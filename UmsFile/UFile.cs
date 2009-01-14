@@ -1,0 +1,344 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using com.ums.UmsCommon;
+using System.IO;
+
+
+namespace com.ums.UmsFile
+{
+    public class UFile
+    {
+        protected String sz_filename;
+        protected String sz_path;
+        public String file() { return sz_filename; }
+        public String path() { return sz_path; }
+        public String full() { return sz_path + "\\" + sz_filename; }
+        public UFile(string path, string file) 
+        {
+            sz_filename = file;
+            sz_path = path;
+        }
+
+        //
+        // Summary:
+        // Move the file. Copy then Delete will be performed
+        // Parameters: 
+        //  dest:
+        //      the file to move
+        // Exceptions:
+        //  Exception:
+        //      If either copy or delete fails
+        public void MoveOperation(UFile dest)
+        {
+            try
+            {
+                File.Copy(this.full(), dest.full());
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                throw e;
+            }
+            try {
+                File.Delete(this.full());
+            }
+            catch(Exception e)
+            {
+                ULog.error(e.Message);
+                throw e;
+            }
+
+        }
+        
+        public virtual bool DeleteOperation()
+        {
+            try
+            {
+                File.Delete(this.full());
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /*public static UFile GetTempFile()
+        {
+            String path = UCommon.UPATHS.sz_temppath;
+
+        }*/
+    }
+
+
+
+    /*
+     * Write and publish Shape-files for use in GUI
+     */
+    public class AdrfileGUIWriter : AdrfileWriter
+    {
+        public AdrfileGUIWriter(long l_refno)
+        {
+            n_refno = l_refno;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
+            open();
+        }
+        public override bool publish()
+        {
+            try
+            {
+                sw.Close();
+            }
+            catch (Exception) //just in case it's still open
+            {
+     
+            }
+            UFile dest = new UFile(UCommon.UPATHS.sz_path_mapsendings, this.file.file());
+            try
+            {
+                file.MoveOperation(dest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing GUI addressfile", e.Message);
+                throw e;
+            }
+        }
+    }
+
+    /*
+     * Write and publish LBA-files
+     */
+    public class AdrfileLBAWriter : AdrfileWriter
+    {
+        public AdrfileLBAWriter(String sz_projectpk, long l_refno)
+        {
+            n_refno = l_refno;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("LBA_SEND_{0}.{1}.xml", sz_projectpk, l_refno));
+            open();
+        }
+        public override bool publish()
+        {
+            try
+            {
+                sw.Close(); //just in case it's still open
+            }
+            catch (Exception)
+            {
+            }
+            UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+            try
+            {
+                file.MoveOperation(dest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
+                throw e;
+
+            }
+        }
+    }
+
+    /*
+     * Write and publish LBA confirm/cancel file
+     */
+    public class ConfirmLBAWriter : AdrfileWriter
+    {
+        String sz_jobid = "";
+        public ConfirmLBAWriter(int refno, String jobid)
+        {
+            n_refno = refno;
+            sz_jobid = jobid;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("LBA_CONFIRM_{0}.{1}.xml", sz_jobid, n_refno));
+            open();
+        }
+        public override bool publish()
+        {
+            try
+            {
+                sw.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+            try
+            {
+                file.MoveOperation(dest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing Confirm LBA file", e.Message);
+                throw e;
+            }
+        }
+    }
+
+    /*
+     * Write and publish Shape-files for parsing (BCP)
+     */
+    public class AdrfileWriter
+    {
+        protected UFile file;
+        protected StreamWriter sw;
+        protected long n_refno;
+        public long getRefno() { return n_refno; }
+
+        protected AdrfileWriter()
+        {
+
+        }
+        public AdrfileWriter(long l_refno)
+        {
+            n_refno = l_refno;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-v{0}.adr", l_refno));
+            open();
+        }
+        public virtual bool delete()
+        {
+            try
+            {
+                File.Delete(this.file.full());
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public virtual bool publish()
+        {
+            try
+            {
+                sw.Close(); //just in case it's still open
+            }
+            catch (Exception)
+            {
+
+            }
+            UFile dest = new UFile(UCommon.UPATHS.sz_path_bcp, this.file.file());
+            try
+            {
+                file.MoveOperation(dest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing addressfile", e.Message);
+                throw e;
+            }
+        }
+        protected bool open()
+        {
+            try
+            {
+                sw = new StreamWriter(file.full(), false, Encoding.GetEncoding("iso-8859-1"));
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                return false;
+            }
+        }
+        protected bool openUTF8()
+        {
+            try
+            {
+                sw = new StreamWriter(file.full(), false, Encoding.GetEncoding("UTF-8"));
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                return false;
+            }
+        }
+        public bool write(String s)
+        {
+            try
+            {
+                sw.Write(s);
+                sw.Flush();
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                return false;
+            }
+        }
+        virtual public bool writeline(String s)
+        {
+            try
+            {
+                sw.WriteLine(s);
+                sw.Flush();
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                return false;
+            }
+        }
+        virtual public void close()
+        {
+            try
+            {
+                sw.Flush();
+                sw.Close();
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+            }
+        }
+
+        
+    }
+
+
+    public class UXml : UFile
+    {
+        protected XmlDocument doc = new XmlDocument();
+        protected String m_sz_lasterror;
+        public String getLastError() { return m_sz_lasterror; }
+        protected void setLastError(String s) { 
+            m_sz_lasterror = s;
+            ULog.error(s);
+        }
+
+        public UXml(string path, string file) : base(path, file)
+        {
+        }
+        /*
+         * start XmlTextReader and start first reading
+         */
+        protected bool read()
+        {
+            try
+            {
+                
+                /*xmlReader = new XmlTextReader(sz_path + "/" + sz_filename);
+                xmlReader.Read();*/
+                doc = new XmlDocument();
+                doc.Load(sz_path + "/" + sz_filename);
+                return true;
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                throw e;
+            }
+        }
+    }
+}
