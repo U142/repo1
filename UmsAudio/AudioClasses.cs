@@ -48,12 +48,14 @@ namespace com.ums.UmsCommon.Audio
                 String sz_tempfile = sz_filebase + ".wav";
 
                 /*WRITE LANG FILE*/
-                UFile file_lang = new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_langfile);
-                StreamWriter w = new StreamWriter(file_lang.full());
+                UFile file_lang = new UFile(UCommon.UPATHS.sz_path_audiofiles, sz_langfile);
+                StreamWriter w = new StreamWriter(file_lang.full(), false, Encoding.GetEncoding("iso-8859-1"));
                 w.WriteLine("$" + dbparams.sz_speaker);
                 w.WriteLine("£" + dbparams.sz_modename);
                 w.WriteLine("%" + dbparams.sz_manufacturer);
                 w.Close();
+                file_lang.MoveOperation(new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_langfile));
+                //File.Copy(UCommon.UPATHS.sz_path_audiofiles + sz_langfile, UCommon.UPATHS.sz_path_ttsserver + sz_langfile);
 
                 /*CONVERT TTS*/
                 UFile file_txt = new UFile(UCommon.UPATHS.sz_path_ttsserver, sz_txtfile);
