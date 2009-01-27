@@ -14,6 +14,7 @@ using com.ums.PAS.Address.gab;
 using com.ums.PAS.Database;
 using com.ums.UmsCommon;
 using com.ums.PAS.Status;
+using com.ums.PAS.Project;
 using com.ums.UmsCommon.Audio;
 using System.Text;
 
@@ -190,6 +191,20 @@ namespace com.ums.ws.pas
         public UPROJECT_RESPONSE UCreateProject(ULOGONINFO logon, UPROJECT_REQUEST req)
         {
             return new UProject().uproject(ref logon, ref req);
+        }
+
+        [WebMethod]
+        public UREFNO_RESPONSE URefno()
+        {
+            ULOGONINFO logon = new ULOGONINFO();
+            logon.l_comppk = 2;
+            logon.l_deptpk = 1;
+            logon.l_userpk = 1;
+            logon.sz_userid = "MH";
+            logon.sz_compid = "UMS";
+            logon.sz_password = "mh123,1";
+
+            return new URefno().getRefno(ref logon);
         }
 
         /*[WebMethod]
