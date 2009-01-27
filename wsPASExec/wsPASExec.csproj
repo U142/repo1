@@ -81,6 +81,7 @@
     <Compile Include="PAS\Database\UAdrDb.cs" />
     <Compile Include="PAS\Database\USendDb.cs" />
     <Compile Include="PAS\Status\IStatusList.cs" />
+    <Compile Include="PAS\Status\UProject.cs" />
     <Compile Include="PAS\Status\UStatusItems.cs" />
     <Compile Include="PAS\Status\UStatusListItem.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

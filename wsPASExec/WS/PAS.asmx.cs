@@ -179,11 +179,36 @@ namespace com.ums.ws.pas
         {
             return new UAudio().ConvertTTS(ref logon, ref req);
         }
+        
         [WebMethod]
         public UPOST_AUDIO_RESPONSE UPostAudio(ULOGONINFO logon, UPOST_AUDIO_REQUEST req)
         {
             return new UAudio().UPostAudio(ref logon, ref req);
         }
+
+        [WebMethod]
+        public UPROJECT_RESPONSE UCreateProject(ULOGONINFO logon, UPROJECT_REQUEST req)
+        {
+            return new UProject().uproject(ref logon, ref req);
+        }
+
+        /*[WebMethod]
+        public UPROJECT_RESPONSE UProjectTest()
+        {
+            ULOGONINFO logon = new ULOGONINFO();
+            logon.l_comppk = 2;
+            logon.l_deptpk = 1;
+            logon.l_userpk = 1;
+            logon.sz_userid = "MH";
+            logon.sz_compid = "UMS";
+            logon.sz_password = "mh123,1";
+
+            UPROJECT_REQUEST req = new UPROJECT_REQUEST();
+            req.sz_name = "Svein test prosjektting";
+
+            return new UProject().uproject(ref logon, ref req);
+        }*/
+
         /*[WebMethod]
         public UPOST_AUDIO_RESPONSE UPostAudioTest()
         {
