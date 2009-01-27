@@ -117,6 +117,7 @@ namespace com.ums.UmsCommon
             public static String sz_path_ttsserver;
             public static String sz_path_audiofiles;
             public static String sz_path_voice;
+            public static string sz_path_bbmessages;
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {

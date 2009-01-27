@@ -28,6 +28,7 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_ttsserver = ConfigurationSettings.AppSettings["sz_path_tts_server"];
             UCommon.UPATHS.sz_path_audiofiles = ConfigurationSettings.AppSettings["sz_path_audiofiles"];
             UCommon.UPATHS.sz_path_voice = ConfigurationSettings.AppSettings["sz_path_voice"];
+            UCommon.UPATHS.sz_path_bbmessages = ConfigurationSettings.AppSettings["sz_path_bbmessages"];
 
             UCommon.UBBDATABASE.sz_dsn = ConfigurationSettings.AppSettings["sz_db_dsn"]; //"backbone_ibuki";
             UCommon.UBBDATABASE.sz_dsn_aoba = ConfigurationSettings.AppSettings["sz_db_dsn_aoba"]; //"aoba";

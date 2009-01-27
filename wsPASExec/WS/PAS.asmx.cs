@@ -179,6 +179,32 @@ namespace com.ums.ws.pas
         {
             return new UAudio().ConvertTTS(ref logon, ref req);
         }
+        [WebMethod]
+        public UPOST_AUDIO_RESPONSE UPostAudio(ULOGONINFO logon, UPOST_AUDIO_REQUEST req)
+        {
+            return new UAudio().UPostAudio(ref logon, ref req);
+        }
+        /*[WebMethod]
+        public UPOST_AUDIO_RESPONSE UPostAudioTest()
+        {
+            ULOGONINFO logon = new ULOGONINFO();
+            logon.l_comppk = 2;
+            logon.l_deptpk = 1;
+            logon.l_userpk = 1;
+            logon.sz_userid = "MH";
+            logon.sz_compid = "UMS";
+            logon.sz_password = "mh123,1";
+
+            UPOST_AUDIO_REQUEST req = new UPOST_AUDIO_REQUEST();
+            req.n_refno = 90500;
+            req.n_filetype = 4;
+            req.sz_filename = "v90500_1.wav";
+            req.n_param = 1;
+            req.n_deptpk = 99999;
+            req.n_messagepk = 90500;
+            req.wav = File.ReadAllBytes(UCommon.UPATHS.sz_path_audiofiles + "PAS_1a395317-c540-4735-a89c-5072fd14ab45_1.wav");
+            return new UAudio().UPostAudio(ref logon, ref req);
+        }*/
 
         /*[WebMethod]
         public bool TestConvertTTS()

@@ -96,6 +96,109 @@ namespace com.ums.UmsCommon.Audio
             return response;
 
         }
+        public UPOST_AUDIO_RESPONSE UPostAudio(ref ULOGONINFO logon, ref UPOST_AUDIO_REQUEST req)
+        {
+            string sz_physpath;
+            string sz_physdestpath;
+            string sz_tempfile;
+            string sz_tempfileraw;
+            string sz_destwav;
+            string sz_destraw;
+            BinaryWriter bw;
+            //string sz_virtualpath;
+
+            UPOST_AUDIO_RESPONSE response = new UPOST_AUDIO_RESPONSE();
+            response.n_responsecode = -1;
+
+            PASUmsDb db = new PASUmsDb();
+            if (!db.CheckLogon(ref logon))
+            {
+                response.sz_responsetext = "Error in logon";
+                return response;
+            }
+            db.close();
+
+            try
+            {
+                convertClass conv = new convertClass();
+
+                switch (req.n_filetype)
+                {
+                    case 1:
+                        sz_physpath = UCommon.UPATHS.sz_path_parmtemp;
+                        sz_tempfile = "v" + req.n_refno + "_" + req.n_param;
+                        sz_tempfileraw = sz_tempfile + ".raw";
+                        sz_tempfile = sz_tempfile + ".wav";
+                        sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_tempfile;
+                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_tempfileraw;
+
+                        bw = new BinaryWriter(File.Open(sz_physpath + sz_tempfile, FileMode.Create));
+                        bw.Write(req.wav);
+                        bw.Flush();
+                        bw.Close();
+                        conv.WAV2RAWNormalize(sz_physpath + sz_tempfile, sz_physpath + sz_tempfileraw);
+                        
+                        File.Move(sz_physpath + sz_tempfile, sz_destwav);
+                        File.Move(sz_physpath + sz_tempfileraw, sz_destraw);
+                        break;
+                    case 2:
+                        string sz_filename;
+                        string sz_destfile;
+
+                        sz_filename = req.sz_filename;
+                        sz_physpath = UCommon.UPATHS.sz_path_parmtemp;
+                        sz_tempfile = sz_physpath + sz_filename;
+                        sz_tempfileraw = sz_physpath + sz_filename.Replace(".wav", ".raw");
+                        sz_destfile = "v" + req.n_refno + "_" + req.n_param;
+                        sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_destfile + ".wav";
+                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_destfile + ".raw";
+
+                        File.Copy(sz_tempfile, sz_destwav);
+                        File.Copy(sz_tempfileraw, sz_destraw);
+                        break;
+                    case 4:
+                        sz_physdestpath = UCommon.UPATHS.sz_path_audiofiles;
+                        sz_physpath = UCommon.UPATHS.sz_path_bbmessages + req.n_deptpk + "/";
+                        sz_tempfile = sz_physpath + req.n_messagepk + ".wav";
+                        sz_tempfileraw = sz_physpath + req.n_messagepk + ".raw";
+                        sz_destfile = "v" + req.n_refno + "_" + req.n_param;
+                        sz_destwav = sz_physdestpath + sz_destfile + ".wav";
+                        sz_destraw = sz_physdestpath + sz_destfile + ".raw";
+
+                        File.Copy(sz_tempfile, sz_destwav);
+                        File.Copy(sz_tempfileraw, sz_destraw);
+                        break;
+                    case 8:
+                        sz_physpath = UCommon.UPATHS.sz_path_parmtemp;
+                        //sz_virtpath = "java_pas/temp/";
+                        sz_tempfile = "v" + req.n_refno + "_" + req.n_param;
+                        sz_tempfileraw = sz_tempfile + ".raw";
+                        sz_tempfile = sz_tempfile + ".wav";
+                        sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_tempfile;
+                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_tempfileraw;
+
+                        bw = new BinaryWriter(File.Open(sz_physpath + sz_tempfile, FileMode.Create));
+                        bw.Write(req.wav);
+                        bw.Flush();
+                        bw.Close();
+                        conv.WAV2RAWNormalize(sz_physpath + sz_tempfile, sz_physpath + sz_tempfileraw);
+
+                        File.Copy(sz_physpath + sz_tempfile, sz_destwav);
+                        File.Copy(sz_physpath + sz_tempfileraw, sz_destraw);
+                        break;
+                }
+                response.n_responsecode = 0;
+                response.sz_responsetext = "OK";
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, "Error WAV2RawNormalize", e.Message);
+                response.n_responsecode = -1;
+                response.sz_responsetext = e.Message;
+            }
+
+            return response;
+        }
 
     }
 
@@ -106,6 +209,14 @@ namespace com.ums.UmsCommon.Audio
         public int n_param;
         public int n_filetype;
         public byte[] wav;
+        public string sz_filename;
+        public int n_messagepk;
+        public int n_deptpk;
+    }
+    public class UPOST_AUDIO_RESPONSE
+    {
+        public int n_responsecode;
+        public string sz_responsetext;
     }
 
     public enum UTTS_LANG
