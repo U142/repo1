@@ -13,7 +13,7 @@ using System.Text;
 using com.ums.UmsParm;
 using com.ums.UmsCommon;
 using com.ums.ws.vb.VB;
-
+using libums2_csharp;
 
 
 namespace com.ums.ws.voice
@@ -28,8 +28,66 @@ namespace com.ums.ws.voice
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
     {
+        [WebMethod]
+        public Int64 sendVoice(ACCOUNT acc, string to, string from, VOCFILE[] message, Int64 actionprofilepk)
+        {
+            try
+            {
+                SendVoice voice = new SendVoice();
+                return voice.send(acc, new string[] {to}, from, message, actionprofilepk);
+            }
+            catch (Exception e)
+            {
+                ULog.error("Error in voice sendVoice: " + e.Message);
+            }
+            return -1;
+        }
 
         [WebMethod]
+        public Int64 sendMultipleVoice(ACCOUNT acc, string[] to, string from, VOCFILE[] message, Int64 actionprofilepk)
+        {
+            try
+            {
+                SendVoice voice = new SendVoice();
+                return voice.send(acc, to, from, message, actionprofilepk);
+            }
+            catch (Exception e)
+            {
+                ULog.error("Error in voice sendVoice: " + e.Message);
+            }
+            return -1;
+        }
+        /*[WebMethod]
+        public Int64 testSendVoice()
+        {
+            SendVoice voice = new SendVoice();
+
+            //input:
+            VOCFILE[] files = new VOCFILE[1];
+
+
+            string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
+            //string v_refno_1_src = "c:\\i386\\recycle.wav";
+            //byte[] raw = File.ReadAllBytes(v_refno_1_src);
+
+            VOCFILE vocfile = new VOCFILE();
+            vocfile.type = libums2_csharp.VOCTYPE.TTS;
+            //vocfile.audiodata = raw;
+            vocfile.sz_tts_string = "Hei, hei, jeg har en fin presang til deg. Rimte ikke det litt? Johoe, det gjorde det. Nå må du se å klappe igjen smella di, du maser som et lokomotiv!";
+            vocfile.l_langpk = 6;
+            files[0] = vocfile;
+            ACCOUNT acc = new ACCOUNT();
+            acc.l_comppk = 2;
+            acc.l_deptpk = 1;
+            acc.l_userpk = 2;
+            acc.sz_password = "mh123";
+            acc.sz_compid = "UMS";
+            acc.sz_userid = "MH";
+            acc.sz_deptid = "TEST";
+
+            return voice.send(acc, new string[] { "004792293390" }, "23000000", files, 564);
+        }*/
+        /*
         public long simpleVoice(string recipient, string pin)
         {   //Array med lydfiler
             // Sende inn meldingen
@@ -48,15 +106,12 @@ namespace com.ums.ws.voice
                 ULOGONINFO logon = new ULOGONINFO();
                 logon.l_comppk = 2;
                 logon.l_deptpk = 1;
-                logon.l_userpk = 1;
+                logon.l_userpk = 2;
                 logon.sz_userid = "MH";
                 logon.sz_compid = "UMS";
                 logon.sz_password = "mh123,1";
 
                 PASUmsDb umsdb = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                /*if (!umsdb.CheckLogon(ref logon))
-                    throw new Exception("Error on logon");
-                 */
 
                 refno = umsdb.newRefno();
                 if (refno == -1)
@@ -143,6 +198,6 @@ namespace com.ums.ws.voice
                 if (bw != null)
                     bw.Close();
             }
-        }
+        }*/
     }
 }
