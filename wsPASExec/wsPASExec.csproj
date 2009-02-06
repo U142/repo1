@@ -64,10 +64,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternComAudio\vjslib.dll</HintPath>
     </Reference>
-    <Reference Include="Voiceting, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ttstest2\Voiceting\bin\Debug\Voiceting.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="WS\ExternalExec.asmx" />
