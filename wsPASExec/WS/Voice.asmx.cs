@@ -61,6 +61,7 @@ namespace com.ums.ws.voice
             }
             return ret;
         }
+        /*
         [WebMethod]
         public Int64 testSendVoice()
         {
@@ -74,11 +75,11 @@ namespace com.ums.ws.voice
 
                 //string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
                 //string v_refno_1_src = "c:\\i386\\U2L1FR.WAV";
-                string v_refno_1_src = "C:\\Program Files\\NetMeeting\\TestSnd.wav";
+                string v_refno_1_src = "C:\\WINDOWS\\Media\\chimes.wav";
                 byte[] raw = File.ReadAllBytes(v_refno_1_src);
 
                 VOCFILE vocfile = new VOCFILE();
-                vocfile.type = VOCTYPE.TTS;
+                vocfile.type = VOCTYPE.WAV;
                 vocfile.audiodata = raw;
                 vocfile.sz_tts_string = "Hei, hei, jeg har en fin presang til deg. Rimte ikke det litt? Johoe, det gjorde det. Nå må du se å klappe igjen smella di du maser som et lokomotiv!";
                 vocfile.l_langpk = 6;
@@ -101,7 +102,7 @@ namespace com.ums.ws.voice
             }
                
         }
-        
+        */
         /*
         public long simpleVoice(string recipient, string pin)
         {   //Array med lydfiler
