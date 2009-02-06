@@ -3,19 +3,156 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Data.Odbc;
+using System.Data;
 
-using TTSLib;
-using WAV2RAWLib;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using com.ums.UmsFile;
 
+using TTSLib;
+using WAV2RAWLib;
 
 namespace com.ums.UmsCommon.Audio
 {
-
     public class UAudio
     {
+        /*
+        public string[] generateVoice(VOCFILE[] message, Int64 l_refno, ref OdbcCommand cmd, string eat, string szTTSServerPath)
+        {
+
+            string[] filenames = new string[message.Length];
+            BinaryWriter bw;
+            string source, destination;
+            
+            string sz_audiofiles_path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            sz_audiofiles_path = sz_audiofiles_path.Replace("file:\\", "");
+            DirectoryInfo di = Directory.GetParent(sz_audiofiles_path);
+            di = di.Parent;
+            sz_audiofiles_path = di.FullName + "\\audiofiles\\";
+            try
+            {
+                for (int i = 0; i < message.Length; ++i)
+                {
+                    switch (message[i].type)
+                    {
+                        case VOCTYPE.TTS:
+                            //tts to WAV
+                            //WAV to RAW
+                            filenames[i] = TTS(message[i].sz_tts_string, i, message[i].l_langpk, l_refno, ref cmd, szTTSServerPath, eat);
+                            break;
+                        case VOCTYPE.WAV:
+                            //convert to raw
+                            bw = new BinaryWriter(File.Open(sz_audiofiles_path + "v" + l_refno + "_" + i + ".wav", FileMode.Create));
+                            bw.Write(message[i].audiodata);
+                            bw.Flush();
+                            bw.Close();
+                            convertClass convert = new convertClass();
+                            TTSClass conv = new TTSClass();
+                            conv.Say_raw(sz_audiofiles_path + "v" + l_refno + "_" + i + ".wav", sz_audiofiles_path + "v" + l_refno + "_" + i + ".raw");
+                            convert.WAV2RAWNormalize(sz_audiofiles_path + "v" + l_refno + "_" + i + ".wav", sz_audiofiles_path + "v" + l_refno + "_" + i + 1 + ".raw");
+                            convert.DoConv(sz_audiofiles_path + "v" + l_refno + "_" + i + ".wav", sz_audiofiles_path + "v" + l_refno + "_" + i + 2 + ".raw");
+                            filenames[i] = "v" + l_refno + "_" + i + ".raw";
+
+                            source = sz_audiofiles_path + filenames[i];
+                            destination = eat + filenames[i];
+                            File.Copy(source, destination);
+                            File.Delete(sz_audiofiles_path + "v" + l_refno + "_" + i + ".wav");
+                            break;
+                        case VOCTYPE.RAW:
+                            //make copy to server
+                            bw = new BinaryWriter(File.Open(eat + "v" + l_refno + "_" + i + ".raw", FileMode.Create));
+                            bw.Write(message[i].audiodata);
+                            bw.Flush();
+                            bw.Close();
+                            filenames[i] = "v" + l_refno + "_" + i + ".raw";
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                com.ums.UmsCommon.ULog.write("Error in generate voice: " + e.Message + e.StackTrace);
+                filenames[0] = e.Message + e.StackTrace;
+            }
+            return filenames;
+        }
+
+        private string TTS(string sz_message, int filenumber, int l_langpk, Int64 l_refno, ref OdbcCommand cmd, string szTTSServerPath, string eat)
+        {
+            string szTempFileName = "v" + l_refno + "_" + filenumber + ".wav";
+            string szFileName = "v" + l_refno + "_" + filenumber + ".wav";
+            string szRawFileName = "v" + l_refno + "_" + filenumber + ".raw";
+            string szTxtFileName = "v" + l_refno + "_" + filenumber + ".txt";
+            string szLangFileName = "v" + l_refno + "_" + filenumber + ".lang";
+            string ret = "";
+            string ting = "Før kall ";
+
+            try
+            {
+                TTS objTXT2Wav = new TTSLib.TTS();
+                cmd.Parameters.Clear();
+                cmd.CommandType = CommandType.Text;
+                //cmd.CommandText = String.Format("SELECT * FROM BBTTSLANG WHERE l_langpk={0}", l_langpk);
+                cmd.CommandText = "SELECT * FROM BBTTSLANG WHERE l_langpk=?";
+                cmd.Parameters.Add("@l_langpk", OdbcType.Int).Value = l_langpk; // This should be BigInt, but is not supported by ayanami
+                
+                OdbcDataReader dr = cmd.ExecuteReader();
+                ting += "Etter kall";
+                if (dr.HasRows)
+                {
+                    StreamWriter fLangFile = new StreamWriter(szLangFileName, false, Encoding.GetEncoding("iso-8859-1"));
+                    fLangFile.WriteLine("$" + dr["sz_speaker"]);
+                    fLangFile.WriteLine("£" + dr["sz_modename"]);
+                    fLangFile.WriteLine("%" + dr["sz_manufacturer"]);
+                    fLangFile.Close();
+                }
+                dr.Close();
+
+                File.Move(szLangFileName, szTTSServerPath + szLangFileName);
+
+                if (File.Exists(szTTSServerPath + szTempFileName))
+                    File.Delete(szTTSServerPath + szTempFileName);
+
+                try
+                {
+                    objTXT2Wav.Say_wavex(sz_message, szTTSServerPath + szFileName, 60);
+                }
+                catch (Exception ex)
+                {
+                    ums.UmsCommon.ULog.write("Error in TTS: " + ex.Message + "\n " + ex.StackTrace);
+                }
+
+                // This is waiting for TTS to finish converting wav to raw
+                DateTime future = DateTime.Now.AddSeconds(10);
+                bool b = true;
+
+                while (b)
+                {
+                    if (File.Exists(szTTSServerPath + szRawFileName))
+                        if (new FileInfo(szTTSServerPath + szRawFileName).Length > 0)
+                            b = false;
+                    if (b && 0 <= DateTime.Compare(DateTime.Now, future))
+                        b = false;
+                }
+
+                if (File.Exists(szTTSServerPath + szRawFileName))
+                    File.Move(szTTSServerPath + szRawFileName, eat + szRawFileName);
+
+                ret = szRawFileName;
+
+            }
+            catch (Exception e)
+            {
+                if (File.Exists(szLangFileName))
+                    File.Delete(szLangFileName);
+                ums.UmsCommon.ULog.write("Error in TTS: " + e.Message + "\n " + e.StackTrace);
+                ret += ting + e.Message + "\n" + e.StackTrace;
+            }
+
+            return ret;
+        }*/
+
         public UCONVERT_TTS_RESPONSE ConvertTTS(ref ULOGONINFO logon, ref UCONVERT_TTS_REQUEST req)
         {
             UCONVERT_TTS_RESPONSE response = new UCONVERT_TTS_RESPONSE();
@@ -241,5 +378,28 @@ namespace com.ums.UmsCommon.Audio
         public byte[] wav;
         public String sz_server_filename;
     }
+    public class VOCFILE
+    {
+        public VOCTYPE type;
+        public String sz_tts_string;
+        public int l_langpk;
+        public byte[] audiodata;
+    }
+    public enum VOCTYPE
+    {
+        TTS = 1,
+        WAV = 2,
+        RAW = 3,
+    }
 
+    public class ACCOUNT
+    {
+        public Int64 l_userpk;
+        public string sz_userid;
+        public Int64 l_comppk;
+        public string sz_compid;
+        public Int64 l_deptpk;
+        public string sz_deptid;
+        public string sz_password;
+    }
 }

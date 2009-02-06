@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -63,6 +64,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternComAudio\vjslib.dll</HintPath>
     </Reference>
+    <Reference Include="Voiceting, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ttstest2\Voiceting\bin\Debug\Voiceting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="WS\ExternalExec.asmx" />
@@ -95,6 +100,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="VB\Pincode.cs" />
+    <Compile Include="VB\Voice.cs" />
     <Compile Include="WS\ExternalExec.asmx.cs">
       <DependentUpon>ExternalExec.asmx</DependentUpon>
       <SubType>Component</SubType>

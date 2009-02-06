@@ -13,6 +13,7 @@ using System.Text;
 using com.ums.UmsParm;
 using com.ums.UmsCommon;
 using com.ums.ws.vb.VB;
+
 using libums2_csharp;
 
 
@@ -21,72 +22,86 @@ namespace com.ums.ws.voice
     /// <summary>
     /// Summary description for Voice
     /// </summary>
-    [WebService(Namespace = "http://tempuri.org/")]
+    [WebService(Namespace = "http://ums.no/ws/vb/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
     {
+        
         [WebMethod]
         public Int64 sendVoice(ACCOUNT acc, string to, string from, VOCFILE[] message, Int64 actionprofilepk)
         {
+            Int64 ret = -1;
             try
             {
-                SendVoice voice = new SendVoice();
-                return voice.send(acc, new string[] {to}, from, message, actionprofilepk);
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                ret = voice.send(acc, new string[] {to}, from, message, actionprofilepk);
             }
             catch (Exception e)
             {
-                ULog.error("Error in voice sendVoice: " + e.Message);
+                ULog.error("Error in voice sendVoice: " + e.Message + " _ " +e.StackTrace);
             }
-            return -1;
+            return ret;
         }
 
         [WebMethod]
         public Int64 sendMultipleVoice(ACCOUNT acc, string[] to, string from, VOCFILE[] message, Int64 actionprofilepk)
         {
+            Int64 ret = -1;
             try
             {
-                SendVoice voice = new SendVoice();
-                return voice.send(acc, to, from, message, actionprofilepk);
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                ret = voice.send(acc, to, from, message, actionprofilepk);
             }
             catch (Exception e)
             {
                 ULog.error("Error in voice sendVoice: " + e.Message);
             }
-            return -1;
+            return ret;
         }
-        /*[WebMethod]
+        [WebMethod]
         public Int64 testSendVoice()
         {
-            SendVoice voice = new SendVoice();
+            try
+            {
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
 
-            //input:
-            VOCFILE[] files = new VOCFILE[1];
+                //input:
+                VOCFILE[] files = new VOCFILE[1];
 
 
-            string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
-            //string v_refno_1_src = "c:\\i386\\recycle.wav";
-            //byte[] raw = File.ReadAllBytes(v_refno_1_src);
+                //string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
+                //string v_refno_1_src = "c:\\i386\\U2L1FR.WAV";
+                string v_refno_1_src = "C:\\Program Files\\NetMeeting\\TestSnd.wav";
+                byte[] raw = File.ReadAllBytes(v_refno_1_src);
 
-            VOCFILE vocfile = new VOCFILE();
-            vocfile.type = libums2_csharp.VOCTYPE.TTS;
-            //vocfile.audiodata = raw;
-            vocfile.sz_tts_string = "Hei, hei, jeg har en fin presang til deg. Rimte ikke det litt? Johoe, det gjorde det. Nå må du se å klappe igjen smella di, du maser som et lokomotiv!";
-            vocfile.l_langpk = 6;
-            files[0] = vocfile;
-            ACCOUNT acc = new ACCOUNT();
-            acc.l_comppk = 2;
-            acc.l_deptpk = 1;
-            acc.l_userpk = 2;
-            acc.sz_password = "mh123";
-            acc.sz_compid = "UMS";
-            acc.sz_userid = "MH";
-            acc.sz_deptid = "TEST";
+                VOCFILE vocfile = new VOCFILE();
+                vocfile.type = VOCTYPE.TTS;
+                vocfile.audiodata = raw;
+                vocfile.sz_tts_string = "Hei, hei, jeg har en fin presang til deg. Rimte ikke det litt? Johoe, det gjorde det. Nå må du se å klappe igjen smella di du maser som et lokomotiv!";
+                vocfile.l_langpk = 6;
+                files[0] = vocfile;
+                ACCOUNT acc = new ACCOUNT();
+                acc.l_comppk = 2;
+                acc.l_deptpk = 1;
+                acc.l_userpk = 2;
+                acc.sz_password = "mh123";
+                acc.sz_compid = "UMS";
+                acc.sz_userid = "MH";
+                acc.sz_deptid = "TEST";
 
-            return voice.send(acc, new string[] { "004792293390" }, "23000000", files, 564);
-        }*/
+                return voice.send(acc, new string[] { "004792293390" }, "23000000", files, 564);
+            }
+            catch (Exception e)
+            {
+                ULog.error(-1, "wsPASExec.Voice.asmx", e.Message + " _ " + e.StackTrace);
+                return -1;
+            }
+               
+        }
+        
         /*
         public long simpleVoice(string recipient, string pin)
         {   //Array med lydfiler
