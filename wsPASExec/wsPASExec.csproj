@@ -96,7 +96,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="VB\Pincode.cs" />
-    <Compile Include="VB\Voice.cs" />
     <Compile Include="WS\ExternalExec.asmx.cs">
       <DependentUpon>ExternalExec.asmx</DependentUpon>
       <SubType>Component</SubType>

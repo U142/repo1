@@ -20,96 +20,6 @@ namespace com.ums.ws.voice
 {
     public class SendVoice
     {
-        private string sz_cstring = "DSN=aoba;UID=sa;PWD=diginform";
-        private string eat = "\\\\195.119.0.169\\ums\\var\\aep\\eat\\";
-        private string szTTSServerPath = "\\\\195.119.0.169\\convert\\";
-        private Int64 l_canceldate = (long)Convert.ToInt32((DateTime.Now.AddDays(1)).ToString("yyyyMMdd"));
-        private Int64 l_canceltime = (long)Convert.ToInt16(DateTime.Now.ToString("HHmm"));
-        private Int64 l_interval = 2;
-        private Int64 l_pauseinterval = 2;
-        private Int64 l_pausetime = 5;
-        private Int64 l_retries = 3;
-        private int l_pri = 8;
-        private string sz_sending_name = "Sending name";
-        private int l_item = 1;
-        private Int64 l_valid = (long)Convert.ToInt32((DateTime.Now.AddDays(1)).ToString("yyyyMMdd"));
-        private int l_wav2raw_frequency = 8000;
-        private float f_wav2raw_rms = (float)0.65;
-
-        public string EatPath {
-            get { return eat; }
-            set { eat = value; }
-        }
-        public string TTSServerPath
-        {
-            get { return szTTSServerPath; }
-            set { szTTSServerPath = value; }
-        }
-        public Int64 Canceldate
-        {
-            get { return l_canceldate; }
-            set { l_canceldate = value; }
-        }
-        public Int64 Canceltime
-        {
-            get { return l_canceltime; }
-            set { l_canceltime = value; }
-        }
-        public Int64 Interval
-        {
-            get { return l_interval; }
-            set { l_interval = value; }
-        }
-        public Int64 Pauseinterval
-        {
-            get { return l_pauseinterval; }
-            set { l_pauseinterval = value; }
-        }
-        public Int64 Pausetime
-        {
-            get { return l_pausetime; }
-            set { l_pausetime = value; }
-        }
-        public Int64 Retries
-        {
-            get { return l_retries; }
-            set { l_retries = value; }
-        }
-        public int Priority
-        {
-            get { return l_pri; }
-            set { l_pri = value; }
-        }
-        public string SendingName
-        {
-            get { return sz_sending_name; }
-            set { sz_sending_name = value; }
-        }
-        public int Item
-        {
-            get { return l_item; }
-            set { l_item = value; }
-        }
-        public Int64 Valid
-        {
-            get { return l_valid; }
-            set { l_valid = value; }
-        }
-        public int Wav2RawFrequency
-        {
-            get { return l_wav2raw_frequency; }
-            set { l_wav2raw_frequency = value; }
-        }
-        public float Wav2RawRMS
-        {
-            get { return f_wav2raw_rms; }
-            set { f_wav2raw_rms = value; }
-        }
-        public string Connectionstring
-        {
-            set { sz_cstring = value; }
-        }
-
         public SendVoice()
         {
         }
@@ -123,10 +33,10 @@ namespace com.ums.ws.voice
         private OdbcCommand cmd;
         private string ret = "ting ";
 
-        public Int64 send(ACCOUNT acc, string[] to, string from, VOCFILE[] message, Int64 actionprofilepk)
+        public Int64 send(ACCOUNT acc, PARAMETERS param, string[] to, string from, VOCFILE[] message, Int64 actionprofilepk)
         {
             SendVoice voice = new SendVoice();
-            return voice.send(acc, to, from, message, actionprofilepk);
+            return voice.send(acc, param, to, from, message, actionprofilepk);
             
             /*
             string sz_sender = from;//"23000050";
@@ -244,7 +154,7 @@ namespace com.ums.ws.voice
             //return cmd.ExecuteNonQuery();
         }
 
-        private int insertBBVALID(Int64 l_refno)
+        /*private int insertBBVALID(Int64 l_refno)
         {
             cmd.Parameters.Clear();
             cmd.CommandType = CommandType.Text;
@@ -255,7 +165,7 @@ namespace com.ums.ws.voice
             ret += tmp.ToString() + " ";
             return tmp;
             //return cmd.ExecuteNonQuery();
-        }
+        }*/
 
         private int insertBBSENDNUM(Int64 l_refno, string sz_sender)
         {

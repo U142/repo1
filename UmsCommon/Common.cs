@@ -101,6 +101,8 @@ namespace com.ums.UmsCommon
         public struct UVOICE
         {
             public static String sz_send_number;
+            public static float f_rms;
+            public static int l_tts_timeout;
         }
 
 
@@ -117,7 +119,8 @@ namespace com.ums.UmsCommon
             public static String sz_path_ttsserver;
             public static String sz_path_audiofiles;
             public static String sz_path_voice;
-            public static string sz_path_bbmessages;
+            public static String sz_path_bbmessages;
+            public static String sz_path_global_wav_dir;
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {

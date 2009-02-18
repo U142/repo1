@@ -10,6 +10,9 @@ using System.Xml.Linq;
 using System.IO;
 using System.Text;
 
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
 using com.ums.UmsParm;
 using com.ums.UmsCommon;
 using com.ums.ws.vb.VB;
@@ -29,15 +32,23 @@ namespace com.ums.ws.voice
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
     {
-        
         [WebMethod]
-        public Int64 sendVoice(ACCOUNT acc, string to, string from, VOCFILE[] message, Int64 actionprofilepk)
+        public void ting(ACCOUNT acc, SendinProfileChoice choice)
+        {
+
+        }
+        [WebMethod]
+        public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                ret = voice.send(acc, new string[] {to}, from, message, actionprofilepk);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                ret = voice.send(acc, settings, new RECIPIENT[] { to }, from, message);
             }
             catch (Exception e)
             {
@@ -47,13 +58,17 @@ namespace com.ums.ws.voice
         }
 
         [WebMethod]
-        public Int64 sendMultipleVoice(ACCOUNT acc, string[] to, string from, VOCFILE[] message, Int64 actionprofilepk)
+        public Int64 sendMultipleVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                ret = voice.send(acc, to, from, message, actionprofilepk);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                ret = voice.send(acc, settings, to, from, message);
             }
             catch (Exception e)
             {
@@ -61,48 +76,337 @@ namespace com.ums.ws.voice
             }
             return ret;
         }
+        [WebMethod]
+        public List<STATUS> getStatus(libums2_csharp.ACCOUNT acc, Int64 referenceNumber)
+        {
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            return voice.getStatus(acc, referenceNumber);
+        }
+        [WebMethod]
+        public List<ItemStatus> getAvailableStatuses(ACCOUNT acc)
+        {
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            return voice.getAvailableStatuses(acc);
+        }
+        [WebMethod]
+        public List<string> getAvailableSoundLibraryFiles (ACCOUNT acc)
+        {
+            // Global path
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            return voice.getAvailableSoundLibraryFiles(acc,UCommon.UPATHS.sz_path_global_wav_dir);
+        }
+        [WebMethod]
+        public string cancelVoice(ACCOUNT acc, Int64 referenceNumber, int itemNumber)
+        {
+            libums2_csharp.SendVoice voice = new SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            return voice.cancelVoice(acc, referenceNumber);
+        }
         /*
+        [WebMethod]
+        public string testCancelVoice(Int64 referenceNumber, int itemNumber)
+        {
+            libums2_csharp.SendVoice voice = new SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            libums2_csharp.ACCOUNT acc = new libums2_csharp.ACCOUNT();
+            acc.sz_password = "ums123";
+            acc.sz_compid = "UMS";
+            acc.sz_deptid = "TEST";
+            return voice.cancelVoice(acc, referenceNumber);
+        }
         [WebMethod]
         public Int64 testSendVoice()
         {
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
 
                 //input:
                 VOCFILE[] files = new VOCFILE[1];
+                //PARAMETERS param = new PARAMETERS();
+                SendingSettings settings = new SendingSettings();
+                settings.SendingName = "testSendVoice";
+                settings.Profile = new SendingProfile();
+                settings.Profile.Number = 564;
+                settings.RescheduleProfile = new SendingProfile();
+                settings.RescheduleProfile.Number = -1;
+                settings.RescheduleProfile.Name = "1 forsøk";
+                settings.Schedule = DateTime.Now.AddDays(1);
+                settings.MessageCaching = DateTime.Now.AddDays(1);
+                settings.IntroClip = 0;
+                settings.HiddenNumber = false;
 
-
-                //string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
+                string v_refno_1_src = "\\\\195.119.0.167\\Backbone\\voicestd\\no\\1262_pine.raw";
                 //string v_refno_1_src = "c:\\i386\\U2L1FR.WAV";
-                string v_refno_1_src = "C:\\WINDOWS\\Media\\chimes.wav";
+                //string v_refno_1_src = "C:\\WINDOWS\\Media\\chimes.wav";
                 byte[] raw = File.ReadAllBytes(v_refno_1_src);
 
                 VOCFILE vocfile = new VOCFILE();
-                vocfile.type = VOCTYPE.WAV;
+                vocfile.type = VOCTYPE.RAW;
                 vocfile.audiodata = raw;
                 vocfile.sz_tts_string = "Hei, hei, jeg har en fin presang til deg. Rimte ikke det litt? Johoe, det gjorde det. Nå må du se å klappe igjen smella di du maser som et lokomotiv!";
-                vocfile.l_langpk = 6;
+                vocfile.l_langpk = LANGUAGE.NORWEGIAN;
                 files[0] = vocfile;
-                ACCOUNT acc = new ACCOUNT();
-                acc.l_comppk = 2;
-                acc.l_deptpk = 1;
-                acc.l_userpk = 2;
-                acc.sz_password = "mh123";
+                libums2_csharp.ACCOUNT acc = new libums2_csharp.ACCOUNT();
+                acc.sz_password = "ums123";
                 acc.sz_compid = "UMS";
-                acc.sz_userid = "MH";
+                //acc.sz_userid = "MH";
                 acc.sz_deptid = "TEST";
 
-                return voice.send(acc, new string[] { "004792293390" }, "23000000", files, 564);
+                return voice.send(acc, settings, new RECIPIENT[] { new RECIPIENT("004792293390") }, "23000000", files);
             }
             catch (Exception e)
             {
                 ULog.error(-1, "wsPASExec.Voice.asmx", e.Message + " _ " + e.StackTrace);
                 return -1;
             }
-               
+
+        }*/
+        /*[WebMethod]
+        public string ting([XmlChoiceIdentifier] int lol)
+        {
+            
         }
         */
+        /*
+        [WebMethod]
+        public List<string> testgetAvailableSoundLibraryFiles()
+        {
+            // Global path
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            ACCOUNT acc = new ACCOUNT();
+            acc.sz_password = "ums123";
+            acc.sz_compid = "UMS";
+            //acc.sz_userid = "MH";
+            acc.sz_deptid = "TEST";
+            return voice.getAvailableSoundLibraryFiles(acc, "C:\\i386");
+        }
+        [WebMethod]
+        public List<ItemStatus> testgetAvailableStatuses()
+        {
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            ACCOUNT acc = new ACCOUNT();
+            acc.sz_password = "ums123";
+            acc.sz_compid = "UMS";
+            //acc.sz_userid = "MH";
+            acc.sz_deptid = "TEST";
+            return voice.getAvailableStatuses(acc);
+        }
+        [WebMethod]
+        public List<STATUS> testGetStatus(int l_refno)
+        {
+            List<STATUS> statusList;
+
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            libums2_csharp.ACCOUNT acc = new libums2_csharp.ACCOUNT();
+            acc.sz_password = "ums123";
+            acc.sz_compid = "UMS";
+            //acc.sz_userid = "MH";
+            acc.sz_deptid = "TEST";
+
+            statusList = voice.getStatus(acc, l_refno);
+            return statusList;
+        }
+        
+        
+        [WebMethod]
+        public PARAMETERS getDefaultParameters()
+        {
+            return new PARAMETERS();
+        }*/
+        /*
+        public struct Account
+        {
+            public string Company;
+            public string Department;
+            public string Password;
+        }
+        public struct Recipient
+        {
+            public string PhoneNumber;
+            public string PinCode;
+        }
+        public struct SoundClip {
+            public Speech Speech;
+            public string Filename;
+            public SoundGeneration Template;
+            public object NextGroup;
+            public FileAttachment FileAttatchment;
+        }
+        public struct SoundGeneration {
+        }
+        public struct FileAttachment {
+            public string mimeType;
+            public byte[] base64Binary;
+        }
+        public enum TextToSpeechEngine {
+            DEFAULT,
+            INFOVOX,
+            NST,
+        }
+        public enum Language
+        {
+            NORWEGIAN,
+            ENGLISH,
+            GERMAN,
+            SWEDISH,
+            DANISH,
+            DUTCH,
+            BRITISH,
+            SPANISH,
+        }
+        public struct Speech {
+            public string Text;
+            public Language Language;
+            public TextToSpeechEngine Engine;
+        }
+        public struct VoiceSending {
+            public SendingSettings Settings;
+            public SoundClip[] SoundClips;
+            public Recipient[] Recipients;
+        }
+        public struct SendingSettings {
+            public string Caching; // Må endres
+            public SendingProfile Profile;
+            public SendingProfile ConfigProfile;
+            public DateTime Schedule;
+            public int IntroClip;
+            public bool HiddenNumber;
+        }
+        public struct SendingProfile {
+            public string Name;
+            public Int32 Number;
+        }*/
+        /*[WebMethod]
+        public int doSendVoice(Account Account, VoiceSending VoiceSending)
+        {
+            libums2_csharp.ACCOUNT acc2 = new libums2_csharp.ACCOUNT();
+            acc2.sz_compid = Account.Company;
+            acc2.sz_deptid = Account.Department;
+            acc2.sz_password = Account.Password;
+
+            //rec.Length
+            RECIPIENT[] recipients = new RECIPIENT[VoiceSending.Recipients.Length];
+
+            for(int i=0;i<VoiceSending.Recipients.Length;++i)
+                recipients[i] = new RECIPIENT(VoiceSending.Recipients[i].PhoneNumber, VoiceSending.Recipients[i].PinCode);
+            
+            PARAMETERS param = new PARAMETERS();
+            VOCFILE[] vocfiles = new VOCFILE[VoiceSending.SoundClips.Length]; // Have to check VoiceSending
+            VOCFILE voc;
+            for(int i=0;i<VoiceSending.SoundClips.Length;++i) {
+                voc = new VOCFILE();
+                if(!VoiceSending.SoundClips[i].Speech.Text.Equals("")) {
+                    voc.type = VOCTYPE.TTS;
+                    voc.sz_tts_string = VoiceSending.SoundClips[i].Speech.Text;
+                    switch(VoiceSending.SoundClips[i].Speech.Language) {
+                        case Language.NORWEGIAN:
+                            voc.l_langpk = LANGUAGE.NORWEGIAN;
+                            break;
+                        case Language.ENGLISH:
+                            voc.l_langpk = LANGUAGE.USENGLISH;
+                            break;
+                        case Language.GERMAN:
+                            voc.l_langpk = LANGUAGE.GERMAN;
+                            break;
+                        case Language.SWEDISH:
+                            voc.l_langpk = LANGUAGE.SWEDISH;
+                            break;
+                        case Language.DANISH:
+                            voc.l_langpk = LANGUAGE.DANISH_METTE;
+                            break;
+                        case Language.DUTCH:
+                            voc.l_langpk = LANGUAGE.DUTCH;
+                            break;
+                        case Language.BRITISH:
+                            voc.l_langpk = LANGUAGE.BRITISH;
+                            break;
+                        case Language.SPANISH:
+                            voc.l_langpk = LANGUAGE.SPANISH;
+                            break;
+                    }
+                }
+                else if(!VoiceSending.SoundClips[i].FileAttatchment.mimeType.Equals("")) {
+                    string mime = VoiceSending.SoundClips[i].FileAttatchment.mimeType;
+                    string mimeext = mime.Substring(mime.IndexOf("/")).ToLower();
+                    if(mimeext.Equals("wav"))
+                        voc.type = VOCTYPE.WAV;
+                    else if(mimeext.Equals("raw"))
+                        voc.type = VOCTYPE.RAW;
+                    BinaryWriter bw = new BinaryWriter(new MemoryStream());
+                    // Må lage data array buffer osv
+                    bw.Write(VoiceSending.SoundClips[i].FileAttatchment.base64Binary);
+                    BinaryReader br = new BinaryReader(bw.BaseStream);
+                    br.BaseStream.Position = 0;
+                    int initialLenght = 32768;
+                    byte[] buffer = new byte[initialLenght];
+                    int read = 0;
+                    byte[] data;
+
+                    int chunk;
+                    bool done = false;
+                    while ((chunk = br.BaseStream.Read(buffer, read, buffer.Length - read)) > 0 || done)
+                    {
+                        read += chunk;
+
+                        if (read == buffer.Length)
+                        {
+                            int nextByte = br.ReadByte();
+                            if (nextByte == - 1)
+                                done = true;
+                            byte[] newBuffer = new byte[buffer.Length * 2];
+                            Array.Copy(buffer, newBuffer, buffer.Length);
+                            newBuffer[read] = (byte)nextByte;
+                            buffer = newBuffer;
+                            read++;
+                        }
+                    }
+                    data = new byte[read];
+                    Array.Copy(buffer, data, read);
+                    voc.audiodata = data;
+                    br.Close();
+                    bw.Close();
+                }
+                vocfiles[i] = voc;
+            }
+            // If the vs.Settings.Profile.Number is nothing then I have to check the database and find the profile pk belonging to Name
+            // The old ws does not have sender number "23000000"
+            return (int)sendMultipleVoice(acc2, param, recipients, "23000000", vocfiles, VoiceSending.Settings.Profile.Number);
+        }*/
         /*
         public long simpleVoice(string recipient, string pin)
         {   //Array med lydfiler
@@ -125,7 +429,7 @@ namespace com.ums.ws.voice
                 logon.l_userpk = 2;
                 logon.sz_userid = "MH";
                 logon.sz_compid = "UMS";
-                logon.sz_password = "mh123,1";
+                logon.sz_password = "ums123,1";
 
                 PASUmsDb umsdb = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
 

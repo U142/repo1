@@ -1,0 +1,19 @@
+CREATE PROCEDURE sp_voice_getstatus(@l_refno numeric)
+AS
+SELECT l_status, l_item, "sz_status" =
+  CASE 
+    WHEN l_status = 1 then "Reading queue (voicebroadcast)"
+    WHEN l_status = 2 then "Reading (voicebroadcast)"
+    WHEN l_status = 3 then "Writing (voicebroadcast)"
+    WHEN l_status = 4 then "Reading queue (backbone)"
+    WHEN l_status = 5 then "Reading (backbone)"
+    WHEN l_status = 6 then "Sending queue (backbone)"
+    WHEN l_status = 7 then "Finished"
+  END
+FROM BBQREF
+WHERE l_refno = @l_refno
+
+SELECT h.l_refno, h.l_item, s.sz_status, h.l_status, h.l_seconds, h.l_date, h.l_time, h.l_tries, h.sz_number, h.sz_ccode
+  FROM BBHIST h, BBSTATUSCODES s
+ WHERE l_refno = 22555640
+   AND h.l_status = s.l_status

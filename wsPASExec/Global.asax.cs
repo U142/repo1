@@ -29,6 +29,7 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_audiofiles = ConfigurationSettings.AppSettings["sz_path_audiofiles"];
             UCommon.UPATHS.sz_path_voice = ConfigurationSettings.AppSettings["sz_path_voice"];
             UCommon.UPATHS.sz_path_bbmessages = ConfigurationSettings.AppSettings["sz_path_bbmessages"];
+            UCommon.UPATHS.sz_path_global_wav_dir = ConfigurationSettings.AppSettings["sz_path_global_wav_dir"];
 
             UCommon.UBBDATABASE.sz_dsn = ConfigurationSettings.AppSettings["sz_db_dsn"]; //"backbone_ibuki";
             UCommon.UBBDATABASE.sz_dsn_aoba = ConfigurationSettings.AppSettings["sz_db_dsn_aoba"]; //"aoba";
@@ -39,6 +40,9 @@ namespace com.ums.wsPASExec
             UCommon.UBBDATABASE.sz_adrdb_pwd = ConfigurationSettings.AppSettings["sz_adrdb_pwd"];
 
             UCommon.UVOICE.sz_send_number = ConfigurationSettings.AppSettings["sz_send_number"];
+            UCommon.UVOICE.l_tts_timeout = int.Parse(ConfigurationSettings.AppSettings["l_tts_timeout_secs"]);
+            UCommon.UVOICE.f_rms = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
+
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
             int syslogport = int.Parse(port);

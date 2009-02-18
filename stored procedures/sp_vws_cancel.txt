@@ -1,0 +1,17 @@
+CREATE PROCEDURE sp_vws_cancel
+@l_refno int
+AS
+DECLARE @count int,
+        @ret_msg nvarchar(35)
+SELECT @ret_msg = 'Finished or already cancelled'
+SELECT @count = count(*) FROM BBCANCEL WHERE l_refno=@l_refno
+if(@count = 0)
+BEGIN
+  SELECT @count = count(*) FROM BBQREF WHERE l_refno=@l_refno AND l_status = 7
+  IF(@count = 0)
+  BEGIN    
+    INSERT INTO BBCANCEL VALUES(@l_refno, -1)
+    SELECT @ret_msg = 'Cancelled OK'
+  END
+END
+SELECT @ret_msg
