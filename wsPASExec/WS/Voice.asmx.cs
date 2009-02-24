@@ -22,9 +22,9 @@ using libums2_csharp;
 
 namespace com.ums.ws.voice
 {
-    /// <summary>
-    /// Summary description for Voice
-    /// </summary>
+    ///<summary>
+    /// This is a service for sending voice messages on the telephone network. A message is built using either text-to-speech or a collection of soundclips. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no
+    ///</summary>
     [WebService(Namespace = "http://ums.no/ws/vb/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [ToolboxItem(false)]
@@ -32,11 +32,6 @@ namespace com.ums.ws.voice
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
     {
-        [WebMethod]
-        public void ting(ACCOUNT acc, SendinProfileChoice choice)
-        {
-
-        }
         [WebMethod]
         public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT to, string from, VOCFILE[] message)
         {
@@ -127,9 +122,9 @@ namespace com.ums.ws.voice
             voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             libums2_csharp.ACCOUNT acc = new libums2_csharp.ACCOUNT();
-            acc.sz_password = "ums123";
-            acc.sz_compid = "UMS";
-            acc.sz_deptid = "TEST";
+            acc.Password = "ums123";
+            acc.Company = "UMS";
+            acc.Department = "TEST";
             return voice.cancelVoice(acc, referenceNumber);
         }
         [WebMethod]
@@ -153,8 +148,8 @@ namespace com.ums.ws.voice
                 settings.RescheduleProfile = new SendingProfile();
                 settings.RescheduleProfile.Number = -1;
                 settings.RescheduleProfile.Name = "1 forsøk";
-                settings.Schedule = DateTime.Now.AddDays(1);
-                settings.MessageCaching = DateTime.Now.AddDays(1);
+                settings.Schedule = Convert.ToInt64(DateTime.Now.ToString("yyyyMMddHHmm"));
+                settings.MessageCaching = 0;//Convert.ToInt64(DateTime.Now.AddDays(1).ToString("yyyyMMddHHmm"));
                 settings.IntroClip = 0;
                 settings.HiddenNumber = false;
 
@@ -170,16 +165,16 @@ namespace com.ums.ws.voice
                 vocfile.l_langpk = LANGUAGE.NORWEGIAN;
                 files[0] = vocfile;
                 libums2_csharp.ACCOUNT acc = new libums2_csharp.ACCOUNT();
-                acc.sz_password = "ums123";
-                acc.sz_compid = "UMS";
+                acc.Password = "ums123";
+                acc.Company = "UMS";
                 //acc.sz_userid = "MH";
-                acc.sz_deptid = "TEST";
+                acc.Department = "TEST";
 
                 return voice.send(acc, settings, new RECIPIENT[] { new RECIPIENT("004792293390") }, "23000000", files);
             }
             catch (Exception e)
             {
-                ULog.error(-1, "wsPASExec.Voice.asmx", e.Message + " _ " + e.StackTrace);
+                //ULog.error(-1, "wsPASExec.Voice.asmx", e.Message + " _ " + e.StackTrace);
                 return -1;
             }
 
