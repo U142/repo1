@@ -120,7 +120,9 @@ namespace com.ums.UmsCommon
             public static String sz_path_audiofiles;
             public static String sz_path_voice;
             public static String sz_path_bbmessages;
+            public static String sz_path_predefined_messages;
             public static String sz_path_global_wav_dir;
+            public static String sz_path_infosent;
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {

@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="WS\ExternalExec.asmx" />
     <Content Include="Global.asax" />
+    <Content Include="WS\Infosentral.asmx" />
     <Content Include="WS\ParmAdmin.asmx" />
     <Content Include="WS\PAS.asmx" />
     <Content Include="Web.config" />
@@ -95,6 +96,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="VB\Infosentral.cs" />
     <Compile Include="VB\Pincode.cs" />
     <Compile Include="WS\ExternalExec.asmx.cs">
       <DependentUpon>ExternalExec.asmx</DependentUpon>
@@ -106,6 +108,10 @@
     <Compile Include="PAS\Address\UAddressList.cs" />
     <Compile Include="PAS\Address\UMapAddressSearch.cs" />
     <Compile Include="PAS\Maps\UMaps.cs" />
+    <Compile Include="WS\Infosentral.asmx.cs">
+      <DependentUpon>Infosentral.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WS\ParmAdmin.asmx.cs">
       <DependentUpon>ParmAdmin.asmx</DependentUpon>
       <SubType>Component</SubType>

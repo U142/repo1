@@ -25,14 +25,14 @@ namespace com.ums.ws.voice
     ///<summary>
     /// This is a service for sending voice messages on the telephone network. A message is built using either text-to-speech or a collection of soundclips. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no
     ///</summary>
-    [WebService(Namespace = "http://ums.no/ws/vb/")]
+    [WebService(Namespace = "http://ums.no/ws/vb/", Description = "This is a service for sending voice messages on the telephone network. A message is built using either text-to-speech or a collection of soundclips. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
     {
-        [WebMethod]
+        [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
         public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
@@ -52,7 +52,7 @@ namespace com.ums.ws.voice
             return ret;
         }
 
-        [WebMethod]
+        [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
         public Int64 sendMultipleVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
@@ -81,7 +81,7 @@ namespace com.ums.ws.voice
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             return voice.getStatus(acc, referenceNumber);
         }
-        [WebMethod]
+        [WebMethod(Description = "Returns all available statuses which includes status code, short text and text")]
         public List<ItemStatus> getAvailableStatuses(ACCOUNT acc)
         {
             libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
@@ -102,7 +102,7 @@ namespace com.ums.ws.voice
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             return voice.getAvailableSoundLibraryFiles(acc,UCommon.UPATHS.sz_path_global_wav_dir);
         }
-        [WebMethod]
+        [WebMethod(Description = "This method cancels all messages on a reference number. ItemNumber is for future use, just add -1 for now")]
         public string cancelVoice(ACCOUNT acc, Int64 referenceNumber, int itemNumber)
         {
             libums2_csharp.SendVoice voice = new SendVoice();
@@ -111,6 +111,16 @@ namespace com.ums.ws.voice
             voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             return voice.cancelVoice(acc, referenceNumber);
+        }
+        [WebMethod(Description = "This method returns an array of VOCFILEs containing a WAV file. This VOCFILE object should be used as input when sending a Voice message")]
+        public List<VOCFILE> previewTTS(ACCOUNT acc, VOCFILE[] message)
+        {
+            libums2_csharp.SendVoice voice = new SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            return voice.previewTTS(acc, message);
         }
         /*
         [WebMethod]
