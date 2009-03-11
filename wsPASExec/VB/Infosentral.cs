@@ -232,7 +232,7 @@ namespace com.ums.VB
                 dr.Close();
 
                 // Is it a redirect number?
-
+                /*
                 cmd.Parameters.Clear();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "sp_infos_isredirectnum ?";
@@ -241,6 +241,7 @@ namespace com.ums.VB
                 if(!dr.Read())
                     throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs setRedirectNumber(): The redirect number is not valid", "setRedirectNumber", FaultCode.Client);
                 dr.Close();
+                */
 
                 cmd.Parameters.Clear();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -250,7 +251,7 @@ namespace com.ums.VB
                 cmd.Parameters.Add("@sz_redir", OdbcType.VarChar, 20).Value = sz_redirectnumber;
                 int ra = cmd.ExecuteNonQuery();
                 if (ra < 1)
-                    throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs setRedirectNumber(): There was a problem with the DTMF", "setRedirectNumber", FaultCode.Client);
+                    throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs setRedirectNumber(): There was a problem setting redirect number, the input was(" + sz_backbonenumber + ", " + sz_dtmf + ", " + sz_redirectnumber + ") rows affected: " + ra, "setRedirectNumber", FaultCode.Client);
             }
             catch (Exception e)
             {

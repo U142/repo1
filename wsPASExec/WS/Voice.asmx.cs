@@ -12,6 +12,7 @@ using System.Text;
 
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Xml;
 
 using com.ums.UmsParm;
 using com.ums.UmsCommon;
@@ -36,19 +37,13 @@ namespace com.ums.ws.voice
         public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
-            try
-            {
-                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-                ret = voice.send(acc, settings, new RECIPIENT[] { to }, from, message);
-            }
-            catch (Exception e)
-            {
-                ULog.error("Error in voice sendVoice: " + e.Message + " _ " +e.StackTrace);
-            }
+        
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            ret = voice.send(acc, settings, new RECIPIENT[] { to }, from, message);
             return ret;
         }
 
@@ -56,19 +51,14 @@ namespace com.ums.ws.voice
         public Int64 sendMultipleVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
-            try
-            {
-                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-                ret = voice.send(acc, settings, to, from, message);
-            }
-            catch (Exception e)
-            {
-                ULog.error("Error in voice sendVoice: " + e.Message);
-            }
+           
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            ret = voice.send(acc, settings, to, from, message);
+
             return ret;
         }
         [WebMethod]
