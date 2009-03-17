@@ -9,8 +9,10 @@ using System.Web.Services.Protocols;
 using System.Xml.Linq;
 
 using System.Xml;
+using System.Collections.Generic;
 
 using libums2_csharp;
+using com.ums.VB;
 
 namespace com.ums.ws.infosentral
 {
@@ -25,6 +27,12 @@ namespace com.ums.ws.infosentral
     public class Infosentral : System.Web.Services.WebService
     {
 
+        [WebMethod(Description = "Returns information about stored messages")]
+        public List<MessageInfo> getStoredMessageInfo(ACCOUNT account)
+        {
+            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
+            return inf.getStoredMessageInfo(account);
+        }
         [WebMethod(Description="Stores a message and returns the messagepk")]
         public long storeMessage(ACCOUNT account, string messageName, VOCFILE message)
         {
@@ -45,6 +53,18 @@ namespace com.ums.ws.infosentral
             inf.setRedirectNumber(account, inboundnumber, dtmf, redirectnumber);
             return "OK";
         }
+        /*
+        [WebMethod(Description = "Returns all available Messages")]
+        public List<MessageInfo> TESTgetStoredMessageInfo()
+        {
+            ACCOUNT account = new ACCOUNT();
+            account.Company = "UMS";
+            account.Department = "TEST";
+            account.Password = "ums123";
+            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
+            return inf.getStoredMessageInfo(account);
+        }*/
+
         /*
         [WebMethod]
         public long test()

@@ -15,11 +15,23 @@ using System.IO;
 using System.Web.Services.Protocols;
 using System.Xml;
 
+using System.Collections.Generic;
+
 using libums2_csharp;
 using com.ums.UmsCommon;
 
 namespace com.ums.VB
 {
+    public struct MessageInfo
+    {
+        public long MessagePK;
+        public String Type;
+        public String Description;
+        public String InboundNumber;
+        public String DTMF;
+        public String RedirectNumber;
+    }
+
     public class Infosentral
     {
         
@@ -29,6 +41,7 @@ namespace com.ums.VB
         private long l_messagepk;
         private long l_refno;
         private string sz_path_sound;
+        private OdbcTransaction tran;
 
         private void openConnection()
         {
@@ -36,6 +49,65 @@ namespace com.ums.VB
             conn.Open();
             cmd = new OdbcCommand();
             cmd.Connection = conn;
+        }
+
+        public List<MessageInfo> getStoredMessageInfo(ACCOUNT acc)
+        {
+            List<MessageInfo> milist = new List<MessageInfo>();
+            try
+            {
+                openConnection();
+                if (!checkLogon(acc, ref l_deptpk))
+                    throw raiseException("uri", "http://ums.no/ws/vb/", String.Format("Infosentral.cs getStoredMessageInfo(): Error in logon credentials for userpk/comppk {0}/{1}", acc.Company, acc.Department), "getStoredMessageInfo:checkLogon", FaultCode.Client);
+
+                cmd.Parameters.Clear();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT l_messagepk, l_type, ISNULL(sz_name,''), ISNULL(sz_number,'') FROM BBMESSAGES WHERE (l_type=3 or l_type=4) and l_deptpk=?";
+                cmd.Parameters.Add("@l_deptpk", OdbcType.Int).Value = l_deptpk;
+                OdbcDataReader dr = cmd.ExecuteReader();
+                MessageInfo mi;
+                
+                while (dr.Read())
+                {
+                    mi = new MessageInfo();
+                    mi.MessagePK = long.Parse(dr.GetValue(0).ToString());
+                    if (dr.GetInt32(1) == 3)
+                        mi.Type = "tts-wav";
+                    else
+                        mi.Type = "wav";
+                    mi.Description = dr.GetString(2);
+                    mi.InboundNumber = dr.GetString(3).Replace(" ","");
+                    if (mi.InboundNumber.Length > 0)
+                    {
+                        OdbcCommand tmpcmd = new OdbcCommand();
+                        tmpcmd.Connection = conn;
+                        tmpcmd.CommandType = CommandType.StoredProcedure;
+                        tmpcmd.CommandText = "sp_get_redirparams ?";
+                        tmpcmd.Parameters.Add("@sz_number", OdbcType.VarChar, 20).Value = mi.InboundNumber;
+                        OdbcDataReader tmpdr = tmpcmd.ExecuteReader();
+                        if (tmpdr.Read())
+                        {
+                            mi.DTMF = tmpdr.GetString(0);
+                            mi.RedirectNumber = tmpdr.GetString(1);
+                        }
+                        tmpdr.Close();
+                        tmpcmd.Dispose();
+                    }
+                    milist.Add(mi);
+                }
+                dr.Close();
+                cmd.Dispose();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.EventLog.WriteEntry("Infosentral.cs", "Error getting stored message info: " + e.Message + " _ " + e.StackTrace, System.Diagnostics.EventLogEntryType.Error);
+                throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs getStoredMessageInfo(): " + e.Message, "getStoredMessageInfo", FaultCode.Server);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return milist;
         }
 
         public long storeMessage(ACCOUNT acc, string sz_name, VOCFILE message)
@@ -50,7 +122,6 @@ namespace com.ums.VB
                     throw raiseException("uri", "http://ums.no/ws/vb/", String.Format("Infosentral.cs storeMessage(): Error in logon credentials for userpk/comppk {0}/{1}", acc.Company, acc.Department), "storeMessage:checkLogon", FaultCode.Client);
 
                 cmd.Parameters.Clear();
-
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "sp_get_bbmessagepk";
                 OdbcDataReader dr = cmd.ExecuteReader();
@@ -58,6 +129,18 @@ namespace com.ums.VB
                     l_messagepk = long.Parse(dr[0].ToString());
 
                 dr.Close();
+
+                // This is used to get a unique file name
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "sp_refno_out";
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
+                    l_refno = Int64.Parse(dr[0].ToString());
+
+                dr.Close();
+
+                tran = conn.BeginTransaction();
+                cmd.Transaction = tran;
 
                 if (message.type == VOCTYPE.TTS)
                 {
@@ -69,7 +152,20 @@ namespace com.ums.VB
 
     			cmd.CommandText = "INSERT INTO BBMESSAGES(l_deptpk, l_type, sz_name, sz_description, l_messagepk, l_langpk, sz_filename) VALUES(?,?,?,?,?,?,?)";
                 cmd.Parameters.Add("@l_deptpk", OdbcType.Int).Value = l_deptpk;
-                cmd.Parameters.Add("@l_type", OdbcType.SmallInt).Value = 3;
+                switch (message.type) {
+                    case VOCTYPE.TTS:
+                        cmd.Parameters.Add("@l_type", OdbcType.SmallInt).Value = 3;
+                        break;
+                    case VOCTYPE.WAV:
+                        cmd.Parameters.Add("@l_type", OdbcType.SmallInt).Value = 4;
+                        break;
+                    case VOCTYPE.RAW:
+                        raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): Rawfiles are not supported as input", "storeMessage", FaultCode.Client);
+                        break;
+                    default:
+                        raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): Invalid VOCTYPE", "storeMessage", FaultCode.Client);
+                        break;
+                }
                 cmd.Parameters.Add("@sz_name", OdbcType.VarChar, 50).Value = sz_name;
                 cmd.Parameters.Add("@sz_description", OdbcType.VarChar, 255).Value = "";
                 cmd.Parameters.Add("@l_messagepk", OdbcType.Decimal).Value = l_messagepk;
@@ -77,15 +173,6 @@ namespace com.ums.VB
                 cmd.Parameters.Add("@sz_filename", OdbcType.VarChar, 255).Value = "";
                 if(cmd.ExecuteNonQuery()<1)
                     throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): Error inserting into BBMESSAGES", "storeMessage", FaultCode.Client);
-                    
-                // This is used to get a unique file name
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_refno_out";
-                dr = cmd.ExecuteReader();
-                while(dr.Read())
-                    l_refno = Int64.Parse(dr[0].ToString());
-
-                dr.Close();
                 
                 SendVoice voice = new SendVoice();
                 
@@ -105,13 +192,28 @@ namespace com.ums.VB
                 }
                 if (!rawexists)
                     raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): Rawfile was not created", "storeMessage", FaultCode.Server);
-                
-                File.Move(UCommon.UPATHS.sz_path_ttsserver + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
-                File.Move(UCommon.UPATHS.sz_path_voice + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
 
+                switch (message.type)
+                {
+                    case VOCTYPE.TTS:
+                        File.Move(UCommon.UPATHS.sz_path_ttsserver + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
+                        File.Move(UCommon.UPATHS.sz_path_voice + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
+                        break;
+                    case VOCTYPE.WAV:
+                        string sz_audiofiles_path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+                        sz_audiofiles_path = sz_audiofiles_path.Replace("file:\\", "");
+                        DirectoryInfo di = Directory.GetParent(sz_audiofiles_path);
+                        di = di.Parent;
+                        sz_audiofiles_path = di.FullName + "\\audiofiles\\";
+                        File.Move(sz_audiofiles_path + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
+                        File.Move(sz_audiofiles_path + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
+                        break;
+                }
+                tran.Commit();
             }
             catch (Exception e)
             {
+                tran.Rollback();
                 System.Diagnostics.EventLog.WriteEntry("Infosentral.cs", "Error storing new message: " + e.Message + " _ " + e.StackTrace, System.Diagnostics.EventLogEntryType.Error);
                 throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): " + e.Message, "storeMessage", FaultCode.Server);
             }
@@ -250,8 +352,8 @@ namespace com.ums.VB
                 cmd.Parameters.Add("@c_dtmf", OdbcType.Char, 1).Value = sz_dtmf;
                 cmd.Parameters.Add("@sz_redir", OdbcType.VarChar, 20).Value = sz_redirectnumber;
                 int ra = cmd.ExecuteNonQuery();
-                if (ra < 1)
-                    throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs setRedirectNumber(): There was a problem setting redirect number, the input was(" + sz_backbonenumber + ", " + sz_dtmf + ", " + sz_redirectnumber + ") rows affected: " + ra, "setRedirectNumber", FaultCode.Client);
+                //if (ra < 1)
+                //    throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs setRedirectNumber(): There was a problem setting redirect number, the input was(" + sz_backbonenumber + ", " + sz_dtmf + ", " + sz_redirectnumber + ") rows affected: " + ra, "setRedirectNumber", FaultCode.Client);
             }
             catch (Exception e)
             {
