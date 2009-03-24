@@ -125,7 +125,7 @@ namespace com.ums.VB
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "sp_get_bbmessagepk";
                 OdbcDataReader dr = cmd.ExecuteReader();
-                while(dr.Read())
+                while (dr.Read())
                     l_messagepk = long.Parse(dr[0].ToString());
 
                 dr.Close();
@@ -144,15 +144,19 @@ namespace com.ums.VB
 
                 if (message.type == VOCTYPE.TTS)
                 {
+                    if (!Directory.Exists(sz_path_sound + l_deptpk + "\\"))
+                        Directory.CreateDirectory(sz_path_sound + l_deptpk + "\\");
+
                     string sz_filename = sz_path_sound + l_deptpk + "\\" + l_messagepk + ".txt";
                     StreamWriter sw = File.CreateText(sz_filename);
                     sw.Write(message.sz_tts_string);
                     sw.Close();
                 }
 
-    			cmd.CommandText = "INSERT INTO BBMESSAGES(l_deptpk, l_type, sz_name, sz_description, l_messagepk, l_langpk, sz_filename) VALUES(?,?,?,?,?,?,?)";
+                cmd.CommandText = "INSERT INTO BBMESSAGES(l_deptpk, l_type, sz_name, sz_description, l_messagepk, l_langpk, sz_filename) VALUES(?,?,?,?,?,?,?)";
                 cmd.Parameters.Add("@l_deptpk", OdbcType.Int).Value = l_deptpk;
-                switch (message.type) {
+                switch (message.type)
+                {
                     case VOCTYPE.TTS:
                         cmd.Parameters.Add("@l_type", OdbcType.SmallInt).Value = 3;
                         break;
@@ -171,18 +175,18 @@ namespace com.ums.VB
                 cmd.Parameters.Add("@l_messagepk", OdbcType.Decimal).Value = l_messagepk;
                 cmd.Parameters.Add("@l_langpk", OdbcType.Decimal).Value = message.l_langpk;
                 cmd.Parameters.Add("@sz_filename", OdbcType.VarChar, 255).Value = "";
-                if(cmd.ExecuteNonQuery()<1)
+                if (cmd.ExecuteNonQuery() < 1)
                     throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): Error inserting into BBMESSAGES", "storeMessage", FaultCode.Client);
-                
+
                 SendVoice voice = new SendVoice();
-                
+
                 voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
                 voice.EatPath = UCommon.UPATHS.sz_path_voice;
                 voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
                 voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-                
+
                 string[] tmpfilename = voice.generateVoice(new VOCFILE[] { message }, l_refno);
-                
+
                 bool rawexists = false;
                 DateTime future = DateTime.Now.AddSeconds(60);
                 while (!rawexists || (future < DateTime.Now && !rawexists))
@@ -211,9 +215,14 @@ namespace com.ums.VB
                 }
                 tran.Commit();
             }
+            catch (SoapException se)
+            {
+                throw se;
+            }
             catch (Exception e)
             {
-                tran.Rollback();
+                if (tran != null)
+                    tran.Rollback();
                 System.Diagnostics.EventLog.WriteEntry("Infosentral.cs", "Error storing new message: " + e.Message + " _ " + e.StackTrace, System.Diagnostics.EventLogEntryType.Error);
                 throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs storeMessage(): " + e.Message, "storeMessage", FaultCode.Server);
             }
@@ -284,7 +293,7 @@ namespace com.ums.VB
                 cmd.CommandText = "UPDATE BBMESSAGES SET sz_number=NULL WHERE sz_number=? AND l_deptpk=?";
                 cmd.Parameters.Add("@sz_number", OdbcType.VarChar, 20).Value = sz_number;
                 cmd.Parameters.Add("@l_deptpk", OdbcType.Int).Value = l_deptpk;
-                if(cmd.ExecuteNonQuery()<1)
+                if(cmd.ExecuteNonQuery()<0)
                     throw raiseException("uri", "http://ums.no/ws/vb/", "Infosentral.cs attatchMessage(): Error updating BBMESSAGES remove previous attachment", "attachMessage", FaultCode.Client);
 
                 //if 1 = yey
@@ -378,7 +387,8 @@ namespace com.ums.VB
                                    "WHERE BC.l_comppk=BD.l_comppk " +
                                      "AND BC.sz_compid=? " +
                                      "AND BD.sz_deptid=? " +
-                                     "AND BD.sz_password=?";
+                                     "AND BD.sz_password=? " +
+                                     "AND BD.f_infosent=1";
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.Add("@sz_compid", OdbcType.VarChar, 30).Value = acc.Company.ToUpper();
@@ -456,9 +466,7 @@ namespace com.ums.VB
             //Append the Detail node to the root node
             rootNode.AppendChild(errorNode);
             //Construct the exception
-            SoapException soapEx = new SoapException(errorMessage,
-                                                     faultCodeLocation, uri,
-                                                     rootNode);
+            SoapException soapEx = new SoapException(errorMessage, faultCodeLocation);
             //Raise the exception  back to the caller
             return soapEx;
         }

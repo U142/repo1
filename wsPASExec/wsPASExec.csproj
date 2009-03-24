@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="WS\Conference.asmx" />
     <Content Include="WS\ExternalExec.asmx" />
     <Content Include="Global.asax" />
     <Content Include="WS\Infosentral.asmx" />
@@ -96,8 +97,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="VB\Conference.cs" />
     <Compile Include="VB\Infosentral.cs" />
     <Compile Include="VB\Pincode.cs" />
+    <Compile Include="WS\Conference.asmx.cs">
+      <DependentUpon>Conference.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WS\ExternalExec.asmx.cs">
       <DependentUpon>ExternalExec.asmx</DependentUpon>
       <SubType>Component</SubType>

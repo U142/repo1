@@ -40,10 +40,10 @@ namespace com.ums.ws.infosentral
             return inf.storeMessage(account, messageName, message);
         }
         [WebMethod(Description = "Attaches a message to a number")]
-        public string attachMessage(ACCOUNT account, string number, long messagepk)
+        public string attachMessage(ACCOUNT account, string inboundnumber, long messagepk)
         {
             com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            inf.attatchMessage(account, number, messagepk);
+            inf.attatchMessage(account, inboundnumber, messagepk);
             return "OK";
         }
         [WebMethod(Description = "Sets redirect number for an inbound number")]
