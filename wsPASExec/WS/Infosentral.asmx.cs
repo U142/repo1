@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 using System.Xml;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 using libums2_csharp;
 using com.ums.VB;
@@ -26,7 +27,6 @@ namespace com.ums.ws.infosentral
     // [System.Web.Script.Services.ScriptService]
     public class Infosentral : System.Web.Services.WebService
     {
-
         [WebMethod(Description = "Returns information about stored messages")]
         public List<MessageInfo> getStoredMessageInfo(ACCOUNT account)
         {
