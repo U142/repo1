@@ -9,18 +9,53 @@ using System.Collections;
 
 namespace com.ums.UmsCommon
 {
+    public class UMapBounds
+    {
+        public float l_bo = 10.3f;
+        public float r_bo = 11.5f;
+        public float u_bo = 59.9f;
+        public float b_bo = 58.9f;
+    }
+
+    public class UMapPoint
+    {
+        public float lon;
+        public float lat;
+    }
+    public class UEllipseDef
+    {
+        public UMapPoint center;
+        public UMapPoint radius;
+    }
+    public class UGisRecord
+    {
+        public long id; //kon_dmid from adr-db
+    }
+
     public enum ADRTYPES
     {
-        NOPHONE_PRIVATE = 1,
-        NOPHONE_COMPANY = 2,
-        FIXED_PRIVATE = 4,
-        FIXED_COMPANY = 8,
-        MOBILE_PRIVATE = 16,
-        MOBILE_COMPANY = 32,
-        MOVED_PRIVATE = 64,
-        MOVED_COMPANY = 128,
-        LBA_TEXT = 256,
-        LBA_VOICE = 512,
+        NOPHONE_PRIVATE             = 1 << 0,
+        NOPHONE_COMPANY             = 1 << 1,
+        FIXED_PRIVATE               = 1 << 2,
+        FIXED_COMPANY               = 1 << 3,
+        MOBILE_PRIVATE              = 1 << 4,
+        MOBILE_COMPANY              = 1 << 5,
+        MOVED_PRIVATE               = 1 << 6,
+        MOVED_COMPANY               = 1 << 7,
+        LBA_TEXT                    = 1 << 8,
+        LBA_VOICE                   = 1 << 9,
+        SMS_PRIVATE                 = 1 << 10,
+        SMS_COMPANY                 = 1 << 11,
+        SMS_PRIVATE_ALT_FIXED       = 1 << 12,
+        SMS_COMPANY_ALT_FIXED       = 1 << 13,
+        FIXED_PRIVATE_ALT_SMS       = 1 << 14,
+        FIXED_COMPANY_ALT_SMS       = 1 << 15,
+        MOBILE_PRIVATE_AND_FIXED    = 1 << 16,
+        MOBILE_COMPANY_AND_FIXED    = 1 << 17,
+        FIXED_PRIVATE_AND_MOBILE    = 1 << 18,
+        FIXED_COMPANY_AND_MOBILE    = 1 << 19,
+        ONLY_HEAD_OF_HOUSEHOLD      = 1 << 30,
+
     }
     public class ARGB
     {
@@ -458,6 +493,64 @@ namespace com.ums.UmsCommon
         public String sz_speaker;
         public String sz_modename;
         public String sz_manufacturer;
+    }
+
+    public class UMAPSENDING
+    {
+        public String sz_sendingname;
+        public long n_profilepk;
+        public long n_scheddate;
+        public long n_schedtime;
+        public BBSENDNUM oadc;
+        public int n_validity;
+        public long n_reschedpk;
+        public int n_sendingtype;
+        public long n_projectpk;
+        public long n_refno;
+        public int n_dynvoc;
+        public int n_retries;
+        public int n_interval;
+        public int n_canceltime;
+        public int n_canceldate;
+        public int n_pausetime;
+        public int n_pauseinterval;
+        public long n_addresstypes;
+        public ULOGONINFO logoninfo;
+        public UMapBounds mapbounds;
+        public String sz_function;
+        public String sz_lba_oadc;
+        public bool b_resend;
+        public int n_maxchannels;
+        protected int n_group;
+        protected int n_function;
+        public int getGroup()
+        {
+            return n_group;
+        }
+        public int getFunction()
+        {
+            return n_function;
+        }
+        public void setGroup(int n)
+        {
+            n_group = n;
+        }
+        public void setFunction(int n)
+        {
+            n_function = n;
+        }
+    }
+    public class UPOLYGONSENDING : UMAPSENDING
+    {
+        public UMapPoint[] polygonpoints;
+    }
+    public class UELLIPSESENDING : UMAPSENDING
+    {
+        public UEllipseDef ellipse;
+    }
+    public class UGISSENDING : UMAPSENDING
+    {
+        public UGisRecord[] gis;
     }
 
 

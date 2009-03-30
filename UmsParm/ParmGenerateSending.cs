@@ -134,6 +134,24 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool SendMapsending(ref UMAPSENDING sending, int n_function)
+        {
+            BBPROJECT project = new BBPROJECT();
+            project.sz_projectpk = sending.n_projectpk.ToString();
+            sending.setFunction(n_function);
+            if (sending.n_projectpk <= 0)
+            {
+                createProject("SendMapsending", 0, ref project, n_function);
+            }
+            xmlwriter.insertStartElement("project");
+            xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
+            send_adhoc(ref project, ref sending);
+
+
+            xmlwriter.insertEndElement();
+            return true;
+        }
+
         public bool SendAlert(Int64 l_alertpk, int n_function, string sz_scheddate, string sz_schedtime)
         {
             PAALERT pa = new PAALERT();
@@ -203,6 +221,57 @@ namespace com.ums.UmsParm
                 setAlertInfo(false, project.sz_projectpk, 0, pa.l_alertpk, pa.sz_name, e.Message, "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 return false;
             }*/
+            return true;
+        }
+
+        protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
+        {
+            try
+            {
+                db.VerifyProfile(sending.n_profilepk);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();
+            BBVALID valid = new BBVALID();
+            BBSENDNUM sendnum = new BBSENDNUM();
+            MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
+            BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
+            PAS_SENDING passending = new PAS_SENDING();
+            passending.setRefno(sending.n_refno, ref project);
+
+            bool b_publish_voice = false;
+            bool b_publish_lba = false;
+            try
+            {
+                passending.createShape(sending); //will also create a temp address file
+                b_publish_voice = true;
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, passending.m_sendinginfo.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                //file.DeleteOperation();
+                return false;
+            }
+
+            
+            db.FillReschedProfile(sending.n_reschedpk.ToString(), ref resched_profile);
+            db.FillValid(sending.n_validity, ref valid);
+            db.FillSendNum(sending.sz_sendingname, ref sendnum);
+            db.FillActionProfile(sending.n_profilepk, ref profile);
+            db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+
+
+            //fill a sending struct
+            passending.setSendingInfo(ref sendinginfo);
+            passending.setReschedProfile(ref resched_profile);
+            passending.setValid(ref valid);
+            passending.setSendNum(ref sendnum);
+            passending.setActionProfile(ref profile);
+
+
             return true;
         }
 

@@ -56,7 +56,62 @@ namespace com.ums.ws.parm
             return -1;
         }
 
+        [WebMethod]
+        public ExecResponse ExecPolygonSending(UPOLYGONSENDING poly)
+        {
+            ExecResponse response = new ExecResponse();
+            return response;
+        }
 
+        [WebMethod]
+        public ExecResponse ExecEllipseSending(UELLIPSESENDING ellipse)
+        {
+            ExecResponse response = new ExecResponse();
+            return response;
+        }
+        [WebMethod]
+        public ExecResponse ExecGisSending(UGISSENDING gis)
+        {
+            ExecResponse response = new ExecResponse();
+            return response;
+        }
+
+        /*
+         * Common function for ExecPolygonSending, ExecEllipseSending and ExecGixSending
+         */
+        protected XmlDocument ExecMapSending(UMAPSENDING sending)
+        {
+            ExecResponse response = new ExecResponse();
+            USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
+            xml.insertStartDocument();
+            xml.insertComment("Results for ExecEvent");
+            xml.insertStartElement(String.Format("results"));
+            //xml.insertAttribute("l_eventpk", l_eventpk.ToString());
+            //xml.insertAttribute("f_simulation", f_simulation.ToString());
+            xml.insertAttribute("l_projectpk", sending.n_projectpk.ToString());
+            xml.insertAttribute("l_refno", sending.n_refno.ToString());
+            xml.insertAttribute("sz_function", sending.sz_function);
+            ParmGenerateSending parm = new ParmGenerateSending();
+            if (parm.Initialize(ref sending.logoninfo, ref xml))
+            {
+                int function = ValidateFunction(sending.sz_function);
+                if (function == -1)
+                {
+                    parm.setAlertInfo(false, "0", 0, sending.n_refno, "", "Invalid function specified [" + sending.sz_function + "]", "ExecMapSending()", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                else
+                {
+                    //parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime);
+                    parm.SendMapsending(ref sending, function);
+                }
+            }
+            cleanup(ref parm);
+            xml.insertEndElement(); //event
+            xml.insertEndDocument();
+            xml.finalize();
+            return xml.GetXmlDocument();
+
+        }
 
         [WebMethod]
         public ExecResponse ExecAlertV2(Int64 l_alertpk, int l_comppk, int l_deptpk, Int64 l_userpk,

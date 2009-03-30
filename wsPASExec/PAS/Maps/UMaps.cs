@@ -66,12 +66,8 @@ namespace com.ums.PAS.Maps
     }
 
 
-    public class UMapInfo
+    public class UMapInfo : UMapBounds
     {
-        public float l_bo = 10.3f;
-        public float r_bo = 11.5f;
-        public float u_bo = 59.9f;
-        public float b_bo = 58.9f;
         public int width = 1024;
         public int height = 768;
         public String portrayal = "Mow1";

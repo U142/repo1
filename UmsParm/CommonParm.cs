@@ -2,7 +2,7 @@
 using System.Collections;
 using com.ums.UmsCommon;
 using com.ums.UmsFile;
-
+using System.Collections.Generic;
 using System.Text;
 
 namespace com.ums.UmsParm
@@ -17,6 +17,7 @@ namespace com.ums.UmsParm
 
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
+        public UGIS gis() { return (UGIS)this; }
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
         public abstract bool WriteAddressFile(ref AdrfileWriter w);
         public abstract bool WriteAddressFileGUI(ref AdrfileGUIWriter w);
@@ -209,6 +210,56 @@ namespace com.ums.UmsParm
         public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class UGIS : UShape
+    {
+        protected List<UGisRecord> m_gis = new List<UGisRecord>();
+        public UGIS()
+            : base()
+        {
+        }
+
+        public bool addRecord(UGisRecord r)
+        {
+            m_gis.Add(r);
+            return true;
+        }
+
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            //throw new NotImplementedException();
+            try
+            {
+                for (int i = 0; i < m_gis.Count; i++)
+                {
+                    w.writeline("/KONDMID=" + m_gis[i].id);
+                    w.writeline("/ADRID=");
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            //throw new NotImplementedException();
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
         }
     }
 
@@ -484,6 +535,46 @@ namespace com.ums.UmsParm
         public AdrfileGUIWriter adrguiwriter;
         public BBPROJECT m_project;
     //public 
+
+        public bool createShape(UMAPSENDING s)
+        {
+            if (typeof(UPOLYGONSENDING) == s.GetType())
+            {
+                UPOLYGONSENDING polygon = (UPOLYGONSENDING)s;
+                s.setGroup(3);
+                UShape shape = new UPolygon();
+                for (int i = 0; i < polygon.polygonpoints.Length; i++)
+                {
+                    UMapPoint point = (UMapPoint)polygon.polygonpoints.GetValue(i);
+                    shape.poly().addPoint(point.lon, point.lat);
+                }
+                setShape(ref shape);
+            }
+            else if (typeof(UELLIPSESENDING) == s.GetType())
+            {
+                UELLIPSESENDING ellipse = (UELLIPSESENDING)s;
+                s.setGroup(8);
+                UShape shape = new UEllipse();
+                shape.ellipse().setCenter(ellipse.ellipse.center.lon, ellipse.ellipse.center.lat);
+                shape.ellipse().setExtents(ellipse.ellipse.radius.lon, ellipse.ellipse.radius.lat);
+                setShape(ref shape);
+
+            }
+            else if (typeof(UGISSENDING) == s.GetType())
+            {
+                UGISSENDING gis = (UGISSENDING)s;
+                s.setGroup(4);
+                UShape shape = new UGIS();
+                for (int i = 0; i < gis.gis.Length; i++)
+                {
+                    UGisRecord rec = gis.gis[i];
+                    shape.gis().addRecord(rec);
+                }
+                setShape(ref shape);
+            }
+            
+            return true;
+        }
         public bool hasLBA() {
             bool b = false;
             try
