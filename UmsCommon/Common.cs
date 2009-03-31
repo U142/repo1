@@ -11,16 +11,16 @@ namespace com.ums.UmsCommon
 {
     public class UMapBounds
     {
-        public float l_bo = 10.3f;
-        public float r_bo = 11.5f;
-        public float u_bo = 59.9f;
-        public float b_bo = 58.9f;
+        public double l_bo = 10.3f;
+        public double r_bo = 11.5f;
+        public double u_bo = 59.9f;
+        public double b_bo = 58.9f;
     }
 
     public class UMapPoint
     {
-        public float lon;
-        public float lat;
+        public double lon;
+        public double lat;
     }
     public class UEllipseDef
     {

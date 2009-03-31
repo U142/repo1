@@ -60,6 +60,8 @@ namespace com.ums.ws.parm
         public ExecResponse ExecPolygonSending(UPOLYGONSENDING poly)
         {
             ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(poly);
+            response.parseFromXml(ref doc, "l_alertpk"); 
             return response;
         }
 
@@ -67,12 +69,16 @@ namespace com.ums.ws.parm
         public ExecResponse ExecEllipseSending(UELLIPSESENDING ellipse)
         {
             ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(ellipse);
+            response.parseFromXml(ref doc, "l_alertpk");
             return response;
         }
         [WebMethod]
         public ExecResponse ExecGisSending(UGISSENDING gis)
         {
             ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(gis);
+            response.parseFromXml(ref doc, "l_alertpk");
             return response;
         }
 

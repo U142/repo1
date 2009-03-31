@@ -271,6 +271,152 @@ namespace com.ums.UmsParm
             passending.setSendNum(ref sendnum);
             passending.setActionProfile(ref profile);
 
+            /*try
+            {
+                if (pa.m_lba_shape != null)
+                {
+                    if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
+                    {
+                        sending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                        b_publish_lba = true;
+
+                    }
+                    else
+                    {
+                        if (!pa.m_lba_shape.lba().getValid())
+                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        else if (!pa.hasValidAreaID())
+                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                sending.lbacleanup();
+            }*/
+
+            bool b_ret = false;
+            //send it
+            try
+            {
+                if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
+                {
+                    //db.BeginTransaction();
+                    //db.RollbackTransaction();
+                }
+                else
+                {
+                    b_ret = db.Send(ref passending);
+                }
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                return false;
+            }
+            if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
+            {
+                //db.BeginTransaction();
+                //db.RollbackTransaction();
+                b_ret = true; //fake link to project
+            }
+            else
+            {
+                b_ret = db.linkRefnoToProject(ref project, passending.l_refno, 0, 0);
+            }
+            if (!b_ret)
+            {
+                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not link sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+            }
+
+
+            //if all ok, publish addressfile
+            try
+            {
+                if (sending.getFunction() != UCommon.USENDING_TEST)
+                    passending.publishGUIAdrFile();
+            }
+            catch (Exception e)
+            {
+                //this is not important for the sending, so continue
+                //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
+                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+            }
+            try
+            {
+                if (b_publish_voice) //requires that no exceptions were caught while writing temp file
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                    {
+                        passending.publishAdrFile();
+                    }
+                    setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Voice Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                }
+            }
+            catch (Exception e)
+            {
+                //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
+                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+            }
+            /*try
+            {
+                if (b_publish_lba) //requires that no exceptions were caught while writing temp file
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                    {
+                        try
+                        {
+                            db.InsertLBARecord(passending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function);
+                            if (passending.publishLBAFile())
+                            {
+                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                            }
+                            else
+                            {
+                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                db.SetLBAStatus(sending.l_refno, 41100);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        }
+                    }
+                    else
+                    {
+                        setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (sending.hasLBA())
+                {
+                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                else
+                {
+                    ULog.warning(sending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
+                }
+            }*/
+
+            /*try
+            {
+                file.DeleteOperation();
+            }
+            catch (Exception e)
+            {
+                ULog.warning(passending.l_refno, String.Format("Could not remove the local temporary alert file\n{0}", file.full()), e.Message);
+            }*/
+
+            ULog.write(String.Format("New <{0}> Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                //(f_simulation ? "[Simulated]" : "[Live]"),
+                UCommon.USENDINGTYPE(sending.getFunction()).ToUpper(),
+                logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, passending.l_refno, 0, 0));
+
+
 
             return true;
         }

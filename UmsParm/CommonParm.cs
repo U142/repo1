@@ -253,30 +253,56 @@ namespace com.ums.UmsParm
             //throw new NotImplementedException();
             try
             {
+                try
+                {
+                    double l_bo, r_bo, u_bo, b_bo;
+                    double f_epsilon = 0.001f;
+                    l_bo = 0.0f-f_epsilon;
+                    r_bo = 0.0f+f_epsilon;
+                    u_bo = 0.0f+f_epsilon;
+                    b_bo = 0.0f-f_epsilon;
+                    /*l_bo = lon - x - f_epsilon;
+                    r_bo = lon + x + f_epsilon;
+                    u_bo = lat + y + f_epsilon;
+                    b_bo = lat - y - f_epsilon;*/
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", l_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", u_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", r_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", b_bo));
+                }
+                catch (Exception e)
+                {
+                    ULog.error(w.getRefno(), "UEllipse::WriteAddressFileGUI", e.Message);
+                    throw new UFileWriteException(e.Message);
+                }
+                finally
+                {
+                    w.close();
+                }
+                return true;
 
             }
             catch (Exception e)
             {
                 throw e;
             }
-            return true;
         }
     }
 
     public class UEllipse : UShape
     {
-        public float lon, lat;
-        public float x, y;
+        public double lon, lat;
+        public double x, y;
         public UEllipse()
             : base()
         {
         }
-        public void setCenter(float lon, float lat)
+        public void setCenter(double lon, double lat)
         {
             this.lon = lon;
             this.lat = lat;
         }
-        public void setExtents(float x, float y)
+        public void setExtents(double x, double y)
         {
             this.x = x;
             this.y = y;
@@ -307,8 +333,8 @@ namespace com.ums.UmsParm
             //throw new NotImplementedException("Ellipse sending not yet implemented");
             try
             {
-                float l_bo, r_bo, u_bo, b_bo;
-                float f_epsilon = 0.001f;
+                double l_bo, r_bo, u_bo, b_bo;
+                double f_epsilon = 0.001f;
                 l_bo = lon - x - f_epsilon;
                 r_bo = lon + x + f_epsilon;
                 u_bo = lat + y + f_epsilon;
@@ -347,7 +373,7 @@ namespace com.ums.UmsParm
         {
             m_array_polypoints = new ArrayList();
         }
-        public void addPoint(float lon, float lat)
+        public void addPoint(double lon, double lat)
         {
             m_array_polypoints.Add(new UPolypoint(lon, lat));
         }
@@ -422,11 +448,11 @@ namespace com.ums.UmsParm
 
     public class UPolypoint
     {
-        float lon, lat;
-        public float getLon() { return lon; }
-        public float getLat() { return lat; }
+        double lon, lat;
+        public double getLon() { return lon; }
+        public double getLat() { return lat; }
 
-        public UPolypoint(float lon, float lat)
+        public UPolypoint(double lon, double lat)
         {
             this.lon = lon;
             this.lat = lat;
@@ -448,9 +474,27 @@ namespace com.ums.UmsParm
 
     public struct PAALERT
     {
-        public String getSendingTypeText()
+        public static String getSendingTypeText(int n_sendingtype)
         {
             switch (n_sendingtype)
+            {
+                case 0:
+                    return "Sending type not set";
+                case 3:
+                    return "Polygon";
+                case 4:
+                    return "GIS import";
+                case 7:
+                    return "Test message";
+                case 8:
+                    return "Ellipse";
+                default:
+                    return "Unknown sending type";
+            }
+        }
+        public String getSendingTypeText()
+        {
+            /*switch (n_sendingtype)
             {
                 case 0:
                     return "Sending type not set";
@@ -460,7 +504,8 @@ namespace com.ums.UmsParm
                     return "Ellipse";
                 default:
                     return "Unknown sending type";
-            }
+            }*/
+            return getSendingTypeText(n_sendingtype);
         }
         public Int64 l_alertpk;
         public String l_parent;
