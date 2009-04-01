@@ -495,63 +495,7 @@ namespace com.ums.UmsCommon
         public String sz_manufacturer;
     }
 
-    public class UMAPSENDING
-    {
-        public String sz_sendingname;
-        public long n_profilepk;
-        public long n_scheddate;
-        public long n_schedtime;
-        public BBSENDNUM oadc;
-        public int n_validity;
-        public long n_reschedpk;
-        public int n_sendingtype;
-        public long n_projectpk;
-        public long n_refno;
-        public int n_dynvoc;
-        public int n_retries;
-        public int n_interval;
-        public int n_canceltime;
-        public int n_canceldate;
-        public int n_pausetime;
-        public int n_pauseinterval;
-        public long n_addresstypes;
-        public ULOGONINFO logoninfo;
-        public UMapBounds mapbounds;
-        public String sz_function;
-        public String sz_lba_oadc;
-        public bool b_resend;
-        public int n_maxchannels;
-        protected int n_group;
-        protected int n_function;
-        public int getGroup()
-        {
-            return n_group;
-        }
-        public int getFunction()
-        {
-            return n_function;
-        }
-        public void setGroup(int n)
-        {
-            n_group = n;
-        }
-        public void setFunction(int n)
-        {
-            n_function = n;
-        }
-    }
-    public class UPOLYGONSENDING : UMAPSENDING
-    {
-        public UMapPoint[] polygonpoints;
-    }
-    public class UELLIPSESENDING : UMAPSENDING
-    {
-        public UEllipseDef ellipse;
-    }
-    public class UGISSENDING : UMAPSENDING
-    {
-        public UGisRecord[] gis;
-    }
+
 
 
 }

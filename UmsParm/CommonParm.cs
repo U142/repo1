@@ -38,10 +38,10 @@ namespace com.ums.UmsParm
         }
         public class LBALanguage
         {
-            String sz_name;
-            String sz_cb_oadc;
-            String sz_otoa;
-            String sz_text;
+            public String sz_name;
+            public String sz_cb_oadc;
+            public String sz_otoa;
+            public String sz_text;
             ArrayList m_ccodes = new ArrayList();
             public LBALanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
             {
@@ -73,7 +73,7 @@ namespace com.ums.UmsParm
         //public String sz_area;
         //public String sz_id;
         public String l_alertpk;
-        protected ArrayList m_languages = new ArrayList();
+        public ArrayList m_languages = new ArrayList();
         public void setValid() { m_b_isvalid = true; }
         public bool getValid() { return m_b_isvalid; }
 
@@ -103,49 +103,6 @@ namespace com.ums.UmsParm
             //create xml and save it to AdrfileLBAWriter
             USimpleXmlWriter xmlwriter = new USimpleXmlWriter(new UTF8Encoding(false));
             xmlwriter.insertStartDocument();
-            /*xmlwriter.insertStartElement("cellbroadcast");
-            xmlwriter.insertAttribute("sz_area", sz_area);
-            xmlwriter.insertAttribute("sz_id", sz_id);
-            xmlwriter.insertAttribute("l_comppk", logoninfo.l_comppk.ToString());
-            xmlwriter.insertAttribute("l_deptpk", logoninfo.l_deptpk.ToString());
-            xmlwriter.insertAttribute("l_msgclass", "1");
-            xmlwriter.insertAttribute("l_pri", logoninfo.l_deptpri.ToString());
-            xmlwriter.insertAttribute("l_localsched", "1");
-            xmlwriter.insertAttribute("l_validitytime", "259200");
-            xmlwriter.insertAttribute("l_schedtime", sched.sz_date + sched.sz_time);
-            xmlwriter.insertAttribute("l_priserver", logoninfo.l_priserver.ToString());
-            xmlwriter.insertAttribute("l_altservers", logoninfo.l_altservers.ToString());
-            xmlwriter.insertAttribute("sz_tarifclass", "");
-            xmlwriter.insertAttribute("sz_stdcc", logoninfo.sz_stdcc);
-            //xmlwriter.insertAttribute("f_simulation", (f_simulation ? "1" : "0"));
-            xmlwriter.insertAttribute("f_simulation", (n_function == UCommon.USENDING_LIVE ? "0" : "1"));
-            xmlwriter.insertAttribute("l_version", "2");
-                xmlwriter.insertStartElement("transaction-id");
-                xmlwriter.insertElementString(String.Format("{0}.{1}", project.sz_projectpk, n_parentrefno));
-                xmlwriter.insertEndElement(); //transaction-id
-                xmlwriter.insertStartElement("languages");
-                for (int i = 0; i < getLanguageCount(); i++)
-                {
-                    xmlwriter.insertStartElement("message");
-                    xmlwriter.insertAttribute("sz_name", getLanguage(i).getName());
-                    xmlwriter.insertAttribute("sz_text", getLanguage(i).getText());
-                    xmlwriter.insertAttribute("sz_cb_oadc", getLanguage(i).getCBOadc());
-                    xmlwriter.insertAttribute("l_otoa", getLanguage(i).getOtoa());
-                    for (int c = 0; c < getLanguage(i).getCCodeCount(); c++)
-                    {
-                        xmlwriter.insertStartElement("ccode");
-                        xmlwriter.insertText(getLanguage(i).getCCode(c).getCCode());
-                        xmlwriter.insertEndElement(); //ccode
-                    }
-                    xmlwriter.insertEndElement(); //message
-                }
-                xmlwriter.insertEndElement(); //languages
-
-            xmlwriter.insertEndElement(); //cellbroadcast
-
-            xmlwriter.insertEndDocument();
-            xmlwriter.finalize();*/
-
             xmlwriter.insertStartElement("LBA");
             xmlwriter.insertAttribute("operation", "SendArea");
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
@@ -779,4 +736,63 @@ namespace com.ums.UmsParm
         }
     }
 
+
+    public class UMAPSENDING
+    {
+        public String sz_sendingname;
+        public long n_profilepk;
+        public long n_scheddate;
+        public long n_schedtime;
+        public BBSENDNUM oadc;
+        public int n_validity;
+        public long n_reschedpk;
+        public int n_sendingtype;
+        public long n_projectpk;
+        public long n_refno;
+        public int n_dynvoc;
+        public int n_retries;
+        public int n_interval;
+        public int n_canceltime;
+        public int n_canceldate;
+        public int n_pausetime;
+        public int n_pauseinterval;
+        public long n_addresstypes;
+        public ULOGONINFO logoninfo;
+        public UMapBounds mapbounds;
+        public String sz_function;
+        public String sz_lba_oadc;
+        public ULocationBasedAlert m_lba;
+        public bool b_resend;
+        public int n_maxchannels;
+        protected int n_group;
+        protected int n_function;
+        public int getGroup()
+        {
+            return n_group;
+        }
+        public int getFunction()
+        {
+            return n_function;
+        }
+        public void setGroup(int n)
+        {
+            n_group = n;
+        }
+        public void setFunction(int n)
+        {
+            n_function = n;
+        }
+    }
+    public class UPOLYGONSENDING : UMAPSENDING
+    {
+        public UMapPoint[] polygonpoints;
+    }
+    public class UELLIPSESENDING : UMAPSENDING
+    {
+        public UEllipseDef ellipse;
+    }
+    public class UGISSENDING : UMAPSENDING
+    {
+        public UGisRecord[] gis;
+    }
 }
