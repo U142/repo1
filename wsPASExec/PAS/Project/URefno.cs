@@ -19,9 +19,9 @@ namespace com.ums.PAS.Project
 {
     public class URefno
     {
-        public UREFNO_RESPONSE getRefno(ref ULOGONINFO logon)
+        public REFNO_RESPONSE getRefno(ref ULOGONINFO logon)
         {
-            UREFNO_RESPONSE response = new UREFNO_RESPONSE();
+            REFNO_RESPONSE response = new REFNO_RESPONSE();
             response.n_responsecode = -1;
 
             PASUmsDb db = new PASUmsDb();
@@ -55,7 +55,7 @@ namespace com.ums.PAS.Project
 
     }
 
-    public class UREFNO_RESPONSE
+    public class REFNO_RESPONSE
     {
         public Int64 n_refno;
         public Int64 n_responsecode;

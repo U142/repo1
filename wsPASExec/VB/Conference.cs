@@ -22,84 +22,7 @@ using com.ums.UmsCommon;
 
 
 namespace wsPASExec.VB
-{   /*
-    else
-		if szType="conf" then
-			rSchedNow		= Request("rSchedNow")
-			lDate			= Request("lDate")
-			lHour			= Request("lHour")
-			lMinutes		= Request("lMinutes")
-			if rSchedNow = 0 then
-				'szSchedDate = addLeadZero(datepart("yyyy",lDate),4) & addLeadZero(DatePart("m",lDate),2) & addLeadZero(DatePart("d",lDate),2)
-				szSchedDate = lDate
-				szSchedTime = lHour & lMinutes
-			elseif rSchedNow = 1 then
-				szSchedDate = szDate
-				szSchedTime = szTime
-			end if
-		end if
-		'Response.Write "<--" & "INSERT INTO " & Application("szDBPrefix") & "SENDINGINFO(sz_fields, sz_sepused, l_namepos, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_removedup, l_group, sz_groups, l_type, f_dynacall, l_addresstypes) VALUES('" & Replace(Request("strFields"),"'","''") & "', '" & Request("szSepUsed") & "', NULL, " & lPhonePos & ", " & lLastAntSep & ", " & Request("lRefNo") & "," & szDate & ", " & szTime & ", " & szSchedDate & ", " & szSchedTime & ", '" & Replace(Request("szSendingName"),"'","''") & "',1," & Session("lCompanyPK") & ", " & Session("lDeptPK") & ", " & bUseNofax & ", " & bRemoveDup & "," & Request("lGroup") & ", '', " & lType & ", " & lDynacall & ", " & lAddressTypes & ")" & "-->"
-		If szType <> "sms" then
-			' Insert voice to MDVSENDINGFO
-			dbConn.Execute("INSERT INTO " & Application("szDBPrefix") & "SENDINGINFO(sz_fields, sz_sepused, l_namepos, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_removedup, l_group, sz_groups, l_type, f_dynacall, l_addresstypes, l_userpk) VALUES('" & Replace(Request("szFields"),"'","''") & "', '" & Request("szSepUsed") & "', " & lNamePos & ", " & lPhonePos & ", " & lLastAntSep & ", " & Request("lRefNo") & "," & szDate & ", " & szTime & ", " & szSchedDate & ", " & szSchedTime & ", '" & Replace(Request("szSendingName"),"'","''") & "',1," & Session("lCompanyPK") & ", " & Session("lDeptPK") & ", " & bUseNofax & ", " & bRemoveDup & "," & Request("lGroup") & ", '', " & lType & ", " & lDynacall & ", " & lAddressTypes & ", " & Session("lUserPk") & ")")
-			' Insert into MDVSENDINGINFO_DCALL if apropriate
-			if Request("lGroup") <> "" then
-				if clng(Request("lGroup")) = 0 and lDynacall <> 0 then ' Imported list & dynacall
-					dbConn.Execute("INSERT INTO MDVSENDINGINFO_DCALL(l_refno, l_adr2, l_adr3, l_adr4, l_adr5) VALUES(" & lRefNo & "," & lPhonePos2 & "," & lPhonePos3 & "," & lPhonePos4 & "," & lPhonePos5 & ")")
-				end if
-			end if
-		end if
-		arrGroups = split(szGroups, ", ")
-		for i=0 to UBound(arrGroups)
-			szSQL = "INSERT INTO " & Application("szDBPrefix") & "SENDINGINFO_GROUPS(l_refno, l_grouppk) VALUES(" & Request("lRefNo") & ", " & arrGroups(i) & ")"
-			dbConn.Execute(szSQL)
-		next
-	end if
-    */
-    /*
-    If szType = "voice" or szType = "conf" then
-
-		Dim cFileType
-		if szType="conf" then
-			cFileType = "c"
-		else
-			cFileType = "v"
-		end if
-
-		Dim szAudioFile
-		Dim szAddressFile
-		Dim szDestAudioFile
-		Dim szDestAddressFile
-		'szAudioFile = server.MapPath("audiofiles") & "\v" & Request("lRefNo") & ".raw"
-		szAddressFile = server.MapPath("addressfiles") & "\adrfile" & Request("lRefNo") & szAdrfileExtension
-		'szDestAudioFile = Application("szBackbonepath") & "v" & Request("lRefNo") & ".raw"
-		szDestAddressFile = Application("szParsepath") & "pri" & Session("lDeptPri") & "-" & cFileType & Request("lRefNo") & szAdrfileExtension
-		'Response.Write szAudioFile & " , " & szAddressFile & "<br>" & szDestAudioFile & " , " & szDestAddressFile
-		Dim nCount
-		for nCount=1 to lDynFiles
-			szAudioFile = server.MapPath("audiofiles") & "\v" & Request("lRefNo") & "_" & nCount & ".raw"
-			if objFileSys.FileExists(szAudioFile) then
-				szDestAudioFile = Application("szBackbonepath") & "v" & Request("lRefNo") & "_" & nCount & ".raw"
-				objFileSys.CopyFile szAudioFile, szDestAudioFile, true
-			else
-				Response.Write("An unexpected error occured: Audio-file does not exist...<br>Sending aborted<br><a href=""index.asp"">Home</a>")
-				Response.End()
-			end if
-		next
-		
-		'objFileSys.MoveFile szAudioFile, szDestAudioFile
-		objFileSys.MoveFile szAddressFile, szDestAddressFile
-		
-		'for nCount=1 to lDynFiles 'delete temp-files on web-server
-		'	szAudioFile = server.MapPath("audiofiles") & "\v" & Request("lRefNo") & "_" & nCount & ".raw"
-		'	if objFileSys.FileExists(szAudioFile) then
-		'		objFileSys.DeleteFile szAudioFile
-		'	end if
-		'next
-		
-		'objFileSys.CopyFile server.MapPath("audiofiles") & "/v" & Request("lRefNo") & ".raw", Application("szBackbonepath") & "v" & Request("lRefNo") & ".raw"
-		'objFileSys.CopyFile server.MapPath("addressfiles") & "/adrfile" & Request("lRefNo") & ".adr", Application("szParsepath") & "pri" & Session("lDeptPri") & "-v" & Request("lRefNo") & ".adr"
-	*/
+{   
     public struct Status
     {
         public int ItemNumber;
@@ -249,6 +172,10 @@ namespace wsPASExec.VB
 
                     File.Move(sz_eat_path + "d" + l_refno + ".tmp", sz_eat_path + "d" + l_refno + ".adr");
                 }
+                catch (SoapException se)
+                {
+                    throw se;
+                }
                 catch (Exception e)
                 {
                     if (tran != null)
@@ -290,6 +217,10 @@ namespace wsPASExec.VB
                     status.SendingStatus = (SendingStatusCode)dr.GetInt32(4);
                     statuses.Add(status);
                 }
+            }
+            catch (SoapException se)
+            {
+                throw se;
             }
             catch (Exception e)
             {
@@ -528,9 +459,7 @@ namespace wsPASExec.VB
             //Append the Detail node to the root node
             rootNode.AppendChild(errorNode);
             //Construct the exception
-            SoapException soapEx = new SoapException(errorMessage,
-                                                     faultCodeLocation, uri,
-                                                     rootNode);
+            SoapException soapEx = new SoapException(errorMessage, faultCodeLocation);
             //Raise the exception  back to the caller
             return soapEx;
         }

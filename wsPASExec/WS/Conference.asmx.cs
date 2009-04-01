@@ -9,6 +9,8 @@ using System.Web.Services.Protocols;
 using System.Xml.Linq;
 
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 
 using libums2_csharp;
 using wsPASExec.VB;
@@ -27,7 +29,7 @@ namespace wsPASExec.WS
     {
 
         [WebMethod(Description="This method is used for scheduling a conference")]
-        public int scheduleConference(ACCOUNT account, Participant[] participants, string conferenceName, long scheduleddatetime)
+        public int scheduleConference([XmlElement(IsNullable=false)] ACCOUNT account, Participant[] participants, string conferenceName, long scheduleddatetime)
         {
             // Should this return refno with item numbers?
             wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();

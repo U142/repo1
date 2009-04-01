@@ -182,7 +182,7 @@ namespace com.ums.ws.pas
         }
         
         [WebMethod]
-        public UPOST_AUDIO_RESPONSE UPostAudio(ULOGONINFO logon, UPOST_AUDIO_REQUEST req)
+        public AUDIO_RESPONSE UPostAudio(ULOGONINFO logon, AUDIO_REQUEST req)
         {
             return new UAudio().UPostAudio(ref logon, ref req);
         }
@@ -192,9 +192,9 @@ namespace com.ums.ws.pas
         {
             return new UProject().uproject(ref logon, ref req);
         }
-
+        
         [WebMethod]
-        public UREFNO_RESPONSE URefno()
+        public REFNO_RESPONSE URefno()
         {
             ULOGONINFO logon = new ULOGONINFO();
             logon.l_comppk = 2;
