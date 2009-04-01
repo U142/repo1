@@ -42,7 +42,10 @@ namespace com.ums.UmsParm
             public String sz_cb_oadc;
             public String sz_otoa;
             public String sz_text;
-            ArrayList m_ccodes = new ArrayList();
+            public List<LBACCode> m_ccodes = new List<LBACCode>();
+            public LBALanguage()
+            {
+            }
             public LBALanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
             {
                 this.sz_name = sz_name;
@@ -62,10 +65,13 @@ namespace com.ums.UmsParm
         }
         public class LBACCode
         {
-            String ccode;
+            public String ccode;
             public LBACCode(String s)
             {
                 ccode = s;
+            }
+            public LBACCode()
+            {
             }
             public String getCCode() { return ccode; }
         }
@@ -73,9 +79,12 @@ namespace com.ums.UmsParm
         //public String sz_area;
         //public String sz_id;
         public String l_alertpk;
-        public ArrayList m_languages = new ArrayList();
+        public List<LBALanguage> m_languages = new List<LBALanguage>();
         public void setValid() { m_b_isvalid = true; }
         public bool getValid() { return m_b_isvalid; }
+        public long n_expiry_minutes;
+        public int n_requesttype; //send right away or wait for confirmation
+        public int getRequestType() { return n_requesttype; }
 
         public LBALanguage addLanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
         {

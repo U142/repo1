@@ -277,7 +277,7 @@ namespace com.ums.UmsParm
                 {
                     if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
                     {
-                        sending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                        passending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
                         b_publish_lba = true;
 
                     }
@@ -293,7 +293,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                sending.lbacleanup();
+                passending.lbacleanup();
             }*/
 
             bool b_ret = false;
@@ -359,7 +359,7 @@ namespace com.ums.UmsParm
                 //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
                 setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
             }
-            /*try
+            try
             {
                 if (b_publish_lba) //requires that no exceptions were caught while writing temp file
                 {
@@ -367,40 +367,40 @@ namespace com.ums.UmsParm
                     {
                         try
                         {
-                            db.InsertLBARecord(passending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function);
+                            db.InsertLBARecord(passending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction());
                             if (passending.publishLBAFile())
                             {
-                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                                setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                                db.SetLBAStatus(sending.l_refno, 41100);
+                                setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                db.SetLBAStatus(passending.l_refno, 41100);
                             }
                         }
                         catch (Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                         }
                     }
                     else
                     {
-                        setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                        setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                     }
                 }
             }
             catch (Exception e)
             {
-                if (sending.hasLBA())
+                if (passending.hasLBA())
                 {
                     //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
                 {
-                    ULog.warning(sending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
+                    ULog.warning(passending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
                 }
-            }*/
+            }
 
             /*try
             {
