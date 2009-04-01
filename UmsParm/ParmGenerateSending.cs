@@ -271,30 +271,31 @@ namespace com.ums.UmsParm
             passending.setSendNum(ref sendnum);
             passending.setActionProfile(ref profile);
 
-            /*try
+            try
             {
-                if (pa.m_lba_shape != null)
+                if (sending.m_lba != null)
                 {
-                    if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
+                    if (sending.m_lba.getValid())
                     {
-                        passending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                        //passending.setLBAShape(ref logoninfo, null, ref sending.m_lba, sending.getFunction());
+                        passending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
                         b_publish_lba = true;
 
                     }
                     else
                     {
-                        if (!pa.m_lba_shape.lba().getValid())
-                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
-                        else if (!pa.hasValidAreaID())
-                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        if (!sending.m_lba.getValid())
+                            setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        //else if (!sending.m_lba.lba().hasValidAreaID())
+                         //   setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
                     }
                 }
             }
             catch (Exception e)
             {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 passending.lbacleanup();
-            }*/
+            }
 
             bool b_ret = false;
             //send it
@@ -359,6 +360,8 @@ namespace com.ums.UmsParm
                 //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
                 setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
             }
+            if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+                b_publish_lba = true;
             try
             {
                 if (b_publish_lba) //requires that no exceptions were caught while writing temp file

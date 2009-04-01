@@ -116,7 +116,10 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("operation", "SendArea");
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
             xmlwriter.insertAttribute("l_refno", n_parentrefno.ToString());
-            xmlwriter.insertAttribute("sz_areaid", alert.sz_areaid.ToString());
+            if (alert.hasValidAreaID())
+                xmlwriter.insertAttribute("sz_areaid", alert.sz_areaid.ToString());
+            else
+                xmlwriter.insertAttribute("sz_areaid", "AdHoc");
             xmlwriter.insertAttribute("l_sched_utc", "0");
             xmlwriter.insertAttribute("l_comppk", logoninfo.l_comppk.ToString());
             xmlwriter.insertAttribute("l_deptpk", logoninfo.l_deptpk.ToString());
@@ -646,6 +649,26 @@ namespace com.ums.UmsParm
                 s.WriteAddressFileGUI(ref adrguiwriter);
                 adrwriter = new AdrfileWriter(l_refno);
                 s.WriteAddressFile(ref adrwriter);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
+        {
+            m_lba_shape = s;
+            if (l_refno < 0)
+            {
+                ULog.error("PAS_SENDING failed to create LBA adrfile because l_refno was not set");
+                return false;
+            }
+            try
+            {
+                adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno);
+                PAALERT nullalert = new PAALERT();
+                s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }
             catch (Exception e)
