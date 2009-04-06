@@ -7,7 +7,6 @@ using System.Text;
 
 namespace com.ums.UmsParm
 {
-
     public abstract class UShape
     {
         public static int SENDINGTYPE_POLYGON = 3;
@@ -519,6 +518,8 @@ namespace com.ums.UmsParm
         public void setRequestType(int n) { n_requesttype = n; }
         public bool hasValidAreaID()
         {
+            if (sz_areaid == null)
+                return false;
             if(sz_areaid.Equals("-2") || sz_areaid.Equals("-1") || sz_areaid.Equals("0") || sz_areaid.Equals(""))
             {
                 return false;
@@ -532,8 +533,31 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class SMS_SENDING : PAS_SENDING
+    {
+        public String sz_smsmessage;
+        public String sz_smsoadc;
+        public int n_expirytime_minutes;
 
-    public struct PAS_SENDING
+        public override bool hasLBA()
+        {
+            return false;
+        }
+        public void setSmsMessage(String s)
+        {
+            sz_smsmessage = s;
+        }
+        public void setSmsOadc(String s)
+        {
+            sz_smsoadc = s;
+        }
+        public void setExpiryTimeMinutes(int n)
+        {
+            n_expirytime_minutes = n;
+        }
+    }
+
+    public class PAS_SENDING
     {
         public long l_refno;
         public BBSENDNUM m_sendnum;
@@ -548,6 +572,9 @@ namespace com.ums.UmsParm
         public AdrfileLBAWriter adrlbawriter;
         public AdrfileGUIWriter adrguiwriter;
         public BBPROJECT m_project;
+        protected bool b_simulation;
+        public bool getSimulation() { return b_simulation; }
+        public void setSimulation(bool b) { b_simulation = b; }
     //public 
 
         public bool createShape(UMAPSENDING s)
@@ -589,7 +616,7 @@ namespace com.ums.UmsParm
             
             return true;
         }
-        public bool hasLBA() {
+        public virtual bool hasLBA() {
             bool b = false;
             try
             {
@@ -666,6 +693,7 @@ namespace com.ums.UmsParm
             }
             try
             {
+                m_lba_shape.lba().setValid();
                 adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno);
                 PAALERT nullalert = new PAALERT();
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
@@ -795,6 +823,9 @@ namespace com.ums.UmsParm
         public String sz_lba_oadc;
         public ULocationBasedAlert m_lba;
         public bool b_resend;
+        public String sz_sms_message;
+        public String sz_sms_oadc;
+        public int n_sms_expirytime_minutes;
         public int n_maxchannels;
         protected int n_group;
         protected int n_function;

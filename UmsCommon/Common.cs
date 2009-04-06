@@ -288,6 +288,8 @@ namespace com.ums.UmsCommon
         }
         public override String ToString()
         {
+            if (sz_date.Equals("-1") || sz_time.Equals("-1"))
+                return "-1";
             return sz_date + sz_time;
         }
     }

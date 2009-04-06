@@ -14,6 +14,21 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UEmptySMSMessageException : UException
+    {
+        public UEmptySMSMessageException()
+            : base("No text in SMS message")
+        {
+        }
+    }
+    public class UEmptySMSOadcException : UException
+    {
+        public UEmptySMSOadcException()
+            : base("No text in SMS OADC field")
+        {
+        }
+    }
+
     public class ULogonFailedException : UException
     {
         public ULogonFailedException()
