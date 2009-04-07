@@ -84,6 +84,17 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            UStatusCode c = new UStatusCode();
+            c.n_status = 8000;
+            c.sz_status = "SMS Sent OK";
+            c.b_userdef_text = true;
+            ret.Add(c);
+            c.n_status = 8001;
+            c.sz_status = "SMS retry";
+            ret.Add(c);
+            c.n_status = 8002;
+            c.sz_status = "SMS Failed";
+            ret.Add(c);
 
             return ret;
         }

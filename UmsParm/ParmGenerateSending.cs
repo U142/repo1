@@ -224,20 +224,30 @@ namespace com.ums.UmsParm
             return true;
         }
 
+        protected bool _sendVoice(ref PAS_SENDING sending)
+        {
+            return true;
+        }
+        protected bool _sendSMS(ref SMS_SENDING sending)
+        {
+            return true;
+        }
+        protected bool _sendLBA(ref PAS_SENDING sending)
+        {
+            return true;
+        }
+
         protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
         {
-            BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();
-            BBVALID valid = new BBVALID();
-            BBSENDNUM sendnum = new BBSENDNUM();
-            MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
-            BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
             PAS_SENDING passending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
             passending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
             smssending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
-            MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
-
+            smssending.setSmsMessage(sending.sz_sms_message);
+            smssending.setSmsOadc(sending.sz_sms_oadc);
+            smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
             passending.setRefno(sending.n_refno, ref project);
+
 
             bool b_publish_voice = false;
             bool b_publish_lba = false;
@@ -253,26 +263,22 @@ namespace com.ums.UmsParm
                 (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED)>0)
             {
                 //This is a sending with possible sms recipients.
-                if (sending.sz_sms_message.Length <= 0)
+                if (smssending.sz_smsmessage.Length <= 0)
                     throw new UEmptySMSMessageException();
-                if (sending.sz_sms_oadc.Length <= 0)
+                if (smssending.sz_smsoadc.Length <= 0)
                     throw new UEmptySMSOadcException();
-                smssending.setSmsMessage(sending.sz_sms_message);
-                smssending.setSmsOadc(sending.sz_sms_oadc);
-                smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
 
                 try
                 {
                     //fetch a refno for the sms sending
-                    long n_refno = db.newRefno();
-
-                    smssendinginfo.l_refno = n_refno;
-                    smssending.setRefno(n_refno, ref project);
+                    MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
+                    smssendinginfo.l_refno = db.newRefno();
+                    smssending.setRefno(smssendinginfo.l_refno, ref project);
                     smssending.createShape(sending);
                     db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     smssending.setSendingInfo(ref smssendinginfo);
-                    b_publish_sms = true;
                     db.Send(ref smssending, ref logoninfo);
+                    b_publish_sms = true;
                 }
                 catch (Exception e)
                 {
@@ -316,6 +322,9 @@ namespace com.ums.UmsParm
             {
                 try
                 {
+                    if (passending.l_refno <= 0)
+                        passending.l_refno = db.newRefno();
+
                     db.VerifyProfile(sending.n_profilepk);
                 }
                 catch (Exception e)
@@ -334,6 +343,11 @@ namespace com.ums.UmsParm
                     return false;
                 }
 
+                BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();
+                MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
+                BBVALID valid = new BBVALID();
+                BBSENDNUM sendnum = new BBSENDNUM();
+                BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
                 db.FillReschedProfile(sending.n_reschedpk.ToString(), ref resched_profile);
                 db.FillValid(sending.n_validity, ref valid);
                 db.FillSendNum(sending.sz_sendingname, ref sendnum);
@@ -347,17 +361,33 @@ namespace com.ums.UmsParm
                 passending.setValid(ref valid);
                 passending.setSendNum(ref sendnum);
                 passending.setActionProfile(ref profile);
+
+                try
+                {
+                    if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
+                    {
+                    }
+                    else
+                    {
+                        b_ret = db.Send(ref passending);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    return false;
+                }
+
             }
-            if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
-                b_publish_lba = true;
 
             try
             {
+                if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+                    b_publish_lba = true;
                 if (b_publish_lba && sending.m_lba != null)
                 {
                     if (sending.m_lba.getValid())
                     {
-                        //passending.setLBAShape(ref logoninfo, null, ref sending.m_lba, sending.getFunction());
                         passending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
                         b_publish_lba = true;
 
@@ -381,23 +411,6 @@ namespace com.ums.UmsParm
             //send it
             if (b_publish_voice)
             {
-                try
-                {
-                    if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
-                    {
-                        //db.BeginTransaction();
-                        //db.RollbackTransaction();
-                    }
-                    else
-                    {
-                        b_ret = db.Send(ref passending);
-                    }
-                }
-                catch (Exception e)
-                {
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                    return false;
-                }
                 if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
                 {
                     //db.BeginTransaction();
@@ -587,7 +600,6 @@ namespace com.ums.UmsParm
 
             PAS_SENDING sending = new PAS_SENDING();
             sending.setRefno(l_refno, ref project);
-
             //retrieve sending info from DB
             db.FillReschedProfile(pa.l_schedpk, ref resched_profile);
             db.FillValid(ref pa, ref valid);
@@ -602,9 +614,11 @@ namespace com.ums.UmsParm
             sending.setSendNum(ref sendnum);
             sending.setActionProfile(ref profile);
 
+            
 
             bool b_publish_voice = false;
             bool b_publish_lba = false;
+            //if VOICE
             try
             {
                 sending.setShape(ref pa.m_shape); //will also create a temp address file
@@ -616,6 +630,22 @@ namespace com.ums.UmsParm
                 file.DeleteOperation();
                 return false;
             }
+            //if SMS
+            try
+            {
+                SMS_SENDING smssending = new SMS_SENDING();
+                MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
+                smssending.setShape(ref pa.m_shape);
+                smssending.setRefno(db.newRefno(), ref project);
+                db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for SMS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                file.DeleteOperation();
+                return false;
+            }
+            //if LBA
             try
             {
                 if (pa.m_lba_shape != null)
@@ -647,8 +677,6 @@ namespace com.ums.UmsParm
             {
                 if (n_function == UCommon.USENDING_TEST) //test DB and rollback
                 {
-                    //db.BeginTransaction();
-                    //db.RollbackTransaction();
                 }
                 else
                 {
@@ -662,8 +690,6 @@ namespace com.ums.UmsParm
             }
             if (n_function == UCommon.USENDING_TEST) //test DB and rollback
             {
-                //db.BeginTransaction();
-                //db.RollbackTransaction();
                 b_ret = true; //fake link to project
             }
             else
@@ -685,7 +711,6 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 //this is not important for the sending, so continue
-                //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
                 setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
             }
             try
@@ -701,7 +726,6 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-                //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
                 setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
             }
             try
