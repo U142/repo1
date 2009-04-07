@@ -34,21 +34,7 @@ namespace com.ums.ws.voice
     public class Voice : System.Web.Services.WebService
     {
         [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
-        public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT to, string from, VOCFILE[] message)
-        {
-            Int64 ret = -1;
-        
-            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            ret = voice.send(acc, settings, new RECIPIENT[] { to }, from, message);
-            return ret;
-        }
-
-        [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
-        public Int64 sendMultipleVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
+        public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
         {
             Int64 ret = -1;
            
@@ -61,6 +47,154 @@ namespace com.ums.ws.voice
 
             return ret;
         }
+        [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
+        //public Int64 sendMergedVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> mergeMessages)
+        public Int64 sendMergedVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> mergeMessages)
+        {
+            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+            voice.EatPath = UCommon.UPATHS.sz_path_voice;
+            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+
+            Int64 l_refno = voice.getRefno();
+            String[] filenames;
+            VOCFILE[] message = new VOCFILE[mergeMessages.Count];
+            VOCFILE voc;
+            for(int i=0;i<mergeMessages.Count;++i) {
+                List<VOCFILE> wavs = voice.previewTTS(account, mergeMessages[i]);
+                String filenameraw = "v" + l_refno + "_" + i + ".raw";
+                String filenamewav = "v" + l_refno + "_" + i + ".wav";
+                
+                BinaryWriter bw;
+                FileStream fs;
+                
+                filenames = new String[wavs.Count];
+
+                for(int j = 0; j < wavs.Count; ++j) {
+                    filenames[j] = Guid.NewGuid() + ".wav";
+                    fs = new FileStream(Server.MapPath(filenames[j]),FileMode.CreateNew);
+                    bw = new BinaryWriter(fs);
+
+                    bw.Write(wavs[j].audiodata);
+                    
+                    bw.Flush();
+                    bw.Close();
+                    fs.Close();
+                }
+
+                WAV2RAWLib.convertClass wav2raw = new WAV2RAWLib.convertClass();
+
+                for (int j = 0; j < filenames.Length; ++j)
+                {
+                    wav2raw.WAV2RAWNormalize(Server.MapPath(filenames[j]), Server.MapPath(filenames[j].Replace(".wav", ".raw")));
+                    if (File.Exists(Server.MapPath(filenames[j])))
+                        File.Delete(Server.MapPath(filenames[j]));
+                }
+                
+
+                for (int j = 0; j < filenames.Length; ++j)
+                {
+                    fs = new FileStream(Server.MapPath(filenameraw), FileMode.Append);
+                    bw = new BinaryWriter(fs);
+                    bw.Write(File.ReadAllBytes(Server.MapPath(filenames[j].Replace(".wav", ".raw"))));
+                    bw.Close();
+                    fs.Close();
+                    
+                    if (File.Exists(Server.MapPath(filenames[j].Replace(".wav", ".raw"))))
+                        File.Delete(Server.MapPath(filenames[j].Replace(".wav", ".raw")));
+
+                }
+
+                wav2raw.RAW2WAV(Server.MapPath(filenameraw), Server.MapPath(filenamewav));
+                
+                if (File.Exists(Server.MapPath(filenameraw)))
+                    File.Delete(Server.MapPath(filenameraw));
+
+
+                voc = new VOCFILE();
+                voc.type = VOCTYPE.WAV;
+                voc.audiodata = File.ReadAllBytes(Server.MapPath(filenamewav));
+                message[i] = voc;
+            }
+
+            return voice.send(account,settings,to,from, message);
+        }
+        
+        /*int length = 0;
+                int dataLength = 0;
+                int samplerate = 0;
+                int channels = 0;
+                
+                for (int j = 0; j < wavs.Count; ++j)
+                {
+                    // Prepare for cHeader
+                    WaveHeaderIn(wavs[i].audiodata, ref length, ref dataLength, ref samplerate, ref channels);
+                }
+
+                WriteHeader(Server.MapPath(filename), length, dataLength, samplerate, channels);
+
+                for (int j = 0; j < wavs.Count; ++j)
+                {
+                    FileStream fs = new FileStream(Server.MapPath(filename), FileMode.Open, FileAccess.Read);
+                    byte[] arrfile = new byte[fs.Length - 44];
+                    fs.Position = 44;
+                    fs.Read(arrfile, 0, arrfile.Length);
+                    fs.Close();
+
+                    FileStream fo = new FileStream(Server.MapPath(filename), FileMode.Append, FileAccess.Write);
+                    BinaryWriter bw = new BinaryWriter(fo);
+                    bw.Write(arrfile);
+                    bw.Close();
+                    fo.Close();
+                }
+
+        private void WaveHeaderIn(byte[] wav, ref int length, ref int dataLength, ref int samplerate, ref int channels)
+        {
+            MemoryStream ms = new MemoryStream(wav);
+            BinaryReader br = new BinaryReader(ms);
+            length += (int)ms.Length - 8;
+            ms.Position = 22;
+            channels = br.ReadInt16();
+            ms.Position = 24;
+            samplerate = br.ReadInt32();
+            ms.Position = 34;
+
+            int BitsPerSample = br.ReadInt16();
+            dataLength += (int)ms.Length - 44;
+            br.Close();
+            ms.Close();
+        }
+
+        private void WriteHeader(String path, int length, int dataLength, int samplerate, int channels)
+        {
+            FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+            BinaryWriter bw = new BinaryWriter(fs);
+            bw.Write(new char[4] { 'R', 'I', 'F', 'F' });
+
+            bw.Write(length);
+
+            bw.Write(new char[8] { 'W', 'A', 'V', 'E', 'f', 'm', 't', ' ' });
+
+            bw.Write((int)16);
+
+            bw.Write((short)1);
+            bw.Write(channels);
+
+            bw.Write(samplerate);
+
+            bw.Write((int)(samplerate * ((samplerate * channels) / 8)));
+
+            bw.Write((short)((samplerate * channels) / 8));
+
+            bw.Write(samplerate);
+
+            bw.Write(new char[4] { 'd', 'a', 't', 'a' });
+            bw.Write(dataLength);
+            bw.Close();
+            fs.Close();
+        }*/
+
         [WebMethod]
         public List<STATUS> getStatus(libums2_csharp.ACCOUNT acc, Int64 referenceNumber)
         {

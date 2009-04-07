@@ -887,7 +887,7 @@ namespace com.ums.ws.parm
         {
             int counter = 0;
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>{0} AND PO.l_deptpk={1}",
+            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,'') FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>{0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -895,6 +895,8 @@ namespace com.ums.ws.parm
                 String l_alertpk, l_parent, sz_name, sz_description, l_profilepk;
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
+                String l_expiry, sz_sms_oadc, sz_sms_message;
+
                 while (rs.Read())
                 {
                     l_alertpk = rs.GetString(0);
@@ -925,6 +927,9 @@ namespace com.ums.ws.parm
                     sz_areaid = rs.GetString(11);
                     l_maxchannels = rs.GetString(12);
                     l_requesttype = rs.GetString(13);
+                    l_expiry = rs.GetString(14);
+                    sz_sms_oadc = rs.GetString(15);
+                    sz_sms_message = rs.GetString(16);
 
                     outxml.insertStartElement("paalert");
                     outxml.insertAttribute("l_alertpk", "a" + l_alertpk);
@@ -941,6 +946,9 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("sz_areaid", sz_areaid);
                     outxml.insertAttribute("l_maxchannels", l_maxchannels);
                     outxml.insertAttribute("l_requesttype", l_requesttype);
+                    outxml.insertAttribute("l_expiry", l_expiry);
+                    outxml.insertAttribute("sz_sms_oadc", sz_sms_oadc);
+                    outxml.insertAttribute("sz_sms_message", sz_sms_message);
                     outxml.insertEndElement();
                     counter++;
                     WritePolygonToFile(l_alertpk, "paalert");
@@ -1306,6 +1314,9 @@ namespace com.ums.ws.parm
             String l_addresstypes = node.Attributes["l_addresstypes"].Value;
             String l_maxchannels = node.Attributes["l_maxchannels"].Value;
             String l_requesttype = node.Attributes["l_requesttype"].Value;
+            String l_expiry = node.Attributes["l_expiry"].Value;
+            String sz_sms_oadc = node.Attributes["sz_sms_oadc"].Value;
+            String sz_sms_message = node.Attributes["sz_sms_message"].Value;
 
             String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
             if (f_locked.Length==0)
@@ -1349,10 +1360,10 @@ namespace com.ums.ws.parm
 
 
             String sz_sql;
-            sz_sql = String.Format("sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}",
+            sz_sql = String.Format("sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}'",
                                     sz_operation.ToLower(), l_alertpk, m_logon.l_userpk, m_logon.l_comppk, l_parent,
                                     sz_name, l_profilepk, l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp,
-                                    f_locked, l_maxchannels, l_requesttype);
+                                    f_locked, l_maxchannels, l_requesttype, l_expiry, sz_sms_oadc, sz_sms_message);
             try
             {
                 db_exec(sz_sql, "paalert", sz_operation, l_alertpk, sz_description);

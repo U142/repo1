@@ -9,7 +9,6 @@ using System.Data;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using com.ums.UmsFile;
-using libums2_csharp;
 
 using TTSLib;
 using WAV2RAWLib;
@@ -287,7 +286,7 @@ namespace com.ums.UmsCommon.Audio
                         // This means the user has previewed the file and it doesn't need to be converted again
                         if (req.sz_filename == null || req.sz_filename.Equals(""))
                         {
-                            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                            /*libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
                             voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
                             voice.EatPath = UCommon.UPATHS.sz_path_voice;
                             voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
@@ -298,8 +297,17 @@ namespace com.ums.UmsCommon.Audio
                             voc.sz_tts_string = req.sz_tts_text;
                             voc.type = VOCTYPE.TTS;
 
-                            sz_filename = voice.generateVoice(new VOCFILE[] { voc }, req.n_refno)[0];
-                            sz_physpath = UCommon.UPATHS.sz_path_ttsserver;
+                            sz_filename = voice.generateVoice(new VOCFILE[] { voc }, req.n_refno)[0];*/
+                            
+                            //sz_physpath = UCommon.UPATHS.sz_path_ttsserver;
+                            UCONVERT_TTS_REQUEST ttsreq = new UCONVERT_TTS_REQUEST();
+                            ttsreq.n_dynfile = req.n_param;
+                            ttsreq.sz_text = req.sz_tts_text;
+                            ttsreq.n_langpk = req.n_langpk;
+                            UCONVERT_TTS_RESPONSE ttsresp = ConvertTTS(ref logon, ref ttsreq);
+                            sz_filename = ttsresp.sz_server_filename;
+                            if (ttsresp.n_responsecode != 0)
+                                throw new Exception(ttsresp.sz_responsetext);
                         }
                         
                         sz_tempfile = sz_physpath + sz_filename;
@@ -367,7 +375,7 @@ namespace com.ums.UmsCommon.Audio
         public int n_filetype;
         public byte[] wav;
         public string sz_tts_text;
-        public LANGUAGE language;
+        public int n_langpk;
         public string sz_filename;
         public int n_messagepk;
         public int n_deptpk;

@@ -822,6 +822,9 @@ namespace com.ums.UmsParm
         public String sz_function;
         public String sz_lba_oadc;
         public ULocationBasedAlert m_lba;
+        public String sz_sms_oadc;
+        public String sz_sms_message;
+        public String n_sms_expirytime_minutes;
         public bool b_resend;
         public String sz_sms_message;
         public String sz_sms_oadc;

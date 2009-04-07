@@ -728,7 +728,7 @@ namespace com.ums.UmsParm
         public int GetAlertAddresstypes(String l_alertpk)
         {
             int n_ret = 0;
-            String szSQL = String.Format("SELECT l_addresstypes FROM PAALERT WHERE l_alertpk={0}", l_alertpk.Substring(1));
+           String szSQL = String.Format("SELECT l_addresstypes FROM PAALERT WHERE l_alertpk={0}", l_alertpk.Substring(1));
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
