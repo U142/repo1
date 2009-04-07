@@ -824,11 +824,11 @@ namespace com.ums.UmsParm
         public ULocationBasedAlert m_lba;
         public String sz_sms_oadc;
         public String sz_sms_message;
-        public String n_sms_expirytime_minutes;
-        public bool b_resend;
-        public String sz_sms_message;
-        public String sz_sms_oadc;
         public int n_sms_expirytime_minutes;
+        public bool b_resend;
+        /*public String sz_sms_message;
+        public String sz_sms_oadc;
+        public int n_sms_expirytime_minutes;*/
         public int n_maxchannels;
         protected int n_group;
         protected int n_function;
