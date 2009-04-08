@@ -30,6 +30,9 @@ namespace com.ums.PAS.Database
         public UNonFinalStatusCodes GetNotFinalStatusCodes(ref UStatusItemSearchParams p)
         {
             UNonFinalStatusCodes ret = new UNonFinalStatusCodes();
+            ret.n_parsing = 0;
+            ret.n_queue = 0;
+            ret.n_sending = 0;
             try
             {
                 String szSQL = String.Format("sp_bbcountforsend {0}, -1", p._l_projectpk);
@@ -40,13 +43,13 @@ namespace com.ums.PAS.Database
                     switch (code)
                     {
                         case -1000:
-                            ret.n_parsing = rs.GetInt32(1);
+                            ret.n_parsing += rs.GetInt32(1);
                             break;
                         case -1001:
-                            ret.n_queue = rs.GetInt32(1);
+                            ret.n_queue += rs.GetInt32(1);
                             break;
                         case -1002:
-                            ret.n_sending = rs.GetInt32(1);
+                            ret.n_sending += rs.GetInt32(1);
                             break;
                     }
                 }
