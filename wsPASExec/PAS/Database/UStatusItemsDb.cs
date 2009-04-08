@@ -89,11 +89,15 @@ namespace com.ums.PAS.Database
             c.sz_status = "SMS Sent OK";
             c.b_userdef_text = true;
             ret.Add(c);
+            c = new UStatusCode();
             c.n_status = 8001;
             c.sz_status = "SMS retry";
+            c.b_userdef_text = true;
             ret.Add(c);
+            c = new UStatusCode();
             c.n_status = 8002;
             c.sz_status = "SMS Failed";
+            c.b_userdef_text = true;
             ret.Add(c);
 
             return ret;
