@@ -63,13 +63,7 @@ namespace com.ums.PAS.Database
             List<UStatusCode> ret = new List<UStatusCode>();
             try
             {
-                String szSQL = String.Format("SELECT hist.l_status, isnull(apst.sz_name, codes.sz_status) sz_status, isnull(apst.sz_name, '__notuserdefined__') userdef " +
-                                "FROM BBHIST hist (INDEX hist_idx), BBSTATUSCODES codes, BBACTIONPROFILESEND ap, BBACTIONPROFILESSTATUS apst, BBPROJECT_X_REFNO pxr " +
-                                "WHERE pxr.l_projectpk={0} AND hist.l_refno=pxr.l_refno AND hist.l_status=codes.l_status " +
-                                "AND hist.l_refno*=ap.l_refno AND ap.l_actionprofilepk*=apst.l_profilepk " +
-                                "AND hist.l_status*=apst.l_status " +
-                                "GROUP BY hist.l_status, codes.sz_status, apst.sz_name " +
-                                "ORDER BY userdef, l_status DESC", p._l_projectpk);
+                String szSQL = String.Format("sp_bbgetstatuscodes {0}", p._l_projectpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
