@@ -196,10 +196,10 @@ namespace com.ums.UmsFile
         {
 
         }
-        public AdrfileWriter(long l_refno)
+        public AdrfileWriter(long l_refno, char sendingtype)
         {
             n_refno = l_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-v{0}.adr", l_refno));
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-{0}{1}.adr", sendingtype, l_refno));
             open();
         }
         public virtual bool delete()

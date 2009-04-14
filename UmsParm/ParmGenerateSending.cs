@@ -427,27 +427,6 @@ namespace com.ums.UmsParm
                 }
 
 
-                //if all ok, publish addressfile
-                try
-                {
-                    if (sending.getFunction() != UCommon.USENDING_TEST)
-                        passending.publishGUIAdrFile();
-                }
-                catch (Exception e)
-                {
-                    //this is not important for the sending, so continue
-                    //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
-                }
-                try
-                {
-                    if (sending.getFunction() != UCommon.USENDING_TEST)
-                        smssending.publishGUIAdrFile();
-                }
-                catch (Exception e)
-                {
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
-                }
             }
             if (b_publish_sms)
             {
@@ -463,9 +442,32 @@ namespace com.ums.UmsParm
                 {
                     setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
+                try
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                        smssending.publishGUIAdrFile();
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+
             }
             if (b_publish_voice) //requires that no exceptions were caught while writing temp file
             {
+                //if all ok, publish addressfile
+                try
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                        passending.publishGUIAdrFile();
+                }
+                catch (Exception e)
+                {
+                    //this is not important for the sending, so continue
+                    //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+
                 try
                 {
                     if (sending.getFunction() != UCommon.USENDING_TEST)

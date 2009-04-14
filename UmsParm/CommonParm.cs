@@ -533,11 +533,17 @@ namespace com.ums.UmsParm
         }
     }
 
-    public class SMS_SENDING : PAS_SENDING
+    public class SMS_SENDING : PAS_SENDING 
     {
+        //new override public char sendingtype = 's'; //sms
         public String sz_smsmessage;
         public String sz_smsoadc;
         public int n_expirytime_minutes;
+
+        public SMS_SENDING()
+        {
+            sendingtype = 's';
+        }
 
         public override bool hasLBA()
         {
@@ -559,6 +565,8 @@ namespace com.ums.UmsParm
 
     public class PAS_SENDING
     {
+        public char getSendingType() { return sendingtype; }
+        public char sendingtype = 'v'; //voice
         public long l_refno;
         public BBSENDNUM m_sendnum;
         public BBRESCHEDPROFILE m_reschedprofile;
@@ -674,7 +682,7 @@ namespace com.ums.UmsParm
             {
                 adrguiwriter = new AdrfileGUIWriter(l_refno);
                 s.WriteAddressFileGUI(ref adrguiwriter);
-                adrwriter = new AdrfileWriter(l_refno);
+                adrwriter = new AdrfileWriter(l_refno, getSendingType());
                 s.WriteAddressFile(ref adrwriter);
                 return true;
             }
