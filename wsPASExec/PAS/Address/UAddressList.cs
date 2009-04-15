@@ -11,6 +11,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Collections;
 using System.Xml.Linq;
 using com.ums.PAS.Maps;
+using System.Collections.Generic;
 
 
 namespace com.ums.PAS.Address
@@ -47,6 +48,53 @@ namespace com.ums.PAS.Address
         {
             this.sz_postno = sz_postno;
             this.sz_xycodes = sz_xycodes;
+        }
+    }
+
+
+    public class UGisImportParams
+    {
+        public int COL_MUNICIPAL;
+        public int COL_NAMEFILTER1;
+        public int COL_NAMEFILTER2;
+        public int SKIPLINES;
+        public String SEPARATOR;
+        public byte [] FILE;
+        
+    }
+    public class UGisImportParamsByStreetId : UGisImportParams
+    {
+        public int COL_STREETID;
+        public int COL_HOUSENO;
+        public int COL_LETTER;
+    }
+
+    public class UGisImportResultLine
+    {
+        public String municipalid;
+        public String streetid;
+        public String houseno;
+        public String letter;
+        public String namefilter1;
+        public String namefilter2;
+        public UAddressList list; //list of inhabitants of this address
+    }
+
+    /*
+     * Collect all the lines from UGisSearchParams.FILE here.
+     * All inhabitants under each FILE-line are listed in UGisResultLine.list
+     */
+    public class UGisImportResultsByStreetId : IAddressResults
+    {
+        UGisImportResultLine[] list;
+        protected List<UGisImportResultLine> temp = new List<UGisImportResultLine>();
+        public void addLine(ref UGisImportResultLine a)
+        {
+            temp.Add(a);
+        }
+        public void finalize()
+        {
+            list = temp.Cast<UGisImportResultLine>().ToArray();
         }
     }
 

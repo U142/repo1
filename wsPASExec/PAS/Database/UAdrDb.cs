@@ -34,6 +34,13 @@ namespace com.ums.PAS.Database
             return list;
         }
 
+        public int GetGisImport(ref UGisImportResultLine p)
+        {
+            
+
+            return 0;
+        }
+
         public UAddressList FindAddressesByDistance(UMapDistanceParams param)
         {
             /*

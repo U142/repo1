@@ -56,6 +56,14 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public UGisImportResultsByStreetId GetGisByStreetId(UGisImportParamsByStreetId search)
+        {
+            UGisImportResultsByStreetId res = new UGisImportResultsByStreetId();
+
+            return res;
+        }
+
+        [WebMethod]
         public UPASMap GetMapOverlay(UMapInfoLayerCellVision request)
         {
             ULOGONINFO info = new ULOGONINFO();
