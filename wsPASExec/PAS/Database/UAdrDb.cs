@@ -13,6 +13,7 @@ using System.Data.Odbc;
 using com.ums.PAS.Address;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
+using System.Collections.Generic;
 
 
 namespace com.ums.PAS.Database
@@ -34,11 +35,61 @@ namespace com.ums.PAS.Database
             return list;
         }
 
+        public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next)
+        {
+            String szSQL = "";
+            int i = 0;
+            int n_validcount = 0;
+            for (i = startat; i < p.Count; i++)
+            {
+                if (p[i].isValid())
+                {
+                    if (n_validcount>0) //there are more sql before this one, add union
+                        szSQL += " UNION ";
+                    szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                             "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
+                                             "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                             p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - 1);
+                    if (p[i].letter.Trim().Length > 0)
+                    {
+                        szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
+                    }
+                    n_validcount++;
+                    if (n_validcount >= max)
+                        break;
+                }
+            }
+            if (n_validcount > 0)
+            {
+                OdbcDataReader rs;
+                m_cmd = new OdbcCommand(szSQL, conn);
+                rs = m_cmd.ExecuteReader();
+                while (rs.Read())
+                {
+                    UAddress adr = new UAddress();
+                    readAddressFromDb(ref adr, ref rs);
+                    if (adr.arrayindex >= 0)
+                    {
+                        p[adr.arrayindex].list.addLine(ref adr);
+                        //p[adr.arrayindex].list.finalize();
+                    }
+                }
+                rs.Close();
+            }
+            /*if (i >= p.Count)
+            {
+                return -1;
+            }*/
+            //return (i+1); //return next
+            next = (i + 1);
+            return i-startat+1;
+        }
+
         public int GetGisImport(ref UGisImportResultLine p)
         {
             String szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0) FROM " +
-                                         "ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber=0 FROM " +
+                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
                                          p.municipalid, p.streetid, p.houseno);
             if (p.letter.Trim().Length > 0)
             {
@@ -94,8 +145,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
     "ADR_KONSUM WHERE %s AND BEDRIFT IN (0,1)", sz_filter1);
 */
             String szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0) FROM " +
-                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE LON>={0} AND LON<={1} AND LAT>={2} AND LAT<={3} AND BEDRIFT IN (0,1)",
+                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber=0 FROM " +
+                                         "ADR_KONSUM WHERE LON>={0} AND LON<={1} AND LAT>={2} AND LAT<={3} AND BEDRIFT IN (0,1)",
                                          param.b_bo, param.u_bo, param.l_bo, param.r_bo);
             OdbcDataReader rs;
             try
@@ -111,6 +162,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 {
                     UAddress adr = new UAddress();
                     readAddressFromDb(ref adr, ref rs);
+                    list.addLine(ref adr);
+
                     /*try
                     {
                         adr.kondmid = rs.GetString(0);
@@ -468,6 +521,14 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             catch (Exception)
             {
                 adr.hasmobile = 0;
+            }
+            try
+            {
+                adr.arrayindex = rs.GetInt32(21);
+            }
+            catch (Exception)
+            {
+                adr.arrayindex = -1;
             }
             return true;
         }

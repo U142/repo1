@@ -166,10 +166,11 @@ namespace com.ums.PAS.Address
         public String xycode;
         public int hasfixed;
         public int hasmobile;
+        public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
 
         public UAddress()
         {
-
+            arrayindex = -1;
         }
     }
 

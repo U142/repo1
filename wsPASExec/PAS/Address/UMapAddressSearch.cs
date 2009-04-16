@@ -71,6 +71,8 @@ namespace com.ums.PAS.Address
             //open file and have it populated into search criterias
             try
             {
+                /*
+                 * OLD ONE BY ONE LINE VERSION
                 for (int x = 0; x < filelines.Count; x++)
                 {
                     UGisImportResultLine tmp = filelines[x];
@@ -82,6 +84,24 @@ namespace com.ums.PAS.Address
 
                     tmp.finalize();
                     ret.addLine(ref tmp);
+                }*/
+                int x = 0;
+                int prev = 0;
+                int next = 0;
+                //UGisImportResultLine[] lines = filelines.ToArray();
+                int chunksize = 255;
+                while (1 == 1)
+                {
+                    x = db.GetGisImport(ref filelines, next, chunksize, ref next);
+                    for (int add = prev; add < prev+(x==chunksize ? x : x-1); add++)
+                    {
+                        UGisImportResultLine tmp = filelines[add];
+                        ret.addLine(ref tmp);
+                        tmp.list.finalize();
+                    }
+                    prev = next;
+                    if (next >= filelines.Count)
+                        break;
                 }
                 ret.finalize();
                 db.close();
