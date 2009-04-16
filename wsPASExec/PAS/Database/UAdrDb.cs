@@ -36,7 +36,36 @@ namespace com.ums.PAS.Database
 
         public int GetGisImport(ref UGisImportResultLine p)
         {
-            
+            String szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0) FROM " +
+                                         "ADR_KONSUM WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                         p.municipalid, p.streetid, p.houseno);
+            if (p.letter.Trim().Length > 0)
+            {
+                szSQL += " AND OPPGANG='" + p.letter.Trim() + "'";
+            }
+            try
+            {
+                
+                //rs = base.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                OdbcDataReader rs;
+                m_cmd = new OdbcCommand(szSQL, conn);
+                rs = m_cmd.ExecuteReader();
+                while (rs.Read())
+                {
+                    UAddress adr = new UAddress();
+                    readAddressFromDb(ref adr, ref rs);
+                    p.list.addLine(ref adr);
+
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, "Error in retrieving GisImport addresses", e.Message);
+                throw e;
+            }
+
 
             return 0;
         }
@@ -66,7 +95,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
 */
             String szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                          "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0) FROM " +
-                                         "ADR_KONSUM WHERE LON>={0} AND LON<={1} AND LAT>={2} AND LAT<={3} AND BEDRIFT IN (0,1)",
+                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE LON>={0} AND LON<={1} AND LAT>={2} AND LAT<={3} AND BEDRIFT IN (0,1)",
                                          param.b_bo, param.u_bo, param.l_bo, param.r_bo);
             OdbcDataReader rs;
             try
@@ -81,7 +110,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 while (rs.Read())
                 {
                     UAddress adr = new UAddress();
-                    try
+                    readAddressFromDb(ref adr, ref rs);
+                    /*try
                     {
                         adr.kondmid = rs.GetString(0);
                     }
@@ -251,7 +281,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                         adr.hasmobile = 0;
                     }
 
-                        list.addLine(ref adr);
+                        list.addLine(ref adr);*/
                     /*}
                     catch (Exception e)
                     {
@@ -267,6 +297,179 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             list.finalize();
 
             return list;
+        }
+        protected bool readAddressFromDb(ref UAddress adr, ref OdbcDataReader rs)
+        {
+            try
+            {
+                adr.kondmid = rs.GetString(0);
+            }
+            catch (Exception)
+            {
+                adr.kondmid = "0";
+            }
+            try
+            {
+                adr.name = rs.GetString(1);
+            }
+            catch (Exception)
+            {
+                adr.name = "";
+            }
+            try
+            {
+                adr.address = rs.GetString(2);
+            }
+            catch (Exception)
+            {
+                adr.address = "";
+            }
+            try
+            {
+                adr.houseno = rs.GetInt32(3);
+            }
+            catch (Exception)
+            {
+                adr.houseno = 0;
+            }
+            try
+            {
+                adr.letter = rs.GetString(4);
+            }
+            catch (Exception)
+            {
+                adr.letter = "";
+            }
+            try
+            {
+                adr.postno = rs.GetString(5);
+            }
+            catch (Exception)
+            {
+                adr.postno = "";
+            }
+            try
+            {
+                adr.postarea = rs.GetString(6);
+            }
+            catch (Exception)
+            {
+                adr.postarea = "";
+            }
+            try
+            {
+                adr.region = rs.GetInt32(7);
+            }
+            catch (Exception)
+            {
+                adr.region = 0;
+            }
+            try
+            {
+                adr.bday = rs.GetString(8);
+            }
+            catch (Exception)
+            {
+                adr.bday = "0";
+            }
+            //adr.bday = 0;
+            try
+            {
+                adr.number = rs.GetString(9);
+            }
+            catch (Exception)
+            {
+                adr.number = "";
+            }
+            try
+            {
+                adr.lon = rs.GetDouble(10);
+            }
+            catch (Exception)
+            {
+                adr.lon = 0;
+            }
+            try
+            {
+                adr.lat = rs.GetDouble(11);
+            }
+            catch (Exception)
+            {
+                adr.lat = 0;
+            }
+            try
+            {
+                adr.gno = rs.GetInt32(12);
+            }
+            catch (Exception)
+            {
+                adr.gno = 0;
+            }
+            try
+            {
+                adr.bno = rs.GetInt32(13);
+            }
+            catch (Exception)
+            {
+                adr.bno = 0;
+            }
+            try
+            {
+                adr.bedrift = rs.GetInt32(14);
+            }
+            catch (Exception)
+            {
+                adr.bedrift = 0;
+            }
+            try
+            {
+                adr.importid = rs.GetInt32(15);
+            }
+            catch (Exception)
+            {
+                adr.importid = -1;
+            }
+            try
+            {
+                adr.mobile = rs.GetString(16);
+            }
+            catch (Exception)
+            {
+                adr.mobile = "";
+            }
+            try
+            {
+                adr.streetid = rs.GetInt32(17);
+            }
+            catch (Exception)
+            {
+                adr.streetid = 0;
+            }
+            try
+            {
+                adr.xycode = rs.GetString(18);
+            }
+            catch (Exception)
+            {
+                adr.xycode = "a";
+            }
+            try
+            {
+                adr.hasfixed = rs.GetInt16(19);
+            }
+            catch (Exception)
+            {
+                adr.hasfixed = 0;
+            }
+            try
+            {
+                adr.hasmobile = rs.GetInt16(20);
+            }
+            catch (Exception)
+            {
+                adr.hasmobile = 0;
+            }
+            return true;
         }
     }
 }

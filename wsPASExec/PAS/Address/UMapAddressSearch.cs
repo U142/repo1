@@ -66,16 +66,32 @@ namespace com.ums.PAS.Address
              populate UGisImportResultLine with house info, the inhabitant results will be returned
              * in UGisImportResultLine.list
              */
-            List<UGisImportResultLine> filelines = new List<UGisImportResultLine>();
+            GisImportFile import = new GisImportFile(ref m_search);
+            List<UGisImportResultLine> filelines = import.Parse();
             //open file and have it populated into search criterias
-
-            for (int x = 0; x < filelines.Count; x++)
+            try
             {
-                UGisImportResultLine tmp = filelines[x];
-                int i = db.GetGisImport(ref tmp);
+                for (int x = 0; x < filelines.Count; x++)
+                {
+                    UGisImportResultLine tmp = filelines[x];
+                    if (tmp.isValid())
+                    {
+                        int i = db.GetGisImport(ref tmp);
+                        tmp.list.finalize();
+                    }
+
+                    tmp.finalize();
+                    ret.addLine(ref tmp);
+                }
+                ret.finalize();
+                db.close();
+                return ret;
             }
-            db.close();
-            return ret;
+            catch (Exception e)
+            {
+                ULog.warning(e.Message);
+                throw e;
+            }
         }
     }
 

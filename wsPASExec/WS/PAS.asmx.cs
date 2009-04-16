@@ -56,11 +56,18 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
-        public UGisImportResultsByStreetId GetGisByStreetId(UGisImportParamsByStreetId search)
+        public UGisImportResultsByStreetId GetGisByStreetId(ULOGONINFO logon, UGisImportParamsByStreetId search)
         {
-            UGisImportResultsByStreetId res = new UGisImportResultsByStreetId();
+            try
+            {
+                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref logon).Find();
+                return res;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
-            return res;
         }
 
         [WebMethod]

@@ -71,13 +71,41 @@ namespace com.ums.PAS.Address
 
     public class UGisImportResultLine
     {
+        public bool isValid()
+        {
+            return b_isvalid;
+        }
+        public bool finalize()
+        {
+            b_isvalid = true;
+            try
+            {
+                Int64 n_tmp = 0;
+                n_tmp = Int64.Parse(municipalid);
+                if (n_tmp <= 0)
+                    b_isvalid = false;
+                n_tmp = Int64.Parse(streetid);
+                if (n_tmp <= 0)
+                    b_isvalid = false;
+                n_tmp = Int64.Parse(houseno);
+                if (n_tmp <= 0)
+                    b_isvalid = false;
+            }
+            catch (Exception)
+            {
+                b_isvalid = false;
+            }
+            return b_isvalid;
+        }
         public String municipalid;
         public String streetid;
         public String houseno;
         public String letter;
         public String namefilter1;
         public String namefilter2;
-        public UAddressList list; //list of inhabitants of this address
+        public int n_linenumber;
+        public bool b_isvalid;
+        public UAddressList list = new UAddressList(); //list of inhabitants of this address
     }
 
     /*
@@ -86,7 +114,7 @@ namespace com.ums.PAS.Address
      */
     public class UGisImportResultsByStreetId : IAddressResults
     {
-        UGisImportResultLine[] list;
+        public UGisImportResultLine[] list;
         protected List<UGisImportResultLine> temp = new List<UGisImportResultLine>();
         public void addLine(ref UGisImportResultLine a)
         {
