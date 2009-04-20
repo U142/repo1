@@ -42,11 +42,16 @@ namespace com.ums.ws.parm
 
         private String sz_timestamp;
         private String sz_newtimestamp;
+        private PercentResult m_res = new PercentResult();
+        private PercentProgress.SetPercentDelegate m_percentdelegate;
 
         [WebMethod]
         public byte[] UpdateParm(byte[] zipfile /*zip-file that contains two files*/, ULOGONINFO logoninfo,
                                 String sz_filename /*PARM detail file*/, String sz_polyfilename /*shapes to PARM detail*/)
         {
+            m_percentdelegate = PercentProgress.newDelegate();
+            m_percentdelegate(ref logoninfo, ProgressJobType.PARM_UPDATE, m_res);
+
             m_logon = logoninfo;
             String sessid;
             if (Session == null)
@@ -128,6 +133,8 @@ namespace com.ums.ws.parm
             {
                 ULog.error(e.Message);
             }
+            m_res.n_percent = 50;
+            m_percentdelegate(ref logoninfo, ProgressJobType.PARM_UPDATE, m_res);
 
 
             //**************** delete the original zip file ******************
@@ -232,6 +239,7 @@ namespace com.ums.ws.parm
                 ULog.error(0, "Error writing PARM ZIP file", e.Message);
                 throw e;
             }
+            PercentProgress.DeleteJob(ref m_logon, ProgressJobType.PARM_UPDATE);
             return zip.ReadZipFileBytes();
 
             //temp write out.xml
@@ -796,10 +804,20 @@ namespace com.ums.ws.parm
 
             int counter = 0;
             counter += GetCategories(); //will append pacategory tags to outxml
+            m_res.n_percent = 60;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetObjects(); //will append paobject tags to outxml
+            m_res.n_percent = 70;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetEvents(); //will append paevent tags to outxml
+            m_res.n_percent = 80;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetAlerts(); //will append paalert tags to outxml
+            m_res.n_percent = 90;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetDeleted(); //will append delete tags to outxml
+            m_res.n_percent = 99;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
 
             outxml.insertEndElement();
             return counter;

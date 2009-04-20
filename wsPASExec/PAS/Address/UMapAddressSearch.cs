@@ -49,10 +49,13 @@ namespace com.ums.PAS.Address
     {
         protected UGisImportParamsByStreetId m_search;
         protected ULOGONINFO m_logon;
-        public UGisImportLookup(ref UGisImportParamsByStreetId search, ref ULOGONINFO logon)
+        protected PercentProgress.SetPercentDelegate m_callback;
+
+        public UGisImportLookup(ref UGisImportParamsByStreetId search, ref ULOGONINFO logon, PercentProgress.SetPercentDelegate percentCallback)
         {
             m_search = search;
             m_logon = logon;
+            m_callback = percentCallback;
         }
         public IAddressResults Find()
         {
@@ -90,21 +93,51 @@ namespace com.ums.PAS.Address
                 int next = 0;
                 //UGisImportResultLine[] lines = filelines.ToArray();
                 int chunksize = 255;
+                float max = filelines.Count;
+                PercentResult result = new PercentResult();
+                result.n_totalrecords = filelines.Count;
+                result.n_currentrecord = 0;
+                result.n_percent = 0;
+                m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
                 while (1 == 1)
                 {
-                    x = db.GetGisImport(ref filelines, next, chunksize, ref next);
+                    try
+                    {
+                        x = db.GetGisImport(ref filelines, next, chunksize, ref next);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
                     for (int add = prev; add < prev+(x==chunksize ? x : x-1); add++)
                     {
                         UGisImportResultLine tmp = filelines[add];
                         ret.addLine(ref tmp);
                         tmp.list.finalize();
                     }
+                    try
+                    {
+                        result.n_currentrecord = next;
+                        if (max > 0)
+                            result.n_percent = (int)((next * 100.0) / max);
+                        else
+                            result.n_percent = 100;
+                        m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
+                    }
+                    catch (Exception) { }
                     prev = next;
                     if (next >= filelines.Count)
                         break;
                 }
                 ret.finalize();
                 db.close();
+                try
+                {
+                    result.n_currentrecord = result.n_totalrecords;
+                    result.n_percent = 100;
+                    m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
+                }
+                catch (Exception) { }
                 return ret;
             }
             catch (Exception e)

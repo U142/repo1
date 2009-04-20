@@ -9,6 +9,86 @@ using System.Collections;
 
 namespace com.ums.UmsCommon
 {
+    public enum ProgressJobType
+    {
+        GEMINI_IMPORT_STREETID = 1,
+        GEMINI_IMPORT_GNRBNR = 2,
+        STATUS_LIST = 3,
+        STATUS_ITEMS = 4,
+        PARM_UPDATE = 5,
+
+
+    }
+
+    public class PercentResult
+    {
+        public int n_percent;
+        public int n_totalrecords;
+        public int n_currentrecord;
+    }
+
+    public class PercentProgress
+    {
+        public static SetPercentDelegate newDelegate() { return new SetPercentDelegate(SetJob); }
+        public delegate void SetPercentDelegate(ref ULOGONINFO l, ProgressJobType jobType, PercentResult val);
+        /*
+         * inserts and updates a job with new value
+         */
+        public static void SetJob(ref ULOGONINFO l, ProgressJobType jobType, PercentResult val)
+        {
+            TempDataStore.SetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk, val);
+        }
+        /*
+         * delete an active job
+         */
+        public static void DeleteJob(ref ULOGONINFO l, ProgressJobType jobType)
+        {
+            TempDataStore.Remove(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk);
+        }
+        public static PercentResult GetProgress(ref ULOGONINFO l, ProgressJobType jobType)
+        {
+            return (PercentResult)TempDataStore.GetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk);
+        }
+    }
+    /*
+     * Session data for progress. Used for polling percentage of completion of different tasks
+     */
+    public class TempDataStore
+    {
+        private static Hashtable _table = new Hashtable();
+        static TempDataStore() { }
+        public static object GetRecords(string key)
+        {
+            lock (_table.SyncRoot)
+            {
+                return _table[key];
+            }
+        }
+        public static void SetRecords(string key, object value)
+        {
+            lock (_table.SyncRoot)
+            {
+                if (_table[key] != null)
+                    _table[key] = value;
+                else
+                    _table.Add(key, value);
+            }
+        }
+        public static void Remove(string key)
+        {
+            lock (_table.SyncRoot)
+            {
+                _table.Remove(key);
+            }
+        }
+        public static void ClearAll()
+        {
+            lock (_table.SyncRoot)
+            {
+                _table.Clear();
+            }
+        }
+    }
     public class UMapBounds
     {
         public double l_bo = 10.3f;

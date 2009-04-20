@@ -33,6 +33,7 @@ namespace com.ums.ws.pas
     // [System.Web.Script.Services.ScriptService]
 
 
+
     public class pasws : System.Web.Services.WebService
     {
 
@@ -60,15 +61,47 @@ namespace com.ums.ws.pas
         {
             try
             {
-                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref logon).Find();
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
+                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref logon, percentdelegate).Find();
                 return res;
             }
             catch (Exception e)
             {
                 throw e;
             }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID);
+            }
 
         }
+
+        [WebMethod]
+        public PercentResult GetProgress(ULOGONINFO l, ProgressJobType jobType)
+        {
+            try
+            {
+                //String ret = TempDataStore.GetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk).ToString();
+                //return ret;
+                return PercentProgress.GetProgress(ref l, jobType);
+            }
+            catch (Exception)
+            {
+                return new PercentResult();
+            }
+
+        }
+
+
+        /*[WebMethod]
+        public void test(AsyncCallback outerCallback)
+        {
+            
+            int retval = 50;
+            Stack stack = Session["Status"] as Stack;
+            stack.Push(retval);
+        }*/
 
         [WebMethod]
         public UPASMap GetMapOverlay(UMapInfoLayerCellVision request)

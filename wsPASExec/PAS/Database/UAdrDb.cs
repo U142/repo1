@@ -61,20 +61,28 @@ namespace com.ums.PAS.Database
             }
             if (n_validcount > 0)
             {
-                OdbcDataReader rs;
-                m_cmd = new OdbcCommand(szSQL, conn);
-                rs = m_cmd.ExecuteReader();
-                while (rs.Read())
+                try
                 {
-                    UAddress adr = new UAddress();
-                    readAddressFromDb(ref adr, ref rs);
-                    if (adr.arrayindex >= 0)
+                    OdbcDataReader rs;
+                    m_cmd = new OdbcCommand(szSQL, conn);
+                    rs = m_cmd.ExecuteReader();
+                    while (rs.Read())
                     {
-                        p[adr.arrayindex].list.addLine(ref adr);
-                        //p[adr.arrayindex].list.finalize();
+                        UAddress adr = new UAddress();
+                        readAddressFromDb(ref adr, ref rs);
+                        if (adr.arrayindex >= 0)
+                        {
+                            p[adr.arrayindex].list.addLine(ref adr);
+                            //p[adr.arrayindex].list.finalize();
+                        }
                     }
+                    rs.Close();
                 }
-                rs.Close();
+                catch (Exception err)
+                {
+                    next = startat;
+                    throw err;
+                }
             }
             /*if (i >= p.Count)
             {

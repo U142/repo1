@@ -65,7 +65,7 @@ namespace com.ums.wsPASExec
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-
+            String s = sender.ToString();
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
@@ -79,12 +79,13 @@ namespace com.ums.wsPASExec
 
         protected void Session_End(object sender, EventArgs e)
         {
-
+            //TempDataStore.Remove(Session.SessionID);
         }
 
         protected void Application_End(object sender, EventArgs e)
         {
             UCommon.UnInitialize();
+            TempDataStore.ClearAll();
         }
     }
 }
