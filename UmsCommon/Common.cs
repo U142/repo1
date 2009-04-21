@@ -134,6 +134,9 @@ namespace com.ums.UmsCommon
         MOBILE_COMPANY_AND_FIXED    = 1 << 17,
         FIXED_PRIVATE_AND_MOBILE    = 1 << 18,
         FIXED_COMPANY_AND_MOBILE    = 1 << 19,
+        SENDTO_USE_NOFAX_COMPANY    = 1 << 27,
+        SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28, //reserved for future use
+        SENDTO_USE_NOFAX_GLOBAL     = 1 << 29, //should always be off
         ONLY_HEAD_OF_HOUSEHOLD      = 1 << 30,
 
     }

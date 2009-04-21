@@ -312,6 +312,8 @@ namespace com.ums.UmsParm
                     m.l_schedtime = rs.GetString(4);
                     m.sz_sendingname = rs.GetString(5);
                     m.l_sendingstatus = rs.GetInt32(6);
+                    if (m.l_sendingstatus == 0)
+                        m.l_sendingstatus = 1;
                     m.l_companypk = rs.GetInt32(7);
                     m.l_deptpk = rs.GetInt32(8);
                     m.l_group = rs.GetInt32(9);
@@ -402,6 +404,7 @@ namespace com.ums.UmsParm
             m.l_nofax = 0;
             m.l_removedup = 1;
             m.l_maxchannels = a.n_maxchannels;
+            m.l_nofax = a.n_nofax;
            
 
             m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse
@@ -431,7 +434,7 @@ namespace com.ums.UmsParm
             m.l_sendingstatus = 1;
             m.l_companypk = l.l_comppk;
             m.l_deptpk = l.l_deptpk;
-            m.l_nofax = 0;
+            m.l_nofax = s.n_nofax;
             m.l_removedup = 1;
             m.l_maxchannels = s.n_maxchannels;
             m.l_group = s.getGroup();
@@ -602,17 +605,43 @@ namespace com.ums.UmsParm
                 int n_oadctype = 1;
                 int n_msgclass = 1;
                 int n_localsched = 1;
-                int n_priserver = logon.l_priserver;
-                int n_altserver = logon.l_altservers;
+                //int n_priserver = logon.l_priserver;
+                //int n_altserver = logon.l_altservers;
                 int n_fromapplication = 13;
                 String sz_tarifclass = "";
                 String sz_stdcc = "";
                 String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString() + "00").ToString();
+                if (n_scheddatetime.Equals("-1"))
+                    n_scheddatetime = s.m_sendinginfo.l_createdate + s.m_sendinginfo.l_createtime;
+                int n_priserver = 0, n_altserver = 0;
+                try
+                {
+                    sql = String.Format("SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk={0} ORDER BY l_pri",
+                                        s.m_sendinginfo.l_deptpk);
+                    OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
+                    if (rs.Read())
+                    {
+                        n_priserver = rs.GetInt32(0);
+                        if (rs.Read())
+                        {
+                            n_altserver = rs.GetInt32(0);
+                        }
+                    }
+                    else
+                        n_priserver = 2;
+                    rs.Close();
+                }
+                catch (Exception e)
+                {
+                    n_priserver = 2;
+                }
+ 
+
 
                 sql = String.Format("sp_sms_ins_smsqref_bcp {0}, {1}, {2}, {3}, {4}, {5}," +
-                                    "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," + 
+                                    "{6}, {7}, {8}, {9}, {10}, {11}, '{12}', '{13}', '{14}', {15}," +
                                     "{16}, {17}, '{18}', {19}, {20}, '{21}', {22}, {23}, {24}, {25}," +
-                                    "{26}, {27}, {28}, '{29}'",
+                                    "{26}, {27}, {28}, '{29}', {30}, {31}",
                                             0, //0 projectpk
                                             s.l_refno, //1
                                             s.m_sendinginfo.l_companypk, //2
@@ -623,8 +652,8 @@ namespace com.ums.UmsParm
                                             n_localsched, //7
                                             s.n_expirytime_minutes, //8
                                             n_scheddatetime, //9
-                                            //s.m_sendinginfo.l_scheddate, //9
-                                            //s.m_sendinginfo.l_schedtime, //9
+                    //s.m_sendinginfo.l_scheddate, //9
+                    //s.m_sendinginfo.l_schedtime, //9
                                             n_priserver, //10
                                             n_altserver, //11
                                             sz_tarifclass.Replace("'", "''"), //12
@@ -644,7 +673,9 @@ namespace com.ums.UmsParm
                                             s.m_sendinginfo.l_userpk, //26
                                             s.m_sendinginfo.l_nofax, //27
                                             s.m_sendinginfo.l_removedup, //28
-                                            sz_stdcc.Replace("'", "''")); //29
+                                            sz_stdcc.Replace("'", "''"), //29
+                                            s.m_sendinginfo.l_addresstypes, //30
+                                            s.m_sendinginfo.f_dynacall); //31
                 return ExecNonQuery(sql);
             }
             catch (Exception e)

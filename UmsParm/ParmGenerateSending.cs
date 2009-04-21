@@ -145,7 +145,14 @@ namespace com.ums.UmsParm
             }
             xmlwriter.insertStartElement("project");
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
-            send_adhoc(ref project, ref sending);
+            try
+            {
+                send_adhoc(ref project, ref sending);
+            }
+            catch (Exception e)
+            {
+
+            }
 
 
             xmlwriter.insertEndElement();
@@ -350,7 +357,7 @@ namespace com.ums.UmsParm
                 BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
                 db.FillReschedProfile(sending.n_reschedpk.ToString(), ref resched_profile);
                 db.FillValid(sending.n_validity, ref valid);
-                db.FillSendNum(sending.sz_sendingname, ref sendnum);
+                db.FillSendNum(sending.oadc.sz_number, ref sendnum);
                 db.FillActionProfile(sending.n_profilepk, ref profile);
                 db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
 

@@ -495,6 +495,7 @@ namespace com.ums.UmsParm
         public int n_sendingtype;
         public int n_maxchannels;
         public int n_requesttype;
+        public int n_nofax;
 
         public int getSendingType() { return n_sendingtype; }
 
@@ -516,6 +517,7 @@ namespace com.ums.UmsParm
         public void setSendingType(int n) { n_sendingtype = n; }
         public void setMaxChannels(int n) { n_maxchannels = n; }
         public void setRequestType(int n) { n_requesttype = n; }
+        public void setNofax(int n) { n_nofax = n; }
         public bool hasValidAreaID()
         {
             if (sz_areaid == null)
@@ -833,6 +835,7 @@ namespace com.ums.UmsParm
         public String sz_sms_oadc;
         public String sz_sms_message;
         public int n_sms_expirytime_minutes;
+        public int n_nofax;
         public bool b_resend;
         /*public String sz_sms_message;
         public String sz_sms_oadc;
