@@ -417,6 +417,14 @@ namespace com.ums.ws.parm
                     FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + l_pk + ".xml");
                     try
                     {
+                        if (fmode.Equals(FileMode.Create))
+                        {
+                            try
+                            {
+                                t.Delete();
+                            }
+                            catch (Exception) { }
+                        }
                         StreamWriter w = (fmode.Equals(FileMode.Create) ? t.CreateText() : t.AppendText());
                         char pktype = l_pk.ToCharArray()[0];
                         ParseShapeNode(ref node, ref w, sz_nodetype, l_pk, pktype);
@@ -526,6 +534,8 @@ namespace com.ums.ws.parm
             w.WriteLine(String.Format("<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\">",
                         nodetype, argb._a, argb._r, argb._g, argb._b, sz_pkfield, l_pk));
             XmlNodeList points = node.ChildNodes;
+            Hashtable tbl = new Hashtable();
+            int written = 0;
             for (int i = 0; i < points.Count; i++)
             {
                 XmlNode point = points.Item(i);
@@ -536,6 +546,10 @@ namespace com.ums.ws.parm
                 let = point.Attributes["letter"].Value;
                 nam1 = point.Attributes["namefilter1"].Value;
                 nam2 = point.Attributes["namefilter2"].Value;
+                String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim();
+                if (tbl[key]!=null && tbl[key].ToString() == "1")
+                    continue;
+                tbl.Add(key, "1");
                 if (mun.Length == 0)
                     mun = " ";
                 if (stre.Length == 0)
@@ -550,6 +564,7 @@ namespace com.ums.ws.parm
                     nam2 = " ";
                 w.WriteLine(String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" />",
                     mun, stre, hou, let, nam1, nam2));
+                written++;
             }
             //WRITE END LINE
             w.WriteLine(String.Format("</{0}>", nodetype));

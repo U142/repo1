@@ -255,7 +255,6 @@ namespace com.ums.UmsParm
             smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
             passending.setRefno(sending.n_refno, ref project);
 
-
             bool b_publish_voice = false;
             bool b_publish_lba = false;
             bool b_publish_sms = false;
@@ -281,7 +280,7 @@ namespace com.ums.UmsParm
                     MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
                     smssendinginfo.l_refno = db.newRefno();
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
-                    smssending.createShape(sending);
+                    smssending.createShape(ref sending);
                     db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     smssending.setSendingInfo(ref smssendinginfo);
                     db.Send(ref smssending, ref logoninfo);
@@ -340,7 +339,7 @@ namespace com.ums.UmsParm
                 }
                 try
                 {
-                    passending.createShape(sending); //will also create a temp address file
+                    passending.createShape(ref sending); //will also create a temp address file
                     b_publish_voice = true;
                 }
                 catch (Exception e)

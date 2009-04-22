@@ -371,6 +371,14 @@ namespace com.ums.UmsParm
                     {
                         m.f_dynacall = 1;
                     }
+                    try
+                    {
+                        m.l_nofax = rs.GetInt32(22);
+                    }
+                    catch (Exception)
+                    {
+                        m.l_nofax = 0;
+                    }
 
                     return true;
                 }
@@ -401,7 +409,7 @@ namespace com.ums.UmsParm
             m.l_sendingstatus = 1;
             m.l_companypk = l.l_comppk;
             m.l_deptpk = l.l_deptpk;
-            m.l_nofax = 0;
+            m.l_nofax = ((a.l_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_removedup = 1;
             m.l_maxchannels = a.n_maxchannels;
             m.l_nofax = a.n_nofax;
@@ -434,7 +442,7 @@ namespace com.ums.UmsParm
             m.l_sendingstatus = 1;
             m.l_companypk = l.l_comppk;
             m.l_deptpk = l.l_deptpk;
-            m.l_nofax = s.n_nofax;
+            m.l_nofax = ((s.n_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_removedup = 1;
             m.l_maxchannels = s.n_maxchannels;
             m.l_group = s.getGroup();

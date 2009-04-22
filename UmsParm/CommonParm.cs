@@ -587,7 +587,7 @@ namespace com.ums.UmsParm
         public void setSimulation(bool b) { b_simulation = b; }
     //public 
 
-        public bool createShape(UMAPSENDING s)
+        public bool createShape(ref UMAPSENDING s)
         {
             if (typeof(UPOLYGONSENDING) == s.GetType())
             {
@@ -600,6 +600,7 @@ namespace com.ums.UmsParm
                     shape.poly().addPoint(point.lon, point.lat);
                 }
                 setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_POLYGON;
             }
             else if (typeof(UELLIPSESENDING) == s.GetType())
             {
@@ -609,6 +610,7 @@ namespace com.ums.UmsParm
                 shape.ellipse().setCenter(ellipse.ellipse.center.lon, ellipse.ellipse.center.lat);
                 shape.ellipse().setExtents(ellipse.ellipse.radius.lon, ellipse.ellipse.radius.lat);
                 setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_ELLIPSE;
 
             }
             else if (typeof(UGISSENDING) == s.GetType())
@@ -622,6 +624,7 @@ namespace com.ums.UmsParm
                     shape.gis().addRecord(rec);
                 }
                 setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_GIS;
             }
             
             return true;
@@ -835,14 +838,16 @@ namespace com.ums.UmsParm
         public String sz_sms_oadc;
         public String sz_sms_message;
         public int n_sms_expirytime_minutes;
-        public int n_nofax;
         public bool b_resend;
+        public long n_resend_refno;
+        public long[] resend_statuscodes;
         /*public String sz_sms_message;
         public String sz_sms_oadc;
         public int n_sms_expirytime_minutes;*/
         public int n_maxchannels;
         protected int n_group;
         protected int n_function;
+
         public int getGroup()
         {
             return n_group;
