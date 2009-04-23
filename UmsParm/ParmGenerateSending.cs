@@ -254,6 +254,8 @@ namespace com.ums.UmsParm
             smssending.setSmsOadc(sending.sz_sms_oadc);
             smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
             passending.setRefno(sending.n_refno, ref project);
+            smssending.l_resend_refno = passending.l_resend_refno = sending.n_resend_refno;
+            smssending.b_resend = passending.b_resend = sending.b_resend;
 
             bool b_publish_voice = false;
             bool b_publish_lba = false;
@@ -261,12 +263,12 @@ namespace com.ums.UmsParm
             bool b_ret = false;
 
             //create SMS sending if 
-            if((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS)>0 ||
+            if(sending.doSendSMS() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS)>0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS)>0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY)>0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED)>0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED)>0)
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED)>0))
             {
                 //This is a sending with possible sms recipients.
                 if (smssending.sz_smsmessage.Length <= 0)
@@ -277,6 +279,8 @@ namespace com.ums.UmsParm
                 try
                 {
                     //fetch a refno for the sms sending
+                    //if (smssending.b_resend)
+                    //    throw new USendingTypeNotSupportedException("Resend of SMS not yet implemented");
                     MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
                     smssendinginfo.l_refno = db.newRefno();
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
@@ -308,7 +312,7 @@ namespace com.ums.UmsParm
 
 
             //create voice sending if
-            if ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+            if (sending.doSendVoice() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
 
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
@@ -324,7 +328,7 @@ namespace com.ums.UmsParm
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
 
                 (sending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0)
+                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0))
             {
                 try
                 {
@@ -358,8 +362,15 @@ namespace com.ums.UmsParm
                 db.FillValid(sending.n_validity, ref valid);
                 db.FillSendNum(sending.oadc.sz_number, ref sendnum);
                 db.FillActionProfile(sending.n_profilepk, ref profile);
-                db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
-
+                try
+                {
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    throw e;
+                }
 
                 //fill a sending struct
                 passending.setSendingInfo(ref sendinginfo);
@@ -390,6 +401,11 @@ namespace com.ums.UmsParm
             {
                 if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
                     b_publish_lba = true;
+                if (sending.b_resend && b_publish_lba)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Resend LBA is not yet supported", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    b_publish_lba = false;
+                }
                 if (b_publish_lba && sending.m_lba != null)
                 {
                     if (sending.m_lba.getValid())

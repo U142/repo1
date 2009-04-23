@@ -17,6 +17,7 @@ namespace com.ums.UmsParm
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }
+        public UResend resend() { return (UResend)this; }
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
         public abstract bool WriteAddressFile(ref AdrfileWriter w);
         public abstract bool WriteAddressFileGUI(ref AdrfileGUIWriter w);
@@ -24,6 +25,14 @@ namespace com.ums.UmsParm
         {
             w.close();
             //throw new NotImplementedException("WriteAddressFileLBA");
+            return true;
+        }
+        public bool WriteAddressResendFile(long copy_refno)
+        {
+            return true;
+        }
+        public bool WriteAddressResendFileGUI(long copy_refno)
+        {
             return true;
         }
     }
@@ -254,6 +263,70 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+        }
+    }
+
+    public class UResend : UShape
+    {
+        public String sz_header;
+        public List<long> resend_status = new List<long>();
+        public long resend_refno;
+
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            try
+            {
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Resend={0}", sz_header));
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Refno={0}", resend_refno));
+                for(int i = 0; i < resend_status.Count; i++)
+                {
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Status={0}", resend_status[i]));
+                }
+            }
+            catch (Exception e)
+            {
+                ULog.error(w.getRefno(), "UResend::WriteAddressFile", e.Message);
+                throw new UFileWriteException(e.Message);
+            }
+            finally
+            {
+                w.close();
+            }
+            return true;
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            try
+            {
+                w.publish();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+    public class UResendVoice : UResend
+    {
+        public UResendVoice()
+            : base()
+        {
+            sz_header = "MR";
+        }
+    }
+    public class UResendSMS : UResend
+    {
+        public UResendSMS()
+            : base()
+        {
+            sz_header = "RS";
         }
     }
 
@@ -570,6 +643,8 @@ namespace com.ums.UmsParm
         public char getSendingType() { return sendingtype; }
         public char sendingtype = 'v'; //voice
         public long l_refno;
+        public long l_resend_refno;
+        public bool b_resend;
         public BBSENDNUM m_sendnum;
         public BBRESCHEDPROFILE m_reschedprofile;
         public MDVSENDINGINFO m_sendinginfo;
@@ -589,7 +664,25 @@ namespace com.ums.UmsParm
 
         public bool createShape(ref UMAPSENDING s)
         {
-            if (typeof(UPOLYGONSENDING) == s.GetType())
+            if (s.b_resend)
+            {
+                //make a copy of the old sending
+                UShape shape = null;
+
+                if (getSendingType() == 'v') //voice
+                    shape = new UResendVoice();
+                else if (getSendingType() == 's') //sms
+                    shape = new UResendSMS();
+                else
+                    return false;
+                shape.resend().resend_refno = s.n_resend_refno;
+                for (int i = 0; i < s.resend_statuscodes.Length; i++)
+                {
+                    shape.resend().resend_status.Add(s.resend_statuscodes[i]);
+                }
+                setShape(ref shape);
+            }
+            else if (typeof(UPOLYGONSENDING) == s.GetType())
             {
                 UPOLYGONSENDING polygon = (UPOLYGONSENDING)s;
                 s.setGroup(3);
@@ -685,9 +778,16 @@ namespace com.ums.UmsParm
             }
             try
             {
-                adrguiwriter = new AdrfileGUIWriter(l_refno);
-                s.WriteAddressFileGUI(ref adrguiwriter);
-                adrwriter = new AdrfileWriter(l_refno, getSendingType());
+                if (b_resend)
+                {
+                    adrguiwriter = new AdrfileGUIWriter(l_refno, l_resend_refno);
+                }
+                else
+                {
+                    adrguiwriter = new AdrfileGUIWriter(l_refno);
+                    s.WriteAddressFileGUI(ref adrguiwriter);
+                }
+                adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend);
                 s.WriteAddressFile(ref adrwriter);
                 return true;
             }
@@ -742,6 +842,14 @@ namespace com.ums.UmsParm
             //return adrguiwriter.publish();
             try
             {
+                /*if (b_resend)
+                {
+                    m_shape.WriteAddressResendFileGUI(l_resend_refno);
+                }
+                else
+                {
+                    adrguiwriter.publish();
+                }*/
                 adrguiwriter.publish();
                 return true;
             }
@@ -841,12 +949,14 @@ namespace com.ums.UmsParm
         public bool b_resend;
         public long n_resend_refno;
         public long[] resend_statuscodes;
+        public int n_send_channels; //0=all, 1=voice, 2=sms
         /*public String sz_sms_message;
         public String sz_sms_oadc;
         public int n_sms_expirytime_minutes;*/
         public int n_maxchannels;
         protected int n_group;
         protected int n_function;
+        
 
         public int getGroup()
         {
@@ -863,6 +973,18 @@ namespace com.ums.UmsParm
         public void setFunction(int n)
         {
             n_function = n;
+        }
+        public bool doSendVoice()
+        {
+            if (n_send_channels == 0 || n_send_channels == 1)
+                return true;
+            return false;
+        }
+        public bool doSendSMS()
+        {
+            if (n_send_channels == 0 || n_send_channels == 2)
+                return true;
+            return false;
         }
     }
     public class UPOLYGONSENDING : UMAPSENDING

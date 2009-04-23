@@ -52,7 +52,20 @@ namespace com.ums.UmsFile
             }
 
         }
-        
+
+        public void CopyOperation(UFile dest)
+        {
+            try
+            {
+                File.Copy(this.full(), dest.full());
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                throw e;
+            }
+        }
+
         public virtual bool DeleteOperation()
         {
             try
@@ -83,29 +96,54 @@ namespace com.ums.UmsFile
         public AdrfileGUIWriter(long l_refno)
         {
             n_refno = l_refno;
+            n_resend_refno = -1;
             this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
             open();
         }
+        public AdrfileGUIWriter(long l_refno, long l_from_resend_refno)
+        {
+            n_refno = l_refno;
+            n_resend_refno = l_from_resend_refno;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
+            //don't open the file for writing
+        }
         public override bool publish()
         {
-            try
+            if (n_resend_refno > 0)
             {
-                sw.Close();
-            }
-            catch (Exception) //just in case it's still open
-            {
-     
-            }
-            UFile dest = new UFile(UCommon.UPATHS.sz_path_mapsendings, this.file.file());
-            try
-            {
-                file.MoveOperation(dest);
+                UFile from = new UFile(UCommon.UPATHS.sz_path_mapsendings, String.Format("{0}.adr", n_resend_refno));
+                try
+                {
+                    //copy the old GUI adrfile to the new resend
+                    from.CopyOperation(file);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
                 return true;
             }
-            catch (Exception e)
+            else
             {
-                ULog.error(n_refno, "Error publishing GUI addressfile", e.Message);
-                throw e;
+                try
+                {
+                    sw.Close();
+                }
+                catch (Exception) //just in case it's still open
+                {
+
+                }
+                UFile dest = new UFile(UCommon.UPATHS.sz_path_mapsendings, this.file.file());
+                try
+                {
+                    file.MoveOperation(dest);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    ULog.error(n_refno, "Error publishing GUI addressfile", e.Message);
+                    throw e;
+                }
             }
         }
     }
@@ -190,16 +228,18 @@ namespace com.ums.UmsFile
         protected UFile file;
         protected StreamWriter sw;
         protected long n_refno;
+        protected long n_resend_refno;
         public long getRefno() { return n_refno; }
+
 
         protected AdrfileWriter()
         {
 
         }
-        public AdrfileWriter(long l_refno, char sendingtype)
+        public AdrfileWriter(long l_refno, char sendingtype, bool b_resend)
         {
             n_refno = l_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-{0}{1}.adr", sendingtype, l_refno));
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-{0}{1}.{2}", sendingtype, l_refno, (b_resend ? "res" : "adr")));
             open();
         }
         public virtual bool delete()

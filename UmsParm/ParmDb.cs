@@ -298,7 +298,7 @@ namespace com.ums.UmsParm
         /*
          * fill sendinginfo struct by refno
          */
-        public bool GetSendingInfo(Int32 l_refno, ref MDVSENDINGINFO m)
+        public bool GetSendingInfo(long l_refno, ref MDVSENDINGINFO m)
         {
             try
             {
@@ -429,32 +429,58 @@ namespace com.ums.UmsParm
         }
         public bool FillSendingInfo(ref ULOGONINFO l, ref UMAPSENDING s, ref MDVSENDINGINFO m, UDATETIME schedule)
         {
+            if (s.b_resend)
+            {
+                try
+                {
+                    GetSendingInfo(s.n_resend_refno, ref m);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                String resendtype = "";
+                switch (s.n_send_channels)
+                {
+                    case 1:
+                        resendtype = "Voice";
+                        break;
+                    case 2:
+                        resendtype = "SMS";
+                        break;
+                }
+                m.sz_sendingname = "[RESEND " + resendtype + "] " + s.sz_sendingname;
+            }
+            else
+            {
+                m.l_namepos = 0;
+                m.l_addresspos = 0;
+                m.l_lastantsep = 0;
+                m.sz_sendingname = s.sz_sendingname;
+                m.l_companypk = l.l_comppk;
+                m.l_deptpk = l.l_deptpk;
+                m.l_group = s.getGroup();
+                //m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse, 4 = GIS
+                m.l_type = 1; //voice
+                m.l_addresstypes = s.n_addresstypes;
+            }
+            //COMMON
             m.sz_fields = "";
             m.sz_sepused = "";
-            m.l_namepos = 0;
-            m.l_addresspos = 0;
-            m.l_lastantsep = 0;
             m.l_createdate = UCommon.UGetDateNow(); //String.Format("{0:yyyy}{0:MM}{0:dd}", DateTime.UtcNow.ToLocalTime());
             m.l_createtime = UCommon.UGetTimeNow(); //String.Format("{0:HH}{0:mm}", DateTime.UtcNow.ToLocalTime());
             m.l_scheddate = schedule.sz_date;
             m.l_schedtime = schedule.sz_time;
-            m.sz_sendingname = s.sz_sendingname;
-            m.l_sendingstatus = 1;
-            m.l_companypk = l.l_comppk;
-            m.l_deptpk = l.l_deptpk;
-            m.l_nofax = ((s.n_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_removedup = 1;
             m.l_maxchannels = s.n_maxchannels;
-            m.l_group = s.getGroup();
-            //m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse, 4 = GIS
+            m.sz_groups = "";
+            m.l_userpk = l.l_userpk;
+            m.f_dynacall = (s.getFunction() == UCommon.USENDING_LIVE ? 1 : 2);
+            m.l_nofax = ((s.n_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
+            m.l_sendingstatus = 1;
+
             if (m.l_group != 3 && m.l_group != 8 && m.l_group != 4)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
-
-            m.sz_groups = "";
-            m.l_type = 1; //voice
-            m.f_dynacall = (s.getFunction() == UCommon.USENDING_LIVE ? 1 : 2);
-            m.l_addresstypes = s.n_addresstypes;
-            m.l_userpk = l.l_userpk;
 
             return true;
         }
