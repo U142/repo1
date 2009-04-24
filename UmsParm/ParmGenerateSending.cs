@@ -284,6 +284,10 @@ namespace com.ums.UmsParm
                     MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
                     smssendinginfo.l_refno = db.newRefno();
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
+                    /*
+                     * if this is a resend, then reorganize resend statuscodes
+                     * 
+                     */
                     smssending.createShape(ref sending);
                     db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     smssending.setSendingInfo(ref smssendinginfo);

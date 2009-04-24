@@ -103,7 +103,7 @@ namespace com.ums.PAS.Address
                 {
                     try
                     {
-                        x = db.GetGisImport(ref filelines, next, chunksize, ref next);
+                        x = db.GetGisImport(ref filelines, next, chunksize, ref next, ref m_search.SKIPLINES);
                     }
                     catch (Exception e)
                     {

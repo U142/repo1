@@ -195,10 +195,16 @@ namespace com.ums.PAS.Status
                             {
                                 for (int i = 0; i < shape.poly().getSize(); i++)
                                 {
-                                    outxml.insertStartElement("POLYPOINT");
-                                    outxml.insertAttribute("lat", shape.poly().getPoint(i).getLat().ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("lon", shape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
+                                    try
+                                    {
+                                        outxml.insertStartElement("POLYPOINT");
+                                        outxml.insertAttribute("lat", shape.poly().getPoint(i).getLat().ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lon", shape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                    }
                                 }
                             }
                             break;
@@ -209,12 +215,18 @@ namespace com.ums.PAS.Status
                             break;
                         case 8: //ellipse
                             {
-                                outxml.insertStartElement("ELLIPSE");
-                                outxml.insertAttribute("f_centerx", shape.ellipse().lon.ToString(UCommon.UGlobalizationInfo));
-                                outxml.insertAttribute("f_centery", shape.ellipse().lat.ToString(UCommon.UGlobalizationInfo));
-                                outxml.insertAttribute("f_radiusx", shape.ellipse().x.ToString(UCommon.UGlobalizationInfo));
-                                outxml.insertAttribute("f_radiusy", shape.ellipse().y.ToString(UCommon.UGlobalizationInfo));
-                                outxml.insertEndElement(); //ELLIPSE
+                                try
+                                {
+                                    outxml.insertStartElement("ELLIPSE");
+                                    outxml.insertAttribute("f_centerx", shape.ellipse().lon.ToString(UCommon.UGlobalizationInfo));
+                                    outxml.insertAttribute("f_centery", shape.ellipse().lat.ToString(UCommon.UGlobalizationInfo));
+                                    outxml.insertAttribute("f_radiusx", shape.ellipse().x.ToString(UCommon.UGlobalizationInfo));
+                                    outxml.insertAttribute("f_radiusy", shape.ellipse().y.ToString(UCommon.UGlobalizationInfo));
+                                    outxml.insertEndElement(); //ELLIPSE
+                                }
+                                catch (Exception e)
+                                {
+                                }
                             }
                             break;
                     }
@@ -280,9 +292,9 @@ namespace com.ums.PAS.Status
                     outxml.insertEndElement();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                String err = e.Message;
             }
 
             outxml.insertEndElement(); //STATUSITEMLIST

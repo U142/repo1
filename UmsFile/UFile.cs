@@ -104,7 +104,7 @@ namespace com.ums.UmsFile
         {
             n_refno = l_refno;
             n_resend_refno = l_from_resend_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
+            this.file = new UFile(UCommon.UPATHS.sz_path_mapsendings, String.Format("{0}.adr", l_refno));
             //don't open the file for writing
         }
         public override bool publish()

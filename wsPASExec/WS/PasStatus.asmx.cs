@@ -47,7 +47,7 @@ namespace com.ums.ws.pas.status
 
         }
 
-        [WebMethod]
+        /*[WebMethod]
         public byte[] GetStatusItemsTest()
         {
             ULOGONINFO logoninfo = new ULOGONINFO();
@@ -66,7 +66,7 @@ namespace com.ums.ws.pas.status
 
             //return "OK";
 
-        }
+        }*/
 
         /*[WebMethod]
         public String TestCoor()

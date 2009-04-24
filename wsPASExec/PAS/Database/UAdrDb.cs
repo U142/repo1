@@ -35,7 +35,7 @@ namespace com.ums.PAS.Database
             return list;
         }
 
-        public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next)
+        public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next, ref int skiplines)
         {
             String szSQL = "";
             int i = 0;
@@ -49,7 +49,7 @@ namespace com.ums.PAS.Database
                     szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
                                              "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
                                              "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                             p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - 1);
+                                             p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
                     if (p[i].letter.Trim().Length > 0)
                     {
                         szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";

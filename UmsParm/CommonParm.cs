@@ -280,6 +280,10 @@ namespace com.ums.UmsParm
                 w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Refno={0}", resend_refno));
                 for(int i = 0; i < resend_status.Count; i++)
                 {
+                    //SMS Specific - resend of sms is based on l_dst=[0,1,2]
+                    if (resend_status[i] >= 8000 && resend_status[i] <= 8002)
+                        resend_status[i] = resend_status[i] - 8000;
+
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Status={0}", resend_status[i]));
                 }
             }
@@ -318,7 +322,7 @@ namespace com.ums.UmsParm
         public UResendVoice()
             : base()
         {
-            sz_header = "MR";
+            sz_header = "MS";
         }
     }
     public class UResendSMS : UResend
@@ -326,7 +330,7 @@ namespace com.ums.UmsParm
         public UResendSMS()
             : base()
         {
-            sz_header = "RS";
+            sz_header = "SM";
         }
     }
 

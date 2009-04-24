@@ -246,7 +246,25 @@ namespace com.ums.PAS.Database
         public void setAdrInfo(String str)
         {
             sz_adrinfo = str;
-            int s = 0;
+            string [] p = str.Split('|');
+            if (p.Length >= 1)
+                sz_adrname = p[0];
+            else
+                sz_adrname = "N/A";
+            if (p.Length >= 2)
+                sz_postaddr = p[1];
+            else
+                sz_postaddr = "N/A";
+            if (p.Length >= 3)
+                sz_postno = p[2];
+            else
+                sz_postno = "N/A";
+            if (p.Length >= 4)
+                sz_postarea = p[3];
+            else
+                sz_postarea = "N/A";
+
+            /*int s = 0;
             int e = str.IndexOf("|");
             sz_adrname = str.Substring(s, e);
             s = e + 1;
@@ -256,7 +274,7 @@ namespace com.ums.PAS.Database
             e = str.IndexOf("|", s);
             sz_postno = str.Substring(s, e-s);
             s = e + 1;
-            sz_postarea = str.Substring(s);
+            sz_postarea = str.Substring(s);*/
         }
 
     }

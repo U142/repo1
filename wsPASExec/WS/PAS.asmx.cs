@@ -16,6 +16,7 @@ using com.ums.UmsCommon;
 using com.ums.PAS.Status;
 using com.ums.PAS.Project;
 using com.ums.UmsCommon.Audio;
+using com.ums.PAS.Settings;
 using System.Text;
 
 
@@ -92,6 +93,39 @@ namespace com.ums.ws.pas
             }
 
         }
+
+        [WebMethod]
+        public byte[] GetSendSettings(ULOGONINFO l)
+        {
+            try
+            {
+                return new USendSettings(ref l).Find();
+                //return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /*[WebMethod]
+        public String __GetSendSettings()
+        {
+            ULOGONINFO l = new ULOGONINFO();
+            l.l_deptpk = 1;
+            l.l_comppk = 2;
+            l.l_userpk = 1;
+            l.sz_password = "mh123,1";
+
+            try
+            {
+                return new USendSettings(ref l).Find();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
 
 
         /*[WebMethod]
@@ -190,7 +224,7 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
-        [WebMethod]
+        /*[WebMethod]
         public UAddressList Test()
         {
             try
@@ -211,7 +245,7 @@ namespace com.ums.ws.pas
             {
                 throw e;
             }
-        }
+        }*/
 
         /*
          * Method - searching for a specified address in an external system (Ugland)
