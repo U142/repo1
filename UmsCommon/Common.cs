@@ -241,6 +241,7 @@ namespace com.ums.UmsCommon
             public static String sz_path_predefined_messages;
             public static String sz_path_global_wav_dir;
             public static String sz_path_infosent;
+            public static String sz_url_nslookup; //MaxMind NS account
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {
@@ -375,6 +376,49 @@ namespace com.ums.UmsCommon
                 return "-1";
             return sz_date + sz_time;
         }
+    }
+
+    public class UPASLOGON
+    {
+        public bool f_granted;
+        public Int64 l_userpk;
+        public int l_comppk;
+        public String sz_userid;
+        public String sz_compid;
+        public String sz_name;
+        public String sz_surname;
+        public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
+        public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
+    }
+
+    public class UDEPARTMENT
+    {
+        public int l_deptpk;
+        public String sz_deptid;
+        public String sz_stdcc;
+        public float lbo, rbo, ubo, bbo;
+        public bool f_default;
+        public int l_deptpri;
+        public int l_maxalloc;
+        public String sz_userprofilename;
+        public String sz_userprofiledesc;
+        public int l_status;
+        public int l_newsending;
+        public int l_parm;
+        public int l_fleetcontrol;
+        public int l_lba;
+        public int l_houseeditor;
+        public long l_addresstypes;
+        public String sz_defaultnumber;
+    }
+
+    public class UNSLOOKUP
+    {
+        public String sz_domain;
+        public String sz_ip;
+        public long l_lastdatetime;
+        public String sz_location;
+        public bool f_success;
     }
 
     public struct ULOGONINFO

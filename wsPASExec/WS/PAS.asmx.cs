@@ -18,6 +18,7 @@ using com.ums.PAS.Project;
 using com.ums.UmsCommon.Audio;
 using com.ums.PAS.Settings;
 using System.Text;
+using com.ums.UmsDbLib;
 
 
 namespace com.ums.ws.pas
@@ -37,6 +38,29 @@ namespace com.ums.ws.pas
 
     public class pasws : System.Web.Services.WebService
     {
+        [WebMethod]
+        public UPASLOGON PasLogon(ULOGONINFO l)
+        {
+            try
+            {
+                UPASLOGON ret = new ULogon().Logon(ref l);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        [WebMethod]
+        public UPASLOGON TestLogon()
+        {
+            ULOGONINFO l = new ULOGONINFO();
+            l.sz_userid = "MH";
+            l.sz_compid = "UMS";
+            l.sz_password = "mh123,1";
+            return new ULogon().Logon(ref l);
+        }
 
         [WebMethod]
         public UPASMap GetMap(UMapInfo request) //UMapInfo input)

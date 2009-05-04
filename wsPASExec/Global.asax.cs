@@ -32,6 +32,7 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_predefined_messages = ConfigurationSettings.AppSettings["sz_path_predefined_messages"];
             UCommon.UPATHS.sz_path_global_wav_dir = ConfigurationSettings.AppSettings["sz_path_global_wav_dir"];
             UCommon.UPATHS.sz_path_infosent = ConfigurationSettings.AppSettings["sz_path_infosent"];
+            UCommon.UPATHS.sz_url_nslookup = ConfigurationSettings.AppSettings["sz_url_nslookup"];
 
             UCommon.UBBDATABASE.sz_dsn = ConfigurationSettings.AppSettings["sz_db_dsn"]; //"backbone_ibuki";
             UCommon.UBBDATABASE.sz_dsn_aoba = ConfigurationSettings.AppSettings["sz_db_dsn_aoba"]; //"aoba";

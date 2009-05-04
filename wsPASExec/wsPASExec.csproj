@@ -84,6 +84,7 @@
     <Compile Include="PAS\Address\gisimport\GisImportFile.cs" />
     <Compile Include="PAS\Address\IAddressSearch.cs" />
     <Compile Include="PAS\Address\UInhabitantsByDistance.cs" />
+    <Compile Include="PAS\Database\ULogon.cs" />
     <Compile Include="PAS\Database\USettingsDb.cs" />
     <Compile Include="PAS\Database\UStatusItemsDb.cs" />
     <Compile Include="PAS\Database\UStatusListDb.cs" />
