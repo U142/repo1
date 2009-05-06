@@ -52,14 +52,23 @@ namespace com.ums.ws.pas
             }
 
         }
-        [WebMethod]
+        /*[WebMethod]
         public UPASLOGON TestLogon()
         {
             ULOGONINFO l = new ULOGONINFO();
             l.sz_userid = "MH";
             l.sz_compid = "UMS";
-            l.sz_password = "mh123,1";
+            l.sz_password = "mh123,";
             return new ULogon().Logon(ref l);
+        }*/
+
+        /*
+         * Will powerup the webservice if it's been shut down
+         */
+        [WebMethod]
+        public String Powerup()
+        {
+            return "OK";
         }
 
         [WebMethod]

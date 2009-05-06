@@ -376,6 +376,20 @@ namespace com.ums.UmsCommon
                 return "-1";
             return sz_date + sz_time;
         }
+        public long getDateTime()
+        {
+            try
+            {
+                if (sz_date.Length == 8 && sz_time.Length == 6)
+                    return long.Parse(sz_date + sz_time);
+                else
+                    return 0;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 
     public class UPASLOGON

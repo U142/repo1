@@ -5,7 +5,8 @@ using System.Web;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
 using System.Data.Odbc;
-
+using System.Net;
+using System.IO;
 
 namespace com.ums.PAS.Database
 {
@@ -15,6 +16,117 @@ namespace com.ums.PAS.Database
             : base()
         {
 
+        }
+
+        protected bool SaveNsLookup(long n_userpk, ref UNSLOOKUP ns)
+        {
+            try
+            {
+                String szSQL = String.Format("SELECT l_userpk, sz_location FROM BBUSER_NSLOOKUP WHERE l_userpk={0} AND "+
+                                            "sz_domain='{1}'",
+                                            n_userpk, ns.sz_domain);
+
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    rs.Close();
+                    szSQL = String.Format("UPDATE BBUSER_NSLOOKUP SET l_lastdatetime={0}, sz_ip='{1}', f_success={2}, " +
+                                          "sz_location='{3}' WHERE l_userpk={4} AND sz_domain='{5}' ",
+                                          ns.l_lastdatetime, ns.sz_ip, (ns.f_success ? 1 : 0), ns.sz_location,
+                                          n_userpk, ns.sz_domain);
+                    ExecNonQuery(szSQL);
+                }
+                else
+                {
+                    rs.Close();
+                    szSQL = String.Format("INSERT INTO BBUSER_NSLOOKUP(l_userpk, sz_domain, sz_ip, l_lastdatetime, f_success, sz_location) " +
+                                        "VALUES({0}, '{1}', '{2}', {3}, {4}, '{5}')",
+                                        n_userpk, ns.sz_domain, ns.sz_ip, ns.l_lastdatetime, (ns.f_success ? 1 : 0), ns.sz_location);
+                    ExecNonQuery(szSQL);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        protected bool NsLookup(ref UNSLOOKUP ns)
+        {
+            
+            try
+            {
+                //Returns:ISO 3166 Two-letter Country Code, Region Code, City, Postal Code, Latitude, Longitude, Metropolitan Code, Area Code, ISP, Organization, Error code
+                String remoteIP = HttpContext.Current.Request.UserHostAddress;
+                String remoteHost = HttpContext.Current.Request.UserHostName;
+                //NO,09,Sandnes,,68.583298,14.883300,0,0,"Ventelo Norge AS","BLUECOM-STATIC-IP-CUSTOMERS"
+
+                ns.sz_ip = remoteIP;
+                ns.sz_domain = remoteHost;
+                ns.sz_location = "";
+                try
+                {
+                    ns.l_lastdatetime = UCommon.UGetFullDateTimeNow().getDateTime();
+                }
+                catch(Exception)
+                {
+                    ns.l_lastdatetime = 0;
+                }
+                if (remoteIP.Length > 0)
+                {
+                    //remoteIP = "81.191.35.194";
+                    String szUrl = String.Format("{0}&i={1}", UCommon.UPATHS.sz_url_nslookup, remoteIP);
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(szUrl);
+                    HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                    StreamReader sr = new StreamReader(response.GetResponseStream());
+                    String output = sr.ReadToEnd();
+                    String [] arr = output.Split(',');
+                    try
+                    {
+                        sr.Close();
+                        response.Close();
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+
+                    for (int i = 0; i < arr.Length; i++)
+                        arr[i] = arr[i].Replace("\"", "");
+                    
+                    if (arr.Length >= 3)
+                    {
+                        if (arr[2].Length > 0)
+                            ns.sz_location = arr[2];
+                        if (arr[0].Length > 0)
+                            ns.sz_location += " " + arr[0] + "\n";
+                        if (ns.sz_location.Length == 0 && arr.Length >= 11)
+                            ns.sz_location = arr[10];
+                            
+                        //ns.sz_location = arr[2] + " " + arr[0] + "\n";
+                    }
+                    if (arr.Length >= 10)
+                    {
+                        String provider = arr[8];
+                        String providertext = arr[9];
+                        if(provider.Length > 0)
+                            ns.sz_location += provider;
+                        if (!provider.Equals(providertext) && providertext.Length > 0)
+                            ns.sz_location += " - " + providertext;
+                    }
+                    ns.sz_location = ns.sz_location.Trim();
+                    if (ns.sz_location.Length >= 99)
+                    {
+                        ns.sz_location = ns.sz_location.Substring(0, 98);
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public UPASLOGON Logon(ref ULOGONINFO l)
@@ -42,8 +154,54 @@ namespace com.ums.PAS.Database
                                     "BC.sz_compid='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
                                     "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1",
                                     l.sz_userid, l.sz_password, l.sz_compid);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                if (rs.Read())
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
+
+                if (!rs.HasRows)  //logon failed
+                {
+                    ret.f_granted = false;
+                    ret.l_comppk = 0;
+                    try
+                    {
+                        //find the userpk to log a failed logon
+                        szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
+                                                l.sz_userid, l.sz_compid);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                        if (rs.Read())
+                        {
+                            ret.l_userpk = rs.GetInt64(0);
+                        }
+                        else
+                            ret.l_userpk = 0;
+                        rs.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        ret.l_userpk = 0;
+                        throw e;
+                    }
+                }
+                else //logon ok
+                {
+                    ret.f_granted = true;
+                    ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
+                }
+                if (ret.l_userpk > 0)
+                {
+                    UNSLOOKUP ns = new UNSLOOKUP();
+                    NsLookup(ref ns);
+                    ns.f_success = ret.f_granted;
+                    SaveNsLookup(ret.l_userpk, ref ns);
+                }
+
+                if (!ret.f_granted)
+                {
+                    ret.l_userpk = 0;
+                    return ret;
+                }
+
+
+                if (rs.Read()) //logon succeeded
                 {
                     ret.f_granted = true;
                     ret.sz_name = rs["sz_name"].ToString();
@@ -62,10 +220,10 @@ namespace com.ums.PAS.Database
                             String[] bounds = sz_nav.Split('|');
                             if (bounds.Length >= 4)
                             {
-                                dept.lbo = float.Parse(bounds[0]);
-                                dept.ubo = float.Parse(bounds[1]);
-                                dept.rbo = float.Parse(bounds[2]);
-                                dept.bbo = float.Parse(bounds[3]);
+                                dept.lbo = float.Parse(bounds[0], UCommon.UGlobalizationInfo);
+                                dept.ubo = float.Parse(bounds[1], UCommon.UGlobalizationInfo);
+                                dept.rbo = float.Parse(bounds[2], UCommon.UGlobalizationInfo);
+                                dept.bbo = float.Parse(bounds[3], UCommon.UGlobalizationInfo);
                             }
                         }
                         catch (Exception)
@@ -152,14 +310,37 @@ namespace com.ums.PAS.Database
                         ns.f_success = bool.Parse((rs["f_success"].ToString().Equals("1") ? "true" : "false"));
                         ret.nslookups.Add(ns);
                     }
+                    rs.Close();
                 } //end of department read
-                else //no records, logon failed
+                /*else //no records, logon failed
                 {
                     ret.f_granted = false;
-                    ret.l_userpk = 0;
                     ret.l_comppk = 0;
-                    
-                }
+                    try
+                    {
+                        //find the userpk to log a failed logon
+                        szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
+                                                l.sz_userid, l.sz_compid);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        if (rs.Read())
+                        {
+                            ret.l_userpk = rs.GetInt64(0);
+                            if (ret.l_userpk > 0)
+                            {
+                                UNSLOOKUP ns = new UNSLOOKUP();
+                                NsLookup(ref ns);
+                                ns.f_success = ret.f_granted;
+                                SaveNsLookup(ret.l_userpk, ref ns);
+                            }
+                        }
+                        else
+                            ret.l_userpk = 0;
+                    }
+                    catch (Exception)
+                    {
+                        ret.l_userpk = 0;
+                    }
+                }*/
 
 
             }
