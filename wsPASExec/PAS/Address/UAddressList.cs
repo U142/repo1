@@ -17,6 +17,26 @@ using System.Collections.Generic;
 namespace com.ums.PAS.Address
 {
     /*
+     * Used to estimate count of recipients before sending
+     */
+    public class UAdrCount
+    {
+        public int n_private_fixed = 0; //total private fixed addresses
+        public int n_company_fixed = 0; //total company fixed addresses
+        public int n_private_mobile = 0;
+        public int n_company_mobile = 0;
+        public int n_private_sms = 0;
+        public int n_company_sms = 0;
+        public int n_total_recipients = 0; //fixed+mobile+sms - duplicates
+        public int n_private_nonumber = 0;
+        public int n_company_nonumber = 0;
+        public int n_private_fax = 0;
+        public int n_company_fax = 0;
+        public int n_duplicates = 0;
+        
+    }
+
+    /*
      * used as in parameter for searching in local address databases
      */
     public class UMapAddressParams : UMapInfo
@@ -172,6 +192,16 @@ namespace com.ums.PAS.Address
         {
             arrayindex = -1;
         }
+    }
+
+    /*used in adress count*/
+    public class UAdrcountCandidate
+    {
+        public double lon;
+        public double lat;
+        public int bedrift;
+        public bool hasfixed;
+        public bool hasmobile;
     }
 
 

@@ -993,6 +993,73 @@ namespace com.ums.UmsParm
     }
     public class UPOLYGONSENDING : UMAPSENDING
     {
+        public UMapBounds _calcbounds()
+        {
+            UMapBounds bounds = new UMapBounds();
+            if (polygonpoints != null && polygonpoints.Length>0)
+            {
+                bounds.l_bo = polygonpoints[0].lon;
+                bounds.r_bo = polygonpoints[0].lon;
+                bounds.u_bo = polygonpoints[0].lat;
+                bounds.b_bo = polygonpoints[0].lat;
+                for (int i = 1; i < polygonpoints.Length; i++)
+                {
+                    if (polygonpoints[i].lon < bounds.l_bo)
+                        bounds.l_bo = polygonpoints[i].lon;
+                    if (polygonpoints[i].lon > bounds.r_bo)
+                        bounds.r_bo = polygonpoints[i].lon;
+                    if (polygonpoints[i].lat < bounds.b_bo)
+                        bounds.b_bo = polygonpoints[i].lat;
+                    if (polygonpoints[i].lat > bounds.u_bo)
+                        bounds.u_bo = polygonpoints[i].lat;
+
+                }
+            }
+
+            mapbounds = bounds;
+            return mapbounds;
+        }
+        protected int counter;
+        protected double p1x, p1y, p2x, p2y;
+        protected double xinters;
+        public bool _point_inside(ref UMapPoint p)
+        {
+            if (polygonpoints == null)
+                return false;
+            if (polygonpoints.Length < 3)
+                return false;
+            counter = 0;
+            
+            p1x = polygonpoints[0].lon;
+            p1y = polygonpoints[0].lat;
+            for (int i = 1; i <= polygonpoints.Length; i++)
+            {
+                p2x = polygonpoints[i % polygonpoints.Length].lon;
+                p2y = polygonpoints[i % polygonpoints.Length].lat;
+                if (p.lat > Math.Min(p1y, p2y))
+                {
+                    if (p.lat <= Math.Max(p1y, p2y))
+                    {
+                        if (p.lon <= Math.Max(p1x, p2x))
+                        {
+                            if (p1y != p2y)
+                            {
+                                xinters = (p.lat - p1y) * (p.lon - p1x) / (p2y - p1y) + p1x;
+                                if (p1x == p2x || p.lon <= xinters)
+                                    counter++;
+                            }
+                        }
+                    }
+                }
+                p1x = p2x;
+                p1y = p2y;
+            }
+            if (counter % 2 == 0)
+                return false;
+            return true;
+
+        }
+
         public UMapPoint[] polygonpoints;
     }
     public class UELLIPSESENDING : UMAPSENDING

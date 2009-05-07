@@ -604,6 +604,10 @@ namespace com.ums.ws.parm
                 sz_msg_lang = msg.Attributes["sz_lang"].Value;
                 sz_msg_text = msg.Attributes["sz_text"].Value;
                 sz_msg_oadc = msg.Attributes["sz_cb_oadc"].Value;
+
+                sz_msg_lang = sz_msg_lang.Replace("&", "&amp;");
+                sz_msg_text = sz_msg_text.Replace("&", "&amp;");
+                sz_msg_oadc = sz_msg_oadc.Replace("&", "&amp;");
                 w.WriteLine(String.Format("<message sz_lang=\"{0}\" sz_text=\"{1}\" sz_cb_oadc=\"{2}\">",
                                     sz_msg_lang, sz_msg_text, sz_msg_oadc));
                 XmlNodeList cclist = msg.ChildNodes;
@@ -870,6 +874,8 @@ namespace com.ums.ws.parm
                     {
                         sz_description = " ";
                     }
+                    sz_name = sz_name.Replace("&", "&amp;");
+                    sz_description = sz_description.Replace("&", "&amp;");
                     l_categorypk = rs.GetString(5);
                     l_parent = rs.GetString(6);
                     sz_address = rs.GetString(7);
@@ -950,6 +956,9 @@ namespace com.ums.ws.parm
                     {
                         sz_description = " ";
                     }
+                    sz_name = sz_name.Replace("&", "&amp;");
+                    sz_description = sz_description.Replace("&", "&amp;");
+
                     l_profilepk = rs.GetString(4);
                     l_schedpk = rs.GetString(5);
                     sz_oadc = rs.GetString(6);
@@ -1019,6 +1028,9 @@ namespace com.ums.ws.parm
                     {
                         sz_description = " ";
                     }
+                    sz_name = sz_name.Replace("&", "&amp;");
+                    sz_description = sz_description.Replace("&", "&amp;");
+
                     l_categorypk = rs.GetString(4);
                     l_timestamp = rs.GetString(5);
                     f_epi_lon = rs.GetString(6);

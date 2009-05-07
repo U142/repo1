@@ -19,6 +19,7 @@ using com.ums.UmsCommon.Audio;
 using com.ums.PAS.Settings;
 using System.Text;
 using com.ums.UmsDbLib;
+using com.ums.UmsParm;
 
 
 namespace com.ums.ws.pas
@@ -231,6 +232,20 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public UAdrCount GetAdrCount(ULOGONINFO logon, UMAPSENDING mapsending)
+        {
+            try
+            {
+                
+                return new UAdrDb(logon.sz_stdcc).GetAddressCount(ref logon, ref mapsending);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
         public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)
         {
             UMapAddressSearch search = new UMapAddressSearch(ref searchparams, ref logoninfo);
@@ -311,7 +326,7 @@ namespace com.ums.ws.pas
         [WebMethod]
         public REFNO_RESPONSE URefno()
         {
-            ULOGONINFO logon = new ULOGONINFO();
+            /*ULOGONINFO logon = new ULOGONINFO();
             logon.l_comppk = 2;
             logon.l_deptpk = 1;
             logon.l_userpk = 1;
@@ -319,7 +334,8 @@ namespace com.ums.ws.pas
             logon.sz_compid = "UMS";
             logon.sz_password = "mh123,1";
 
-            return new URefno().getRefno(ref logon);
+            return new URefno().getRefno(ref logon);*/
+            return new REFNO_RESPONSE();
         }
 
         /*[WebMethod]

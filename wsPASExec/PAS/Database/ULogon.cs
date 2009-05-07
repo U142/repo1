@@ -137,6 +137,9 @@ namespace com.ums.PAS.Database
             try
             {
                 bool b_default_dept_set = false;
+                l.sz_compid = l.sz_compid.ToUpper();
+                l.sz_userid = l.sz_userid.ToUpper();
+                l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
                 szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
                                     "isnull(BU.l_profilepk,0) l_default_profilepk, isnull(BUXD.l_profilepk,-1) l_profilepk, " +
@@ -150,8 +153,8 @@ namespace com.ums.PAS.Database
                                     "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
                                     "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber " +
                                     "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
-                                    "WHERE BU.sz_userid='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
-                                    "BC.sz_compid='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
+                                    "WHERE UPPER(BU.sz_userid)='{0}' AND UPPER(BU.sz_paspassword)='{1}' AND BU.l_comppk=BC.l_comppk AND " +
+                                    "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
                                     "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1",
                                     l.sz_userid, l.sz_password, l.sz_compid);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
@@ -233,13 +236,14 @@ namespace com.ums.PAS.Database
                             dept.ubo = 0.0f;
                             dept.bbo = 0.0f;
                         }
-                        Int32 l_deptpk, l_default_deptpk, l_profilepk, l_default_profilepk;
+                        Int32 l_deptpk, l_default_deptpk;
+                        long l_profilepk, l_default_profilepk;
                         Int32 l_dept_parm, l_dept_fleetcontrol, l_dept_houseeditor, l_dept_pas_send, l_pas_send;
 
                         l_deptpk = Int32.Parse(rs["l_deptpk"].ToString());
                         l_default_deptpk = Int32.Parse(rs["l_default_deptpk"].ToString());
-                        l_profilepk = Int32.Parse(rs["l_profilepk"].ToString());
-                        l_default_profilepk = Int32.Parse(rs["l_default_profilepk"].ToString());
+                        l_profilepk = long.Parse(rs["l_profilepk"].ToString());
+                        l_default_profilepk = long.Parse(rs["l_default_profilepk"].ToString());
                         if (l_deptpk == l_default_deptpk && l_profilepk == l_default_profilepk)
                         {
                             dept.f_default = true;
