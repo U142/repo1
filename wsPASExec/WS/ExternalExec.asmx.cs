@@ -12,6 +12,8 @@ using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using com.ums.UmsFile;
 using com.ums.PARM.AlertExec;
+using com.ums.PAS.Address;
+using com.ums.PAS.Database;
 using System.Xml;
 using com.ums.UmsCommon.Audio;
 
@@ -80,6 +82,37 @@ namespace com.ums.ws.parm
             XmlDocument doc = ExecMapSending(gis);
             response.parseFromXml(ref doc, "l_alertpk");
             return response;
+        }
+
+        [WebMethod]
+        public UAdrCount GetAdrCountPolygon(ULOGONINFO logon, UPOLYGONSENDING s)
+        {
+            return GetAdrCount(logon, s);
+        }
+        [WebMethod]
+        public UAdrCount GetAdrCountEllipse(ULOGONINFO logon, UELLIPSESENDING s)
+        {
+            return GetAdrCount(logon, s);
+        }
+        [WebMethod]
+        public UAdrCount GetAdrCountGis(ULOGONINFO logon, UGIS s)
+        {
+            //return GetAdrCount(logon, s);
+            throw new NotSupportedException();
+        }
+
+        [WebMethod]
+        public UAdrCount GetAdrCount(ULOGONINFO logon, UMAPSENDING mapsending)
+        {
+            try
+            {
+
+                return new UAdrDb(logon.sz_stdcc).GetAddressCount(ref logon, ref mapsending);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         /*

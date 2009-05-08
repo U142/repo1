@@ -197,11 +197,16 @@ namespace com.ums.PAS.Address
     /*used in adress count*/
     public class UAdrcountCandidate
     {
+        public UAdrcountCandidate()
+        {
+            add = 1;
+        }
         public double lon;
         public double lat;
         public int bedrift;
         public bool hasfixed;
         public bool hasmobile;
+        public int add;
     }
 
 

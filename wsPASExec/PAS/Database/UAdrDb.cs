@@ -77,72 +77,92 @@ namespace com.ums.PAS.Database
         protected void _AddToAdrcount(ref UAdrCount c, ref UAdrcountCandidate adr, long adrtypes)
         {
             if ((adrtypes & (long)ADRTYPES.FIXED_PRIVATE)>0 && adr.hasfixed && adr.bedrift==0)
-                c.n_private_fixed++;
+                c.n_private_fixed += adr.add;
             if ((adrtypes & (long)ADRTYPES.FIXED_COMPANY) > 0 && adr.hasfixed && adr.bedrift==1)
-                c.n_company_fixed++;
+                c.n_company_fixed += adr.add;
             if ((adrtypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 && adr.hasmobile && adr.bedrift == 0)
-                c.n_private_mobile++;
+                c.n_private_mobile += adr.add;
             if ((adrtypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 && adr.hasmobile && adr.bedrift == 1)
-                c.n_company_mobile++;
+                c.n_company_mobile += adr.add;
             if ((adrtypes & (long)ADRTYPES.SMS_PRIVATE) > 0 && adr.hasmobile && adr.bedrift == 0)
-                c.n_private_sms++;
+                c.n_private_sms += adr.add;
             if ((adrtypes & (long)ADRTYPES.SMS_COMPANY) > 0 && adr.hasmobile && adr.bedrift == 1)
-                c.n_company_sms++;
+                c.n_company_sms += adr.add;
             if ((adrtypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 && adr.bedrift == 0)
             {
                 if (adr.hasmobile)
-                    c.n_private_sms++;
+                    c.n_private_sms += adr.add;
                 else if (adr.hasfixed)
-                    c.n_private_fixed++;
+                    c.n_private_fixed += adr.add;
             }
             if ((adrtypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 && adr.bedrift == 1)
             {
                 if (adr.hasmobile)
-                    c.n_company_sms++;
+                    c.n_company_sms += adr.add;
                 else if (adr.hasfixed)
-                    c.n_company_fixed++;
+                    c.n_company_fixed += adr.add;
             }
             if ((adrtypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 && adr.bedrift == 0)
             {
                 if (adr.hasfixed)
-                    c.n_private_fixed++;
+                    c.n_private_fixed += adr.add;
                 else if(adr.hasmobile)
-                    c.n_private_sms++;
+                    c.n_private_sms += adr.add;
             }
             if ((adrtypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 && adr.bedrift == 1)
             {
                 if(adr.hasfixed)
-                    c.n_company_fixed++;
+                    c.n_company_fixed += adr.add;
                 else if(adr.hasmobile)
-                    c.n_company_sms++;
+                    c.n_company_sms += adr.add;
             }
             if ((adrtypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 && adr.bedrift == 0)
             {
                 if (adr.hasfixed)
-                    c.n_private_fixed++;
+                    c.n_private_fixed += adr.add;
                 if (adr.hasmobile)
-                    c.n_private_mobile++;
+                    c.n_private_mobile += adr.add;
             }
             if ((adrtypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 && adr.bedrift == 1)
             {
                 if (adr.hasfixed)
-                    c.n_company_fixed++;
+                    c.n_company_fixed += adr.add;
                 if (adr.hasmobile)
-                    c.n_company_mobile++;
+                    c.n_company_mobile += adr.add;
             }
             if (!adr.hasfixed && !adr.hasmobile)
             {
                 if (adr.bedrift == 0)
-                    c.n_private_nonumber++;
+                    c.n_private_nonumber += adr.add;
                 else if (adr.bedrift == 1)
-                    c.n_company_nonumber++;
+                    c.n_company_nonumber += adr.add;
             }
         }
 
         protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
         {
             UAdrCount count = new UAdrCount();
-
+            try
+            {
+                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}",
+                                            e.center.lon, e.center.lat,
+                                            e.radius.lon, e.radius.lat);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                while (rs.Read())
+                {
+                    c.bedrift = rs.GetInt32(0);
+                    c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
+                    c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
+                    c.add = rs.GetInt32(3);
+                    _AddToAdrcount(ref count, ref c, adrtypes);
+                }
+                rs.Close();
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
             return count;
         }
 
@@ -153,15 +173,15 @@ namespace com.ums.PAS.Database
             UAdrCount count = new UAdrCount();
             try
             {
-                String szSQL = String.Format("SELECT TOP {0} LON, LAT, BEDRIFT, f_hasfixed, f_hasmobile FROM ADR_KONSUM WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1)",
+                String szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, f_hasfixed, f_hasmobile FROM ADR_KONSUM WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                             n_maxadr_polycount,
                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 //List<UAdrcountCandidate> candidates = new List<UAdrcountCandidate>();
                 UMapPoint cpoint = new UMapPoint();
+                UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())
                 {
-                    UAdrcountCandidate c = new UAdrcountCandidate();
                     c.lon = rs.GetDouble(1);
                     c.lat = rs.GetDouble(0);
                     c.bedrift = rs.GetInt32(2);
@@ -176,13 +196,13 @@ namespace com.ums.PAS.Database
                         _AddToAdrcount(ref count, ref c, adrtypes);
                     }
                 }
+                rs.Close();
 
-                //we now have a set of candidates. Calculate who's inside polygon
                 
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                throw e;
+                throw err;
             }
             return count;
         }

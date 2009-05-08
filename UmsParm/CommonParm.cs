@@ -1044,7 +1044,7 @@ namespace com.ums.UmsParm
                         {
                             if (p1y != p2y)
                             {
-                                xinters = (p.lat - p1y) * (p.lon - p1x) / (p2y - p1y) + p1x;
+                                xinters = (p.lat - p1y) * (p2x - p1x) / (p2y - p1y) + p1x;
                                 if (p1x == p2x || p.lon <= xinters)
                                     counter++;
                             }

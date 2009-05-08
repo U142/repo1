@@ -19,7 +19,6 @@ using com.ums.UmsCommon.Audio;
 using com.ums.PAS.Settings;
 using System.Text;
 using com.ums.UmsDbLib;
-using com.ums.UmsParm;
 
 
 namespace com.ums.ws.pas
@@ -231,19 +230,7 @@ namespace com.ums.ws.pas
             return maxalloc;
         }
 
-        [WebMethod]
-        public UAdrCount GetAdrCount(ULOGONINFO logon, UMAPSENDING mapsending)
-        {
-            try
-            {
-                
-                return new UAdrDb(logon.sz_stdcc).GetAddressCount(ref logon, ref mapsending);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+
 
         [WebMethod]
         public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)
