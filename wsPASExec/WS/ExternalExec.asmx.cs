@@ -83,6 +83,14 @@ namespace com.ums.ws.parm
             response.parseFromXml(ref doc, "l_alertpk");
             return response;
         }
+        [WebMethod]
+        public ExecResponse ExecTestSending(UTESTSENDING send)
+        {
+            ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(send);
+            response.parseFromXml(ref doc, "l_alertpk");
+            return response;
+        }
 
         [WebMethod]
         public UAdrCount GetAdrCountPolygon(ULOGONINFO logon, UPOLYGONSENDING s)
@@ -99,6 +107,11 @@ namespace com.ums.ws.parm
         {
             //return GetAdrCount(logon, s);
             throw new NotSupportedException();
+        }
+        [WebMethod]
+        public UAdrCount GetAdrCountTestsending(ULOGONINFO logon, UTESTSENDING s)
+        {
+            return GetAdrCount(logon, s);
         }
 
         [WebMethod]

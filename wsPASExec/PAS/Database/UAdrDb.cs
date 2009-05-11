@@ -66,6 +66,14 @@ namespace com.ums.PAS.Database
                 else if (typeof(UGIS) == sending.GetType())
                 {
                 }
+                else if (typeof(UTESTSENDING) == sending.GetType())
+                {
+                    UTESTSENDING s = (UTESTSENDING)sending;
+                    UAdrCount a = new UAdrCount();
+                    a.n_private_fixed = s.numbers.Count;
+                    return a;
+                    //return s.numbers.Count;
+                }
                 throw new NotImplementedException();
             }
             catch (Exception e)

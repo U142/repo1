@@ -12,11 +12,14 @@ namespace com.ums.UmsParm
         public static int SENDINGTYPE_POLYGON = 3;
         public static int SENDINGTYPE_ELLIPSE = 8;
         public static int SENDINGTYPE_GIS = 4;
+        public static int SENDINGTYPE_TESTSENDING = 0;//imported list
+
 
 
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }
+        public UTestSending test() { return (UTestSending)this; }
         public UResend resend() { return (UResend)this; }
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
         public abstract bool WriteAddressFile(ref AdrfileWriter w);
@@ -185,6 +188,49 @@ namespace com.ums.UmsParm
             throw new NotImplementedException();
         }
         public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class UTestSending : UShape
+    {
+        protected List<string> m_numbers = new List<string>();
+        public UTestSending()
+            : base()
+        {
+        }
+        public bool addRecord(String number)
+        {
+            m_numbers.Add(number);
+            return true;
+        }
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            try
+            {
+                for (int i = 0; i < m_numbers.Count; i++)
+                {
+                    if (m_numbers[i].Length > 5)
+                        w.writeline(m_numbers[i]);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                w.close();
+            }
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            //throw new NotImplementedException();
+            return true;
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
         {
             throw new NotImplementedException();
         }
@@ -689,7 +735,7 @@ namespace com.ums.UmsParm
             else if (typeof(UPOLYGONSENDING) == s.GetType())
             {
                 UPOLYGONSENDING polygon = (UPOLYGONSENDING)s;
-                s.setGroup(3);
+                s.setGroup(UShape.SENDINGTYPE_POLYGON);
                 UShape shape = new UPolygon();
                 for (int i = 0; i < polygon.polygonpoints.Length; i++)
                 {
@@ -713,7 +759,7 @@ namespace com.ums.UmsParm
             else if (typeof(UGISSENDING) == s.GetType())
             {
                 UGISSENDING gis = (UGISSENDING)s;
-                s.setGroup(4);
+                s.setGroup(UShape.SENDINGTYPE_GIS);
                 UShape shape = new UGIS();
                 for (int i = 0; i < gis.gis.Length; i++)
                 {
@@ -723,7 +769,19 @@ namespace com.ums.UmsParm
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_GIS;
             }
-            
+            else if (typeof(UTESTSENDING) == s.GetType())
+            {
+                UTESTSENDING t = (UTESTSENDING)s;
+                t.setGroup(UShape.SENDINGTYPE_TESTSENDING);
+                UShape shape = new UTestSending();
+                for (int i = 0; i < t.numbers.Count; i++)
+                {
+                    shape.test().addRecord(t.numbers[i]);
+                }
+                setShape(ref shape);
+                t.n_sendingtype = UShape.SENDINGTYPE_TESTSENDING;
+            }
+
             return true;
         }
         public virtual bool hasLBA() {
@@ -1069,5 +1127,9 @@ namespace com.ums.UmsParm
     public class UGISSENDING : UMAPSENDING
     {
         public UGisRecord[] gis;
+    }
+    public class UTESTSENDING : UMAPSENDING
+    {
+        public List<string> numbers;
     }
 }

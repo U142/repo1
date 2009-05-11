@@ -479,7 +479,8 @@ namespace com.ums.UmsParm
             m.l_nofax = ((s.n_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_sendingstatus = 1;
 
-            if (m.l_group != 3 && m.l_group != 8 && m.l_group != 4)
+            if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE && 
+                m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
 
             return true;
