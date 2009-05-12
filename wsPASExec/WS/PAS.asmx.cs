@@ -128,6 +128,27 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public String GetCurrentJobs()
+        {
+            try
+            {
+                String ret = "Results\n";
+                PercentResult [] pr = PercentProgress.GetJobs();
+                if (pr!=null)
+                {
+                    for (int i = 0; i < pr.Length; i++)
+                        ret += pr[i].ToString() + "\n";
+
+                }
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
         public byte[] GetSendSettings(ULOGONINFO l)
         {
             try

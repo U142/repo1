@@ -110,7 +110,7 @@ namespace com.ums.UmsParm
             pa.l_alertpk = l_alertpk;
             String szSQL = String.Format("SELECT l_alertpk, l_parent, sz_name, sz_description, l_profilepk, " +
                                             "l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp, f_locked, sz_areaid, "+
-                                            "isnull(l_maxchannels, 0), isnull(l_requesttype, 0) " +
+                                            "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,'') " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
             try
             {
@@ -132,6 +132,8 @@ namespace com.ums.UmsParm
                     pa.setMaxChannels(rs.GetInt32(12));
                     pa.setRequestType(rs.GetInt32(13));
                     pa.setFunction(n_function);
+                    pa.setSmsOadc(rs.GetString(14));
+                    pa.setSmsMessage(rs.GetString(15));
                     b_ret = true;
                 }
                 rs.Close();

@@ -256,7 +256,6 @@ namespace com.ums.UmsParm
             passending.setRefno(sending.n_refno, ref project);
             smssending.l_resend_refno = passending.l_resend_refno = sending.n_resend_refno;
             smssending.b_resend = passending.b_resend = sending.b_resend;
-
             bool b_publish_voice = false;
             bool b_publish_lba = false;
             bool b_publish_sms = false;
@@ -462,11 +461,11 @@ namespace com.ums.UmsParm
                     {
                         smssending.publishAdrFile();
                     }
-                    setAlertInfo(true, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "SMS Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    setAlertInfo(true, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "SMS Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 try
                 {
@@ -500,12 +499,12 @@ namespace com.ums.UmsParm
                     {
                         passending.publishAdrFile();
                     }
-                    setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Voice Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Voice Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                 }
                 catch (Exception e)
                 {
                     //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.n_sendingtype) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
             }
 
@@ -578,6 +577,8 @@ namespace com.ums.UmsParm
             BBVALID valid = new BBVALID();
             BBSENDNUM sendnum = new BBSENDNUM();
             MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
+            MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
+
             BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
 
             bool b_ret = false;
@@ -627,6 +628,8 @@ namespace com.ums.UmsParm
 
 
             PAS_SENDING sending = new PAS_SENDING();
+            SMS_SENDING smssending = new SMS_SENDING();
+
             sending.setRefno(l_refno, ref project);
             //retrieve sending info from DB
             db.FillReschedProfile(pa.l_schedpk, ref resched_profile);
@@ -646,116 +649,206 @@ namespace com.ums.UmsParm
 
             bool b_publish_voice = false;
             bool b_publish_lba = false;
+            bool b_publish_sms = false;
             //if VOICE
-            try
+            //create voice sending if
+            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0)
             {
-                sending.setShape(ref pa.m_shape); //will also create a temp address file
-                b_publish_voice = true;
-            }
-            catch (Exception e)
-            {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                file.DeleteOperation();
-                return false;
-            }
-            //if SMS
-            try
-            {
-                SMS_SENDING smssending = new SMS_SENDING();
-                MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
-                smssending.setShape(ref pa.m_shape);
-                smssending.setRefno(db.newRefno(), ref project);
-                db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
-            }
-            catch (Exception e)
-            {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for SMS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                file.DeleteOperation();
-                return false;
-            }
-            //if LBA
-            try
-            {
-                if (pa.m_lba_shape != null)
+                try
                 {
-                    if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
+                    sending.setShape(ref pa.m_shape); //will also create a temp address file
+                    b_publish_voice = true;
+                    try
                     {
-                        sending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
-                        b_publish_lba = true;
-                        
+                        if (n_function == UCommon.USENDING_TEST) //test DB and rollback
+                        {
+                        }
+                        else
+                        {
+                            b_ret = db.Send(ref sending);
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        if (!pa.m_lba_shape.lba().getValid())
-                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
-                        else if (!pa.hasValidAreaID())
-                            setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        return false;
                     }
+
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    file.DeleteOperation();
+                    return false;
                 }
             }
-            catch (Exception e)
+            //if SMS
+            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
             {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                sending.lbacleanup();
+                try
+                {
+                    smssending.sz_smsmessage = pa.sz_sms_message;
+                    smssending.sz_smsoadc = pa.sz_sms_oadc;
+                    //This is a sending with possible sms recipients.
+                    if (smssending.sz_smsmessage.Length <= 0)
+                        throw new UEmptySMSMessageException();
+                    if (smssending.sz_smsoadc.Length <= 0)
+                        throw new UEmptySMSOadcException();
+
+                    
+                    smssending.setShape(ref pa.m_shape);
+                    //smssending.setRefno(db.newRefno(), ref project);
+                    smssendinginfo.l_refno = db.newRefno();
+                    smssending.setRefno(smssendinginfo.l_refno, ref project);
+                    db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
+                    smssending.setSendingInfo(ref smssendinginfo);
+                    db.Send(ref smssending, ref logoninfo);
+                    b_publish_sms = true;
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for SMS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    file.DeleteOperation();
+                    return false;
+                }
+            }
+            //if LBA
+            if ((pa.l_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+            {
+                try
+                {
+                    if (pa.m_lba_shape != null)
+                    {
+                        if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
+                        {
+                            sending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                            b_publish_lba = true;
+
+                        }
+                        else
+                        {
+                            if (!pa.m_lba_shape.lba().getValid())
+                                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                            else if (!pa.hasValidAreaID())
+                                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    sending.lbacleanup();
+                }
             }
 
 
             //send it
-            try
+            if (b_publish_voice)
             {
                 if (n_function == UCommon.USENDING_TEST) //test DB and rollback
                 {
+                    b_ret = true; //fake link to project
                 }
                 else
                 {
-                    b_ret = db.Send(ref sending);
+                    b_ret = db.linkRefnoToProject(ref project, l_refno, 0, 0);
+                }
+                if (!b_ret)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link VOICE sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+                //if all ok, publish addressfile
+                try
+                {
+                    if (n_function != UCommon.USENDING_TEST)
+                        sending.publishGUIAdrFile();
+                }
+                catch (Exception e)
+                {
+                    //this is not important for the sending, so continue
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file (VOICE). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+                try
+                {
+                    if (b_publish_voice) //requires that no exceptions were caught while writing temp file
+                    {
+                        if (n_function != UCommon.USENDING_TEST)
+                        {
+                            sending.publishAdrFile();
+                        }
+                        setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Voice Message " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.getSendingTypeText() + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
             }
-            catch (Exception e)
+            if (b_publish_sms)
             {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                return false;
-            }
-            if (n_function == UCommon.USENDING_TEST) //test DB and rollback
-            {
-                b_ret = true; //fake link to project
-            }
-            else
-            {
-                b_ret = db.linkRefnoToProject(ref project, l_refno, 0, 0);
-            }
-            if (!b_ret)
-            {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                if (n_function == UCommon.USENDING_TEST) //test DB and rollback
+                {
+                    b_ret = true; //fake link to project
+                }
+                else
+                {
+                    b_ret = db.linkRefnoToProject(ref project, smssending.l_refno, 0, 0);
+                }
+                if (!b_ret)
+                {
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link SMS sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+
+                try
+                {
+                    if (n_function != UCommon.USENDING_TEST)
+                        smssending.publishGUIAdrFile();
+                }
+                catch (Exception e)
+                {
+                    //this is not important for the sending, so continue
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file (SMS). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+                try
+                {
+                    if (b_publish_sms) //requires that no exceptions were caught while writing temp file
+                    {
+                        if (n_function != UCommon.USENDING_TEST)
+                        {
+                            smssending.publishAdrFile();
+                        }
+                        setAlertInfo(true, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Voice Message " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.getSendingTypeText() + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+
             }
             
 
-            //if all ok, publish addressfile
-            try
-            {
-                if (n_function != UCommon.USENDING_TEST)
-                    sending.publishGUIAdrFile();
-            }
-            catch (Exception e)
-            {
-                //this is not important for the sending, so continue
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
-            }
-            try
-            {
-                if (b_publish_voice) //requires that no exceptions were caught while writing temp file
-                {
-                    if (n_function != UCommon.USENDING_TEST)
-                    {
-                        sending.publishAdrFile();
-                    }
-                    setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Voice Message " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.getSendingTypeText() + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
-                }
-            }
-            catch (Exception e)
-            {
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-            }
             try
             {
                 if (b_publish_lba) //requires that no exceptions were caught while writing temp file

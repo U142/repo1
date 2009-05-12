@@ -49,6 +49,23 @@ namespace com.ums.UmsCommon
         {
             return (PercentResult)TempDataStore.GetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk);
         }
+        public static PercentResult [] GetJobs()
+        {
+            try
+            {
+                Hashtable h = TempDataStore.getJobs();
+                PercentResult[] ret = new PercentResult[h.Count];
+                for (int i = 0; i < h.Count; i++)
+                {
+                    ret[i] = (PercentResult)h[i];
+                }
+                return ret;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
     /*
      * Session data for progress. Used for polling percentage of completion of different tasks
@@ -57,6 +74,28 @@ namespace com.ums.UmsCommon
     {
         private static Hashtable _table = new Hashtable();
         static TempDataStore() { }
+        public static int getJobCount() { return _table.Count; }
+        public static PercentResult getJob(int n) {
+            try
+            {
+                return (PercentResult)_table[n];
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+        }
+        public static Hashtable getJobs()
+        {
+            try
+            {
+                return _table;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         public static object GetRecords(string key)
         {
             lock (_table.SyncRoot)
