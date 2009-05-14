@@ -54,12 +54,12 @@ namespace com.ums.UmsParm
                 throw new UDbNoDataException("Could not find specified Alert (l_alertpk=" + l_alertpk + ")");
             return b_ret;
         }
-        public bool VerifyProfile(long l_profilepk)
+        public bool VerifyProfile(long l_profilepk, bool b_must_have_no_dynfiles)
         {
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
             int n_num_audiofiles = base.getNumDynfilesInProfile(l_profilepk);
-            if (n_num_audiofiles > 0)
+            if (n_num_audiofiles > 0 && b_must_have_no_dynfiles)
             {
                 throw new UProfileNotSupportedException(l_profilepk, "Max dynamic audio files allowed = 0");
             }
@@ -266,17 +266,21 @@ namespace com.ums.UmsParm
         {
             try
             {
-                String szSQL = String.Format("SELECT l_refno FROM BBPROJECT_X_REFNO WHERE l_projectpk={0} AND l_type in (0,2)", project.sz_projectpk);
+                String szSQL = String.Format("SELECT l_refno, isnull(l_type, 0), isnull(l_parentrefno,0) FROM BBPROJECT_X_REFNO WHERE l_projectpk={0} AND l_type in (0,2)", project.sz_projectpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     int n_refno = rs.GetInt32(0);
+                    int n_linktype = rs.GetInt32(1);
+                    int n_parentrefno = rs.GetInt32(2);
                     MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-
+                    
                     try
                     {
                         if (GetSendingInfo(n_refno, ref mdv))
                         {
+                            mdv.l_linktype = n_linktype;
+                            mdv.l_resendrefno = n_parentrefno;
                             project.mdvsendinginfo.Add(mdv);
                         }
                     }
@@ -414,7 +418,7 @@ namespace com.ums.UmsParm
             m.l_nofax = ((a.l_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_removedup = 1;
             m.l_maxchannels = a.n_maxchannels;
-            m.l_nofax = a.n_nofax;
+            //m.l_nofax = a.n_nofax;
            
 
             m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse
@@ -441,7 +445,7 @@ namespace com.ums.UmsParm
                 {
                     throw e;
                 }
-                String resendtype = "";
+                /*String resendtype = "";
                 switch (s.n_send_channels)
                 {
                     case 1:
@@ -451,7 +455,7 @@ namespace com.ums.UmsParm
                         resendtype = "SMS";
                         break;
                 }
-                m.sz_sendingname = "[RESEND " + resendtype + "] " + s.sz_sendingname;
+                m.sz_sendingname = "[RESEND " + resendtype + "] " + s.sz_sendingname;*/
             }
             else
             {

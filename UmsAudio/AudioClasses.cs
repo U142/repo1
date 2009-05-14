@@ -268,7 +268,7 @@ namespace com.ums.UmsCommon.Audio
                         sz_tempfileraw = sz_tempfile + ".raw";
                         sz_tempfile = sz_tempfile + ".wav";
                         sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_tempfile;
-                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_tempfileraw;
+                        sz_destraw = UCommon.UPATHS.sz_path_backbone + sz_tempfileraw;
 
                         bw = new BinaryWriter(File.Open(sz_physpath + sz_tempfile, FileMode.Create));
                         bw.Write(req.wav);
@@ -276,8 +276,28 @@ namespace com.ums.UmsCommon.Audio
                         bw.Close();
                         conv.WAV2RAWNormalize(sz_physpath + sz_tempfile, sz_physpath + sz_tempfileraw);
                         
-                        File.Move(sz_physpath + sz_tempfile, sz_destwav);
-                        File.Move(sz_physpath + sz_tempfileraw, sz_destraw);
+                        //File.Move(sz_physpath + sz_tempfile, sz_destwav);
+                        //File.Move(sz_physpath + sz_tempfileraw, sz_destraw);
+                        try
+                        {
+                            //File.Move(sz_physpath + sz_tempfile, sz_destwav);
+                            //File.Move(sz_physpath + sz_tempfileraw, sz_destraw);
+                            File.Copy(sz_physpath+sz_tempfile, sz_destwav);
+                            //File.Delete(sz_tempfile);
+                            //File.Delete(sz_tempfileraw);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            File.Copy(sz_physpath + sz_tempfileraw, sz_destraw);
+                        }
+                        catch (Exception e)
+                        {
+                            throw e;
+                        }
+
                         break;
                     case 2: //SOUNDFILE_TYPE_TTS_
                         string sz_filename = req.sz_filename;
@@ -314,10 +334,21 @@ namespace com.ums.UmsCommon.Audio
                         sz_tempfileraw = sz_physpath + sz_filename.Replace(".wav", ".raw");
                         sz_destfile = "v" + req.n_refno + "_" + req.n_param;
                         sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_destfile + ".wav";
-                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_destfile + ".raw";
+                        sz_destraw = UCommon.UPATHS.sz_path_backbone + sz_destfile + ".raw";
 
-                        File.Move(sz_tempfile, sz_destwav);
-                        File.Move(sz_tempfileraw, sz_destraw);
+                        try
+                        {
+                            File.Move(sz_tempfile, sz_destwav);
+                            File.Move(sz_tempfileraw, sz_destraw);
+                            //File.Copy(sz_tempfile, sz_destwav);
+                            //File.Copy(sz_tempfileraw, sz_destraw);
+                            //File.Delete(sz_tempfile);
+                            //File.Delete(sz_tempfileraw);
+                        }
+                        catch (Exception e)
+                        {
+                            throw e;
+                        }
                         break;
                     case 4: //SOUNDFILE_TYPE_LIBRARY_
                         sz_physdestpath = UCommon.UPATHS.sz_path_audiofiles;
@@ -326,7 +357,7 @@ namespace com.ums.UmsCommon.Audio
                         sz_tempfileraw = sz_physpath + req.n_messagepk + ".raw";
                         sz_destfile = "v" + req.n_refno + "_" + req.n_param;
                         sz_destwav = sz_physdestpath + sz_destfile + ".wav";
-                        sz_destraw = sz_physdestpath + sz_destfile + ".raw";
+                        sz_destraw = UCommon.UPATHS.sz_path_backbone + sz_destfile + ".raw";
 
                         File.Copy(sz_tempfile, sz_destwav);
                         File.Copy(sz_tempfileraw, sz_destraw);
@@ -338,7 +369,7 @@ namespace com.ums.UmsCommon.Audio
                         sz_tempfileraw = sz_tempfile + ".raw";
                         sz_tempfile = sz_tempfile + ".wav";
                         sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_tempfile;
-                        sz_destraw = UCommon.UPATHS.sz_path_audiofiles + sz_tempfileraw;
+                        sz_destraw = UCommon.UPATHS.sz_path_backbone + sz_tempfileraw;
 
                         bw = new BinaryWriter(File.Open(sz_physpath + sz_tempfile, FileMode.Create));
                         bw.Write(req.wav);

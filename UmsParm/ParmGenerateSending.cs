@@ -304,7 +304,10 @@ namespace com.ums.UmsParm
                 }
                 else
                 {
-                    b_ret = db.linkRefnoToProject(ref project, smssending.l_refno, 0, 0);
+                    int n_linktype = 0;
+                    if (smssending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                        n_linktype = 9;
+                    b_ret = db.linkRefnoToProject(ref project, smssending.l_refno, n_linktype, (smssending.b_resend ? smssending.l_resend_refno : 0));
                 }
                 if (!b_ret)
                 {
@@ -338,7 +341,7 @@ namespace com.ums.UmsParm
                     if (passending.l_refno <= 0)
                         passending.l_refno = db.newRefno();
 
-                    db.VerifyProfile(sending.n_profilepk);
+                    db.VerifyProfile(sending.n_profilepk, false);
                 }
                 catch (Exception e)
                 {
@@ -444,7 +447,10 @@ namespace com.ums.UmsParm
                 }
                 else
                 {
-                    b_ret = db.linkRefnoToProject(ref project, passending.l_refno, 0, 0);
+                    int n_linktype = 0;
+                    if (passending.m_sendinginfo.l_group == 0)
+                        n_linktype = 9; //test sending before real sending
+                    b_ret = db.linkRefnoToProject(ref project, passending.l_refno, n_linktype, (passending.b_resend ? passending.l_resend_refno : 0));
                 }
                 if (!b_ret)
                 {
@@ -567,7 +573,7 @@ namespace com.ums.UmsParm
             try
             {
                 db.VerifyAlert(pa.l_alertpk, ref logoninfo);
-                db.VerifyProfile(pa.l_profilepk);
+                db.VerifyProfile(pa.l_profilepk, true);
             }
             catch (Exception e) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
             {
@@ -583,22 +589,7 @@ namespace com.ums.UmsParm
 
             bool b_ret = false;
 
-            long l_refno = 0;
-            
 
-
-            //If this is only a test, don't waste a refno
-            if (n_function != UCommon.USENDING_TEST)
-            {
-                try
-                {
-                    l_refno = db.newRefno();
-                }
-                catch (Exception)
-                {
-                    throw new URefnoException();
-                }
-            }
             string sz_sendingname = String.Format("{0}", pa.sz_name);
 
             
@@ -606,18 +597,19 @@ namespace com.ums.UmsParm
             UXmlAlert file = new UXmlAlert(UCommon.UPATHS.sz_path_predefined_areas, String.Format("a{0}.xml", pa.l_alertpk));
             try
             {
-                file.load(String.Format("{0}.{1}", project.sz_projectpk, l_refno));
+                String guid = new Guid().ToString();
+                file.load(String.Format("{0}.{1}", project.sz_projectpk, guid));
             }
             catch (UFileCopyException e)
             {
                 //we don't have a local copy
-                setAlertInfo(false, project.sz_projectpk, l_refno, pa.l_alertpk, pa.sz_name, "Could not copy remote file to a local copy", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                setAlertInfo(false, project.sz_projectpk, 0, pa.l_alertpk, pa.sz_name, "Could not copy remote file to a local copy", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 return false;
             }
             catch (UXmlParseException e)
             {
                 //the file has been copied to a local drive, delete it
-                setAlertInfo(false, project.sz_projectpk, l_refno, pa.l_alertpk, pa.sz_name, "Could not parse XML file", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                setAlertInfo(false, project.sz_projectpk, 0, pa.l_alertpk, pa.sz_name, "Could not parse XML file", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 file.DeleteOperation();
                 return false;
             }
@@ -625,25 +617,14 @@ namespace com.ums.UmsParm
             pa.setSendingType(file.getSendingType());
             pa.setShape(file.getShape());
             pa.setLBAShape(file.getLBAShape());
+            pa.n_function = n_function;
 
 
             PAS_SENDING sending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
+            sending.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
+            smssending.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
 
-            sending.setRefno(l_refno, ref project);
-            //retrieve sending info from DB
-            db.FillReschedProfile(pa.l_schedpk, ref resched_profile);
-            db.FillValid(ref pa, ref valid);
-            db.FillSendNum(ref pa, ref sendnum);
-            db.FillActionProfile(ref pa, ref profile);
-            db.FillSendingInfo(ref logoninfo, ref pa, ref sendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
-
-            //fill a sending struct
-            sending.setSendingInfo(ref sendinginfo);
-            sending.setReschedProfile(ref resched_profile);
-            sending.setValid(ref valid);
-            sending.setSendNum(ref sendnum);
-            sending.setActionProfile(ref profile);
 
             
 
@@ -668,10 +649,42 @@ namespace com.ums.UmsParm
                 (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
 
                 (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0)
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0 ||
+
+
+
+                (pa.l_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
             {
                 try
                 {
+                    long l_refno = 0;
+                    //If this is only a test, don't waste a refno
+                    if (n_function != UCommon.USENDING_TEST)
+                    {
+                        try
+                        {
+                            l_refno = db.newRefno();
+                        }
+                        catch (Exception)
+                        {
+                            throw new URefnoException();
+                        }
+                    }
+                    sending.setRefno(l_refno, ref project);
+                    //retrieve sending info from DB
+                    db.FillReschedProfile(pa.l_schedpk, ref resched_profile);
+                    db.FillValid(ref pa, ref valid);
+                    db.FillSendNum(ref pa, ref sendnum);
+                    db.FillActionProfile(ref pa, ref profile);
+                    db.FillSendingInfo(ref logoninfo, ref pa, ref sendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
+
+                    //fill a sending struct
+                    sending.setSendingInfo(ref sendinginfo);
+                    sending.setReschedProfile(ref resched_profile);
+                    sending.setValid(ref valid);
+                    sending.setSendNum(ref sendnum);
+                    sending.setActionProfile(ref profile);
+
                     sending.setShape(ref pa.m_shape); //will also create a temp address file
                     b_publish_voice = true;
                     try
@@ -716,11 +729,11 @@ namespace com.ums.UmsParm
                     if (smssending.sz_smsoadc.Length <= 0)
                         throw new UEmptySMSOadcException();
 
-                    
-                    smssending.setShape(ref pa.m_shape);
-                    //smssending.setRefno(db.newRefno(), ref project);
+
                     smssendinginfo.l_refno = db.newRefno();
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
+                    smssending.setShape(ref pa.m_shape);
+                    //smssending.setRefno(db.newRefno(), ref project);
                     db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
                     smssending.setSendingInfo(ref smssendinginfo);
                     db.Send(ref smssending, ref logoninfo);
@@ -772,11 +785,11 @@ namespace com.ums.UmsParm
                 }
                 else
                 {
-                    b_ret = db.linkRefnoToProject(ref project, l_refno, 0, 0);
+                    b_ret = db.linkRefnoToProject(ref project, sending.l_refno, 0, 0);
                 }
                 if (!b_ret)
                 {
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link VOICE sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link [VOICE] sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
                 //if all ok, publish addressfile
                 try
@@ -787,7 +800,7 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     //this is not important for the sending, so continue
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file (VOICE). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [VOICE] GUI address file (VOICE). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
                 try
                 {
@@ -802,7 +815,7 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [VOICE] address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
             }
             if (b_publish_sms)
@@ -817,7 +830,7 @@ namespace com.ums.UmsParm
                 }
                 if (!b_ret)
                 {
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link SMS sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not link [SMS] sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
 
                 try
@@ -828,7 +841,7 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     //this is not important for the sending, so continue
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file (SMS). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
                 try
                 {
@@ -838,12 +851,12 @@ namespace com.ums.UmsParm
                         {
                             smssending.publishAdrFile();
                         }
-                        setAlertInfo(true, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Voice Message " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.getSendingTypeText() + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                        setAlertInfo(true, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "SMS Message " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.getSendingTypeText() + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                     }
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
 
             }
@@ -901,10 +914,27 @@ namespace com.ums.UmsParm
                 ULog.warning(sending.l_refno, String.Format("Could not remove the local temporary alert file\n{0}", file.full()), e.Message);
             }
 
-            ULog.write(String.Format("New <{0}> Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
-                //(f_simulation ? "[Simulated]" : "[Live]"),
-                UCommon.USENDINGTYPE(n_function).ToUpper(),
-                logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, l_refno, pa.l_alertpk, l_fromeventpk));
+            if (b_publish_voice)
+            {
+                ULog.write(String.Format("New <{0}> Voice-Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                    //(f_simulation ? "[Simulated]" : "[Live]"),
+                    UCommon.USENDINGTYPE(n_function).ToUpper(),
+                    logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, sending.l_refno, pa.l_alertpk, l_fromeventpk));
+            }
+            if (b_publish_lba)
+            {
+                ULog.write(String.Format("New <{0}> LBA-Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                    //(f_simulation ? "[Simulated]" : "[Live]"),
+                    UCommon.USENDINGTYPE(n_function).ToUpper(),
+                    logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, sending.l_refno, pa.l_alertpk, l_fromeventpk));
+            }
+            if (b_publish_sms)
+            {
+                ULog.write(String.Format("New <{0}> SMS-Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                    //(f_simulation ? "[Simulated]" : "[Live]"),
+                    UCommon.USENDINGTYPE(n_function).ToUpper(),
+                    logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, l_fromeventpk));
+            }
 
             return true;
         }
@@ -918,7 +948,7 @@ namespace com.ums.UmsParm
             try
             {
                 db.VerifyAlert(pa.l_alertpk, ref logoninfo);
-                db.VerifyProfile(pa.l_profilepk);
+                db.VerifyProfile(pa.l_profilepk, true);
             }
             catch (Exception e) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
             {

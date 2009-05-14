@@ -155,6 +155,8 @@ namespace com.ums.PAS.Status
                 outxml.insertAttribute("l_qreftype", mdv.l_qreftype.ToString());
                 outxml.insertAttribute("f_dynacall", mdv.f_dynacall.ToString());
                 outxml.insertAttribute("l_nofax", mdv.l_nofax.ToString());
+                outxml.insertAttribute("l_linktype", mdv.l_linktype.ToString());
+                outxml.insertAttribute("l_resendrefno", mdv.l_resendrefno.ToString());
 
 
                 //WRITE map data

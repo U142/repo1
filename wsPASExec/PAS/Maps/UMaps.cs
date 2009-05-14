@@ -192,7 +192,7 @@ namespace com.ums.PAS.Maps
             catch (Exception e)
             {
                 ULog.error(0, "Error retrieving WMS layer", e.Message);
-                throw new UMapLoadFailedException(e);
+                throw new UMapLoadFailedException(e, m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
             }
 
         }
@@ -252,7 +252,7 @@ namespace com.ums.PAS.Maps
             }
             catch (Exception e)
             {
-                throw new UMapLoadFailedException(e);
+                throw new UMapLoadFailedException(e, m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
             }
             m_mapinfo.mapstatus = response.GetResponseHeader("MAPSTATUS");
             m_mapinfo.maptime = response.GetResponseHeader("MAPTIME");

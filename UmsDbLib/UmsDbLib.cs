@@ -237,6 +237,11 @@ namespace com.ums.UmsDbLib
          */
         public bool linkRefnoToProject(ref BBPROJECT p /*in*/, long n_refno /*in*/, long n_type /*in*/, long n_parent_refno /*in*/)
         {
+            /*
+             * n_type (linktype)
+             * 0 = Voice sending
+             * 9 = Test sending (list of phone numbers to test SMS text and voice profiles)
+             */
             String szSQL = String.Format("sp_ins_projectsending {0}, {1}, {2}, {3}",
                                          p.sz_projectpk, n_refno, n_type, n_parent_refno);
             try

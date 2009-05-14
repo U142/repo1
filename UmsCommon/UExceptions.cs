@@ -160,8 +160,8 @@ namespace com.ums.UmsCommon
     }
     public class UMapLoadFailedException : UException
     {
-        public UMapLoadFailedException(Exception e)
-            : base(e.Message)
+        public UMapLoadFailedException(Exception e, String bounds)
+            : base(bounds + "\n" + e.Message)
         {
         }
     }

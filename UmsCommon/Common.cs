@@ -572,6 +572,8 @@ namespace com.ums.UmsCommon
         public long l_maxalloc;
         public String sz_oadc;
         public long l_qreftype; //60 is voice simulation from BBQREF
+        public int l_linktype;
+        public int l_resendrefno; //if it's a resend
     }
     public struct BBVALID
     {
@@ -599,8 +601,12 @@ namespace com.ums.UmsCommon
             //l_canceldate = p.l_canceldate; //This should be converted to NOW + p.l_canceldate days
             //compute canceldate
             DateTime now = DateTime.UtcNow.ToLocalTime();
-            now = now.AddDays(p.l_canceldate);
-            String sz_canceldate = String.Format("{0:yyyy}{0:MM}{0:dd}", now);
+            String sz_canceldate = "-1";
+            if (p.l_canceldate > 0 || (p.l_canceldate==0 && p.l_canceltime>0))
+            {
+                now = now.AddDays(p.l_canceldate);
+                sz_canceldate = String.Format("{0:yyyy}{0:MM}{0:dd}", now);
+            }
             try
             {
                 l_canceldate = Int64.Parse(sz_canceldate);

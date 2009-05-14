@@ -228,13 +228,21 @@ namespace com.ums.PAS.Database
                                 dept.rbo = float.Parse(bounds[2], UCommon.UGlobalizationInfo);
                                 dept.bbo = float.Parse(bounds[3], UCommon.UGlobalizationInfo);
                             }
+                            else
+                            {
+                                dept.lbo = 3.0f;
+                                dept.rbo = 31.0f;
+                                dept.ubo = 71.0f;
+                                dept.bbo = 57.0f;
+
+                            }
                         }
                         catch (Exception)
                         {
-                            dept.lbo = 0.0f;
-                            dept.rbo = 0.0f;
-                            dept.ubo = 0.0f;
-                            dept.bbo = 0.0f;
+                            dept.lbo = 3.0f;
+                            dept.rbo = 31.0f;
+                            dept.ubo = 71.0f;
+                            dept.bbo = 57.0f;
                         }
                         Int32 l_deptpk, l_default_deptpk;
                         long l_profilepk, l_default_profilepk;

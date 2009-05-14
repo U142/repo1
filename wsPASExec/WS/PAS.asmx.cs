@@ -83,9 +83,9 @@ namespace com.ums.ws.pas
             {
                 map = fleximap.getMap();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                throw e;
             }
             return map;
         }
@@ -322,7 +322,14 @@ namespace com.ums.ws.pas
         [WebMethod]
         public AUDIO_RESPONSE UPostAudio(ULOGONINFO logon, AUDIO_REQUEST req)
         {
-            return new UAudio().UPostAudio(ref logon, ref req);
+            try
+            {
+                return new UAudio().UPostAudio(ref logon, ref req);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [WebMethod]
