@@ -95,6 +95,48 @@ namespace com.ums.UmsDbLib
             
         }
 
+        public bool CheckLogonLiteral(ref ULOGONINFO info)
+        {
+            bool b_ret = false;
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.sz_userid='{0}' AND " +
+                                            "BC.sz_compid='{1}' AND BD.sz_deptid='{2}' AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
+                                            "BU.sz_paspassword='{3}'",
+                                            info.sz_userid, info.sz_compid, info.sz_deptid, info.sz_password);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    Int64 l_fromdb = rs.GetInt64(0);
+                    if (l_fromdb == info.l_userpk)
+                    {
+                        info.l_deptpri = rs.GetInt32(1);
+                        info.sz_stdcc = rs.GetString(2);
+                        info.l_priserver = 2;
+                        info.l_altservers = 1;
+                        b_ret = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                throw new UDbQueryException("CheckLogon");
+            }
+            /*finally
+            {
+                CloseRecordSet();
+            }*/
+            if (!b_ret)
+            {
+                setLastError(String.Format("Error in logon credentials for userid/compid {0}/{1}", info.sz_userid, info.sz_compid));
+                throw new ULogonFailedException();
+            }
+            return b_ret;
+        }
+
         public bool CheckLogon(ref ULOGONINFO info)
         {
             bool b_ret = false;

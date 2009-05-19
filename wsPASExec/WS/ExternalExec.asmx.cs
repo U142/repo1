@@ -179,6 +179,19 @@ namespace com.ums.ws.parm
         }
 
         [WebMethod]
+        public ExecResponse ExecEventV3(Int64 l_eventpk, String sz_compid, String sz_userid, String sz_deptid,
+                                        String sz_password, String sz_function, String sz_scheddate,
+                                        String sz_schedtime)
+        {
+            ExecResponse response = new ExecResponse();
+
+            XmlDocument doc = ExecEvent(l_eventpk, 0, 0, 0, sz_compid, sz_userid, sz_deptid,
+                                        sz_password, sz_function, sz_scheddate, sz_schedtime);
+            response.parseFromXml(ref doc, "l_eventpk");
+            return response;
+        }
+
+        [WebMethod]
         public ExecResponse ExecEventV2(Int64 l_eventpk, int l_comppk, int l_deptpk, Int64 l_userpk,
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
                                 String sz_function, String sz_scheddate, String sz_schedtime)
