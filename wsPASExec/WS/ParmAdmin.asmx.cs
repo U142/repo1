@@ -21,6 +21,7 @@ using com.ums.UmsParm;
 using com.ums.UmsFile;
 using com.ums.UmsDbLib;
 using com.ums.ZipLib;
+using System.Collections.Generic;
 
 
 namespace com.ums.ws.parm
@@ -44,6 +45,11 @@ namespace com.ums.ws.parm
         private String sz_newtimestamp;
         private PercentResult m_res = new PercentResult();
         private PercentProgress.SetPercentDelegate m_percentdelegate;
+
+
+
+
+
 
         [WebMethod]
         public byte[] UpdateParm(byte[] zipfile /*zip-file that contains two files*/, ULOGONINFO logoninfo,

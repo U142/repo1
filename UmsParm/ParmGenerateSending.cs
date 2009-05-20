@@ -7,6 +7,7 @@ using com.ums.UmsDbLib;
 using com.ums.UmsFile;
 using System.Collections;
 using com.ums.UmsParm;
+using System.Collections.Generic;
 
 
 namespace com.ums.UmsParm
@@ -180,7 +181,8 @@ namespace com.ums.UmsParm
         {
             //get all alerts. send all
 
-            ArrayList alerts = new ArrayList();
+            //ArrayList alerts = new ArrayList();
+            List<PAALERT> alerts = new List<PAALERT>();
             db.GetAlertsFromEvent(l_eventpk, n_function, ref alerts);
 
             BBPROJECT project = new BBPROJECT();

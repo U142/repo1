@@ -16,6 +16,7 @@ using com.ums.PAS.Address;
 using com.ums.PAS.Database;
 using System.Xml;
 using com.ums.UmsCommon.Audio;
+using System.Collections.Generic;
 
 
 namespace com.ums.ws.parm
@@ -30,6 +31,35 @@ namespace com.ums.ws.parm
     // [System.Web.Script.Services.ScriptService]
     public class parmws : System.Web.Services.WebService
     {
+
+        [WebMethod]
+        public PAEVENT[] GetEventList(com.ums.UmsCommon.ULOGONINFO logoninfo)
+        {
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                try
+                {
+                    if (db.CheckLogonLiteral(ref logoninfo))
+                    {
+                        List<PAEVENT> events = new List<PAEVENT>();
+                        db.GetEventAlertStructure(ref logoninfo, ref events);
+
+                        return events.ToArray();
+                    }
+                    else
+                        throw new ULogonFailedException();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         protected void _init()
         {
