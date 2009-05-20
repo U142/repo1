@@ -190,7 +190,7 @@ namespace com.ums.UmsDbLib
         {
             m_b_dbconn = false;
             conn = new OdbcConnection(sz_constring);
-            conn.ConnectionTimeout = timeout;
+            //conn.ConnectionTimeout = timeout;
             try
             {
                 conn.Open();
