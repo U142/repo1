@@ -38,7 +38,7 @@ namespace com.ums.PAS.Address
             conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
             conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
 
-            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc);
+            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
             UAddressList list = db.GetAddresslist(m_search);
             db.close();
             return list;
@@ -64,7 +64,7 @@ namespace com.ums.PAS.Address
             conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
             conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
             conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc);
+            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
             /*parse file and get results from db
              populate UGisImportResultLine with house info, the inhabitant results will be returned
              * in UGisImportResultLine.list

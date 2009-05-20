@@ -295,7 +295,21 @@ namespace com.ums.PAS.Database
                         if (l_dept_fleetcontrol <= 0)
                             dept.l_fleetcontrol = 0;
 
+                        //check the folkereg adr database of this department if the user has access to municipals
+                        try
+                        {
+                            UmsDbConnParams p = new UmsDbConnParams();
+                            p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc + "_reg";
+                            p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
+                            p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
+                            UAdrDb adr = new UAdrDb(p, 60);
+                            dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
+                            adr.close();
+                        }
+                        catch (Exception)
+                        {
 
+                        }
 
                         ret.departments.Add(dept); //ADD DEPARTMENT TO LIST
                     } while (rs.Read());

@@ -74,7 +74,7 @@ namespace com.ums.UmsParm
             this.logoninfo = logoninfo;
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
             }
             catch (Exception e)
             {

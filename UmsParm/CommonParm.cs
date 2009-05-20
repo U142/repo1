@@ -562,8 +562,39 @@ namespace com.ums.UmsParm
 
     }
 
+    public class PAOBJECT
+    {
+        public long l_objectpk;
+        public long l_deptpk;
+        public long l_importpk;
+        public String sz_name;
+        public String sz_description;
+        public long l_categorypk;
+        public long l_parent;
+        public String sz_address;
+        public String sz_postno;
+        public String sz_place;
+        public String sz_phone;
+        public String sz_metadata;
+        public bool b_isobjectfolder;
+        public long l_timestamp;
+    }
 
-    public struct PAALERT
+    public class PAEVENT
+    {
+        public long l_eventpk;
+        public long l_parent;
+        public String sz_name;
+        public String sz_description;
+        public long l_categorypk;
+        public long l_timestamp;
+        public float f_epi_lon;
+        public float f_epi_lat;
+        public List<PAALERT> alerts = new List<PAALERT>();
+    }
+
+
+    public class PAALERT
     {
         public static String getSendingTypeText(int n_sendingtype)
         {
@@ -1135,5 +1166,9 @@ namespace com.ums.UmsParm
     public class UTESTSENDING : UMAPSENDING
     {
         public List<string> numbers;
+    }
+    public class UMUNICIPALSENDING : UMAPSENDING
+    {
+        public List<UMunicipalDef> municipals;
     }
 }

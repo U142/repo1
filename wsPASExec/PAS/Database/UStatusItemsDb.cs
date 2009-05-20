@@ -22,7 +22,7 @@ namespace com.ums.PAS.Database
     public class UStatusItemsDb : PASUmsDb
     {
         public UStatusItemsDb(UmsDbConnParams conn) 
-            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd)
+            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, 180)
         {
 
         }

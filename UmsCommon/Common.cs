@@ -146,6 +146,11 @@ namespace com.ums.UmsCommon
         public UMapPoint center;
         public UMapPoint radius;
     }
+    public class UMunicipalDef
+    {
+        public String sz_municipalid;
+        public String sz_municipalname;
+    }
     public class UGisRecord
     {
         public long id; //kon_dmid from adr-db
@@ -442,6 +447,7 @@ namespace com.ums.UmsCommon
         public String sz_surname;
         public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
         public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
+
     }
 
     public class UDEPARTMENT
@@ -463,6 +469,14 @@ namespace com.ums.UmsCommon
         public int l_houseeditor;
         public long l_addresstypes;
         public String sz_defaultnumber;
+        public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
+        public void AddMunicipal(String sz_id, String sz_name)
+        {
+            UMunicipalDef d = new UMunicipalDef();
+            d.sz_municipalid = sz_id;
+            d.sz_municipalname = sz_name;
+            municipals.Add(d);
+        }
     }
 
     public class UNSLOOKUP

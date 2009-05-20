@@ -35,7 +35,7 @@ namespace com.ums.PAS.Address
 
             try
             {
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc);
+                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
                 UAddressList list = db.FindAddressesByDistance(m_search);
                 db.close();
                 return list;

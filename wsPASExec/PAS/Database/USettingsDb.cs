@@ -15,7 +15,7 @@ namespace com.ums.PAS.Database
     public class USettingsDb : PASUmsDb
     {
         public USettingsDb(UmsDbConnParams conn)
-            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd)
+            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, 60)
         {
 
         }

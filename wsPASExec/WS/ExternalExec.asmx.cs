@@ -139,6 +139,11 @@ namespace com.ums.ws.parm
             throw new NotSupportedException();
         }
         [WebMethod]
+        public UAdrCount GetAdrCountMunicipal(ULOGONINFO logon, UMUNICIPALSENDING s)
+        {
+            return GetAdrCount(logon, s);
+        }
+        [WebMethod]
         public UAdrCount GetAdrCountTestsending(ULOGONINFO logon, UTESTSENDING s)
         {
             return GetAdrCount(logon, s);
@@ -150,7 +155,7 @@ namespace com.ums.ws.parm
             try
             {
 
-                return new UAdrDb(logon.sz_stdcc).GetAddressCount(ref logon, ref mapsending);
+                return new UAdrDb(logon.sz_stdcc, 120).GetAddressCount(ref logon, ref mapsending);
             }
             catch (Exception e)
             {
@@ -246,7 +251,7 @@ namespace com.ums.ws.parm
             ret.sz_jobid = sz_jobid;
             try
             {
-                PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
                 if (!db.CheckLogon(ref logon))
                 {
                     //logon failed

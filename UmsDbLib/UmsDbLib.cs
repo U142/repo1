@@ -27,6 +27,7 @@ namespace com.ums.UmsDbLib
         protected bool m_b_transaction_in_progress = false;
         protected OdbcCommand m_cmd;
         protected OdbcDataReader m_reader;
+        protected int timeout = 60;
 
         protected void setLastError(string s) { 
             sz_last_error = s;
@@ -78,9 +79,10 @@ namespace com.ums.UmsDbLib
 
         }
 
-        public UmsDb(string sz_dsn, string sz_uid, string sz_password)
+        public UmsDb(string sz_dsn, string sz_uid, string sz_password, int timeout)
         {
             sz_constring = String.Format("DSN={0}; UID={1}; PWD={2}", sz_dsn, sz_uid, sz_password);
+            this.timeout = timeout;
             try
             {
                 init();
@@ -90,7 +92,7 @@ namespace com.ums.UmsDbLib
                 throw e;
             }
         }
-        public UmsDb() : this(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd)
+        public UmsDb() : this(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
         {
             
         }
@@ -100,7 +102,7 @@ namespace com.ums.UmsDbLib
             bool b_ret = false;
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
-            String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.sz_userid='{0}' AND " +
+            String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc, BU.l_userpk, BD.l_deptpk, BC.l_comppk FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.sz_userid='{0}' AND " +
                                             "BC.sz_compid='{1}' AND BD.sz_deptid='{2}' AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
                                             "BU.sz_paspassword='{3}'",
                                             info.sz_userid, info.sz_compid, info.sz_deptid, info.sz_password);
@@ -110,10 +112,13 @@ namespace com.ums.UmsDbLib
                 if (rs.Read())
                 {
                     Int64 l_fromdb = rs.GetInt64(0);
-                    if (l_fromdb == info.l_userpk)
+                    //if (l_fromdb == info.l_userpk)
                     {
                         info.l_deptpri = rs.GetInt32(1);
                         info.sz_stdcc = rs.GetString(2);
+                        info.l_userpk = rs.GetInt64(3);
+                        info.l_deptpk = rs.GetInt32(4);
+                        info.l_comppk = rs.GetInt32(5);
                         info.l_priserver = 2;
                         info.l_altservers = 1;
                         b_ret = true;
@@ -185,6 +190,7 @@ namespace com.ums.UmsDbLib
         {
             m_b_dbconn = false;
             conn = new OdbcConnection(sz_constring);
+            conn.ConnectionTimeout = timeout;
             try
             {
                 conn.Open();
@@ -357,6 +363,7 @@ namespace com.ums.UmsDbLib
                 }
                 else
                     m_cmd = new OdbcCommand(s, conn);
+                m_cmd.CommandTimeout = timeout;
             }
             catch (Exception e)
             {

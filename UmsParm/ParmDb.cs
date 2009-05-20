@@ -3,14 +3,14 @@ using System.Data.Odbc;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
 using System.Collections;
-
+using System.Collections.Generic;
 
 namespace com.ums.UmsParm
 {
     public class PASUmsDb : UmsDb
     {
-        public PASUmsDb(string sz_dsn, string sz_uid, string sz_password)
-            : base(sz_dsn, sz_uid, sz_password)
+        public PASUmsDb(string sz_dsn, string sz_uid, string sz_password, int timeout)
+            : base(sz_dsn, sz_uid, sz_password, timeout)
         {
         }
         public PASUmsDb()
@@ -73,7 +73,7 @@ namespace com.ums.UmsParm
          * throws DbException
          *  retrieve all alerts from a eventpk.
          */
-        public bool GetAlertsFromEvent(Int64 l_eventpk, int n_function, ref ArrayList alerts)
+        public bool GetAlertsFromEvent(Int64 l_eventpk, int n_function, ref List<PAALERT> alerts)//ref ArrayList alerts)
         {
             String szSQL = String.Format("SELECT l_alertpk FROM PAALERT WHERE l_parent={0}", l_eventpk);
             try
@@ -98,6 +98,97 @@ namespace com.ums.UmsParm
                 CloseRecordSet();
             }*/
             return true;
+        }
+
+        public bool GetEventAlertStructure(ref ULOGONINFO l, ref List<PAEVENT> list)
+        {
+            bool b_ret = false;
+            /*String szSQL = String.Format("SELECT PA.l_alertpk, PA.l_parent, PE.l_eventpk, PE.l_parent FROM PAALERT PA, PAEVENT PE, PAOBJECT PO "+
+                                        "WHERE PA.l_parent=*PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PO.l_deptpk={0} "+
+                                        "ORDER BY PE.l_eventpk, PA.l_alertpk",
+                                        l.l_deptpk);*/
+            String szSQL = String.Format("SELECT isnull(PE.l_eventpk,-1), isnull(PE.l_parent,-1), isnull(PE.sz_name,'N/A'), PE.sz_description, " +
+                                        "isnull(PE.l_categorypk,-1), isnull(PE.l_timestamp,-1), isnull(PE.f_epi_lon,0), isnull(PE.f_epi_lat,0) " +
+                                        "FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PO.l_deptpk={0}",
+                                        l.l_deptpk);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                //PAEVENT current_event = null;
+                while (rs.Read())
+                {
+                    PAEVENT ev = new PAEVENT();
+                    ev.l_eventpk = rs.GetInt64(0);
+                    ev.l_parent = rs.GetInt64(1);
+                    ev.sz_name = rs.GetString(2);
+                    if (rs.IsDBNull(3))
+                        ev.sz_description = " ";
+                    else
+                        ev.sz_description = rs.GetString(3);
+                    ev.l_categorypk = rs.GetInt64(4);
+                    ev.l_timestamp = rs.GetInt64(5);
+                    ev.f_epi_lon = rs.GetFloat(6);
+                    ev.f_epi_lat = rs.GetFloat(7);
+
+
+                    if (GetAlertsFromEvent(ev.l_eventpk, 0, ref ev.alerts))
+                    {
+
+                    }
+
+                    /*long n_alertpk = rs.GetInt64(0);
+                    long n_alertparent = rs.GetInt64(1);
+                    long n_eventparent = rs.GetInt64(3);
+                    long n_eventpk = rs.GetInt64(2);
+                    if (current_event == null || current_event.l_eventpk != n_eventpk)
+                    {
+                        current_event = new PAEVENT();
+                    }
+
+                    PAALERT prev_alert = null;*/
+
+
+                    list.Add(ev);
+                }
+                rs.Close();
+                b_ret = true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return b_ret;
+        }
+
+        public bool FillEvent(Int64 l_eventpk, int n_function, ref PAEVENT pe)
+        {
+            bool b_ret = false;
+            pe.l_eventpk = l_eventpk;
+            String szSQL = String.Format("SELECT l_eventpk, l_parent, sz_name, sz_description, l_categorypk, l_timestamp, f_epi_lon, f_epi_lat " +
+                                        "FROM PAEVENT WHERE l_eventpk={0}", l_eventpk);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    pe.l_parent = rs.GetInt64(1);
+                    pe.sz_name = rs.GetString(2);
+                    pe.sz_description = rs.GetString(3);
+                    pe.l_categorypk = rs.GetInt64(4);
+                    pe.l_timestamp = rs.GetInt64(5);
+                    pe.f_epi_lon = rs.GetFloat(6);
+                    pe.f_epi_lat = rs.GetFloat(7);
+                    b_ret = true;
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                setLastError(e.Message);
+                pe.l_eventpk = 0;
+            }
+            return b_ret;
+
         }
 
         /*  in: alertpk, reference to PAALERT struct

@@ -24,16 +24,48 @@ namespace com.ums.PAS.Database
         /*
          * Connect to "vb_adr_" + sz_stdcc depending on which database to access
          */
-        public UAdrDb(UmsDbConnParams conn, String sz_stdcc) 
-            : base(conn.sz_dsn + sz_stdcc, conn.sz_uid, conn.sz_pwd)
+        public UAdrDb(UmsDbConnParams conn, String sz_stdcc, int timeout) 
+            : base(conn.sz_dsn + sz_stdcc, conn.sz_uid, conn.sz_pwd, timeout)
         {
 
         }
+        public UAdrDb(UmsDbConnParams conn, int timeout)
+            : base(conn.sz_dsn, conn.sz_uid, conn.sz_pwd, timeout)
+        {
+        }
 
-        public UAdrDb(String sz_stdcc)
-            : base(UCommon.UBBDATABASE.sz_adrdb_dsnbase + sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_uid, UCommon.UBBDATABASE.sz_adrdb_pwd)
+        public UAdrDb(String sz_stdcc, int timeout)
+            : base(UCommon.UBBDATABASE.sz_adrdb_dsnbase + sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_uid, UCommon.UBBDATABASE.sz_adrdb_pwd, timeout)
         {
             
+        }
+
+        public List<UMunicipalDef> GetMunicipalsByDept(int n_deptpk)
+        {
+            List<UMunicipalDef> list = new List<UMunicipalDef>();
+            String szSQL = String.Format("SELECT DXM.l_deptpk, DXM.l_municipalid, MU.sz_name "+
+                            "FROM DEPARTMENT_X_MUNICIPAL DXM, MUNICIPAL MU WHERE DXM.l_deptpk={0} AND DXM.l_municipalid*=MU.l_municipalid",
+                            n_deptpk);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    UMunicipalDef md = new UMunicipalDef();
+                    md.sz_municipalid = rs.GetInt32(1).ToString();
+                    if (rs.IsDBNull(2))
+                        md.sz_municipalname = "Unknown Municipal Name";
+                    else
+                        md.sz_municipalname = rs.GetString(2);
+                    list.Add(md);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
         }
 
         public UAdrCount GetAddressCount(ref ULOGONINFO l, ref UMAPSENDING sending)
@@ -74,6 +106,12 @@ namespace com.ums.PAS.Database
                     return a;
                     //return s.numbers.Count;
                 }
+                else if (typeof(UMUNICIPALSENDING) == sending.GetType())
+                {
+                    UMUNICIPALSENDING s = (UMUNICIPALSENDING)sending;
+                    List<UMunicipalDef> m = s.municipals;
+                    return _MunicipalCount(ref m, n_adrtypes);
+                }
                 throw new NotImplementedException();
             }
             catch (Exception e)
@@ -84,7 +122,7 @@ namespace com.ums.PAS.Database
 
         protected void _AddToAdrcount(ref UAdrCount c, ref UAdrcountCandidate adr, long adrtypes)
         {
-            if ((adrtypes & (long)ADRTYPES.FIXED_PRIVATE)>0 && adr.hasfixed && adr.bedrift==0)
+            if ((adrtypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 && adr.hasfixed && adr.bedrift == 0)
                 c.n_private_fixed += adr.add;
             if ((adrtypes & (long)ADRTYPES.FIXED_COMPANY) > 0 && adr.hasfixed && adr.bedrift==1)
                 c.n_company_fixed += adr.add;
@@ -145,6 +183,47 @@ namespace com.ums.PAS.Database
                 else if (adr.bedrift == 1)
                     c.n_company_nonumber += adr.add;
             }
+        }
+
+        protected UAdrCount _MunicipalCount(ref List<UMunicipalDef> m, long adrtypes)
+        {
+            UAdrCount count = new UAdrCount();
+            try
+            {
+                String szSQL="";
+                bool bfirst = true;
+                for(int i=0; i < m.Count; i++)
+                {
+                    if (!bfirst)
+                        szSQL += " UNION ";
+                    if (m[i].sz_municipalid.Length > 0)
+                    {
+                        szSQL += String.Format("SELECT BEDRIFT, f_hasfixed, f_hasmobile, count(KON_DMID) n_count " +
+                                                "FROM ADR_KONSUM WHERE KOMMUNENR={0}",
+                                                m[i].sz_municipalid);
+                        bfirst = false;
+                    }
+                    if (!bfirst)
+                        szSQL += " GROUP BY BEDRIFT, f_hasfixed, f_hasmobile";
+                }
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                
+                UAdrcountCandidate c = new UAdrcountCandidate();
+                while (rs.Read())
+                {
+                    c.bedrift = rs.GetInt32(0);
+                    c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
+                    c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
+                    c.add = rs.GetInt32(3);
+                    _AddToAdrcount(ref count, ref c, adrtypes);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return count;
         }
 
         protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
