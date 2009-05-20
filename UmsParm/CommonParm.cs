@@ -692,7 +692,7 @@ namespace com.ums.UmsParm
             m_dynaresched = new BBDYNARESCHED(p);
         }
     }
-
+     
     public class SMS_SENDING : PAS_SENDING 
     {
         //new override public char sendingtype = 's'; //sms
