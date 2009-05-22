@@ -7,7 +7,6 @@ using com.ums.UmsDbLib;
 using com.ums.UmsFile;
 using System.Collections;
 using com.ums.UmsParm;
-using System.Collections.Generic;
 
 
 namespace com.ums.UmsParm

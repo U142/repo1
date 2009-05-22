@@ -267,8 +267,8 @@ namespace com.ums.UmsCommon.Audio
                         sz_tempfile = "v" + req.n_refno + "_" + req.n_param;
                         sz_tempfileraw = sz_tempfile + ".raw";
                         sz_tempfile = sz_tempfile + ".wav";
-                        sz_destwav = UCommon.UPATHS.sz_path_audiofiles + sz_tempfile;
-                        sz_destraw = UCommon.UPATHS.sz_path_backbone + sz_tempfileraw;
+                        sz_destwav = UCommon.UPATHS.sz_path_audiofiles + "\\" + sz_tempfile;
+                        sz_destraw = UCommon.UPATHS.sz_path_backbone + "\\" + sz_tempfileraw;
 
                         bw = new BinaryWriter(File.Open(sz_physpath + sz_tempfile, FileMode.Create));
                         bw.Write(req.wav);

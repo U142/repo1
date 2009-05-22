@@ -78,11 +78,11 @@ namespace com.ums.UmsParm
             String szSQL = String.Format("SELECT l_alertpk FROM PAALERT WHERE l_parent={0}", l_eventpk);
             try
             {
-                PAALERT pa;
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
-                    pa = new PAALERT();
+                    PAALERT pa = new PAALERT();
+                    pa.l_alertpk = rs.GetInt64(0);
                     FillAlert(rs.GetInt64(0), n_function, ref pa);
                     alerts.Add(pa);
                 }
@@ -199,8 +199,8 @@ namespace com.ums.UmsParm
         {
             bool b_ret = false;
             pa.l_alertpk = l_alertpk;
-            String szSQL = String.Format("SELECT l_alertpk, l_parent, sz_name, sz_description, l_profilepk, " +
-                                            "l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp, f_locked, sz_areaid, "+
+            String szSQL = String.Format("SELECT l_alertpk, isnull(l_parent,-1), sz_name, sz_description, isnull(l_profilepk, -1), " +
+                                            "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), "+
                                             "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,'') " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
             try
@@ -211,7 +211,10 @@ namespace com.ums.UmsParm
                     pa.setAlertPk(rs.GetInt64(0));
                     pa.setParent(rs.GetString(1));
                     pa.setName(rs.GetString(2));
-                    pa.setDescription(rs.GetString(3));
+                    if (rs.IsDBNull(3))
+                        pa.setDescription("");
+                    else
+                        pa.setDescription(rs.GetString(3));
                     pa.setProfilePk(rs.GetInt32(4));
                     pa.setSchedPk(rs.GetString(5));
                     pa.setOadc(rs.GetString(6));
