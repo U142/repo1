@@ -50,23 +50,23 @@ namespace com.ums.PAS.Database
             String szSQL = String.Format(
                 "SELECT isnull(head.l_type, 0) l_sendingtype, isnull(head.l_items, -1) l_totitem, " +
                 "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
-                "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(info.l_sendingstatus,-1) l_sendingstatus, " +
+                "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(info.l_sendingstatus,1) l_sendingstatus, " +
                 "isnull(info.sz_groups,' '), isnull(info.l_group, -1) l_group, isnull(info.l_type, -1) l_type, " +
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, BBQREF head, " +
                 "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE dept.l_comppk={0} AND info.l_type=1 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                "AND info.l_group in (2,3,4,8) " +
+                "AND info.l_group in (2,3,4,8,9) " +
                 "UNION " +
                 "SELECT l_sendingtype=2, isnull(head.l_items, -1) l_totitem, " +
                 "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
-                "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(info.l_sendingstatus,-1) l_sendingstatus, " +
+                "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(info.l_sendingstatus,1) l_sendingstatus, " +
                 "isnull(info.sz_groups,' '), isnull(info.l_group, -1) l_group, isnull(info.l_type, -1) l_type, " +
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, SMSQREF head, " +
                 "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE dept.l_comppk={0} AND info.l_type=2 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                "AND info.l_group in (2,3,4,8) " +
+                "AND info.l_group in (2,3,4,8,9) " +
                 "ORDER BY info.l_refno DESC",
                 logon.l_comppk);
             try

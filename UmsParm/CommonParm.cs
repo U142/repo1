@@ -5,10 +5,12 @@ using com.ums.UmsFile;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace com.ums.UmsParm
 {
     public abstract class UShape
     {
+        
         public static int SENDINGTYPE_POLYGON = 3;
         public static int SENDINGTYPE_ELLIPSE = 8;
         public static int SENDINGTYPE_GIS = 4;
@@ -34,6 +36,7 @@ namespace com.ums.UmsParm
         }
         public bool WriteAddressResendFile(long copy_refno)
         {
+            
             return true;
         }
         public bool WriteAddressResendFileGUI(long copy_refno)
@@ -261,7 +264,6 @@ namespace com.ums.UmsParm
         {
             try
             {
-                w.writeline("/KV");
                 for (int i = 0; i < m_municipals.Count; i++)
                 {
                     if(m_municipals[i].sz_municipalid.Length>0)
@@ -680,6 +682,8 @@ namespace com.ums.UmsParm
                     return "Test message";
                 case 8:
                     return "Ellipse";
+                case 9:
+                    return "Municipal";
                 default:
                     return "Unknown sending type";
             }

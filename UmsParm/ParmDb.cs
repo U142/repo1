@@ -577,7 +577,8 @@ namespace com.ums.UmsParm
             m.l_sendingstatus = 1;
 
             if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE && 
-                m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING)
+                m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING &&
+                m.l_group != UShape.SENDINGTYPE_MUNICIPAL)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
 
             return true;

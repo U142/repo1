@@ -267,6 +267,11 @@ namespace com.ums.UmsParm
             bool b_publish_sms = false;
             bool b_ret = false;
 
+            if(typeof(UMUNICIPALSENDING).Equals(sending.GetType()))
+            {
+                
+            }
+
             //create SMS sending if 
             if(sending.doSendSMS() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS)>0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS)>0 ||
