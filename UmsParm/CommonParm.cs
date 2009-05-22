@@ -12,6 +12,7 @@ namespace com.ums.UmsParm
         public static int SENDINGTYPE_POLYGON = 3;
         public static int SENDINGTYPE_ELLIPSE = 8;
         public static int SENDINGTYPE_GIS = 4;
+        public static int SENDINGTYPE_MUNICIPAL = 9;
         public static int SENDINGTYPE_TESTSENDING = 0;//imported list
 
 
@@ -19,6 +20,7 @@ namespace com.ums.UmsParm
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }
+        public UMunicipalShape municipal() { return (UMunicipalShape)this; }
         public UTestSending test() { return (UTestSending)this; }
         public UResend resend() { return (UResend)this; }
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
@@ -236,6 +238,71 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class UMunicipalShape : UShape
+    {
+        protected List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
+        protected UMapBounds m_bounds = null;
+        public void SetBounds(UMapBounds b)
+        {
+            m_bounds = b;
+        }
+
+
+        public UMunicipalShape()
+            : base()
+        {
+        }
+        public bool addRecord(UMunicipalDef r)
+        {
+            m_municipals.Add(r);
+            return true;
+        }
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            try
+            {
+                w.writeline("/KV");
+                for (int i = 0; i < m_municipals.Count; i++)
+                {
+                    if(m_municipals[i].sz_municipalid.Length>0)
+                        w.writeline("/MUNICIPALID=" + m_municipals[i].sz_municipalid);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            try
+            {
+                if (m_bounds != null)
+                {
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.l_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.u_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.r_bo));
+                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.b_bo));
+                }
+                //w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", l_bo));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                w.close();
+            }
+            return true;
+        }
+    }
+
     public class UGIS : UShape
     {
         protected List<UGisRecord> m_gis = new List<UGisRecord>();
@@ -273,7 +340,6 @@ namespace com.ums.UmsParm
         }
         public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
         {
-            //throw new NotImplementedException();
             try
             {
                 try
@@ -591,6 +657,10 @@ namespace com.ums.UmsParm
         public float f_epi_lon;
         public float f_epi_lat;
         public List<PAALERT> alerts = new List<PAALERT>();
+        public override string ToString()
+        {
+            return sz_name;
+        }
     }
 
 
@@ -804,11 +874,27 @@ namespace com.ums.UmsParm
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_GIS;
             }
+            else if (typeof(UMUNICIPALSENDING) == s.GetType())
+            {
+                UMUNICIPALSENDING mun = (UMUNICIPALSENDING)s;
+                s.setGroup(UShape.SENDINGTYPE_MUNICIPAL);
+                UShape shape = new UMunicipalShape();
+                for (int i = 0; i < mun.municipals.Count; i++)
+                {
+                    UMunicipalDef def = mun.municipals[i];
+                    shape.municipal().addRecord(def);
+                }
+                shape.municipal().SetBounds(mun.mapbounds);
+                
+                setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
+            }
             else if (typeof(UTESTSENDING) == s.GetType())
             {
                 UTESTSENDING t = (UTESTSENDING)s;
                 t.setGroup(UShape.SENDINGTYPE_TESTSENDING);
                 UShape shape = new UTestSending();
+                
                 for (int i = 0; i < t.numbers.Count; i++)
                 {
                     shape.test().addRecord(t.numbers[i]);

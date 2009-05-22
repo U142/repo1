@@ -114,6 +114,14 @@ namespace com.ums.ws.parm
             return response;
         }
         [WebMethod]
+        public ExecResponse ExecMunicipalSending(UMUNICIPALSENDING municipal)
+        {
+            ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(municipal);
+            response.parseFromXml(ref doc, "l_alertpk");
+            return response;
+        }
+        [WebMethod]
         public ExecResponse ExecTestSending(UTESTSENDING send)
         {
             ExecResponse response = new ExecResponse();
