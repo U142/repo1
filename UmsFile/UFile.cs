@@ -153,11 +153,14 @@ namespace com.ums.UmsFile
      */
     public class AdrfileLBAWriter : AdrfileWriter
     {
-        public AdrfileLBAWriter(String sz_projectpk, long l_refno)
+        public AdrfileLBAWriter(String sz_projectpk, long l_refno, bool b_utf8)
         {
             n_refno = l_refno;
             this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("LBA_SEND_{0}.{1}.xml", sz_projectpk, l_refno));
-            open();
+            if (b_utf8)
+                openUTF8();
+            else
+                open();
         }
         public override bool publish()
         {

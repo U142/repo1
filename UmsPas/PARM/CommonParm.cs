@@ -4,7 +4,7 @@ using com.ums.UmsCommon;
 using com.ums.UmsFile;
 using System.Collections.Generic;
 using System.Text;
-
+using com.ums.PAS.Database;
 
 namespace com.ums.UmsParm
 {
@@ -888,10 +888,19 @@ namespace com.ums.UmsParm
                     UMunicipalDef def = mun.municipals[i];
                     shape.municipal().addRecord(def);
                 }
-                shape.municipal().SetBounds(mun.mapbounds);
                 
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
+                try
+                {
+                    UAdrDb db = new UAdrDb(s.logoninfo.sz_stdcc, 60);
+                    db.GetMunicipalBounds(ref mun);
+                }
+                catch (Exception e)
+                {
+                }
+                shape.municipal().SetBounds(mun.mapbounds);
+
             }
             else if (typeof(UTESTSENDING) == s.GetType())
             {
@@ -902,7 +911,7 @@ namespace com.ums.UmsParm
                 for (int i = 0; i < t.numbers.Count; i++)
                 {
                     shape.test().addRecord(t.numbers[i]);
-                }
+                }                
                 setShape(ref shape);
                 t.n_sendingtype = UShape.SENDINGTYPE_TESTSENDING;
             }

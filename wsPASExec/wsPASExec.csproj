@@ -137,10 +137,6 @@
       <Project>{BFF1C26F-955E-4A56-B781-D0CA89912B8A}</Project>
       <Name>UmsFile</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UmsParm\UmsParm.csproj">
-      <Project>{E9A3BCAD-ACAE-4AE0-8039-F965BE224BC9}</Project>
-      <Name>UmsParm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UmsPas\UmsPas.csproj">
       <Project>{8CDBBCD2-D0EA-4A62-B60C-A500D5CB68DA}</Project>
       <Name>UmsPas</Name>

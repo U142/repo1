@@ -35,6 +35,13 @@ namespace com.ums.PAS.Database
             
         }
 
+        public UMapBounds GetMunicipalBounds(ref UMUNICIPALSENDING mun)
+        {
+            UMapBounds b = new UMapBounds();
+
+            return b;
+        }
+
         public List<UMunicipalDef> GetMunicipalsByDept(int n_deptpk)
         {
             List<UMunicipalDef> list = new List<UMunicipalDef>();
