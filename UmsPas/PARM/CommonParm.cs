@@ -8,8 +8,41 @@ using com.ums.PAS.Database;
 
 namespace com.ums.UmsParm
 {
+    //public static bool operator !=(SENDINGTYPES s, long x) { return x != (long)s; }
+
+    /*public static class USENDINGTYPES
+    {
+        public enum types
+        {
+            SENDINGTYPE_POLYGON = 3,
+            SENDINGTYPE_ELLIPSE = 8,
+            SENDINGTYPE_GIS = 4,
+            SENDINGTYPE_MUNICIPAL = 9,
+            SENDINGTYPE_TESTSENDING = 0,
+        }
+        public static bool operator !=(USENDINGTYPES a, USENDINGTYPES b)
+        {
+            return (a!=b);
+        }
+        public static bool operator ==(USENDINGTYPES a, USENDINGTYPES b)
+        {
+            return a == b;
+        }
+    }*/
+
     public abstract class UShape
     {
+        //public static USENDINGTYPES operator !=(USENDINGTYPES s, long n) { return new USENDINGTYPES(); }
+        /*public enum USENDINGTYPES : int
+        {
+            
+            SENDINGTYPE_POLYGON = 3,
+            SENDINGTYPE_ELLIPSE = 8,
+            SENDINGTYPE_GIS = 4,
+            SENDINGTYPE_MUNICIPAL = 9,
+            SENDINGTYPE_TESTSENDING = 0,
+
+        };*/
         
         public static int SENDINGTYPE_POLYGON = 3;
         public static int SENDINGTYPE_ELLIPSE = 8;
@@ -244,6 +277,7 @@ namespace com.ums.UmsParm
     public class UMunicipalShape : UShape
     {
         protected List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
+        public List<UMunicipalDef> GetMunicipals() { return m_municipals; }
         protected UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
         {
@@ -290,6 +324,11 @@ namespace com.ums.UmsParm
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.u_bo));
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.r_bo));
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", m_bounds.b_bo));
+                    for(int i = 0; i < m_municipals.Count; i++)
+                    {
+                        w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}\t{1}", m_municipals[i].sz_municipalid, m_municipals[i].sz_municipalname));
+                    }
+                    
                 }
                 //w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", l_bo));
             }
@@ -888,9 +927,6 @@ namespace com.ums.UmsParm
                     UMunicipalDef def = mun.municipals[i];
                     shape.municipal().addRecord(def);
                 }
-                
-                setShape(ref shape);
-                s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
                 try
                 {
                     UAdrDb db = new UAdrDb(s.logoninfo.sz_stdcc, 60);
@@ -900,6 +936,9 @@ namespace com.ums.UmsParm
                 {
                 }
                 shape.municipal().SetBounds(mun.mapbounds);
+                
+                setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
 
             }
             else if (typeof(UTESTSENDING) == s.GetType())

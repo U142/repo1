@@ -479,6 +479,14 @@ namespace com.ums.UmsParm
                     {
                         m.l_nofax = 0;
                     }
+                    try
+                    {
+                        m.sz_messagetext = rs.GetString(23);
+                    }
+                    catch (Exception)
+                    {
+                        m.sz_messagetext = "N/A";
+                    }
 
                     return true;
                 }
@@ -579,7 +587,7 @@ namespace com.ums.UmsParm
             m.l_nofax = ((s.n_addresstypes & (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY) == (long)ADRTYPES.SENDTO_USE_NOFAX_COMPANY ? 1 : 0);
             m.l_sendingstatus = 1;
 
-            if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE && 
+            if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE &&
                 m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING &&
                 m.l_group != UShape.SENDINGTYPE_MUNICIPAL)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));

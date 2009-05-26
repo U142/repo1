@@ -98,7 +98,7 @@ namespace com.ums.UmsFile
             n_refno = l_refno;
             n_resend_refno = -1;
             this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
-            open();
+            openUTF8();
         }
         public AdrfileGUIWriter(long l_refno, long l_from_resend_refno)
         {

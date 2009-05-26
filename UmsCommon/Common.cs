@@ -588,6 +588,7 @@ namespace com.ums.UmsCommon
         public long l_qreftype; //60 is voice simulation from BBQREF
         public int l_linktype;
         public int l_resendrefno; //if it's a resend
+        public String sz_messagetext; //for sms messages
     }
     public struct BBVALID
     {

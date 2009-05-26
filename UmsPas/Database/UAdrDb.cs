@@ -38,7 +38,80 @@ namespace com.ums.PAS.Database
         public UMapBounds GetMunicipalBounds(ref UMUNICIPALSENDING mun)
         {
             UMapBounds b = new UMapBounds();
+            if (mun.municipals == null)
+                return b;
+            if (mun.municipals.Count <= 0)
+                return b;
+            String szMunicipal = "";
+            for (int i = 0; i < mun.municipals.Count; i++)
+            {
+                if (i > 0)
+                    szMunicipal += ", ";
+                szMunicipal += mun.municipals[i].sz_municipalid;
+            }
+            /*String szSQL = String.Format("SELECT MIN(lon), MAX(lon), MIN(lat), MAX(lat) FROM " +
+                                        "ADR_KONSUM WHERE KOMMUNENR IN ({0}) AND not lon=0 AND not lat=0",
+                                        szMunicipal);*/
+            /*String szSQL = String.Format("SELECT AVG(lon), AVG(lat) FROM ADR_KONSUM "+
+                                        "WHERE KOMMUNENR IN ({0}) AND not lon=0 AND not lat=0",
+                                        szMunicipal);*/
+            String szSQL = String.Format("SELECT KOMMUNENR, STDEV(ALL LON) AS Expr1, STDEV(ALL lat), AVG(lon), AVG(lat) " +
+                                        "FROM ADR_KONSUM " +
+                                        "WHERE KOMMUNENR IN ({0}) AND NOT lon = 0 AND NOT lat = 0 " +
+                                        "GROUP BY KOMMUNENR",
+                                        szMunicipal);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                /*List<double> list_std_lon = new List<double>();
+                List<double> list_std_lat = new List<double>();
+                List<double> list_avg_lon = new List<double>();
+                List<double> list_avg_lat = new List<double>();*/
+                double min_lon = 360, min_lat = 360, max_lon = -360, max_lat = -360;
+                while (rs.Read())
+                {
+                    double stddev_lon = rs.GetFloat(1);
+                    double stddev_lat = rs.GetFloat(2);
+                    double avg_lon = rs.GetFloat(3);
+                    double avg_lat = rs.GetFloat(4);
+                    double lon_min = avg_lon - stddev_lon;
+                    double lon_max = avg_lon + stddev_lon;
+                    double lat_min = avg_lat - stddev_lat;
+                    double lat_max = avg_lat + stddev_lat;
 
+                    if (lon_min < min_lon)
+                        min_lon = lon_min;
+                    if (lon_max > max_lon)
+                        max_lon = lon_max;
+                    if (lat_min < min_lat)
+                        min_lat = lat_min;
+                    if (lat_max > max_lat)
+                        max_lat = lat_max;
+
+                    /*list_std_lon.Add(stddev_lon);
+                    list_std_lat.Add(stddev_lat);
+                    list_avg_lon.Add(avg_lon);
+                    list_avg_lat.Add(avg_lat);*/
+                }
+                b.l_bo = min_lat;
+                b.r_bo = max_lat;
+                b.b_bo = min_lon;
+                b.u_bo = max_lon;
+                /*for (int i = 0; i < list_avg_lat.Count; i++)
+                {
+                    double 
+                }*/
+                //b.l_bo = avg_lat - Math.Abs(stddev_lat);
+                //b.r_bo = avg_lat + Math.Abs(stddev_lat);
+                //b.b_bo = avg_lon - Math.Abs(stddev_lon);
+                //b.u_bo = avg_lon + Math.Abs(stddev_lon);
+                mun.mapbounds = b;
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
             return b;
         }
 

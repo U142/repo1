@@ -142,6 +142,29 @@ namespace com.ums.ws.parm
             return response;
         }
 
+
+
+        [WebMethod]
+        public UMapBounds GetMapBoundsFromSending(ULOGONINFO logon, UMAPSENDING s)
+        {
+            try
+            {
+                //UAdrDb db = new UAdrDb(logon.sz_stdcc, 120);
+                if (typeof(UMUNICIPALSENDING).Equals(s.GetType()))
+                {
+                    UMUNICIPALSENDING m = (UMUNICIPALSENDING)s;
+                    UAdrDb db = new UAdrDb(logon.sz_stdcc, 60);
+                    return db.GetMunicipalBounds(ref m);
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            throw new NotSupportedException();
+        }
+
         [WebMethod]
         public UAdrCount GetAdrCountPolygon(ULOGONINFO logon, UPOLYGONSENDING s)
         {
