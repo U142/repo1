@@ -347,6 +347,12 @@ namespace com.ums.UmsParm
     public class UGIS : UShape
     {
         protected List<UGisRecord> m_gis = new List<UGisRecord>();
+        protected UMapBounds m_bounds = null;
+        public void SetBounds(UMapBounds b)
+        {
+            m_bounds = b;
+        }
+
         public UGIS()
             : base()
         {
@@ -386,15 +392,13 @@ namespace com.ums.UmsParm
                 try
                 {
                     double l_bo, r_bo, u_bo, b_bo;
-                    double f_epsilon = 0.001f;
-                    l_bo = 0.0f-f_epsilon;
-                    r_bo = 0.0f+f_epsilon;
-                    u_bo = 0.0f+f_epsilon;
-                    b_bo = 0.0f-f_epsilon;
-                    /*l_bo = lon - x - f_epsilon;
-                    r_bo = lon + x + f_epsilon;
-                    u_bo = lat + y + f_epsilon;
-                    b_bo = lat - y - f_epsilon;*/
+                    double f_epsilon = 0.0001f;
+                    if (m_bounds == null)
+                        m_bounds = new UMapBounds();
+                    l_bo = m_bounds.l_bo-f_epsilon;
+                    r_bo = m_bounds.r_bo+f_epsilon;
+                    u_bo = m_bounds.u_bo+f_epsilon;
+                    b_bo = m_bounds.b_bo-f_epsilon;
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", l_bo));
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", u_bo));
                     w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", r_bo));
@@ -914,6 +918,7 @@ namespace com.ums.UmsParm
                     UGisRecord rec = gis.gis[i];
                     shape.gis().addRecord(rec);
                 }
+                shape.gis().SetBounds(gis.mapbounds);
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_GIS;
             }
