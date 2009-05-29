@@ -13,6 +13,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Diagnostics;
 
 using com.ums.UmsParm;
 using com.ums.UmsCommon;
@@ -32,7 +33,7 @@ namespace com.ums.ws.voice
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
     public class Voice : System.Web.Services.WebService
-    {
+    {/*
         [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
         public Int64 sendVoice(libums2_csharp.ACCOUNT acc, SendingSettings settings, RECIPIENT[] to, string from, VOCFILE[] message)
         {
@@ -46,26 +47,34 @@ namespace com.ums.ws.voice
             ret = voice.send(acc, settings, to, from, message);
 
             return ret;
-        }
+        }*/
         [WebMethod(Description = "For multiple numbers pr recipient add as comma separated list in order of priority ( 004799999999,004723232323,004732323232 )")]
         //public Int64 sendMergedVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> mergeMessages)
-        public Int64 sendMergedVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> mergeMessages)
+        public Int64 sendVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> messages)
         {
             libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
             voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
             voice.EatPath = UCommon.UPATHS.sz_path_voice;
             voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+            voice.TempPath = UCommon.UPATHS.sz_path_temp;
 
             Int64 l_refno = voice.getRefno();
             String[] filenames;
-            VOCFILE[] message = new VOCFILE[mergeMessages.Count];
+            VOCFILE[] message = new VOCFILE[messages.Count];
             VOCFILE voc;
-            for(int i=0;i<mergeMessages.Count;++i) {
-                List<VOCFILE> wavs = voice.previewTTS(account, mergeMessages[i]);
+
+            string sSource = "sendMergedVoice";
+            string sLog = "VoiceWS";
+            string sEvent = "PreviewTTS";
+
+            for(int i=0;i<messages.Count;++i) {
+
+                EventLog.WriteEntry(sSource, i + " time: for preview TTS");
+                List<VOCFILE> wavs = voice.previewTTS(account, messages[i]);
                 String filenameraw = "v" + l_refno + "_" + i + ".raw";
                 String filenamewav = "v" + l_refno + "_" + i + ".wav";
-                
+                EventLog.WriteEntry(sSource, i + " time: " + filenamewav);
                 BinaryWriter bw;
                 FileStream fs;
                 
@@ -88,6 +97,7 @@ namespace com.ums.ws.voice
                 for (int j = 0; j < filenames.Length; ++j)
                 {
                     wav2raw.WAV2RAWNormalize(Server.MapPath(filenames[j]), Server.MapPath(filenames[j].Replace(".wav", ".raw")));
+
                     if (File.Exists(Server.MapPath(filenames[j])))
                         File.Delete(Server.MapPath(filenames[j]));
                 }
@@ -100,10 +110,9 @@ namespace com.ums.ws.voice
                     bw.Write(File.ReadAllBytes(Server.MapPath(filenames[j].Replace(".wav", ".raw"))));
                     bw.Close();
                     fs.Close();
-                    
+
                     if (File.Exists(Server.MapPath(filenames[j].Replace(".wav", ".raw"))))
                         File.Delete(Server.MapPath(filenames[j].Replace(".wav", ".raw")));
-
                 }
 
                 wav2raw.RAW2WAV(Server.MapPath(filenameraw), Server.MapPath(filenamewav));
@@ -114,7 +123,10 @@ namespace com.ums.ws.voice
 
                 voc = new VOCFILE();
                 voc.type = VOCTYPE.WAV;
+                //EventLog.WriteEntry(sSource, i + " time ReadAllBytes line 126 Voice.asmx");
                 voc.audiodata = File.ReadAllBytes(Server.MapPath(filenamewav));
+                if(File.Exists(Server.MapPath(filenamewav)))
+                    File.Delete(Server.MapPath(filenamewav));
                 message[i] = voc;
             }
 
@@ -215,6 +227,7 @@ namespace com.ums.ws.voice
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             return voice.getAvailableStatuses(acc);
         }
+        /*
         [WebMethod]
         public List<string> getAvailableSoundLibraryFiles (ACCOUNT acc)
         {
@@ -225,7 +238,7 @@ namespace com.ums.ws.voice
             voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
             voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
             return voice.getAvailableSoundLibraryFiles(acc,UCommon.UPATHS.sz_path_global_wav_dir);
-        }
+        }*/
         [WebMethod(Description = "This method cancels all messages on a reference number. ItemNumber is for future use, just add -1 for now")]
         public string cancelVoice(ACCOUNT acc, Int64 referenceNumber, int itemNumber)
         {
