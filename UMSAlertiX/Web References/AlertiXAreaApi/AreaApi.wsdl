@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:tns="http://webservice.api.alertix.jpipe.cellvision" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://vo.common.alertix.jpipe.cellvision" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://domain.common.alertix.jpipe.cellvision" xmlns:ns3="http://vo.webservice.api.alertix.jpipe.cellvision" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" targetNamespace="http://webservice.api.alertix.jpipe.cellvision" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webservice.api.alertix.jpipe.cellvision">
+      <xsd:element name="deleteAllAreas">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="deleteAllAreasResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns1:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAllAreas">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getAllAreasResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:GetAllResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createArea">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns2:Polygon" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns2:AreaName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createAreaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns1:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getArea">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns2:AreaName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAreaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns3:GetAreaResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteArea">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns2:AreaName" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteAreaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns1:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateArea">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="in0" nillable="true" type="ns2:AreaName" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="in1" nillable="true" type="ns2:Polygon" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateAreaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="ns1:Response" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.common.alertix.jpipe.cellvision">
+      <xsd:complexType name="Response">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://vo.webservice.api.alertix.jpipe.cellvision">
+      <xsd:complexType name="GetAllResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="areas" nillable="true" type="ns2:ArrayOfArea" />
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GetAreaResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="area" nillable="true" type="ns2:Area" />
+          <xsd:element minOccurs="0" name="code" type="xsd:int" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="successful" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://domain.common.alertix.jpipe.cellvision">
+      <xsd:complexType name="ArrayOfArea">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Area" nillable="true" type="ns2:Area" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Area">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="areaId" nillable="true" type="ns2:AreaId" />
+          <xsd:element minOccurs="0" name="areaName" nillable="true" type="ns2:AreaName" />
+          <xsd:element minOccurs="0" name="polygon" nillable="true" type="ns2:ArrayOfPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Point" nillable="true" type="ns2:Point" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Point">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="x" type="xsd:double" />
+          <xsd:element minOccurs="0" name="y" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AreaId">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AreaName">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Polygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="vertices" nillable="true" type="ns2:ArrayOfPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getAreaRequest">
+    <wsdl:part name="parameters" element="tns:getArea" />
+  </wsdl:message>
+  <wsdl:message name="updateAreaRequest">
+    <wsdl:part name="parameters" element="tns:updateArea" />
+  </wsdl:message>
+  <wsdl:message name="deleteAreaResponse">
+    <wsdl:part name="parameters" element="tns:deleteAreaResponse" />
+  </wsdl:message>
+  <wsdl:message name="createAreaResponse">
+    <wsdl:part name="parameters" element="tns:createAreaResponse" />
+  </wsdl:message>
+  <wsdl:message name="getAreaResponse">
+    <wsdl:part name="parameters" element="tns:getAreaResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteAllAreasResponse">
+    <wsdl:part name="parameters" element="tns:deleteAllAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="getAllAreasResponse">
+    <wsdl:part name="parameters" element="tns:getAllAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteAreaRequest">
+    <wsdl:part name="parameters" element="tns:deleteArea" />
+  </wsdl:message>
+  <wsdl:message name="createAreaRequest">
+    <wsdl:part name="parameters" element="tns:createArea" />
+  </wsdl:message>
+  <wsdl:message name="getAllAreasRequest">
+    <wsdl:part name="parameters" element="tns:getAllAreas" />
+  </wsdl:message>
+  <wsdl:message name="deleteAllAreasRequest">
+    <wsdl:part name="parameters" element="tns:deleteAllAreas" />
+  </wsdl:message>
+  <wsdl:message name="updateAreaResponse">
+    <wsdl:part name="parameters" element="tns:updateAreaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AreaApiPortType">
+    <wsdl:operation name="deleteAllAreas">
+      <wsdl:input name="deleteAllAreasRequest" message="tns:deleteAllAreasRequest" />
+      <wsdl:output name="deleteAllAreasResponse" message="tns:deleteAllAreasResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getAllAreas">
+      <wsdl:input name="getAllAreasRequest" message="tns:getAllAreasRequest" />
+      <wsdl:output name="getAllAreasResponse" message="tns:getAllAreasResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createArea">
+      <wsdl:input name="createAreaRequest" message="tns:createAreaRequest" />
+      <wsdl:output name="createAreaResponse" message="tns:createAreaResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getArea">
+      <wsdl:input name="getAreaRequest" message="tns:getAreaRequest" />
+      <wsdl:output name="getAreaResponse" message="tns:getAreaResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteArea">
+      <wsdl:input name="deleteAreaRequest" message="tns:deleteAreaRequest" />
+      <wsdl:output name="deleteAreaResponse" message="tns:deleteAreaResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateArea">
+      <wsdl:input name="updateAreaRequest" message="tns:updateAreaRequest" />
+      <wsdl:output name="updateAreaResponse" message="tns:updateAreaResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AreaApiHttpBinding" type="tns:AreaApiPortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="deleteAllAreas">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="deleteAllAreasRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteAllAreasResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllAreas">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getAllAreasRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAllAreasResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createArea">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="createAreaRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createAreaResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getArea">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getAreaRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAreaResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteArea">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="deleteAreaRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteAreaResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateArea">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="updateAreaRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateAreaResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AreaApi">
+    <wsdl:port name="AreaApiHttpPort" binding="tns:AreaApiHttpBinding">
+      <wsdlsoap:address location="http://lbv.netcom.no:8080/alertix/AreaApi" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

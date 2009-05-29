@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UMSAlertiX.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UMSAlertiX_AlertiXAlertApi_AlertApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://lbv.netcom.no:8080/alertix/AlertApi</Value>
+    </Setting>
+    <Setting Name="UMSAlertiX_AlertiXAreaApi_AreaApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://lbv.netcom.no:8080/alertix/AreaApi</Value>
+    </Setting>
+    <Setting Name="UMSAlertiX_AlertiXStatusApi_StatusApi" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://lbv.netcom.no:8080/alertix/StatusApi</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
