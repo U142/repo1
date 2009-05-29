@@ -201,7 +201,7 @@ namespace com.ums.UmsParm
             pa.l_alertpk = l_alertpk;
             String szSQL = String.Format("SELECT l_alertpk, isnull(l_parent,-1), sz_name, sz_description, isnull(l_profilepk, -1), " +
                                             "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), "+
-                                            "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,'') " +
+                                            "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,''), isnull(l_expiry, 60) l_expiry " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
             try
             {
@@ -228,6 +228,7 @@ namespace com.ums.UmsParm
                     pa.setFunction(n_function);
                     pa.setSmsOadc(rs.GetString(14));
                     pa.setSmsMessage(rs.GetString(15));
+                    pa.setExpiry(rs.GetInt32(16));
                     b_ret = true;
                 }
                 rs.Close();
@@ -524,7 +525,8 @@ namespace com.ums.UmsParm
            
 
             m.l_group = a.getSendingType(); //type dependent, 3 = polygon, 8 = ellipse
-            if (m.l_group != 3 && m.l_group != 8)
+            if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE &&
+                m.l_group != UShape.SENDINGTYPE_GIS)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
 
             m.sz_groups = "";

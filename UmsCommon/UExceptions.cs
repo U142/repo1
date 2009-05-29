@@ -144,6 +144,13 @@ namespace com.ums.UmsCommon
 
         }
     }
+    public class UParseStreetidException : UException
+    {
+        public UParseStreetidException(String s)
+            : base(s)
+        {
+        }
+    }
     public class UFileWriteException : UException
     {
         public UFileWriteException(String s)

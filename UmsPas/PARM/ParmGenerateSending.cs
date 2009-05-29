@@ -251,6 +251,44 @@ namespace com.ums.UmsParm
 
         protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
         {
+            bool b_voice_active = false;
+            bool b_sms_active = false;
+            bool b_lba_active = false;
+            if (sending.doSendSMS() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0))
+            {
+                b_sms_active = true;
+            }
+            if(sending.doSendVoice() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
+
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
+
+                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
+
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
+
+                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
+                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0))
+            {
+                b_voice_active = true;
+            }
+            if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+            {
+                b_lba_active = true;
+            }
+
+
             PAS_SENDING passending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
             passending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
@@ -272,12 +310,7 @@ namespace com.ums.UmsParm
             }
 
             //create SMS sending if 
-            if(sending.doSendSMS() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE)>0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED)>0))
+            if(b_sms_active)
             {
                 //This is a sending with possible sms recipients.
                 if (smssending.sz_smsmessage.Length <= 0)
@@ -328,30 +361,15 @@ namespace com.ums.UmsParm
 
 
             //create voice sending if
-            if (sending.doSendVoice() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
-
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
-
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
-
-                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
-
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
-
-                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
-                (sending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0))
+            if (b_voice_active || b_lba_active)
             {
                 try
                 {
                     if (passending.l_refno <= 0)
                         passending.l_refno = db.newRefno();
 
-                    db.VerifyProfile(sending.n_profilepk, false);
+                    if(b_voice_active)
+                        db.VerifyProfile(sending.n_profilepk, false);
                 }
                 catch (Exception e)
                 {
@@ -415,7 +433,7 @@ namespace com.ums.UmsParm
 
             try
             {
-                if ((sending.n_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+                if (b_lba_active)
                     b_publish_lba = true;
                 if (sending.b_resend && b_publish_lba)
                 {
@@ -424,8 +442,10 @@ namespace com.ums.UmsParm
                 }
                 if (b_publish_lba && sending.m_lba != null)
                 {
+                    sending.m_lba.Validate();
                     if (sending.m_lba.getValid())
                     {
+                        sending.m_lba.setSourceShape(ref passending.m_shape);
                         passending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
                         b_publish_lba = true;
 
@@ -580,10 +600,48 @@ namespace com.ums.UmsParm
         protected bool send_v3(ref BBPROJECT project, Int64 l_fromeventpk, ref PAALERT pa, int n_function,
                             string sz_scheddate, string sz_schedtime)
         {
+            bool b_voice_active = false;
+            bool b_sms_active = false;
+            bool b_lba_active = false;
+            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
+
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0)
+            {
+                b_voice_active = true;
+            }
+            if((pa.l_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+            {
+                b_lba_active = true;
+            }
+            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
+                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
+            {
+                b_sms_active = true;
+            }
+
             try
             {
                 db.VerifyAlert(pa.l_alertpk, ref logoninfo);
-                db.VerifyProfile(pa.l_profilepk, true);
+                if(b_voice_active)
+                    db.VerifyProfile(pa.l_profilepk, true);
             }
             catch (Exception e) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
             {
@@ -605,6 +663,7 @@ namespace com.ums.UmsParm
             
 
             UXmlAlert file = new UXmlAlert(UCommon.UPATHS.sz_path_predefined_areas, String.Format("a{0}.xml", pa.l_alertpk));
+            file.SetLogonInfo(ref logoninfo);
             try
             {
                 String guid = new Guid().ToString();
@@ -643,27 +702,7 @@ namespace com.ums.UmsParm
             bool b_publish_sms = false;
             //if VOICE
             //create voice sending if
-            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
-
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
-
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
-
-                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
-
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
-
-                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0 ||
-
-
-
-                (pa.l_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+            if (b_voice_active || b_lba_active)
             {
                 try
                 {
@@ -722,12 +761,7 @@ namespace com.ums.UmsParm
                 }
             }
             //if SMS
-            if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
-                (pa.l_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
+            if (b_sms_active)
             {
                 try
                 {
@@ -739,14 +773,30 @@ namespace com.ums.UmsParm
                     if (smssending.sz_smsoadc.Length <= 0)
                         throw new UEmptySMSOadcException();
 
-
-                    smssendinginfo.l_refno = db.newRefno();
+                    if (n_function != UCommon.USENDING_TEST)
+                    {
+                        try
+                        {
+                            smssendinginfo.l_refno = db.newRefno();
+                        }
+                        catch (Exception)
+                        {
+                            throw new URefnoException();
+                        }
+                    }
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
                     smssending.setShape(ref pa.m_shape);
                     //smssending.setRefno(db.newRefno(), ref project);
                     db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
                     smssending.setSendingInfo(ref smssendinginfo);
-                    db.Send(ref smssending, ref logoninfo);
+                    //db.Send(ref smssending, ref logoninfo);
+                    if (n_function == UCommon.USENDING_TEST) //test DB and rollback
+                    {
+                    }
+                    else
+                    {
+                        b_ret = db.Send(ref smssending, ref logoninfo);
+                    }
                     b_publish_sms = true;
                 }
                 catch (Exception e)
@@ -757,7 +807,7 @@ namespace com.ums.UmsParm
                 }
             }
             //if LBA
-            if ((pa.l_addresstypes & (long)ADRTYPES.LBA_TEXT) > 0)
+            if (b_lba_active)
             {
                 try
                 {
@@ -784,8 +834,11 @@ namespace com.ums.UmsParm
                     sending.lbacleanup();
                 }
             }
-
-
+            if(typeof(UGIS).Equals(sending.m_shape.GetType()))
+            {
+                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+            }
+            
             //send it
             if (b_publish_voice)
             {

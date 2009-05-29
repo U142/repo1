@@ -39,7 +39,6 @@ namespace com.ums.PAS.Address
         public UMapAddressParams()
             : base()
         {
-
         }
     }
 
@@ -82,6 +81,7 @@ namespace com.ums.PAS.Address
         public int COL_STREETID;
         public int COL_HOUSENO;
         public int COL_LETTER;
+        public int DETAIL_THRESHOLD_LINES;
     }
 
     public class UGisImportResultLine

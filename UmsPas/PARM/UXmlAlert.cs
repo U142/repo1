@@ -7,11 +7,14 @@ using System.Collections;
 using com.ums.UmsCommon;
 using com.ums.UmsFile;
 using System.Xml;
+using com.ums.PAS.Address;
 
 namespace com.ums.UmsParm
 {
     public class UXmlAlert : UXml
     {
+        protected ULOGONINFO m_logon;
+        public void SetLogonInfo(ref ULOGONINFO logon) { m_logon = logon; }
         protected String l_alertpk;
         protected URGBA m_rgba;
         public URGBA getRGBA() { return m_rgba; }
@@ -142,6 +145,10 @@ namespace com.ums.UmsParm
                     {
                         parsePolygon(el_subnode);
                     }
+                    else if (el_subnode.Name.Equals("alertstreetid"))
+                    {
+                        parseStreetid(el_subnode);
+                    }
                     else if (el_subnode.Name.Equals("alertellipse"))
                     {
                         parseEllipse(el_subnode);
@@ -165,6 +172,116 @@ namespace com.ums.UmsParm
                 ULog.error(0, full(), e.Message);
                 throw e;
             }
+            return true;
+        }
+
+        protected bool parseStreetid(XmlNode node)
+        {
+            m_shape = new UGIS();
+            String col_a, col_b, col_r, col_g, l_alertpk;
+            try
+            {
+                col_a = node.Attributes["col_a"].Value;
+                col_b = node.Attributes["col_b"].Value;
+                col_r = node.Attributes["col_r"].Value;
+                col_g = node.Attributes["col_g"].Value;
+                l_alertpk = node.Attributes["l_alertpk"].Value;
+                XmlNodeList nl = node.SelectNodes("line");
+                String municipal, streetid, houseno, letter, namefilter1, namefilter2;
+                List<UGisImportResultLine> filelines = new List<UGisImportResultLine>();
+                for (int i = 0; i < nl.Count; i++)
+                {
+                    XmlNode n = nl.Item(i);
+                    try
+                    {
+                        municipal = n.Attributes["municipal"].Value;
+                        streetid = n.Attributes["streetid"].Value;
+                        houseno = n.Attributes["houseno"].Value;
+                        letter = n.Attributes["letter"].Value;
+                        namefilter1 = n.Attributes["namefilter1"].Value;
+                        namefilter2 = n.Attributes["namefilter2"].Value;
+                        UGisImportResultLine res = new UGisImportResultLine();
+                        res.n_linenumber = (i + 1);
+                        res.municipalid = municipal;
+                        res.streetid = streetid;
+                        res.houseno = houseno;
+                        res.letter = letter;
+                        res.namefilter1 = namefilter1;
+                        res.namefilter2 = namefilter2;
+                        res.b_isvalid = true;
+                        res.finalize();
+                        filelines.Add(res);
+                        /*UGisRecord r = new UGisRecord();
+                        r.id = "";
+                        m_shape.gis().addRecord(r);*/
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                try
+                {
+                    m_shape.gis().SetLineCount(filelines.Count);
+                    UGisImportParamsByStreetId search = new UGisImportParamsByStreetId();
+                    search.SKIPLINES = 0;
+                    PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                    percentdelegate(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
+                    UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref m_logon, percentdelegate).SearchDatabase(ref filelines, true);
+                    UMapBounds bounds = new UMapBounds();
+                    bounds.reset();
+                    bool setbounds = false;
+                    if (res != null && res.list!=null)
+                    {
+                        for (int line = 0; line < res.list.Length; line++)
+                        {
+                            if (res.list[line].list != null && res.list[line].list.list != null)
+                            {
+                                for(int inhab = 0; inhab < res.list[line].list.list.Length; inhab++)
+                                {
+                                    UAddress adr = res.list[line].list.list[inhab];
+                                    UGisRecord gisrecord = new UGisRecord();
+                                    if (adr.kondmid.Length > 0)
+                                    {
+                                        gisrecord.id = long.Parse(adr.kondmid);
+                                        m_shape.gis().addRecord(gisrecord);
+                                        
+                                        if (adr.lon != 0 && adr.lat != 0)
+                                        {
+                                            if (adr.lat < bounds.l_bo)
+                                                bounds.l_bo = adr.lat;
+                                            if (adr.lat > bounds.r_bo)
+                                                bounds.r_bo = adr.lat;
+                                            if (adr.lon < bounds.b_bo)
+                                                bounds.b_bo = adr.lon;
+                                            if (adr.lon > bounds.u_bo)
+                                                bounds.u_bo = adr.lon;
+                                            setbounds = true;
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        res.finalize();
+                    }
+                    if(setbounds)
+                        m_shape.gis().SetBounds(bounds);
+                    PercentProgress.DeleteJob(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID);
+
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+                String s = "parseStreetid() Error parsing alert file " + full();
+                ULog.error(0, s, e.Message);
+                throw new UParseStreetidException(s + ". " + e.Message);
+            }
+            n_sendingtype = UShape.SENDINGTYPE_GIS;
             return true;
         }
 

@@ -134,6 +134,18 @@ namespace com.ums.UmsParm
         public long n_expiry_minutes;
         public int n_requesttype; //send right away or wait for confirmation
         public int getRequestType() { return n_requesttype; }
+        protected UShape sourceshape; //either polygon or ellipse
+        public void setSourceShape(ref UShape shape) { sourceshape = shape; }
+
+        public bool Validate()
+        {
+            if (m_languages != null)
+            {
+                if (m_languages.Count > 0)
+                    setValid();
+            }
+            return false;
+        }
 
         public LBALanguage addLanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
         {
@@ -159,10 +171,24 @@ namespace com.ums.UmsParm
         public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, String sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
         {
             //create xml and save it to AdrfileLBAWriter
+            bool b_adhoc = false;
             USimpleXmlWriter xmlwriter = new USimpleXmlWriter(new UTF8Encoding(false));
             xmlwriter.insertStartDocument();
             xmlwriter.insertStartElement("LBA");
-            xmlwriter.insertAttribute("operation", "SendArea");
+            if (typeof(PAALERT).Equals(alert.GetType()))
+            {
+                xmlwriter.insertAttribute("operation", "SendArea");
+            }
+            else if (typeof(PANULLALERT).Equals(alert.GetType()))
+            {
+                if (typeof(UPolygon).Equals(sourceshape.GetType()))
+                    xmlwriter.insertAttribute("operation", "SendPolygon");
+                else if (typeof(UEllipse).Equals(sourceshape.GetType()))
+                    xmlwriter.insertAttribute("operation", "SendEllipse");
+                else
+                    throw new USendingTypeNotSupportedException("Sending type " + sourceshape.GetType().ToString() + " not supported for Location Based Alert");
+                b_adhoc = true;
+            }
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk.ToString());
             xmlwriter.insertAttribute("l_refno", n_parentrefno.ToString());
             if (alert.hasValidAreaID())
@@ -177,6 +203,7 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("sz_password", logoninfo.sz_password.ToString());
             xmlwriter.insertAttribute("f_simulation", (n_function == UCommon.USENDING_LIVE ? "0" : "1"));
             xmlwriter.insertAttribute("l_version", "3");
+            xmlwriter.insertAttribute("l_validity", alert.n_expiry.ToString());
                 xmlwriter.insertStartElement("textmessages");
                 for (int i = 0; i < getLanguageCount(); i++)
                 {
@@ -194,6 +221,40 @@ namespace com.ums.UmsParm
                     xmlwriter.insertEndElement(); //message
                 }
                 xmlwriter.insertEndElement(); //textmessages
+                if (b_adhoc)
+                {
+                    if (typeof(UPolygon).Equals(sourceshape.GetType()))
+                    {
+                        xmlwriter.insertStartElement("alertpolygon");
+                        xmlwriter.insertAttribute("col_a", "0");
+                        xmlwriter.insertAttribute("col_b", "0");
+                        xmlwriter.insertAttribute("col_r", "0");
+                        xmlwriter.insertAttribute("col_g", "0");
+                        xmlwriter.insertAttribute("l_alertpk", "AdHoc");
+                        for(int i=0; i < sourceshape.poly().getSize(); i++)
+                        {
+                            xmlwriter.insertStartElement("polypoint");
+                            xmlwriter.insertAttribute("xcord", sourceshape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
+                            xmlwriter.insertAttribute("ycord", sourceshape.poly().getPoint(i).getLat().ToString(UCommon.UGlobalizationInfo));
+                            xmlwriter.insertEndElement();
+                        }
+                        xmlwriter.insertEndElement();
+                    }
+                    else if (typeof(UEllipse).Equals(sourceshape.GetType()))
+                    {
+                        xmlwriter.insertStartElement("alertellipse");
+                        xmlwriter.insertAttribute("col_a", "0");
+                        xmlwriter.insertAttribute("col_b", "0");
+                        xmlwriter.insertAttribute("col_r", "0");
+                        xmlwriter.insertAttribute("col_g", "0");
+                        xmlwriter.insertAttribute("l_alertpk", "AdHoc");
+                        xmlwriter.insertAttribute("centerx", sourceshape.ellipse().lon.ToString(UCommon.UGlobalizationInfo));
+                        xmlwriter.insertAttribute("centery", sourceshape.ellipse().lat.ToString(UCommon.UGlobalizationInfo));
+                        xmlwriter.insertAttribute("cornerx", (sourceshape.ellipse().lon + sourceshape.ellipse().x).ToString(UCommon.UGlobalizationInfo));
+                        xmlwriter.insertAttribute("cornery", (sourceshape.ellipse().lat + sourceshape.ellipse().y).ToString(UCommon.UGlobalizationInfo));
+                        xmlwriter.insertEndElement();
+                    }
+                }
             xmlwriter.insertEndElement(); //LBA
             xmlwriter.insertEndDocument();
             xmlwriter.finalize();
@@ -346,6 +407,21 @@ namespace com.ums.UmsParm
 
     public class UGIS : UShape
     {
+        public int GetInabitantCount()
+        {
+            if (m_gis != null)
+                return m_gis.Count;
+            return -1;
+        }
+        public int GetLineCount()
+        {
+            return m_n_linecount;
+        }
+        protected int m_n_linecount = 0;
+        public void SetLineCount(int n)
+        {
+            m_n_linecount = n;
+        }
         protected List<UGisRecord> m_gis = new List<UGisRecord>();
         protected UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
@@ -708,6 +784,9 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class PANULLALERT : PAALERT
+    {
+    }
 
     public class PAALERT
     {
@@ -766,6 +845,7 @@ namespace com.ums.UmsParm
         public int n_sendingtype;
         public int n_maxchannels;
         public int n_requesttype;
+        public int n_expiry;
         //public int n_nofax;
         public String sz_sms_oadc;
         public String sz_sms_message;
@@ -793,6 +873,7 @@ namespace com.ums.UmsParm
         //public void setNofax(int n) { n_nofax = n; }
         public void setSmsOadc(String s) { sz_sms_oadc = s; }
         public void setSmsMessage(String s) { sz_sms_message = s; }
+        public void setExpiry(int n) { n_expiry = n; }
         public bool hasValidAreaID()
         {
             if (sz_areaid == null)
@@ -1048,7 +1129,8 @@ namespace com.ums.UmsParm
             {
                 m_lba_shape.lba().setValid();
                 adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true);
-                PAALERT nullalert = new PAALERT();
+                PAALERT nullalert = new PANULLALERT();
+                nullalert.n_expiry = (int)s.n_expiry_minutes;
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }

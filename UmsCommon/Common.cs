@@ -134,6 +134,13 @@ namespace com.ums.UmsCommon
         public double r_bo = 11.5f;
         public double u_bo = 59.9f;
         public double b_bo = 58.9f;
+        public void reset()
+        {
+            l_bo = 360;
+            r_bo = -360;
+            u_bo = -360;
+            b_bo = 360;
+        }
     }
 
     public class UMapPoint
