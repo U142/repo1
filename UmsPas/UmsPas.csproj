@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8CDBBCD2-D0EA-4A62-B60C-A500D5CB68DA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UmsPas</RootNamespace>
+    <AssemblyName>UmsPas</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Address\gab\UGabSearch.cs" />
+    <Compile Include="Address\gab\UGabSearchResultList.cs" />
+    <Compile Include="Address\gisimport\GisImportFile.cs" />
+    <Compile Include="Address\IAddressSearch.cs" />
+    <Compile Include="Address\UAddressList.cs" />
+    <Compile Include="Address\UInhabitantsByDistance.cs" />
+    <Compile Include="Address\UMapAddressSearch.cs" />
+    <Compile Include="Database\UAdrDb.cs" />
+    <Compile Include="Database\ULogon.cs" />
+    <Compile Include="Database\USendDb.cs" />
+    <Compile Include="Database\USettingsDb.cs" />
+    <Compile Include="Database\UStatusItemsDb.cs" />
+    <Compile Include="Database\UStatusListDb.cs" />
+    <Compile Include="Maps\UMaps.cs" />
+    <Compile Include="PARM\CommonParm.cs" />
+    <Compile Include="PARM\ParmDb.cs" />
+    <Compile Include="PARM\ParmGenerateSending.cs" />
+    <Compile Include="PARM\UXmlAlert.cs" />
+    <Compile Include="Project\UProject.cs" />
+    <Compile Include="Project\URefno.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\USendSettings.cs" />
+    <Compile Include="Status\IStatusList.cs" />
+    <Compile Include="Status\UStatusItems.cs" />
+    <Compile Include="Status\UStatusListItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">
+      <Project>{21957982-6FBC-49F9-8F75-C0DE18558133}</Project>
+      <Name>UmsCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsDbLib\UmsDbLib.csproj">
+      <Project>{F0B76F05-656E-43FA-A965-A233B0F2C8A9}</Project>
+      <Name>UmsDbLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UmsFile\UmsFile.csproj">
+      <Project>{BFF1C26F-955E-4A56-B781-D0CA89912B8A}</Project>
+      <Name>UmsFile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZipLib\ZipLib.csproj">
+      <Project>{9EF07252-75DF-4359-B46A-30F3A84DFA41}</Project>
+      <Name>ZipLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
