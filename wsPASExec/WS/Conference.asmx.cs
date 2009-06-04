@@ -45,7 +45,8 @@ namespace wsPASExec.WS
         [WebMethod(Description = "This method is currently not in use")]
         public string cancelConference(ACCOUNT account, int referenceNumber)
         {
-            return null;
+            wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
+            return conf.cancelConference(account, referenceNumber);
         }
 
         [WebMethod(Description = "This method returns the status of a conference, shows the participants with their statuses")]

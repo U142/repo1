@@ -224,7 +224,7 @@ namespace wsPASExec.VB
             }
             catch (Exception e)
             {
-                raiseException("", "http://ums.no/ws/vb/", "Conference.cs getConference()", "getConference:checkLogon", FaultCode.Client);
+                raiseException("", "http://ums.no/ws/vb/", "Conference.cs getConference()", "getConference()", FaultCode.Client);
             }
             return statuses;
         }
@@ -272,6 +272,44 @@ namespace wsPASExec.VB
                 conn.Close();
             }
             return "OK";
+        }
+
+        public string cancelConference(ACCOUNT acc, int l_refno)
+        {
+            openConnection(); 
+            
+            if (!checkLogon(acc, ref l_deptpk, ref l_deptpri, ref l_comppk))
+                throw raiseException("uri", "http://ums.no/ws/vb/", String.Format("Conference.cs redialParticipant(): Error in logon credentials for userpk/comppk {0}/{1}", acc.Company, acc.Department), "redialParticipant:checkLogon", FaultCode.Client);
+            try
+            {
+                cmd.Parameters.Clear();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT l_refno FROM BBCANCEL WHERE l_refno=?";
+                cmd.Parameters.Add("@l_refno", OdbcType.Int).Value = l_refno;
+                OdbcDataReader dr = cmd.ExecuteReader();
+
+                if(dr.HasRows) {
+                    dr.Close();
+                    cmd.Parameters.Clear();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "DELETE FROM BBCANCEL WHERE l_refno=?";
+                    cmd.Parameters.Add("@l_refno", OdbcType.Int).Value = l_refno;
+                    cmd.ExecuteNonQuery();
+                }
+                if(dr != null && !dr.IsClosed)
+                    dr.Close();
+                
+                cmd.Parameters.Clear();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "INSERT INTO BBCANCEL(l_refno,l_item) VALUES(?,-1)";
+                cmd.Parameters.Add("@l_refno", OdbcType.Int).Value = l_refno;
+                cmd.ExecuteNonQuery();
+                return "Successfully cancelled conference with refno: " + l_refno;
+            }
+            catch(Exception e) {
+                System.Diagnostics.EventLog.WriteEntry("Conference.cs", "Conference.cs cancelConference(): " + e.Message + " _ " + e.StackTrace, System.Diagnostics.EventLogEntryType.Error);
+                throw raiseException("", "http://ums.no/ws/vb/", e.Message, "A problem occurred while cancelling conference. Please check that the reference number is correct", FaultCode.Client);
+            }
         }
 
         private string commaSeparate(string[] participants)
