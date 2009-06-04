@@ -19,6 +19,7 @@ using com.ums.UmsCommon.Audio;
 using com.ums.PAS.Settings;
 using System.Text;
 using com.ums.UmsDbLib;
+using com.ums.PAS.Address;
 
 
 namespace com.ums.ws.pas
@@ -88,6 +89,25 @@ namespace com.ums.ws.pas
                 throw e;
             }
             return map;
+        }
+
+        [WebMethod]
+        public UAddressList GetAddressListByQuality(ULOGONINFO logon, UMapAddressParamsByQuality param)
+        {
+            try
+            {
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.HOUSE_DOWNLOAD, new PercentResult());
+                return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddresslistByQuality(ref logon, ref param, percentdelegate);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.HOUSE_DOWNLOAD);
+            }
         }
 
         [WebMethod]
@@ -251,7 +271,19 @@ namespace com.ums.ws.pas
             return maxalloc;
         }
 
-
+        [WebMethod]
+        public UAddress HouseEditor(UAddress adr, ULOGONINFO logoninfo, UHouseEditor.HOUSEEDITOR_OPERATION operation)
+        {
+            try
+            {
+                new UHouseEditor(ref logoninfo, ref adr, operation);
+                return adr;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         [WebMethod]
         public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)

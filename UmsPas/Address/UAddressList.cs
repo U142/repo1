@@ -56,12 +56,18 @@ namespace com.ums.PAS.Address
     public class UMapAddressParamsByQuality : UMapAddressParams
     {
         public String sz_postno;
-        public String sz_xycodes;
-        public UMapAddressParamsByQuality(String sz_postno, String sz_xycodes) 
+        //public String sz_xycodes;
+        public List<string> arr_xycodes = new List<string>();
+        public UMapAddressParamsByQuality(String sz_postno, ref List<string> sz_xycodes) 
             : base()
         {
             this.sz_postno = sz_postno;
-            this.sz_xycodes = sz_xycodes;
+            this.arr_xycodes = sz_xycodes;
+        }
+        public UMapAddressParamsByQuality()
+        {
+            this.sz_postno = "0";
+            
         }
     }
 
@@ -181,6 +187,7 @@ namespace com.ums.PAS.Address
         public String xycode;
         public int hasfixed;
         public int hasmobile;
+        public String municipalid;
         public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
 
         public UAddress()

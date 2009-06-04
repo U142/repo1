@@ -1015,7 +1015,7 @@ namespace com.ums.UmsParm
                 }
                 try
                 {
-                    UAdrDb db = new UAdrDb(s.logoninfo.sz_stdcc, 60);
+                    UAdrDb db = new UAdrDb(s.logoninfo.sz_stdcc, 60, s.logoninfo.l_deptpk);
                     db.GetMunicipalBounds(ref mun);
                 }
                 catch (Exception e)

@@ -22,7 +22,7 @@ namespace com.ums.UmsDbLib
         private String sz_last_error;
         protected OdbcConnection conn;
         protected bool m_b_dbconn;
-        private string sz_constring;
+        protected string sz_constring;
         protected OdbcTransaction m_odbc_transaction;
         protected bool m_b_transaction_in_progress = false;
         protected OdbcCommand m_cmd;
@@ -79,6 +79,7 @@ namespace com.ums.UmsDbLib
 
         }
 
+
         public UmsDb(string sz_dsn, string sz_uid, string sz_password, int timeout)
         {
             sz_constring = String.Format("DSN={0}; UID={1}; PWD={2}", sz_dsn, sz_uid, sz_password);
@@ -96,6 +97,12 @@ namespace com.ums.UmsDbLib
         {
             
         }
+        /*no auto connect*/
+        public UmsDb(int n_timeout)
+        {
+            this.timeout = n_timeout;
+        }
+
 
         public bool CheckLogonLiteral(ref ULOGONINFO info)
         {

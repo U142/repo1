@@ -46,6 +46,8 @@ namespace com.ums.wsPASExec
             UCommon.UVOICE.l_tts_timeout = int.Parse(ConfigurationSettings.AppSettings["l_tts_timeout_secs"]);
             UCommon.UVOICE.f_rms = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
 
+            UCommon.USETTINGS.l_folkereg_num_adrtables = int.Parse(ConfigurationSettings.AppSettings["l_folkereg_num_adrtables"]);
+
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
             int syslogport = int.Parse(port);

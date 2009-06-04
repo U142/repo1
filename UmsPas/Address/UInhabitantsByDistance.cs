@@ -30,7 +30,7 @@ namespace com.ums.PAS.Address
 
             try
             {
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
+                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60, m_logon.l_deptpk);
                 UAddressList list = db.FindAddressesByDistance(m_search);
                 db.close();
                 return list;

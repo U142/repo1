@@ -153,7 +153,7 @@ namespace com.ums.ws.parm
                 if (typeof(UMUNICIPALSENDING).Equals(s.GetType()))
                 {
                     UMUNICIPALSENDING m = (UMUNICIPALSENDING)s;
-                    UAdrDb db = new UAdrDb(logon.sz_stdcc, 60);
+                    UAdrDb db = new UAdrDb(logon.sz_stdcc, 60, logon.l_deptpk);
                     return db.GetMunicipalBounds(ref m);
                 }
 
@@ -198,7 +198,7 @@ namespace com.ums.ws.parm
             try
             {
 
-                return new UAdrDb(logon.sz_stdcc, 120).GetAddressCount(ref logon, ref mapsending);
+                return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
             }
             catch (Exception e)
             {

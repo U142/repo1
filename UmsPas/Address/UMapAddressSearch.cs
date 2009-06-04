@@ -33,7 +33,7 @@ namespace com.ums.PAS.Address
             conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
             conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
 
-            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
+            UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60, m_logon.l_deptpk);
             UAddressList list = db.GetAddresslist(m_search);
             db.close();
             return list;
@@ -61,7 +61,7 @@ namespace com.ums.PAS.Address
                 conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
                 conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
                 conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 60);
+                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 120, m_logon.l_deptpk);
 
                 /*
                  * OLD ONE BY ONE LINE VERSION
@@ -81,6 +81,8 @@ namespace com.ums.PAS.Address
                 int prev = 0;
                 int next = 0;
                 //UGisImportResultLine[] lines = filelines.ToArray();
+                double n_tables = (double)UCommon.USETTINGS.l_folkereg_num_adrtables;
+                //int chunksize = (int)Math.Floor(255.0 / n_tables);
                 int chunksize = 255;
                 float max = filelines.Count;
                 PercentResult result = new PercentResult();
@@ -96,6 +98,7 @@ namespace com.ums.PAS.Address
                     }
                     catch (Exception e)
                     {
+                        ULog.error(e.Message);
                         throw e;
                     }
                     for (int add = prev; add < prev + (x == chunksize ? x : x - 1); add++)

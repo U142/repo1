@@ -49,6 +49,7 @@
     <Compile Include="Address\gab\UGabSearch.cs" />
     <Compile Include="Address\gab\UGabSearchResultList.cs" />
     <Compile Include="Address\gisimport\GisImportFile.cs" />
+    <Compile Include="Address\houseeditor\UHouseEditor.cs" />
     <Compile Include="Address\IAddressSearch.cs" />
     <Compile Include="Address\UAddressList.cs" />
     <Compile Include="Address\UInhabitantsByDistance.cs" />

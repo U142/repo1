@@ -16,6 +16,7 @@ namespace com.ums.UmsCommon
         STATUS_LIST = 3,
         STATUS_ITEMS = 4,
         PARM_UPDATE = 5,
+        HOUSE_DOWNLOAD = 6,
 
 
     }
@@ -36,18 +37,18 @@ namespace com.ums.UmsCommon
          */
         public static void SetJob(ref ULOGONINFO l, ProgressJobType jobType, PercentResult val)
         {
-            TempDataStore.SetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk, val);
+            TempDataStore.SetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk + "_" + l.jobid, val);
         }
         /*
          * delete an active job
          */
         public static void DeleteJob(ref ULOGONINFO l, ProgressJobType jobType)
         {
-            TempDataStore.Remove(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk);
+            TempDataStore.Remove(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk + "_" + l.jobid);
         }
         public static PercentResult GetProgress(ref ULOGONINFO l, ProgressJobType jobType)
         {
-            return (PercentResult)TempDataStore.GetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk);
+            return (PercentResult)TempDataStore.GetRecords(jobType + "_" + l.l_comppk + "_" + l.l_deptpk + "_" + l.l_userpk + "_" + l.jobid);
         }
         public static PercentResult [] GetJobs()
         {
@@ -274,6 +275,10 @@ namespace com.ums.UmsCommon
             public static int l_tts_timeout;
         }
 
+        public struct USETTINGS
+        {
+            public static int l_folkereg_num_adrtables;
+        }
 
         public struct UPATHS
         {
@@ -476,6 +481,8 @@ namespace com.ums.UmsCommon
         public int l_houseeditor;
         public long l_addresstypes;
         public String sz_defaultnumber;
+        public int f_map;
+        public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
         public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
         public void AddMunicipal(String sz_id, String sz_name)
         {
@@ -510,6 +517,7 @@ namespace com.ums.UmsCommon
         public int l_priserver;
         public int l_altservers;
         public String sz_stdcc;
+        public String jobid;
     }
 
 

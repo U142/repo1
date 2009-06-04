@@ -19,6 +19,27 @@ namespace com.ums.UmsParm
 
         }
 
+        public int GetPasType(int n_deptpk)
+        {
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            String szSQL = String.Format("SELECT l_pas FROM BBDEPARTMENTMODS WHERE l_deptpk={0}", n_deptpk);
+            try
+            {
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                if(rs.Read())
+                {
+                    return rs.GetInt32(0);
+                }
+                else
+                    return -1;
+            }
+            catch(Exception e)
+            {
+                setLastError(e.Message);
+                throw new UDbQueryException(szSQL);
+            }
+        }
 
         /*
          * Check l_alertpk, external execution and owned by

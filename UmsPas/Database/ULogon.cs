@@ -148,10 +148,10 @@ namespace com.ums.PAS.Database
                                     "isnull(BD.l_maxalloc, 180) l_maxalloc, BUP.sz_name sz_userprofilename, " +
                                     "BUP.sz_description sz_userprofiledesc, isnull(BUP.l_status, 0) l_status, " +
                                     "isnull(l_newsending, 0) l_newsending, isnull(BUP.l_parm, 0) l_parm, " +
-                                    "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, BD.l_pas l_dept_pas, BD.l_parm l_dept_parm, " +
+                                    "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
                                     "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
                                     "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
-                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber " +
+                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map " +
                                     "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
                                     "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
                                     "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
@@ -279,6 +279,8 @@ namespace com.ums.PAS.Database
                         l_pas_send = Int32.Parse(rs["l_pas_send"].ToString());
                         dept.l_addresstypes = long.Parse(rs["l_addresstypes"].ToString());
                         dept.sz_defaultnumber = rs["sz_defaultnumber"].ToString();
+                        dept.f_map = Int32.Parse(rs["f_map"].ToString());
+                        dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
 
                         if (l_dept_houseeditor <= 0)
                             dept.l_houseeditor = 0;
@@ -299,10 +301,10 @@ namespace com.ums.PAS.Database
                         try
                         {
                             UmsDbConnParams p = new UmsDbConnParams();
-                            p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc + "_reg";
+                            p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc; // +"_reg";
                             p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
                             p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                            UAdrDb adr = new UAdrDb(p, 60);
+                            UAdrDb adr = new UAdrDb(dept.sz_stdcc);
                             dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
                             adr.close();
                         }
@@ -310,7 +312,7 @@ namespace com.ums.PAS.Database
                         {
 
                         }
-
+                        //if(dept.f_map>0)
                         ret.departments.Add(dept); //ADD DEPARTMENT TO LIST
                     } while (rs.Read());
 
