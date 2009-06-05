@@ -470,14 +470,18 @@ namespace com.ums.PAS.Database
                         xycodes += ",";
                     xycodes += param.arr_xycodes[i].ToString();
                 }
-                String szSQL = String.Format("sp_getadr_byquality '{0}', '{1}'", param.sz_postno, xycodes);
+                String szSQL = "";
+                if(m_n_pastype==1)
+                    szSQL = String.Format("sp_getadr_byquality '{0}', '{1}'", param.sz_postno, xycodes);
+                else if(m_n_pastype==2)
+                    szSQL = String.Format("sp_getadr_byquality '{0}', '{1}', {2}", param.sz_postno, xycodes, logon.l_deptpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 percent.n_totalrecords = rs.RecordsAffected;
                 int counter = 0;
                 while (rs.Read())
                 {
                     UAddress adr = new UAddress();
-                    readAddressFromDb(ref adr, ref rs, false);
+                    readAddressFromDbByFieldnames(ref adr, ref rs, false);
                     list.addLine(ref adr);
                     counter++;
                     percent.n_currentrecord = counter;
@@ -856,6 +860,224 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             list.finalize();
 
             return list;
+        }
+        protected bool readAddressFromDbByFieldnames(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
+        {
+            try
+            {
+                adr.kondmid = rs["KON_DMID"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.kondmid = "0";
+            }
+            try
+            {
+                adr.lon = float.Parse(rs["LON"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.lon = 0;
+            }
+            try
+            {
+                adr.lat = float.Parse(rs["LAT"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.lat = 0;
+            }
+            if (only_coors)
+            {
+                try
+                {
+                    adr.bedrift = Int32.Parse(rs["BEDRIFT"].ToString());
+                }
+                catch (Exception)
+                {
+                    adr.bedrift = 0;
+                }
+                try
+                {
+                    adr.hasfixed = Int32.Parse(rs["f_hasfixed"].ToString());
+                }
+                catch (Exception)
+                {
+                    adr.hasfixed = 0;
+                }
+                try
+                {
+                    adr.hasmobile = Int32.Parse(rs["f_hasmobile"].ToString());
+                }
+                catch (Exception)
+                {
+                    adr.hasmobile = 0;
+                }
+                try
+                {
+                    adr.arrayindex = Int32.Parse(rs["arrayindex"].ToString());
+                }
+                catch (Exception)
+                {
+                    adr.arrayindex = -1;
+                }
+                return true;
+            }
+            try
+            {
+                adr.name = rs["NAVN"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.name = "";
+            }
+            try
+            {
+                adr.address = rs["ADRESSE"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.address = "";
+            }
+            try
+            {
+                adr.houseno = Int32.Parse(rs["HUSNR"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.houseno = 0;
+            }
+            try
+            {
+                adr.letter = rs["OPPGANG"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.letter = "";
+            }
+            try
+            {
+                adr.postno = rs["POSTNR"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.postno = "";
+            }
+            try
+            {
+                adr.postarea = rs["POSTSTED"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.postarea = "";
+            }
+            try
+            {
+                adr.region = Int32.Parse(rs["KOMMUNENR"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.region = 0;
+            }
+            try
+            {
+                adr.bday = rs["FØDTÅR"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.bday = "0";
+            }
+            //adr.bday = 0;
+            try
+            {
+                adr.number = rs["TELEFON"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.number = "";
+            }
+            try
+            {
+                adr.gno = Int32.Parse(rs["GNR"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.gno = 0;
+            }
+            try
+            {
+                adr.bno = Int32.Parse(rs["BNR"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.bno = 0;
+            }
+            try
+            {
+                adr.bedrift = Int32.Parse(rs["BEDRIFT"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.bedrift = 0;
+            }
+            try
+            {
+                adr.importid = Int32.Parse(rs["l_importid"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.importid = -1;
+            }
+            try
+            {
+                adr.mobile = rs["MOBIL"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.mobile = "";
+            }
+            try
+            {
+                adr.streetid = Int32.Parse(rs["GATEKODE"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.streetid = 0;
+            }
+            try
+            {
+                adr.xycode = rs["QUALITY"].ToString();
+            }
+            catch (Exception)
+            {
+                adr.xycode = "a";
+            }
+            try
+            {
+                adr.hasfixed = Int32.Parse(rs["f_hasfixed"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.hasfixed = 0;
+            }
+            try
+            {
+                adr.hasmobile = Int32.Parse(rs["f_hasmobile"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.hasmobile = 0;
+            }
+            try
+            {
+                adr.arrayindex = Int32.Parse(rs["arrayindex"].ToString());
+            }
+            catch (Exception)
+            {
+                adr.arrayindex = -1;
+            }
+            return true;
+    
         }
         protected bool readAddressFromDb(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
         {
