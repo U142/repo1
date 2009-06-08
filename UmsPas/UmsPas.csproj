@@ -72,6 +72,7 @@
     <Compile Include="Status\IStatusList.cs" />
     <Compile Include="Status\UStatusItems.cs" />
     <Compile Include="Status\UStatusListItem.cs" />
+    <Compile Include="Weather\UWeatherReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">

@@ -278,6 +278,7 @@ namespace com.ums.UmsCommon
         public struct USETTINGS
         {
             public static int l_folkereg_num_adrtables;
+            public static String sz_url_weather_forecast;
         }
 
         public struct UPATHS
@@ -436,8 +437,13 @@ namespace com.ums.UmsCommon
         {
             try
             {
-                if (sz_date.Length == 8 && sz_time.Length == 6)
-                    return long.Parse(sz_date + sz_time);
+                if (sz_date.Length == 8 && (sz_time.Length == 6 || sz_time.Length == 4))
+                {
+                    if (sz_time.Length == 6)
+                        return long.Parse(sz_date + sz_time);
+                    else
+                        return long.Parse(sz_date + sz_time + "00");
+                }
                 else
                     return 0;
             }

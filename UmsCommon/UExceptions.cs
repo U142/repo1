@@ -172,5 +172,13 @@ namespace com.ums.UmsCommon
         {
         }
     }
+    public class UWeatherReportException : UException
+    {
+        public UWeatherReportException(String s)
+            : base(s)
+        {
+        }
+    }
    
+
 }

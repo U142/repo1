@@ -19,7 +19,7 @@ using com.ums.UmsCommon.Audio;
 using com.ums.PAS.Settings;
 using System.Text;
 using com.ums.UmsDbLib;
-using com.ums.PAS.Address;
+using com.ums.PAS.Weather;
 
 
 namespace com.ums.ws.pas
@@ -293,11 +293,29 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
-        public UGabResult GetNearestGABFromPoint(float lon, float lat)
+        public UGabResultFromPoint GetNearestGABFromPoint(ULOGONINFO logon, UMapPoint p)
         {
-            UGabResult search = new UGabResult();
-            return search;
+            //UGabResult search = new UGabResult();
+            //return search;
+            try
+            {
+                return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
+        /*[WebMethod]
+        public UGabResultFromPoint GetNearestTest()
+        {
+            ULOGONINFO l = new ULOGONINFO();
+            l.sz_stdcc = "0047";
+            UMapPoint p = new UMapPoint();
+            p.lat = 59.1;
+            p.lon = 8.7;
+            return (UGabResultFromPoint)new UGabFromPoint(ref l, ref p).Find();
+        }*/
 
         [WebMethod]
         public UAddressList GetNearestInhabitantsFromPoint(UMapDistanceParams param, ULOGONINFO logoninfo)
@@ -384,6 +402,34 @@ namespace com.ums.ws.pas
             return new URefno().getRefno(ref logon);*/
             return new REFNO_RESPONSE();
         }
+
+        [WebMethod]
+        public UWeatherReportResults GetWeatherReport(ULOGONINFO l, UWeatherSearch s)
+        {
+            UWeatherReport report = new UWeatherReport();
+            try
+            {
+                UmsDb db = new UmsDb();
+                db.CheckLogon(ref l);
+                return report.GetWeatherReport(ref s);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        /*[WebMethod]
+        public UWeatherReportResults GetWeatherTest()
+        {
+            UWeatherSearch w = new UWeatherSearch();
+            w.forecasts = 1;
+            w.interval = 1;
+            if (w.forecasts == 1)
+                w.interval = 0;
+            w.lat = 55.5;
+            w.lon = 5.5;
+            return new UWeatherReport().GetWeatherReport(ref w);
+        }*/
 
         /*[WebMethod]
         public UPROJECT_RESPONSE UProjectTest()

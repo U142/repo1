@@ -35,6 +35,111 @@ namespace com.ums.PAS.Address.gab
     }
 
 
+    public class UGabFromPoint : IAddressSearch
+    {
+        protected ULOGONINFO m_logon;
+        protected UMapPoint m_point;
+        public UGabFromPoint(ref ULOGONINFO logon, ref UMapPoint p)
+        {
+            m_logon = logon;
+            m_point = p;
+        }
+        public IAddressResults Find()
+        {
+            String lang = "1";
+            if (m_logon.sz_stdcc.Equals("0047"))
+                lang = "1";
+            else if (m_logon.sz_stdcc.Equals("0046"))
+                lang = "2";
+            else if (m_logon.sz_stdcc.Equals("0045"))
+                lang = "5";
+
+
+            string sz_server = "http://api.fleximap.com/servlet/FlexiMap";
+            string sz_params = String.Format(UCommon.UGlobalizationInfo,
+                                "UID=" + "UMS" +
+                                "&UPA=" + "MSG" +
+                                "&Language=" + lang +
+                                "&Sort=0" +
+                                "&Count=1" +
+                                "&Lon={0}" +
+                                "&Lat={1}" +
+                                "&Src=1",
+                                m_point.lon,
+                                m_point.lat);
+
+            String sz_request = String.Format("{0}?{1}", sz_server, sz_params);
+
+            string xmldata;
+            try
+            {
+                UTF8Encoding enc = new UTF8Encoding();
+                Byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_request);
+                String sz_request_8859 = Encoding.GetEncoding("iso-8859-1").GetString(bytes);
+
+                HttpWebRequest web = (HttpWebRequest)HttpWebRequest.Create(sz_server);
+                byte[] postDataBytes = Encoding.GetEncoding("iso-8859-1").GetBytes(sz_params);
+                // HTTP Request
+                web.Method = "POST";
+                web.ContentType = "application/x-www-form-urlencoded";
+                web.ContentLength = postDataBytes.Length;
+                Stream requestStream = web.GetRequestStream();
+                requestStream.Write(postDataBytes, 0, postDataBytes.Length);
+                requestStream.Close();
+
+                HttpWebResponse response = (HttpWebResponse)web.GetResponse();
+                StreamReader r = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("iso-8859-1"));
+                xmldata = r.ReadToEnd();
+                r.Close();
+                response.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            Byte[] to_utf8 = Encoding.GetEncoding("utf-8").GetBytes(xmldata);
+            string xmldata_utf8 = Encoding.UTF8.GetString(to_utf8);
+
+
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.LoadXml(xmldata_utf8);
+                return parse(ref doc);
+            }
+            catch (Exception e)
+            {
+                //UGabSearchResultList list = new UGabSearchResultList();
+                //list.setError(xmldata, e.Message);
+                //return list;
+                throw e;
+            }
+        }
+
+        public UGabResultFromPoint parse(ref XmlDocument doc)
+        {
+            UGabResultFromPoint res = new UGabResultFromPoint();
+            XmlNodeList nl = doc.GetElementsByTagName("Street");
+            if (nl.Count > 0)
+            {
+                XmlNode node_street = nl.Item(0);
+                res.name = node_street.Attributes["Name"].Value;
+                res.region = node_street.Attributes["Region"].Value;
+                XmlNode node_house = node_street.FirstChild;
+                if (node_house != null)
+                {
+                    res.no = node_house.Attributes["Name"].Value;
+                    res.distance = int.Parse(node_house.Attributes["Distance"].Value);
+                    res.lon = double.Parse(node_house.Attributes["Lon"].Value, UCommon.UGlobalizationInfo);
+                    res.lat = double.Parse(node_house.Attributes["Lat"].Value, UCommon.UGlobalizationInfo);
+                }
+            }
+            return res;
+        }
+    }
+
+
     /*
      * sz_url = "http://api.fleximap.com/servlet/FlexiMap"
         Dim sz_params

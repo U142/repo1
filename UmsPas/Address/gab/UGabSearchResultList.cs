@@ -23,14 +23,24 @@ namespace com.ums.PAS.Address.gab
      The result may be of types
      * list of Postnumbers, Streets, regions or houses
      */
-    public class UGabResult
+    public class UGabResult : IAddressResults
     {
         public float match;
         public string name;
         public string region;
         public string postno;
-        public float lon, lat;
+        public double lon, lat;
         public GABTYPE type;
+        public void finalize()
+        {
+        }
+    }
+
+    public class UGabResultFromPoint : UGabResult
+    {
+        public string no;
+        public int distance;
+
     }
 
     /*

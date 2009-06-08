@@ -47,6 +47,7 @@ namespace com.ums.wsPASExec
             UCommon.UVOICE.f_rms = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
 
             UCommon.USETTINGS.l_folkereg_num_adrtables = int.Parse(ConfigurationSettings.AppSettings["l_folkereg_num_adrtables"]);
+            UCommon.USETTINGS.sz_url_weather_forecast = ConfigurationSettings.AppSettings["sz_url_weather_forecast"];
 
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
