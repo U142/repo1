@@ -47,10 +47,10 @@ namespace com.ums.ws.infosentral
             return "OK";
         }
         [WebMethod(Description = "Sets redirect number for an inbound number")]
-        public string setRedirectNumber(ACCOUNT account, string inboundnumber, string dtmf, string redirectnumber)
+        public string setRedirectNumber(ACCOUNT account, string inboundnumber, string dtmf, string RedirectNumber)
         {
             com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            inf.setRedirectNumber(account, inboundnumber, dtmf, redirectnumber);
+            inf.setRedirectNumber(account, inboundnumber, dtmf, RedirectNumber);
             return "OK";
         }
         /*

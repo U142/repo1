@@ -412,7 +412,7 @@ namespace com.ums.UmsParm
                 passending.setValid(ref valid);
                 passending.setSendNum(ref sendnum);
                 passending.setActionProfile(ref profile);
-
+                
                 try
                 {
                     if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
