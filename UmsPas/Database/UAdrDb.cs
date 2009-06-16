@@ -316,6 +316,13 @@ namespace com.ums.PAS.Database
                 if (adr.hasmobile)
                     c.n_company_mobile += adr.add;
             }
+            if((adrtypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 && adr.bedrift == 0)
+            {
+                if (adr.hasfixed)
+                    c.n_private_fixed += adr.add;
+                if (adr.hasmobile)
+                    c.n_private_mobile += adr.add;
+            }
             if (!adr.hasfixed && !adr.hasmobile)
             {
                 if (adr.bedrift == 0)
