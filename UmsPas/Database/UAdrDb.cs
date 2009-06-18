@@ -347,13 +347,13 @@ namespace com.ums.PAS.Database
                     {
                         if (m_n_pastype == 1)
                         {
-                            szSQL += String.Format("SELECT BEDRIFT, f_hasfixed, f_hasmobile, count(KON_DMID) n_count " +
+                            szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
                                                     "FROM ADR_KONSUM WHERE KOMMUNENR={0}",
                                                     m[i].sz_municipalid);
                         }
                         else if (m_n_pastype == 2)
                         {
-                            szSQL += String.Format("SELECT BEDRIFT, f_hasfixed, f_hasmobile, count(KON_DMID) n_count " +
+                            szSQL += String.Format("SELECT isnull(BEDRIFT,0), isnull(f_hasfixed,0), isnull(f_hasmobile,0), count(KON_DMID) n_count " +
                                                     "FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={1} AND AK.KOMMUNENR={0}",
                                                     m[i].sz_municipalid, m_n_deptpk);
                         }
@@ -428,7 +428,7 @@ namespace com.ums.PAS.Database
                                                             "WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={5} " +
                                                             "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                             n_maxadr_polycount,
-                                            b.l_bo, b.r_bo, b.u_bo, b.b_bo, m_n_deptpk);
+                                            b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk);
                                                                 
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 //List<UAdrcountCandidate> candidates = new List<UAdrcountCandidate>();

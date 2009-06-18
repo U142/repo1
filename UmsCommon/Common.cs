@@ -30,6 +30,7 @@ namespace com.ums.UmsCommon
 
     public class PercentProgress
     {
+        
         public static SetPercentDelegate newDelegate() { return new SetPercentDelegate(SetJob); }
         public delegate void SetPercentDelegate(ref ULOGONINFO l, ProgressJobType jobType, PercentResult val);
         /*
