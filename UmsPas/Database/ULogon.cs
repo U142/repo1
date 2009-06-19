@@ -139,6 +139,9 @@ namespace com.ums.PAS.Database
                 bool b_default_dept_set = false;
                 l.sz_compid = l.sz_compid.ToUpper();
                 l.sz_userid = l.sz_userid.ToUpper();
+                l.sz_compid = l.sz_compid.Replace("'", "''");
+                l.sz_userid = l.sz_userid.Replace("'", "''");
+                l.sz_password = l.sz_password.Replace("'", "''");
                 //l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
                 szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
