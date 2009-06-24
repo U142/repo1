@@ -116,6 +116,11 @@ namespace com.ums.PAS.Database
                     ret.sz_jobid = rs.GetString(7);
                     ret.sz_areaid = rs.GetString(8);
                 }
+                else
+                {
+                    rs.Close();
+                    return null;
+                }
                 rs.Close();
                 szSQL = String.Format("SELECT l_cc, l_delivered, l_expired, l_failed, l_unknown, l_submitted, l_queued, l_subscribers " +
                                     "FROM LBAHISTCC WHERE l_refno={0}", n_refno);
