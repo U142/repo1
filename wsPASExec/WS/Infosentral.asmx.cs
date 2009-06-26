@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 
 using libums2_csharp;
 using com.ums.VB;
+using com.ums.UmsCommon;
 
 namespace com.ums.ws.infosentral
 {
@@ -30,28 +31,82 @@ namespace com.ums.ws.infosentral
         [WebMethod(Description = "Returns information about stored messages")]
         public List<MessageInfo> getStoredMessageInfo(ACCOUNT account)
         {
-            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            return inf.getStoredMessageInfo(account);
+            try
+            {
+                com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();  
+                List<MessageInfo> list = inf.getStoredMessageInfo(account);
+
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages succeeded)", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         [WebMethod(Description="Stores a message and returns the messagepk")]
         public long storeMessage(ACCOUNT account, string messageName, VOCFILE message)
         {
-            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            return inf.storeMessage(account, messageName, message);
+            try
+            {
+                com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
+                long messagepk = inf.storeMessage(account, messageName, message);
+
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage succeeded and returned messagepk=" + messagepk + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return messagepk;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         [WebMethod(Description = "Attaches a message to a number")]
         public string attachMessage(ACCOUNT account, string inboundnumber, long messagepk)
         {
-            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            inf.attatchMessage(account, inboundnumber, messagepk);
-            return "OK";
+            try
+            {
+                com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
+                inf.attatchMessage(account, inboundnumber, messagepk);
+
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully attached message (" + messagepk + ") to inboundnumber " + inboundnumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+
+                return "OK";
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " attachMessage failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         [WebMethod(Description = "Sets redirect number for an inbound number")]
         public string setRedirectNumber(ACCOUNT account, string inboundnumber, string dtmf, string RedirectNumber)
         {
-            com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
-            inf.setRedirectNumber(account, inboundnumber, dtmf, RedirectNumber);
-            return "OK";
+            try
+            {
+                com.ums.VB.Infosentral inf = new com.ums.VB.Infosentral();
+                inf.setRedirectNumber(account, inboundnumber, dtmf, RedirectNumber);
+
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " redirect number " + RedirectNumber + " successfully set to inboundnumber " + inboundnumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+
+                return "OK";
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/infosentral-1.0";
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " setRedirectNumber failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         /*
         [WebMethod(Description = "Returns all available Messages")]

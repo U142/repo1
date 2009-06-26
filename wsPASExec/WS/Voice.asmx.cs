@@ -52,85 +52,102 @@ namespace com.ums.ws.voice
         //public Int64 sendMergedVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> mergeMessages)
         public Int64 sendVoice(libums2_csharp.ACCOUNT account, SendingSettings settings, RECIPIENT[] to, string from, List<VOCFILE[]> messages)
         {
-            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            voice.TempPath = UCommon.UPATHS.sz_path_temp;
+            Int64 l_refno = -1;
+            try
+            {
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.TempPath = UCommon.UPATHS.sz_path_temp;
 
-            Int64 l_refno = voice.getRefno();
-            String[] filenames;
-            VOCFILE[] message = new VOCFILE[messages.Count];
-            VOCFILE voc;
+                l_refno = voice.getRefno();
+                String[] filenames;
+                VOCFILE[] message = new VOCFILE[messages.Count];
+                VOCFILE voc;
 
-            string sSource = "sendMergedVoice";
-            string sLog = "VoiceWS";
-            string sEvent = "PreviewTTS";
+                string sSource = "sendMergedVoice";
+                string sLog = "VoiceWS";
+                string sEvent = "PreviewTTS";
 
-            for(int i=0;i<messages.Count;++i) {
-
-                EventLog.WriteEntry(sSource, i + " time: for preview TTS");
-                List<VOCFILE> wavs = voice.previewTTS(account, messages[i]);
-                String filenameraw = "v" + l_refno + "_" + i + ".raw";
-                String filenamewav = "v" + l_refno + "_" + i + ".wav";
-                EventLog.WriteEntry(sSource, i + " time: " + filenamewav);
-                BinaryWriter bw;
-                FileStream fs;
-                
-                filenames = new String[wavs.Count];
-
-                for(int j = 0; j < wavs.Count; ++j) {
-                    filenames[j] = Guid.NewGuid() + ".wav";
-                    fs = new FileStream(Server.MapPath(filenames[j]),FileMode.CreateNew);
-                    bw = new BinaryWriter(fs);
-
-                    bw.Write(wavs[j].audiodata);
-                    
-                    bw.Flush();
-                    bw.Close();
-                    fs.Close();
-                }
-
-                WAV2RAWLib.convertClass wav2raw = new WAV2RAWLib.convertClass();
-
-                for (int j = 0; j < filenames.Length; ++j)
+                for (int i = 0; i < messages.Count; ++i)
                 {
-                    wav2raw.WAV2RAWNormalize(Server.MapPath(filenames[j]), Server.MapPath(filenames[j].Replace(".wav", ".raw")));
 
-                    if (File.Exists(Server.MapPath(filenames[j])))
-                        File.Delete(Server.MapPath(filenames[j]));
+                    EventLog.WriteEntry(sSource, i + " time: for preview TTS");
+                    List<VOCFILE> wavs = voice.previewTTS(account, messages[i]);
+                    String filenameraw = "v" + l_refno + "_" + i + ".raw";
+                    String filenamewav = "v" + l_refno + "_" + i + ".wav";
+                    EventLog.WriteEntry(sSource, i + " time: " + filenamewav);
+                    BinaryWriter bw;
+                    FileStream fs;
+
+                    filenames = new String[wavs.Count];
+
+                    for (int j = 0; j < wavs.Count; ++j)
+                    {
+                        filenames[j] = Guid.NewGuid() + ".wav";
+                        fs = new FileStream(Server.MapPath(filenames[j]), FileMode.CreateNew);
+                        bw = new BinaryWriter(fs);
+
+                        bw.Write(wavs[j].audiodata);
+
+                        bw.Flush();
+                        bw.Close();
+                        fs.Close();
+                    }
+
+                    WAV2RAWLib.convertClass wav2raw = new WAV2RAWLib.convertClass();
+
+                    for (int j = 0; j < filenames.Length; ++j)
+                    {
+                        wav2raw.WAV2RAWNormalize(Server.MapPath(filenames[j]), Server.MapPath(filenames[j].Replace(".wav", ".raw")));
+
+                        if (File.Exists(Server.MapPath(filenames[j])))
+                            File.Delete(Server.MapPath(filenames[j]));
+                    }
+
+
+                    for (int j = 0; j < filenames.Length; ++j)
+                    {
+                        fs = new FileStream(Server.MapPath(filenameraw), FileMode.Append);
+                        bw = new BinaryWriter(fs);
+                        bw.Write(File.ReadAllBytes(Server.MapPath(filenames[j].Replace(".wav", ".raw"))));
+                        bw.Close();
+                        fs.Close();
+
+                        if (File.Exists(Server.MapPath(filenames[j].Replace(".wav", ".raw"))))
+                            File.Delete(Server.MapPath(filenames[j].Replace(".wav", ".raw")));
+                    }
+
+                    wav2raw.RAW2WAV(Server.MapPath(filenameraw), Server.MapPath(filenamewav));
+
+                    if (File.Exists(Server.MapPath(filenameraw)))
+                        File.Delete(Server.MapPath(filenameraw));
+
+
+                    voc = new VOCFILE();
+                    voc.type = VOCTYPE.WAV;
+                    //EventLog.WriteEntry(sSource, i + " time ReadAllBytes line 126 Voice.asmx");
+                    voc.audiodata = File.ReadAllBytes(Server.MapPath(filenamewav));
+                    if (File.Exists(Server.MapPath(filenamewav)))
+                        File.Delete(Server.MapPath(filenamewav));
+                    message[i] = voc;
                 }
-                
 
-                for (int j = 0; j < filenames.Length; ++j)
-                {
-                    fs = new FileStream(Server.MapPath(filenameraw), FileMode.Append);
-                    bw = new BinaryWriter(fs);
-                    bw.Write(File.ReadAllBytes(Server.MapPath(filenames[j].Replace(".wav", ".raw"))));
-                    bw.Close();
-                    fs.Close();
+                l_refno = voice.send(account, settings, to, from, message);
 
-                    if (File.Exists(Server.MapPath(filenames[j].Replace(".wav", ".raw"))))
-                        File.Delete(Server.MapPath(filenames[j].Replace(".wav", ".raw")));
-                }
-
-                wav2raw.RAW2WAV(Server.MapPath(filenameraw), Server.MapPath(filenamewav));
-                
-                if (File.Exists(Server.MapPath(filenameraw)))
-                    File.Delete(Server.MapPath(filenameraw));
-
-
-                voc = new VOCFILE();
-                voc.type = VOCTYPE.WAV;
-                //EventLog.WriteEntry(sSource, i + " time ReadAllBytes line 126 Voice.asmx");
-                voc.audiodata = File.ReadAllBytes(Server.MapPath(filenamewav));
-                if(File.Exists(Server.MapPath(filenamewav)))
-                    File.Delete(Server.MapPath(filenamewav));
-                message[i] = voc;
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully sent voice (l_refno=" + l_refno + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+  
+                return l_refno;
             }
-
-            return voice.send(account,settings,to,from, message);
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " error sending voice (l_refno=" + l_refno + ") " + e.Message , USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         
         /*int length = 0;
@@ -210,22 +227,53 @@ namespace com.ums.ws.voice
         [WebMethod]
         public List<STATUS> getStatus(libums2_csharp.ACCOUNT acc, Int64 referenceNumber)
         {
-            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            return voice.getStatus(acc, referenceNumber);
+            try
+            {
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+
+                List<STATUS> list = voice.getStatus(acc, referenceNumber);
+
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " requested status for (l_refno=" + referenceNumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " requested status for (l_refno=" + referenceNumber + ") " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
+
         }
         [WebMethod(Description = "Returns all available statuses which includes status code, short text and text")]
         public List<ItemStatus> getAvailableStatuses(ACCOUNT acc)
         {
-            libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};",UCommon.UBBDATABASE.sz_dsn_aoba,UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            return voice.getAvailableStatuses(acc);
+            try
+            {
+                libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+
+                List<ItemStatus> list = voice.getAvailableStatuses(acc);
+
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " requested all available statuses)", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " Error requesting all available statuses) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         /*
         [WebMethod]
@@ -242,22 +290,48 @@ namespace com.ums.ws.voice
         [WebMethod(Description = "This method cancels all messages on a reference number. ItemNumber is for future use, just add -1 for now")]
         public string cancelVoice(ACCOUNT acc, Int64 referenceNumber, int itemNumber)
         {
-            libums2_csharp.SendVoice voice = new SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            return voice.cancelVoice(acc, referenceNumber);
+            try
+            {
+                libums2_csharp.SendVoice voice = new SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                
+                string result = voice.cancelVoice(acc, referenceNumber);
+                
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully cancelled Voice message with refno=" + referenceNumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+                
+                return result;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " failed to cancel Voice message with refno=" + referenceNumber + ") " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         [WebMethod(Description = "This method returns an array of VOCFILEs containing a WAV file. This VOCFILE object should be used as input when sending a Voice message")]
         public List<VOCFILE> previewTTS(ACCOUNT acc, VOCFILE[] message)
         {
-            libums2_csharp.SendVoice voice = new SendVoice();
-            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-            return voice.previewTTS(acc, message);
+            try
+            {
+                libums2_csharp.SendVoice voice = new SendVoice();
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                return voice.previewTTS(acc, message);
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " preview TTS succeeded)", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/voice-2.0";
+                USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " failed during TTS preview) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
         /*
         [WebMethod]

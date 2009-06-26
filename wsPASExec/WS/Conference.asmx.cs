@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 
 using libums2_csharp;
 using wsPASExec.VB;
+using com.ums.UmsCommon;
 
 namespace wsPASExec.WS
 {
@@ -31,38 +32,109 @@ namespace wsPASExec.WS
         [WebMethod(Description="This method is used for scheduling a conference")]
         public int scheduleConference([XmlElement(IsNullable=false)] ACCOUNT account, Participant[] participants, string conferenceName, long scheduleddatetime)
         {
-            // Should this return refno with item numbers?
-            wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
-            return conf.scheduleConference(account, participants, conferenceName, scheduleddatetime);
+            try
+            {
+                // Should this return refno with item numbers?
+                wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
+                int l_refno = conf.scheduleConference(account, participants, conferenceName, scheduleddatetime);
+                
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully scheduled a conference with (l_refno=" + l_refno + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return l_refno;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " scheduleConference failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
 
         [WebMethod(Description = "This method is used for starting a conference imidiately")]
         public int startConferenceNow(ACCOUNT account, Participant[] participant, string conferenceName)
         {
-            return scheduleConference(account, participant, conferenceName, 0);
+            try
+            {
+                int l_refno = scheduleConference(account, participant, conferenceName, 0);
+                
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully started a conference with (l_refno=" + l_refno + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+                
+                return l_refno;
+
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " startConferenceNow failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
 
         [WebMethod(Description = "This method is currently not in use")]
         public string cancelConference(ACCOUNT account, int referenceNumber)
         {
-            wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
-            return conf.cancelConference(account, referenceNumber);
+            try
+            {
+                wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
+                string message = conf.cancelConference(account, referenceNumber);
+                
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully cancelled conference with l_refno=" + referenceNumber, USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return message;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " cancelConference failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
 
         [WebMethod(Description = "This method returns the status of a conference, shows the participants with their statuses")]
         public List<Status> getConferenceStatus(ACCOUNT account, int referenceNumber)
         {
-            // Should this return refno with item numbers?
-            // Actually there could be more than one here?
-            wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
-            return conf.getConference(account, referenceNumber);
+            try
+            {
+                // Should this return refno with item numbers?
+                // Actually there could be more than one here?
+                wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
+                List<Status> list = conf.getConference(account, referenceNumber);
+
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully returned conference status with l_refno=" + referenceNumber, USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getConferenceStatus failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
 
         [WebMethod(Description = "This method is used for redialing participants, use getConferenceStatus to get itemNumber for a participant")]
         public string redialParticipant(ACCOUNT account, int referenceNumber, int itemNumber)
         {
-            wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
-            return conf.redialParticipant(account, referenceNumber, itemNumber);
+            try
+            {
+                wsPASExec.VB.Conference conf = new wsPASExec.VB.Conference();
+                string message = conf.redialParticipant(account, referenceNumber, itemNumber);
+
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully redialed l_refno " + referenceNumber + " l_item " + itemNumber, USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+
+                return message;
+            }
+            catch (Exception e)
+            {
+                UCommon.appname = "soap/conference-1.1";
+                USysLog.send(Environment.MachineName + " soap/conference-1.1: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " redialParticipant failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                throw e;
+            }
         }
     }
 }
