@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -32,8 +31,10 @@ namespace UMSAlertiX
             oController.wsuser = oConfig.GetConfigValue("WSUser");
             oController.wspass = oConfig.GetConfigValue("WSPass");
             oController.parsepath = oConfig.GetConfigValue("ParsePath");
-            oController.message_validity = Convert.ToInt32(oConfig.GetConfigValue("MessageValidity"));
-//            oController.dbConn.Open();
+            if(oConfig.GetConfigValue("MessageValidity")!="") oController.message_validity = Convert.ToInt32(oConfig.GetConfigValue("MessageValidity")); // default validity
+            if(oConfig.GetConfigValue("CPUAffinity")!="") oController.affinity = Convert.ToInt32(oConfig.GetConfigValue("CPUAffinity"));
+            
+            System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)oController.affinity;
 
             // parse command line arguments
             foreach (string s in args)
@@ -66,7 +67,7 @@ namespace UMSAlertiX
             Thread trKey = new Thread(new ThreadStart(oController.GetKey));
             trKey.Start();
             oController.threads++;
-///*
+
             // start log thread
             Console.WriteLine("# Starting Log Status thread", 1);
             Thread trLog = new Thread(new ThreadStart(oLog.FlushLog));
@@ -91,20 +92,10 @@ namespace UMSAlertiX
             trCCStatus.Start();
             oController.threads++;
 
-// */
-            /*
-            // start misc thread
-            Console.WriteLine("# Starting Misc thread", 1);
-            Thread trMisc = new Thread(new ThreadStart(oMisc.GetAllAreas));
-            trMisc.Start();
-            */
             while (oController.threads > 0)
             {
                 Thread.Sleep(100);
             }
-            Console.WriteLine("-- All threads successfully shut down, closing database --", 1);
-//            oController.dbConn.Close();
-            Console.WriteLine("-- Database closed, exiting --", 1);
             Thread.Sleep(1000);
         }
     }

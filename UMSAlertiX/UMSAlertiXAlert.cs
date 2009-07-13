@@ -1,10 +1,10 @@
-﻿#define FORCE_AREA
+﻿//#define FORCE_AREA
 #define FORCE_SIMULATE
 //#define WHITELISTS
 
 using System;
 using System.Collections.Generic;
-//using System.Linq;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Globalization;
@@ -137,13 +137,18 @@ namespace UMSAlertiX
             int lRefNo;
             double UTMnorth, UTMeast;
             string szZone;
+            int lValidity = oController.message_validity;
 
             int lReturn = 0;
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
 
+            if (oDoc.SelectSingleNode("LBA") != null)
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null)
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
             XmlNode oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-            GetAlertMsg(ref oTextMessages, ref msgAlert);
+            GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
             if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
             lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
             oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon) (execute mode=" + execMode.ToString() + ")");
@@ -188,13 +193,18 @@ namespace UMSAlertiX
             int lRefNo;
             double UTMnorth, UTMeast;
             string szZone;
+            int lValidity = oController.message_validity;
 
             int lReturn = 0;
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
 
+            if (oDoc.SelectSingleNode("LBA") != null)
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null)
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
             XmlNode oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-            GetAlertMsg(ref oTextMessages, ref msgAlert);
+            GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
             if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
             lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
             oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse) (execute mode=" + execMode.ToString() + ")");
@@ -428,14 +438,21 @@ namespace UMSAlertiX
             return bReturn;
         }
 
-        // help functions
         private bool GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert)
+        {
+            return GetAlertMsg(ref oTextMessages, ref msgAlert, 0);
+        }
+
+        // help functions
+        private bool GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert, int lValidity)
         {
             bool bReturn = true;
 
             DateTime dtmExpiry = new DateTime();
-            //dtmExpiry = DateTime.Now.AddHours(12);
-            dtmExpiry = DateTime.Now.AddMinutes(oController.message_validity);
+            if(lValidity > 0)
+                dtmExpiry = DateTime.Now.AddMinutes(lValidity);
+            else
+                dtmExpiry = DateTime.Now.AddMinutes(oController.message_validity);
 
             int iCountMsg = 0;
             int iCountCC = 0;

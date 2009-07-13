@@ -24,55 +24,60 @@ namespace UMSAlertiX
         {
             while (oController.running)
             {
-                //string[] fileEntries = Directory.GetFiles("\\\\192.168.3.40\\ums\\var\\lba\\eat\\", "LBA_*.xml");
-                string[] fileEntries = Directory.GetFiles(oController.parsepath + "eat\\", "LBA_*.xml");
-                Array.Sort(fileEntries);
-                foreach (string fileName in fileEntries)
+                try
                 {
-                    if (!oController.running) break;
-                    lRetVal = ParseXMLFile(fileName);
-                    if (lRetVal == 0)
+                    string[] fileEntries = Directory.GetFiles(oController.parsepath + "eat\\", "LBA_*.xml");
+                    Array.Sort(fileEntries);
+                    foreach (string fileName in fileEntries)
                     {
-                        oController.log.WriteLog("Moving " + fileName + " to done.");
-                        File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
-                    }
-                    else if (lRetVal == -1)
-                    {
-                        oController.log.WriteLog("Moving " + fileName + " to retry.");
-                        File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
-                    }
-                    else // lRetVal -2
-                    {
-                        oController.log.WriteLog("Moving " + fileName + " to failed.");
-                        File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
-                    }
-                }
-                //string[] fileEntriesRetry = Directory.GetFiles("\\\\192.168.3.40\\ums\\var\\lba\\retry\\", "LBA_*.xml");
-                string[] fileEntriesRetry = Directory.GetFiles(oController.parsepath + "retry\\", "LBA_*.xml");
-                Array.Sort(fileEntriesRetry);
-                foreach (string fileName in fileEntriesRetry)
-                {
-                    if (!oController.running) break;
-                    FileInfo fFile = new FileInfo(fileName);
-                    if (fFile.LastAccessTime.AddMinutes(1).CompareTo(DateTime.Now) <= 0)
-                    {
+                        if (!oController.running) break;
                         lRetVal = ParseXMLFile(fileName);
                         if (lRetVal == 0)
                         {
                             oController.log.WriteLog("Moving " + fileName + " to done.");
-                            File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
+                            File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
                         }
                         else if (lRetVal == -1)
                         {
                             oController.log.WriteLog("Moving " + fileName + " to retry.");
-                            File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                            File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
                         }
                         else // lRetVal -2
                         {
                             oController.log.WriteLog("Moving " + fileName + " to failed.");
-                            File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
+                            File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
                         }
                     }
+                    string[] fileEntriesRetry = Directory.GetFiles(oController.parsepath + "retry\\", "LBA_*.xml");
+                    Array.Sort(fileEntriesRetry);
+                    foreach (string fileName in fileEntriesRetry)
+                    {
+                        if (!oController.running) break;
+                        FileInfo fFile = new FileInfo(fileName);
+                        if (fFile.LastAccessTime.AddMinutes(1).CompareTo(DateTime.Now) <= 0)
+                        {
+                            lRetVal = ParseXMLFile(fileName);
+                            if (lRetVal == 0)
+                            {
+                                oController.log.WriteLog("Moving " + fileName + " to done.");
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
+                            }
+                            else if (lRetVal == -1)
+                            {
+                                oController.log.WriteLog("Moving " + fileName + " to retry.");
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                            }
+                            else // lRetVal -2
+                            {
+                                oController.log.WriteLog("Moving " + fileName + " to failed.");
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    oController.log.WriteLog("Exception during file poll: " + e.Message);
                 }
                 Thread.Sleep(1000);
             }
@@ -94,61 +99,71 @@ namespace UMSAlertiX
             oAlert.SetController(ref oController);
             oArea.SetController(ref oController);
 
-            if (oReader.Read())
+            try
             {
-                oDoc.Load(oReader);
-                if (oDoc.SelectSingleNode("LBA") != null)
+                //oReader.Close();
+                if (oReader.Read())
                 {
-                    if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation") != null)
-                        switch (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation").Value)
-                        {
-                            case "InsertAreaPolygon":
-                                //oController.log.WriteLog("ins area polygon");
-                                lReturn = oArea.InsertAreaPolygon(ref oDoc);
-                                break;
-                            case "UpdateAreaPolygon":
-                                //oController.log.WriteLog("upd area polygon");
-                                lReturn = oArea.UpdateAreaPolygon(ref oDoc);
-                                break;
-                            case "InsertAreaEllipse":
-                                //oController.log.WriteLog("ins area ellipse");
-                                lReturn = oArea.InsertAreaEllipse(ref oDoc);
-                                break;
-                            case "UpdateAreaEllipse":
-                                //oController.log.WriteLog("upd area ellipse");
-                                lReturn = oArea.UpdateAreaEllipse(ref oDoc);
-                                break;
-                            case "DeleteArea":
-                                //oController.log.WriteLog("del area");
-                                lReturn = oArea.DeleteArea(ref oDoc);
-                                break;
-                            case "SendArea":
-                                //oController.log.WriteLog("send area");
-                                lReturn = oAlert.SendArea(ref oDoc);
-                                break;
-                            case "SendPolygon":
-                                //oController.log.WriteLog("send polygon");
-                                lReturn = oAlert.SendPolygon(ref oDoc);
-                                break;
-                            case "SendEllipse":
-                                //oController.log.WriteLog("send ellipse");
-                                lReturn = oAlert.SendEllipse(ref oDoc);
-                                break;
-                            case "ConfirmJob":
-                                //oController.log.WriteLog("send prep alert");
-                                lReturn = oAlert.ExecutePreparedAlert(ref oDoc);
-                                break;
-                            case "CancelJob":
-                                //oController.log.WriteLog("cancel prep alert");
-                                lReturn = oAlert.CancelPreparedAlert(ref oDoc);
-                                break;
-                            default:
-                                oController.log.WriteLog("ERROR: Operation not recognized");
-                                lReturn = -2;
-                                break;
-                        }
+                    oDoc.Load(oReader);
+                    if (oDoc.SelectSingleNode("LBA") != null)
+                    {
+                        if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation") != null)
+                            switch (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation").Value)
+                            {
+                                case "InsertAreaPolygon":
+                                    //oController.log.WriteLog("ins area polygon");
+                                    lReturn = oArea.InsertAreaPolygon(ref oDoc);
+                                    break;
+                                case "UpdateAreaPolygon":
+                                    //oController.log.WriteLog("upd area polygon");
+                                    lReturn = oArea.UpdateAreaPolygon(ref oDoc);
+                                    break;
+                                case "InsertAreaEllipse":
+                                    //oController.log.WriteLog("ins area ellipse");
+                                    lReturn = oArea.InsertAreaEllipse(ref oDoc);
+                                    break;
+                                case "UpdateAreaEllipse":
+                                    //oController.log.WriteLog("upd area ellipse");
+                                    lReturn = oArea.UpdateAreaEllipse(ref oDoc);
+                                    break;
+                                case "DeleteArea":
+                                    //oController.log.WriteLog("del area");
+                                    lReturn = oArea.DeleteArea(ref oDoc);
+                                    break;
+                                case "SendArea":
+                                    //oController.log.WriteLog("send area");
+                                    lReturn = oAlert.SendArea(ref oDoc);
+                                    break;
+                                case "SendPolygon":
+                                    //oController.log.WriteLog("send polygon");
+                                    lReturn = oAlert.SendPolygon(ref oDoc);
+                                    break;
+                                case "SendEllipse":
+                                    //oController.log.WriteLog("send ellipse");
+                                    lReturn = oAlert.SendEllipse(ref oDoc);
+                                    break;
+                                case "ConfirmJob":
+                                    //oController.log.WriteLog("send prep alert");
+                                    lReturn = oAlert.ExecutePreparedAlert(ref oDoc);
+                                    break;
+                                case "CancelJob":
+                                    //oController.log.WriteLog("cancel prep alert");
+                                    lReturn = oAlert.CancelPreparedAlert(ref oDoc);
+                                    break;
+                                default:
+                                    oController.log.WriteLog("ERROR: Operation not recognized");
+                                    lReturn = -2;
+                                    break;
+                            }
+                    }
+                    oReader.Close();
                 }
+            }
+            catch (Exception e)
+            {
                 oReader.Close();
+                oController.log.WriteLog("ERROR: Exception while reading XML " + e.ToString(), "ERROR: Exception while reading XML " + e.Message);
+                lReturn = -2;
             }
             return lReturn;
         }

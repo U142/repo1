@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
 using System.Data.Odbc;
 using UMSAlertiX.AlertiXAreaApi;
@@ -20,8 +19,8 @@ namespace UMSAlertiX
         private string szWSPass = "";
         private string szParsePath = "";
         private int lMessageValidity = 240; // minutes
+        private int lAffinity = 1;
         private UMSAlertiXLog oLog;
-//        public OdbcConnection dbConn;
 
         public UMSAlertiXLog log
         {
@@ -47,6 +46,18 @@ namespace UMSAlertiX
             }
         }
 
+        public int affinity
+        {
+            get
+            {
+                return lAffinity;
+            }
+            set
+            {
+                lAffinity = value;
+            }
+        }
+
         public int threads
         {
             get
@@ -68,7 +79,6 @@ namespace UMSAlertiX
             set
             {
                 szDBConn = value;
-//                dbConn = new OdbcConnection(szDBConn);
             }
         }
 
@@ -238,8 +248,6 @@ namespace UMSAlertiX
                 if (!rsSendingStatus.IsDBNull(0))
                     lRetVal = rsSendingStatus.GetInt32(0);
 
-//			lRetVal = (int)cmd.ExecuteScalar();
-
             cmd.Dispose();
             dbConn.Close();
 
@@ -270,8 +278,5 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
- /*       public void CheckSocket()
-        {
-        }*/
     }
 }
