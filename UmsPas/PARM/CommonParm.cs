@@ -30,6 +30,14 @@ namespace com.ums.UmsParm
         }
     }*/
 
+    public enum PARMOPERATION
+    {
+        insert,
+        update,
+        delete,
+    }
+
+
     public abstract class UShape
     {
         //public static USENDINGTYPES operator !=(USENDINGTYPES s, long n) { return new USENDINGTYPES(); }
@@ -51,10 +59,11 @@ namespace com.ums.UmsParm
         public static int SENDINGTYPE_TESTSENDING = 0;//imported list
 
 
-
+        public float col_red, col_green, col_blue, col_alpha;
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }
+        public UGeminiStreet gemini() { return (UGeminiStreet)this; }
         public UMunicipalShape municipal() { return (UMunicipalShape)this; }
         public UTestSending test() { return (UTestSending)this; }
         public UResend resend() { return (UResend)this; }
@@ -337,7 +346,7 @@ namespace com.ums.UmsParm
 
     public class UMunicipalShape : UShape
     {
-        protected List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
+        public List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
         public List<UMunicipalDef> GetMunicipals() { return m_municipals; }
         protected UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
@@ -405,6 +414,23 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class UGeminiStreet : UShape
+    {
+        public List<com.ums.PAS.Address.UGisImportResultLine> linelist;
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            return base.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
+        }
+    }
+
     public class UGIS : UShape
     {
         public int GetInabitantCount()
@@ -422,7 +448,7 @@ namespace com.ums.UmsParm
         {
             m_n_linecount = n;
         }
-        protected List<UGisRecord> m_gis = new List<UGisRecord>();
+        public List<UGisRecord> m_gis = new List<UGisRecord>();
         protected UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
         {
@@ -641,15 +667,15 @@ namespace com.ums.UmsParm
 
     public class UPolygon : UShape
     {
-        protected ArrayList m_array_polypoints;
-        public ArrayList getPolygon() { return m_array_polypoints; }
+        public List<UPolypoint> m_array_polypoints;
+        public List<UPolypoint> getPolygon() { return m_array_polypoints; }
         public long getSize() { return m_array_polypoints.Count; }
         public UPolypoint getPoint(int i) { return (UPolypoint)m_array_polypoints[i]; }
 
         public UPolygon()
             : base()
         {
-            m_array_polypoints = new ArrayList();
+            m_array_polypoints = new List<UPolypoint>();
         }
         public void addPoint(double lon, double lat)
         {
@@ -726,7 +752,7 @@ namespace com.ums.UmsParm
 
     public class UPolypoint
     {
-        double lon, lat;
+        public double lon, lat;
         public double getLon() { return lon; }
         public double getLat() { return lat; }
 
@@ -734,6 +760,11 @@ namespace com.ums.UmsParm
         {
             this.lon = lon;
             this.lat = lat;
+        }
+        public UPolypoint()
+        {
+            this.lat = 0.0;
+            this.lon = 0.0;
         }
     }
     public class URGBA
@@ -751,6 +782,8 @@ namespace com.ums.UmsParm
 
     public class PAOBJECT
     {
+        public PARMOPERATION parmop;
+        public long l_temppk;
         public long l_objectpk;
         public long l_deptpk;
         public long l_importpk;
@@ -765,10 +798,13 @@ namespace com.ums.UmsParm
         public String sz_metadata;
         public bool b_isobjectfolder;
         public long l_timestamp;
+        public com.ums.UmsParm.UPolygon m_shape; //must be of type: polygon
     }
 
     public class PAEVENT
     {
+        public PARMOPERATION parmop;
+        public long l_temppk;
         public long l_eventpk;
         public long l_parent;
         public String sz_name;
@@ -825,6 +861,8 @@ namespace com.ums.UmsParm
             }*/
             return getSendingTypeText(n_sendingtype);
         }
+        public PARMOPERATION parmop;
+        public long l_temppk;
         public Int64 l_alertpk;
         public String l_parent;
         public String sz_name;

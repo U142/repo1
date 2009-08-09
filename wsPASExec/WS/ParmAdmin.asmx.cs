@@ -34,6 +34,7 @@ namespace com.ums.ws.parm
     [ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
+    
     public class ParmAdmin : System.Web.Services.WebService
     {
         private ULOGONINFO m_logon;
@@ -46,9 +47,105 @@ namespace com.ums.ws.parm
         private PercentResult m_res = new PercentResult();
         private PercentProgress.SetPercentDelegate m_percentdelegate;
 
+        public class UPARESULT
+        {
+            public long pk;
+        }
+        public class UPAEVENTRESULT : UPARESULT
+        {
+        }
+
+        public class UPAALERTRESTULT : UPARESULT
+        {
+        }
+        public class UPAOBJECTRESULT : UPARESULT
+        {
+        }
+
+        protected bool createOutXml()
+        {
+            try
+            {
+                String encoding = "UTF-8";
+                outxml = new USimpleXmlWriter(encoding);
+                outxml.insertStartDocument();
+                outxml.insertStartElement("PAROOT");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
 
 
+        [WebMethod]
+        public UPAEVENTRESULT ExecEventUpdate(ULOGONINFO logon, PAEVENT ev)
+        {
+            try
+            {
+                UPAEVENTRESULT ret = new UPAEVENTRESULT();
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                createOutXml();
+                ret.pk = HandleEventUpdate(ev.parmop, ref logon, ref ev);
+                outxml.insertEndElement(); //PAROOT
+                outxml.insertEndDocument();
+                outxml.finalize();
+                return ret;
 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
+        public UPAOBJECTRESULT ExecObjectUpdate(ULOGONINFO logon, PAOBJECT obj)
+        {
+            try
+            {
+                UPAOBJECTRESULT ret = new UPAOBJECTRESULT();
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                createOutXml();
+                ret.pk = HandleObjectUpdate(obj.parmop, ref logon, ref obj);
+                outxml.insertEndElement(); //PAROOT
+                outxml.insertEndDocument();
+                outxml.finalize();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        [WebMethod]
+        public int Defines(UEllipse e, UPolygon p, UGeminiStreet s, ULocationBasedAlert l)
+        {
+            return 0;
+        }
+
+        [WebMethod]
+        public UPAALERTRESTULT ExecAlertUpdate(ULOGONINFO logon, PAALERT a)
+        {
+            try
+            {
+                UPAALERTRESTULT ret = new UPAALERTRESTULT();
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                createOutXml();
+                ret.pk = HandleAlertUpdate(a.parmop, ref logon, ref a);
+                outxml.insertEndElement(); //PAROOT
+                outxml.insertEndDocument();
+                outxml.finalize();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
 
         [WebMethod]
@@ -159,9 +256,10 @@ namespace com.ums.ws.parm
 
             //create return file
             String encoding = "UTF-8";
-            outxml = new USimpleXmlWriter(encoding);
+            /*outxml = new USimpleXmlWriter(encoding);
             outxml.insertStartDocument();
-            outxml.insertStartElement("PAROOT");
+            outxml.insertStartElement("PAROOT");*/
+            createOutXml();
 
             sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
 
@@ -504,6 +602,235 @@ namespace com.ums.ws.parm
             return true;
         }
 
+        protected bool write_server_shape(ref PAOBJECT obj)
+        {
+            //only polygons supported
+            String l_pk = "o" + obj.l_objectpk;
+            String nodetype = "objectpolygon";
+            StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
+            return _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w);
+        }
+
+        protected StreamWriter _create_server_shape_file(String l_pk, FileMode fmode)
+        {
+            FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + l_pk + ".xml");
+            try
+            {
+                if (fmode.Equals(FileMode.Create))
+                {
+                    try
+                    {
+                        t.Delete();
+                    }
+                    catch (Exception) { }
+                }
+                StreamWriter w = (fmode.Equals(FileMode.Create) ? t.CreateText() : t.AppendText());
+                return w;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        protected bool _delete_server_shape_file(String nodetype, String l_pk)
+        {
+            try
+            {
+                FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + nodetype + l_pk + ".xml");
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        protected bool _write_server_shape(ref UPolygon poly, String l_pk, String nodetype, ref StreamWriter w)
+        {
+            //CREATE A NEW FILE IN PREDEFINED-AREAS
+            try
+            {
+                String pktype = "l_pk";
+                if (l_pk.StartsWith("o"))
+                    pktype = "l_objectpk";
+                else if (l_pk.StartsWith("a"))
+                    pktype = "l_alertpk";
+                else if (l_pk.StartsWith("e"))
+                    pktype = "l_eventpk";
+                else
+                    pktype = "l_alertpk";
+                w.WriteLine(String.Format(UCommon.UGlobalizationInfo, "<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\">",
+                            nodetype, poly.col_alpha, poly.col_red, poly.col_green, poly.col_blue,
+                            pktype, l_pk));
+                List<UPolypoint> p = poly.m_array_polypoints;
+                for (int i = 0; i < p.Count; i++)
+                {
+                    w.WriteLine(String.Format(UCommon.UGlobalizationInfo, "<polypoint xcord=\"{0}\" ycord=\"{1}\" />", p[i].lon, p[i].lat));
+                }
+                w.WriteLine(String.Format("</{0}>", nodetype));
+
+
+                //w.Close();
+            }
+            catch (Exception e)
+            {
+                //Failed to create/open file
+                ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
+                throw e;
+            }
+            return true;
+        }
+
+        protected bool _write_server_shape(ref UEllipse ell, String l_pk, String nodetype, ref StreamWriter w)
+        {
+            try
+            {
+                //StreamWriter w = _create_server_shape_file(l_pk, fmode);
+                w.WriteLine(String.Format(UCommon.UGlobalizationInfo, "<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\" centerx=\"{7}\" centery=\"{8}\" cornerx=\"{9}\" cornery=\"{10}\" />",
+                nodetype, ell.col_alpha, ell.col_red, ell.col_green, ell.col_blue, "l_alertpk", l_pk, ell.ellipse().lon, ell.ellipse().lat, ell.ellipse().lon + ell.x, ell.ellipse().lat + ell.y));
+                //w.Close();
+            }
+            catch (Exception e)
+            {
+                ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
+                throw e;
+            }
+
+            return true;
+        }
+
+        protected bool _write_server_shape(ref UGeminiStreet shape, String l_pk, String nodetype, FileMode fmode)
+        {
+            try
+            {
+                StreamWriter w = _create_server_shape_file(l_pk, fmode);
+                String sz_pkfield = "l_alertpk";
+                w.WriteLine(String.Format("<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\">",
+                    nodetype, shape.col_alpha, shape.col_red, shape.col_green, shape.col_blue, sz_pkfield, l_pk));
+                //XmlNodeList points = node.ChildNodes;
+                Hashtable tbl = new Hashtable();
+                int written = 0;
+                List<com.ums.PAS.Address.UGisImportResultLine> list = shape.gemini().linelist;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    String mun, stre, hou, let, nam1, nam2;
+                    list[i].finalize();
+                    if(!list[i].isValid())
+                        continue;
+                    mun = list[i].municipalid;
+                    stre = list[i].streetid;
+                    hou = list[i].houseno;
+                    let = list[i].letter;
+                    nam1 = list[i].namefilter1;
+                    nam2 = list[i].namefilter2;
+
+                    String key = mun.Trim() + "." + stre.Trim() + "." + hou.Trim() + "." + let.Trim() + "." + nam1.Trim() + "." + nam2.Trim();
+                    if (tbl[key] != null && tbl[key].ToString() == "1")
+                        continue;
+                    tbl.Add(key, "1");
+                    if (mun.Length == 0)
+                        mun = " ";
+                    if (stre.Length == 0)
+                        stre = " ";
+                    if (hou.Length == 0)
+                        hou = " ";
+                    if (let.Length == 0)
+                        let = " ";
+                    if (nam1.Length == 0)
+                        nam1 = " ";
+                    if (nam2.Length == 0)
+                        nam2 = " ";
+                    w.WriteLine(String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" />",
+                        mun, stre, hou, let, nam1, nam2));
+                    written++;
+                }
+                //WRITE END LINE
+                w.WriteLine(String.Format("</{0}>", nodetype));
+
+                w.Close();
+            }
+            catch (Exception e)
+            {
+                ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
+                throw e;
+            }
+
+            return true;
+        }
+
+        protected bool _write_server_lbashape(ref PAALERT a, ref StreamWriter w, PARMOPERATION op)
+        {
+            try
+            {
+                if (a.m_lba_shape == null)
+                    return false;
+                //if ((a.n_sendingtype & UShape.SENDINGTYPE_POLYGON) == UShape.SENDINGTYPE_POLYGON ||
+                //    (a.n_sendingtype & UShape.SENDINGTYPE_ELLIPSE) == UShape.SENDINGTYPE_ELLIPSE)
+                {
+                    if (typeof(ULocationBasedAlert).Equals(a.m_lba_shape.GetType()))
+                    {
+                        ULocationBasedAlert lba = (ULocationBasedAlert)a.m_lba_shape;
+                        _write_lba_server_part(ref lba, ref w, "cellbroadcast", "a" + a.l_alertpk.ToString(), "l_alertpk");
+                        _create_lba_file_for_server(op, ref a);
+                    }
+                }
+                //else
+                //    throw new NotImplementedException("LBA addresstype only available with polygon and ellipse");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+
+        protected bool write_server_shape(ref PAALERT a, PARMOPERATION op)
+        {
+            try
+            {
+                //char pktype = 'a';
+                String l_pk = "a" + a.l_alertpk;
+                String nodetype = "Unknown";
+
+                if (typeof(UPolygon).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertpolygon";
+                    UPolygon poly = a.m_shape.poly();
+                    StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
+                    _write_server_shape(ref poly, l_pk, nodetype, ref w);
+                    _write_server_lbashape(ref a, ref w, op);
+                    w.Close();
+                }
+                else if (typeof(UEllipse).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertellipse";
+                    UEllipse ell = a.m_shape.ellipse();
+                    StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
+                    _write_server_shape(ref ell, l_pk, nodetype, ref w);
+                    _write_server_lbashape(ref a, ref w, op);
+                    w.Close();
+                }
+                else if (typeof(UGeminiStreet).Equals(a.m_shape.GetType()))
+                {
+                    nodetype = "alertstreetid";
+                    UGeminiStreet street = a.m_shape.gemini();
+                    _write_server_shape(ref street, l_pk, nodetype, FileMode.Create);
+                }
+                else if (typeof(UMunicipalShape).Equals(a.m_shape.GetType()))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                    throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+
+
         private bool parse_as_polygon(ref XmlNode node, ref StreamWriter w, String nodetype, String l_pk, String sz_pkfield, ref ARGB argb)
         {
             //WRITE START LINE
@@ -598,6 +925,35 @@ namespace com.ums.ws.parm
             w.WriteLine(String.Format("</{0}>", nodetype));
             return true;
         }
+
+        private bool _write_lba_server_part(ref ULocationBasedAlert lba, ref StreamWriter w, String nodetype, String l_pk, String sz_pkfield)
+        {
+            try
+            {
+                w.WriteLine(String.Format("<{0} sz_area=\"{1}\" sz_id=\"{2}\" {3}=\"{4}\">",
+                                nodetype, "-1", "-1", sz_pkfield, l_pk));
+
+                for (int i = 0; i < lba.getLanguageCount(); i++)
+                {
+                    ULocationBasedAlert.LBALanguage lang = lba.getLanguage(i);
+                    w.WriteLine(String.Format("<message sz_lang=\"{0}\" sz_text=\"{1}\" sz_cb_oadc=\"{2}\">",
+                                        lang.sz_name, lang.sz_text, lang.sz_cb_oadc));
+                    for (int j = 0; j < lang.getCCodeCount(); j++)
+                    {
+                        ULocationBasedAlert.LBACCode ccode = lang.getCCode(j);
+                        w.WriteLine(String.Format("<ccode>{0}</ccode>", ccode.getCCode()));
+                    }
+                    w.WriteLine("</message>");
+                }
+                w.WriteLine(String.Format("</{0}>", nodetype));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+
         private bool parse_as_cellbroadcast(ref XmlNode node, ref StreamWriter w, String nodetype, String l_pk, String sz_pkfield)
         {
             w.WriteLine(String.Format("<{0} sz_area=\"{1}\" sz_id=\"{2}\" {3}=\"{4}\">",
@@ -684,6 +1040,44 @@ namespace com.ums.ws.parm
             return true;
         }
 
+        private bool _create_lba_file_for_server(PARMOPERATION op, ref PAALERT alert)
+        {
+            String l_pk = alert.l_alertpk.ToString();
+            String filename = GenLBAFileName(l_pk);
+            String original_areaid = "0";
+            try
+            {
+                original_areaid = db.GetAlertAreaID(l_pk);
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+            }
+
+            try
+            {
+                db.ResetLBAArea(l_pk);
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+            }
+            FileInfo file = new FileInfo(filename);
+            StreamWriter w = file.CreateText();
+
+            _write_lba_admin_for_server(op, original_areaid, l_pk, ref alert, ref w);
+            w.WriteLine("</LBA>");
+            w.Close();
+            try
+            {
+                file.MoveTo(filename.Replace(".tmp", ".xml"));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
 
         private bool CreateLBAFile(String sz_nodetype, String l_pk, XmlNode node)
         {
@@ -724,16 +1118,62 @@ namespace com.ums.ws.parm
             }
             return true;
         }
+
+        private bool _write_lba_admin_for_server(PARMOPERATION operation, String original_areaid, String l_pk, 
+                                                        ref PAALERT alert, ref StreamWriter w)
+        {
+            try
+            {
+                String sz_lba_operation = "";
+                if(operation.ToString().ToLower().Equals("insert") || operation.ToString().ToLower().Equals("update"))
+                {
+                    if (original_areaid.Equals("-2") || original_areaid.Equals("-1")) //never been made before
+                    {
+                        if (typeof(UPolygon).Equals(alert.m_shape.GetType()))
+                            sz_lba_operation = "InsertAreaPolygon";
+                        else if (typeof(UEllipse).Equals(alert.m_shape.GetType()))
+                            sz_lba_operation = "InsertAreaEllipse";
+                    }
+                    else
+                    {
+                        if (typeof(UPolygon).Equals(alert.m_shape.GetType()))
+                            sz_lba_operation = "UpdateAreaPolygon";
+                        else if (typeof(UEllipse).Equals(alert.m_shape.GetType()))
+                            sz_lba_operation = "UpdateAreaEllipse";
+                    }
+                }
+                else if (operation.ToString().ToLower().Equals("delete"))
+                {
+                    if (typeof(UPolygon).Equals(alert.m_shape.GetType()))
+                        sz_lba_operation = "DeleteAreaPolygon";
+                    else if (typeof(UEllipse).Equals(alert.m_shape.GetType()))
+                        sz_lba_operation = "DeleteAreaEllipse";
+
+                }
+
+                _StartLBATag(ref w, sz_lba_operation, original_areaid);
+                if(typeof(UPolygon).Equals(alert.m_shape.GetType()))
+                {
+                    UPolygon poly = (UPolygon)alert.m_shape;
+                    _write_server_shape(ref poly, l_pk, "alertpolygon", ref w);
+                }
+                else if (typeof(UEllipse).Equals(alert.m_shape.GetType()))
+                {
+                    UEllipse ell = (UEllipse)alert.m_shape;
+                    _write_server_shape(ref ell, l_pk, "alertellipse", ref w);
+                }
+
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
         private bool CreateLBAPolygon(String original_areaid, String l_pk, ref XmlNode node, ref StreamWriter w)
         {
             String sz_lba_operation = "", sz_operation;
             sz_operation = node.Attributes["sz_operation"].Value;
-            /*if(sz_operation.Equals("insert"))
-                sz_lba_operation = "InsertAreaPolygon";
-            else if(sz_operation.Equals("update"))
-                sz_lba_operation = "UpdateAreaPolygon";
-            else if(sz_operation.Equals("delete"))
-                sz_lba_operation = "DeleteAreaPolygon";*/
             if (sz_operation.Equals("insert") || sz_operation.Equals("update"))
             {
                 if (original_areaid.Equals("-2") || original_areaid.Equals("-1")) //never been made before
@@ -764,12 +1204,6 @@ namespace com.ums.ws.parm
         {
             String sz_lba_operation = "", sz_operation;
             sz_operation = node.Attributes["sz_operation"].Value;
-            /*if (sz_operation.Equals("insert"))
-                sz_lba_operation = "InsertAreaEllipse";
-            else if (sz_operation.Equals("update"))
-                sz_lba_operation = "UpdateAreaEllipse";
-            else if (sz_operation.Equals("delete"))
-                sz_lba_operation = "DeleteAreaEllipse";*/
             if (sz_operation.Equals("insert") || sz_operation.Equals("update"))
             {
                 if (original_areaid.Equals("-2") || original_areaid.Equals("-1")) //never been made before
@@ -1290,10 +1724,139 @@ namespace com.ums.ws.parm
             sz_sql = String.Format("sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
                                    sz_operation.ToLower(), l_objectpk, m_logon.l_userpk, m_logon.l_comppk, m_logon.l_deptpk, l_importpk, sz_name, l_categorypk,
                                    l_parent, sz_address, sz_postno, sz_place, sz_phone, l_timestamp, f_isobjectfolder);
-            db_exec(sz_sql, "paobject", sz_operation, l_objectpk, sz_description);
+            db_exec(sz_sql, "paobject", sz_operation, l_objectpk, sz_description, true);
 
             return true;
         }
+
+        /*new function for insert/update/delete of objects, by useing PAOBJECT class*/
+        public long HandleObjectUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAOBJECT obj)
+        {
+            try
+            {
+                m_logon = logon;
+                sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+                String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
+                obj.l_timestamp = long.Parse(l_timestamp);
+                String sz_sql;
+                sz_sql = String.Format(UCommon.UGlobalizationInfo,
+                    "sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
+                       operation.ToString().ToLower(), obj.l_objectpk, logon.l_userpk, logon.l_comppk, logon.l_deptpk, obj.l_importpk, obj.sz_name, obj.l_categorypk,
+                       obj.l_parent, obj.sz_address, obj.sz_postno, obj.sz_place, obj.sz_phone, l_timestamp, (obj.b_isobjectfolder ? 1 : 0));
+
+                long n_ret = db_exec(sz_sql, "paobject", operation.ToString().ToLower(), obj.l_temppk.ToString(), obj.sz_description, false);
+                obj.l_objectpk = n_ret;
+                if (n_ret > 0)
+                {
+                    switch(operation)
+                    {
+                        case PARMOPERATION.insert:
+                        case PARMOPERATION.update:
+                            if (obj.m_shape != null)
+                            {
+                                if(typeof(UPolygon).Equals(obj.m_shape.GetType()))
+                                {
+                                    write_server_shape(ref obj);
+                                }
+                            }
+                            break;
+                        case PARMOPERATION.delete:
+                            try
+                            {
+                                _delete_server_shape_file("o", obj.l_objectpk.ToString());
+                            }
+                            catch (Exception) { }
+                            break;
+                    }
+                }
+
+                return n_ret;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        /*new function for insert/update/delete of events, by using PAEVENT class*/
+        public long HandleEventUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAEVENT ev)
+        {
+            try
+            {
+                m_logon = logon;
+                sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+                String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
+                ev.l_timestamp = long.Parse(l_timestamp);
+                String sz_sql;
+                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
+                                        operation.ToString(), ev.l_eventpk, logon.l_userpk, logon.l_comppk,
+                                        ev.l_parent, ev.sz_name, ev.l_categorypk, ev.l_timestamp, ev.f_epi_lon, ev.f_epi_lat);
+                return db_exec(sz_sql, "paevent", operation.ToString().ToLower(), ev.l_temppk.ToString(), ev.sz_description, false);
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /*new function for insert/update/delete of alerts, by using PAALERT class*/
+        public long HandleAlertUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAALERT a)
+        {
+            try
+            {
+                m_logon = logon;
+                sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+                String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
+                a.l_timestamp = long.Parse(l_timestamp).ToString();
+
+                String sz_sql;
+                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}'",
+                                        operation.ToString().ToLower(), a.l_alertpk, logon.l_userpk, logon.l_comppk, a.l_parent,
+                                        a.sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
+                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, a.sz_sms_oadc, a.sz_sms_message);
+                long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), a.sz_description, false);
+                if (n_ret > 0) //ok
+                {
+                    a.l_alertpk = n_ret;
+                    a.l_temppk = n_ret;
+                    if (operation.ToString().ToLower().Equals("delete"))
+                    {
+                        try
+                        {
+                            String sz_areaid = db.GetAlertAreaID(a.l_alertpk.ToString());
+                            if (!sz_areaid.Equals("-2") && !sz_areaid.Equals("-1") && !sz_areaid.Equals("0"))
+                                CreateLBADeleteFile(a.l_alertpk.ToString(), sz_areaid);
+                        }
+                        catch (Exception) { }
+                        try
+                        {
+                            _delete_server_shape_file("a", a.l_alertpk.ToString());
+                        }
+                        catch (Exception) { }
+                    }
+                    else //if it's not a delete op, update the shape(s)
+                    {
+                        if (a.m_shape != null)
+                        {
+                            write_server_shape(ref a, operation);
+                        }
+                        /*if (a.m_lba_shape != null && (a.l_addresstypes & (long)ADRTYPES.LBA_TEXT) == (long)ADRTYPES.LBA_TEXT)
+                        {
+                            _write_server_lbashape(ref a);
+                        }*/
+                    }
+                }
+                return n_ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         private bool parseEvent(ref XmlNode node, String sz_operation)
         {
             String l_eventpk = node.Attributes["l_eventpk"].Value;
@@ -1339,11 +1902,11 @@ namespace com.ums.ws.parm
             //", " & f_epi_lon & ", " & f_epi_lat
 
             String sz_sql;
-            sz_sql = String.Format("sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
+            sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
                                     sz_operation.ToLower(), l_eventpk, m_logon.l_userpk, m_logon.l_comppk,
                                     l_parent, sz_name, l_categorypk, l_timestamp, f_epi_lon, f_epi_lat);
 
-            db_exec(sz_sql, "paevent", sz_operation, l_eventpk, sz_description);
+            db_exec(sz_sql, "paevent", sz_operation, l_eventpk, sz_description, true);
 
             return true;
         }
@@ -1417,7 +1980,7 @@ namespace com.ums.ws.parm
                                     f_locked, l_maxchannels, l_requesttype, l_expiry, sz_sms_oadc, sz_sms_message);
             try
             {
-                db_exec(sz_sql, "paalert", sz_operation, l_alertpk, sz_description);
+                db_exec(sz_sql, "paalert", sz_operation, l_alertpk, sz_description, true);
             }
             catch (Exception)
             {
@@ -1426,14 +1989,15 @@ namespace com.ums.ws.parm
             return true;
         }
 
-        private bool db_exec(String sql, String sz_nodename, String sz_operation, String temppk, String sz_description)
+        private long db_exec(String sql, String sz_nodename, String sz_operation, String temppk, String sz_description,
+            bool b_add_to_pkref)
         {
+            String realpk = "-1";
             if (sql.Length > 0)
             {
                 try
                 {
                     OdbcDataReader rs = db.ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
-                    String realpk = "-1";
                     if (rs.Read())
                     {
                         realpk = rs.GetString(0);
@@ -1441,7 +2005,8 @@ namespace com.ums.ws.parm
                     }
                     if (sz_operation.Equals("insert"))
                     {
-                        addPkRef(temppk, realpk, sz_nodename);
+                        if(b_add_to_pkref)
+                            addPkRef(temppk, realpk, sz_nodename);
                         setDescription(sz_nodename, realpk, sz_description);
                     }
                     else if (sz_operation.Equals("update"))
@@ -1455,14 +2020,17 @@ namespace com.ums.ws.parm
                     }
                     addStatusText(sz_nodename, sz_operation, realpk, temppk, "S_OK", "");
 
-                    return true;
+                    if (realpk.Length > 0)
+                        return long.Parse(realpk);
+                    else
+                        return -1;
                 }
                 catch (Exception e)
                 {
                     throw new UDbQueryException(e.Message);
                 }
             }
-            return false;
+            return -2;
         }
 
         bool setDescription(String sz_nodename, String l_objpk, String sz_desc)
@@ -1492,22 +2060,28 @@ namespace com.ums.ws.parm
 
         void addStatusText(String sz_nodename, String sz_operation, String l_pk, String l_temppk, String status, String statustext)
         {
-            String sz_prefix = "u";
-            if (sz_nodename.Equals("paobject"))
-                sz_prefix = "o";
-            else if (sz_nodename.Equals("paevent"))
-                sz_prefix = "e";
-            else if (sz_nodename.Equals("paalert"))
-                sz_prefix = "a";
-            else if (sz_nodename.Equals("pacategory"))
-                sz_prefix = "c";
-            outxml.insertStartElement(sz_nodename);
-            outxml.insertAttribute("sz_operation", sz_operation);
-            outxml.insertAttribute("l_objectpk", sz_prefix + l_pk);
-            outxml.insertAttribute("l_temppk", (l_pk.Equals(l_temppk) ? sz_prefix : "") + l_temppk);
-            outxml.insertAttribute("sz_status", status);
-            outxml.insertAttribute("l_timestamp", UCommon.UGetFullDateTimeNow().ToString());
-            outxml.insertEndElement();
+            try
+            {
+                String sz_prefix = "u";
+                if (sz_nodename.Equals("paobject"))
+                    sz_prefix = "o";
+                else if (sz_nodename.Equals("paevent"))
+                    sz_prefix = "e";
+                else if (sz_nodename.Equals("paalert"))
+                    sz_prefix = "a";
+                else if (sz_nodename.Equals("pacategory"))
+                    sz_prefix = "c";
+                outxml.insertStartElement(sz_nodename);
+                outxml.insertAttribute("sz_operation", sz_operation);
+                outxml.insertAttribute("l_objectpk", sz_prefix + l_pk);
+                outxml.insertAttribute("l_temppk", (l_pk.Equals(l_temppk) ? sz_prefix : "") + l_temppk);
+                outxml.insertAttribute("sz_status", status);
+                outxml.insertAttribute("l_timestamp", UCommon.UGetFullDateTimeNow().ToString());
+                outxml.insertEndElement();
+            }
+            catch (Exception e)
+            {
+            }
 
         }
 
