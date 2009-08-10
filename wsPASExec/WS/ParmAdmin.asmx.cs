@@ -608,7 +608,9 @@ namespace com.ums.ws.parm
             String l_pk = "o" + obj.l_objectpk;
             String nodetype = "objectpolygon";
             StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
-            return _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w);
+            bool b_ret = _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w);
+            w.Close();
+            return b_ret;
         }
 
         protected StreamWriter _create_server_shape_file(String l_pk, FileMode fmode)
@@ -1739,10 +1741,16 @@ namespace com.ums.ws.parm
                 String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
                 obj.l_timestamp = long.Parse(l_timestamp);
                 String sz_sql;
+                String sz_name = obj.sz_name.Replace("'", "''");
+                String sz_address = obj.sz_address.Replace("'", "''");
+                String sz_postno = obj.sz_postno.Replace("'", "''");
+                String sz_place = obj.sz_place.Replace("'", "''");
+                String sz_phone = obj.sz_phone.Replace("'", "''");
+
                 sz_sql = String.Format(UCommon.UGlobalizationInfo,
                     "sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
-                       operation.ToString().ToLower(), obj.l_objectpk, logon.l_userpk, logon.l_comppk, logon.l_deptpk, obj.l_importpk, obj.sz_name, obj.l_categorypk,
-                       obj.l_parent, obj.sz_address, obj.sz_postno, obj.sz_place, obj.sz_phone, l_timestamp, (obj.b_isobjectfolder ? 1 : 0));
+                       operation.ToString().ToLower(), obj.l_objectpk, logon.l_userpk, logon.l_comppk, logon.l_deptpk, obj.l_importpk, sz_name, obj.l_categorypk,
+                       obj.l_parent, sz_address, sz_postno, sz_place, sz_phone, l_timestamp, (obj.b_isobjectfolder ? 1 : 0));
 
                 long n_ret = db_exec(sz_sql, "paobject", operation.ToString().ToLower(), obj.l_temppk.ToString(), obj.sz_description, false);
                 obj.l_objectpk = n_ret;
@@ -1789,11 +1797,13 @@ namespace com.ums.ws.parm
                 sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
                 String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
                 ev.l_timestamp = long.Parse(l_timestamp);
+                String sz_name = ev.sz_name.Replace("'", "''");
+                String sz_description = ev.sz_description.Replace("'", "''");
                 String sz_sql;
                 sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
                                         operation.ToString(), ev.l_eventpk, logon.l_userpk, logon.l_comppk,
-                                        ev.l_parent, ev.sz_name, ev.l_categorypk, ev.l_timestamp, ev.f_epi_lon, ev.f_epi_lat);
-                return db_exec(sz_sql, "paevent", operation.ToString().ToLower(), ev.l_temppk.ToString(), ev.sz_description, false);
+                                        ev.l_parent, sz_name, ev.l_categorypk, ev.l_timestamp, ev.f_epi_lon, ev.f_epi_lat);
+                return db_exec(sz_sql, "paevent", operation.ToString().ToLower(), ev.l_temppk.ToString(), sz_description, false);
 
             }
             catch (Exception e)
@@ -1812,12 +1822,16 @@ namespace com.ums.ws.parm
                 String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
                 a.l_timestamp = long.Parse(l_timestamp).ToString();
 
+                String sz_name = a.sz_name.Replace("'", "''");
+                String sz_description = a.sz_description.Replace("'", "''");
+                String sz_oadc = a.sz_sms_oadc.Replace("'", "''");
+                String sz_message = a.sz_sms_message.Replace("'", "''");
                 String sz_sql;
                 sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}'",
                                         operation.ToString().ToLower(), a.l_alertpk, logon.l_userpk, logon.l_comppk, a.l_parent,
-                                        a.sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
-                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, a.sz_sms_oadc, a.sz_sms_message);
-                long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), a.sz_description, false);
+                                        sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
+                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, sz_oadc, sz_message);
+                long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), sz_description, false);
                 if (n_ret > 0) //ok
                 {
                     a.l_alertpk = n_ret;
