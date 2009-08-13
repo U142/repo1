@@ -9,7 +9,7 @@
           <AspNetDebugging>True</AspNetDebugging>
           <NativeDebugging>False</NativeDebugging>
           <SQLDebugging>False</SQLDebugging>
-          <PublishCopyOption>AllFiles</PublishCopyOption>
+          <PublishCopyOption>ProjectFiles</PublishCopyOption>
           <PublishTargetLocation>S:\WebSites\ws-pas\</PublishTargetLocation>
           <PublishDeleteAllFiles>True</PublishDeleteAllFiles>
           <PublishCopyAppData>False</PublishCopyAppData>

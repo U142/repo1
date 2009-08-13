@@ -464,6 +464,7 @@ namespace com.ums.UmsCommon
         public String sz_compid;
         public String sz_name;
         public String sz_surname;
+        public Int32 l_language;
         public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
         public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
 
