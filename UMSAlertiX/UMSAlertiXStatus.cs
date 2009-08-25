@@ -220,8 +220,11 @@ namespace UMSAlertiX
             {
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
-
-            if (aStatusResponse.countryStatusCounts != null)
+            if (aStatusResponse == null)
+            {
+                // getAlertStatusByCountryCode didn't fail, but returned NULL, update database with something
+            }
+            else if (aStatusResponse.countryStatusCounts != null)
             {
                 foreach (CountryCodeAlertStatus ccStatus in aStatusResponse.countryStatusCounts)
                 {

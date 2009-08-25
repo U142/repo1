@@ -143,10 +143,10 @@
     <None Include="Web References\AlertiXStatusApi\StatusApi.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://lbv.netcom.no:8080/alertix/AlertApi%3fwsdl">
+    <WebReferenceUrl Include="http://10.250.17.77:8080/alertix/AlertApi%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AlertiXAlertApi\</RelPath>
-      <UpdateFromURL>http://lbv.netcom.no:8080/alertix/AlertApi%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>http://10.250.17.77:8080/alertix/AlertApi%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -154,10 +154,10 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>UMSAlertiX_AlertiXAlertApi_AlertApi</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://lbv.netcom.no:8080/alertix/AreaApi%3fwsdl">
+    <WebReferenceUrl Include="http://10.250.17.77:8080/alertix/AreaApi%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AlertiXAreaApi\</RelPath>
-      <UpdateFromURL>http://lbv.netcom.no:8080/alertix/AreaApi%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>http://10.250.17.77:8080/alertix/AreaApi%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -165,10 +165,10 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>UMSAlertiX_AlertiXAreaApi_AreaApi</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://lbv.netcom.no:8080/alertix/StatusApi%3fwsdl">
+    <WebReferenceUrl Include="http://10.250.17.77:8080/alertix/StatusApi%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AlertiXStatusApi\</RelPath>
-      <UpdateFromURL>http://lbv.netcom.no:8080/alertix/StatusApi%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>http://10.250.17.77:8080/alertix/StatusApi%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -193,9 +193,6 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

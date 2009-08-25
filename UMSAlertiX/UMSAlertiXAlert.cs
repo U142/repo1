@@ -1,6 +1,6 @@
 ﻿//#define FORCE_AREA
 #define FORCE_SIMULATE
-//#define WHITELISTS
+#define WHITELISTS
 
 using System;
 using System.Collections.Generic;
@@ -30,22 +30,94 @@ namespace UMSAlertiX
             AreaName szAreaName = new AreaName();
             AlertMsg msgAlert = new AlertMsg();
             ExecuteMode execMode = ExecuteMode.SIMULATE;
+            Msisdn[] arrMsisdn = null;
+            WhiteListName[] arrWhiteList = null;
+            AdditionalSubscribers cAddSubscribers = new AdditionalSubscribers();
+            WhiteLists cWhiteLists = new WhiteLists();
 
             int lRefNo;
             string szUpdateSQL;
             int lRequestType = 0;
+            int lValidity = oController.message_validity;
 
             int lReturn = 0;
-            XmlNode oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
+            int lRetval = 0;
+            if (oDoc.SelectSingleNode("LBA") != null)
+            {
 
-            szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid").Value;
-            GetAlertMsg(ref oTextMessages, ref msgAlert);
-            if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-            lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
-            oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send area)");
+                XmlNode oTextMessages;
 
-            szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
-            int lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
+                {
+                    oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
+                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                }
+                else
+                {
+                    // error, can't send empty messages
+                    return Constant.ERR_NOMSG;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
+                {
+                    arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes)
+                    {
+                        arrMsisdn[i] = new Msisdn();
+                        arrMsisdn[i].value = oNode.Attributes.GetNamedItem("msisdn").Value;
+
+                        i++;
+                    }
+
+                    cAddSubscribers.subscribers = arrMsisdn;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
+                {
+                    arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes)
+                    {
+                        arrWhiteList[i] = new WhiteListName();
+                        arrWhiteList[i].value = oNode.Attributes.GetNamedItem("name").Value;
+
+                        i++;
+                    }
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+                {
+                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                }
+                else
+                {
+                    // error, need refno
+                    return Constant.ERR_NOREFNO;
+                }
+
+                szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid").Value;
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send area)");
+
+                szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
+                lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+
+            }
+            else
+            {
+                //missing LBA tag
+                return Constant.ERR_NOTAG_LBA;
+            }
 
             AlertApi aAlert = new AlertApi();
             AlertResponse aResponse = new AlertResponse();
@@ -59,18 +131,10 @@ namespace UMSAlertiX
             aAlert.Credentials = objAuth;
             aAlert.PreAuthenticate = true;
 
+
 #if FORCE_AREA
             oController.log.WriteLog(lRefNo.ToString() + " Force testarea");
             szAreaName.value = "TestArea";
-#endif
-#if WHITELISTS
-            oController.log.WriteLog(lRefNo.ToString() + " Force whitelist");
-            WhiteLists oWhiteLists = new WhiteLists();
-            oWhiteLists.whiteLists = new WhiteListName[1];
-            oWhiteLists.whiteLists[0] = new WhiteListName();
-            oWhiteLists.whiteLists[0].value = "StorfjordenKommune";
-#else
-            WhiteLists oWhiteLists = null;
 #endif
 #if FORCE_SIMULATE
             oController.log.WriteLog(lRefNo.ToString() + " force simulate");
@@ -83,12 +147,12 @@ namespace UMSAlertiX
                 if (lRequestType == 0)
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " Executing alert (execute mode=" + execMode.ToString() + ")");
-                    aResponse = aAlert.executeAreaAlert(szAreaName, msgAlert, oWhiteLists, execMode);
+                    aResponse = aAlert.executeAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers, execMode);
                 }
                 else
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " Preparing alert (execute mode=" + execMode.ToString() + ")");
-                    aResponse = aAlert.prepareAreaAlert(szAreaName, msgAlert, oWhiteLists);
+                    aResponse = aAlert.prepareAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers);
                 }
 
                 if (aResponse.successful)
@@ -128,61 +192,134 @@ namespace UMSAlertiX
 
         public int SendPolygon(ref XmlDocument oDoc)
         {
+            Point[] arrPoint = null;
+            Msisdn[] arrMsisdn = null;
+            WhiteListName[] arrWhiteList = null;
             AreaName szAreaName = new AreaName();
             AlertMsg msgAlert = new AlertMsg();
-            Point[] arrPoint = null;
-            UTM uCoConv = new UTM();
+            AdditionalSubscribers cAddSubscribers = new AdditionalSubscribers();
+            WhiteLists cWhiteLists = new WhiteLists();
             ExecuteMode execMode = ExecuteMode.SIMULATE;
+            UTM uCoConv = new UTM();
 
             int lRefNo;
             double UTMnorth, UTMeast;
             string szZone;
             int lValidity = oController.message_validity;
 
-            int lReturn = 0;
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
 
             if (oDoc.SelectSingleNode("LBA") != null)
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null)
+            {
+                XmlNode oTextMessages;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
                     lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
-            XmlNode oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-            GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
-            if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-            lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
-            oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon) (execute mode=" + execMode.ToString() + ")");
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
+                {
+                    oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
+                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                }
+                else
+                {
+                    // error, can't send empty messages
+                    return Constant.ERR_NOMSG;
+                }
 
-            szAreaName.value = lRefNo.ToString();
-            arrPoint = new Point[oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon").ChildNodes.Count];
-            int i = 0;
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
+                {
+                    arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
+                    int i = 0;
 
-            foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon").ChildNodes)
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes)
+                    {
+                        arrMsisdn[i] = new Msisdn();
+                        arrMsisdn[i].value = oNode.Attributes.GetNamedItem("msisdn").Value;
+
+                        i++;
+                    }
+
+                    cAddSubscribers.subscribers = arrMsisdn;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
+                {
+                    arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes)
+                    {
+                        arrWhiteList[i] = new WhiteListName();
+                        arrWhiteList[i].value = oNode.Attributes.GetNamedItem("name").Value;
+
+                        i++;
+                    }
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+                {
+                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                }
+                else
+                {
+                    // error, need refno
+                    return Constant.ERR_NOREFNO;
+                }
+                
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon) (execute mode=" + execMode.ToString() + ")");
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon") != null)
+                {
+                    szAreaName.value = lRefNo.ToString();
+                    arrPoint = new Point[oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon").ChildNodes)
+                    {
+                        UTMeast = 0;
+                        UTMnorth = 0;
+                        szZone = "";
+
+                        uCoConv.LL2UTM(23, Double.Parse(oNode.Attributes.GetNamedItem("ycord").Value, provider), Double.Parse(oNode.Attributes.GetNamedItem("xcord").Value, provider), 33, ref UTMnorth, ref UTMeast, ref szZone);
+
+                        arrPoint[i] = new Point();
+                        arrPoint[i].x = UTMeast;
+                        arrPoint[i].y = UTMnorth;
+                        arrPoint[i].xSpecified = true;
+                        arrPoint[i].ySpecified = true;
+
+                        i++;
+                    }
+
+                    if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                    {
+                        // unkown error
+                        return Constant.ERR_GENERAL;
+                    }
+                }
+                else
+                {
+                    // no alert polygon
+                    return Constant.ERR_NOTAG_ALERTPOLY;
+                }
+            }
+            else 
             {
-                UTMeast = 0;
-                UTMnorth = 0;
-                szZone = "";
-
-                uCoConv.LL2UTM(23, Double.Parse(oNode.Attributes.GetNamedItem("ycord").Value, provider), Double.Parse(oNode.Attributes.GetNamedItem("xcord").Value, provider), 33, ref UTMnorth, ref UTMeast, ref szZone);
-
-                arrPoint[i] = new Point();
-                arrPoint[i].x = UTMeast;
-                arrPoint[i].y = UTMnorth;
-                arrPoint[i].xSpecified = true;
-                arrPoint[i].ySpecified = true;
-
-                i++;
+                //missing LBA tag
+                return Constant.ERR_NOTAG_LBA;
             }
 
-            if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, execMode))
-            {
-                lReturn = -2;
-            }
-
-            return lReturn;
+            return Constant.OK;
         }
 
-        public int SendEllipse(ref XmlDocument oDoc)
+/*        public int SendEllipse_old(ref XmlDocument oDoc)
         {
             AreaName szAreaName = new AreaName();
             AlertMsg msgAlert = new AlertMsg();
@@ -195,7 +332,6 @@ namespace UMSAlertiX
             string szZone;
             int lValidity = oController.message_validity;
 
-            int lReturn = 0;
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
 
@@ -240,19 +376,152 @@ namespace UMSAlertiX
 
                 if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, execMode))
                 {
-                    lReturn = -2;
+                    return Constant.ERR_GENERAL;
                 }
             }
             else
             {
-                lReturn = -2;
+                return Constant.ERR_GENERAL;
             }
-            return lReturn;
+            return Constant.OK;
+        }*/
+
+        public int SendEllipse(ref XmlDocument oDoc)
+        {
+            Point[] arrPoint = null;
+            Msisdn[] arrMsisdn = null;
+            WhiteListName[] arrWhiteList = null;
+            AreaName szAreaName = new AreaName();
+            AlertMsg msgAlert = new AlertMsg();
+            AdditionalSubscribers cAddSubscribers = new AdditionalSubscribers();
+            WhiteLists cWhiteLists = new WhiteLists();
+            ExecuteMode execMode = ExecuteMode.SIMULATE;
+            UTM uCoConv = new UTM();
+
+            int lRefNo;
+            double UTMnorth, UTMeast;
+            string szZone;
+            int lValidity = oController.message_validity;
+
+            NumberFormatInfo provider = new NumberFormatInfo();
+            provider.NumberDecimalSeparator = ".";
+
+            if (oDoc.SelectSingleNode("LBA") != null)
+            {
+                XmlNode oTextMessages;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
+                {
+                    oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
+                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                }
+                else
+                {
+                    // error, can't send empty messages
+                    return Constant.ERR_NOMSG;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
+                {
+                    arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes)
+                    {
+                        arrMsisdn[i] = new Msisdn();
+                        arrMsisdn[i].value = oNode.Attributes.GetNamedItem("msisdn").Value;
+
+                        i++;
+                    }
+
+                    cAddSubscribers.subscribers = arrMsisdn;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
+                {
+                    arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes)
+                    {
+                        arrWhiteList[i] = new WhiteListName();
+                        arrWhiteList[i].value = oNode.Attributes.GetNamedItem("name").Value;
+
+                        i++;
+                    }
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+                {
+                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                }
+                else
+                {
+                    // error, need refno
+                    return Constant.ERR_NOREFNO;
+                }
+
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse) (execute mode=" + execMode.ToString() + ")");
+
+                szAreaName.value = lRefNo.ToString();
+                arrPoint = new Point[36];
+
+                int steps = 36;
+                double centerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centerx").Value, provider);
+                double centery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centery").Value, provider);
+                double cornerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornerx").Value, provider);
+                double cornery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornery").Value, provider);
+
+                double[,] arrPoly = new double[steps, 2];
+
+                if (UCommon.ConvertEllipseToPolygon(centerx, centery, cornerx, cornery, steps, 0, ref arrPoly))
+                {
+                    // put array of doubles into array of points
+                    for (int i = 0; i < steps; i++)
+                    {
+                        UTMeast = 0;
+                        UTMnorth = 0;
+                        szZone = "";
+
+                        uCoConv.LL2UTM(23, arrPoly[i, 1], arrPoly[i, 0], 33, ref UTMnorth, ref UTMeast, ref szZone);
+
+                        arrPoint[i] = new Point();
+                        arrPoint[i].x = UTMeast;
+                        arrPoint[i].y = UTMnorth;
+                        arrPoint[i].xSpecified = true;
+                        arrPoint[i].ySpecified = true;
+                    }
+
+                    if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                    {
+                        return Constant.ERR_GENERAL;
+                    }
+                }
+                else
+                {
+                    return Constant.ERR_GENERAL;
+                }
+            }
+            else
+            {
+                //missing LBA tag
+                return Constant.ERR_NOTAG_LBA;
+            }
+
+            return Constant.OK;
         }
 
         public int ExecutePreparedAlert(ref XmlDocument oDoc)
         {
-            int lReturn = 0;
+            int lReturn = Constant.OK;
             int lRefNo;
             int lRetval;
             string szUpdateSQL;
@@ -269,7 +538,7 @@ namespace UMSAlertiX
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 340)
-                return -1;
+                return Constant.ERR_CANCEL;
 
             aAlert.Url = oController.alertapi; //"http://lbv.netcom.no:8080/alertix/AlertApi";
 
@@ -293,13 +562,13 @@ namespace UMSAlertiX
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
-                    lReturn = -2;
+                    lReturn = Constant.ERR_GENERAL;
             }
             catch (Exception e)
             {
                 szUpdateSQL = "UPDATE LBASEND SET l_status=42001 WHERE l_refno=" + lRefNo.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = -2;
+                lReturn = Constant.ERR_GENERAL;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
 
@@ -308,7 +577,7 @@ namespace UMSAlertiX
 
         public int CancelPreparedAlert(ref XmlDocument oDoc)
         {
-            int lReturn = 0;
+            int lReturn = Constant.OK;
             int lRefNo;
             JobId idJob = new JobId();
 
@@ -318,7 +587,7 @@ namespace UMSAlertiX
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 800)
-                return -1;
+                return Constant.ERR_CANCEL;
 
             lReturn = CancelPreparedAlert(ref idJob, lRefNo);
 
@@ -327,7 +596,7 @@ namespace UMSAlertiX
 
         public int CancelPreparedAlert(ref JobId idJob, int lRefNo)
         {
-            int lReturn = 0;
+            int lReturn = Constant.OK;
             int lRetval;
             string szUpdateSQL;
 
@@ -354,13 +623,13 @@ namespace UMSAlertiX
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
-                    lReturn = -2;
+                    lReturn = Constant.ERR_GENERAL;
             }
             catch (Exception e)
             {
                 szUpdateSQL = "UPDATE LBASEND SET l_status=42002 WHERE l_refno=" + lRefNo.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = -2;
+                lReturn = Constant.ERR_GENERAL;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
 
@@ -368,7 +637,7 @@ namespace UMSAlertiX
         }
 
         // alert api
-        private bool SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, ExecuteMode execMode) // + refno + execmode
+        private bool SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, WhiteLists cWhiteLists, AdditionalSubscribers cAddSubscribers, ExecuteMode execMode) // + refno + execmode
         {
             AlertApi aAlert = new AlertApi();
             AlertResponse aResponse = new AlertResponse();
@@ -396,14 +665,6 @@ namespace UMSAlertiX
             aAlert.Credentials = objAuth;
             aAlert.PreAuthenticate = true;
 
-#if WHITELISTS
-            WhiteLists oWhiteLists = new WhiteLists();
-            oWhiteLists.whiteLists = new WhiteListName[1];
-            oWhiteLists.whiteLists[0] = new WhiteListName();
-            oWhiteLists.whiteLists[0].value = "StorfjordenKommune";
-#else
-            WhiteLists oWhiteLists = null;
-#endif
 #if FORCE_SIMULATE
             execMode = ExecuteMode.SIMULATE;
 #endif
@@ -413,11 +674,11 @@ namespace UMSAlertiX
                 lRequestType = oController.GetRequestType(lRefNo);
                 if (lRequestType == 0)
                 {
-                    aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, oWhiteLists, oPoly, execMode);
+                    aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists,oPoly, cAddSubscribers, execMode);
                 }
                 else
                 {
-                    aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, oWhiteLists, oPoly);
+                    aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
                 }
                 if (aResponse.codeSpecified)
                 {

@@ -279,4 +279,19 @@ namespace UMSAlertiX
         }
 
     }
+
+    public class Constant
+    {
+        public const int OK = 0;
+
+        public const int ERR_CANCEL = -1;
+        public const int ERR_GENERAL = -2;
+
+        public const int ERR_NOTAG_LBA = -2001;
+        public const int ERR_NOTAG_ALERTPOLY = -2002;
+        public const int ERR_NOMSG = -2003;
+        public const int ERR_NOREFNO = -2004;
+
+
+    }
 }
