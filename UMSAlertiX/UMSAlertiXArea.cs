@@ -337,6 +337,50 @@ namespace UMSAlertiX
             return bReturn;
         }
 
+        private bool AreaExists(ref AreaName szAreaName)
+        {
+            bool bReturn = true;
+            AreaApi aArea = new AreaApi();
+            GetAreaResponse aResponse = new GetAreaResponse();
+
+            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            Uri uri = new Uri(aArea.Url);
+            ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
+
+            aArea.Url = oController.areaapi; // "http://lbv.netcom.no:8080/alertix/AreaApi";
+            aArea.Credentials = objAuth;
+            aArea.PreAuthenticate = true;
+
+            try
+            {
+                aResponse = aArea.getArea(szAreaName);
+                if (aResponse.successfulSpecified)
+                {
+                    if (aResponse.successful)
+                    {
+                        bReturn = true;
+                    }
+                    else
+                    {
+                        // area doesn't exist, don't bother logging
+                        bReturn = false;
+                    }
+                }
+                else
+                {
+                    oController.log.WriteLog(szAreaName.value + " AreaExists Failed: " + aResponse.message);
+                    bReturn = false;
+                }
+            }
+            catch (Exception e)
+            {
+                oController.log.WriteLog(szAreaName.value + " AreaExists Failed (exception): " + e.Message);
+                bReturn = false;
+            }
+
+            return bReturn;
+        }
+
         private bool DeleteArea(ref AreaName szAreaName)
         {
             bool bReturn=true;
@@ -379,6 +423,24 @@ namespace UMSAlertiX
             }
 
             return bReturn;
+        }
+
+        // Delete an area based on string containing the name
+        public bool DeleteArea(string sz_areaname)
+        {
+            AreaName areaname = new AreaName();
+            areaname.value = sz_areaname;
+            
+            return DeleteArea(ref areaname);
+        }
+
+        // Check if an area exists using a string containing the name
+        public bool AreaExists(string sz_areaname)
+        {
+            AreaName areaname = new AreaName();
+            areaname.value = sz_areaname;
+
+            return AreaExists(ref areaname);
         }
     }
 }

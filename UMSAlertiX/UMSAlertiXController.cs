@@ -15,8 +15,6 @@ namespace UMSAlertiX
         private string szWSStatusAPI = "";
         private string szWSAlertAPI = "";
         private string szWSAreaAPI = "";
-        private string szWSUser = "";
-        private string szWSPass = "";
         private string szParsePath = "";
         private int lMessageValidity = 240; // minutes
         private int lAffinity = 1;

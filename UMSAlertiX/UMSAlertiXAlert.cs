@@ -140,6 +140,21 @@ namespace UMSAlertiX
             oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
 #endif
+#if WHITELISTS
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
+                arrWhiteList = new WhiteListName[1];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "UMS";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
 
             try
             {
@@ -671,13 +686,20 @@ namespace UMSAlertiX
 
             try
             {
+                UMSAlertiXArea oArea = new UMSAlertiXArea();
+                oArea.SetController(ref oController);
+
                 lRequestType = oController.GetRequestType(lRefNo);
                 if (lRequestType == 0)
                 {
+                    if (oArea.AreaExists(szAreaName.ToString()))
+                        oArea.DeleteArea(szAreaName.ToString());
                     aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists,oPoly, cAddSubscribers, execMode);
                 }
                 else
                 {
+                    if (oArea.AreaExists(szAreaName.ToString()))
+                        oArea.DeleteArea(szAreaName.ToString());
                     aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
                 }
                 if (aResponse.codeSpecified)

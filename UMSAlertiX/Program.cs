@@ -28,8 +28,6 @@ namespace UMSAlertiX
             oController.statusapi = oConfig.GetConfigValue("WSStatusAPI");
             oController.alertapi = oConfig.GetConfigValue("WSAlertAPI");
             oController.areaapi = oConfig.GetConfigValue("WSAreaAPI");
-            oController.wsuser = oConfig.GetConfigValue("WSUser");
-            oController.wspass = oConfig.GetConfigValue("WSPass");
             oController.parsepath = oConfig.GetConfigValue("ParsePath");
             if(oConfig.GetConfigValue("MessageValidity")!="") oController.message_validity = Convert.ToInt32(oConfig.GetConfigValue("MessageValidity")); // default validity
             if(oConfig.GetConfigValue("CPUAffinity")!="") oController.affinity = Convert.ToInt32(oConfig.GetConfigValue("CPUAffinity"));
