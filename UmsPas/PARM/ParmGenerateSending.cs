@@ -552,7 +552,8 @@ namespace com.ums.UmsParm
                     {
                         try
                         {
-                            db.InsertLBARecord(passending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction());
+                            List<Int32> operatorfilter = null;
+                            db.InsertLBARecord_2_0(passending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter);
                             if (passending.publishLBAFile())
                             {
                                 setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
@@ -933,7 +934,8 @@ namespace com.ums.UmsParm
                     {
                         try
                         {
-                            db.InsertLBARecord(sending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function);
+                            List<Int32> operatorfilter = null;
+                            db.InsertLBARecord_2_0(sending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function, ref operatorfilter);
                             if (sending.publishLBAFile())
                             {
                                 setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);

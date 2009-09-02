@@ -284,6 +284,83 @@ namespace com.ums.ws.parm
         }
 
         [WebMethod]
+        public UConfirmJobResponse ConfirmJob_2_0(ULOGONINFO logon, int l_refno, bool b_confirm)
+        {
+            //check if jobid is correct to l_refno in LBASEND
+            //check if l_status still is = 5 i sendinginfo (ready for confirmation)
+            //write confirm file to LBA server
+            UConfirmJobResponse ret = new UConfirmJobResponse();
+            ret.l_refno = l_refno;
+            //ret.sz_jobid = sz_jobid;
+            try
+            {
+                PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
+                if (!db.CheckLogon(ref logon))
+                {
+                    //logon failed
+                    ret.resultcode = -1;
+                    ret.resulttext = "Logon failed";
+
+                }
+                else
+                {
+                    List<ULBASENDING> sendings = new List<ULBASENDING>();
+                    if (db.GetLbaSendsByRefno(l_refno, ref sendings))
+                    {
+                        for (int i = 0; i < sendings.Count; i++)
+                        {
+                            String sz_jobid = sendings[i].sz_jobid;
+                            if (!db.VerifyJobIDAndRefno_2_0(l_refno, sz_jobid, sendings[i].l_operator))
+                            {
+                                ret.resultcode = -1;
+                                ret.resulttext = "Could not verify refno and jobid";
+                            }
+                            else
+                            {
+                                bool b_simulation = db.GetIsSimulation(l_refno);
+                                USimpleXmlWriter xmlwriter = new USimpleXmlWriter("iso-8859-1");
+                                xmlwriter.insertStartDocument();
+                                xmlwriter.insertStartElement("LBA");
+                                xmlwriter.insertAttribute("operation", (b_confirm ? "ConfirmJob" : "CancelJob"));
+                                xmlwriter.insertAttribute("l_refno", l_refno.ToString());
+                                xmlwriter.insertAttribute("sz_jobid", sz_jobid);
+                                xmlwriter.insertAttribute("f_simulation", (b_simulation ? "1" : "0"));
+                                xmlwriter.insertAttribute("l_operator", sendings[i].l_operator.ToString());
+                                xmlwriter.insertEndElement();
+                                xmlwriter.insertEndDocument();
+                                xmlwriter.finalize();
+                                ConfirmLBAWriter lba = new ConfirmLBAWriter(l_refno, sz_jobid);
+                                lba.writeline(xmlwriter.getXml());
+                                lba.close();
+
+                                db.SetLBAStatus(l_refno, (b_confirm ? 320 : 330), 310); //320 = Confirmed by user, 330 = cancelled by user, but only if status is 310
+                                if (!lba.publish())
+                                {
+                                    ret.resultcode = -1;
+                                    ret.resulttext = "Failed to publish LBA Confirmation file";
+                                }
+                                else
+                                {
+                                    ret.resultcode = (b_confirm ? 0 : 1000);
+                                    ret.resulttext = (b_confirm ? "CONFIRMED" : "CANCELLED");
+                                }
+
+                            }
+                        }
+                    }
+                }
+                db.close();
+            }
+            catch (Exception e)
+            {
+                ret.resultcode = -1;
+                ret.resulttext = e.Message;
+            }
+            return ret;
+
+        }
+
+        [WebMethod]
         public UConfirmJobResponse ConfirmJob(ULOGONINFO logon, int l_refno, String sz_jobid, bool b_confirm)
         {
             //check if jobid is correct to l_refno in LBASEND

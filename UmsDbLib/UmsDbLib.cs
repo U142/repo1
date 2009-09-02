@@ -205,7 +205,12 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                setLastError(e.Message);
+                String constr = "";
+                if (sz_constring.Length > 12)
+                    constr = sz_constring.Substring(0, sz_constring.Length - 9);
+                else
+                    constr = sz_constring;
+                setLastError("constr="+ constr + "\n" + e.Message + "\n" + e.StackTrace);
                 throw e;
             }
             return m_b_dbconn;

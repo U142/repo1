@@ -47,7 +47,7 @@ namespace com.ums.ws.pas.status
 
         }
 
-        /*[WebMethod]
+        [WebMethod]
         public byte[] GetStatusItemsTest()
         {
             ULOGONINFO logoninfo = new ULOGONINFO();
@@ -56,17 +56,17 @@ namespace com.ums.ws.pas.status
             logoninfo.l_userpk = 1;
             logoninfo.sz_userid = "MH";
             logoninfo.sz_compid = "UMS";
-            logoninfo.sz_password = "mh123,1";
+            logoninfo.sz_password = "mh123,1æøå";
             long[] refnos = new long[1];
-            refnos[0] = 89974;
-            UStatusItemSearchParams search = new UStatusItemSearchParams(1000000000000425, 0, 0, 0, refnos);
+            refnos[0] = 91721;
+            UStatusItemSearchParams search = new UStatusItemSearchParams(1000000000000938, 0, 0, 0, refnos);
 
             UStatusItemSearch itemsearch = new UStatusItemSearch(ref logoninfo, ref search);
             return itemsearch.Find();
 
             //return "OK";
 
-        }*/
+        }
 
         /*[WebMethod]
         public String TestCoor()

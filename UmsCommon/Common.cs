@@ -685,11 +685,13 @@ namespace com.ums.UmsCommon
         public int l_submitted;
         public int l_queued;
         public int l_subscribers;
+        public int l_operator;
     }
     public class ULBASEND_TS
     {
         public int l_status;
         public long l_ts;
+        public int l_operator;
     }
     public class ULBAHISTCELL
     {
@@ -707,6 +709,8 @@ namespace com.ums.UmsCommon
         public int l_retries;
         public int l_requesttype;
         public int f_simulation;
+        public int l_operator;
+        public String sz_operator;
         public String sz_jobid;
         public String sz_areaid;
         public List<ULBAHISTCC> histcc = new List<ULBAHISTCC>(); //list of country codes hist

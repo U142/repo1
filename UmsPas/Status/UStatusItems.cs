@@ -383,55 +383,64 @@ namespace com.ums.PAS.Status
                 if((mdv.l_addresstypes & (int)ADRTYPES.LBA_TEXT)==(int)ADRTYPES.LBA_TEXT ||
                     (mdv.l_addresstypes & (int)ADRTYPES.LBA_VOICE)==(int)ADRTYPES.LBA_VOICE)
                 {
-                    ULBASENDING lbasending = m_db.GetLBASending(mdv.l_refno);
-                    if (lbasending!=null)
+                    //ULBASENDING lbasending = m_db.GetLBASending(mdv.l_refno);
+                    List<ULBASENDING> lbasendings = m_db.GetLBASending_2_0(mdv.l_refno);
+                    for (int lbaoperator = 0; lbaoperator < lbasendings.Count; lbaoperator++)
                     {
-                        outxml.insertStartElement("LBASEND");
-                        try
+                        ULBASENDING lbasending = lbasendings[lbaoperator];
+                        if (lbasending != null)
                         {
-                            outxml.insertAttribute("l_parentrefno", mdv.l_refno.ToString());
-                            outxml.insertAttribute("l_cbtype", "2");
-                            outxml.insertAttribute("l_status", lbasending.l_status.ToString());
-                            outxml.insertAttribute("l_response", lbasending.l_response.ToString());
-                            outxml.insertAttribute("l_items", lbasending.l_items.ToString());
-                            outxml.insertAttribute("l_proc", lbasending.l_proc.ToString());
-                            outxml.insertAttribute("l_retries", lbasending.l_retries.ToString());
-                            outxml.insertAttribute("l_requesttype", lbasending.l_requesttype.ToString());
-                            outxml.insertAttribute("sz_jobid", lbasending.sz_jobid);
-                            outxml.insertAttribute("sz_areaid", lbasending.sz_areaid);
-                            outxml.insertAttribute("f_simulation", lbasending.f_simulation.ToString());
-                            for (int st = 0; st < lbasending.histcc.Count; st++)
+                            outxml.insertStartElement("LBASEND");
+                            try
                             {
-                                ULBAHISTCC cc = lbasending.histcc[st];
-                                outxml.insertStartElement("LBAHISTCC");
-                                //outxml.insertAttribute("l_projectpk", proj.sz_projectpk);
-                                outxml.insertAttribute("sz_ccode", cc.l_cc.ToString());
-                                outxml.insertAttribute("l_delivered", cc.l_delivered.ToString());
-                                outxml.insertAttribute("l_expired", cc.l_expired.ToString());
-                                outxml.insertAttribute("l_failed", cc.l_failed.ToString());
-                                outxml.insertAttribute("l_unknown", cc.l_unknown.ToString());
-                                outxml.insertAttribute("l_submitted", cc.l_submitted.ToString());
-                                outxml.insertAttribute("l_queued", cc.l_queued.ToString());
-                                outxml.insertAttribute("l_subscribers", cc.l_subscribers.ToString());
-                                outxml.insertEndElement(); //STATUS
+                                outxml.insertAttribute("l_parentrefno", mdv.l_refno.ToString());
+                                outxml.insertAttribute("l_cbtype", "2");
+                                outxml.insertAttribute("l_status", lbasending.l_status.ToString());
+                                outxml.insertAttribute("l_response", lbasending.l_response.ToString());
+                                outxml.insertAttribute("l_items", lbasending.l_items.ToString());
+                                outxml.insertAttribute("l_proc", lbasending.l_proc.ToString());
+                                outxml.insertAttribute("l_retries", lbasending.l_retries.ToString());
+                                outxml.insertAttribute("l_requesttype", lbasending.l_requesttype.ToString());
+                                outxml.insertAttribute("sz_jobid", lbasending.sz_jobid);
+                                outxml.insertAttribute("sz_areaid", lbasending.sz_areaid);
+                                outxml.insertAttribute("f_simulation", lbasending.f_simulation.ToString());
+                                outxml.insertAttribute("l_operator", lbasending.l_operator.ToString());
+                                outxml.insertAttribute("sz_operator", lbasending.sz_operator);
+                                for (int st = 0; st < lbasending.histcc.Count; st++)
+                                {
+                                    ULBAHISTCC cc = lbasending.histcc[st];
+                                    outxml.insertStartElement("LBAHISTCC");
+                                    //outxml.insertAttribute("l_projectpk", proj.sz_projectpk);
+                                    outxml.insertAttribute("sz_ccode", cc.l_cc.ToString());
+                                    outxml.insertAttribute("l_delivered", cc.l_delivered.ToString());
+                                    outxml.insertAttribute("l_expired", cc.l_expired.ToString());
+                                    outxml.insertAttribute("l_failed", cc.l_failed.ToString());
+                                    outxml.insertAttribute("l_unknown", cc.l_unknown.ToString());
+                                    outxml.insertAttribute("l_submitted", cc.l_submitted.ToString());
+                                    outxml.insertAttribute("l_queued", cc.l_queued.ToString());
+                                    outxml.insertAttribute("l_subscribers", cc.l_subscribers.ToString());
+                                    outxml.insertAttribute("l_operator", cc.l_operator.ToString());
+                                    outxml.insertEndElement(); //STATUS
+                                }
+                                outxml.insertStartElement("LBASEND_TS");
+                                for (int c = 0; c < lbasending.send_ts.Count; c++)
+                                {
+                                    ULBASEND_TS ts = lbasending.send_ts[c];
+                                    outxml.insertStartElement("TS");
+                                    outxml.insertAttribute("l_status", ts.l_status.ToString());
+                                    outxml.insertAttribute("l_ts", ts.l_ts.ToString());
+                                    outxml.insertAttribute("l_operator", ts.l_operator.ToString());
+                                    outxml.insertEndElement(); //TS
+                                }
+                                outxml.insertEndElement(); //LBASEND_TS
                             }
-                            outxml.insertStartElement("LBASEND_TS");
-                            for (int c = 0; c < lbasending.send_ts.Count; c++)
+                            catch (Exception e)
                             {
-                                ULBASEND_TS ts = lbasending.send_ts[c];
-                                outxml.insertStartElement("TS");
-                                outxml.insertAttribute("l_status", ts.l_status.ToString());
-                                outxml.insertAttribute("l_ts", ts.l_ts.ToString());
-                                outxml.insertEndElement(); //TS
+                                ULog.error(0, "Error fetching LBA status for refno " + mdv.l_refno, e.Message);
                             }
-                            outxml.insertEndElement(); //LBASEND_TS
-                        }
-                        catch (Exception e)
-                        {
-                            ULog.error(0, "Error fetching LBA status", e.Message);
-                        }
 
-                        outxml.insertEndElement(); //LBASEND
+                            outxml.insertEndElement(); //LBASEND
+                        }
                     }
                 }
             }

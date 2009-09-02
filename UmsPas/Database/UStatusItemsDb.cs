@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Data.Odbc;
@@ -91,6 +92,97 @@ namespace com.ums.PAS.Database
             c.sz_status = "SMS Failed";
             c.b_userdef_text = true;
             ret.Add(c);
+
+            return ret;
+        }
+
+        public List<ULBASENDING> GetLBASending_2_0(long n_refno)
+        {
+            List<ULBASENDING> ret = new List<ULBASENDING>();
+            Hashtable operatorlink = new Hashtable();
+
+            
+            try
+            {
+                String szSQL = String.Format("SELECT LS.l_status, LS.l_response, LS.l_items, LS.l_proc, LS.l_retries, LS.l_requesttype, LS.f_simulate, LS.sz_jobid, LS.sz_areaid, isnull(LS.l_operator, -1), isnull(LOP.sz_operatorname, 'Unknown Operator') " +
+                                            "FROM LBASEND LS, LBAOPERATORS LOP WHERE LS.l_refno={0} AND LS.l_operator*=LOP.l_operator", n_refno);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                int n_index = 0;
+                while (rs.Read())
+                {
+                    ULBASENDING sending = new ULBASENDING();
+                    sending.l_refno = n_refno;
+                    sending.l_status = rs.GetInt32(0);
+                    sending.l_response = rs.GetInt32(1);
+                    sending.l_items = rs.GetInt32(2);
+                    sending.l_proc = rs.GetInt32(3);
+                    sending.l_retries = rs.GetInt32(4);
+                    sending.l_requesttype = rs.GetInt32(5);
+                    sending.f_simulation = rs.GetInt32(6);
+                    sending.sz_jobid = rs.GetString(7);
+                    sending.sz_areaid = rs.GetString(8);
+                    sending.l_operator = rs.GetInt32(9);
+                    sending.sz_operator = rs.GetString(10);
+                    operatorlink.Add(sending.l_operator, n_index); //add operator as key and an index to the List as value
+                    ret.Add(sending);
+                    n_index++;
+                }
+                if (ret.Count <= 0)
+                {
+                    rs.Close();
+                    return null;
+                }
+                rs.Close();
+                szSQL = String.Format("SELECT l_cc, l_delivered, l_expired, l_failed, l_unknown, l_submitted, l_queued, l_subscribers, isnull(l_operator, -1) " +
+                                    "FROM LBAHISTCC WHERE l_refno={0}", n_refno);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    ULBAHISTCC cc = new ULBAHISTCC();
+                    cc.l_cc = rs.GetInt32(0);
+                    cc.l_delivered = rs.GetInt32(1);
+                    cc.l_expired = rs.GetInt32(2);
+                    cc.l_failed = rs.GetInt32(3);
+                    cc.l_unknown = rs.GetInt32(4);
+                    cc.l_submitted = rs.GetInt32(5);
+                    cc.l_queued = rs.GetInt32(6);
+                    cc.l_subscribers = rs.GetInt32(7);
+                    cc.l_operator = rs.GetInt32(8);
+                    if (cc.l_operator > 0)
+                    {
+                        ULBASENDING lba = ret[(Int32)operatorlink[cc.l_operator]];
+                        lba.histcc.Add(cc);
+                    }
+                    //ret.histcc.Add(cc);
+                }
+                rs.Close();
+
+                szSQL = String.Format("SELECT l_status, isnull(l_ts, 0), isnull(l_operator, -1) FROM LBASEND_TS WHERE l_refno={0} ORDER BY l_operator, l_ts,l_status", n_refno);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    ULBASEND_TS ts = new ULBASEND_TS();
+                    try
+                    {
+                        ts.l_status = rs.GetInt32(0);
+                        ts.l_ts = rs.GetInt64(1);
+                        ts.l_operator = rs.GetInt32(2);
+                        if (ts.l_operator > 0)
+                        {
+                            ULBASENDING lba = ret[(Int32)operatorlink[ts.l_operator]];
+                            lba.send_ts.Add(ts);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return ret;
         }

@@ -888,6 +888,41 @@ namespace com.ums.UmsParm
             }
 
         }
+
+        public bool InsertLBARecord_2_0(long l_refno, int l_status, int l_response, int l_items,
+                                    int l_proc, int l_retries, int l_requesttype,
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
+        {
+            //select all operators from db, then insert one record pr operator
+            String szSQL = "";
+            try
+            {
+                int n_operator = 0;
+                szSQL = "SELECT isnull(l_operator,-1) FROM LBAOPERATORS";
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    n_operator = rs.GetInt32(0);
+                    if (n_operator > 0)
+                    {
+                        szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
+                                                 "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
+                                                 "{6}, '{7}', '{8}', {9}, {10})",
+                                                 l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
+                                                 sz_jobid, sz_areaid, n_function, n_operator);
+                        ExecNonQuery(szSQL);
+                    }
+                }
+                rs.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
         public bool InsertLBARecord(long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
                                     String sz_jobid, String sz_areaid, int n_function/*live or simulate*/) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
@@ -958,6 +993,59 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, szSQL, e.Message);
+                throw e;
+            }
+        }
+
+        public bool GetLbaSendsByRefno(int n_refno, ref List<ULBASENDING> list)
+        {
+            bool b = false;
+            try
+            {
+                String szSQL = String.Format("SELECT l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator FROM LBASEND WHERE l_refno={0}", n_refno);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    ULBASENDING s = new ULBASENDING();
+                    s.l_refno = rs.GetInt32(0);
+                    s.l_status = rs.GetInt32(1);
+                    s.l_response = rs.GetInt32(2);
+                    s.l_items = rs.GetInt32(3);
+                    s.l_proc = rs.GetInt32(4);
+                    s.l_retries = rs.GetInt32(5);
+                    s.l_requesttype = rs.GetInt32(6);
+                    s.sz_jobid = rs.GetString(7);
+                    s.sz_areaid = rs.GetString(8);
+                    s.f_simulation = rs.GetInt32(9);
+                    s.l_operator = rs.GetInt32(10);
+                    list.Add(s);
+                }
+                return b;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public bool VerifyJobIDAndRefno_2_0(int n_refno, String sz_jobid, int l_operator)
+        {
+            bool b = false;
+            try
+            {
+                String szSQL = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1}", n_refno, l_operator);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    String job = rs.GetString(0);
+                    if (job.Equals(sz_jobid))
+                        b = true;
+                }
+                rs.Close();
+                return b;
+            }
+            catch (Exception e)
+            {
                 throw e;
             }
         }
