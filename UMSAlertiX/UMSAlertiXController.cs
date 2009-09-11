@@ -20,6 +20,8 @@ namespace UMSAlertiX
         private int lAffinity = 1;
         private UMSAlertiXLog oLog;
 
+        public Operator[] Operators;
+
         public UMSAlertiXLog log
         {
             get
@@ -125,7 +127,7 @@ namespace UMSAlertiX
                 szWSAreaAPI = value;
             }
         }
-        public string wsuser
+/*        public string wsuser
         {
             get
             {
@@ -146,7 +148,7 @@ namespace UMSAlertiX
             {
                 szWSPass = value;
             }
-        }
+        }*/
         public string parsepath
         {
             get
@@ -252,12 +254,12 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
-        public int GetSendingProc(int lRefNo)
+        public int GetSendingProc(int lRefNo, int lOperator)
         {
             string szQuery;
             int lRetVal = 0;
 
-            szQuery = "SELECT l_proc FROM LBASEND where l_refno=" + lRefNo.ToString();
+            szQuery = "SELECT l_proc FROM LBASEND where l_refno=" + lRefNo.ToString() + " and l_operator=" + lOperator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(szDBConn);
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
@@ -276,6 +278,86 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
+        public Operator GetOperator(int l_operator)
+        {
+            Operator oRet = new Operator();
+
+            foreach (Operator op in Operators)
+            {
+                if (l_operator == op.l_operator)
+                {
+                    oRet = op;
+                    return oRet;
+                }
+            }
+            return oRet;
+        }
+
+        public Operator[] GetOperators(int l_refno)
+        {
+            int lCount=0;
+            // Select operators from LBAOPERATORS joina med LBASEND (use status=200 or 290 to only pick up sendings that failed)
+            string qryOperatorCount = "SELECT COUNT(l_operator) FROM LBASEND WHERE (l_status=200 or l_status=290) AND l_refno=" + l_refno.ToString();
+            string qryOperators = "SELECT l_operator from LBASEND WHERE (l_status=200 or l_status=290) AND l_refno=" + l_refno.ToString();
+
+            OdbcConnection dbConn = new OdbcConnection(dsn);
+            OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
+            OdbcDataReader rsOperators;
+
+            dbConn.Open();
+
+            int lOperatorCount = (int)cmdOperators.ExecuteScalar();
+
+            cmdOperators.CommandText = qryOperators;
+
+            rsOperators = cmdOperators.ExecuteReader();
+            Operator[] retOperators = new Operator[lOperatorCount];
+            while (rsOperators.Read())
+            {
+                retOperators[lCount] = GetOperator(rsOperators.GetInt32(0));
+                lCount++;
+            }
+            return retOperators;
+        }
+
+        public Operator[] GetOperators()
+        {
+            return Operators;
+        }
+
+        public void InitOperators()
+        {
+            int lCount = 0;
+
+            string qryOperatorCount = "SELECT COUNT(l_operator) FROM LBAOPERATORS";
+            string qryOperators = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password FROM LBAOPERATORS ORDER BY l_operator";
+
+            OdbcConnection dbConn = new OdbcConnection(dsn);
+            OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
+            OdbcDataReader rsOperators;
+
+            dbConn.Open();
+
+            int lOperatorCount = (int)cmdOperators.ExecuteScalar();
+
+            cmdOperators.CommandText = qryOperators;
+
+            rsOperators = cmdOperators.ExecuteReader();
+            Operators = new Operator[lOperatorCount];
+
+            while (rsOperators.Read())
+            {
+                Operators[lCount] = new Operator();
+
+                Operators[lCount].l_operator = rsOperators.GetInt32(0);
+                Operators[lCount].sz_operatorname = rsOperators.GetString(1);
+                Operators[lCount].sz_url = rsOperators.GetString(2);
+                Operators[lCount].sz_user = rsOperators.GetString(3);
+                Operators[lCount].sz_password = rsOperators.GetString(4);
+
+                lCount++;
+            }
+        }
     }
 
     public class Constant
@@ -289,7 +371,14 @@ namespace UMSAlertiX
         public const int ERR_NOTAG_ALERTPOLY = -2002;
         public const int ERR_NOMSG = -2003;
         public const int ERR_NOREFNO = -2004;
+    }
 
-
+    public class Operator
+    {
+        public int l_operator=0;
+        public string sz_operatorname="";
+        public string sz_url="";
+        public string sz_user="";
+        public string sz_password="";
     }
 }

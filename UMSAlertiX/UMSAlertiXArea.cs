@@ -8,6 +8,7 @@ using System.Net;
 using UMSAlertiX.AlertiXAreaApi;
 using com.ums.UmsCommon;
 using com.ums.UmsCommon.CoorConvert;
+using System.Data.Odbc;
 
 namespace UMSAlertiX
 {
@@ -245,63 +246,119 @@ namespace UMSAlertiX
             Response aResponse = new Response();
             Polygon oPoly = new Polygon();
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
-            Uri uri = new Uri(aArea.Url);
-            ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
-
-            aArea.Url = oController.areaapi; // "http://lbv.netcom.no:8080/alertix/AreaApi";
-            aArea.Credentials = objAuth;
-            aArea.PreAuthenticate = true;
-
             oPoly.vertices = new Point[pArea.Length];
             for (int iCount = 0; iCount < pArea.Length; iCount++)
             {
                 oPoly.vertices[iCount] = new Point();
                 oPoly.vertices[iCount] = pArea[iCount];
             }
+            // Insert operators to PAALERT_LBA
+            InsertPAALERT_LBA(szAreaName.value);
 
-            try
+            // Get operators
+            foreach (Operator op in oController.GetOperators())
             {
-                aResponse = aArea.createArea(oPoly, szAreaName);
-                if (aResponse.successful)
+                try
                 {
-                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='" + szAreaName.value + "', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
-                    bReturn = true;
+                    aArea.Url = op.sz_url + oController.areaapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
+
+                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password); //("jone", "jone");
+                    Uri uri = new Uri(aArea.Url);
+                    ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
+
+                    aArea.Credentials = objAuth;
+                    aArea.PreAuthenticate = true;
+
+                    oController.log.WriteLog("Creating area " + szAreaName.value + " at operator " + op.sz_operatorname);
+
+                    aResponse = aArea.createArea(oPoly, szAreaName);
+                    if (aResponse.successful)
+                    {
+                        //oController.ExecDB("UPDATE PAALERT SET sz_areaid='" + szAreaName.value + "', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+                        //oController.ExecDB("INSERT INTO PAALERT_LBA(l_alertpk, l_operator, l_status, l_areaid) VALUES(" + szAreaName.value + ", " + op.l_operator.ToString() + ", 0, " + szAreaName.value + ")", oController.dsn);
+                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, 0, long.Parse(szAreaName.value));
+                        bReturn = true;
+                    }
+                    else if (aResponse.code == 1020 || aResponse.code == 899)
+                    {
+                        oController.log.WriteLog(szAreaName.value + " Area already exist, trying update.");
+                        bReturn = UpdateArea(ref pArea, ref szAreaName, op.l_operator);
+                    }
+                    else
+                    {
+                        oController.log.WriteLog(szAreaName.value + " Create Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
+                        //oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+                        //oController.ExecDB("INSERT INTO PAALERT_LBA(l_alertpk, l_operator, l_status, l_areaid) VALUES(" + szAreaName.value + ", " + op.l_operator.ToString() + ", " + aResponse.code.ToString() + ", " + szAreaName.value + ")", oController.dsn);
+                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2); // may use response code on a later date
+                        bReturn = false;
+                    }
                 }
-                else if (aResponse.code == 1020)
+                catch (Exception e)
                 {
-                    oController.log.WriteLog(szAreaName.value + " Area already exist, trying update.");
-                    bReturn = UpdateArea(ref pArea, ref szAreaName);
-                }
-                else
-                {
-                    oController.log.WriteLog(szAreaName.value + " Create Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
-                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+                    oController.log.WriteLog(szAreaName.value + " Create Area Failed (exception): " + e.Message);
+                    //oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+                    //oController.ExecDB("INSERT INTO PAALERT_LBA(l_alertpk, l_operator, l_status, l_areaid) VALUES(" + szAreaName.value + ", " + op.l_operator.ToString() + ", -2, " + szAreaName.value + ")", oController.dsn);
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2);
                     bReturn = false;
                 }
             }
-            catch (Exception e)
-            {
-                oController.log.WriteLog(szAreaName.value + " Create Area Failed (exception): " + e.Message);
-                oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
-                bReturn = false;
-            }
-
             return bReturn;
         }
 
         private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName)
         {
+            bool bRet = true;
+
+            foreach (Operator op in oController.GetOperators())
+            {
+                if (!UpdateArea(ref pArea, ref szAreaName, op.l_operator))
+                    bRet = false;
+            }
+
+            return bRet;
+        }
+
+        private bool InsertPAALERT_LBA(string sz_areaname)
+        {
+            bool bRet = true;
+            foreach (Operator op in oController.GetOperators())
+            {
+                if(!InsertPAALERT_LBA(long.Parse(sz_areaname), op.l_operator, -1, 0))
+                    bRet = false;
+            }
+            return bRet;
+        }
+
+        private bool InsertPAALERT_LBA(long l_alertpk, int l_operator, int l_status, long l_areaname)
+        {
+            bool bRet = true;
+            try
+            {
+                oController.ExecDB("sp_ins_paalert_lba " + l_alertpk.ToString() + ", " + l_operator.ToString() + ", " + l_status.ToString() + ", " + l_areaname.ToString(), oController.dsn);
+            }
+            catch (Exception e)
+            {
+                oController.log.WriteLog(e.ToString(), e.Message);
+                bRet = false;
+            }
+            return bRet;
+        }
+
+        private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName, int lOperator)
+        {
             bool bReturn=true;
             AreaApi aArea = new AreaApi();
             Response aResponse = new Response();
             Polygon oPoly = new Polygon();
+            Operator op = oController.GetOperator(lOperator);
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            aArea.Url = op.sz_url + oController.areaapi; // "http://lbv.netcom.no:8080/alertix/AreaApi";
+            
+//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
             Uri uri = new Uri(aArea.Url);
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 
-            aArea.Url = oController.areaapi; // "http://lbv.netcom.no:8080/alertix/AreaApi";
             aArea.Credentials = objAuth;
             aArea.PreAuthenticate = true;
 
@@ -317,20 +374,26 @@ namespace UMSAlertiX
                 aResponse = aArea.updateArea(szAreaName, oPoly);
                 if (aResponse.successful)
                 {
-                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='" + szAreaName.value + "', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='" + szAreaName.value + "', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                    oController.ExecDB("UPDATE PAALERT_LBA SET l_areaid=" + szAreaName.value + ", l_status=0 WHERE l_alertpk=" + szAreaName.value + " AND l_operator=" + lOperator.ToString(), oController.dsn);
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, 0, long.Parse(szAreaName.value));
                     bReturn = true;
                 }
                 else
                 {
                     oController.log.WriteLog(szAreaName.value + " Update Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
-                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                    oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                    oController.ExecDB("UPDATE PAALERT_LBA SET l_areaid=-2, l_status=" + aResponse.code.ToString() + " WHERE l_alertpk=" + szAreaName.value + " AND l_operator=" + lOperator.ToString(), oController.dsn);
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2); // may use aResponse.code on a later date
                     bReturn = false;
                 }
             }
             catch (Exception e)
             {
                 oController.log.WriteLog(szAreaName.value + " Update Area Failed (exception): " + e.Message);
-                oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                oController.ExecDB("UPDATE PAALERT SET sz_areaid='-2', l_timestamp=" + DateTime.Now.ToString("yyyyMMddHHmmss") + " WHERE l_alertpk=" + szAreaName.value, oController.dsn);
+//                oController.ExecDB("UPDATE PAALERT_LBA SET l_areaid=-2, l_status=-1 WHERE l_alertpk=" + szAreaName.value + " AND l_operator=" + lOperator.ToString(), oController.dsn);
+                InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2);
                 bReturn = false;
             }
 
@@ -343,7 +406,8 @@ namespace UMSAlertiX
             AreaApi aArea = new AreaApi();
             GetAreaResponse aResponse = new GetAreaResponse();
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
             Uri uri = new Uri(aArea.Url);
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 
@@ -387,7 +451,8 @@ namespace UMSAlertiX
             AreaApi aArea = new AreaApi();
             Response aResponse = new Response();
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
             Uri uri = new Uri(aArea.Url);
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 

@@ -24,7 +24,8 @@ namespace UMSAlertiX
             AllJobsResponse aResponse = new AllJobsResponse();
             JobId idJob = new JobId();
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
             Uri uri = new Uri(aStatus.Url);
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 
@@ -38,7 +39,7 @@ namespace UMSAlertiX
         public void UpdateJobStatus() // checks status of jobs
         {
             //string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=300";
-            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, o.sz_url, o.sz_user, o.sz_password FROM LBASEND s, LBAOPERATORS o where s.l_status=300 AND s.l_operator=o.l_operator";
+            string szJobQuery = "SELECT s.l_refno, s.sz_jobid, s.l_operator, o.sz_url, o.sz_user, o.sz_password, s.l_status FROM LBASEND s, LBAOPERATORS o WHERE (s.l_status=300 OR s.l_status=305) AND s.l_operator=o.l_operator";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
@@ -61,6 +62,7 @@ namespace UMSAlertiX
             int lRetVal;
             int lRefNo;
             int lOperator;
+            int lStatus;
 
             string sz_url = "";
             string sz_user = "";
@@ -82,11 +84,14 @@ namespace UMSAlertiX
                         if (!rsJobs.IsDBNull(4)) sz_user = rsJobs.GetString(4);
                         if (!rsJobs.IsDBNull(5)) sz_passeword = rsJobs.GetString(5);
 
+                        lStatus = rsJobs.GetInt32(6);
+
+                        aStatus.Url = sz_url + oController.statusapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
+
                         NetworkCredential objNetCredentials = new NetworkCredential(sz_user, sz_passeword); //("jone", "jone");
                         Uri uri = new Uri(aStatus.Url);
                         ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 
-                        aStatus.Url = sz_url + oController.statusapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
                         aStatus.Credentials = objAuth;
                         aStatus.PreAuthenticate = true;
 
@@ -109,8 +114,16 @@ namespace UMSAlertiX
                                         oController.log.WriteLog(lRefNo.ToString() + " (" + lOperator.ToString() + ") Status NO_SUBSCRIBERS");
                                         lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=0, l_proc=0, l_status=1000 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                                         break;
+                                    case "PROCESSING_SUBSCRIBERS":
+                                        if (lStatus == 300)
+                                        {
+                                            UpdateCCStatus(idJob, lRefNo, lOperator);
+                                            oController.log.WriteLog(lRefNo.ToString() + " (" + lOperator.ToString() + ") Status PROCESSING_SUBSCRIBERS");
+                                            lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=305 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
+                                        }
+                                        break;
                                     case "PREPARED":
-                                        UpdateCCStatus(idJob, lRefNo);
+                                        UpdateCCStatus(idJob, lRefNo, lOperator);
                                         if (oController.GetRequestType(lRefNo) == 2)
                                         {
                                             oController.log.WriteLog(lRefNo.ToString() + " (" + lOperator.ToString() + ") Status PREPARED (request type 2, performing autocancel)");
@@ -126,6 +139,7 @@ namespace UMSAlertiX
                                             lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=310 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                                         }
                                         break;
+                                    case "SUBMITTING_STARTED":
                                     case "SUBMITTING":
                                         oController.log.WriteLog(lRefNo.ToString() + " (" + lOperator.ToString() + ") Status SENDING");
                                         lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=340 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
@@ -136,8 +150,6 @@ namespace UMSAlertiX
                                         break;
                                     case "PREPARING":
                                         break;
-                                    case "PROCESSING_SUBSCRIBERS":
-                                        break;
                                     default:
                                         break;
                                 }
@@ -145,7 +157,7 @@ namespace UMSAlertiX
                         }
                         else
                         {
-                            Console.WriteLine("daffda");
+                            Console.WriteLine("jobResponse.code not specified");
                         }
                     }
                 }
@@ -164,7 +176,7 @@ namespace UMSAlertiX
 
         public void UpdateCCStatus() // updates jobs with country code status
         {
-            string szJobQuery = "SELECT l_refno, sz_jobid FROM LBASEND where l_status=340";
+            string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
@@ -173,6 +185,7 @@ namespace UMSAlertiX
             JobId idJob = new JobId();
 
             int lRefNo;
+            int lOperator;
             dbConn.Open();
 
             while (oController.running)
@@ -180,12 +193,13 @@ namespace UMSAlertiX
                 rsJobs = cmdJobs.ExecuteReader();
                 while (rsJobs.Read() && oController.running)
                 {
-                    if (!(rsJobs.IsDBNull(0) || rsJobs.IsDBNull(1)))
+                    if (!(rsJobs.IsDBNull(0) || rsJobs.IsDBNull(1) || rsJobs.IsDBNull(2)))
                     {
                         lRefNo = rsJobs.GetInt32(0);
                         idJob.value = rsJobs.GetString(1);
+                        lOperator = rsJobs.GetInt32(2);
 
-                        UpdateCCStatus(idJob, lRefNo);
+                        UpdateCCStatus(idJob, lRefNo, lOperator);
                     }
                 }
                 rsJobs.Close();
@@ -201,16 +215,19 @@ namespace UMSAlertiX
             Console.WriteLine("# Stopped CC Status thread", 1);
         }
 
-        private bool UpdateCCStatus(JobId idJob, int lRefNo)
+        private bool UpdateCCStatus(JobId idJob, int lRefNo, int lOperator)
         {
             StatusApi aStatus = new StatusApi();
             CountryCodeAlertStatusResponse aStatusResponse = new CountryCodeAlertStatusResponse();
+            Operator op = oController.GetOperator(lOperator);
 
-            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
+            aStatus.Url = op.sz_url + oController.statusapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
+
+            NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
             Uri uri = new Uri(aStatus.Url);
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
 
-            aStatus.Url = oController.statusapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
             aStatus.Credentials = objAuth;
             aStatus.PreAuthenticate = true;
 
@@ -264,22 +281,22 @@ namespace UMSAlertiX
                     lItems += ccSubscribers;
                     lProc += ccDelivered + ccExpired + ccFailed;
 
-                    lRetVal = oController.ExecDB("sp_upd_status_lba_cc " + lRefNo.ToString() + ", " + cc.ToString() + ", " + ccDelivered.ToString() + ", " + ccExpired.ToString() + ", " + ccFailed.ToString() + ", " + ccUnknown.ToString() + ", " + ccSubmitted.ToString() + ", " + ccQueued.ToString() + ", " + ccSubscribers.ToString(), oController.dsn);
+                    lRetVal = oController.ExecDB("sp_upd_status_lba_cc " + lRefNo.ToString() + ", " + lOperator.ToString() + ", " + cc.ToString() + ", " + ccDelivered.ToString() + ", " + ccExpired.ToString() + ", " + ccFailed.ToString() + ", " + ccUnknown.ToString() + ", " + ccSubmitted.ToString() + ", " + ccQueued.ToString() + ", " + ccSubscribers.ToString(), oController.dsn);
                 }
 
-                lPrevProc = oController.GetSendingProc(lRefNo);
+                lPrevProc = oController.GetSendingProc(lRefNo, lOperator);
 
                 if (lProc == lItems)
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " Status done (" + lItems.ToString() + " recipients)");
-                    lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + ", l_status=1000 WHERE l_refno=" + lRefNo.ToString(), oController.dsn);
+                    lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + ", l_status=1000 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                 }
                 else
                 {
                     if (lPrevProc < lProc)
                     {
                         oController.log.WriteLog(lRefNo.ToString() + " Status update (" + lProc.ToString() + " of " + lItems.ToString() + " delivered)");
-                        lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + " WHERE l_refno=" + lRefNo.ToString(), oController.dsn);
+                        lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                     }
                 }
             }
