@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
@@ -56,11 +57,15 @@ namespace com.ums.ws.voice
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-                voice.TempPath = UCommon.UPATHS.sz_path_temp;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
+                voice.TempPath = ConfigurationSettings.AppSettings["sz_path_temp"];
 
                 l_refno = voice.getRefno();
                 String[] filenames;
@@ -230,10 +235,14 @@ namespace com.ums.ws.voice
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
 
                 List<STATUS> list = voice.getStatus(acc, referenceNumber);
 
@@ -256,10 +265,14 @@ namespace com.ums.ws.voice
             try
             {
                 libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
 
                 List<ItemStatus> list = voice.getAvailableStatuses(acc);
 
@@ -293,10 +306,14 @@ namespace com.ums.ws.voice
             try
             {
                 libums2_csharp.SendVoice voice = new SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
                 
                 string result = voice.cancelVoice(acc, referenceNumber);
                 
@@ -318,10 +335,14 @@ namespace com.ums.ws.voice
             try
             {
                 libums2_csharp.SendVoice voice = new SendVoice();
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
                 return voice.previewTTS(acc, message);
                 UCommon.appname = "soap/voice-2.0";
                 USysLog.send(Environment.MachineName + " soap/voice-2.0: client " + acc.Company + "/" + acc.Department + " from " + HttpContext.Current.Request.UserHostAddress + " preview TTS succeeded)", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);

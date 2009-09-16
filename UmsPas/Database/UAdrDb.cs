@@ -323,13 +323,11 @@ namespace com.ums.PAS.Database
                 if (adr.hasmobile)
                     c.n_private_mobile += adr.add;
             }
-            if (!adr.hasfixed && !adr.hasmobile)
-            {
-                if (adr.bedrift == 0)
-                    c.n_private_nonumber += adr.add;
-                else if (adr.bedrift == 1)
-                    c.n_company_nonumber += adr.add;
-            }
+            if (!adr.hasfixed && !adr.hasmobile && (adrtypes & (long)ADRTYPES.NOPHONE_COMPANY) > 0 && adr.bedrift == 1)
+                c.n_company_nonumber += adr.add;
+
+            if(!adr.hasfixed && !adr.hasmobile && (adrtypes & (long)ADRTYPES.NOPHONE_PRIVATE) > 0 && adr.bedrift == 0)
+                c.n_private_nonumber += adr.add;
         }
 
         protected UAdrCount _MunicipalCount(ref List<UMunicipalDef> m, long adrtypes)
@@ -419,12 +417,12 @@ namespace com.ums.PAS.Database
             {
                 String szSQL = "";
                 if (m_n_pastype == 1)
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, f_hasfixed, f_hasmobile FROM ADR_KONSUM " +
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile FROM ADR_KONSUM " +
                                         "WHERE LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                              n_maxadr_polycount,
                                              b.l_bo, b.r_bo, b.b_bo, b.u_bo);
                 else if (m_n_pastype == 2)
-                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, f_hasfixed, f_hasmobile FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
+                    szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT TOP {0} LON, LAT, BEDRIFT, ISNULL(f_hasfixed,0) f_hasfixed, ISNULL(f_hasmobile,0) f_hasmobile FROM ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX " +
                                                             "WHERE AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={5} " +
                                                             "AND LAT>={1} AND LAT<={2} AND LON>={3} AND LON<={4} AND BEDRIFT IN (0,1) ORDER BY BEDRIFT, f_hasfixed, f_hasmobile",
                                             n_maxadr_polycount,
@@ -439,8 +437,8 @@ namespace com.ums.PAS.Database
                     c.lon = rs.GetDouble(1);
                     c.lat = rs.GetDouble(0);
                     c.bedrift = rs.GetInt32(2);
-                    c.hasfixed = (rs.GetInt32(3) == 1 ? true : false);
-                    c.hasmobile = (rs.GetInt32(4) == 1 ? true : false);
+                    c.hasfixed = (rs.GetByte(3) == 1 ? true : false);
+                    c.hasmobile = (rs.GetByte(4) == 1 ? true : false);
                     cpoint.lat = c.lat;
                     cpoint.lon = c.lon;
 

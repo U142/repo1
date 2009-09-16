@@ -9,7 +9,7 @@
           <AspNetDebugging>True</AspNetDebugging>
           <NativeDebugging>False</NativeDebugging>
           <SQLDebugging>False</SQLDebugging>
-          <PublishCopyOption>ProjectFiles</PublishCopyOption>
+          <PublishCopyOption>RunFiles</PublishCopyOption>
           <PublishTargetLocation>S:\WebSites\ws-pas\</PublishTargetLocation>
           <PublishDeleteAllFiles>True</PublishDeleteAllFiles>
           <PublishCopyAppData>False</PublishCopyAppData>
@@ -23,7 +23,6 @@
           </StartWorkingDirectory>
           <EnableENC>True</EnableENC>
           <AlwaysStartWebServerOnDebug>True</AlwaysStartWebServerOnDebug>
-          <EnableWcfTestClientForSVC>False</EnableWcfTestClientForSVC>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -62,7 +62,8 @@ namespace wsPASExec.VB
         
         private void openConnection()
         {
-            conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
+            //conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
+            conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]));
             conn.Open();
             cmd = new OdbcCommand();
             cmd.Connection = conn;
@@ -90,8 +91,8 @@ namespace wsPASExec.VB
             int l_addresstypes;
             int l_userpk;
             int[] arr_groups;
-            string sz_eat_path = UCommon.UPATHS.sz_path_voice;
-
+            //string sz_eat_path = UCommon.UPATHS.sz_path_voice;
+            string sz_eat_path = ConfigurationSettings.AppSettings["sz_path_voice"];
             checkDateTime(ref sz_scheddate, ref sz_schedtime, l_scheduleddatetime);
 
             if (participants.Length < 2)
@@ -288,7 +289,8 @@ namespace wsPASExec.VB
                 cmd.Parameters.Add("@l_refno", OdbcType.Int).Value = l_refno;
                 OdbcDataReader dr = cmd.ExecuteReader();
 
-                if(dr.HasRows) {
+                if (dr.HasRows)
+                {
                     dr.Close();
                     cmd.Parameters.Clear();
                     cmd.CommandType = CommandType.Text;
@@ -296,9 +298,9 @@ namespace wsPASExec.VB
                     cmd.Parameters.Add("@l_refno", OdbcType.Int).Value = l_refno;
                     cmd.ExecuteNonQuery();
                 }
-                if(dr != null && !dr.IsClosed)
+                if (dr != null && !dr.IsClosed)
                     dr.Close();
-                
+
                 cmd.Parameters.Clear();
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = "INSERT INTO BBCANCEL(l_refno,l_item) VALUES(?,-1)";
@@ -306,9 +308,14 @@ namespace wsPASExec.VB
                 cmd.ExecuteNonQuery();
                 return "Successfully cancelled conference with refno: " + l_refno;
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 System.Diagnostics.EventLog.WriteEntry("Conference.cs", "Conference.cs cancelConference(): " + e.Message + " _ " + e.StackTrace, System.Diagnostics.EventLogEntryType.Error);
                 throw raiseException("", "http://ums.no/ws/vb/", e.Message, "A problem occurred while cancelling conference. Please check that the reference number is correct", FaultCode.Client);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 

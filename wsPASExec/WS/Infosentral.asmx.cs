@@ -37,14 +37,14 @@ namespace com.ums.ws.infosentral
                 List<MessageInfo> list = inf.getStoredMessageInfo(account);
 
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages succeeded)", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages succeeded", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
 
                 return list;
             }
             catch (Exception e)
             {
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " getStoredMessages failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
                 throw e;
             }
         }
@@ -57,14 +57,14 @@ namespace com.ums.ws.infosentral
                 long messagepk = inf.storeMessage(account, messageName, message);
 
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage succeeded and returned messagepk=" + messagepk + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage succeeded and returned messagepk=" + messagepk, USysLog.UFACILITY.syslog, USysLog.ULEVEL.info);
 
                 return messagepk;
             }
             catch (Exception e)
             {
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " storedMessage failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
                 throw e;
             }
         }
@@ -77,14 +77,14 @@ namespace com.ums.ws.infosentral
                 inf.attatchMessage(account, inboundnumber, messagepk);
 
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully attached message (" + messagepk + ") to inboundnumber " + inboundnumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " successfully attached message (" + messagepk + ") to inboundnumber " + inboundnumber, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
 
                 return "OK";
             }
             catch (Exception e)
             {
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " attachMessage failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " attachMessage failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
                 throw e;
             }
         }
@@ -97,14 +97,14 @@ namespace com.ums.ws.infosentral
                 inf.setRedirectNumber(account, inboundnumber, dtmf, RedirectNumber);
 
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " redirect number " + RedirectNumber + " successfully set to inboundnumber " + inboundnumber + ")", USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " redirect number " + RedirectNumber + " successfully set to inboundnumber " + inboundnumber, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
 
                 return "OK";
             }
             catch (Exception e)
             {
                 UCommon.appname = "soap/infosentral-1.0";
-                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " setRedirectNumber failed) " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
+                USysLog.send(Environment.MachineName + " soap/infosentral-1.0: client " + account.Company + "/" + account.Department + " from " + HttpContext.Current.Request.UserHostAddress + " setRedirectNumber failed " + e.Message + " Stack: " + e.StackTrace, USysLog.UFACILITY.syslog, USysLog.ULEVEL.err);
                 throw e;
             }
         }

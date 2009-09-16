@@ -46,6 +46,7 @@ namespace com.ums.VB
         private void openConnection()
         {
             conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
+            //conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]));
             conn.Open();
             cmd = new OdbcCommand();
             cmd.Connection = conn;
@@ -114,7 +115,8 @@ namespace com.ums.VB
         {
             try
             {
-                sz_path_sound = UCommon.UPATHS.sz_path_predefined_messages;
+                //sz_path_sound = UCommon.UPATHS.sz_path_predefined_messages;
+                sz_path_sound = ConfigurationSettings.AppSettings["sz_path_predefined_messages"];
 
                 openConnection();
 
@@ -180,10 +182,14 @@ namespace com.ums.VB
 
                 SendVoice voice = new SendVoice();
 
-                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                //voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
+                voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]);
+                //voice.EatPath = UCommon.UPATHS.sz_path_voice;
+                voice.EatPath = ConfigurationSettings.AppSettings["sz_path_voice"];
+                //voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
+                voice.TTSServer = ConfigurationSettings.AppSettings["sz_path_tts_server"];
+                //voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
+                voice.Wav2RawRMS = float.Parse(ConfigurationSettings.AppSettings["f_rms"]);
 
                 string[] tmpfilename = voice.generateVoice(new VOCFILE[] { message }, l_refno);
 
@@ -191,7 +197,8 @@ namespace com.ums.VB
                 DateTime future = DateTime.Now.AddSeconds(60);
                 while (!rawexists || (future < DateTime.Now && !rawexists))
                 {
-                    if (File.Exists(UCommon.UPATHS.sz_path_voice + tmpfilename[0])) // Its like this because generateVoice moves this file here
+                    //if (File.Exists(UCommon.UPATHS.sz_path_voice + tmpfilename[0])) // Its like this because generateVoice moves this file here
+                    if (File.Exists(ConfigurationSettings.AppSettings["sz_path_voice"] + tmpfilename[0]))
                         rawexists = true;
                 }
                 if (!rawexists)
@@ -200,8 +207,10 @@ namespace com.ums.VB
                 switch (message.type)
                 {
                     case VOCTYPE.TTS:
-                        File.Move(UCommon.UPATHS.sz_path_ttsserver + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
-                        File.Move(UCommon.UPATHS.sz_path_voice + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
+                        //File.Move(UCommon.UPATHS.sz_path_ttsserver + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
+                        File.Move(ConfigurationSettings.AppSettings["sz_path_tts_server"] + tmpfilename[0].Substring(0, tmpfilename[0].Length - 3) + "wav", sz_path_sound + l_deptpk + "\\" + l_messagepk + ".wav");
+                        //File.Move(UCommon.UPATHS.sz_path_voice + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
+                        File.Move(ConfigurationSettings.AppSettings["sz_path_voice"] + tmpfilename[0], sz_path_sound + l_deptpk + "\\" + l_messagepk + ".raw");
                         break;
                     case VOCTYPE.WAV:
                         string sz_audiofiles_path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
@@ -245,7 +254,8 @@ namespace com.ums.VB
 
         public void attatchMessage(ACCOUNT acc, string sz_number, long l_messagepk)
         {
-            string sz_messagepath = UCommon.UPATHS.sz_path_predefined_messages;
+            //string sz_messagepath = UCommon.UPATHS.sz_path_predefined_messages;
+            string sz_messagepath = ConfigurationSettings.AppSettings["sz_path_predefined_messages"];
 
             try
             {
@@ -279,7 +289,8 @@ namespace com.ums.VB
                 {
                     destination = dr.GetString(0);
                     string temp = destination.Substring(2);
-                    destination = UCommon.UPATHS.sz_path_infosent + temp;
+                    //destination = UCommon.UPATHS.sz_path_infosent + temp;
+                    destination = ConfigurationSettings.AppSettings["sz_path_infosent"] + temp;
                     File.Copy(source, destination, true);
                 }
                 else
@@ -322,7 +333,8 @@ namespace com.ums.VB
         public void setRedirectNumber(ACCOUNT acc, string sz_backbonenumber, string sz_dtmf, string sz_redirectnumber) {
             try
             {
-                conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
+                //conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd));
+                conn = new OdbcConnection(String.Format("DSN={0};UID={1};PWD={2};", ConfigurationSettings.AppSettings["sz_db_dsn_aoba"], ConfigurationSettings.AppSettings["sz_db_uid"], ConfigurationSettings.AppSettings["sz_db_pwd"]));
                 conn.Open();
                 cmd = new OdbcCommand();
                 cmd.Connection = conn;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -76,7 +77,8 @@ namespace com.ums.PAS.Database
                 if (remoteIP.Length > 0)
                 {
                     //remoteIP = "81.191.35.194";
-                    String szUrl = String.Format("{0}&i={1}", UCommon.UPATHS.sz_url_nslookup, remoteIP);
+                    //String szUrl = String.Format("{0}&i={1}", UCommon.UPATHS.sz_url_nslookup, remoteIP);
+                    String szUrl = String.Format("{0}&i={1}", ConfigurationSettings.AppSettings["sz_url_nslookup"], remoteIP);
                     HttpWebRequest req = (HttpWebRequest)WebRequest.Create(szUrl);
                     HttpWebResponse response = (HttpWebResponse)req.GetResponse();
                     StreamReader sr = new StreamReader(response.GetResponseStream());
@@ -154,7 +156,7 @@ namespace com.ums.PAS.Database
                                     "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
                                     "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
                                     "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
-                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) " +
+                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language " +
                                     "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
                                     "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
                                     "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +

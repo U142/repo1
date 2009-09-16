@@ -1020,6 +1020,8 @@ namespace com.ums.UmsParm
                     s.l_operator = rs.GetInt32(10);
                     list.Add(s);
                 }
+                if (list.Count > 0)
+                    b = true;
                 return b;
             }
             catch (Exception e)
