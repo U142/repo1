@@ -91,6 +91,7 @@ namespace com.ums.ws.parm
                 outxml.insertEndElement(); //PAROOT
                 outxml.insertEndDocument();
                 outxml.finalize();
+                db.close();
                 return ret;
 
             }
@@ -112,6 +113,7 @@ namespace com.ums.ws.parm
                 outxml.insertEndElement(); //PAROOT
                 outxml.insertEndDocument();
                 outxml.finalize();
+                db.close();
                 return ret;
             }
             catch (Exception e)
@@ -139,6 +141,7 @@ namespace com.ums.ws.parm
                 outxml.insertEndElement(); //PAROOT
                 outxml.insertEndDocument();
                 outxml.finalize();
+                db.close();
                 return ret;
             }
             catch (Exception e)
@@ -261,7 +264,24 @@ namespace com.ums.ws.parm
             outxml.insertStartElement("PAROOT");*/
             createOutXml();
 
-            sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+            //sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+            try
+            {
+                String szSQL = "select datepart(YY, getdate())*10000000000 + datepart(mm, getdate())*100000000 + datepart(dd, getdate()) * 1000000 + datepart(HH, getdate())*10000 + datepart(MI,getdate())*100 + datepart(SS, getdate())";
+                OdbcDataReader rs = db.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    sz_newtimestamp = rs.GetString(0);
+                }
+                else
+                    sz_newtimestamp = "0";
+                rs.Close();
+            }
+            catch (Exception)
+            {
+                sz_newtimestamp = "0";
+            }
+            
 
             //create poly file
             outpolyxml = new USimpleXmlWriter(encoding);
@@ -343,6 +363,13 @@ namespace com.ums.ws.parm
                 ULog.error(0, "Error writing PARM ZIP file", e.Message);
                 throw e;
             }
+            try
+            {
+                db.close();
+            }
+            catch (Exception e)
+            { }
+
             PercentProgress.DeleteJob(ref m_logon, ProgressJobType.PARM_UPDATE);
             return zip.ReadZipFileBytes();
 
@@ -1276,7 +1303,8 @@ namespace com.ums.ws.parm
             counter += GetAlerts(); //will append paalert tags to outxml
             m_res.n_percent = 90;
             m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
-            counter += GetDeleted(); //will append delete tags to outxml
+            if(!sz_timestamp.Equals("0")) //don't include deleted if this is a full PARM download
+                counter += GetDeleted(); //will append delete tags to outxml
             m_res.n_percent = 99;
             m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
 
@@ -1372,7 +1400,7 @@ namespace com.ums.ws.parm
                                             sz_timestamp, m_logon.l_deptpk);
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
                 String l_alertpk, l_parent, sz_name, sz_description, l_profilepk;
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
@@ -1415,6 +1443,7 @@ namespace com.ums.ws.parm
                     sz_sms_oadc = rs.GetString(15);
                     sz_sms_message = rs.GetString(16);
 
+
                     outxml.insertStartElement("paalert");
                     outxml.insertAttribute("l_alertpk", "a" + l_alertpk);
                     outxml.insertAttribute("l_parent", "e" + l_parent);
@@ -1433,8 +1462,29 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("l_expiry", l_expiry);
                     outxml.insertAttribute("sz_sms_oadc", sz_sms_oadc);
                     outxml.insertAttribute("sz_sms_message", sz_sms_message);
-                    outxml.insertEndElement();
+
+                    if (!sz_areaid.Equals("-1")) //assume we're preparing LBA, status for each operator is in PAALERT_LBA
+                    {
+                        outxml.insertStartElement("lbaoperators");
+                        //String szLbaSql = String.Format("SELECT PA.l_operator, PA.l_status, PA.l_areaid, OP.sz_operatorname FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} AND PA.l_operator*=OP.l_operator", l_alertpk);
+                        String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
+                        OdbcDataReader lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
+                        while (lba.Read())
+                        {
+                            outxml.insertStartElement("operator");
+                            outxml.insertAttribute("l_operator", lba.GetInt32(0).ToString());
+                            outxml.insertAttribute("l_status", lba.GetInt32(1).ToString());
+                            outxml.insertAttribute("l_areaid", lba.GetInt64(2).ToString());
+                            outxml.insertAttribute("sz_operatorname", lba.GetString(3));
+                            outxml.insertEndElement();
+                        }
+                        lba.Close();
+                        outxml.insertEndElement(); //lbaoperators
+                    }
+                    outxml.insertEndElement();//paalert
+                    
                     counter++;
+
                     WritePolygonToFile(l_alertpk, "paalert");
                 }
                 rs.Close();
@@ -1800,9 +1850,9 @@ namespace com.ums.ws.parm
                 String sz_name = ev.sz_name.Replace("'", "''");
                 String sz_description = ev.sz_description.Replace("'", "''");
                 String sz_sql;
-                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
+                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}, {10}",
                                         operation.ToString(), ev.l_eventpk, logon.l_userpk, logon.l_comppk,
-                                        ev.l_parent, sz_name, ev.l_categorypk, ev.l_timestamp, ev.f_epi_lon, ev.f_epi_lat);
+                                        ev.l_parent, sz_name, ev.l_categorypk, ev.l_timestamp, ev.f_epi_lon, ev.f_epi_lat, logon.l_deptpk);
                 return db_exec(sz_sql, "paevent", operation.ToString().ToLower(), ev.l_temppk.ToString(), sz_description, false);
 
             }
@@ -1827,10 +1877,10 @@ namespace com.ums.ws.parm
                 String sz_oadc = a.sz_sms_oadc.Replace("'", "''");
                 String sz_message = a.sz_sms_message.Replace("'", "''");
                 String sz_sql;
-                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}'",
+                sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}', '{18}', {19}",
                                         operation.ToString().ToLower(), a.l_alertpk, logon.l_userpk, logon.l_comppk, a.l_parent,
                                         sz_name, a.l_profilepk, a.l_schedpk, a.sz_oadc, a.l_validity, a.l_addresstypes, a.l_timestamp,
-                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, sz_oadc, sz_message);
+                                        a.f_locked, a.n_maxchannels, a.n_requesttype, a.n_expiry, sz_oadc, sz_message, "-1", logon.l_deptpk);
                 long n_ret = db_exec(sz_sql, "paalert", operation.ToString().ToLower(), a.l_alertpk.ToString(), sz_description, false);
                 if (n_ret > 0) //ok
                 {
@@ -1916,9 +1966,9 @@ namespace com.ums.ws.parm
             //", " & f_epi_lon & ", " & f_epi_lat
 
             String sz_sql;
-            sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}",
+            sz_sql = String.Format(UCommon.UGlobalizationInfo, "sp_ins_paevent '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9}, {10}",
                                     sz_operation.ToLower(), l_eventpk, m_logon.l_userpk, m_logon.l_comppk,
-                                    l_parent, sz_name, l_categorypk, l_timestamp, f_epi_lon, f_epi_lat);
+                                    l_parent, sz_name, l_categorypk, l_timestamp, f_epi_lon, f_epi_lat, m_logon.l_deptpk);
 
             db_exec(sz_sql, "paevent", sz_operation, l_eventpk, sz_description, true);
 
@@ -1988,10 +2038,10 @@ namespace com.ums.ws.parm
 
 
             String sz_sql;
-            sz_sql = String.Format("sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}'",
+            sz_sql = String.Format("sp_ins_paalert '{0}', {1}, {2}, {3}, {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, '{16}', '{17}', '{18}', {19}",
                                     sz_operation.ToLower(), l_alertpk, m_logon.l_userpk, m_logon.l_comppk, l_parent,
                                     sz_name, l_profilepk, l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp,
-                                    f_locked, l_maxchannels, l_requesttype, l_expiry, sz_sms_oadc, sz_sms_message);
+                                    f_locked, l_maxchannels, l_requesttype, l_expiry, sz_sms_oadc, sz_sms_message, "-1", m_logon.l_deptpk);
             try
             {
                 db_exec(sz_sql, "paalert", sz_operation, l_alertpk, sz_description, true);
@@ -2015,8 +2065,8 @@ namespace com.ums.ws.parm
                     if (rs.Read())
                     {
                         realpk = rs.GetString(0);
-                        rs.Close();
                     }
+                    rs.Close();
                     if (sz_operation.Equals("insert"))
                     {
                         if(b_add_to_pkref)
@@ -2034,10 +2084,17 @@ namespace com.ums.ws.parm
                     }
                     addStatusText(sz_nodename, sz_operation, realpk, temppk, "S_OK", "");
 
-                    if (realpk.Length > 0)
-                        return long.Parse(realpk);
-                    else
+                    try
+                    {
+                        if (realpk.Length > 0)
+                            return long.Parse(realpk);
+                        else
+                            return -1;
+                    }
+                    catch (Exception e)
+                    {
                         return -1;
+                    }
                 }
                 catch (Exception e)
                 {

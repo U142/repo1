@@ -41,6 +41,7 @@ namespace com.ums.PAS.Database
                 {
 
                 }
+                rs.Close();
             }
             catch (Exception e)
             {

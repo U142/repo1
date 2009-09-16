@@ -49,6 +49,7 @@ namespace com.ums.PAS.Database
                             break;
                     }
                 }
+                rs.Close();
                 return ret;
             }
             catch (Exception e)
@@ -72,6 +73,7 @@ namespace com.ums.PAS.Database
                     code.b_userdef_text = (rs.GetString(2).Equals("__notuserdefined__") ? false : true);
                     ret.Add(code);
                 }
+                rs.Close();
             }
             catch (Exception e)
             {

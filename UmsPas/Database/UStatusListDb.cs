@@ -97,6 +97,7 @@ namespace com.ums.PAS.Database
                         ULog.error(0, szSQL, e.Message);
                     }
                 }
+                rs.Close();
             }
             catch (Exception e)
             {

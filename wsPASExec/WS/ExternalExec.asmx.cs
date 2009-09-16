@@ -396,7 +396,21 @@ namespace com.ums.ws.parm
                         xmlwriter.insertAttribute("l_refno", l_refno.ToString());
                         xmlwriter.insertAttribute("sz_jobid", sz_jobid);
                         xmlwriter.insertAttribute("f_simulation", (b_simulation ? "1" : "0"));
-                        xmlwriter.insertEndElement();
+
+                        //select operators to be included. Only include operators with status=310 (awaiting confirmation)
+                        xmlwriter.insertStartElement("operators");
+
+                        List<ULBASENDING> operators = db.GetLBAOperatorsReadyForConfirmCancel(l_refno);
+                        for (int i = 0; i < operators.Count; i++)
+                        {
+                            xmlwriter.insertStartElement("operator");
+                            xmlwriter.insertAttribute("id", operators[i].l_operator.ToString());
+                            xmlwriter.insertAttribute("sz_jobid", operators[i].sz_jobid.ToString());
+                        }
+
+                        xmlwriter.insertEndElement(); //operators
+
+                        xmlwriter.insertEndElement(); //end LBA
                         xmlwriter.insertEndDocument();
                         xmlwriter.finalize();
                         ConfirmLBAWriter lba = new ConfirmLBAWriter(l_refno, sz_jobid);
@@ -408,6 +422,7 @@ namespace com.ums.ws.parm
                         {
                             ret.resultcode = -1;
                             ret.resulttext = "Failed to publish LBA Confirmation file";
+                            throw new ULBACouldNotPublishConfirmCancelFile();
                         }
                         else
                         {
@@ -421,8 +436,9 @@ namespace com.ums.ws.parm
             }
             catch (Exception e)
             {
-                ret.resultcode = -1;
-                ret.resulttext = e.Message;
+                //ret.resultcode = -1;
+                //ret.resulttext = e.Message;
+                throw e;
             }
             return ret;
 

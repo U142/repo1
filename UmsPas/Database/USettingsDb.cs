@@ -52,6 +52,7 @@ namespace com.ums.PAS.Database
                     xml.insertEndElement(); //SERVERFILE
                 }
                 xml.insertEndElement(); //SOUNDLIB
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -76,6 +77,7 @@ namespace com.ums.PAS.Database
                     xml.insertEndElement();
                 }
                 xml.insertEndElement(); //TTSLANG
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -116,6 +118,7 @@ namespace com.ums.PAS.Database
                 }
 
                 xml.insertEndElement(); //SCHEDPROFILES
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -141,6 +144,7 @@ namespace com.ums.PAS.Database
                     xml.insertEndElement(); //OADC
                 }
                 xml.insertEndElement(); //FROMNUMBERS
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -202,6 +206,7 @@ namespace com.ums.PAS.Database
 
                 }
                 xml.insertEndElement(); //MSGPROFILES
+                rs.Close();
                 
             }
             catch (Exception e)

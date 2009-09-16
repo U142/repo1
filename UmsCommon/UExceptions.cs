@@ -14,6 +14,22 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class ULBANoOperatorsReadyForConfirmCancel : UException
+    {
+        public ULBANoOperatorsReadyForConfirmCancel()
+            : base("No operators are ready to confirm or cancel LBA sending")
+        {
+        }
+    }
+
+    public class ULBACouldNotPublishConfirmCancelFile : UException
+    {
+        public ULBACouldNotPublishConfirmCancelFile()
+            : base("Could not publish the confirm or cancel file")
+        {
+        }
+    }
+
     public class UEmptySMSMessageException : UException
     {
         public UEmptySMSMessageException()

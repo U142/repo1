@@ -44,7 +44,9 @@ namespace com.ums.ws.pas
         {
             try
             {
-                UPASLOGON ret = new ULogon().Logon(ref l);
+                ULogon logon = new ULogon();
+                UPASLOGON ret = logon.Logon(ref l);
+                logon.close();
                 return ret;
             }
             catch (Exception e)
@@ -98,7 +100,10 @@ namespace com.ums.ws.pas
             {
                 PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
                 percentdelegate(ref logon, ProgressJobType.HOUSE_DOWNLOAD, new PercentResult());
-                return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddresslistByQuality(ref logon, ref param, percentdelegate);
+                UAdrDb db = new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk);
+                UAddressList list = db.GetAddresslistByQuality(ref logon, ref param, percentdelegate);
+                db.close();
+                return list;
             }
             catch (Exception e)
             {
@@ -117,7 +122,9 @@ namespace com.ums.ws.pas
             {
                 PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
                 percentdelegate(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
-                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref logon, percentdelegate).Find();
+                UGisImportLookup lookup = new UGisImportLookup(ref search, ref logon, percentdelegate);
+                UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)lookup.Find();
+                
                 return res;
             }
             catch (Exception e)
@@ -276,7 +283,7 @@ namespace com.ums.ws.pas
         {
             try
             {
-                new UHouseEditor(ref logoninfo, ref adr, operation);
+                UHouseEditor edit = new UHouseEditor(ref logoninfo, ref adr, operation);
                 return adr;
             }
             catch (Exception e)

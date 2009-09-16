@@ -213,6 +213,7 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("f_simulation", (n_function == UCommon.USENDING_LIVE ? "0" : "1"));
             xmlwriter.insertAttribute("l_version", "3");
             xmlwriter.insertAttribute("l_validity", alert.n_expiry.ToString());
+            xmlwriter.insertAttribute("l_requesttype", alert.n_requesttype.ToString());
                 xmlwriter.insertStartElement("textmessages");
                 for (int i = 0; i < getLanguageCount(); i++)
                 {

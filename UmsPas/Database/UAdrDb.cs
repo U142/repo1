@@ -494,6 +494,7 @@ namespace com.ums.PAS.Database
                     percentCallback(ref logon, ProgressJobType.HOUSE_DOWNLOAD, percent);
                 }
                 list.finalize();
+                rs.Close();
                 return list;
             }
             catch (Exception e)
@@ -863,6 +864,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
 
             }*/
             list.finalize();
+            rs.Close();
 
             return list;
         }
@@ -1312,8 +1314,10 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 if (rs.Read())
                 {
                     adr.kondmid = rs.GetString(0);
+                    rs.Close();
                     return true;
                 }
+                rs.Close();
                 return false;
             }
             catch (Exception e)
@@ -1335,8 +1339,10 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                     if (kondmid <= 0)
                         throw new UDbQueryException("Recordset error");
                     adr.kondmid = kondmid.ToString();
+                    rs.Close();
                     return true;
                 }
+                rs.Close();
                 //adr.kondmid = "-1";
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");
