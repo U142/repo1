@@ -364,7 +364,7 @@ namespace com.ums.UmsParm
                     p.n_deptpk = rs.GetInt32(4);
                     p.n_sendingcount = rs.GetInt32(5);
 
-                    rs.Close();
+                    //rs.Close();
                 }
                 rs.Close();
                 return false;
@@ -889,7 +889,36 @@ namespace com.ums.UmsParm
 
         }
 
-        public bool InsertLBARecord_2_0(long l_refno, int l_status, int l_response, int l_items,
+        public List<int> GetOperatorsForSend(long l_alertpk)
+        {
+            List<int> operators = new List<int>();
+            try
+            {
+                String szSQL = "";
+                int n_operator = 0;
+                int n_status = -2;
+                if (l_alertpk < 0) //ad-hoc sending, select all operators
+                    szSQL = "SELECT isnull(l_operator,-1), l_status=0 FROM LBAOPERATORS";
+                else //sending from alert, select only prepared operators
+                    szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator", l_alertpk);
+
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    n_operator = rs.GetInt32(0);
+                    n_status = rs.GetInt32(1);
+                    if(n_operator > 0 && n_status == 0)
+                        operators.Add(n_operator);
+                }
+                rs.Close();
+            }
+            catch (Exception)
+            {
+            }
+            return operators;
+        }
+
+        public bool InsertLBARecord_2_0(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
                                     String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
         {
@@ -897,23 +926,33 @@ namespace com.ums.UmsParm
             String szSQL = "";
             try
             {
-                int n_operator = 0;
-                szSQL = "SELECT isnull(l_operator,-1) FROM LBAOPERATORS";
+                /*int n_operator = 0;
+                int n_status = -2;
+                if (l_alertpk < 0) //ad-hoc sending, select all operators
+                    szSQL = "SELECT isnull(l_operator,-1), l_status=0 FROM LBAOPERATORS";
+                else //sending from alert, select only prepared operators
+                    szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator", l_alertpk);
+
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     n_operator = rs.GetInt32(0);
-                    if (n_operator > 0)
-                    {
-                        szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
-                                                 "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
-                                                 "{6}, '{7}', '{8}', {9}, {10})",
-                                                 l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
-                                                 sz_jobid, sz_areaid, n_function, n_operator);
-                        ExecNonQuery(szSQL);
-                    }
+                    n_status = rs.GetInt32(1);
+                    if (n_operator > 0 && l_status == 0)
+                    {*/
+                List<int> operators = GetOperatorsForSend(l_alertpk);
+                for (int i = 0; i < operators.Count; i++)
+                {
+                    szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
+                                             "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
+                                             "{6}, '{7}', '{8}', {9}, {10})",
+                                             l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
+                                             sz_jobid, sz_areaid, n_function, operators[i]);
+                    ExecNonQuery(szSQL);
                 }
-                rs.Close();
+                    /*}
+                }
+                rs.Close();*/
                 return true;
             }
             catch (Exception e)
@@ -1020,8 +1059,8 @@ namespace com.ums.UmsParm
                     s.l_operator = rs.GetInt32(10);
                     list.Add(s);
                 }
-                if (list.Count > 0)
-                    b = true;
+                rs.Close();
+
                 return b;
             }
             catch (Exception e)
@@ -1107,6 +1146,38 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+        }
+        public List<ULBASENDING> GetLBAOperatorsReadyForConfirmCancel(int l_refno)
+        {
+            try
+            {
+                List<ULBASENDING> operators = new List<ULBASENDING>();
+                String szSQL = String.Format("SELECT LS.l_operator, LS.sz_jobid, LS.sz_operatorname FROM LBASEND LS, LBAOPERATORS OP WHERE LS.l_status=310 AND LS.l_refno={0} AND LS.l_operator=OP.l_operator", l_refno);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    int op = rs.GetInt32(0);
+                    String job = rs.GetString(1);
+                    String sz_operator = rs.GetString(2);
+                    if (op >= 1)
+                    {
+                        ULBASENDING lba = new ULBASENDING();
+                        lba.l_operator = op;
+                        lba.sz_jobid = job;
+                        lba.sz_operator = sz_operator;
+                        operators.Add(lba);
+                    }
+                }
+                rs.Close();
+                if (operators.Count <= 0)
+                    throw new ULBANoOperatorsReadyForConfirmCancel();
+                return operators;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
         public bool GetIsSimulation(int n_refno)
         {
