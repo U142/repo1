@@ -122,17 +122,17 @@ namespace UMSAlertiX
             AlertResponse aResponse = new AlertResponse();
 
 #if FORCE_AREA
-            oController.log.WriteLog(lRefNo.ToString() + " Force testarea");
+//            oController.log.WriteLog(lRefNo.ToString() + " Force testarea");
             szAreaName.value = "TestArea";
 #endif
 #if FORCE_SIMULATE
-            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
+//            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
 #endif
 #if WHITELISTS
             if (arrWhiteList == null)
             {
-                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
+//                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
                 arrWhiteList = new WhiteListName[1];
                 arrWhiteList[0] = new WhiteListName();
                 arrWhiteList[0].value = "UMS";
@@ -162,12 +162,12 @@ namespace UMSAlertiX
                     lRequestType = oController.GetRequestType(lRefNo);
                     if (lRequestType == 0)
                     {
-                        oController.log.WriteLog(lRefNo.ToString() + " Executing alert (execute mode=" + execMode.ToString() + ")");
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing alert (execute mode=" + execMode.ToString() + ")");
                         aResponse = aAlert.executeAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers, execMode);
                     }
                     else
                     {
-                        oController.log.WriteLog(lRefNo.ToString() + " Preparing alert (execute mode=" + execMode.ToString() + ")");
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing alert (execute mode=" + execMode.ToString() + ")");
                         aResponse = aAlert.prepareAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers);
                     }
 
@@ -175,7 +175,7 @@ namespace UMSAlertiX
                     {
                         szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                         lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                        oController.log.WriteLog(lRefNo.ToString() + " Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
                     }
                     else if (aResponse.codeSpecified)
                     {
@@ -183,7 +183,7 @@ namespace UMSAlertiX
                             lReturn = UpdateTries(lRefNo, 290, 42011, aResponse.code, op.l_operator);
                         else
                             lReturn = UpdateTries(lRefNo, 290, 42012, aResponse.code, op.l_operator);
-                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
                     }
                     else
                     {
@@ -191,7 +191,7 @@ namespace UMSAlertiX
                             lReturn = UpdateTries(lRefNo, 290, 42001, -1, op.l_operator);
                         else
                             lReturn = UpdateTries(lRefNo, 290, 42002, -1, op.l_operator);
-                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: No response received");
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
                     }
                 }
                 catch (Exception e)
@@ -200,7 +200,7 @@ namespace UMSAlertiX
                         lReturn = UpdateTries(lRefNo, 290, 42001, -1, op.l_operator);
                     else
                         lReturn = UpdateTries(lRefNo, 290, 42002, -1, op.l_operator);
-                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: " + e.ToString(), lRefNo.ToString() + " ERROR: " + e.Message.ToString());
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.ToString(), lRefNo.ToString() + " ERROR: " + e.Message.ToString());
                 }
             }
 
@@ -290,7 +290,7 @@ namespace UMSAlertiX
                     return Constant.ERR_NOREFNO;
                 }
                 
-                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon) (execute mode=" + execMode.ToString() + ")");
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon)");
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon") != null)
                 {
@@ -486,7 +486,7 @@ namespace UMSAlertiX
                     return Constant.ERR_NOREFNO;
                 }
 
-                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse) (execute mode=" + execMode.ToString() + ")");
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse)");
 
                 szAreaName.value = lRefNo.ToString();
                 arrPoint = new Point[36];
@@ -541,6 +541,7 @@ namespace UMSAlertiX
             int lReturn = Constant.OK;
             int lRefNo;
             int lRetval;
+            int lOperator;
             string szUpdateSQL;
 
             AlertApi aAlert = new AlertApi();
@@ -551,16 +552,19 @@ namespace UMSAlertiX
             idJob.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_jobid").Value;
             if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
             lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
-            oController.log.WriteLog(lRefNo.ToString() + " Started parsing (execute prepared alert) (execute mode=" + execMode.ToString() + ")");
+            lOperator = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_operator").Value);
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 340)
                 return Constant.ERR_CANCEL;
 
-            aAlert.Url = oController.alertapi; //"http://lbv.netcom.no:8080/alertix/AlertApi";
+            Operator op = oController.GetOperator(lOperator);
 
-//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
-            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
+            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Started parsing (execute prepared alert)");
+
+            aAlert.Url = op.sz_url + oController.alertapi;
+
+            NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
             Uri uri = new Uri(aAlert.Url);
 
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
@@ -576,7 +580,7 @@ namespace UMSAlertiX
                 aResponse = aAlert.executePreparedAlert(idJob, execMode);
                 if (aResponse.codeSpecified)
                 {
-                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString();
+                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
@@ -584,7 +588,7 @@ namespace UMSAlertiX
             }
             catch (Exception e)
             {
-                szUpdateSQL = "UPDATE LBASEND SET l_status=42001 WHERE l_refno=" + lRefNo.ToString();
+                szUpdateSQL = "UPDATE LBASEND SET l_status=42001 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 lReturn = Constant.ERR_GENERAL;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
@@ -597,37 +601,39 @@ namespace UMSAlertiX
         {
             int lReturn = Constant.OK;
             int lRefNo;
+            int lOperator;
             JobId idJob = new JobId();
 
             idJob.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_jobid").Value;
             lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+            lOperator = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_operator").Value);
             oController.log.WriteLog(lRefNo.ToString() + " Started parsing (cancel prepared alert)");
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 800)
                 return Constant.ERR_CANCEL;
 
-            lReturn = CancelPreparedAlert(ref idJob, lRefNo);
+            lReturn = CancelPreparedAlert(ref idJob, lRefNo, lOperator);
 
             return lReturn;
         }
 
-        public int CancelPreparedAlert(ref JobId idJob, int lRefNo)
+        public int CancelPreparedAlert(ref JobId idJob, int lRefNo, int lOperator)
         {
             int lReturn = Constant.OK;
             int lRetval;
             string szUpdateSQL;
+            Operator op = oController.GetOperator(lOperator);
 
-            szUpdateSQL = "UPDATE LBASEND SET l_status=800 WHERE l_refno=" + lRefNo.ToString();
+            szUpdateSQL = "UPDATE LBASEND SET l_status=800 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
             lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
 
             AlertApi aAlert = new AlertApi();
             Response aResponse = new Response();
 
-            aAlert.Url = oController.alertapi; //"http://lbv.netcom.no:8080/alertix/AlertApi";
+            aAlert.Url = op.sz_url + oController.alertapi;
 
-//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
-            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
+            NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
             Uri uri = new Uri(aAlert.Url);
 
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
@@ -638,7 +644,7 @@ namespace UMSAlertiX
                 aResponse = aAlert.cancelPreparedAlert(idJob);
                 if (aResponse.codeSpecified)
                 {
-                    szUpdateSQL = "UPDATE LBASEND SET l_status=2000, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString();
+                    szUpdateSQL = "UPDATE LBASEND SET l_status=2000, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
@@ -646,7 +652,7 @@ namespace UMSAlertiX
             }
             catch (Exception e)
             {
-                szUpdateSQL = "UPDATE LBASEND SET l_status=42002 WHERE l_refno=" + lRefNo.ToString();
+                szUpdateSQL = "UPDATE LBASEND SET l_status=42002 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 lReturn = Constant.ERR_GENERAL;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
@@ -675,56 +681,67 @@ namespace UMSAlertiX
             szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
             int lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
 
-            aAlert.Url = oController.alertapi; //"http://lbv.netcom.no:8080/alertix/AlertApi";
-
-//            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
-            NetworkCredential objNetCredentials = new NetworkCredential("jone", "jone");
-            Uri uri = new Uri(aAlert.Url);
-
-            ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
-            aAlert.Credentials = objAuth;
-            aAlert.PreAuthenticate = true;
-
 #if FORCE_SIMULATE
             execMode = ExecuteMode.SIMULATE;
 #endif
 
-//            foreach (Operator op in oController.GetOperators(lRefNo))
-//            {
+            foreach (Operator op in oController.GetOperators(lRefNo))
+            {
                 try
                 {
+                    aAlert.Url = op.sz_url + oController.alertapi;
+
+                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
+                    Uri uri = new Uri(aAlert.Url);
+
+                    ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
+                    aAlert.Credentials = objAuth;
+                    aAlert.PreAuthenticate = true;
+
                     UMSAlertiXArea oArea = new UMSAlertiXArea();
                     oArea.SetController(ref oController);
 
                     lRequestType = oController.GetRequestType(lRefNo);
                     if (lRequestType == 0)
                     {
-                        if (oArea.AreaExists(szAreaName.ToString()))
-                            oArea.DeleteArea(szAreaName.ToString());
+                        if (oArea.AreaExists(szAreaName.ToString(), op))
+                            oArea.DeleteArea(szAreaName.ToString(), op);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing custom alert (execute mode=" + execMode.ToString() + ")");
                         aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers, execMode);
                     }
                     else
                     {
-                        if (oArea.AreaExists(szAreaName.ToString()))
-                            oArea.DeleteArea(szAreaName.ToString());
+                        if (oArea.AreaExists(szAreaName.ToString(), op))
+                            oArea.DeleteArea(szAreaName.ToString(), op);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing custom alert (execute mode=" + execMode.ToString() + ")");
                         aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
                     }
-                    if (aResponse.codeSpecified)
+
+                    if (aResponse.successful)
                     {
-                        szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString();
+                        szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                         lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
+                    }
+                    else if (aResponse.codeSpecified)
+                    {
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
+                        bReturn = false;
                     }
                     else
+                    {
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
                         bReturn = false;
+                    }
                 }
                 catch (Exception e)
                 {
-                    szUpdateSQL = "UPDATE LBASEND SET l_retries=l_retries+1 WHERE l_refno=" + lRefNo.ToString();
+                    szUpdateSQL = "UPDATE LBASEND SET l_retries=l_retries+1 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                     bReturn = false;
                     oController.log.WriteLog(e.ToString(), e.Message.ToString());
                 }
-//            }
+            }
             return bReturn;
         }
 

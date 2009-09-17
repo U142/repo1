@@ -254,12 +254,11 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
-        public int GetSendingProc(int lRefNo, int lOperator)
+        public bool GetSendingProc(int lRefNo, int lOperator, ref int lItems, ref int lProc)
         {
             string szQuery;
-            int lRetVal = 0;
 
-            szQuery = "SELECT l_proc FROM LBASEND where l_refno=" + lRefNo.ToString() + " and l_operator=" + lOperator.ToString();
+            szQuery = "SELECT l_items, l_proc FROM LBASEND where l_refno=" + lRefNo.ToString() + " and l_operator=" + lOperator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(szDBConn);
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
@@ -269,13 +268,17 @@ namespace UMSAlertiX
             rsProcessed = cmd.ExecuteReader();
 
             if (rsProcessed.Read())
+            {
                 if (!rsProcessed.IsDBNull(0))
-                    lRetVal = rsProcessed.GetInt32(0);
+                    lItems = rsProcessed.GetInt32(0);
+                if (!rsProcessed.IsDBNull(1))
+                    lProc = rsProcessed.GetInt32(1);
+            }
 
             cmd.Dispose();
             dbConn.Close();
 
-            return lRetVal;
+            return true;
         }
 
         public Operator GetOperator(int l_operator)
