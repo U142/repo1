@@ -1060,7 +1060,8 @@ namespace com.ums.UmsParm
                     list.Add(s);
                 }
                 rs.Close();
-
+                if (list.Count > 0)
+                    b = true;
                 return b;
             }
             catch (Exception e)
@@ -1074,7 +1075,7 @@ namespace com.ums.UmsParm
             bool b = false;
             try
             {
-                String szSQL = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1}", n_refno, l_operator);
+                String szSQL = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1} AND l_status=310", n_refno, l_operator);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
@@ -1131,11 +1132,11 @@ namespace com.ums.UmsParm
 
         }
 
-        public bool SetLBAStatus(long n_refno, int n_status, int where_status_is)
+        public bool SetLBAStatus(long n_refno, int n_status, int where_status_is, int n_operator)
         {
             try
             {
-                String szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1} AND l_status={2}", n_status, n_refno, where_status_is);
+                String szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1} AND l_status={2} AND l_operator={3}", n_status, n_refno, where_status_is, n_operator);
                 if (ExecNonQuery(szSQL))
                 {
                     return true;
