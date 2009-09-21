@@ -1,6 +1,6 @@
 ﻿//#define FORCE_AREA
 #define FORCE_SIMULATE
-//#define WHITELISTS
+#define WHITELISTS
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace UMSAlertiX
             oController = objController;
         }
 
-        public int SendArea(ref XmlDocument oDoc) // return: 0=success, -1=retry, -2=failed
+        public int SendArea(ref XmlDocument oDoc) // return: 0=ok, -1=retry, -2=failed
         {
             AreaName szAreaName = new AreaName();
             AlertMsg msgAlert = new AlertMsg();
@@ -35,34 +35,72 @@ namespace UMSAlertiX
             AdditionalSubscribers cAddSubscribers = new AdditionalSubscribers();
             WhiteLists cWhiteLists = new WhiteLists();
 
-            int lRefNo;
             string szUpdateSQL;
+
+            int lRefNo;
             int lRequestType = 0;
             int lValidity = oController.message_validity;
 
-            int lReturn = 0;
-            int lRetval = 0;
+            int lReturn = Constant.OK;  // return code for method
+
             if (oDoc.SelectSingleNode("LBA") != null)
             {
-
                 XmlNode oTextMessages;
 
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+                // Check if refno is present, this is required both for sending and status updating, return immediately
+                // if refno is missing (can't update status)
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+                {
+                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                }
+                else
+                {
+                    oController.log.WriteLog("ERROR: (SendArea) Missing refno");
+                    return Constant.FAILED;
+                }
+
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (SendArea)");
+
+                // check for other required fields that prevent sending
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid") != null)
+                {
+                    szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid").Value;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing area id");
+                    SetStatus(lRefNo, Constant.ERR_NOATTR_AREA);
+                    return Constant.FAILED;
+                }
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                    int lRetVal = GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                    if (lRetVal != 0)
+                    {
+                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
+                        SetStatus(lRefNo, lRetVal);
+                        return Constant.FAILED;
+                    }
                 }
                 else
                 {
-                    // error, can't send empty messages
-                    return Constant.ERR_NOMSG;
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing textmessage tag");
+                    SetStatus(lRefNo,Constant.ERR_NOTAG_MSG);
+                    return Constant.FAILED;
                 }
 
-                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
+                // The rest of the fields aren't required for sending and can default if missing
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null) // optional
                 {
+                    // TODO: add errorhandling for malformated tags
                     arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
                     int i = 0;
 
@@ -77,8 +115,9 @@ namespace UMSAlertiX
                     cAddSubscribers.subscribers = arrMsisdn;
                 }
 
-                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null) // optional
                 {
+                    // TODO: add errorhandling for malformated tags
                     arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
                     int i = 0;
 
@@ -93,46 +132,31 @@ namespace UMSAlertiX
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
 
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
-                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
-                {
-                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
-                }
-                else
-                {
-                    // error, need refno
-                    return Constant.ERR_NOREFNO;
-                }
-
-                szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid").Value;
-                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send area)");
-
                 szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString(); // update all operators
-                lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                oController.ExecDB(szUpdateSQL, oController.dsn);
             }
             else
             {
-                //missing LBA tag
-                return Constant.ERR_NOTAG_LBA;
+                //missing LBA tag, can't log error so just return failed immediately
+                oController.log.WriteLog("ERROR: (SendArea) Missing LBA tag");
+                return Constant.FAILED;
             }
 
             AlertApi aAlert = new AlertApi();
             AlertResponse aResponse = new AlertResponse();
 
 #if FORCE_AREA
-//            oController.log.WriteLog(lRefNo.ToString() + " Force testarea");
+            oController.log.WriteLog(lRefNo.ToString() + " force area (TestArea)");
             szAreaName.value = "TestArea";
 #endif
 #if FORCE_SIMULATE
-//            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
+            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
 #endif
 #if WHITELISTS
             if (arrWhiteList == null)
             {
-//                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
                 arrWhiteList = new WhiteListName[1];
                 arrWhiteList[0] = new WhiteListName();
                 arrWhiteList[0].value = "UMS";
@@ -149,10 +173,9 @@ namespace UMSAlertiX
             {
                 try
                 {
-                    aAlert.Url = op.sz_url + oController.alertapi; //"http://lbv.netcom.no:8080/alertix/AlertApi";
+                    aAlert.Url = op.sz_url + oController.alertapi;
 
-                    //            NetworkCredential objNetCredentials = new NetworkCredential(oController.wsuser, oController.wspass); //("jone", "jone");
-                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password); //("jone", "jone");
+                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
                     Uri uri = new Uri(aAlert.Url);
 
                     ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
@@ -174,32 +197,32 @@ namespace UMSAlertiX
                     if (aResponse.successful)
                     {
                         szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                        lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                        oController.ExecDB(szUpdateSQL, oController.dsn);
                         oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
                     }
                     else if (aResponse.codeSpecified)
                     {
                         if (lRequestType == 0)
-                            lReturn = UpdateTries(lRefNo, 290, 42011, aResponse.code, op.l_operator);
+                            lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executeAreaAlert, aResponse.code, op.l_operator);
                         else
-                            lReturn = UpdateTries(lRefNo, 290, 42012, aResponse.code, op.l_operator);
+                            lReturn = UpdateTries(lRefNo, 290, Constant.ERR_prepareAreaAlert, aResponse.code, op.l_operator);
                         oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
                     }
                     else
                     {
                         if (lRequestType == 0)
-                            lReturn = UpdateTries(lRefNo, 290, 42001, -1, op.l_operator);
+                            lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
                         else
-                            lReturn = UpdateTries(lRefNo, 290, 42002, -1, op.l_operator);
+                            lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
                         oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
                     }
                 }
                 catch (Exception e)
                 {
                     if (lRequestType == 0)
-                        lReturn = UpdateTries(lRefNo, 290, 42001, -1, op.l_operator);
+                        lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
                     else
-                        lReturn = UpdateTries(lRefNo, 290, 42002, -1, op.l_operator);
+                        lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
                     oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.ToString(), lRefNo.ToString() + " ERROR: " + e.Message.ToString());
                 }
             }
@@ -219,9 +242,10 @@ namespace UMSAlertiX
             ExecuteMode execMode = ExecuteMode.SIMULATE;
             UTM uCoConv = new UTM();
 
-            int lRefNo;
             double UTMnorth, UTMeast;
             string szZone;
+
+            int lRefNo;
             int lValidity = oController.message_validity;
 
             NumberFormatInfo provider = new NumberFormatInfo();
@@ -231,67 +255,21 @@ namespace UMSAlertiX
             {
                 XmlNode oTextMessages;
 
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
-
-                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
-                {
-                    oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
-                }
-                else
-                {
-                    // error, can't send empty messages
-                    return Constant.ERR_NOMSG;
-                }
-
-                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
-                {
-                    arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
-                    int i = 0;
-
-                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes)
-                    {
-                        arrMsisdn[i] = new Msisdn();
-                        arrMsisdn[i].value = oNode.Attributes.GetNamedItem("msisdn").Value;
-
-                        i++;
-                    }
-
-                    cAddSubscribers.subscribers = arrMsisdn;
-                }
-
-                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
-                {
-                    arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
-                    int i = 0;
-
-                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes)
-                    {
-                        arrWhiteList[i] = new WhiteListName();
-                        arrWhiteList[i].value = oNode.Attributes.GetNamedItem("name").Value;
-
-                        i++;
-                    }
-
-                    cWhiteLists.whiteLists = arrWhiteList;
-                }
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
-                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
+                // Check if refno is present, this is required both for sending and status updating, return immediately
+                // if refno is missing (can't update status)
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
                 {
                     lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
                 }
                 else
                 {
-                    // error, need refno
-                    return Constant.ERR_NOREFNO;
+                    oController.log.WriteLog("ERROR: (SendPolygon) Missing refno");
+                    return Constant.FAILED;
                 }
-                
-                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send polygon)");
 
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (SendPolygon)");
+
+                // check for other required fields that prevent sending
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("alertpolygon") != null)
                 {
                     szAreaName.value = lRefNo.ToString();
@@ -314,94 +292,107 @@ namespace UMSAlertiX
 
                         i++;
                     }
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing polygon");
+                    SetStatus(lRefNo, Constant.ERR_NOTAG_POLY);
+                    return Constant.FAILED;
+                }
 
-                    if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
+                {
+                    oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
+                    int lRetVal = GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                    if (lRetVal != 0)
                     {
-                        // unkown error
-                        return Constant.ERR_GENERAL;
+                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
+                        SetStatus(lRefNo, lRetVal);
+                        return Constant.FAILED;
                     }
                 }
                 else
                 {
-                    // no alert polygon
-                    return Constant.ERR_NOTAG_ALERTPOLY;
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing textmessage tag");
+                    SetStatus(lRefNo, Constant.ERR_NOTAG_MSG);
+                    return Constant.FAILED;
+                }
+
+                // The rest of the fields aren't required for sending and can default if missing
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
+                {
+                    // TODO: add errorhandling for malformated tags
+                    arrMsisdn = new Msisdn[oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers").ChildNodes)
+                    {
+                        arrMsisdn[i] = new Msisdn();
+                        arrMsisdn[i].value = oNode.Attributes.GetNamedItem("msisdn").Value;
+
+                        i++;
+                    }
+
+                    cAddSubscribers.subscribers = arrMsisdn;
+                }
+
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists") != null)
+                {
+                    // TODO: add errorhandling for malformated tags
+                    arrWhiteList = new WhiteListName[oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes.Count];
+                    int i = 0;
+
+                    foreach (XmlNode oNode in oDoc.SelectSingleNode("LBA").SelectSingleNode("whitelists").ChildNodes)
+                    {
+                        arrWhiteList[i] = new WhiteListName();
+                        arrWhiteList[i].value = oNode.Attributes.GetNamedItem("name").Value;
+
+                        i++;
+                    }
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+
+#if FORCE_AREA
+            oController.log.WriteLog(lRefNo.ToString() + " force area (TestArea)");
+            szAreaName.value = "TestArea";
+#endif
+#if WHITELISTS
+                if (arrWhiteList == null)
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
+                    arrWhiteList = new WhiteListName[1];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "UMS";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+                }
+#endif
+
+                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                {
+                    // unkown error
+                    return Constant.FAILED;
                 }
             }
             else 
             {
                 //missing LBA tag
-                return Constant.ERR_NOTAG_LBA;
+                return Constant.FAILED;
             }
 
             return Constant.OK;
         }
-
-/*        public int SendEllipse_old(ref XmlDocument oDoc)
-        {
-            AreaName szAreaName = new AreaName();
-            AlertMsg msgAlert = new AlertMsg();
-            Point[] arrPoint = new Point[36];
-            UTM uCoConv = new UTM();
-            ExecuteMode execMode = ExecuteMode.SIMULATE;
-
-            int lRefNo;
-            double UTMnorth, UTMeast;
-            string szZone;
-            int lValidity = oController.message_validity;
-
-            NumberFormatInfo provider = new NumberFormatInfo();
-            provider.NumberDecimalSeparator = ".";
-
-            if (oDoc.SelectSingleNode("LBA") != null)
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null)
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
-
-            XmlNode oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-            GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
-            if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-            lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
-            oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse) (execute mode=" + execMode.ToString() + ")");
-
-            szAreaName.value = lRefNo.ToString();
-            arrPoint = new Point[36];
-
-            int steps = 36;
-            double centerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centerx").Value, provider);
-            double centery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centery").Value, provider);
-            double cornerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornerx").Value, provider);
-            double cornery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornery").Value, provider);
-
-            double[,] arrPoly = new double[steps, 2];
-
-            if (UCommon.ConvertEllipseToPolygon(centerx, centery, cornerx, cornery, steps, 0, ref arrPoly))
-            {
-                // put array of doubles into array of points
-                for (int i = 0; i < steps; i++)
-                {
-                    UTMeast = 0;
-                    UTMnorth = 0;
-                    szZone = "";
-
-                    uCoConv.LL2UTM(23, arrPoly[i, 1], arrPoly[i, 0], 33, ref UTMnorth, ref UTMeast, ref szZone);
-
-                    arrPoint[i] = new Point();
-                    arrPoint[i].x = UTMeast;
-                    arrPoint[i].y = UTMnorth;
-                    arrPoint[i].xSpecified = true;
-                    arrPoint[i].ySpecified = true;
-                }
-
-                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, execMode))
-                {
-                    return Constant.ERR_GENERAL;
-                }
-            }
-            else
-            {
-                return Constant.ERR_GENERAL;
-            }
-            return Constant.OK;
-        }*/
 
         public int SendEllipse(ref XmlDocument oDoc)
         {
@@ -415,9 +406,10 @@ namespace UMSAlertiX
             ExecuteMode execMode = ExecuteMode.SIMULATE;
             UTM uCoConv = new UTM();
 
-            int lRefNo;
             double UTMnorth, UTMeast;
             string szZone;
+
+            int lRefNo;
             int lValidity = oController.message_validity;
 
             NumberFormatInfo provider = new NumberFormatInfo();
@@ -427,19 +419,91 @@ namespace UMSAlertiX
             {
                 XmlNode oTextMessages;
 
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+                // Check if refno is present, this is required both for sending and status updating, return immediately
+                // if refno is missing (can't update status)
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+                {
+                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                }
+                else
+                {
+                    oController.log.WriteLog("ERROR: (SendPolygon) Missing refno");
+                    return Constant.FAILED;
+                }
+
+                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (SendEllipse)");
+
+                //check for other required fields that prevent sending
+                if (oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse") != null)
+                {
+                    szAreaName.value = lRefNo.ToString();
+                    arrPoint = new Point[36];
+
+                    int steps = 36;
+                    double centerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centerx").Value, provider);
+                    double centery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centery").Value, provider);
+                    double cornerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornerx").Value, provider);
+                    double cornery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornery").Value, provider);
+
+                    double[,] arrPoly = new double[steps, 2];
+
+                    if (UCommon.ConvertEllipseToPolygon(centerx, centery, cornerx, cornery, steps, 0, ref arrPoly))
+                    {
+                        // put array of doubles into array of points
+                        for (int i = 0; i < steps; i++)
+                        {
+                            UTMeast = 0;
+                            UTMnorth = 0;
+                            szZone = "";
+
+                            uCoConv.LL2UTM(23, arrPoly[i, 1], arrPoly[i, 0], 33, ref UTMnorth, ref UTMeast, ref szZone);
+
+                            arrPoint[i] = new Point();
+                            arrPoint[i].x = UTMeast;
+                            arrPoint[i].y = UTMnorth;
+                            arrPoint[i].xSpecified = true;
+                            arrPoint[i].ySpecified = true;
+                        }
+
+                    }
+                    else
+                    {
+                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: Failed to convert ellipse to polygon");
+                        SetStatus(lRefNo, Constant.ERR_EllipseToPoly);
+                        return Constant.FAILED;
+                    }
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing ellipse");
+                    SetStatus(lRefNo, Constant.ERR_NOTAG_POLY);
+                    return Constant.FAILED;
+                }
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
-                    GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                    int lRetVal = GetAlertMsg(ref oTextMessages, ref msgAlert, lValidity);
+                    if (lRetVal != 0)
+                    {
+                        oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing country code for textmessage(s)");
+                        SetStatus(lRefNo, lRetVal);
+                        return Constant.FAILED;
+                    }
                 }
                 else
                 {
-                    // error, can't send empty messages
-                    return Constant.ERR_NOMSG;
+                    oController.log.WriteLog(lRefNo.ToString() + " ERROR: Missing textmessage tag");
+                    SetStatus(lRefNo, Constant.ERR_NOTAG_MSG);
+                    return Constant.FAILED;
                 }
+
+                // The rest of the fields aren't required for sending and can default if missing
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
                 {
@@ -473,64 +537,35 @@ namespace UMSAlertiX
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
 
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
-                    if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno") != null)
+#if FORCE_AREA
+            oController.log.WriteLog(lRefNo.ToString() + " force area (TestArea)");
+            szAreaName.value = "TestArea";
+#endif
+#if WHITELISTS
+                if (arrWhiteList == null)
                 {
-                    lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
+                    arrWhiteList = new WhiteListName[1];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "UMS";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
                 }
                 else
                 {
-                    // error, need refno
-                    return Constant.ERR_NOREFNO;
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
                 }
+#endif
 
-                oController.log.WriteLog(lRefNo.ToString() + " Started parsing (send ellipse)");
-
-                szAreaName.value = lRefNo.ToString();
-                arrPoint = new Point[36];
-
-                int steps = 36;
-                double centerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centerx").Value, provider);
-                double centery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("centery").Value, provider);
-                double cornerx = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornerx").Value, provider);
-                double cornery = Double.Parse(oDoc.SelectSingleNode("LBA").SelectSingleNode("alertellipse").Attributes.GetNamedItem("cornery").Value, provider);
-
-                double[,] arrPoly = new double[steps, 2];
-
-                if (UCommon.ConvertEllipseToPolygon(centerx, centery, cornerx, cornery, steps, 0, ref arrPoly))
+                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
                 {
-                    // put array of doubles into array of points
-                    for (int i = 0; i < steps; i++)
-                    {
-                        UTMeast = 0;
-                        UTMnorth = 0;
-                        szZone = "";
-
-                        uCoConv.LL2UTM(23, arrPoly[i, 1], arrPoly[i, 0], 33, ref UTMnorth, ref UTMeast, ref szZone);
-
-                        arrPoint[i] = new Point();
-                        arrPoint[i].x = UTMeast;
-                        arrPoint[i].y = UTMnorth;
-                        arrPoint[i].xSpecified = true;
-                        arrPoint[i].ySpecified = true;
-                    }
-
-                    if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
-                    {
-                        return Constant.ERR_GENERAL;
-                    }
-                }
-                else
-                {
-                    return Constant.ERR_GENERAL;
+                    return Constant.FAILED;
                 }
             }
             else
             {
                 //missing LBA tag
-                return Constant.ERR_NOTAG_LBA;
+                return Constant.FAILED;
             }
 
             return Constant.OK;
@@ -556,7 +591,7 @@ namespace UMSAlertiX
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 340)
-                return Constant.ERR_CANCEL;
+                return Constant.FAILED;
 
             Operator op = oController.GetOperator(lOperator);
 
@@ -584,13 +619,13 @@ namespace UMSAlertiX
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
-                    lReturn = Constant.ERR_GENERAL;
+                    lReturn = Constant.FAILED;
             }
             catch (Exception e)
             {
                 szUpdateSQL = "UPDATE LBASEND SET l_status=42001 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = Constant.ERR_GENERAL;
+                lReturn = Constant.FAILED;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
 
@@ -611,7 +646,7 @@ namespace UMSAlertiX
 
             // exit if sending has already been cancelled or executed
             if (oController.GetRequestType(lRefNo) == 1 && oController.GetSendingStatus(lRefNo) == 800)
-                return Constant.ERR_CANCEL;
+                return Constant.FAILED;
 
             lReturn = CancelPreparedAlert(ref idJob, lRefNo, lOperator);
 
@@ -648,13 +683,13 @@ namespace UMSAlertiX
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 }
                 else
-                    lReturn = Constant.ERR_GENERAL;
+                    lReturn = Constant.FAILED;
             }
             catch (Exception e)
             {
                 szUpdateSQL = "UPDATE LBASEND SET l_status=42002 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = Constant.ERR_GENERAL;
+                lReturn = Constant.FAILED;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
 
@@ -682,6 +717,7 @@ namespace UMSAlertiX
             int lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
 
 #if FORCE_SIMULATE
+            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
 #endif
 
@@ -745,16 +781,14 @@ namespace UMSAlertiX
             return bReturn;
         }
 
-        private bool GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert)
+        private int GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert)
         {
             return GetAlertMsg(ref oTextMessages, ref msgAlert, 0);
         }
 
         // help functions
-        private bool GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert, int lValidity)
+        private int GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert, int lValidity)
         {
-            bool bReturn = true;
-
             DateTime dtmExpiry = new DateTime();
             if(lValidity > 0)
                 dtmExpiry = DateTime.Now.AddMinutes(lValidity);
@@ -768,41 +802,54 @@ namespace UMSAlertiX
             msgAlert.expiryTime = dtmExpiry;
             msgAlert.expiryTimeSpecified = true;
 
-            // loop through all the different messages/languages
-            foreach (XmlNode oCountryMsg in oTextMessages.ChildNodes)
+            try
             {
-
-                // check if current node is the default message
-                if (oCountryMsg.SelectSingleNode("ccode").InnerText == "-1")
+                // loop through all the different messages/languages
+                foreach (XmlNode oCountryMsg in oTextMessages.ChildNodes)
                 {
-                    msgAlert.defaultMessage = new TextMessage();
-
-                    msgAlert.defaultMessage.text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value;
-                    msgAlert.defaultMessage.oa = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
-                }
-                else
-                {
-                    msgAlert.countryMessages[iCountMsg] = new CountryTextMessage();
-                    msgAlert.countryMessages[iCountMsg].countryCodes = new CountryCode[oCountryMsg.ChildNodes.Count];
-
-                    msgAlert.countryMessages[iCountMsg].text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value;
-                    msgAlert.countryMessages[iCountMsg].oa = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
-
-                    iCountCC = 0; // reset cc count for each language
-                    // loop through country codes for each language
-                    foreach (XmlNode oCCode in oCountryMsg.ChildNodes)
+                    if (oCountryMsg.SelectSingleNode("ccode") != null)
                     {
-                        msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC] = new CountryCode();
-                        msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC].value = Convert.ToInt32(oCCode.InnerText);
-                        msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC].valueSpecified = true;
-                        iCountCC++;
-                    }
-                    iCountMsg++;
-                }
+                        // check if current node is the default message
+                        if (oCountryMsg.SelectSingleNode("ccode").InnerText == "-1")
+                        {
+                            msgAlert.defaultMessage = new TextMessage();
 
+                            msgAlert.defaultMessage.text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value;
+                            msgAlert.defaultMessage.oa = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
+                        }
+                        else
+                        {
+                            msgAlert.countryMessages[iCountMsg] = new CountryTextMessage();
+                            msgAlert.countryMessages[iCountMsg].countryCodes = new CountryCode[oCountryMsg.ChildNodes.Count];
+
+                            msgAlert.countryMessages[iCountMsg].text = oCountryMsg.Attributes.GetNamedItem("sz_text").Value;
+                            msgAlert.countryMessages[iCountMsg].oa = oCountryMsg.Attributes.GetNamedItem("sz_cb_oadc").Value;
+
+                            iCountCC = 0; // reset cc count for each language
+                            // loop through country codes for each language
+                            foreach (XmlNode oCCode in oCountryMsg.ChildNodes)
+                            {
+                                msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC] = new CountryCode();
+                                msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC].value = Convert.ToInt32(oCCode.InnerText);
+                                msgAlert.countryMessages[iCountMsg].countryCodes[iCountCC].valueSpecified = true;
+                                iCountCC++;
+                            }
+                            iCountMsg++;
+                        }
+                    }
+                    else // missing ccode tag, return 
+                    {
+                        return Constant.ERR_NOTAG_CCODE; //GetAlertMsg exception
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                oController.log.WriteLog("GetAlertMsg EXCEPTION: " + e.ToString(), "GetAlertMsg EXCEPTION: " + e.Message.ToString());
+                return Constant.EXC_GetAlertMsg; //GetAlertMsg exception
             }
 
-            return bReturn;
+            return Constant.OK; //ok
         }
 
         private int UpdateTries(int lRefNo, int lTempStatus, int lEndStatus, int lResponse, int lOperator)
@@ -812,6 +859,38 @@ namespace UMSAlertiX
             string szQuery;
 
             szQuery = "sp_lba_upd_sendtries " + lRefNo.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lMaxTries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
+
+            OdbcConnection dbConn = new OdbcConnection(oController.dsn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+            OdbcDataReader rsRequestType;
+
+            dbConn.Open();
+            rsRequestType = cmd.ExecuteReader();
+
+            if (rsRequestType.Read())
+                if (!rsRequestType.IsDBNull(0))
+                    lRetVal = rsRequestType.GetInt32(0);
+
+            cmd.Dispose();
+            dbConn.Close();
+
+            return lRetVal;
+        }
+
+        private int SetStatus(int lRefNo, int lStatus) // update all
+        {
+            return SetStatus(lRefNo, lStatus, -1);
+        }
+
+        private int SetStatus(int lRefNo, int lStatus, int lOperator)
+        {
+            int lRetVal = 0;
+            string szQuery;
+
+            if(lOperator==-1) // update all
+                szQuery = "UPDATE LBASEND SET l_status=" + lStatus.ToString() + " WHERE l_refno=" + lRefNo.ToString();
+            else
+                szQuery = "UPDATE LBASEND SET l_status=" + lStatus.ToString() + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);

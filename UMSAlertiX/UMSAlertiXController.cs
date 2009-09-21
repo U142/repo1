@@ -365,15 +365,32 @@ namespace UMSAlertiX
 
     public class Constant
     {
-        public const int OK = 0;
+        // main return values for ParseXMLFile
+        public const int OK     = 0;
+        public const int RETRY  = -1;
+        public const int FAILED = -2;
 
-        public const int ERR_CANCEL = -1;
-        public const int ERR_GENERAL = -2;
-
-        public const int ERR_NOTAG_LBA = -2001;
-        public const int ERR_NOTAG_ALERTPOLY = -2002;
-        public const int ERR_NOMSG = -2003;
-        public const int ERR_NOREFNO = -2004;
+        // exceptions from cellvision
+        public const int EXC_executeAreaAlert       = 42001;
+        public const int EXC_prepareAreaAlert       = 42002;
+        public const int EXC_execureCustomAlert     = 42003;
+        public const int EXC_prepareCustomAlert     = 42004;
+        public const int EXC_executePreparedAlert   = 42005;
+        public const int EXC_cancelPreparedAlert    = 42006;
+        // errors from cellvision
+        public const int ERR_executeAreaAlert       = 42011;
+        public const int ERR_prepareAreaAlert       = 42012;
+        public const int ERR_executeCustomAlert     = 42013;
+        public const int ERR_prepareCustomAlert     = 42014;
+        public const int ERR_executePreparedAlert   = 42015;
+        public const int ERR_cancelPreparedAlert    = 42016;
+        // errors & exceptions from parsing
+        public const int ERR_NOTAG_MSG              = 42101;
+        public const int ERR_NOATTR_AREA            = 42102;
+        public const int ERR_NOTAG_POLY             = 42103;
+        public const int EXC_GetAlertMsg            = 42104;
+        public const int ERR_NOTAG_CCODE            = 42105;
+        public const int ERR_EllipseToPoly          = 42106;
     }
 
     public class Operator

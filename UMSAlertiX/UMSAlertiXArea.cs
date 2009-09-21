@@ -285,7 +285,7 @@ namespace UMSAlertiX
                     aResponse = aArea.createArea(oPoly, szAreaName);
                     if (aResponse.successful)
                     {
-                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, 0, long.Parse(szAreaName.value));
+                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, 0, long.Parse(szAreaName.value), aResponse.code);
                         bReturn = true;
                     }
                     else // failed, try update
@@ -297,7 +297,7 @@ namespace UMSAlertiX
                 catch (Exception e)
                 {
                     oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Create Area Failed (exception): " + e.Message);
-                    InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2);
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2, 0);
                     bReturn = false;
                 }
             }
@@ -322,18 +322,18 @@ namespace UMSAlertiX
             bool bRet = true;
             foreach (Operator op in oController.GetOperators())
             {
-                if(!InsertPAALERT_LBA(long.Parse(sz_areaname), op.l_operator, -1, 0))
+                if(!InsertPAALERT_LBA(long.Parse(sz_areaname), op.l_operator, -1, 0, 0))
                     bRet = false;
             }
             return bRet;
         }
 
-        private bool InsertPAALERT_LBA(long l_alertpk, int l_operator, int l_status, long l_areaname)
+        private bool InsertPAALERT_LBA(long l_alertpk, int l_operator, int l_status, long l_areaname, int l_responsecode)
         {
             bool bRet = true;
             try
             {
-                oController.ExecDB("sp_ins_paalert_lba " + l_alertpk.ToString() + ", " + l_operator.ToString() + ", " + l_status.ToString() + ", " + l_areaname.ToString(), oController.dsn);
+                oController.ExecDB("sp_ins_paalert_lba " + l_alertpk.ToString() + ", " + l_operator.ToString() + ", " + l_status.ToString() + ", " + l_areaname.ToString() + ", " + l_responsecode.ToString(), oController.dsn);
             }
             catch (Exception e)
             {
@@ -373,20 +373,20 @@ namespace UMSAlertiX
                 aResponse = aArea.updateArea(szAreaName, oPoly);
                 if (aResponse.successful)
                 {
-                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, 0, long.Parse(szAreaName.value));
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, 0, long.Parse(szAreaName.value), aResponse.code);
                     bReturn = true;
                 }
                 else
                 {
                     oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Update Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
-                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2); // may use aResponse.code on a later date
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2, aResponse.code); // may use aResponse.code on a later date
                     bReturn = false;
                 }
             }
             catch (Exception e)
             {
                 oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Update Area Failed (exception): " + e.Message);
-                InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2);
+                InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2, 0);
                 bReturn = false;
             }
 
