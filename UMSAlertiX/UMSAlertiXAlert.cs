@@ -156,10 +156,12 @@ namespace UMSAlertiX
 #if WHITELISTS
             if (arrWhiteList == null)
             {
-                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
-                arrWhiteList = new WhiteListName[1];
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+CELLVISION)");
+                arrWhiteList = new WhiteListName[2];
                 arrWhiteList[0] = new WhiteListName();
                 arrWhiteList[0].value = "UMS";
+                arrWhiteList[1] = new WhiteListName();
+                arrWhiteList[1].value = "CELLVISION";
 
                 cWhiteLists.whiteLists = arrWhiteList;
             }

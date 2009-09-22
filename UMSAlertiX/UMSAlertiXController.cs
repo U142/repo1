@@ -202,6 +202,7 @@ namespace UMSAlertiX
             lRetVal = cmd.ExecuteNonQuery();
             cmd.Dispose();
             dbConn.Close();
+            dbConn.Dispose();
 
             return lRetVal;
         }
@@ -224,8 +225,11 @@ namespace UMSAlertiX
                 if (!rsRequestType.IsDBNull(0))
                     lRetVal = rsRequestType.GetByte(0);
 
+            rsRequestType.Close();
+            rsRequestType.Dispose();
             cmd.Dispose();
             dbConn.Close();
+            dbConn.Dispose();
 
             return lRetVal;
         }
@@ -248,8 +252,11 @@ namespace UMSAlertiX
                 if (!rsSendingStatus.IsDBNull(0))
                     lRetVal = rsSendingStatus.GetInt32(0);
 
+            rsSendingStatus.Close();
+            rsSendingStatus.Dispose();
             cmd.Dispose();
             dbConn.Close();
+            dbConn.Dispose();
 
             return lRetVal;
         }
@@ -274,9 +281,11 @@ namespace UMSAlertiX
                 if (!rsProcessed.IsDBNull(1))
                     lProc = rsProcessed.GetInt32(1);
             }
-
+            rsProcessed.Close();
+            rsProcessed.Dispose();
             cmd.Dispose();
             dbConn.Close();
+            dbConn.Dispose();
 
             return true;
         }
@@ -320,6 +329,11 @@ namespace UMSAlertiX
                 retOperators[lCount] = GetOperator(rsOperators.GetInt32(0));
                 lCount++;
             }
+            rsOperators.Close();
+            rsOperators.Dispose();
+            cmdOperators.Dispose();
+            dbConn.Close();
+            dbConn.Dispose();
             return retOperators;
         }
 
@@ -360,6 +374,11 @@ namespace UMSAlertiX
 
                 lCount++;
             }
+            rsOperators.Close();
+            rsOperators.Dispose();
+            cmdOperators.Dispose();
+            dbConn.Close();
+            dbConn.Dispose();
         }
     }
 
