@@ -98,7 +98,7 @@ namespace com.ums.PAS.Status
 
 
             outxml.insertStartDocument();
-            outxml.insertComment("UMS Status file");
+            outxml.insertComment("UMS Population Alert Status file");
             m_db.GetProjectInfo(m_search._l_projectpk, ref proj);
 
             //TOP LEVEL

@@ -291,14 +291,19 @@ namespace com.ums.UmsParm
 
             PAS_SENDING passending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
+            PAS_SENDING lbasending = new PAS_SENDING();
             passending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+            lbasending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
             smssending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+
             smssending.setSmsMessage(sending.sz_sms_message);
             smssending.setSmsOadc(sending.sz_sms_oadc);
             smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
-            passending.setRefno(sending.n_refno, ref project);
-            smssending.l_resend_refno = passending.l_resend_refno = sending.n_resend_refno;
-            smssending.b_resend = passending.b_resend = sending.b_resend;
+            
+            smssending.l_resend_refno = passending.l_resend_refno = lbasending.l_resend_refno = sending.n_resend_refno;
+            smssending.b_resend = passending.b_resend = lbasending.b_resend = sending.b_resend;
+            
+
             bool b_publish_voice = false;
             bool b_publish_lba = false;
             bool b_publish_sms = false;
@@ -367,6 +372,8 @@ namespace com.ums.UmsParm
                 {
                     if (passending.l_refno <= 0)
                         passending.l_refno = db.newRefno();
+                    if (lbasending.l_refno <= 0)
+                        lbasending.l_refno = db.newRefno();
 
                     if(b_voice_active)
                         db.VerifyProfile(sending.n_profilepk, false);
@@ -378,7 +385,11 @@ namespace com.ums.UmsParm
                 try
                 {
                     passending.createShape(ref sending); //will also create a temp address file
-                    b_publish_voice = true;
+                    lbasending.createShape(ref sending);
+                    if(b_voice_active)
+                        b_publish_voice = true;
+                    if (b_lba_active)
+                        b_publish_lba = true;
                 }
                 catch (Exception e)
                 {
@@ -413,6 +424,13 @@ namespace com.ums.UmsParm
                 passending.setSendNum(ref sendnum);
                 passending.setActionProfile(ref profile);
                 
+                lbasending.setSendingInfo(ref sendinginfo);
+                lbasending.setReschedProfile(ref resched_profile);
+                lbasending.setValid(ref valid);
+                lbasending.setSendNum(ref sendnum);
+                lbasending.setActionProfile(ref profile);
+
+                
                 try
                 {
                     if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
@@ -420,7 +438,14 @@ namespace com.ums.UmsParm
                     }
                     else
                     {
-                        b_ret = db.Send(ref passending);
+                        if(b_publish_voice)
+                            b_ret = db.Send(ref passending);
+                        if (b_publish_lba)
+                        {
+                            //mark this sending as LBA. 1=voice, 2=sms, 3=mail, 4=lba
+                            lbasending.m_sendinginfo.l_type = 4;
+                            b_ret = db.Send(ref lbasending);
+                        }
                     }
                 }
                 catch (Exception e)
@@ -445,15 +470,15 @@ namespace com.ums.UmsParm
                     sending.m_lba.Validate();
                     if (sending.m_lba.getValid())
                     {
-                        sending.m_lba.setSourceShape(ref passending.m_shape);
-                        passending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
+                        sending.m_lba.setSourceShape(ref lbasending.m_shape);
+                        lbasending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
                         b_publish_lba = true;
 
                     }
                     else
                     {
                         if (!sending.m_lba.getValid())
-                            setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                            setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
                         b_publish_lba = false;
                         //else if (!sending.m_lba.lba().hasValidAreaID())
                          //   setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
@@ -552,32 +577,50 @@ namespace com.ums.UmsParm
                     {
                         try
                         {
+                            //if all ok, publish addressfile
+                            try
+                            {
+                                if (sending.getFunction() != UCommon.USENDING_TEST)
+                                    lbasending.publishGUIAdrFile();
+                            }
+                            catch (Exception e)
+                            {
+                                //this is not important for the sending, so continue
+                                //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                            }
+
+                            int n_linktype = 0;
+                            if (lbasending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                                n_linktype = 9;
+                            b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, n_linktype, (lbasending.b_resend ? lbasending.l_resend_refno : 0));
+
                             List<Int32> operatorfilter = null;
-                            db.InsertLBARecord_2_0(-1, passending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter);
+                            db.InsertLBARecord_2_0(-1, lbasending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter);
                             if (passending.publishLBAFile())
                             {
-                                setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                                db.SetLBAStatus(passending.l_refno, 41100);
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                db.SetLBAStatus(lbasending.l_refno, 41100);
                             }
                         }
                         catch (Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                         }
                     }
                     else
                     {
-                        setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                        setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                     }
                 }
             }
             catch (Exception e)
             {
-                if (passending.hasLBA())
+                if (lbasending.hasLBA())
                 {
                     //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
                     setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
@@ -653,6 +696,7 @@ namespace com.ums.UmsParm
             BBSENDNUM sendnum = new BBSENDNUM();
             MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
             MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
+            MDVSENDINGINFO lbasendinginfo = new MDVSENDINGINFO();
 
             BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
 
@@ -692,8 +736,10 @@ namespace com.ums.UmsParm
 
             PAS_SENDING sending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
+            PAS_SENDING lbasending = new PAS_SENDING();
             sending.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
             smssending.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
+            lbasending.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
 
 
             
@@ -708,12 +754,16 @@ namespace com.ums.UmsParm
                 try
                 {
                     long l_refno = 0;
+                    long l_lba_refno = 0;
                     //If this is only a test, don't waste a refno
                     if (n_function != UCommon.USENDING_TEST)
                     {
                         try
                         {
-                            l_refno = db.newRefno();
+                            if (b_voice_active)
+                                l_refno = db.newRefno();
+                            if (b_lba_active)
+                                l_lba_refno = db.newRefno();
                         }
                         catch (Exception)
                         {
@@ -721,6 +771,7 @@ namespace com.ums.UmsParm
                         }
                     }
                     sending.setRefno(l_refno, ref project);
+                    lbasending.setRefno(l_lba_refno, ref project);
                     //retrieve sending info from DB
                     db.FillReschedProfile(pa.l_schedpk, ref resched_profile);
                     db.FillValid(ref pa, ref valid);
@@ -735,8 +786,19 @@ namespace com.ums.UmsParm
                     sending.setSendNum(ref sendnum);
                     sending.setActionProfile(ref profile);
 
+                    lbasending.setSendingInfo(ref sendinginfo);
+                    lbasending.setReschedProfile(ref resched_profile);
+                    lbasending.setValid(ref valid);
+                    lbasending.setSendNum(ref sendnum);
+                    lbasending.setActionProfile(ref profile);
+
                     sending.setShape(ref pa.m_shape); //will also create a temp address file
-                    b_publish_voice = true;
+                    lbasending.setShape(ref pa.m_shape);
+
+                    if(b_voice_active)
+                        b_publish_voice = true;
+                    if (b_lba_active)
+                        b_publish_lba = true;
                     try
                     {
                         if (n_function == UCommon.USENDING_TEST) //test DB and rollback
@@ -744,7 +806,15 @@ namespace com.ums.UmsParm
                         }
                         else
                         {
-                            b_ret = db.Send(ref sending);
+                            if(b_publish_voice)
+                                b_ret = db.Send(ref sending);
+                            if (b_publish_lba)
+                            {
+                                //mark sendinginfo as type LBA
+                                lbasending.m_sendinginfo.l_type = 4;
+                                b_ret = db.Send(ref lbasending);
+                            }
+
                         }
                     }
                     catch (Exception e)
@@ -816,23 +886,23 @@ namespace com.ums.UmsParm
                     {
                         if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
                         {
-                            sending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                            lbasending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
                             b_publish_lba = true;
 
                         }
                         else
                         {
                             if (!pa.m_lba_shape.lba().getValid())
-                                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
                             else if (!pa.hasValidAreaID())
-                                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                    sending.lbacleanup();
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    lbasending.lbacleanup();
                 }
             }
             if(typeof(UGIS).Equals(sending.m_shape.GetType()))
@@ -934,26 +1004,38 @@ namespace com.ums.UmsParm
                     {
                         try
                         {
-                            List<Int32> operatorfilter = null;
-                            db.InsertLBARecord_2_0(pa.l_alertpk, sending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function, ref operatorfilter);
-                            if (sending.publishLBAFile())
+                            try
                             {
-                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                                if (n_function != UCommon.USENDING_TEST)
+                                    lbasending.publishGUIAdrFile();
+                            }
+                            catch (Exception e)
+                            {
+                                //this is not important for the sending, so continue
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                            }
+
+                            b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, 0, 0);
+                            List<Int32> operatorfilter = null;
+                            db.InsertLBARecord_2_0(pa.l_alertpk, lbasending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function, ref operatorfilter);
+                            if (lbasending.publishLBAFile())
+                            {
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                                 db.SetLBAStatus(sending.l_refno, 41100);
                             }
                         }
                         catch(Exception e)
                         {
-                            setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                         }
                     }
                     else
                     {
-                        setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                        setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                     }
                 }
             }
@@ -962,11 +1044,11 @@ namespace com.ums.UmsParm
                 if(sending.hasLBA())
                 {
                     //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
                 {
-                    ULog.warning(sending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
+                    ULog.warning(lbasending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
                 }
             }
 
@@ -991,7 +1073,7 @@ namespace com.ums.UmsParm
                 ULog.write(String.Format("New <{0}> LBA-Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
                     //(f_simulation ? "[Simulated]" : "[Live]"),
                     UCommon.USENDINGTYPE(n_function).ToUpper(),
-                    logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, sending.l_refno, pa.l_alertpk, l_fromeventpk));
+                    logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, l_fromeventpk));
             }
             if (b_publish_sms)
             {

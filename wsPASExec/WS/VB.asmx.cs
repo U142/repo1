@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using com.ums.PAS.Database;
 
-namespace com.ums.ws.vb
+namespace com.ums.ws.voicebroadcast
 {
     /// <summary>
     /// Summary description for VB
@@ -16,6 +17,10 @@ namespace com.ums.ws.vb
     // [System.Web.Script.Services.ScriptService]
     public class VB : System.Web.Services.WebService
     {
+        [WebMethod]
+        public void test()
+        {
 
+        }
     }
 }
