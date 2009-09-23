@@ -370,10 +370,17 @@ namespace com.ums.UmsParm
             {
                 try
                 {
-                    if (passending.l_refno <= 0)
-                        passending.l_refno = db.newRefno();
-                    if (lbasending.l_refno <= 0)
-                        lbasending.l_refno = db.newRefno();
+                    if (b_voice_active)
+                    {
+                        if (passending.l_refno <= 0)
+                            passending.l_refno = db.newRefno();
+                    }
+                    if (b_lba_active)
+                    {
+                        if (lbasending.l_refno <= 0)
+                            lbasending.l_refno = db.newRefno();
+                        lbasending.setRefno(lbasending.l_refno, ref project);
+                    }
 
                     if(b_voice_active)
                         db.VerifyProfile(sending.n_profilepk, false);
@@ -462,7 +469,7 @@ namespace com.ums.UmsParm
                     b_publish_lba = true;
                 if (sending.b_resend && b_publish_lba)
                 {
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Resend LBA is not yet supported", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Resend LBA is not yet supported", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
                     b_publish_lba = false;
                 }
                 if (b_publish_lba && sending.m_lba != null)
@@ -487,8 +494,8 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-                setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                passending.lbacleanup();
+                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                lbasending.lbacleanup();
             }
 
             //send it
@@ -597,13 +604,13 @@ namespace com.ums.UmsParm
 
                             List<Int32> operatorfilter = null;
                             db.InsertLBARecord_2_0(-1, lbasending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter);
-                            if (passending.publishLBAFile())
+                            if (lbasending.publishLBAFile())
                             {
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                             }
                             else
                             {
-                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                                 db.SetLBAStatus(lbasending.l_refno, 41100);
                             }
                         }
@@ -623,11 +630,11 @@ namespace com.ums.UmsParm
                 if (lbasending.hasLBA())
                 {
                     //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
                 {
-                    ULog.warning(passending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
+                    ULog.warning(lbasending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
                 }
             }
 
