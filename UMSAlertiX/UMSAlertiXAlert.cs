@@ -1,6 +1,6 @@
 ﻿//#define FORCE_AREA
 #define FORCE_SIMULATE
-#define WHITELISTS
+//#define WHITELISTS
 
 using System;
 using System.Collections.Generic;
@@ -132,7 +132,7 @@ namespace UMSAlertiX
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
 
-                szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString(); // update all operators
+                szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_status IN (199,290) AND l_refno=" + lRefNo.ToString(); // update all operators
                 oController.ExecDB(szUpdateSQL, oController.dsn);
             }
             else
