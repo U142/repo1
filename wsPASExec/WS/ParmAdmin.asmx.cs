@@ -1396,7 +1396,7 @@ namespace com.ums.ws.parm
         {
             int counter = 0;
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,'') FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>{0} AND PO.l_deptpk={1}",
+            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), PA.l_deptpk FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>{0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -1405,6 +1405,7 @@ namespace com.ums.ws.parm
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
                 String l_expiry, sz_sms_oadc, sz_sms_message;
+                int l_deptpk = 0;
 
                 while (rs.Read())
                 {
@@ -1442,6 +1443,7 @@ namespace com.ums.ws.parm
                     l_expiry = rs.GetString(14);
                     sz_sms_oadc = rs.GetString(15);
                     sz_sms_message = rs.GetString(16);
+                    l_deptpk = rs.GetInt32(17);
 
 
                     outxml.insertStartElement("paalert");
@@ -1466,8 +1468,8 @@ namespace com.ums.ws.parm
                     if (!sz_areaid.Equals("-1")) //assume we're preparing LBA, status for each operator is in PAALERT_LBA
                     {
                         outxml.insertStartElement("lbaoperators");
-                        //String szLbaSql = String.Format("SELECT PA.l_operator, PA.l_status, PA.l_areaid, OP.sz_operatorname FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} AND PA.l_operator*=OP.l_operator", l_alertpk);
-                        String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
+                        //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
+                        String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE OP.l_operator=XD.l_operator AND XD.l_operator=PA.l_operator AND PA.l_alertpk={0} AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
                         OdbcDataReader lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
                         while (lba.Read())
                         {

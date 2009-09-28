@@ -396,6 +396,13 @@ namespace com.ums.ws.parm
                         xmlwriter.insertAttribute("l_refno", l_refno.ToString());
                         xmlwriter.insertAttribute("sz_jobid", sz_jobid);
                         xmlwriter.insertAttribute("f_simulation", (b_simulation ? "1" : "0"));
+                        xmlwriter.insertAttribute("l_deptpk", logon.l_deptpk.ToString());
+                        xmlwriter.insertAttribute("l_comppk", logon.l_comppk.ToString());
+                        xmlwriter.insertAttribute("l_userpk", logon.l_userpk.ToString());
+                        xmlwriter.insertAttribute("sz_compid", logon.sz_compid);
+                        xmlwriter.insertAttribute("sz_deptid", logon.sz_deptid);
+                        xmlwriter.insertAttribute("sz_userid", logon.sz_userid);
+
 
                         //select operators to be included. Only include operators with status=310 (awaiting confirmation)
                         xmlwriter.insertStartElement("operators");

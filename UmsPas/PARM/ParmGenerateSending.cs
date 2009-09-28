@@ -603,7 +603,7 @@ namespace com.ums.UmsParm
                             b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, n_linktype, (lbasending.b_resend ? lbasending.l_resend_refno : 0));
 
                             List<Int32> operatorfilter = null;
-                            db.InsertLBARecord_2_0(-1, lbasending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter);
+                            db.InsertLBARecord_2_0(-1, lbasending.l_refno, 199, -1, -1, -1, 0, sending.m_lba.getRequestType(), "", "", sending.getFunction(), ref operatorfilter, logoninfo.l_deptpk);
                             if (lbasending.publishLBAFile())
                             {
                                 setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
@@ -1024,7 +1024,7 @@ namespace com.ums.UmsParm
 
                             b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, 0, 0);
                             List<Int32> operatorfilter = null;
-                            db.InsertLBARecord_2_0(pa.l_alertpk, lbasending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function, ref operatorfilter);
+                            db.InsertLBARecord_2_0(pa.l_alertpk, lbasending.l_refno, 199, -1, -1, -1, 0, pa.n_requesttype, "", pa.sz_areaid, n_function, ref operatorfilter, logoninfo.l_deptpk);
                             if (lbasending.publishLBAFile())
                             {
                                 setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(n_function) + " [" + pa.sz_areaid + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);

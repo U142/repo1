@@ -889,7 +889,7 @@ namespace com.ums.UmsParm
 
         }
 
-        public List<int> GetOperatorsForSend(long l_alertpk)
+        public List<int> GetOperatorsForSend(long l_alertpk, long l_deptpk)
         {
             List<int> operators = new List<int>();
             try
@@ -898,7 +898,7 @@ namespace com.ums.UmsParm
                 int n_operator = 0;
                 int n_status = -2;
                 if (l_alertpk < 0) //ad-hoc sending, select all operators
-                    szSQL = "SELECT isnull(l_operator,-1), l_status=0 FROM LBAOPERATORS";
+                    szSQL = String.Format("SELECT isnull(OP.l_operator,-1), l_status=0 FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE XD.l_deptpk={0} AND XD.l_operator=OP.l_operator", l_deptpk);
                 else //sending from alert, select only prepared operators
                     szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator", l_alertpk);
 
@@ -920,7 +920,7 @@ namespace com.ums.UmsParm
 
         public bool InsertLBARecord_2_0(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
-                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter, long l_deptpk) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
         {
             //select all operators from db, then insert one record pr operator
             String szSQL = "";
@@ -940,7 +940,7 @@ namespace com.ums.UmsParm
                     n_status = rs.GetInt32(1);
                     if (n_operator > 0 && l_status == 0)
                     {*/
-                List<int> operators = GetOperatorsForSend(l_alertpk);
+                List<int> operators = GetOperatorsForSend(l_alertpk, l_deptpk);
                 for (int i = 0; i < operators.Count; i++)
                 {
                     szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
