@@ -50,7 +50,7 @@ namespace com.ums.ws.pas.status
         [WebMethod]
         public byte[] GetStatusItemsTest()
         {
-            ULOGONINFO logoninfo = new ULOGONINFO();
+            /*ULOGONINFO logoninfo = new ULOGONINFO();
             logoninfo.l_comppk = 2;
             logoninfo.l_deptpk = 1;
             logoninfo.l_userpk = 1;
@@ -63,8 +63,8 @@ namespace com.ums.ws.pas.status
 
             UStatusItemSearch itemsearch = new UStatusItemSearch(ref logoninfo, ref search);
             return itemsearch.Find();
-
-            //return "OK";
+            */
+            return null;
 
         }
 
