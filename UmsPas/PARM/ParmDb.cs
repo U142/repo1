@@ -900,7 +900,7 @@ namespace com.ums.UmsParm
                 if (l_alertpk < 0) //ad-hoc sending, select all operators
                     szSQL = String.Format("SELECT isnull(OP.l_operator,-1), l_status=0 FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE XD.l_deptpk={0} AND XD.l_operator=OP.l_operator", l_deptpk);
                 else //sending from alert, select only prepared operators
-                    szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator", l_alertpk);
+                    szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator AND OP.l_operator=XD.l_operator AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
 
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
