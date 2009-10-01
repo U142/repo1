@@ -85,6 +85,55 @@ namespace UMSAlertiX
             Console.WriteLine("# Stopped Parser thread", 1);
         }
 
+        private bool SetUserValues(XmlAttributeCollection attr, ref UserValues uv)
+        {
+            bool bRetval = true;
+            try
+            {
+                // required fields
+                if (attr.GetNamedItem("l_deptpk") != null)
+                {
+                    if (attr.GetNamedItem("l_deptpk").Value != "")
+                    {
+                        uv.l_deptpk = int.Parse(attr.GetNamedItem("l_deptpk").Value);
+                    }
+                    else
+                    {
+                        bRetval = false;
+                    }
+                }
+                else
+                {
+                    bRetval = false;
+                }
+
+                // optional fields
+                if(attr.GetNamedItem("l_comppk") != null)
+                    if(attr.GetNamedItem("l_comppk").Value != "")
+                        uv.l_comppk = int.Parse(attr.GetNamedItem("l_comppk").Value);
+                if (attr.GetNamedItem("l_userpk") != null)
+                    if (attr.GetNamedItem("l_userpk").Value != "")
+                        uv.l_userpk = long.Parse(attr.GetNamedItem("l_userpk").Value);
+                if (attr.GetNamedItem("sz_compid") != null)
+                    uv.sz_compid = attr.GetNamedItem("sz_compid").Value;
+                if (attr.GetNamedItem("sz_deptid") != null)
+                    uv.sz_deptid = attr.GetNamedItem("sz_deptid").Value;
+                if (attr.GetNamedItem("sz_password") != null)
+                    uv.sz_password = attr.GetNamedItem("sz_password").Value;
+                if (attr.GetNamedItem("sz_userid") != null)
+                    uv.sz_userid = attr.GetNamedItem("sz_userid").Value;
+
+                uv.operators = oController.GetOperators(ref uv);
+            }
+            catch (Exception e)
+            {
+                oController.log.WriteLog("Error reading user values. " + e.ToString(), "Error reading user values. " + e.Message);
+                return false;
+            }
+
+            return bRetval;
+        }
+
         // parse XML file and find operation type
         private int ParseXMLFile(string szFileName)
         {
@@ -95,6 +144,7 @@ namespace UMSAlertiX
             XmlDocument oDoc = new XmlDocument();
             UMSAlertiXAlert oAlert = new UMSAlertiXAlert();
             UMSAlertiXArea oArea = new UMSAlertiXArea();
+            UserValues oUser = new UserValues();
 
             oAlert.SetController(ref oController);
             oArea.SetController(ref oController);
@@ -112,19 +162,27 @@ namespace UMSAlertiX
                             {
                                 case "InsertAreaPolygon":
                                     //oController.log.WriteLog("ins area polygon");
-                                    lReturn = oArea.InsertAreaPolygon(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oArea.InsertAreaPolygon(ref oDoc, ref oUser);
                                     break;
                                 case "UpdateAreaPolygon":
                                     //oController.log.WriteLog("upd area polygon");
-                                    lReturn = oArea.UpdateAreaPolygon(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oArea.UpdateAreaPolygon(ref oDoc, ref oUser);
                                     break;
                                 case "InsertAreaEllipse":
                                     //oController.log.WriteLog("ins area ellipse");
-                                    lReturn = oArea.InsertAreaEllipse(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oArea.InsertAreaEllipse(ref oDoc, ref oUser);
                                     break;
                                 case "UpdateAreaEllipse":
                                     //oController.log.WriteLog("upd area ellipse");
-                                    lReturn = oArea.UpdateAreaEllipse(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oArea.UpdateAreaEllipse(ref oDoc, ref oUser);
                                     break;
                                 case "DeleteArea":
                                     //oController.log.WriteLog("del area");
@@ -132,15 +190,21 @@ namespace UMSAlertiX
                                     break;
                                 case "SendArea":
                                     //oController.log.WriteLog("send area");
-                                    lReturn = oAlert.SendArea(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oAlert.SendArea(ref oDoc, ref oUser);
                                     break;
                                 case "SendPolygon":
                                     //oController.log.WriteLog("send polygon");
-                                    lReturn = oAlert.SendPolygon(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oAlert.SendPolygon(ref oDoc, ref oUser);
                                     break;
                                 case "SendEllipse":
                                     //oController.log.WriteLog("send ellipse");
-                                    lReturn = oAlert.SendEllipse(ref oDoc);
+                                    if (!SetUserValues(oDoc.SelectSingleNode("LBA").Attributes, ref oUser))
+                                        return -2;
+                                    lReturn = oAlert.SendEllipse(ref oDoc, ref oUser);
                                     break;
                                 case "ConfirmJob":
                                     //oController.log.WriteLog("send prep alert");

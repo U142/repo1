@@ -20,8 +20,6 @@ namespace UMSAlertiX
         private int lAffinity = 1;
         private UMSAlertiXLog oLog;
 
-        public Operator[] Operators;
-
         public UMSAlertiXLog log
         {
             get
@@ -127,28 +125,7 @@ namespace UMSAlertiX
                 szWSAreaAPI = value;
             }
         }
-/*        public string wsuser
-        {
-            get
-            {
-                return szWSUser;
-            }
-            set
-            {
-                szWSUser = value;
-            }
-        }
-        public string wspass
-        {
-            get
-            {
-                return szWSPass;
-            }
-            set
-            {
-                szWSPass = value;
-            }
-        }*/
+
         public string parsepath
         {
             get
@@ -261,11 +238,38 @@ namespace UMSAlertiX
             return lRetVal;
         }
 
-        public bool GetSendingProc(int lRefNo, int lOperator, ref int lItems, ref int lProc)
+        public string GetJobID(int l_refno, int l_operator)
+        {
+            string szRetVal = "";
+            string szQuery;
+
+            szQuery = "SELECT sz_jobid FROM LBASEND WHERE l_refno=" + l_refno.ToString() + " AND l_operator=" + l_operator.ToString();
+
+            OdbcConnection dbConn = new OdbcConnection(szDBConn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+            OdbcDataReader rsSendingStatus;
+
+            dbConn.Open();
+            rsSendingStatus = cmd.ExecuteReader();
+
+            if (rsSendingStatus.Read())
+                if (!rsSendingStatus.IsDBNull(0))
+                    szRetVal = rsSendingStatus.GetString(0);
+
+            rsSendingStatus.Close();
+            rsSendingStatus.Dispose();
+            cmd.Dispose();
+            dbConn.Close();
+            dbConn.Dispose();
+
+            return szRetVal.Trim();
+        }
+
+        public bool GetSendingProc(int lRefNo, int lOperator, ref int lItems, ref int lProc, ref int lStatus)
         {
             string szQuery;
 
-            szQuery = "SELECT l_items, l_proc FROM LBASEND where l_refno=" + lRefNo.ToString() + " and l_operator=" + lOperator.ToString();
+            szQuery = "SELECT l_items, l_proc, l_status FROM LBASEND where l_refno=" + lRefNo.ToString() + " and l_operator=" + lOperator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(szDBConn);
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
@@ -280,6 +284,8 @@ namespace UMSAlertiX
                     lItems = rsProcessed.GetInt32(0);
                 if (!rsProcessed.IsDBNull(1))
                     lProc = rsProcessed.GetInt32(1);
+                if (!rsProcessed.IsDBNull(2))
+                    lStatus = rsProcessed.GetInt32(2);
             }
             rsProcessed.Close();
             rsProcessed.Dispose();
@@ -294,64 +300,45 @@ namespace UMSAlertiX
         {
             Operator oRet = new Operator();
 
-            foreach (Operator op in Operators)
-            {
-                if (l_operator == op.l_operator)
-                {
-                    oRet = op;
-                    return oRet;
-                }
-            }
-            return oRet;
-        }
-
-        public Operator[] GetOperators(int l_refno)
-        {
-            int lCount=0;
-            // Select operators from LBAOPERATORS joina med LBASEND (use status=200 or 290 to only pick up sendings that failed)
-            string qryOperatorCount = "SELECT COUNT(l_operator) FROM LBASEND WHERE (l_status=200 or l_status=290) AND l_refno=" + l_refno.ToString();
-            string qryOperators = "SELECT l_operator from LBASEND WHERE (l_status=200 or l_status=290) AND l_refno=" + l_refno.ToString();
+            string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password FROM LBAOPERATORS WHERE l_operator=" + l_operator.ToString();
 
             OdbcConnection dbConn = new OdbcConnection(dsn);
-            OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
-            OdbcDataReader rsOperators;
+            OdbcCommand cmdOperator = new OdbcCommand(qryOperator, dbConn);
+            OdbcDataReader rsOperator;
 
             dbConn.Open();
 
-            int lOperatorCount = (int)cmdOperators.ExecuteScalar();
+            rsOperator = cmdOperator.ExecuteReader();
 
-            cmdOperators.CommandText = qryOperators;
-
-            rsOperators = cmdOperators.ExecuteReader();
-            Operator[] retOperators = new Operator[lOperatorCount];
-            while (rsOperators.Read())
+            while (rsOperator.Read())
             {
-                retOperators[lCount] = GetOperator(rsOperators.GetInt32(0));
-                lCount++;
+                oRet.l_operator = rsOperator.GetInt32(0);
+                oRet.sz_operatorname = rsOperator.GetString(1);
+                oRet.sz_url = rsOperator.GetString(2);
+                oRet.sz_user = rsOperator.GetString(3);
+                oRet.sz_password = rsOperator.GetString(4);
             }
-            rsOperators.Close();
-            rsOperators.Dispose();
-            cmdOperators.Dispose();
+            rsOperator.Close();
+            rsOperator.Dispose();
+            cmdOperator.Dispose();
             dbConn.Close();
             dbConn.Dispose();
-            return retOperators;
+
+            return oRet;
         }
 
-        public Operator[] GetOperators()
-        {
-            return Operators;
-        }
-
-        public void InitOperators()
+        public Operator[] GetAlertOperators(long l_alertpk)
         {
             int lCount = 0;
 
-            string qryOperatorCount = "SELECT COUNT(l_operator) FROM LBAOPERATORS";
-            string qryOperators = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password FROM LBAOPERATORS ORDER BY l_operator";
+            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString();
+            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, PAALERT_LBA PA WHERE PA.l_operator=OP.l_operator AND PA.l_alertpk=" + l_alertpk.ToString() + " ORDER BY l_operator";
 
             OdbcConnection dbConn = new OdbcConnection(dsn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
             OdbcDataReader rsOperators;
+
+            Operator[] Operators;
 
             dbConn.Open();
 
@@ -379,6 +366,51 @@ namespace UMSAlertiX
             cmdOperators.Dispose();
             dbConn.Close();
             dbConn.Dispose();
+
+            return Operators;
+        }
+
+        public Operator[] GetOperators(ref UserValues oUser)
+        {
+            int lCount = 0;
+
+            string qryOperatorCount = "SELECT COUNT(OP.l_operator) FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString();
+            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
+
+            OdbcConnection dbConn = new OdbcConnection(dsn);
+            OdbcCommand cmdOperators = new OdbcCommand(qryOperatorCount, dbConn);
+            OdbcDataReader rsOperators;
+
+            Operator[] Operators;
+
+            dbConn.Open();
+
+            int lOperatorCount = (int)cmdOperators.ExecuteScalar();
+
+            cmdOperators.CommandText = qryOperators;
+
+            rsOperators = cmdOperators.ExecuteReader();
+            Operators = new Operator[lOperatorCount];
+
+            while (rsOperators.Read())
+            {
+                Operators[lCount] = new Operator();
+
+                Operators[lCount].l_operator = rsOperators.GetInt32(0);
+                Operators[lCount].sz_operatorname = rsOperators.GetString(1);
+                Operators[lCount].sz_url = rsOperators.GetString(2);
+                Operators[lCount].sz_user = rsOperators.GetString(3);
+                Operators[lCount].sz_password = rsOperators.GetString(4);
+
+                lCount++;
+            }
+            rsOperators.Close();
+            rsOperators.Dispose();
+            cmdOperators.Dispose();
+            dbConn.Close();
+            dbConn.Dispose();
+
+            return Operators;
         }
     }
 
@@ -419,5 +451,19 @@ namespace UMSAlertiX
         public string sz_url="";
         public string sz_user="";
         public string sz_password="";
+    }
+
+    public class UserValues
+    {
+        public int l_comppk=0;
+        public int l_deptpk=0;
+        public long l_userpk=0;
+
+        public string sz_compid="";
+        public string sz_deptid="";
+        public string sz_userid="";
+        public string sz_password="";
+
+        public Operator[] operators;
     }
 }

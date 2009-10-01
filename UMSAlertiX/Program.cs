@@ -32,7 +32,7 @@ namespace UMSAlertiX
             if(oConfig.GetConfigValue("MessageValidity")!="") oController.message_validity = Convert.ToInt32(oConfig.GetConfigValue("MessageValidity")); // default validity
             if(oConfig.GetConfigValue("CPUAffinity")!="") oController.affinity = Convert.ToInt32(oConfig.GetConfigValue("CPUAffinity"));
             
-            oController.InitOperators();
+            //oController.InitOperators();
             
             System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)oController.affinity;
 

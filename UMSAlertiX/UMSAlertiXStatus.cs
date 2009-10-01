@@ -117,7 +117,6 @@ namespace UMSAlertiX
                                         }
                                         break;
                                     case "PREPARED":
-                                        UpdateCCStatus(idJob, lRefNo, lOperator);
                                         if (oController.GetRequestType(lRefNo) == 2)
                                         {
                                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Status PREPARED (" + aJobResponse.subscriberCount.ToString() + " items) (request type 2, performing autocancel)");
@@ -132,6 +131,7 @@ namespace UMSAlertiX
                                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Status PREPARED (" + aJobResponse.subscriberCount.ToString() + " items)");
                                             lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + aJobResponse.subscriberCount.ToString() + ", l_proc=0, l_status=310 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                                         }
+                                        //UpdateCCStatus(idJob, lRefNo, lOperator);
                                         break;
                                     case "SUBMITTING_STARTED":
                                     case "SUBMITTING":
@@ -150,7 +150,7 @@ namespace UMSAlertiX
                             }
                             else
                             {
-                                Console.Write(aJobResponse.code.ToString() + " - " + idJob.value + " - " + aJobResponse.message);
+                                oController.log.WriteLog(aJobResponse.code.ToString() + " - " + idJob.value + " - " + aJobResponse.message);
                             }
                         }
                         else
@@ -174,7 +174,9 @@ namespace UMSAlertiX
 
         public void UpdateCCStatus() // updates jobs with country code status
         {
-            string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340";
+            //string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340";
+            //string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340 union SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=310 and l_operator is not null and l_refno not in (SELECT s.l_refno FROM LBASEND s, LBAHISTCC h where s.l_status=310 and s.l_refno=h.l_refno)";
+            string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340 or l_status=310";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
@@ -247,20 +249,24 @@ namespace UMSAlertiX
             int lItems = 0;
             int lProc = 0;
             int lCountSub = 0;
+            int lStatus = 0;
 
             int lPrevProc = 0;
 
             try
             {
+                oController.GetSendingProc(lRefNo, lOperator, ref lItems, ref lPrevProc, ref lStatus);
                 aStatusResponse = aStatus.getAlertStatusByCountryCode(idJob);
             }
             catch (Exception e)
             {
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
             }
+
             if (aStatusResponse == null)
             {
                 // getAlertStatusByCountryCode didn't fail, but returned NULL, update database with something
+                oController.log.WriteLog("jobid: " + idJob.value + " statusResponse is NULL (status=" + lStatus.ToString() + ")");
             }
             else if (aStatusResponse.countryStatusCounts != null)
             {
@@ -283,16 +289,20 @@ namespace UMSAlertiX
                     lRetVal = oController.ExecDB("sp_upd_status_lba_cc " + lRefNo.ToString() + ", " + lOperator.ToString() + ", " + cc.ToString() + ", " + ccDelivered.ToString() + ", " + ccExpired.ToString() + ", " + ccFailed.ToString() + ", " + ccUnknown.ToString() + ", " + ccSubmitted.ToString() + ", " + ccQueued.ToString() + ", " + ccSubscribers.ToString(), oController.dsn);
                 }
 
-                oController.GetSendingProc(lRefNo, lOperator, ref lItems, ref lPrevProc);
                 if (lItems <= 0)
                     lItems = lCountSub;
 
-                if (lProc == lItems)
+                if (lProc == lItems && lStatus == 340) // done sending
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Status done (" + lItems.ToString() + " recipients)");
                     lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + ", l_status=1000 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                 }
-                else
+                else if (lItems == lCountSub && lStatus == 310) // got all ccode statuses from prepared sending
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Got all cc for prepared sending (" + lItems.ToString() + " recipients)");
+                    lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=311 WHERE l_refno=" + lRefNo.ToString() + " AND l_status=310 AND l_operator=" + lOperator.ToString(), oController.dsn);
+                }
+                else // sending in progress
                 {
                     if (lPrevProc < lProc && lProc > 0)
                     {
@@ -301,7 +311,7 @@ namespace UMSAlertiX
                     }
                 }
             }
-            else if (aStatusResponse.codeSpecified)
+            else if (aStatusResponse.codeSpecified && (lStatus == 310 || lStatus == 340)) // if status is not 310 or 340 the message has most likely been cancelled by the user, ignore it
             {
                 switch (aStatusResponse.code)
                 {
@@ -314,9 +324,13 @@ namespace UMSAlertiX
                     default:
                         // set to cancelled
                         oController.log.WriteLog("jobid: " + idJob.value + " error (" + aStatusResponse.code.ToString() + ") (" + aStatusResponse.message + ")");
-                        lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=0, l_proc=0, l_status=2000, l_response=" + aStatusResponse.code.ToString() + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString() + " AND sz_jobid='" + idJob.value + "'", oController.dsn);
+                        lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=2000, l_response=" + aStatusResponse.code.ToString() + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString() + " AND sz_jobid='" + idJob.value + "'", oController.dsn);
                         break;
                 }
+            }
+            else
+            {
+                oController.log.WriteLog("jobid: " + idJob.value + " no action taken (status=" + lStatus.ToString() + ")");
             }
             return bReturn;
         }

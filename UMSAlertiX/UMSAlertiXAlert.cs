@@ -25,7 +25,7 @@ namespace UMSAlertiX
             oController = objController;
         }
 
-        public int SendArea(ref XmlDocument oDoc) // return: 0=ok, -1=retry, -2=failed
+        public int SendArea(ref XmlDocument oDoc, ref UserValues oUser) // return: 0=ok, -1=retry, -2=failed
         {
             AreaName szAreaName = new AreaName();
             AlertMsg msgAlert = new AlertMsg();
@@ -132,7 +132,9 @@ namespace UMSAlertiX
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
 
-                szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_status IN (199,290) AND l_refno=" + lRefNo.ToString(); // update all operators
+                // set parsing lba status for all operators where status is either new (199) or retry (290) to
+                // prevent successfull operators to be sent a second time on retries where only one operator failed
+                szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_status IN (199,290) AND l_refno=" + lRefNo.ToString();
                 oController.ExecDB(szUpdateSQL, oController.dsn);
             }
             else
@@ -156,12 +158,14 @@ namespace UMSAlertiX
 #if WHITELISTS
             if (arrWhiteList == null)
             {
-                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+CELLVISION)");
-                arrWhiteList = new WhiteListName[2];
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                arrWhiteList = new WhiteListName[3];
                 arrWhiteList[0] = new WhiteListName();
                 arrWhiteList[0].value = "UMS";
                 arrWhiteList[1] = new WhiteListName();
-                arrWhiteList[1].value = "CELLVISION";
+                arrWhiteList[1].value = "UMSSANDNES";
+                arrWhiteList[2] = new WhiteListName();
+                arrWhiteList[2].value = "CELLVISION";
 
                 cWhiteLists.whiteLists = arrWhiteList;
             }
@@ -171,52 +175,62 @@ namespace UMSAlertiX
             }
 #endif
 
-            foreach (Operator op in oController.GetOperators(lRefNo))
+            foreach (Operator op in oUser.operators)
             {
                 try
                 {
-                    aAlert.Url = op.sz_url + oController.alertapi;
-
-                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
-                    Uri uri = new Uri(aAlert.Url);
-
-                    ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
-                    aAlert.Credentials = objAuth;
-                    aAlert.PreAuthenticate = true;
-
-                    lRequestType = oController.GetRequestType(lRefNo);
-                    if (lRequestType == 0)
+                    // check if sending has been submitted already
+                    string szJobID = oController.GetJobID(lRefNo, op.l_operator);
+                    if (szJobID != "")
                     {
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing alert (execute mode=" + execMode.ToString() + ")");
-                        aResponse = aAlert.executeAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers, execMode);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") already submitted with jobid: " + szJobID);
                     }
                     else
                     {
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing alert (execute mode=" + execMode.ToString() + ")");
-                        aResponse = aAlert.prepareAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers);
-                    }
 
-                    if (aResponse.successful)
-                    {
-                        szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                        oController.ExecDB(szUpdateSQL, oController.dsn);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
-                    }
-                    else if (aResponse.codeSpecified)
-                    {
+                        aAlert.Url = op.sz_url + oController.alertapi;
+
+                        NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
+                        Uri uri = new Uri(aAlert.Url);
+
+                        ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
+                        aAlert.Credentials = objAuth;
+                        aAlert.PreAuthenticate = true;
+
+                        lRequestType = oController.GetRequestType(lRefNo);
                         if (lRequestType == 0)
-                            lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executeAreaAlert, aResponse.code, op.l_operator);
+                        {
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing alert (execute mode=" + execMode.ToString() + ")");
+                            aResponse = aAlert.executeAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers, execMode);
+                        }
                         else
-                            lReturn = UpdateTries(lRefNo, 290, Constant.ERR_prepareAreaAlert, aResponse.code, op.l_operator);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
-                    }
-                    else
-                    {
-                        if (lRequestType == 0)
-                            lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
+                        {
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing alert (execute mode=" + execMode.ToString() + ")");
+                            aResponse = aAlert.prepareAreaAlert(szAreaName, msgAlert, cWhiteLists, cAddSubscribers);
+                        }
+
+                        if (aResponse.successful)
+                        {
+                            szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            oController.ExecDB(szUpdateSQL, oController.dsn);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
+                        }
+                        else if (aResponse.codeSpecified)
+                        {
+                            if (lRequestType == 0)
+                                lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executeAreaAlert, aResponse.code, op.l_operator);
+                            else
+                                lReturn = UpdateTries(lRefNo, 290, Constant.ERR_prepareAreaAlert, aResponse.code, op.l_operator);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
+                        }
                         else
-                            lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
+                        {
+                            if (lRequestType == 0)
+                                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
+                            else
+                                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
+                        }
                     }
                 }
                 catch (Exception e)
@@ -232,7 +246,7 @@ namespace UMSAlertiX
             return lReturn;
         }
 
-        public int SendPolygon(ref XmlDocument oDoc)
+        public int SendPolygon(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = null;
             Msisdn[] arrMsisdn = null;
@@ -368,10 +382,14 @@ namespace UMSAlertiX
 #if WHITELISTS
                 if (arrWhiteList == null)
                 {
-                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
-                    arrWhiteList = new WhiteListName[1];
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                    arrWhiteList = new WhiteListName[3];
                     arrWhiteList[0] = new WhiteListName();
                     arrWhiteList[0].value = "UMS";
+                    arrWhiteList[1] = new WhiteListName();
+                    arrWhiteList[1].value = "UMSSANDNES";
+                    arrWhiteList[2] = new WhiteListName();
+                    arrWhiteList[2].value = "CELLVISION";
 
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
@@ -381,7 +399,7 @@ namespace UMSAlertiX
                 }
 #endif
 
-                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
                 {
                     // unkown error
                     return Constant.FAILED;
@@ -396,7 +414,7 @@ namespace UMSAlertiX
             return Constant.OK;
         }
 
-        public int SendEllipse(ref XmlDocument oDoc)
+        public int SendEllipse(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = null;
             Msisdn[] arrMsisdn = null;
@@ -546,10 +564,14 @@ namespace UMSAlertiX
 #if WHITELISTS
                 if (arrWhiteList == null)
                 {
-                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS)");
-                    arrWhiteList = new WhiteListName[1];
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                    arrWhiteList = new WhiteListName[3];
                     arrWhiteList[0] = new WhiteListName();
                     arrWhiteList[0].value = "UMS";
+                    arrWhiteList[1] = new WhiteListName();
+                    arrWhiteList[1].value = "UMSSANDNES";
+                    arrWhiteList[2] = new WhiteListName();
+                    arrWhiteList[2].value = "CELLVISION";
 
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
@@ -559,7 +581,7 @@ namespace UMSAlertiX
                 }
 #endif
 
-                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode))
+                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
                 {
                     return Constant.FAILED;
                 }
@@ -672,6 +694,7 @@ namespace UMSAlertiX
 
             NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
             Uri uri = new Uri(aAlert.Url);
+            aAlert.Timeout = 300000;
 
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
             aAlert.Credentials = objAuth;
@@ -699,7 +722,7 @@ namespace UMSAlertiX
         }
 
         // alert api
-        private bool SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, WhiteLists cWhiteLists, AdditionalSubscribers cAddSubscribers, ExecuteMode execMode) // + refno + execmode
+        private bool SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, WhiteLists cWhiteLists, AdditionalSubscribers cAddSubscribers, ExecuteMode execMode, ref UserValues oUser) // + refno + execmode
         {
             AlertApi aAlert = new AlertApi();
             AlertResponse aResponse = new AlertResponse();
@@ -723,53 +746,63 @@ namespace UMSAlertiX
             execMode = ExecuteMode.SIMULATE;
 #endif
 
-            foreach (Operator op in oController.GetOperators(lRefNo))
+            foreach (Operator op in oUser.operators)
             {
                 try
                 {
-                    aAlert.Url = op.sz_url + oController.alertapi;
-
-                    NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
-                    Uri uri = new Uri(aAlert.Url);
-
-                    ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
-                    aAlert.Credentials = objAuth;
-                    aAlert.PreAuthenticate = true;
-
-                    UMSAlertiXArea oArea = new UMSAlertiXArea();
-                    oArea.SetController(ref oController);
-
-                    lRequestType = oController.GetRequestType(lRefNo);
-                    if (lRequestType == 0)
+                    // check if sending has been submitted already
+                    string szJobID = oController.GetJobID(lRefNo, op.l_operator);
+                    if (szJobID != "")
                     {
-                        if (oArea.AreaExists(szAreaName.ToString(), op))
-                            oArea.DeleteArea(szAreaName.ToString(), op);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing custom alert (execute mode=" + execMode.ToString() + ")");
-                        aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers, execMode);
+                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") already submitted with jobid: " + szJobID);
                     }
                     else
                     {
-                        if (oArea.AreaExists(szAreaName.ToString(), op))
-                            oArea.DeleteArea(szAreaName.ToString(), op);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing custom alert (execute mode=" + execMode.ToString() + ")");
-                        aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
-                    }
 
-                    if (aResponse.successful)
-                    {
-                        szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                        lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
-                    }
-                    else if (aResponse.codeSpecified)
-                    {
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
-                        bReturn = false;
-                    }
-                    else
-                    {
-                        oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
-                        bReturn = false;
+                        aAlert.Url = op.sz_url + oController.alertapi;
+
+                        NetworkCredential objNetCredentials = new NetworkCredential(op.sz_user, op.sz_password);
+                        Uri uri = new Uri(aAlert.Url);
+
+                        ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
+                        aAlert.Credentials = objAuth;
+                        aAlert.PreAuthenticate = true;
+
+                        UMSAlertiXArea oArea = new UMSAlertiXArea();
+                        oArea.SetController(ref oController);
+
+                        lRequestType = oController.GetRequestType(lRefNo);
+                        if (lRequestType == 0)
+                        {
+                            if (oArea.AreaExists(szAreaName.ToString(), op))
+                                oArea.DeleteArea(szAreaName.ToString(), op);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing custom alert (execute mode=" + execMode.ToString() + ")");
+                            aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers, execMode);
+                        }
+                        else
+                        {
+                            if (oArea.AreaExists(szAreaName.ToString(), op))
+                                oArea.DeleteArea(szAreaName.ToString(), op);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing custom alert (execute mode=" + execMode.ToString() + ")");
+                            aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
+                        }
+
+                        if (aResponse.successful)
+                        {
+                            szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
+                        }
+                        else if (aResponse.codeSpecified)
+                        {
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
+                            bReturn = false;
+                        }
+                        else
+                        {
+                            oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
+                            bReturn = false;
+                        }
                     }
                 }
                 catch (Exception e)

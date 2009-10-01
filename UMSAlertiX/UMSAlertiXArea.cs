@@ -21,7 +21,7 @@ namespace UMSAlertiX
             oController = objController;
         }
 
-        public int InsertAreaPolygon(ref XmlDocument oDoc)
+        public int InsertAreaPolygon(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = null;
             AreaName szAreaName = new AreaName();
@@ -58,7 +58,7 @@ namespace UMSAlertiX
             }
 
             // call AlertiX api with polygon
-            if (!CreateArea(ref arrPoint, ref szAreaName))
+            if (!CreateArea(ref arrPoint, ref szAreaName, ref oUser))
             {
                 lReturn = -2;
             }
@@ -66,7 +66,7 @@ namespace UMSAlertiX
             return lReturn;
         }
 
-        public int InsertAreaEllipse(ref XmlDocument oDoc)
+        public int InsertAreaEllipse(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = new Point[36];
             AreaName szAreaName = new AreaName();
@@ -108,7 +108,7 @@ namespace UMSAlertiX
                 }
 
                 // call AlertiX api with polygon
-                if (!CreateArea(ref arrPoint, ref szAreaName))
+                if (!CreateArea(ref arrPoint, ref szAreaName, ref oUser))
                 {
                     lReturn = -2;
                 }
@@ -121,7 +121,7 @@ namespace UMSAlertiX
             return lReturn;
         }
 
-        public int UpdateAreaPolygon(ref XmlDocument oDoc)
+        public int UpdateAreaPolygon(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = null;
             AreaName szAreaName = new AreaName();
@@ -159,7 +159,7 @@ namespace UMSAlertiX
 
             // call AlertiX api with polygon
 
-            if (!UpdateArea(ref arrPoint, ref szAreaName))
+            if (!UpdateArea(ref arrPoint, ref szAreaName, ref oUser))
             {
                 lReturn = -2;
             }
@@ -167,7 +167,7 @@ namespace UMSAlertiX
             return lReturn;
         }
 
-        public int UpdateAreaEllipse(ref XmlDocument oDoc)
+        public int UpdateAreaEllipse(ref XmlDocument oDoc, ref UserValues oUser)
         {
             Point[] arrPoint = new Point[36];
             AreaName szAreaName = new AreaName();
@@ -209,7 +209,7 @@ namespace UMSAlertiX
                 }
 
                 // call AlertiX api with polygon
-                if (!UpdateArea(ref arrPoint, ref szAreaName))
+                if (!UpdateArea(ref arrPoint, ref szAreaName, ref oUser))
                 {
                     lReturn = -2;
                 }
@@ -225,17 +225,22 @@ namespace UMSAlertiX
         public int DeleteArea(ref XmlDocument oDoc)
         {
             AreaName szAreaName = new AreaName();
+            Operator[] operators;
 
             int lReturn = 0;
+            long l_alertpk=0;
 
             szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_areaid").Value;
             if (szAreaName.value == "")
             {
                 oController.log.WriteLog("sz_areaid not specified, using l_alertpk instead");
-                szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_alertpk").Value.ToString();
+                szAreaName.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_alertpk").Value;
             }
+            l_alertpk = long.Parse(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_alertpk").Value);
 
-            foreach (Operator op in oController.GetOperators())
+            operators = oController.GetAlertOperators(l_alertpk);
+
+            foreach (Operator op in operators)
             {
                 if (!DeleteArea(ref szAreaName, op))
                 {
@@ -247,7 +252,7 @@ namespace UMSAlertiX
         }
 
         // communicate with AlertiX
-        private bool CreateArea(ref Point[] pArea, ref AreaName szAreaName)
+        private bool CreateArea(ref Point[] pArea, ref AreaName szAreaName, ref UserValues oUser)
         {
             bool bReturn=true;
             AreaApi aArea = new AreaApi();
@@ -261,10 +266,10 @@ namespace UMSAlertiX
                 oPoly.vertices[iCount] = pArea[iCount];
             }
             // Insert operators to PAALERT_LBA
-            InsertPAALERT_LBA(szAreaName.value);
+            InsertPAALERT_LBA(szAreaName.value, ref oUser);
 
             // Get operators
-            foreach (Operator op in oController.GetOperators())
+            foreach (Operator op in oUser.operators)
             {
                 try
                 {
@@ -291,7 +296,7 @@ namespace UMSAlertiX
                     else // failed, try update
                     {
                         oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Create Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + "), trying update.");
-                        bReturn = UpdateArea(ref pArea, ref szAreaName, op.l_operator);
+                        bReturn = UpdateArea(ref pArea, ref szAreaName, op, ref oUser);
                     }
                 }
                 catch (Exception e)
@@ -304,23 +309,23 @@ namespace UMSAlertiX
             return bReturn;
         }
 
-        private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName)
+        private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName, ref UserValues oUser)
         {
             bool bRet = true;
 
-            foreach (Operator op in oController.GetOperators())
+            foreach (Operator op in oUser.operators)
             {
-                if (!UpdateArea(ref pArea, ref szAreaName, op.l_operator))
+                if (!UpdateArea(ref pArea, ref szAreaName, op, ref oUser))
                     bRet = false;
             }
 
             return bRet;
         }
 
-        private bool InsertPAALERT_LBA(string sz_areaname)
+        private bool InsertPAALERT_LBA(string sz_areaname, ref UserValues oUser)
         {
             bool bRet = true;
-            foreach (Operator op in oController.GetOperators())
+            foreach (Operator op in oUser.operators)
             {
                 if(!InsertPAALERT_LBA(long.Parse(sz_areaname), op.l_operator, -1, 0, 0))
                     bRet = false;
@@ -343,13 +348,12 @@ namespace UMSAlertiX
             return bRet;
         }
 
-        private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName, int lOperator)
+        private bool UpdateArea(ref Point[] pArea, ref AreaName szAreaName, Operator op, ref UserValues oUser)
         {
             bool bReturn=true;
             AreaApi aArea = new AreaApi();
             Response aResponse = new Response();
             Polygon oPoly = new Polygon();
-            Operator op = oController.GetOperator(lOperator);
 
             aArea.Url = op.sz_url + oController.areaapi;
             
@@ -373,20 +377,31 @@ namespace UMSAlertiX
                 aResponse = aArea.updateArea(szAreaName, oPoly);
                 if (aResponse.successful)
                 {
-                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, 0, long.Parse(szAreaName.value), aResponse.code);
+                    InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, 0, long.Parse(szAreaName.value), aResponse.code);
                     bReturn = true;
                 }
                 else
                 {
-                    oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Update Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
-                    InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2, aResponse.code); // may use aResponse.code on a later date
-                    bReturn = false;
+                    oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Update Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ") trying to insert instead.");
+
+                    aResponse = aArea.createArea(oPoly, szAreaName);
+                    if (aResponse.successful)
+                    {
+                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, 0, long.Parse(szAreaName.value), aResponse.code);
+                        bReturn = true;
+                    }
+                    else // failed, give up
+                    {
+                        oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Insert Area Failed (code=" + aResponse.code.ToString() + ") (msg=" + aResponse.message.ToString() + ")");
+                        InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2, aResponse.code); // may use aResponse.code on a later date
+                        bReturn = false;
+                    }
                 }
             }
             catch (Exception e)
             {
                 oController.log.WriteLog(szAreaName.value + " (" + op.sz_operatorname + ") Update Area Failed (exception): " + e.Message);
-                InsertPAALERT_LBA(long.Parse(szAreaName.value), lOperator, -2, -2, 0);
+                InsertPAALERT_LBA(long.Parse(szAreaName.value), op.l_operator, -2, -2, 0);
                 bReturn = false;
             }
 
