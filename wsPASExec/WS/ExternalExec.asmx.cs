@@ -340,7 +340,7 @@ namespace com.ums.ws.parm
                                 lba.writeline(xmlwriter.getXml());
                                 lba.close();
 
-                                db.SetLBAStatus(l_refno, (b_confirm ? 320 : 330), 310, sendings[i].l_operator); //320 = Confirmed by user, 330 = cancelled by user, but only if status is 310
+                                db.SetLBAStatus(l_refno, (b_confirm ? 320 : 330), "310, 311", sendings[i].l_operator); //320 = Confirmed by user, 330 = cancelled by user, but only if status is 310
                                 if (!lba.publish())
                                 {
                                     ret.resultcode = -1;
@@ -431,7 +431,7 @@ namespace com.ums.ws.parm
                         lba.writeline(xmlwriter.getXml());
                         lba.close();
 
-                        db.SetLBAStatus(l_refno, (b_confirm ? 320 : 330), 310, -1); //320 = Confirmed by user, 330 = cancelled by user, but only if status is 310
+                        db.SetLBAStatus(l_refno, (b_confirm ? 320 : 330), "310, 311", -1); //320 = Confirmed by user, 330 = cancelled by user, but only if status is 310
                         if (!lba.publish())
                         {
                             ret.resultcode = -1;

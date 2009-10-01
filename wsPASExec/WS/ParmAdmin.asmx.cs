@@ -348,7 +348,8 @@ namespace com.ums.ws.parm
                 ULog.error(e.Message);
             }
 
-            UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, sz_output_parmzip);
+            //old zip
+            /*UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, sz_output_parmzip);
             try
             {
                 zip.AddTextAsZipFileEntry(sz_parmxml, outxml.getXml(), Encoding.GetEncoding(encoding));
@@ -362,16 +363,65 @@ namespace com.ums.ws.parm
             {
                 ULog.error(0, "Error writing PARM ZIP file", e.Message);
                 throw e;
+            }*/
+
+            //new zip
+            String file_zip = UCommon.UPATHS.sz_path_parmtemp + "gzip_" + sz_output_parmzip;
+            try
+            {
+                Byte[] str_encoded = Encoding.GetEncoding(encoding).GetBytes(outxml.getXml());
+                int l1 = (int)str_encoded.Length;
+                sbyte[] sb1 = new sbyte[l1];
+                Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
+                //ByteArrayOutputStream arr = new ByteArrayOutputStream(l1);
+                //arr.write(sb1);
+
+                String file = "parmroot.xml";
+                FileOutputStream output = new FileOutputStream(file_zip);
+                GZIPOutputStream gzip = new GZIPOutputStream(output);
+                gzip.write(sb1);
+                gzip.close();
+
             }
+            catch(Exception e)
+            {
+                ULog.error(0, "Error writing PARM ZIP file", e.Message);
+                throw e;
+            }
+            
+            
             try
             {
                 db.close();
+                System.IO.File.Delete(sz_xml_filename);
+                System.IO.File.Delete(sz_xml_adrfilename);
             }
             catch (Exception e)
             { }
+            
 
             PercentProgress.DeleteJob(ref m_logon, ProgressJobType.PARM_UPDATE);
-            return zip.ReadZipFileBytes();
+
+
+            //old zip
+            //return zip.ReadZipFileBytes();
+
+            //new zip
+            try
+            {
+                FileInfo zipped = new FileInfo(file_zip);
+                FileStream fszipped = zipped.OpenRead();
+                byte[] outbytes = new byte[zipped.Length];
+                fszipped.Read(outbytes, 0, (int)zipped.Length);
+                fszipped.Close();
+                System.IO.File.Delete(file_zip);
+                return outbytes;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, "Error returning PARM ZIP file", e.Message);
+                throw e;
+            }
 
             //temp write out.xml
             /*String txt_parmxml = outxml.getXml();
@@ -452,7 +502,7 @@ namespace com.ums.ws.parm
 
 
         /*get all updated shapes from predefined-areas and make a xml file for return (outpolyxml)*/
-        private bool WritePolygonToFile(String l_polypk, String sz_objecttype)
+        private bool WritePolygonToFile(String l_polypk, String sz_objecttype, ref USimpleXmlWriter outfile)
         {
             String prefix = "";
             if (sz_objecttype.Equals("paobject"))
@@ -468,7 +518,7 @@ namespace com.ums.ws.parm
                 StreamReader reader = t.OpenText();
                 string s = reader.ReadToEnd();
                 reader.Close();
-                outpolyxml.insertText(s);
+                outfile.insertText(s);
             }
             catch (Exception)
             {
@@ -1315,7 +1365,7 @@ namespace com.ums.ws.parm
         private int GetObjects()
         {
             int counter = 0;
-            String sz_sql = String.Format("SELECT l_objectpk, isnull(l_deptpk,0), isnull(l_importpk, 0), isnull(sz_name,' '), sz_description, isnull(l_categorypk,-1), isnull(l_parent,-1), isnull(sz_address,' '), isnull(sz_postno,' '), isnull(sz_place,' '), isnull(sz_phone,' '), sz_metadata, isnull(f_isobjectfolder,0), isnull(l_timestamp,0) FROM PAOBJECT WHERE l_timestamp>{0} AND l_deptpk={1}",
+            String sz_sql = String.Format("SELECT l_objectpk, isnull(l_deptpk,0), isnull(l_importpk, 0), isnull(sz_name,' '), sz_description, isnull(l_categorypk,-1), isnull(l_parent,-1), isnull(sz_address,' '), isnull(sz_postno,' '), isnull(sz_place,' '), isnull(sz_phone,' '), sz_metadata, isnull(f_isobjectfolder,0), isnull(l_timestamp,0) FROM PAOBJECT WHERE l_timestamp>={0} AND l_deptpk={1}",
                                            sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -1378,9 +1428,10 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("sz_metadata", sz_metadata);
                     outxml.insertAttribute("f_isobjectfolder", f_isobjectfolder);
                     outxml.insertAttribute("l_timestamp", l_timestamp);
+                    WritePolygonToFile(l_objectpk, "paobject", ref outxml);
                     outxml.insertEndElement();
                     counter++;
-                    WritePolygonToFile(l_objectpk, "paobject");
+                    //WritePolygonToFile(l_objectpk, "paobject", ref outpolyxml);
                 }
                 rs.Close();
             }
@@ -1396,7 +1447,7 @@ namespace com.ums.ws.parm
         {
             int counter = 0;
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>{0} AND PO.l_deptpk={1}",
+            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -1487,11 +1538,13 @@ namespace com.ums.ws.parm
                         lba.Close();
                         outxml.insertEndElement(); //lbaoperators
                     }
+
+                    WritePolygonToFile(l_alertpk, "paalert", ref outxml);
                     outxml.insertEndElement();//paalert
                     
                     counter++;
 
-                    WritePolygonToFile(l_alertpk, "paalert");
+                    //WritePolygonToFile(l_alertpk, "paalert", ref outpolyxml);
                 }
                 rs.Close();
             }
@@ -1506,7 +1559,7 @@ namespace com.ums.ws.parm
         {
             int counter = 0;
             //SELECT PE.l_eventpk, PE.l_parent, PE.sz_name, PE.sz_description, PE.l_categorypk, PE.l_timestamp, isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PE.l_eventpk, isnull(PE.l_parent,-1), isnull(PE.sz_name,' '), PE.sz_description, isnull(PE.l_categorypk,0), isnull(PE.l_timestamp,0), isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>{0} AND PO.l_deptpk={1}",
+            String sz_sql = String.Format("SELECT PE.l_eventpk, isnull(PE.l_parent,-1), isnull(PE.sz_name,' '), PE.sz_description, isnull(PE.l_categorypk,0), isnull(PE.l_timestamp,0), isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>={0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -1558,7 +1611,7 @@ namespace com.ums.ws.parm
         private int GetCategories()
         {
             int counter = 0;
-            String sz_sql = String.Format("SELECT l_categorypk, isnull(sz_name,' '), sz_description, isnull(sz_fileext,' '), isnull(l_timestamp,0) FROM PACATEGORY WHERE l_timestamp>{0}",
+            String sz_sql = String.Format("SELECT l_categorypk, isnull(sz_name,' '), sz_description, isnull(sz_fileext,' '), isnull(l_timestamp,0) FROM PACATEGORY WHERE l_timestamp>={0}",
                                         sz_timestamp);
             try
             {
@@ -1604,7 +1657,7 @@ namespace com.ums.ws.parm
             int counter = 0;
             if (!sz_timestamp.Equals("0"))
             {
-                String sz_sql = String.Format("SELECT isnull(c_objtype, 'n'), isnull(l_objectpk, 0), isnull(sz_areaid,' ') FROM PADELETE WHERE l_comppk={0} AND l_timestamp>{1}",
+                String sz_sql = String.Format("SELECT isnull(c_objtype, 'n'), isnull(l_objectpk, 0), isnull(sz_areaid,' ') FROM PADELETE WHERE l_comppk={0} AND l_timestamp>={1}",
                                         m_logon.l_comppk, sz_timestamp);
                 String l_objectpk, c_objtype, sz_areaid;
                 try
