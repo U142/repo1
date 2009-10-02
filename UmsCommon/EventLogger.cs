@@ -97,27 +97,27 @@ namespace com.ums.UmsCommon
     {
         public static void write(long l_refno, String s)
         {
-            String o = String.Format("Refno {0}\n{1}", l_refno, s);
+            String o = String.Format("INFO Refno {0}\n{1}", l_refno, s);
             write(o);
         }
         public static void error(long l_refno, String s)
         {
-            String o = String.Format("Refno {0}\n{1}", l_refno, s);
+            String o = String.Format("ERROR Refno {0}\n{1}", l_refno, s);
             error(o);
         }
         public static void warning(long l_refno, String s)
         {
-            String o = String.Format("Refno {0}\n{1}", l_refno, s);
+            String o = String.Format("WARNING Refno {0}\n{1}", l_refno, s);
             warning(o);
         }
         public static void warning(long l_refno, String s, String e)
         {
-            String o = String.Format("Refno {0}\n{1}\n{2}", l_refno, s, e);
+            String o = String.Format("WARNING Refno {0}\n{1}\n{2}", l_refno, s, e);
             warning(o);
         }
         public static void error(long l_refno, String s, String e)
         {
-            String o = String.Format("Refno {0}\n{1}\n{2}", l_refno, s, e);
+            String o = String.Format("ERROR Refno {0}\n{1}\n{2}", l_refno, s, e);
             error(o);
         }
 

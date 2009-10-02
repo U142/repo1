@@ -14,6 +14,21 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class ULbaCellCoverageWmsServerNotRegisteredException : UException
+    {
+        public ULbaCellCoverageWmsServerNotRegisteredException(String sz_operator)
+            : base(String.Format("LBA Cell coverage server not registered for \"{0}\"", sz_operator))
+        {
+        }
+    }
+    public class ULbaCellCoverageJobIdNotFoundException : UException
+    {
+        public ULbaCellCoverageJobIdNotFoundException(String sz_jobid)
+            : base(String.Format("LBA Cell coverage, JobId not found \"{0}\"", sz_jobid))
+        {
+        }
+    }
+
     public class ULBANoOperatorsReadyForConfirmCancel : UException
     {
         public ULBANoOperatorsReadyForConfirmCancel()

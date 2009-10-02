@@ -6,6 +6,8 @@ using System.IO;
 using System.Net;
 
 using com.ums.UmsCommon.CoorConvert;
+using com.ums.UmsDbLib;
+using System.Data.Odbc;
 
 namespace com.ums.PAS.Maps
 {
@@ -127,6 +129,7 @@ namespace com.ums.PAS.Maps
         public override UPASMap getMap()
         {
             UMapInfoLayerCellVision cv = (UMapInfoLayerCellVision)m_mapinfo;
+            
             /*UTM utm = new UTM();
             double lb_x = 0, lb_y = 0, ur_x = 0, ur_y = 0;
             String UTMZone = "";
@@ -160,12 +163,50 @@ namespace com.ums.PAS.Maps
                                             "&REQUEST=map&ServiceName=WMS_NB_Kulturlandskap",
                                             cv.l_bo, cv.b_bo, cv.r_bo, cv.u_bo,
                                             Math.Round(cv.width / Math.Cos(((cv.u_bo + cv.b_bo) / 2) * DEG2RAD)), cv.height);*/
+
+
+            String sz_operator = "";
+            String sz_wms_url = "";
+            String sz_wms_user = "";
+            String sz_wms_password = "";
+            try
+            {
+                UmsDb db = new UmsDb();
+                String sz_sql = String.Format("SELECT isnull(LO.sz_operatorname, ''), isnull(LO.sz_wms_url,''), isnull(LO.sz_wms_user,''), isnull(LO.sz_wms_password,'') FROM LBASEND LS, LBAOPERATORS LO WHERE LS.sz_jobid='{0}' AND LS.l_operator=LO.l_operator", cv.sz_jobid);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    sz_operator = rs.GetString(0).Trim();
+                    sz_wms_url = rs.GetString(1).Trim();
+                    sz_wms_user = rs.GetString(2).Trim();
+                    sz_wms_password = rs.GetString(3).Trim();
+                    if (sz_wms_url.Length == 0)
+                    {
+                        rs.Close();
+                        throw new ULbaCellCoverageWmsServerNotRegisteredException(sz_operator);
+                    }
+                }
+                else
+                {
+                    rs.Close();
+                    throw new ULbaCellCoverageJobIdNotFoundException(cv.sz_jobid);
+                }
+                rs.Close();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
             String sz_request = "";
             try
             {
                 //LON LAT
                 sz_request = String.Format(UCommon.UGlobalizationInfo,
-                                                  "http://lbv.netcom.no:8081/alertix/alertix.asp?" +
+                                                  //"http://lbv.netcom.no:8081/alertix/alertix.asp?" +
+                                                  sz_wms_url + 
+                                                  "?" +
                                                   "version={0}&request={1}&layers={2}_{3}&STYLES={4}&" +
                                                   "SRS=EPSG:{5}&BBOX={6},{7},{8},{9}&WIDTH={10}&" +
                                                   "HEIGHT={11}&FORMAT=image/png",

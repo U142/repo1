@@ -239,7 +239,7 @@ namespace com.ums.ws.parm
             {
                 ULog.error(e.Message);
             }
-            m_res.n_percent = 50;
+            m_res.n_percent = 20;
             m_percentdelegate(ref logoninfo, ProgressJobType.PARM_UPDATE, m_res);
 
 
@@ -375,11 +375,15 @@ namespace com.ums.ws.parm
                 Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
                 //ByteArrayOutputStream arr = new ByteArrayOutputStream(l1);
                 //arr.write(sb1);
+                
+                //MemoryStream mem = new MemoryStream();
+                //BinaryWriter bin = new BinaryWriter(mem);
+                //bin.Write(str_encoded);
 
-                String file = "parmroot.xml";
                 FileOutputStream output = new FileOutputStream(file_zip);
+
                 GZIPOutputStream gzip = new GZIPOutputStream(output);
-                gzip.write(sb1);
+                gzip.write(sb1, 0, l1);
                 gzip.close();
 
             }
@@ -515,10 +519,14 @@ namespace com.ums.ws.parm
             try
             {
                 FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + prefix + l_polypk + ".xml");
-                StreamReader reader = t.OpenText();
-                string s = reader.ReadToEnd();
-                reader.Close();
-                outfile.insertText(s);
+                if (t.Exists)
+                {
+                    StreamReader reader = t.OpenText();
+                    string s = reader.ReadToEnd();
+                    reader.Close();
+
+                    outfile.insertText(s);
+                }
             }
             catch (Exception)
             {
@@ -1342,14 +1350,14 @@ namespace com.ums.ws.parm
 
             int counter = 0;
             counter += GetCategories(); //will append pacategory tags to outxml
-            m_res.n_percent = 60;
+            m_res.n_percent = 30;
             m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetObjects(); //will append paobject tags to outxml
-            m_res.n_percent = 70;
+            m_res.n_percent = 40;
             m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
             counter += GetEvents(); //will append paevent tags to outxml
-            m_res.n_percent = 80;
-            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
+            m_res.n_percent = 50;
+            m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res); //detailed percentage for alerts. span=50-90%
             counter += GetAlerts(); //will append paalert tags to outxml
             m_res.n_percent = 90;
             m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
@@ -1445,10 +1453,27 @@ namespace com.ums.ws.parm
 
         private int GetAlerts()
         {
+            DateTime start = DateTime.Now;
             int counter = 0;
+            int n_records = 1;
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
             String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);
+
+            String sz_sql_count = String.Format("SELECT count(*) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
+                                            sz_timestamp, m_logon.l_deptpk);
+            try
+            {
+                OdbcDataReader rs = db.ExecReader(sz_sql_count, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    n_records = rs.GetInt32(0);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+            }
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
@@ -1543,10 +1568,18 @@ namespace com.ums.ws.parm
                     outxml.insertEndElement();//paalert
                     
                     counter++;
+                    int percent = (int)(counter * 40.0f / n_records);
+                    m_res.n_percent = (int)(50.0f) + percent;
+                    m_percentdelegate(ref m_logon, ProgressJobType.PARM_UPDATE, m_res);
+
 
                     //WritePolygonToFile(l_alertpk, "paalert", ref outpolyxml);
                 }
                 rs.Close();
+                DateTime end = DateTime.Now;
+                TimeSpan diff = end - start;
+                int sec = diff.Seconds;
+
             }
             catch (Exception e)
             {
