@@ -10,6 +10,40 @@ using com.ums.UmsFile;
 
 namespace com.ums.ZipLib
 {
+    public class UGZipLib
+    {
+        protected UFile ufile;
+        String encoding = "UTF-8";
+        public UGZipLib(string path, string file)
+        {
+            ufile = new UFile(path, file);
+        }
+
+        public byte [] getZipped(String data)
+        {
+            //write to zip
+            Byte[] str_encoded = Encoding.GetEncoding(encoding).GetBytes(data);
+            int l1 = (int)str_encoded.Length;
+            sbyte[] sb1 = new sbyte[l1];
+            Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
+            FileOutputStream output = new FileOutputStream(ufile.full());
+
+            GZIPOutputStream gzip = new GZIPOutputStream(output);
+            gzip.write(sb1, 0, l1);
+            gzip.close();
+
+            //open zip
+            FileInfo zipped = new FileInfo(ufile.full());
+            FileStream fszipped = zipped.OpenRead();
+            byte[] outbytes = new byte[zipped.Length];
+            fszipped.Read(outbytes, 0, (int)zipped.Length);
+            fszipped.Close();
+            System.IO.File.Delete(ufile.full());
+            return outbytes;
+
+        }
+    }
+
     public class UZipLib
     {
         protected ZipOutputStream zos;

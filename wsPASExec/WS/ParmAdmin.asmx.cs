@@ -367,7 +367,7 @@ namespace com.ums.ws.parm
 
             //new zip
             String file_zip = UCommon.UPATHS.sz_path_parmtemp + "gzip_" + sz_output_parmzip;
-            try
+            /*try
             {
                 Byte[] str_encoded = Encoding.GetEncoding(encoding).GetBytes(outxml.getXml());
                 int l1 = (int)str_encoded.Length;
@@ -391,7 +391,7 @@ namespace com.ums.ws.parm
             {
                 ULog.error(0, "Error writing PARM ZIP file", e.Message);
                 throw e;
-            }
+            }*/
             
             
             try
@@ -413,13 +413,15 @@ namespace com.ums.ws.parm
             //new zip
             try
             {
-                FileInfo zipped = new FileInfo(file_zip);
+                /*FileInfo zipped = new FileInfo(file_zip);
                 FileStream fszipped = zipped.OpenRead();
                 byte[] outbytes = new byte[zipped.Length];
                 fszipped.Read(outbytes, 0, (int)zipped.Length);
                 fszipped.Close();
                 System.IO.File.Delete(file_zip);
-                return outbytes;
+                return outbytes;*/
+                UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "gzip_" + sz_output_parmzip);
+                return zip.getZipped(outxml.getXml());
             }
             catch (Exception e)
             {

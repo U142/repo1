@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using com.ums.ZipLib;
+using System.IO.Compression;
 
 
 
@@ -462,7 +463,7 @@ namespace com.ums.PAS.Status
             {
             }*/
 
-            UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, "statuszip." + Guid.NewGuid() + ".zip");
+            /*UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, "statuszip." + Guid.NewGuid() + ".zip");
             try
             {
                 zip.AddTextAsZipFileEntry("status", outxml.getXml(), Encoding.GetEncoding(sz_encoding));
@@ -473,7 +474,18 @@ namespace com.ums.PAS.Status
             {
                 ULog.error(0, "Error writing Status ZIP", e.Message);
                 throw e;
+            }*/
+            UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "statuszip." + Guid.NewGuid() + ".zip");
+            try
+            {
+                return zip.getZipped(outxml.getXml());
             }
+            catch (Exception e)
+            {
+                ULog.error(0, "Error writing Status ZIP", e.Message);
+                throw e;
+            }
+
             //return outxml.getXml();
             //XmlDocument xml = new XmlDocument();
             //xml.LoadXml(Encoding.UTF8.(outxml.getXml().ToCharArray()));
