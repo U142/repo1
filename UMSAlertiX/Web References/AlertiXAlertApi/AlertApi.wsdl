@@ -14,6 +14,12 @@
           <xsd:element minOccurs="0" name="expiryTime" type="xsd:dateTime" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:complexType name="TextMessage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="oa" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:complexType name="ArrayOfCountryTextMessage">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="CountryTextMessage" nillable="true" type="ns1:CountryTextMessage" />
@@ -34,12 +40,6 @@
       <xsd:complexType name="CountryCode">
         <xsd:sequence>
           <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:complexType name="TextMessage">
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="oa" nillable="true" type="xsd:string" />
-          <xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="WhiteLists">

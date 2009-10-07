@@ -14,11 +14,6 @@
           <xsd:element minOccurs="0" name="polygon" nillable="true" type="ns1:ArrayOfPoint" />
         </xsd:sequence>
       </xsd:complexType>
-      <xsd:complexType name="AreaId">
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
-        </xsd:sequence>
-      </xsd:complexType>
       <xsd:complexType name="ArrayOfPoint">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="Point" nillable="true" type="ns1:Point" />
@@ -28,6 +23,11 @@
         <xsd:sequence>
           <xsd:element minOccurs="0" name="x" type="xsd:double" />
           <xsd:element minOccurs="0" name="y" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AreaId">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="value" nillable="true" type="xsd:int" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="Polygon">

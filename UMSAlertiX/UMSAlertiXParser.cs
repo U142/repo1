@@ -35,16 +35,19 @@ namespace UMSAlertiX
                         if (lRetVal == 0)
                         {
                             oController.log.WriteLog("Moving " + fileName + " to done.");
+                            Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
                         }
                         else if (lRetVal == -1)
                         {
                             oController.log.WriteLog("Moving " + fileName + " to retry.");
+                            Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
                         }
                         else // lRetVal -2
                         {
                             oController.log.WriteLog("Moving " + fileName + " to failed.");
+                            Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
                         }
                     }
@@ -60,16 +63,19 @@ namespace UMSAlertiX
                             if (lRetVal == 0)
                             {
                                 oController.log.WriteLog("Moving " + fileName + " to done.");
+                                Thread.Sleep(500);
                                 File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
                             }
                             else if (lRetVal == -1)
                             {
                                 oController.log.WriteLog("Moving " + fileName + " to retry.");
+                                Thread.Sleep(500);
                                 File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
                             }
                             else // lRetVal -2
                             {
                                 oController.log.WriteLog("Moving " + fileName + " to failed.");
+                                Thread.Sleep(500);
                                 File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
                             }
                         }
