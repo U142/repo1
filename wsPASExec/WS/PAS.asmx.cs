@@ -234,6 +234,7 @@ namespace com.ums.ws.pas
             {
                 map = new UPASMap();
                 map.image = Encoding.UTF8.GetBytes(e.Message);
+                //throw e;
             }
             return map;
         }

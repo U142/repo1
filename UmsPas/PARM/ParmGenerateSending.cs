@@ -381,13 +381,20 @@ namespace com.ums.UmsParm
                             lbasending.l_refno = db.newRefno();
                         lbasending.setRefno(lbasending.l_refno, ref project);
                     }
-
+                }
+                catch(Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.m_sendinginfo.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Unable to get a refno", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                try
+                {
                     if(b_voice_active)
                         db.VerifyProfile(sending.n_profilepk, false);
                 }
                 catch (Exception e)
                 {
-                    throw e;
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, sending.sz_sendingname, "Could not verify message profile", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    return false;
                 }
                 try
                 {
@@ -400,7 +407,7 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, passending.m_sendinginfo.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, sending.sz_sendingname, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                     //file.DeleteOperation();
                     return false;
                 }

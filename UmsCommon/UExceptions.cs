@@ -28,6 +28,13 @@ namespace com.ums.UmsCommon
         {
         }
     }
+    public class ULbaCellCoverageJobNotPreparedException : UException
+    {
+        public ULbaCellCoverageJobNotPreparedException(String sz_operator)
+            : base(String.Format("LBA Cell coverage, Job not yet prepared"))
+        {
+        }
+    }
 
     public class ULBANoOperatorsReadyForConfirmCancel : UException
     {
@@ -196,11 +203,26 @@ namespace com.ums.UmsCommon
         {
         }
     }
+    public class UProfileDoesNotExistException : UException
+    {
+        public UProfileDoesNotExistException(long l_profilepk)
+            : base(String.Format("profilepk={0} does not exist", l_profilepk))
+        {
+        }
+    }
     public class UMapLoadFailedException : UException
     {
         public UMapLoadFailedException(Exception e, String bounds)
             : base(bounds + "\n" + e.Message)
         {
+        }
+    }
+    public class UMapOverlayFailedException : UException
+    {
+        public UMapOverlayFailedException(String s, String sz_operator, String sz_jobid)
+            : base(String.Format("{0}\n JobId={1}\n Operator={2}", s, sz_jobid, sz_operator))
+        {
+
         }
     }
     public class UWeatherReportException : UException

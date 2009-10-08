@@ -79,6 +79,20 @@ namespace com.ums.UmsParm
         {
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
+            try
+            {
+                String szSQL = String.Format("SELECT l_profilepk FROM BBACTIONPROFILESOUT WHERE l_profilepk={0}", l_profilepk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (!rs.Read())
+                {
+                    rs.Close();
+                    throw new UProfileDoesNotExistException(l_profilepk);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
             int n_num_audiofiles = base.getNumDynfilesInProfile(l_profilepk);
             if (n_num_audiofiles > 0 && b_must_have_no_dynfiles)
             {

@@ -172,6 +172,8 @@ namespace com.ums.PAS.Maps
             try
             {
                 UmsDb db = new UmsDb();
+                if (cv.sz_jobid.Equals("-1") || cv.sz_jobid.Trim().Equals(""))
+                    throw new ULbaCellCoverageJobNotPreparedException(sz_operator);
                 String sz_sql = String.Format("SELECT isnull(LO.sz_operatorname, ''), isnull(LO.sz_wms_url,''), isnull(LO.sz_wms_user,''), isnull(LO.sz_wms_password,'') FROM LBASEND LS, LBAOPERATORS LO WHERE LS.sz_jobid='{0}' AND LS.l_operator=LO.l_operator", cv.sz_jobid);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
@@ -219,6 +221,14 @@ namespace com.ums.PAS.Maps
                 //web.Credentials = new NetworkCredential("jone", "jone");
                 HttpWebResponse response = (HttpWebResponse)web.GetResponse();
                 UPASMap map = new UPASMap();
+                if (response.ContentLength < 50)
+                {
+                    byte [] error = new byte[response.ContentLength];
+                    response.GetResponseStream().Read(error, 0, (int)response.ContentLength);
+                    String sz_error = System.Text.Encoding.GetEncoding(response.CharacterSet).GetString(error);
+                    //throw new UMapLoadFailedException(new Exception(sz_error), m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
+                    throw new UMapOverlayFailedException(sz_error, sz_operator, cv.sz_jobid);
+                }
                 map.createMemoryStream(response.GetResponseStream());
                 map.setMapInfo(m_mapinfo);
 
@@ -233,7 +243,8 @@ namespace com.ums.PAS.Maps
             catch (Exception e)
             {
                 ULog.error(0, "Error retrieving WMS layer", e.Message);
-                throw new UMapLoadFailedException(e, m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
+                //throw new UMapLoadFailedException(e, m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
+                throw e;
             }
 
         }
