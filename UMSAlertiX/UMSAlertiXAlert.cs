@@ -1,6 +1,9 @@
 ﻿//#define FORCE_AREA
 #define FORCE_SIMULATE
 //#define WHITELISTS
+//#define WHITELISTS_TELENOR
+//#define WHITELISTS_NETCOM
+//#define SILENTSMS
 
 using System;
 using System.Collections.Generic;
@@ -154,6 +157,11 @@ namespace UMSAlertiX
 #if FORCE_SIMULATE
             oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
+#else
+#if SILENTSMS
+            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
+            execMode = ExecuteMode.SILENT;
+#endif
 #endif
 #if WHITELISTS
             if (arrWhiteList == null)
@@ -166,6 +174,48 @@ namespace UMSAlertiX
                 arrWhiteList[1].value = "UMSSANDNES";
                 arrWhiteList[2] = new WhiteListName();
                 arrWhiteList[2].value = "CELLVISION";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
+#if WHITELISTS_NETCOM
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+NETCOM)");
+                arrWhiteList = new WhiteListName[4];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "UMS";
+                arrWhiteList[1] = new WhiteListName();
+                arrWhiteList[1].value = "UMSSANDNES";
+                arrWhiteList[2] = new WhiteListName();
+                arrWhiteList[2].value = "CELLVISION";
+                arrWhiteList[3] = new WhiteListName();
+                arrWhiteList[3].value = "NETCOM";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
+#if WHITELISTS_TELENOR
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+TELENOR)");
+                arrWhiteList = new WhiteListName[4];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "UMS";
+                arrWhiteList[1] = new WhiteListName();
+                arrWhiteList[1].value = "UMSSANDNES";
+                arrWhiteList[2] = new WhiteListName();
+                arrWhiteList[2].value = "CELLVISION";
+                arrWhiteList[3] = new WhiteListName();
+                arrWhiteList[3].value = "TELENOR";
 
                 cWhiteLists.whiteLists = arrWhiteList;
             }
@@ -398,6 +448,49 @@ namespace UMSAlertiX
                     oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
                 }
 #endif
+#if WHITELISTS_NETCOM
+                if (arrWhiteList == null)
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+NETCOM)");
+                    arrWhiteList = new WhiteListName[4];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "UMS";
+                    arrWhiteList[1] = new WhiteListName();
+                    arrWhiteList[1].value = "UMSSANDNES";
+                    arrWhiteList[2] = new WhiteListName();
+                    arrWhiteList[2].value = "CELLVISION";
+                    arrWhiteList[3] = new WhiteListName();
+                    arrWhiteList[3].value = "NETCOM";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+                }
+#endif
+#if WHITELISTS_TELENOR
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+TELENOR)");
+                arrWhiteList = new WhiteListName[4];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "UMS";
+                arrWhiteList[1] = new WhiteListName();
+                arrWhiteList[1].value = "UMSSANDNES";
+                arrWhiteList[2] = new WhiteListName();
+                arrWhiteList[2].value = "CELLVISION";
+                arrWhiteList[3] = new WhiteListName();
+                arrWhiteList[3].value = "TELENOR";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
+
 
                 if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
                 {
@@ -580,6 +673,48 @@ namespace UMSAlertiX
                     oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
                 }
 #endif
+#if WHITELISTS_NETCOM
+                if (arrWhiteList == null)
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+NETCOM)");
+                    arrWhiteList = new WhiteListName[4];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "UMS";
+                    arrWhiteList[1] = new WhiteListName();
+                    arrWhiteList[1].value = "UMSSANDNES";
+                    arrWhiteList[2] = new WhiteListName();
+                    arrWhiteList[2].value = "CELLVISION";
+                    arrWhiteList[3] = new WhiteListName();
+                    arrWhiteList[3].value = "NETCOM";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+                }
+#endif
+#if WHITELISTS_TELENOR
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION+TELENOR)");
+                arrWhiteList = new WhiteListName[4];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "UMS";
+                arrWhiteList[1] = new WhiteListName();
+                arrWhiteList[1].value = "UMSSANDNES";
+                arrWhiteList[2] = new WhiteListName();
+                arrWhiteList[2].value = "CELLVISION";
+                arrWhiteList[3] = new WhiteListName();
+                arrWhiteList[3].value = "TELENOR";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
 
                 if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
                 {
@@ -631,7 +766,13 @@ namespace UMSAlertiX
             aAlert.PreAuthenticate = true;
 
 #if FORCE_SIMULATE
+            oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
+#else
+#if SILENTSMS
+            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
+            execMode = ExecuteMode.SILENT;
+#endif
 #endif
             
             try
@@ -744,6 +885,11 @@ namespace UMSAlertiX
 #if FORCE_SIMULATE
             oController.log.WriteLog(lRefNo.ToString() + " force simulate");
             execMode = ExecuteMode.SIMULATE;
+#else
+#if SILENTSMS
+            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
+            execMode = ExecuteMode.SILENT;
+#endif
 #endif
 
             foreach (Operator op in oUser.operators)
@@ -889,7 +1035,7 @@ namespace UMSAlertiX
 
         private int UpdateTries(int lRefNo, int lTempStatus, int lEndStatus, int lResponse, int lOperator)
         {
-            int lMaxTries = 4; // Is really retries so 4 will give 5 tries total
+            int lMaxTries = 1; // Is really retries so 4 will give 5 tries total
             int lRetVal = 0;
             string szQuery;
 
