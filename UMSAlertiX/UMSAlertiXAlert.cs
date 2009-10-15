@@ -1,5 +1,5 @@
 ﻿//#define FORCE_AREA
-#define FORCE_SIMULATE
+//#define FORCE_SIMULATE
 //#define WHITELISTS
 //#define WHITELISTS_TELENOR
 //#define WHITELISTS_NETCOM
@@ -76,6 +76,10 @@ namespace UMSAlertiX
                     return Constant.FAILED;
                 }
 
+                // validity is optional, but needs to run before GetAlertMsg
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
@@ -97,9 +101,6 @@ namespace UMSAlertiX
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null) // optional
                 {
@@ -159,8 +160,11 @@ namespace UMSAlertiX
             execMode = ExecuteMode.SIMULATE;
 #else
 #if SILENTSMS
-            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
-            execMode = ExecuteMode.SILENT;
+            if (execMode == ExecuteMode.LIVE)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " using ExecuteMode.SILENT");
+                execMode = ExecuteMode.SILENT;
+            }
 #endif
 #endif
 #if WHITELISTS
@@ -289,7 +293,7 @@ namespace UMSAlertiX
                         lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
                     else
                         lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
-                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.ToString(), lRefNo.ToString() + " ERROR: " + e.Message.ToString());
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.ToString(), lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.Message.ToString());
                 }
             }
 
@@ -313,6 +317,7 @@ namespace UMSAlertiX
 
             int lRefNo;
             int lValidity = oController.message_validity;
+            int lReturn = Constant.OK;
 
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
@@ -366,6 +371,10 @@ namespace UMSAlertiX
                     return Constant.FAILED;
                 }
 
+                // validity is optional but needs to run before GetAlertMsg
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
@@ -387,9 +396,6 @@ namespace UMSAlertiX
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
                 {
@@ -492,19 +498,20 @@ namespace UMSAlertiX
 #endif
 
 
-                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
-                {
-                    // unkown error
-                    return Constant.FAILED;
-                }
+                lReturn = SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser);
+                //if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
+                //{
+                //    // unkown error
+                //    return Constant.FAILED;
+                //}
             }
             else 
             {
                 //missing LBA tag
-                return Constant.FAILED;
+                lReturn = Constant.FAILED;
             }
 
-            return Constant.OK;
+            return lReturn;
         }
 
         public int SendEllipse(ref XmlDocument oDoc, ref UserValues oUser)
@@ -524,6 +531,7 @@ namespace UMSAlertiX
 
             int lRefNo;
             int lValidity = oController.message_validity;
+            int lReturn = Constant.OK;
 
             NumberFormatInfo provider = new NumberFormatInfo();
             provider.NumberDecimalSeparator = ".";
@@ -593,6 +601,10 @@ namespace UMSAlertiX
                     return Constant.FAILED;
                 }
 
+                // validity is optional but needs to run before GetAlertMsg
+                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
+                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
+
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages") != null)
                 {
                     oTextMessages = oDoc.SelectSingleNode("LBA").SelectSingleNode("textmessages");
@@ -614,9 +626,6 @@ namespace UMSAlertiX
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
-
-                if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity") != null) // defaults to config value if null
-                    lValidity = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_validity").Value);
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
                 {
@@ -716,18 +725,19 @@ namespace UMSAlertiX
             }
 #endif
 
-                if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
-                {
-                    return Constant.FAILED;
-                }
+                lReturn = SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser);
+                //if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
+                //{
+                //    return Constant.FAILED;
+                //}
             }
             else
             {
                 //missing LBA tag
-                return Constant.FAILED;
+                lReturn = Constant.FAILED;
             }
 
-            return Constant.OK;
+            return lReturn;
         }
 
         public int ExecutePreparedAlert(ref XmlDocument oDoc)
@@ -770,12 +780,15 @@ namespace UMSAlertiX
             execMode = ExecuteMode.SIMULATE;
 #else
 #if SILENTSMS
-            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
-            execMode = ExecuteMode.SILENT;
+            if (execMode == ExecuteMode.LIVE)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " using ExecuteMode.SILENT");
+                execMode = ExecuteMode.SILENT;
+            }
 #endif
 #endif
             
-            try
+/*            try
             {
                 aResponse = aAlert.executePreparedAlert(idJob, execMode);
                 if (aResponse.codeSpecified)
@@ -792,6 +805,31 @@ namespace UMSAlertiX
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 lReturn = Constant.FAILED;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
+            }*/
+            try
+            {
+                aResponse = aAlert.executePreparedAlert(idJob, execMode);
+                if (aResponse.successful)
+                {
+                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                    lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executed (res=" + aResponse.code.ToString() + ") (job=" + idJob.value + ")");
+                }
+                else if (aResponse.codeSpecified)
+                {
+                    lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executePreparedAlert, -1, op.l_operator);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Execute ERROR: (res=" + aResponse.code.ToString() + ") (job=" + idJob.value + ")");
+                }
+                else
+                {
+                    lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executePreparedAlert, -1, op.l_operator);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Execute ERROR: No response received (job=" + idJob.value + ")");
+                }
+            }
+            catch (Exception e)
+            {
+                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executePreparedAlert, -1, op.l_operator);
+                oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Execute Exception: " + e.ToString(), lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancel Exception: " + e.Message.ToString());
             }
 
             return lReturn;
@@ -840,7 +878,7 @@ namespace UMSAlertiX
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
             aAlert.Credentials = objAuth;
             aAlert.PreAuthenticate = true;
-            try
+/*            try
             {
                 aResponse = aAlert.cancelPreparedAlert(idJob);
                 if (aResponse.codeSpecified)
@@ -857,18 +895,43 @@ namespace UMSAlertiX
                 lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                 lReturn = Constant.FAILED;
                 oController.log.WriteLog(e.ToString(), e.Message.ToString());
+            }*/
+            try
+            {
+                aResponse = aAlert.cancelPreparedAlert(idJob);
+                if (aResponse.successful)
+                {
+                    szUpdateSQL = "UPDATE LBASEND SET l_status=2000, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                    lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancelled (res=" + aResponse.code.ToString() + ") (job=" + idJob.value + ")");
+                }
+                else if (aResponse.codeSpecified)
+                {
+                    lReturn = UpdateTries(lRefNo, 290, Constant.ERR_cancelPreparedAlert, -1, op.l_operator);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancel ERROR: (res=" + aResponse.code.ToString() + ") (job=" + idJob.value + ")");
+                }
+                else
+                {
+                    lReturn = UpdateTries(lRefNo, 290, Constant.EXC_cancelPreparedAlert, -1, op.l_operator);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancel ERROR: No response received (job=" + idJob.value + ")");
+                }
+            }
+            catch (Exception e)
+            {
+                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_cancelPreparedAlert, -1, op.l_operator);
+                oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancel Exception: " + e.ToString(), lRefNo.ToString() + " (" + op.sz_operatorname + ") Cancel Exception: " + e.Message.ToString());
             }
 
             return lReturn;
         }
 
         // alert api
-        private bool SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, WhiteLists cWhiteLists, AdditionalSubscribers cAddSubscribers, ExecuteMode execMode, ref UserValues oUser) // + refno + execmode
+        private int SendCustomArea(ref Point[] pArea, ref AreaName szAreaName, ref AlertMsg msgAlert, int lRefNo, WhiteLists cWhiteLists, AdditionalSubscribers cAddSubscribers, ExecuteMode execMode, ref UserValues oUser) // + refno + execmode
         {
             AlertApi aAlert = new AlertApi();
             AlertResponse aResponse = new AlertResponse();
             Polygon oPoly = new Polygon();
-            bool bReturn = true;
+            int lReturn = Constant.OK;  // return code for method
             string szUpdateSQL;
             int lRequestType = 0;
 
@@ -879,7 +942,8 @@ namespace UMSAlertiX
                 oPoly.vertices[iCount] = pArea[iCount];
             }
 
-            szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
+            szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_status IN (199,290) AND l_refno=" + lRefNo.ToString();
+            //szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
             int lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
 
 #if FORCE_SIMULATE
@@ -887,8 +951,11 @@ namespace UMSAlertiX
             execMode = ExecuteMode.SIMULATE;
 #else
 #if SILENTSMS
-            oController.log.WriteLog(lRefNo.ToString() + " using silentsms");
-            execMode = ExecuteMode.SILENT;
+            if (execMode == ExecuteMode.LIVE)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " using ExecuteMode.SILENT");
+                execMode = ExecuteMode.SILENT;
+            }
 #endif
 #endif
 
@@ -920,15 +987,15 @@ namespace UMSAlertiX
                         lRequestType = oController.GetRequestType(lRefNo);
                         if (lRequestType == 0)
                         {
-                            if (oArea.AreaExists(szAreaName.ToString(), op))
-                                oArea.DeleteArea(szAreaName.ToString(), op);
+                            if (oArea.AreaExists(szAreaName.value, op))
+                                oArea.DeleteArea(szAreaName.value, op);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executing custom alert (execute mode=" + execMode.ToString() + ")");
                             aResponse = aAlert.executeCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers, execMode);
                         }
                         else
                         {
-                            if (oArea.AreaExists(szAreaName.ToString(), op))
-                                oArea.DeleteArea(szAreaName.ToString(), op);
+                            if (oArea.AreaExists(szAreaName.value, op))
+                                oArea.DeleteArea(szAreaName.value, op);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Preparing custom alert (execute mode=" + execMode.ToString() + ")");
                             aResponse = aAlert.prepareCustomAlert(szAreaName, msgAlert, cWhiteLists, oPoly, cAddSubscribers);
                         }
@@ -941,25 +1008,40 @@ namespace UMSAlertiX
                         }
                         else if (aResponse.codeSpecified)
                         {
+                            //oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
+                            //lReturn = -2;
+                            if (lRequestType == 0)
+                                lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executeAreaAlert, aResponse.code, op.l_operator);
+                            else
+                                lReturn = UpdateTries(lRefNo, 290, Constant.ERR_prepareAreaAlert, aResponse.code, op.l_operator);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
-                            bReturn = false;
                         }
                         else
                         {
+                            //oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
+                            //lReturn = -2;
+                            if (lRequestType == 0)
+                                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
+                            else
+                                lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
-                            bReturn = false;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    szUpdateSQL = "UPDATE LBASEND SET l_retries=l_retries+1 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                    lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                    bReturn = false;
+                    //szUpdateSQL = "UPDATE LBASEND SET l_retries=l_retries+1 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                    //lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
+                    //lReturn = -2;
                     oController.log.WriteLog(e.ToString(), e.Message.ToString());
+                    if (lRequestType == 0)
+                        lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
+                    else
+                        lReturn = UpdateTries(lRefNo, 290, Constant.EXC_prepareAreaAlert, -1, op.l_operator);
+                    oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.ToString(), lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: " + e.Message.ToString());
                 }
             }
-            return bReturn;
+            return lReturn;
         }
 
         private int GetAlertMsg(ref XmlNode oTextMessages, ref AlertMsg msgAlert)

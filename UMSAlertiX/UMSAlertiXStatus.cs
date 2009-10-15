@@ -271,7 +271,7 @@ namespace UMSAlertiX
 
                     ccSubscribers = ccStatus.subscribersCount;
                     lCountSub += ccSubscribers;
-                    lProc += ccDelivered + ccExpired + ccFailed;
+                    lProc += ccDelivered + ccExpired + ccFailed + ccUnknown;
 
                     lRetVal = oController.ExecDB("sp_upd_status_lba_cc " + lRefNo.ToString() + ", " + lOperator.ToString() + ", " + cc.ToString() + ", " + ccDelivered.ToString() + ", " + ccExpired.ToString() + ", " + ccFailed.ToString() + ", " + ccUnknown.ToString() + ", " + ccSubmitted.ToString() + ", " + ccQueued.ToString() + ", " + ccSubscribers.ToString(), oController.dsn);
                 }
