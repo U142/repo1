@@ -372,8 +372,13 @@ namespace com.ums.UmsParm
                 {
                     if (b_voice_active)
                     {
-                        if (passending.l_refno <= 0)
+                        //if (passending.l_refno <= 0)
+                        //    passending.l_refno = db.newRefno();
+                        if (sending.n_refno > 0)
+                            passending.l_refno = sending.n_refno;
+                        else
                             passending.l_refno = db.newRefno();
+
                     }
                     if (b_lba_active)
                     {

@@ -52,7 +52,7 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, BBQREF head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE dept.l_comppk={0} AND info.l_type=1 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=1 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
                 "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
                 "UNION " +
                 "SELECT l_sendingtype=2, isnull(head.l_items, -1) l_totitem, " +
@@ -62,7 +62,7 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, SMSQREF head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE dept.l_comppk={0} AND info.l_type=2 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=2 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
                 "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
                 "UNION " +
                 "SELECT l_sendingtype=4, sum(isnull(head.l_items, 0)) l_totitem, " +
@@ -72,7 +72,7 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, LBASEND head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE dept.l_comppk={0} AND info.l_type=4 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=4 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
                 "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
                 "GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                 "ORDER BY info.l_refno DESC",
