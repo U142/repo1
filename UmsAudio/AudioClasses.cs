@@ -209,7 +209,7 @@ namespace com.ums.UmsCommon.Audio
 
                 try
                 {
-                    response.wav = null; // File.ReadAllBytes(file_dest_wav.full());
+                    response.wav = File.ReadAllBytes(file_dest_wav.full());
                     response.sz_server_filename = file_dest_wav.file();
                     response.n_responsecode = 0;
                     response.n_dynfile = req.n_dynfile;
