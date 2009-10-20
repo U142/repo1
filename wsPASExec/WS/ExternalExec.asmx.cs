@@ -136,6 +136,8 @@ namespace com.ums.ws.parm
         [WebMethod]
         public ExecResponse ExecTestSending(UTESTSENDING send)
         {
+            for(int i = 0;i<send.numbers.Count;++i)
+                send.numbers[i] = "NA," + send.numbers[i];
             ExecResponse response = new ExecResponse();
             XmlDocument doc = ExecMapSending(send);
             response.parseFromXml(ref doc, "l_alertpk");
