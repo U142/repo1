@@ -321,7 +321,7 @@ namespace com.ums.UmsParm
                 for (int i = 0; i < m_numbers.Count; i++)
                 {
                     if (m_numbers[i].Length > 5)
-                        w.writeline(m_numbers[i]);
+                        w.writeline("NA," + m_numbers[i]);
                 }
                 return true;
             }
