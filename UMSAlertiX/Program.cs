@@ -31,10 +31,17 @@ namespace UMSAlertiX
             oController.parsepath = oConfig.GetConfigValue("ParsePath");
             if(oConfig.GetConfigValue("MessageValidity")!="") oController.message_validity = Convert.ToInt32(oConfig.GetConfigValue("MessageValidity")); // default validity
             if(oConfig.GetConfigValue("CPUAffinity")!="") oController.affinity = Convert.ToInt32(oConfig.GetConfigValue("CPUAffinity"));
-            
+
             //oController.InitOperators();
+
+            UMSAlertiXWebServer oWmsProxy = new UMSAlertiXWebServer(oConfig.GetConfigValue("WebServerPrefix"));
+            oController.webserver = oWmsProxy;
+            oWmsProxy.SetController(ref oController);
             
             System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)oController.affinity;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Clear();
 
             // parse command line arguments
             foreach (string s in args)
@@ -90,6 +97,12 @@ namespace UMSAlertiX
             Console.WriteLine("# Starting CC Status thread", 1);
             Thread trCCStatus = new Thread(new ThreadStart(oStatus.UpdateCCStatus));
             trCCStatus.Start();
+            oController.threads++;
+
+            // start webserver thread
+            Console.WriteLine("# Starting Webserver thread with filter: " + oConfig.GetConfigValue("WebServerPrefix"), 1);
+            Thread trWebServer = new Thread(new ThreadStart(oWmsProxy.Start));
+            trWebServer.Start();
             oController.threads++;
 
             while (oController.threads > 0)

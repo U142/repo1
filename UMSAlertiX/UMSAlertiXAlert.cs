@@ -3,7 +3,8 @@
 //#define WHITELISTS
 //#define WHITELISTS_TELENOR
 //#define WHITELISTS_NETCOM
-//#define SILENTSMS
+#define SILENTSMS
+//#define WHITELISTS_GRENLAND
 
 using System;
 using System.Collections.Generic;
@@ -170,14 +171,29 @@ namespace UMSAlertiX
 #if WHITELISTS
             if (arrWhiteList == null)
             {
-                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+CELLVISION)");
                 arrWhiteList = new WhiteListName[3];
                 arrWhiteList[0] = new WhiteListName();
                 arrWhiteList[0].value = "UMS";
                 arrWhiteList[1] = new WhiteListName();
                 arrWhiteList[1].value = "UMSSANDNES";
                 arrWhiteList[2] = new WhiteListName();
-                arrWhiteList[2].value = "CELLVISION";
+                arrWhiteList[2].value = "CellVision";
+
+                cWhiteLists.whiteLists = arrWhiteList;
+            }
+            else
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+            }
+#endif
+#if WHITELISTS_GRENLAND
+            if (arrWhiteList == null)
+            {
+                oController.log.WriteLog(lRefNo.ToString() + " force whitelist (GRENLAND_TYR_CREW)");
+                arrWhiteList = new WhiteListName[1];
+                arrWhiteList[0] = new WhiteListName();
+                arrWhiteList[0].value = "GRENLAND_TYR_CREW";
 
                 cWhiteLists.whiteLists = arrWhiteList;
             }
@@ -438,14 +454,29 @@ namespace UMSAlertiX
 #if WHITELISTS
                 if (arrWhiteList == null)
                 {
-                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+CELLVISION)");
                     arrWhiteList = new WhiteListName[3];
                     arrWhiteList[0] = new WhiteListName();
                     arrWhiteList[0].value = "UMS";
                     arrWhiteList[1] = new WhiteListName();
                     arrWhiteList[1].value = "UMSSANDNES";
                     arrWhiteList[2] = new WhiteListName();
-                    arrWhiteList[2].value = "CELLVISION";
+                    arrWhiteList[2].value = "CellVision";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+                }
+#endif
+#if WHITELISTS_GRENLAND
+                if (arrWhiteList == null)
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (GRENLAND_TYR_CREW)");
+                    arrWhiteList = new WhiteListName[1];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "GRENLAND_TYR_CREW";
 
                     cWhiteLists.whiteLists = arrWhiteList;
                 }
@@ -666,14 +697,29 @@ namespace UMSAlertiX
 #if WHITELISTS
                 if (arrWhiteList == null)
                 {
-                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+UMSSANDNES+CELLVISION)");
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (UMS+CELLVISION)");
                     arrWhiteList = new WhiteListName[3];
                     arrWhiteList[0] = new WhiteListName();
                     arrWhiteList[0].value = "UMS";
                     arrWhiteList[1] = new WhiteListName();
                     arrWhiteList[1].value = "UMSSANDNES";
-                    arrWhiteList[2] = new WhiteListName();
-                    arrWhiteList[2].value = "CELLVISION";
+                    arrWhiteList[1] = new WhiteListName();
+                    arrWhiteList[1].value = "CellVision";
+
+                    cWhiteLists.whiteLists = arrWhiteList;
+                }
+                else
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " can't force whitelist, whitelist(s) already specified.");
+                }
+#endif
+#if WHITELISTS_GRENLAND
+                if (arrWhiteList == null)
+                {
+                    oController.log.WriteLog(lRefNo.ToString() + " force whitelist (GRENLAND_TYR_CREW)");
+                    arrWhiteList = new WhiteListName[1];
+                    arrWhiteList[0] = new WhiteListName();
+                    arrWhiteList[0].value = "GRENLAND_TYR_CREW";
 
                     cWhiteLists.whiteLists = arrWhiteList;
                 }

@@ -19,6 +19,7 @@ namespace UMSAlertiX
         private int lMessageValidity = 240; // minutes
         private int lAffinity = 1;
         private UMSAlertiXLog oLog;
+        private UMSAlertiXWebServer oWebServer;
 
         public UMSAlertiXLog log
         {
@@ -29,6 +30,18 @@ namespace UMSAlertiX
             set
             {
                 oLog = value;
+            }
+        }
+
+        public UMSAlertiXWebServer webserver
+        {
+            get
+            {
+                return oWebServer;
+            }
+            set
+            {
+                oWebServer = value;
             }
         }
 
@@ -166,6 +179,8 @@ namespace UMSAlertiX
             }
             threads--;
             Console.WriteLine("# Stopped Watcher thread", 1);
+            oWebServer.Stop();
+            threads--;
         }
 
         public int ExecDB(string szQuery, string szConn)

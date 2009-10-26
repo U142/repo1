@@ -74,6 +74,7 @@
     <Compile Include="UMSAlertiXLog.cs" />
     <Compile Include="UMSAlertiXParser.cs" />
     <Compile Include="UMSAlertiXStatus.cs" />
+    <Compile Include="UMSAlertiXWebServer.cs" />
     <Compile Include="Web References\AlertiXAlertApi\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
