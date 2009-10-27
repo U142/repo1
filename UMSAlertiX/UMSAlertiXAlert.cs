@@ -530,11 +530,6 @@ namespace UMSAlertiX
 
 
                 lReturn = SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser);
-                //if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
-                //{
-                //    // unkown error
-                //    return Constant.FAILED;
-                //}
             }
             else 
             {
@@ -772,10 +767,6 @@ namespace UMSAlertiX
 #endif
 
                 lReturn = SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser);
-                //if (!SendCustomArea(ref arrPoint, ref szAreaName, ref msgAlert, lRefNo, cWhiteLists, cAddSubscribers, execMode, ref oUser))
-                //{
-                //    return Constant.FAILED;
-                //}
             }
             else
             {
@@ -834,24 +825,6 @@ namespace UMSAlertiX
 #endif
 #endif
             
-/*            try
-            {
-                aResponse = aAlert.executePreparedAlert(idJob, execMode);
-                if (aResponse.codeSpecified)
-                {
-                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                    lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                }
-                else
-                    lReturn = Constant.FAILED;
-            }
-            catch (Exception e)
-            {
-                szUpdateSQL = "UPDATE LBASEND SET l_status=42001 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = Constant.FAILED;
-                oController.log.WriteLog(e.ToString(), e.Message.ToString());
-            }*/
             try
             {
                 aResponse = aAlert.executePreparedAlert(idJob, execMode);
@@ -924,24 +897,7 @@ namespace UMSAlertiX
             ICredentials objAuth = objNetCredentials.GetCredential(uri, "Basic");
             aAlert.Credentials = objAuth;
             aAlert.PreAuthenticate = true;
-/*            try
-            {
-                aResponse = aAlert.cancelPreparedAlert(idJob);
-                if (aResponse.codeSpecified)
-                {
-                    szUpdateSQL = "UPDATE LBASEND SET l_status=2000, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                    lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                }
-                else
-                    lReturn = Constant.FAILED;
-            }
-            catch (Exception e)
-            {
-                szUpdateSQL = "UPDATE LBASEND SET l_status=42002 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                lReturn = Constant.FAILED;
-                oController.log.WriteLog(e.ToString(), e.Message.ToString());
-            }*/
+
             try
             {
                 aResponse = aAlert.cancelPreparedAlert(idJob);
@@ -989,7 +945,6 @@ namespace UMSAlertiX
             }
 
             szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_status IN (199,290) AND l_refno=" + lRefNo.ToString();
-            //szUpdateSQL = "UPDATE LBASEND SET l_status=200 WHERE l_refno=" + lRefNo.ToString();
             int lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
 
 #if FORCE_SIMULATE
@@ -1054,8 +1009,6 @@ namespace UMSAlertiX
                         }
                         else if (aResponse.codeSpecified)
                         {
-                            //oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: (res=" + aResponse.code.ToString() + ") " + aResponse.message);
-                            //lReturn = -2;
                             if (lRequestType == 0)
                                 lReturn = UpdateTries(lRefNo, 290, Constant.ERR_executeAreaAlert, aResponse.code, op.l_operator);
                             else
@@ -1064,8 +1017,6 @@ namespace UMSAlertiX
                         }
                         else
                         {
-                            //oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") ERROR: No response received");
-                            //lReturn = -2;
                             if (lRequestType == 0)
                                 lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
                             else
@@ -1076,9 +1027,6 @@ namespace UMSAlertiX
                 }
                 catch (Exception e)
                 {
-                    //szUpdateSQL = "UPDATE LBASEND SET l_retries=l_retries+1 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
-                    //lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
-                    //lReturn = -2;
                     oController.log.WriteLog(e.ToString(), e.Message.ToString());
                     if (lRequestType == 0)
                         lReturn = UpdateTries(lRefNo, 290, Constant.EXC_executeAreaAlert, -1, op.l_operator);
