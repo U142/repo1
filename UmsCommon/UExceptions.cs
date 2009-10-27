@@ -232,6 +232,13 @@ namespace com.ums.UmsCommon
         {
         }
     }
+    public class UNoStatusReadRightsException : UException
+    {
+        public UNoStatusReadRightsException(String s)
+            : base(s)
+        {
+        }
+    }
    
 
 }

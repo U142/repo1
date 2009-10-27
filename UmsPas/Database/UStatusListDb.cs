@@ -43,6 +43,20 @@ namespace com.ums.PAS.Database
 
             //deptfilter
             // WHERE AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk=logon.l_userpk
+            String szDeptList = "";
+            String szDeptListSQL = String.Format("SELECT DISTINCT isnull(BD.l_deptpk,0) FROM BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP WHERE BD.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={0} AND BUXD.l_profilepk=BUP.l_profilepk AND BUP.l_status>=1", logon.l_userpk);
+            OdbcDataReader rsDepts = ExecReader(szDeptListSQL, UmsDb.UREADER_KEEPOPEN);
+            while (rsDepts.Read())
+            {
+                String l_deptpk = rsDepts.GetString(0);
+                if (szDeptList.Length > 0)
+                    szDeptList += ",";
+                szDeptList += l_deptpk;
+            }
+            rsDepts.Close();
+            if (szDeptList.Length == 0)
+                throw new UNoStatusReadRightsException("No Department/Userprofile link provides status read");
+
             UStatusListResults res = new UStatusListResults();
             String szSQL = String.Format(
                 "SELECT isnull(head.l_type, 0) l_sendingtype, isnull(head.l_items, -1) l_totitem, " +
@@ -52,8 +66,8 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, BBQREF head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=1 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE info.l_type=1 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk in ({2}) " +
                 "UNION " +
                 "SELECT l_sendingtype=2, isnull(head.l_items, -1) l_totitem, " +
                 "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
@@ -62,8 +76,8 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, SMSQREF head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=2 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE info.l_type=2 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk in ({2}) " +
                 "UNION " +
                 "SELECT l_sendingtype=4, sum(isnull(head.l_items, 0)) l_totitem, " +
                 "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
@@ -72,11 +86,11 @@ namespace com.ums.PAS.Database
                 "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                 "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                 "FROM MDVSENDINGINFO info, LBASEND head, " +
-                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj, BBUSERPROFILE_X_DEPT BUXD WHERE info.l_type=4 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} " +
+                "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE info.l_type=4 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
+                "AND info.l_group in (2,3,4,8,9) AND dept.l_deptpk in ({2}) " +
                 "GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                 "ORDER BY info.l_refno DESC",
-                logon.l_comppk, logon.l_userpk);
+                logon.l_comppk, logon.l_userpk, szDeptList);
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);

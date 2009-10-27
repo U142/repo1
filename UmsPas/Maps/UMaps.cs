@@ -209,7 +209,7 @@ namespace com.ums.PAS.Maps
                                                   //"http://lbv.netcom.no:8081/alertix/alertix.asp?" +
                                                   sz_wms_url + 
                                                   "?" +
-                                                  "version={0}&request={1}&layers={2}_{3}&STYLES={4}&" +
+                                                  "VERSION={0}&REQUEST={1}&LAYERS={2}_{3}&STYLES={4}&" +
                                                   "SRS=EPSG:{5}&BBOX={6},{7},{8},{9}&WIDTH={10}&" +
                                                   "HEIGHT={11}&FORMAT=image/png",
                                                   cv.version, cv.sz_request, cv.sz_jobid, cv.layers,
