@@ -3,7 +3,7 @@
 //#define WHITELISTS
 //#define WHITELISTS_TELENOR
 //#define WHITELISTS_NETCOM
-#define SILENTSMS
+//#define SILENTSMS
 //#define WHITELISTS_GRENLAND
 
 using System;

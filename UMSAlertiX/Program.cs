@@ -40,7 +40,7 @@ namespace UMSAlertiX
             
             System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)oController.affinity;
             Console.BackgroundColor = ConsoleColor.DarkBlue;
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
 
             // parse command line arguments
