@@ -13,13 +13,16 @@ namespace com.ums.UmsFile
     {
         protected String sz_filename;
         protected String sz_path;
+        protected String sz_ext;
         public String file() { return sz_filename; }
         public String path() { return sz_path; }
         public String full() { return sz_path + "\\" + sz_filename; }
+        public String ext() { return sz_ext; }
         public UFile(string path, string file) 
         {
             sz_filename = file;
             sz_path = path;
+            sz_ext = sz_filename.Substring(sz_filename.LastIndexOf("."));
         }
 
         //
@@ -51,6 +54,19 @@ namespace com.ums.UmsFile
                 throw e;
             }
 
+        }
+
+        public void RenameOperation(UFile dest)
+        {
+            try
+            {
+                File.Move(this.full(), dest.full());
+            }
+            catch (Exception e)
+            {
+                ULog.error(e.Message);
+                throw e;
+            }
         }
 
         public void CopyOperation(UFile dest)
@@ -171,10 +187,16 @@ namespace com.ums.UmsFile
             catch (Exception)
             {
             }
+            //UFile temp = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file().Replace(this.file.ext(), ".tmp"));
+            //UFile desttemp = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+            String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
+            UFile desttemp = new UFile(UCommon.UPATHS.sz_path_lba, tempfile);
             UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+
             try
             {
-                file.MoveOperation(dest);
+                file.MoveOperation(desttemp);
+                desttemp.RenameOperation(dest);
                 return true;
             }
             catch (Exception e)
@@ -209,10 +231,15 @@ namespace com.ums.UmsFile
             {
                 throw e;
             }
+            //UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+            String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
+            UFile desttemp = new UFile(UCommon.UPATHS.sz_path_lba, tempfile);
             UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+
             try
             {
-                file.MoveOperation(dest);
+                file.MoveOperation(desttemp);
+                desttemp.RenameOperation(dest);
                 return true;
             }
             catch (Exception e)
@@ -267,10 +294,14 @@ namespace com.ums.UmsFile
             {
 
             }
+            String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
+            UFile desttemp = new UFile(UCommon.UPATHS.sz_path_bcp, tempfile);
             UFile dest = new UFile(UCommon.UPATHS.sz_path_bcp, this.file.file());
             try
             {
-                file.MoveOperation(dest);
+                file.MoveOperation(desttemp);
+                desttemp.RenameOperation(dest);
+                
                 return true;
             }
             catch (Exception e)

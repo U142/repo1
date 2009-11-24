@@ -14,6 +14,14 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UNoCountryCodeSpecifiedException : UException
+    {
+        public UNoCountryCodeSpecifiedException()
+            : base("No Country Code was specified")
+        {
+        }
+    }
+
     public class ULbaCellCoverageWmsServerNotRegisteredException : UException
     {
         public ULbaCellCoverageWmsServerNotRegisteredException(String sz_operator)

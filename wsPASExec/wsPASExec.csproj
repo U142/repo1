@@ -76,6 +76,7 @@
     <Content Include="WS\PAS.asmx" />
     <Content Include="Web.config" />
     <Content Include="WS\PasStatus.asmx" />
+    <Content Include="WS\TAS.asmx" />
     <Content Include="WS\VB.asmx" />
     <Content Include="WS\Voice.asmx" />
   </ItemGroup>
@@ -117,6 +118,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WS\PasStatus.asmx.cs">
       <DependentUpon>PasStatus.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WS\TAS.asmx.cs">
+      <DependentUpon>TAS.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WS\VB.asmx.cs">

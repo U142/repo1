@@ -274,9 +274,11 @@ namespace com.ums.PAS.Maps
                                 "&IW={8}" + 
                                 "&IH={9}" + 
                                 "&IT=0" +
-                                "&IF=1" + //0 = GIF, 1 = JPG, 3 = PNG
+                                "&IF=3" + //0 = GIF, 1 = JPG, 3 = PNG
+                                "&IP=1" + //1=true color
                                 "&PL={10}" + 
-                                ";M",
+                                ";SYM",
+                                //";M",
                                 m_logoninfo.sz_compid, m_logoninfo.sz_deptid,
                                 userid, password, m_mapinfo.l_bo, m_mapinfo.r_bo,
                                 m_mapinfo.u_bo, m_mapinfo.b_bo,

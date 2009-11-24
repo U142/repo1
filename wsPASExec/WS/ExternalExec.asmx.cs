@@ -35,12 +35,13 @@ namespace com.ums.ws.parm
         [WebMethod]
         public PAEVENT[] GetEventListTest()
         {
-            ULOGONINFO logoninfo = new ULOGONINFO();
+            /*ULOGONINFO logoninfo = new ULOGONINFO();
             logoninfo.sz_userid = "MH";
             logoninfo.sz_compid = "UMS";
             logoninfo.sz_password = "mh123,1";
             logoninfo.sz_deptid = "TEST";
-            return GetEventList(logoninfo);
+            return GetEventList(logoninfo);*/
+            return null;
 
         }
 

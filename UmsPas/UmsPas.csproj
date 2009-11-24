@@ -60,6 +60,7 @@
     <Compile Include="Database\USettingsDb.cs" />
     <Compile Include="Database\UStatusItemsDb.cs" />
     <Compile Include="Database\UStatusListDb.cs" />
+    <Compile Include="Database\UTasDb.cs" />
     <Compile Include="Maps\UMaps.cs" />
     <Compile Include="PARM\CommonParm.cs" />
     <Compile Include="PARM\ParmDb.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Status\IStatusList.cs" />
     <Compile Include="Status\UStatusItems.cs" />
     <Compile Include="Status\UStatusListItem.cs" />
+    <Compile Include="TAS\UTas.cs" />
     <Compile Include="Weather\UWeatherReport.cs" />
   </ItemGroup>
   <ItemGroup>
