@@ -17,6 +17,7 @@ namespace com.ums.UmsCommon
         STATUS_ITEMS = 4,
         PARM_UPDATE = 5,
         HOUSE_DOWNLOAD = 6,
+        TAS_UPDATE = 7,
 
 
     }
