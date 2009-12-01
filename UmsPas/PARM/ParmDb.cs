@@ -626,7 +626,7 @@ namespace com.ums.UmsParm
 
             if (m.l_group != UShape.SENDINGTYPE_POLYGON && m.l_group != UShape.SENDINGTYPE_ELLIPSE &&
                 m.l_group != UShape.SENDINGTYPE_GIS && m.l_group != UShape.SENDINGTYPE_TESTSENDING &&
-                m.l_group != UShape.SENDINGTYPE_MUNICIPAL)
+                m.l_group != UShape.SENDINGTYPE_MUNICIPAL && m.l_group != UShape.SENDINGTYPE_TAS)
                 throw new USendingTypeNotSupportedException(String.Format("Sending type {0} not supported", m.l_group));
 
             return true;
@@ -901,6 +901,23 @@ namespace com.ums.UmsParm
                 throw e;
             }
 
+        }
+
+        public bool Send(ref TAS_SENDING s)
+        {
+            try
+            {
+                PAS_SENDING p = s;
+                p.m_profile = new BBACTIONPROFILESEND();
+                p.m_profile.l_actionprofilepk = 0;
+                InsertBBACTIONPROFILE(ref p);
+                InsertMDVSENDINGINFO(ref p);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<int> GetOperatorsForSend(long l_alertpk, long l_deptpk)

@@ -55,6 +55,7 @@ namespace com.ums.UmsParm
         public static int SENDINGTYPE_POLYGON = 3;
         public static int SENDINGTYPE_ELLIPSE = 8;
         public static int SENDINGTYPE_GIS = 4;
+        public static int SENDINGTYPE_TAS = 5;
         public static int SENDINGTYPE_MUNICIPAL = 9;
         public static int SENDINGTYPE_TESTSENDING = 0;//imported list
 
@@ -65,6 +66,7 @@ namespace com.ums.UmsParm
         public UGIS gis() { return (UGIS)this; }
         public UGeminiStreet gemini() { return (UGeminiStreet)this; }
         public UMunicipalShape municipal() { return (UMunicipalShape)this; }
+        public UTasShape tas() { return (UTasShape)this; }
         public UTestSending test() { return (UTestSending)this; }
         public UResend resend() { return (UResend)this; }
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
@@ -190,7 +192,9 @@ namespace com.ums.UmsParm
             }
             else if (typeof(PANULLALERT).Equals(alert.GetType()))
             {
-                if (typeof(UPolygon).Equals(sourceshape.GetType()))
+                if (sourceshape == null) //TAS
+                    xmlwriter.insertAttribute("operation", "SendInternational");
+                else if (typeof(UPolygon).Equals(sourceshape.GetType()))
                     xmlwriter.insertAttribute("operation", "SendPolygon");
                 else if (typeof(UEllipse).Equals(sourceshape.GetType()))
                     xmlwriter.insertAttribute("operation", "SendEllipse");
@@ -233,7 +237,11 @@ namespace com.ums.UmsParm
                 xmlwriter.insertEndElement(); //textmessages
                 if (b_adhoc)
                 {
-                    if (typeof(UPolygon).Equals(sourceshape.GetType()))
+                    if (sourceshape == null)
+                    {
+                        //TAS has no shape
+                    }
+                    else if (typeof(UPolygon).Equals(sourceshape.GetType()))
                     {
                         xmlwriter.insertStartElement("alertpolygon");
                         xmlwriter.insertAttribute("col_a", "0");
@@ -666,6 +674,77 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class UTasShape : UShape
+    {
+        public List<ULBACOUNTRY> countries;
+        protected UMapBounds bounds;
+        public UTASSENDING sending;
+
+        public UTasShape()
+            : base()
+        {
+            countries = new List<ULBACOUNTRY>();
+        }
+        public void addCountry(ULBACOUNTRY c)
+        {
+            countries.Add(c);
+        }
+        public void setBounds(UMapBounds b)
+        {
+            bounds = b;
+        }
+        public void setSending(ref UTASSENDING s)
+        {
+            sending = s;
+        }
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            try
+            {
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.l_bo));
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.r_bo));
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.u_bo));
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.b_bo));
+            }
+            catch (Exception e)
+            {
+                ULog.error(w.getRefno(), "UTasShape::WriteAddressFileGUI", e.Message);
+                throw new UFileWriteException(e.Message);
+            }
+            finally
+            {
+                w.close();
+            }
+            return true;
+        }
+        public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            //return base.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
+            ULocationBasedAlert loc = new ULocationBasedAlert();
+            loc.l_alertpk = "-1";
+            loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
+            ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();
+            lbalang.sz_cb_oadc = sending.sz_sms_oadc;
+            lbalang.sz_name = "Default";
+            lbalang.sz_otoa = "0";
+            lbalang.sz_text = sending.sz_sms_message;
+            lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
+            ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
+            for(int i=0; i < countries.Count; i++)
+            {
+                ccode.ccode = countries[i].l_cc.ToString();
+                lbalang.m_ccodes.Add(ccode);
+            }
+            loc.m_languages.Add(lbalang);
+            loc.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
+            return true;
+        }
+    }
+
     public class UPolygon : UShape
     {
         public List<UPolypoint> m_array_polypoints;
@@ -929,6 +1008,27 @@ namespace com.ums.UmsParm
             m_dynaresched = new BBDYNARESCHED(p);
         }
     }
+
+    public class TAS_SENDING : SMS_SENDING
+    {
+        public TAS_SENDING()
+        {
+            sendingtype = 's';
+        }
+        public override bool hasLBA()
+        {
+            return true;
+        }
+        public override bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
+        {
+            adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true);
+            //s = new ULocationBasedAlert();
+            PAALERT alert = new PANULLALERT();
+            //UTasShape tas = new UTasShape();
+            m_shape.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref alert, l_refno, n_function, ref adrlbawriter);
+            return true;
+        }
+    }
      
     public class SMS_SENDING : PAS_SENDING 
     {
@@ -1017,6 +1117,20 @@ namespace com.ums.UmsParm
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_POLYGON;
             }
+            else if (typeof(UTASSENDING) == s.GetType())
+            {
+                UTASSENDING tas = (UTASSENDING)s;
+                s.setGroup(UShape.SENDINGTYPE_TAS);
+                UShape shape = new UTasShape();
+                for (int i = 0; i < tas.countrylist.Count; i++)
+                {
+                    shape.tas().addCountry(tas.countrylist[i]);
+                }
+                shape.tas().setBounds(tas.mapbounds);
+                shape.tas().setSending(ref tas);
+                setShape(ref shape);
+                s.n_sendingtype = UShape.SENDINGTYPE_TAS;
+            }
             else if (typeof(UELLIPSESENDING) == s.GetType())
             {
                 UELLIPSESENDING ellipse = (UELLIPSESENDING)s;
@@ -1061,7 +1175,7 @@ namespace com.ums.UmsParm
                 {
                 }
                 shape.municipal().SetBounds(mun.mapbounds);
-                
+
                 setShape(ref shape);
                 s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
 
@@ -1071,11 +1185,11 @@ namespace com.ums.UmsParm
                 UTESTSENDING t = (UTESTSENDING)s;
                 t.setGroup(UShape.SENDINGTYPE_TESTSENDING);
                 UShape shape = new UTestSending();
-                
+
                 for (int i = 0; i < t.numbers.Count; i++)
                 {
                     shape.test().addRecord(t.numbers[i]);
-                }                
+                }
                 setShape(ref shape);
                 t.n_sendingtype = UShape.SENDINGTYPE_TESTSENDING;
             }
@@ -1147,8 +1261,14 @@ namespace com.ums.UmsParm
                     adrguiwriter = new AdrfileGUIWriter(l_refno);
                     s.WriteAddressFileGUI(ref adrguiwriter);
                 }
-                adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend);
-                s.WriteAddressFile(ref adrwriter);
+                bool b_write_addressfile = true;
+                if (typeof(UTasShape).Equals(s.GetType()))
+                    b_write_addressfile = false;
+                if (b_write_addressfile)
+                {
+                    adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend);
+                    s.WriteAddressFile(ref adrwriter);
+                }
                 return true;
             }
             catch (Exception e)
@@ -1156,7 +1276,7 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
-        public bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
+        public virtual bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
         {
             m_lba_shape = s;
             if (l_refno < 0)
@@ -1434,5 +1554,10 @@ namespace com.ums.UmsParm
     public class UMUNICIPALSENDING : UMAPSENDING
     {
         public List<UMunicipalDef> municipals;
+    }
+    public class UTASSENDING : UMAPSENDING
+    {
+        public List<ULBACOUNTRY> countrylist;
+        public int n_requesttype; //for LBA/TAS call
     }
 }

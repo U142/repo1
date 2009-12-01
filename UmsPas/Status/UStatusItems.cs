@@ -381,8 +381,11 @@ namespace com.ums.PAS.Status
             for(int lba = 0; lba < proj.mdvsendinginfo.Count; lba++)
             {
                 MDVSENDINGINFO mdv = proj.mdvsendinginfo[lba];
-                if((mdv.l_addresstypes & (int)ADRTYPES.LBA_TEXT)==(int)ADRTYPES.LBA_TEXT ||
-                    (mdv.l_addresstypes & (int)ADRTYPES.LBA_VOICE)==(int)ADRTYPES.LBA_VOICE)
+                if(
+                    (mdv.l_addresstypes & (int)ADRTYPES.LBA_TEXT)==(int)ADRTYPES.LBA_TEXT ||
+                    (mdv.l_addresstypes & (int)ADRTYPES.LBA_VOICE)==(int)ADRTYPES.LBA_VOICE ||
+                    (mdv.l_addresstypes & (int)ADRTYPES.SENDTO_TAS_SMS)==(int)ADRTYPES.SENDTO_TAS_SMS
+                  )
                 {
                     //ULBASENDING lbasending = m_db.GetLBASending(mdv.l_refno);
                     List<ULBASENDING> lbasendings = m_db.GetLBASending_2_0(mdv.l_refno);

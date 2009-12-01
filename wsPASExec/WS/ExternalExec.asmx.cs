@@ -102,6 +102,15 @@ namespace com.ums.ws.parm
         }
 
         [WebMethod]
+        public ExecResponse ExecTasSending(UTASSENDING tas)
+        {
+            ExecResponse response = new ExecResponse();
+            XmlDocument doc = ExecMapSending(tas);
+            response.parseFromXml(ref doc, "l_alertpk");
+            return response;
+        }
+
+        [WebMethod]
         public ExecResponse ExecPolygonSending(UPOLYGONSENDING poly)
         {
             ExecResponse response = new ExecResponse();

@@ -250,9 +250,15 @@ namespace com.ums.UmsParm
 
         protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
         {
+            bool b_test_to_single_recipient = false;
+            if (typeof(UTESTSENDING) == sending.GetType())
+                b_test_to_single_recipient = true;
+
+
             bool b_voice_active = false;
             bool b_sms_active = false;
             bool b_lba_active = false;
+            bool b_tas_active = false;
             if (sending.doSendSMS() && ((sending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
                 (sending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
@@ -286,14 +292,26 @@ namespace com.ums.UmsParm
             {
                 b_lba_active = true;
             }
+            if ((sending.n_addresstypes & (long)ADRTYPES.SENDTO_TAS_SMS) > 0)
+            {
+                if (b_test_to_single_recipient)
+                {
+                    b_tas_active = false;
+                    b_sms_active = true;
+                }
+                else
+                    b_tas_active = true;
+            }
 
 
             PAS_SENDING passending = new PAS_SENDING();
             SMS_SENDING smssending = new SMS_SENDING();
             PAS_SENDING lbasending = new PAS_SENDING();
+            TAS_SENDING tassending = new TAS_SENDING();
             passending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
             lbasending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
             smssending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+            tassending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
 
             smssending.setSmsMessage(sending.sz_sms_message);
             smssending.setSmsOadc(sending.sz_sms_oadc);
@@ -301,11 +319,18 @@ namespace com.ums.UmsParm
             
             smssending.l_resend_refno = passending.l_resend_refno = lbasending.l_resend_refno = sending.n_resend_refno;
             smssending.b_resend = passending.b_resend = lbasending.b_resend = sending.b_resend;
-            
+
+            tassending.setSmsMessage(sending.sz_sms_message);
+            tassending.setSmsOadc(sending.sz_sms_oadc);
+            tassending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
+
+            tassending.l_resend_refno = passending.l_resend_refno = lbasending.l_resend_refno = sending.n_resend_refno;
+            tassending.b_resend = passending.b_resend = lbasending.b_resend = sending.b_resend;
 
             bool b_publish_voice = false;
             bool b_publish_lba = false;
             bool b_publish_sms = false;
+            bool b_publish_tas = false;
             bool b_ret = false;
 
             if(typeof(UMUNICIPALSENDING).Equals(sending.GetType()))
@@ -313,6 +338,57 @@ namespace com.ums.UmsParm
                 
             }
 
+            //create TAS sending if
+            if (b_tas_active)
+            {
+                if (tassending.sz_smsmessage.Length <= 0)
+                    throw new UEmptySMSMessageException();
+                if (tassending.sz_smsoadc.Length <= 0)
+                    throw new UEmptySMSOadcException();
+
+                try
+                {
+                    MDVSENDINGINFO tassendinginfo = new MDVSENDINGINFO();
+                    //tassendinginfo.l_refno = db.newRefno();
+                    if (sending.n_refno > 0)
+                        tassendinginfo.l_refno = sending.n_refno;
+                    else
+                        tassendinginfo.l_refno = db.newRefno();
+                    tassending.setRefno(tassendinginfo.l_refno, ref project);
+                    /*
+                     * if this is a resend, then reorganize resend statuscodes
+                     * 
+                     */
+                    tassending.createShape(ref sending);
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                    tassending.setSendingInfo(ref tassendinginfo);
+                    tassending.m_sendinginfo.l_type = 5;
+                    db.Send(ref tassending);
+                    b_publish_tas = true;
+                }
+                catch (Exception e)
+                {
+                    b_publish_tas = false;
+                    setAlertInfo(false, project.sz_projectpk, tassending.m_sendinginfo.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Error creating shape file for TAS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                /*if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
+                {
+                    b_ret = true; //fake link to project
+                }
+                else
+                {
+                    int n_linktype = 0;
+                    if (tassending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                        n_linktype = 9;
+                    b_ret = db.linkRefnoToProject(ref project, tassending.l_refno, n_linktype, (tassending.b_resend ? tassending.l_resend_refno : 0));
+                }
+                if (!b_ret)
+                {
+                    setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Could not link TAS sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }*/
+
+
+            }
             //create SMS sending if 
             if(b_sms_active)
             {
@@ -460,7 +536,7 @@ namespace com.ums.UmsParm
                             b_ret = db.Send(ref passending);
                         if (b_publish_lba)
                         {
-                            //mark this sending as LBA. 1=voice, 2=sms, 3=mail, 4=lba
+                            //mark this sending as LBA. 1=voice, 2=sms, 3=mail, 4=lba, 5=tas
                             lbasending.m_sendinginfo.l_type = 4;
                             b_ret = db.Send(ref lbasending);
                         }
@@ -584,6 +660,44 @@ namespace com.ums.UmsParm
                 {
                     //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
                     setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+            }
+            if (b_publish_tas)
+            {
+                try
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                        tassending.publishGUIAdrFile();
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Could not publish TAS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                }
+                try
+                {
+                    int n_linktype = 0;
+                    if (tassending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                        n_linktype = 9;
+                    b_ret = db.linkRefnoToProject(ref project, tassending.l_refno, n_linktype, (tassending.b_resend ? tassending.l_resend_refno : 0));
+
+                    List<Int32> operatorfilter = null;
+                    int n_requesttype = 0;
+                    db.InsertLBARecord_2_0(-1, tassending.l_refno, 199, -1, -1, -1, 0, n_requesttype, "", "", sending.getFunction(), ref operatorfilter, logoninfo.l_deptpk);
+                    ULocationBasedAlert lbanull = null;
+                    tassending.setLBAShape(ref logoninfo, ref lbanull, sending.getFunction());
+                    if (tassending.publishLBAFile())
+                    {
+                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                    else
+                    {
+                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        db.SetLBAStatus(lbasending.l_refno, 41100);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
                 }
             }
 

@@ -188,6 +188,7 @@ namespace com.ums.UmsCommon
         MOBILE_COMPANY_AND_FIXED    = 1 << 17,
         FIXED_PRIVATE_AND_MOBILE    = 1 << 18,
         FIXED_COMPANY_AND_MOBILE    = 1 << 19,
+        SENDTO_TAS_SMS              = 1 << 20,
         SENDTO_USE_NOFAX_COMPANY    = 1 << 27,
         SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28, //reserved for future use
         SENDTO_USE_NOFAX_GLOBAL     = 1 << 29, //should always be off
@@ -625,6 +626,44 @@ namespace com.ums.UmsCommon
     public struct BBACTIONPROFILESEND
     {
         public long l_actionprofilepk;
+    }
+    public class ULBACOUNTRY
+    {
+        public int l_cc;
+        public String sz_iso;
+        public String sz_name;
+        public UMapPoint weightpoint;
+        public UMapPoint weightpoint_screen;
+        public UMapBounds bounds;
+        public int l_continentpk;
+        public int l_iso_numeric;
+        public int n_touristcount;
+        public long n_oldestupdate; //oldest of all operators
+        public long n_newestupdate; //newest of all operators
+        /*public int l_operator;
+        public String sz_operator;*/
+        public List<UTOURISTCOUNT> operators;
+    }
+
+    public class UTOURISTCOUNT
+    {
+        public long l_lastupdate;
+        public int l_operator;
+        public String sz_operator;
+        public int l_touristcount;
+    }
+
+    public class ULBACONTINENT
+    {
+        public int l_continentpk;
+        public String sz_short;
+        public String sz_name;
+        public UMapPoint weightpoint;
+        public UMapPoint weightpoint_screen;
+        public UMapBounds bounds;
+        public List<ULBACOUNTRY> countries;
+        public int n_touristcount;
+        public long n_lastupdate;
     }
 
 
