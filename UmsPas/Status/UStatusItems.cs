@@ -222,6 +222,39 @@ namespace com.ums.PAS.Status
                                 }
                             }
                             break;
+                        case 5: //TAS country
+                            {
+                                try
+                                {
+                                    if (bounding != null)
+                                    {
+                                        outxml.insertStartElement("BOUNDS");
+                                        outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                    }
+                                    if (shape != null)
+                                    {
+                                        outxml.insertStartElement("TASCOUNTRIES");
+                                        for(int i=0; i < shape.tas().countries.Count; i++)
+                                        {
+                                            outxml.insertStartElement("COUNTRY");
+                                            outxml.insertAttribute("iso", shape.tas().countries[i].sz_iso);
+                                            outxml.insertAttribute("iso-n", shape.tas().countries[i].l_iso_numeric.ToString());
+                                            outxml.insertAttribute("cc", shape.tas().countries[i].l_cc.ToString());
+                                            outxml.insertAttribute("name", shape.tas().countries[i].sz_name);
+                                            outxml.insertEndElement();
+                                        }
+                                        outxml.insertEndElement();
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                }
+                            }
+                            break;
                         case 8: //ellipse
                             {
                                 try
@@ -619,6 +652,37 @@ namespace com.ums.PAS.Status
                 case 4: //expect gemini
                     shape = null;
                     break;
+                case 5: //expect TAS country
+                    {//4 first lines are bounds (start of function), then a list of countries follows
+                        try
+                        {
+                            shape = new UTasShape();
+                            bool b_continue = true;
+                            while(b_continue)
+                            {
+                                String str;
+                                str = reader.ReadLine();
+                                if (str == null)
+                                    break;
+                                String [] country = str.Split(';');
+                                ULBACOUNTRY lba = new ULBACOUNTRY();
+
+                                if (country != null && country.Length >= 3)
+                                {
+                                    lba.sz_iso = country[0];
+                                    lba.l_iso_numeric = Int32.Parse(country[1]);
+                                    lba.l_cc = Int32.Parse(country[2]);
+                                    lba.sz_name = country[3];
+                                    shape.tas().addCountry(lba);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw e;
+                        }
+                        break;
+                    }
                 case 8: //expect ellipse
                     {
                         shape = new UEllipse();

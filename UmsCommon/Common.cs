@@ -195,6 +195,14 @@ namespace com.ums.UmsCommon
         ONLY_HEAD_OF_HOUSEHOLD      = 1 << 30,
 
     }
+    public enum SENDCHANNEL
+    {
+        VOICE = 1,
+        SMS = 2,
+        EMAIL = 3,
+        LBA = 4,
+        TAS = 5,
+    }
     public class ARGB
     {
         public String _a, _r, _g, _b;
@@ -292,6 +300,7 @@ namespace com.ums.UmsCommon
             public static String sz_path_temp;
             public static String sz_path_mapsendings;
             public static String sz_path_lba;
+            public static String sz_path_tas;
             public static String sz_path_parmtemp;
             public static String sz_path_parmzipped;
             public static String sz_path_ttsserver;

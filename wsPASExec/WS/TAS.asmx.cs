@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Services;
+using com.ums.PAS.TAS;
+using com.ums.UmsCommon;
+
+namespace com.ums.ws.pas.tas
+{
+    /// <summary>
+    /// Summary description for TAS
+    /// </summary>
+    [WebService(Namespace = "http://ums.no/ws/pas/tas")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    [System.ComponentModel.ToolboxItem(false)]
+    // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
+    // [System.Web.Script.Services.ScriptService]
+    public class tasws : System.Web.Services.WebService
+    {
+        [WebMethod]
+        public List<ULBACONTINENT> GetContinentsAndCountries(ULOGONINFO logon, long timefilter)
+        {
+            try
+            {
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.TAS_UPDATE, new PercentResult());
+                UTas tas = new UTas(ref logon);
+                return tas.GetContinentsAndCountries(timefilter);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.TAS_UPDATE);
+            }
+
+        }
+    }
+}

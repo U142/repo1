@@ -706,9 +706,13 @@ namespace com.ums.UmsParm
             try
             {
                 w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.l_bo));
-                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.r_bo));
                 w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.u_bo));
+                w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.r_bo));
                 w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", bounds.b_bo));
+                for(int i=0; i < countries.Count; i++)
+                {
+                    w.writeline(countries[i].sz_iso + ";" + countries[i].l_iso_numeric.ToString() + ";" + countries[i].l_cc + ";" + countries[i].sz_name);
+                }
             }
             catch (Exception e)
             {
@@ -1021,7 +1025,7 @@ namespace com.ums.UmsParm
         }
         public override bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
         {
-            adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true);
+            adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true, SENDCHANNEL.TAS);
             //s = new ULocationBasedAlert();
             PAALERT alert = new PANULLALERT();
             //UTasShape tas = new UTasShape();
@@ -1287,7 +1291,7 @@ namespace com.ums.UmsParm
             try
             {
                 m_lba_shape.lba().setValid();
-                adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true);
+                adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true, SENDCHANNEL.LBA);
                 PAALERT nullalert = new PANULLALERT();
                 nullalert.n_expiry = (int)s.n_expiry_minutes;
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
@@ -1309,7 +1313,7 @@ namespace com.ums.UmsParm
             }
             try
             {
-                adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true);
+                adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true, SENDCHANNEL.LBA);
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref alert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }
