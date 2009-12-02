@@ -5,6 +5,9 @@ using System.Text;
 
 using com.ums.UmsCommon;
 using com.ums.PAS.Database;
+using com.ums.PAS.Address;
+using com.ums.UmsParm;
+using com.ums.UmsFile;
 
 namespace com.ums.PAS.TAS
 {
@@ -52,6 +55,32 @@ namespace com.ums.PAS.TAS
                 throw e;
             }
 
+        }
+        public bool PerformAdrCountByCountry(ref List<ULBACOUNTRY> c)
+        {
+            try
+            {
+                UTasShape shape = new UTasShape();
+                int i = 0;
+                for (i = 0; i < c.Count; i++)
+                {
+                    shape.addCountry(c[i]);
+                }
+                if (i == 0)
+                    throw new UNoCountryCodeSpecifiedException();
+                BBPROJECT proj = new BBPROJECT();
+                proj.sz_projectpk = Guid.NewGuid().ToString();
+                PAALERT alert = new PANULLALERT();
+                alert.n_requesttype = 2;
+                AdrfileLBAWriter w = new AdrfileLBAWriter(proj.sz_projectpk, 0, true, SENDCHANNEL.TAS);
+                shape.WriteAddressFileLBA(ref logon, new UDATETIME("0", "0"), "sms", ref proj, ref alert, 0, 0, ref w);
+                w.publish();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

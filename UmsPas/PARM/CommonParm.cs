@@ -732,10 +732,20 @@ namespace com.ums.UmsParm
             loc.l_alertpk = "-1";
             loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
             ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();
-            lbalang.sz_cb_oadc = sending.sz_sms_oadc;
-            lbalang.sz_name = "Default";
-            lbalang.sz_otoa = "0";
-            lbalang.sz_text = sending.sz_sms_message;
+            if (alert.n_requesttype == 2) //only a count request, we don't have any details
+            {
+                lbalang.sz_cb_oadc = "NULL";
+                lbalang.sz_text = "NOTEXT";
+                lbalang.sz_name = "Default";
+                lbalang.sz_otoa = "0";
+            }
+            else
+            {
+                lbalang.sz_cb_oadc = sending.sz_sms_oadc;
+                lbalang.sz_name = "Default";
+                lbalang.sz_otoa = "0";
+                lbalang.sz_text = sending.sz_sms_message;
+            }
             lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
             ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
             for(int i=0; i < countries.Count; i++)

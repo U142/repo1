@@ -174,7 +174,7 @@ namespace com.ums.UmsFile
         {
             m_channel = channel;
             n_refno = l_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("LBA_SEND_{0}.{1}.xml", sz_projectpk, l_refno));
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}_SEND_{1}.{2}.xml", channel.ToString(), sz_projectpk, l_refno));
             if (b_utf8)
                 openUTF8();
             else

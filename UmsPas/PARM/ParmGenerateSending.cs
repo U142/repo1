@@ -843,7 +843,7 @@ namespace com.ums.UmsParm
             file.SetLogonInfo(ref logoninfo);
             try
             {
-                String guid = new Guid().ToString();
+                String guid = Guid.NewGuid().ToString();//new Guid().ToString();
                 file.load(String.Format("{0}.{1}", project.sz_projectpk, guid));
             }
             catch (UFileCopyException e)

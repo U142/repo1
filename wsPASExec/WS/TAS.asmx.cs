@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using com.ums.PAS.TAS;
 using com.ums.UmsCommon;
+using com.ums.PAS.Address;
 
 namespace com.ums.ws.pas.tas
 {
@@ -37,6 +38,12 @@ namespace com.ums.ws.pas.tas
                 PercentProgress.DeleteJob(ref logon, ProgressJobType.TAS_UPDATE);
             }
 
+        }
+        [WebMethod]
+        public bool GetAdrCount(ULOGONINFO logon, List<ULBACOUNTRY> country)
+        {
+            UTas tas = new UTas(ref logon);
+            return tas.PerformAdrCountByCountry(ref country);
         }
     }
 }
