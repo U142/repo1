@@ -45,7 +45,7 @@ namespace com.ums.PAS.Database
                     cont.bounds.b_bo = cont.weightpoint.lat - 45.0;
 
                     cont.countries = GetCountriesByContinent(cont.l_continentpk, from_country, timefilter);
-                    //if(cont.countries.Count>0)
+                    if(cont.countries.Count>0)
                         list.Add(cont);
                 }
                 rs.Close();
