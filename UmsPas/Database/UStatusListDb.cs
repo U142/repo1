@@ -117,7 +117,7 @@ namespace com.ums.PAS.Database
                     "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                     "FROM MDVSENDINGINFO info, LBASEND head, " +
                     "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE info.l_type=4 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno*=head.l_refno " +
-                    "AND info.l_group>=2 AND dept.l_deptpk in ({0}) ",
+                    "AND info.l_group>=2 AND dept.l_deptpk in ({0}) "+
                      "GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                      "ORDER BY info.l_refno DESC",
                      /*logon.l_comppk, logon.l_userpk, */szDeptList);
