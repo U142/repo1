@@ -1305,19 +1305,53 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
         {
             try
             {
+                
+                OdbcCommand cmd = new OdbcCommand();
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "{ CALL sp_ins_adr (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }";
+                cmd.Parameters.Add("@sz_name", OdbcType.VarChar, 50).Value = adr.name;
+                cmd.Parameters.Add("@sz_phone", OdbcType.VarChar, 30).Value = adr.number;
+                cmd.Parameters.Add("@sz_mobile", OdbcType.VarChar, 30).Value = adr.mobile;
+                cmd.Parameters.Add("@sz_birthday", OdbcType.VarChar, 20).Value = adr.bday;
+                cmd.Parameters.Add("@sz_address", OdbcType.VarChar, 50).Value = adr.address;
+                if (adr.houseno == -1)
+                    cmd.Parameters.Add("@sz_house", OdbcType.Int).Value = DBNull.Value;
+                else
+                    cmd.Parameters.Add("@sz_house", OdbcType.Int).Value = adr.houseno;
+                cmd.Parameters.Add("@sz_letter", OdbcType.VarChar, 5).Value = adr.letter;
+                cmd.Parameters.Add("@sz_postno", OdbcType.VarChar, 10).Value = adr.postno;
+                cmd.Parameters.Add("@sz_place", OdbcType.VarChar, 50).Value = adr.postarea;
+                cmd.Parameters.Add("@sz_gnr", OdbcType.Int).Value = adr.gno;
+                cmd.Parameters.Add("@sz_bnr", OdbcType.Int).Value = adr.bno;
+                cmd.Parameters.Add("@sz_municipalid", OdbcType.VarChar, 30).Value = adr.municipalid;
+                cmd.Parameters.Add("@sz_streetid", OdbcType.Int).Value = adr.streetid;
+                cmd.Parameters.Add("@f_lon", OdbcType.Double).Value = adr.lat;
+                cmd.Parameters.Add("@f_lat", OdbcType.Double).Value = adr.lon;
+                cmd.Parameters.Add("@sz_bedrift", OdbcType.Int).Value = adr.bedrift;
+                cmd.Parameters.Add("@sz_importid", OdbcType.Int).Value = l.l_deptpk;
+
+                OdbcDataReader rs = cmd.ExecuteReader();
+
+                /* Had to use command to accomodate null value in houseno
                 String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_ins_adr '{0}', '{1}', '{2}', '{3}', '{4}', {5}, '{6}', '{7}', " +
-                        "'{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}",
-                        adr.name, adr.number, adr.mobile, adr.bday, adr.address, adr.houseno,
-                        adr.letter, adr.postno, adr.postarea, adr.gno, adr.bno, adr.municipalid,
-                        adr.streetid, adr.lat, adr.lon, adr.bedrift, l.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                   "'{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}",
+                   adr.name, adr.number, adr.mobile, adr.bday, adr.address, adr.houseno,
+                   adr.letter, adr.postno, adr.postarea, adr.gno, adr.bno, adr.municipalid,
+                   adr.streetid, adr.lat, adr.lon, adr.bedrift, l.l_deptpk);
+
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);*/
                 if (rs.Read())
                 {
                     adr.kondmid = rs.GetString(0);
                     rs.Close();
+                    cmd.Dispose();
+                    conn.Close();
                     return true;
                 }
                 rs.Close();
+                cmd.Dispose();
+                conn.Close();
                 return false;
             }
             catch (Exception e)
