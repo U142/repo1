@@ -12,12 +12,47 @@ using com.ums.PAS.TAS;
 
 namespace com.ums.PAS.Database
 {
-    public class UTasDb : UmsDb
+    public class UTasDb : PASUmsDb
     {
         public UTasDb()
             : base()
         {
 
+        }
+
+        public int insertCountRequest(ref UTasCountShape s, ref ULOGONINFO logon)
+        {
+            try
+            {
+                if (s.countries.Count <= 0)
+                    throw new UNoCountryCodeSpecifiedException();
+
+                int n_requestpk = -1;
+                OdbcDataReader rsReq = ExecReader("sp_tas_requestpk", UmsDb.UREADER_KEEPOPEN);
+                if (rsReq.Read())
+                    n_requestpk = rsReq.GetInt32(0);
+                rsReq.Close();
+                List<int> operators = GetOperatorsForSend(-1, logon.l_deptpk);
+                if(operators.Count<=0)
+                    throw new UNoAccessOperatorsException();
+                for(int i=0; i < operators.Count; i++)
+                {
+                    String szSQL = String.Format("sp_tas_insert_request {0}, {1}, {2}, {3}",
+                                            n_requestpk, operators[i], logon.l_userpk, logon.l_deptpk);
+                    ExecNonQuery(szSQL);
+                }
+                for (int i = 0; i < s.countries.Count; i++)
+                {
+                    String szSQL = String.Format("sp_tas_insert_request_country {0}, {1}, {2}",
+                                        n_requestpk, s.countries[i].l_cc, s.countries[i].sz_iso);
+                    ExecNonQuery(szSQL);
+                }
+                return n_requestpk;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<ULBACONTINENT> GetContinentsAndCountries(String from_country, long timefilter)

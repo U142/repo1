@@ -192,8 +192,13 @@ namespace com.ums.UmsParm
             }
             else if (typeof(PANULLALERT).Equals(alert.GetType()))
             {
-                if (sourceshape == null) //TAS
+                if (typeof(UTasShape).Equals(sourceshape.GetType())) //TAS
                     xmlwriter.insertAttribute("operation", "SendInternational");
+                else if (typeof(UTasCountShape).Equals(sourceshape.GetType())) //TAS Count
+                {
+                    xmlwriter.insertAttribute("operation", "CountInternational");
+                    xmlwriter.insertAttribute("l_requestpk", n_parentrefno.ToString());
+                }
                 else if (typeof(UPolygon).Equals(sourceshape.GetType()))
                     xmlwriter.insertAttribute("operation", "SendPolygon");
                 else if (typeof(UEllipse).Equals(sourceshape.GetType()))
@@ -241,6 +246,12 @@ namespace com.ums.UmsParm
                     {
                         //TAS has no shape
                     }
+                    else if (typeof(UTasShape).Equals(sourceshape.GetType()))
+                    {
+                    }
+                    else if (typeof(UTasCountShape).Equals(sourceshape.GetType()))
+                    {
+                    }
                     else if (typeof(UPolygon).Equals(sourceshape.GetType()))
                     {
                         xmlwriter.insertStartElement("alertpolygon");
@@ -249,7 +260,7 @@ namespace com.ums.UmsParm
                         xmlwriter.insertAttribute("col_r", "0");
                         xmlwriter.insertAttribute("col_g", "0");
                         xmlwriter.insertAttribute("l_alertpk", "AdHoc");
-                        for(int i=0; i < sourceshape.poly().getSize(); i++)
+                        for (int i = 0; i < sourceshape.poly().getSize(); i++)
                         {
                             xmlwriter.insertStartElement("polypoint");
                             xmlwriter.insertAttribute("xcord", sourceshape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
@@ -674,6 +685,10 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class UTasCountShape : UTasShape
+    {
+    }
+
     public class UTasShape : UShape
     {
         public List<ULBACOUNTRY> countries;
@@ -729,6 +744,8 @@ namespace com.ums.UmsParm
         {
             //return base.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
             ULocationBasedAlert loc = new ULocationBasedAlert();
+            UShape _this = this;
+            loc.setSourceShape(ref _this);
             loc.l_alertpk = "-1";
             loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
             ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();

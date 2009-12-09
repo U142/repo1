@@ -12,8 +12,17 @@ using com.ums.UmsFile;
 namespace com.ums.PAS.TAS
 {
 
+    public class UTASREQUEST
+    {
+        public int n_requestpk;
+        public bool b_success;
+        public List<ULBACOUNTRY> list;
+    }
+
     public class UTas
     {
+
+
         UTasDb db;
         ULOGONINFO logon;
         public UTas(ref ULOGONINFO logon)
@@ -56,11 +65,11 @@ namespace com.ums.PAS.TAS
             }
 
         }
-        public bool PerformAdrCountByCountry(ref List<ULBACOUNTRY> c)
+        public UTASREQUEST PerformAdrCountByCountry(ref List<ULBACOUNTRY> c, ref ULOGONINFO logon)
         {
             try
             {
-                UTasShape shape = new UTasShape();
+                UTasCountShape shape = new UTasCountShape();
                 int i = 0;
                 for (i = 0; i < c.Count; i++)
                 {
@@ -72,10 +81,19 @@ namespace com.ums.PAS.TAS
                 proj.sz_projectpk = Guid.NewGuid().ToString();
                 PAALERT alert = new PANULLALERT();
                 alert.n_requesttype = 2;
-                AdrfileLBAWriter w = new AdrfileLBAWriter(proj.sz_projectpk, 0, true, SENDCHANNEL.TAS);
-                shape.WriteAddressFileLBA(ref logon, new UDATETIME("0", "0"), "sms", ref proj, ref alert, 0, 0, ref w);
+                //do DB-stuff
+                int n_requestpk = db.insertCountRequest(ref shape, ref logon);
+                UTASREQUEST req = new UTASREQUEST();
+                req.n_requestpk = n_requestpk;
+                AdrfileLBAWriter w = new AdrfileLBAWriter(proj.sz_projectpk, n_requestpk, true, SENDCHANNEL.TAS);
+                shape.WriteAddressFileLBA(ref logon, new UDATETIME("0", "0"), "sms", ref proj, ref alert, n_requestpk, 0, ref w);
+                
+                
                 w.publish();
-                return true;
+                req.b_success = true;
+                req.list = c;
+                    
+                return req;
             }
             catch (Exception e)
             {

@@ -40,10 +40,10 @@ namespace com.ums.ws.pas.tas
 
         }
         [WebMethod]
-        public bool GetAdrCount(ULOGONINFO logon, List<ULBACOUNTRY> country)
+        public UTASREQUEST GetAdrCount(ULOGONINFO logon, List<ULBACOUNTRY> country)
         {
             UTas tas = new UTas(ref logon);
-            return tas.PerformAdrCountByCountry(ref country);
+            return tas.PerformAdrCountByCountry(ref country, ref logon);
         }
     }
 }

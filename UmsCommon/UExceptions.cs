@@ -44,6 +44,14 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UNoAccessOperatorsException : UException
+    {
+        public UNoAccessOperatorsException()
+            : base("No access to any operators")
+        {
+        }
+    }
+
     public class ULBANoOperatorsReadyForConfirmCancel : UException
     {
         public ULBANoOperatorsReadyForConfirmCancel()
