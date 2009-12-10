@@ -20,14 +20,14 @@ namespace com.ums.ws.pas.tas
     public class tasws : System.Web.Services.WebService
     {
         [WebMethod]
-        public List<ULBACONTINENT> GetContinentsAndCountries(ULOGONINFO logon, long timefilter)
+        public UTASUPDATES GetContinentsAndCountries(ULOGONINFO logon, long timefilter_count, long timefilter_requestlog)
         {
             try
             {
                 PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
                 percentdelegate(ref logon, ProgressJobType.TAS_UPDATE, new PercentResult());
                 UTas tas = new UTas(ref logon);
-                return tas.GetContinentsAndCountries(timefilter);
+                return tas.GetContinentsAndCountries(timefilter_count, timefilter_requestlog);
             }
             catch (Exception e)
             {

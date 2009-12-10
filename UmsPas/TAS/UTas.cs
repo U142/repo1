@@ -17,6 +17,27 @@ namespace com.ums.PAS.TAS
         public int n_requestpk;
         public bool b_success;
         public List<ULBACOUNTRY> list;
+        public long n_timestamp;
+        public List<int> operators;
+    }
+
+    public class UTASREQUESTRESULTS : UTASREQUEST
+    {
+        public int n_operator;
+        public String sz_operatorname;
+        public String sz_jobid;
+        public int n_response;
+        public int n_status;
+        public long n_userpk;
+        public int n_deptpk;
+        public String sz_userid;
+        public String sz_username;
+    }
+
+    public class UTASUPDATES
+    {
+        public List<ULBACONTINENT> continents;
+        public List<UTASREQUESTRESULTS> request_updates;
     }
 
     public class UTas
@@ -51,13 +72,18 @@ namespace com.ums.PAS.TAS
             List<ULBACOUNTRY> list = new List<ULBACOUNTRY>();
             return list;
         }
-        public List<ULBACONTINENT> GetContinentsAndCountries(long timefilter)
+        public UTASUPDATES GetContinentsAndCountries(long timefilter_count, long timefilter_requestlog)
         {
             try
             {
-                List<ULBACONTINENT> list = db.GetContinentsAndCountries(logon.sz_stdcc, timefilter);
+                UTASUPDATES updates = new UTASUPDATES();
+                List<ULBACONTINENT> list = db.GetContinentsAndCountries(logon.sz_stdcc, timefilter_count);
+                updates.continents = list;
+                List<UTASREQUESTRESULTS> requests = db.GetTasRequestResults(ref logon, timefilter_requestlog);
+                updates.request_updates = requests;
+
                 db.close();
-                return list;
+                return updates;
             }
             catch (Exception e)
             {
@@ -82,9 +108,11 @@ namespace com.ums.PAS.TAS
                 PAALERT alert = new PANULLALERT();
                 alert.n_requesttype = 2;
                 //do DB-stuff
-                int n_requestpk = db.insertCountRequest(ref shape, ref logon);
+                List<int> operators = new List<int>();
+                int n_requestpk = db.insertCountRequest(ref shape, ref logon, ref operators);
                 UTASREQUEST req = new UTASREQUEST();
                 req.n_requestpk = n_requestpk;
+                req.operators = operators;
                 AdrfileLBAWriter w = new AdrfileLBAWriter(proj.sz_projectpk, n_requestpk, true, SENDCHANNEL.TAS);
                 shape.WriteAddressFileLBA(ref logon, new UDATETIME("0", "0"), "sms", ref proj, ref alert, n_requestpk, 0, ref w);
                 

@@ -20,7 +20,7 @@ namespace com.ums.PAS.Database
 
         }
 
-        public int insertCountRequest(ref UTasCountShape s, ref ULOGONINFO logon)
+        public int insertCountRequest(ref UTasCountShape s, ref ULOGONINFO logon, ref List<int> retoperators)
         {
             try
             {
@@ -33,6 +33,7 @@ namespace com.ums.PAS.Database
                     n_requestpk = rsReq.GetInt32(0);
                 rsReq.Close();
                 List<int> operators = GetOperatorsForSend(-1, logon.l_deptpk);
+                retoperators = operators;
                 if(operators.Count<=0)
                     throw new UNoAccessOperatorsException();
                 for(int i=0; i < operators.Count; i++)
@@ -43,11 +44,86 @@ namespace com.ums.PAS.Database
                 }
                 for (int i = 0; i < s.countries.Count; i++)
                 {
-                    String szSQL = String.Format("sp_tas_insert_request_country {0}, {1}, {2}",
+                    String szSQL = String.Format("sp_tas_insert_request_country {0}, {1}, '{2}'",
                                         n_requestpk, s.countries[i].l_cc, s.countries[i].sz_iso);
                     ExecNonQuery(szSQL);
                 }
                 return n_requestpk;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public List<UTASREQUESTRESULTS> GetTasRequestResults(ref ULOGONINFO logon, long timefilter)
+        {
+            List<UTASREQUESTRESULTS> res = new List<UTASREQUESTRESULTS>();
+            try
+            {
+                String sql = String.Format("SELECT " +
+                    "REQ.l_requestpk, REQ.l_operator, OP.sz_operatorname, REQ.sz_jobid, REQ.l_response, REQ.l_status, " +
+                    "REQ.l_timestamp, REQ.l_userpk, REQ.l_deptpk, BU.sz_userid, (BU.sz_name + ' ' + BU.sz_surname) sz_username, " +
+                    "COU.l_cc_to, COU.sz_iso_to " +
+                    "FROM " +
+                    "LBATOURISTCOUNTREQ REQ, LBAOPERATORS OP, LBATOURISTCOUNTREQ_COUNTRIES COU, BBUSER BU " +
+                    "WHERE " +
+                    "REQ.l_operator=OP.l_operator AND REQ.l_requestpk=COU.l_requestpk AND REQ.l_userpk=BU.l_userpk AND " +
+                    "REQ.l_timestamp>={0} " +
+                    "ORDER BY REQ.l_requestpk, REQ.l_operator",
+                    timefilter);
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                int n_prev_operator = -1;
+                int n_prev_request = -1;
+                int n_new_operator = -1;
+                int n_new_request = -1;
+                UTASREQUESTRESULTS tmp = null;
+                List<ULBACOUNTRY> ccs = null;
+                while (rs.Read())
+                {
+                    n_new_request = rs.GetInt32(0);
+                    n_new_operator = rs.GetInt32(1);
+
+                    //this is an old result, just add the country
+                    if (n_new_request == n_prev_request && n_new_operator == n_prev_operator)
+                    {
+                        ULBACOUNTRY country = new ULBACOUNTRY();
+                        country.l_cc = rs.GetInt32(11);
+                        country.sz_iso = rs.GetString(12);
+                        if(ccs != null)
+                           ccs.Add(country);
+                    }
+                    //this is a new result
+                    else
+                    {
+                        tmp = new UTASREQUESTRESULTS();
+                        tmp.n_requestpk = rs.GetInt32(0);
+                        tmp.n_operator = rs.GetInt32(1);
+                        tmp.sz_operatorname = rs.GetString(2);
+                        tmp.sz_jobid = rs.GetString(3);
+                        tmp.n_response = rs.GetInt32(4);
+                        tmp.n_status = rs.GetInt32(5);
+                        tmp.n_timestamp = rs.GetInt64(6);
+                        tmp.n_userpk = rs.GetInt64(7);
+                        tmp.n_deptpk = rs.GetInt32(8);
+                        tmp.sz_userid = rs.GetString(9);
+                        tmp.sz_username = rs.GetString(10);
+                        ccs = new List<ULBACOUNTRY>();
+                        ULBACOUNTRY country = new ULBACOUNTRY();
+                        country.l_cc = rs.GetInt32(11);
+                        country.sz_iso = rs.GetString(12);
+                        ccs.Add(country);
+                        tmp.list = ccs;
+                        res.Add(tmp);
+
+                        n_prev_request = tmp.n_requestpk;
+                        n_prev_operator = tmp.n_operator;
+                        
+                    }
+                }
+                rs.Close();
+                
+                return res;
             }
             catch (Exception e)
             {

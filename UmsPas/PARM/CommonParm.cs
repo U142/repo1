@@ -764,9 +764,9 @@ namespace com.ums.UmsParm
                 lbalang.sz_text = sending.sz_sms_message;
             }
             lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
-            ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
             for(int i=0; i < countries.Count; i++)
             {
+                ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
                 ccode.ccode = countries[i].l_cc.ToString();
                 lbalang.m_ccodes.Add(ccode);
             }
