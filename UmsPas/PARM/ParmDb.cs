@@ -739,6 +739,27 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool InsertLBACountries(ref TAS_SENDING t)
+        {
+            try
+            {
+                for (int i = 0; i < t.m_shape.tas().countries.Count; i++)
+                {
+                    String szSQL = String.Format("sp_tas_insert_send_country {0}, {1}, '{2}'",
+                                            t.l_refno,
+                                            t.m_shape.tas().countries[i].l_cc,
+                                            "");
+                    ExecNonQuery(szSQL);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool InsertBBACTIONPROFILE(ref PAS_SENDING s)
         {
             try
@@ -912,6 +933,7 @@ namespace com.ums.UmsParm
                 p.m_profile.l_actionprofilepk = 0;
                 InsertBBACTIONPROFILE(ref p);
                 InsertMDVSENDINGINFO(ref p);
+                InsertLBACountries(ref s);
                 return true;
             }
             catch (Exception e)
