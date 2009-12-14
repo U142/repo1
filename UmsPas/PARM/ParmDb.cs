@@ -748,7 +748,7 @@ namespace com.ums.UmsParm
                     String szSQL = String.Format("sp_tas_insert_send_country {0}, {1}, '{2}'",
                                             t.l_refno,
                                             t.m_shape.tas().countries[i].l_cc,
-                                            "");
+                                            t.m_shape.tas().countries[i].sz_iso);
                     ExecNonQuery(szSQL);
                 }
 
@@ -973,7 +973,7 @@ namespace com.ums.UmsParm
 
         public bool InsertLBARecord_2_0(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
-                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter, long l_deptpk) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter, long l_deptpk, long l_type) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
         {
             //select all operators from db, then insert one record pr operator
             String szSQL = "";
@@ -997,10 +997,10 @@ namespace com.ums.UmsParm
                 for (int i = 0; i < operators.Count; i++)
                 {
                     szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
-                                             "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
-                                             "{6}, '{7}', '{8}', {9}, {10})",
+                                             "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
+                                             "{6}, '{7}', '{8}', {9}, {10}, {11})",
                                              l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
-                                             sz_jobid, sz_areaid, n_function, operators[i]);
+                                             sz_jobid, sz_areaid, n_function, operators[i], l_type);
                     ExecNonQuery(szSQL);
                 }
                     /*}

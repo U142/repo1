@@ -388,6 +388,35 @@ namespace com.ums.UmsCommon
         public static String UGetDateNowLiteralUTC() { return String.Format("{0:dd}.{0:MM}.{0:yyyy}", DateTime.UtcNow); }
         public static String UGetTimeNowLiteralUTC() { return String.Format("{0:HH}:{0:mm}", DateTime.UtcNow); }
 
+        public static DateTime UConvertLongToDateTime(long n)
+        {
+            try
+            {
+                String sz = n.ToString();
+                if (sz.Length == 14)
+                {
+                    DateTime dt = new DateTime(
+                        int.Parse(sz.Substring(0, 4)),
+                        int.Parse(sz.Substring(4, 2)),
+                        int.Parse(sz.Substring(6, 2)),
+                        int.Parse(sz.Substring(8, 2)),
+                        int.Parse(sz.Substring(10, 2)),
+                        int.Parse(sz.Substring(12, 2)));
+                    return dt;
+                }
+                return new DateTime();
+
+            }
+            catch(Exception e)
+            {
+                return new DateTime();
+            }
+        }
+
+        public static long UConvertDateTimeToLong(ref DateTime d)
+        {
+            return long.Parse(d.ToString("yyyyMMddHHmmss"));
+        }
 
         /// <summary>
         /// Converts an ellipse to a polygon

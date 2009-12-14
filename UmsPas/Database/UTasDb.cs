@@ -56,11 +56,130 @@ namespace com.ums.PAS.Database
             }
         }
 
-        public List<UTASREQUESTRESULTS> GetTasRequestResults(ref ULOGONINFO logon, long timefilter)
+        protected long _getInitTimestamp(long n)
         {
-            List<UTASREQUESTRESULTS> res = new List<UTASREQUESTRESULTS>();
+            if (n.ToString().Length < 14)
+            {
+                String sqlNow = "sp_getdatetime";
+                OdbcDataReader rsNow = ExecReader(sqlNow, UmsDb.UREADER_KEEPOPEN);
+                if (rsNow.Read())
+                {
+                    long n_tmp = rsNow.GetInt64(0);
+
+                    //create a new date, 30 minutes earlier
+                    DateTime date = UCommon.UConvertLongToDateTime(n_tmp);
+                    date = date.AddMinutes(-n);
+                    n = UCommon.UConvertDateTimeToLong(ref date);
+                }
+                rsNow.Close();
+                return n;
+            }
+            else
+                return n;
+        }
+
+        public bool GetTasSendings(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter)
+        {
             try
             {
+                timefilter = _getInitTimestamp(timefilter);
+                String sql = String.Format(
+                    "select " +
+                    "SI.l_refno, OP.l_operator, OP.sz_operatorname, LS.sz_jobid, LS.l_response, LS.l_status, " +
+                    "TS.l_ts, SI.l_userpk, SI.l_deptpk, BU.sz_userid, (BU.sz_name + ' ' + BU.sz_surname) sz_username, " +
+                    "LS.l_retries, LS.l_requesttype, LS.f_simulate, SI.sz_sendingname " +
+                    "FROM " +
+                    "MDVSENDINGINFO SI, LBASEND LS, LBASEND_TS TS, LBAOPERATORS OP, BBUSER BU " +
+                    "WHERE " +
+                    "SI.l_refno=LS.l_refno AND LS.l_refno=TS.l_refno AND LS.l_operator=TS.l_operator AND TS.l_operator=OP.l_operator AND SI.l_deptpk={0} " +
+                    "AND SI.l_userpk=BU.l_userpk AND TS.l_ts>={1} " +
+                    "ORDER BY TS.l_ts, TS.l_refno, TS.l_operator",
+                    logon.l_deptpk, timefilter);
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                int n_prev_operator = -1;
+                int n_prev_request = -1;
+                int n_new_operator = -1;
+                int n_new_request = -1;
+                UTASREQUESTRESULTS tmp = null;
+                List<ULBACOUNTRY> ccs = null;
+                while (rs.Read())
+                {
+                    n_new_request = rs.GetInt32(0);
+                    n_new_operator = rs.GetInt32(1);
+
+                    //this is an old result, just add the country
+                    if (n_new_request == n_prev_request && n_new_operator == n_prev_operator)
+                    {
+                        /*ULBACOUNTRY country = new ULBACOUNTRY();
+                        country.l_cc = rs.GetInt32(11);
+                        country.sz_iso = rs.GetString(12);
+                        if(ccs != null)
+                           ccs.Add(country);*/
+                        tmp.n_timestamp = rs.GetInt64(6);
+                        tmp.n_status = rs.GetInt32(5);
+                    }
+                    //this is a new result
+                    else
+                    {
+                        tmp = new UTASREQUESTRESULTS();
+                        tmp.type = ENUM_TASREQUESTRESULTTYPE.SENDING;
+                        tmp.n_requestpk = rs.GetInt32(0);
+                        tmp.n_operator = rs.GetInt32(1);
+                        tmp.sz_operatorname = rs.GetString(2);
+                        tmp.sz_jobid = rs.GetString(3);
+                        tmp.n_response = rs.GetInt32(4);
+                        tmp.n_status = rs.GetInt32(5);
+                        tmp.n_timestamp = rs.GetInt64(6);
+                        tmp.n_userpk = rs.GetInt64(7);
+                        tmp.n_deptpk = rs.GetInt32(8);
+                        tmp.sz_userid = rs.GetString(9);
+                        tmp.sz_username = rs.GetString(10);
+                        tmp.n_retries = rs.GetInt32(11);
+                        tmp.n_requesttype = rs.GetInt32(12);
+                        tmp.n_simulation = rs.GetInt32(13);
+                        tmp.sz_sendingname = rs.GetString(14);
+                        tmp.n_refno = tmp.n_requestpk;
+                        
+                        ccs = new List<ULBACOUNTRY>();
+
+                        String sqlCC = String.Format("SELECT l_cc_to, isnull(sz_iso_to,'') FROM LBASEND_COUNTRIES WHERE l_refno={0}", tmp.n_refno);
+                        OdbcDataReader rsCC = ExecReader(sqlCC, UmsDb.UREADER_KEEPOPEN);
+                        while (rsCC.Read())
+                        {
+                            ULBACOUNTRY country = new ULBACOUNTRY();
+                            country.l_cc = rsCC.GetInt32(0);
+                            country.sz_iso = rsCC.GetString(1).Trim();
+                            ccs.Add(country);
+                        }
+                        rsCC.Close();
+                        tmp.list = ccs;
+                        res.Add(tmp);
+
+                        n_prev_request = tmp.n_requestpk;
+                        n_prev_operator = tmp.n_operator;
+                        
+                    }
+                }
+                rs.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /*
+         * timefilter = yyyymmddhhmmss
+         * if timefilter's length is less than 14, it's a fresh query. Use timefilter to download timefilter minutes old records.
+         */
+        public bool GetTasRequestResults(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter)
+        {
+            try
+            {
+                timefilter = _getInitTimestamp(timefilter);
+
+
                 String sql = String.Format("SELECT " +
                     "REQ.l_requestpk, REQ.l_operator, OP.sz_operatorname, REQ.sz_jobid, REQ.l_response, REQ.l_status, " +
                     "REQ.l_timestamp, REQ.l_userpk, REQ.l_deptpk, BU.sz_userid, (BU.sz_name + ' ' + BU.sz_surname) sz_username, " +
@@ -89,7 +208,7 @@ namespace com.ums.PAS.Database
                     {
                         ULBACOUNTRY country = new ULBACOUNTRY();
                         country.l_cc = rs.GetInt32(11);
-                        country.sz_iso = rs.GetString(12);
+                        country.sz_iso = rs.GetString(12).Trim();
                         if(ccs != null)
                            ccs.Add(country);
                     }
@@ -97,6 +216,7 @@ namespace com.ums.PAS.Database
                     else
                     {
                         tmp = new UTASREQUESTRESULTS();
+                        tmp.type = ENUM_TASREQUESTRESULTTYPE.COUNTREQUEST;
                         tmp.n_requestpk = rs.GetInt32(0);
                         tmp.n_operator = rs.GetInt32(1);
                         tmp.sz_operatorname = rs.GetString(2);
@@ -111,7 +231,7 @@ namespace com.ums.PAS.Database
                         ccs = new List<ULBACOUNTRY>();
                         ULBACOUNTRY country = new ULBACOUNTRY();
                         country.l_cc = rs.GetInt32(11);
-                        country.sz_iso = rs.GetString(12);
+                        country.sz_iso = rs.GetString(12).Trim();
                         ccs.Add(country);
                         tmp.list = ccs;
                         res.Add(tmp);
@@ -123,7 +243,7 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
                 
-                return res;
+                return true;
             }
             catch (Exception e)
             {
@@ -205,7 +325,7 @@ namespace com.ums.PAS.Database
                     ULBACOUNTRY c = new ULBACOUNTRY();
                     UTOURISTCOUNT t = new UTOURISTCOUNT();
                     c.l_cc = rs.GetInt32(0);
-                    c.sz_iso = rs.GetString(1);
+                    c.sz_iso = rs.GetString(1).Trim();
                     c.sz_name = rs.GetString(2);
                     c.weightpoint = new UMapPoint();
                     c.weightpoint.lat = rs.GetDouble(3);

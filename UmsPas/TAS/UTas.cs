@@ -21,8 +21,15 @@ namespace com.ums.PAS.TAS
         public List<int> operators;
     }
 
+    public enum ENUM_TASREQUESTRESULTTYPE
+    {
+        COUNTREQUEST = 1,
+        SENDING = 2,
+    }
+
     public class UTASREQUESTRESULTS : UTASREQUEST
     {
+        public ENUM_TASREQUESTRESULTTYPE type;
         public int n_operator;
         public String sz_operatorname;
         public String sz_jobid;
@@ -32,7 +39,15 @@ namespace com.ums.PAS.TAS
         public int n_deptpk;
         public String sz_userid;
         public String sz_username;
+
+        /*if SENDING*/
+        public int n_refno;
+        public int n_retries;
+        public int n_requesttype;
+        public int n_simulation;
+        public String sz_sendingname;
     }
+
 
     public class UTASUPDATES
     {
@@ -79,7 +94,9 @@ namespace com.ums.PAS.TAS
                 UTASUPDATES updates = new UTASUPDATES();
                 List<ULBACONTINENT> list = db.GetContinentsAndCountries(logon.sz_stdcc, timefilter_count);
                 updates.continents = list;
-                List<UTASREQUESTRESULTS> requests = db.GetTasRequestResults(ref logon, timefilter_requestlog);
+                List<UTASREQUESTRESULTS> requests = new List<UTASREQUESTRESULTS>();
+                bool b = db.GetTasRequestResults(ref requests, ref logon, timefilter_requestlog);
+                b = db.GetTasSendings(ref requests, ref logon, timefilter_requestlog);
                 updates.request_updates = requests;
 
                 db.close();
