@@ -53,6 +53,7 @@ namespace com.ums.PAS.TAS
     {
         public List<ULBACONTINENT> continents;
         public List<UTASREQUESTRESULTS> request_updates;
+        public long n_serverclock;
     }
 
     public class UTas
@@ -91,13 +92,15 @@ namespace com.ums.PAS.TAS
         {
             try
             {
+                long serverclock = db.getDbTime(); //first, get db-timestamp before getting data
                 UTASUPDATES updates = new UTASUPDATES();
                 List<ULBACONTINENT> list = db.GetContinentsAndCountries(logon.sz_stdcc, timefilter_count);
                 updates.continents = list;
                 List<UTASREQUESTRESULTS> requests = new List<UTASREQUESTRESULTS>();
-                bool b = db.GetTasRequestResults(ref requests, ref logon, timefilter_requestlog);
-                b = db.GetTasSendings(ref requests, ref logon, timefilter_requestlog);
+                bool b = db.GetTasRequestResults(ref requests, ref logon, timefilter_requestlog, serverclock);
+                b = db.GetTasSendings(ref requests, ref logon, timefilter_requestlog, serverclock);
                 updates.request_updates = requests;
+                updates.n_serverclock = serverclock;
 
                 db.close();
                 return updates;

@@ -19,6 +19,27 @@ namespace com.ums.UmsParm
 
         }
 
+        public long getDbTime()
+        {
+            try
+            {
+                long n_tmp = 0;
+                String sqlNow = "sp_getdatetime";
+                OdbcDataReader rsNow = ExecReader(sqlNow, UmsDb.UREADER_KEEPOPEN);
+                if (rsNow.Read())
+                {
+                    n_tmp = rsNow.GetInt64(0);
+
+                }
+                rsNow.Close();
+                return n_tmp;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public int GetPasType(int n_deptpk)
         {
             if (!m_b_dbconn)

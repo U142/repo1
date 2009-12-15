@@ -56,33 +56,28 @@ namespace com.ums.PAS.Database
             }
         }
 
-        protected long _getInitTimestamp(long n)
+        protected long _getInitTimestamp(long n, long now)
         {
             if (n.ToString().Length < 14)
             {
-                String sqlNow = "sp_getdatetime";
-                OdbcDataReader rsNow = ExecReader(sqlNow, UmsDb.UREADER_KEEPOPEN);
-                if (rsNow.Read())
-                {
-                    long n_tmp = rsNow.GetInt64(0);
-
-                    //create a new date, 30 minutes earlier
-                    DateTime date = UCommon.UConvertLongToDateTime(n_tmp);
-                    date = date.AddMinutes(-n);
-                    n = UCommon.UConvertDateTimeToLong(ref date);
-                }
-                rsNow.Close();
+                long n_tmp = now;
+                //create a new date, 30 minutes earlier
+                DateTime date = UCommon.UConvertLongToDateTime(n_tmp);
+                date = date.AddMinutes(-n);
+                n = UCommon.UConvertDateTimeToLong(ref date);
                 return n;
             }
             else
                 return n;
         }
 
-        public bool GetTasSendings(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter)
+
+
+        public bool GetTasSendings(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter, long dbtime)
         {
             try
             {
-                timefilter = _getInitTimestamp(timefilter);
+                timefilter = _getInitTimestamp(timefilter, dbtime);
                 String sql = String.Format(
                     "select " +
                     "SI.l_refno, OP.l_operator, OP.sz_operatorname, LS.sz_jobid, LS.l_response, LS.l_status, " +
@@ -173,11 +168,11 @@ namespace com.ums.PAS.Database
          * timefilter = yyyymmddhhmmss
          * if timefilter's length is less than 14, it's a fresh query. Use timefilter to download timefilter minutes old records.
          */
-        public bool GetTasRequestResults(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter)
+        public bool GetTasRequestResults(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter, long dbtime)
         {
             try
             {
-                timefilter = _getInitTimestamp(timefilter);
+                timefilter = _getInitTimestamp(timefilter, dbtime);
 
 
                 String sql = String.Format("SELECT " +
@@ -312,7 +307,7 @@ namespace com.ums.PAS.Database
                     "FROM " +
                     "LBACOUNTRIES LC, LBATOURISTCOUNT TC, LBAOPERATORS OP " +
                     "WHERE " +
-                    "LC.l_cc>0 AND LC.l_continentpk={0} AND LC.l_isonumeric>0 AND LC.l_cc{3}TC.l_cc_to AND TC.l_cc_from={1} AND TC.l_operator*=OP.l_operator AND TC.l_timestamp>{2}" +
+                    "LC.l_cc>0 AND LC.l_continentpk={0} AND LC.l_isonumeric>0 AND LC.l_cc{3}TC.l_cc_to AND TC.l_cc_from={1} AND TC.l_operator*=OP.l_operator AND TC.l_timestamp>={2}" +
                     "ORDER BY LC.l_cc, LC.sz_iso, OP.l_operator",
                     n, from_country, timefilter, join);
 
