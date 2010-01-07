@@ -191,6 +191,26 @@ namespace com.ums.UmsDbLib
             return b_ret;
         }
 
+        public long getDbClock()
+        {
+            long ret = 0;
+            try
+            {
+                String szSQL = String.Format("sp_getdatetime");
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    ret = rs.GetInt64(0);
+                }
+                rs.Close();
+
+            }
+            catch (Exception e)
+            {
+            }
+            return ret;
+
+        }
 
         /*initialize database connection*/
         protected bool init()
@@ -343,10 +363,75 @@ namespace com.ums.UmsDbLib
             return n_ret;
         }
 
+        public OdbcCommand CreateCommand(String s, int OPENMODE)
+        {
+            if (!m_b_dbconn)
+                throw new UDbConnectionException();
+            try
+            {
+                if (m_reader != null)
+                    m_reader.Close(); //close the old reader
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                if (m_cmd != null)
+                    m_cmd.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+            m_cmd = conn.CreateCommand(); // new OdbcCommand(s, conn, m_odbc_transaction);
+            
+            m_cmd.CommandTimeout = timeout;
+            m_cmd.CommandText = s;
+            return m_cmd;
+        }
+
+        public void AddCommandParameter(String paramname, OdbcType type)
+        {
+            m_cmd.Parameters.Add(paramname, type);
+        }
+
+        public void SetCommandValue(String paramname, Object value)
+        {
+            m_cmd.Parameters[paramname].Value = value;
+        }
+
+        public OdbcDataReader ExecCommandReader()
+        {
+            try
+            {
+                return m_cmd.ExecuteReader();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public int ExecCommand()
+        {
+            try
+            {
+                return m_cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public OdbcDataReader ExecReader(String s, int OPENMODE)
+        {
+            return ExecReader(s, OPENMODE, false);
+        }
+
         /*
          * using KEEPOPEN the caller is responsible for Closing the reader 
          */
-        public OdbcDataReader ExecReader(String s, int OPENMODE) //KEEPOPEN or AUTOCLOSE
+        public OdbcDataReader ExecReader(String s, int OPENMODE, bool prepare) //KEEPOPEN or AUTOCLOSE
         {
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
@@ -376,6 +461,8 @@ namespace com.ums.UmsDbLib
                 else
                     m_cmd = new OdbcCommand(s, conn);
                 m_cmd.CommandTimeout = timeout;
+                if (prepare)
+                    m_cmd.Prepare();
             }
             catch (Exception e)
             {

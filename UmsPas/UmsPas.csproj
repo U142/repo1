@@ -62,6 +62,7 @@
     <Compile Include="Database\UStatusListDb.cs" />
     <Compile Include="Database\UTasDb.cs" />
     <Compile Include="Maps\UMaps.cs" />
+    <Compile Include="MessageLib\UMessageLib.cs" />
     <Compile Include="PARM\CommonParm.cs" />
     <Compile Include="PARM\ParmDb.cs" />
     <Compile Include="PARM\ParmGenerateSending.cs" />

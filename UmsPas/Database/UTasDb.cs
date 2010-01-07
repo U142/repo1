@@ -307,7 +307,7 @@ namespace com.ums.PAS.Database
                     "FROM " +
                     "LBACOUNTRIES LC, LBATOURISTCOUNT TC, LBAOPERATORS OP " +
                     "WHERE " +
-                    "LC.l_cc>0 AND LC.l_continentpk={0} AND LC.l_isonumeric>0 AND LC.l_cc{3}TC.l_cc_to AND TC.l_cc_from={1} AND TC.l_operator*=OP.l_operator AND TC.l_timestamp>={2}" +
+                    "LC.l_cc>0 AND LC.l_continentpk={0} AND LC.l_isonumeric>0 AND LC.l_cc{3}TC.l_cc_to AND TC.l_cc_from={1} AND TC.l_operator*=OP.l_operator AND TC.l_timestamp>={2} AND NOT LC.l_cc={1}" +
                     "ORDER BY LC.l_cc, LC.sz_iso, OP.l_operator",
                     n, from_country, timefilter, join);
 

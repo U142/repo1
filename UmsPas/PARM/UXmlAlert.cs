@@ -233,13 +233,13 @@ namespace com.ums.UmsParm
                     bool setbounds = false;
                     if (res != null && res.list!=null)
                     {
-                        for (int line = 0; line < res.list.Length; line++)
+                        for (int line = 0; line < res.list.Count; line++)
                         {
                             if (res.list[line].list != null && res.list[line].list.list != null)
                             {
-                                for(int inhab = 0; inhab < res.list[line].list.list.Length; inhab++)
+                                for(int inhab = 0; inhab < res.list[line].list.list.Count; inhab++)
                                 {
-                                    UAddress adr = res.list[line].list.list[inhab];
+                                    UAddressBasics adr = res.list[line].list.list[inhab];
                                     UGisRecord gisrecord = new UGisRecord();
                                     if (adr.kondmid.Length > 0)
                                     {

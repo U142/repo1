@@ -61,7 +61,7 @@ namespace com.ums.PAS.Address
                 conn.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase;
                 conn.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
                 conn.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, 120, m_logon.l_deptpk);
+                UAdrDb db = new UAdrDb(conn, m_logon.sz_stdcc, UCommon.USETTINGS.l_gisimport_db_timeout, m_logon.l_deptpk);
 
                 /*
                  * OLD ONE BY ONE LINE VERSION
@@ -83,7 +83,7 @@ namespace com.ums.PAS.Address
                 //UGisImportResultLine[] lines = filelines.ToArray();
                 double n_tables = (double)UCommon.USETTINGS.l_folkereg_num_adrtables;
                 //int chunksize = (int)Math.Floor(255.0 / n_tables);
-                int chunksize = 255;
+                int chunksize = UCommon.USETTINGS.l_gisimport_chunksize;
                 float max = filelines.Count;
                 PercentResult result = new PercentResult();
                 result.n_totalrecords = filelines.Count;
@@ -101,11 +101,21 @@ namespace com.ums.PAS.Address
                         ULog.error(e.Message);
                         throw e;
                     }
-                    for (int add = prev; add < prev + (x == chunksize ? x : x - 1); add++)
+                    //if (!only_coors)
                     {
-                        UGisImportResultLine tmp = filelines[add];
-                        ret.addLine(ref tmp);
-                        tmp.list.finalize();
+                        for (int add = prev; add < prev + (x == chunksize ? x : x - 1); add++)
+                        {
+                            if (add >= filelines.Count)
+                            {
+                                String s = "";
+                            }
+                            else
+                            {
+                                UGisImportResultLine tmp = filelines[add];
+                                ret.addLine(ref tmp);
+                                tmp.list.finalize();
+                            }
+                        }
                     }
                     try
                     {
@@ -146,15 +156,22 @@ namespace com.ums.PAS.Address
              populate UGisImportResultLine with house info, the inhabitant results will be returned
              * in UGisImportResultLine.list
              */
-            GisImportFile import = new GisImportFile(ref m_search);
-            List<UGisImportResultLine> filelines = import.Parse();
-            //open file and have it populated into search criterias
-            bool b_only_coors = false;
-            if (filelines.Count > m_search.DETAIL_THRESHOLD_LINES)
-                b_only_coors = true;
-            else
-                b_only_coors = false;
-            return SearchDatabase(ref filelines, b_only_coors);
+            try
+            {
+                GisImportFile import = new GisImportFile(ref m_search);
+                List<UGisImportResultLine> filelines = import.Parse();
+                //open file and have it populated into search criterias
+                bool b_only_coors = false;
+                if (filelines.Count > m_search.DETAIL_THRESHOLD_LINES)
+                    b_only_coors = true;
+                else
+                    b_only_coors = false;
+                return SearchDatabase(ref filelines, b_only_coors);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 

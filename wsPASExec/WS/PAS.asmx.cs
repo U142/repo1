@@ -20,6 +20,7 @@ using com.ums.PAS.Settings;
 using System.Text;
 using com.ums.UmsDbLib;
 using com.ums.PAS.Weather;
+using com.ums.PAS.messagelib;
 
 
 namespace com.ums.ws.pas
@@ -426,6 +427,33 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
+        [WebMethod]
+        public UBBMESSAGE InsertMessageLibrary(ULOGONINFO logon, UBBMESSAGE msg)
+        {
+            try
+            {
+                UBBMESSAGE ret = new UMessageLib(ref logon).InsertMessage(ref msg);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public UBBMESSAGELIST GetMessageLibrary(ULOGONINFO logon, UBBMESSAGELISTFILTER filter)
+        {
+            try
+            {
+                UBBMESSAGELIST ret = new UMessageLib(ref logon).GetMessageList(ref logon, filter);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         /*[WebMethod]
         public UWeatherReportResults GetWeatherTest()
         {

@@ -18,7 +18,7 @@ namespace com.ums.PAS.Database
     {
         public int m_n_pastype; //0=no db rights, 1=normal address, 2=folkereg address
         public int m_n_deptpk; //using deptpk
-
+        public bool b_prepared = false;
         /*
          * Connect to "vb_adr_" + sz_stdcc depending on which database to access
          */
@@ -510,83 +510,193 @@ namespace com.ums.PAS.Database
 
         public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next, ref int skiplines, bool only_coors)
         {
-            String szSQL = "";
-            int i = 0;
-            int n_validcount = 0;
-            for (i = startat; i < p.Count; i++)
+            try
             {
-                if (p[i].isValid())
+                String szSQL = "";
+                int i = 0;
+                int n_validcount = 0;
+                for (i = startat; i < p.Count; i++)
                 {
-                    if (n_validcount>0) //there are more sql before this one, add union
-                        szSQL += " UNION ";
-                    if (only_coors)
+                    if (p[i].isValid())
                     {
-                        if(m_n_pastype==1)
-                            szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                                                                p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
-                        else if(m_n_pastype==2)
-                            szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
-                                                                                p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);                        
-                    
-                    }
-                    else
-                    {
-                        if(m_n_pastype==1)
-                            szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                                     "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
-                                                     "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
-                                                     p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
-                        else if(m_n_pastype==2)
-                            szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
-                                                     "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
-                                                     "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
-                                                     p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
-                        
-                    }
-                    if (p[i].letter.Trim().Length > 0)
-                    {
-                        szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
-                    }
-                    n_validcount++;
-                    if (n_validcount >= max)
-                        break;
-                }
-            }
-            if (n_validcount > 0)
-            {
-                try
-                {
-                    OdbcDataReader rs;
-                    m_cmd = new OdbcCommand(szSQL, conn);
-                    rs = m_cmd.ExecuteReader();
-                    while (rs.Read())
-                    {
-                        UAddress adr = new UAddress();
-                        readAddressFromDb(ref adr, ref rs, only_coors);
-                        if (adr.arrayindex >= 0)
+                        if (n_validcount > 0) //there are more sql before this one, add union
+                            szSQL += " UNION ";
+                        if (only_coors)
                         {
-                            p[adr.arrayindex].list.addLine(ref adr);
-                            //p[adr.arrayindex].list.finalize();
+                            if (m_n_pastype == 1)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
+                                                                                    "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
+                            else if (m_n_pastype == 2)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
+                                                                                    "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
+                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
+
                         }
+                        else
+                        {
+                            if (m_n_pastype == 1)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
+                                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
+                            else if (m_n_pastype == 2)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
+                                                         "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
+                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
+
+                        }
+                        if (p[i].letter.Trim().Length > 0)
+                        {
+                            szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
+                        }
+                        n_validcount++;
+                        if (n_validcount >= max)
+                            break;
                     }
-                    rs.Close();
                 }
-                catch (Exception err)
+                if (n_validcount > 0)
                 {
-                    next = startat;
-                    throw err;
+                    try
+                    {
+                        OdbcDataReader rs;
+                        //m_cmd = new OdbcCommand(szSQL, conn);
+                        //rs = m_cmd.ExecuteReader();
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN, !b_prepared);
+                        b_prepared = true;
+                        while (rs.Read())
+                        {
+                            if (only_coors)
+                            {
+                                UAddressBasics adr = new UAddressBasics();
+                                adr = new UAddressBasics();
+                                readAddressFromDb(ref adr, ref rs);
+                                if (adr.arrayindex >= 0)
+                                {
+                                    p[adr.arrayindex].list.addLine(ref adr);
+                                    //p[adr.arrayindex].list.finalize();
+                                }
+                            }
+                            else
+                            {
+                                UAddress adr = new UAddress();
+                                adr = new UAddress();
+                                readAddressFromDb(ref adr, ref rs, only_coors);
+                                if (adr.arrayindex >= 0)
+                                {
+                                    p[adr.arrayindex].list.addLine(ref adr);
+                                    //p[adr.arrayindex].list.finalize();
+                                }
+                            }
+                                
+                        }
+                        rs.Close();
+                    }
+                    catch (Exception err)
+                    {
+                        next = startat;
+                        throw err;
+                    }
                 }
+                /*if (i >= p.Count)
+                {
+                    return -1;
+                }*/
+                //return (i+1); //return next
+                next = (i + 1);
+                return i - startat + 1;
             }
-            /*if (i >= p.Count)
+            catch (Exception e)
             {
-                return -1;
-            }*/
-            //return (i+1); //return next
-            next = (i + 1);
-            return i-startat+1;
+                throw e;
+            }
         }
+
+        /*public int GetGisImport(ref List<UGisImportResultLine> p, int startat, int max, ref int next, ref int skiplines, bool only_coors)
+        {
+            try
+            {
+                String szSQL = "";
+                int i = 0;
+                int n_validcount = 0;
+                for (i = startat; i < p.Count; i++)
+                {
+                    if (p[i].isValid())
+                    {
+                        if (n_validcount > 0) //there are more sql before this one, add union
+                            szSQL += " UNION ";
+                        if (only_coors)
+                        {
+                            if (m_n_pastype == 1)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
+                                                                                    "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
+                            else if (m_n_pastype == 2)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
+                                                                                    "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
+                                                                                    p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
+
+                        }
+                        else
+                        {
+                            if (m_n_pastype == 1)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
+                                                         "ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
+                            else if (m_n_pastype == 2)
+                                szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +
+                                                         "isnull(MOBIL, ''), isnull(GATEKODE, 0) GATEKODE, isnull(XY_KODE, 'a') AS QUALITY, isnull(f_hasfixed, 0), isnull(f_hasmobile,0), arr_indexnumber={3} FROM " +
+                                                         "ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
+                                                         p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
+
+                        }
+                        if (p[i].letter.Trim().Length > 0)
+                        {
+                            szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
+                        }
+                        n_validcount++;
+                        if (n_validcount >= max)
+                            break;
+                    }
+                }
+                if (n_validcount > 0)
+                {
+                    try
+                    {
+                        OdbcDataReader rs;
+                        //m_cmd = new OdbcCommand(szSQL, conn);
+                        //rs = m_cmd.ExecuteReader();
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN, true);
+
+                        while (rs.Read())
+                        {
+                            UAddress adr = new UAddress();
+                            readAddressFromDb(ref adr, ref rs, only_coors);
+                            if (adr.arrayindex >= 0)
+                            {
+                                p[adr.arrayindex].list.addLine(ref adr);
+                                //p[adr.arrayindex].list.finalize();
+                            }
+                        }
+                        rs.Close();
+                    }
+                    catch (Exception err)
+                    {
+                        next = startat;
+                        throw err;
+                    }
+                }
+                //return (i+1); //return next
+                next = (i + 1);
+                return i - startat + 1;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
 
         /*public int GetGisImport(ref UGisImportResultLine p)
         {
@@ -677,6 +787,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 while (rs.Read())
                 {
                     UAddress adr = new UAddress();
+                    UAddressBasics _adr = (UAddressBasics)adr;
                     readAddressFromDb(ref adr, ref rs, false);
                     list.addLine(ref adr);
 
@@ -1086,6 +1197,69 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             return true;
     
         }
+
+        protected bool readAddressFromDb(ref UAddressBasics adr, ref OdbcDataReader rs)
+        {
+            try
+            {
+                adr.kondmid = rs.GetString(0);
+            }
+            catch (Exception)
+            {
+                adr.kondmid = "0";
+            }
+            try
+            {
+                adr.lon = rs.GetDouble(1);
+            }
+            catch (Exception)
+            {
+                adr.lon = 0;
+            }
+            try
+            {
+                adr.lat = rs.GetDouble(2);
+            }
+            catch (Exception)
+            {
+                adr.lat = 0;
+            }
+            try
+            {
+                adr.bedrift = rs.GetInt32(3);
+            }
+            catch (Exception)
+            {
+                adr.bedrift = 0;
+            }
+            try
+            {
+                adr.hasfixed = rs.GetInt32(4);
+            }
+            catch (Exception)
+            {
+                adr.hasfixed = 0;
+            }
+            try
+            {
+                adr.hasmobile = rs.GetInt32(5);
+            }
+            catch (Exception)
+            {
+                adr.hasmobile = 0;
+            }
+            try
+            {
+                adr.arrayindex = rs.GetInt32(6);
+            }
+            catch (Exception)
+            {
+                adr.arrayindex = -1;
+            }
+            return true;
+
+        }
+
         protected bool readAddressFromDb(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
         {
             try
@@ -1116,10 +1290,11 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             {
                 try
                 {
+                    adr.bedrift = rs.GetInt32(3);
                 }
                 catch (Exception)
                 {
-                    adr.bedrift = rs.GetInt32(3);
+                    adr.bedrift = 0;
                 }
                 try
                 {

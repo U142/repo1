@@ -290,6 +290,8 @@ namespace com.ums.UmsCommon
         {
             public static int l_folkereg_num_adrtables;
             public static String sz_url_weather_forecast;
+            public static int l_gisimport_chunksize;
+            public static int l_gisimport_db_timeout;
         }
 
         public struct UPATHS
@@ -311,6 +313,7 @@ namespace com.ums.UmsCommon
             public static String sz_path_global_wav_dir;
             public static String sz_path_infosent;
             public static String sz_url_nslookup; //MaxMind NS account
+
 
             public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
             {
@@ -803,6 +806,48 @@ namespace com.ums.UmsCommon
         public String sz_manufacturer;
     }
 
+    public enum UBBMODULEDEF
+    {
+        CALL = 11,
+        INTRO = 12,
+        LOGON = 13,
+        SUBSTANCE = 14,
+        DIALOGUE = 15,
+        REPORT = 16,
+        CONFIRM = 17,
+        ENDING = 18,
+        HANGUP = 19,
+        ERROR = 21,
+        EXECUTE = 22,
+    }
 
+    public class UBBMESSAGE
+    {
+        public long n_messagepk;
+        public int n_deptpk;
+        public UBBMODULEDEF n_type;
+        public String sz_name;
+        public String sz_description;
+        public long n_langpk;
+        public String sz_number;
+        public int f_template;
+        public String sz_filename;
+        public int n_ivrcode;
+        public long n_parentpk;
+        public int n_depth;
+        public long n_timestamp;
+        public long n_categorypk;
+        public String sz_message;
+    }
+
+    public class UBBMESSAGELIST
+    {
+        public List<UBBMESSAGE> list;
+        public long n_servertimestamp;
+    }
+    public class UBBMESSAGELISTFILTER
+    {
+        public long n_timefilter;
+    }
 
 }

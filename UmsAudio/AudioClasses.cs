@@ -177,7 +177,7 @@ namespace com.ums.UmsCommon.Audio
                 db.close();
 
                 /*CREATE FILENAMES*/
-                response.guid_sendingid = Guid.NewGuid();
+                response.guid_sendingid = Guid.NewGuid().ToString();
                 String sz_filebase = "PAS_" + response.guid_sendingid + "_" + req.n_dynfile;
                 String sz_langfile = sz_filebase + ".lang";
                 String sz_wavfile = sz_filebase + ".wav";
@@ -433,7 +433,7 @@ namespace com.ums.UmsCommon.Audio
         public int n_responsecode;
         public String sz_responsetext;
         public int n_langpk;
-        public Guid guid_sendingid;
+        public String guid_sendingid;
         public int n_dynfile;
         public byte[] wav;
         public String sz_server_filename;

@@ -50,6 +50,9 @@ namespace com.ums.wsPASExec
             UCommon.USETTINGS.l_folkereg_num_adrtables = int.Parse(ConfigurationSettings.AppSettings["l_folkereg_num_adrtables"]);
             UCommon.USETTINGS.sz_url_weather_forecast = ConfigurationSettings.AppSettings["sz_url_weather_forecast"];
 
+            UCommon.USETTINGS.l_gisimport_chunksize = int.Parse(ConfigurationSettings.AppSettings["l_gisimport_chunksize"]);
+            UCommon.USETTINGS.l_gisimport_db_timeout = int.Parse(ConfigurationSettings.AppSettings["l_gisimport_db_timeout"]);
+
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
             int syslogport = int.Parse(port);

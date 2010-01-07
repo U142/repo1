@@ -135,38 +135,62 @@ namespace com.ums.PAS.Address
      */
     public class UGisImportResultsByStreetId : IAddressResults
     {
-        public UGisImportResultLine[] list;
-        protected List<UGisImportResultLine> temp = new List<UGisImportResultLine>();
+        //public UGisImportResultLine[] list;
+        public List<UGisImportResultLine> list = new List<UGisImportResultLine>();
         public void addLine(ref UGisImportResultLine a)
         {
-            temp.Add(a);
+            list.Add(a);
         }
         public void finalize()
         {
-            list = temp.Cast<UGisImportResultLine>().ToArray();
         }
+        /*public void finalize()
+        {
+            list = temp.Cast<UGisImportResultLine>().ToArray();
+        }*/
     }
 
     /*collection of addresses*/
     public class UAddressList : IAddressResults
     {
-        protected ArrayList temp = new ArrayList();
-        public UAddress [] list;
+        //protected ArrayList temp = new ArrayList();
+        //public UAddress [] list;
+        public List<UAddressBasics> list_basics = new List<UAddressBasics>();
+        public List<UAddress> list = new List<UAddress>();
         public void addLine(ref UAddress adr)
         {
-            temp.Add(adr);
+            list.Add(adr);
+        }
+        public void addLine(ref UAddressBasics adr)
+        {
+            list_basics.Add(adr);
         }
         public void finalize()
         {
-            list = temp.Cast<UAddress>().ToArray();
+            //list = temp.Cast<UAddress>().ToArray();
         }
     }
 
+    /*address basics*/
+    public class UAddressBasics
+    {
+        public UAddressBasics()
+        {
+            arrayindex = -1;
+        }
+        public String kondmid;
+        public double lon;
+        public double lat;
+        public int hasfixed;
+        public int hasmobile;
+        public int bedrift;
+        public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
+    }
 
     /*single address*/
-    public class UAddress
+    public class UAddress : UAddressBasics
     {
-        public String kondmid;
+        //public String kondmid;
         public String name;
         public String address;
         public int houseno;
@@ -177,22 +201,22 @@ namespace com.ums.PAS.Address
         public String bday;
         public String number;
         public String mobile;
-        public double lon;
-        public double lat;
+        //public double lon;
+        //public double lat;
         public int gno;
         public int bno;
-        public int bedrift;
+        //public int bedrift;
         public Int64 importid;
         public int streetid;
         public String xycode;
-        public int hasfixed;
-        public int hasmobile;
+        //public int hasfixed;
+        //public int hasmobile;
         public String municipalid;
-        public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
+        //public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
 
         public UAddress()
+            : base()
         {
-            arrayindex = -1;
         }
     }
 
