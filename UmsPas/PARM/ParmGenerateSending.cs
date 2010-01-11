@@ -23,6 +23,7 @@ namespace com.ums.UmsParm
         PASUmsDb db;
         ULOGONINFO logoninfo;
         protected USimpleXmlWriter xmlwriter;
+        protected PercentProgress.SetPercentDelegate percentDelegate;
 
         protected String m_sz_lasterror;
         protected void setLastError(String s, bool b_errortag) { 
@@ -162,8 +163,9 @@ namespace com.ums.UmsParm
             return true;
         }
 
-        public bool SendAlert(Int64 l_alertpk, int n_function, string sz_scheddate, string sz_schedtime)
+        public bool SendAlert(Int64 l_alertpk, int n_function, string sz_scheddate, string sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate)
         {
+            this.percentDelegate = percentDelegate;
             PAALERT pa = new PAALERT();
             db.FillAlert(l_alertpk, n_function, ref pa);
             BBPROJECT project = new BBPROJECT();
@@ -175,8 +177,9 @@ namespace com.ums.UmsParm
             return b;
         }
 
-        public bool SendEvent(Int64 l_eventpk, int n_function, string sz_scheddate, string sz_schedtime)
+        public bool SendEvent(Int64 l_eventpk, int n_function, string sz_scheddate, string sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate)
         {
+            this.percentDelegate = percentDelegate;
             //get all alerts. send all
 
             //ArrayList alerts = new ArrayList();
@@ -841,6 +844,8 @@ namespace com.ums.UmsParm
 
             UXmlAlert file = new UXmlAlert(UCommon.UPATHS.sz_path_predefined_areas, String.Format("a{0}.xml", pa.l_alertpk));
             file.SetLogonInfo(ref logoninfo);
+            file.setPercentDelegate(percentDelegate);
+            file.setJobType(ProgressJobType.PARM_SEND);
             try
             {
                 String guid = Guid.NewGuid().ToString();//new Guid().ToString();
@@ -924,8 +929,10 @@ namespace com.ums.UmsParm
                     lbasending.setSendNum(ref sendnum);
                     lbasending.setActionProfile(ref profile);
 
-                    sending.setShape(ref pa.m_shape); //will also create a temp address file
-                    lbasending.setShape(ref pa.m_shape);
+                    if(b_voice_active)
+                        sending.setShape(ref pa.m_shape); //will also create a temp address file
+                    if(b_lba_active)
+                        lbasending.setShape(ref pa.m_shape);
 
                     if(b_voice_active)
                         b_publish_voice = true;

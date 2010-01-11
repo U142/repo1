@@ -18,6 +18,7 @@ namespace com.ums.UmsCommon
         PARM_UPDATE = 5,
         HOUSE_DOWNLOAD = 6,
         TAS_UPDATE = 7,
+        PARM_SEND = 8,
 
 
     }

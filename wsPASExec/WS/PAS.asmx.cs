@@ -123,7 +123,7 @@ namespace com.ums.ws.pas
             {
                 PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
                 percentdelegate(ref logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
-                UGisImportLookup lookup = new UGisImportLookup(ref search, ref logon, percentdelegate);
+                UGisImportLookup lookup = new UGisImportLookup(ref search, ref logon, percentdelegate, ProgressJobType.GEMINI_IMPORT_STREETID);
                 UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)lookup.Find();
                 
                 return res;

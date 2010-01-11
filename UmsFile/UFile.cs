@@ -373,8 +373,9 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                ULog.error(e.Message);
-                return false;
+                //ULog.error(e.Message);
+                //return false;
+                throw e;
             }
         }
         virtual public void close()

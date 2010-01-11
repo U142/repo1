@@ -24,6 +24,17 @@ namespace com.ums.UmsParm
         public UShape getLBAShape() { return m_lba_shape; }
         protected int n_sendingtype;
         public int getSendingType() { return n_sendingtype; }
+        protected PercentProgress.SetPercentDelegate percentDelegate = null;
+        public void setPercentDelegate(PercentProgress.SetPercentDelegate percent)
+        {
+            percentDelegate = percent;
+        
+        }
+        protected ProgressJobType jobType = ProgressJobType.GEMINI_IMPORT_STREETID;
+        public void setJobType(ProgressJobType jobType)
+        {
+            this.jobType = jobType;
+        }
 
         public UXmlAlert(string path, string file) : base(path, file)
         {
@@ -225,9 +236,14 @@ namespace com.ums.UmsParm
                     m_shape.gis().SetLineCount(filelines.Count);
                     UGisImportParamsByStreetId search = new UGisImportParamsByStreetId();
                     search.SKIPLINES = 0;
-                    PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
-                    percentdelegate(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, new PercentResult());
-                    UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref m_logon, percentdelegate).SearchDatabase(ref filelines, true);
+                    bool adhoc_percentdelegate = false;
+                    if (percentDelegate == null)
+                    {
+                        adhoc_percentdelegate = true;
+                        percentDelegate = PercentProgress.newDelegate();
+                        percentDelegate(ref m_logon, jobType, new PercentResult());
+                    }
+                    UGisImportResultsByStreetId res = (UGisImportResultsByStreetId)new UGisImportLookup(ref search, ref m_logon, percentDelegate, jobType).SearchDatabase(ref filelines, true);
                     UMapBounds bounds = new UMapBounds();
                     bounds.reset();
                     bool setbounds = false;
@@ -235,11 +251,11 @@ namespace com.ums.UmsParm
                     {
                         for (int line = 0; line < res.list.Count; line++)
                         {
-                            if (res.list[line].list != null && res.list[line].list.list != null)
+                            if (res.list[line].list != null && res.list[line].list.list_basics != null)
                             {
-                                for(int inhab = 0; inhab < res.list[line].list.list.Count; inhab++)
+                                for(int inhab = 0; inhab < res.list[line].list.list_basics.Count; inhab++)
                                 {
-                                    UAddressBasics adr = res.list[line].list.list[inhab];
+                                    UAddressBasics adr = res.list[line].list.list_basics[inhab];
                                     UGisRecord gisrecord = new UGisRecord();
                                     if (adr.kondmid.Length > 0)
                                     {
@@ -267,7 +283,8 @@ namespace com.ums.UmsParm
                     }
                     if(setbounds)
                         m_shape.gis().SetBounds(bounds);
-                    PercentProgress.DeleteJob(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID);
+                    if(adhoc_percentdelegate)
+                        PercentProgress.DeleteJob(ref m_logon, jobType);
 
                 }
                 catch (Exception e)

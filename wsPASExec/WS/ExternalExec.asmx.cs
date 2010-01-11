@@ -262,10 +262,34 @@ namespace com.ums.ws.parm
         {
             ExecResponse response = new ExecResponse();
             XmlDocument doc = ExecAlert(l_alertpk, l_comppk, l_deptpk, l_userpk, sz_compid, sz_userid,
-                                        sz_deptid, sz_password, sz_function, sz_scheddate, sz_schedtime);
+                                        sz_deptid, sz_password, sz_function, sz_scheddate, sz_schedtime, null, "");
             response.parseFromXml(ref doc, "l_alertpk");
 
             return response;
+        }
+
+        [WebMethod]
+        public ExecResponse ExecAlertV3(Int64 l_alertpk, ULOGONINFO logon, String sz_function, String sz_scheddate, String sz_schedtime)
+        {
+            try
+            {
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.PARM_SEND, new PercentResult());
+
+                ExecResponse response = new ExecResponse();
+                XmlDocument doc = ExecAlert(l_alertpk, logon.l_comppk, logon.l_deptpk, logon.l_userpk, logon.sz_compid,
+                    logon.sz_userid, logon.sz_deptid, logon.sz_password, sz_function, sz_scheddate, sz_schedtime, percentdelegate, logon.jobid);
+                response.parseFromXml(ref doc, "l_alertpk");
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.PARM_SEND);
+            }
         }
 
         [WebMethod]
@@ -276,9 +300,36 @@ namespace com.ums.ws.parm
             ExecResponse response = new ExecResponse();
 
             XmlDocument doc = ExecEvent(l_eventpk, 0, 0, 0, sz_compid, sz_userid, sz_deptid,
-                                        sz_password, sz_function, sz_scheddate, sz_schedtime);
+                                        sz_password, sz_function, sz_scheddate, sz_schedtime, null, "");
             response.parseFromXml(ref doc, "l_eventpk");
             return response;
+        }
+
+        [WebMethod]
+        public ExecResponse ExecEventV4(Int64 l_eventpk, ULOGONINFO logon, String sz_function, String sz_scheddate,
+                                        String sz_schedtime)
+        {
+            try
+            {
+                ExecResponse response = new ExecResponse();
+                PercentProgress.SetPercentDelegate percentdelegate = PercentProgress.newDelegate();
+                percentdelegate(ref logon, ProgressJobType.PARM_SEND, new PercentResult());
+
+                XmlDocument doc = ExecEvent(l_eventpk, 0, 0, 0, logon.sz_compid, logon.sz_userid, logon.sz_deptid,
+                                            logon.sz_password, sz_function, sz_scheddate, sz_schedtime, percentdelegate, logon.jobid);
+                response.parseFromXml(ref doc, "l_eventpk");
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw e;
+
+            }
+            finally
+            {
+                PercentProgress.DeleteJob(ref logon, ProgressJobType.PARM_SEND);
+            }
+
         }
 
         [WebMethod]
@@ -289,7 +340,7 @@ namespace com.ums.ws.parm
             ExecResponse response = new ExecResponse();
             XmlDocument doc = ExecEvent(l_eventpk, l_comppk, l_deptpk, l_userpk,
                                         sz_compid, sz_userid, sz_deptid, sz_password,
-                                        sz_function, sz_scheddate, sz_schedtime);
+                                        sz_function, sz_scheddate, sz_schedtime, null, "");
             response.parseFromXml(ref doc, "l_eventpk");
 
             return response;
@@ -470,11 +521,26 @@ namespace com.ums.ws.parm
 
         }
 
-
-        [WebMethod]
-        public XmlDocument ExecAlert(Int64 l_alertpk, int l_comppk, int l_deptpk, Int64 l_userpk, 
+        /*[WebMethod]
+        public XmlDocument ExecAlert(Int64 l_alertpk, int l_comppk, int l_deptpk, Int64 l_userpk,
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
                                 String sz_function, String sz_scheddate, String sz_schedtime)
+        {
+            try
+            {
+                return ExecAlert(l_alertpk, l_comppk, l_deptpk, l_userpk, sz_compid, sz_userid, sz_deptid, sz_password,
+                    sz_function, sz_scheddate, sz_schedtime, null);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
+
+        //[WebMethod]
+        public XmlDocument ExecAlert(Int64 l_alertpk, int l_comppk, int l_deptpk, Int64 l_userpk, 
+                                String sz_compid, String sz_userid, String sz_deptid, String sz_password,
+                                String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid)
         {
             sz_function = sz_function.ToLower();
            
@@ -486,6 +552,7 @@ namespace com.ums.ws.parm
             logoninfo.sz_deptid = sz_deptid;
             logoninfo.sz_password = sz_password;
             logoninfo.sz_userid = sz_userid;
+            logoninfo.jobid = jobid;
 
             USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
             ParmGenerateSending parm = new ParmGenerateSending();
@@ -504,7 +571,7 @@ namespace com.ums.ws.parm
                 }
                 else
                 {
-                    parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime);
+                    parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime, percentDelegate);
                 }
             }
             cleanup(ref parm);
@@ -517,10 +584,10 @@ namespace com.ums.ws.parm
         }
 
 
-        [WebMethod]
+        //[WebMethod]
         public XmlDocument ExecEvent(Int64 l_eventpk, int l_comppk, int l_deptpk, Int64 l_userpk,
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
-                                String sz_function, String sz_scheddate, String sz_schedtime)
+                                String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid)
         {
             sz_function = sz_function.ToLower();
             //_init();
@@ -534,6 +601,7 @@ namespace com.ums.ws.parm
             logoninfo.sz_deptid = sz_deptid;
             logoninfo.sz_password = sz_password;
             logoninfo.sz_userid = sz_userid;
+            logoninfo.jobid = jobid;
 
             USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
             xml.insertStartDocument();
@@ -554,7 +622,7 @@ namespace com.ums.ws.parm
                 }
                 else
                 {
-                    parm.SendEvent(l_eventpk, function, sz_scheddate, sz_schedtime);
+                    parm.SendEvent(l_eventpk, function, sz_scheddate, sz_schedtime, null);
                 }
             }
             cleanup(ref parm);

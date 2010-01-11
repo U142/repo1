@@ -45,9 +45,11 @@ namespace com.ums.PAS.Address
         protected UGisImportParamsByStreetId m_search;
         protected ULOGONINFO m_logon;
         protected PercentProgress.SetPercentDelegate m_callback;
+        protected ProgressJobType jobType = ProgressJobType.GEMINI_IMPORT_STREETID;
 
-        public UGisImportLookup(ref UGisImportParamsByStreetId search, ref ULOGONINFO logon, PercentProgress.SetPercentDelegate percentCallback)
+        public UGisImportLookup(ref UGisImportParamsByStreetId search, ref ULOGONINFO logon, PercentProgress.SetPercentDelegate percentCallback, ProgressJobType jobType)
         {
+            this.jobType = jobType;
             m_search = search;
             m_logon = logon;
             m_callback = percentCallback;
@@ -89,7 +91,7 @@ namespace com.ums.PAS.Address
                 result.n_totalrecords = filelines.Count;
                 result.n_currentrecord = 0;
                 result.n_percent = 0;
-                m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
+                m_callback(ref m_logon, jobType, result);
                 while (1 == 1)
                 {
                     try
@@ -124,7 +126,7 @@ namespace com.ums.PAS.Address
                             result.n_percent = (int)((next * 100.0) / max);
                         else
                             result.n_percent = 100;
-                        m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
+                        m_callback(ref m_logon, jobType, result);
                     }
                     catch (Exception) { }
                     prev = next;
@@ -137,7 +139,7 @@ namespace com.ums.PAS.Address
                 {
                     result.n_currentrecord = result.n_totalrecords;
                     result.n_percent = 100;
-                    m_callback(ref m_logon, ProgressJobType.GEMINI_IMPORT_STREETID, result);
+                    m_callback(ref m_logon, jobType, result);
                 }
                 catch (Exception) { }
                 return ret;
