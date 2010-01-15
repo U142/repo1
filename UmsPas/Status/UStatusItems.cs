@@ -125,7 +125,25 @@ namespace com.ums.PAS.Status
             }
             for (int r = 0; r < proj.mdvsendinginfo.Count; r++)
             {
+
+
                 MDVSENDINGINFO mdv = proj.mdvsendinginfo[r];
+
+                //WRITE map data
+                /*only do this if refno is not in refno_filter*/
+                bool b_writeshapes = true;
+                if (m_search._l_refno_filter != null)
+                {
+                    for (int x = 0; x < m_search._l_refno_filter.Length; x++)
+                    {
+                        if (mdv.l_refno == m_search._l_refno_filter[x])
+                        {
+                            b_writeshapes = false;
+                            break;
+                        }
+                    }
+                }
+
                 //sending
                 outxml.insertStartElement("SENDING");
                 outxml.insertAttribute("sz_sendingname", mdv.sz_sendingname);
@@ -154,20 +172,17 @@ namespace com.ums.PAS.Status
                 outxml.insertAttribute("l_linktype", mdv.l_linktype.ToString());
                 outxml.insertAttribute("l_resendrefno", mdv.l_resendrefno.ToString());
                 outxml.insertAttribute("sz_messagetext", mdv.sz_messagetext.ToString());
-
-                //WRITE map data
-                /*only do this if refno is not in refno_filter*/
-                bool b_writeshapes = true;
-                if (m_search._l_refno_filter != null)
+                outxml.insertAttribute("sz_actionprofilename", mdv.sz_actionprofilename.ToString());
+                try
                 {
-                    for (int x = 0; x < m_search._l_refno_filter.Length; x++)
-                    {
-                        if (mdv.l_refno == m_search._l_refno_filter[x])
-                        {
-                            b_writeshapes = false;
-                            break;
-                        }
-                    }
+                    if (b_writeshapes)
+                        outxml.insertAttribute("l_num_dynfiles", m_db.getNumDynfilesInProfile(mdv.l_profilepk).ToString());
+                    else
+                        outxml.insertAttribute("l_num_dynfiles", "-2");
+                }
+                catch (Exception e)
+                {
+                    outxml.insertAttribute("l_num_dynfiles", "-3");
                 }
 
                 UBoundingRect bounding = null;

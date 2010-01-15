@@ -56,6 +56,19 @@ namespace com.ums.ws.pas
             }
 
         }
+
+        [WebMethod]
+        public bool SavePasUiSettings(ULOGONINFO l, UPASUISETTINGS ui)
+        {
+            try
+            {
+                return new ULogon().SaveUiSettings(ref l, ref ui);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         /*[WebMethod]
         public UPASLOGON TestLogon()
         {

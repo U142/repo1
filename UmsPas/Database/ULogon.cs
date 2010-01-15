@@ -19,6 +19,61 @@ namespace com.ums.PAS.Database
 
         }
 
+        public bool SaveUiSettings(ref ULOGONINFO l, ref UPASUISETTINGS ui)
+        {
+            try
+            {
+                bool b_ret = false;
+                base.CheckLogon(ref l);
+                String szSQL = String.Format("sp_pas_ins_ui {0}, '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, " +
+                                            "{11}, {12}, {13}, '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', " +
+                                            "{20}, '{21}', '{22}', '{23}', {24}, '{25}', '{26}', '{27}', {28}, {29}",
+                                            l.l_userpk,
+                                            ui.sz_languageid,
+                                            ui.f_mapinit_lbo,
+                                            ui.f_mapinit_rbo,
+                                            ui.f_mapinit_ubo,
+                                            ui.f_mapinit_bbo,
+                                            (ui.b_autostart_fleetcontrol ? 1 : 0),
+                                            (ui.b_autostart_parm ? 1 : 0),
+                                            (ui.b_window_fullscreen ? 1 : 0),
+                                            ui.l_winpos_x,
+                                            ui.l_winpos_y,
+                                            ui.l_win_width,
+                                            ui.l_win_height,
+                                            ui.l_gis_max_for_details,
+                                            ui.sz_skin_class,
+                                            ui.sz_theme_class,
+                                            ui.sz_watermark_class,
+                                            ui.sz_buttonshaper_class,
+                                            ui.sz_gradient_class,
+                                            ui.sz_title_class,
+                                            ui.l_mapserver,
+                                            ui.sz_wms_site,
+                                            ui.sz_wms_layers,
+                                            ui.sz_wms_format,
+                                            ui.l_drag_mode,
+                                            ui.sz_email_name,
+                                            ui.sz_email,
+                                            ui.sz_emailserver,
+                                            ui.l_mailport,
+                                            ui.l_lba_update_percent);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    if (rs.GetInt32(0) >= 1)
+                        b_ret = true;
+                }
+                rs.Close();
+
+                return b_ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         protected bool SaveNsLookup(long n_userpk, ref UNSLOOKUP ns)
         {
             try
@@ -345,6 +400,46 @@ namespace com.ums.PAS.Database
                         ret.nslookups.Add(ns);
                     }
                     rs.Close();
+
+                    //READ UI SETTINGS
+                    ret.uisettings = new UPASUISETTINGS();
+                    szSQL = String.Format("sp_pas_get_ui {0}", ret.l_userpk);
+                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    if (rs.Read())
+                    {
+                        ret.uisettings.initialized = true;
+                        ret.uisettings.sz_languageid = rs.GetString(0);
+                        ret.uisettings.f_mapinit_lbo = rs.GetDouble(1);
+                        ret.uisettings.f_mapinit_rbo = rs.GetDouble(2);
+                        ret.uisettings.f_mapinit_ubo = rs.GetDouble(3);
+                        ret.uisettings.f_mapinit_bbo = rs.GetDouble(4);
+                        ret.uisettings.b_autostart_fleetcontrol = (rs.GetInt32(5) >= 1 ? true : false);
+                        ret.uisettings.b_autostart_parm = (rs.GetInt32(6) >= 1 ? true : false);
+                        ret.uisettings.b_window_fullscreen = (rs.GetInt32(7) >= 1 ? true : false);
+                        ret.uisettings.l_winpos_x = rs.GetInt32(8);
+                        ret.uisettings.l_winpos_y = rs.GetInt32(9);
+                        ret.uisettings.l_win_width = rs.GetInt32(10);
+                        ret.uisettings.l_win_height = rs.GetInt32(11);
+                        ret.uisettings.l_gis_max_for_details = rs.GetInt32(12);
+                        ret.uisettings.sz_skin_class = rs.GetString(13);
+                        ret.uisettings.sz_theme_class = rs.GetString(14);
+                        ret.uisettings.sz_watermark_class = rs.GetString(15);
+                        ret.uisettings.sz_buttonshaper_class = rs.GetString(16);
+                        ret.uisettings.sz_gradient_class = rs.GetString(17);
+                        ret.uisettings.sz_title_class = rs.GetString(18);
+                        ret.uisettings.l_mapserver = rs.GetInt32(19);
+                        ret.uisettings.sz_wms_site = rs.GetString(20);
+                        ret.uisettings.sz_wms_layers = rs.GetString(21);
+                        ret.uisettings.sz_wms_format = rs.GetString(22);
+                        ret.uisettings.l_drag_mode = rs.GetInt32(23);
+                        ret.uisettings.sz_email_name = rs.GetString(24);
+                        ret.uisettings.sz_email = rs.GetString(25);
+                        ret.uisettings.sz_emailserver = rs.GetString(26);
+                        ret.uisettings.l_mailport = rs.GetInt32(27);
+                        ret.uisettings.l_lba_update_percent = rs.GetInt32(28);
+                    }
+                    rs.Close();
+
                 } //end of department read
                 /*else //no records, logon failed
                 {

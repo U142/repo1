@@ -511,7 +511,42 @@ namespace com.ums.UmsCommon
         public Int32 l_language;
         public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
         public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
+        public UPASUISETTINGS uisettings;
+    }
 
+    public class UPASUISETTINGS
+    {
+        public bool initialized = false;
+        public String sz_languageid;
+        public double f_mapinit_lbo;
+        public double f_mapinit_rbo;
+        public double f_mapinit_ubo;
+        public double f_mapinit_bbo;
+        public bool b_autostart_fleetcontrol;
+        public bool b_autostart_parm;
+        public bool b_window_fullscreen;
+        public int l_winpos_x;
+        public int l_winpos_y;
+        public int l_win_width;
+        public int l_win_height;
+        public int l_gis_max_for_details;
+        public String sz_skin_class;
+        public String sz_theme_class;
+        public String sz_watermark_class;
+        public String sz_buttonshaper_class;
+        public String sz_gradient_class;
+        public String sz_title_class;
+        public int l_mapserver;
+        public String sz_wms_site;
+        public String sz_wms_layers;
+        public String sz_wms_format;
+        public int l_drag_mode;
+
+        public String sz_email_name;
+        public String sz_email;
+        public String sz_emailserver;
+        public int l_mailport;
+        public int l_lba_update_percent;
     }
 
     public class UDEPARTMENT
@@ -656,6 +691,7 @@ namespace com.ums.UmsCommon
         public int l_linktype;
         public int l_resendrefno; //if it's a resend
         public String sz_messagetext; //for sms messages
+        public String sz_actionprofilename; //actionprofile used in sending (voice)
     }
     public struct BBVALID
     {

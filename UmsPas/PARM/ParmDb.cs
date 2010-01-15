@@ -544,6 +544,14 @@ namespace com.ums.UmsParm
                     {
                         m.sz_messagetext = "N/A";
                     }
+                    try
+                    {
+                        m.sz_actionprofilename = rs.GetString(24);
+                    }
+                    catch (Exception)
+                    {
+                        m.sz_actionprofilename = "N/A";
+                    }
 
                     return true;
                 }
