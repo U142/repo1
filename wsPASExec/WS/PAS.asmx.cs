@@ -69,12 +69,25 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
+
+        [WebMethod]
+        public UPASUISETTINGS LoadLanguageAndVisuals(ULOGONINFO l)
+        {
+            try
+            {
+                return new ULogon().LoadLanguageAndVisualsBeforeLogon(ref l);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         /*[WebMethod]
         public UPASLOGON TestLogon()
         {
             ULOGONINFO l = new ULOGONINFO();
             l.sz_userid = "MH";
-            l.sz_compid = "UMS";
+            l.sz_compid = "UMS";%
             l.sz_password = "mh123,";
             return new ULogon().Logon(ref l);
         }*/

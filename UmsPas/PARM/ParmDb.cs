@@ -1309,5 +1309,38 @@ namespace com.ums.UmsParm
                 return false;
             }
         }
+
+        /** Inject all languages and CC's into database for status review */
+        public bool InjectLBALanguages(long n_refno, ref ULocationBasedAlert a)
+        {
+            try
+            {
+                int ret = 0;
+                for (int i = 0; i < a.getLanguageCount(); i++)
+                {
+                    for (int c = 0; c < a.getLanguage(i).getCCodeCount(); c++)
+                    {
+                        String szSQL = String.Format("sp_pas_ins_lbatext {0}, {1}, '{2}', '{3}', '{4}', '{5}'",
+                                                    n_refno,
+                                                    a.getLanguage(i).getCCode(c).getCCode(),
+                                                    a.getLanguage(i).getName().Substring(0,50),
+                                                    a.getLanguage(i).getCBOadc().Substring(0, 20),
+                                                    a.getLanguage(i).getText().Substring(0, 760));
+                        OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                        if (rs.Read())
+                        {
+                            if (rs.GetInt32(0) <= -1)
+                                ret = -1;
+                        }
+                        rs.Close();
+                    }
+                }
+                return (ret == -1 ? false : true);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

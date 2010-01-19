@@ -569,6 +569,7 @@ namespace com.ums.UmsParm
                     {
                         sending.m_lba.setSourceShape(ref lbasending.m_shape);
                         lbasending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
+                        db.InjectLBALanguages(lbasending.l_refno, ref sending.m_lba);
                         b_publish_lba = true;
 
                     }
@@ -1026,6 +1027,15 @@ namespace com.ums.UmsParm
                         if (pa.m_lba_shape.lba().getValid() && pa.hasValidAreaID())
                         {
                             lbasending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
+                            try
+                            {
+                                ULocationBasedAlert lbashape = pa.m_lba_shape.lba();
+                                db.InjectLBALanguages(lbasending.l_refno, ref lbashape);
+                            }
+                            catch (Exception e)
+                            {
+                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "An error occured while injecting languages to database", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                            }
                             b_publish_lba = true;
 
                         }

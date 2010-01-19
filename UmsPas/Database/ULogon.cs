@@ -186,6 +186,85 @@ namespace com.ums.PAS.Database
             }
         }
 
+        public UPASUISETTINGS LoadLanguageAndVisualsBeforeLogon(ref ULOGONINFO l)
+        {
+            try
+            {
+                UPASUISETTINGS ret = new UPASUISETTINGS();
+                String szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
+                                    l.sz_userid, l.sz_compid);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                long n_userpk = 0;
+                if (rs.Read())
+                    n_userpk = rs.GetInt64(0);
+                rs.Close();
+
+                return LoadLanguageAndVisuals(n_userpk, true);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        protected UPASUISETTINGS LoadLanguageAndVisuals(long l_userpk, bool b_visualsonly)
+        {
+            try
+            {
+                UPASUISETTINGS ret = new UPASUISETTINGS();
+                ret.initialized = false;
+                String szSQL;
+                szSQL = String.Format("sp_pas_get_ui {0}", l_userpk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    ret.initialized = true;
+                    ret.sz_languageid = rs.GetString(0);
+                    if (!b_visualsonly)
+                    {
+                        ret.f_mapinit_lbo = rs.GetDouble(1);
+                        ret.f_mapinit_rbo = rs.GetDouble(2);
+                        ret.f_mapinit_ubo = rs.GetDouble(3);
+                        ret.f_mapinit_bbo = rs.GetDouble(4);
+                        ret.b_autostart_fleetcontrol = (rs.GetInt32(5) >= 1 ? true : false);
+                        ret.b_autostart_parm = (rs.GetInt32(6) >= 1 ? true : false);
+                        ret.b_window_fullscreen = (rs.GetInt32(7) >= 1 ? true : false);
+                        ret.l_winpos_x = rs.GetInt32(8);
+                        ret.l_winpos_y = rs.GetInt32(9);
+                        ret.l_win_width = rs.GetInt32(10);
+                        ret.l_win_height = rs.GetInt32(11);
+                        ret.l_gis_max_for_details = rs.GetInt32(12);
+                    }
+                    ret.sz_skin_class = rs.GetString(13);
+                    ret.sz_theme_class = rs.GetString(14);
+                    ret.sz_watermark_class = rs.GetString(15);
+                    ret.sz_buttonshaper_class = rs.GetString(16);
+                    ret.sz_gradient_class = rs.GetString(17);
+                    ret.sz_title_class = rs.GetString(18);
+                    if (!b_visualsonly)
+                    {
+                        ret.l_mapserver = rs.GetInt32(19);
+                        ret.sz_wms_site = rs.GetString(20);
+                        ret.sz_wms_layers = rs.GetString(21);
+                        ret.sz_wms_format = rs.GetString(22);
+                        ret.l_drag_mode = rs.GetInt32(23);
+                        ret.sz_email_name = rs.GetString(24);
+                        ret.sz_email = rs.GetString(25);
+                        ret.sz_emailserver = rs.GetString(26);
+                        ret.l_mailport = rs.GetInt32(27);
+                        ret.l_lba_update_percent = rs.GetInt32(28);
+                    }
+                }
+                rs.Close();
+
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public UPASLOGON Logon(ref ULOGONINFO l)
         {
             UPASLOGON ret = new UPASLOGON();
@@ -402,43 +481,7 @@ namespace com.ums.PAS.Database
                     rs.Close();
 
                     //READ UI SETTINGS
-                    ret.uisettings = new UPASUISETTINGS();
-                    szSQL = String.Format("sp_pas_get_ui {0}", ret.l_userpk);
-                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                    if (rs.Read())
-                    {
-                        ret.uisettings.initialized = true;
-                        ret.uisettings.sz_languageid = rs.GetString(0);
-                        ret.uisettings.f_mapinit_lbo = rs.GetDouble(1);
-                        ret.uisettings.f_mapinit_rbo = rs.GetDouble(2);
-                        ret.uisettings.f_mapinit_ubo = rs.GetDouble(3);
-                        ret.uisettings.f_mapinit_bbo = rs.GetDouble(4);
-                        ret.uisettings.b_autostart_fleetcontrol = (rs.GetInt32(5) >= 1 ? true : false);
-                        ret.uisettings.b_autostart_parm = (rs.GetInt32(6) >= 1 ? true : false);
-                        ret.uisettings.b_window_fullscreen = (rs.GetInt32(7) >= 1 ? true : false);
-                        ret.uisettings.l_winpos_x = rs.GetInt32(8);
-                        ret.uisettings.l_winpos_y = rs.GetInt32(9);
-                        ret.uisettings.l_win_width = rs.GetInt32(10);
-                        ret.uisettings.l_win_height = rs.GetInt32(11);
-                        ret.uisettings.l_gis_max_for_details = rs.GetInt32(12);
-                        ret.uisettings.sz_skin_class = rs.GetString(13);
-                        ret.uisettings.sz_theme_class = rs.GetString(14);
-                        ret.uisettings.sz_watermark_class = rs.GetString(15);
-                        ret.uisettings.sz_buttonshaper_class = rs.GetString(16);
-                        ret.uisettings.sz_gradient_class = rs.GetString(17);
-                        ret.uisettings.sz_title_class = rs.GetString(18);
-                        ret.uisettings.l_mapserver = rs.GetInt32(19);
-                        ret.uisettings.sz_wms_site = rs.GetString(20);
-                        ret.uisettings.sz_wms_layers = rs.GetString(21);
-                        ret.uisettings.sz_wms_format = rs.GetString(22);
-                        ret.uisettings.l_drag_mode = rs.GetInt32(23);
-                        ret.uisettings.sz_email_name = rs.GetString(24);
-                        ret.uisettings.sz_email = rs.GetString(25);
-                        ret.uisettings.sz_emailserver = rs.GetString(26);
-                        ret.uisettings.l_mailport = rs.GetInt32(27);
-                        ret.uisettings.l_lba_update_percent = rs.GetInt32(28);
-                    }
-                    rs.Close();
+                    ret.uisettings = LoadLanguageAndVisuals(ret.l_userpk, false);
 
                 } //end of department read
                 /*else //no records, logon failed
