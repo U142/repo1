@@ -712,6 +712,22 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool InsertMDVSENDINGINFO_DCALL(ref long l_refno)
+        {
+            String szSQL = String.Format("INSERT INTO MDVSENDINGINFO_DCALL(l_refno,l_adr2,l_adr3,l_adr4,l_adr5) VALUES({0},-1,-1,-1,-1)",l_refno);
+            try
+            {
+                ExecNonQuery(szSQL);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
+
         public bool InsertMDVSENDINGINFO(ref PAS_SENDING s)
         {
             String szSQL = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
@@ -751,7 +767,7 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
-
+        
         public bool InsertBBACTIONPROFILE(ref long l_refno, ref BBACTIONPROFILESEND ap)
         {
             String szSQL = String.Format("INSERT INTO BBACTIONPROFILESEND(l_actionprofilepk, l_refno) VALUES({0}, {1})",
@@ -941,6 +957,7 @@ namespace com.ums.UmsParm
                 InsertBBVALID(ref s);
                 InsertBBSENDNUM(ref s);
                 InsertMDVSENDINGINFO(ref s);
+                InsertMDVSENDINGINFO_DCALL(ref s.l_refno); // Det er denne som manglet og gjorde at en ble oppringt 2 ganger
                 InsertBBACTIONPROFILE(ref s);
                 InsertBBDYNARESCHED(ref s);
                 return true;
@@ -962,6 +979,7 @@ namespace com.ums.UmsParm
                 p.m_profile.l_actionprofilepk = 0;
                 InsertBBACTIONPROFILE(ref p);
                 InsertMDVSENDINGINFO(ref p);
+                InsertMDVSENDINGINFO_DCALL(ref s.l_refno); // Det er denne som manglet og gjorde at en ble oppringt 2 ganger
                 InsertLBACountries(ref s);
                 return true;
             }
