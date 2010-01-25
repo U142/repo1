@@ -23,11 +23,13 @@ namespace com.ums.PAS.Database
         {
             try
             {
+                String wms_layers = ui.sz_wms_layers;
+
                 bool b_ret = false;
                 base.CheckLogon(ref l);
                 String szSQL = String.Format("sp_pas_ins_ui {0}, '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, " +
                                             "{11}, {12}, {13}, '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', " +
-                                            "{20}, '{21}', '{22}', '{23}', {24}, '{25}', '{26}', '{27}', {28}, {29}",
+                                            "{20}, '{21}', '{22}', '{23}', {24}, '{25}', '{26}', '{27}', {28}, {29}, '{30}', '{31}'",
                                             l.l_userpk,
                                             ui.sz_languageid,
                                             ui.f_mapinit_lbo,
@@ -50,14 +52,16 @@ namespace com.ums.PAS.Database
                                             ui.sz_title_class,
                                             ui.l_mapserver,
                                             ui.sz_wms_site,
-                                            ui.sz_wms_layers,
+                                            wms_layers,
                                             ui.sz_wms_format,
                                             ui.l_drag_mode,
                                             ui.sz_email_name,
                                             ui.sz_email,
                                             ui.sz_emailserver,
                                             ui.l_mailport,
-                                            ui.l_lba_update_percent);
+                                            ui.l_lba_update_percent,
+                                            ui.sz_wms_username,
+                                            ui.sz_wms_password);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
@@ -253,6 +257,8 @@ namespace com.ums.PAS.Database
                         ret.sz_emailserver = rs.GetString(26);
                         ret.l_mailport = rs.GetInt32(27);
                         ret.l_lba_update_percent = rs.GetInt32(28);
+                        ret.sz_wms_username = rs.GetString(29);
+                        ret.sz_wms_password = rs.GetString(30);
                     }
                 }
                 rs.Close();

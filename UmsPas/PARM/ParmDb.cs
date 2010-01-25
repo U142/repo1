@@ -1333,23 +1333,49 @@ namespace com.ums.UmsParm
         {
             try
             {
-                int ret = 0;
+                long ret = 0;
+                long textpk = 0;
                 for (int i = 0; i < a.getLanguageCount(); i++)
                 {
-                    for (int c = 0; c < a.getLanguage(i).getCCodeCount(); c++)
+                    String strname = a.getLanguage(i).getName();
+                    String stroadc = a.getLanguage(i).getCBOadc();
+                    String strtext = a.getLanguage(i).getText();
+                    if (strname.Length > 50)
+                        strname = strname.Substring(0, 50);
+                    if (stroadc.Length > 20)
+                        stroadc = stroadc.Substring(0, 20);
+                    if (strtext.Length > 760)
+                        strtext = strtext.Substring(0, 760);
+
+                    String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
+                            n_refno,
+                            strname,
+                            stroadc,
+                            strtext);
+                    OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    if (rs.Read())
                     {
-                        String szSQL = String.Format("sp_pas_ins_lbatext {0}, {1}, '{2}', '{3}', '{4}', '{5}'",
-                                                    n_refno,
-                                                    a.getLanguage(i).getCCode(c).getCCode(),
-                                                    a.getLanguage(i).getName().Substring(0,50),
-                                                    a.getLanguage(i).getCBOadc().Substring(0, 20),
-                                                    a.getLanguage(i).getText().Substring(0, 760));
-                        OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                        textpk = rs.GetInt64(0);
+                        if (textpk <= -1)
+                            ret = -1;
+                    }
+                    else
+                        ret = -1;
+                    rs.Close();
+
+                    for (int c = 0; c < a.getLanguage(i).getCCodeCount() && textpk>0; c++)
+                    {
+                        szSQL = String.Format("sp_pas_ins_lbatext_cc {0}, {1}",
+                                            textpk, a.getLanguage(i).getCCode(c).getCCode());
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                         if (rs.Read())
                         {
-                            if (rs.GetInt32(0) <= -1)
+                            long pk = rs.GetInt64(0);
+                            if (pk <= -1)
                                 ret = -1;
                         }
+                        else
+                            ret = -1;
                         rs.Close();
                     }
                 }

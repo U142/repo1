@@ -131,8 +131,8 @@ namespace com.ums.PAS.Status
 
                 //WRITE map data
                 /*only do this if refno is not in refno_filter*/
-                bool b_writeshapes = true;
-                if (m_search._l_refno_filter != null)
+                bool b_writeshapes = isRefnoInFilter(ref mdv);
+                /*if (m_search._l_refno_filter != null)
                 {
                     for (int x = 0; x < m_search._l_refno_filter.Length; x++)
                     {
@@ -142,7 +142,7 @@ namespace com.ums.PAS.Status
                             break;
                         }
                     }
-                }
+                }*/
 
                 //sending
                 outxml.insertStartElement("SENDING");
@@ -435,7 +435,11 @@ namespace com.ums.PAS.Status
                     (mdv.l_addresstypes & (int)ADRTYPES.SENDTO_TAS_SMS)==(int)ADRTYPES.SENDTO_TAS_SMS
                   )
                 {
+                    bool b_writeshapes = isRefnoInFilter(ref mdv);
+
+
                     //ULBASENDING lbasending = m_db.GetLBASending(mdv.l_refno);
+
                     List<ULBASENDING> lbasendings = m_db.GetLBASending_2_0(mdv.l_refno);
                     if (lbasendings != null)
                     {
@@ -487,6 +491,45 @@ namespace com.ums.PAS.Status
                                         outxml.insertEndElement(); //TS
                                     }
                                     outxml.insertEndElement(); //LBASEND_TS
+
+                                    try
+                                    {
+                                        if (b_writeshapes)
+                                        {
+                                            List<LBALanguage> lbatext = m_db.GetLBATextContent(mdv.l_refno);
+                                            outxml.insertStartElement("LBALANGUAGES");
+                                            for (int lang = 0; lang < lbatext.Count; lang++)
+                                            {
+                                                outxml.insertStartElement("LBALANGUAGE");
+                                                outxml.insertAttribute("name", lbatext[lang].getName());
+                                                outxml.insertAttribute("oadc", lbatext[lang].getCBOadc());
+                                                outxml.insertAttribute("text", lbatext[lang].getText());
+                                                /*outxml.insertStartElement("CCODES");
+                                                for (int langcc = 0; langcc < lbatext[lang].getCCodeCount(); langcc++)
+                                                {
+                                                    outxml.insertStartElement("country");
+                                                    outxml.insertAttribute("cc", lbatext[lang].getCCode(langcc).getCCode());
+                                                    outxml.insertEndElement(); //CC
+                                                }
+                                                outxml.insertEndElement(); //CCODES*/
+                                                String cclist = "";
+                                                for (int langcc = 0; langcc < lbatext[lang].getCCodeCount(); langcc++)
+                                                {
+                                                    if (langcc > 0)
+                                                        cclist += ",";
+                                                    cclist += lbatext[lang].getCCode(langcc).getCCode();
+                                                }
+                                                outxml.insertAttribute("ccodelist", cclist);
+
+                                                outxml.insertEndElement();//LBALANGAUGE
+                                            }
+                                            outxml.insertEndElement(); //LBALANGUAGES
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                    }
+
                                 }
                                 catch (Exception e)
                                 {
@@ -547,6 +590,23 @@ namespace com.ums.PAS.Status
 
 
             //return null;
+        }
+
+        protected bool isRefnoInFilter(ref MDVSENDINGINFO mdv)
+        {
+            bool b_writeshapes = true;
+            if (m_search._l_refno_filter != null)
+            {
+                for (int x = 0; x < m_search._l_refno_filter.Length; x++)
+                {
+                    if (mdv.l_refno == m_search._l_refno_filter[x])
+                    {
+                        b_writeshapes = false;
+                        break;
+                    }
+                }
+            }
+            return b_writeshapes;
         }
 
         private bool ParseMapFile(ref MDVSENDINGINFO mdv, ref UBoundingRect rect, ref UShape shape)

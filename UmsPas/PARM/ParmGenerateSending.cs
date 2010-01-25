@@ -1029,8 +1029,11 @@ namespace com.ums.UmsParm
                             lbasending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
                             try
                             {
-                                ULocationBasedAlert lbashape = pa.m_lba_shape.lba();
-                                db.InjectLBALanguages(lbasending.l_refno, ref lbashape);
+                                if (n_function != UCommon.USENDING_TEST)
+                                {
+                                    ULocationBasedAlert lbashape = pa.m_lba_shape.lba();
+                                    db.InjectLBALanguages(lbasending.l_refno, ref lbashape);
+                                }
                             }
                             catch (Exception e)
                             {
@@ -1054,9 +1057,12 @@ namespace com.ums.UmsParm
                     lbasending.lbacleanup();
                 }
             }
-            if(typeof(UGIS).Equals(sending.m_shape.GetType()))
+            if (sending.m_shape != null)
             {
-                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                if (typeof(UGIS).Equals(sending.m_shape.GetType()))
+                {
+                    setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                }
             }
             
             //send it

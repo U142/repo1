@@ -540,6 +540,8 @@ namespace com.ums.UmsCommon
         public String sz_wms_site;
         public String sz_wms_layers;
         public String sz_wms_format;
+        public String sz_wms_username;
+        public String sz_wms_password;
         public int l_drag_mode;
 
         public String sz_email_name;
@@ -834,8 +836,48 @@ namespace com.ums.UmsCommon
         public List<ULBAHISTCC> histcc = new List<ULBAHISTCC>(); //list of country codes hist
         public List<ULBAHISTCELL> histcell = new List<ULBAHISTCELL>(); //list of cell hist
         public List<ULBASEND_TS> send_ts = new List<ULBASEND_TS>(); //list of status timestamps
-        
+        public List<LBALanguage> languages = new List<LBALanguage>(); //list of languages and countrycodes
     }
+    public class LBALanguage
+    {
+        public String sz_name;
+        public String sz_cb_oadc;
+        public String sz_otoa;
+        public String sz_text;
+        public List<LBACCode> m_ccodes = new List<LBACCode>();
+        public LBALanguage()
+        {
+        }
+        public LBALanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
+        {
+            this.sz_name = sz_name;
+            this.sz_text = sz_text;
+            this.sz_cb_oadc = sz_cb_oadc;
+            this.sz_otoa = sz_otoa;
+        }
+        public void AddCCode(String ccode) { m_ccodes.Add(new LBACCode(ccode)); }
+
+        public String getName() { return sz_name; }
+        public String getCBOadc() { return sz_cb_oadc; }
+        public String getOtoa() { return sz_otoa; }
+        public String getText() { return sz_text; }
+        public int getCCodeCount() { return m_ccodes.Count; }
+        public LBACCode getCCode(int i) { return (LBACCode)m_ccodes[i]; }
+
+    }
+    public class LBACCode
+    {
+        public String ccode;
+        public LBACCode(String s)
+        {
+            ccode = s;
+        }
+        public LBACCode()
+        {
+        }
+        public String getCCode() { return ccode; }
+    }
+
     public class UTTS_DB_PARAMS
     {
         public String sz_speaker;

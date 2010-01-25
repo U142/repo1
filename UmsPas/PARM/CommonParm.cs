@@ -96,7 +96,7 @@ namespace com.ums.UmsParm
         {
             m_b_isvalid = false;
         }
-        public class LBALanguage
+        /*public class LBALanguage
         {
             public String sz_name;
             public String sz_cb_oadc;
@@ -134,7 +134,7 @@ namespace com.ums.UmsParm
             {
             }
             public String getCCode() { return ccode; }
-        }
+        }*/
         protected bool m_b_isvalid;
         //public String sz_area;
         //public String sz_id;
@@ -749,8 +749,8 @@ namespace com.ums.UmsParm
             UShape _this = this;
             loc.setSourceShape(ref _this);
             loc.l_alertpk = "-1";
-            loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
-            ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();
+            loc.m_languages = new List<LBALanguage>();
+            LBALanguage lbalang = new LBALanguage();
             if (alert.n_requesttype == 2) //only a count request, we don't have any details
             {
                 lbalang.sz_cb_oadc = "NULL";
@@ -765,10 +765,10 @@ namespace com.ums.UmsParm
                 lbalang.sz_otoa = "0";
                 lbalang.sz_text = sending.sz_sms_message;
             }
-            lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
+            lbalang.m_ccodes = new List<LBACCode>();
             for(int i=0; i < countries.Count; i++)
             {
-                ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
+                LBACCode ccode = new LBACCode();
                 ccode.ccode = countries[i].l_cc.ToString();
                 lbalang.m_ccodes.Add(ccode);
             }

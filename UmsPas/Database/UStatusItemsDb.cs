@@ -180,6 +180,7 @@ namespace com.ums.PAS.Database
                     }
                 }
                 rs.Close();
+
             }
             catch (Exception e)
             {
@@ -187,6 +188,41 @@ namespace com.ums.PAS.Database
             }
 
             return ret;
+        }
+
+        public List<LBALanguage> GetLBATextContent(long n_refno)
+        {
+            try
+            {
+                List<LBALanguage> ret = new List<LBALanguage>();
+                String szSQL = String.Format("sp_pas_get_lbatext {0}", n_refno);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                long n_prev_textpk = -1;
+                LBALanguage lang = null;
+                while(rs.Read())
+                {
+                    long textpk = rs.GetInt64(0);
+                    if (n_prev_textpk != textpk)
+                    {
+                        String sz_name = rs.GetString(1);
+                        String sz_oadc = rs.GetString(2);
+                        String sz_text = rs.GetString(3);
+                        lang = new LBALanguage();
+                        lang.sz_name = sz_name;
+                        lang.sz_cb_oadc = sz_oadc;
+                        lang.sz_text = sz_text;
+                        ret.Add(lang);
+                    }
+                    int l_cc = rs.GetInt16(4);
+                    lang.AddCCode(l_cc.ToString());
+                }
+                rs.Close();
+                return ret;
+            }
+            catch(Exception e)
+            {
+                return new List<LBALanguage>();
+            }
         }
 
         public ULBASENDING GetLBASending(long n_refno)
