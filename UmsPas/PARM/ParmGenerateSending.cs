@@ -481,8 +481,10 @@ namespace com.ums.UmsParm
                 }
                 try
                 {
-                    passending.createShape(ref sending); //will also create a temp address file
-                    lbasending.createShape(ref sending);
+                    if(b_voice_active)
+                        passending.createShape(ref sending); //will also create a temp address file
+                    if(b_lba_active)
+                        lbasending.createShape(ref sending);
                     if(b_voice_active)
                         b_publish_voice = true;
                     if (b_lba_active)

@@ -271,6 +271,7 @@ namespace com.ums.UmsDbLib
                 {
                     n_ret = rs.GetInt32(0);
                 }
+                rs.Close();
             }
             catch (Exception e)
             {

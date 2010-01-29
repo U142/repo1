@@ -190,6 +190,29 @@ namespace com.ums.PAS.Database
             return ret;
         }
 
+        public List<USMSINSTATS> GetSmsInStats(long n_refno)
+        {
+            List<USMSINSTATS> ret = new List<USMSINSTATS>();
+            String szSQL = String.Format("sp_pas_get_smsinstats {0}", n_refno);
+            OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+            while (rs.Read())
+            {
+                USMSINSTATS st = new USMSINSTATS();
+                try
+                {
+                    st.l_refno = rs.GetInt32(0);
+                    st.l_answercode = rs.GetInt32(1);
+                    st.sz_description = rs.GetString(2);
+                    ret.Add(st);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            rs.Close();
+            return ret;
+        }
+
         public List<LBALanguage> GetLBATextContent(long n_refno)
         {
             try

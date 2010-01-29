@@ -467,6 +467,19 @@ namespace com.ums.ws.pas
             }
         }
         [WebMethod]
+        public UBBMESSAGE DeleteMessageLibrary(ULOGONINFO logon, UBBMESSAGE msg)
+        {
+            try
+            {
+                UBBMESSAGE ret = new UMessageLib(ref logon).DeleteMessage(ref msg);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
         public UBBMESSAGELIST GetMessageLibrary(ULOGONINFO logon, UBBMESSAGELISTFILTER filter)
         {
             try

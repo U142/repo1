@@ -795,6 +795,13 @@ namespace com.ums.UmsCommon
 
     }
 
+    public class USMSINSTATS
+    {
+        public int l_refno;
+        public int l_answercode;
+        public String sz_description;
+    }
+
     public class ULBAHISTCC
     {
         public int l_cc;
@@ -917,6 +924,8 @@ namespace com.ums.UmsCommon
         public long n_timestamp;
         public long n_categorypk;
         public String sz_message;
+        public byte[] audiostream;
+        public bool b_valid;
     }
 
     public class UBBMESSAGELIST

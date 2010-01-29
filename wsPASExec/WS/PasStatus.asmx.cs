@@ -11,7 +11,7 @@ using com.ums.UmsCommon;
 using com.ums.PAS.Status;
 using com.ums.UmsCommon.CoorConvert;
 using System.Xml;
-
+using System.Collections.Generic;
 
 namespace com.ums.ws.pas.status
 {
@@ -23,8 +23,16 @@ namespace com.ums.ws.pas.status
     [ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
+
     public class PasStatus : System.Web.Services.WebService
     {
+
+        [WebMethod]
+        public List<USMSINSTATS> GetSmsStats(ULOGONINFO logoninfo, long n_refno)
+        {
+            List<USMSINSTATS> ret = new List<USMSINSTATS>();
+            return ret;
+        }
 
         /*
          * Retrieve statuslist
@@ -32,6 +40,7 @@ namespace com.ums.ws.pas.status
         [WebMethod]
         public UStatusListResults GetStatusList(ULOGONINFO logoninfo)
         {
+
             UStatusListSearch sl = new UStatusListSearch(ref logoninfo);
 
             return (UStatusListResults)sl.Find();

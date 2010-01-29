@@ -185,6 +185,20 @@ namespace com.ums.PAS.Status
                     outxml.insertAttribute("l_num_dynfiles", "-3");
                 }
 
+                List<USMSINSTATS> smsinstats = m_db.GetSmsInStats(mdv.l_refno);
+                outxml.insertStartElement("SMSINSTATS");
+                for (int st = 0; st < smsinstats.Count; st++)
+                {
+                    USMSINSTATS stats = smsinstats[st];
+                    outxml.insertStartElement("ANSWER");
+                    outxml.insertAttribute("l_refno", stats.l_refno.ToString());
+                    outxml.insertAttribute("l_answercode", stats.l_answercode.ToString());
+                    outxml.insertAttribute("sz_description", stats.sz_description);
+                    outxml.insertEndElement(); //ANSWERS
+                }
+                outxml.insertEndElement(); //SMSINSTATS
+
+
                 UBoundingRect bounding = null;
                 if (b_writeshapes)
                 {
@@ -537,8 +551,12 @@ namespace com.ums.PAS.Status
                                 }
 
                                 outxml.insertEndElement(); //LBASEND
+
                             }
                         }
+
+
+
                     }
                 }
             }
