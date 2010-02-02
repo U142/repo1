@@ -264,6 +264,44 @@ namespace com.ums.UmsFile
     }
 
     /*
+    * Write and publish Shape-files for parsing (BCP) TAS resend
+    */
+    public class TASResendWriter : AdrfileWriter
+    {
+        public TASResendWriter (long l_refno, char sendingtype) {
+            n_refno = l_refno;
+            this.file = new UFile(UCommon.UPATHS.sz_path_bcp, String.Format("pri1-{0}{1}.{2}", sendingtype, l_refno, "res"));
+            open();
+        }
+        public virtual bool publish()
+        {
+            try
+            {
+                sw.Close(); //just in case it's still open
+            }
+            catch (Exception)
+            {
+
+            }
+            String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
+            UFile desttemp = new UFile(UCommon.UPATHS.sz_path_bcp, tempfile);
+            UFile dest = new UFile(UCommon.UPATHS.sz_path_bcp, this.file.file());
+            try
+            {
+                file.MoveOperation(desttemp);
+                desttemp.RenameOperation(dest);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing addressfile", e.Message);
+                throw e;
+            }
+        }
+    }
+
+    /*
      * Write and publish Shape-files for parsing (BCP)
      */
     public class AdrfileWriter

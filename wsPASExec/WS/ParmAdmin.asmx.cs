@@ -1024,12 +1024,12 @@ namespace com.ums.ws.parm
 
                 for (int i = 0; i < lba.getLanguageCount(); i++)
                 {
-                    LBALanguage lang = lba.getLanguage(i);
+                    ULocationBasedAlert.LBALanguage lang = lba.getLanguage(i);
                     w.WriteLine(String.Format("<message sz_lang=\"{0}\" sz_text=\"{1}\" sz_cb_oadc=\"{2}\">",
                                         lang.sz_name, lang.sz_text, lang.sz_cb_oadc));
                     for (int j = 0; j < lang.getCCodeCount(); j++)
                     {
-                        LBACCode ccode = lang.getCCode(j);
+                        ULocationBasedAlert.LBACCode ccode = lang.getCCode(j);
                         w.WriteLine(String.Format("<ccode>{0}</ccode>", ccode.getCCode()));
                     }
                     w.WriteLine("</message>");

@@ -152,7 +152,10 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
             try
             {
-                send_adhoc(ref project, ref sending);
+                if (sending.b_resend && typeof(UTASSENDING) == sending.GetType())
+                    resend_tas(ref project, ref sending);
+                else
+                    send_adhoc(ref project, ref sending);
             }
             catch (Exception e)
             {
@@ -249,6 +252,68 @@ namespace com.ums.UmsParm
         protected bool _sendLBA(ref PAS_SENDING sending)
         {
             return true;
+        }
+
+        protected bool resend_tas(ref BBPROJECT project, ref UMAPSENDING sending) {
+            bool publish = false;
+            
+            MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
+            smssendinginfo.l_refno = db.newRefno();
+
+            TAS_RESEND resend_tas = new TAS_RESEND(smssendinginfo.l_refno);
+            
+            resend_tas.setSmsMessage(sending.sz_sms_message);
+            resend_tas.setSmsOadc(sending.sz_sms_oadc);
+            resend_tas.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
+
+            resend_tas.l_resend_refno = sending.n_resend_refno;
+            resend_tas.b_resend = sending.b_resend;
+            resend_tas.l_resend_status = sending.resend_statuscodes;
+
+           
+            resend_tas.setRefno(smssendinginfo.l_refno, ref project);
+            /*
+             * if this is a resend, then reorganize resend statuscodes
+             * 
+             */
+            
+            db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+            resend_tas.setSendingInfo(ref smssendinginfo);
+            resend_tas.createShape(ref sending);
+
+            SMS_SENDING sms = (SMS_SENDING)resend_tas;
+            try
+            {
+                db.Send(ref sms, ref logoninfo);
+                publish = true;
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, resend_tas.m_sendinginfo.l_refno, 0, resend_tas.m_sendinginfo.sz_sendingname, "Error creating TAS SMS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+            }
+
+            if (publish)
+            {
+                try
+                {
+                    resend_tas.publishAdrFile();
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, resend_tas.m_sendinginfo.l_refno, 0, resend_tas.m_sendinginfo.sz_sendingname, "Error publishing TAS SMS address file. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+            }
+            
+            ULog.write(String.Format("New <{0}> Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                //(f_simulation ? "[Simulated]" : "[Live]"),
+               UCommon.USENDINGTYPE(sending.getFunction()).ToUpper(),
+               logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, resend_tas.l_refno, 0, 0));
+
+            setAlertInfo(true, project.sz_projectpk, resend_tas.l_refno, 0, sending.sz_sendingname, "Traveller Alert Resend " + UCommon.USENDINGTYPE_SENT(sending.getFunction()), "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+
+            return true;
+            
+
         }
 
         protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
@@ -481,10 +546,8 @@ namespace com.ums.UmsParm
                 }
                 try
                 {
-                    if(b_voice_active)
-                        passending.createShape(ref sending); //will also create a temp address file
-                    if(b_lba_active)
-                        lbasending.createShape(ref sending);
+                    passending.createShape(ref sending); //will also create a temp address file
+                    lbasending.createShape(ref sending);
                     if(b_voice_active)
                         b_publish_voice = true;
                     if (b_lba_active)
@@ -1031,11 +1094,8 @@ namespace com.ums.UmsParm
                             lbasending.setLBAShape(ref logoninfo, ref pa, ref pa.m_lba_shape, n_function);
                             try
                             {
-                                if (n_function != UCommon.USENDING_TEST)
-                                {
-                                    ULocationBasedAlert lbashape = pa.m_lba_shape.lba();
-                                    db.InjectLBALanguages(lbasending.l_refno, ref lbashape);
-                                }
+                                ULocationBasedAlert lbashape = pa.m_lba_shape.lba();
+                                db.InjectLBALanguages(lbasending.l_refno, ref lbashape);
                             }
                             catch (Exception e)
                             {
@@ -1059,12 +1119,9 @@ namespace com.ums.UmsParm
                     lbasending.lbacleanup();
                 }
             }
-            if (sending.m_shape != null)
+            if(typeof(UGIS).Equals(sending.m_shape.GetType()))
             {
-                if (typeof(UGIS).Equals(sending.m_shape.GetType()))
-                {
-                    setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
-                }
+                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
             }
             
             //send it

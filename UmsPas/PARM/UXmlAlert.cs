@@ -379,7 +379,7 @@ namespace com.ums.UmsParm
                 for (int i = 0; i < lbalist.Count; i++)
                 {
                     XmlNode lba = lbalist.Item(i);
-                    LBALanguage lang;
+                    ULocationBasedAlert.LBALanguage lang;
                     try
                     {
                         lang = m_lba_shape.lba().addLanguage(lba.Attributes["sz_lang"].Value, lba.Attributes["sz_cb_oadc"].Value, "1", lba.Attributes["sz_text"].Value);

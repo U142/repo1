@@ -96,7 +96,7 @@ namespace com.ums.UmsParm
         {
             m_b_isvalid = false;
         }
-        /*public class LBALanguage
+        public class LBALanguage
         {
             public String sz_name;
             public String sz_cb_oadc;
@@ -134,7 +134,7 @@ namespace com.ums.UmsParm
             {
             }
             public String getCCode() { return ccode; }
-        }*/
+        }
         protected bool m_b_isvalid;
         //public String sz_area;
         //public String sz_id;
@@ -565,7 +565,15 @@ namespace com.ums.UmsParm
                     if (resend_status[i] >= 8000 && resend_status[i] <= 8002)
                         resend_status[i] = resend_status[i] - 8000;
 
-                    w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Status={0}", resend_status[i]));
+                    if (sz_header == "TR")
+                    {
+                        //SMS Specific - resend of sms is based on l_dst=[0,1,2] for TAS
+                        if (resend_status[i] >= 1000 && resend_status[i] <= 1002)
+                            resend_status[i] = resend_status[i] - 1000;
+                        w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Answercode={0}", resend_status[i]));
+                    }
+                    else
+                        w.writeline(String.Format(UCommon.UGlobalizationInfo, "/Status={0}", resend_status[i]));
                 }
             }
             catch (Exception e)
@@ -613,6 +621,16 @@ namespace com.ums.UmsParm
         {
             sz_header = "SM";
         }
+    }
+
+    public class UResendTAS : UResend
+    {
+        public UResendTAS()
+            : base()
+        {
+            sz_header = "TR";
+        }
+            
     }
 
     public class UEllipse : UShape
@@ -749,8 +767,8 @@ namespace com.ums.UmsParm
             UShape _this = this;
             loc.setSourceShape(ref _this);
             loc.l_alertpk = "-1";
-            loc.m_languages = new List<LBALanguage>();
-            LBALanguage lbalang = new LBALanguage();
+            loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
+            ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();
             if (alert.n_requesttype == 2) //only a count request, we don't have any details
             {
                 lbalang.sz_cb_oadc = "NULL";
@@ -765,10 +783,10 @@ namespace com.ums.UmsParm
                 lbalang.sz_otoa = "0";
                 lbalang.sz_text = sending.sz_sms_message;
             }
-            lbalang.m_ccodes = new List<LBACCode>();
+            lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
             for(int i=0; i < countries.Count; i++)
             {
-                LBACCode ccode = new LBACCode();
+                ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
                 ccode.ccode = countries[i].l_cc.ToString();
                 lbalang.m_ccodes.Add(ccode);
             }
@@ -1092,6 +1110,21 @@ namespace com.ums.UmsParm
             n_expirytime_minutes = n;
         }
     }
+    
+    public class TAS_RESEND : SMS_SENDING
+    {
+        public long[] l_resend_status;
+        
+        public TAS_RESEND(long l_refno)
+        {
+            sendingtype = 's';
+        }
+
+        public void setLResend_status(long[] resendStatus)
+        {
+            l_resend_status = resendStatus;
+        }
+    }
 
     public class PAS_SENDING
     {
@@ -1124,7 +1157,9 @@ namespace com.ums.UmsParm
                 //make a copy of the old sending
                 UShape shape = null;
 
-                if (getSendingType() == 'v') //voice
+                if (typeof(UTASSENDING) == s.GetType()) // tas sms
+                    shape = new UResendTAS();
+                else if (getSendingType() == 'v') //voice
                     shape = new UResendVoice();
                 else if (getSendingType() == 's') //sms
                     shape = new UResendSMS();
