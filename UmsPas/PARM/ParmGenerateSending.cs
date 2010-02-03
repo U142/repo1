@@ -258,7 +258,7 @@ namespace com.ums.UmsParm
             bool publish = false;
             
             MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
-            smssendinginfo.l_refno = db.newRefno();
+            smssendinginfo.l_refno = sending.n_refno;
 
             TAS_RESEND resend_tas = new TAS_RESEND(smssendinginfo.l_refno);
             
@@ -280,6 +280,18 @@ namespace com.ums.UmsParm
             db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
             resend_tas.setSendingInfo(ref smssendinginfo);
             resend_tas.createShape(ref sending);
+            bool b_ret;
+
+            int n_linktype = 0;
+            if (resend_tas.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                n_linktype = 9;
+
+            b_ret = db.linkRefnoToProject(ref project, sending.n_refno, n_linktype, (resend_tas.b_resend ? resend_tas.l_resend_refno : 0));
+
+            if (!b_ret)
+            {
+                setAlertInfo(false, project.sz_projectpk, resend_tas.l_refno, 0, resend_tas.m_sendinginfo.sz_sendingname, "Could not link SMS sending to project. Sending will continue", db.getLastError(), SYSLOG.ALERTINFO_SYSLOG_WARNING);
+            }
 
             SMS_SENDING sms = (SMS_SENDING)resend_tas;
             try
