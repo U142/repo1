@@ -36,24 +36,29 @@ namespace com.ums.UmsFile
         //      If either copy or delete fails
         public void MoveOperation(UFile dest)
         {
+            MoveOperation(dest, false);
+        }
+
+        public void MoveOperation(UFile dest, bool b_overwrite)
+        {
             try
             {
-                File.Copy(this.full(), dest.full());
+                File.Copy(this.full(), dest.full(), b_overwrite);
             }
             catch (Exception e)
             {
                 ULog.error(e.Message);
                 throw e;
             }
-            try {
+            try
+            {
                 File.Delete(this.full());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ULog.error(e.Message);
                 throw e;
             }
-
         }
 
         public void RenameOperation(UFile dest)

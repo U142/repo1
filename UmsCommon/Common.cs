@@ -9,6 +9,15 @@ using System.Collections;
 
 namespace com.ums.UmsCommon
 {
+    /**
+     * Value used in Backbone log procedures/tables (e.g sp_log_BBMESSAGES => log_BBMESSAGES)
+     */
+    public enum UDbOperation
+    {
+        INSERT = 0,
+        UPDATE = 1,
+        DELETE = 2,
+    }
     public enum ProgressJobType
     {
         GEMINI_IMPORT_STREETID = 1,
@@ -931,6 +940,7 @@ namespace com.ums.UmsCommon
     public class UBBMESSAGELIST
     {
         public List<UBBMESSAGE> list;
+        public List<UBBMESSAGE> deleted;
         public long n_servertimestamp;
     }
     public class UBBMESSAGELISTFILTER

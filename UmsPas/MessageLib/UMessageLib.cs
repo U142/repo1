@@ -25,18 +25,31 @@ namespace com.ums.PAS.messagelib
             }
         }
 
-        public UBBMESSAGE DeleteMessage(ref UBBMESSAGE msg)
+        public UBBMESSAGE DeleteMessage(ref ULOGONINFO logon, ref UBBMESSAGE msg)
         {
             try
             {
-                String szSQL = String.Format("DELETE FROM BBMESSAGES WHERE l_messagepk={0} AND l_deptpk={1}",
+                String szSQL;
+                szSQL = String.Format("sp_log_BBMESSAGES {0}, {1}, {2}, {3}",
+                                    logon.l_userpk, logon.l_comppk, (int)UDbOperation.DELETE,//(int)Enum.Parse(typeof(UDbOperation), UDbOperation.DELETE.ToString()),
+                                    msg.n_messagepk);
+                if (!ExecNonQuery(szSQL))
+                {
+                    msg.b_valid = false;
+                    return msg;
+                }
+
+                szSQL = String.Format("DELETE FROM BBMESSAGES WHERE l_messagepk={0} AND l_deptpk={1}",
                                         msg.n_messagepk, msg.n_deptpk);
                 if (ExecNonQuery(szSQL))
                 {
                     msg.b_valid = true;
                 }
                 else
+                {
                     msg.b_valid = false;
+                    return msg;
+                }
                 UFile filetxt = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
                 if(File.Exists(filetxt.full()))
                     File.Delete(filetxt.full());
@@ -74,7 +87,10 @@ namespace com.ums.PAS.messagelib
                                     msg.n_messagepk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
+                {
                     msg.n_messagepk = rs.GetInt64(0);
+                    msg.n_timestamp = rs.GetInt64(1);
+                }
                 else
                 {
                     msg.n_messagepk = -1;
@@ -83,10 +99,12 @@ namespace com.ums.PAS.messagelib
 
                 rs.Close();
 
+                UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
                 UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
-                StreamWriter sw = new StreamWriter(file.full(), false, Encoding.GetEncoding("utf-8"));
+                StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("utf-8"));
                 sw.Write(msg.sz_message);
-                sw.Close();               
+                sw.Close();
+                file_tmp.MoveOperation(file, true);
                 return msg;
             }
             catch (Exception e)
@@ -177,6 +195,24 @@ namespace com.ums.PAS.messagelib
                     ret.list.Add(msg);
                 }
                 rs.Close();
+
+                //ALSO GET DELETED if this is an update
+                ret.deleted = new List<UBBMESSAGE>();
+                if(filter.n_timefilter>0)
+                {
+                    szSQL = String.Format("SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND l_deptpk={1}",
+                                    filter.n_timefilter, logon.l_deptpk);
+                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    while (rs.Read())
+                    {
+                        UBBMESSAGE msg = new UBBMESSAGE();
+                        msg.n_messagepk = rs.GetInt64(0);
+                        msg.n_type = UBBMODULEDEF.DIALOGUE;
+                        ret.deleted.Add(msg);
+                    }
+                    rs.Close();
+                }
+
                 return ret;
             }
             catch (Exception e)

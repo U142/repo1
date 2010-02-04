@@ -471,7 +471,7 @@ namespace com.ums.ws.pas
         {
             try
             {
-                UBBMESSAGE ret = new UMessageLib(ref logon).DeleteMessage(ref msg);
+                UBBMESSAGE ret = new UMessageLib(ref logon).DeleteMessage(ref logon, ref msg);
                 return ret;
             }
             catch (Exception e)
