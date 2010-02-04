@@ -443,6 +443,7 @@ namespace com.ums.UmsParm
                     db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     tassending.setSendingInfo(ref tassendinginfo);
                     tassending.m_sendinginfo.l_type = 5;
+                    tassending.AllowResponse = ((UTASSENDING)sending).b_allow_response;
                     db.Send(ref tassending);
                     b_publish_tas = true;
                 }

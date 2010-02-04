@@ -1062,6 +1062,8 @@ namespace com.ums.UmsParm
 
     public class TAS_SENDING : SMS_SENDING
     {
+        private bool m_b_allow_response;
+
         public TAS_SENDING()
         {
             sendingtype = 's';
@@ -1078,6 +1080,10 @@ namespace com.ums.UmsParm
             //UTasShape tas = new UTasShape();
             m_shape.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref alert, l_refno, n_function, ref adrlbawriter);
             return true;
+        }
+        public bool AllowResponse {
+            set { m_b_allow_response = value; }
+            get { return m_b_allow_response; }
         }
     }
      
@@ -1505,7 +1511,6 @@ namespace com.ums.UmsParm
         public int n_maxchannels;
         protected int n_group;
         protected int n_function;
-        
 
         public int getGroup()
         {
@@ -1627,5 +1632,6 @@ namespace com.ums.UmsParm
     {
         public List<ULBACOUNTRY> countrylist;
         public int n_requesttype; //for LBA/TAS call
+        public bool b_allow_response;
     }
 }
