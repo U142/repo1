@@ -227,6 +227,7 @@ namespace com.ums.PAS.Database
                     long textpk = rs.GetInt64(0);
                     if (n_prev_textpk != textpk)
                     {
+                        long pk = rs.GetInt64(0);
                         String sz_name = rs.GetString(1);
                         String sz_oadc = rs.GetString(2);
                         String sz_text = rs.GetString(3);
@@ -234,6 +235,7 @@ namespace com.ums.PAS.Database
                         lang.sz_name = sz_name;
                         lang.sz_cb_oadc = sz_oadc;
                         lang.sz_text = sz_text;
+                        lang.setTextPk(pk);
                         ret.Add(lang);
                     }
                     int l_cc = rs.GetInt16(4);

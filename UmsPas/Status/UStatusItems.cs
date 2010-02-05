@@ -515,6 +515,7 @@ namespace com.ums.PAS.Status
                                             for (int lang = 0; lang < lbatext.Count; lang++)
                                             {
                                                 outxml.insertStartElement("LBALANGUAGE");
+                                                outxml.insertAttribute("textpk", lbatext[lang].l_textpk.ToString());
                                                 outxml.insertAttribute("name", lbatext[lang].getName());
                                                 outxml.insertAttribute("oadc", lbatext[lang].getCBOadc());
                                                 outxml.insertAttribute("text", lbatext[lang].getText());

@@ -101,7 +101,7 @@ namespace com.ums.PAS.messagelib
 
                 UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
                 UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
-                StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("utf-8"));
+                StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("iso-8859-1"));
                 sw.Write(msg.sz_message);
                 sw.Close();
                 file_tmp.MoveOperation(file, true);
@@ -129,7 +129,7 @@ namespace com.ums.PAS.messagelib
                 ret.list = new List<UBBMESSAGE>();
                 String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
                                             "FROM BBMESSAGES " +
-                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} " +
+                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} AND f_template=1" +
                                             "ORDER BY l_depth",
                                             logon.l_deptpk, filter.n_timefilter);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
@@ -137,7 +137,19 @@ namespace com.ums.PAS.messagelib
                 {
                     UBBMESSAGE msg = new UBBMESSAGE();
                     msg.n_deptpk = rs.GetInt32(0);
-                    msg.n_type = (UBBMODULEDEF)rs.GetInt32(1);
+                    try
+                    {
+                        int type = rs.GetInt32(1);
+                        if (type <= 0)
+                            msg.n_type = UBBMODULEDEF.DIALOGUE;
+                        else
+                            msg.n_type = (UBBMODULEDEF)type;
+                        
+                    }
+                    catch (Exception)
+                    {
+                        msg.n_type = UBBMODULEDEF.DIALOGUE;
+                    }
                     msg.sz_name = rs.GetString(2);
                     msg.sz_description = rs.GetString(3);
                     msg.n_messagepk = rs.GetInt64(4);
@@ -158,7 +170,7 @@ namespace com.ums.PAS.messagelib
                             UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".txt");
                             if (File.Exists(f.full()))
                             {
-                                msg.sz_message = File.ReadAllText(f.full());
+                                msg.sz_message = File.ReadAllText(f.full(), Encoding.GetEncoding("iso-8859-1"));
                                 msg.b_valid = true;
                             }
                             else

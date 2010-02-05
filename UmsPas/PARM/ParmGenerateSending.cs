@@ -440,6 +440,8 @@ namespace com.ums.UmsParm
                      * 
                      */
                     tassending.createShape(ref sending);
+                    UTASSENDING s = (UTASSENDING)sending;
+                    db.InjectTASLanguages(ref s);
                     db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     tassending.setSendingInfo(ref tassendinginfo);
                     tassending.m_sendinginfo.l_type = 5;

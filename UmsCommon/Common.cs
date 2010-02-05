@@ -856,6 +856,11 @@ namespace com.ums.UmsCommon
     }
     public class LBALanguage
     {
+        public long l_textpk;
+        public void setTextPk(long l_textpk)
+        {
+            this.l_textpk = l_textpk;
+        }
         public String sz_name;
         public String sz_cb_oadc;
         public String sz_otoa;

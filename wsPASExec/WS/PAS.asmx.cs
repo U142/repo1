@@ -40,6 +40,17 @@ namespace com.ums.ws.pas
 
     public class pasws : System.Web.Services.WebService
     {
+        public class imports
+        {
+            public LBALanguage l1;
+            public LBACCode l2;
+        }
+        [WebMethod]
+        public imports _no_use()
+        {
+            return new imports();
+        }
+
         [WebMethod]
         public UPASLOGON PasLogon(ULOGONINFO l)
         {

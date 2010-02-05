@@ -1328,6 +1328,47 @@ namespace com.ums.UmsParm
             }
         }
 
+        /** Inject the message into database for status review */
+        public bool InjectTASLanguages(ref UTASSENDING tas)
+        {
+            try
+            {
+                String oadc = tas.sz_sms_oadc;
+                String message = tas.sz_sms_message;
+                oadc = oadc.Replace("'", "''");
+                message = message.Replace("'", "''");
+                String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
+                                            tas.n_refno, "Message", tas.sz_sms_oadc, tas.sz_sms_message);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                long textpk = 0;
+                if (rs.Read())
+                {
+                    textpk = rs.GetInt64(0);                        
+                }
+                rs.Close();
+
+                for (int c = 0; c < tas.countrylist.Count && textpk > 0; c++)
+                {
+                    szSQL = String.Format("sp_pas_ins_lbatext_cc {0}, {1}",
+                                        textpk, tas.countrylist[c].l_cc);
+                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    if (rs.Read())
+                    {
+                        long pk = rs.GetInt64(0);
+                    }
+                    rs.Close();
+                }
+
+
+                return (textpk>0 ? true : false);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
+        }
+
         /** Inject all languages and CC's into database for status review */
         public bool InjectLBALanguages(long n_refno, ref ULocationBasedAlert a)
         {
@@ -1346,6 +1387,9 @@ namespace com.ums.UmsParm
                         stroadc = stroadc.Substring(0, 20);
                     if (strtext.Length > 760)
                         strtext = strtext.Substring(0, 760);
+
+                    stroadc = stroadc.Replace("'", "''");
+                    strtext = strtext.Replace("'", "''");
 
                     String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
                             n_refno,
