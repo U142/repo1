@@ -45,5 +45,11 @@ namespace com.ums.ws.pas.tas
             UTas tas = new UTas(ref logon);
             return tas.PerformAdrCountByCountry(ref country, ref logon);
         }
+        [WebMethod]
+        public List<UTASRESPONSENUMBER> GetResponseNumbers(ULOGONINFO logon)
+        {
+            UTas tas = new UTas(ref logon);
+            return tas.GetResponseNumbers(ref logon);
+        }
     }
 }

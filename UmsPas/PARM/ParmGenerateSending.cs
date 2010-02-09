@@ -446,6 +446,9 @@ namespace com.ums.UmsParm
                     tassending.setSendingInfo(ref tassendinginfo);
                     tassending.m_sendinginfo.l_type = 5;
                     tassending.AllowResponse = ((UTASSENDING)sending).b_allow_response;
+                    tassending.ResponseNumber = ((UTASSENDING)sending).sz_response_number;
+                    db.InsertLBASMSIN_REPLYNUMBERS(ref logoninfo, ref tassending);
+                    // Insert into LBASMSIN_REPLYNUMBERS
                     db.Send(ref tassending);
                     b_publish_tas = true;
                 }

@@ -1063,6 +1063,7 @@ namespace com.ums.UmsParm
     public class TAS_SENDING : SMS_SENDING
     {
         private bool m_b_allow_response;
+        private string m_sz_response_number;
 
         public TAS_SENDING()
         {
@@ -1084,6 +1085,11 @@ namespace com.ums.UmsParm
         public bool AllowResponse {
             set { m_b_allow_response = value; }
             get { return m_b_allow_response; }
+        }
+        public string ResponseNumber
+        {
+            set { m_sz_response_number = value; }
+            get { return m_sz_response_number; }
         }
     }
      
@@ -1633,5 +1639,6 @@ namespace com.ums.UmsParm
         public List<ULBACOUNTRY> countrylist;
         public int n_requesttype; //for LBA/TAS call
         public bool b_allow_response;
+        public String sz_response_number;
     }
 }

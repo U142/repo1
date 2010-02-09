@@ -161,7 +161,14 @@ namespace com.ums.PAS.messagelib
                     msg.n_parentpk = rs.GetInt64(10);
                     msg.n_depth = rs.GetInt32(11);
                     msg.n_timestamp = rs.GetInt64(12);
-                    msg.n_categorypk = rs.GetInt64(13);
+                    try
+                    {
+                        msg.n_categorypk = rs.GetInt64(13);
+                    }
+                    catch (Exception e)
+                    {
+                        msg.n_categorypk = 0;
+                    }
                     msg.b_valid = false;
                     if (msg.f_template == 1 || msg.n_langpk>=0) //Text template or TTS, there should exist a txt-file
                     {

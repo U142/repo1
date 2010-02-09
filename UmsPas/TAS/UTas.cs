@@ -56,6 +56,13 @@ namespace com.ums.PAS.TAS
         public long n_serverclock;
     }
 
+    public class UTASRESPONSENUMBER
+    {
+        public String sz_responsenumber;
+        public int n_refno;
+        public long n_timestamp;
+    }
+
     public class UTas
     {
 
@@ -144,6 +151,18 @@ namespace com.ums.PAS.TAS
                 return req;
             }
             catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        
+        public List<UTASRESPONSENUMBER> GetResponseNumbers(ref ULOGONINFO logon)
+        {
+            try
+            {
+                return db.GetResponseNumbers(ref logon);
+            }
+            catch(Exception e) 
             {
                 throw e;
             }

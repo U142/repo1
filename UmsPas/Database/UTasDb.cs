@@ -399,5 +399,34 @@ namespace com.ums.PAS.Database
             }
             return list;
         }
+        public List<UTASRESPONSENUMBER> GetResponseNumbers(ref ULOGONINFO logon)
+        {
+            List<UTASRESPONSENUMBER> list = new List<UTASRESPONSENUMBER>();
+            try
+            {
+                UTASRESPONSENUMBER responsenumber;
+                string szSQL = String.Format("SELECT sz_replynumber, l_activerefno, l_timestamp FROM LBASMSIN_REPLYNUMBERS WHERE (l_comppk={0} AND l_deptpk={1}) OR (l_comppk={2} AND l_deptpk=0)", logon.l_comppk, logon.l_deptpk, logon.l_comppk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    responsenumber = new UTASRESPONSENUMBER();
+                    responsenumber.sz_responsenumber = rs.GetString(0);
+                    if (rs.IsDBNull(1))
+                        responsenumber.n_refno = 0;
+                    else
+                        responsenumber.n_refno = rs.GetInt32(1);
+                    if (rs.IsDBNull(2))
+                        responsenumber.n_timestamp = 0;
+                    else
+                        responsenumber.n_timestamp = (long)rs.GetDecimal(2);
+                    list.Add(responsenumber);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
+        }
     }
 }

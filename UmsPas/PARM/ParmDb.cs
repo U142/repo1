@@ -844,6 +844,21 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+        public bool InsertLBASMSIN_REPLYNUMBERS(ref ULOGONINFO logon, ref TAS_SENDING s)
+        {
+            // Sjekk om brukeren har tilgang
+            String szSQL = String.Format("UPDATE LBASMSIN_REPLYNUMBERS SET l_activerefno={0},l_timestamp={1} WHERE sz_replynumber='{2}'", s.l_refno, DateTime.Now.ToString("yyyyMMddHHmmss"), s.ResponseNumber);
+            try
+            {                
+                ExecNonQuery(szSQL);
+            }
+            catch (Exception e) 
+            {
+                ULog.error(s.l_refno, szSQL, e.Message);
+                throw e;
+            }
+            return true;
+        }
         public bool SP_smsqref_bcp(ref SMS_SENDING s, ref ULOGONINFO logon)
         {
             String sql = "";
