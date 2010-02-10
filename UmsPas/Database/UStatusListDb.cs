@@ -149,7 +149,7 @@ namespace com.ums.PAS.Database
                         item.n_projectpk = rs.GetInt64(13);
                         item.sz_projectname = rs.GetString(14);
                         item.n_createtimestamp = rs.GetInt64(15);
-                        item.n_updatetimestamp = rs.GetInt64(16);
+                        item.n_updatetimestamp = (long)rs.GetDecimal(16);
 
                         res.addLine(ref item);
                     }

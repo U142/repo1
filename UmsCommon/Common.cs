@@ -809,6 +809,7 @@ namespace com.ums.UmsCommon
         public int l_refno;
         public int l_answercode;
         public String sz_description;
+        public int l_count;
     }
 
     public class ULBAHISTCC

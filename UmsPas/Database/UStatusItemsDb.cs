@@ -203,6 +203,7 @@ namespace com.ums.PAS.Database
                     st.l_refno = rs.GetInt32(0);
                     st.l_answercode = rs.GetInt32(1);
                     st.sz_description = rs.GetString(2);
+                    st.l_count = rs.GetInt32(3);
                     ret.Add(st);
                 }
                 catch (Exception)

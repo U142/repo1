@@ -194,6 +194,7 @@ namespace com.ums.PAS.Status
                     outxml.insertAttribute("l_refno", stats.l_refno.ToString());
                     outxml.insertAttribute("l_answercode", stats.l_answercode.ToString());
                     outxml.insertAttribute("sz_description", stats.sz_description);
+                    outxml.insertAttribute("l_count", stats.l_count.ToString());
                     outxml.insertEndElement(); //ANSWERS
                 }
                 outxml.insertEndElement(); //SMSINSTATS
