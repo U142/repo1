@@ -421,6 +421,7 @@ namespace com.ums.PAS.Database
                         responsenumber.n_timestamp = (long)rs.GetDecimal(2);
                     list.Add(responsenumber);
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
