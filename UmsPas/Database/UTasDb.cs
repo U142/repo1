@@ -429,5 +429,94 @@ namespace com.ums.PAS.Database
             }
             return list;
         }
+
+        public List<ULBACOUNTRYSTATISTICS> GetStatistics_Countries_Per_Timeunit(ref ULBASTATISTICS_FILTER filter)
+        {
+            try
+            {
+                List<ULBACOUNTRYSTATISTICS> ret = new List<ULBACOUNTRYSTATISTICS>();
+
+                String from_ts = "";
+                String to_ts = "";
+                long number_of_date = 8;
+                if (filter.avg_per.Equals(ULBAFILTER_STATAVG.PER_HOUR))
+                    number_of_date = 10;
+                else if (filter.avg_per.Equals(ULBAFILTER_STATAVG.PER_DAY))
+                    number_of_date = 8;
+                else if (filter.avg_per.Equals(ULBAFILTER_STATAVG.PER_MONTH))
+                    number_of_date = 6;
+                else if (filter.avg_per.Equals(ULBAFILTER_STATAVG.PER_YEAR))
+                    number_of_date = 4;
+
+                String szSQL = "";
+
+                for (int countries = 0; countries < filter.countries.Count; countries++)
+                {
+                    int cc_to = filter.countries[countries].l_cc;
+                    for (int years = 0; years < filter.year_to_compare.Count; years++)
+                    {
+                        //from_ts = filter.year_to_compare[years].ToString(); //2010
+                        //from_ts += 
+                        DateTime dt_from = new DateTime(filter.year_to_compare[years], 1, 1);
+                        DateTime dt_to = new DateTime(filter.year_to_compare[years], 12, 31);
+                        from_ts = String.Format("{0:yyyyMMdd}000000", dt_from);
+                        to_ts = String.Format("{0:yyyyMMdd}000000", dt_to);
+                        /*switch (filter.avg_per)
+                        {
+                            case ULBAFILTER_STATAVG.PER_DAY:
+                                break;
+                            case ULBAFILTER_STATAVG.PER_MONTH:
+                                break;
+                        }*/
+                        String tempSQL = String.Format(
+                            "select TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), avg(TCH.l_count) " +
+                            "FROM " +
+                            "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH " +
+                            "WHERE " +
+                            "TC.l_countpk=TCH.l_countpk AND " +
+                            "TC.l_cc_to={0} AND " +
+                            "TCH.l_timestamp>={2} AND TCH.l_timestamp<={3} "+
+                            "GROUP BY TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}) ",
+                            cc_to, number_of_date, from_ts, to_ts, filter.countries[countries].sz_name);
+                        szSQL += (years > 0 || countries > 0 ? " UNION " : "");
+                        szSQL += tempSQL;
+                    }
+                }
+                szSQL += String.Format("" +
+                         "ORDER BY substring(convert(varchar(18), TCH.l_timestamp),1,{0})",
+                         number_of_date);
+
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
+
+                while (rs.Read())
+                {
+                    ULBACOUNTRYSTATISTICS stats = new ULBACOUNTRYSTATISTICS();
+                    //stats.sz_iso = filter.countries[0].sz_iso;
+                    //stats.l_cc = filter.countries[0].l_cc;
+                    //stats.l_continentpk = filter.countries[0].l_continentpk;
+                    //stats.l_iso_numeric = filter.countries[0].l_iso_numeric;
+                    //stats.sz_name = filter.countries[0].sz_name;
+                    stats.l_cc = rs.GetInt32(0);
+                    //stats.sz_name = rs.GetString(1);
+
+                    stats.statistics = new List<UTOURISTCOUNT>();
+
+                    UTOURISTCOUNT touristcount = new UTOURISTCOUNT();
+                    touristcount.l_operator = rs.GetInt32(1);
+                    touristcount.l_lastupdate = rs.GetInt64(2);
+                    touristcount.l_touristcount = rs.GetInt32(3);
+                    stats.statistics.Add(touristcount);
+                    ret.Add(stats);
+                }
+
+                rs.Close();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

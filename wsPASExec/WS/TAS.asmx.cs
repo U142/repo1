@@ -51,5 +51,18 @@ namespace com.ums.ws.pas.tas
             UTas tas = new UTas(ref logon);
             return tas.GetResponseNumbers(ref logon);
         }
+        [WebMethod]
+        public List<ULBACOUNTRYSTATISTICS> GetStatsCountriesPerTimeunit(ULOGONINFO logon, ULBASTATISTICS_FILTER filter)
+        {
+            try
+            {
+                UTas tas = new UTas(ref logon);
+                return tas.GetStatsCountriesPerTimeunit(ref filter);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

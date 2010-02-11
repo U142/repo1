@@ -716,6 +716,30 @@ namespace com.ums.UmsCommon
     {
         public long l_actionprofilepk;
     }
+
+
+    public enum ULBAFILTER_STATAVG
+    {
+        PER_HOUR,
+        PER_DAY,
+        PER_WEEK,
+        PER_MONTH,
+        PER_YEAR,
+    }
+    public class ULBASTATISTICS_FILTER
+    {
+        public List<ULBACOUNTRY> countries;
+        public List<int> year_to_compare;
+        public int from_mmdd;
+        public int to_mmdd;
+        public ULBAFILTER_STATAVG avg_per;
+    }
+
+    public class ULBACOUNTRYSTATISTICS : ULBACOUNTRY
+    {
+        public List<UTOURISTCOUNT> statistics;
+    }
+
     public class ULBACOUNTRY
     {
         public int l_cc;

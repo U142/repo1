@@ -167,5 +167,18 @@ namespace com.ums.PAS.TAS
                 throw e;
             }
         }
+
+        public List<ULBACOUNTRYSTATISTICS> GetStatsCountriesPerTimeunit(ref ULBASTATISTICS_FILTER filter)
+        {
+            try
+            {
+                return db.GetStatistics_Countries_Per_Timeunit(ref filter);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
     }
 }
