@@ -73,17 +73,19 @@ namespace com.ums.PAS.Database
             switch (n_pas_type)
             {
                 case 4:
-                    szSQL = String.Format("SELECT l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
+                    szSQL = String.Format("SELECT distinct l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
                      "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
-                     "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +
+                     //"isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +
+                     "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), max(isnull(head.l_status,1)) l_sendingstatus, " +
                      "isnull(info.sz_groups,' '), isnull(info.l_group, -1) l_group, isnull(info.l_type, -1) l_type, " +
                      "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                      "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
                      "FROM MDVSENDINGINFO info, LBASEND head, " +
                      "BBDEPARTMENT dept, BBPROJECT_X_REFNO projx, BBPROJECT proj WHERE info.l_type=5 AND info.l_refno=projx.l_refno AND projx.l_projectpk=proj.l_projectpk AND info.l_deptpk=dept.l_deptpk AND info.l_refno=head.l_refno " +
                      "AND info.l_group=5 AND dept.l_deptpk={0} " +
-                     "GROUP BY head.l_refno, info.l_refno, dept.l_deptpk, projx.l_refno, proj.l_projectpk "+
+                     //"GROUP BY head.l_refno, info.l_refno, dept.l_deptpk, projx.l_refno, proj.l_projectpk "+
                      //"GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
+                     "GROUP BY head.l_refno, info.l_refno, dept.l_deptpk, projx.l_refno, proj.l_projectpk, info.l_createdate, info.l_createtime,info.sz_sendingname, info.sz_groups, info.l_group, info.l_type, dept.sz_deptid, proj.sz_name,proj.l_createtimestamp, proj.l_updatetimestamp " +
                      "ORDER BY info.l_refno DESC",
                      logon.l_deptpk);
                     break;
