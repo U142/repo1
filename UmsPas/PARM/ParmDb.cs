@@ -744,7 +744,7 @@ namespace com.ums.UmsParm
                             s.m_sendinginfo.l_createtime,
                             s.m_sendinginfo.l_scheddate, 
                             s.m_sendinginfo.l_schedtime, 
-                            s.m_sendinginfo.sz_sendingname,
+                            s.m_sendinginfo.sz_sendingname.Replace("'", "''"),
                             s.m_sendinginfo.l_sendingstatus, 
                             s.m_sendinginfo.l_companypk,
                             s.m_sendinginfo.l_deptpk,
