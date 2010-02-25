@@ -770,8 +770,10 @@ namespace com.ums.UmsParm
                     List<Int32> operatorfilter = null;
                     int n_requesttype = 0;
                     db.InsertLBARecord_2_0(-1, tassending.l_refno, 199, -1, -1, -1, 0, n_requesttype, "", "", sending.getFunction(), ref operatorfilter, logoninfo.l_deptpk, 5 /*tas*/);
-                    ULocationBasedAlert lbanull = null;
+                    ULocationBasedAlert lbanull = new ULocationBasedAlert();
+                    lbanull.n_expiry_minutes = (long)tassending.n_expirytime_minutes; // Dette må til for at validity skal bli riktig
                     tassending.setLBAShape(ref logoninfo, ref lbanull, sending.getFunction());
+
                     if (tassending.publishLBAFile())
                     {
                         setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);

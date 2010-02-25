@@ -223,7 +223,7 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("sz_password", logoninfo.sz_password.ToString());
             xmlwriter.insertAttribute("f_simulation", (n_function == UCommon.USENDING_LIVE ? "0" : "1"));
             xmlwriter.insertAttribute("l_version", "3");
-            xmlwriter.insertAttribute("l_validity", alert.n_expiry.ToString());
+            xmlwriter.insertAttribute("l_validity", alert.n_expiry.ToString()); //If TAS then jalla jalla ((UTASSENDING)sourceshape).n_sms_expirytime_minutes;
             xmlwriter.insertAttribute("l_requesttype", alert.n_requesttype.ToString());
                 xmlwriter.insertStartElement("textmessages");
                 for (int i = 0; i < getLanguageCount(); i++)
@@ -1078,6 +1078,7 @@ namespace com.ums.UmsParm
             adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true, SENDCHANNEL.TAS);
             //s = new ULocationBasedAlert();
             PAALERT alert = new PANULLALERT();
+            alert.n_expiry = (int)s.n_expiry_minutes; // Dette må til for at validity skal bli riktig
             //UTasShape tas = new UTasShape();
             m_shape.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref alert, l_refno, n_function, ref adrlbawriter);
             return true;

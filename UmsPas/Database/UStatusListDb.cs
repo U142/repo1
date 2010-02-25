@@ -75,8 +75,8 @@ namespace com.ums.PAS.Database
                 case 4:
                     szSQL = String.Format("SELECT distinct l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
                      "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
-                     //"isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +
-                     "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), max(isnull(head.l_status,1)) l_sendingstatus, " +
+                     "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +
+                     //"isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), max(isnull(head.l_status,1)) l_sendingstatus, " +
                      "isnull(info.sz_groups,' '), isnull(info.l_group, -1) l_group, isnull(info.l_type, -1) l_type, " +
                      "isnull(dept.l_deptpk, -1), dept.sz_deptid, isnull(proj.l_projectpk, -1), isnull(proj.sz_name, ' '), " +
                      "isnull(proj.l_createtimestamp, -1), isnull(proj.l_updatetimestamp, -1) " +
