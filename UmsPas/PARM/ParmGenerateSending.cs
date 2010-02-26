@@ -153,7 +153,7 @@ namespace com.ums.UmsParm
             try
             {
                 if (sending.b_resend && typeof(UTASSENDING) == sending.GetType())
-                    resend_tas(ref project, ref sending);
+                    resend_tas(ref project, ref sending, n_function);
                 else
                     send_adhoc(ref project, ref sending);
             }
@@ -254,7 +254,7 @@ namespace com.ums.UmsParm
             return true;
         }
 
-        protected bool resend_tas(ref BBPROJECT project, ref UMAPSENDING sending) {
+        protected bool resend_tas(ref BBPROJECT project, ref UMAPSENDING sending, int n_function) {
             bool publish = false;
             
             MDVSENDINGINFO smssendinginfo = new MDVSENDINGINFO();
@@ -294,6 +294,7 @@ namespace com.ums.UmsParm
             }
 
             SMS_SENDING sms = (SMS_SENDING)resend_tas;
+            sms.setSimulation((n_function == UCommon.USENDING_SIMULATION ? true : false));
             try
             {
                 db.Send(ref sms, ref logoninfo);
