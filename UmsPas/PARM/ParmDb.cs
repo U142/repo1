@@ -48,12 +48,16 @@ namespace com.ums.UmsParm
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
-                if(rs.Read())
+                if (rs.Read())
                 {
+                    rs.Close();
                     return rs.GetInt32(0);
                 }
                 else
+                {
+                    rs.Close();
                     return -1;
+                }
             }
             catch(Exception e)
             {
@@ -82,6 +86,7 @@ namespace com.ums.UmsParm
                 {
                     b_ret = true;
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -325,6 +330,7 @@ namespace com.ums.UmsParm
                     re.setName(rs.GetString(8));
                     b_ret = true;
                 }
+                rs.Close();
             }
             catch (Exception e)
             {

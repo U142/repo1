@@ -718,7 +718,7 @@ namespace com.ums.UmsCommon
     }
 
 
-    public enum ULBAFILTER_STATAVG
+    public enum ULBAFILTER_STAT_TIMEUNIT
     {
         PER_HOUR,
         PER_DAY,
@@ -726,13 +726,23 @@ namespace com.ums.UmsCommon
         PER_MONTH,
         PER_YEAR,
     }
+    public enum ULBAFILTER_STAT_FUNCTION
+    {
+        STAT_AVERAGE,
+        STAT_MAX,
+        STAT_MIN,
+    }
     public class ULBASTATISTICS_FILTER
     {
         public List<ULBACOUNTRY> countries;
-        public List<int> year_to_compare;
-        public int from_mmdd;
-        public int to_mmdd;
-        public ULBAFILTER_STATAVG avg_per;
+        public List<int> years_to_compare; //alternative to from/to date
+        //public int from_mmdd;
+        //public int to_mmdd;
+        public long from_date;
+        public long to_date;
+        public ULBAFILTER_STAT_TIMEUNIT group_timeunit;
+        public ULBAFILTER_STAT_FUNCTION stat_function;
+        public int rowcount;
     }
 
     public class ULBACOUNTRYSTATISTICS : ULBACOUNTRY

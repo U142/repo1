@@ -131,6 +131,7 @@ namespace com.ums.UmsDbLib
                         b_ret = true;
                     }
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -173,6 +174,7 @@ namespace com.ums.UmsDbLib
                         b_ret = true;
                     }
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -302,6 +304,7 @@ namespace com.ums.UmsDbLib
                 }
                 else
                     ULog.error(0, szSQL, String.Format("Could not create project for {0}/{1}/{2}", l.sz_userid, l.sz_deptid, l.sz_compid));
+                rs.Close();
             }
             catch (Exception e)
             {
@@ -348,6 +351,7 @@ namespace com.ums.UmsDbLib
                 {
                     n_ret = rs.GetInt32(0);
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
