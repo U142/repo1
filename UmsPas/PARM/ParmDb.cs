@@ -50,8 +50,9 @@ namespace com.ums.UmsParm
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
+                    int pastype = rs.GetInt32(0);
                     rs.Close();
-                    return rs.GetInt32(0);
+                    return pastype;
                 }
                 else
                 {
@@ -59,7 +60,7 @@ namespace com.ums.UmsParm
                     return -1;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 setLastError(e.Message);
                 throw new UDbQueryException(szSQL);
