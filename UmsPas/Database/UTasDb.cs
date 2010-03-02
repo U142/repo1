@@ -450,6 +450,26 @@ namespace com.ums.PAS.Database
 
                 String szSQL = "";
 
+                filter.rowcount = 0;
+                bool b_inc_operator = true;
+                if (filter.rowcount > 0)
+                    b_inc_operator = false;
+
+
+                String statfunction = "avg";
+                switch (filter.stat_function)
+                {
+                    case ULBAFILTER_STAT_FUNCTION.STAT_AVERAGE:
+                        statfunction = "AVG";
+                        break;
+                    case ULBAFILTER_STAT_FUNCTION.STAT_MAX:
+                        statfunction = "MAX";
+                        break;
+                    case ULBAFILTER_STAT_FUNCTION.STAT_MIN:
+                        statfunction = "MIN";
+                        break;
+                }
+
                 for (int countries = 0; countries < filter.countries.Count; countries++)
                 {
                     int cc_to = filter.countries[countries].l_cc;
@@ -470,37 +490,67 @@ namespace com.ums.PAS.Database
                             case ULBAFILTER_STATAVG.PER_MONTH:
                                 break;
                         }*/
-                        String statfunction = "avg";
-                        switch (filter.stat_function)
+                        String tempSQL = "";
+                        if (b_inc_operator)
                         {
-                            case ULBAFILTER_STAT_FUNCTION.STAT_AVERAGE:
-                                statfunction = "AVG";
-                                break;
-                            case ULBAFILTER_STAT_FUNCTION.STAT_MAX:
-                                statfunction = "MAX";
-                                break;
-                            case ULBAFILTER_STAT_FUNCTION.STAT_MIN:
-                                statfunction = "MIN";
-                                break;
+                            tempSQL = String.Format(
+                                "select TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), {5}(TCH.l_count) " +
+                                "FROM " +
+                                "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH " +
+                                "WHERE " +
+                                "TC.l_countpk=TCH.l_countpk AND " +
+                                "TC.l_cc_to={0} AND " +
+                                "TCH.l_timestamp>={2} AND TCH.l_timestamp<={3} " +
+                                "GROUP BY TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}) ",
+                                cc_to, number_of_date, from_ts, to_ts, filter.countries[countries].sz_name, statfunction);
+                            szSQL += (countries > 0 ? " UNION " : "");
+                            szSQL += tempSQL;
                         }
-
-                        String tempSQL = String.Format(
-                            "select TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), {5}(TCH.l_count) " +
-                            "FROM " +
-                            "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH " +
-                            "WHERE " +
-                            "TC.l_countpk=TCH.l_countpk AND " +
-                            "TC.l_cc_to={0} AND " +
-                            "TCH.l_timestamp>={2} AND TCH.l_timestamp<={3} "+
-                            "GROUP BY TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}) ",
-                            cc_to, number_of_date, from_ts, to_ts, filter.countries[countries].sz_name, statfunction);
-                        szSQL += (countries > 0 ? " UNION " : "");
-                        szSQL += tempSQL;
+                        else
+                        {
+                            tempSQL = String.Format(
+                                "select TC.l_cc_to, l_operator=0, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), {5}(TCH.l_count) " +
+                                "FROM " +
+                                "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH " +
+                                "WHERE " +
+                                "TC.l_countpk=TCH.l_countpk AND " +
+                                "TC.l_cc_to={0} AND " +
+                                "TCH.l_timestamp>={2} AND TCH.l_timestamp<={3} " +
+                                "GROUP BY TC.l_cc_to, substring(convert(varchar(18), TCH.l_timestamp),1,{1}) ",
+                                cc_to, number_of_date, from_ts, to_ts, filter.countries[countries].sz_name, statfunction);
+                            szSQL += (countries > 0 ? " UNION " : "");
+                            szSQL += tempSQL;
+                        }
                     }
                 }
-                szSQL += String.Format("" +
-                         "ORDER BY substring(convert(varchar(18), TCH.l_timestamp),1,{0})",
-                         number_of_date);
+                if (b_inc_operator)
+                {
+                    szSQL += String.Format("" +
+                             "ORDER BY substring(convert(varchar(18), TCH.l_timestamp),1,{0})",
+                             number_of_date);
+                }
+                else
+                {
+                    String order = "";
+                    switch (filter.stat_function)
+                    {
+                        case ULBAFILTER_STAT_FUNCTION.STAT_MAX:
+                            order = "DESC";
+                            break;
+                        case ULBAFILTER_STAT_FUNCTION.STAT_MIN:
+                            order = "ASC";
+                            break;
+                        case ULBAFILTER_STAT_FUNCTION.STAT_AVERAGE: //really not need
+                            order = "DESC";
+                            break;
+                    }
+                    szSQL += String.Format("" +
+                            "ORDER BY {0}(TCH.l_count) {1}", statfunction, order);
+                }
+
+
+                if (filter.rowcount > 0)
+                    ExecNonQuery(String.Format("SET ROWCOUNT {0}", filter.rowcount));
 
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
 
@@ -527,6 +577,9 @@ namespace com.ums.PAS.Database
                 }
 
                 rs.Close();
+                if (filter.rowcount > 0)
+                    ExecNonQuery(String.Format("SET ROWCOUNT {0}", 0));
+
                 return ret;
             }
             catch (Exception e)
