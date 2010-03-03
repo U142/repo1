@@ -748,9 +748,18 @@ namespace com.ums.UmsCommon
     public class ULBACOUNTRYSTATISTICS : ULBACOUNTRY
     {
         public List<UTOURISTCOUNT> statistics;
+        public override int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 0;
+            ULBACOUNTRYSTATISTICS t = (ULBACOUNTRYSTATISTICS)obj;
+            return (int)(statistics[0].l_lastupdate - t.statistics[0].l_lastupdate);
+            //return (int)(operators[0].l_lastupdate - t.operators[0].l_lastupdate);
+        } 
+
     }
 
-    public class ULBACOUNTRY
+    public class ULBACOUNTRY:IComparable
     {
         public int l_cc;
         public String sz_iso;
@@ -766,14 +775,31 @@ namespace com.ums.UmsCommon
         /*public int l_operator;
         public String sz_operator;*/
         public List<UTOURISTCOUNT> operators;
+        public virtual int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 0;
+            ULBACOUNTRY t = (ULBACOUNTRY)obj;
+            return (int)(n_newestupdate - t.n_newestupdate);
+            //return (int)(operators[0].l_lastupdate - t.operators[0].l_lastupdate);
+        } 
+
     }
 
-    public class UTOURISTCOUNT
+    public class UTOURISTCOUNT:IComparable
     {
         public long l_lastupdate;
         public int l_operator;
         public String sz_operator;
         public int l_touristcount;
+        // sorting in ascending order  
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 0;
+            UTOURISTCOUNT t = (UTOURISTCOUNT)obj;
+            return (l_lastupdate > t.l_lastupdate ? 1 : -1);
+        } 
     }
 
     public class ULBACONTINENT
