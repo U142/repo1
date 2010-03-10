@@ -322,7 +322,7 @@ namespace com.ums.UmsParm
                UCommon.USENDINGTYPE(sending.getFunction()).ToUpper(),
                logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, resend_tas.l_refno, 0, 0));
 
-            setAlertInfo(true, project.sz_projectpk, resend_tas.l_refno, 0, sending.sz_sendingname, "Traveller Alert Resend " + UCommon.USENDINGTYPE_SENT(sending.getFunction()), "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+            setAlertInfo(true, project.sz_projectpk, resend_tas.l_refno, 0, sending.sz_sendingname, "Traveller Alert New Message " + UCommon.USENDINGTYPE_SENT(sending.getFunction()), "", SYSLOG.ALERTINFO_SYSLOG_NONE);
 
             return true;
             

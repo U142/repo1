@@ -99,6 +99,9 @@ namespace com.ums.PAS.messagelib
 
                 rs.Close();
 
+                if (!Directory.Exists(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\"))
+                    Directory.CreateDirectory(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\");
+
                 UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
                 UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
                 StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("iso-8859-1"));
