@@ -478,14 +478,15 @@ namespace com.ums.PAS.Database
                         from_ts = filter.from_date.ToString();
                         to_ts = filter.to_date.ToString();
                         tempSQL = String.Format(
-                            "select TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), {5}(TCH.l_count) " +
+                            "select TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), {5}(TCH.l_count), LO.sz_operatorname " +
                             "FROM " +
-                            "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH " +
+                            "LBATOURISTCOUNT TC, LBATOURISTCOUNTHIST TCH, LBAOPERATORS LO " +
                             "WHERE " +
                             "TC.l_countpk=TCH.l_countpk AND " +
                             "TC.l_cc_to={0} AND " +
                             "TCH.l_timestamp>={2} AND TCH.l_timestamp<={3} " +
-                            "GROUP BY TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}) ",
+                            "AND TC.l_operator = LO.l_operator " +
+                            "GROUP BY TC.l_cc_to, TC.l_operator, substring(convert(varchar(18), TCH.l_timestamp),1,{1}), LO.sz_operatorname ",
                             cc_to, number_of_date, from_ts, to_ts, filter.countries[countries].sz_name, statfunction);
                         szSQL += (countries > 0 ? " UNION " : "");
                         szSQL += tempSQL;
@@ -504,6 +505,7 @@ namespace com.ums.PAS.Database
                         touristcount.l_operator = rs.GetInt32(1);
                         touristcount.l_lastupdate = rs.GetInt64(2);
                         touristcount.l_touristcount = rs.GetInt32(3);
+                        touristcount.sz_operator = rs.GetString(4);
                         stats.statistics.Add(touristcount);
                         ret.Add(stats);
                     }
