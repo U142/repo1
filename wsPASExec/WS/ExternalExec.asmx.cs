@@ -219,6 +219,40 @@ namespace com.ums.ws.parm
         }
 
         /*
+         * Resending tas or lba
+         */
+        [WebMethod]
+        public ExecResponse LBAResend(int refno, int lbaoperator, ULOGONINFO logoninfo) //
+        {
+            ExecResponse response = new ExecResponse();
+            USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
+            xml.insertStartDocument();
+            xml.insertComment("Results for ExecEvent");
+            xml.insertStartElement(String.Format("results"));
+            //xml.insertAttribute("l_eventpk", l_eventpk.ToString());
+            //xml.insertAttribute("f_simulation", f_simulation.ToString());
+            // This is now done in prepare_single_operator_resend
+            /*
+            xml.insertAttribute("l_projectpk", sending.n_projectpk.ToString());
+            xml.insertAttribute("l_refno", sending.n_refno.ToString());
+            xml.insertAttribute("sz_function", sending.sz_function);
+            */
+            ParmGenerateSending parm = new ParmGenerateSending();
+            if (parm.Initialize(ref logoninfo, ref xml))
+            {
+                parm.prepare_single_operator_resend(refno, logoninfo, lbaoperator);
+            }
+            cleanup(ref parm);
+            xml.insertEndElement(); //event
+            xml.insertEndDocument();
+            xml.finalize();
+            
+            XmlDocument xmldoc = xml.GetXmlDocument();
+            response.parseFromXml(ref xmldoc, "l_alertpk");
+            return response;
+        }
+
+        /*
          * Common function for ExecPolygonSending, ExecEllipseSending and ExecGixSending
          */
         protected XmlDocument ExecMapSending(UMAPSENDING sending)

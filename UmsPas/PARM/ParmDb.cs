@@ -1452,5 +1452,101 @@ namespace com.ums.UmsParm
                 return false;
             }
         }
+
+        /** Prepare for single operator resend */
+        public bool prepare_single_operator_resend(int refno, int lbaoperator)
+        {
+            try {
+                String szSQL = String.Format("UPDATE LBASEND SET sz_jobid='' WHERE l_refno={0} AND l_operator={1}", refno, lbaoperator);
+            
+                if (ExecNonQuery(szSQL))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /** Fill sending, project */
+        public UMAPSENDING fill_resend_info(int refno, ref BBPROJECT project)
+        {
+            UTASSENDING tas = null;
+            ULBASENDING lbas = null;
+            try
+            {
+                string szSQL = String.Format("select l_projectpk from BBPROJECT_X_REFNO where l_refno={0}",refno);
+                OdbcDataReader rs = ExecReader(szSQL,UmsDb.UREADER_KEEPOPEN);
+                
+                if (rs.Read())
+                    project.sz_projectpk = rs.GetString(0);
+                rs.Close();
+
+                szSQL = String.Format("select f_simulate, l_type from LBASEND where l_refno={0}", refno);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    int l_type = rs.GetInt16(1);
+                    if(l_type == 5) {
+                        tas = new UTASSENDING();
+                        tas.setFunction(Convert.ToInt16(rs.GetValue(0).ToString()));
+                        tas.n_sendingtype = l_type;
+                    }
+                    else if(l_type == 4)
+                    {
+                        lbas = new ULBASENDING();
+                        lbas.f_simulation = rs.GetInt16(0);
+                        //lbas.n_sendingtype = l_type;
+                    }
+                        
+                }
+                rs.Close();
+
+                szSQL = String.Format("SELECT c.l_cc, t.sz_text, t.sz_oadc FROM LBASEND_TEXT t, LBASEND_TEXT_CC c WHERE t.l_textpk=c.l_textpk and t.l_refno={0}", refno);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
+
+                if (tas != null)
+                {
+                    ULBACOUNTRY c;
+                    tas.countrylist = new List<ULBACOUNTRY>();
+                    while (rs.Read())
+                    {
+                        c = new ULBACOUNTRY();
+                        c.l_cc = rs.GetInt32(0);
+                        tas.countrylist.Add(c);
+                        tas.sz_sms_message = rs.GetValue(1).ToString();
+                        tas.sz_sms_oadc = rs.GetValue(2).ToString();
+                        tas.sz_lba_oadc = rs.GetValue(2).ToString();
+                        tas.n_refno = refno;
+                        tas.mapbounds = new UMapBounds();
+                        tas.mapbounds.b_bo = 0.0;
+                        tas.mapbounds.l_bo = 0.0;
+                        tas.mapbounds.r_bo = 0.0;
+                        tas.mapbounds.u_bo = 0.0;
+                        //tas.sz_sendingname = 
+                    }
+                    rs.Close();
+                    return tas;
+                }
+                else
+                {
+                    // add lbas support later
+                    rs.Close();
+                    return tas;
+                    //return lbas;
+                }
+                // projectpk = select l_projectpk from BBPROJECT_X_REFNO where l_refno=93031
+                // f_simulation,sending_type = select f_simulate, l_type from LBASEND where l_refno=93031
+                // sz_sms_message, sz_oadc = SELECT sz_text, sz_oadc FROM LBASEND_TEXT WHERE l_refno=93031
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

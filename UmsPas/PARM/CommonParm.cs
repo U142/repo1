@@ -1458,6 +1458,32 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+        public bool publishLBAResendFile()
+        {
+            //If the file is empty, just cleanup and exit
+            if (!hasLBA())
+            {
+                try
+                {
+                    lbacleanup();
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            //try to publish the addressfile to LBA path
+            try
+            {
+                adrlbawriter.publishResend();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         public bool lbacleanup()
         {
             try

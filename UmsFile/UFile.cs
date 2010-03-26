@@ -224,6 +224,46 @@ namespace com.ums.UmsFile
 
             }
         }
+        public bool publishResend()
+        {
+            try
+            {
+                sw.Close(); //just in case it's still open
+            }
+            catch (Exception)
+            {
+            }
+            //UFile temp = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file().Replace(this.file.ext(), ".tmp"));
+            //UFile desttemp = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
+            String destpath = "";
+            switch (m_channel)
+            {
+                case SENDCHANNEL.TAS:
+                    destpath = UCommon.UPATHS.sz_path_tas;
+                    break;
+                default:
+                    destpath = UCommon.UPATHS.sz_path_lba;
+                    break;
+            }
+            DateTime now = DateTime.Now;
+            
+            String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
+            UFile desttemp = new UFile(destpath, tempfile);
+            UFile dest = new UFile(destpath, this.file.file().Replace(this.file.ext(), "." + now.ToString("yyyyMMddHHmmss") + ".xml"));
+
+            try
+            {
+                file.MoveOperation(desttemp);
+                desttemp.RenameOperation(dest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
+                throw e;
+
+            }
+        }
     }
 
     /*

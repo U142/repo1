@@ -20,6 +20,7 @@ namespace com.ums.UmsParm
             ALERTINFO_SYSLOG_INFO
         };
 
+        bool insertdb = true;
         PASUmsDb db;
         ULOGONINFO logoninfo;
         protected USimpleXmlWriter xmlwriter;
@@ -269,7 +270,6 @@ namespace com.ums.UmsParm
             resend_tas.l_resend_refno = sending.n_resend_refno;
             resend_tas.b_resend = sending.b_resend;
             resend_tas.l_resend_status = sending.resend_statuscodes;
-
            
             resend_tas.setRefno(smssendinginfo.l_refno, ref project);
             /*
@@ -327,6 +327,357 @@ namespace com.ums.UmsParm
             return true;
             
 
+        }
+
+        public bool prepare_single_operator_resend(int refno, ULOGONINFO logon, int lbaoperator)
+        {
+            if (db.prepare_single_operator_resend(refno, lbaoperator))
+                return resend_single_operator(refno, logon);
+            else
+                return false;
+        }
+
+        public bool resend_single_operator(int refno, ULOGONINFO logon)
+        {
+            // Må ha refno
+            // projectpk = select l_projectpk from BBPROJECT_X_REFNO where l_refno=93031
+            // f_simulation,sending_type = select f_simulate, l_type from LBASEND where l_refno=93031
+            // sz_sms_message, sz_oadc = SELECT sz_text, sz_oadc FROM LBASEND_TEXT WHERE l_refno=93031
+            // 
+
+            bool b_test_to_single_recipient = false;
+
+            bool b_voice_active = false;
+            bool b_sms_active = false;
+            bool b_lba_active = false;
+            bool b_tas_active = false;
+            
+            UMAPSENDING sending;
+            BBPROJECT project = new BBPROJECT();
+            PAS_SENDING passending = new PAS_SENDING();
+            SMS_SENDING smssending = new SMS_SENDING();
+            TAS_SENDING tassending = new TAS_SENDING();
+            PAS_SENDING lbasending = new PAS_SENDING();
+
+            // projectpk = select l_projectpk from BBPROJECT_X_REFNO where l_refno=93031
+            // f_simulation,sending_type = select f_simulate, l_type from LBASEND where l_refno=93031
+            // sz_sms_message, sz_oadc = SELECT sz_text, sz_oadc FROM LBASEND_TEXT WHERE l_refno=93031
+            sending = db.fill_resend_info(refno,ref project);
+            
+            xmlwriter.insertAttribute("l_projectpk", sending.n_projectpk.ToString());
+            xmlwriter.insertAttribute("l_refno", sending.n_refno.ToString());
+            xmlwriter.insertAttribute("sz_function", sending.sz_function);
+
+            if (typeof(ULBASENDING) == sending.GetType()) // LBA
+            {
+                b_lba_active = true;
+            }
+            if (typeof(UTASSENDING) == sending.GetType()) // TAS
+            {
+                if (b_test_to_single_recipient)
+                {
+                    b_tas_active = false;
+                    b_sms_active = true;
+                }
+                else
+                    b_tas_active = true;
+            }
+
+           
+
+            lbasending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+            smssending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+            tassending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
+
+            smssending.setSmsMessage(sending.sz_sms_message);
+            smssending.setSmsOadc(sending.sz_sms_oadc);
+            smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
+
+            tassending.setSmsMessage(sending.sz_sms_message);
+            tassending.setSmsOadc(sending.sz_sms_oadc);
+            tassending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);
+
+            bool b_publish_voice = false;
+            bool b_publish_lba = false;
+            bool b_publish_sms = false;
+            bool b_publish_tas = false;
+            bool b_ret = false;
+
+
+            //create TAS sending if
+            if (b_tas_active)
+            {
+                if (tassending.sz_smsmessage.Length <= 0)
+                    throw new UEmptySMSMessageException();
+                if (tassending.sz_smsoadc.Length <= 0)
+                    throw new UEmptySMSOadcException();
+
+                try
+                {
+                    MDVSENDINGINFO tassendinginfo = new MDVSENDINGINFO();
+                    //tassendinginfo.l_refno = db.newRefno();
+                    if (sending.n_refno > 0)
+                        tassendinginfo.l_refno = sending.n_refno;
+                    else
+                        tassendinginfo.l_refno = db.newRefno();
+                    tassending.setRefno(tassendinginfo.l_refno, ref project);
+                    /*
+                     * if this is a resend, then reorganize resend statuscodes
+                     * 
+                     */
+                    tassending.createShape(ref sending);
+                    UTASSENDING s = (UTASSENDING)sending;
+                    s.logoninfo = logon;
+                    tassending.setSendingInfo(ref tassendinginfo);
+                    tassending.m_sendinginfo.l_type = 5;
+                    //tassending.AllowResponse = ((UTASSENDING)sending).b_allow_response;
+                    //tassending.ResponseNumber = ((UTASSENDING)sending).sz_response_number;
+                    // Insert into LBASMSIN_REPLYNUMBERS
+                    b_publish_tas = true;
+                }
+                catch (Exception e)
+                {
+                    b_publish_tas = false;
+                    setAlertInfo(false, project.sz_projectpk, tassending.m_sendinginfo.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Error creating shape file for TAS sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+            }
+
+            //create voice sending if
+            if (b_voice_active || b_lba_active)
+            {
+                try
+                {
+                    if (b_voice_active)
+                    {
+                        //if (passending.l_refno <= 0)
+                        //    passending.l_refno = db.newRefno();
+                        if (sending.n_refno > 0)
+                            passending.l_refno = sending.n_refno;
+                        else
+                            passending.l_refno = db.newRefno();
+
+                    }
+                    if (b_lba_active)
+                    {
+                        if (lbasending.l_refno <= 0)
+                            lbasending.l_refno = db.newRefno();
+                        lbasending.setRefno(lbasending.l_refno, ref project);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.m_sendinginfo.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Unable to get a refno", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                try
+                {
+                    if (b_voice_active)
+                        db.VerifyProfile(sending.n_profilepk, false);
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, sending.sz_sendingname, "Could not verify message profile", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    return false;
+                }
+                try
+                {
+                    passending.createShape(ref sending); //will also create a temp address file
+                    lbasending.createShape(ref sending);
+                    if (b_voice_active)
+                        b_publish_voice = true;
+                    if (b_lba_active)
+                        b_publish_lba = true;
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, sending.sz_sendingname, "Error creating shape file for sending. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    //file.DeleteOperation();
+                    return false;
+                }
+
+                BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();
+                MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
+                BBVALID valid = new BBVALID();
+                BBSENDNUM sendnum = new BBSENDNUM();
+                BBACTIONPROFILESEND profile = new BBACTIONPROFILESEND();
+
+                db.FillReschedProfile(sending.n_reschedpk.ToString(), ref resched_profile);
+                db.FillValid(sending.n_validity, ref valid);
+                db.FillSendNum(sending.oadc.sz_number, ref sendnum);
+                db.FillActionProfile(sending.n_profilepk, ref profile);
+                try
+                {
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    throw e;
+                }
+
+                //fill a sending struct
+                passending.setSendingInfo(ref sendinginfo);
+                passending.setReschedProfile(ref resched_profile);
+                passending.setValid(ref valid);
+                passending.setSendNum(ref sendnum);
+                passending.setActionProfile(ref profile);
+
+                lbasending.setSendingInfo(ref sendinginfo);
+                lbasending.setReschedProfile(ref resched_profile);
+                lbasending.setValid(ref valid);
+                lbasending.setSendNum(ref sendnum);
+                lbasending.setActionProfile(ref profile);
+
+
+                try
+                {
+                    if (sending.getFunction() == UCommon.USENDING_TEST) //test DB and rollback
+                    {
+                    }
+                    else
+                    {
+                        if (b_publish_voice)
+                            b_ret = db.Send(ref passending);
+                        if (b_publish_lba)
+                        {
+                            //mark this sending as LBA. 1=voice, 2=sms, 3=mail, 4=lba, 5=tas
+                            lbasending.m_sendinginfo.l_type = 4;
+                            b_ret = db.Send(ref lbasending);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    return false;
+                }
+
+            }
+
+            try
+            {
+                if (b_lba_active)
+                    b_publish_lba = true;
+                if (sending.b_resend && b_publish_lba)
+                {
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Resend LBA is not yet supported", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    b_publish_lba = false;
+                }
+                if (b_publish_lba && sending.m_lba != null)
+                {
+                    sending.m_lba.Validate();
+                    if (sending.m_lba.getValid())
+                    {
+                        sending.m_lba.setSourceShape(ref lbasending.m_shape);
+                        lbasending.setLBAShape(ref logoninfo, ref sending.m_lba, sending.getFunction());
+                        b_publish_lba = true;
+
+                    }
+                    else
+                    {
+                        if (!sending.m_lba.getValid())
+                            setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "An error was found in the Location Based Alert-part", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                        b_publish_lba = false;
+                        //else if (!sending.m_lba.lba().hasValidAreaID())
+                        //   setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "This ALERT has not registered a valid AREA-ID from provider", "", SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                lbasending.lbacleanup();
+            }
+
+            
+            
+            if (b_publish_tas)
+            {
+                try
+                {
+                    int n_linktype = 0;
+                    if (tassending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                        n_linktype = 9;
+                    b_ret = true;
+
+                    List<Int32> operatorfilter = null;
+                    int n_requesttype = 0;
+                    ULocationBasedAlert lbanull = new ULocationBasedAlert();
+                    lbanull.n_expiry_minutes = (long)tassending.n_expirytime_minutes; // Dette må til for at validity skal bli riktig
+                    tassending.setLBAShape(ref logoninfo, ref lbanull, sending.getFunction());
+
+                    if (tassending.publishLBAResendFile())
+                    {
+                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                    else
+                    {
+                        setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        db.SetLBAStatus(lbasending.l_refno, 41100);
+                    }
+                }
+                catch (Exception e)
+                {
+                    setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                }
+            }
+
+            try
+            {
+                if (b_publish_lba) //requires that no exceptions were caught while writing temp file
+                {
+                    if (sending.getFunction() != UCommon.USENDING_TEST)
+                    {
+                        try
+                        {
+                            int n_linktype = 0;
+                            if (lbasending.m_sendinginfo.l_group == UShape.SENDINGTYPE_TESTSENDING)
+                                n_linktype = 9;
+                            b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, n_linktype, (lbasending.b_resend ? lbasending.l_resend_refno : 0));
+
+                            List<Int32> operatorfilter = null;
+
+                            if (lbasending.publishLBAFile())
+                            {
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                            }
+                            else
+                            {
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "No Location Based Alert found", "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                                db.SetLBAStatus(lbasending.l_refno, 41100);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not insert into LBASEND", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                        }
+                    }
+                    else
+                    {
+                        setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Location Based Alert " + UCommon.USENDINGTYPE_SENT(sending.getFunction()) + " [" + "AdHoc" + "]", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (lbasending.hasLBA())
+                {
+                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                }
+                else
+                {
+                    ULog.warning(lbasending.l_refno, "Could not remove the temporary LBA addressfile", e.Message);
+                }
+            }
+
+            ULog.write(String.Format("New <{0}> Sending\nUserID={1}\nDeptID={2}\nCompID={3}\nProject={4}\nRefno={5}\nAlertpk={6}\nEventpk={7})",
+                //(f_simulation ? "[Simulated]" : "[Live]"),
+                UCommon.USENDINGTYPE(sending.getFunction()).ToUpper(),
+                logoninfo.sz_userid, logoninfo.sz_deptid, logoninfo.sz_compid, project.sz_projectpk, passending.l_refno, 0, 0));
+
+
+
+            return true;
         }
 
         protected bool send_adhoc(ref BBPROJECT project, ref UMAPSENDING sending)
@@ -442,6 +793,7 @@ namespace com.ums.UmsParm
                      */
                     tassending.createShape(ref sending);
                     UTASSENDING s = (UTASSENDING)sending;
+                    
                     db.InjectTASLanguages(ref s);
                     db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     tassending.setSendingInfo(ref tassendinginfo);
