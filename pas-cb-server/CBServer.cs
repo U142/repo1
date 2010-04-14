@@ -28,10 +28,14 @@ namespace pas_cb_server
 
                 // Init log values default is both syslog and log files
                 Log.InitLog(Settings.GetValue("SyslogApp", "umsalertix"), Settings.GetValue("SyslogServer", "makoto.umscom.com"), Settings.GetValue("SyslogPort", 514), Settings.GetValue("Syslog", true), Settings.GetValue("LogFileName", "umsalertix"), Settings.GetValue("LogFile", true));
+
+                // Start threads
+                Log.WriteLog("Starting parser thread", 9);
+                new Thread(new ThreadStart(Parser.CheckFiles)).Start();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Trace.WriteLine(e.Message);
                 return;
             }
 
@@ -45,7 +49,7 @@ namespace pas_cb_server
 
         protected static void exit(object sender, ConsoleCancelEventArgs args)
         {
-            Console.WriteLine("Stopping...\nPress ctrl+c again to force exit.");
+            Trace.WriteLine("Stopping...\nPress ctrl+c again to force exit.");
             args.Cancel = true;
             running = false;
         }

@@ -20,58 +20,33 @@ namespace pas_cb_server
             {
                 try
                 {
-                    string[] fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml");
-                    Array.Sort(fileEntries);
+                    string[] eatfileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml");
+                    string[] retryfileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml");
+                    Array.Sort(eatfileEntries);
+                    Array.Sort(retryfileEntries);
+
+                    HashSet<string> fileEntries = new HashSet<string>();
+                    fileEntries.Concat(eatfileEntries);
+                    fileEntries.Concat(retryfileEntries);
+
                     foreach (string fileName in fileEntries)
                     {
                         if (!CBServer.running) break;
                         lRetVal = ParseXMLFile(fileName);
                         if (lRetVal == 0)
                         {
-                            //                            Log.WriteLog("Moving " + fileName + " to done.",0);
                             Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
                         }
                         else if (lRetVal == -1)
                         {
-                            //                            Log.WriteLog("Moving " + fileName + " to retry.",1);
                             Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
                         }
                         else // lRetVal -2
                         {
-                            //                            Log.WriteLog("Moving " + fileName + " to failed.",2);
                             Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
-                        }
-                    }
-                    fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml");
-                    Array.Sort(fileEntries);
-                    foreach (string fileName in fileEntries)
-                    {
-                        if (!CBServer.running) break;
-                        FileInfo fFile = new FileInfo(fileName);
-                        if (fFile.LastAccessTime.AddMinutes(1).CompareTo(DateTime.Now) <= 0)
-                        {
-                            lRetVal = ParseXMLFile(fileName);
-                            if (lRetVal == 0)
-                            {
-                                //                                Log.WriteLog("Moving " + fileName + " to done.", 0);
-                                Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
-                            }
-                            else if (lRetVal == -1)
-                            {
-                                //                                Log.WriteLog("Moving " + fileName + " to retry.", 1);
-                                Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
-                            }
-                            else // lRetVal -2
-                            {
-                                //                                Log.WriteLog("Moving " + fileName + " to failed.", 2);
-                                Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
-                            }
                         }
                     }
                 }
@@ -97,10 +72,10 @@ namespace pas_cb_server
                 if (oReader.Read())
                 {
                     oDoc.Load(oReader);
-                    if (oDoc.SelectSingleNode("LBA") != null)
+                    if (oDoc.SelectSingleNode("cb") != null)
                     {
-                        if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation") != null)
-                            switch (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("operation").Value)
+                        if (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation") != null)
+                            switch (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation").Value)
                             {
                                 case "NewAlertPolygon":
                                     break;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 using com.ums.UmsCommon;
 
 namespace pas_cb_server
@@ -103,7 +104,7 @@ namespace pas_cb_server
             if (blogfile && severity != 9) // add to logfile queue if enabled, but don't log severity 9
                 qlog.Enqueue(szLogLine);
 
-            Console.WriteLine(szConsoleLine);
+            Trace.WriteLine(szConsoleLine);
         }
 
         private static void WriteSysLog(string logtext, int severity)
