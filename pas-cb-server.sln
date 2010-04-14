@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pas-cb-server", "pas-cb-server\pas-cb-server.csproj", "{EC18DE30-4546-4CC7-95D6-97BDEBE649EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC18DE30-4546-4CC7-95D6-97BDEBE649EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC18DE30-4546-4CC7-95D6-97BDEBE649EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC18DE30-4546-4CC7-95D6-97BDEBE649EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC18DE30-4546-4CC7-95D6-97BDEBE649EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
