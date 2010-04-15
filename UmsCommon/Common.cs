@@ -1001,6 +1001,13 @@ namespace com.ums.UmsCommon
         public String sz_message;
         public byte[] audiostream;
         public bool b_valid;
+        public List<UCCMessage> ccmessage;
+    }
+    
+    public class UCCMessage
+    {
+        public String sz_message;
+        public int l_cc;
     }
 
     public class UBBMESSAGELIST

@@ -222,7 +222,7 @@ namespace com.ums.ws.parm
          * Resending tas or lba
          */
         [WebMethod]
-        public ExecResponse LBAResend(int refno, int lbaoperator, ULOGONINFO logoninfo) //
+        public ExecResponse TASResend(int refno, int lbaoperator, ULOGONINFO logoninfo) //
         {
             ExecResponse response = new ExecResponse();
             USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");

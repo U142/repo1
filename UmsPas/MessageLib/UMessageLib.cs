@@ -90,6 +90,16 @@ namespace com.ums.PAS.messagelib
                 {
                     msg.n_messagepk = rs.GetInt64(0);
                     msg.n_timestamp = rs.GetInt64(1);
+                    // Delete existing messages
+                    szSQL = String.Format("sp_prep_message_smscontent {0}", msg.n_messagepk);
+                    ExecNonQuery(szSQL);
+
+                    for (int i = 0; i < msg.ccmessage.Count; ++i)
+                    {
+                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message);
+                        ExecNonQuery(szSQL);
+                    }
+
                 }
                 else
                 {
@@ -132,7 +142,7 @@ namespace com.ums.PAS.messagelib
                 ret.list = new List<UBBMESSAGE>();
                 String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
                                             "FROM BBMESSAGES " +
-                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} AND f_template=1" +
+                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} AND f_template=1 " +
                                             "ORDER BY l_depth",
                                             logon.l_deptpk, filter.n_timefilter);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
@@ -214,6 +224,22 @@ namespace com.ums.PAS.messagelib
                     {
                         //NOT A VALID MESSAGE
                     }
+                    // Gets messages for specific country codes
+                    msg.ccmessage = new List<UCCMessage>();
+                    szSQL = String.Format("SELECT l_cc, sz_text " +
+                                            "FROM BBMESSAGE_SMSCONTENT " +
+                                            "WHERE l_messagepk={0} " +
+                                            "ORDER BY l_cc",
+                                            msg.n_messagepk);
+                    OdbcDataReader rsCC = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    while (rsCC.Read())
+                    {
+                        UCCMessage ccm = new UCCMessage();
+                        ccm.l_cc = rsCC.GetInt32(0);
+                        ccm.sz_message = rsCC.GetString(1);
+                        msg.ccmessage.Add(ccm);
+                    }
+                    rsCC.Close();
                     ret.list.Add(msg);
                 }
                 rs.Close();
