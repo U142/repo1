@@ -57,6 +57,8 @@
     <Compile Include="CBServer.cs" />
     <Compile Include="include\_settings.cs" />
     <Compile Include="Ione2many.cs" />
+    <Compile Include="include\_tmobile.cs" />
+    <Compile Include="Itmobile.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
