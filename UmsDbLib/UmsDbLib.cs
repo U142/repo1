@@ -155,10 +155,12 @@ namespace com.ums.UmsDbLib
             bool b_ret = false;
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
+            //info.sz_password = Encoding.ASCII.GetString(info.sz_password.ToCharArray());
             String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.l_userpk={0} AND " +
                                             "BC.l_comppk={1} AND BD.l_deptpk={2} AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
                                             "BU.sz_paspassword='{3}'",
-                                            info.l_userpk, info.l_comppk, info.l_deptpk, info.sz_password);
+                                            info.l_userpk, info.l_comppk, info.l_deptpk, 
+                                            info.sz_password);
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);

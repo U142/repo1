@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
 using System.Collections;
+using System.Security.Cryptography;
 
 namespace com.ums.UmsCommon
 {
+
     /**
      * Value used in Backbone log procedures/tables (e.g sp_log_BBMESSAGES => log_BBMESSAGES)
      */
@@ -141,6 +143,29 @@ namespace com.ums.UmsCommon
             }
         }
     }
+
+    public static class Helpers
+    {
+        public static string CreateMD5Hash(string input)
+        {
+            // Use input string to calculate MD5 hash
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            // Convert the byte array to hexadecimal string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                sb.Append(hashBytes[i].ToString("X2"));
+                // To force the hex string to lower-case letters instead of
+                // upper-case, use he following line instead:
+                // sb.Append(hashBytes[i].ToString("x2")); 
+            }
+            return sb.ToString();
+        }
+    }
+
     public class UMapBounds
     {
         public double l_bo = 10.3f;
@@ -821,13 +846,22 @@ namespace com.ums.UmsCommon
      */
     public struct BBDYNARESCHED
     {
-        public BBDYNARESCHED(BBRESCHEDPROFILE p)
+        public BBDYNARESCHED(BBRESCHEDPROFILE p, long n_scheddate)
         {
             l_retries = p.l_retries;
             l_interval = p.l_interval;
             //l_canceldate = p.l_canceldate; //This should be converted to NOW + p.l_canceldate days
             //compute canceldate
+
             DateTime now = DateTime.UtcNow.ToLocalTime();
+            if (n_scheddate.ToString().Length==8) //fix - if scheddate is set, add days to this to determine canceldate
+            {
+                int year = Int32.Parse(n_scheddate.ToString().Substring(0, 4));
+                int month = Int32.Parse(n_scheddate.ToString().Substring(4,2));
+                int day = Int32.Parse(n_scheddate.ToString().Substring(6,2));
+                now = new DateTime(year, month, day);
+            }
+
             String sz_canceldate = "-1";
             if (p.l_canceldate > 0 || (p.l_canceldate==0 && p.l_canceltime>0))
             {

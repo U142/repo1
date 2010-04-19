@@ -516,13 +516,13 @@ namespace com.ums.UmsParm
 
                 //fill a sending struct
                 passending.setSendingInfo(ref sendinginfo);
-                passending.setReschedProfile(ref resched_profile);
+                passending.setReschedProfile(ref resched_profile, sending.n_scheddate);
                 passending.setValid(ref valid);
                 passending.setSendNum(ref sendnum);
                 passending.setActionProfile(ref profile);
 
                 lbasending.setSendingInfo(ref sendinginfo);
-                lbasending.setReschedProfile(ref resched_profile);
+                lbasending.setReschedProfile(ref resched_profile, sending.n_scheddate);
                 lbasending.setValid(ref valid);
                 lbasending.setSendNum(ref sendnum);
                 lbasending.setActionProfile(ref profile);
@@ -952,13 +952,13 @@ namespace com.ums.UmsParm
 
                 //fill a sending struct
                 passending.setSendingInfo(ref sendinginfo);
-                passending.setReschedProfile(ref resched_profile);
+                passending.setReschedProfile(ref resched_profile, sending.n_scheddate);
                 passending.setValid(ref valid);
                 passending.setSendNum(ref sendnum);
                 passending.setActionProfile(ref profile);
                 
                 lbasending.setSendingInfo(ref sendinginfo);
-                lbasending.setReschedProfile(ref resched_profile);
+                lbasending.setReschedProfile(ref resched_profile, sending.n_scheddate);
                 lbasending.setValid(ref valid);
                 lbasending.setSendNum(ref sendnum);
                 lbasending.setActionProfile(ref profile);
@@ -1355,15 +1355,20 @@ namespace com.ums.UmsParm
                     db.FillActionProfile(ref pa, ref profile);
                     db.FillSendingInfo(ref logoninfo, ref pa, ref sendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
 
+                    long n_scheddate = 0;
+                    if (sz_scheddate != null && sz_scheddate.Length > 0)
+                    {
+                        n_scheddate = long.Parse(sz_scheddate);
+                    }
                     //fill a sending struct
                     sending.setSendingInfo(ref sendinginfo);
-                    sending.setReschedProfile(ref resched_profile);
+                    sending.setReschedProfile(ref resched_profile, n_scheddate);
                     sending.setValid(ref valid);
                     sending.setSendNum(ref sendnum);
                     sending.setActionProfile(ref profile);
 
                     lbasending.setSendingInfo(ref sendinginfo);
-                    lbasending.setReschedProfile(ref resched_profile);
+                    lbasending.setReschedProfile(ref resched_profile, n_scheddate);
                     lbasending.setValid(ref valid);
                     lbasending.setSendNum(ref sendnum);
                     lbasending.setActionProfile(ref profile);
@@ -1785,9 +1790,15 @@ namespace com.ums.UmsParm
             db.FillActionProfile(ref pa, ref profile);
             db.FillSendingInfo(ref logoninfo, ref pa, ref sendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
 
+            long n_scheddate = 0;
+            if (sz_scheddate != null && sz_scheddate.Length > 0)
+            {
+                n_scheddate = long.Parse(sz_scheddate);
+            }
+
             //fill a sending struct
             sending.setSendingInfo(ref sendinginfo);
-            sending.setReschedProfile(ref resched_profile);
+            sending.setReschedProfile(ref resched_profile, n_scheddate);
             sending.setValid(ref valid);
             sending.setSendNum(ref sendnum);
             sending.setActionProfile(ref profile);

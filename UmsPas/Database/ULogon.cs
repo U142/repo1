@@ -8,6 +8,7 @@ using com.ums.UmsCommon;
 using System.Data.Odbc;
 using System.Net;
 using System.IO;
+using System.Text;
 
 namespace com.ums.PAS.Database
 {
@@ -284,6 +285,10 @@ namespace com.ums.PAS.Database
                 l.sz_compid = l.sz_compid.Replace("'", "''");
                 l.sz_userid = l.sz_userid.Replace("'", "''");
                 l.sz_password = l.sz_password.Replace("'", "''");
+                byte[] utf8pass = Encoding.UTF8.GetBytes(l.sz_password);
+                byte[] asciipass = Encoding.ASCII.GetBytes(l.sz_password);
+                String pass = Encoding.GetEncoding("iso-8859-1").GetString(utf8pass);
+                //pass = "mh123,1µ°Õ";
                 //l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
                 szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +

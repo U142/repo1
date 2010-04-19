@@ -1053,10 +1053,10 @@ namespace com.ums.UmsParm
             }
             return true;
         }
-        public void setReschedProfile(BBRESCHEDPROFILE p)
+        public void setReschedProfile(BBRESCHEDPROFILE p, long n_scheddate)
         {
             m_reschedprofile = p;
-            m_dynaresched = new BBDYNARESCHED(p);
+            m_dynaresched = new BBDYNARESCHED(p, n_scheddate);
         }
     }
 
@@ -1300,10 +1300,10 @@ namespace com.ums.UmsParm
         }
 
         /*DYNARESCHED will be automatically generated*/
-        public void setReschedProfile(ref BBRESCHEDPROFILE r)
+        public void setReschedProfile(ref BBRESCHEDPROFILE r, long n_scheddate)
         {
             m_reschedprofile = r;
-            m_dynaresched = new BBDYNARESCHED(r);
+            m_dynaresched = new BBDYNARESCHED(r, n_scheddate);
 
         }
         public void setSendingInfo(ref MDVSENDINGINFO r)

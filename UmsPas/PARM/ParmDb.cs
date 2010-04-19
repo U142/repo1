@@ -253,6 +253,49 @@ namespace com.ums.UmsParm
 
         }
 
+        public bool UpdatePAShape(Int64 pk, String sz_xml)
+        {
+            try
+            {
+                bool exists = false;
+                String sz_existing_md5 = "";
+                String md5 = UmsCommon.Helpers.CreateMD5Hash(sz_xml);
+                String sql = String.Format("SELECT isnull(sz_md5,'') FROM PAALERTSHAPE WHERE l_alertpk={0}", pk);
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    exists = true;
+                    sz_existing_md5 = rs.GetString(0);
+                }
+                rs.Close();
+
+                if (exists)
+                {
+                    if (!sz_existing_md5.Equals(md5)) //only update if md5 is changed
+                    {
+                        sql = String.Format("UPDATE PAALERTSHAPE set sz_md5='{0}', sz_xml='{1}' WHERE l_alertpk={2}",
+                                            md5, sz_xml, pk);
+                        if (ExecNonQuery(sql))
+                            return true;
+                    }
+                }
+                else
+                {
+                    sql = String.Format("INSERT INTO PAALERTSHAPE(l_alertpk, l_timestamp, sz_md5, sz_xml) " +
+                                        "VALUES({0}, {1}, '{2}', '{3}')",
+                                        pk, 0, md5, sz_xml);
+                    if (ExecNonQuery(sql))
+                        return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         /*  in: alertpk, reference to PAALERT struct
          *  out: UmsCommon.PAALERT struct
          *  returns: boolean
