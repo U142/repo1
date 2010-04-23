@@ -28,4 +28,8 @@ namespace pas_cb_server
     public class Operator
     {
     }
+
+    public class UserValues
+    {
+    }
 }

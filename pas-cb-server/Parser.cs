@@ -21,15 +21,8 @@ namespace pas_cb_server
                 try
                 {
                     string[] eatfileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml");
-                    string[] retryfileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml");
                     Array.Sort(eatfileEntries);
-                    Array.Sort(retryfileEntries);
-
-                    HashSet<string> fileEntries = new HashSet<string>();
-                    fileEntries.Concat(eatfileEntries);
-                    fileEntries.Concat(retryfileEntries);
-
-                    foreach (string fileName in fileEntries)
+                    foreach (string fileName in eatfileEntries)
                     {
                         if (!CBServer.running) break;
                         lRetVal = ParseXMLFile(fileName);
@@ -47,6 +40,33 @@ namespace pas_cb_server
                         {
                             Thread.Sleep(500);
                             File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
+                        }
+                    }
+
+                    string[] retryfileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml");
+                    Array.Sort(retryfileEntries);
+                    foreach (string fileName in retryfileEntries)
+                    {
+                        if (!CBServer.running) break;
+                        FileInfo fFile = new FileInfo(fileName);
+                        if (fFile.LastAccessTime.AddMinutes(1).CompareTo(DateTime.Now) <= 0)
+                        {
+                            lRetVal = ParseXMLFile(fileName);
+                            if (lRetVal == 0)
+                            {
+                                Thread.Sleep(500);
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
+                            }
+                            else if (lRetVal == -1)
+                            {
+                                Thread.Sleep(500);
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                            }
+                            else // lRetVal -2
+                            {
+                                Thread.Sleep(500);
+                                File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
+                            }
                         }
                     }
                 }
@@ -78,10 +98,13 @@ namespace pas_cb_server
                             switch (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation").Value)
                             {
                                 case "NewAlertPolygon":
+                                    lReturn = CreateAlert(oDoc.SelectSingleNode("cb"));
                                     break;
                                 case "UpdateAlert":
+                                    lReturn = UpdateAlert(oDoc.SelectSingleNode("cb"));
                                     break;
                                 case "KillAlert":
+                                    lReturn = KillAlert(oDoc.SelectSingleNode("cb"));
                                     break;
                                 default:
                                     Log.WriteLog("ERROR: Operation not recognized", 2);
@@ -99,6 +122,28 @@ namespace pas_cb_server
                 lReturn = -2;
             }
             return lReturn;
+        }
+
+        private static int CreateAlert(XmlNode xmlCB)
+        {
+            // create an alert for each operator
+            return 0;
+        }
+        private static int UpdateAlert(XmlNode xmlCB)
+        {
+            // update a given alert at each operator
+            return 0;
+        }
+        private static int KillAlert(XmlNode xmlCB)
+        {
+            // kill a given alert at each operator
+            return 0;
+        }
+        private static int GetAlertStatus()
+        {
+            // get alert status
+            // all alerts for all operators?
+            return 0;
         }
     }
 }
