@@ -105,7 +105,21 @@ namespace pas_cb_server
         // methods
         public static Operator[] GetOperators()
         {
-            string qryOperators = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password, f_alertapi, f_statusapi, f_internationalapi, f_statisticsapi FROM LBAOPERATORS WHERE f_internationalapi=1 ORDER BY l_operator";
+            string qryOperators = @"SELECT
+                                        l_operator,
+                                        sz_operatorname,
+                                        l_type,
+                                        sz_url,
+                                        l_port,
+                                        sz_cb_user sz_login_id,
+                                        sz_cb_name sz_login_name,
+                                        sz_cb_password sz_login_password
+                                    FROM
+                                        LBAOPERATORS
+                                    WHERE
+                                        f_cb=1
+                                    ORDER BY
+                                        l_operator";
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
