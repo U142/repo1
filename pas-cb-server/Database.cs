@@ -118,5 +118,10 @@ namespace pas_cb_server
 
             return ret;
         }
+
+        public static void SetSendingStatus(Operator op, int l_refno, int l_status)
+        {
+
+        }
     }
 }

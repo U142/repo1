@@ -25,7 +25,6 @@ namespace pas_cb_server
         private static bool blogfile = false;
         private static string szlogfilename = "";
         private static Queue<string> qlog = new Queue<string>();
-
         public static void InitLog(string app, string sysloghost, int syslogport, bool syslog, string logfilename, bool logfile)
         {
             try

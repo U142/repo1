@@ -97,29 +97,27 @@ namespace pas_cb_server
 
         // login settings for interaface
         public string sz_url = "";
-        public int l_port = 0;
         public string sz_login_id = "";
         public string sz_login_name = "";
         public string sz_login_password = "";
 
         // methods
-        public static Operator[] GetOperators()
+        /*public static Operator[] GetOperators()
         {
-            string qryOperators = @"SELECT
-                                        l_operator,
-                                        sz_operatorname,
-                                        l_type,
-                                        sz_url,
-                                        l_port,
-                                        sz_cb_user sz_login_id,
-                                        sz_cb_name sz_login_name,
-                                        sz_cb_password sz_login_password
+            string qryOperators = String.Format(@"SELECT
+                                        OP.l_operator,
+                                        OP.sz_operatorname,
+                                        OP.l_type,
+                                        OP.sz_url,
+                                        OP.sz_user sz_login_id,
+                                        OP.sz_name sz_login_name,
+                                        OP.sz_password sz_login_password
                                     FROM
-                                        LBAOPERATORS
+                                        LBAOPERATORS OP
                                     WHERE
-                                        f_cb=1
+                                        OP.f_cb=1
                                     ORDER BY
-                                        l_operator";
+                                        OP.l_operator");
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
@@ -139,9 +137,12 @@ namespace pas_cb_server
 
                     op.l_operator = rsOperators.GetInt32(0);
                     op.sz_operatorname = rsOperators.GetString(1);
-                    op.sz_url = rsOperators.GetString(2);
-                    op.sz_login_id = rsOperators.GetString(3);
-                    op.sz_login_password = rsOperators.GetString(4);
+                    op.l_type = rsOperators.GetInt32(2);
+                    op.sz_url = rsOperators.GetString(3);
+                    op.sz_login_id = rsOperators.GetString(4);
+                    op.sz_login_name = rsOperators.GetString(5);
+                    op.sz_login_password = rsOperators.GetString(6);
+
                     Operators.Add(op);
                 }
                 rsOperators.Close();
@@ -159,10 +160,28 @@ namespace pas_cb_server
             }
 
             return Operators.ToArray();
-        }
+        }*/
         public static Operator[] GetOperators(Settings oUser)
         {
-            string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
+            //string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
+            string qryOperators = String.Format(@"SELECT
+                                        OP.l_operator,
+                                        OP.sz_operatorname,
+                                        OP.l_type,
+                                        OP.sz_url,
+                                        isnull(OD.sz_userid, OP.sz_user) sz_login_id,
+                                        isnull(OD.sz_username, OP.sz_name) sz_login_name,
+                                        isnull(OD.sz_userpassword, OP.sz_password) sz_login_password
+                                    FROM
+                                        LBAOPERATORS OP, 
+                                        LBAOPERATORS_X_DEPT OD 
+                                    WHERE
+                                        OP.f_cb=1
+                                        AND OD.l_operator=OP.l_operator 
+                                        AND OD.l_deptpk={0}
+                                    ORDER BY
+                                        OP.l_operator"
+                , oUser.l_deptpk.ToString());
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
             OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
@@ -182,9 +201,11 @@ namespace pas_cb_server
 
                     op.l_operator = rsOperators.GetInt32(0);
                     op.sz_operatorname = rsOperators.GetString(1);
-                    op.sz_url = rsOperators.GetString(2);
-                    op.sz_login_id = rsOperators.GetString(3);
-                    op.sz_login_password = rsOperators.GetString(4);
+                    op.l_type = rsOperators.GetInt32(2);
+                    op.sz_url = rsOperators.GetString(3);
+                    op.sz_login_id = rsOperators.GetString(4);
+                    op.sz_login_name = rsOperators.GetString(5);
+                    op.sz_login_password = rsOperators.GetString(6);
 
                     Operators.Add(op);
                 }
@@ -204,11 +225,27 @@ namespace pas_cb_server
 
             return Operators.ToArray();
         }
-        public static Operator GetOperator(int l_operator)
+        /*public static Operator GetOperator(int l_operator)
         {
             Operator oRet = new Operator();
 
-            string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password, f_alertapi, f_statusapi, f_internationalapi, f_statisticsapi FROM LBAOPERATORS WHERE l_operator=" + l_operator.ToString();
+            //string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password, f_alertapi, f_statusapi, f_internationalapi, f_statisticsapi FROM LBAOPERATORS WHERE l_operator=" + l_operator.ToString();
+            string qryOperator = String.Format(@"SELECT
+                                        OP.l_operator,
+                                        OP.sz_operatorname,
+                                        OP.l_type,
+                                        OP.sz_url,
+                                        OP.sz_user sz_login_id,
+                                        OP.sz_name sz_login_name,
+                                        OP.sz_password sz_login_password
+                                    FROM
+                                        LBAOPERATORS OP
+                                    WHERE
+                                        OP.f_cb=1
+                                        AND OP.l_operator={0}
+                                    ORDER BY
+                                        OP.l_operator"
+                , l_operator.ToString());
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
             OdbcCommand cmdOperator = new OdbcCommand(qryOperator, dbConn);
@@ -224,9 +261,11 @@ namespace pas_cb_server
                 {
                     oRet.l_operator = rsOperator.GetInt32(0);
                     oRet.sz_operatorname = rsOperator.GetString(1);
-                    oRet.sz_url = rsOperator.GetString(2);
-                    oRet.sz_login_id = rsOperator.GetString(3);
-                    oRet.sz_login_password = rsOperator.GetString(4);
+                    oRet.l_type = rsOperator.GetInt32(2);
+                    oRet.sz_url = rsOperator.GetString(3);
+                    oRet.sz_login_id = rsOperator.GetString(4);
+                    oRet.sz_login_name = rsOperator.GetString(5);
+                    oRet.sz_login_password = rsOperator.GetString(6);
                 }
                 rsOperator.Close();
                 rsOperator.Dispose();
@@ -243,6 +282,6 @@ namespace pas_cb_server
             }
 
             return oRet;
-        }
+        }*/
     }
 }

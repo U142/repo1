@@ -82,6 +82,7 @@ namespace pas_cb_server
         private static int ParseXMLFile(string sz_filename)
         {
             int lReturn = 0;
+            Hashtable hRet = new Hashtable();
 
             XmlTextReader oReader = new XmlTextReader(sz_filename);
             XmlDocument oDoc = new XmlDocument();
@@ -95,22 +96,33 @@ namespace pas_cb_server
                     if (oDoc.SelectSingleNode("cb") != null)
                     {
                         if (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation") != null)
+                        {
                             switch (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation").Value)
                             {
                                 case "NewAlertPolygon":
-                                    lReturn = CreateAlert(oDoc.SelectSingleNode("cb"));
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return -2;
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser);
                                     break;
                                 case "UpdateAlert":
-                                    lReturn = UpdateAlert(oDoc.SelectSingleNode("cb"));
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return -2;
+                                    hRet = UpdateAlert(oDoc.SelectSingleNode("cb"), oUser);
                                     break;
                                 case "KillAlert":
-                                    lReturn = KillAlert(oDoc.SelectSingleNode("cb"));
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return -2;
+                                    hRet = KillAlert(oDoc.SelectSingleNode("cb"), oUser);
                                     break;
                                 default:
                                     Log.WriteLog("ERROR: Operation not recognized", 2);
                                     lReturn = -2;
                                     break;
                             }
+                            // look through Hashtable hRet and check status(es) for operator(s)
+                            // retry operators that failed?
+
+                        }
                     }
                     oReader.Close();
                 }
@@ -124,26 +136,87 @@ namespace pas_cb_server
             return lReturn;
         }
 
-        private static int CreateAlert(XmlNode xmlCB)
+        private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser)
         {
+            Hashtable ret = new Hashtable();
+
             // create an alert for each operator
-            return 0;
+            foreach (Operator op in oUser.operators)
+            {
+                switch (op.l_type)
+                {
+                    case 1: // AlertiX (not supported)
+                        ret.Add(op, -2);
+                        break;
+                    case 2: // one2many
+                        ret.Add(op, CB_one2many.CreateAlert());
+                        break;
+                    case 3: // tmobile
+                        ret.Add(op, CB_tmobile.CreateAlert());
+                        break;
+                    default:
+                        ret.Add(op, -2);
+                        break;
+                }
+            }
+            return ret;
         }
-        private static int UpdateAlert(XmlNode xmlCB)
+        private static Hashtable UpdateAlert(XmlNode xmlCB, Settings oUser)
         {
+            Hashtable ret = new Hashtable();
+
             // update a given alert at each operator
-            return 0;
+            foreach (Operator op in oUser.operators)
+            {
+                switch (op.l_type)
+                {
+                    case 1: // AlertiX (not supported)
+                        ret.Add(op, -2);
+                        break;
+                    case 2: // one2many
+                        ret.Add(op, CB_one2many.UpdateAlert());
+                        break;
+                    case 3: // tmobile
+                        ret.Add(op, CB_tmobile.UpdateAlert());
+                        break;
+                    default:
+                        ret.Add(op, -2);
+                        break;
+                }
+            }
+            return ret;
         }
-        private static int KillAlert(XmlNode xmlCB)
+        private static Hashtable KillAlert(XmlNode xmlCB, Settings oUser)
         {
+            Hashtable ret = new Hashtable();
+
             // kill a given alert at each operator
-            return 0;
+            foreach (Operator op in oUser.operators)
+            {
+                switch (op.l_type)
+                {
+                    case 1: // AlertiX (not supported)
+                        ret.Add(op, -2);
+                        break;
+                    case 2: // one2many
+                        ret.Add(op, CB_one2many.KillAlert());
+                        break;
+                    case 3: // tmobile
+                        ret.Add(op, CB_tmobile.KillAlert());
+                        break;
+                    default:
+                        ret.Add(op, -2);
+                        break;
+                }
+            }
+            return ret;
         }
         private static int GetAlertStatus()
         {
+            int ret = 0;
             // get alert status
             // all alerts for all operators?
-            return 0;
+            return ret;
         }
     }
 }
