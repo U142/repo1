@@ -238,19 +238,19 @@ namespace pas_cb_server
     {
         public static int CreateAlert() 
         {
-            return 0; 
+            return Constant.OK; 
         }
         public static int UpdateAlert() 
-        { 
-            return 0; 
+        {
+            return Constant.OK; 
         }
         public static int KillAlert() 
         {
-            return 0; 
+            return Constant.OK; 
         }
         public static int GetAlertStatus()
         { 
-            return 0; 
+            return Constant.OK; 
         }
     }
 }

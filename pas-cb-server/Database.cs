@@ -119,9 +119,57 @@ namespace pas_cb_server
             return ret;
         }
 
-        public static void SetSendingStatus(Operator op, int l_refno, int l_status)
+        public static int SetSendingStatus(Operator op, int l_refno, int l_status)
         {
 
+            return Constant.OK;
+        }
+
+        public static int UpdateTries(int lReference, int lTempStatus, int lEndStatus, int lResponse, int lOperator, LBATYPE Type)
+        {
+            //int lMaxTries = 1; // Is really retries so 4 will give 5 tries total
+            int lRetries = Settings.GetValue("Retries", 2);
+            int lRetVal = 0;
+            string szQuery = "";
+
+            if (Type == LBATYPE.LBAS)
+            {
+                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
+            }
+            else if (Type == LBATYPE.TAS)
+            {
+                szQuery = "sp_tas_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
+            }
+            else if (Type == LBATYPE.CB)
+            {
+                szQuery = "sp_cb_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + " , " + lResponse.ToString() + ", " + lOperator.ToString();
+            }
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+            OdbcDataReader rsRequestType;
+
+            try
+            {
+                dbConn.Open();
+                rsRequestType = cmd.ExecuteReader();
+
+                if (rsRequestType.Read())
+                    if (!rsRequestType.IsDBNull(0))
+                        lRetVal = rsRequestType.GetInt32(0);
+
+                cmd.Dispose();
+                dbConn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.UpdateTries (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.UpdateTries (exception={0}) (sql={1})", e, szQuery),
+                    2);
+            }
+
+            return lRetVal;
         }
     }
 }
