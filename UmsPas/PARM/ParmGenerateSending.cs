@@ -917,12 +917,18 @@ namespace com.ums.UmsParm
                 }
                 try
                 {
-                    passending.createShape(ref sending); //will also create a temp address file
-                    lbasending.createShape(ref sending);
-                    if(b_voice_active)
+                    
+                    
+                    if (b_voice_active)
+                    {
+                        passending.createShape(ref sending); //will also create a temp address file
                         b_publish_voice = true;
+                    }
                     if (b_lba_active)
+                    {
+                        lbasending.createShape(ref sending);
                         b_publish_lba = true;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1497,10 +1503,27 @@ namespace com.ums.UmsParm
                     lbasending.lbacleanup();
                 }
             }
+            
+            PAS_SENDING usesending = null;
+
+            if (sending != null && sending.m_shape != null)
+            {
+                usesending = sending;
+            }
+            else if (smssending != null && smssending.m_shape != null)
+            {
+                usesending = smssending;
+            }
+            if (usesending != null && typeof(UGIS).Equals(usesending.m_shape.GetType()))
+            {
+                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + usesending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+            }
+
+            /*
             if(typeof(UGIS).Equals(sending.m_shape.GetType()))
             {
                 setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
-            }
+            }*/
             
             //send it
             if (b_publish_voice)

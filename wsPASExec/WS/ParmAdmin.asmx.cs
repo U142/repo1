@@ -1410,7 +1410,7 @@ namespace com.ums.ws.parm
             int counter = 0;
             //String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PAALERTSHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_alertpk",
             //                               sz_timestamp, m_logon.l_deptpk);
-            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1}",
+            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0) FROM PAOBJECT PO WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1}",
                                            sz_timestamp, m_logon.l_deptpk);
             try
             {
@@ -1457,14 +1457,7 @@ namespace com.ums.ws.parm
                     }
                     f_isobjectfolder = rs.GetString(12);
                     l_timestamp = rs.GetString(13);
-                    try
-                    {
-                        sz_shape_xml = rs.GetString(14);
-                    }
-                    catch (Exception)
-                    {
-                        sz_shape_xml = "";
-                    }
+                   
                     
                     outxml.insertStartElement("paobject");
                     outxml.insertAttribute("l_objectpk", "o" + l_objectpk);
@@ -1481,10 +1474,8 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("sz_metadata", sz_metadata);
                     outxml.insertAttribute("f_isobjectfolder", f_isobjectfolder);
                     outxml.insertAttribute("l_timestamp", l_timestamp);
-                    if (sz_shape_xml.Trim().Length > 0)
-                        outxml.insertText(sz_shape_xml);
-                    else
-                        WritePolygonToFile(l_objectpk, "paobject", ref outxml);
+                    
+                    WritePolygonToFile(l_objectpk, "paobject", ref outxml);
                     outxml.insertEndElement();
                     counter++;
                     //WritePolygonToFile(l_objectpk, "paobject", ref outpolyxml);

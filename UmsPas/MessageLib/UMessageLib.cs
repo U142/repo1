@@ -173,7 +173,14 @@ namespace com.ums.PAS.messagelib
                     msg.n_ivrcode = rs.GetInt32(9);
                     msg.n_parentpk = rs.GetInt64(10);
                     msg.n_depth = rs.GetInt32(11);
-                    msg.n_timestamp = rs.GetInt64(12);
+                    try
+                    {
+                        msg.n_timestamp = rs.GetInt64(12);
+                    }
+                    catch (Exception e)
+                    {
+                        msg.n_timestamp = 0;
+                    }
                     try
                     {
                         msg.n_categorypk = rs.GetInt64(13);
