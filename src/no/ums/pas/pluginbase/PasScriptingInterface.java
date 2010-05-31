@@ -114,7 +114,7 @@ public abstract class PasScriptingInterface
 	protected void setSubPluginNames()
 	{
 		System.out.println("***Using Plugins***");
-		System.out.println((this.plugin_AddressSearch = "pluginbase.defaults.DefaultAddressSearch"));
+		System.out.println((this.plugin_AddressSearch = "no.ums.pas.pluginbase.defaults.DefaultAddressSearch"));
 	}
 
 	/**

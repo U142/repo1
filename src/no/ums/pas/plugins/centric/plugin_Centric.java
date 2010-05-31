@@ -29,7 +29,7 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	protected void setSubPluginNames() {
 		System.out.println("***Using Plugins (plugin_Centric)***");
-		System.out.println((this.plugin_AddressSearch = "no.ums.pas.plugins.Centric.CentricAddressSearch"));
+		System.out.println((this.plugin_AddressSearch = "no.ums.pas.plugins.centric.CentricAddressSearch"));
 	}
 
 	@Override
