@@ -1,0 +1,1124 @@
+package parm.xml;
+
+import java.awt.Color;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import Maps.Defines.PolygonStruct;
+
+import parm.voobjects.*;
+import parm.constants.*;
+
+public class XmlWriter {
+	private String XMLFilePath = "parmxml.zip";
+	
+	private final String strCategory = "pacategory";
+	private final String strCategoryPK = "l_categorypk";
+	
+	private final String strObject = "paobject";
+	private final String strObjectPK = "l_objectpk";
+	
+	private final String strEvent = "paevent";
+	private final String strEventPK = "l_eventpk";
+	
+	private final String strAlert = "paalert";
+	private final String strAlertPK = "l_alertpk";
+	
+	private int returnValue = 0;
+	private String rootTimestamp = "0";
+	
+	public XmlWriter(){}
+	
+	public String writeTempXml(Collection objects, String filepath) {
+		String[] files = new String[2];
+		files[0] = filepath;
+		String polypath = filepath.substring(0,filepath.indexOf("tempxml")) + "polyxml" + filepath.substring(filepath.indexOf("tempxml")+7);
+		// Blir slik sessionid-tempxml-highesttemp
+		//           sessionid+polyxml+highesttemp
+		files[1] = polypath;
+		/*
+		try{
+			// Leser ut rootTimestamp
+			XmlReader reader = new XmlReader();
+			rootTimestamp = reader.getRootTimestamp();
+			reader = null;
+			if(rootTimestamp == null)
+				rootTimestamp = "0";
+		}
+		catch(Exception e){
+			System.out.println("Feilet med å lese timestamp fra parmxml: " + e.getMessage());
+			returnValue = -1;
+		}*/
+		
+		if(objects != null)
+			writer(objects, filepath);
+		else
+			writeEmptyParm(filepath);
+		
+		if(objects != null) {
+			Iterator it = objects.iterator();
+			boolean writtenPoly = false;
+			while(it.hasNext()){
+				Object o = it.next();
+				if(o.getClass().equals(ObjectVO.class) || o.getClass().equals(AlertVO.class)) {
+					returnValue = writePolyXml(o, files[1]);
+					writtenPoly = true;
+				}
+			}
+			// Hvis det er et event som er blitt lagt til så må det skrives en tom poly
+			if(!writtenPoly)
+				writeEmptyPoly(files[1]);
+		}
+		else
+			returnValue = writeEmptyPoly(files[1]);
+		
+		returnValue = zipXmlFile(files);
+		return filepath;
+	}
+	
+	private int writeEmptyParm(String filename){
+		Document xmlDoc = null;
+	
+		if(filename.equals(""))
+			xmlDoc = getXMLDocument(ParmConstants.xmlLocation,ParmConstants.xmlLocation);
+		else
+			xmlDoc = getXMLDocument(filename,filename);
+		
+		Element rootnd;
+		
+		if(!xmlDoc.hasChildNodes()){
+			rootnd = (Element) xmlDoc.createElement("parmroot");
+			rootnd.setAttribute("l_timestamp",rootTimestamp);
+			
+			xmlDoc.appendChild(rootnd);
+		}
+		else{
+			rootnd = xmlDoc.getDocumentElement();
+			rootnd.setAttribute("l_timestamp",rootTimestamp);
+		}
+		/*
+		try{
+			XmlReader reader = new XmlReader();
+			rootTimestamp = reader.getRootTimestamp();
+			reader = null;
+			if(rootTimestamp == null)
+				rootTimestamp = "0";
+		}
+		catch(Exception e){
+			System.out.println("Fant ikke rootTimestamp: " + e.getMessage());
+		}*/
+		
+		if(filename.equals(""))
+			writeXMLFile(xmlDoc,ParmConstants.xmlLocation);
+		else
+			writeXMLFile(xmlDoc,filename);
+		return returnValue;
+	}
+	private int writeEmptyPoly(String filename){
+		Document xmlDoc = null;
+		
+		if(filename.equals(""))
+			xmlDoc = getXMLDocument(ParmConstants.polyxmlLocation,ParmConstants.xmlLocation);
+		else
+			xmlDoc = getXMLDocument(filename,filename);
+		
+		Element rootnd = (Element) xmlDoc.createElement("polyroot");
+		xmlDoc.appendChild(rootnd);
+		if(filename.equals(""))
+			writeXMLFile(xmlDoc,ParmConstants.polyxmlLocation);
+		else
+			writeXMLFile(xmlDoc,filename);
+		return returnValue;
+	}
+	
+	public int writeXml(Collection objects) {//, String timestamp) {
+		/* TEST DATA
+		map = this.map;
+		ObjectVO obj = new ObjectVO("1004","1","-1","Mount evrest","Høyt fjell",null,"3000","-1","Himalaya veien 1","99999","Nepal","+9999999999","Rols",
+				"20060217150122",false,new ArrayList());
+		PolygonStruct m_polygon = new PolygonStruct(new Navigation(map, 1024, 768), new Dimension(1024, 768)); 
+		m_polygon.add_coor(new Double(10.919536393915573), new Double(59.958140280243875));
+		m_polygon.add_coor(new Double(10.92144223057047), new Double(59.958275572081355));
+		m_polygon.add_coor(new Double(10.920830656121511), new Double(59.95732852921899));
+		m_polygon.set_fill_color(Color.PINK);
+		obj.setM_polygon(m_polygon);
+		writePolyXml(obj);*/
+		String[] files = new String[2];
+		files[0] = ParmConstants.xmlLocation;
+		files[1] = ParmConstants.polyxmlLocation;
+		
+		if(objects != null){
+			returnValue = writer(objects, ParmConstants.xmlLocation);
+			
+			Iterator it = objects.iterator();
+			while(it.hasNext()){
+				Object o = it.next();
+				if(o.getClass().equals(ObjectVO.class) || o.getClass().equals(AlertVO.class)) {
+					// Her må jeg oppdatere temppk'ene for at den ikke skal legge til i stedet for å oppdatere polygonene
+					/*if(o.getClass().equals(ObjectVO.class) && ((ObjectVO)o).getM_polygon() != null)
+						updatePolyXml(((ObjectVO)o).getObjectPK(),((ObjectVO)o).getTempPk());
+					else if(o.getClass().equals(AlertVO.class) && ((AlertVO)o).getM_polygon() != null)  // det kan jo kun være ObjectVO eller AlertVO
+						updatePolyXml(((AlertVO)o).getAlertpk(),((AlertVO)o).getTempPk());*/
+					
+					returnValue = writePolyXml(o, ParmConstants.polyxmlLocation);
+				}
+			}			
+			returnValue = zipXmlFile(files);
+		}
+		else{
+			// Sjekker om zipfilen eksisterer, hvis den gjør det så må jeg ikke overskrive med tomme filer
+			File file = new File(ParmConstants.xmlLocation);
+			if(!file.exists()){
+				returnValue = writeEmptyParm("");
+				returnValue = writeEmptyPoly("");
+				
+				returnValue = zipXmlFile(files);
+			}
+		}
+		return returnValue;
+	}
+	
+	private int writer(Collection objects, String filepath){
+		if(objects!=null)
+			objects = extractObjects(objects);
+		
+		Document xmlDoc = getXMLDocument(filepath,filepath);
+		Element element = null;
+		
+		try {
+			// Må sjekke om det har root element
+			Element rootnd = xmlDoc.getDocumentElement();
+			if (rootnd == null) {
+				rootnd = (Element) xmlDoc.createElement("parmroot");
+				rootnd.setAttribute("l_timestamp",rootTimestamp);
+				xmlDoc.appendChild(rootnd);
+			}
+			else
+				rootnd.setAttribute("l_timestamp",rootTimestamp);
+
+			Iterator it = objects.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				if (o.getClass().equals(CategoryVO.class)) {
+					CategoryVO category = (CategoryVO)o;
+
+					// Må sjekke om et element med samme pk eksisterer
+					element = checkXMLElement(xmlDoc,strCategory,strCategoryPK, category);
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+						element = (Element) xmlDoc.createElement(strCategory);
+					
+					rootnd.appendChild(element);
+					element.setAttribute("l_categorypk", category.getCategoryPK());
+					element.setAttribute("sz_name", category.getName());
+					element.setAttribute("sz_description", category.getDescription());
+					element.setAttribute("sz_fileext", category.getFileext());
+					element.setAttribute("l_timestamp", category.getTimestamp());
+					element = null;
+				} else if (o.getClass().equals(ObjectVO.class)) {
+					ObjectVO object = (ObjectVO)o;
+//					 Må sjekke om et element med samme pk eksisterer
+					element = checkXMLElement(xmlDoc,strObject,strObjectPK, object);
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+						element = (Element) xmlDoc.createElement(strObject);
+					
+					rootnd.appendChild(element);
+					
+					element.setAttribute("l_objectpk", object.getObjectPK());
+					element.setAttribute("l_deptpk", object.getDeptPK());
+					element.setAttribute("l_importpk", object.getImportPK());
+					element.setAttribute("sz_name", object.getName());
+					element.setAttribute("sz_description", object.getDescription());
+					element.setAttribute("l_categorypk", object.getCategoryPK());
+					element.setAttribute("l_parent", object.getParent());
+					element.setAttribute("sz_address", object.getAddress());
+					element.setAttribute("sz_postno", object.getPostno());
+					element.setAttribute("sz_place", object.getPlace());
+					element.setAttribute("sz_phone", object.getPhone());
+					element.setAttribute("sz_metadata", object.getMetadata());
+					element.setAttribute("l_timestamp", object.getTimestamp());
+					String isObjectFolder = "0";
+					if(object.isObjectFolder())
+						isObjectFolder = "1";
+					element.setAttribute("f_isobjectfolder", isObjectFolder);
+					if(object.getOperation() != null)
+						element.setAttribute("sz_operation", object.getOperation());
+					element = null;
+				} else if (o.getClass().equals(EventVO.class)) {
+					EventVO event = (EventVO)o;
+//					 Må sjekke om et element med samme pk eksisterer
+					element = checkXMLElement(xmlDoc,strEvent,strEventPK, event);
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+						element = (Element) xmlDoc.createElement(strEvent);
+					
+					rootnd.appendChild(element);				
+					element.setAttribute("l_eventpk", event.getEventPk());
+					element.setAttribute("l_parent", event.getParentpk());
+					element.setAttribute("sz_name", event.getName());
+					element.setAttribute("sz_description", event.getDescription());
+					element.setAttribute("l_categorypk", event.getCategorypk());
+					element.setAttribute("l_timestamp", event.getTimestamp());
+					if(event.getOperation() != null)
+						element.setAttribute("sz_operation", event.getOperation());
+					element = null;
+				} else if (o.getClass().equals(AlertVO.class)) {
+					AlertVO alert = (AlertVO)o;
+					// Må sjekke om et element med samme pk eksisterer
+					element = checkXMLElement(xmlDoc,strAlert,strAlertPK, alert);
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+						element = (Element) xmlDoc.createElement(strAlert);
+					rootnd.appendChild(element);
+					// Legger til elementer
+//					 Må sjekke om det er temppk som blir lagt inn eller vanlig (temppk har ikke bokstav foran)
+					element.setAttribute("l_alertpk", alert.getAlertpk());
+					element.setAttribute("l_parent", alert.getParent());
+					element.setAttribute("sz_name", alert.getName());
+					element.setAttribute("sz_description", alert.getDescription());
+					element.setAttribute("l_profilepk", String.valueOf(alert.getProfilepk()));
+					element.setAttribute("l_schedpk", String.valueOf(alert.getSchedpk()));
+					element.setAttribute("sz_oadc", alert.getOadc());
+					element.setAttribute("l_addresstypes", String.valueOf(alert.getAddresstypes()));
+					element.setAttribute("l_timestamp", alert.getTimestamp());
+					element.setAttribute("l_validity", String.valueOf(alert.getValidity()));
+					if(alert.getOperation() != null)
+						element.setAttribute("sz_operation", alert.getOperation());
+					element = null;
+				}
+			}
+			
+			writeXMLFile(xmlDoc,filepath);
+			
+		} catch (Exception e) {
+			returnValue = -1;
+			System.out.println("Feilmelding: " + e.getMessage());
+		}
+		return returnValue;
+	}
+
+	public int updateXml(String pk, String temppk, String timestamp){
+		
+		returnValue = 0;
+		
+		Document xmlDoc = getXMLDocument(ParmConstants.xmlLocation,ParmConstants.xmlLocation);
+		// Dette brukes til zipingen
+		String[] files = new String[2];
+		files[0] = ParmConstants.xmlLocation;
+		files[1] = ParmConstants.polyxmlLocation;
+		
+		//Jeg finner ut hvilket objekt det er også kan jeg gå gjennom hele xmlfilen og bytte ut
+		Element element = null;
+		Element rootnd = xmlDoc.getDocumentElement();
+		if (rootnd == null) {
+			rootnd = (Element) xmlDoc.createElement("parmroot");
+			rootnd.setAttribute("l_timestamp",rootTimestamp);
+			xmlDoc.appendChild(rootnd);
+		}
+		else
+			rootnd.setAttribute("l_timestamp",rootTimestamp);
+		
+		NodeList nl = rootnd.getElementsByTagName("paobject");
+		
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
+		for(int i=0;i<nl.getLength() ;i++){
+			
+			element = (Element)nl.item(i);	
+			// Dette kan egentlig ikke skje...
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+				element = (Element) xmlDoc.createElement(strObject);
+			
+			//rootnd.appendChild(element);
+			// Denne kan ha temppk
+			if((element.getAttribute("l_objectpk")).compareTo(temppk) == 0) {
+				element.setAttribute("l_objectpk", pk);
+				element.setAttribute("l_timestamp", timestamp);						
+			}
+			
+			// Denne kan ha temppk
+			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
+				element.setAttribute("l_parent", pk);
+			
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			if(element.hasAttribute("sz_operation")){
+				String temp = element.getAttribute("sz_operation");
+				// Hvis den skal slettes
+				if(temp.compareTo("delete") == 0)
+					rootnd.removeChild(element);
+				element.removeAttribute("sz_operation");
+			}
+		}
+		
+		nl = rootnd.getElementsByTagName("paevent");
+		
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
+		for(int i=0;i<nl.getLength() ;i++){
+			element = (Element)nl.item(i);
+			// Dette kan egentlig ikke skje...
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+				element = (Element) xmlDoc.createElement(strEvent);
+			
+			//rootnd.appendChild(element);
+			
+			// Denne kan ha temppk
+			if((element.getAttribute("l_eventpk")).compareTo(temppk) == 0){
+				element.setAttribute("l_eventpk", pk);
+				element.setAttribute("l_timestamp", timestamp);
+			}
+			
+			// Denne kan ha temppk
+			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
+				element.setAttribute("l_parent", pk);
+			
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			if(element.hasAttribute("sz_operation")){
+				String temp = element.getAttribute("sz_operation");
+				// Hvis den skal slettes
+				if(temp.compareTo("delete") == 0)
+					rootnd.removeChild(element);
+				element.removeAttribute("sz_operation");
+			}
+		}
+		
+		nl = rootnd.getElementsByTagName("paalert");
+		
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
+		for(int i=0;i<nl.getLength() ;i++){
+
+			element = (Element)nl.item(i);
+			// Dette kan egentlig ikke skje...
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+				element = (Element) xmlDoc.createElement(strAlert);
+
+			// Denne kan ha temppk
+			if((element.getAttribute("l_alertpk")).compareTo(temppk) == 0){
+				element.setAttribute("l_alertpk", pk);
+				element.setAttribute("l_timestamp", timestamp);
+			}
+			// Denne kan ha temppk
+			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
+				element.setAttribute("l_parent", pk);
+				
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			if(element.hasAttribute("sz_operation")){
+				String temp = element.getAttribute("sz_operation");
+				// Hvis den skal slettes
+				if(temp.compareTo("delete") == 0)
+					rootnd.removeChild(element);
+				element.removeAttribute("sz_operation");
+			}
+		}
+		writeXMLFile(xmlDoc,ParmConstants.xmlLocation);
+		zipXmlFile(files);
+		return returnValue;
+	}
+	
+	public int updatePolyXml(String pk, String temppk) {
+		returnValue = 0;
+		
+		Document xmlDoc = getXMLDocument(ParmConstants.polyxmlLocation,ParmConstants.xmlLocation);
+		// Dette brukes til zipingen
+		String[] files = new String[2];
+		files[0] = ParmConstants.xmlLocation;
+		files[1] = ParmConstants.polyxmlLocation;
+		
+		//Jeg finner ut hvilket objekt det er også kan jeg gå gjennom hele xmlfilen og bytte ut
+		Element element = null;
+		Element rootnd = xmlDoc.getDocumentElement();
+		if (rootnd == null) {
+			rootnd = (Element) xmlDoc.createElement("polyroot");
+		}
+		
+		NodeList nl = rootnd.getElementsByTagName("objectpolygon");
+		
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
+		for(int i=0;i<nl.getLength() ;i++){
+			
+			element = (Element)nl.item(i);	
+	
+			//rootnd.appendChild(element);
+			// Denne kan ha temppk
+			if((element.getAttribute("l_objectpk")).equals(temppk)) {
+				element.setAttribute("l_objectpk", pk);						
+			}
+			
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			if(element.hasAttribute("sz_operation")){
+				String temp = element.getAttribute("sz_operation");
+				// Hvis den skal slettes
+				if(temp.compareTo("delete") == 0)
+					rootnd.removeChild(element);
+				element.removeAttribute("sz_operation");
+			}
+		}
+		
+		nl = rootnd.getElementsByTagName("alertpolygon");
+		
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
+		for(int i=0;i<nl.getLength() ;i++){
+
+			element = (Element)nl.item(i);
+
+			// Denne kan ha temppk
+			if((element.getAttribute("l_alertpk")).equals(temppk))
+				element.setAttribute("l_alertpk", pk);
+				
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			if(element.hasAttribute("sz_operation")){
+				String temp = element.getAttribute("sz_operation");
+				// Hvis den skal slettes
+				if(temp.compareTo("delete") == 0)
+					rootnd.removeChild(element);
+				element.removeAttribute("sz_operation");
+			}
+		}
+		writeXMLFile(xmlDoc,ParmConstants.xmlLocation);
+		zipXmlFile(files);
+		return returnValue;
+	}
+
+	private int writePolyXml(Object obj, String filepath){
+		String objectPK = null;
+		String objectPolygon = null;
+		ObjectVO object = null;
+		AlertVO alert = null;
+		PolygonStruct poly = null;
+		boolean remove = false;
+		Color color = null;
+		
+		if (obj.getClass().equals(ObjectVO.class)) {
+			objectPK = ParmConstants.xmlElmObjectPk;
+			objectPolygon = ParmConstants.xmlElmObjectPoly;
+			object = (ObjectVO) obj;
+		}
+		else if (obj.getClass().equals(AlertVO.class)) {
+			objectPK = ParmConstants.xmlElmAlertPk;
+			objectPolygon = ParmConstants.xmlElmAlertPoly;
+			alert = (AlertVO)obj;
+		}
+		
+		// Document xmlDoc = getXMLDocument(parm.constants.Constants.polyxmlLocation);
+		Document xmlDoc = null;
+		Element element = null;
+		
+		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÅtte fjerne denne fordi den fant en zipfil(katastrofe)
+		xmlDoc = getXMLDocument(filepath,filepath);
+						
+		// Må sjekke om det har root element
+		Element rootnd = xmlDoc.getDocumentElement();
+		if (rootnd == null) {
+			rootnd = (Element) xmlDoc.createElement("polyroot");
+			xmlDoc.appendChild(rootnd);
+		}
+		
+		// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
+		// Her må jeg sjekke om det er alert eller object
+		if(object == null){
+			element = checkXMLElement(xmlDoc,objectPolygon,objectPK,alert);
+			poly = alert.getM_polygon();
+			if(alert.getOperation()!=null && alert.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
+				if(poly!=null){
+					rootnd.removeChild(element);
+					remove = true;
+				}
+			}
+		}
+		else if(alert == null){
+			element = checkXMLElement(xmlDoc,objectPolygon,objectPK,object);
+			poly = object.getM_polygon();
+			if(object.getOperation()!=null && object.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
+				if(poly!=null){
+					rootnd.removeChild(element);
+					remove = true;
+				}
+			}
+		}
+		
+		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
+		if(!remove && poly != null && poly.get_coors_lat().size()>0){ // Den siste biten la jeg til for at den ikke skulle skrive bare farger i polyxml
+			if(element == null && poly!=null){ // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+				element = (Element) xmlDoc.createElement(objectPolygon);
+				rootnd.appendChild(element);
+			}
+			if(element != null){
+				// Hvis den har childnodes må disse slettes for å legge inn koordinatene på nytt
+				if(element.hasChildNodes())
+					while(element.getLastChild()!= null)
+						element.removeChild(element.getLastChild());
+				
+				if(object == null){
+					element.setAttribute(objectPK, alert.getAlertpk());
+					if(alert.getOperation()!=null)
+						element.setAttribute("sz_operation",alert.getOperation());
+					else
+						element.removeAttribute("sz_operation");
+				}
+				else if(alert == null){
+					element.setAttribute(objectPK, object.getObjectPK());
+					if(object.getOperation()!=null)
+						element.setAttribute("sz_operation",object.getOperation());
+					else
+						element.removeAttribute("sz_operation");
+				}
+				
+				if(poly != null)
+					color = poly.get_fill_color();
+				
+				if(color!=null){
+					element.setAttribute("col_r",Integer.toString(color.getRed()));
+					element.setAttribute("col_g",Integer.toString(color.getGreen()));
+					element.setAttribute("col_b",Integer.toString(color.getBlue()));
+					element.setAttribute("col_a",Integer.toString(color.getAlpha()));
+				}
+				else {
+					element.setAttribute("col_r","0");
+					element.setAttribute("col_g","0");
+					element.setAttribute("col_b","0");
+					element.setAttribute("col_a","51");
+				}
+				if(poly != null){
+					// Må hente ut liste med koordinater
+					for(int i=0;i<poly.get_coors_lat().size();i++){
+						Element ChildElement = (Element) xmlDoc.createElement("polypoint");
+						element.appendChild(ChildElement);
+						ChildElement.setAttribute("xcord", Double.toString(poly.get_coor_lon(i)));
+						ChildElement.setAttribute("ycord", Double.toString(poly.get_coor_lat(i)));
+					}
+				}
+			}
+		}
+		writeXMLFile(xmlDoc,filepath);
+		return returnValue;
+	}
+	
+	// Denne gjør jobbem som checkXMLFile gjorde
+	private Document getXMLDocument(String filepath, String xmlpath) {
+		Document xmlDoc = null;
+		DocumentBuilder db = null;
+		DocumentBuilderFactory dbf = null;
+		InputStream is = null;
+		File xmlfile = null;
+		File unzipedFile = null;
+		String strTemp = null;
+		// Et skikkelig tjuvtrix for å få det til å funke, for den må ikke finne zip filen når den skal skrive temppolyxml
+		if(filepath.equals(ParmConstants.polyxmlLocation))
+			xmlfile = new File(ParmConstants.xmlLocation);
+		else if(filepath.contains("polyxml"))
+			xmlfile = new File(filepath.substring(0,filepath.indexOf(".zip")) + ".xml"); //Denne må til pga det elendige trixet mitt over
+		else
+			xmlfile = new File(filepath);
+				
+		// Bruker dette for å gjøre ha noe å hente den riktige xml filen ut fra zip filen
+		int index = xmlpath.indexOf(".zip");
+		strTemp = xmlpath.substring(xmlpath.lastIndexOf("\\")+1,index) + ".xml";
+		
+		// Den må ikke pakke ut zipfilen for hver gang, sjekker om xmlfilen eksisterer
+		index = filepath.indexOf(".zip");
+		String strTemp2 = filepath.substring(filepath.lastIndexOf("\\")+1,index) + ".xml";
+		unzipedFile = new File(strTemp2);
+		
+		
+		
+		if(xmlfile.exists()){
+			try{
+				// Her sjekker jeg om xmlfilen er pakket ut, hvis ikke pakkes den ut
+				if(unzipedFile.exists())
+					is = new FileInputStream(unzipedFile);
+				else{
+					ZipFile zipfile = new ZipFile(xmlfile);
+					Enumeration en = zipfile.entries();
+					while(en.hasMoreElements()){
+						ZipEntry entry = (ZipEntry)en.nextElement();
+							if(entry.getName().compareTo(strTemp) == 0){
+							is = zipfile.getInputStream(entry);
+						}
+					}
+				}
+				dbf = DocumentBuilderFactory.newInstance();
+				dbf.setNamespaceAware(true);
+				db = dbf.newDocumentBuilder();
+				xmlDoc = db.parse(is);
+			}
+			catch(ZipException ze){
+				System.out.println("XMLWriter - getXMLDocument: ZipException - " + ze.getMessage());
+			}
+			catch(IOException ioe){
+				System.out.println("XMLWriter - getXMLDocument: IOException - " + ioe.getMessage());
+			}
+			catch(ParserConfigurationException pce){
+				System.out.println("XMLWriter - getXMLDocument: ParserConfigurationException - " + pce.getMessage());
+			}
+			catch(SAXException saxe){
+				System.out.println("XMLWriter - getXMLDocument: SAXException - " + saxe.getMessage());
+			}
+		}
+		else {
+			if (xmlDoc == null) {
+				try {
+					dbf = DocumentBuilderFactory.newInstance();
+					db = dbf.newDocumentBuilder();
+					xmlDoc = db.newDocument();
+				} catch (ParserConfigurationException pce) {
+					returnValue = -1;
+					System.out.println("Feil i checkXMLFile: ParserConfigurationException-->" + pce.getMessage());
+				}
+			}
+		}
+		
+		return xmlDoc;
+	}
+	
+	// Sjekker om elementet eksisterer
+	private Element checkXMLElement(Document xmlDoc, String tag, String pk, Object o){
+		String objPk = "-1";
+		Element element = null;
+		
+		if (o.getClass().equals(CategoryVO.class)) {
+			CategoryVO cat = (CategoryVO)o;
+			objPk = cat.getCategoryPK();
+			cat = null;
+		}else if (o.getClass().equals(ObjectVO.class)) {
+			ObjectVO obj = (ObjectVO)o;
+			objPk = obj.getObjectPK();
+			obj = null;
+		}else if (o.getClass().equals(EventVO.class)) {
+			EventVO event = (EventVO)o;
+			objPk = event.getEventPk();
+			event = null;
+		}else if (o.getClass().equals(AlertVO.class)) {
+			AlertVO alert = (AlertVO)o;
+			objPk = alert.getAlertpk();
+			alert = null;
+		}
+		// Henter ut elementene med denne tag'en
+		NodeList nl = xmlDoc.getElementsByTagName(tag);
+		if(nl.getLength() > 0) {
+			int i=0;
+			while(i < nl.getLength()){
+				element = (Element)nl.item(i);
+				//System.out.println("if(" + Integer.parseInt(element.getAttribute(pk)) + " != " + objPk + ")");
+				if(element.getAttribute(pk).compareTo(objPk) == 0)
+					break; // Hvis den kommer inn her så eksisterer elementet fra før med samme pk
+				element = null;
+				i++;
+			}
+		}
+		return element;
+	}
+
+	// Trekker ut objektene og gjør klar til lagring
+	public Collection extractObjects(Collection objectList){
+		Iterator it = objectList.iterator();
+		ArrayList list = new ArrayList();
+		
+		while(it.hasNext()){
+			Object o = it.next();
+			test(o,list);
+		}
+		
+		return list;
+	}
+	
+	// ObjectVO har jo en arraylist med objekter som også kan være av typen ObjectVO
+//	 ObjectVO har jo en arraylist med objekter som også kan være av typen ObjectVO
+	private void test(Object o, ArrayList list){	
+
+		if(o.getClass().equals(ObjectVO.class)){
+			ObjectVO oo = (ObjectVO)o;
+			list.add(oo);
+			Iterator it = oo.getList().iterator();
+			
+			while(it.hasNext()){
+				Object obj = it.next();
+				if(obj.getClass().equals(ObjectVO.class)){
+					test((ObjectVO)obj, list); // Må sende til seg selv for å komme til neste objekt
+				}
+				else if(obj.getClass().equals(EventVO.class)){ // Nå har jeg kommet til kanten
+					EventVO event = (EventVO)obj;
+					if(event.getAlertListe() != null){
+						Iterator eventIt = event.getAlertListe().iterator();
+						while(eventIt.hasNext()){
+							AlertVO alert = (AlertVO)eventIt.next();
+							list.add(alert);
+						}
+					}
+					list.add(event);
+				}
+			}
+		}
+		else if(o.getClass().equals(EventVO.class)){
+			EventVO event = (EventVO)o;
+			
+			if (event.getAlertListe() != null){
+				Iterator eventIt = event.getAlertListe().iterator();
+				while(eventIt.hasNext()){
+					AlertVO alert = (AlertVO)eventIt.next();
+					list.add(alert);
+				}
+			}
+			list.add(event);
+		}	
+		else
+			list.add(o);
+	}
+	// Sånn i tilfelle
+	/*private void test(Object o, ArrayList list){	
+
+		if(o.getClass().equals(ObjectVO.class)){
+			ObjectVO oo = (ObjectVO)o;
+			list.add(oo);
+			Iterator it = oo.getList().iterator();
+			
+			while(it.hasNext()){
+				Object obj = it.next();
+				if(obj.getClass().equals(ObjectVO.class)){
+					test((ObjectVO)obj, list); // Må sende til seg selv for å komme til neste objekt
+				}
+				else if(obj.getClass().equals(EventVO.class)){ // Nå har jeg kommet til kanten
+					EventVO event = (EventVO)obj;
+					Iterator eventIt = event.getAlertListe().iterator();
+					while(eventIt.hasNext()){
+						AlertVO alert = (AlertVO)eventIt.next();
+						list.add(alert);
+					}
+					list.add(event);
+				}
+			}
+		}
+		else if(o.getClass().equals(EventVO.class)){
+			EventVO event = (EventVO)o;
+			Iterator eventIt = event.getAlertListe().iterator();
+			while(eventIt.hasNext()){
+				AlertVO alert = (AlertVO)eventIt.next();
+				list.add(alert);
+			}
+			list.add(event);
+		}
+		else
+			list.add(o);
+	}*/
+	// Må ha en metode som sletter objekt fra xmlfilen public int deleteObject(Object o, int pk);
+	public Object deleteObject(Object o){
+		
+		// Må få lagt inn
+		ArrayList list = new ArrayList();
+		list.add(o);
+		list = (ArrayList)extractObjects(list);
+		Iterator it = list.iterator();
+		
+		Document xmlDoc = getXMLDocument(XMLFilePath,XMLFilePath);
+		Element element = null;
+
+		while(it.hasNext()) {
+			o = it.next();
+			try {
+				// Må sjekke om det har root element
+				Element rootnd = xmlDoc.getDocumentElement();
+				if (rootnd == null) {
+					rootnd = (Element) xmlDoc.createElement("parmroot");
+					xmlDoc.appendChild(rootnd);
+				}
+				
+				if (o.getClass().equals(ObjectVO.class)) {
+					// Slett object!
+					//ObjectVO object = (ObjectVO)o;
+					element = checkXMLElement(xmlDoc,strObject,strObjectPK,o);
+					if(element != null)
+						rootnd.removeChild(element);
+					
+				}else if (o.getClass().equals(EventVO.class)) {
+					// Slett event
+					//EventVO event = (EventVO)o;
+					element = checkXMLElement(xmlDoc,strEvent,strEventPK,o);
+					if(element != null)
+						rootnd.removeChild(element);
+					
+				}else if (o.getClass().equals(AlertVO.class)) {
+					// Slett alert
+					//AlertVO alert = (AlertVO)o;
+					element = checkXMLElement(xmlDoc,strAlert,strAlertPK,o);
+					if(element != null)
+						rootnd.removeChild(element);
+					
+				}else if(o.getClass().equals(CategoryVO.class)) {
+					// Denne skal egentlig ikke kunne slettes
+				}
+			}	
+			catch(Exception e){
+				System.out.println("XMLWriter: " + e.getMessage());
+			}	
+		}
+		
+		writeXMLFile(xmlDoc,XMLFilePath);
+		
+		return null;
+	}
+	
+	private void writeXMLFile(Document xmlDoc, String filepath){
+		final int BUFFER = 2048;
+		ZipEntry entry = null;
+		String[] zipedFiles = new String[2]; // Holder på filepath + navnet på filene i zipfilen
+		int entryCount = 0; // Tar vare på hvor mange filer som ligger i zipfilen
+		
+		try {
+			if(filepath.indexOf("tempxml") == -1 && filepath.indexOf("polyxml") == -1){
+				File zipfile = new File(filepath);
+				if(zipfile.exists()){
+					FileInputStream fis = new FileInputStream(filepath);
+					ZipInputStream zin = new ZipInputStream(new BufferedInputStream(fis));
+					
+					while((entry = zin.getNextEntry()) != null){
+						//Pakker ut filene
+						zipedFiles[entryCount] = filepath.substring(0,filepath.lastIndexOf("\\")) + "\\" + entry.getName();
+						FileOutputStream fos = new FileOutputStream(zipedFiles[entryCount]);
+						BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+						int count;
+						byte data[] = new byte[BUFFER];
+						while ((count = zin.read(data, 0, BUFFER)) != -1) {
+						   //System.out.write(x);
+						   dest.write(data, 0, count);
+						}
+						dest.flush();
+						dest.close();
+						entryCount++;
+					}
+					zin.close();
+				}
+			}
+			else {
+				// Dette må til for å unngå så mye dobbelkoding ved skriving av tempxml.zip
+				zipedFiles[entryCount] = filepath.substring(0,filepath.indexOf(".zip")) + ".xml";
+				entryCount++;
+			}
+			// Her skriver jeg xmlfilen, må gjøre det for at jeg skal kunne legge den i zipfilen
+			// Trenger denne for å få skrevet ut filen
+			TransformerFactory tf = TransformerFactory.newInstance();
+			// set all necessary features for your transformer -> see OutputKeys
+			Transformer t = tf.newTransformer();
+			int index = filepath.indexOf(".zip");
+			File file = new File(filepath.substring(0,index) + ".xml");
+			// Må gjøre det slik for at den skal klare å lukke filen etterpå (som igjen gjør at filen kan slettes)
+			OutputStream os = new FileOutputStream(file);
+			
+			//FileOutputStream result = new FileOutputStream(file);
+			StreamResult result = new StreamResult(os);
+			t.transform(new DOMSource(xmlDoc), result);
+
+			t = null;
+			tf = null;
+			result = null;
+			os.close();
+			
+			// Her begynner zipingen
+			/*BufferedInputStream origin = null;
+			FileOutputStream dest = null;
+			
+			if(filepath.indexOf("tempxml") == -1)
+				dest = new FileOutputStream(ParmConstants.xmlLoacation); // zip filen
+			else
+				dest = new FileOutputStream(filepath); // zip filen
+			
+			ZipOutputStream outzip = new ZipOutputStream(new BufferedOutputStream(dest));
+			outzip.setMethod(ZipOutputStream.DEFLATED); //Betyr at den komprimerer
+			
+			byte data[] = new byte[BUFFER];
+			
+			String entryName;
+			// Her henter jeg opp igjen og legger inn filene som jeg unzipet tidligere
+			for(int i=0;i<entryCount;i++){
+				entryName = zipedFiles[i].substring(zipedFiles[i].lastIndexOf("\\")+1); // Hva entry'en skal hete
+				FileInputStream in = new FileInputStream(zipedFiles[i]);
+				origin = new BufferedInputStream(in,BUFFER);
+				entry = new ZipEntry(entryName);
+				outzip.putNextEntry(entry);
+				// Overfører data til zipfilen
+	            int count;
+	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+	                outzip.write(data, 0, count);
+	            }
+	            origin.close();
+			}*/
+			// Overfører data til zipfilen
+            /*int count;
+            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                outzip.write(data, 0, count);
+            }*/
+            /*
+			outzip.close();
+            dest.close();
+            
+            if(returnValue == 0)
+            	for(int i=0;i<entryCount;i++){
+            		file = new File(zipedFiles[i]);
+            		if(!file.delete())
+                		returnValue = -1;
+    			}
+			*/
+		}
+		catch(TransformerConfigurationException tce){
+			System.out.println("XMLWriter: TransformerConfigurationException --> " + tce.getMessage());
+			returnValue = -1;
+		}
+		catch(TransformerException te){
+			System.out.println("XMLWriter: TransformerException --> " + te.getMessage());
+			returnValue = -1;
+		}
+		catch(FileNotFoundException fnfe){
+			System.out.println("XMLWriter: FileNotFoundException --> " + fnfe.getMessage());
+			returnValue = -1;
+		}
+		catch(IOException ioe){
+			System.out.print("XmlWriter: IOException --> " + ioe.getMessage());
+			returnValue = -1;
+		}
+		catch(Exception e){
+			System.out.println("XmlWriter: Exception --> " + e.getMessage());
+			returnValue = -1;
+		}
+	}
+	public void setRootTimestamp(String timestamp){
+		rootTimestamp = timestamp;
+	}
+	
+	private int zipXmlFile(String[] files){
+		final int BUFFER = 2048;
+		ZipEntry entry = null;
+		File file = null;
+		String destination = null;
+		
+		try {
+			// Her begynner zipingen
+			BufferedInputStream origin = null;
+			FileOutputStream dest = null;
+			
+			/*
+			for(int i=0;i<files.length;i++){
+				if(files[i].indexOf("tempxml") == -1)
+					destination = files[1]; // zip filen
+				else
+					destination = files[0]; // zip filen
+			}*/
+			
+			dest = new FileOutputStream(files[0]);
+			
+			ZipOutputStream outzip = new ZipOutputStream(new BufferedOutputStream(dest));
+			outzip.setMethod(ZipOutputStream.DEFLATED); //Betyr at den komprimerer
+			
+			byte data[] = new byte[BUFFER];
+			
+			String entryName;
+			// Her henter jeg opp igjen og legger inn filene som jeg unzipet tidligere
+			for(int i=0;i<files.length;i++){
+				entryName = files[i].substring(files[i].lastIndexOf("\\")+1); // Hva entry'en skal hete
+				entryName = entryName.substring(0,entryName.lastIndexOf(".zip")) + ".xml";
+				FileInputStream in = new FileInputStream(files[i].substring(0,files[i].lastIndexOf(".zip")) + ".xml");
+				origin = new BufferedInputStream(in,BUFFER);
+				entry = new ZipEntry(entryName);
+				outzip.putNextEntry(entry);
+				// Overfører data til zipfilen
+	            int count;
+	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+	                outzip.write(data, 0, count);
+	            }
+	            origin.close();
+			}
+			
+	        outzip.close();
+	        dest.close();
+	        
+	        if(returnValue == 0)
+	        	for(int i=0;i<files.length;i++){
+	        		file = new File(files[i].substring(0,files[i].lastIndexOf(".zip"))+ ".xml");
+	        		if(!file.delete())
+	            		returnValue = -1;
+				}
+		}
+		catch(ZipException ze){
+			System.out.println("XMLWriter: ZipException --> " + ze.getMessage());
+			returnValue = -1;
+		}
+		catch(FileNotFoundException fe){
+			System.out.println("XMLWriter: zipXmlFile -->" + fe.getMessage());
+		}
+		catch(IOException ioe){
+			System.out.print("XmlWriter: IOException --> " + ioe.getMessage());
+			returnValue = -1;
+		}
+		return returnValue;
+	}
+	
+	public boolean deleteZip(String filepath){
+		File zipfile = new File(filepath);
+		return zipfile.delete();
+	}
+	
+	public static void main(String[] args) {
+		ArrayList list = new ArrayList();
+		/*list.add(new AlertVO("1000",-1,"Kåsen skofabrikk","Produserer kamelsko",-1,-1,"+4790000000",3,-1,"20060216124323"));
+		list.add(new AlertVO("1001",-1,"Jens","Produserer jens",-1,-1,"+4790000000",3,-1,"20060216124323"));
+		list.add(new AlertVO("1000",-1,"Kåsen skofabrikk","Produserer kamelsko med tilbehør og ting",-1,-1,"+4790000000",3,-1,"20060216124323"));
+		list.add(new EventVO(1003,1004,"Snøskred","Snø som raser ned siden av et fjell",null,null,-1,"20060216220503"));
+		list.add(new ObjectVO(1004,1,-1,"Mount evrest","Høyt fjell",null,1003,-1,"Himalaya veien 1","99999","Nepal","+9999999999","Rols",
+				"20060217150122",false,null));*/
+		/*
+		ObjectVO obj = new ObjectVO("1004","1","-1","Mount evrest","Høyt fjell",null,"3000","-1","Himalaya veien 1","99999","Nepal","+9999999999","Rols",
+				"20060217150122",false,new ArrayList());
+		EventVO event3 = new EventVO("1009","1004","Snøstorm","Blåser mye","-1","20060216220503");
+		AlertVO alert3 = new AlertVO("1010","1009","Varsle fjellklatrere","Varsle fjellklatrere om snøstorm",-1,-1,"+4790000000",3,-1,"20060216124323",null);
+		ObjectVO obj2 = new ObjectVO("1005","1","-1","Mount evrest sør","Sørsiden",null,"3000","1004","tull","99999","Nepal","+9999999999","Rols",
+				"20060217150122",false,new ArrayList());
+		EventVO event = new EventVO("1003","1005","Snøskred","Snø som raser ned siden av et fjell","-1","20060216220503");
+		AlertVO alert = new AlertVO("1000","1003","Kåsen skofabrikk","Produserer kamelsko med tilbehør og ting",-1,-1,"+4790000000",3,-1,"20060216124323",null);
+		
+		event.addAlerts(alert);
+		obj2.addEvents(event);
+		obj.addObjects(obj2);
+		event3.addAlerts(alert3);
+		obj.addEvents(event3);
+		
+		list.add(obj);
+		
+		ObjectVO obj3 = new ObjectVO("1006","1","-1","Megaen","På Ålgård",null,"3000","-1","Ålgård","99999","Norge","+9999999999","Fjols",
+				"20060217150122",false,new ArrayList());
+		EventVO event2 = new EventVO("1007","1006","Brann","Varmt og godt...eller kanskje ikke godt, men ihvertfall varmt","-1","20060216220503");
+		AlertVO alert2 = new AlertVO("1008","1007","Varsle brann","Må varsle om brann",-1,-1,"+4790000000",3,-1,"20060216124323",null);
+		event2.addAlerts(alert2);
+		obj3.addEvents(event2);
+		list.add(obj3);
+		*/
+
+		
+		//System.out.println(xml.writeXml(list));
+		//System.out.println(xml.writeTempXml(new ArrayList(), "c:\\1234tempxml1.zip"));
+		//System.out.println(xml.updateXml("1", obj3.getObjectPK(), "4004040404004"));
+		//xml.deleteObject(obj3);
+		XmlWriter xml = new XmlWriter();
+		xml.writeTempXml(null,"c:\\workspace\\PJ501Running\\182323tempxml43.zip");
+		}
+}

@@ -1,0 +1,179 @@
+package parm.xml;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import parm.constants.ParmConstants;
+import parm.main.MainController;
+import parm.voobjects.AlertVO;
+import parm.voobjects.ObjectVO;
+import Maps.Defines.PolygonStruct;
+
+public class XmlPolyReader {
+	private Document doc;
+
+	//private MapPanel map;
+	private MainController main;
+	
+	//private Navigation navigation;
+	
+	private ArrayList arrayObjects;
+	
+	private ArrayList updatedObjectList;
+
+	private ArrayList arrayAlerts;
+	
+	private ArrayList updatedAlertList;
+
+	private String pk, xCor, yCor;
+
+	private NodeList listOfPoly;
+
+	private PolygonStruct poly;
+
+	private int col_r, col_g, col_b, col_a;
+
+	private Color col;
+
+	private Element elPolyObject;
+	
+	public XmlPolyReader(){}
+	
+	public XmlPolyReader(Document doc, MainController main) {
+		this.doc = doc;
+		this.main = main;
+		this.arrayAlerts = null;
+		this.arrayObjects = null;
+		this.updatedAlertList = null;
+		this.updatedObjectList = null;
+	}
+	public void readPolyObject(ArrayList arrayObjects) {
+		// TODO Auto-generated method stub
+		this.arrayObjects = arrayObjects;
+		this.updatedObjectList = new ArrayList();
+		
+		this.listOfPoly = doc
+				.getElementsByTagName(ParmConstants.xmlElmObjectPoly);
+
+		if (listOfPoly.getLength() > 0) {
+			for (int a = 0; a < listOfPoly.getLength(); a++) {
+				poly = new PolygonStruct(main.getMapNavigation(), main.getMapSize()); //new Navigation(map, 1024, 768), new Dimension(1024, 768));
+				Node nPolyObject = listOfPoly.item(a);
+
+				if (nPolyObject.getNodeType() == Node.ELEMENT_NODE
+						&& this.arrayObjects != null) {
+
+					elPolyObject = (Element) nPolyObject;
+					pk = elPolyObject
+							.getAttribute(ParmConstants.xmlElmObjectPk);
+
+					ObjectVO o = getObject(pk);
+					if (o != null) {
+						this.setPolyCoor(nPolyObject);
+						o.setM_polygon(poly);
+						this.updatedObjectList.add(o);
+					}
+				}
+			}
+		}
+	}
+	public void readPolyAlert(ArrayList arrayAlerts) {
+		// TODO Auto-generated method stub
+		this.arrayAlerts = arrayAlerts;
+		this.updatedAlertList = new ArrayList();
+		this.listOfPoly = doc
+				.getElementsByTagName(ParmConstants.xmlElmAlertPoly);
+
+		if (listOfPoly.getLength() > 0) {
+
+			for (int a = 0; a < listOfPoly.getLength(); a++) {
+				poly = new PolygonStruct(main.getMapNavigation(), main.getMapSize()); //new Navigation(map, 1024, 768), new Dimension(1024, 768));
+				Node nPolyObject = listOfPoly.item(a);
+
+				if (nPolyObject.getNodeType() == Node.ELEMENT_NODE
+						&& this.arrayAlerts != null) {
+
+					elPolyObject = (Element) nPolyObject;
+					pk = elPolyObject.getAttribute(ParmConstants.xmlElmAlertPk);
+					
+
+					AlertVO o = getAlert(pk);
+					if (o != null) {
+						this.setPolyCoor(nPolyObject);
+						o.setM_polygon(poly);
+						this.updatedAlertList.add(o);
+					}
+				}
+			}
+		}
+
+	}
+	private ObjectVO getObject(String pk) {
+		// TODO Auto-generated method stub
+		ObjectVO o = null;
+		for (int b = 0; b < this.arrayObjects.size(); b++) {
+			o = (ObjectVO) arrayObjects.get(b);
+			if (o.getObjectPK().compareTo(pk) == 0)
+				break;
+			else{
+				o = null;
+			}
+		}
+		return o;
+	}
+	private AlertVO getAlert(String pk) {
+		AlertVO ao = null;
+		for (int a = 0; a < this.arrayAlerts.size(); a++) {
+			ao = (AlertVO) arrayAlerts.get(a);
+			if (ao.getAlertpk().compareTo(pk) == 0)
+				break;
+			else
+				ao = null;
+		}
+		return ao;
+	}
+	private void setPolyCoor(Node node) {
+		if (elPolyObject.hasAttribute("col_r")
+				&& elPolyObject.hasAttribute("col_g")
+				&& elPolyObject.hasAttribute("col_b")
+				&& elPolyObject.hasAttribute("col_a")) {
+			col_r = Integer.parseInt(elPolyObject
+					.getAttribute("col_r"));
+			col_g = Integer.parseInt(elPolyObject
+					.getAttribute("col_g"));
+			col_b = Integer.parseInt(elPolyObject
+					.getAttribute("col_b"));
+			col_a = Integer.parseInt(elPolyObject
+					.getAttribute("col_a"));
+			col = new Color(col_r, col_g, col_b, col_a);
+			// Goes through every object in objectlist and adds
+			// polycoordinates
+			poly.set_fill_color(col);
+		}
+		Element el = (Element)node;
+		NodeList listOfPolyPoints = el
+				.getElementsByTagName("polypoint");
+		for (int b = 0; b < listOfPolyPoints.getLength(); b++) {
+			Node nPoint = listOfPolyPoints.item(b);
+			if (nPoint.getNodeType() == Node.ELEMENT_NODE) {
+				Element elPolyPoint = (Element) nPoint;
+				xCor = elPolyPoint.getAttribute("xcord");
+				yCor = elPolyPoint.getAttribute("ycord");
+			}
+			poly.add_coor(new Double(Double.parseDouble(xCor)), new Double(
+					Double.parseDouble(yCor)));
+		}
+	}
+	public Collection getUpdatedList(){
+		Collection updatedList = new ArrayList();
+		updatedList.addAll(this.updatedObjectList);
+		updatedList.addAll(this.updatedAlertList);
+		return updatedList;
+	}
+}

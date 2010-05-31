@@ -1,0 +1,107 @@
+package no.ums.pas.core.ws;
+
+import java.awt.event.*;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
+
+import no.ums.pas.PAS;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.ums.errorhandling.*;
+import no.ums.ws.pas.*;
+
+
+
+public class WSWeatherReport extends WSThread
+{	
+	String action;
+	UWeatherSearch params;
+	UWeatherReportResults results;
+	public void setParams(UWeatherSearch w) { params = w; }
+	public UWeatherReportResults getResults() { return results; }
+	public UWeatherResult getResult(int n)
+	{
+		try
+		{
+			return getResults().getResults().getUWeatherResult().get(0);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+
+	public WSWeatherReport(ActionListener callback, String act, UWeatherSearch params)
+	{
+		super(callback);
+		this.action = act;
+		this.params = params;
+		//start();
+	}
+	
+	public static String getWindIcon(float f) {
+		if(f > 337.5 || f <= 22.5)
+			return "N.gif";
+		else if(f > 22.5 && f <= 67.5)
+			return "NE.gif";
+		else if(f > 67.5 && f <= 112.5)
+			return "E.gif";
+		else if(f > 112.5 && f <= 157.5)
+			return "SE.gif";
+		else if(f > 157.5 && f <= 202.5)
+			return "S.gif";
+		else if(f > 202.5 && f <= 247.5)
+			return "SW.gif";
+		else if(f > 247.5 && f <= 292.5)
+			return "W.gif";
+		else if(f > 292.5 && f <= 337.5)
+			return "NW.gif";
+		else
+			return null;
+	}
+
+
+	@Override
+	public void OnDownloadFinished() {
+		if(m_callback!=null && results!=null)
+			m_callback.actionPerformed(new ActionEvent(results, ActionEvent.ACTION_PERFORMED, action));
+	}
+	
+	@Override
+	public void run()
+	{
+		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
+		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
+		logon.setLComppk(ui.get_comppk());
+		logon.setLDeptpk(ui.get_current_department().get_deptpk());
+		logon.setLUserpk(Long.parseLong(ui.get_userpk()));
+		logon.setSzCompid(ui.get_compid());
+		logon.setSzDeptid(ui.get_current_department().get_deptid());
+		logon.setSzUserid(ui.get_userid());
+		logon.setSzPassword(ui.get_passwd());
+		logon.setSzStdcc(ui.get_current_department().get_stdcc());
+		java.net.URL wsdl;
+		try
+		{	
+			wsdl = new java.net.URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL"); 
+			//wsdl = new java.net.URL("http://localhost/WS/PAS.asmx?WSDL"); 
+			QName service = new QName("http://ums.no/ws/pas/", "pasws");
+			
+			
+			results = new Pasws(wsdl, service).getPaswsSoap12().getWeatherReport(logon, params);
+
+		}
+		catch(Exception e)
+		{
+			//Error.getError().addError("Error", "An error occured when downloading weather report", e, 1);
+			System.out.println(e.getMessage());
+		}
+		finally
+		{
+			OnDownloadFinished();
+		}
+		
+	}
+}

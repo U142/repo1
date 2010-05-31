@@ -1,0 +1,180 @@
+package no.ums.pas.maps.defines;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.ImageLoader;
+
+
+public abstract class ShapeStruct extends Object implements Cloneable {
+	
+	public static final int SHAPE_UNKNOWN = -1;
+	public static final int SHAPE_ELLIPSE = 0;
+	public static final int SHAPE_POLYGON = 1;
+	public static final int SHAPE_GISIMPORT = 2;
+	public static final int SHAPE_MUNICIPAL = 9;
+
+	protected boolean m_b_hidden = false;
+	protected double m_f_area_sqm = 0;
+	protected double get_area_sqm()
+	{
+		return m_f_area_sqm;
+	}
+	protected abstract void calc_area_sqm();
+	public void setHidden(boolean b)
+	{
+		m_b_hidden = b;
+	}
+	public boolean isHidden()
+	{
+		return m_b_hidden;
+	}
+	public int numParts = 0;
+	public List<Integer> parts = new ArrayList<Integer>();
+	public int combination_id = -1;
+
+	protected NavStruct m_bounds = new NavStruct();
+	protected MapPointLL m_center = new MapPointLL(0,0);
+	protected MapPointPix m_center_pix = new MapPointPix(0, 0);
+	public void SetBounds(double lbo, double rbo, double ubo, double bbo)
+	{
+		m_bounds._lbo = lbo;
+		m_bounds._rbo = rbo;
+		m_bounds._bbo = bbo;
+		m_bounds._ubo = ubo;
+		m_center.setLon((rbo - lbo)/2);
+		m_center.setLat((ubo - bbo)/2);
+	} 
+	
+	public String toString()
+	{
+		return new Integer(shapeID).toString();
+	}
+	public int shapeID = 0;
+	public String shapeName = "";
+	private ImageIcon m_icon_epicentre;
+	private MapPoint m_p_epicentre = null;
+	public MapPoint get_epicentre() { return m_p_epicentre; }
+	public void set_epicentre(MapPoint p) { m_p_epicentre = p; }
+	protected void draw_epicentre(Graphics g) {
+		if(get_epicentre()!=null) {
+			g.drawImage(m_icon_epicentre.getImage(), get_epicentre().get_x(), get_epicentre().get_y(), m_icon_epicentre.getIconWidth(), m_icon_epicentre.getIconHeight(), null);
+		}
+	}
+	/** mark as finished to prepare bounds*/
+	protected void finalize()
+	{
+		try
+		{
+			calc_area_sqm();
+			calc_bounds();
+			calc_coortopix(no.ums.pas.PAS.get_pas().get_navigation());
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
+	
+	protected void calc_epicentre_coortopix(Navigation n) {
+		if(get_epicentre()!=null) {
+			get_epicentre().recalc_pix(n);
+		}
+	}
+	
+	public abstract boolean pointInsideShape(MapPointLL ll);
+	
+	public abstract NavStruct getFullBBox();
+	
+	public int getType() {
+		if(this.getClass().equals(PolygonStruct.class)) {
+			return SHAPE_POLYGON;
+		}
+		else if(this.getClass().equals(EllipseStruct.class)) {
+			return SHAPE_ELLIPSE;
+		}
+		else if(this.getClass().equals(UnknownShape.class)) {
+			return SHAPE_UNKNOWN;
+		}
+		else if(this.getClass().equals(GISShape.class)) {
+			return SHAPE_GISIMPORT;
+		}
+		else if(this.getClass().equals(MunicipalStruct.class)) {
+			return SHAPE_MUNICIPAL;
+		}
+		return SHAPE_UNKNOWN;
+	}
+	
+	protected Color m_fill_color;
+	protected Color m_border_color;
+	public PolygonStruct typecast_polygon() { return (PolygonStruct)this; }
+	public EllipseStruct typecast_ellipse() { return (EllipseStruct)this; }
+	public MunicipalStruct typecast_municipal() { return (MunicipalStruct)this; }
+	public GISShape typecast_gis() { return (GISShape)this; }
+	public TasStruct typecast_tas() { return (TasStruct)this; }
+
+	public ShapeStruct() {
+		m_icon_epicentre = ImageLoader.load_icon("epicentre_pinpoint.png");
+	}
+	public Color get_border_color() { return m_border_color; }
+	public void set_border_color(Color col) { m_border_color = col; }
+	public abstract boolean can_lock();
+	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p);
+	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, 
+						Point p, boolean b_border, boolean b_fill, int pensize, boolean bPaintShapeName);
+	public abstract NavStruct calc_bounds();
+	public abstract PolySnapStruct snap_to_point(Point p1, int n_max_distance, boolean b_current,
+			Dimension dim_map, Navigation nav);
+	public abstract void calc_coortopix(Navigation n);
+	public abstract Object clone() throws CloneNotSupportedException;
+	
+	public Color get_fill_color() { return m_fill_color; }
+	public void set_fill_color(Color col) { 
+		//m_fill_color = new Color((float)col.getRed(), (float)col.getGreen(), (float)col.getRed(), (float)0.2);
+		try {
+			float[] comp = new float[3];
+			comp = col.getRGBColorComponents(comp);
+			m_fill_color = new Color(comp[0], comp[1], comp[2], (float)0.2);
+			create_texpaint(6);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			Error.getError().addError("ShapeStruct","Exception in set_fill_color",e,1);
+		}
+	}
+	
+
+	BufferedImage m_buff_image = null;
+	TexturePaint m_tex_paint = null;
+	public BufferedImage skravering(int h, Rectangle rek, Color col1, Color col2) {
+		BufferedImage buf=new BufferedImage(h,h,BufferedImage.TYPE_INT_ARGB);
+		Graphics2D gg = buf.createGraphics();
+		gg.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
+		gg.setColor(col2); 
+		gg.fill(rek);
+		gg.setColor(col1);
+		gg.drawLine(0,0,h-1,h-1);
+		gg.drawLine(h-1,0,0,h-1);
+		return buf; 
+	}	
+	
+	
+	protected void create_texpaint(int h) {
+		Rectangle rek = new Rectangle(0, 0, h, h);
+		m_buff_image = skravering(h, rek, get_fill_color(), new Color(0.0f, 0.0f, 0.0f, 0.0f));
+		m_tex_paint = new TexturePaint(m_buff_image,rek);
+	}
+
+}

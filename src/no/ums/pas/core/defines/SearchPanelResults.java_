@@ -1,0 +1,523 @@
+package Core.Defines;
+
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.*;
+import javax.swing.*;
+import java.io.*;
+import javax.swing.JFileChooser;
+
+public abstract class SearchPanelResults extends JPanel 
+{
+	private GridLayout	m_gridlayout;
+	public JTable m_tbl;
+	public TableList m_tbl_list;
+	private AdressTblListener m_listener;
+	private JScrollPane scrollPane;
+	//public ImageIcon m_icon_goto;
+	private boolean [] m_b_editable;
+	public JScrollPane get_scrollpane() { return scrollPane; }
+	TableSorter sorter;
+	public TableSorter get_tablesorter() {
+    	return sorter;
+    }
+	
+	public SearchPanelResults(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension panelDimension, int model)
+	{
+	        super(new GridLayout(1,0));
+	        m_tbl_list = new TableList(sz_columns, n_width);
+			sorter = new TableSorter(m_tbl_list);
+	        
+	        m_tbl = new JTable(sorter);
+			sorter.setTableHeader(m_tbl.getTableHeader());
+	        m_b_editable = b_editable;
+        	m_tbl.setSelectionMode(model);
+        	m_tbl.setCellSelectionEnabled(true);
+        	m_tbl.setRowSelectionAllowed(true);
+        	m_tbl.setColumnSelectionAllowed(true);
+        	
+
+	        setBounds(0,0,panelDimension.width, panelDimension.height);
+	        m_tbl.setPreferredScrollableViewportSize(panelDimension); //new Dimension(800, 200));
+	        //Create the scroll pane and add the table to it.
+	        scrollPane = new JScrollPane(m_tbl);
+	        //Add the scroll pane to this panel.
+	        add(scrollPane);
+	        m_tbl_list.initialize();
+	        
+	        m_listener = new AdressTblListener();
+        	TableColumnModel colSM = m_tbl.getColumnModel();
+        	colSM.addColumnModelListener(m_listener);
+	        ListSelectionModel rowSM = m_tbl.getSelectionModel();
+	        rowSM.addListSelectionListener(m_listener);
+	        colSM.setColumnSelectionAllowed(true);
+	        m_tbl.addMouseListener(m_listener);
+			m_tbl.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			
+			/*final JTableHeader tableHeader = m_tbl.getTableHeader();
+			tableHeader.addMouseListener( new MouseAdapter() {
+			  public void mouseClicked(MouseEvent e) {
+			    int x = e.getX();
+			    int y = e.getY();
+			    int columnIndex = tableHeader.columnAtPoint( new Point(x,y) );
+			    sort( columnIndex );
+			  }
+			} );*/
+	        
+	}
+	public void set_columnnames(String [] sz_columns) {
+    	m_tbl_list.columnNames = sz_columns;
+    	m_tbl_list.fireTableStructureChanged();
+    	sorter.fireTableStructureChanged();
+	}
+	/*public SearchPanelResults(String [] sz_columns, Integer [] n_width, Boolean [] b_editable, Dimension dim, int n_model) {
+		//this(sz_columns, width, editable, dim, n_model);
+	}*/
+
+	//HTTPReq get_http() { return new HTTPReq(get_pas()); }/*return get_pas().get_httpreq(); }*/
+	//public HTTPReq get_http() { return get_pas().get_httpreq(); }
+
+	public TableList get_tablelist() { return m_tbl_list; }
+	public JTable get_table() { return m_tbl; }
+	//ImageIcon get_icon_goto() { return m_icon_goto; }
+	
+	protected abstract void start_search();
+	
+	protected abstract void onMouseLClick(int n_row, int n_col, Object [] rowcontent, Point p);
+	protected abstract void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p);
+	protected abstract void onMouseRClick(int n_row, int n_col, Object [] rowcontent, Point p);
+	protected abstract void onMouseRDblClick(int n_row, int n_col, Object [] rowcontent, Point p);
+	protected abstract void valuesChanged();
+	public void sort(int n_col) {
+		System.out.println("sort by column " + n_col);
+	}
+	
+	void prepare_controls()
+	{
+		
+	}
+	void add_controls()
+	{
+		
+	}	
+	void init()
+	{
+	}
+	public void insert_row(Object [] data, int n_index)
+	{
+		get_tablelist().insert_row(data, n_index);
+	}
+	public void insert_component_row(Object [] data, int n_index) {
+		get_tablelist().insert_component_row(data, n_index);
+	}
+	void edit_row(Object [] data, int n_index) {
+		
+	}
+	public void clear()
+	{
+		get_tablelist().clear();
+		//this.repaint();
+	}
+    public void set_custom_cellrenderer(TableColumn column, int n_col)
+    {
+    	
+    }
+    public int find(int n_column, int n_value) {
+    	for(int i=0; i < m_tbl_list.getRowCount(); i++) {
+    		int n_temp = -1;
+    		try {
+    			n_temp = new Integer((String)m_tbl_list.getValueAt(i, n_column)).intValue();
+    		} catch(Exception e) {
+    			
+    		}
+    		if(n_temp == n_value) {
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
+    public int find(Object o, int n_col, Class expect) {
+    	for(int i=0; i < m_tbl_list.getRowCount(); i++) {
+    		try {
+    			if(expect.cast(o).equals(expect.cast(m_tbl_list.getValueAt(i, n_col)))) 
+    				return i;
+    		} catch(Exception e) {
+    			System.out.println(e.getMessage());
+    			e.printStackTrace();
+    		}
+    	}
+    	return -1;
+    }
+    public boolean delete_row(Object o, int n_objcol, Class expect) {
+    	try {
+    		//m_tbl.remove(find(o, n_objcol));
+    		int i = find(o, n_objcol, expect);
+    		if(i >= 0) {
+	    		//m_tbl_list.m_data[i].clear();
+            	/*for(int x=0; x < m_tbl_list.m_data[i].size(); x++)
+            	{
+            		//m_data[x].add(idx, data[x]);
+            		m_tbl_list.m_data[x].set(i, "");
+            	}*/
+            	for(int x=0; x < m_tbl_list.m_data.length; x++)
+            	{
+            		//sorter.setValueAt(null, i, x);
+            		//m_data[x].add(idx, data[x]);
+            		try {
+	            		((ArrayList)m_tbl_list.m_data[x]).remove(i);
+	            		m_tbl_list.fireTableRowsDeleted(i, i);
+            		} catch(Exception e) {
+            			System.out.println(e.getMessage());
+            			e.printStackTrace();
+            		}
+            	}
+
+    			//sorter.fireTableRowsDeleted(i, i);
+	    		sorter.fireTableDataChanged();
+	    		//m_tbl_list.fireTableRowsDeleted(i, i);
+	    		m_tbl_list.fireTableDataChanged();
+    		}
+    		return true;
+    	} catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		e.printStackTrace();
+    	}
+    	return false;
+    }
+	public boolean is_cell_editable(int col) {
+    	if(m_b_editable==null)
+        	return false;
+    	else
+    		return m_b_editable[col];
+	}
+    public abstract boolean is_cell_editable(int row, int col);
+	
+    
+    public void export(boolean b_headers) {
+    	String sz_path = exportFileSelect();
+    	if(sz_path!=null) {
+    		exportToFile(this.sorter, sz_path, b_headers);
+    	}
+    }
+	public void exportToFile(TableSorter table, String filepath, boolean writeTableHeaders){
+		File exportFile = new File(filepath);
+		try {
+			FileWriter f = new FileWriter(exportFile);
+			BufferedWriter b = new BufferedWriter(f);
+			PrintWriter p = new PrintWriter(b);
+			
+			if(writeTableHeaders){
+				for(int i=0;i<table.getColumnCount();i++) {
+					if(table.getColumnClass(i).equals(javax.swing.ImageIcon.class))
+						p.print("IMG\t");
+					else
+						p.print(table.getColumnName(i) + "\t");
+				}
+				p.print("\n");
+			}
+			for(int i=0;i<table.getRowCount();i++){
+				for(int j=0;j<table.getColumnCount();j++) {
+					if(table.getColumnClass(j).equals(javax.swing.ImageIcon.class))
+						p.print("img\t");
+					else
+						p.print(table.getValueAt(i,j).toString() + "\t");
+					
+				}
+				p.print("\n");
+			}
+			p.close();
+			b.close();
+			f.close();
+			exportFile = null;
+		}
+		catch(IOException ioe){
+			ioe.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public String exportFileSelect() {
+		JFileChooser fchExportLocation = new JFileChooser();
+		if(fchExportLocation.showDialog(this, "Save")==JFileChooser.APPROVE_OPTION)
+			return fchExportLocation.getSelectedFile().toString();
+		return null;
+	}
+	
+	
+	public class AdressTblListener implements ListSelectionListener, TableColumnModelListener, MouseListener
+	{
+		int m_n_selectedindex = -1;
+		int m_n_selectedcolumn = -1;
+		Component m_current_component = null;
+	
+		public void valueChanged(ListSelectionEvent e)
+		{
+			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			if (lsm.isSelectionEmpty()) {
+				m_n_selectedindex = -1;
+			}
+			else
+			{
+		        //set_rowbgcolor(java.awt.Color.WHITE);
+				m_n_selectedindex = lsm.getMinSelectionIndex();
+	        	//ListSelectionModel lsm = jt.getSelectionModel();
+	        	//lsm.setSelectionInterval(0, m_n_selectedindex);
+				
+		        //set_rowbgcolor(java.awt.Color.LIGHT_GRAY);
+		        
+				//lsm.clearSelection();
+				m_tbl.getColumnModel().getSelectionModel().setSelectionInterval(0, m_tbl.getColumnCount()-1);
+			}
+		}
+		public void columnAdded(TableColumnModelEvent e) { }
+		public void columnMarginChanged(ChangeEvent e) { }
+		public void columnMoved(TableColumnModelEvent e) { }
+		public void columnRemoved(TableColumnModelEvent e) { }
+		public synchronized void columnSelectionChanged(ListSelectionEvent e) {
+			//m_n_selectedcolumn = e.getLastIndex();
+			//TableColumnModel tcm = (TableColumnModel)e.getSource();
+			//tcm.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			//tcm.getSelectionModel().addSelectionInterval(0, m_tbl.getColumnCount()-1);
+			//PAS.get_pas().add_event("columnSelectionChanged " + e.getFirstIndex() + " / " + e.getLastIndex());
+		}
+		
+		public synchronized void mousePressed(java.awt.event.MouseEvent e) { }
+		public synchronized void mouseReleased(java.awt.event.MouseEvent e) { }
+		public synchronized void mouseExited(java.awt.event.MouseEvent e) { }	
+		public synchronized void mouseEntered(java.awt.event.MouseEvent e) { 
+			//get_pas().add_event("Mouse entered");
+		}	
+		public void select(MouseEvent e) {
+			//JTable theList = (JTable)e.getSource();
+			//theList.getro
+			/*JList theList = (JList) e.getSource();
+			if (theList.getSelectedIndex() == -1) {
+				int index = theList.locationToIndex(e.getPoint());
+				if (index == -1)
+					return;
+				else
+					theList.setSelectedIndex(index);
+			} else {
+				//if ( theList.locationToIndex(e.getPoint()) !=  theList.getSelectedIndex())
+				//	return;
+				m_n_selectedindex = theList.getSelectedIndex();
+			}*/
+		}
+	    public void setSelected(int index, int colidx) {
+	    	if(index != m_n_selectedindex) {
+		        //m_tbl.changeSelection(index,-1,false,false);
+		        m_n_selectedindex = index;
+	    	}
+	    	if(colidx != m_n_selectedcolumn) {
+	    		m_n_selectedcolumn = colidx;
+	    	}
+	    	//m_tbl.setRowSelectionInterval(0,m_n_selectedindex);
+	    	//m_tbl.setColumnSelectionInterval(0, m_tbl.getColumnCount());
+	    	//m_tbl.changeSelection(m_n_selectedindex, -1, true, true);
+	    }
+	    public void set_rowbgcolor(java.awt.Color col) {
+	        if(m_n_selectedindex>=0) {
+	        	/*for(int i=0; i < m_tbl.getColumnCount(); i++) {
+	        		m_tbl.getCellRenderer(m_n_selectedindex, i).getTableCellRendererComponent()
+	        	}*/
+	        	
+	        }	
+	    }
+
+		public synchronized void mouseClicked(java.awt.event.MouseEvent e)
+		{
+			int idx = m_tbl.rowAtPoint(e.getPoint());
+			int idxcol = m_tbl.columnAtPoint(e.getPoint());
+			setSelected(idx, idxcol);
+
+			switch(e.getButton())
+			{
+				case MouseEvent.BUTTON1:
+					if(e.getClickCount()==1)
+					{
+						if(m_n_selectedindex>=0) {
+							//PAS.get_pas().add_event("mouseClicked " + m_n_selectedcolumn);
+							onMouseLClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+					}
+					else if(e.getClickCount()==2) //double click
+					{
+						if(m_n_selectedindex>=0)
+						{
+							select(e);
+							onMouseLDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));	
+						}
+					}
+					break;
+				case MouseEvent.BUTTON3:
+					if(e.getClickCount()==1)
+					{
+						if(m_n_selectedindex>=0) {
+							//m_tbl.getComponentAt(e.getX(), e.getY())
+							onMouseRClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+						
+					}
+					else if(e.getClickCount()==2)
+					{
+						if(m_n_selectedindex>=0) {
+							onMouseRDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
+						}
+					}
+					break;
+			}
+			if(m_n_selectedindex>=0) {
+				//m_tbl.setColumnSelectionInterval(0, m_tbl.getColumnCount()-1);
+			}
+		}	
+	}
+	
+	public class TableList extends AbstractTableModel
+	{
+		int m_n_columns;
+		
+		TableList(String [] sz_columns, int [] n_width)
+		{
+			m_n_columns = sz_columns.length;
+			m_data = new ArrayList[m_n_columns];
+			for(int i=0; i < m_n_columns; i++)
+			{
+				m_data[i] = new ArrayList();
+			}
+			columnNames = sz_columns;
+			columnWidth = n_width;
+		}
+        private String[] columnNames;
+        private int[] columnWidth;
+        private ArrayList[] m_data;
+	
+        
+		public void initialize()
+		{
+			TableColumn column = null;
+			for (int i = 0; i < m_n_columns; i++) {
+			    column = m_tbl.getColumnModel().getColumn(i);
+			    column.setPreferredWidth(columnWidth[i]);
+		    	set_custom_cellrenderer(column,  i);
+			    	//column.setCellRenderer(new TblCellColor());
+			    
+			}		
+			
+		}
+        public void insert_row(Object[] data, int n_index)
+        {
+        	int idx;
+        	if(n_index>=0)
+        		idx = n_index;
+        	else
+        		idx = m_data[0].size();
+        	for(int i=0; i < data.length; i++)
+        	{
+        		m_data[i].add(idx, data[i]);
+        	}
+        	fireTableDataChanged();
+        }
+        public void insert_component_row(Object[] data, int n_index) {
+        	int idx;
+        	if(n_index>=0)
+        		idx = n_index;
+        	else
+        		idx = m_data[0].size();
+        	for(int i=0; i < data.length; i++)
+        	{
+        		m_data[i].add(idx, new javax.swing.JLabel(data[i].toString()));
+        	}
+        	fireTableDataChanged();
+        }
+        
+        public void clear()
+        {
+        	int n_rows = this.getRowCount();
+/*        	for(int i=0; i < m_n_columns; i++)
+        	{
+        		m_data[i].clear();
+        	}	*/
+        	
+        	/*for(int i=0; i < m_data.length; i++)
+        	{
+        		m_data[i].clear();
+        	}*/
+        	int i;
+        	for(i=0; i < this.getRowCount(); i++) {
+        		m_data[i].clear();
+        	}
+        	//this.
+        	//if(i > 0)
+        	//	this.fireTableRowsDeleted(0, n_rows-1);
+        	//fireTableCellUpdated(0, 0);
+        	//fireTableDataChanged();
+        	fireTableDataChanged();
+        }
+        
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return m_data[0].size();
+        }
+
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+        	try {
+        		//return sorter.getValueAt(row, col);
+        		return m_data[col].get(row);
+        	} catch(Exception e) { 
+        		return null; 
+        	}
+        }
+        public Object [] getRowContent(int row) {
+        	Object [] ret = new Object[m_n_columns];//new String[m_n_columns];
+        	for(int i=0; i < m_n_columns; i++)
+        	{
+        		try {
+        			ret[i] = getValueAt(row, i);//.toString();
+        		}
+        		catch(Exception e) {
+        			ret[i] = null;
+        		}
+        	}
+        	return ret;
+        }
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+        public boolean isCellEditable(int row, int col) {
+        	return is_cell_editable(row, col);
+        }
+        public void setValueAt(Object value, int row, int col) {
+            //data[row][col] = value;
+            m_data[col].set(row, value);
+            fireTableCellUpdated(row, col);
+
+        }
+        public void fireTableDataChanged() {
+        	valuesChanged();
+        	super.fireTableDataChanged();
+        	//sorter.fireTableDataChanged();
+        }
+	
+	}
+}
+
