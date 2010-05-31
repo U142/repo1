@@ -114,14 +114,14 @@ namespace com.ums.UmsFile
      */
     public class AdrfileGUIWriter : AdrfileWriter
     {
-        public AdrfileGUIWriter(long l_refno)
+        public AdrfileGUIWriter(long l_refno) : base(1)
         {
             n_refno = l_refno;
             n_resend_refno = -1;
             this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("{0}.adr", l_refno));
             openUTF8();
         }
-        public AdrfileGUIWriter(long l_refno, long l_from_resend_refno)
+        public AdrfileGUIWriter(long l_refno, long l_from_resend_refno) : base(1)
         {
             n_refno = l_refno;
             n_resend_refno = l_from_resend_refno;
@@ -175,7 +175,7 @@ namespace com.ums.UmsFile
     public class AdrfileLBAWriter : AdrfileWriter
     {
         SENDCHANNEL m_channel;
-        public AdrfileLBAWriter(String sz_projectpk, long l_refno, bool b_utf8, SENDCHANNEL channel)
+        public AdrfileLBAWriter(String sz_projectpk, long l_refno, bool b_utf8, SENDCHANNEL channel) : base(1)
         {
             m_channel = channel;
             n_refno = l_refno;
@@ -272,7 +272,7 @@ namespace com.ums.UmsFile
     public class ConfirmLBAWriter : AdrfileWriter
     {
         String sz_jobid = "";
-        public ConfirmLBAWriter(int refno, String jobid)
+        public ConfirmLBAWriter(int refno, String jobid) : base(1)
         {
             n_refno = refno;
             sz_jobid = jobid;
@@ -313,9 +313,9 @@ namespace com.ums.UmsFile
     */
     public class TASResendWriter : AdrfileWriter
     {
-        public TASResendWriter (long l_refno, char sendingtype) {
+        public TASResendWriter (long l_refno, char sendingtype, long n_priority) : base(n_priority) {
             n_refno = l_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_bcp, String.Format("pri1-{0}{1}.{2}", sendingtype, l_refno, "res"));
+            this.file = new UFile(UCommon.UPATHS.sz_path_bcp, String.Format("pri{0}-{1}{2}.{3}", n_priority, sendingtype, l_refno, "res"));
             open();
         }
         public virtual bool publish()
@@ -355,17 +355,22 @@ namespace com.ums.UmsFile
         protected StreamWriter sw;
         protected long n_refno;
         protected long n_resend_refno;
+        protected long n_priority; //pri to BCP
         public long getRefno() { return n_refno; }
 
-
-        protected AdrfileWriter()
+        /*protected AdrfileWriter()
         {
-
+            this.n_priority = 1;
+        }*/
+        protected AdrfileWriter(long n_priority)
+        {
+            this.n_priority = n_priority;
         }
-        public AdrfileWriter(long l_refno, char sendingtype, bool b_resend)
+        public AdrfileWriter(long l_refno, char sendingtype, bool b_resend, long n_priority)
         {
             n_refno = l_refno;
-            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri1-{0}{1}.{2}", sendingtype, l_refno, (b_resend ? "res" : "adr")));
+            this.n_priority = n_priority;
+            this.file = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("pri{0}-{1}{2}.{3}", n_priority, sendingtype, l_refno, (b_resend ? "res" : "adr")));
             open();
         }
         public virtual bool delete()

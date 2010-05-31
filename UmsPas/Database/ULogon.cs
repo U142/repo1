@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
+using com.ums.UmsParm;
 using System.Data.Odbc;
 using System.Net;
 using System.IO;
@@ -301,11 +302,11 @@ namespace com.ums.PAS.Database
                                     "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
                                     "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
                                     "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
-                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language " +
-                                    "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
+                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language, SH.sz_xml sz_restriction_shape " +
+                                    "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP, PASHAPE SH " +
                                     "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
                                     "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
-                                    "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1",
+                                    "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1 AND BD.l_deptpk*=SH.l_pk",
                                     l.sz_userid, l.sz_password, l.sz_compid);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
 
@@ -432,6 +433,9 @@ namespace com.ums.PAS.Database
                         dept.sz_defaultnumber = rs["sz_defaultnumber"].ToString();
                         dept.f_map = Int32.Parse(rs["f_map"].ToString());
                         dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
+                        String xml = rs["sz_restriction_shape"].ToString();
+                        UShape restrictionshape = UShape.ParseFromXml(xml);
+                        dept.AddRestrictionShape(ref restrictionshape);
 
                         if (l_dept_houseeditor <= 0)
                             dept.l_houseeditor = 0;

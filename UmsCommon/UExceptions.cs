@@ -22,6 +22,14 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UXmlShapeException : UException
+    {
+        public UXmlShapeException(String s)
+            : base("Error parsing XML Shape. " + s)
+        {
+        }
+    }
+
     public class ULbaCellCoverageWmsServerNotRegisteredException : UException
     {
         public ULbaCellCoverageWmsServerNotRegisteredException(String sz_operator)

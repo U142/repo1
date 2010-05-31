@@ -144,6 +144,15 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public enum PASHAPETYPES : int
+    {
+        PAALERT = 1,
+        PAEVENT = 2,
+        PAOBJECT = 4,
+        PAUSERRESTRICTION = 8,
+        PADEPARTMENTRESTRICTION = 16,
+    }
+
     public static class Helpers
     {
         public static string CreateMD5Hash(string input)
@@ -533,88 +542,9 @@ namespace com.ums.UmsCommon
         }
     }
 
-    public class UPASLOGON
-    {
-        public bool f_granted;
-        public Int64 l_userpk;
-        public int l_comppk;
-        public String sz_userid;
-        public String sz_compid;
-        public String sz_name;
-        public String sz_surname;
-        public Int32 l_language;
-        public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
-        public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
-        public UPASUISETTINGS uisettings;
-    }
 
-    public class UPASUISETTINGS
-    {
-        public bool initialized = false;
-        public String sz_languageid;
-        public double f_mapinit_lbo;
-        public double f_mapinit_rbo;
-        public double f_mapinit_ubo;
-        public double f_mapinit_bbo;
-        public bool b_autostart_fleetcontrol;
-        public bool b_autostart_parm;
-        public bool b_window_fullscreen;
-        public int l_winpos_x;
-        public int l_winpos_y;
-        public int l_win_width;
-        public int l_win_height;
-        public int l_gis_max_for_details;
-        public String sz_skin_class;
-        public String sz_theme_class;
-        public String sz_watermark_class;
-        public String sz_buttonshaper_class;
-        public String sz_gradient_class;
-        public String sz_title_class;
-        public int l_mapserver;
-        public String sz_wms_site;
-        public String sz_wms_layers;
-        public String sz_wms_format;
-        public String sz_wms_username;
-        public String sz_wms_password;
-        public int l_drag_mode;
 
-        public String sz_email_name;
-        public String sz_email;
-        public String sz_emailserver;
-        public int l_mailport;
-        public int l_lba_update_percent;
-    }
 
-    public class UDEPARTMENT
-    {
-        public int l_deptpk;
-        public String sz_deptid;
-        public String sz_stdcc;
-        public float lbo, rbo, ubo, bbo;
-        public bool f_default;
-        public int l_deptpri;
-        public int l_maxalloc;
-        public String sz_userprofilename;
-        public String sz_userprofiledesc;
-        public int l_status;
-        public int l_newsending;
-        public int l_parm;
-        public int l_fleetcontrol;
-        public int l_lba;
-        public int l_houseeditor;
-        public long l_addresstypes;
-        public String sz_defaultnumber;
-        public int f_map;
-        public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
-        public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
-        public void AddMunicipal(String sz_id, String sz_name)
-        {
-            UMunicipalDef d = new UMunicipalDef();
-            d.sz_municipalid = sz_id;
-            d.sz_municipalname = sz_name;
-            municipals.Add(d);
-        }
-    }
 
     public class UNSLOOKUP
     {

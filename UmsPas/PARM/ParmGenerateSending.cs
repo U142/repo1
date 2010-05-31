@@ -1380,9 +1380,9 @@ namespace com.ums.UmsParm
                     lbasending.setActionProfile(ref profile);
 
                     if(b_voice_active)
-                        sending.setShape(ref pa.m_shape); //will also create a temp address file
+                        sending.setShape(ref pa.m_shape, logoninfo.l_deptpri); //will also create a temp address file
                     if(b_lba_active)
-                        lbasending.setShape(ref pa.m_shape);
+                        lbasending.setShape(ref pa.m_shape, logoninfo.l_deptpri);
 
                     if(b_voice_active)
                         b_publish_voice = true;
@@ -1445,7 +1445,7 @@ namespace com.ums.UmsParm
                         }
                     }
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
-                    smssending.setShape(ref pa.m_shape);
+                    smssending.setShape(ref pa.m_shape, logoninfo.l_deptpri);
                     //smssending.setRefno(db.newRefno(), ref project);
                     db.FillSendingInfo(ref logoninfo, ref pa, ref smssendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
                     smssending.setSendingInfo(ref smssendinginfo);
@@ -1522,8 +1522,16 @@ namespace com.ums.UmsParm
             /*
             if(typeof(UGIS).Equals(sending.m_shape.GetType()))
             {
-                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + sending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+                usesending = sending;
             }*/
+            else if (smssending != null && smssending.m_shape != null)
+            {
+                usesending = smssending;
+            }
+            if (usesending != null && typeof(UGIS).Equals(usesending.m_shape.GetType()))
+            {
+                setAlertInfo(true, "", 0, pa.l_alertpk, pa.sz_name, "Imported file: " + file.getShape().gis().GetLineCount() + " lines / " + usesending.m_shape.gis().GetInabitantCount() + " inhabitants", "", SYSLOG.ALERTINFO_SYSLOG_NONE);
+            }
             
             //send it
             if (b_publish_voice)
@@ -1776,7 +1784,7 @@ namespace com.ums.UmsParm
             bool b_publish_lba = false;
             try
             {
-                sending.setShape(ref pa.m_shape); //will also create a temp address file
+                sending.setShape(ref pa.m_shape, logoninfo.l_deptpri); //will also create a temp address file
                 b_publish_voice = true;
             }
             catch (Exception e)

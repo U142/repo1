@@ -691,6 +691,12 @@ namespace com.ums.ws.parm
 
         protected bool write_server_shape(ref PAOBJECT obj)
         {
+            /*TEMP - update department restriction*/
+            /*String outxml = "", md5 = "";
+            obj.m_shape.CreateXml(ref outxml, ref md5);
+            bool changed = false;
+            db.UpdatePAShape(m_logon.l_deptpk, outxml, PASHAPETYPES.PADEPARTMENTRESTRICTION, ref changed);
+            */
             //only polygons supported
             String szDbShapeString = "";
             String l_pk = "o" + obj.l_objectpk;
@@ -698,7 +704,8 @@ namespace com.ums.ws.parm
             StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
             bool b_ret = _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w, ref szDbShapeString);
             w.Close();
-            //db.UpdatePAShape(obj.l_objectpk, szDbShapeString);
+            bool bShapeChanged = false;
+            db.UpdatePAShape(obj.l_objectpk, szDbShapeString, PASHAPETYPES.PAOBJECT, ref bShapeChanged);
             return b_ret;
         }
 
@@ -864,12 +871,15 @@ namespace com.ums.ws.parm
             return true;
         }
 
-        protected bool _write_server_lbashape(ref PAALERT a, ref StreamWriter w, PARMOPERATION op, ref String szShapeString)
+        protected bool _write_server_lbashape(ref PAALERT a, ref StreamWriter w, PARMOPERATION op, ref String szShapeString, ref bool bUseLba)
         {
             try
             {
                 if (a.m_lba_shape == null)
+                {
+                    bUseLba = false;
                     return false;
+                }
                 //if ((a.n_sendingtype & UShape.SENDINGTYPE_POLYGON) == UShape.SENDINGTYPE_POLYGON ||
                 //    (a.n_sendingtype & UShape.SENDINGTYPE_ELLIPSE) == UShape.SENDINGTYPE_ELLIPSE)
                 {
@@ -877,7 +887,8 @@ namespace com.ums.ws.parm
                     {
                         ULocationBasedAlert lba = (ULocationBasedAlert)a.m_lba_shape;
                         _write_lba_server_part(ref lba, ref w, "cellbroadcast", "a" + a.l_alertpk.ToString(), "l_alertpk", ref szShapeString);
-                        _create_lba_file_for_server(op, ref a);
+                        bUseLba = true;
+                        //_create_lba_file_for_server(op, ref a);
                     }
                 }
                 //else
@@ -885,6 +896,7 @@ namespace com.ums.ws.parm
             }
             catch (Exception e)
             {
+                bUseLba = false;
                 throw e;
             }
             return true;
@@ -898,15 +910,22 @@ namespace com.ums.ws.parm
                 String l_pk = "a" + a.l_alertpk;
                 String nodetype = "Unknown";
                 String szShapeToDb = "";
-
+                bool bShapeChanged = false;
+                bool bUseLba = false;
 
                 if (typeof(UPolygon).Equals(a.m_shape.GetType()))
                 {
+                    /*TEMP - update department restriction
+                     * String outxml = "", md5 = "";
+                    a.m_shape.CreateXml(ref outxml, ref md5);
+                    bool changed = false;
+                    db.UpdatePAShape(m_logon.l_deptpk, outxml, PASHAPETYPES.PADEPARTMENTRESTRICTION, ref changed);*/
+
                     nodetype = "alertpolygon";
                     UPolygon poly = a.m_shape.poly();
                     StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
                     _write_server_shape(ref poly, l_pk, nodetype, ref w, ref szShapeToDb);
-                    _write_server_lbashape(ref a, ref w, op, ref szShapeToDb);
+                    _write_server_lbashape(ref a, ref w, op, ref szShapeToDb, ref bUseLba);
                     w.Close();
                 }
                 else if (typeof(UEllipse).Equals(a.m_shape.GetType()))
@@ -915,7 +934,7 @@ namespace com.ums.ws.parm
                     UEllipse ell = a.m_shape.ellipse();
                     StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
                     _write_server_shape(ref ell, l_pk, nodetype, ref w, ref szShapeToDb);
-                    _write_server_lbashape(ref a, ref w, op, ref szShapeToDb);
+                    _write_server_lbashape(ref a, ref w, op, ref szShapeToDb, ref bUseLba);
                     w.Close();
                 }
                 else if (typeof(UGeminiStreet).Equals(a.m_shape.GetType()))
@@ -931,6 +950,11 @@ namespace com.ums.ws.parm
                 }
                 else
                     throw new NotImplementedException();
+                db.UpdatePAShape(a.l_alertpk, szShapeToDb, PASHAPETYPES.PAALERT, ref bShapeChanged);
+                if (bShapeChanged && bUseLba)
+                {
+                    _create_lba_file_for_server(op, ref a);
+                }
             }
             catch (Exception e)
             {
@@ -1408,10 +1432,8 @@ namespace com.ums.ws.parm
         private int GetObjects()
         {
             int counter = 0;
-            //String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PAALERTSHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_alertpk",
-            //                               sz_timestamp, m_logon.l_deptpk);
-            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0) FROM PAOBJECT PO WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1}",
-                                           sz_timestamp, m_logon.l_deptpk);
+            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PASHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_pk AND SH.l_type={2}",
+                                           sz_timestamp, m_logon.l_deptpk, (int)PASHAPETYPES.PAOBJECT);
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -1457,6 +1479,14 @@ namespace com.ums.ws.parm
                     }
                     f_isobjectfolder = rs.GetString(12);
                     l_timestamp = rs.GetString(13);
+                    try
+                    {
+                        sz_shape_xml = rs.GetString(14);
+                    }
+                    catch (Exception)
+                    {
+                        sz_shape_xml = "";
+                    }
                    
                     
                     outxml.insertStartElement("paobject");
@@ -1474,8 +1504,10 @@ namespace com.ums.ws.parm
                     outxml.insertAttribute("sz_metadata", sz_metadata);
                     outxml.insertAttribute("f_isobjectfolder", f_isobjectfolder);
                     outxml.insertAttribute("l_timestamp", l_timestamp);
-                    
-                    WritePolygonToFile(l_objectpk, "paobject", ref outxml);
+                    if (sz_shape_xml.Trim().Length > 0)
+                        outxml.insertText(sz_shape_xml);
+                    else
+                        WritePolygonToFile(l_objectpk, "paobject", ref outxml);
                     outxml.insertEndElement();
                     counter++;
                     //WritePolygonToFile(l_objectpk, "paobject", ref outpolyxml);
@@ -1496,7 +1528,10 @@ namespace com.ums.ws.parm
             int counter = 0;
             int n_records = 1;
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
+            /*String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
+                                            sz_timestamp, m_logon.l_deptpk);*/
+            db.ExecNonQuery("set textsize 10000000");
+            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1), SH.sz_xml FROM PAALERT PA, PAEVENT PE, PAOBJECT PO, PASHAPE SH WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1} AND PA.l_alertpk*=SH.l_pk",
                                             sz_timestamp, m_logon.l_deptpk);
 
             String sz_sql_count = String.Format("SELECT count(*) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
@@ -1519,7 +1554,7 @@ namespace com.ums.ws.parm
                 String l_alertpk, l_parent, sz_name, sz_description, l_profilepk;
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
-                String l_expiry, sz_sms_oadc, sz_sms_message;
+                String l_expiry, sz_sms_oadc, sz_sms_message, sz_shape_xml;
                 int l_deptpk = 0;
 
                 while (rs.Read())
@@ -1563,6 +1598,24 @@ namespace com.ums.ws.parm
                     {
                         l_deptpk = m_logon.l_deptpk;
                     }
+                    try
+                    {
+                        sz_shape_xml = rs.GetString(18);
+                        //new UPolygon().ParseFromXml(sz_shape_xml);
+                    }
+                    catch (Exception)
+                    {
+                        sz_shape_xml = "";
+                    }
+                    if (sz_shape_xml.Length > 0)
+                    {
+                        try
+                        {
+                            UShape sh = UShape.ParseFromXml(sz_shape_xml);
+                        }
+                        catch (Exception)
+                        { }
+                    }
 
 
                     outxml.insertStartElement("paalert");
@@ -1602,8 +1655,14 @@ namespace com.ums.ws.parm
                         lba.Close();
                         outxml.insertEndElement(); //lbaoperators
                     }
-
-                    WritePolygonToFile(l_alertpk, "paalert", ref outxml);
+                    if (sz_shape_xml.Trim().Length > 0)
+                    {
+                        //byte [] utf8 = new UTF8Encoding().GetBytes(sz_shape_xml.ToCharArray());
+                        //sz_shape_xml = Encoding.GetEncoding("iso-8859-1").GetString(utf8);
+                        outxml.insertText(sz_shape_xml);
+                    }
+                    else
+                        WritePolygonToFile(l_alertpk, "paalert", ref outxml);
                     outxml.insertEndElement();//paalert
                     
                     counter++;
@@ -1953,6 +2012,7 @@ namespace com.ums.ws.parm
                             try
                             {
                                 _delete_server_shape_file("o", obj.l_objectpk.ToString());
+                                db.DeletePAShape(obj.l_objectpk, PASHAPETYPES.PAOBJECT);
                             }
                             catch (Exception) { }
                             break;
@@ -2029,6 +2089,7 @@ namespace com.ums.ws.parm
                         try
                         {
                             _delete_server_shape_file("a", a.l_alertpk.ToString());
+                            db.DeletePAShape(a.l_alertpk, PASHAPETYPES.PAALERT);
                         }
                         catch (Exception) { }
                     }

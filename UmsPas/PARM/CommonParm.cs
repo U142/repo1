@@ -5,6 +5,9 @@ using com.ums.UmsFile;
 using System.Collections.Generic;
 using System.Text;
 using com.ums.PAS.Database;
+using System.Xml;
+using System.Security.Cryptography;
+
 
 namespace com.ums.UmsParm
 {
@@ -35,6 +38,97 @@ namespace com.ums.UmsParm
         insert,
         update,
         delete,
+    }
+
+    public class UPASLOGON
+    {
+        public bool f_granted;
+        public Int64 l_userpk;
+        public int l_comppk;
+        public String sz_userid;
+        public String sz_compid;
+        public String sz_name;
+        public String sz_surname;
+        public Int32 l_language;
+        public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
+        public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
+        public UPASUISETTINGS uisettings;
+    }
+
+    public class UPASUISETTINGS
+    {
+        public bool initialized = false;
+        public String sz_languageid;
+        public double f_mapinit_lbo;
+        public double f_mapinit_rbo;
+        public double f_mapinit_ubo;
+        public double f_mapinit_bbo;
+        public bool b_autostart_fleetcontrol;
+        public bool b_autostart_parm;
+        public bool b_window_fullscreen;
+        public int l_winpos_x;
+        public int l_winpos_y;
+        public int l_win_width;
+        public int l_win_height;
+        public int l_gis_max_for_details;
+        public String sz_skin_class;
+        public String sz_theme_class;
+        public String sz_watermark_class;
+        public String sz_buttonshaper_class;
+        public String sz_gradient_class;
+        public String sz_title_class;
+        public int l_mapserver;
+        public String sz_wms_site;
+        public String sz_wms_layers;
+        public String sz_wms_format;
+        public String sz_wms_username;
+        public String sz_wms_password;
+        public int l_drag_mode;
+
+        public String sz_email_name;
+        public String sz_email;
+        public String sz_emailserver;
+        public int l_mailport;
+        public int l_lba_update_percent;
+    }
+
+    public class UDEPARTMENT
+    {
+        public int l_deptpk;
+        public String sz_deptid;
+        public String sz_stdcc;
+        public float lbo, rbo, ubo, bbo;
+        public bool f_default;
+        public int l_deptpri;
+        public int l_maxalloc;
+        public String sz_userprofilename;
+        public String sz_userprofiledesc;
+        public int l_status;
+        public int l_newsending;
+        public int l_parm;
+        public int l_fleetcontrol;
+        public int l_lba;
+        public int l_houseeditor;
+        public long l_addresstypes;
+        public String sz_defaultnumber;
+        public int f_map;
+        public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
+        public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
+        public UPolygon typedef1;
+        public UEllipse typedef2;
+        public UBoundingRect typedef3;
+        public void AddMunicipal(String sz_id, String sz_name)
+        {
+            UMunicipalDef d = new UMunicipalDef();
+            d.sz_municipalid = sz_id;
+            d.sz_municipalname = sz_name;
+            municipals.Add(d);
+        }
+        public List<UShape> restrictionShapes = new List<UShape>();
+        public void AddRestrictionShape(ref UShape s)
+        {
+            restrictionShapes.Add(s);
+        }
     }
 
 
@@ -72,6 +166,62 @@ namespace com.ums.UmsParm
         public ULocationBasedAlert lba() { return (ULocationBasedAlert)this; }
         public abstract bool WriteAddressFile(ref AdrfileWriter w);
         public abstract bool WriteAddressFileGUI(ref AdrfileGUIWriter w);
+        protected abstract bool ParseFromXml(ref XmlDocument d);
+        protected abstract String CreateXml(ref USimpleXmlWriter d);
+
+        public bool CreateXml(ref String outxml, ref String md5)
+        {
+            try
+            {
+                USimpleXmlWriter w = new USimpleXmlWriter(Encoding.UTF8);
+                w.insertComment("UMS -- Created XML from UShape object");
+                outxml = CreateXml(ref w);
+                md5 = UmsCommon.Helpers.CreateMD5Hash(outxml);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /*
+         * Get shape string from DB, then parse it based on the node type
+         */
+        public static UShape ParseFromXml(String s)
+        {
+            try
+            {
+                if (s.Trim().Length <= 0) //the whole world
+                    return new UBoundingRect(-180.0, 180.0, 90.0, -90.0);
+                UShape retshape = null;
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(s);
+                {
+                    XmlNodeList nl;
+                    nl = doc.GetElementsByTagName("polygon");
+                    if (nl.Count > 0)
+                    {
+                        retshape = new UPolygon();
+                        retshape.ParseFromXml(ref doc);
+                        return retshape;
+                    }
+                    nl = doc.GetElementsByTagName("ellipse");
+                    if (nl.Count > 0)
+                    {
+                        retshape = new UEllipse();
+                        retshape.ParseFromXml(ref doc);
+                        return retshape;
+                    }
+                    throw new UXmlShapeException("XML String does not contain a valid shape");
+
+                }
+            }
+            catch (Exception e)
+            {
+                throw new UXmlShapeException(e.Message);
+            }
+        }
         public virtual bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, String sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
         {
             w.close();
@@ -87,6 +237,7 @@ namespace com.ums.UmsParm
         {
             return true;
         }
+
     }
 
     public class ULocationBasedAlert : UShape
@@ -297,6 +448,14 @@ namespace com.ums.UmsParm
             w.close();
             return true;
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class UBoundingRect : UShape
@@ -321,6 +480,15 @@ namespace com.ums.UmsParm
         {
             throw new NotImplementedException();
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UTestSending : UShape
@@ -364,6 +532,15 @@ namespace com.ums.UmsParm
         {
             throw new NotImplementedException();
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UMunicipalShape : UShape
@@ -434,6 +611,15 @@ namespace com.ums.UmsParm
             }
             return true;
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UGeminiStreet : UShape
@@ -451,6 +637,15 @@ namespace com.ums.UmsParm
         {
             return base.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UGIS : UShape
@@ -545,6 +740,15 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UResend : UShape
@@ -600,6 +804,14 @@ namespace com.ums.UmsParm
             }
         }
         public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
         {
             throw new NotImplementedException();
         }
@@ -703,6 +915,63 @@ namespace com.ums.UmsParm
             }
             return true;
         }
+        protected override string CreateXml(ref USimpleXmlWriter w)
+        {
+            try
+            {
+                w.insertStartDocument();
+                    w.insertStartElement("ellipse");
+                        w.insertAttribute("col_a", col_alpha.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("col_r", col_red.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("col_g", col_green.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("col_b", col_blue.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("centerx", lon.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("centery", lat.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("cornerx", x.ToString(UCommon.UGlobalizationInfo));
+                        w.insertAttribute("cornery", y.ToString(UCommon.UGlobalizationInfo));
+                    w.insertEndElement();
+                w.insertEndDocument();
+                w.finalize();
+                return w.getXml2();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            try
+            {
+                XmlNodeList tags = doc.GetElementsByTagName("ellipse");
+                if (tags.Count >= 1)
+                {
+                    XmlNode node = tags.Item(0);
+                    String centerx = node.Attributes["centerx"].Value;
+                    String centery = node.Attributes["centery"].Value;
+                    String cornerx = node.Attributes["cornerx"].Value;
+                    String cornery = node.Attributes["cornery"].Value;
+                    String col_r = node.Attributes["col_r"].Value;
+                    String col_g = node.Attributes["col_g"].Value;
+                    String col_b = node.Attributes["col_b"].Value;
+                    String col_a = node.Attributes["col_a"].Value;
+                    this.col_alpha = Int32.Parse(col_a);
+                    this.col_red = Int32.Parse(col_r);
+                    this.col_green = Int32.Parse(col_g);
+                    this.col_blue = Int32.Parse(col_b);
+                    this.setCenter(Double.Parse(centerx, UCommon.UGlobalizationInfo), Double.Parse(centery, UCommon.UGlobalizationInfo));
+                    this.setExtents(Double.Parse(cornerx, UCommon.UGlobalizationInfo), Double.Parse(cornery, UCommon.UGlobalizationInfo));
+
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.warning("Error parsing Xml string");
+                return false;
+            }
+        }
     }
 
     public class UTasCountShape : UTasShape
@@ -794,6 +1063,15 @@ namespace com.ums.UmsParm
             loc.WriteAddressFileLBA(ref logoninfo, sched, sz_type, ref project, ref alert, n_parentrefno, n_function, ref w);
             return true;
         }
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class UPolygon : UShape
@@ -802,6 +1080,7 @@ namespace com.ums.UmsParm
         public List<UPolypoint> getPolygon() { return m_array_polypoints; }
         public long getSize() { return m_array_polypoints.Count; }
         public UPolypoint getPoint(int i) { return (UPolypoint)m_array_polypoints[i]; }
+        
 
         public UPolygon()
             : base()
@@ -878,6 +1157,65 @@ namespace com.ums.UmsParm
                 w.close();
             }
             return true;
+        }
+        protected override string CreateXml(ref USimpleXmlWriter w)
+        {
+            try
+            {
+                w.insertStartElement("polygon");
+                w.insertAttribute("col_a", col_alpha.ToString(UCommon.UGlobalizationInfo));
+                w.insertAttribute("col_r", col_red.ToString(UCommon.UGlobalizationInfo));
+                w.insertAttribute("col_g", col_green.ToString(UCommon.UGlobalizationInfo));
+                w.insertAttribute("col_b", col_blue.ToString(UCommon.UGlobalizationInfo));
+                for (int i = 0; i < m_array_polypoints.Count; i++)
+                {
+                    w.insertStartElement("pp");
+                    w.insertAttribute("lon", getPoint(i).lon.ToString(UCommon.UGlobalizationInfo));
+                    w.insertAttribute("lat", getPoint(i).lat.ToString(UCommon.UGlobalizationInfo));
+                    w.insertEndElement();
+                }
+                w.insertEndElement(); //polygon
+                w.finalize();
+                return w.getXml2();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        protected override bool ParseFromXml(ref XmlDocument doc)
+        {
+            try
+            {
+                XmlNodeList headnode = doc.GetElementsByTagName("polygon");
+                if (headnode.Count >= 1)
+                {
+                    XmlNode node = headnode.Item(0);
+                    String col_a = node.Attributes["col_a"].Value;
+                    String col_r = node.Attributes["col_r"].Value;
+                    String col_g = node.Attributes["col_g"].Value;
+                    String col_b = node.Attributes["col_b"].Value;
+                    this.col_alpha = Int32.Parse(col_a);
+                    this.col_red = Int32.Parse(col_r);
+                    this.col_green = Int32.Parse(col_g);
+                    this.col_blue = Int32.Parse(col_b);
+                }
+                XmlNodeList points = doc.GetElementsByTagName("pp");
+                for (int i = 0; i < points.Count; i++)
+                {
+                    XmlNode node = points.Item(i);
+                    String x = node.Attributes["lon"].Value;
+                    String y = node.Attributes["lat"].Value;
+                    m_array_polypoints.Add(new UPolypoint(Double.Parse(x, UCommon.UGlobalizationInfo), Double.Parse(y, UCommon.UGlobalizationInfo)));
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.warning("Error parsing Xml string");
+                return false;
+            }
         }
     }
 
@@ -1183,7 +1521,7 @@ namespace com.ums.UmsParm
                 {
                     shape.resend().resend_status.Add(s.resend_statuscodes[i]);
                 }
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
             }
             else if (typeof(UPOLYGONSENDING) == s.GetType())
             {
@@ -1195,7 +1533,7 @@ namespace com.ums.UmsParm
                     UMapPoint point = (UMapPoint)polygon.polygonpoints.GetValue(i);
                     shape.poly().addPoint(point.lon, point.lat);
                 }
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 s.n_sendingtype = UShape.SENDINGTYPE_POLYGON;
             }
             else if (typeof(UTASSENDING) == s.GetType())
@@ -1209,7 +1547,7 @@ namespace com.ums.UmsParm
                 }
                 shape.tas().setBounds(tas.mapbounds);
                 shape.tas().setSending(ref tas);
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 s.n_sendingtype = UShape.SENDINGTYPE_TAS;
             }
             else if (typeof(UELLIPSESENDING) == s.GetType())
@@ -1219,7 +1557,7 @@ namespace com.ums.UmsParm
                 UShape shape = new UEllipse();
                 shape.ellipse().setCenter(ellipse.ellipse.center.lon, ellipse.ellipse.center.lat);
                 shape.ellipse().setExtents(ellipse.ellipse.radius.lon, ellipse.ellipse.radius.lat);
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 s.n_sendingtype = UShape.SENDINGTYPE_ELLIPSE;
 
             }
@@ -1234,7 +1572,7 @@ namespace com.ums.UmsParm
                     shape.gis().addRecord(rec);
                 }
                 shape.gis().SetBounds(gis.mapbounds);
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 s.n_sendingtype = UShape.SENDINGTYPE_GIS;
             }
             else if (typeof(UMUNICIPALSENDING) == s.GetType())
@@ -1257,7 +1595,7 @@ namespace com.ums.UmsParm
                 }
                 shape.municipal().SetBounds(mun.mapbounds);
 
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 s.n_sendingtype = UShape.SENDINGTYPE_MUNICIPAL;
 
             }
@@ -1271,7 +1609,7 @@ namespace com.ums.UmsParm
                 {
                     shape.test().addRecord(t.numbers[i]);
                 }
-                setShape(ref shape);
+                setShape(ref shape, s.logoninfo.l_deptpri);
                 t.n_sendingtype = UShape.SENDINGTYPE_TESTSENDING;
             }
 
@@ -1322,7 +1660,7 @@ namespace com.ums.UmsParm
         {
             m_dynaresched = r;
         }
-        public bool setShape(ref UShape s)
+        public bool setShape(ref UShape s, int n_priority)
         {
             m_shape = s;
             //create addresslist using UmsFile.AdrfileWriter
@@ -1347,7 +1685,7 @@ namespace com.ums.UmsParm
                     b_write_addressfile = false;
                 if (b_write_addressfile)
                 {
-                    adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend);
+                    adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend, n_priority);
                     s.WriteAddressFile(ref adrwriter);
                 }
                 return true;
