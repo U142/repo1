@@ -6,7 +6,7 @@ import no.ums.pas.maps.defines.MapObject;
 import no.ums.pas.ums.errorhandling.Error;
 
 public class MapObjectSave {
-	HttpPostForm m_form;
+	//HttpPostForm m_form;
 	MapObjectReg m_reg;
 	MapObject m_obj;
 	private MapObject get_obj() { return m_obj; }
@@ -17,7 +17,7 @@ public class MapObjectSave {
 		save();
 	}
 	private boolean save() {
-		try {
+		/*try {
 			m_form = new HttpPostForm(PAS.get_pas().get_sitename() + "/PAS_mapobject_save.asp");
 			m_form.setParameter("l_objectpk", get_obj().get_objectpk());
 			m_form.setParameter("f_dynamic", (get_obj().get_dynamic() ? "1" : "0"));
@@ -46,7 +46,7 @@ public class MapObjectSave {
 			Error.getError().addError("MapObjectSave","Exception in post_form",e,1);
 			return false;
 		}
-		PAS.get_pas().add_event("Saved", null);
+		PAS.get_pas().add_event("Saved", null);*/
 		return true;
 	}
 }

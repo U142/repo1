@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.awt.event.*;
 
 import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.HttpGPSChannel;
+//import no.ums.pas.core.dataexchange.HttpGPSChannel;
 import no.ums.pas.core.webdata.*;
 import no.ums.pas.gps.*;
 import no.ums.pas.maps.defines.*;
@@ -199,13 +199,13 @@ public class GPSController extends Controller{
 		new MapObjectDlg(PAS.get_pas(), obj);
 	}
 	public void get_current_position(String sz_objectpk) {
-		HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_GETCOOR, 10, 0, "", "");
+		//HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_GETCOOR, 10, 0, "", "");
 	}
 	public void gps_shutdown(String sz_objectpk) {
-		HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_GPS_SHUTDOWN, 0, 0, "", "");
+		//HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_GPS_SHUTDOWN, 0, 0, "", "");
 	}
 	public void gps_query_battery(String sz_objectpk) {
-		HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_BAT_VOLTAGE, 0, 0, "", "");		
+		//HttpGPSChannel.post_form(PAS.get_pas().get_sitename() + "PAS_gpssetup.asp", sz_objectpk, this, PAS.get_pas().get_eastcontent().get_gps_loadingpanel(), GPSCmd.CMD_BAT_VOLTAGE, 0, 0, "", "");		
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_gps_answer".equals(e.getActionCommand())) {

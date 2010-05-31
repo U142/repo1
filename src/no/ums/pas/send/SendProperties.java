@@ -315,7 +315,7 @@ public abstract class SendProperties extends Object {
 			PAS.get_pas().add_event(get_params()[i] + " = " + get_vals()[i], null);
 		}		
 	}
-	protected boolean populate_common(HttpPostForm http) {
+	/*protected boolean populate_common(HttpPostForm http) {
 		//try {
 			for(int i=0; i < get_params().length; i++) {
 				try {
@@ -326,11 +326,8 @@ public abstract class SendProperties extends Object {
 					return false;
 				}
 			}
-		/*} catch(java.io.IOException e) {
-			return false;
-		}*/
 		return true;
-	}
+	}*/
 	protected boolean populate_common(UMAPSENDING s, ULOGONINFO logon, UMapBounds bounds)
 	{
 		UserInfo info = PAS.get_pas().get_userinfo();
@@ -456,7 +453,7 @@ public abstract class SendProperties extends Object {
 		
 		return true;
 	}
-	protected boolean populate_adrlist(HttpPostForm http, ArrayList<String> arr_numbers) {
+	/*protected boolean populate_adrlist(HttpPostForm http, ArrayList<String> arr_numbers) {
 		try {
 			for(int i=0; i < arr_numbers.size(); i++) {
 				http.setParameter("sz_number_" + i, arr_numbers.get(i));
@@ -467,7 +464,7 @@ public abstract class SendProperties extends Object {
 			return false;
 		}
 		return true;
-	}
+	}*/
 	
 	abstract public void set_adrinfo(Object adr);
 	abstract public void draw(Graphics g, Point mousepos);

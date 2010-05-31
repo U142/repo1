@@ -50,8 +50,8 @@ public class MapObjectGpsSetup extends DefaultPanel {
 	private JButton m_btn_create_gpsfix_alarm = new JButton("Create");
 	private JButton m_btn_delete_gpsfix_alarm = new JButton("Delete");
 	
-	private HttpPostForm m_form = null;
-	protected HttpPostForm get_form() { return m_form; }
+	//private HttpPostForm m_form = null;
+	//protected HttpPostForm get_form() { return m_form; }
 	private String m_sz_url;
 	protected String get_url() { return m_sz_url; }
 	private LoadingPanel m_loader = new LoadingPanel("GPS Setup", new Dimension(200, 16), false);
@@ -154,7 +154,7 @@ public class MapObjectGpsSetup extends DefaultPanel {
 		}
 	}
 	public void post_form(int n_cmd, int n_param1, int n_param2, String sz_param1, String sz_param2) {
-		try {
+		/*try {
 			m_form = new HttpPostForm(get_url());
 			get_form().setParameter("l_objectpk", m_reg.get_mapobject().get_objectpk());
 			get_form().setParameter("l_cmd", new Integer(n_cmd));
@@ -172,7 +172,7 @@ public class MapObjectGpsSetup extends DefaultPanel {
 			System.out.println("MapObjectGpsSetup.post_form() Exception " + e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("MapObjectGpsSetup","Exception in post_form",e,1);
-		}
+		}*/
 	}
 	public void add_controls() {
 		//GPRS timeout

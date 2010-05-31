@@ -38,7 +38,7 @@ public class Sending_AddressPanelPolygon extends Sending_AddressPanel {
 		super.add_controls();
 	}
 	protected final void exec_adrcount() {
-		HttpPostForm form = null;
+		//HttpPostForm form = null;
 		//XMLAdrCount xml = null;
 		try {
 			/*NavStruct bounds = get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().calc_bounds();

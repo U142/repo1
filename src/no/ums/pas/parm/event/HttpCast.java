@@ -3,7 +3,7 @@ package no.ums.pas.parm.event;
 import java.util.*;
 import java.io.*;
 
-import no.ums.pas.core.dataexchange.HttpPostForm;
+//import no.ums.pas.core.dataexchange.HttpPostForm;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -13,7 +13,7 @@ public class HttpCast {
 	public HttpCast(){ 
 		
 	}
-	public InputStream send(String url, Hashtable table)throws ParmException{
+	/*public InputStream send(String url, Hashtable table)throws ParmException{
 		InputStream in;
 		HttpPostForm webServer;
 		Set liste = table.keySet();
@@ -40,7 +40,7 @@ public class HttpCast {
 			throw new ParmException(e.getMessage());
 		}
 		return in;
-	}
+	}*/
 	public static void main(String[]args){
 		new HttpCast();
 	}
