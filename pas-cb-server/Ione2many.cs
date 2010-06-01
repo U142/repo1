@@ -151,7 +151,7 @@ namespace pas_cb_server
         public int? messageclass;
         public string messagetext;
         public int? messagehandle;
-        CBECELLLIST cbefailedcelllist;
+        public CBECELLLIST cbefailedcelllist;
     }
     [XmlRpcMissingMapping(MappingAction.Ignore)]
     public struct CBCINFOMSGREQRESULT 

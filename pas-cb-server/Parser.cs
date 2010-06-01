@@ -20,9 +20,11 @@ namespace pas_cb_server
             {
                 try
                 {
-                    string[] eatfileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml");
-                    Array.Sort(eatfileEntries);
-                    foreach (string fileName in eatfileEntries)
+                    int lRetryInterval = Settings.GetValue("RetryInterval", 60); // defaults to 60 seconds
+                    string[] fileEntries = null;
+
+                    fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                    foreach (string fileName in fileEntries)
                     {
                         if (!CBServer.running) break;
                         lRetVal = ParseXMLFile(fileName);
@@ -43,10 +45,8 @@ namespace pas_cb_server
                         }
                     }
 
-                    string[] retryfileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml");
-                    Array.Sort(retryfileEntries);
-                    int lRetryInterval = Settings.GetValue("RetryInterval", 60); // defaults to 60 seconds
-                    foreach (string fileName in retryfileEntries)
+                    fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                    foreach (string fileName in fileEntries)
                     {
                         if (!CBServer.running) break;
                         FileInfo fFile = new FileInfo(fileName);
@@ -152,16 +152,16 @@ namespace pas_cb_server
                 switch (op.l_type)
                 {
                     case 1: // AlertiX (not supported)
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op, CB_one2many.CreateAlert());
+                        ret.Add(op.l_operator, CB_one2many.CreateAlert());
                         break;
                     case 3: // tmobile
-                        ret.Add(op, CB_tmobile.CreateAlert());
+                        ret.Add(op.l_operator, CB_tmobile.CreateAlert());
                         break;
                     default:
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                 }
             }
@@ -177,16 +177,16 @@ namespace pas_cb_server
                 switch (op.l_type)
                 {
                     case 1: // AlertiX (not supported)
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op, CB_one2many.UpdateAlert());
+                        ret.Add(op.l_operator, CB_one2many.UpdateAlert());
                         break;
                     case 3: // tmobile
-                        ret.Add(op, CB_tmobile.UpdateAlert());
+                        ret.Add(op.l_operator, CB_tmobile.UpdateAlert());
                         break;
                     default:
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                 }
             }
@@ -202,16 +202,16 @@ namespace pas_cb_server
                 switch (op.l_type)
                 {
                     case 1: // AlertiX (not supported)
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op, CB_one2many.KillAlert());
+                        ret.Add(op.l_operator, CB_one2many.KillAlert());
                         break;
                     case 3: // tmobile
-                        ret.Add(op, CB_tmobile.KillAlert());
+                        ret.Add(op.l_operator, CB_tmobile.KillAlert());
                         break;
                     default:
-                        ret.Add(op, Constant.FAILED);
+                        ret.Add(op.l_operator, Constant.FAILED);
                         break;
                 }
             }
