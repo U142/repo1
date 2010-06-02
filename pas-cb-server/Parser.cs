@@ -145,6 +145,7 @@ namespace pas_cb_server
         private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser)
         {
             Hashtable ret = new Hashtable();
+            AlertInfo oAlert = new AlertInfo();
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -155,10 +156,10 @@ namespace pas_cb_server
                         ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.CreateAlert());
+                        ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op));
                         break;
                     case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.CreateAlert());
+                        ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op));
                         break;
                     default:
                         ret.Add(op.l_operator, Constant.FAILED);
@@ -170,6 +171,7 @@ namespace pas_cb_server
         private static Hashtable UpdateAlert(XmlNode xmlCB, Settings oUser)
         {
             Hashtable ret = new Hashtable();
+            AlertInfo oAlert = new AlertInfo();
 
             // update a given alert at each operator
             foreach (Operator op in oUser.operators)
@@ -180,10 +182,10 @@ namespace pas_cb_server
                         ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.UpdateAlert());
+                        ret.Add(op.l_operator, CB_one2many.UpdateAlert(oAlert, op));
                         break;
                     case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.UpdateAlert());
+                        ret.Add(op.l_operator, CB_tmobile.UpdateAlert(oAlert, op));
                         break;
                     default:
                         ret.Add(op.l_operator, Constant.FAILED);
@@ -195,6 +197,7 @@ namespace pas_cb_server
         private static Hashtable KillAlert(XmlNode xmlCB, Settings oUser)
         {
             Hashtable ret = new Hashtable();
+            AlertInfo oAlert = new AlertInfo();
 
             // kill a given alert at each operator
             foreach (Operator op in oUser.operators)
@@ -205,10 +208,10 @@ namespace pas_cb_server
                         ret.Add(op.l_operator, Constant.FAILED);
                         break;
                     case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.KillAlert());
+                        ret.Add(op.l_operator, CB_one2many.KillAlert(oAlert, op));
                         break;
                     case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.KillAlert());
+                        ret.Add(op.l_operator, CB_tmobile.KillAlert(oAlert, op));
                         break;
                     default:
                         ret.Add(op.l_operator, Constant.FAILED);
@@ -224,5 +227,34 @@ namespace pas_cb_server
             // all alerts for all operators?
             return ret;
         }
+    }
+
+    public class AlertInfo
+    {
+        // info needed to start a cb sending
+        public int l_projectpk;
+        public int l_refno;
+        public int l_comppk;
+        public int l_deptpk;
+        public int l_userpk;
+        public string sz_password;
+
+        public int l_sched_utc;
+        public int l_validity;
+
+        public AlertMessage alert_message;
+        public List<PolyPoint> alert_polygon;
+    }
+
+    public class AlertMessage
+    {
+        public int l_channel;
+        public string sz_text;
+    }
+
+    public class PolyPoint
+    {
+        public float x;
+        public float y;
     }
 }

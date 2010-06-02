@@ -94,6 +94,7 @@ namespace pas_cb_server
         public int l_operator = 0;
         public string sz_operatorname = "";
         public int l_type = 0; // one2many, tmobile
+        public int l_coordinate_type = 0; // may need conversion
 
         // login settings for interaface
         public string sz_url = "";

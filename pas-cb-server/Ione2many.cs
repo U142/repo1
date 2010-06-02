@@ -236,19 +236,19 @@ namespace pas_cb_server
     // CB Methods
     public class CB_one2many
     {
-        public static int CreateAlert() 
+        public static int CreateAlert(AlertInfo oAlert, Operator op) 
         {
             return Constant.OK; 
         }
-        public static int UpdateAlert() 
+        public static int UpdateAlert(AlertInfo oAlert, Operator op) 
         {
             return Constant.OK; 
         }
-        public static int KillAlert() 
+        public static int KillAlert(AlertInfo oAlert, Operator op) 
         {
             return Constant.OK; 
         }
-        public static int GetAlertStatus()
+        public static int GetAlertStatus(AlertInfo oAlert, Operator op)
         { 
             return Constant.OK; 
         }
