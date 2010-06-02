@@ -43,6 +43,7 @@ public class NetworkClassLoader extends ClassLoader {
 			try
 			{
 				URL url = new URL(host + "/" + filename);
+				System.out.println("Loading plugin " + url.toString());
 				URLClassLoader loader = new URLClassLoader(new URL [] { url }, this.getClass().getClassLoader());
 				Class<PasScriptingInterface> classToLoad = (Class<PasScriptingInterface>)Class.forName(classname, true, loader);
 				return classToLoad;

@@ -6,8 +6,8 @@ import no.ums.pas.*;
 
 public class SendingPanel extends GeneralPanel {
 	public static final long serialVersionUID = 1;
-	SendingPanel(PAS pas, Dimension dim) {
-		super(pas, dim);
+	SendingPanel(Dimension dim) {
+		super(dim);
 	}
 	
 	protected void set_layout() {

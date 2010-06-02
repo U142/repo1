@@ -175,6 +175,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String m_sz_param_userid;
 	private String m_sz_param_compid;
 	private String m_sz_pasws_site;
+	private String m_sz_codebase;
 	StatusController m_statuscontroller = null;
 	GPSController m_gpscontroller = null;
 	HouseController m_housecontroller = null;
@@ -193,6 +194,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private ParmController m_parmcontroller = null;
 	public ParmController get_parmcontroller() { return m_parmcontroller; }	
 	private int m_n_eastwidth = 550;
+	public void setEastWidth(int n) { m_n_eastwidth = n; }
 	private int m_n_southheight = 0;//300
 	public int get_eastwidth() { return m_n_eastwidth; }
 	public int get_southheight() { return m_n_southheight; }
@@ -241,6 +243,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public HTTPReq get_httpreq() { return m_httpreq; }
 	public String get_sitename() { return m_sz_sitename; }
 	public String get_pasws() { return m_sz_pasws_site; }
+	public String get_codebase() { return m_sz_codebase; }
+	public String get_plugin_codebase() { return m_sz_codebase + "/plugins/"; }
 	public StatusController get_statuscontroller() { return m_statuscontroller; }
 	public GPSController get_gpscontroller() { return m_gpscontroller; }
 	public HouseController get_housecontroller() { return m_housecontroller; }
@@ -542,13 +546,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public PAS() {
-		this("https://secure.ums.no/vb4/", "", "", "", false, null, null);
+		this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null);
 	}
 	public PAS(String sz_sitename)
 	{
-		this(sz_sitename, null, null, null, false, null, null);
+		this(sz_sitename, null, null, null, false, null, null, null);
 	}
-	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, boolean b_debug, String sz_plugin, String [] args)
+	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 
+			boolean b_debug, String sz_codebase, String sz_plugin, String [] args)
 	{
 		super();
 		g_b_debug = b_debug;
@@ -573,6 +578,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		else
 			m_sz_pasws_site = sz_pasws;
+		m_sz_codebase = sz_codebase;
 		System.out.println("Using WS " + m_sz_pasws_site);
 		
 		try
@@ -725,8 +731,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			{
 	    				if(sz_script_class!=null)
 	    				{
-	    					pasplugin = PluginLoader.loadPlugin(get_pasws(), sz_script_class, no.ums.pas.pluginbase.PluginLoader.FILETYPE.JAR);
-	    					pasplugin.onTest();
+	    					pasplugin = PluginLoader.loadPlugin(get_codebase(), sz_script_class, no.ums.pas.pluginbase.PluginLoader.FILETYPE.JAR);
 	    				}
 	    			}
 	    			catch(Exception e)
@@ -739,6 +744,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			{
 	    				pasplugin = new PAS_Scripting(); //go default
 	    			}	
+	    			pasplugin.onLoadSecurityManager();
 	    			pasplugin.onBeforeLogon();
 	    			createGUI();
 	    			
@@ -1089,6 +1095,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						}
 						//String lang = ui.getSzLanguageid();
 						b_logon_saved_remote = true;
+						
 					}
 					//else
 					String lang = logon.getLogonInfo().get_language();
@@ -1115,6 +1122,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 		try {
 			m_settings = xmlreader.loadScreenSize(m_settings);
+			
 		} catch(Exception e) {
 			//Error.getError().addError("Error loading screen settings", "Could not load last known screen settings", e, Error.SEVERITY_WARNING);
 		}
@@ -1158,7 +1166,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					m_mainmenu.init();
 					actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_dept_changed"));
 					//m_pasactionlistener.deptChanged();
-					PAS.get_pas().get_eastcontent().get_infopanel().actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo(), ActionEvent.ACTION_PERFORMED, "act_update_accountinfo"));
+					if(PAS.get_pas().get_eastcontent().get_infopanel()!=null)
+						PAS.get_pas().get_eastcontent().get_infopanel().actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo(), ActionEvent.ACTION_PERFORMED, "act_update_accountinfo"));
 				}
 			});
 		}
@@ -1282,14 +1291,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		
 		//get_eastcontent().get_infopanel().actionPerformed(new ActionEvent(m_userinfo, ActionEvent.ACTION_PERFORMED, "act_update_accountinfo"));
-		try
+		/*try
 		{
-			get_eastcontent().get_infopanel().update_accountinfo(m_userinfo);
+			if(get_eastcontent().get_infopanel()!=null)
+				get_eastcontent().get_infopanel().update_accountinfo(m_userinfo);
 		}
 		catch(Exception e)
 		{
 			
-		}
+		}*/
 		try {
 			//Dimension dim_pos = new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight());
 			//Dimension dim_size = new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight());

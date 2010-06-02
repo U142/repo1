@@ -1,14 +1,17 @@
 package no.ums.pas.pluginbase;
 
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.SearchFrame;
 import no.ums.pas.core.mainui.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.SearchPanelVals;
@@ -31,7 +34,7 @@ public abstract class PasScriptingInterface
 	 */
 	protected String plugin_AddressSearch;
 
-	
+		
 	/**
 	 * @author Morten H. Helvig
 	 * Abstract class for searching addresses
@@ -205,4 +208,38 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract boolean onSetAppTitle(PAS pas, String s);
+	
+	/**
+	 * Function to load a custom security-manager. Loaded right after plugin is loaded.
+	 * Defaults to load security manager null. If customized, plugins will have runtime restrictions.
+	 * @return
+	 */
+	public boolean onLoadSecurityManager()
+	{
+		System.out.println("onLoadSecurityManager");
+		try
+		{
+			System.setSecurityManager(null);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Create a panel that will be added by onAddInfoTab
+	 * @return an instance InfoPanel
+	 */
+	public abstract InfoPanel onCreateInfoPanel();
+	
+	/**
+	 * 
+	 * @param tab pane created by PAS
+	 * @param panel the infopanel that's created by onCreateInfoTab()
+	 * @return
+	 */
+	public abstract boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel);
 }

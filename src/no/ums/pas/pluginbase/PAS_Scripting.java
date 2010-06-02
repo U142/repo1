@@ -12,6 +12,7 @@ import javax.swing.*;
 import no.ums.pas.*;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.maps.defines.Navigation;
@@ -335,6 +336,25 @@ public class PAS_Scripting extends PasScriptingInterface
 		
 		//if(pas.get_rightsmanagement().houseeditor()>=1)
 		pas.get_mainmenu().setHouseeditorEnabled((pas.get_rightsmanagement().houseeditor()>=1 ? true : false));
+		return true;
+	}
+
+	
+
+	@Override
+	public InfoPanel onCreateInfoPanel() {
+		InfoPanel panel = new InfoPanel();
+		panel.doInit();
+		return panel;
+	}
+
+
+	@Override
+	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
+		tab.addTab(PAS.l("main_infotab_title"), null,
+				panel,
+				//sp,
+				PAS.l("main_infotab_title_tooltip"));
 		return true;
 	}
 	

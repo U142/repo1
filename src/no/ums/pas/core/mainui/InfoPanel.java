@@ -50,15 +50,26 @@ public class InfoPanel extends GeneralPanel {
 				if(w<=0 || h<=0)
 					return;
 				sp.setPreferredSize(new Dimension(w, h));
-				m_weatherinfo.setPreferredSize(new Dimension(w, 130));
-				m_coorsearch.setPreferredSize(new Dimension(w, 130));
-				userinfo.setPreferredSize(new Dimension(w, 380));
-				coorinfo.setPreferredSize(new Dimension(w, 220));
+				if(m_weatherinfo!=null)
+				{
+					m_weatherinfo.setPreferredSize(new Dimension(w, m_weatherinfo.getWantedHeight()));
+					m_weatherinfo.validate();
+				}
+				if(m_coorsearch!=null)
+				{
+					m_coorsearch.setPreferredSize(new Dimension(w, m_coorsearch.getWantedHeight()));
+				}
+				if(userinfo!=null)
+				{
+					userinfo.setPreferredSize(new Dimension(w, userinfo.getWantedHeight()));
+					userinfo.validate();
+				}
+				if(coorinfo!=null)
+				{
+					coorinfo.setPreferredSize(new Dimension(w, coorinfo.getWantedHeight()));
+					coorinfo.validate();
+				}
 				sp.validate();
-				m_weatherinfo.validate();
-				m_coorsearch.validate();
-				userinfo.validate();
-				coorinfo.validate();
 			}
 		});
 		super.componentResized(e);
@@ -112,8 +123,11 @@ public class InfoPanel extends GeneralPanel {
 	public CoorInfoBox coorinfo;
 
 	JScrollPane sp = null;
-	InfoContainer infocont = new InfoContainer();
-	class InfoContainer extends DefaultPanel
+	protected InfoContainer infocont = new InfoContainer();
+	
+	
+	
+	public class InfoContainer extends DefaultPanel
 	{
 		
 		public InfoContainer()
@@ -186,24 +200,42 @@ public class InfoPanel extends GeneralPanel {
 		}
 	}
 	
-	public InfoPanel(PAS pas, Dimension dim) {
+	public InfoPanel()
+	{
+		this(new Dimension(1,1));
+	}
+	
+	
+	public InfoPanel(Dimension dim) {
 		super(dim);
 		this.setBorder(null);
-		sp = new JScrollPane(infocont,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sp.setBorder(null);
+		//sp = new JScrollPane(infocont,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		//sp.setBorder(null);
 		//JScrollPane sp = new JScrollPane(m_infopanel, JScrollPane.);
-		sp.setPreferredSize(new Dimension(PAS.get_pas().get_eastwidth(), 300));
-		doInit();
+		//sp.setPreferredSize(new Dimension(PAS.get_pas().get_eastwidth(), 300));
+		//doInit();
 		addComponentListener(this);
 
 	}
 	
+	
+	
+	@Override
+	public void add_controls() {
+		sp = new JScrollPane(infocont,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp.setBorder(null);
+		super.add_controls();
+
+	}
+
+
 	public void actionPerformed(ActionEvent e) {
 		if("act_maploaded".equals(e.getActionCommand())) {
 			Navigation nav = (Navigation)e.getSource();
 			set_mapdimpix(nav.getDimension().width, nav.getDimension().height);
 			set_mapdimmeters(nav.get_mapwidthmeters().intValue(), nav.get_mapheightmeters().intValue());
-			m_weatherinfo.updateWeatherData();
+			if(m_weatherinfo!=null)
+				m_weatherinfo.updateWeatherData();
 			// Update weather data
 		} else if("act_download_houses_report".equals(e.getActionCommand())) {
 			Integer i = (Integer)e.getSource();
@@ -448,14 +480,22 @@ public class InfoPanel extends GeneralPanel {
 			}
 		}
 	}*/
-	class UserInfoBox extends DefaultPanel {
+	public class UserInfoBox extends DefaultPanel {
 		public static final long serialVersionUID = 1;
-		UserInfoBox() {
+		protected UserInfoUI ui = null;
+		public UserInfoBox() {
 			super();
+		}
+		public UserInfoBox(UserInfoUI ui)
+		{
+			super();
+			this.ui = ui;
 		}
 		public void init() {
 			try { 
-				add(new UserInfoUI());
+				if(ui==null)
+					ui = new UserInfoUI();
+				add(ui);
 				
 			} catch(Exception e) {
 				Error.getError().addError("InfoPanel","Exception in UserInfoUI",e,1);
@@ -469,16 +509,31 @@ public class InfoPanel extends GeneralPanel {
 		public void add_controls() {
 			
 		}
+		@Override
+		public int getWantedHeight() {
+			return 380;
+		}
+		@Override
+		public int getWantedWidth() {
+			return super.getWantedWidth();
+		}
+		
 	}
-	class CoorInfoBox extends DefaultPanel {
+	public class CoorInfoBox extends DefaultPanel {
 		public static final long serialVersionUID = 1;
-		CoorInfoBox() {
+		protected CoorInfoUI ui = null;
+		public CoorInfoBox() {
 			super();
+		}
+		public CoorInfoBox(CoorInfoUI ui)
+		{
+			this.ui = ui;
 		}
 		public void init() {
 			try
 			{
-				CoorInfoUI ui = new CoorInfoUI();
+				if(ui==null)
+					ui = new CoorInfoUI();
 				add(ui);
 			} catch(Exception e) {
 				Error.getError().addError("InfoPanel", "Exception in CoorInfoUI", e, 1);
@@ -492,11 +547,19 @@ public class InfoPanel extends GeneralPanel {
 		public void add_controls() {
 			
 		}
+		@Override
+		public int getWantedHeight() {
+			return 220;
+		}
+		@Override
+		public int getWantedWidth() {
+			return super.getWantedWidth();
+		}
 	}
-	
-	class CoorInfoUI extends DefaultPanel {
+
+	public class CoorInfoUI extends DefaultPanel {
 		public static final long serialVersionUID = 1;
-		CoorInfoUI() {
+		public CoorInfoUI() {
 			super();
 			init();
 		}
@@ -574,9 +637,9 @@ public class InfoPanel extends GeneralPanel {
 		}
 	}
 	
-	class UserInfoUI extends DefaultPanel {
+	public class UserInfoUI extends DefaultPanel {
 		public static final long serialVersionUID = 1;
-		UserInfoUI() {
+		public UserInfoUI() {
 			super();
 			init();
 		}
@@ -859,8 +922,18 @@ public class InfoPanel extends GeneralPanel {
 				PAS.get_pas().actionPerformed(new ActionEvent(center, ActionEvent.ACTION_PERFORMED, "act_set_pinpoint"));
 				PAS.get_pas().get_navigation().exec_adrsearch(llcoor.get_lon(), llcoor.get_lat(), 500.0f);
 			}
+			
 		}
 		
+		@Override
+		public int getWantedHeight() {
+			return 130;
+		}
+		@Override
+		public int getWantedWidth() {
+			return super.getWantedWidth();
+		}
+
 		public class CoorSearchLLDec extends CoorSearchLL implements ActionListener {
 			public static final long serialVersionUID = 1;
 			//protected StdIntegerArea m_txt_lon_deg = new StdIntegerArea("", false, 30, StdIntegerArea.DOUBLE); //override
@@ -1456,6 +1529,16 @@ public class InfoPanel extends GeneralPanel {
 		
 		public void init() {
 			setVisible(true);
+		}
+
+		@Override
+		public int getWantedHeight() {
+			return 130;
+		}
+
+		@Override
+		public int getWantedWidth() {
+			return super.getWantedWidth();
 		}
 		
 		

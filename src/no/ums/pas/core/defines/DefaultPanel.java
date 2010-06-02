@@ -9,11 +9,12 @@ import no.ums.pas.ums.tools.StdTextLabel;
 
 import java.awt.event.*;
 
-public abstract class DefaultPanel extends JPanel implements ActionListener, ComponentListener {
+public abstract class DefaultPanel extends JPanel implements ActionListener, ComponentListener, IWantedSizing {
 	public static final int DIR_HORIZONTAL	= 0;
 	public static final int DIR_VERTICAL	= 1;
 	public static boolean ENABLE_GRID_DEBUG = false;
 	
+
 	public void componentHidden(ComponentEvent e)
 	{
 		
@@ -29,6 +30,17 @@ public abstract class DefaultPanel extends JPanel implements ActionListener, Com
 	{
 		
 	}
+	
+
+	@Override
+	public int getWantedHeight() {
+		return getPreferredSize().height;
+	}
+	@Override
+	public int getWantedWidth() {
+		return getPreferredSize().width;
+	}
+
 
 	int m_n_panels = 0;
 	int m_n_xpanels = 0;

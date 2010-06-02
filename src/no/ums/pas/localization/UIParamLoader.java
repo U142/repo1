@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -20,7 +21,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import org.opengis.parameter.ParameterNotFoundException;
 
 
-public class UIParamLoader
+public class UIParamLoader extends ClassLoader
 {
 	protected static boolean parseParams(Properties b)
 	{
@@ -161,21 +162,25 @@ public class UIParamLoader
 	public static boolean loadUIParams()
 	throws FileNotFoundException
 	{
-		String file = "no/ums/pas/localization/uidefaults.properties";
+		//String file = "no/ums/pas/localization/uidefaults.properties";
+		String sz_filename = "uidefaults.properties";
+		ClassLoader loader = UIParamLoader.class.getClassLoader();//UIParamLoader.class.getClass().getClassLoader();
+		URL url = loader.getResource("no/ums/pas/localization/" + sz_filename);
 		try
 		{
 			//ResourceBundle bundle = ResourceBundle.getBundle(file);//, new Locale("en", "GB"));
+			InputStreamReader input = new InputStreamReader(url.openStream());
 			Properties bundle = new Properties();
-			InputStream inStream = ClassLoader.getSystemResourceAsStream(file);
-			bundle.load(inStream);
+			//InputStream inStream = UIParamLoader.class.getClass().getClassLoader().getSystemResourceAsStream(file);
+			bundle.load(input);
 			if(bundle==null)
-				throw new FileNotFoundException(file);
+				throw new FileNotFoundException(sz_filename);
 			parseParams(bundle);
 			return true;
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_warning"), String.format("UI defaults file could not be loaded (%s)",file), e, Error.SEVERITY_WARNING);
+			Error.getError().addError(PAS.l("common_warning"), String.format("UI defaults file could not be loaded (%s)",sz_filename), e, Error.SEVERITY_WARNING);
 			return false;
 		}
 		/*

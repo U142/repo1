@@ -130,7 +130,8 @@ public class PASActions implements ActionListener {
 			Integer i = (Integer)e.getSource();
 			try
 			{
-				PAS.get_pas().get_eastcontent().get_infopanel().set_housesdownload_status(i.intValue());
+				if(PAS.get_pas().get_eastcontent().get_infopanel()!=null)
+					PAS.get_pas().get_eastcontent().get_infopanel().set_housesdownload_status(i.intValue());
 			} catch(Exception err)
 			{
 				

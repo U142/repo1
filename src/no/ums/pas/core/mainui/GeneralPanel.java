@@ -10,14 +10,15 @@ import no.ums.pas.maps.defines.MapPoint;
 
 public abstract class GeneralPanel extends DefaultPanel {
 	boolean b_inited = false;
-	public GeneralPanel(PAS pas, Dimension size) {
+	/*public GeneralPanel(PAS pas, Dimension size) {
 		super();
 		setPreferredSize(size);
 		doInit();
-	}
+	}*/
 	public GeneralPanel(Dimension size) {
 		super();
 		setPreferredSize(size);
+		//doInit();
 	}
 	public void doInit()
 	{

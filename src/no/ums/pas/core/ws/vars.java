@@ -16,19 +16,19 @@ public class vars
 	{
 		WSDL_CONFERENCE 		= sz_base + "Conference.asmx?WSDL";
 		
-		//WSDL_EXTERNALEXEC 		= sz_base + "ExternalExec.asmx?WSDL";
-		WSDL_EXTERNALEXEC		= "http://localhost/WS/ExternalExec.asmx?WSDL";
+		WSDL_EXTERNALEXEC 		= sz_base + "ExternalExec.asmx?WSDL";
+		//WSDL_EXTERNALEXEC		= "http://localhost/WS/ExternalExec.asmx?WSDL";
 		
 		WSDL_INFOSENTRAL		= sz_base + "Infosentral.asmx?WSDL";
 		
-		//WSDL_PARMADMIN 			= sz_base + "ParmAdmin.asmx?WSDL";
-		WSDL_PARMADMIN 			= "http://localhost/WS/ParmAdmin.asmx?WSDL";
+		WSDL_PARMADMIN 			= sz_base + "ParmAdmin.asmx?WSDL";
+		//WSDL_PARMADMIN 			= "http://localhost/WS/ParmAdmin.asmx?WSDL";
 
-		//WSDL_PAS 				= sz_base + "PAS.asmx?WSDL";
-		WSDL_PAS 				= "http://localhost/WS/PAS.asmx?WSDL";
+		WSDL_PAS 				= sz_base + "PAS.asmx?WSDL";
+		//WSDL_PAS 				= "http://localhost/WS/PAS.asmx?WSDL";
 		
-		WSDL_PASSTATUS			= "http://localhost/WS/PasStatus.asmx?WSDL";
-		//WSDL_PASSTATUS			= sz_base + "PasStatus.asmx?WSDL";
+		//WSDL_PASSTATUS			= "http://localhost/WS/PasStatus.asmx?WSDL";
+		WSDL_PASSTATUS			= sz_base + "PasStatus.asmx?WSDL";
 		
 		WSDL_TAS				= sz_base + "TAS.asmx?WSDL";
 		//WSDL_TAS				= "http://localhost/WS/TAS.asmx?WSDL";

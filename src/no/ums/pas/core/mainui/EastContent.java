@@ -95,24 +95,27 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		//SwingUtilities.invokeLater(new Runnable() {
 		//	public void run()
 			{
-				Dimension dim_panelsize = new Dimension(get_pas().get_eastwidth(), get_pas().get_mappane().getHeight());
-				m_infopanel	= new InfoPanel(get_pas(), new Dimension(n_infopanel_width, 200));
+				Dimension dim_panelsize = new Dimension(100,100);//new Dimension(get_pas().get_eastwidth(), get_pas().get_mappane().getHeight());
+				m_infopanel	= PAS.pasplugin.onCreateInfoPanel(); //new InfoPanel(new Dimension(n_infopanel_width, 200));
 				reloadStatusPanel(false);
 				m_gpspanel		= new GPSPanel(get_pas(), dim_panelsize);
 				m_gpseventpanel = new GPSEventPanel(get_pas(), dim_panelsize);
-				m_sendingpanel  = new SendingPanel(get_pas(), dim_panelsize);
+				m_sendingpanel  = new SendingPanel(dim_panelsize);
 				m_tabbedpane = new EastTabbedPane();
-				m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());
+				if(m_infopanel!=null)
+					m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());
 				m_taspanel = null;
 				//this.setPreferredSize(new Dimension(get_pas().get_eastwidth()-50, 500));
 				m_gridlayout = new GridBagLayout();//GridLayout(0, 2, 50, 20);
 				m_gridconst  = new GridBagConstraints();
 				setLayout(m_gridlayout);
 				
-				m_tabbedpane.addTab(PAS.l("main_infotab_title"), null,
+				if(m_infopanel!=null)
+					PAS.pasplugin.onAddInfoTab(m_tabbedpane, m_infopanel);
+				/*m_tabbedpane.addTab(PAS.l("main_infotab_title"), null,
 									m_infopanel,
 									//sp,
-									PAS.l("main_infotab_title_tooltip"));
+									PAS.l("main_infotab_title_tooltip"));*/
 				/*m_tabbedpane.addTab("Status", null,
 									m_statuspanel,
 									"Status");
@@ -135,9 +138,12 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		addComponentListener(this);
 		try
 		{
-			m_houseeditor.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
-			m_gpspanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
-			m_gpseventpanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+			if(m_houseeditor!=null)
+				m_houseeditor.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+			if(m_gpspanel!=null)
+				m_gpspanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+			if(m_gpseventpanel!=null)
+				m_gpseventpanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
 			if(get_parm()!=null)
 			{
 				get_parm().putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
@@ -205,14 +211,19 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			//int n = get_tabbedpane().getSelectedIndex();
 			//Component c = get_tabbedpane().getSelectedComponent();
 			//if(get_tabbedpane().getComponentAt(get_tabbedpane().getSelectedIndex()).equals(get_infopanel()))
-			if(get_tabbedpane().getSelectedComponent().equals(get_infopanel()))
-				get_infopanel().actionPerformed(e);
+			if(get_infopanel()!=null)
+			{
+				if(get_tabbedpane().getSelectedComponent().equals(get_infopanel()))
+					get_infopanel().actionPerformed(e);
+			}
 		}
 		else if("act_maploaded".equals(e.getActionCommand())) {
-			get_infopanel().actionPerformed(e);
+			if(get_infopanel()!=null)
+				get_infopanel().actionPerformed(e);
 		}
 		else if("act_download_houses_report".equals(e.getActionCommand())) {
-			get_infopanel().actionPerformed(e);
+			if(get_infopanel()!=null)
+				get_infopanel().actionPerformed(e);
 		}
 		else if(e.getSource().equals(get_taspanel())) //show loader
 		{
@@ -335,11 +346,17 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		
 		
 		// Kommentert bort pga scrollbar
-		m_infopanel.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		m_infopanel.revalidate();
+		if(m_infopanel!=null)
+		{
+			m_infopanel.setPreferredSize(new Dimension(getWidth(), getHeight()));
+			m_infopanel.revalidate();
+		}
 		
-		m_houseeditor.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		m_houseeditor.revalidate();
+		if(m_houseeditor!=null)
+		{
+			m_houseeditor.setPreferredSize(new Dimension(getWidth(), getHeight()));
+			m_houseeditor.revalidate();
+		}
 		
 		if(m_taspanel!=null)
 		{
@@ -381,7 +398,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		try {
 			switch(n_leaf) {
 				case PANEL_INFO_:
-					get_tabbedpane().setSelectedComponent(m_infopanel);
+					if(m_infopanel!=null)
+						get_tabbedpane().setSelectedComponent(m_infopanel);
 					break;
 				case PANEL_GPS_LIST_:
 					get_tabbedpane().setSelectedComponent(m_gpspanel);
@@ -396,7 +414,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					get_tabbedpane().setSelectedComponent(m_sendingpanel);
 					break;
 				case PANEL_HOUSEEDITOR_:
-					get_tabbedpane().setSelectedComponent(m_houseeditor);
+					if(m_houseeditor!=null)
+						get_tabbedpane().setSelectedComponent(m_houseeditor);
 					break;
 				case PANEL_PARM_:
 					get_tabbedpane().setSelectedComponent(get_parm());
@@ -478,6 +497,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	
 	
 	private int find_component(Component c) {
+		if(c==null)
+			return -1;
 		Component arr [] = get_tabbedpane().getComponents();
 		for(int i=0; i < arr.length; i++) {
 			if(arr[i].equals(c))

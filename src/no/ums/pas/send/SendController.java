@@ -406,7 +406,7 @@ public class SendController implements ActionListener {
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_new_sending".equals(e.getActionCommand())) {
 			create_new_sending();
-			get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
+			get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 		}
 		else if("act_resend".equals(e.getActionCommand())) {
 			StatusSending sending = (StatusSending)e.getSource();

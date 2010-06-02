@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import com.sun.jmx.snmp.Enumerated;
 
 import java.net.URL;
+import java.net.URLClassLoader;
 
 import no.ums.pas.PAS;
 
@@ -29,8 +30,14 @@ public class LocalizationFinder
 			//System.out.println(new File(PAS.class.getClass().getResource("/localization/").getPath()).toString());
 			//File langs = new File(PAS.class.getClass().getResource("/localization/").getPath());//PAS.class.getClass().getResource("/localization").getPath()+File.separatorChar);
 			//File langs = new File(LocalizationFinder.class.getClass().getResource("/localization/").getPath());
-			Class cl = LocalizationFinder.class.getClass();
-			File langs = new File(cl.getResource("/localization/").getPath());
+			ClassLoader cl = LocalizationFinder.class.getClassLoader();//PAS.get_pas().getClass().getClassLoader();//LocalizationFinder.class.getClassLoader();
+			//System.out.println("ClassLoader: " + cl);
+			//File langs = new File(cl.getResource("no/ums/pas/localization/").getFile());
+			URL url = LocalizationFinder.class.getResource("/no/ums/pas/localization/");
+			//URLClassLoader ucl = new URLClassLoader(new URL[] { new URL(PAS.get_pas().get_codebase() + "/localization.jar") },cl );
+			//System.out.println("Loading URL " + url);
+			File langs = new File(cl.getResource("no/ums/pas/localization/").getFile());
+			System.out.println("Searching for localization files in " + langs.getAbsolutePath());
 			return getAvailableLocales("lang", langs);
 			
 			/*ClassFile file = new ClassPath().getDirectory("localization/");
@@ -105,6 +112,8 @@ public class LocalizationFinder
 			String[] bundles = dir.list();
 			if(bundles!=null)
 				System.out.println("Bundles.length: " + bundles.length);
+			else
+				return null;
 			for (int i = 0; i < bundles.length; i++) {
 				Matcher m = bundleFilePattern.matcher(bundles[i]);
 				if (m.find()) {

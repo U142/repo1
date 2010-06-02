@@ -295,12 +295,12 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			PAS.get_pas().kickRepaint();*/
 		}
 		public void set_show_houses() {
-			//if(get_show_houses())
+			if(get_show_houses())
 				PAS.get_pas().download_houses();
 			PAS.get_pas().kickRepaint();
 		}
 		public boolean get_show_houses() {
-			return m_item_view_showhouses.getState();
+			return m_item_view_showhouses.isSelected();
 		}
 		
 		public MainMenuBar()

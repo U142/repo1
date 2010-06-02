@@ -1,4 +1,8 @@
 package no.ums.pas.entrypoint;
+import java.net.URL;
+
+import javax.jnlp.BasicService;
+import javax.jnlp.ServiceManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -61,7 +65,21 @@ public class ExecApp {
 		SubstanceTitlePane.setCanHaveHeapStatusPanel(true);
 		
 		System.out.println("Using site: " + sz_sitename);
-		m_pas = new PAS(sz_sitename, sz_userid, sz_compid, sz_pasws, debug, sz_plugin, args);
+		
+		String sz_codebase = null;
+		try
+		{
+			BasicService basicService = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
+			URL url = basicService.getCodeBase();
+			System.out.println("Codebase="+url.toExternalForm());
+			sz_codebase = url.toExternalForm();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			sz_codebase = sz_sitename;
+		}
+		m_pas = new PAS(sz_sitename, sz_userid, sz_compid, sz_pasws, debug, sz_codebase, sz_plugin, args);
 /*		m_pas.init();
 		m_pas.setBounds(0, 0, 1280, 1000);
 		m_pas.setVisible(true);
