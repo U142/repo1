@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Xml.Serialization;
+using pas_cb_server.tmobile;
 
 namespace pas_cb_server
 {

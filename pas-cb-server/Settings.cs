@@ -103,65 +103,6 @@ namespace pas_cb_server
         public string sz_login_password = "";
 
         // methods
-        /*public static Operator[] GetOperators()
-        {
-            string qryOperators = String.Format(@"SELECT
-                                        OP.l_operator,
-                                        OP.sz_operatorname,
-                                        OP.l_type,
-                                        OP.sz_url,
-                                        OP.sz_user sz_login_id,
-                                        OP.sz_name sz_login_name,
-                                        OP.sz_password sz_login_password
-                                    FROM
-                                        LBAOPERATORS OP
-                                    WHERE
-                                        OP.f_cb=1
-                                    ORDER BY
-                                        OP.l_operator");
-
-            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
-            OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
-            OdbcDataReader rsOperators;
-
-            List<Operator> Operators = new List<Operator>();
-
-            try
-            {
-                dbConn.Open();
-
-                rsOperators = cmdOperators.ExecuteReader();
-
-                while (rsOperators.Read())
-                {
-                    Operator op = new Operator();
-
-                    op.l_operator = rsOperators.GetInt32(0);
-                    op.sz_operatorname = rsOperators.GetString(1);
-                    op.l_type = rsOperators.GetInt32(2);
-                    op.sz_url = rsOperators.GetString(3);
-                    op.sz_login_id = rsOperators.GetString(4);
-                    op.sz_login_name = rsOperators.GetString(5);
-                    op.sz_login_password = rsOperators.GetString(6);
-
-                    Operators.Add(op);
-                }
-                rsOperators.Close();
-                rsOperators.Dispose();
-                cmdOperators.Dispose();
-                dbConn.Close();
-                dbConn.Dispose();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("GetOperator() (exception={0})", e.Message),
-                    String.Format("GetOperator() (exception={0})", e),
-                    2);
-            }
-
-            return Operators.ToArray();
-        }*/
         public static Operator[] GetOperators(Settings oUser)
         {
             //string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
@@ -226,64 +167,6 @@ namespace pas_cb_server
 
             return Operators.ToArray();
         }
-        /*public static Operator GetOperator(int l_operator)
-        {
-            Operator oRet = new Operator();
-
-            //string qryOperator = "SELECT l_operator, sz_operatorname, sz_url, sz_user, sz_password, f_alertapi, f_statusapi, f_internationalapi, f_statisticsapi FROM LBAOPERATORS WHERE l_operator=" + l_operator.ToString();
-            string qryOperator = String.Format(@"SELECT
-                                        OP.l_operator,
-                                        OP.sz_operatorname,
-                                        OP.l_type,
-                                        OP.sz_url,
-                                        OP.sz_user sz_login_id,
-                                        OP.sz_name sz_login_name,
-                                        OP.sz_password sz_login_password
-                                    FROM
-                                        LBAOPERATORS OP
-                                    WHERE
-                                        OP.f_cb=1
-                                        AND OP.l_operator={0}
-                                    ORDER BY
-                                        OP.l_operator"
-                , l_operator.ToString());
-
-            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
-            OdbcCommand cmdOperator = new OdbcCommand(qryOperator, dbConn);
-            OdbcDataReader rsOperator;
-
-            try
-            {
-                dbConn.Open();
-
-                rsOperator = cmdOperator.ExecuteReader();
-
-                while (rsOperator.Read())
-                {
-                    oRet.l_operator = rsOperator.GetInt32(0);
-                    oRet.sz_operatorname = rsOperator.GetString(1);
-                    oRet.l_type = rsOperator.GetInt32(2);
-                    oRet.sz_url = rsOperator.GetString(3);
-                    oRet.sz_login_id = rsOperator.GetString(4);
-                    oRet.sz_login_name = rsOperator.GetString(5);
-                    oRet.sz_login_password = rsOperator.GetString(6);
-                }
-                rsOperator.Close();
-                rsOperator.Dispose();
-                cmdOperator.Dispose();
-                dbConn.Close();
-                dbConn.Dispose();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("GetOperators(int i) (exception={0})", e.Message),
-                    String.Format("GetOperators(int i) (exception={0})", e),
-                    2);
-            }
-
-            return oRet;
-        }*/
     }
 
     public class Constant

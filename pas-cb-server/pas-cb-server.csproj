@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="CBServer.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="include\_one2many.cs" />
     <Compile Include="include\_settings.cs" />
     <Compile Include="Ione2many.cs" />
     <Compile Include="include\_tmobile.cs" />
