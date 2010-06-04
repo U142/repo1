@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using System.Xml.Serialization;
 using pas_cb_server.tmobile;
+using com.ums.UmsCommon.CoorConvert;
 
 namespace pas_cb_server
 {
@@ -14,7 +15,7 @@ namespace pas_cb_server
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
             int ret = Constant.OK;
-
+            
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             IBAG_Alert_AttributesIBAG_alert_info t_alert_info = new IBAG_Alert_AttributesIBAG_alert_info();
             IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area t_alert_area = new IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area();

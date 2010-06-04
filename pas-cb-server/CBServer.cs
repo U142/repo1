@@ -32,10 +32,6 @@ namespace pas_cb_server
                 // Start threads
                 Log.WriteLog("Starting parser thread", 9);
                 new Thread(new ThreadStart(Parser.CheckFiles)).Start();
-
-                AlertInfo ai = new AlertInfo();
-                Operator op = new Operator();
-                CB_one2many.CreateAlert(ai, op);
             }
             catch (Exception e)
             {
