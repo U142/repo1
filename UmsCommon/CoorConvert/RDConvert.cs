@@ -5,7 +5,7 @@ using System.Text;
 
 namespace com.ums.UmsCommon.CoorConvert
 {
-    class RD
+    public class RD
     {
         // constants
         private const long x0 = 155000;
