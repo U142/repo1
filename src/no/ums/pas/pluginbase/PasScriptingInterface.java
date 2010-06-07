@@ -71,8 +71,8 @@ public abstract class PasScriptingInterface
 		
 		/**
 		 * 
-		 * @param results - Use the list retrieved from onExecSearch
-		 * @param list - Populate this list
+		 * @param results Use the list retrieved from onExecSearch
+		 * @param list Populate this list
 		 * @return true if ok
 		 * @throws Exception
 		 */
@@ -80,17 +80,17 @@ public abstract class PasScriptingInterface
 		
 		/**
 		 * 
-		 * @param frame - The frame where the overridden SearchPanelVals will be added
-		 * @return - a new overridden version of SearchPanelVals
+		 * @param frame The frame where the overridden SearchPanelVals will be added
+		 * @return a new overridden version of SearchPanelVals
 		 * @throws Exception
 		 */
 		public abstract SearchPanelVals onCreateSearchPanelVals(SearchFrame frame) throws Exception;
 		
 		/**
 		 * 
-		 * @param frame - the frame where the overridden SearchPanelVals will be added
-		 * @param callback - Where to the list will notify on clicks
-		 * @return - a new overridden version of SearchPanelResultsAddrSearch (list)
+		 * @param frame the frame where the overridden SearchPanelVals will be added
+		 * @param callback Where to the list will notify on clicks
+		 * @return a new overridden version of SearchPanelResultsAddrSearch (list)
 		 * @throws Exception
 		 */
 		public abstract SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(SearchFrame frame, ActionListener callback) throws Exception;
@@ -177,14 +177,14 @@ public abstract class PasScriptingInterface
 	
 	/**
 	 * Function is executed when user asks for new sending. The SendOptionToolbar object may be altered here
-	 * @param toolbar - SendOptionToolbar to be altered before added
+	 * @param toolbar SendOptionToolbar to be altered before added
 	 * @return
 	 */
 	public abstract boolean onAddSendOptionToolbar(SendOptionToolbar toolbar);
 	
 	/**
 	 * Function to add buttons below the JMenu
-	 * @param menu - MainMenu to be altered
+	 * @param menu MainMenu to be altered
 	 * @return
 	 */
 	public abstract boolean onAddMainMenuButtons(MainMenu menu);
@@ -216,22 +216,22 @@ public abstract class PasScriptingInterface
 	
 	/**
 	 * Function to add components to main window. Is executed right before onShowMainWindow()
-	 * @param p - pointer to main PAS object to get the main visual objects. New visual objects may also be added.
+	 * @param p pointer to main PAS object to get the main visual objects. New visual objects may also be added.
 	 * @return
 	 */
 	public abstract boolean onAddPASComponents(PAS p);
 	
 	/**
 	 * Function to determine the geographic location of the first map loaded. 
-	 * @param nav - pointer to Navigation object for handling geographic calculations
-	 * @param ui - pointer to UserInfo object where geographic hints are stored.
+	 * @param nav pointer to Navigation object for handling geographic calculations
+	 * @param ui pointer to UserInfo object where geographic hints are stored.
 	 * @return
 	 */
 	public abstract boolean onSetInitialMapBounds(Navigation nav, UserInfo ui);
 	
 	/**
 	 * Function is executed when the user selects a new department
-	 * @param pas - pointer to the main PAS object to alter whatever
+	 * @param pas pointer to the main PAS object to alter whatever
 	 * @return
 	 */
 	public abstract boolean onDepartmentChanged(PAS pas);
@@ -239,8 +239,8 @@ public abstract class PasScriptingInterface
 	/**
 	 * 
 	 * Function to change main window title. Is called after logon and when user changed department (onDepartmentChanged)
-	 * @param pas - pointer to the main PAS object
-	 * @param s - string containing hint of app title
+	 * @param pas pointer to the main PAS object
+	 * @param s string containing hint of app title
 	 * @param userinfo UserInfo struct holding information that may be used to generate an app-title
 	 * @return
 	 */

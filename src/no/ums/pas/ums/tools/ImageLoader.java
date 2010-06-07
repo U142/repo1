@@ -55,7 +55,7 @@ public class ImageLoader {
 	public static ImageIcon load_icon(String sz_filename) {
 		m_cl = ImageLoader.class.getClassLoader();
 		try {
-			return load_icon("no/ums/pas/icons/", sz_filename);
+			return load_icon("no/ums/pas/icons/", sz_filename, m_cl);
 		} catch(Exception e) {
 			return null;
 		}
@@ -64,10 +64,10 @@ public class ImageLoader {
 	/*
 	 * load resources from specified namespace
 	 */
-	public static ImageIcon load_icon(String sz_namespace, String sz_filename) {
-		m_cl = ImageLoader.class.getClassLoader();
+	public static ImageIcon load_icon(String sz_namespace, String sz_filename, ClassLoader classloader) {
+		//m_cl = ImageLoader.class.getClassLoader();
 		try {
-			return new ImageIcon(m_cl.getResource(sz_namespace + sz_filename));
+			return new ImageIcon(classloader.getResource(sz_namespace + sz_filename));
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

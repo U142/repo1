@@ -56,6 +56,7 @@ public abstract class SendProperties extends Object {
 	public static final int SENDING_TYPE_MUNICIPAL_ = 9;
 	public static final int SENDING_TYPE_TAS_COUNTRY_ = 10;
 	public static final int SENDING_TYPE_PAINT_RESTRICTION_AREA_ = 11;
+	public static final int SENDING_TYPE_POLYGONAL_ELLIPSE_ = 12;
 	
 	//public static final int SENDING_TYPE_RESEND_ = 9;
 	

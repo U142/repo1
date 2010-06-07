@@ -72,10 +72,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	ButtonGroup m_group_sendingtype;
 	JToggleButton m_radio_sendingtype_polygon;
 	JToggleButton m_radio_sendingtype_ellipse;
+	JToggleButton m_radio_sendingtype_polygonal_ellipse;
 	JToggleButton m_radio_sendingtype_municipal;
 	ButtonGroup m_btngroup_lba;
 	public JToggleButton get_radio_polygon() { return m_radio_sendingtype_polygon; }
 	public JToggleButton get_radio_ellipse() { return m_radio_sendingtype_ellipse; }
+	public JToggleButton get_radio_polygonal_ellipse() { return m_radio_sendingtype_polygonal_ellipse; }
 	public JToggleButton get_radio_municipal() { return m_radio_sendingtype_municipal; }
 	JButton m_btn_goto;
 	ToggleAddresstype m_btn_adrtypes_private_fixed;
@@ -310,6 +312,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public static final int TXT_RECIPIENTTYPES_			= 32768;
 	public static final int BTN_ADRTYPES_NOFAX_			= 65536;
 	public static final int BTN_SENDINGTYPE_MUNICIPAL_	= 1 << 17;
+	public static final int BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_ = 1 << 18; 
 	
 	public static final int COMPONENTS_ALL_ = BTN_SENDINGTYPE_POLYGON_ | BTN_SENDINGTYPE_ELLIPSE_ | BTN_ADRTYPES_PRIVATE_ |
 												BTN_ADRTYPES_COMPANY_ | BTN_ADRTYPES_NOPHONE_ | BTN_COLORPICKER_ | BTN_FINALIZE_ | 
@@ -327,6 +330,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_radio_sendingtype_polygon.setEnabled(false);
 				m_radio_sendingtype_ellipse.setEnabled(false);
 				m_radio_sendingtype_municipal.setEnabled(false);
+				m_radio_sendingtype_polygonal_ellipse.setEnabled(false);
 				
 				m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
@@ -373,6 +377,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		if((FLAGS & BTN_SENDINGTYPE_ELLIPSE_) == BTN_SENDINGTYPE_ELLIPSE_) {
 			this.m_radio_sendingtype_ellipse.setVisible(b_show);
+		}
+		if((FLAGS & BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_) == BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_) {
+			this.m_radio_sendingtype_polygonal_ellipse.setVisible(b_show);
 		}
 		if((FLAGS & BTN_SENDINGTYPE_MUNICIPAL_) == BTN_SENDINGTYPE_MUNICIPAL_)
 		{
@@ -704,15 +711,18 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		switch(get_parent().get_sendproperties().get_sendingtype()) {
 			case SendProperties.SENDING_TYPE_POLYGON_:
 			case SendProperties.SENDING_TYPE_CIRCLE_:
+			case SendProperties.SENDING_TYPE_POLYGONAL_ELLIPSE_:
 				m_radio_sendingtype_polygon.setEnabled(true);
 				m_radio_sendingtype_ellipse.setEnabled(true);
 				m_radio_sendingtype_municipal.setEnabled(true);
+				m_radio_sendingtype_polygonal_ellipse.setEnabled(true);
 				m_radio_activate.setEnabled(true);
 				break;
 			case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
 				m_radio_sendingtype_polygon.setEnabled(false);
 				m_radio_sendingtype_ellipse.setEnabled(false);
 				m_radio_sendingtype_municipal.setEnabled(false);
+				m_radio_sendingtype_polygonal_ellipse.setEnabled(false);
 				m_radio_activate.setEnabled(false);
 				break;				
 		}
@@ -743,6 +753,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_radio_sendingtype_ellipse	= new JToggleButton(ImageLoader.load_icon("send_ellipse_24.png"));
 		else
 			m_radio_sendingtype_ellipse	= new JToggleButton(ImageLoader.load_icon("send_ellipse.gif"));
+		m_radio_sendingtype_polygonal_ellipse = new JToggleButton(ImageLoader.load_icon("send_ellipse_24.png"));
 		if(PAS.icon_version==2)
 			m_radio_sendingtype_municipal = new JToggleButton(ImageLoader.load_icon("send_municipal_24.png"));
 		else
@@ -827,6 +838,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		m_radio_sendingtype_polygon.setToolTipText(PAS.l("main_sending_type_polygon"));
 		m_radio_sendingtype_ellipse.setToolTipText(PAS.l("main_sending_type_ellipse"));
+		m_radio_sendingtype_polygonal_ellipse.setToolTipText(PAS.l("main_sending_type_ellipse") + " (polygonal)");
 		m_radio_sendingtype_municipal.setToolTipText(PAS.l("main_sending_type_municipal"));
 		m_btn_goto.setToolTipText(PAS.l("main_status_show_map_of_sending"));
 		m_btn_adrtypes_private_fixed.setToolTipText(PAS.l("main_sending_adr_btn_fixed_private_tooltip"));
@@ -846,9 +858,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		m_group_sendingtype.add(m_radio_sendingtype_polygon);
 		m_group_sendingtype.add(m_radio_sendingtype_ellipse);
+		m_group_sendingtype.add(m_radio_sendingtype_polygonal_ellipse);
 		m_group_sendingtype.add(m_radio_sendingtype_municipal);
 		set_size(m_radio_sendingtype_polygon, SIZE_BUTTON_LARGE);
 		set_size(m_radio_sendingtype_ellipse, SIZE_BUTTON_LARGE);
+		set_size(m_radio_sendingtype_polygonal_ellipse, SIZE_BUTTON_LARGE);
 		set_size(m_radio_sendingtype_municipal, SIZE_BUTTON_LARGE);
 		set_size(m_btn_goto, SIZE_BUTTON_LARGE);
 		
@@ -871,6 +885,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		m_radio_sendingtype_polygon.addActionListener(this);
 		m_radio_sendingtype_ellipse.addActionListener(this);
+		m_radio_sendingtype_polygonal_ellipse.addActionListener(this);
 		m_radio_sendingtype_municipal.addActionListener(this);
 		m_btn_goto.addActionListener(this);
 		m_btn_adrtypes_private_fixed.addActionListener(this);
@@ -900,6 +915,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_send.setActionCommand("act_send_one");
 		m_radio_sendingtype_polygon.setActionCommand("act_sendingtype_polygon");
 		m_radio_sendingtype_ellipse.setActionCommand("act_sendingtype_ellipse");
+		m_radio_sendingtype_polygonal_ellipse.setActionCommand("act_sendingtype_polygonal_ellipse");
 		m_radio_sendingtype_municipal.setActionCommand("act_sendingtype_municipal");
 		m_btn_adrtypes_private_fixed.setActionCommand("act_set_addresstypes");
 		m_btn_adrtypes_company_fixed.setActionCommand("act_set_addresstypes");
@@ -1146,6 +1162,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_radio_sendingtype_polygon, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_ellipse, m_gridconst);
+		inc_xpanels2();
+		add(m_radio_sendingtype_polygonal_ellipse, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_municipal, m_gridconst);
 		inc_xpanels2();
@@ -1501,6 +1519,17 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}
 			catch(Exception err) { }
 		}
+		else if("act_sendingtype_polygonal_ellipse".equals(e.getActionCommand())) {
+			try
+			{
+				get_parent().set_type(SendProperties.SENDING_TYPE_POLYGONAL_ELLIPSE_);
+				get_callback().actionPerformed(new ActionEvent(new Integer(no.ums.pas.maps.MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+				//if(get_callback()!=null)
+				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+				resetMunicipals();				
+			}
+			catch(Exception err) { }
+		}
 		else if("act_sendingtype_municipal".equals(e.getActionCommand())) {
 			get_parent().set_type(SendProperties.SENDING_TYPE_MUNICIPAL_);
 			get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
@@ -1642,6 +1671,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			m_btn_color.setEnabled(!b);
 			m_radio_sendingtype_polygon.setEnabled(!b);
 			m_radio_sendingtype_ellipse.setEnabled(!b);
+			m_radio_sendingtype_polygonal_ellipse.setEnabled(!b);
 			m_radio_sendingtype_municipal.setEnabled(!b);
 			m_txt_sendname.setEditable(!b);
 			m_btn_open.setEnabled(!b);

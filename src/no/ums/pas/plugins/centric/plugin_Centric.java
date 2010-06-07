@@ -20,6 +20,7 @@ import java.util.List;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import no.ums.pas.send.*;
+import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
@@ -237,7 +238,16 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public ImageIcon onLoadAppIcon() {
 		//return super.onLoadAppIcon();
-		return no.ums.pas.ums.tools.ImageLoader.load_icon("no/ums/pas/plugins/centric/", "alert-icon.png");
+		return no.ums.pas.ums.tools.ImageLoader.load_icon("no/ums/pas/plugins/centric/", "alert-icon.png", getClass().getClassLoader());
+		/*try
+		{
+			//return new ImageIcon(getClass().getClassLoader().getResource("no/ums/pas/plugins/centric/alert-icon.png"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}*/
 	}
 
 	@Override
