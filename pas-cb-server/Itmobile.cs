@@ -17,19 +17,19 @@ namespace pas_cb_server
             int ret = Constant.OK;
             
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            IBAG_Alert_AttributesIBAG_alert_info t_alert_info = new IBAG_Alert_AttributesIBAG_alert_info();
-            IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area t_alert_area = new IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area();
-            List<IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area>();
+            IBAG_alert_info t_alert_info = new IBAG_alert_info();
+            IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
+            List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
 
             t_alert_area.IBAG_area_description = "adhoc-polygon";
             t_alert_area.IBAG_polygon = get_IBAG_polygon(oAlert, op);
             t_alert_arealist.Add(t_alert_area);
 
-            t_alert_info.IBAG_priority = IBAG_Alert_AttributesIBAG_alert_infoIBAG_priority.Normal;
+            t_alert_info.IBAG_priority = IBAG_priority.Normal;
             t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = IBAG_Alert_AttributesIBAG_alert_infoIBAG_category.Met;
-            t_alert_info.IBAG_severity = IBAG_Alert_AttributesIBAG_alert_infoIBAG_severity.Severe;
-            t_alert_info.IBAG_urgency = IBAG_Alert_AttributesIBAG_alert_infoIBAG_urgency.Expected;
+            t_alert_info.IBAG_category = IBAG_category.Met;
+            t_alert_info.IBAG_severity = IBAG_severity.Severe;
+            t_alert_info.IBAG_urgency = IBAG_urgency.Expected;
             t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
@@ -41,8 +41,8 @@ namespace pas_cb_server
             t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(oAlert.l_refno.ToString());
             t_alert.IBAG_sender = ""; //config
             t_alert.IBAG_sent_date_time = DateTime.Now;
-            t_alert.IBAG_status = IBAG_Alert_AttributesIBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_Alert_AttributesIBAG_message_type.Alert;
+            t_alert.IBAG_status = IBAG_status.Actual;
+            t_alert.IBAG_message_type = IBAG_message_type.Alert;
             t_alert.IBAG_cap_identifier = ""; //config
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
@@ -51,10 +51,10 @@ namespace pas_cb_server
 
             switch (t_alert_response.IBAG_message_type)
             {
-                case IBAG_Alert_AttributesIBAG_message_type.Ack:
+                case IBAG_message_type.Ack:
                     // ok, insert appropriate info in database
                     break;
-                case IBAG_Alert_AttributesIBAG_message_type.Error:
+                case IBAG_message_type.Error:
                     // failed, return error and insert appropriate info in database
                     ret = Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
                     break;
@@ -120,19 +120,19 @@ namespace pas_cb_server
             return null;
         } // end HttpPost 
 
-        private static IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language get_IBAG_text_language(AlertInfo oAlert, Operator op)
+        private static IBAG_text_language get_IBAG_text_language(AlertInfo oAlert, Operator op)
         {
             switch (oAlert.alert_message.l_channel)
             {
                 case 4:
-                    return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.Spanish;
+                    return IBAG_text_language.Spanish;
                 case 3:
-                    return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.French;
+                    return IBAG_text_language.French;
                 case 2:
-                    return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.English;
+                    return IBAG_text_language.English;
                 case 1:
                 default:
-                    return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.Dutch;
+                    return IBAG_text_language.Dutch;
             }
         }
         private static string[] get_IBAG_polygon(AlertInfo oAlert, Operator op)

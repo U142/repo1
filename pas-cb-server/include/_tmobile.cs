@@ -49,14 +49,14 @@ namespace pas_cb_server.tmobile {
         public System.DateTime IBAG_sent_date_time;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_status IBAG_status;
+        public IBAG_status IBAG_status;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_message_type IBAG_message_type;
+        public IBAG_message_type IBAG_message_type;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IBAG_status_report")]
-        public IBAG_Alert_AttributesIBAG_status_report[] IBAG_status_report;
+        public IBAG_status_report[] IBAG_status_report;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IBAG_response_code")]
@@ -81,17 +81,17 @@ namespace pas_cb_server.tmobile {
         public bool IBAG_cap_sent_date_timeSpecified;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_info IBAG_alert_info;
+        public IBAG_alert_info IBAG_alert_info;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_Digital_Signature IBAG_Digital_Signature;
+        public IBAG_Digital_Signature IBAG_Digital_Signature;
     }
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_status {
+    public enum IBAG_status {
         
         /// <remarks/>
         Actual,
@@ -108,7 +108,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_message_type {
+    public enum IBAG_message_type {
         
         /// <remarks/>
         Alert,
@@ -153,10 +153,10 @@ namespace pas_cb_server.tmobile {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public partial class IBAG_Alert_AttributesIBAG_status_report {
+    public partial class IBAG_status_report {
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_status_reportIBAG_network_type IBAG_network_type;
+        public IBAG_network_type IBAG_network_type;
         
         /// <remarks/>
         public int IBAG_cell_count;
@@ -184,7 +184,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_status_reportIBAG_network_type {
+    public enum IBAG_network_type {
         
         /// <remarks/>
         GSM,
@@ -199,36 +199,36 @@ namespace pas_cb_server.tmobile {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public partial class IBAG_Alert_AttributesIBAG_alert_info {
+    public partial class IBAG_alert_info {
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_priority IBAG_priority;
+        public IBAG_priority IBAG_priority;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool IBAG_prioritySpecified;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_category IBAG_category;
+        public IBAG_category IBAG_category;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_event_code IBAG_event_code;
+        public IBAG_event_code IBAG_event_code;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_response_type IBAG_response_type;
+        public IBAG_response_type IBAG_response_type;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool IBAG_response_typeSpecified;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_severity IBAG_severity;
+        public IBAG_severity IBAG_severity;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_urgency IBAG_urgency;
+        public IBAG_urgency IBAG_urgency;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_certainty IBAG_certainty;
+        public IBAG_certainty IBAG_certainty;
         
         /// <remarks/>
         public System.DateTime IBAG_expires_date_time;
@@ -237,7 +237,7 @@ namespace pas_cb_server.tmobile {
         public string IBAG_sender_name;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language IBAG_text_language;
+        public IBAG_text_language IBAG_text_language;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
@@ -271,7 +271,7 @@ namespace pas_cb_server.tmobile {
         public bool IBAG_broadcast_countSpecified;
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_coordinate_system IBAG_coordinate_system;
+        public IBAG_coordinate_system IBAG_coordinate_system;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
@@ -279,14 +279,14 @@ namespace pas_cb_server.tmobile {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IBAG_Alert_Area")]
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area[] IBAG_Alert_Area;
+        public IBAG_Alert_Area[] IBAG_Alert_Area;
     }
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_priority {
+    public enum IBAG_priority {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("High Priority")]
@@ -303,7 +303,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_category {
+    public enum IBAG_category {
         
         /// <remarks/>
         Geo,
@@ -346,7 +346,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_event_code {
+    public enum IBAG_event_code {
         
         /// <remarks/>
         CDW,
@@ -440,7 +440,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_response_type {
+    public enum IBAG_response_type {
         
         /// <remarks/>
         Shelter,
@@ -471,7 +471,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_severity {
+    public enum IBAG_severity {
         
         /// <remarks/>
         Extreme,
@@ -484,7 +484,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_urgency {
+    public enum IBAG_urgency {
         
         /// <remarks/>
         Immediate,
@@ -497,7 +497,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_certainty {
+    public enum IBAG_certainty {
         
         /// <remarks/>
         Observed,
@@ -510,7 +510,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language {
+    public enum IBAG_text_language {
         
         /// <remarks/>
         English,
@@ -529,7 +529,7 @@ namespace pas_cb_server.tmobile {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_coordinate_system {
+    public enum IBAG_coordinate_system {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("WGS-84")]
@@ -553,7 +553,7 @@ namespace pas_cb_server.tmobile {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public partial class IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area {
+    public partial class IBAG_Alert_Area {
         
         /// <remarks/>
         public string IBAG_area_description;
@@ -575,7 +575,7 @@ namespace pas_cb_server.tmobile {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IBAG_cell_list")]
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_AreaIBAG_cell_list[] IBAG_cell_list;
+        public IBAG_cell_list[] IBAG_cell_list;
     }
     
     /// <remarks/>
@@ -584,10 +584,10 @@ namespace pas_cb_server.tmobile {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public partial class IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_AreaIBAG_cell_list {
+    public partial class IBAG_cell_list {
         
         /// <remarks/>
-        public IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_AreaIBAG_cell_listIBAG_network_type IBAG_network_type;
+        public IBAG_network_type IBAG_network_type;
         
         /// <remarks/>
         public string IBAG_network_element_identifier;
@@ -603,23 +603,10 @@ namespace pas_cb_server.tmobile {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public enum IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_AreaIBAG_cell_listIBAG_network_type {
-        
-        /// <remarks/>
-        GSM,
-        
-        /// <remarks/>
-        UMTS,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="ibag:1.0")]
-    public partial class IBAG_Alert_AttributesIBAG_Digital_Signature {
+    public partial class IBAG_Digital_Signature {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAnyElementAttribute()]
