@@ -66,6 +66,10 @@ public class ImageLoader {
 		}
 	}
 	
+	/*
+	 * load resources from specified namespace
+	 */
+	
     public static Image makeTransparent(Image i, float f_alpha){
     	try{
     	    int width=i.getWidth(null);
