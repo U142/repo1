@@ -53,15 +53,10 @@ public class ImageLoader {
 	 * load resources from downloaded JAR
 	 */
 	public static ImageIcon load_icon(String sz_filename) {
-		//m_cl = Toolkit.getDefaultToolkit().getClass().getClassLoader();
-		
 		m_cl = ImageLoader.class.getClassLoader();
 		try {
-			return new ImageIcon(m_cl.getResource("no/ums/pas/icons/" + sz_filename));
+			return load_icon("no/ums/pas/icons/", sz_filename);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("ImageLoader","Exception in load_icon (" + sz_filename + ")",e,1);
 			return null;
 		}
 	}
@@ -69,6 +64,17 @@ public class ImageLoader {
 	/*
 	 * load resources from specified namespace
 	 */
+	public static ImageIcon load_icon(String sz_namespace, String sz_filename) {
+		m_cl = ImageLoader.class.getClassLoader();
+		try {
+			return new ImageIcon(m_cl.getResource(sz_namespace + sz_filename));
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			Error.getError().addError("ImageLoader","Exception in load_icon (" + sz_filename + ")",e,1);
+			return null;
+		}
+	}
 	
     public static Image makeTransparent(Image i, float f_alpha){
     	try{

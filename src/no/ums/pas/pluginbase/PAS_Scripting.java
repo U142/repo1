@@ -527,15 +527,7 @@ public class PAS_Scripting extends PasScriptingInterface
 	public List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback) {
 		List<String> arr_adr = new ArrayList<String>();
 		arr_adr.add("mh@ums.no");
-		arr_adr.add("sa@ums.no");
-		
-		/*String sz_to = "";
-		for(int i=0; i < arr_adr.size(); i++)
-		{
-			if(i>0)
-				sz_to += ",";
-			sz_to += arr_adr.get(i);
-		}*/
+		arr_adr.add("sa@ums.no");		
 		MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
 		return arr_adr;
 	}
