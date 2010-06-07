@@ -119,13 +119,14 @@
     {
         public CBECELLID[] CBECELLID;
     }
-    
+
+    [XmlRpcMissingMapping(MappingAction.Ignore)]
     public partial class CBECELLID 
     {
-        public int ci;
-        public int lac;
+        public int? ci;
+        public int? lac;
         public string btsname;
-        public int reason;
+        public int? reason;
     }
     
     public partial class CBCNEWMSGCELLREQRESULT 
@@ -210,18 +211,13 @@
         public int immediatedisplay;
         public PAGELISTDATA pagelist;
     }
-    
-    public partial class PAGELISTDATA 
+
+    public partial class PAGELISTDATA
     {
         public int nrofpages;
-        public PAGELISTDATAPage page;
+        public PAGEDATA[] page;
     }
-    
-    public partial class PAGELISTDATAPage 
-    {
-        public PAGEDATA[] PAGEDATA;
-    }
-    
+
     public partial class PAGEDATA 
     {
         public byte[] pagecontents;
@@ -283,18 +279,13 @@
         public int nrofareaid;
         public string userareaid;
     }
-    
-    public partial class CBECELLLIST 
+
+    public partial class CBECELLLIST
     {
         public int nrofcells;
-        public CBECELLLISTCbecellid cbecellid;
+        public CBECELLID[] cbecellid;
     }
-    
-    public partial class CBECELLLISTCbecellid 
-    {
-        public CBECELLID[] CBECELLID;
-    }
-    
+
     public partial class CBECCLIST 
     {
         public int nrofcc;

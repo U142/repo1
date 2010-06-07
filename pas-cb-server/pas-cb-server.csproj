@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBServer.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="include\_one2many.cs" />
     <Compile Include="include\_settings.cs" />

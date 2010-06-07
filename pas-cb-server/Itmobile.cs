@@ -5,8 +5,8 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Xml.Serialization;
+using System.Globalization;
 using pas_cb_server.tmobile;
-using com.ums.UmsCommon.CoorConvert;
 
 namespace pas_cb_server
 {
@@ -21,13 +21,8 @@ namespace pas_cb_server
             IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area t_alert_area = new IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area();
             List<IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_AttributesIBAG_alert_infoIBAG_Alert_Area>();
 
-            List<string> poly = new List<string>();
-            foreach(PolyPoint p in oAlert.alert_polygon)
-            {
-                poly.Add(String.Format("{0},{1}", p.x, p.y));
-            }
             t_alert_area.IBAG_area_description = "adhoc-polygon";
-            t_alert_area.IBAG_polygon = poly.ToArray();
+            t_alert_area.IBAG_polygon = get_IBAG_polygon(oAlert, op);
             t_alert_arealist.Add(t_alert_area);
 
             t_alert_info.IBAG_priority = IBAG_Alert_AttributesIBAG_alert_infoIBAG_priority.Normal;
@@ -36,7 +31,7 @@ namespace pas_cb_server
             t_alert_info.IBAG_severity = IBAG_Alert_AttributesIBAG_alert_infoIBAG_severity.Severe;
             t_alert_info.IBAG_urgency = IBAG_Alert_AttributesIBAG_alert_infoIBAG_urgency.Expected;
             t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
-            t_alert_info.IBAG_text_language = GetLanguageEnum(oAlert.alert_message.l_channel);
+            t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
             t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
             t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
@@ -52,7 +47,7 @@ namespace pas_cb_server
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op.sz_url, t_alert);
+            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
             switch (t_alert_response.IBAG_message_type)
             {
@@ -80,13 +75,13 @@ namespace pas_cb_server
             return Constant.OK;
         }
         
-        private static IBAG_Alert_Attributes SendRequest(string uri, IBAG_Alert_Attributes parameters)
+        private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters)
         {
             XmlSerializer s = new XmlSerializer(typeof(IBAG_Alert_Attributes));
             TextWriter w = new StringWriter();
             s.Serialize(w, parameters);
 
-            WebRequest webRequest = WebRequest.Create(uri);
+            WebRequest webRequest = WebRequest.Create(op.sz_url);
             webRequest.Method = "POST";
 
             byte[] bytes = Encoding.ASCII.GetBytes(w.ToString());
@@ -124,9 +119,10 @@ namespace pas_cb_server
             }
             return null;
         } // end HttpPost 
-        private static IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language GetLanguageEnum(int l_channel)
+
+        private static IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language get_IBAG_text_language(AlertInfo oAlert, Operator op)
         {
-            switch (l_channel)
+            switch (oAlert.alert_message.l_channel)
             {
                 case 4:
                     return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.Spanish;
@@ -138,6 +134,23 @@ namespace pas_cb_server
                 default:
                     return IBAG_Alert_AttributesIBAG_alert_infoIBAG_text_language.Dutch;
             }
+        }
+        private static string[] get_IBAG_polygon(AlertInfo oAlert, Operator op)
+        {
+            List<string> ret = new List<string>();
+            NumberFormatInfo coorformat = new NumberFormatInfo();
+            coorformat.NumberDecimalSeparator = ".";
+            coorformat.NumberGroupSeparator = "";
+
+            double xcoord, ycoord;
+
+            foreach (PolyPoint wgs84pt in oAlert.alert_polygon)
+            {
+                Tools.ConvertCoordinate(wgs84pt, out xcoord, out ycoord, op.coordinate_type);
+                ret.Add(String.Format(coorformat, "{0}, {1}", xcoord, ycoord));
+            }
+
+            return ret.ToArray();
         }
     }
 }

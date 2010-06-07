@@ -254,7 +254,7 @@ namespace pas_cb_server
 
     public class PolyPoint
     {
-        public float x;
-        public float y;
+        public float x; // longitude
+        public float y; // latitude
     }
 }

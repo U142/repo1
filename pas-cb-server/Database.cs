@@ -171,5 +171,33 @@ namespace pas_cb_server
 
             return lRetVal;
         }
+
+        private static object ExecuteScalar(string sz_query)
+        {
+            object ret = null;
+
+            try
+            {
+                OdbcConnection conn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(sz_query, conn);
+
+                conn.Open();
+                ret = cmd.ExecuteScalar();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.ExecuteScalar (exception={0}) (sql={1})", e.Message, sz_query),
+                    String.Format("Database.ExecuteScalar (exception={0}) (sql={1})", e, sz_query),
+                    2);
+            }
+
+            return ret;
+        }
+
+        public static int GetHandle(Operator op)
+        {
+            return (int)Database.ExecuteScalar(op.sz_handle_proc);
+        }
     }
 }

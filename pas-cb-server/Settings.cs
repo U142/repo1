@@ -94,13 +94,14 @@ namespace pas_cb_server
         public int l_operator = 0;
         public string sz_operatorname = "";
         public int l_type = 0; // one2many, tmobile
-        public int l_coordinate_type = 0; // may need conversion
 
-        // login settings for interaface
+        // login settings for interface
         public string sz_url = "";
         public string sz_login_id = "";
         public string sz_login_name = "";
         public string sz_login_password = "";
+        public string sz_handle_proc = "sp_cb_kpnhandle";
+        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.RD;
 
         // methods
         public static Operator[] GetOperators(Settings oUser)
@@ -246,5 +247,13 @@ namespace pas_cb_server
         LBAS = 0,
         TAS = 1,
         CB = 2
+    }
+
+    public enum COORDINATESYSTEM
+    {
+        WGS84 = 0,
+        UTM31 = 1,
+        UTM32 = 2,
+        RD = 3
     }
 }
