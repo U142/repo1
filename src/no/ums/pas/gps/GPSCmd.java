@@ -262,7 +262,7 @@ public class GPSCmd extends Object {
 				cmd.set_cmdline("MAIL FROM:<" + sz_param1 + ">");
 				break;
 			case MAILCTRL_RCPTTO:
-				cmd.set_cmdline("RCPT TO:<" + sz_param1 + ">");
+				cmd.set_cmdline("RCPT TO:" + sz_param1 + "");
 				break;
 			case MAILCTRL_HEADER_FROM:
 				cmd.set_cmdline("From: \"" + sz_param1 + "\" <" + sz_param2 + ">");

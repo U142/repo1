@@ -215,8 +215,8 @@ public class Error implements ActionListener {
 	}
 	
 	private void sendMail(MailAccount account){		
-		MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),"mh@ums.no",this,"PAS error",concatErrorList(errorList));
-		// new MailCtrl("ums.no", "mail.ums.no", 25, "mh@ums.no", "mh@ums.no", this, "PAS Error", "dilldall");
+		//MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),"mh@ums.no",this,"PAS error",concatErrorList(errorList));
+		PAS.pasplugin.onSendErrorMessages(concatErrorList(errorList), account, this);
 	}
 	private void fillGUI(ErrorGUI gui, ErrorVO e) {
 		fillGUI(gui, e, true);

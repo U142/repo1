@@ -26,13 +26,6 @@ public class ErrorGUI extends JFrame {
 		
 		pnlNorth = new JPanel();
 		lblIcon = new JLabel();
-//		try {
-//			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//			lblIcon.setUI(LabelUI.createUI())
-//			//lblIcon.setUI(UIManager.getLookAndFeel());
-//		}catch(Exception e){
-//			Error.getError().addError("Look and Feel", "Error setting Look and Feel in ErrorGUI", e, 3);
-//		}
 		
 		lblDescription = new JLabel();
 		lblCounter = new JLabel();

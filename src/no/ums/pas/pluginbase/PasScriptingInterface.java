@@ -1,14 +1,23 @@
 package no.ums.pas.pluginbase;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 
+import org.geotools.data.ows.Layer;
+
 import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
@@ -29,6 +38,17 @@ import no.ums.ws.pas.UGabSearchResultList;
  */
 public abstract class PasScriptingInterface
 {
+	
+	public enum OPERATING_SYSTEM
+	{
+		WIN,
+		MAC,
+		UNIX,
+	};
+	
+	protected OPERATING_SYSTEM operating_system;
+	
+	
 	/**
 	 * String containing plugin for AddressSearch
 	 */
@@ -109,6 +129,7 @@ public abstract class PasScriptingInterface
 		System.out.println("PasScriptingInterface");
 		setSubPluginNames();
 		initSubPlugins();
+		_OSLookup();
 	}
 	
 	/**
@@ -118,6 +139,20 @@ public abstract class PasScriptingInterface
 	{
 		System.out.println("***Using Plugins***");
 		System.out.println((this.plugin_AddressSearch = "no.ums.pas.pluginbase.defaults.DefaultAddressSearch"));
+	}
+	
+	private void _OSLookup()
+	{
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.indexOf("win")>=0)
+			operating_system = OPERATING_SYSTEM.WIN;
+		else if(os.indexOf("mac")>=0)
+			operating_system = OPERATING_SYSTEM.MAC;
+		else if(os.indexOf("nix")>=0)
+			operating_system = OPERATING_SYSTEM.UNIX;
+		else
+			operating_system = OPERATING_SYSTEM.WIN;
+		System.out.println("Operating System: "+os);
 	}
 
 	/**
@@ -202,12 +237,14 @@ public abstract class PasScriptingInterface
 	public abstract boolean onDepartmentChanged(PAS pas);
 	
 	/**
+	 * 
 	 * Function to change main window title. Is called after logon and when user changed department (onDepartmentChanged)
 	 * @param pas - pointer to the main PAS object
 	 * @param s - string containing hint of app title
+	 * @param userinfo UserInfo struct holding information that may be used to generate an app-title
 	 * @return
 	 */
-	public abstract boolean onSetAppTitle(PAS pas, String s);
+	public abstract boolean onSetAppTitle(PAS pas, String s, final UserInfo userinfo);
 	
 	/**
 	 * Function to load a custom security-manager. Loaded right after plugin is loaded.
@@ -236,10 +273,53 @@ public abstract class PasScriptingInterface
 	public abstract InfoPanel onCreateInfoPanel();
 	
 	/**
-	 * 
+	 * Function to add the created InfoPanel (onCreateInfoPanel) to the system's tabbed pane, or anywhere else
 	 * @param tab pane created by PAS
 	 * @param panel the infopanel that's created by onCreateInfoTab()
 	 * @return
 	 */
 	public abstract boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel);
+	
+	/**
+	 * Function to set a LAF before any window is opened
+	 * @param classloader
+	 * @return an instance of a LAF
+	 */
+	public abstract LookAndFeel onSetInitialLookAndFeel(ClassLoader classloader);
+	
+	/**
+	 * Function to set a user specific LAF. This happens after logon.
+	 * @param settings
+	 * @return
+	 */
+	public abstract boolean onSetUserLookAndFeel(Settings settings, final UserInfo userinfo);
+	
+	/**
+	 * Function executed if user is altering default LAF.
+	 * @param settings Update settings struct with new LAF info to store at logoff
+	 * @return true if ok
+	 */
+	public abstract boolean onUserChangedLookAndFeel(Settings settings);
+	
+	/**
+	 * Function to load the application's window icon
+	 * @return instance of an ImageIcon
+	 */
+	public abstract ImageIcon onLoadAppIcon();
+	
+	public abstract boolean onBeforeLoadMap(Settings settings);
+	
+	public abstract boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check);
+	
+	/**
+	 * 
+	 * Function that will be called from the Error object when user click to send
+	 * a list of error messages.
+	 * @param concat_errorlist String containing all errors generated
+	 * @param account MailAccount object that specifies the senders credentials
+	 * @param callback where to callback after error reporting is done. Defaults to Error object
+	 * @return list of recipient addresses that received the message
+	 */
+	public abstract List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback);
 }
+

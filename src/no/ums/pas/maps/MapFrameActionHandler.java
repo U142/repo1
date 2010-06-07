@@ -472,7 +472,16 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				}
 				catch(Exception e)
 				{
-					current_polygon = PAS.get_pas().get_parmcontroller().get_shape().typecast_polygon();
+					current_polygon = null;
+				}
+				try
+				{
+					if(current_polygon==null)
+						current_polygon = PAS.get_pas().get_parmcontroller().get_shape().typecast_polygon();
+				}
+				catch(Exception e)
+				{
+					return false;
 				}
 				if(get_mappane().get_mode()==MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON)
 				{

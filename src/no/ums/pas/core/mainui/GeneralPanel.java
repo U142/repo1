@@ -18,7 +18,6 @@ public abstract class GeneralPanel extends DefaultPanel {
 	public GeneralPanel(Dimension size) {
 		super();
 		setPreferredSize(size);
-		//doInit();
 	}
 	public void doInit()
 	{

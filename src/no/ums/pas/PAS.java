@@ -163,6 +163,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public static int icon_version = 2;
 	MapFrame m_mappane;
+	//MapLayeredPane m_maplayeredpane;
 	MainMenu m_mainmenu;
 	Navigation m_navigation = null;
 	PASDraw m_drawthread = null;
@@ -231,14 +232,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		return m_b_parm_open;
 	}
 
-	private SubstanceLookAndFeel m_lookandfeel;
-	public SubstanceLookAndFeel get_lookandfeel() { return m_lookandfeel; }
+	private LookAndFeel m_lookandfeel;
+	public LookAndFeel get_lookandfeel() { return m_lookandfeel; }
 	//public LookAndFeel get_lookandfeel() { return UIManager.getCrossPlatformLookAndFeelClassName(); }
 	//public LookAndFeel get_lookandfeel() { return UIManager.getLookAndFeel(); }
 	
 	public Navigation get_navigation() { return m_navigation; }
 	public Draw get_drawthread() { return m_drawthread; }
 	public MapFrame get_mappane() { return m_mappane; }
+	//public MapLayeredPane get_maplayeredpane() { return m_maplayeredpane; }
 	public MainMenu get_mainmenu() { return m_mainmenu; }
 	public HTTPReq get_httpreq() { return m_httpreq; }
 	public String get_sitename() { return m_sz_sitename; }
@@ -265,7 +267,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
 	
-	public void initSubstance()
+	/*public void initSubstance()
 	{
 		try
 		{
@@ -328,7 +330,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 	
 	String sz_current_user = "";
 	String sz_current_comp = "";
@@ -435,8 +437,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			//Error.getError().addError("Error in language file", "Glossary for " + locale.getDisplayCountry() + " / " + locale.getDisplayLanguage() + " is missing (key="+s+")", e, Error.SEVERITY_WARNING);
 			if(langErrors==null) //init once
 			{
-				langErrors = new Error(false);
-				langErrors.addError("Error in language file", "Glossary for " + locale.getDisplayCountry() + " / " + locale.getDisplayLanguage() + " is missing", "", 0, Error.SEVERITY_WARNING);
+				try
+				{
+					langErrors = new Error(false);
+					langErrors.addError("Error in language file", "Glossary for " + locale.getDisplayCountry() + " / " + locale.getDisplayLanguage() + " is missing", "", 0, Error.SEVERITY_WARNING);
+				}
+				catch(Exception err)
+				{
+					return "[NO STRING]";
+				}
 			}
 			if(defaultLang==null)
 			{
@@ -458,7 +467,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				
 			}
-			langErrors.getError(0).appendBodyFiltered("\n"+s + " = " + defaultWord + "\n");
+			if(langErrors!=null && langErrors.getError(0)!=null)
+				langErrors.getError(0).appendBodyFiltered("\n"+s + " = " + defaultWord + "\n");
 			return "[NO STRING]";
 		}
 	}
@@ -493,7 +503,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	//Substance 3.3
-	public void setSubstanceTheme(SubstanceTheme substance) {
+	/*public void setSubstanceTheme(SubstanceTheme substance) {
 		//SubstanceLookAndFeel.setCurrentSkin(substance);
 		try {
 			SubstanceLookAndFeel.setCurrentTheme(substance);
@@ -502,14 +512,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			Error.getError().addError(PAS.l("common_error"), "Exception in setSubstanceTheme", e, Error.SEVERITY_WARNING);
 		}
 		updateUI();
-	}
+	}*/
 	
 	//Substance 5.2
 	/*public void setSubstanceTheme(SubstanceColorSchemeBundle cols) {
 		
 	}*/
 	
-	public void setSubstanceTheme(String sz_name) {
+	/*public void setSubstanceTheme(String sz_name) {
 		//Substance 3.3
 		SubstanceLookAndFeel.setCurrentTheme(sz_name);
 		
@@ -539,7 +549,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				updateUI();
 			}
 		});
-	}
+	}*/
 	private void updateUI() {
 		SwingUtilities.updateComponentTreeUI(getRootPane());
 		repaint();
@@ -583,7 +593,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		try
 		{
-			m_lookandfeel = new SubstanceOfficeBlue2007LookAndFeel();//SubstanceLookAndFeel();
+			//m_lookandfeel = new SubstanceOfficeBlue2007LookAndFeel();//SubstanceLookAndFeel();
+			//UIManager.setLookAndFeel(m_lookandfeel);
 		}
 		catch(Exception e)
 		{
@@ -645,15 +656,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		try
-		{
-			JDialog.setDefaultLookAndFeelDecorated(true);
-			JFrame.setDefaultLookAndFeelDecorated(true);	
-		}
-		catch(Exception e)
-		{
-			
-		}
 	    try {
 	    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	    		public void run()
@@ -661,10 +663,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			try
 	    			{
 		    			//m_lookandfeel = new SubstanceOfficeBlue2007LookAndFeel();
-		    			UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
+		    			//UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
 		    			
 		    			
-		    			SubstanceLookAndFeel.permanentlyHideHeapStatusPanel(getRootPane());
+		    			//SubstanceLookAndFeel.permanentlyHideHeapStatusPanel(getRootPane());
 
 
 	    			}
@@ -672,7 +674,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			{
 	    				
 	    			}
-	    			System.out.println(m_lookandfeel.getClass().getName());
+	    			/*System.out.println(m_lookandfeel.getClass().getName());
 	    			try
 	    			{
 	    				//UIManager.setLookAndFeel(m_lookandfeel);
@@ -683,7 +685,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			}
 	    			catch(Exception e)
 	    			{
-	    			}
+	    			}*/
 	    			powerUp();
 	    		}
 	    	});
@@ -727,7 +729,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			new Thread("PAS powerUp thread") {
 	    		public void run()
 	    		{
-	    			try
+	    			/*try
 	    			{
 	    				if(sz_script_class!=null)
 	    				{
@@ -743,9 +745,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	    			if(pasplugin==null)
 	    			{
 	    				pasplugin = new PAS_Scripting(); //go default
-	    			}	
+	    			}	*/
 	    			pasplugin.onLoadSecurityManager();
-	    			pasplugin.onBeforeLogon();
 	    			createGUI();
 	    			
 	    		}
@@ -761,8 +762,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	private void createGUI() {
 		//m_appicon = ImageLoader.load_icon("UMSKule_icon_16x16.gif");
-		m_appicon = ImageLoader.load_icon("pas_appicon_16.png");
+		//m_appicon = ImageLoader.load_icon("pas_appicon_16.png");
+		m_appicon = pasplugin.onLoadAppIcon();
+		
+		//m_lookandfeel = pasplugin.onSetInitialLookAndFeel(getRootPane());
+		
 		try {
+			//UIManager.setLookAndFeel(m_lookandfeel);
 			
 			
 			/*SubstanceLookAndFeel.setFontPolicy(contrib.com.jgoodies.looks.common.FontPolicies.getLooks1xPlasticPolicy());
@@ -798,50 +804,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				
 				UIParamLoader.loadServerUIParams();
 				UIParamLoader.loadUIParams();
-				
-				
-				/*final String fontType = "Wingdings"; //face;
-				
-    			SubstanceLookAndFeel.setFontPolicy(new FontPolicy() {
-					@Override
-					public FontSet getFontSet(String arg0,
-							UIDefaults arg1) {
-						return fontdelegate = new UMSFontSet() {
-							public FontUIResource getWindowTitleFont()
-							{
-								return new FontUIResource(fontType, Font.BOLD, 14);
-							}
-
-							@Override
-							public FontUIResource getControlFont() {
-								return new FontUIResource(fontType, Font.PLAIN, 11);
-							}
-
-							@Override
-							public FontUIResource getMenuFont() {
-								return new FontUIResource(fontType, Font.PLAIN, 15);
-							}
-
-							@Override
-							public FontUIResource getMessageFont() {
-								return new FontUIResource(fontType, Font.PLAIN, 11);
-							}
-
-							@Override
-							public FontUIResource getSmallFont() {
-								return new FontUIResource(fontType, Font.PLAIN, 9);
-							}
-
-							@Override
-							public FontUIResource getTitleFont() {
-								return new FontUIResource(fontType, Font.PLAIN, 11);
-							}
-						};
-					}
-    				
-    			});*/
-				
-			////
 			
 		}
 		catch(Exception e)
@@ -849,6 +811,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			e.printStackTrace();
 			
 		}
+		pasplugin.onBeforeLogon();
 		
 		
 		String sz_userid, sz_compid, sz_passwd;
@@ -1028,7 +991,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				try
 				{
 					LoadVisualSettings(get_pasactionlistener(), m_settings.getUsername(), m_settings.getCompany(), false);
-					initSubstance();
+					//initSubstance();
 				}
 				catch(Exception e)
 				{
@@ -1147,7 +1110,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		try
 		{
-			initSubstance();
+			//initSubstance();
+			pasplugin.onSetUserLookAndFeel(m_settings, m_userinfo);
 		}
 		catch(Exception e)
 		{
@@ -1156,7 +1120,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 		LBASEND.CreateLbaStatusHash();
 		//setAppTitle("");
-		pasplugin.onSetAppTitle(this, "");
+		pasplugin.onSetAppTitle(this, "", get_userinfo());
 		afterLogon();
 		try
 		{
@@ -1214,6 +1178,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					try
 					{
 						m_mappane = new MapFrame(dim_map.width, dim_map.height, m_drawthread, m_navigation, null, true);
+						m_mappane.setSize(new Dimension(dim_map.width, dim_map.height));
+						//m_maplayeredpane = new MapLayeredPane(m_mappane);
+						//m_maplayeredpane.setPreferredSize(new Dimension(dim_map.width, dim_map.height));
 						m_mappane.addActionListener(get_pasactionlistener());
 						m_drawthread.setMapImage(get_mappane().get_mapimage());
 						//m_drawthread.setMapOverlay(get_mappane().get_mapoverlay());
@@ -1513,6 +1480,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			dim_map = new Dimension(get_mappane().getWidth(), get_mappane().getHeight());
 			Dimension dim_map2 = new Dimension(get_mappane().getWidth(), get_mappane().getHeight());
+			System.out.println("  MapSize = " + dim_map.width + ", " + dim_map.height);
 			get_navigation().set_dimension(dim_map);
 			get_mappane().set_dimension(dim_map2);
 			//get_mappane().revalidate();
@@ -1991,40 +1959,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 	}*/
 	
-	public void setSubstanceChanges()
-	{
-		try
-		{
-			
-			//String szname = UIManager.getLookAndFeel().getLayoutStyle().getClass().getName();
-			//m_settings.setThemeClassName(szname);
-			String szname = UIManager.getLookAndFeel().getClass().getName();
-			
-			szname = SubstanceLookAndFeel.getCurrentWatermark().getClass().getName();
-			m_settings.setWatermarkClassName(szname);
-
-			szname = SubstanceLookAndFeel.getCurrentButtonShaper().getClass().getName();
-			m_settings.setButtonShaperClassName(szname);
-			
-			szname = SubstanceLookAndFeel.getCurrentGradientPainter().getClass().getName();
-			m_settings.setGradientClassname(szname);
-			
-			szname = SubstanceLookAndFeel.getCurrentTitlePainter().getClass().getName();
-			m_settings.setTitlePainterClassname(szname);
-			//SubstanceLookAndFeel.getCurrentDecorationPainter().getClass().getName();
-			//m_settings.setTitlePainterClassname(szname);
-			
-			szname = SubstanceLookAndFeel.getTheme().getClass().getName();
-			m_settings.setThemeClassName(szname);
-		
-			//ColorSc
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		//m_settings.setTitlePainterClassname(SubstanceLookAndFeel.getCurrentTitlePainterName().getClass().getCanonicalName());
-	}
 	@Override
 	public void skinChanged() {
 		//setSubstanceChanges();

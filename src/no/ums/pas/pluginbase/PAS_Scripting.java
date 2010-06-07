@@ -4,22 +4,32 @@ package no.ums.pas.pluginbase;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import javax.swing.*;
 
 import no.ums.pas.*;
+import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.dataexchange.MailCtrl;
+import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
+import no.ums.pas.core.themes.UMSTheme;
+import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
 
+import org.geotools.data.ows.Layer;
 import org.jvnet.substance.*;
+import org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel;
 
 
 public class PAS_Scripting extends PasScriptingInterface
@@ -193,7 +203,8 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onAddPASComponents(PAS p)
 	{
-		p.getContentPane().add(p.get_mappane(), BorderLayout.CENTER);
+		p.add(p.get_mappane(), BorderLayout.CENTER);
+		//p.add(p.get_maplayeredpane(), BorderLayout.CENTER);
 		p.add(p.get_mainmenu(), BorderLayout.NORTH);
 		p.add(p.get_southcontent(), BorderLayout.SOUTH);
 		p.add(p.get_eastcontent(), BorderLayout.EAST);	
@@ -265,7 +276,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		return true;
 	}
 	@Override
-	public boolean onSetAppTitle(PAS pas, String s)
+	public boolean onSetAppTitle(PAS pas, String s, final UserInfo userinfo)
 	{
 		if(s.length()==0)
 			s = PAS.l("common_app_title");
@@ -314,14 +325,14 @@ public class PAS_Scripting extends PasScriptingInterface
 		case 2:
 			pas.get_mainmenu().setTASMode(false);
 			//pas.setAppTitle("");
-			onSetAppTitle(pas, "");
+			onSetAppTitle(pas, "", PAS.get_pas().get_userinfo());
 			pas.get_eastcontent().remove_tab(EastContent.PANEL_TAS_);
 			pas.get_mainmenu().enable_mapsite(true);
 			break;
 		case 4: //TAS
 			pas.get_mainmenu().setTASMode(true);
 			//pas.setAppTitle("UMS - " + PAS.l("main_tas_appname"));
-			onSetAppTitle(pas, "UMS - " + PAS.l("main_tas_appname"));
+			onSetAppTitle(pas, "UMS - " + PAS.l("main_tas_appname"), PAS.get_pas().get_userinfo());
 			pas.get_eastcontent().InitTAS();
 			pas.get_eastcontent().flip_to(EastContent.PANEL_TAS_);
 			pas.get_mainmenu().enable_mapsite(false);
@@ -356,6 +367,177 @@ public class PAS_Scripting extends PasScriptingInterface
 				//sp,
 				PAS.l("main_infotab_title_tooltip"));
 		return true;
+	}
+
+
+
+	@Override
+	public LookAndFeel onSetInitialLookAndFeel(ClassLoader classloader) {
+		try
+		{
+			JDialog.setDefaultLookAndFeelDecorated(true);
+			JFrame.setDefaultLookAndFeelDecorated(true);	
+			SubstanceOfficeBlue2007LookAndFeel laf = new SubstanceOfficeBlue2007LookAndFeel();
+			UIManager.setLookAndFeel(laf);
+			return laf;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	@Override
+	public boolean onSetUserLookAndFeel(final Settings settings, final UserInfo userinfo) {
+		try
+		{
+			//SubstanceLookAndFeel.setCurrentTheme(SubstanceTheme.getTheme(m_settings.getThemeClassName()));
+			//ClassLoader loader = new ClassLoader(); //getSystemResource(m_settings.getThemeClassName());
+			//SubstanceTheme activeTheme = new SubstanceMixTheme(m_settings.getThemeClassName());
+			        //new SubstancePurpleTheme(),
+			        //new SubstanceBarbyPinkTheme()).saturate(0.1);
+			//SubstanceLookAndFeel.setCurrentTheme(activeTheme);
+
+			//Substance 3.3
+			////
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
+						//UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
+						boolean b;
+						//b = SubstanceLookAndFeel.setSkin(m_settings.getSkinClassName());
+						b = SubstanceLookAndFeel.setCurrentTheme(settings.getThemeClassName());
+					
+						//themeChanged();
+						
+						//active_theme = (UMSTheme)SubstanceLookAndFeel.getTheme();
+						//active_theme = new UMSTheme(THEMETYPE.SIMPLE);
+						//theme = theme.saturate(0.1, true);
+						//theme = theme.tint(0.15);
+						//theme = theme.hueShift(0.2);
+						//theme = theme.shade(0.1);
+						
+						
+						//b = SubstanceLookAndFeel.setCurrentTheme(active_theme);
+						
+						
+						
+						b = SubstanceLookAndFeel.setCurrentButtonShaper(settings.getButtonShaperClassname());
+						if(settings.getGradientClassname()!=null && settings.getGradientClassname().length() > 0)
+							b = SubstanceLookAndFeel.setCurrentGradientPainter(settings.getGradientClassname());
+						else
+							b = SubstanceLookAndFeel.setCurrentGradientPainter("org.jvnet.substance.painter.GlassGradientPainter");
+						if(settings.getTitlePainterClassname()!=null && settings.getTitlePainterClassname().length() > 0)
+							b = SubstanceLookAndFeel.setCurrentTitlePainter(settings.getTitlePainterClassname());
+						else
+							b = SubstanceLookAndFeel.setCurrentTitlePainter("org.jvnet.substance.title.Glass3DTitlePainter");
+						b = SubstanceLookAndFeel.setCurrentWatermark(settings.getWatermarkClassName());
+						
+					}
+					catch(Exception e)
+					{
+						
+					}
+
+				}
+			});
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	
+	
+
+	@Override
+	public boolean onUserChangedLookAndFeel(Settings settings) {
+		try
+		{
+			
+			//String szname = UIManager.getLookAndFeel().getLayoutStyle().getClass().getName();
+			//m_settings.setThemeClassName(szname);
+			String szname = UIManager.getLookAndFeel().getClass().getName();
+			
+			szname = SubstanceLookAndFeel.getCurrentWatermark().getClass().getName();
+			settings.setWatermarkClassName(szname);
+
+			szname = SubstanceLookAndFeel.getCurrentButtonShaper().getClass().getName();
+			settings.setButtonShaperClassName(szname);
+			
+			szname = SubstanceLookAndFeel.getCurrentGradientPainter().getClass().getName();
+			settings.setGradientClassname(szname);
+			
+			szname = SubstanceLookAndFeel.getCurrentTitlePainter().getClass().getName();
+			settings.setTitlePainterClassname(szname);
+			//SubstanceLookAndFeel.getCurrentDecorationPainter().getClass().getName();
+			//m_settings.setTitlePainterClassname(szname);
+			
+			szname = SubstanceLookAndFeel.getTheme().getClass().getName();
+			settings.setThemeClassName(szname);
+		
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+
+
+
+
+
+	@Override
+	public ImageIcon onLoadAppIcon() {
+		try
+		{
+			return no.ums.pas.ums.tools.ImageLoader.load_icon("pas_appicon_16.png");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	@Override
+	public boolean onBeforeLoadMap(Settings settings) {
+		return true;
+	}
+
+
+	@Override
+	public boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check) {
+		return false;
+	}
+
+	@Override
+	public List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback) {
+		List<String> arr_adr = new ArrayList<String>();
+		arr_adr.add("mh@ums.no");
+		arr_adr.add("sa@ums.no");
+		
+		/*String sz_to = "";
+		for(int i=0; i < arr_adr.size(); i++)
+		{
+			if(i>0)
+				sz_to += ",";
+			sz_to += arr_adr.get(i);
+		}*/
+		MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
+		return arr_adr;
 	}
 	
 	

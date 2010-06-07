@@ -19,7 +19,7 @@ public class LoadingFrame extends JDialog {
 	Dimension m_dim;
 	public JProgressBar get_progress() { return m_progress; }
 	
-	public LoadingFrame(String sz_starttext, JPanel center)
+	public LoadingFrame(String sz_starttext, Component center)
 	{
 		super();
 		try

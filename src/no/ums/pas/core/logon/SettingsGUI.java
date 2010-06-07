@@ -78,6 +78,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	private StdTextLabel m_lbl_mapsite;
 	private JRadioButton m_btn_default;
 	private JRadioButton m_btn_wms;
+	public JRadioButton getWmsRadioBtn() { return m_btn_wms; }
 	private ButtonGroup m_group_mapsite;
 	private StdTextArea m_txt_wms_site;
 	private JButton m_btn_openwms;
@@ -90,7 +91,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	private JPasswordField m_txt_wms_password;
 	
 	protected WmsLayerTree m_wms_tree;
-	protected DefaultTreeModel m_model;
+	public WmsLayerTree getWmsLayerTree() { return m_wms_tree; }
 
 	
 	private JRadioButton m_btn_pan_by_click;
@@ -115,9 +116,20 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	private JButton m_btn_save;
 	private JButton m_btn_cancel;
 	
+	public SettingsGUI() {
+		super("NONE");
+	}
+	
 	public SettingsGUI(PAS parent) {
 		super(PAS.l("mainmenu_settings"));
-		this.setIconImage(PAS.get_pas().getIconImage());
+		try
+		{
+			this.setIconImage(PAS.get_pas().getIconImage());
+		}
+		catch(Exception e)
+		{
+			
+		}
 		try
 		{
 			this.setAlwaysOnTop(true);
@@ -164,8 +176,8 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		m_btn_openwms = new JButton(PAS.l("common_open"));
 		m_btn_openwms.addActionListener(this);
 		
-		m_model = new DefaultTreeModel(null);
-		m_wms_tree = new WmsLayerTree(m_model);
+		//m_model = new DefaultTreeModel(null);
+		m_wms_tree = new WmsLayerTree(new DefaultTreeModel(null));
 		
 		
 		
@@ -429,22 +441,6 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				PAS.get_pas().get_mappane().getMapLoader().testWmsUrl(new_url, m_txt_wms_username.getText(), m_txt_wms_password.getPassword());
 				List<Layer> layers = PAS.get_pas().get_mappane().getMapLoader().getCapabilitiesTest().getLayerList();
 				Settings s = PAS.get_pas().get_settings();
-				/*for(int i=0; i < layers.size(); i++)
-				{
-					if(layers.get(i).getName()!=null)
-					{
-						Boolean b = new Boolean(false);
-						if(b_new_url)
-							b = new Boolean(true);
-						else if(s.getSelectedWmsLayers().contains(layers.get(i).getName()))
-							b = new Boolean(true);
-						//if(layers.get(i).getChildren().length>0)
-						{
-							Object [] data = new Object[] { b, layers.get(i).getTitle(), layers.get(i) }; 
-							m_wms_list.insert_row(data, 0);
-						}
-					}
-				}*/
 				m_combo_wmsformat.removeAllItems();
 				List<String> formats = PAS.get_pas().get_mappane().getMapLoader().m_wms_formats;
 				int select_index = 0;
@@ -456,7 +452,9 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				}
 				m_combo_wmsformat.setSelectedIndex(select_index);
 				
-				m_wms_tree.populate(layers, s.getSelectedWmsLayers(), b_new_url);
+				m_wms_tree.populate(layers, s.getSelectedWmsLayers(), b_new_url, null);
+				PAS.pasplugin.onWmsLayerListLoaded(layers, s.getSelectedWmsLayers());
+
 			}
 			catch(Exception err)
 			{
@@ -538,9 +536,12 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	public class WmsLayerTree extends JTree
 	{
 		List<Layer> m_layers;
+		protected DefaultTreeModel m_model;
+
 		public WmsLayerTree(TreeModel model)
 		{
 			super(model);
+			m_model = (DefaultTreeModel)model;
 			setCellRenderer(new LayerRenderer());
 			setCellEditor(new CheckBoxNodeEditor(this));
 		}
@@ -587,7 +588,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	        	chk.selected = b;
 	        }
 	    }
-		public void populate(List<Layer> layers, ArrayList<String> check, boolean b_new_url /*check none*/)
+		public void populate(List<Layer> layers, ArrayList<String> check, boolean b_new_url /*check none*/, ActionListener callback)
 		{
 			this.setEditable(true);
 			boolean b_topnode_set = false;
@@ -635,7 +636,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				else if(check.contains(layers.get(i).getName()))
 					b = new Boolean(true);
 
-				LayerCheckBoxNode chk = new LayerCheckBoxNode(currentlayer.getName(), b.booleanValue(), currentlayer);
+				LayerCheckBoxNode chk = new LayerCheckBoxNode(currentlayer.getName(), b.booleanValue(), currentlayer, callback);
 				node = new DefaultMutableTreeNode(chk);
 				m_model.insertNodeInto(node, parent, 0);
 				
@@ -651,10 +652,12 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		
 		class LayerCheckBoxNode extends CheckBoxNode {
 			Layer layer;
-			public LayerCheckBoxNode(String text, boolean selected, Layer layer)
+			ActionListener callback;
+			public LayerCheckBoxNode(String text, boolean selected, Layer layer, ActionListener callback)
 			{
 				super(text, selected);
 				this.layer = layer;
+				this.callback = callback;
 			}
 		}
 		class CheckBoxNode {
@@ -794,7 +797,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 			  public Object getCellEditorValue() {
 			    LayerCheckBox checkbox = renderer.getCheckRenderer();
 			    LayerCheckBoxNode checkBoxNode = new LayerCheckBoxNode(checkbox.getText(),
-			        checkbox.isSelected(), checkbox.layer);
+			        checkbox.isSelected(), checkbox.layer, null);
 			    return checkBoxNode;
 			  }
 

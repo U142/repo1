@@ -4,6 +4,8 @@ package no.ums.pas.core.dataexchange;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import no.ums.pas.gps.*;
 import no.ums.pas.ums.errorhandling.Error;
@@ -22,7 +24,7 @@ public class MailCtrl extends Object {
 		m_sz_lasterror = sz_error;
 	}
 	
-	public MailCtrl(String sz_helofrom, String sz_mailserver, int n_port, String sz_displayname, String sz_from, String sz_to, 
+	public MailCtrl(String sz_helofrom, String sz_mailserver, int n_port, String sz_displayname, String sz_from, List<String> sz_to, 
 			ActionListener callback, String sz_subject, String sz_body) {
 		super();
 		m_callback = callback;
@@ -41,11 +43,12 @@ public class MailCtrl extends Object {
 	public GPSCmd(String sz_msgpk, String sz_objectpk, int n_cmd, int n_dir, int n_param1, int n_param2, 
 			String sz_param1, String sz_param2, int n_pri) {
 	 */
-	public boolean send_mail(SendMail sendmail, String sz_helofrom, String sz_displayname, String sz_from, String sz_to, 
+	public boolean send_mail(SendMail sendmail, String sz_helofrom, String sz_displayname, String sz_from, List<String> sz_to, 
 			String sz_subject, String sz_body) {
 		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_HELO, 0, 0, 0, sz_helofrom, "", 1));
 		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_MAILFROM, 0, 0, 0, sz_from, "", 1));
-		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_RCPTTO, 0, 0, 0, sz_to, "", 1));
+		for(int i=0; i < sz_to.size(); i++)
+			sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_RCPTTO, 0, 0, 0, sz_to.get(i), "", 1));
 		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_BODYSTART, 0, 0, 0, "", "", 1));
 		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_HEADER_FROM, 0, 0, 0, sz_displayname, sz_from, 1, false));
 		sendmail.add_to_writequeue(GPSCmd.createCmd("0", "0", GPSCmd.MAILCTRL_SUBJECT, 0, 0, 0, sz_subject, "", 1, false));

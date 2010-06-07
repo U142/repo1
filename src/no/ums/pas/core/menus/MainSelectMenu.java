@@ -18,7 +18,6 @@ import org.jvnet.substance.*;
 //import org.jvnet.substance.theme.*;
 //import org.jvnet.substance.skin.*;
 import org.jvnet.substance.skin.SkinInfo;
-import org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel;
 import org.jvnet.substance.watermark.SubstanceWatermark;
 //import org.jvnet.substance.api.SubstanceSkin;
 
@@ -26,12 +25,8 @@ import java.util.Map;
 import java.util.Iterator;
 
 //Substance 3.3
-import org.jvnet.substance.color.*;
-import org.jvnet.substance.theme.*;
-import org.jvnet.substance.theme.SubstanceTheme.ThemeKind;
 import org.jvnet.substance.watermark.WatermarkInfo;
 import org.jvnet.substance.skin.SubstanceSkin;
-import org.jvnet.substance.theme.SubstanceComplexTheme;
 import org.jvnet.substance.theme.SubstanceTheme;
 import org.jvnet.substance.theme.ThemeInfo;
 
@@ -438,78 +433,78 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			if(!get_pas().get_statuscontroller().get_autoupdate())
 				m_item_status_updateseconds_checklist.enable_all(false);
 
-			
-				/*SubstanceTheme activeTheme = new SubstanceSaturatedTheme(new SubstanceOrangeTheme(), 0.4f, true);
-				SubstanceTheme defaultTheme = new SubstanceSaturatedTheme(new SubstanceTheme(shiftBlue, "Aqua Blue",ThemeKind.BRIGHT), -0.3);
-				SubstanceTheme disabledTheme = new SubstanceTintTheme(new SubstanceBlendBiTheme(new SubstanceAquaTheme(),new SubstanceSteelBlueTheme(), 0.8), 0.6);
-				SubstanceTheme activeTitleTheme = new SubstanceSaturatedTheme(defaultTheme, 0.2);*/
-				/*setTheme(new SubstanceComplexTheme("Office 2007",
-				    ThemeKind.BRIGHT, activeTheme, defaultTheme,
-				    disabledTheme, activeTitleTheme));	
-			*/
-			
+						
 			int i=0;
 
-			//Substance 3.3
-			Map<String,ThemeInfo> themes = SubstanceLookAndFeel.getAllThemes();
-            SubstanceImageCreator ic = new SubstanceImageCreator();
-			SubstanceMenuItem theme_items [] = new SubstanceMenuItem[themes.size()];
-			for (Iterator iterator = themes.entrySet().iterator(); iterator.hasNext();) { 
-			    Map.Entry entry = (Map.Entry) iterator.next(); 
-			    ThemeInfo info = (ThemeInfo)entry.getValue();
-			    try {
-			    	Class themeClass = Class.forName(info.getClassName());
-		            SubstanceTheme themeInstance = (SubstanceTheme) themeClass.newInstance();
+			try
+			{
+				//Substance 3.3
+				Map<String,ThemeInfo> themes = SubstanceLookAndFeel.getAllThemes();
+	            SubstanceImageCreator ic = new SubstanceImageCreator();
+				SubstanceMenuItem theme_items [] = new SubstanceMenuItem[themes.size()];
+				for (Iterator iterator = themes.entrySet().iterator(); iterator.hasNext();) { 
+				    Map.Entry entry = (Map.Entry) iterator.next(); 
+				    ThemeInfo info = (ThemeInfo)entry.getValue();
+				    try {
+				    	Class themeClass = Class.forName(info.getClassName());
+			            SubstanceTheme themeInstance = (SubstanceTheme) themeClass.newInstance();
+	
+			            theme_items[i] = new SubstanceMenuItem(info.getDisplayName(), themeInstance, SubstanceImageCreator.getThemeIcon(themeInstance));
+			            
+				    } catch(Exception e) {
+				    	Error.getError().addError("MainSelectMenu","Exception in MainMenuBar",e,1);
+				    	continue;
+				    }
+				    i++;
+				}
+				m_themes = new SubstanceMenuItemList(get_pas(), theme_items, 0, m_menu_themes, m_actionlistener, "act_set_theme", 14);
 
-		            theme_items[i] = new SubstanceMenuItem(info.getDisplayName(), themeInstance, SubstanceImageCreator.getThemeIcon(themeInstance));
-		            
-			    } catch(Exception e) {
-			    	Error.getError().addError("MainSelectMenu","Exception in MainMenuBar",e,1);
-			    	continue;
-			    }
-			    i++;
-			}
-			m_themes = new SubstanceMenuItemList(get_pas(), theme_items, 0, m_menu_themes, m_actionlistener, "act_set_theme", 14);
+				i=0;
+				Map<String, WatermarkInfo> wm = SubstanceLookAndFeel.getAllWatermarks();
+				SubstanceMenuItem wm_items [] = new SubstanceMenuItem[wm.size()];
+				for(Iterator iterator = wm.entrySet().iterator(); iterator.hasNext();) {
+					Map.Entry<String, WatermarkInfo> entry = (Map.Entry<String, WatermarkInfo>)iterator.next();
+					WatermarkInfo info = (WatermarkInfo)entry.getValue();
+					try
+					{
+						Class themeClass = Class.forName(info.getClassName());
+						SubstanceWatermark wmInstance = (SubstanceWatermark)themeClass.newInstance();
+						wm_items[i] = new SubstanceMenuItem(info.getDisplayName(), wmInstance, SubstanceImageCreator.getWatermarkIcon(wmInstance));
+					}
+					catch(Exception e)
+					{
+						
+					}
+					i++;
+				}
+				m_watermarks = new SubstanceMenuItemList(get_pas(), wm_items, 0, m_menu_watermarks, m_actionlistener, "act_set_watermark", 0);
+				
+				i=0;
+				Map<String,SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
+				SubstanceMenuItem sk_items [] = new SubstanceMenuItem[skins.size()];
+				for(Iterator iterator = skins.entrySet().iterator(); iterator.hasNext();) {
+					Map.Entry<String, SkinInfo> entry = (Map.Entry<String, SkinInfo>)iterator.next();
+					SkinInfo info = entry.getValue();
+					try
+					{
+						Class skinClass = Class.forName(info.getClassName());
+						SubstanceSkin skInstance = (SubstanceSkin)skinClass.newInstance();
+						sk_items[i] = new SubstanceMenuItem(info.getDisplayName(), skInstance, null);
+					}
+					catch(Exception e)
+					{
+						
+					}
+					i++;
+				}
+				m_skins = new SubstanceMenuItemList(get_pas(), sk_items, 0, m_menu_skins, m_actionlistener, "act_set_skin", 0);
 
-			i=0;
-			Map<String, WatermarkInfo> wm = SubstanceLookAndFeel.getAllWatermarks();
-			SubstanceMenuItem wm_items [] = new SubstanceMenuItem[wm.size()];
-			for(Iterator iterator = wm.entrySet().iterator(); iterator.hasNext();) {
-				Map.Entry<String, WatermarkInfo> entry = (Map.Entry<String, WatermarkInfo>)iterator.next();
-				WatermarkInfo info = (WatermarkInfo)entry.getValue();
-				try
-				{
-					Class themeClass = Class.forName(info.getClassName());
-					SubstanceWatermark wmInstance = (SubstanceWatermark)themeClass.newInstance();
-					wm_items[i] = new SubstanceMenuItem(info.getDisplayName(), wmInstance, SubstanceImageCreator.getWatermarkIcon(wmInstance));
-				}
-				catch(Exception e)
-				{
-					
-				}
-				i++;
 			}
-			m_watermarks = new SubstanceMenuItemList(get_pas(), wm_items, 0, m_menu_watermarks, m_actionlistener, "act_set_watermark", 0);
-			
-			i=0;
-			Map<String,SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
-			SubstanceMenuItem sk_items [] = new SubstanceMenuItem[skins.size()];
-			for(Iterator iterator = skins.entrySet().iterator(); iterator.hasNext();) {
-				Map.Entry<String, SkinInfo> entry = (Map.Entry<String, SkinInfo>)iterator.next();
-				SkinInfo info = entry.getValue();
-				try
-				{
-					Class skinClass = Class.forName(info.getClassName());
-					SubstanceSkin skInstance = (SubstanceSkin)skinClass.newInstance();
-					sk_items[i] = new SubstanceMenuItem(info.getDisplayName(), skInstance, null);
-				}
-				catch(Exception e)
-				{
-					
-				}
-				i++;
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
-			m_skins = new SubstanceMenuItemList(get_pas(), sk_items, 0, m_menu_skins, m_actionlistener, "act_set_skin", 0);
+
 			
 			init();
 			showNewSending(true);

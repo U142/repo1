@@ -373,7 +373,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		//m_tooltip.repaint();
 		
 	}
-	public MapFrame(int n_width, int n_height, Navigation nav, HTTPReq http, boolean b_enable_snap)
+	/*public MapFrame(int n_width, int n_height, Navigation nav, HTTPReq http, boolean b_enable_snap)
 	{
 		super();
 		
@@ -460,12 +460,12 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		}
 		addComponentListener(this);
 		addMouseWheelListener(this);
-	}
+	}*/
 
 	public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap)
 	{
 		super();
-		
+		setLayout(new BorderLayout());
 		
 		try
 		{
@@ -1009,6 +1009,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	
 	public synchronized void load_map(boolean b_threaded) {
 		//ensures that nothing is drawn until this new map is ready
+		PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
 		if(b_threaded)
 		{
 			

@@ -28,7 +28,7 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 //import tas.TasPanel.TASTreeTable;
 
 
-public abstract class TreeRenderer extends SubstanceDefaultTreeCellRenderer {
+public abstract class TreeRenderer extends DefaultTreeCellRenderer {//SubstanceDefaultTreeCellRenderer {
 	public static final long serialVersionUID = 1;
 	
 
@@ -69,8 +69,8 @@ public abstract class TreeRenderer extends SubstanceDefaultTreeCellRenderer {
 		m_tbl_list = table;
 
 		
-		SubstanceDefaultTreeCellRenderer dtcr = (SubstanceDefaultTreeCellRenderer) this;
-		//DefaultTreeCellRenderer dtcr = this;
+		//SubstanceDefaultTreeCellRenderer dtcr = (SubstanceDefaultTreeCellRenderer) this;
+		DefaultTreeCellRenderer dtcr = this;
 		//Substance 3.3
 		Color c = SubstanceLookAndFeel.getActiveColorScheme()
 				.getUltraLightColor();

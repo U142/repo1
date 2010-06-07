@@ -101,6 +101,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_gpspanel		= new GPSPanel(get_pas(), dim_panelsize);
 				m_gpseventpanel = new GPSEventPanel(get_pas(), dim_panelsize);
 				m_sendingpanel  = new SendingPanel(dim_panelsize);
+				m_sendingpanel.doInit();
 				m_tabbedpane = new EastTabbedPane();
 				if(m_infopanel!=null)
 					m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());

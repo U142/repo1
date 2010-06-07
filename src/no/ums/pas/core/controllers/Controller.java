@@ -29,7 +29,6 @@ import no.ums.pas.maps.defines.*;
 import no.ums.pas.send.*;
 import no.ums.pas.ums.tools.*;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
 
 
 public abstract class Controller implements ActionListener {
@@ -205,34 +204,7 @@ public abstract class Controller implements ActionListener {
 
 	public void draw_details(Graphics g)
 	{
-		/*if(arr_found.size()==0)
-			return;
-		int n_compensate_left = 0;
-		int n_compensate_up = 0;
-				
-		Dimension quad = new Dimension();
-		Point p = new Point();
-		p.x = m_mouse.width;
-		p.y = m_mouse.height;
-		quad.width = 400;
-		quad.height = arr_found.size() * 12;
-		
-		n_compensate_left = (p.x + quad.width > PAS.get_pas().get_mappane().getWidth() ? p.x + quad.width - PAS.get_pas().get_mappane().getWidth() + 5 : 0);
-		n_compensate_up   = (p.y + quad.height > PAS.get_pas().get_mappane().getHeight() ? p.y + quad.height - PAS.get_pas().get_mappane().getHeight() + 5 : 0);
-		
-		g.setColor(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor());
-		//g.drawRect(p.x - n_compensate_left, p.y - n_compensate_up, quad.width, quad.height);
-		Color _c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
-		Color c1 = new Color(_c1.getRed(), _c1.getGreen(), _c1.getBlue(), 168);
-		g.setColor(c1);
-		
-		//g.fillRect(p.x - n_compensate_left, p.y - n_compensate_up, quad.width, quad.height);
-		g.setColor(SubstanceLookAndFeel.getActiveColorScheme().getForegroundColor());
-		int n_lineno = 0; int n_linedist = 14; int n_xpad = 3;
-		g.setFont(new Font("Arial", Font.PLAIN, n_linedist - 2));
-		//g.setFont(new Font(""))
-		int n_x = 0;
-		int n_y = 0;*/
+
 		Inhabitant cur;
 		String sz_showname, sz_showaddr;
 		boolean b_showtooltip = false;
