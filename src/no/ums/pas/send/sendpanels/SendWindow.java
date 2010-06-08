@@ -261,6 +261,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		if(!obj.get_sendproperties().get_isresend()) {
 			switch(obj.get_sendproperties().get_sendingtype()) {
 				case SendProperties.SENDING_TYPE_POLYGON_:
+				case SendProperties.SENDING_TYPE_POLYGONAL_ELLIPSE_:
 					m_addresspanel = new Sending_AddressPanelPolygon(controller.get_pas(), this);
 					break;
 				case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:

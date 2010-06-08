@@ -888,7 +888,10 @@ public class PolygonStruct extends ShapeStruct {
 		if(bEditmode)
 		{
 			if(ellipse_polygon!=null)
-				ellipse_polygon.draw(g, nav, true, true, true, p, bBorder, false, 1, true);
+			{
+				ellipse_polygon.draw(g, nav, true, true, true, p, bBorder, false, 1, false);
+				//return;
+			}
 		}
 		
 		Color col_dot = new Color(get_fill_color().getRed(), get_fill_color().getGreen(), get_fill_color().getBlue());
@@ -1037,13 +1040,13 @@ public class PolygonStruct extends ShapeStruct {
 	}
 	public void set_ellipse_center(Navigation nav, MapPoint p_center) {
 		set_ellipse(nav, p_center, m_p_corner);
-		recalc_shape(nav);
-		finalize();
+		//recalc_shape(nav);
+		//finalize();
 	}
 	public void set_ellipse_corner(Navigation nav, MapPoint p_corner) {
 		set_ellipse(nav, m_p_center, p_corner);
-		recalc_shape(nav);
-		finalize();
+		//recalc_shape(nav);
+		//finalize();
 	}
 	PolygonStruct ellipse_polygon = null;
 	public void recalc_shape(Navigation nav)
@@ -1052,7 +1055,8 @@ public class PolygonStruct extends ShapeStruct {
 		m_ellipse_coor_lat.clear();
 		m_ellipse_coor_lon.clear();
 		
-		ellipse_polygon = new PolygonStruct(null);
+		if(ellipse_polygon==null)
+			ellipse_polygon = new PolygonStruct(null);
 		Utils.ConvertEllipseToPolygon(
 				m_p_center.get_lon(), 
 				m_p_center.get_lat(), 
@@ -1061,6 +1065,8 @@ public class PolygonStruct extends ShapeStruct {
 				50, 0, ellipse_polygon);
 		this.m_ellipse_coor_lat = ellipse_polygon.get_coors_lat();
 		this.m_ellipse_coor_lon = ellipse_polygon.get_coors_lon();
+		ellipse_polygon.set_border_color(this.get_border_color());
+		ellipse_polygon.set_fill_color(this.get_fill_color());
 		this.m_b_needcoortopix = true;
 		m_b_recalcing = false;
 	}
@@ -1483,6 +1489,13 @@ public class PolygonStruct extends ShapeStruct {
 	
 	
  
+	@Override
+	public void set_fill_color(Color col) {
+		super.set_fill_color(col);
+		if(ellipse_polygon!=null)
+			ellipse_polygon.set_fill_color(col);
+	}
+
 	public Object clone() throws CloneNotSupportedException {
 		PolygonStruct c;
 		try {

@@ -927,7 +927,7 @@ public class InfoPanel extends GeneralPanel {
 		
 		@Override
 		public int getWantedHeight() {
-			return 130;
+			return 150;
 		}
 		@Override
 		public int getWantedWidth() {
@@ -943,7 +943,7 @@ public class InfoPanel extends GeneralPanel {
 				super(a);
 				m_txt_lon_deg.setPreferredSize(new Dimension(65, 15));
 				m_txt_lat_deg.setPreferredSize(new Dimension(65, 15));
-				m_btn_go_ll.setPreferredSize(new Dimension(50, 16));
+				//m_btn_go_ll.setPreferredSize(new Dimension(75, 16));
 				m_txt_lon_deg.setType(StdIntegerArea.DOUBLE);
 				m_txt_lat_deg.setType(StdIntegerArea.DOUBLE);
 			}
@@ -1026,7 +1026,7 @@ public class InfoPanel extends GeneralPanel {
 
 			public CoorSearchLL(ActionListener a) {
 				m_callback = a;
-				m_btn_go_ll.setPreferredSize(new Dimension(50, 16));
+				//m_btn_go_ll.setPreferredSize(new Dimension(75, 16));
 				m_btn_go_ll.addActionListener(this);
 				add_controls();
 			}
@@ -1145,7 +1145,7 @@ public class InfoPanel extends GeneralPanel {
 			private ActionListener m_callback;
 
 			public CoorSearchUTM(ActionListener a) {
-				m_btn_go_utm.setPreferredSize(new Dimension(50, 16));
+				//m_btn_go_utm.setPreferredSize(new Dimension(75, 16));
 				m_callback = a;
 				m_btn_go_utm.addActionListener(this);
 				add_controls();

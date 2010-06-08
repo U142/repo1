@@ -95,9 +95,9 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 		m_val_country		= new JComboBox(m_sz_country);
 
 		
-        m_txt_address.setPreferredSize(new Dimension(100, 15));
-        m_txt_postno.setPreferredSize(new Dimension(100, 15));
-        m_txt_region.setPreferredSize(new Dimension(100, 15));
+        m_txt_address.setPreferredSize(new Dimension(150, 15));
+        m_txt_postno.setPreferredSize(new Dimension(150, 15));
+        m_txt_region.setPreferredSize(new Dimension(150, 15));
         m_txt_country.setPreferredSize(new Dimension(100, 15));
 
         m_val_address.setPreferredSize(new Dimension(100, 15));

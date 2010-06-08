@@ -1145,7 +1145,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		this.reset_xpanels();
 		this.set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.WEST);
 		add(m_radio_activate, m_gridconst);
-		set_gridconst(inc_xpanels(), get_panel(), 16, 1, GridBagConstraints.WEST);
+		set_gridconst(inc_xpanels(), get_panel(), 11, 1, GridBagConstraints.WEST);
 		add(m_txt_sendname, m_gridconst);
 		inc_xpanels2(9);
 		//addSeparator();

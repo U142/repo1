@@ -98,7 +98,7 @@ public class PASDraw extends Draw {
 			List<ShapeStruct> list = get_pas().get_userinfo().get_departments().get_combined_restriction_shape();
 			for(int i=0; i < list.size(); i++)
 			{
-				list.get(i).draw(m_gfx_buffer, get_pas().get_navigation(), false, true, false, null, true, true, 1, false);
+				list.get(i).draw(m_gfx_buffer, get_pas().get_navigation(), false, true, false, null, true, true, 2, false);
 			}
 
 		}
