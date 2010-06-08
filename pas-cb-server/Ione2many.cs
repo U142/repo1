@@ -46,17 +46,33 @@ namespace pas_cb_server
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
 
             CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
-            cbc.Url = "http://localhost:5678/cbc/gateway";
+            //cbc.Url = "http://localhost:5678/cbc/gateway";
             //cbc.Url = "http://92.65.238.116:8000/cbc/gateway";
+            //loginreq.infoprovname = "ums";
+            //loginreq.cbename = "cbeums";
+            //loginreq.password = "12secret";
+            cbc.Url = op.sz_url;
+
             loginreq.cbccberequesthandle = Database.GetHandle(op);
-            loginreq.infoprovname = "ums";
-            loginreq.cbename = "cbeums";
-            loginreq.password = "12secret";
+            loginreq.infoprovname = op.sz_login_id;
+            loginreq.cbename = op.sz_login_name;
+            loginreq.password = op.sz_login_password;
+            CBCLOGINREQRESULT loginres = cbc.CBC_Login(loginreq);
+
+            Log.WriteLog(String.Format("{0} (op={1}) (req={2}) LOGIN (code={3}, msg={4})"
+                , oAlert.l_refno
+                , op.sz_operatorname
+                , loginres.cbccberequesthandle
+                , loginres.cbccbestatuscode
+                , loginres.messagetext), 9);
+
+            if (loginres.cbccbestatuscode != 0) // login failed
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
 
             //CBCNEWMSGREQUEST newmsgreq = new CBCNEWMSGREQUEST();
             CBCNEWMSGCELLREQUEST newmsgreq = new CBCNEWMSGCELLREQUEST();
             newmsgreq.cbccberequesthandle = Database.GetHandle(op);
-            
+
             //newmsgreq.area = get_area(oAlert, op);
             newmsgreq.cbecelllist = get_celllist(oAlert, op);
             newmsgreq.pagelist = get_pagelist(oAlert, op);
@@ -76,9 +92,19 @@ namespace pas_cb_server
             newmsgreq.channelindicator = null;
             newmsgreq.category = 0;
 
-            CBCLOGINREQRESULT loginres = cbc.CBC_Login(loginreq);
             //CBCNEWMSGREQRESULT newmsgres = cbc.CBC_NewMsg(newmsgreq);
             CBCNEWMSGCELLREQRESULT newmsgres = cbc.CBC_NewMsgCell(newmsgreq);
+
+            Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NEW_MESSAGE (code={3}, msg={4}, handle{5})"
+                , oAlert.l_refno
+                , op.sz_operatorname
+                , newmsgres.cbccberequesthandle
+                , newmsgres.cbccbestatuscode
+                , newmsgres.messagetext
+                , newmsgres.messagehandle), 9);
+
+            if (newmsgres.cbccbestatuscode != 0)
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
 
             return Constant.OK;
         }

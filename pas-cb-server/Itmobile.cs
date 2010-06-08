@@ -14,8 +14,6 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
-            int ret = Constant.OK;
-            
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
             IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
@@ -49,6 +47,13 @@ namespace pas_cb_server
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
+            Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NEW_MESSAGE (code={3}, msg={4})"
+                , oAlert.l_refno
+                , op.sz_operatorname
+                , oAlert.l_refno
+                , t_alert_response.IBAG_message_type
+                , t_alert_response.IBAG_note), 9);
+
             switch (t_alert_response.IBAG_message_type)
             {
                 case IBAG_message_type.Ack:
@@ -56,11 +61,11 @@ namespace pas_cb_server
                     break;
                 case IBAG_message_type.Error:
                     // failed, return error and insert appropriate info in database
-                    ret = Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
                     break;
             }
 
-            return ret;
+            return Constant.OK;
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {

@@ -145,7 +145,9 @@ namespace pas_cb_server
         private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser)
         {
             Hashtable ret = new Hashtable();
-            AlertInfo oAlert = new AlertInfo();
+            AlertInfo oAlert;
+
+            GetAlert(xmlCB, oUser, out oAlert);
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -227,6 +229,43 @@ namespace pas_cb_server
             // all alerts for all operators?
             return ret;
         }
+        private static int GetAlert(XmlNode xmlCB, Settings oUser, out AlertInfo oAlert)
+        {
+            oAlert = new AlertInfo();
+            oAlert.alert_message = new AlertMessage();
+            oAlert.alert_polygon = new List<PolyPoint>();
+
+            NumberFormatInfo coorformat = new NumberFormatInfo();
+            coorformat.NumberDecimalSeparator = ".";
+            coorformat.NumberGroupSeparator = "";
+
+            try
+            {
+                oAlert.l_projectpk = int.Parse(xmlCB.Attributes.GetNamedItem("l_projectpk").Value);
+                oAlert.l_refno = int.Parse(xmlCB.Attributes.GetNamedItem("l_refno").Value);
+                oAlert.l_sched_utc = int.Parse(xmlCB.Attributes.GetNamedItem("l_sched_utc").Value);
+                oAlert.l_validity = int.Parse(xmlCB.Attributes.GetNamedItem("l_validity").Value);
+
+                XmlAttributeCollection xml_message = xmlCB.SelectSingleNode("textmessages").SelectSingleNode("message").Attributes;
+                oAlert.alert_message.l_channel = int.Parse(xml_message.GetNamedItem("l_channel").Value);
+                oAlert.alert_message.sz_text = xml_message.GetNamedItem("sz_text").Value;
+
+                foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
+                {
+                    PolyPoint pt = new PolyPoint();
+                    pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcoord").Value, coorformat);
+                    pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycoord").Value, coorformat);
+
+                    oAlert.alert_polygon.Add(pt);
+                }
+            }
+            catch(Exception e)
+            {
+                Log.WriteLog(String.Format("Incorrect XML format: {0}", e.Message), 2);
+            }
+
+            return Constant.OK;
+        }
     }
 
     public class AlertInfo
@@ -234,10 +273,12 @@ namespace pas_cb_server
         // info needed to start a cb sending
         public int l_projectpk;
         public int l_refno;
+
+        /* these shouldn't be needed as they are in the user settings as well
         public int l_comppk;
         public int l_deptpk;
         public int l_userpk;
-        public string sz_password;
+        public string sz_password;*/
 
         public int l_sched_utc;
         public int l_validity;
