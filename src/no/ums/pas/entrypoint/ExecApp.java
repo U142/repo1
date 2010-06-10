@@ -114,7 +114,7 @@ public class ExecApp {
 	{
 		try
 		{
-			if(sz_plugin!=null)
+			if(sz_plugin!=null && sz_plugin.length()>0)
 			{
 				PAS.pasplugin = PluginLoader.loadPlugin(sz_codebase, sz_plugin, no.ums.pas.pluginbase.PluginLoader.FILETYPE.JAR);
 			}

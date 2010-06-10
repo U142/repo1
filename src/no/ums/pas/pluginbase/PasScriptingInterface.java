@@ -21,9 +21,10 @@ import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.mainui.SearchFrame;
-import no.ums.pas.core.mainui.SearchPanelResultsAddrSearch;
-import no.ums.pas.core.mainui.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
+import no.ums.pas.core.mainui.address_search.SearchFrame;
+import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
+import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
@@ -84,7 +85,7 @@ public abstract class PasScriptingInterface
 		 * @return a new overridden version of SearchPanelVals
 		 * @throws Exception
 		 */
-		public abstract SearchPanelVals onCreateSearchPanelVals(SearchFrame frame) throws Exception;
+		public abstract SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception;
 		
 		/**
 		 * 
@@ -93,7 +94,7 @@ public abstract class PasScriptingInterface
 		 * @return a new overridden version of SearchPanelResultsAddrSearch (list)
 		 * @throws Exception
 		 */
-		public abstract SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(SearchFrame frame, ActionListener callback) throws Exception;
+		public abstract SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback) throws Exception;
 		
 	}
 

@@ -461,8 +461,12 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			
 			for(int i=0;i < list.size(); i++)
 			{
-				if(list.get(i).isHidden())
+				/*if(list.get(i).isHidden())
+				{
+					if(list.size() == 1)
+						return true; //
 					continue;
+				}*/
 				
 				//check line intersects with last line (last polypoint and mouse pos)
 				PolygonStruct current_polygon = null;

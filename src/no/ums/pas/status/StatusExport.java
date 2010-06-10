@@ -211,7 +211,7 @@ public class StatusExport
 		{
 			//m_lbl_time = new StdTextLabel("Last Update", true);
 			//m_lbl_sendings = new StdTextLabel("", true);
-			FilePicker picker = new FilePicker(opener, laf, 
+			FilePicker picker = new FilePicker(opener, 
 					StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
 					"Open file", FILE_FILTERS_, FilePicker.MODE_SAVE_);	
 			//picker.getSelectedFile();

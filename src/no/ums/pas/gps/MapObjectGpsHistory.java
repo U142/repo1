@@ -10,8 +10,8 @@ import javax.swing.ListSelectionModel;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
-import no.ums.pas.core.mainui.SearchFrame;
-import no.ums.pas.core.mainui.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.SearchFrame;
+import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.maps.defines.MapObject;
 import no.ums.pas.ums.tools.TextFormat;
 
@@ -51,7 +51,7 @@ public class MapObjectGpsHistory extends DefaultPanel {
 		final int m_n_lon_col = 4;
 		final int m_n_lat_col = 3;
 		
-		SearchPanelVals get_vals() { return get_searchframe().get_searchpanelvals(); }
+		SearchPanelVals get_vals() { return get_searchframe().get_panel().get_searchpanelvals(); }
 		SearchFrame get_searchframe() { return m_searchframe; }
 
 		GpsAddrSearch(PAS pas, String [] sz_columns, int [] n_width)
@@ -97,7 +97,7 @@ public class MapObjectGpsHistory extends DefaultPanel {
 			{ 
 				m_b_issearching = false; 
 				try {
-					get_searchframe().get_searchpanelvals().search_stopped();
+					get_searchframe().get_panel().get_searchpanelvals().search_stopped();
 				} catch(Exception e) {
 					
 				}

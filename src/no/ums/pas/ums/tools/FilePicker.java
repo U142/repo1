@@ -20,7 +20,7 @@ public class FilePicker extends JFileChooser {
 	private String m_sz_selectedfiletype;
 	//private String m_sz_selectedfileext;
 	
-	public FilePicker(Component parent, LookAndFeel laf, String sz_path, String sz_title, String [][] sz_filter, int MODE) {
+	public FilePicker(Component parent, String sz_path, String sz_title, String [][] sz_filter, int MODE) {
 		super(sz_path);
 		m_parent	= parent;
 		m_sz_filter = sz_filter;

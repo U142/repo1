@@ -65,7 +65,7 @@ public class csvexporter extends Object
 		                                   };
 		try
 		{
-			FilePicker fp = new FilePicker(parent, null, current_dir, "Save to CSV", sz_filter, FilePicker.MODE_SAVE_);
+			FilePicker fp = new FilePicker(parent, current_dir, "Save to CSV", sz_filter, FilePicker.MODE_SAVE_);
 			file = fp.getSelectedFile();
 			if(file==null)
 				throw new FileNotFoundException();

@@ -51,6 +51,7 @@ public class ShapeImporter extends FileParser
 				
 				//Record rec = shape.nextRecord();
 				Object obj = shape.nextRecord().shape();
+				Class cl = obj.getClass();
 				
 				if(obj.getClass().equals(com.vividsolutions.jts.geom.MultiPolygon.class))
 				{
@@ -123,6 +124,37 @@ public class ShapeImporter extends FileParser
 				else if(obj.getClass().equals(com.vividsolutions.jts.geom.MultiPoint.class))
 				{
 					
+				}
+				else if(obj.getClass().equals(com.vividsolutions.jts.geom.MultiLineString.class))
+				{
+					com.vividsolutions.jts.geom.MultiLineString geom = (com.vividsolutions.jts.geom.MultiLineString)obj;
+					for(int i=0; i < geom.getNumGeometries(); i++)
+					{
+						com.vividsolutions.jts.geom.Geometry g = geom.getGeometryN(i);
+						com.vividsolutions.jts.geom.Coordinate [] coors = g.getCoordinates();
+						PolygonStruct poly = new PolygonStruct(new java.awt.Dimension(1,1));
+						poly.shapeID = (totalshapes+1);
+						poly.shapeName = "Imported Line";
+						//poly.SetBounds(geom.getBoundary()., bounds._rbo, bounds._ubo, bounds._bbo);
+						for(int p = 0; p < coors.length; p++)
+						{
+							if(coors[p].x>180 || coors[p].x < -180)
+							{
+								
+								no.ums.pas.ums.tools.CoorConverter conv = new CoorConverter();
+								LLCoor ll1 = conv.UTM2LL(23, coors[p].y, coors[p].x, "32V");
+								poly.add_coor(ll1.get_lon(), ll1.get_lat());
+							}
+							else
+							{
+								//assume lon/lat
+								poly.add_coor(coors[p].x, coors[p].y);
+							}
+
+						}
+						polylist.add(poly);
+
+					}
 				}
 				else if(obj.getClass().equals(com.vividsolutions.jts.geom.LineSegment.class))
 				{

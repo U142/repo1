@@ -29,7 +29,7 @@ public class SosiExport
 	public SosiExport(AlertVO [] alert)
 	{
 		this.alert = alert;
-		FilePicker picker = new FilePicker(PAS.get_pas(), PAS.get_pas().get_lookandfeel(), 
+		FilePicker picker = new FilePicker(PAS.get_pas(), 
 				StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
 				"Choose file", FILE_FILTERS_, FilePicker.MODE_SAVE_);
 		file = picker.getSelectedFile();

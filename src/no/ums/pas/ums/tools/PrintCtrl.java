@@ -130,7 +130,7 @@ public class PrintCtrl implements Printable {
 		//PlanarImage image= new RenderedImageAdapter(g2d);
 		//new ImageIO().write()
 		
-		FilePicker picker = new FilePicker(null, PAS.get_pas().get_lookandfeel(),
+		FilePicker picker = new FilePicker(null, 
 				StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
 				"Save As", FILE_FILTERS_, FilePicker.MODE_SAVE_);
 		File f = picker.getSelectedFile();

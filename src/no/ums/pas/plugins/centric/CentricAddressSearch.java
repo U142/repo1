@@ -6,6 +6,9 @@ import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.*;
+import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
+import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
+import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.ws.pas.*;
 import no.ums.pas.*;
 
@@ -26,13 +29,13 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	
 	
 	@Override
-	public SearchPanelVals onCreateSearchPanelVals(SearchFrame frame) throws Exception {
+	public SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception {
 		System.out.println("CentricAddressSearch.onCreateSearchPanelVals");
-		return new CentricSearchPanelVals(frame);
+		return new CentricSearchPanelVals(panel);
 	}
 	
 	@Override
-	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(SearchFrame frame, ActionListener callback)
+	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback)
 			throws Exception {
 		System.out.println("CentricAddressSearch.onCreateSearchPanelResultsAddrSearch");
         String[] sz_columns  = {
@@ -41,7 +44,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 				PAS.l("common_lon"),
 				PAS.l("common_lat"),};//"icon"
 		int[] n_width = { 200, 100, 50, 50 }; //, 16 };
-		return new CentricSearchPanelResultsAddrSearch(frame, sz_columns, n_width, new Dimension(800, 200), callback);
+		return new CentricSearchPanelResultsAddrSearch(panel, sz_columns, n_width, new Dimension(100, 100), callback);
 	}
 	
 	@Override
@@ -67,9 +70,9 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		protected int m_n_lon_col = 3;
 		protected int m_n_lat_col = 2;
 		
-		public CentricSearchPanelResultsAddrSearch(SearchFrame frm, String [] sz_columns, int [] n_width, Dimension dim, ActionListener callback)
+		public CentricSearchPanelResultsAddrSearch(AddressSearchPanel frm, String [] sz_columns, int [] n_width, Dimension dim, ActionListener callback)
 		{
-			super(frm, sz_columns, n_width, dim, callback);
+			super(frm, sz_columns, n_width, dim, callback, false);
 			super.m_n_lon_col = 3;
 			super.m_n_lat_col = 2;
 		}
@@ -77,7 +80,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	
 	public class CentricSearchPanelVals extends SearchPanelVals
 	{
-		public CentricSearchPanelVals(SearchFrame frm)
+		public CentricSearchPanelVals(AddressSearchPanel frm)
 		{
 			super(frm);
 		}

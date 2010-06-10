@@ -129,7 +129,7 @@ public class ImportPolygon implements ActionListener {
 	public ImportPolygon(ActionListener callback, String action, boolean bIsAlert, Component parent) {
 		
 		
-		FilePicker picker = new FilePicker(parent, PAS.get_pas().get_lookandfeel(), 
+		FilePicker picker = new FilePicker(parent, 
 								StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
 								PAS.l("common_open_file"), FILE_FILTERS_, FilePicker.MODE_OPEN_){
 			protected JDialog createDialog(Component parent) throws HeadlessException {

@@ -64,6 +64,12 @@ public class DeptArray extends ArrayList<Object> {
 		Area area1 = new Area(shape1);
 		Area area2 = new Area(shape2);*/
 		
+		/*if(size()==1)
+		{
+			m_combined_shapestruct_list.add((PolygonStruct)((DeptInfo)this.get(0)).get_restriction_shapes().get(0));
+			return;
+		}*/
+
 		
 		int int_mod = 10000;
 		
@@ -72,7 +78,7 @@ public class DeptArray extends ArrayList<Object> {
 		for(int j=0; j < this.size(); j++)
 		{
 			PolygonStruct poly = (PolygonStruct)((DeptInfo)this.get(j)).get_restriction_shapes().get(0);
-			if(poly.isHidden())
+			if(poly.isHidden() && size()>1)
 				continue;
 			Polygon javapoly = new Polygon();
 			int c;
@@ -147,6 +153,7 @@ public class DeptArray extends ArrayList<Object> {
 			}
 			catch(Exception e)
 			{
+				break;
 				
 			}
 		

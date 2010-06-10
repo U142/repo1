@@ -9,9 +9,10 @@ import javax.xml.namespace.QName;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
-import no.ums.pas.core.mainui.SearchFrame;
-import no.ums.pas.core.mainui.SearchPanelResultsAddrSearch;
-import no.ums.pas.core.mainui.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
+import no.ums.pas.core.mainui.address_search.SearchFrame;
+import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
+import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.ws.pas.ObjectFactory;
@@ -26,7 +27,7 @@ public class DefaultAddressSearch extends PasScriptingInterface.AddressSearch
 	
 	
 	@Override
-	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(SearchFrame frame, ActionListener callback)
+	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback)
 			throws Exception {
 		System.out.println("onCreateSearchPanelResultsAddrSearch");
         String[] sz_columns  = {PAS.l("adrsearch_dlg_hit"),
@@ -35,13 +36,13 @@ public class DefaultAddressSearch extends PasScriptingInterface.AddressSearch
 				PAS.l("common_lon"),
 				PAS.l("common_lat"),};//"icon"
 		int[] n_width = { 30, 200, 100, 50, 50 }; //, 16 };
-		return new SearchPanelResultsAddrSearch(frame, sz_columns, n_width, new Dimension(800, 200), callback);
+		return new SearchPanelResultsAddrSearch(panel, sz_columns, n_width, new Dimension(800, 200), callback);
 	}
 
 	@Override
-	public SearchPanelVals onCreateSearchPanelVals(SearchFrame frame) throws Exception {
+	public SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception {
 		System.out.println("onCreateSearchPanelVals");
-		return new SearchPanelVals(frame);
+		return new SearchPanelVals(panel);
 	}
 
 	@Override

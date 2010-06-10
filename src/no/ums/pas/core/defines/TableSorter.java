@@ -135,6 +135,8 @@ public class TableSorter extends AbstractTableModel {
         return tableHeader;
     }
 
+    
+    
     public void setTableHeader(JTableHeader tableHeader) {
         if (this.tableHeader != null) {
             this.tableHeader.removeMouseListener(mouseListener);

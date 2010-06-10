@@ -1207,8 +1207,6 @@ public class PolygonStruct extends ShapeStruct {
 			if(num_intersects>0)
 				num_intersects --;
 		}
-		if(n_ell_point>=25)
-			System.out.println("break");
 		
 		if(n_total_iterations>0)
 		{

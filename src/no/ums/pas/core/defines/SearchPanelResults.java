@@ -108,7 +108,13 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		//m_tbl.changeSelection(rowIndex, columnIndex, toggle, extend)
 	}
 	JLayeredPane layer = new JLayeredPane();
+	public JLayeredPane getLayeredPane() { return layer; }
+
 	public SearchPanelResults(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension panelDimension, int model)
+	{
+		this(sz_columns, n_width, b_editable, panelDimension, model, true);
+	}
+	public SearchPanelResults(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension panelDimension, int model, boolean b_enable_sort)
 	{
 	        //super(new GridLayout(1,0));
 			super();
@@ -116,11 +122,21 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 			//setLayout(new BorderLayout());
 			addComponentListener(this);
 	        m_tbl_list = new TableList(sz_columns, n_width);
-			sorter = new TableSorter(m_tbl_list);
+			sorter = new TableSorter(m_tbl_list);	        		
 	        
 	        m_tbl = new JTable(sorter);
-			sorter.setTableHeader(m_tbl.getTableHeader());
-	        m_b_editable = b_editable;
+	        if(b_enable_sort)
+	        {
+		        //m_tbl.getTableHeader().setDefaultRenderer(m_tbl.getTableHeader().getDefaultRenderer());
+	        }
+	        SwingUtilities.invokeLater(new Runnable() {
+	        	public void run()
+	        	{
+					sorter.setTableHeader(m_tbl.getTableHeader());
+	        	}
+	        });
+
+			m_b_editable = b_editable;
         	m_tbl.setSelectionMode(model);
         	m_tbl.setCellSelectionEnabled(true);
         	m_tbl.setRowSelectionAllowed(true);
@@ -794,7 +810,9 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		if(getWidth()<=0 || getHeight()<=0)
+		int w = getWidth();
+		int h = getHeight();
+		if(w<=1 || h<=1)
 		{
 			return;
 		}

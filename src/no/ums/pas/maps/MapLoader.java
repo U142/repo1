@@ -1,13 +1,11 @@
 package no.ums.pas.maps;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.MapPointF;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
@@ -16,20 +14,16 @@ import no.ums.ws.pas.*;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
 import javax.xml.namespace.QName;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 
-import javax.imageio.*;
 
 import org.geotools.data.ows.Layer;
 import org.geotools.data.ows.WMSCapabilities;
 import org.geotools.data.wms.WMSUtils;
 import org.geotools.data.wms.WebMapServer;
 import org.geotools.data.wms.response.GetMapResponse;
-import org.opengis.style.Style;
 
 import java.awt.color.*;
 import java.awt.image.*;

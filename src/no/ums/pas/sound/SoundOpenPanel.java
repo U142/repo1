@@ -69,7 +69,7 @@ public class SoundOpenPanel extends DefaultPanel {
 		}
 	}
 	public boolean open_file() {
-		FilePicker picker = new FilePicker(this, PAS.get_pas().get_lookandfeel(),
+		FilePicker picker = new FilePicker(this, 
 				StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_),
 				PAS.l("sound_panel_open_file_title"), sz_filter, FilePicker.MODE_OPEN_);
 		m_file = picker.getSelectedFile();

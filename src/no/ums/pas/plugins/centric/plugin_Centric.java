@@ -135,10 +135,10 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onAddMainSelectMenu(MainMenuBar menu)
 	{
 		super.onAddMainSelectMenu(menu);
-		//menu.remove(menu.get_menu_navigate());
-		//menu.remove(menu.get_dept());
+		menu.remove(menu.get_menu_navigate());
+		menu.remove(menu.get_dept());
 		menu.remove(menu.get_menu_layout());
-		//menu.remove(menu.get_parm());
+		menu.remove(menu.get_parm());
 		menu.get_status().remove(menu.get_item_status_export());
 		menu.get_status().remove(menu.get_item_status_updates());
 		menu.get_view().remove(menu.get_item_view_showhouses());
@@ -186,25 +186,25 @@ public class plugin_Centric extends PAS_Scripting
 	@Override 
 	public boolean onStartParm()
 	{
-		return super.onStartParm();
-		//System.out.println("onStartParm - PARM is invalid in this plugin");
-		//return false;
+		//return super.onStartParm();
+		System.out.println("onStartParm - PARM is invalid in this plugin");
+		return false;
 	}
 	
 	@Override
 	public boolean onCloseParm()
 	{
-		return super.onCloseParm();
-		//System.out.println("onCloseParm - PARM is invalid in this plugin");
-		//return false;
+		//return super.onCloseParm();
+		System.out.println("onCloseParm - PARM is invalid in this plugin");
+		return false;
 	}
 	
 	@Override
 	public boolean onRefreshParm()
 	{
-		return super.onRefreshParm();
-		//System.out.println("onRefreshParm - PARM is invalid in this plugin");
-		//return false;
+		//return super.onRefreshParm();
+		System.out.println("onRefreshParm - PARM is invalid in this plugin");
+		return false;
 	}
 	
 	@Override
@@ -265,6 +265,7 @@ public class plugin_Centric extends PAS_Scripting
 				break;
 			case WIN:
 				cl = (Class<LookAndFeel>)classloader.loadClass("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				//cl = (Class<LookAndFeel>)classloader.loadClass(UIManager.getCrossPlatformLookAndFeelClassName());
 				break;
 			}
 			LookAndFeel laf = (LookAndFeel)cl.newInstance();

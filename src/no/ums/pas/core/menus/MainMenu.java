@@ -13,6 +13,7 @@ import java.awt.event.*;
 import no.ums.pas.*;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.mainui.*;
+import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.menus.defines.*;
 import no.ums.pas.core.themes.ThemeColorComponent;
 import no.ums.pas.importer.*;
