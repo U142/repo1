@@ -30,8 +30,14 @@ namespace pas_cb_server
                 Log.InitLog(Settings.GetValue("SyslogApp", "umsalertix"), Settings.GetValue("SyslogServer", "makoto.umscom.com"), Settings.GetValue("SyslogPort", 514), Settings.GetValue("Syslog", true), Settings.GetValue("LogFileName", "umsalertix"), Settings.GetValue("LogFile", true));
 
                 // Start threads
+                Log.WriteLog("Starting keyreader thread", 9);
+                new Thread(new ThreadStart(Tools.KeyReader)).Start();
+
                 Log.WriteLog("Starting parser thread", 9);
-                new Thread(new ThreadStart(Parser.CheckFiles)).Start();
+                new Thread(new ThreadStart(CBParser.CheckFiles)).Start();
+
+                Log.WriteLog("Starting status thread", 9);
+                new Thread(new ThreadStart(CBStatus.CheckStatus)).Start();
             }
             catch (Exception e)
             {

@@ -8,6 +8,16 @@ namespace pas_cb_server
 {
     public class Database
     {
+        // 7 = CB, 6 = TCS, 5 = TAS, 4 = PAS
+        private static int MESSAGETYPEfield = umssettings._settings.GetValue("MessageType", 7);
+        public static int MESSAGETYPE
+        {
+            get
+            {
+                return MESSAGETYPEfield;
+            }
+        }
+
         public static string GetCompID(int l_comppk)
         {
             string ret = "";
@@ -44,7 +54,6 @@ namespace pas_cb_server
 
             return ret;
         }
-
         public static string GetDeptID(int l_deptpk)
         {
             string ret = "";
@@ -81,7 +90,6 @@ namespace pas_cb_server
 
             return ret;
         }
-
         public static string GetUserID(long l_userpk)
         {
             string ret = "";
@@ -121,10 +129,65 @@ namespace pas_cb_server
 
         public static int SetSendingStatus(Operator op, int l_refno, int l_status)
         {
+            string szQuery;
+
+            szQuery = "UPDATE LBASEND SET l_status=? WHERE l_refno=? AND l_operator=?";
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+
+            try
+            {
+                cmd.Parameters.Add("status", OdbcType.Int).Value = l_status;
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = l_refno;
+                cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
+
+                dbConn.Open();
+                cmd.ExecuteNonQuery();
+
+                dbConn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e, szQuery),
+                    2);
+            }
 
             return Constant.OK;
         }
+        public static int SetSendingStatus(Operator op, int l_refno, int l_status, string sz_jobid)
+        {
+            string szQuery;
 
+            szQuery = "UPDATE LBASEND SET l_status=?, sz_jobid=? WHERE l_refno=? AND l_operator=?";
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+
+            try
+            {
+                cmd.Parameters.Add("status", OdbcType.Int).Value = l_status;
+                cmd.Parameters.Add("jobid", OdbcType.VarChar).Value = sz_jobid;
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = l_refno;
+                cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
+
+                dbConn.Open();
+                cmd.ExecuteNonQuery();
+
+                dbConn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e, szQuery),
+                    2);
+            }
+
+            return Constant.OK;
+        }
         public static int UpdateTries(int lReference, int lTempStatus, int lEndStatus, int lResponse, int lOperator, LBATYPE Type)
         {
             //int lMaxTries = 1; // Is really retries so 4 will give 5 tries total
@@ -172,6 +235,15 @@ namespace pas_cb_server
             return lRetVal;
         }
 
+        public static int GetHandle(Operator op)
+        {
+            return (int)Database.ExecuteScalar(op.sz_handle_proc);
+        }
+        public static int GetRefno()
+        {
+            return (int)Database.ExecuteScalar("sp_refno_out");
+        }
+
         private static object ExecuteScalar(string sz_query)
         {
             object ret = null;
@@ -193,11 +265,6 @@ namespace pas_cb_server
             }
 
             return ret;
-        }
-
-        public static int GetHandle(Operator op)
-        {
-            return (int)Database.ExecuteScalar(op.sz_handle_proc);
         }
     }
 }

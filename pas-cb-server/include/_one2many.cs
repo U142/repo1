@@ -25,11 +25,6 @@
     public partial class CBEFAILEDCCLIST 
     {
         public int nrofcc;
-        public CBEFAILEDCCLISTCbeccid cbeccid;
-    }
-    
-    public partial class CBEFAILEDCCLISTCbeccid 
-    {
         public CBECCID[] CBECCID;
     }
     
@@ -74,12 +69,7 @@
     {
         public int coordinatesystem;
         public int nrofcoordinatepair;
-        public AREADATACoordinatepair coordinatepair;
-    }
-    
-    public partial class AREADATACoordinatepair 
-    {
-        public COORDINATEPAIR[] COORDINATEPAIR;
+        public COORDINATEPAIR[] coordinatepair;
     }
     
     public partial class COORDINATEPAIR 
@@ -91,12 +81,7 @@
     public partial class AREAINFOLIST 
     {
         public int nrofareas;
-        public AREAINFOLISTAreainfo areainfo;
-    }
-    
-    public partial class AREAINFOLISTAreainfo 
-    {
-        public AREAINFO[] AREAINFO;
+        public AREAINFO[] areainfo;
     }
     
     public partial class CBCINFOAREASREQRESULT 
@@ -112,12 +97,7 @@
     public partial class CBEFAILEDCELLLIST 
     {
         public int nrofcells;
-        public CBEFAILEDCELLLISTCbecellid cbecellid;
-    }
-    
-    public partial class CBEFAILEDCELLLISTCbecellid 
-    {
-        public CBECELLID[] CBECELLID;
+        public CBECELLID[] cbecellid;
     }
 
     [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -223,16 +203,12 @@
         public byte[] pagecontents;
         public int pagelength;
     }
-    
+
+    [XmlRpcMissingMapping(MappingAction.Ignore)]
     public partial class MESSAGEINFOLIST 
     {
         public int nrofintervals;
-        public MESSAGEINFOLISTIntervalinfo intervalinfo;
-    }
-    
-    public partial class MESSAGEINFOLISTIntervalinfo 
-    {
-        public INTERVALINFO[] INTERVALINFO;
+        public INTERVALINFO[] intervalinfo;
     }
     
     public partial class CBCINFOMSGREQRESULT 
@@ -289,12 +265,7 @@
     public partial class CBECCLIST 
     {
         public int nrofcc;
-        public CBECCLISTCbeccid cbeccid;
-    }
-    
-    public partial class CBECCLISTCbeccid 
-    {
-        public CBECCID[] CBECCID;
+        public CBECCID[] cbeccid;
     }
     
     public partial class CBCINFOCMDREQRESULT 
@@ -331,13 +302,12 @@
         [XmlRpcMissingMapping(MappingAction.Ignore)]
         public int? messagehandle;
     }
-    
+
     public partial class CBCLOGINREQRESULT 
     {
         public int cbccberequesthandle;
         public int cbccbestatuscode;
         public int messageclass;
-        [XmlRpcMissingMapping(MappingAction.Ignore)]
         public string messagetext;
     }
     

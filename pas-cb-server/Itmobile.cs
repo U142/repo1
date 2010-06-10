@@ -47,25 +47,27 @@ namespace pas_cb_server
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
-            Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NEW_MESSAGE (code={3}, msg={4})"
-                , oAlert.l_refno
-                , op.sz_operatorname
-                , oAlert.l_refno
-                , t_alert_response.IBAG_message_type
-                , t_alert_response.IBAG_note), 9);
-
-            switch (t_alert_response.IBAG_message_type)
+            if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
             {
-                case IBAG_message_type.Ack:
-                    // ok, insert appropriate info in database
-                    break;
-                case IBAG_message_type.Error:
-                    // failed, return error and insert appropriate info in database
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
-                    break;
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (code={3})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , oAlert.l_refno
+                    , t_alert_response.IBAG_message_type
+                    , t_alert_response.IBAG_note), 0);
+                // ok, insert appropriate info in database
+                return Constant.OK;
             }
-
-            return Constant.OK;
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , oAlert.l_refno
+                    , t_alert_response.IBAG_message_type
+                    , t_alert_response.IBAG_note), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {

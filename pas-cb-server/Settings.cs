@@ -27,6 +27,28 @@ namespace pas_cb_server
         public Operator[] operators;
 
         // methods
+        public static Settings SystemUser()
+        {
+            Settings ret = new Settings();
+            
+            try
+            {
+                ret.l_deptpk = _settings.GetInt("l_deptpk");
+                ret.l_comppk = _settings.GetInt("l_comppk");
+                ret.sz_compid = Database.GetCompID(ret.l_comppk);
+                ret.sz_deptid = Database.GetDeptID(ret.l_deptpk);
+                ret.sz_password = "";
+                ret.sz_userid = "system";
+
+                ret.operators = Operator.GetOperators(ret);
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog("Error getting systemuser values. " + e.ToString(), "Error getting systemuser values. " + e.Message, 2);
+            }
+
+            return ret;
+        }
         public static bool SetUserValues(XmlAttributeCollection attr, Settings uv)
         {
             bool bRetval = true;
@@ -101,9 +123,65 @@ namespace pas_cb_server
         public string sz_login_name = "";
         public string sz_login_password = "";
         public string sz_handle_proc = "sp_cb_kpnhandle";
-        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.RD;
+        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.WGS84;
 
         // methods
+        public static Operator Getoperator(int l_operator)
+        {
+            string qryOperators = String.Format(@"SELECT
+                                        OP.l_operator,
+                                        OP.sz_operatorname,
+                                        OP.l_type,
+                                        OP.sz_url,
+                                        OP.sz_user sz_login_id,
+                                        OP.sz_name sz_login_name,
+                                        OP.sz_password sz_login_password
+                                    FROM
+                                        LBAOPERATORS OP
+                                    WHERE
+                                        OP.f_cb=1
+                                        AND OP.l_operator={0}"
+                , l_operator);
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
+            OdbcDataReader rsOperators;
+
+            Operator op = new Operator();
+
+            try
+            {
+                dbConn.Open();
+
+                rsOperators = cmdOperators.ExecuteReader();
+
+                if(rsOperators.Read())
+                {
+
+                    op.l_operator = rsOperators.GetInt32(0);
+                    op.sz_operatorname = rsOperators.GetString(1);
+                    op.l_type = rsOperators.GetInt32(2);
+                    op.sz_url = rsOperators.GetString(3);
+                    op.sz_login_id = rsOperators.GetString(4);
+                    op.sz_login_name = rsOperators.GetString(5);
+                    op.sz_login_password = rsOperators.GetString(6);
+                }
+                rsOperators.Close();
+                rsOperators.Dispose();
+                cmdOperators.Dispose();
+                dbConn.Close();
+                dbConn.Dispose();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("GetOperators(Settings s) (exception={0})", e.Message),
+                    String.Format("GetOperators(Settings s) (exception={0})", e),
+                    2);
+            }
+
+            return op;
+        }
         public static Operator[] GetOperators(Settings oUser)
         {
             //string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
@@ -199,7 +277,7 @@ namespace pas_cb_server
         public const int INTUSERCANCELLED = 430;
         public const int INTSENDING = 440;
         // CellBroadcast
-        public const int CBPREPAREING = 500;
+        public const int CBPREPARING = 500;
         public const int CBQUEUED = 510;
         public const int CBACTIVE = 540;
         public const int CBPAUSED = 590;
@@ -207,8 +285,8 @@ namespace pas_cb_server
         public const int CANCELLING = 800;
         public const int FINISHED = 1000;
         public const int CANCELLED = 2000;
-/*
-        // exceptions from cellvision
+
+        // exceptions from AlertiX
         public const int EXC_executeAreaAlert = 42001;
         public const int EXC_prepareAreaAlert = 42002;
         public const int EXC_executeCustomAlert = 42003;
@@ -219,7 +297,7 @@ namespace pas_cb_server
         public const int EXC_prepareIntAlert = 42008;
         public const int EXC_countByCC = 42009;
         public const int EXC_countryDistributionByCc = 42010;
-        // errors from cellvision
+        // errors from AlertiX
         public const int ERR_executeAreaAlert = 42011;
         public const int ERR_prepareAreaAlert = 42012;
         public const int ERR_executeCustomAlert = 42013;
@@ -237,9 +315,9 @@ namespace pas_cb_server
         public const int EXC_GetAlertMsg = 42104;
         public const int ERR_NOTAG_CCODE = 42105;
         public const int ERR_EllipseToPoly = 42106;
-        // job errors from CellVision
+        // job errors from AlertiX
         public const int ERR_JobError = 42201;
-*/
+
     }
 
     public enum LBATYPE
