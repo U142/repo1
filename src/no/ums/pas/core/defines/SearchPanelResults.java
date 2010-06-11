@@ -129,12 +129,12 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	        {
 		        //m_tbl.getTableHeader().setDefaultRenderer(m_tbl.getTableHeader().getDefaultRenderer());
 	        }
-	        SwingUtilities.invokeLater(new Runnable() {
-	        	public void run()
+	        //SwingUtilities.invokeLater(new Runnable() {
+	        //	public void run()
 	        	{
 					sorter.setTableHeader(m_tbl.getTableHeader());
 	        	}
-	        });
+	        //});
 
 			m_b_editable = b_editable;
         	m_tbl.setSelectionMode(model);

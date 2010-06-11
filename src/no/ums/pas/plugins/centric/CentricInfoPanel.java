@@ -142,16 +142,18 @@ public class CentricInfoPanel extends InfoPanel
 			add(address_search, m_gridconst);
 			add_spacing(DIR_VERTICAL, 20);
 
+			set_gridconst(0, inc_panels(), 1, 1);
+			add(m_coorsearch, m_gridconst);
+			add_spacing(DIR_VERTICAL, 20);
+
 			set_gridconst(0,inc_panels(),1,1);
 			add(coorinfo, m_gridconst);
 			add_spacing(DIR_VERTICAL, 20);
 
 			set_gridconst(0,inc_panels(),1,1);
 			add(userinfo, m_gridconst);
-			add_spacing(DIR_VERTICAL, 20);
 
-			set_gridconst(0, inc_panels(), 1, 1);
-			add(m_coorsearch, m_gridconst);}
+		}
 		
 	}
 	public CentricInfoPanel()

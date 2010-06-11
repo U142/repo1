@@ -114,8 +114,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu.add(menu.get_btn_pan(), menu.m_gridconst);
 		menu.set_gridconst(1, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom(), menu.m_gridconst);
-		menu.set_gridconst(2, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(menu.get_btn_search(), menu.m_gridconst);
+		//menu.set_gridconst(2, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		//menu.add(menu.get_btn_search(), menu.m_gridconst);
 		
 		JButton btn_goto_restriction = new JButton("Home");
 		btn_goto_restriction.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));

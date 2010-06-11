@@ -3,6 +3,8 @@ package no.ums.pas.core.mainui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import javax.swing.SwingUtilities;
+
 import no.ums.pas.*;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.maps.defines.MapPoint;
@@ -21,13 +23,18 @@ public abstract class GeneralPanel extends DefaultPanel {
 	}
 	public void doInit()
 	{
-		if(!b_inited)
-		{
-			set_layout();
-			init_controls();
-			add_controls();	
-			b_inited = true;
-		}
+		init_controls();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				if(!b_inited)
+				{
+					set_layout();
+					add_controls();	
+					b_inited = true;
+				}
+			}
+		});
 	}
 	protected abstract void set_layout();
 	protected abstract void do_layout();
