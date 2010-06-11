@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace pas_cb_server
 {
-    class Parser
+    class CBParser
     {
         static int lRetVal = Constant.OK;
 
@@ -22,7 +22,6 @@ namespace pas_cb_server
                 {
                     int lRetryInterval = Settings.GetValue("RetryInterval", 60); // defaults to 60 seconds
                     string[] fileEntries = null;
-
                     fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                     foreach (string fileName in fileEntries)
                     {
@@ -253,8 +252,8 @@ namespace pas_cb_server
                 foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
                 {
                     PolyPoint pt = new PolyPoint();
-                    pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcoord").Value, coorformat);
-                    pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycoord").Value, coorformat);
+                    pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcord").Value, coorformat);
+                    pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycord").Value, coorformat);
 
                     oAlert.alert_polygon.Add(pt);
                 }
