@@ -45,41 +45,62 @@ namespace pas_cb_server
             }
         }
 
+        private static void PrintHelp()
+        {
+            Console.WriteLine("# List of commands:");
+            Console.WriteLine("#");
+            Console.WriteLine("#   h, ?\tthis page");
+            Console.WriteLine("#   ctrl+t\trun self test");
+            Console.WriteLine("#   ctrl+m\tmodify current self test");
+            Console.WriteLine("#   ctrl+k\tkill current self test");
+            Console.WriteLine("#   ctrl+c\tstop parser");
+        }
         public static void KeyReader()
         {
             while (CBServer.running)
             {
-                try
+                if (Console.KeyAvailable)
                 {
-                    switch (Console.ReadLine().ToLower())
-                    {
-                        case "h":
-                        case "?":
-                        case "help":
-                            Console.WriteLine("# List of commands:", 1);
-                            Console.WriteLine("#", 1);
-                            Console.WriteLine("#   h, help\tthis page", 1);
-                            Console.WriteLine("#   t, test\trun self test", 1);
-                            Console.WriteLine("#   ctrl+c\tstop parser", 1);
-                            break;
-                        case "q":
-                        case "quit":
-                        case "exit":
-                            Console.WriteLine("Use ctrl+c to quit");
-                            break;
-                        case "t":
-                        case "test":
-                            test.Selftest.NewAlertTest();
-                            break;
-                        default:
-                            Console.WriteLine("# Uknown command, try \"help\" for more info.", 1);
-                            break;
-                    }
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    if (key.KeyChar == '?')
+                        PrintHelp();
+                    else
+                        switch (key.Key)
+                        {
+                            case ConsoleKey.Q:
+                                Console.WriteLine("# Use ctrl+c to quit");
+                                break;
+                            case ConsoleKey.T:
+                                if (key.Modifiers == ConsoleModifiers.Control)
+                                    test.Selftest.NewAlert();
+                                else
+                                    Console.WriteLine("# Use ctrl+t to run test");
+                                break;
+                            case ConsoleKey.K:
+                                if (key.Modifiers == ConsoleModifiers.Control)
+                                    test.Selftest.KillAlert();
+                                else
+                                    Console.WriteLine("# Use ctrl+k to kill current test");
+                                break;
+                            case ConsoleKey.M:
+                                if (key.Modifiers == ConsoleModifiers.Control)
+                                    test.Selftest.UpdateAlert();
+                                else
+                                    Console.WriteLine("# Use ctrl+m to modify current test");
+                                break;
+                            case ConsoleKey.H:
+                            case ConsoleKey.Help:
+                                PrintHelp();
+                                break;
+                            default:
+                                Console.WriteLine("# Unknown command '{0}'. Press 'h' or '?' for a list of available commands.", key.Key.ToString().ToLower());
+                                break;
+                        }
                 }
-                catch
+                else
                 {
-                    // Exception means program is shutting down while still reading. If so, just break while
-                    break;
+                    Thread.Sleep(100);
                 }
             }
             Log.WriteLog("Stopped keyreader thread", 9);

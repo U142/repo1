@@ -18,6 +18,7 @@ namespace pas_cb_server
         {
             // Add custom handler for ctrl+c
             Console.CancelKeyPress += new ConsoleCancelEventHandler(exit);
+            
 
             // Get Config values and initialize
             try
@@ -28,6 +29,9 @@ namespace pas_cb_server
 
                 // Init log values default is both syslog and log files
                 Log.InitLog(Settings.GetValue("SyslogApp", "umsalertix"), Settings.GetValue("SyslogServer", "makoto.umscom.com"), Settings.GetValue("SyslogPort", 514), Settings.GetValue("Syslog", true), Settings.GetValue("LogFileName", "umsalertix"), Settings.GetValue("LogFile", true));
+                
+                Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
+                Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
 
                 // Start threads
                 Log.WriteLog("Starting keyreader thread", 9);
@@ -47,7 +51,7 @@ namespace pas_cb_server
 
             while (running)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             };
 
             Console.CancelKeyPress -= new ConsoleCancelEventHandler(exit);

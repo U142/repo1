@@ -11,16 +11,35 @@ namespace pas_cb_server.test
 {
     class Selftest
     {
-        public static void NewAlertTest()
+        private static int currentTestRef = 0;
+        public static int TestReference
+        {
+            get
+            {
+                return currentTestRef;
+            }
+        }
+        public static void TestEnded(int status)
+        {
+            Log.WriteLog(String.Format("Test alert {0} ended width status", status), 0);
+            currentTestRef = 0;
+        }
+
+        public static void NewAlert()
         {
             Settings oUser = Settings.SystemUser();
             cb alert = new cb();
             polypoint pt;
 
-            alert.l_refno = Database.GetRefno();
+            currentTestRef = Database.GetRefno();
+
+            alert.l_refno = currentTestRef;
             alert.operation = "NewAlertPolygon";
             alert.l_comppk = oUser.l_comppk;
             alert.l_deptpk = oUser.l_deptpk;
+
+            alert.alertpolygon = new List<polypoint>();
+            alert.textmessages = new List<message>();
 
             // Downtown Amsterdam
             pt = new polypoint();
@@ -49,8 +68,8 @@ namespace pas_cb_server.test
 
             alert.textmessages.Add(msg);
 
-            string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno);
-            Log.WriteLog(String.Format("Initiating self test. Filename='{0}'", filename), 0);
+            string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+            Log.WriteLog(String.Format("Initiating self test (New Alert). Filename='{0}'", filename), 0);
 
             // insert to LBASEND
             if (InsertSending(oUser, alert) != Constant.OK)
@@ -63,6 +82,69 @@ namespace pas_cb_server.test
             StreamWriter w = new StreamWriter(filename);
             s.Serialize(w, alert);
             w.Close();
+        }
+
+        public static void KillAlert()
+        {
+            if (currentTestRef == 0)
+            {
+                Log.WriteLog("No test alerts to kill.", 9);
+                Console.Write("Enter refno to kill: ");
+                currentTestRef = int.Parse(Console.ReadLine());
+            }
+            else
+            {
+                Settings oUser = Settings.SystemUser();
+                cb alert = new cb();
+
+                alert.l_refno = currentTestRef;
+                alert.operation = "KillAlert";
+                alert.l_comppk = oUser.l_comppk;
+                alert.l_deptpk = oUser.l_deptpk;
+
+                string filename = String.Format(@"{0}eat\CB_KILL_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+                Log.WriteLog(String.Format("Initiating self test (Kill Alert). Filename='{0}'", filename), 0);
+
+                XmlSerializer s = new XmlSerializer(typeof(cb));
+                StreamWriter w = new StreamWriter(filename);
+                s.Serialize(w, alert);
+                w.Close();
+
+                currentTestRef = 0;
+            }
+        }
+
+        public static void UpdateAlert()
+        {
+            if (currentTestRef == 0)
+            {
+                Log.WriteLog("No test alerts to kill.", 9);
+            }
+            else
+            {
+                Settings oUser = Settings.SystemUser();
+                cb alert = new cb();
+
+                alert.l_refno = currentTestRef;
+                alert.operation = "UpdateAlert";
+                alert.l_comppk = oUser.l_comppk;
+                alert.l_deptpk = oUser.l_deptpk;
+
+                alert.textmessages = new List<message>();
+                message msg = new message();
+                msg.l_channel = 1;
+                msg.sz_text = "-- self test message - UPDATED --";
+
+                alert.textmessages.Add(msg);
+
+                string filename = String.Format(@"{0}eat\CB_UPDATE_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+                Log.WriteLog(String.Format("Initiating self test (Update Alert). Filename='{0}'", filename), 0);
+
+                XmlSerializer s = new XmlSerializer(typeof(cb));
+                StreamWriter w = new StreamWriter(filename);
+                s.Serialize(w, alert);
+                w.Close();
+            }
         }
 
         private static int InsertSending(Settings oUser, cb oAlert)
@@ -167,8 +249,8 @@ namespace pas_cb_server.test
         [XmlAttribute]public int l_sched_utc = 0;
         [XmlAttribute]public int l_validity = 10;
 
-        public List<message> textmessages = new List<message>();
-        public List<polypoint> alertpolygon = new List<polypoint>();
+        public List<message> textmessages;// = new List<message>();
+        public List<polypoint> alertpolygon;// = new List<polypoint>();
     }
     public class message
     {

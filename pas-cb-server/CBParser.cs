@@ -146,7 +146,7 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert;
 
-            GetAlert(xmlCB, oUser, out oAlert);
+            GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -174,6 +174,8 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert = new AlertInfo();
 
+            GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
+
             // update a given alert at each operator
             foreach (Operator op in oUser.operators)
             {
@@ -200,6 +202,8 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert = new AlertInfo();
 
+            GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+
             // kill a given alert at each operator
             foreach (Operator op in oUser.operators)
             {
@@ -221,14 +225,7 @@ namespace pas_cb_server
             }
             return ret;
         }
-        private static int GetAlertStatus()
-        {
-            int ret = 0;
-            // get alert status
-            // all alerts for all operators?
-            return ret;
-        }
-        private static int GetAlert(XmlNode xmlCB, Settings oUser, out AlertInfo oAlert)
+        private static int GetAlert(XmlNode xmlCB, Settings oUser, Operation type, out AlertInfo oAlert)
         {
             oAlert = new AlertInfo();
             oAlert.alert_message = new AlertMessage();
@@ -243,19 +240,26 @@ namespace pas_cb_server
                 oAlert.l_projectpk = int.Parse(xmlCB.Attributes.GetNamedItem("l_projectpk").Value);
                 oAlert.l_refno = int.Parse(xmlCB.Attributes.GetNamedItem("l_refno").Value);
                 oAlert.l_sched_utc = int.Parse(xmlCB.Attributes.GetNamedItem("l_sched_utc").Value);
+
+                if (type == Operation.KILL)
+                    return Constant.OK; // return if kill, don't need more information
+
                 oAlert.l_validity = int.Parse(xmlCB.Attributes.GetNamedItem("l_validity").Value);
 
                 XmlAttributeCollection xml_message = xmlCB.SelectSingleNode("textmessages").SelectSingleNode("message").Attributes;
                 oAlert.alert_message.l_channel = int.Parse(xml_message.GetNamedItem("l_channel").Value);
                 oAlert.alert_message.sz_text = xml_message.GetNamedItem("sz_text").Value;
 
-                foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
+                if (type == Operation.NEWAREA) // get poly for new area messages
                 {
-                    PolyPoint pt = new PolyPoint();
-                    pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcord").Value, coorformat);
-                    pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycord").Value, coorformat);
+                    foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
+                    {
+                        PolyPoint pt = new PolyPoint();
+                        pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcord").Value, coorformat);
+                        pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycord").Value, coorformat);
 
-                    oAlert.alert_polygon.Add(pt);
+                        oAlert.alert_polygon.Add(pt);
+                    }
                 }
             }
             catch(Exception e)
@@ -264,6 +268,14 @@ namespace pas_cb_server
             }
 
             return Constant.OK;
+        }
+
+        private enum Operation
+        {
+            NEWAREA,
+            NEWPLNM,
+            UPDATE,
+            KILL
         }
     }
 

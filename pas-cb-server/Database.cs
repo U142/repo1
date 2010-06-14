@@ -239,6 +239,44 @@ namespace pas_cb_server
         {
             return (int)Database.ExecuteScalar(op.sz_handle_proc);
         }
+        public static string GetJobID(Operator op, int l_refno)
+        {
+            string ret = "";
+            string szQuery;
+
+            szQuery = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1}"
+                , l_refno
+                , op.l_operator);
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+            OdbcDataReader rs;
+
+            try
+            {
+                dbConn.Open();
+                rs = cmd.ExecuteReader();
+
+                if (rs.Read())
+                    if (!rs.IsDBNull(0))
+                        ret = rs.GetString(0);
+
+                rs.Close();
+                rs.Dispose();
+                cmd.Dispose();
+                dbConn.Close();
+                dbConn.Dispose();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.GetJobID (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.GetJobID (exception={0}) (sql={1})", e, szQuery),
+                    2);
+            }
+
+            return ret;
+        }
         public static int GetRefno()
         {
             return (int)Database.ExecuteScalar("sp_refno_out");

@@ -14,12 +14,13 @@ namespace pas_cb_server
             OdbcConnection conn = new OdbcConnection();
             OdbcCommand cmd = new OdbcCommand();
 
-            string sql = String.Format("SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status in ({0},{1},{2},{3},{4})"
+            string sql = String.Format("SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status in ({0},{1},{2},{3},{4},{5})"
                 , Constant.CBPREPARING
                 , Constant.CBQUEUED
                 , Constant.CBACTIVE
                 , Constant.CBPAUSED
-                , Constant.CANCELLING);
+                , Constant.CANCELLING
+                , Constant.USERCANCELLED);
 
             while (CBServer.running)
             {
@@ -55,7 +56,7 @@ namespace pas_cb_server
                 rs_alerts.Close();
                 conn.Close();
 
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < Settings.l_statuspollinterval; i++)
                 {
                     Thread.Sleep(1000);
                     if (!CBServer.running)

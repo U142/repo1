@@ -78,7 +78,7 @@ namespace pas_cb_server
 
             newmsgreq.schedulemethod = 1;
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
-            newmsgreq.endtime = DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss");
+            newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
 
             newmsgreq.recurrency = null;
             newmsgreq.recurrencyendtime = null;
@@ -114,11 +114,106 @@ namespace pas_cb_server
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {
-            return Constant.OK;
+            Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            cbc.Url = op.sz_url;
+
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            if (loginres.cbccbestatuscode != 0) // login failed
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (UpdateAlert) Login FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , loginres.cbccberequesthandle
+                    , loginres.cbccbestatuscode
+                    , loginres.messagetext), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
+
+            // login OK, update status to parsing
+            Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING);
+
+            CBCCHANGEREQUEST changereq = new CBCCHANGEREQUEST();
+            changereq.cbccberequesthandle = Database.GetHandle(op);
+            changereq.messagehandle = int.Parse(Database.GetJobID(op, oAlert.l_refno));
+
+            changereq.pagelist = get_pagelist(oAlert, op);
+
+
+            changereq.schedulemethod = 1;
+            //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            CBCCHANGEREQRESULT changeres = cbc.CBC_ChangeMsg(changereq);
+
+            if (changeres.cbccbestatuscode == 0)
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) ChangeMessage OK (handle={5})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , changeres.cbccberequesthandle
+                    , changeres.cbccbestatuscode
+                    , changeres.messagetext
+                    , changereq.messagehandle), 0);
+                // update database
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, changereq.messagehandle.ToString());
+                return Constant.OK;
+            }
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) ChangeMessage FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , changeres.cbccberequesthandle
+                    , changeres.cbccbestatuscode
+                    , changeres.messagetext
+                    , changereq.messagehandle), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
         {
-            return Constant.OK;
+            Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            cbc.Url = op.sz_url;
+
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            if (loginres.cbccbestatuscode != 0) // login failed
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (KillAlert) Login FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , loginres.cbccberequesthandle
+                    , loginres.cbccbestatuscode
+                    , loginres.messagetext), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
+
+            CBCKILLREQUEST killreq = new CBCKILLREQUEST();
+            killreq.cbccberequesthandle = Database.GetHandle(op);
+            killreq.messagehandle = int.Parse(Database.GetJobID(op, oAlert.l_refno)); // get handle
+            killreq.schedulemethod = 1;
+
+            CBCKILLREQRESULT killres = cbc.CBC_KillMsg(killreq);
+
+            if (killres.cbccbestatuscode == 0)
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (handle={3})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , killres.cbccberequesthandle
+                    , killreq.messagehandle), 0);
+                // update database
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.USERCANCELLED);
+                return Constant.OK;
+            }
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , killres.cbccberequesthandle
+                    , killres.cbccbestatuscode
+                    , killres.messagetext), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
         }
         public static int GetAlertStatus(int l_refno, int l_msghandle, Operator op)
         {
@@ -145,8 +240,8 @@ namespace pas_cb_server
             CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
             if (infores.cbccbestatuscode == 0)
             {
-                string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.First().messagestatus);
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success%={7:0.00})"
+                string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.Last().messagestatus);
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%, expires={8:G}, updates={9}, message=\"{10}\")"
                     , l_refno
                     , op.sz_operatorname
                     , infores.cbccberequesthandle
@@ -154,9 +249,12 @@ namespace pas_cb_server
                     , infores.messagetext
                     , l_msghandle
                     , sz_messagestatus
-                    , infores.successpercentage), 0);
+                    , infores.successpercentage
+                    , DateTime.ParseExact(infores.messageinfolist.intervalinfo.Last().endtime, "yyyyMMddHHmmss",System.Globalization.CultureInfo.InvariantCulture)
+                    , infores.messageinfolist.nrofintervals
+                    , ASCIIEncoding.ASCII.GetString(infores.messageinfolist.intervalinfo.Last().pagelist.page.Last().pagecontents, 0, infores.messageinfolist.intervalinfo.Last().pagelist.page.Last().pagelength)), 0);
 
-                switch (infores.messageinfolist.intervalinfo.First().messagestatus)
+                switch (infores.messageinfolist.intervalinfo.Last().messagestatus)
                 {
                     case 0:   // Processing
                         Database.SetSendingStatus(op, l_refno, Constant.CBPREPARING);
@@ -166,22 +264,25 @@ namespace pas_cb_server
                         break;
                     case 20:  // Starting
                     case 30:  // Running
-                        CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
-                        r_cellcount.cbccberequesthandle = Database.GetHandle(op);
-                        r_cellcount.messagehandle = l_msghandle;
-
-                        CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
-                        if (cellcount.cbecbcstatuscode == 0)
+                        if (op.api_version >= new Version(2, 5))
                         {
-                            Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, 2gSuccess={4}, 2gTotal={5}, 3gSuccess={6}, 3gTotal={7})"
-                                , l_refno
-                                , op.sz_operatorname
-                                , infores.cbccberequesthandle
-                                , l_msghandle
-                                , cellcount.cellcount2gsuccess
-                                , cellcount.cellcount2gtotal
-                                , cellcount.cellcount3gsuccess
-                                , cellcount.cellcount3gtotal), 0);
+                            CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
+                            r_cellcount.cbccberequesthandle = Database.GetHandle(op);
+                            r_cellcount.messagehandle = l_msghandle;
+
+                            CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
+                            if (cellcount.cbecbcstatuscode == 0)
+                            {
+                                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, 2gSuccess={4}, 2gTotal={5}, 3gSuccess={6}, 3gTotal={7})"
+                                    , l_refno
+                                    , op.sz_operatorname
+                                    , infores.cbccberequesthandle
+                                    , l_msghandle
+                                    , cellcount.cellcount2gsuccess
+                                    , cellcount.cellcount2gtotal
+                                    , cellcount.cellcount3gsuccess
+                                    , cellcount.cellcount3gtotal), 0);
+                            }
                         }
                         Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
                         break;
@@ -196,6 +297,8 @@ namespace pas_cb_server
                     case 120: // Error
                     case 130: // Disabled
                     case 140: // Deleted (PLNM override)
+                        if (test.Selftest.TestReference == l_refno)
+                            test.Selftest.TestEnded(Constant.FINISHED);
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }
