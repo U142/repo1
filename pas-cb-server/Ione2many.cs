@@ -215,7 +215,7 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
             }
         }
-        public static int GetAlertStatus(int l_refno, int l_msghandle, Operator op)
+        public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             cbc.Url = op.sz_url;
@@ -257,10 +257,12 @@ namespace pas_cb_server
                 switch (infores.messageinfolist.intervalinfo.Last().messagestatus)
                 {
                     case 0:   // Processing
-                        Database.SetSendingStatus(op, l_refno, Constant.CBPREPARING);
+                        if (l_status != Constant.CBPREPARING)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBPREPARING);
                         break;
                     case 10:  // Planned
-                        Database.SetSendingStatus(op, l_refno, Constant.CBQUEUED);
+                        if (l_status != Constant.CBQUEUED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBQUEUED);
                         break;
                     case 20:  // Starting
                     case 30:  // Running
@@ -284,13 +286,16 @@ namespace pas_cb_server
                                     , cellcount.cellcount3gtotal), 0);
                             }
                         }
-                        Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+                        if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
                         break;
                     case 40:  // Killing
-                        Database.SetSendingStatus(op, l_refno, Constant.CANCELLING);
+                        if (l_status != Constant.CANCELLING)
+                            Database.SetSendingStatus(op, l_refno, Constant.CANCELLING);
                         break;
                     case 50:  // Recurring (paused)
-                        Database.SetSendingStatus(op, l_refno, Constant.CBPAUSED);
+                        if(l_status != Constant.CBPAUSED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBPAUSED);
                         break;
                     case 100: // Killed
                     case 110: // Expired
@@ -302,7 +307,6 @@ namespace pas_cb_server
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }
-
                 return Constant.OK;
             }
             else
@@ -326,7 +330,7 @@ namespace pas_cb_server
             PAGEDATA[] msg_page = new PAGEDATA[1];
             msg_page[0] = new PAGEDATA();
             msg_page[0].pagecontents = bytemsg;
-            msg_page[0].pagelength = bytemsg.Length; //?
+            msg_page[0].pagelength = bytemsg.Length;
 
             PAGELISTDATA msg_pagelist = new PAGELISTDATA();
             msg_pagelist.nrofpages = msg_page.Length;

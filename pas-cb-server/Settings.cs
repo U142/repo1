@@ -123,7 +123,6 @@ namespace pas_cb_server
         public string sz_login_id = "";
         public string sz_login_name = "";
         public string sz_login_password = "";
-        public string sz_handle_proc = "sp_cb_kpnhandle";
         public Version api_version = new Version(2, 3);
         public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.WGS84;
 

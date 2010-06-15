@@ -237,7 +237,7 @@ namespace pas_cb_server
 
         public static int GetHandle(Operator op)
         {
-            return (int)Database.ExecuteScalar(op.sz_handle_proc);
+            return (int)Database.ExecuteScalar("sp_cb_gethandle " + op.l_operator);
         }
         public static string GetJobID(Operator op, int l_refno)
         {

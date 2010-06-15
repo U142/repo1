@@ -21,7 +21,7 @@ namespace pas_cb_server.test
         }
         public static void TestEnded(int status)
         {
-            Log.WriteLog(String.Format("Test alert {0} ended width status", status), 0);
+            Log.WriteLog(String.Format("Test alert {0} ended width status {1}", currentTestRef, status), 0);
             currentTestRef = 0;
         }
 
