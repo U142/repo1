@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<OperatorDefaults>
+  <sending_gateway_id>http://CCCBroker-01.cas.gov</sending_gateway_id>
+  <sender>ccc-broker@cas.gov</sender>
+  <cap_identifier>Netherlands Govt. Agency</cap_identifier>
+  <cap_sender>nl-cas-agency@cas.gov</cap_sender>
+  <priority>Normal</priority>
+  <category>Met</category>
+  <severity>Severe</severity>
+  <urgency>Expected</urgency>
+  <certainty>Likely</certainty>
+  <event_code>CDW</event_code>
+</OperatorDefaults>

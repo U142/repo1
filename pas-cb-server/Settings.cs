@@ -127,7 +127,7 @@ namespace pas_cb_server
         public string sz_login_password = "";
         
         public Version api_version = new Version("2.3");
-        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.WGS84;
+        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.RD;
 
         // methods
         public static Operator Getoperator(int l_operator)

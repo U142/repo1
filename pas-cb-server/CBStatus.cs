@@ -48,7 +48,7 @@ namespace pas_cb_server
                             break;
                         case 3: // tmobile
                             //Log.WriteLog(String.Format("{0} Status for t-mobile messages not supported (op={1}, job={2})", l_refno, op.sz_operatorname, sz_jobid), 2);
-                            CB_tmobile.GetAlertStatus(l_refno, l_status, ASCIIEncoding.ASCII.GetBytes(sz_jobid), op);
+                            CB_tmobile.GetAlertStatus(l_refno, l_status, BitConverter.GetBytes(int.Parse(sz_jobid)), op);
                             break;
                         default:
                             Log.WriteLog(String.Format("{0} Unkown operator type (op={1}, job={2})", l_refno, op.sz_operatorname, sz_jobid), 2);

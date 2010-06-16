@@ -17,7 +17,7 @@ namespace pas_cb_server
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
+            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Alert;
@@ -43,6 +43,8 @@ namespace pas_cb_server
             t_alert_info.IBAG_category = def.category;
             t_alert_info.IBAG_severity = def.severity;
             t_alert_info.IBAG_urgency = def.urgency;
+            t_alert_info.IBAG_certainty = def.certainty;
+            t_alert_info.IBAG_event_code = def.event_code;
 
             t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
@@ -78,7 +80,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type), 0);
                 // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, ASCIIEncoding.ASCII.GetString(t_alert_response.IBAG_referenced_message_number));
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number,0).ToString());
                 return Constant.OK;
             }
             else
@@ -97,8 +99,8 @@ namespace pas_cb_server
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
-            t_alert.IBAG_referenced_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetJobID(op, oAlert.l_refno));
+            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Update;
@@ -118,6 +120,8 @@ namespace pas_cb_server
             t_alert_info.IBAG_category = def.category;
             t_alert_info.IBAG_severity = def.severity;
             t_alert_info.IBAG_urgency = def.urgency;
+            t_alert_info.IBAG_certainty = def.certainty;
+            t_alert_info.IBAG_event_code = def.event_code;
 
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
@@ -135,7 +139,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type), 0);
                 // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, ASCIIEncoding.ASCII.GetString(t_alert_response.IBAG_referenced_message_number));
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString());
                 return Constant.OK;
             }
             else
@@ -154,8 +158,8 @@ namespace pas_cb_server
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
-            t_alert.IBAG_referenced_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetJobID(op, oAlert.l_refno));
+            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Cancel;
@@ -197,7 +201,7 @@ namespace pas_cb_server
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
+            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
             t_alert.IBAG_referenced_message_number = message_number;
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
@@ -230,8 +234,8 @@ namespace pas_cb_server
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                     , l_refno
                     , op.sz_operatorname
-                    , ASCIIEncoding.ASCII.GetString(t_alert.IBAG_message_number)
-                    , ASCIIEncoding.ASCII.GetString(t_alert_response.IBAG_referenced_message_number)
+                    , BitConverter.ToInt32(t_alert.IBAG_message_number,0)
+                    , BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number,0)
                     , cb_percentage), 0);
                 // ok, insert appropriate info in database
                 if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
@@ -243,8 +247,8 @@ namespace pas_cb_server
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
                     , l_refno
                     , op.sz_operatorname
-                    , ASCIIEncoding.ASCII.GetString(t_alert.IBAG_message_number)
-                    , ASCIIEncoding.ASCII.GetString(t_alert.IBAG_referenced_message_number)
+                    , BitConverter.ToInt32(t_alert.IBAG_message_number,0)
+                    , BitConverter.ToInt32(t_alert.IBAG_referenced_message_number,0)
                     , t_alert_response.IBAG_message_type
                     , t_alert_response.IBAG_note.First()), 2);
                 return Constant.FAILED;
@@ -345,5 +349,7 @@ namespace pas_cb_server
         public IBAG_category category = IBAG_category.Geo;
         public IBAG_severity severity = IBAG_severity.Severe;
         public IBAG_urgency urgency = IBAG_urgency.Expected;
+        public IBAG_event_code event_code = IBAG_event_code.CDW;
+        public IBAG_certainty certainty = IBAG_certainty.Likely;
     }
 }

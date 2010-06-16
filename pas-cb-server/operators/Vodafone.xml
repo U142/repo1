@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<OperatorDefaults>
+  <datacodingscheme>0</datacodingscheme>
+  <displaymode>0</displaymode>
+  <repetitioninterval>11</repetitioninterval>
+  <schedulemethod>1</schedulemethod>
+  <category>0</category>
+  <testchannel>1</testchannel>
+</OperatorDefaults>
