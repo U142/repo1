@@ -5,6 +5,8 @@ using System.Text;
 using umssettings;
 using System.Data.Odbc;
 using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace pas_cb_server
 {
@@ -34,8 +36,8 @@ namespace pas_cb_server
             
             try
             {
-                ret.l_deptpk = _settings.GetInt("l_deptpk");
-                ret.l_comppk = _settings.GetInt("l_comppk");
+                ret.l_deptpk = _settings.GetInt("DeptPK");
+                ret.l_comppk = _settings.GetInt("CompPK");
                 ret.sz_compid = Database.GetCompID(ret.l_comppk);
                 ret.sz_deptid = Database.GetDeptID(ret.l_deptpk);
                 ret.sz_password = "";
@@ -123,7 +125,8 @@ namespace pas_cb_server
         public string sz_login_id = "";
         public string sz_login_name = "";
         public string sz_login_password = "";
-        public Version api_version = new Version(2, 3);
+        
+        public Version api_version = new Version("2.3");
         public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.WGS84;
 
         // methods
@@ -246,6 +249,26 @@ namespace pas_cb_server
             }
 
             return Operators.ToArray();
+        }
+        public object GetDefaultValues(Type type)
+        {
+            object ret = new object();
+
+            try
+            {
+                StreamReader r = new StreamReader(String.Format(@"operators/{0}.xml", sz_operatorname));
+                XmlSerializer s = new XmlSerializer(type);
+
+                ret = s.Deserialize(r);
+
+                r.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(String.Format("Failed to get default settings, using standard defaults. {0}", e.Message),2);
+            }
+
+            return ret;
         }
     }
 

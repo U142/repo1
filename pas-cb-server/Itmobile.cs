@@ -14,18 +14,21 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
+            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //config på operatør
-            t_alert.IBAG_sending_gateway_id = ""; //config
+
             t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
-            t_alert.IBAG_sender = ""; //config
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Alert;
-            t_alert.IBAG_cap_identifier = ""; //config
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
+
+            // based on default values:
+            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+            t_alert.IBAG_sender = def.sz_sender;
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
             IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
             List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
@@ -34,16 +37,20 @@ namespace pas_cb_server
             t_alert_arealist.Add(t_alert_area);
 
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            t_alert_info.IBAG_priority = IBAG_priority.Normal;
+            // based on defautl values:
+            t_alert_info.IBAG_priority = def.priority;
             t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = IBAG_category.Met;
-            t_alert_info.IBAG_severity = IBAG_severity.Severe;
-            t_alert_info.IBAG_urgency = IBAG_urgency.Expected;
+            t_alert_info.IBAG_category = def.category;
+            t_alert_info.IBAG_severity = def.severity;
+            t_alert_info.IBAG_urgency = def.urgency;
+
             t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
             t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
             t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
+
+            t_alert.IBAG_alert_info = t_alert_info;
 
             switch(op.coordinate_type)
             {
@@ -87,30 +94,36 @@ namespace pas_cb_server
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {
+            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //config på operatør
-            t_alert.IBAG_sending_gateway_id = ""; //config
             t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
-            t_alert.IBAG_sender = ""; //config
+            t_alert.IBAG_referenced_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetJobID(op, oAlert.l_refno));
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Update;
-            t_alert.IBAG_referenced_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetJobID(op, oAlert.l_refno));
-            t_alert.IBAG_cap_identifier = ""; //config
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
+            // based on default values:
+            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+            t_alert.IBAG_sender = def.sz_sender;
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            t_alert_info.IBAG_priority = IBAG_priority.Normal;
+            // based on defautl values:
+            t_alert_info.IBAG_priority = def.priority;
             t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = IBAG_category.Met;
-            t_alert_info.IBAG_severity = IBAG_severity.Severe;
-            t_alert_info.IBAG_urgency = IBAG_urgency.Expected;
-            //t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
+            t_alert_info.IBAG_category = def.category;
+            t_alert_info.IBAG_severity = def.severity;
+            t_alert_info.IBAG_urgency = def.urgency;
+
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
             t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
+
+            t_alert.IBAG_alert_info = t_alert_info;
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
@@ -138,19 +151,22 @@ namespace pas_cb_server
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
         {
+            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //config på operatør
-            t_alert.IBAG_sending_gateway_id = ""; //config
             t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
             t_alert.IBAG_referenced_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetJobID(op, oAlert.l_refno));
-            t_alert.IBAG_sender = ""; //config
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Cancel;
-            t_alert.IBAG_cap_identifier = ""; //config
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
+
+            // based on default values:
+            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+            t_alert.IBAG_sender = def.sz_sender;
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
@@ -178,19 +194,22 @@ namespace pas_cb_server
         }
         public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op)
         {
+            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //config på operatør
-            t_alert.IBAG_sending_gateway_id = ""; //config
             t_alert.IBAG_message_number = ASCIIEncoding.ASCII.GetBytes(Database.GetHandle(op).ToString());
             t_alert.IBAG_referenced_message_number = message_number;
-            t_alert.IBAG_sender = ""; //config
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.EMS;
-            t_alert.IBAG_cap_identifier = ""; //config
             t_alert.IBAG_cap_sent_date_time = DateTime.Now;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
+
+            // based on default values:
+            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+            t_alert.IBAG_sender = def.sz_sender;
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
@@ -309,5 +328,22 @@ namespace pas_cb_server
 
             return ret.ToArray();
         }
+    }
+
+    [XmlRoot("OperatorDefaults")]
+    public class CB_tmobile_defaults
+    {
+        [XmlElement("sending_gateway_id")]
+        public string sz_sending_gateway_id = "";
+        [XmlElement("sender")]
+        public string sz_sender = "";
+        [XmlElement("cap_identifier")]
+        public string sz_cap_identifier = "";
+        [XmlElement("cap_sender")]
+        public string sz_cap_sender = "";
+        public IBAG_priority priority = IBAG_priority.Background;
+        public IBAG_category category = IBAG_category.Geo;
+        public IBAG_severity severity = IBAG_severity.Severe;
+        public IBAG_urgency urgency = IBAG_urgency.Expected;
     }
 }

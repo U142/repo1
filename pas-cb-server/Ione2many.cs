@@ -47,6 +47,7 @@ namespace pas_cb_server
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
             CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
@@ -69,21 +70,19 @@ namespace pas_cb_server
 
             newmsgreq.area = get_area(oAlert, op);
             newmsgreq.pagelist = get_pagelist(oAlert, op);
-
-            newmsgreq.datacodingscheme = 0;
-            newmsgreq.displaymode = 0;
-            newmsgreq.messageid = oAlert.alert_message.l_channel;
-
-            newmsgreq.repetitioninterval = 11;
-
-            newmsgreq.schedulemethod = 1;
+            newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
 
-            newmsgreq.recurrency = null;
-            newmsgreq.recurrencyendtime = null;
-            newmsgreq.channelindicator = null;
-            newmsgreq.category = 0;
+            // default values from config
+            newmsgreq.datacodingscheme = def.l_datacodingscheme;
+            newmsgreq.displaymode = def.l_displaymode;
+            newmsgreq.repetitioninterval = def.l_repetitioninterval;
+            newmsgreq.schedulemethod = def.l_schedulemethod;
+            newmsgreq.recurrency = def.l_recurrency;
+            newmsgreq.recurrencyendtime = def.recurrencyendtime;
+            newmsgreq.channelindicator = def.l_channelindicator;
+            newmsgreq.category = def.l_category;
 
             CBCNEWMSGREQRESULT newmsgres = cbc.CBC_NewMsg(newmsgreq);
 
@@ -115,6 +114,7 @@ namespace pas_cb_server
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
             CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
@@ -137,10 +137,9 @@ namespace pas_cb_server
             changereq.messagehandle = int.Parse(Database.GetJobID(op, oAlert.l_refno));
 
             changereq.pagelist = get_pagelist(oAlert, op);
-
-
-            changereq.schedulemethod = 1;
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            changereq.schedulemethod = def.l_schedulemethod;
 
             CBCCHANGEREQRESULT changeres = cbc.CBC_ChangeMsg(changereq);
 
@@ -172,6 +171,7 @@ namespace pas_cb_server
         public static int KillAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
             CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
@@ -189,7 +189,8 @@ namespace pas_cb_server
             CBCKILLREQUEST killreq = new CBCKILLREQUEST();
             killreq.cbccberequesthandle = Database.GetHandle(op);
             killreq.messagehandle = int.Parse(Database.GetJobID(op, oAlert.l_refno)); // get handle
-            killreq.schedulemethod = 1;
+
+            killreq.schedulemethod = def.l_schedulemethod;
 
             CBCKILLREQRESULT killres = cbc.CBC_KillMsg(killreq);
 
@@ -347,21 +348,6 @@ namespace pas_cb_server
 
             return msg_area;
         }
-        /*private static CBECELLLIST get_celllist(AlertInfo oAlert, Operator op)
-        {
-            CBECELLID[] cellid = new CBECELLID[1];
-            cellid[0] = new CBECELLID();
-            cellid[0].btsname = "53477";
-            cellid[0].ci = null;
-            cellid[0].lac = null;
-            cellid[0].reason = null;
-
-            CBECELLLIST cells = new CBECELLLIST();
-            cells.cbecellid = cellid;
-            cells.nrofcells = cellid.Length;
-
-            return cells;
-        }*/
         private static COORDINATEPAIR[] get_coordinatepair(AlertInfo oAlert, Operator op)
         {
             List<COORDINATEPAIR> ret = new List<COORDINATEPAIR>();
@@ -414,5 +400,28 @@ namespace pas_cb_server
                 default: return "UNDEFINED";
             }
         }
+    }
+
+    [XmlRoot("OperatorDefaults")]
+    public class CB_one2many_defaults
+    {
+       [XmlElement("datacodingscheme")]
+        public int l_datacodingscheme = 0;
+        [XmlElement("displaymode")]
+        public int l_displaymode = 0;
+        [XmlElement("repetitioninterval")]
+        public int l_repetitioninterval = 11;
+        [XmlElement("schedulemethod")]
+        public int l_schedulemethod = 1;
+        [XmlElement("recurrency")]
+        public int? l_recurrency = null;
+        [XmlElement("recurrencyendtime")]
+        public string recurrencyendtime = null;
+        [XmlElement("channelindicator")]
+        public int? l_channelindicator = null;
+        [XmlElement("category")]
+        public int l_category = 0;
+        [XmlElement("testchannel")]
+        public int l_testchannel = 500;
     }
 }
