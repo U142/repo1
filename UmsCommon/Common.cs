@@ -41,6 +41,11 @@ namespace com.ums.UmsCommon
         public int n_currentrecord;
     }
 
+    public class SessionStore
+    {
+
+    }
+
     public class PercentProgress
     {
         
@@ -161,6 +166,24 @@ namespace com.ums.UmsCommon
             MD5 md5 = System.Security.Cryptography.MD5.Create();
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
             byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            // Convert the byte array to hexadecimal string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                sb.Append(hashBytes[i].ToString("X2"));
+                // To force the hex string to lower-case letters instead of
+                // upper-case, use he following line instead:
+                // sb.Append(hashBytes[i].ToString("x2")); 
+            }
+            return sb.ToString();
+        }
+
+        public static string CreateSHA512Hash(string input)
+        {
+            SHA512 sha = SHA512.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hashBytes = sha.ComputeHash(inputBytes);
 
             // Convert the byte array to hexadecimal string
             StringBuilder sb = new StringBuilder();
@@ -332,6 +355,8 @@ namespace com.ums.UmsCommon
 
         public struct USETTINGS
         {
+            public static bool b_enable_adrdb;
+            public static bool b_enable_nslookup;
             public static int l_folkereg_num_adrtables;
             public static String sz_url_weather_forecast;
             public static int l_gisimport_chunksize;
@@ -507,13 +532,45 @@ namespace com.ums.UmsCommon
         }    
     }
 
-    public struct UDATETIME
+    public class UDATETIME
     {
         public String sz_date, sz_time;
-        public UDATETIME(String date, String time) /*yyyymmdd hhmmss*/
+        protected DateTime dt;
+        public DateTime getDT() { return dt; }
+        public long getTimeDiffSec(UDATETIME old)
         {
+            long seconds = 0;
+            TimeSpan ts = dt - old.getDT();
+            return (long)ts.TotalSeconds;
+        }
+        protected void createDt()
+        {
+            if(sz_date.Length==8 && sz_time.Length==6)
+            {
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4,2));
+                int day = int.Parse(sz_date.Substring(6,2));
+                int hour = int.Parse(sz_time.Substring(0,2));
+                int minute = int.Parse(sz_time.Substring(2,2));
+                int second = int.Parse(sz_time.Substring(4,2));
+                dt = new DateTime(year, month, day, hour, minute, second);
+            }
+        }
+        public UDATETIME(Int64 datetime)
+        {
+            String str = datetime.ToString();
+            if (str.Length < 14)
+                throw new UMalformedDateTimeException();
+            sz_date = str.Substring(0, 8);
+            sz_time = str.Substring(8, 6);
+            createDt();
+        }
+        public UDATETIME(String date, String time) : this(Int64.Parse(date+time))/*yyyymmdd hhmmss*/
+        {
+            
             sz_date = date;
             sz_time = time;
+            createDt();
         }
         public override String ToString()
         {
@@ -571,6 +628,7 @@ namespace com.ums.UmsCommon
         public int l_altservers;
         public String sz_stdcc;
         public String jobid;
+        public String sessionid;
     }
 
 

@@ -209,8 +209,32 @@ namespace com.ums.ws.parm
         {
             try
             {
+                if ((mapsending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.FIXED_COMPANY_AND_MOBILE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_AND_MOBILE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOBILE_COMPANY_AND_FIXED) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOBILE_PRIVATE_AND_FIXED) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOVED_COMPANY) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.MOVED_PRIVATE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.NOPHONE_COMPANY) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.NOPHONE_PRIVATE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
+                {
+                    return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
+                }
+                else
+                {
+                    return new UAdrCount();
+                }
 
-                return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
             }
             catch (Exception e)
             {

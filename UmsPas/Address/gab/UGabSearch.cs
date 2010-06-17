@@ -9,6 +9,7 @@ using System.IO;
 using System.Text;
 using com.ums.UmsCommon;
 using com.ums.PAS.Address;
+using com.ums.UmsDbLib;
 
 
 namespace com.ums.PAS.Address.gab
@@ -162,7 +163,15 @@ namespace com.ums.PAS.Address.gab
         public IAddressResults Find()
         {
             //UGabSearchResultList list = new UGabSearchResultList();
-
+            UmsDb db = new UmsDb();
+            try
+            {
+                db.CheckLogon(ref m_logoninfo);
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
             int n_unique = 0;
             if (m_params.sz_no.Length > 0)
                 n_unique = 1;

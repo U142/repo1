@@ -106,8 +106,9 @@ namespace com.ums.PAS.Database
             
             try
             {
-                String szSQL = String.Format("SELECT LS.l_status, LS.l_response, LS.l_items, LS.l_proc, LS.l_retries, LS.l_requesttype, LS.f_simulate, LS.sz_jobid, LS.sz_areaid, isnull(LS.l_operator, -1), isnull(LOP.sz_operatorname, 'Unknown Operator') " +
-                                            "FROM LBASEND LS, LBAOPERATORS LOP WHERE LS.l_refno={0} AND LS.l_operator*=LOP.l_operator", n_refno);
+                //String szSQL = String.Format("SELECT LS.l_status, LS.l_response, LS.l_items, LS.l_proc, LS.l_retries, LS.l_requesttype, LS.f_simulate, LS.sz_jobid, LS.sz_areaid, isnull(LS.l_operator, -1), isnull(LOP.sz_operatorname, 'Unknown Operator') " +
+                //                            "FROM LBASEND LS, LBAOPERATORS LOP WHERE LS.l_refno={0} AND LS.l_operator*=LOP.l_operator", n_refno);
+                String szSQL = String.Format("sp_pas_status_lbasend {0}", n_refno);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 int n_index = 0;
                 while (rs.Read())
@@ -135,8 +136,9 @@ namespace com.ums.PAS.Database
                     return null;
                 }
                 rs.Close();
-                szSQL = String.Format("SELECT l_cc, l_delivered, l_expired, l_failed, l_unknown, l_submitted, l_queued, l_subscribers, isnull(l_operator, -1) " +
-                                    "FROM LBAHISTCC WHERE l_refno={0}", n_refno);
+                //szSQL = String.Format("SELECT l_cc, l_delivered, l_expired, l_failed, l_unknown, l_submitted, l_queued, l_subscribers, isnull(l_operator, -1) " +
+                //                    "FROM LBAHISTCC WHERE l_refno={0}", n_refno);
+                szSQL = String.Format("sp_pas_status_lbahistcc {0}", n_refno);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
@@ -159,7 +161,8 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
 
-                szSQL = String.Format("SELECT l_status, isnull(l_ts, 0), isnull(l_operator, -1) FROM LBASEND_TS WHERE l_refno={0} ORDER BY l_operator, l_ts,l_status", n_refno);
+                //szSQL = String.Format("SELECT l_status, isnull(l_ts, 0), isnull(l_operator, -1) FROM LBASEND_TS WHERE l_refno={0} ORDER BY l_operator, l_ts,l_status", n_refno);
+                szSQL = String.Format("sp_pas_status_lbasend_ts {0}", n_refno);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {

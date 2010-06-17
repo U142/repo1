@@ -25,6 +25,7 @@ namespace com.ums.PAS.Database
         {
             try
             {
+                base.CheckLogon(ref l);
                 String wms_layers = ui.sz_wms_layers;
 
                 bool b_ret = false;
@@ -273,6 +274,18 @@ namespace com.ums.PAS.Database
             }
         }
 
+        public bool Logoff(ref ULOGONINFO l)
+        {
+            try
+            {
+                return RemoveSession(ref l);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public UPASLOGON Logon(ref ULOGONINFO l)
         {
             UPASLOGON ret = new UPASLOGON();
@@ -292,7 +305,7 @@ namespace com.ums.PAS.Database
                 //pass = "mh123,1µ°Õ";
                 //l.sz_password = l.sz_password.ToUpper();
                 //Get userinfo
-                szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
+                /*szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
                                     "isnull(BU.l_profilepk,0) l_default_profilepk, isnull(BUXD.l_profilepk,-1) l_profilepk, " +
                                     "BD.l_deptpk, BU.l_comppk, BU.sz_userid, BD.sz_deptid, BC.sz_compid, " +
                                     "isnull(BD.l_mapinit, '') l_mapinit, isnull(BD.sz_stdcc, '0047') sz_stdcc, BD.l_deptpri, " +
@@ -307,7 +320,33 @@ namespace com.ums.PAS.Database
                                     "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
                                     "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
                                     "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1 AND BD.l_deptpk*=SH.l_pk",
-                                    l.sz_userid, l.sz_password, l.sz_compid);
+                                    l.sz_userid, l.sz_password, l.sz_compid);*/
+                /*szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
+                                    "isnull(BU.l_profilepk,0) l_default_profilepk, isnull(BUXD.l_profilepk,-1) l_profilepk, " +
+                                    "BD.l_deptpk, BU.l_comppk, BU.sz_userid, BD.sz_deptid, BC.sz_compid, " +
+                                    "isnull(BD.l_mapinit, '') l_mapinit, isnull(BD.sz_stdcc, '0047') sz_stdcc, BD.l_deptpri, " +
+                                    "isnull(BD.l_maxalloc, 180) l_maxalloc, BUP.sz_name sz_userprofilename, " +
+                                    "BUP.sz_description sz_userprofiledesc, isnull(BUP.l_status, 0) l_status, " +
+                                    "isnull(l_newsending, 0) l_newsending, isnull(BUP.l_parm, 0) l_parm, " +
+                                    "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
+                                    "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
+                                    "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
+                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language, SH.sz_xml sz_restriction_shape " +
+                                    //"FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP, PASHAPE SH " +
+                                    "FROM BBUSER BU, BBCOMPANY BC, "+
+                                    "v_BBDEPARTMENT BD LEFT OUTER JOIN PASHAPE SH ON BD.l_deptpk=SH.l_pk AND SH.l_type={3}, " +
+                                    "BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
+                                    
+
+
+                                    "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
+                                    "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
+                                    "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1",
+                                    l.sz_userid, l.sz_password, l.sz_compid, (int)PASHAPETYPES.PADEPARTMENTRESTRICTION);*/
+                szSQL = String.Format("sp_pas_logon '{0}', '{1}', '{2}'",
+                    l.sz_userid,
+                    l.sz_password,
+                    l.sz_compid);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
 
 
@@ -315,6 +354,7 @@ namespace com.ums.PAS.Database
                 {
                     ret.f_granted = false;
                     ret.l_comppk = 0;
+                    ret.sessionid = "-1";
                     try
                     {
                         //find the userpk to log a failed logon
@@ -340,7 +380,7 @@ namespace com.ums.PAS.Database
                     ret.f_granted = true;
                     ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
                 }
-                if (ret.l_userpk > 0)
+                if (ret.l_userpk > 0 && UCommon.USETTINGS.b_enable_nslookup)
                 {
                     UNSLOOKUP ns = new UNSLOOKUP();
                     NsLookup(ref ns);
@@ -365,6 +405,7 @@ namespace com.ums.PAS.Database
                     ret.sz_userid = rs["sz_userid"].ToString();
                     ret.sz_compid = rs["sz_compid"].ToString();
                     ret.l_language = Int32.Parse(rs["l_language"].ToString());
+                    ret.sessionid = l.sessionid;
                     do //parse departments
                     {
                         UDEPARTMENT dept = new UDEPARTMENT(); //CREATE NEW DEPARTMENT
@@ -453,19 +494,22 @@ namespace com.ums.PAS.Database
                             dept.l_fleetcontrol = 0;
 
                         //check the folkereg adr database of this department if the user has access to municipals
-                        try
+                        if (UCommon.USETTINGS.b_enable_adrdb)
                         {
-                            UmsDbConnParams p = new UmsDbConnParams();
-                            p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc; // +"_reg";
-                            p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
-                            p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                            UAdrDb adr = new UAdrDb(dept.sz_stdcc);
-                            dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
-                            adr.close();
-                        }
-                        catch (Exception)
-                        {
+                            try
+                            {
+                                UmsDbConnParams p = new UmsDbConnParams();
+                                p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc; // +"_reg";
+                                p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
+                                p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
+                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60, dept.l_deptpk);
+                                dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
+                                adr.close();
+                            }
+                            catch (Exception)
+                            {
 
+                            }
                         }
                         //if(dept.f_map>0)
                         ret.departments.Add(dept); //ADD DEPARTMENT TO LIST
@@ -479,21 +523,38 @@ namespace com.ums.PAS.Database
 
                     rs.Close();
 
-                    //READ NS TABLE
-                    szSQL = String.Format("SELECT * FROM BBUSER_NSLOOKUP WHERE l_userpk={0} ORDER BY l_lastdatetime DESC",
-                                           ret.l_userpk);
-                    rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                    while (rs.Read())
+                    //Create a new session
+                    //start session
+                    try
                     {
-                        UNSLOOKUP ns = new UNSLOOKUP();
-                        ns.sz_domain = rs["sz_domain"].ToString();
-                        ns.sz_ip = rs["sz_ip"].ToString();
-                        ns.l_lastdatetime = long.Parse(rs["l_lastdatetime"].ToString());
-                        ns.sz_location = rs["sz_location"].ToString();
-                        ns.f_success = bool.Parse((rs["f_success"].ToString().Equals("1") ? "true" : "false"));
-                        ret.nslookups.Add(ns);
+                        String szSessionSql = String.Format("sp_pas_startsession {0}, '{1}', '{2}'",
+                                                ret.l_userpk, l.sessionid, l.sz_password);
+                        ExecNonQuery(szSessionSql);
                     }
-                    rs.Close();
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+
+
+                    if (UCommon.USETTINGS.b_enable_nslookup)
+                    {
+                        //READ NS TABLE
+                        szSQL = String.Format("SELECT * FROM BBUSER_NSLOOKUP WHERE l_userpk={0} ORDER BY l_lastdatetime DESC",
+                                               ret.l_userpk);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                        {
+                            UNSLOOKUP ns = new UNSLOOKUP();
+                            ns.sz_domain = rs["sz_domain"].ToString();
+                            ns.sz_ip = rs["sz_ip"].ToString();
+                            ns.l_lastdatetime = long.Parse(rs["l_lastdatetime"].ToString());
+                            ns.sz_location = rs["sz_location"].ToString();
+                            ns.f_success = bool.Parse((rs["f_success"].ToString().Equals("1") ? "true" : "false"));
+                            ret.nslookups.Add(ns);
+                        }
+                        rs.Close();
+                    }
 
                     //READ UI SETTINGS
                     ret.uisettings = LoadLanguageAndVisuals(ret.l_userpk, false);

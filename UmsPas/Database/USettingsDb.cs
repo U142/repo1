@@ -25,7 +25,7 @@ namespace com.ums.PAS.Database
             try
             {
                 xml.insertStartElement("SOUNDLIB");
-                String szSQL = String.Format("SELECT l_shared=0, BM.l_deptpk, isnull(BM.l_type, 0) l_type, UPPER(BM.sz_name), BM.sz_name, BM.l_messagepk, isnull(BM.l_langpk, 0) l_langpk, isnull(MD.l_defpk, 0) l_defpk, MD.sz_name moduledef, isnull(BM.f_template, 0) f_template FROM BBMESSAGES BM, MDVMODULEDEF MD WHERE BM.l_type=(MD.l_defpk+10) AND BM.f_template=1 AND BM.l_deptpk={0} " +
+                /*String szSQL = String.Format("SELECT l_shared=0, BM.l_deptpk, isnull(BM.l_type, 0) l_type, UPPER(BM.sz_name), BM.sz_name, BM.l_messagepk, isnull(BM.l_langpk, 0) l_langpk, isnull(MD.l_defpk, 0) l_defpk, MD.sz_name moduledef, isnull(BM.f_template, 0) f_template FROM BBMESSAGES BM, MDVMODULEDEF MD WHERE BM.l_type=(MD.l_defpk+10) AND BM.f_template=1 AND BM.l_deptpk={0} " +
                                             "UNION " +
                                             "SELECT l_shared=1, BM.l_deptpk, isnull(BM.l_type, 0) l_type, UPPER(BM.sz_name), BM.sz_name, BM.l_messagepk, isnull(BM.l_langpk, 0) l_langpk, isnull(MD.l_defpk, 0) l_defpk, MD.sz_name moduledef, isnull(BM.f_template, 0) f_template FROM BBMESSAGES BM, MDVMODULEDEF MD, BBMESSAGES_X_DEPT XD WHERE BM.l_type=(MD.l_defpk+10) AND BM.f_template=1 AND BM.l_messagepk=XD.l_messagepk AND XD.l_deptpk={0} " +
                                             "UNION " +
@@ -37,6 +37,8 @@ namespace com.ums.PAS.Database
                                             "UNION " +
                                             "SELECT l_shared=1, BM.l_deptpk, isnull(BM.l_type, 0) l_type, UPPER(BM.sz_name), BM.sz_name, BM.l_messagepk, isnull(BM.l_langpk, 0) l_langpk, l_defpk=0, moduledef='', f_template=2 FROM BBMESSAGES BM, BBMESSAGES_X_DEPT XD WHERE BM.f_template=1 AND BM.l_messagepk=XD.l_messagepk AND XD.l_deptpk={0} " +
                                             "ORDER BY f_template, UPPER(BM.sz_name)",
+                                            l.l_deptpk);*/
+                String szSQL = String.Format("sp_pas_get_soundlib {0}",
                                             l.l_deptpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -66,8 +68,10 @@ namespace com.ums.PAS.Database
             try
             {
                 xml.insertStartElement("TTSLANG");
-                String szSQL = String.Format("SELECT tts.l_langpk, tts.sz_name FROM BBTTSLANG tts, BBTTSLANG_X_DEPT xd WHERE xd.l_deptpk={0} AND xd.l_langpk=tts.l_langpk",
-                                            l.l_deptpk);
+                //String szSQL = String.Format("SELECT tts.l_langpk, tts.sz_name FROM BBTTSLANG tts, BBTTSLANG_X_DEPT xd WHERE xd.l_deptpk={0} AND xd.l_langpk=tts.l_langpk",
+                //                            l.l_deptpk);
+                String szSQL = String.Format("sp_pas_get_ttslanguages {0}",
+                    l.l_deptpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
@@ -91,13 +95,15 @@ namespace com.ums.PAS.Database
             try
             {
                 xml.insertStartElement("SCHEDPROFILES");
-                String szSQL = String.Format("SELECT l_sharing=0, UPPER(BR.sz_name), BR.sz_name, BR.l_deptpk l_owner_deptpk, BD.l_deptpk, UPPER(BD.sz_deptid), BD.sz_deptid, BR.l_reschedpk, BR.l_retries, BR.l_interval, BR.l_canceltime, BR.l_canceldate, BR.l_pausetime, BR.l_pauseinterval FROM BBRESCHEDPROFILES BR, BBDEPARTMENT BD " +
+                /*String szSQL = String.Format("SELECT l_sharing=0, UPPER(BR.sz_name), BR.sz_name, BR.l_deptpk l_owner_deptpk, BD.l_deptpk, UPPER(BD.sz_deptid), BD.sz_deptid, BR.l_reschedpk, BR.l_retries, BR.l_interval, BR.l_canceltime, BR.l_canceldate, BR.l_pausetime, BR.l_pauseinterval FROM BBRESCHEDPROFILES BR, BBDEPARTMENT BD " +
                                             "WHERE BR.l_deptpk=BD.l_deptpk AND BR.l_deptpk={0} " +
                                             "UNION " +
                                             "SELECT l_sharing=1, UPPER(BR.sz_name), BR.sz_name, BR.l_deptpk l_owner_deptpk, BD.l_deptpk, UPPER(BD.sz_deptid), BD.sz_deptid, BR.l_reschedpk, BR.l_retries, BR.l_interval, BR.l_canceltime, BR.l_canceldate, BR.l_pausetime, BR.l_pauseinterval FROM BBRESCHEDPROFILES BR, BBRESCHEDPROFILES_X_DEPT BX, BBDEPARTMENT BD " +
                                             "WHERE BR.l_reschedpk=BX.l_reschedpk AND BX.l_deptpk=BD.l_deptpk AND BX.l_deptpk={0} " +
                                             "ORDER BY UPPER(BR.sz_name)",
-                                            l.l_deptpk);
+                                            l.l_deptpk);*/
+                String szSQL = String.Format("sp_pas_getschedprofiles {0}",
+                    l.l_deptpk);
 
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -132,7 +138,9 @@ namespace com.ums.PAS.Database
             try
             {
                 xml.insertStartElement("FROMNUMBERS");
-                String szSQL = String.Format("SELECT sz_number, isnull(l_deptpk, -1), isnull(sz_descr,'') FROM BBDEPTNUMBERS WHERE l_deptpk={0} OR l_deptpk=-1 ORDER BY sz_number DESC",
+                //String szSQL = String.Format("SELECT sz_number, isnull(l_deptpk, -1), isnull(sz_descr,'') FROM BBDEPTNUMBERS WHERE l_deptpk={0} OR l_deptpk=-1 ORDER BY sz_number DESC",
+                //    l.l_deptpk);
+                String szSQL = String.Format("sp_pas_getfromnumbers {0}",
                     l.l_deptpk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -159,7 +167,7 @@ namespace com.ums.PAS.Database
             {
                 xml.insertStartElement("MSGPROFILES");
 
-                String szSQL = String.Format("SELECT UPPER(AP.sz_name), sharing=0, AP.l_profilepk, AP.sz_name, isnull(AP.l_deptpk, -1), isnull(AP.l_reschedpk, -1), isnull(BO.l_parent, 0) l_parent, isnull(BO.l_item, 0), isnull(BO.l_param, 0), isnull(BO.l_action, 0), isnull(BO.l_seq, 0), isnull(MN.sz_name, 'Not specified') sz_modulename, isnull(MD.sz_name, 'Not specified') defname, MD.l_defpk FROM BBACTIONPROFILESNAME AP, BBACTIONPROFILESOUT BO, BBACTIONPROFILESOUT_X_MOD BX, MDVMODULE MOD, MDVMODULENAME MN, MDVMODULEDEF MD " +
+                /*String szSQL = String.Format("SELECT UPPER(AP.sz_name), sharing=0, AP.l_profilepk, AP.sz_name, isnull(AP.l_deptpk, -1), isnull(AP.l_reschedpk, -1), isnull(BO.l_parent, 0) l_parent, isnull(BO.l_item, 0), isnull(BO.l_param, 0), isnull(BO.l_action, 0), isnull(BO.l_seq, 0), isnull(MN.sz_name, 'Not specified') sz_modulename, isnull(MD.sz_name, 'Not specified') defname, MD.l_defpk FROM BBACTIONPROFILESNAME AP, BBACTIONPROFILESOUT BO, BBACTIONPROFILESOUT_X_MOD BX, MDVMODULE MOD, MDVMODULENAME MN, MDVMODULEDEF MD " +
                                         "WHERE AP.l_deptpk={0} AND AP.l_profilepk*=BO.l_profilepk {1} " +
                                         "UNION " +
                                         "SELECT UPPER(AP.sz_name), sharing=1, AP.l_profilepk, AP.sz_name, isnull(AP.l_deptpk, -1), isnull(AP.l_reschedpk, -1), isnull(BO.l_parent, 0) l_parent, isnull(BO.l_item, 0), isnull(BO.l_param, 0), isnull(BO.l_action, 0), isnull(BO.l_seq, 0), isnull(MN.sz_name, 'Not specified') sz_modulename, isnull(MD.sz_name, 'Not specified') defname, MD.l_defpk FROM BBACTIONPROFILESNAME AP, BBACTIONPROFILES_X_DEPT XD, BBACTIONPROFILESOUT BO, BBACTIONPROFILESOUT_X_MOD BX, MDVMODULE MOD, MDVMODULENAME MN, MDVMODULEDEF MD " +
@@ -170,7 +178,12 @@ namespace com.ums.PAS.Database
                                         //ARG1
                                         "AND (BO.l_action=1 OR BO.l_action=20 OR BO.l_action=1018) AND (len(BO.sz_param)<=1 OR BO.sz_param IS NULL OR BO.sz_param=' ') " +
                                         "AND BO.l_profilepk*=BX.l_profilepk AND BO.l_parent*=BX.l_parent AND BX.l_modulepk*=MOD.l_modulepk AND (MOD.l_action=1 OR MOD.l_action=20 OR MOD.l_action=1018) " +
-                                        "AND MOD.l_modulepk*=MN.l_modulepk AND MN.l_defpk*=MD.l_defpk");
+                                        "AND MOD.l_modulepk*=MN.l_modulepk AND MN.l_defpk*=MD.l_defpk");*/
+                //1.
+                // UPPER(AP.sz_name), sharing=0, AP.l_profilepk, AP.sz_name, isnull(AP.l_deptpk, -1), isnull(AP.l_reschedpk, -1), isnull(BO.l_parent, 0) l_parent, isnull(BO.l_item, 0), isnull(BO.l_param, 0), isnull(BO.l_action, 0), isnull(BO.l_seq, 0), isnull(MN.sz_name, 'Not specified') sz_modulename, isnull(MD.sz_name, 'Not specified') defname, MD.l_defpk 
+                //2.SELECT UPPER(AP.sz_name), sharing=1, AP.l_profilepk, AP.sz_name, isnull(AP.l_deptpk, -1), 
+                //
+                String szSQL = String.Format("sp_pas_getactionprofiles {0}", l.l_deptpk);
 
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 int n_last_profilepk = -1;

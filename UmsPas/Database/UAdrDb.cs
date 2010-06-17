@@ -52,12 +52,12 @@ namespace com.ums.PAS.Database
         }*/
 
         /*always connect to reg db*/
-        public UAdrDb(String sz_stdcc)
+        /*public UAdrDb(String sz_stdcc)
             : base(UCommon.UBBDATABASE.sz_adrdb_dsnbase + sz_stdcc + "_reg", UCommon.UBBDATABASE.sz_adrdb_uid,
             UCommon.UBBDATABASE.sz_adrdb_pwd, 120)
         {
 
-        }
+        }*/
 
         public UAdrDb(String sz_stdcc, int timeout, int n_deptpk)
             : base(timeout)
@@ -78,6 +78,10 @@ namespace com.ums.PAS.Database
         /*used for address databases only*/
         public bool Connect(string sz_stdcc, string sz_dsn, string sz_uid, string sz_password, int n_deptpk)
         {
+            if (!UCommon.USETTINGS.b_enable_adrdb)
+            {
+                throw new UServerDeniedAddressDatabaseException();
+            }
             try
             {
                 PASUmsDb db = new PASUmsDb();
@@ -183,9 +187,17 @@ namespace com.ums.PAS.Database
         public List<UMunicipalDef> GetMunicipalsByDept(int n_deptpk)
         {
             List<UMunicipalDef> list = new List<UMunicipalDef>();
-            String szSQL = String.Format("SELECT DXM.l_deptpk, DXM.l_municipalid, MU.sz_name "+
+            /*String szSQL = String.Format("SELECT DXM.l_deptpk, DXM.l_municipalid, MU.sz_name "+
                             "FROM DEPARTMENT_X_MUNICIPAL DXM, MUNICIPAL MU WHERE DXM.l_deptpk={0} AND DXM.l_municipalid*=MU.l_municipalid",
-                            n_deptpk);
+                            n_deptpk);*/
+            String szSQL = String.Format(
+                "SELECT DXM.l_deptpk, DXM.l_municipalid, MU.sz_name " +
+                "FROM "+
+                "DEPARTMENT_X_MUNICIPAL DXM LEFT OUTER JOIN MUNICIPAL MU ON DXM.l_municipalid=MU.l_municipalid " +
+                "WHERE " +
+                "DXM.l_deptpk={0}",
+                n_deptpk);
+
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);

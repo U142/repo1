@@ -61,7 +61,6 @@ namespace com.ums.PAS.Status
         public UStatusListResults()
         {
         }
-
         protected ArrayList temp = new ArrayList();
         public UStatusListItem[] list;
         public void addLine(ref UStatusListItem adr)

@@ -136,7 +136,6 @@ namespace com.ums.PAS.messagelib
         {
             try
             {
-                
                 UBBMESSAGELIST ret = new UBBMESSAGELIST();
                 ret.n_servertimestamp = base.getDbClock();
                 ret.list = new List<UBBMESSAGE>();

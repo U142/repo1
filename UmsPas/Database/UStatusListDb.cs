@@ -36,9 +36,16 @@ namespace com.ums.PAS.Database
         
         public UStatusListResults GetStatusList(ref ULOGONINFO logon)
         {
-            if (!CheckLogon(ref logon))
+            try
             {
-                throw new ULogonFailedException();
+                if (!CheckLogon(ref logon))
+                {
+                    throw new ULogonFailedException();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
 
             //deptfilter
@@ -73,7 +80,7 @@ namespace com.ums.PAS.Database
             switch (n_pas_type)
             {
                 case 4:
-                    szSQL = String.Format("SELECT distinct l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
+                    /*szSQL = String.Format("SELECT distinct l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
                      "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
                      "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +
                      //"isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), max(isnull(head.l_status,1)) l_sendingstatus, " +
@@ -87,10 +94,15 @@ namespace com.ums.PAS.Database
                      //"GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                      "GROUP BY head.l_refno, info.l_refno, dept.l_deptpk, projx.l_refno, proj.l_projectpk, info.l_createdate, info.l_createtime,info.sz_sendingname, info.sz_groups, info.l_group, info.l_type, dept.sz_deptid, proj.sz_name,proj.l_createtimestamp, proj.l_updatetimestamp " +
                      "ORDER BY info.l_refno DESC",
-                     logon.l_deptpk);
+                     logon.l_deptpk);*/
+                    szSQL = String.Format(
+                        "SELECT * FROM v_StatusListTAS " +
+                        "WHERE l_deptpk={0} "+
+                        "ORDER BY l_refno DESC",
+                        logon.l_deptpk);
                     break;
                 default:
-                    szSQL = String.Format(
+                    /*szSQL = String.Format(
                     "SELECT isnull(head.l_type, 0) l_sendingtype, isnull(head.l_items, -1) l_totitem, " +
                     "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
                     "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(info.l_sendingstatus,1) l_sendingstatus, " +
@@ -122,7 +134,16 @@ namespace com.ums.PAS.Database
                     "AND info.l_group>=2 AND dept.l_deptpk in ({0}) "+
                      "GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                      "ORDER BY info.l_refno DESC",
-                     /*logon.l_comppk, logon.l_userpk, */szDeptList);
+                     szDeptList);*/
+                    szSQL = String.Format(
+                        "SELECT * FROM v_StatusListVoice " +
+                        "UNION " +
+                        "SELECT * FROM v_StatusListSms " +
+                        "UNION " +
+                        "SELECT * FROM v_StatusListLBA " +
+                        "WHERE l_deptpk in ({0}) " +
+                        "ORDER BY l_refno DESC",
+                        szDeptList);
 
                     break;
             }

@@ -1432,8 +1432,9 @@ namespace com.ums.ws.parm
         private int GetObjects()
         {
             int counter = 0;
-            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PASHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_pk AND SH.l_type={2}",
-                                           sz_timestamp, m_logon.l_deptpk, (int)PASHAPETYPES.PAOBJECT);
+            /*String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PASHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_pk AND SH.l_type={2}",
+                                           sz_timestamp, m_logon.l_deptpk, (int)PASHAPETYPES.PAOBJECT);*/
+            String sz_sql = String.Format("sp_parm_getobjects {0}, {1}", m_logon.l_deptpk, sz_timestamp);
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -1530,12 +1531,14 @@ namespace com.ums.ws.parm
             //"SELECT PA.l_alertpk, PA.l_parent, PA.sz_name, PA.sz_description, PA.l_profilepk, PA.l_schedpk, PA.sz_oadc, PA.l_validity, PA.l_addresstypes, PA.l_timestamp, isnull(PA.f_locked, 0) f_locked, PA.sz_areaid FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
             /*String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);*/
-            db.ExecNonQuery("set textsize 10000000");
-            String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1), SH.sz_xml FROM PAALERT PA, PAEVENT PE, PAOBJECT PO, PASHAPE SH WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1} AND PA.l_alertpk*=SH.l_pk",
-                                            sz_timestamp, m_logon.l_deptpk);
+            //db.ExecNonQuery("set textsize 10000000");
+            //String sz_sql = String.Format("SELECT PA.l_alertpk, isnull(PA.l_parent,-1), isnull(PA.sz_name,' '), PA.sz_description, isnull(PA.l_profilepk,0), isnull(PA.l_schedpk,0), isnull(PA.sz_oadc,' '), isnull(PA.l_validity,1), isnull(PA.l_addresstypes,0), isnull(PA.l_timestamp,0), isnull(PA.f_locked, 0) f_locked, isnull(PA.sz_areaid,'-1'), isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(l_expiry, 0), isnull(sz_sms_oadc,''), isnull(sz_sms_message,''), isnull(PA.l_deptpk, -1), SH.sz_xml FROM PAALERT PA, PAEVENT PE, PAOBJECT PO, PASHAPE SH WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1} AND PA.l_alertpk*=SH.l_pk",
+            //                                sz_timestamp, m_logon.l_deptpk);
+            String sz_sql = String.Format("sp_parm_getalerts {0}, {1}", m_logon.l_deptpk, sz_timestamp);
 
-            String sz_sql_count = String.Format("SELECT count(*) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
-                                            sz_timestamp, m_logon.l_deptpk);
+            //String sz_sql_count = String.Format("SELECT count(*) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
+            //                                sz_timestamp, m_logon.l_deptpk);
+            String sz_sql_count = String.Format("sp_parm_getcount {0}, {1}", m_logon.l_deptpk, sz_timestamp);
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql_count, UmsDb.UREADER_KEEPOPEN);
@@ -1641,7 +1644,8 @@ namespace com.ums.ws.parm
                     {
                         outxml.insertStartElement("lbaoperators");
                         //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
-                        String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE OP.l_operator=XD.l_operator AND XD.l_operator=PA.l_operator AND PA.l_alertpk={0} AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
+                        //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE OP.l_operator=XD.l_operator AND XD.l_operator=PA.l_operator AND PA.l_alertpk={0} AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
+                        String szLbaSql = String.Format("sp_parm_getalert_lbaop {0}, {1}", l_alertpk, l_deptpk);
                         OdbcDataReader lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
                         while (lba.Read())
                         {
@@ -1690,8 +1694,9 @@ namespace com.ums.ws.parm
         {
             int counter = 0;
             //SELECT PE.l_eventpk, PE.l_parent, PE.sz_name, PE.sz_description, PE.l_categorypk, PE.l_timestamp, isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>" & l_maintimestamp & " AND PO.l_deptpk=" & Session("lDeptPk")
-            String sz_sql = String.Format("SELECT PE.l_eventpk, isnull(PE.l_parent,-1), isnull(PE.sz_name,' '), PE.sz_description, isnull(PE.l_categorypk,0), isnull(PE.l_timestamp,0), isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>={0} AND PO.l_deptpk={1}",
-                                            sz_timestamp, m_logon.l_deptpk);
+            /*String sz_sql = String.Format("SELECT PE.l_eventpk, isnull(PE.l_parent,-1), isnull(PE.sz_name,' '), PE.sz_description, isnull(PE.l_categorypk,0), isnull(PE.l_timestamp,0), isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>={0} AND PO.l_deptpk={1}",
+                                            sz_timestamp, m_logon.l_deptpk);*/
+            String sz_sql = String.Format("sp_parm_getevents {0}, {1}", m_logon.l_deptpk, sz_timestamp);
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -1742,8 +1747,9 @@ namespace com.ums.ws.parm
         private int GetCategories()
         {
             int counter = 0;
-            String sz_sql = String.Format("SELECT l_categorypk, isnull(sz_name,' '), sz_description, isnull(sz_fileext,' '), isnull(l_timestamp,0) FROM PACATEGORY WHERE l_timestamp>={0}",
-                                        sz_timestamp);
+            /*String sz_sql = String.Format("SELECT l_categorypk, isnull(sz_name,' '), sz_description, isnull(sz_fileext,' '), isnull(l_timestamp,0) FROM PACATEGORY WHERE l_timestamp>={0}",
+                                        sz_timestamp);*/
+            String sz_sql = String.Format("sp_parm_getcategories {0}", sz_timestamp);
             try
             {
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -1788,8 +1794,10 @@ namespace com.ums.ws.parm
             int counter = 0;
             if (!sz_timestamp.Equals("0"))
             {
-                String sz_sql = String.Format("SELECT isnull(c_objtype, 'n'), isnull(l_objectpk, 0), isnull(sz_areaid,' ') FROM PADELETE WHERE l_comppk={0} AND l_timestamp>={1}",
-                                        m_logon.l_comppk, sz_timestamp);
+                //String sz_sql = String.Format("SELECT isnull(c_objtype, 'n'), isnull(l_objectpk, 0), isnull(sz_areaid,' ') FROM PADELETE WHERE l_comppk={0} AND l_timestamp>={1}",
+                //                        m_logon.l_comppk, sz_timestamp);
+                String sz_sql = String.Format("sp_parm_getdeleted {0}, {1}",
+                                        m_logon.l_deptpk, sz_timestamp);
                 String l_objectpk, c_objtype, sz_areaid;
                 try
                 {

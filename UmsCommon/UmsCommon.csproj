@@ -35,6 +35,10 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Net">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -47,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="CoorConvert\Constants.cs" />
+    <Compile Include="CoorConvert\RDConvert.cs" />
     <Compile Include="CoorConvert\UTM.cs" />
     <Compile Include="EventLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

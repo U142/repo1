@@ -34,16 +34,27 @@ namespace com.ums.ws.pas.status
             return ret;
         }
 
+
         /*
          * Retrieve statuslist
          */
         [WebMethod]
         public UStatusListResults GetStatusList(ULOGONINFO logoninfo)
         {
+            try
+            {
+                UStatusListSearch sl = new UStatusListSearch(ref logoninfo);
 
-            UStatusListSearch sl = new UStatusListSearch(ref logoninfo);
-
-            return (UStatusListResults)sl.Find();
+                return (UStatusListResults)sl.Find();
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [WebMethod]

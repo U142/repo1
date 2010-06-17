@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Services.Protocols;
 
 namespace com.ums.UmsCommon
 {
@@ -11,6 +12,43 @@ namespace com.ums.UmsCommon
             : base(s)
         {
 
+        }
+    }
+
+    public class UServerDeniedAddressDatabaseException : UException
+    {
+        public UServerDeniedAddressDatabaseException()
+            : base("Server denied use of any address databases")
+        {
+
+        }
+    }
+
+    public class USessionExpiredException : UException
+    {
+        public long seconds;
+        public USessionExpiredException(long seconds)
+            : base("Session expired after " + seconds + " seconds")
+            //: base("Session expired after " + seconds + " seconds")
+        {
+            this.seconds = seconds;
+        }
+
+    }
+
+    public class USessionDoesNotExsistException : UException
+    {
+        public USessionDoesNotExsistException()
+            : base("Session does not exsist")
+        {
+        }
+    }
+
+    public class UMalformedDateTimeException : UException
+    {
+        public UMalformedDateTimeException()
+            : base("Error creating valid date-time")
+        {
         }
     }
 

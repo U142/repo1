@@ -53,6 +53,7 @@ namespace com.ums.UmsParm
         public List<UNSLOOKUP> nslookups = new List<UNSLOOKUP>();
         public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
         public UPASUISETTINGS uisettings;
+        public String sessionid;
     }
 
     public class UPASUISETTINGS

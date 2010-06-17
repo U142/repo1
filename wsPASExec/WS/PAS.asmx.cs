@@ -52,13 +52,16 @@ namespace com.ums.ws.pas
             return new imports();
         }
 
-        [WebMethod]
+        [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)
         {
             try
             {
+                //System.Web.SessionState.HttpSessionState state = this.Session;
+                l.sessionid = Guid.NewGuid().ToString();//state.SessionID.ToString();
+                //String sha = Helpers.CreateSHA512Hash(l.sz_password);
                 ULogon logon = new ULogon();
-                UPASLOGON ret = logon.Logon(ref l);
+                UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
                 logon.close();
                 return ret;
             }
@@ -68,12 +71,26 @@ namespace com.ums.ws.pas
             }
 
         }
+        [WebMethod]
+        public bool PasLogoff(ULOGONINFO l)
+        {
+            try
+            {
+                ULogon logon = new ULogon();
+                return logon.Logoff(ref l);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         [WebMethod]
         public bool SavePasUiSettings(ULOGONINFO l, UPASUISETTINGS ui)
         {
             try
             {
+                //System.Web.SessionState.HttpSessionState state = this.Session;
                 return new ULogon().SaveUiSettings(ref l, ref ui);
             }
             catch (Exception e)

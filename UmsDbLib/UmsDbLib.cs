@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data.Odbc;
 using com.ums.UmsCommon;
+using System.Web.Services.Protocols;
+using System.Xml;
 
 namespace com.ums.UmsDbLib
 {
@@ -111,7 +113,7 @@ namespace com.ums.UmsDbLib
                 throw new UDbConnectionException();
             String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc, BU.l_userpk, BD.l_deptpk, BC.l_comppk FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.sz_userid='{0}' AND " +
                                             "BC.sz_compid='{1}' AND BD.sz_deptid='{2}' AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
-                                            "BU.sz_paspassword='{3}'",
+                                            "BU.sz_hash_paspwd='{3}'",
                                             info.sz_userid, info.sz_compid, info.sz_deptid, info.sz_password);
             try
             {
@@ -133,11 +135,24 @@ namespace com.ums.UmsDbLib
                 }
                 rs.Close();
             }
+            catch (SoapException e)
+            {
+                throw e;
+            }
+            catch (USessionDoesNotExsistException e)
+            {
+                throw e;
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 setLastError(e.Message);
                 throw new UDbQueryException("CheckLogon");
             }
+            checkSessionIntegrity(ref info);
             /*finally
             {
                 CloseRecordSet();
@@ -158,12 +173,12 @@ namespace com.ums.UmsDbLib
             //info.sz_password = Encoding.ASCII.GetString(info.sz_password.ToCharArray());
             String szSQL = String.Format("SELECT BU.l_userpk, BD.l_deptpri, BD.sz_stdcc FROM BBUSER BU, BBCOMPANY BC, BBDEPARTMENT BD WHERE BU.l_userpk={0} AND " +
                                             "BC.l_comppk={1} AND BD.l_deptpk={2} AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
-                                            "BU.sz_paspassword='{3}'",
+                                            "BU.sz_hash_paspwd='{3}'",
                                             info.l_userpk, info.l_comppk, info.l_deptpk, 
                                             info.sz_password);
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     Int64 l_fromdb = rs.GetInt64(0);
@@ -177,11 +192,30 @@ namespace com.ums.UmsDbLib
                     }
                 }
                 rs.Close();
+                checkSessionIntegrity(ref info);
+
+                szSQL = String.Format("sp_pas_updatesession {0}, '{1}', '{2}'",
+                                    info.l_userpk, info.sessionid, info.sz_password);
+                ExecNonQuery(szSQL);
+
+            }
+            catch (SoapException e)
+            {
+                throw e;
+            }
+            catch (USessionDoesNotExsistException e)
+            {
+                throw e;
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
             }
             catch (Exception e)
             {
                 setLastError(e.Message);
-                throw new UDbQueryException("CheckLogon");
+                //throw new UDbQueryException("CheckLogon");
+                throw e;
             }
             /*finally
             {
@@ -193,6 +227,83 @@ namespace com.ums.UmsDbLib
                 throw new ULogonFailedException();
             }
             return b_ret;
+        }
+
+        protected bool checkSessionIntegrity(ref ULOGONINFO info)
+        {
+            if (info.l_userpk <= 0)
+                throw new ULogonFailedException();
+            if (info.sessionid.Length <= 0)
+                throw new ULogonFailedException();
+            if (info.sz_password.Length <= 0)
+                throw new ULogonFailedException();
+            //check session integrity
+            String szSQL = String.Format("sp_pas_getsession {0}, '{1}', '{2}'",
+                               info.l_userpk, info.sessionid, info.sz_password);
+            OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+            Int64 now = 0;
+            Int64 last = 0;
+            String snow = "0";
+            String slast = "0";
+            Decimal dnow = 0;
+            Decimal dlast = 0;
+            int timeout = 0;
+            if (rs.Read())
+            {
+                if (!rs.IsDBNull(0))
+                    dnow = rs.GetDecimal(0);
+                if (!rs.IsDBNull(1))
+                    dlast = rs.GetDecimal(1);
+                now = Int64.Parse(dnow.ToString());
+                last = Int64.Parse(dlast.ToString());
+                if (!rs.IsDBNull(2))
+                    timeout = rs.GetInt32(2);
+                else
+                    timeout = 1;
+            }
+            rs.Close();
+            if (last <= 0)
+            {
+                throw new SoapException("Session no longer exist", SoapException.ServerFaultCode, new USessionExpiredException(0));
+            }
+            //throw new USessionDoesNotExsistException();
+
+            UDATETIME dt_now = new UDATETIME(now);
+            UDATETIME dt_last = new UDATETIME(last);
+            long seconds = dt_now.getTimeDiffSec(dt_last);
+            if (Math.Abs(seconds) > timeout && timeout > 0)
+            {
+                RemoveSession(ref info);
+                throw new SoapException("Session Expired", SoapException.ServerFaultCode, new USessionExpiredException(seconds));
+            }
+            //USessionExpiredException(seconds, new Exception("Session expired"));
+
+            return true;
+        }
+
+        protected bool RemoveSession(ref ULOGONINFO l)
+        {
+            try
+            {
+                //delete logon record from DB
+                String szSQL = String.Format("sp_pas_logoff {0}, '{1}', '{2}'", l.l_userpk, l.sessionid, l.sz_password);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    rs.Close();
+                    return true;
+                }
+                else
+                {
+                    rs.Close();
+                    throw new USessionDoesNotExsistException();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public long getDbClock()
@@ -516,7 +627,6 @@ namespace com.ums.UmsDbLib
                 }
                 else
                     m_cmd = new OdbcCommand(s, conn);
-
                 m_cmd.ExecuteNonQuery();
                 m_cmd.Dispose();
             }
