@@ -74,6 +74,7 @@ public class DeptArray extends ArrayList<Object> {
 		int int_mod = 10000;
 		
 		Area combined = new Area();
+		int n_total_points = 0;
 		
 		for(int j=0; j < this.size(); j++)
 		{
@@ -87,7 +88,9 @@ public class DeptArray extends ArrayList<Object> {
 				int x = (int)(poly.get_coor_lon(c % poly.get_size())*int_mod);
 				int y = (int)(poly.get_coor_lat(c % poly.get_size())*int_mod);
 				javapoly.addPoint(x, y);
+				n_total_points++;
 			}
+			System.out.println(poly.get_size() + " points in polygon");
 			//System.out.println("C = " + c);
 			/*if(j==1)
 				javapoly.translate(-10, -10);
@@ -99,6 +102,7 @@ public class DeptArray extends ArrayList<Object> {
 			boolean b_polygonal = combined.isPolygonal();
 			//System.out.println("Is polygonal:" + b_polygonal);
 		}
+		System.out.println(n_total_points + " points in " + size() + " shapes");
 
 		//temp
 		//test ellipse
@@ -130,14 +134,22 @@ public class DeptArray extends ArrayList<Object> {
 		PathIterator it = combined.getPathIterator(new AffineTransform());
 		PolygonStruct combined_shapestruct = new PolygonStruct(null, Color.black, new Color(0,0,0,0));
 		int point_count = 0;
+		n_total_points = 0;
 		while(it!=null)
 		{
 			double [] coors = new double[2];
+			double f_prev_moveto_x = 0;
+			double f_prev_moveto_y = 0;
 			try
 			{
 				int pi = it.currentSegment(coors);
 				if(pi==PathIterator.SEG_CLOSE)
-					break;
+				{
+					//it.next();
+					//continue;
+				}
+				
+				//	break;
 				if(pi==PathIterator.SEG_LINETO)
 				{
 					//System.out.println("Lineto");
@@ -147,19 +159,35 @@ public class DeptArray extends ArrayList<Object> {
 				{
 					//combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod);
 				}
-				combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod);
+				if(pi==PathIterator.SEG_CLOSE)
+				{
+					System.out.println("SEG_CLOSE ("+n_total_points+")");
+					
+					//combined_shapestruct.add_coor(f_prev_moveto_x, f_prev_moveto_y);
+				}
+				else if(pi==PathIterator.SEG_MOVETO)
+				{
+					f_prev_moveto_x = coors[0]/int_mod;
+					f_prev_moveto_y = coors[1]/int_mod;
+					System.out.println("SEG_MOVETO ("+n_total_points+")");
+					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true);
+				}
+				else
+					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true);
+								n_total_points++;
 				point_count++;
 				//System.out.println("Lon " + coors[0]/int_mod + " Lat " + coors[1]/int_mod);
 			}
 			catch(Exception e)
 			{
+				e.printStackTrace();
 				break;
 				
 			}
 		
 			it.next();
 		}
-		System.out.println("Pointcount = " + point_count);
+		System.out.println("Combined Pointcount = " + n_total_points);
 		combined_shapestruct.setCurrentViewMode(PolygonStruct.SHOW_POLYGON_FULL, 0, null);
 
 		m_combined_shapestruct_list.add(combined_shapestruct);

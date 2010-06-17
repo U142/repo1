@@ -56,7 +56,7 @@ public class WSHouseEditor extends WSThread
 	}
 	
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
@@ -69,6 +69,7 @@ public class WSHouseEditor extends WSThread
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
 		logon.setSzStdcc(ui.get_current_department().get_stdcc());
+		logon.setSessionid(ui.get_sessionid());
 		java.net.URL wsdl;
 		try
 		{	
@@ -107,13 +108,19 @@ public class WSHouseEditor extends WSThread
 		}
 		catch(Exception e)
 		{
-			sz_error = e.getMessage();
-			Error.getError().addError("Error occured", "Error in House Editor", e, 1);
+			//sz_error = e.getMessage();
+			//Error.getError().addError("Error occured", "Error in House Editor", e, 1);
+			throw e;
 		}
-		finally
+		/*finally
 		{
 			OnDownloadFinished();
-		}
+		}*/
 		
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Error in House Editor";
 	}
 }

@@ -50,6 +50,20 @@ public interface PaswsSoap {
 
     /**
      * 
+     * @param l
+     * @return
+     *     returns boolean
+     */
+    @WebMethod(operationName = "PasLogoff", action = "http://ums.no/ws/pas/PasLogoff")
+    @WebResult(name = "PasLogoffResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "PasLogoff", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.PasLogoff")
+    @ResponseWrapper(localName = "PasLogoffResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.PasLogoffResponse")
+    public boolean pasLogoff(
+        @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO l);
+
+    /**
+     * 
      * @param ui
      * @param l
      * @return

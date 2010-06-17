@@ -98,7 +98,7 @@ public class WSGetStatusItems extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		if(sz_datefilter<=0 && sz_timefilter<=0)
 		{
 			PAS.get_pas().get_mappane().SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("mainmenu_status"));
@@ -150,15 +150,22 @@ public class WSGetStatusItems extends WSThread
 			}
 			catch(Exception e)
 			{
-				no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), "Error fetching status items WSGetStatusItems::run()", e, 1);
+				/*no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), "Error fetching status items WSGetStatusItems::run()", e, 1);
 				if(n_retries+1<n_maxretries)
 					no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), "Automatic retry will start. Failed to get statusitems", e, 1);
+					*/
 				if(b_use_loading_image)
-					PAS.get_pas().get_mappane().SetIsLoading(false, "");			
+					PAS.get_pas().get_mappane().SetIsLoading(false, "");
+				throw e;
 			}
 		}
 	}
 	
+	@Override
+	protected String getErrorMessage() {
+		return "Error fetching status items WSGetStatusItems::run()";
+	}
+
 	public void parseDoc(final Document doc)
 	{
 		/*try
@@ -972,7 +979,7 @@ public class WSGetStatusItems extends WSThread
 			}
 			
 		}
-					OnDownloadFinished();				
+					//OnDownloadFinished();				
 		/*		}
 			});
 		}

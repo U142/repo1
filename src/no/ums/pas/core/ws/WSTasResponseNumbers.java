@@ -30,7 +30,7 @@ public class WSTasResponseNumbers extends WSThread {
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		try
 		{
 			ObjectFactory of = new ObjectFactory();
@@ -41,6 +41,7 @@ public class WSTasResponseNumbers extends WSThread {
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 			logon.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 			logon.setJobid(WSThread.GenJobId());
+			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 
 			URL wsdl = new URL(vars.WSDL_TAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Tas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Tas.asmx?WSDL");
@@ -51,14 +52,20 @@ public class WSTasResponseNumbers extends WSThread {
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"),"Error in getting TAS response numbers", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError(PAS.l("common_error"),"Error in getting TAS response numbers", e, Error.SEVERITY_ERROR);
 			m_responsenumbers = new ArrayOfUTASRESPONSENUMBER().getUTASRESPONSENUMBER();
+			throw e;
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
 		
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Error in getting TAS response numbers";
 	}
 
 }

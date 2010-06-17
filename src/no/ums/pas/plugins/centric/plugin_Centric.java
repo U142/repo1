@@ -3,6 +3,7 @@ package no.ums.pas.plugins.centric;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import javax.swing.*;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.*;
@@ -16,6 +17,7 @@ import java.awt.*;
 import javax.imageio.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
@@ -223,7 +225,7 @@ public class plugin_Centric extends PAS_Scripting
 		pas.setMainTitle(
 				"UMS/Centric Burger Alert - " + 
 				pas.get_userinfo().get_current_department().get_deptid() + 
-				(trainingmode ? "  [TRAINING MODE] " : ""));
+				(trainingmode ? "  [TRAINING MODE] " : " ") + s);
 		pas.setTitle(pas.getMainTitle());
 		return true;
 	}
@@ -264,7 +266,18 @@ public class plugin_Centric extends PAS_Scripting
 				cl = (Class<LookAndFeel>)classloader.loadClass("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 				break;
 			case WIN:
-				cl = (Class<LookAndFeel>)classloader.loadClass("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				cl = (Class<LookAndFeel>)classloader.loadClass("no.ums.pas.pluginbase.defaults.DefaultWindowsLookAndFeel"); //"com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				if(uidefaults_initial!=null)
+				{
+					ArrayList<Object> defaults = new ArrayList<Object>();
+					Enumeration<Object> keys = uidefaults_initial.keys();
+					while(keys.hasMoreElements()) {
+						Object key = keys.nextElement();
+						defaults.add(key);
+						defaults.add(uidefaults_initial.get(key));
+					}
+					UIManager.getDefaults().putDefaults(defaults.toArray());
+				}
 				//cl = (Class<LookAndFeel>)classloader.loadClass(UIManager.getCrossPlatformLookAndFeelClassName());
 				break;
 			}
@@ -305,6 +318,7 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onSetUserLookAndFeel(Settings settings, final UserInfo userinfo) {
 		try
 		{
+			onGetInitialUIDefaults();
 			if(_IsTrainingMode(userinfo))
 			{
 				ClassLoader classloader = settings.getClass().getClassLoader();
@@ -359,6 +373,16 @@ public class plugin_Centric extends PAS_Scripting
 	{
 		boolean cansend = (userinfo.get_current_department().get_userprofile().get_send() >= 1);
 		return !cansend;
+	}
+
+	@Override
+	public boolean onSoapFaultException(UserInfo info, SOAPFaultException e) {
+		return super.onSoapFaultException(info, e);
+	}
+
+	@Override
+	protected boolean onSessionTimedOutException(UserInfo info) {
+		return super.onSessionTimedOutException(info);
 	}
 	
 	

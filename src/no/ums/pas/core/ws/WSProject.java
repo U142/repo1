@@ -50,7 +50,7 @@ public class WSProject extends WSThread
 			e.printStackTrace();
 		}
 	}
-	public void run()
+	public void call() throws Exception
 	{	
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
@@ -58,6 +58,7 @@ public class WSProject extends WSThread
 		logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 		logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+		logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 		try
 		{
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
@@ -68,12 +69,16 @@ public class WSProject extends WSThread
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Error saving project", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError(PAS.l("common_error"), "Error saving project", e, Error.SEVERITY_ERROR);
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
 
+	}
+	@Override
+	protected String getErrorMessage() {
+		return "Error saving project";
 	}
 }

@@ -11,6 +11,8 @@ import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.geotools.data.ows.Layer;
 
@@ -48,6 +50,7 @@ public abstract class PasScriptingInterface
 	};
 	
 	protected OPERATING_SYSTEM operating_system;
+	protected UIDefaults uidefaults_initial;
 	
 	
 	/**
@@ -303,6 +306,12 @@ public abstract class PasScriptingInterface
 	public abstract boolean onUserChangedLookAndFeel(Settings settings);
 	
 	/**
+	 * Define all UIDefaults when program starts. If UI changes (e.g. training mode), one may revert to default
+	 * @return
+	 */
+	protected abstract boolean onGetInitialUIDefaults();
+		
+	/**
 	 * Function to load the application's window icon
 	 * @return instance of an ImageIcon
 	 */
@@ -322,5 +331,27 @@ public abstract class PasScriptingInterface
 	 * @return list of recipient addresses that received the message
 	 */
 	public abstract List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback);
+	
+	/**
+	 * Function for parsing and handling Soap Exceptions (e.g. Session timeout)
+	 * @param e The Soap exception caught
+	 * @return true if handling of the exception is ok
+	 */
+	public abstract boolean onSoapFaultException(UserInfo info, SOAPFaultException e);
+	
+	/**
+	 * Function called when the webservice session has expired.
+	 * Called from onSoapFaultException, if details show that server threw
+	 * a com.ums.UmsCommon.USessionExpiredException
+	 * @return
+	 */
+	protected abstract boolean onSessionTimedOutException(UserInfo info);
+	
+	/**
+	 * Function called when logon procedure has succeeded
+	 * @param ui
+	 * @return
+	 */
+	public abstract boolean onSessionRenewed(UserInfo ui);
 }
 

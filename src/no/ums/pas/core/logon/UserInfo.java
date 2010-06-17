@@ -17,11 +17,15 @@ public class UserInfo extends Object {
 	private String m_sz_userid;
 	private String m_sz_compid;
 	private String m_sz_passwd;
+	private String m_sz_sessionid;
+	private boolean m_b_session_active = false;
 	private int m_n_comppk;
 	private String m_sz_userpk;
 	private int m_n_default_deptpk;
 	private String m_sz_sitename;
 	NavStruct m_nav_init = null;
+	public void set_session_active(boolean b) { m_b_session_active = b; }
+	public boolean is_session_active() { return m_b_session_active; }
 	public String get_userid() { return m_sz_userid; }
 	public String get_compid() { return m_sz_compid; }
 	public String get_userpk() { return m_sz_userpk; }
@@ -30,12 +34,14 @@ public class UserInfo extends Object {
 	public NavStruct get_nav_init() { return m_nav_init; }
 	public void set_nav_init(NavStruct n) { m_nav_init = n; }
 	public String get_passwd() { return m_sz_passwd; }
+	public String get_sessionid() { return m_sz_sessionid; }
 	private DeptArray m_departments;
 	private DeptInfo m_default_dept = null;
 	public DeptArray get_departments() { return m_departments; }
 	public int get_default_deptpk() { return m_n_default_deptpk; }
 	public DeptInfo get_default_dept() { return m_default_dept; }
 	public void set_passwd(String sz_passwd) { m_sz_passwd = sz_passwd; }
+	public void set_sessionid(String sz_sessionid) { m_sz_sessionid = sz_sessionid; }
 	public String get_sitename() { return m_sz_sitename; }
 	public void set_sitename(String sz_site) { m_sz_sitename = sz_site; }
 	private MailAccount m_account;
@@ -55,16 +61,17 @@ public class UserInfo extends Object {
 	public void set_current_department(DeptInfo dept) { m_current_dept = dept; }
 	
 	public UserInfo(String n_userpk, int n_comppk, String sz_userid, String sz_compid,
-			String sz_name, String sz_surname) {
+			String sz_name, String sz_surname, String sessionid) {
 		m_sz_userid = sz_userid;
 		m_sz_compid = sz_compid;
 		m_n_comppk  = n_comppk;
 		m_sz_userpk  = n_userpk;
 		m_sz_name = sz_name;
 		m_sz_surname = sz_surname;
+		m_sz_sessionid = sessionid;
 		m_departments = new DeptArray();
 	}
-	public UserInfo(String [] s) {
+	/*public UserInfo(String [] s) {
 		//"l_userpk", "l_comppk", "sz_userid", "sz_compid", "sz_name", "sz_surname" 
 		m_sz_userpk = s[0];
 		m_n_comppk 	= new Integer(s[1]).intValue();
@@ -73,7 +80,7 @@ public class UserInfo extends Object {
 		m_sz_name   = s[4];
 		m_sz_surname= s[5];
 		m_departments = new DeptArray();
-	}
+	}*/
 	public UserInfo(UserInfo info) {
 		m_sz_userid = info.m_sz_userid;
 		m_sz_compid = info.m_sz_compid;
@@ -83,6 +90,7 @@ public class UserInfo extends Object {
 		m_sz_passwd = info.m_sz_passwd;
 		m_sz_name   = info.m_sz_name;
 		m_sz_surname= info.m_sz_surname;
+		m_sz_sessionid = info.m_sz_sessionid;
 		m_departments = new DeptArray();
 		m_departments.m_combined_shapestruct_list = info.get_departments().get_combined_restriction_shape();
 		/*m_departments = (DeptArray)info.m_departments.clone();*/

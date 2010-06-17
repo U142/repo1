@@ -26,7 +26,7 @@ public class WSSaveUI extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		try
 		{
 			//PAS.get_pas().setSubstanceChanges();
@@ -37,6 +37,7 @@ public class WSSaveUI extends WSThread
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 			UPASUISETTINGS ui = of.createUPASUISETTINGS();
 			MailAccount account = PAS.get_pas().get_userinfo().get_mailaccount();
 			Settings settings = PAS.get_pas().get_settings();
@@ -104,17 +105,24 @@ public class WSSaveUI extends WSThread
 			}
 			catch(Exception e)
 			{
-				Error.getError().addError(PAS.l("common_error"), "Error saving UI settings", e, Error.SEVERITY_ERROR);
+				//Error.getError().addError(PAS.l("common_error"), "Error saving UI settings", e, Error.SEVERITY_ERROR);
+				throw e;
 			}
 			finally
 			{
-				OnDownloadFinished();
+				//OnDownloadFinished();
 			}
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			throw e;
 		}
 
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Error saving UI settings";
 	}
 }

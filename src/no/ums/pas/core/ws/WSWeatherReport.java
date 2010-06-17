@@ -69,7 +69,7 @@ public class WSWeatherReport extends WSThread
 	}
 	
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
@@ -82,6 +82,7 @@ public class WSWeatherReport extends WSThread
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
 		logon.setSzStdcc(ui.get_current_department().get_stdcc());
+		logon.setSessionid(ui.get_sessionid());
 		java.net.URL wsdl;
 		try
 		{	
@@ -97,11 +98,16 @@ public class WSWeatherReport extends WSThread
 		{
 			//Error.getError().addError("Error", "An error occured when downloading weather report", e, 1);
 			System.out.println(e.getMessage());
+			throw e;
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
 		
+	}
+	@Override
+	protected String getErrorMessage() {
+		return "An error occured when downloading weather report";
 	}
 }

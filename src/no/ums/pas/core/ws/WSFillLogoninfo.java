@@ -15,6 +15,7 @@ public class WSFillLogoninfo
 		l.setLComppk(ui.get_comppk());
 		l.setLDeptpk(ui.get_current_department().get_deptpk());
 		l.setLUserpk(new Long(ui.get_userpk()));
+		l.setSessionid(ui.get_sessionid());
 
 	}
 }

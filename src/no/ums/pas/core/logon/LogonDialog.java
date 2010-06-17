@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPasswordField;
 import javax.swing.JToolTip;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -30,14 +31,17 @@ import no.ums.pas.*;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.localization.LocalizationFinder;
+import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 
 import org.opengis.coverage.grid.Grid;
 
 
+
 import java.awt.event.*;
 import java.io.File;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -120,7 +124,9 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		
 	}
 	
-	public LogonDialog(Logon logon, JFrame owner, boolean b_modal, LogonInfo logoninfo, String wantedlanguage) {
+	public LogonDialog(Logon logon, JFrame owner, boolean b_modal, 
+			LogonInfo logoninfo, String wantedlanguage,
+			boolean b_request_newsession) {
 		super(PAS.l("logon_heading"));
 		this.setResizable(false);
 		this.setIconImage(PAS.get_pas().getIconImage());
@@ -134,7 +140,12 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		//setTitle(PAS.l("logon_heading"));
 		int n_width  = 500;//310;
 		int n_height = 330; //230;
+		
+		
 		setBounds((PAS.get_pas().get_screensize().width/2 - n_width/2), PAS.get_pas().get_screensize().height/2 - n_height/2, n_width, n_height);
+		this.setLocationRelativeTo(PAS.get_pas());
+		if(b_request_newsession)
+			this.setAlwaysOnTop(true);
 		m_panel = new LogonPanel(PAS.get_pas());
 		m_panel.m_txt_passwd.addComponentListener(this);
 		m_panel.add_controls();
@@ -150,6 +161,11 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		} catch(Exception e) {
 		}
 		m_panel.init();
+		if(b_request_newsession)
+		{
+			m_panel.m_txt_userid.setEditable(false);
+			m_panel.m_txt_compid.setEditable(false);
+		}
 		try
 		{
 			new WSPowerup(this);
@@ -174,7 +190,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	void add_panel() {
 		getContentPane().add(m_panel, BorderLayout.CENTER);
 	}
-	void set_logoninfo(String sz_userid, String sz_compid, String sz_passwd, String language) {
+	void set_logoninfo(String sz_userid, String sz_compid, String sz_passwd, 
+				String language) {
 		m_logoninfo = new LogonInfo(sz_userid, sz_compid, sz_passwd, language);
 	}
 	public void componentHidden(ComponentEvent e) {
@@ -373,8 +390,19 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			if(e.getActionCommand().equals("act_logon")) {
 				enableInput(false);
 				m_b_logonproc_start = true;
-				set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), new String(m_txt_passwd.getPassword()), selectedlanguage);	
-				set_response(false);
+				try
+				{
+					String sha = encrypt(new String(m_txt_passwd.getPassword()));
+					char[] s = m_txt_passwd.getPassword();
+					int l = sha.length();
+					set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), sha/*new String(m_txt_passwd.getPassword())*/, selectedlanguage);
+					m_txt_passwd.setText("");
+					set_response(false);
+				}
+				catch(Exception err)
+				{
+					Error.getError().addError(PAS.l("common_error"), "Error while encrypting password", err, Error.SEVERITY_ERROR);
+				}
 			}
 			else if(e.getActionCommand().equals("act_language_changed"))
 			{
@@ -383,6 +411,33 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				
 			}
 		}
+		
+		public String encrypt(String pw)
+			throws Exception
+		{
+			String sha = "";
+			try
+			{
+				MessageDigest md = MessageDigest.getInstance("SHA-512");
+				md.update(pw.getBytes());
+				byte[] mb = md.digest();
+	            for (int i = 0; i < mb.length; i++) {
+	                byte temp = mb[i];
+	                String s = Integer.toHexString(new Byte(temp));
+	                while (s.length() < 2) {
+	                    s = "0" + s;
+	                }
+	                s = s.substring(s.length() - 2);
+	                sha += s;
+	            }
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+			return sha;
+		}
+		
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()) {
 				case KeyEvent.VK_ENTER:

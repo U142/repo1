@@ -13,6 +13,7 @@ import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.ws.WSFillLogoninfo;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.ws.pas.ObjectFactory;
@@ -77,6 +78,11 @@ public class DefaultAddressSearch extends PasScriptingInterface.AddressSearch
 		params.setSzRegion(sz_region);
 		params.setSzUid("UMS");
 		ULOGONINFO logoninfo = factory.createULOGONINFO();
+		logoninfo.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
+		logoninfo.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
+		logoninfo.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+		logoninfo.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
+		logoninfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		
 		java.net.URL wsdl;
 		try

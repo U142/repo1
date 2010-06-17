@@ -51,7 +51,7 @@ public class WSSendSettings extends WSThread
 		super(callback);
 	}
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
@@ -60,6 +60,7 @@ public class WSSendSettings extends WSThread
 		logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 		logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+		logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 		try
 		{
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
@@ -80,10 +81,16 @@ public class WSSendSettings extends WSThread
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			throw e;
 		}
 
 	}
 	
+	@Override
+	protected String getErrorMessage() {
+		return "Error loading Send Settings";
+	}
+
 	@Override
 	public void OnDownloadFinished()
 	{
@@ -326,7 +333,7 @@ public class WSSendSettings extends WSThread
 		}
 
 		
-		OnDownloadFinished();
+		//OnDownloadFinished();
 	}
 	
 }

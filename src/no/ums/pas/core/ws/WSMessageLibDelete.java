@@ -36,6 +36,7 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 		logon.setSzDeptid(ui.get_current_department().get_deptid());
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
+		logon.setSessionid(ui.get_sessionid());
 		UBBMESSAGELISTFILTER filter = of.createUBBMESSAGELISTFILTER();
 		//filter.setNTimefilter(n_servertimestamp);
 		java.net.URL wsdl;

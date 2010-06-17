@@ -27,7 +27,7 @@ public class WSTasCount extends WSThread
 		start();
 	}
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		try
 		{
@@ -39,6 +39,7 @@ public class WSTasCount extends WSThread
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 			logon.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 			logon.setJobid(WSThread.GenJobId());
+			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 
 			URL wsdl = new URL(vars.WSDL_TAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Tas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Tas.asmx?WSDL");
@@ -52,15 +53,20 @@ public class WSTasCount extends WSThread
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"),"Error in TAS Count Request", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError(PAS.l("common_error"),"Error in TAS Count Request", e, Error.SEVERITY_ERROR);
 			result = new UTASREQUEST();
 			result.setBSuccess(false);
+			throw e;
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
 
+	}
+	@Override
+	protected String getErrorMessage() {
+		return "Error in TAS Count Request";
 	}
 	@Override
 	public void OnDownloadFinished()

@@ -53,6 +53,7 @@ public class WSConfirmLBA
 			logon.setSzCompid(info.get_compid());
 			logon.setSzDeptid(info.get_current_department().get_deptid());
 			logon.setSzPassword(info.get_passwd());
+			logon.setSessionid(info.get_sessionid());
 			
 			try
 			{

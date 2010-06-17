@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="nslookups" type="{http://ums.no/ws/pas/}ArrayOfUNSLOOKUP" minOccurs="0"/>
  *         &lt;element name="departments" type="{http://ums.no/ws/pas/}ArrayOfUDEPARTMENT" minOccurs="0"/>
  *         &lt;element name="uisettings" type="{http://ums.no/ws/pas/}UPASUISETTINGS" minOccurs="0"/>
+ *         &lt;element name="sessionid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -48,7 +49,8 @@ import javax.xml.bind.annotation.XmlType;
     "lLanguage",
     "nslookups",
     "departments",
-    "uisettings"
+    "uisettings",
+    "sessionid"
 })
 public class UPASLOGON {
 
@@ -71,6 +73,7 @@ public class UPASLOGON {
     protected ArrayOfUNSLOOKUP nslookups;
     protected ArrayOfUDEPARTMENT departments;
     protected UPASUISETTINGS uisettings;
+    protected String sessionid;
 
     /**
      * Gets the value of the fGranted property.
@@ -302,6 +305,30 @@ public class UPASLOGON {
      */
     public void setUisettings(UPASUISETTINGS value) {
         this.uisettings = value;
+    }
+
+    /**
+     * Gets the value of the sessionid property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSessionid() {
+        return sessionid;
+    }
+
+    /**
+     * Sets the value of the sessionid property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSessionid(String value) {
+        this.sessionid = value;
     }
 
 }

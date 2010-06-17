@@ -19,7 +19,7 @@ public class WSPowerup extends WSThread
 	}
 	
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		try
 		{
@@ -27,17 +27,22 @@ public class WSPowerup extends WSThread
 			//URL wsdl = new URL("http://localhost/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			new Pasws(wsdl, service).getPaswsSoap12().powerup();
-			OnDownloadFinished();			
+			//OnDownloadFinished();			
 		}
 		catch(Exception e)
 		{
-			
+			throw e;
 		}
 		finally
 		{
 		}
 	}
 	
+	@Override
+	protected String getErrorMessage() {
+		return "PowerUp failed";
+	}
+
 	@Override
 	public void OnDownloadFinished()
 	{

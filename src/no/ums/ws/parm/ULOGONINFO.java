@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="l_altservers" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="sz_stdcc" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="jobid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="sessionid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -50,7 +51,8 @@ import javax.xml.bind.annotation.XmlType;
     "lPriserver",
     "lAltservers",
     "szStdcc",
-    "jobid"
+    "jobid",
+    "sessionid"
 })
 public class ULOGONINFO {
 
@@ -77,6 +79,7 @@ public class ULOGONINFO {
     @XmlElement(name = "sz_stdcc")
     protected String szStdcc;
     protected String jobid;
+    protected String sessionid;
 
     /**
      * Gets the value of the lUserpk property.
@@ -316,6 +319,30 @@ public class ULOGONINFO {
      */
     public void setJobid(String value) {
         this.jobid = value;
+    }
+
+    /**
+     * Gets the value of the sessionid property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSessionid() {
+        return sessionid;
+    }
+
+    /**
+     * Sets the value of the sessionid property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSessionid(String value) {
+        this.sessionid = value;
     }
 
 }

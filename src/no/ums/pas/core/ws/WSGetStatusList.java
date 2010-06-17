@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
 
 
 import no.ums.pas.PAS;
@@ -38,7 +39,7 @@ public class WSGetStatusList extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		no.ums.ws.pas.status.ObjectFactory of = new no.ums.ws.pas.status.ObjectFactory();
 		no.ums.ws.pas.status.ULOGONINFO logon = of.createULOGONINFO();
 		WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
@@ -65,15 +66,28 @@ public class WSGetStatusList extends WSThread
 		}
 		catch(Exception e)
 		{
+			throw e;
+		}
+		/*catch(SOAPFaultException e)
+		{
 			e.printStackTrace();
 			Error.getError().addError(PAS.l("common_error"), "Unable to open statuslist", e, Error.SEVERITY_ERROR);
-		
+			PAS.pasplugin.onSoapFaultException(e);
+		}
+		catch(Exception e)
+		{
+			Error.getError().addError(PAS.l("common_error"), "Unable to open statuslist", e, Error.SEVERITY_ERROR);			
 		}
 		finally
 		{
 			OnDownloadFinished();
-		}
+		}*/
 		
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Unable to open statuslist";
 	}
 
 }

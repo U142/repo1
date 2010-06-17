@@ -33,7 +33,7 @@ public class WSAdrcount extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		try
 		{
 			URL wsdl = new URL(vars.WSDL_EXTERNALEXEC); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ExternalExec.asmx?WSDL");
@@ -47,6 +47,7 @@ public class WSAdrcount extends WSThread
 			l.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 			l.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 			l.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
+			l.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 			UAdrCount a = new Parmws(wsdl, service).getParmwsSoap12().getAdrCount(l, m_sending);
 			ret = new AddressCount(a.getNPrivateFixed(),
 									a.getNCompanyFixed(),
@@ -62,11 +63,20 @@ public class WSAdrcount extends WSThread
 		}
 		catch(Exception e)
 		{
-			no.ums.pas.ums.errorhandling.Error.getError().addError("Error", "Address Count Failed", e, 1);
+			//no.ums.pas.ums.errorhandling.Error.getError().addError("Error", "Address Count Failed", e, 1);
+			throw e;
 		}
-		finally
+		//finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
 	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Address Count Failed";
+	}
+	
+	
+	
 }

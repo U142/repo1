@@ -34,7 +34,7 @@ public class WSTasStats_Countries_Timeunit extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		try
 		{
 			ObjectFactory of = new ObjectFactory();
@@ -45,6 +45,7 @@ public class WSTasStats_Countries_Timeunit extends WSThread
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 			logon.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 			logon.setJobid(WSThread.GenJobId());
+			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 
 			URL wsdl = new URL(vars.WSDL_TAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Tas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/tas", "tasws");
@@ -53,13 +54,19 @@ public class WSTasStats_Countries_Timeunit extends WSThread
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"),"Error in TAS Count Request", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError(PAS.l("common_error"),"Error in TAS Count Request", e, Error.SEVERITY_ERROR);
 			results = new ArrayOfULBACOUNTRYSTATISTICS();
+			throw e;
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Error in TAS Stats Countries Timeunit";
 	}
 	
 }

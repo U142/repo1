@@ -509,13 +509,16 @@ public class PolygonStruct extends ShapeStruct {
 	{
 		return m_bounds;
 	}
-
 	public void add_coor(Double lon, Double lat) {
+		this.add_coor(lon, lat, false);
+	}
+
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates) {
 		int index = get_size();
 		double dlon = ((int)(lon * 10000))/10000.0;
 		double dlat = ((int)(lat * 10000))/10000.0;
 		String id = dlon+"_"+dlat;
-		if(hash_coors_added.contains(id))
+		if(!b_allow_duplicates && hash_coors_added.contains(id))
 			return;
 		m_coor_lon.add(dlon);
 		m_coor_lat.add(dlat);

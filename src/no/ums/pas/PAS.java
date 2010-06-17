@@ -38,6 +38,7 @@ import no.ums.pas.core.themes.ThemeColorComponent;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSGetVisualSettings;
+import no.ums.pas.core.ws.WSLogoff;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.ImportPolygon;
@@ -266,6 +267,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static int g_n_parmversion = 2;
 	public static String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
+	
+	public static boolean APP_EXIT = false;
 	
 	/*public void initSubstance()
 	{
@@ -1018,7 +1021,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			//	public void run()
 				{
 					
-					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany()), m_settings.getLanguage());
+					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany()), m_settings.getLanguage(), false);
 					if(!logon.isLoggedOn())
 						System.exit(0);
  
@@ -1888,6 +1891,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		System.out.println(sz_text);
 	}
 	public void exit_application() {
+		PAS.APP_EXIT = true;
 		close_parm(true);
 		XmlWriter xmlwriter = new XmlWriter();
 		try
@@ -1900,7 +1904,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		} catch(Exception e){};
 		try
 		{
-			new WSSaveUI(get_pasactionlistener()).run();
+			new WSSaveUI(get_pasactionlistener()).runNonThreaded();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		try
+		{
+			new WSLogoff(get_pasactionlistener(), m_userinfo).runNonThreaded();
 		}
 		catch(Exception e)
 		{

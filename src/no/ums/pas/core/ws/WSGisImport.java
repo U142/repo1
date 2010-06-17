@@ -89,7 +89,7 @@ public class WSGisImport extends WSThread
 	
 	
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
 		UserInfo u = PAS.get_pas().get_userinfo();
@@ -101,6 +101,7 @@ public class WSGisImport extends WSThread
 		logon.setSzPassword(u.get_passwd());
 		logon.setSzStdcc(u.get_current_department().get_stdcc());
 		logon.setLDeptpk(u.get_current_department().get_deptpk());
+		logon.setSessionid(u.get_sessionid());
 		logon.setJobid(WSThread.GenJobId());
 		//WSFillLogoninfo.fill((no.ums.ws.pas.status.ULOGONINFO)logon, PAS.get_pas().get_userinfo());
 		WSProgressPoller progress = new WSProgressPoller(loader, ProgressJobType.GEMINI_IMPORT_STREETID, logon, "GIS Import", "Finished", false);
@@ -131,18 +132,23 @@ public class WSGisImport extends WSThread
 		}
 		catch(Exception e)
 		{
-			no.ums.pas.ums.errorhandling.Error.getError().addError("Error fetching GIS import", "WSGisImport::run()", e, 1);
+			//no.ums.pas.ums.errorhandling.Error.getError().addError("Error fetching GIS import", "WSGisImport::run()", e, 1);
+			throw e;
 		}
 		finally
 		{
 			progress.SetFinished();
-			OnDownloadFinished();
+			//OnDownloadFinished();
 			
 		}
 
 	}
 	
 
+	@Override
+	protected String getErrorMessage() {
+		return "Error fetching GIS import";
+	}
 	@Override
 	public void OnDownloadFinished() {
 		m_callback.actionPerformed(new ActionEvent(m_gislist, ActionEvent.ACTION_PERFORMED, sz_cb_cmd));

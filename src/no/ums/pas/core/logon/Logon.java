@@ -54,6 +54,7 @@ public class Logon implements ActionListener {
 	private boolean m_b_doexit = false;
 	private String wantedlanguage = "";
 	public LogonInfo getLogonInfo() { return m_logoninfo; }
+	private boolean b_request_newsession = false;
 	
 	public int getLogonTries() {
 		return m_n_logontries;
@@ -76,11 +77,12 @@ public class Logon implements ActionListener {
 			m_b_cantryagain = false;
 	}
 	
-	public Logon(PAS pas, LogonInfo info, String language) {
+	public Logon(PAS pas, LogonInfo info, String language, boolean b_request_newsession) {
 		m_pas = pas;
 		m_logoninfo = info;
 		m_initinfo = info;
 		wantedlanguage = language;
+		this.b_request_newsession = b_request_newsession;
 		start();
 	}
 	
@@ -110,7 +112,7 @@ public class Logon implements ActionListener {
 				java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run()
 				{
-					dlg = new LogonDialog(temp, get_pas(), true, m_initinfo, wantedlanguage);
+					dlg = new LogonDialog(temp, get_pas(), true, m_initinfo, wantedlanguage, b_request_newsession);
 					dlg.setVisible(true);
 				}
 				});
@@ -228,6 +230,7 @@ public class Logon implements ActionListener {
 		} catch(Exception e) { }
 		setLoggedOn();
 		get_userinfo().set_passwd(info.get_passwd());
+		//get_userinfo().set_sessionid(info.get_sessionid());
 		dlg.setVisible(false);
 		//dlg.setTitle(get_last_error());
 		return m_info;
@@ -250,29 +253,33 @@ public class Logon implements ActionListener {
 			}
 			
 			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
-					l.getSzCompid(), l.getSzName(), l.getSzSurname());
+					l.getSzCompid(), l.getSzName(), l.getSzSurname(), l.getSessionid());
+			m_info.set_session_active(true);
 			m_pasui_settings = l.getUisettings();
-			List<UDEPARTMENT> depts = l.getDepartments().getUDEPARTMENT();
-			for(int i=0; i < depts.size(); i++)
+			if(!b_request_newsession)
 			{
-				UDEPARTMENT d = depts.get(i);
-				m_info.add_department(d.getLDeptpk(), d.getSzDeptid(), d.getSzStdcc(), d.getLbo(), d.getRbo(), 
-						d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
-						d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
-						d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
-						d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
+				List<UDEPARTMENT> depts = l.getDepartments().getUDEPARTMENT();
+				for(int i=0; i < depts.size(); i++)
+				{
+					UDEPARTMENT d = depts.get(i);
+					m_info.add_department(d.getLDeptpk(), d.getSzDeptid(), d.getSzStdcc(), d.getLbo(), d.getRbo(), 
+							d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
+							d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
+							d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
+							d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
+				}
+				//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
+				m_info.get_departments().CreateCombinedRestrictionShape();
+				List<UNSLOOKUP> ns = l.getNslookups().getUNSLOOKUP();
+				for(int i=0; i < ns.size(); i++)
+				{
+					UNSLOOKUP n = ns.get(i);
+					UserInfo.NSLookup temp = m_info.new NSLookup(n.getSzDomain(),n.getSzIp(),n.getLLastdatetime(),
+																n.getSzLocation(),n.isFSuccess());
+					PAS.get_pas().add_event("NS Added: " + temp.get_domain(), null);
+				}
+				dlg.fillNSInfo();
 			}
-			//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
-			m_info.get_departments().CreateCombinedRestrictionShape();
-			List<UNSLOOKUP> ns = l.getNslookups().getUNSLOOKUP();
-			for(int i=0; i < ns.size(); i++)
-			{
-				UNSLOOKUP n = ns.get(i);
-				UserInfo.NSLookup temp = m_info.new NSLookup(n.getSzDomain(),n.getSzIp(),n.getLLastdatetime(),
-															n.getSzLocation(),n.isFSuccess());
-				PAS.get_pas().add_event("NS Added: " + temp.get_domain(), null);
-			}
-			dlg.fillNSInfo();
 			b_results_ready = true;
 		}
 	}

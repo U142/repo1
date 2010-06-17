@@ -11,10 +11,13 @@ import java.util.List;
 
 
 import javax.swing.*;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import no.ums.pas.*;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
+import no.ums.pas.core.logon.Logon;
+import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
@@ -229,6 +232,7 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override 
 	public boolean onStartParm()
 	{
+
 		new Thread("PARM Start thread")
 		{
 			public void run()
@@ -388,6 +392,16 @@ public class PAS_Scripting extends PasScriptingInterface
 		return null;
 
 	}
+	
+	
+
+	@Override
+	protected boolean onGetInitialUIDefaults() {
+		if(uidefaults_initial==null)
+			uidefaults_initial = (UIDefaults)UIManager.getDefaults().clone();
+		return true;
+	}
+
 
 	@Override
 	public boolean onSetUserLookAndFeel(final Settings settings, final UserInfo userinfo) {
@@ -530,6 +544,83 @@ public class PAS_Scripting extends PasScriptingInterface
 		arr_adr.add("sa@ums.no");		
 		MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
 		return arr_adr;
+	}
+
+	@Override
+	public boolean onSoapFaultException(UserInfo info, SOAPFaultException e) {
+		int idx1 = e.getLocalizedMessage().indexOf(">")+2;
+		int idx2 = e.getLocalizedMessage().indexOf(":", idx1);
+		String sz_class = e.getLocalizedMessage().substring(idx1, idx2);
+		if(sz_class.equals("com.ums.UmsCommon.USessionExpiredException"))
+		{
+			return onSessionTimedOutException(info);
+		}
+		return false;
+	}
+
+
+	@Override
+	protected boolean onSessionTimedOutException(UserInfo info) {
+		try
+		{
+			PAS.get_pas().setEnabled(false);
+			info.set_session_active(false);
+			if(!PAS.APP_EXIT)
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						try
+						{
+							ClassLoader classloader = PAS.get_pas().getClass().getClassLoader();
+							Class cl = classloader.loadClass("no.ums.pas.pluginbase.defaults.DisabledLookAndFeel");
+							LookAndFeel laf = (LookAndFeel)cl.newInstance();
+							UIManager.setLookAndFeel(laf);
+							SwingUtilities.updateComponentTreeUI(PAS.get_pas());
+							onSetAppTitle(PAS.get_pas(), " [SESSION TIMED OUT]", PAS.get_pas().get_userinfo());
+						}
+						catch(Exception err)
+						{
+							
+						}
+					}
+				});
+				Logon logon = new Logon(PAS.get_pas(), new LogonInfo(PAS.get_pas().get_settings().getUsername(),
+						PAS.get_pas().get_settings().getCompany()), 
+						PAS.get_pas().get_settings().getLanguage(),
+						true);
+				if(!logon.isLoggedOn())
+					System.exit(0);
+	
+				if(logon.get_userinfo()==null) {
+					System.exit(0);
+				}
+				PAS.get_pas().get_userinfo().set_sessionid(logon.get_userinfo().get_sessionid());
+				PAS.pasplugin.onSessionRenewed(PAS.get_pas().get_userinfo());
+			}
+	
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+
+	@Override
+	public boolean onSessionRenewed(final UserInfo ui) {
+		ui.set_session_active(true);
+		//onUserChangedLookAndFeel(PAS.get_pas().get_settings());
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				PAS.get_pas().setEnabled(true);
+				onSetInitialLookAndFeel(ui.getClass().getClassLoader());
+				onSetAppTitle(PAS.get_pas(), "", ui);
+			}
+		});
+		return true;
 	}
 	
 	

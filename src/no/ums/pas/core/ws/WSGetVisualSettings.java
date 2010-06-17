@@ -23,7 +23,7 @@ public class WSGetVisualSettings extends WSThread
 		m_callback.actionPerformed(new ActionEvent(visuals, ActionEvent.ACTION_PERFORMED, "act_visualsettings_downloaded"));
 	}
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		try
 		{
 			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
@@ -53,13 +53,20 @@ public class WSGetVisualSettings extends WSThread
 			visuals = new UPASUISETTINGS();
 			visuals.setInitialized(false);
 			e.printStackTrace();
+			throw e;
 		}
-		finally
+		/*finally
 		{
 			OnDownloadFinished();
-		}
+		}*/
 		
 	}
+	
+	@Override
+	protected String getErrorMessage() {
+		return "Unable to load Visual Settings";
+	}
+
 	protected String sz_userid;
 	protected String sz_compid;
 	public WSGetVisualSettings(ActionListener callback, String userid, String compid)

@@ -34,7 +34,7 @@ public class WSClosestGAB extends WSThread
 	}
 	
 	@Override
-	public void run()
+	public void call() throws Exception
 	{
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
@@ -47,6 +47,7 @@ public class WSClosestGAB extends WSThread
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
 		logon.setSzStdcc(ui.get_current_department().get_stdcc());
+		logon.setSessionid(ui.get_sessionid());
 		java.net.URL wsdl;
 		try
 		{	
@@ -64,12 +65,14 @@ public class WSClosestGAB extends WSThread
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError("Error", "An error occured while searching for nearest building", e, 1);
-		}
-		finally
-		{
-			OnDownloadFinished();
+			//Error.getError().addError("Error", "An error occured while searching for nearest building", e, 1);
+			throw e;
 		}
 		
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "An error occured while searching for nearest building";
 	}	
 }

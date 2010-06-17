@@ -28,7 +28,7 @@ public class WSMessageLib extends WSThread
 	}
 
 	@Override
-	public void run() {
+	public void call() throws Exception {
 		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
 		no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
@@ -39,6 +39,7 @@ public class WSMessageLib extends WSThread
 		logon.setSzDeptid(ui.get_current_department().get_deptid());
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
+		logon.setSessionid(ui.get_sessionid());
 		UBBMESSAGELISTFILTER filter = of.createUBBMESSAGELISTFILTER();
 		filter.setNTimefilter(n_servertimestamp);
 		java.net.URL wsdl;
@@ -50,13 +51,18 @@ public class WSMessageLib extends WSThread
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Error opening Message Library", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError(PAS.l("common_error"), "Error opening Message Library", e, Error.SEVERITY_ERROR);
 			list = new UBBMESSAGELIST();
 			list.setNServertimestamp(-1);
 		}
 		finally
 		{
-			OnDownloadFinished();
+			//OnDownloadFinished();
 		}
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Error opening Message Library";
 	}
 }

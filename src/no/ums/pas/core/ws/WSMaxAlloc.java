@@ -45,7 +45,7 @@ public class WSMaxAlloc extends WSThread
 		start();
 	}
 	
-	public void run()
+	public void call() throws Exception
 	{
 		try
 		{
@@ -60,6 +60,7 @@ public class WSMaxAlloc extends WSThread
 			logon.setSzDeptid(ui.get_current_department().get_deptid());
 			logon.setSzUserid(ui.get_userid());
 			logon.setSzPassword(ui.get_passwd());
+			logon.setSessionid(ui.get_sessionid());
 			java.net.URL wsdl;
 			try
 			{			
@@ -74,9 +75,10 @@ public class WSMaxAlloc extends WSThread
 				maxalloc_return.setNProjectpk(maxalloc_request.getNProjectpk());
 				maxalloc_return.setNRefno(maxalloc_request.getNRefno());
 				maxalloc_return.setNMaxalloc(-1);
-				return ;
+				//return ;
+				throw e;
 			}
-			OnDownloadFinished();
+			//OnDownloadFinished();
 			
 		}
 		catch(Exception e)
@@ -85,6 +87,11 @@ public class WSMaxAlloc extends WSThread
 		}
 	}
 	
+	@Override
+	protected String getErrorMessage() {
+		return "Failed to set max alloc";
+	}
+
 	@Override
 	public void OnDownloadFinished()
 	{
