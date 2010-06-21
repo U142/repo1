@@ -69,6 +69,14 @@ namespace pas_cb_server
                     t_alert_info.IBAG_coordinate_systemSpecified = false;
                     break;
             }
+
+            if (CBServer.debug)
+            {
+                dump_request(t_alert);
+                Log.WriteLog(String.Format("{0} (op={1}) NewMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                return Constant.OK;
+            }
             
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
@@ -129,6 +137,14 @@ namespace pas_cb_server
 
             t_alert.IBAG_alert_info = t_alert_info;
 
+            if (CBServer.debug)
+            {
+                dump_request(t_alert);
+                Log.WriteLog(String.Format("{0} (op={1}) UpdMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
+                return Constant.OK;
+            }
+
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
             if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
@@ -171,6 +187,14 @@ namespace pas_cb_server
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+
+            if (CBServer.debug)
+            {
+                dump_request(t_alert);
+                Log.WriteLog(String.Format("{0} (op={1}) KillMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
 
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
@@ -215,6 +239,14 @@ namespace pas_cb_server
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
+            if (CBServer.debug)
+            {
+                dump_request(t_alert);
+                Log.WriteLog(String.Format("{0} (op={1}) InfoMessage DUMPED", l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
+
             IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
             if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
@@ -253,6 +285,15 @@ namespace pas_cb_server
                     , t_alert_response.IBAG_note.First()), 2);
                 return Constant.FAILED;
             }
+        }
+
+        private static void dump_request(object cap_request)
+        {
+            XmlSerializer s = new XmlSerializer(cap_request.GetType());
+            TextWriter w = new StringWriter();
+            s.Serialize(w, cap_request);
+
+            Tools.Dump(w.ToString());
         }
         
         private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters)

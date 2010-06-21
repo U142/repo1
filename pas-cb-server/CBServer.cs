@@ -13,6 +13,7 @@ namespace pas_cb_server
     class CBServer
     {
         public static bool running = true;
+        public static bool debug = true;
 
         static void Main(string[] args)
         {

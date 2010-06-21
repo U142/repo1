@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using com.ums.UmsCommon.CoorConvert;
+using System.IO;
 
 namespace pas_cb_server
 {
@@ -104,6 +105,11 @@ namespace pas_cb_server
                 }
             }
             Log.WriteLog("Stopped keyreader thread", 9);
+        }
+
+        public static void Dump(string text)
+        {
+            File.AppendAllText("debug-log-" + DateTime.Now.ToString("yyyy.MM.dd") + ".txt", text);
         }
     }
 }

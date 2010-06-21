@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
 using CookComputing.XmlRpc;
 using System.Xml.Serialization;
+using System.Xml;
 using System.Net;
 using System.IO;
 using pas_cb_server.one2many;
@@ -44,6 +45,9 @@ namespace pas_cb_server
     // CB Methods
     public class CB_one2many
     {
+
+        //public delegate void XmlRpcRequestEventHandler(object sender, XmlRpcRequestEventArgs args);
+
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
@@ -83,6 +87,14 @@ namespace pas_cb_server
             newmsgreq.recurrencyendtime = def.recurrencyendtime;
             newmsgreq.channelindicator = def.l_channelindicator;
             newmsgreq.category = def.l_category;
+
+            if (CBServer.debug)
+            {
+                dump_request(newmsgreq);
+                Log.WriteLog(String.Format("{0} (op={1}) NewMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                return Constant.OK;
+            }
 
             CBCNEWMSGREQRESULT newmsgres = cbc.CBC_NewMsg(newmsgreq);
 
@@ -141,6 +153,14 @@ namespace pas_cb_server
 
             changereq.schedulemethod = def.l_schedulemethod;
 
+            if (CBServer.debug)
+            {
+                dump_request(changereq);
+                Log.WriteLog(String.Format("{0} (op={1}) UpdMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
+                return Constant.OK;
+            }
+
             CBCCHANGEREQRESULT changeres = cbc.CBC_ChangeMsg(changereq);
 
             if (changeres.cbccbestatuscode == 0)
@@ -192,6 +212,14 @@ namespace pas_cb_server
 
             killreq.schedulemethod = def.l_schedulemethod;
 
+            if (CBServer.debug)
+            {
+                dump_request(killreq);
+                Log.WriteLog(String.Format("{0} (op={1}) KillMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
+            
             CBCKILLREQRESULT killres = cbc.CBC_KillMsg(killreq);
 
             if (killres.cbccbestatuscode == 0)
@@ -237,6 +265,13 @@ namespace pas_cb_server
             CBCINFOMSGREQUEST inforeq = new CBCINFOMSGREQUEST();
             inforeq.cbccberequesthandle = Database.GetHandle(op);
             inforeq.messagehandle = l_msghandle;
+
+            if (CBServer.debug)
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) InfoMessage DUMPED", l_refno, op.sz_operatorname), 0);
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
 
             CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
             if (infores.cbccbestatuscode == 0)
@@ -378,9 +413,16 @@ namespace pas_cb_server
             loginreq.infoprovname = op.sz_login_id;
             loginreq.cbename = op.sz_login_name;
             loginreq.password = op.sz_login_password;
-            CBCLOGINREQRESULT loginres = cbc.CBC_Login(loginreq);
 
-            return loginres;
+            if (CBServer.debug)
+            {
+                dump_request(loginreq);
+                return new CBCLOGINREQRESULT();
+            }
+            else
+            {
+                return cbc.CBC_Login(loginreq);
+            }
         }
         private static String get_messagestatus(Int32 messagestatus)
         {
@@ -399,6 +441,22 @@ namespace pas_cb_server
                 case 140: return "Deleted";
                 default: return "UNDEFINED";
             }
+        }
+        private static void dump_request(object xmlrpcrequest)
+        {
+            XmlRpcSerializer ser = new XmlRpcSerializer();
+            XmlRpcRequest req = new XmlRpcRequest();
+
+            req.method = xmlrpcrequest.GetType().Name;
+            req.args = new object[] { xmlrpcrequest };
+
+            Stream st = new MemoryStream();
+            ser.SerializeRequest(st, req);
+            st.Seek(0, SeekOrigin.Begin);
+
+            StreamReader sr = new StreamReader(st);
+
+            Tools.Dump(sr.ReadToEnd());
         }
     }
 
