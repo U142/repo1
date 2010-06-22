@@ -83,7 +83,41 @@ namespace pas_cb_server.test
             s.Serialize(w, alert);
             w.Close();
         }
+        public static void NewAlertPLMN()
+        {
+            Settings oUser = Settings.SystemUser();
+            cb alert = new cb();
 
+            currentTestRef = Database.GetRefno();
+
+            alert.l_refno = currentTestRef;
+            alert.operation = "NewAlertPLMN";
+            alert.l_comppk = oUser.l_comppk;
+            alert.l_deptpk = oUser.l_deptpk;
+
+            alert.textmessages = new List<message>();
+
+            message msg = new message();
+            msg.l_channel = 1;
+            msg.sz_text = "-- self test message --";
+
+            alert.textmessages.Add(msg);
+
+            string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+            Log.WriteLog(String.Format("Initiating self test (New Alert). Filename='{0}'", filename), 0);
+
+            // insert to LBASEND
+            if (InsertSending(oUser, alert) != Constant.OK)
+            {
+                Log.WriteLog(String.Format("Self test failed to insert into database, aborting"), 2);
+                return;
+            }
+
+            XmlSerializer s = new XmlSerializer(typeof(cb));
+            StreamWriter w = new StreamWriter(filename);
+            s.Serialize(w, alert);
+            w.Close();
+        }
         public static void KillAlert()
         {
             if (currentTestRef == 0)
@@ -113,7 +147,6 @@ namespace pas_cb_server.test
                 currentTestRef = 0;
             }
         }
-
         public static void UpdateAlert()
         {
             if (currentTestRef == 0)
@@ -149,7 +182,6 @@ namespace pas_cb_server.test
 
         private static int InsertSending(Settings oUser, cb oAlert)
         {
-            decimal l_textpk = 0;
             string sz_query = "";
 
             try
@@ -187,37 +219,35 @@ namespace pas_cb_server.test
                 */
                 foreach (message msg in oAlert.textmessages)
                 {
-                    sz_query = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
-                                    oAlert.l_refno,
-                                    "Message",
-                                    "CB",
-                                    msg.sz_text);
-                    cmd.CommandText = sz_query;
-                    l_textpk = (decimal)cmd.ExecuteScalar();
-
-                    sz_query = String.Format("sp_pas_ins_lbatext_cc {0}, {1}",
-                        l_textpk,
-                        msg.l_channel);
+                    sz_query = String.Format("sp_cb_ins_lbatext {0}, '{1}', {2}",
+                                        oAlert.l_refno,
+                                        msg.sz_text.Replace("'","''"),
+                                        msg.l_channel);
                     cmd.CommandText = sz_query;
                     cmd.ExecuteNonQuery();
                 }
                 foreach (Operator op in oUser.operators)
                 {
-                    sz_query = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
-                                             "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
-                                             "{6}, '{7}', '{8}', {9}, {10}, {11})",
-                                             oAlert.l_refno,
-                                             100,
-                                             -1,
-                                             -1,
-                                             -1,
-                                             0,
-                                             1,
-                                             "",
-                                             "",
-                                             0,
-                                             op.l_operator,
-                                             Database.MESSAGETYPE);
+                    /*sz_query = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
+                                         "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
+                                         "{6}, '{7}', '{8}', {9}, {10}, {11})",
+                                         oAlert.l_refno,
+                                         100,
+                                         -1,
+                                         -1,
+                                         -1,
+                                         0,
+                                         1,
+                                         "",
+                                         "",
+                                         0,
+                                         op.l_operator,
+                                         Database.MESSAGETYPE);*/
+                    
+                    sz_query = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}",
+                                        oAlert.l_refno,
+                                        op.l_operator,
+                                        Database.MESSAGETYPE);
                     cmd.CommandText = sz_query;
                     cmd.ExecuteNonQuery();
                 }

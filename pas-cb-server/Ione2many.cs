@@ -45,16 +45,13 @@ namespace pas_cb_server
     // CB Methods
     public class CB_one2many
     {
-
-        //public delegate void XmlRpcRequestEventHandler(object sender, XmlRpcRequestEventArgs args);
-
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
             if (loginres.cbccbestatuscode != 0) // login failed
             {
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (CreateAlert) Login FAILED (code={3}, msg={4})"
@@ -90,8 +87,7 @@ namespace pas_cb_server
 
             if (CBServer.debug)
             {
-                dump_request(newmsgreq);
-                Log.WriteLog(String.Format("{0} (op={1}) NewMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
                 return Constant.OK;
             }
@@ -123,13 +119,86 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
             }
         }
+        public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
+        {
+            Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
+            cbc.Url = op.sz_url;
+
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
+            if (loginres.cbccbestatuscode != 0) // login failed
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (CreateAlertPLMN) Login FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , loginres.cbccberequesthandle
+                    , loginres.cbccbestatuscode
+                    , loginres.messagetext), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
+
+            // login OK, update status to parsing
+            Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING);
+
+            CBCNEWMSGPLMNREQUEST newmsgreq = new CBCNEWMSGPLMNREQUEST();
+            newmsgreq.cbccberequesthandle = Database.GetHandle(op);
+
+            newmsgreq.pagelist = get_pagelist(oAlert, op);
+            newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
+            //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
+            newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
+
+            // default values from config
+            newmsgreq.datacodingscheme = def.l_datacodingscheme;
+            newmsgreq.displaymode = def.l_displaymode;
+            newmsgreq.repetitioninterval = def.l_repetitioninterval;
+            newmsgreq.schedulemethod = def.l_schedulemethod;
+            newmsgreq.recurrency = def.l_recurrency;
+            newmsgreq.recurrencyendtime = def.recurrencyendtime;
+            newmsgreq.channelindicator = def.l_channelindicator;
+            newmsgreq.category = def.l_category;
+
+            if (CBServer.debug)
+            {
+                dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                return Constant.OK;
+            }
+
+            CBCNEWMSGPLMNREQRESULT newmsgres = cbc.CBC_NewMsgPLMN(newmsgreq);
+
+            if (newmsgres.cbccbestatuscode == 0)
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN OK (handle={5})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , newmsgres.cbccberequesthandle
+                    , newmsgres.cbccbestatuscode
+                    , newmsgres.messagetext
+                    , newmsgres.messagehandle), 0);
+                // update database
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, newmsgres.messagehandle.ToString());
+                return Constant.OK;
+            }
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN FAILED (code={3}, msg={4})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , newmsgres.cbccberequesthandle
+                    , newmsgres.cbccbestatuscode
+                    , newmsgres.messagetext
+                    , newmsgres.messagehandle), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+            }
+        }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
             if (loginres.cbccbestatuscode != 0) // login failed
             {
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (UpdateAlert) Login FAILED (code={3}, msg={4})"
@@ -155,8 +224,7 @@ namespace pas_cb_server
 
             if (CBServer.debug)
             {
-                dump_request(changereq);
-                Log.WriteLog(String.Format("{0} (op={1}) UpdMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                dump_request(changereq, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                 return Constant.OK;
             }
@@ -194,7 +262,7 @@ namespace pas_cb_server
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
             if (loginres.cbccbestatuscode != 0) // login failed
             {
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (KillAlert) Login FAILED (code={3}, msg={4})"
@@ -214,8 +282,7 @@ namespace pas_cb_server
 
             if (CBServer.debug)
             {
-                dump_request(killreq);
-                Log.WriteLog(String.Format("{0} (op={1}) KillMessage DUMPED", oAlert.l_refno, op.sz_operatorname), 0);
+                dump_request(killreq, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
                 return Constant.OK;
             }
@@ -249,7 +316,7 @@ namespace pas_cb_server
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             cbc.Url = op.sz_url;
 
-            CBCLOGINREQRESULT loginres = cbc_login(cbc, op);
+            CBCLOGINREQRESULT loginres = cbc_login(cbc, op, l_refno);
             if (loginres.cbccbestatuscode != 0) // login failed
             {
                 Log.WriteLog(String.Format("{0} {1} (op={2}) (req={3}) (GetAlertStatus) Login FAILED (code={4}, msg={5})"
@@ -268,7 +335,7 @@ namespace pas_cb_server
 
             if (CBServer.debug)
             {
-                Log.WriteLog(String.Format("{0} (op={1}) InfoMessage DUMPED", l_refno, op.sz_operatorname), 0);
+                dump_request(inforeq, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                 return Constant.OK;
             }
@@ -338,8 +405,6 @@ namespace pas_cb_server
                     case 120: // Error
                     case 130: // Disabled
                     case 140: // Deleted (PLNM override)
-                        if (test.Selftest.TestReference == l_refno)
-                            test.Selftest.TestEnded(Constant.FINISHED);
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }
@@ -406,7 +471,7 @@ namespace pas_cb_server
 
             return ret.ToArray();
         }
-        private static CBCLOGINREQRESULT cbc_login(Ione2many cbc, Operator op)
+        private static CBCLOGINREQRESULT cbc_login(Ione2many cbc, Operator op, int l_refno)
         {
             CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
             loginreq.cbccberequesthandle = Database.GetHandle(op);
@@ -416,7 +481,7 @@ namespace pas_cb_server
 
             if (CBServer.debug)
             {
-                dump_request(loginreq);
+                dump_request(loginreq, op, "Login", l_refno);
                 return new CBCLOGINREQRESULT();
             }
             else
@@ -442,7 +507,7 @@ namespace pas_cb_server
                 default: return "UNDEFINED";
             }
         }
-        private static void dump_request(object xmlrpcrequest)
+        private static void dump_request(object xmlrpcrequest, Operator op, string method, int refno)
         {
             XmlRpcSerializer ser = new XmlRpcSerializer();
             XmlRpcRequest req = new XmlRpcRequest();
@@ -456,7 +521,7 @@ namespace pas_cb_server
 
             StreamReader sr = new StreamReader(st);
 
-            Tools.Dump(sr.ReadToEnd());
+            DebugLog.dump(sr.ReadToEnd(), op, method, refno);
         }
     }
 

@@ -155,4 +155,26 @@ namespace pas_cb_server
         }
 
     }
+    
+    public static class DebugLog
+    {
+        public static void dump(string sz_text, Operator op, string sz_method, int l_refno)
+        {
+            string sz_filename = String.Format("{0}log-{1}-{2}.txt"
+                , Settings.sz_dumppath
+                , l_refno
+                , op.sz_operatorname);
+
+            string sz_seperator = "--------------------------------------";
+            string sz_header = String.Format("{0}\r\n# {1} - {2}\r\n{0}\r\n"
+                , sz_seperator
+                , sz_method
+                , DateTime.Now);
+
+            File.AppendAllText(sz_filename, sz_header);
+            File.AppendAllText(sz_filename, sz_text + "\r\n\r\n");
+
+            Log.WriteLog(String.Format("{0} (op={1}) {2} DUMPED", l_refno, op.sz_operatorname, sz_method), 0);
+        }
+    }
 }

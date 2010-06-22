@@ -9,20 +9,35 @@ namespace pas_cb_server
 {
     class CBStatus
     {
+        public static void CheckStatusThread()
+        {
+            while (CBServer.running)
+            {
+                CheckStatus();
+
+                for (int i = 0; i < Settings.l_statuspollinterval; i++)
+                {
+                    Thread.Sleep(1000);
+                    if (!CBServer.running)
+                        break;
+                }
+            }
+        }
+
         public static void CheckStatus()
         {
             OdbcConnection conn = new OdbcConnection();
             OdbcCommand cmd = new OdbcCommand();
 
             string sql = String.Format("SELECT l_refno, l_status, sz_jobid, l_operator FROM LBASEND where l_status in ({0},{1},{2},{3},{4},{5})"
-                , Constant.CBPREPARING
-                , Constant.CBQUEUED
-                , Constant.CBACTIVE
-                , Constant.CBPAUSED
-                , Constant.CANCELLING
-                , Constant.USERCANCELLED);
+               , Constant.CBPREPARING
+               , Constant.CBQUEUED
+               , Constant.CBACTIVE
+               , Constant.CBPAUSED
+               , Constant.CANCELLING
+               , Constant.USERCANCELLED);
 
-            while (CBServer.running)
+            try
             {
                 conn.ConnectionString = Settings.sz_dbconn;
                 cmd.Connection = conn;
@@ -30,7 +45,7 @@ namespace pas_cb_server
 
                 conn.Open();
                 OdbcDataReader rs_alerts = cmd.ExecuteReader();
-                while(rs_alerts.Read())
+                while (rs_alerts.Read())
                 {
                     int l_refno = rs_alerts.GetInt32(0);
                     int l_status = rs_alerts.GetInt32(1);
@@ -57,13 +72,13 @@ namespace pas_cb_server
                 }
                 rs_alerts.Close();
                 conn.Close();
-
-                for (int i = 0; i < Settings.l_statuspollinterval; i++)
-                {
-                    Thread.Sleep(1000);
-                    if (!CBServer.running)
-                        break;
-                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Statuscheck failed: {0}", e.Message), 
+                    String.Format("Statuscheck failed: {0}", e), 
+                    2);
             }
         }
     }

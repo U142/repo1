@@ -14,7 +14,7 @@ namespace pas_cb_server
     {
         static int lRetVal = Constant.OK;
 
-        public static void CheckFiles()
+        public static void CheckFilesThread()
         {
             while (CBServer.running)
             {
@@ -104,6 +104,11 @@ namespace pas_cb_server
                                         return Constant.FAILED;
                                     hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser);
                                     break;
+                                case "NewAlertPLMN":
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return Constant.FAILED;
+                                    hRet = CreateAlertPLMN(oDoc.SelectSingleNode("cb"), oUser);
+                                    break;
                                 case "UpdateAlert":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
                                         return Constant.FAILED;
@@ -161,6 +166,34 @@ namespace pas_cb_server
                         break;
                     case 3: // tmobile
                         ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op));
+                        break;
+                    default:
+                        ret.Add(op.l_operator, Constant.FAILED);
+                        break;
+                }
+            }
+            return ret;
+        }
+        private static Hashtable CreateAlertPLMN(XmlNode xmlCB, Settings oUser)
+        {
+            Hashtable ret = new Hashtable();
+            AlertInfo oAlert;
+
+            GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
+
+            // create an alert for each operator
+            foreach (Operator op in oUser.operators)
+            {
+                switch (op.l_type)
+                {
+                    case 1: // AlertiX (not supported)
+                        ret.Add(op.l_operator, Constant.FAILED);
+                        break;
+                    case 2: // one2many
+                        ret.Add(op.l_operator, CB_one2many.CreateAlertPLMN(oAlert, op));
+                        break;
+                    case 3: // tmobile
+                        ret.Add(op.l_operator, CB_tmobile.CreateAlertPLMN(oAlert, op));
                         break;
                     default:
                         ret.Add(op.l_operator, Constant.FAILED);

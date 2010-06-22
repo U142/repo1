@@ -205,7 +205,7 @@ namespace pas_cb_server
             }
             else if (Type == LBATYPE.CB)
             {
-                szQuery = "sp_cb_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + " , " + lResponse.ToString() + ", " + lOperator.ToString();
+                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + " , " + lResponse.ToString() + ", " + lOperator.ToString();
             }
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);

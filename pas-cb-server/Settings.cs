@@ -14,6 +14,7 @@ namespace pas_cb_server
     {
         // General (global settings used in the app)
         public static string sz_parsepath;
+        public static string sz_dumppath;
         public static string sz_dbconn;
         public static int l_statuspollinterval;
 

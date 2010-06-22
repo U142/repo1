@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using com.ums.UmsCommon.CoorConvert;
-using System.IO;
 
 namespace pas_cb_server
 {
@@ -46,17 +45,20 @@ namespace pas_cb_server
             }
         }
 
+        // console info/input handling
         private static void PrintHelp()
         {
             Console.WriteLine("# List of commands:");
             Console.WriteLine("#");
             Console.WriteLine("#   h, ?\tthis page");
             Console.WriteLine("#   ctrl+t\trun self test");
+            Console.WriteLine("#   ctrl+p\trun PLMN self test");
             Console.WriteLine("#   ctrl+m\tmodify current self test");
             Console.WriteLine("#   ctrl+k\tkill current self test");
+            Console.WriteLine("#   ctrl+i\tforce status check (all active alerts)");
             Console.WriteLine("#   ctrl+c\tstop parser");
         }
-        public static void KeyReader()
+        public static void KeyReaderThread()
         {
             while (CBServer.running)
             {
@@ -78,6 +80,12 @@ namespace pas_cb_server
                                 else
                                     Console.WriteLine("# Use ctrl+t to run test");
                                 break;
+                            case ConsoleKey.P:
+                                if (key.Modifiers == ConsoleModifiers.Control)
+                                    test.Selftest.NewAlertPLMN();
+                                else
+                                    Console.WriteLine("# Use ctrl+p to run PLMN test");
+                                break;
                             case ConsoleKey.K:
                                 if (key.Modifiers == ConsoleModifiers.Control)
                                     test.Selftest.KillAlert();
@@ -89,6 +97,10 @@ namespace pas_cb_server
                                     test.Selftest.UpdateAlert();
                                 else
                                     Console.WriteLine("# Use ctrl+m to modify current test");
+                                break;
+                            case ConsoleKey.I:
+                                Log.WriteLog(String.Format("Checking status for all active messages."), 0);
+                                CBStatus.CheckStatus();
                                 break;
                             case ConsoleKey.H:
                             case ConsoleKey.Help:
@@ -105,11 +117,6 @@ namespace pas_cb_server
                 }
             }
             Log.WriteLog("Stopped keyreader thread", 9);
-        }
-
-        public static void Dump(string text)
-        {
-            File.AppendAllText("debug-log-" + DateTime.Now.ToString("yyyy.MM.dd") + ".txt", text);
         }
     }
 }
