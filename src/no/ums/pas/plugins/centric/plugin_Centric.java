@@ -21,10 +21,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
+
 import no.ums.pas.send.*;
+import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.mainui.GeneralPanel;
 import no.ums.pas.core.mainui.InfoPanel;
@@ -32,6 +35,8 @@ import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
+import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
 import no.ums.pas.maps.defines.*;
 
@@ -127,9 +132,37 @@ public class plugin_Centric extends PAS_Scripting
 				PAS.get_pas().actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).getFullBBox(),ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			}
 		});
+		
 		menu.set_gridconst(3, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(btn_goto_restriction, menu.m_gridconst);
 
+		
+		JButton btn_draw_polygon = new JButton("Draw Polygon");
+		btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		btn_draw_polygon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+				PAS.get_pas().repaint();
+			}
+		});
+		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.add(btn_draw_polygon, menu.m_gridconst);
+
+		JButton btn_draw_ellipse = new JButton("Draw Ellipse");
+		btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		btn_draw_ellipse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
+				PAS.get_pas().repaint();
+			}
+		});
+		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.add(btn_draw_ellipse, menu.m_gridconst);
+		
 		return true;
 	}
 	
@@ -141,10 +174,18 @@ public class plugin_Centric extends PAS_Scripting
 		menu.remove(menu.get_dept());
 		menu.remove(menu.get_menu_layout());
 		menu.remove(menu.get_parm());
+		menu.remove(menu.get_status());
+		menu.get_menu_file().remove(menu.get_item_new_sending());
+		menu.get_menu_file().remove(menu.get_item_file_print_map());
+		menu.get_menu_file().remove(menu.get_item_file_save_map());
+		menu.get_menu_file().remove(menu.get_item_fileimport());
 		menu.get_status().remove(menu.get_item_status_export());
 		menu.get_status().remove(menu.get_item_status_updates());
 		menu.get_view().remove(menu.get_item_view_showhouses());
 		menu.get_item_view_showhouses().setSelected(false);
+		menu.add(menu.get_menu_help());
+		menu.get_menu_config().add(menu.get_item_training_mode());
+
 		//menu.set_show_houses_invoke(false);
 		return true;
 	}
@@ -163,13 +204,47 @@ public class plugin_Centric extends PAS_Scripting
 	}
 	
 	@Override
-	public boolean onAddPASComponents(PAS p)
+	public boolean onAddPASComponents(final PAS p)
 	{
 		System.out.println("onAddPASComponents");
 		p.add(p.get_mappane(), BorderLayout.CENTER);
 		p.add(p.get_mainmenu(), BorderLayout.NORTH);
 		p.add(p.get_southcontent(), BorderLayout.SOUTH);
 		p.add(p.get_eastcontent(), BorderLayout.EAST);
+		//p.setJMenuBar(p.get_mainmenu().get_selectmenu().get_bar());
+
+		//p.setJMenuBar(p.get_mainmenu().get_selectmenu().get_bar());
+		/*DefaultPanel panel = new DefaultPanel() {
+			
+			@Override
+			public void init() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void add_controls() {				
+				set_gridconst(0, 0, 2, 1, GridBagConstraints.WEST);
+				add(p.get_mainmenu(), get_gridconst());
+				
+				set_gridconst(0, 1, 1, 1);
+				add(p.get_mappane(), get_gridconst());
+				
+				set_gridconst(1, 1, 1, 1);
+				add(p.get_eastcontent(), get_gridconst());				
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		panel.add_controls();
+		p.getContentPane().add(panel, GridBagConstraints.CENTER);*/
+
+
+		
 		//p.get_mappane().add(wms_layer_selector, BorderLayout.WEST);
 		//wms_layer_selector.setVisible(false);
 		
@@ -220,7 +295,7 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public boolean onSetAppTitle(PAS pas, String s, UserInfo userinfo)
 	{
-		boolean trainingmode = _IsTrainingMode(userinfo);
+		boolean trainingmode = IsInTrainingMode(userinfo);
 		System.out.println("onSetAppTitle");
 		pas.setMainTitle(
 				"UMS/Centric Burger Alert - " + 
@@ -319,7 +394,7 @@ public class plugin_Centric extends PAS_Scripting
 		try
 		{
 			onGetInitialUIDefaults();
-			if(_IsTrainingMode(userinfo))
+			/*if(IsInTrainingMode(userinfo))
 			{
 				ClassLoader classloader = settings.getClass().getClassLoader();
 				Class cl = classloader.loadClass("no.ums.pas.plugins.centric.TrainingLookAndFeel");
@@ -330,7 +405,8 @@ public class plugin_Centric extends PAS_Scripting
 			else
 			{
 				onSetInitialLookAndFeel(this.getClass().getClassLoader());
-			}
+			}*/
+			onSetInitialLookAndFeel(this.getClass().getClassLoader());
 
 		}
 		catch(Exception e)
@@ -364,16 +440,6 @@ public class plugin_Centric extends PAS_Scripting
 		return true;
 	}
 	
-	/**
-	 * Centric specific function to determine if a user is logged on in training mode
-	 * @param ui UserInfo struct used to determine if it's training mode
-	 * @return
-	 */
-	private boolean _IsTrainingMode(final UserInfo userinfo)
-	{
-		boolean cansend = (userinfo.get_current_department().get_userprofile().get_send() >= 1);
-		return !cansend;
-	}
 
 	@Override
 	public boolean onSoapFaultException(UserInfo info, SOAPFaultException e) {
@@ -383,6 +449,223 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	protected boolean onSessionTimedOutException(UserInfo info) {
 		return super.onSessionTimedOutException(info);
+	}
+
+	@Override
+	public boolean onHelpAbout() {
+		
+		JOptionPane.showMessageDialog(PAS.get_pas(), "Blablabla...", "About NL Alert", JOptionPane.INFORMATION_MESSAGE);
+		return super.onHelpAbout();
+	}
+
+	@Override
+	public boolean onTrainingMode(boolean b) {
+		if(b)
+		{
+			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
+		}
+		else
+		{
+			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
+		}
+		PAS.get_pas().repaint();
+		//onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
+		return super.onTrainingMode(b);
+	}
+
+	
+	
+	@Override
+	public boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws) {
+		if(ws==WSRESULTCODE.OK)
+			dlg.set_errortext(PAS.l("logon_ws_active"), false);
+		else
+			dlg.set_errortext(PAS.l("logon_ws_inactive"));
+		return true;
+	}
+
+	@Override
+	public boolean onLogonAddControls(LogonPanel p) {
+		int verticalspacing = 10;
+		p.m_gridconst.fill = GridBagConstraints.HORIZONTAL;
+		p.m_gridconst.anchor = GridBagConstraints.CENTER;
+		
+
+		p.set_gridconst(3,p.inc_panels(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getLblCompId(), p.m_gridconst);
+		p.set_gridconst(5,p.get_panel(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getCompId(), p.m_gridconst);
+
+		p.add_spacing(p.DIR_VERTICAL, verticalspacing);
+
+		p.set_gridconst(3, p.inc_panels(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getLblUserId(), p.m_gridconst);
+		p.set_gridconst(5,p.get_panel(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getUserId(), p.m_gridconst);
+
+		p.add_spacing(p.DIR_VERTICAL, verticalspacing);
+
+		p.set_gridconst(3,p.inc_panels(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getLblPasswd(), p.m_gridconst);
+		p.set_gridconst(5,p.get_panel(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getPasswd(), p.m_gridconst);
+
+		p.add_spacing(p.DIR_VERTICAL, verticalspacing);
+		
+		
+		p.set_gridconst(3,p.inc_panels(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(p.getBtnSubmit(), p.m_gridconst);			
+
+		JButton btn_cancel = new JButton(PAS.l("common_cancel"));
+		btn_cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(0);
+			}
+		});
+		p.set_gridconst(5,p.get_panel(),1,1, GridBagConstraints.CENTER); //x,y,sizex,sizey
+		p.add(btn_cancel, p.m_gridconst);			
+		
+		
+		p.set_gridconst(0,p.inc_panels(),7,1, GridBagConstraints.CENTER);
+		p.add(p.getLblError(), p.m_gridconst);
+		
+		
+		
+		//p.set_gridconst(0,p.inc_panels(),7,1);
+		//p.add(p.getNSList(), p.m_gridconst);
+		return true;
+
+	}
+
+	@Override
+	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
+		dlg.setSize(new Dimension(350,250));
+		dlg.get_logonpanel().getCompId().setEditable(false);
+		dlg.get_logonpanel().getCompId().setText("UMS");
+		dlg.get_logonpanel().getBtnSubmit().setText(PAS.l("common_ok"));
+
+		/*dlg.get_logonpanel().getNSList().setVisible(false);
+		dlg.get_logonpanel().getCompId().setEditable(false);
+		dlg.get_logonpanel().getCompId().setText("UMS");
+		dlg.get_logonpanel().getLblLanguage().setVisible(false);
+		dlg.get_logonpanel().getLanguageCombo().setVisible(false);
+		dlg.get_logonpanel().getLblUserId().setPreferredSize(new Dimension(150, 30));*/
+		return super.onCustomizeLogonDlg(dlg);
+	}
+
+	@Override
+	public boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g) {
+		//MARK LIVE/TRAINING MODE
+		g.setFont(UIManager.getFont("InternalFrame.titleFont"));
+
+		String str = "LIVE";
+		if(IsInTrainingMode(PAS.get_pas().get_userinfo()))
+			str = "TRAINING MODE";
+		int strwidth = g.getFontMetrics().stringWidth(str);
+		int x = bar.getWidth()/2 - strwidth/2;
+		int y = bar.getHeight()/2-9;
+		int w = strwidth;
+		int h = bar.getHeight()/2+5;
+		g.setColor(new Color(230, 100, 100, 250));
+		g.fillRoundRect(x-5, y, w+10, h, 2, 2);
+		g.setColor(Color.black);
+		g.drawRoundRect(x-5, y, w+10, h, 2, 2);
+		g.drawString(str, x, h);
+		
+		//HELPDESK
+		g.setColor(Color.black);
+		str = "Helpdesk: 0123456789";
+		strwidth = g.getFontMetrics().stringWidth(str); 
+		x = bar.getWidth() - strwidth - 20;
+		w = strwidth;
+		//g.drawRoundRect(x-5, y, w+10, h, 2, 2);
+		g.drawString(str, x, h);
+		return super.onPaintMenuBarExtras(bar, g);
+	}
+
+	@Override
+	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
+		return true;
+	}
+
+	@Override
+	public boolean onMapCalcNewCoords(Navigation nav, PAS p) {
+		//return super.onMapCalcNewCoords(nav, p);
+		p.get_statuscontroller().calcHouseCoords();
+		if(p.get_statuscontroller().get_sendinglist()!=null) {
+			for(int i=0; i < p.get_statuscontroller().get_sendinglist().size(); i++) {
+				try {
+					if(p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape()!=null)
+						p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape().calc_coortopix(nav);
+				} catch(Exception e) {
+					
+				}
+			}
+		}
+		try
+		{
+			DeptArray depts = p.get_userinfo().get_departments();
+			for(int i=0; i < depts.size(); i++)
+			{
+				((DeptInfo)depts.get(i)).CalcCoorRestrictionShapes();
+			}
+			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
+			for(int i=0; i < list.size(); i++)
+			{
+				list.get(i).calc_coortopix(p.get_navigation());
+			}
+			//get_pas().get_userinfo().get_current_department().CalcCoorRestrictionShapes();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			p.get_mappane().get_active_shape().calc_coortopix(PAS.get_pas().get_navigation());
+		}
+		catch(Exception e)
+		{
+			
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p) {
+		try
+		{
+			
+			DeptArray depts = p.get_userinfo().get_departments();
+			//depts.ClearCombinedRestrictionShapelist();
+			//depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
+			//depts.test();
+			for(int i=0; i < depts.size(); i++)
+			{
+				((DeptInfo)depts.get(i)).drawRestrictionShapes(g, nav);
+			}
+			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
+			for(int i=0; i < list.size(); i++)
+			{
+				list.get(i).draw(g, nav, false, true, false, null, true, true, 2, false);
+			}
+
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try {
+			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+		} catch(Exception e) { }
+		try {
+			p.get_mappane().draw_pinpoint(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+
+		return true;
 	}
 	
 	

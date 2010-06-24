@@ -68,12 +68,19 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		protected JMenu m_menu_gps;
 		protected JMenu m_menu_parm;
 		protected JMenu m_menu_departments;
+		protected JMenu m_menu_help;
 
 		protected JMenu m_menu_layout;
 		protected JMenu m_menu_themes;
 		protected JMenu m_menu_watermarks;
 		protected JMenu m_menu_skins;
 		
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			PAS.pasplugin.onPaintMenuBarExtras(this, g);
+		}
+
 		public ActionListener get_actionlistener() { return m_actionlistener; }
 		
 		//public JMenuItem get_file_new_sending() { return m_item_new_sending; }
@@ -87,10 +94,12 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		public JMenu get_menu_watermarks() { return m_menu_watermarks; }
 		public JMenu get_menu_skins() { return m_menu_skins; }
 		public JMenu get_status() { return m_menu_status; }
+		public JMenu get_menu_help() { return m_menu_help; }
 		public JMenuItem get_fleetcontrol() { return m_menu_gps; }
 		public JMenuItem get_parm() { return m_menu_parm; }
 		public JMenuItem get_dept() { return m_menu_departments; }
 		public JMenuItem get_view() { return m_menu_view; }
+		
 		
 		public JMenuItem get_item_fileimport()
 		{
@@ -140,6 +149,10 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			return m_item_messagelib;
 		}
+		public JMenuItem get_item_training_mode()
+		{
+			return m_item_training_mode;
+		}
 		public JMenuItem get_item_status_open()
 		{
 			return m_item_status_open;
@@ -180,6 +193,11 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			return m_item_status_updates;
 		}
+		
+		public JMenuItem get_item_help_about()
+		{
+			return m_item_help_about;
+		}
 		//public JMenuItem get_search() { return m_item_navigate_search; }
 		
 		protected JMenuItem m_item_new_sending;
@@ -215,6 +233,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		
 		protected JMenuItem m_item_show_settings;
 		protected JMenuItem m_item_messagelib;
+		protected JCheckBoxMenuItem m_item_training_mode;
 		//private JMenuItem m_item_save_settings;
 		
 		protected JMenuItem m_item_status_open;
@@ -226,6 +245,9 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		protected JMenuItem m_item_parm_start;
 		protected JMenuItem m_item_parm_refresh;
 		protected JMenuItem m_item_parm_close;
+		
+		protected JMenuItem m_item_help_about;
+		
 		//private JMenu m_item_gps_epsilon;
 		//private SliderMenuItem m_item_gps_epsilon_slider;
 		protected JMenu m_item_gps_trail_minutes;
@@ -309,6 +331,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_menu_gps		= new JMenu(PAS.l("mainmenu_fleetcontrol"));
 			m_menu_parm		= new JMenu(PAS.l("mainmenu_parm"));
 			m_menu_departments = new JMenu(PAS.l("mainmenu_departments"));
+			m_menu_help = new JMenu(PAS.l("mainmenu_help"));
 			m_menu_layout = new JMenu(PAS.l("mainmenu_layout"));
 			m_menu_themes	= new JMenu(PAS.l("mainmenu_layout_themes"));
 			m_menu_watermarks = new JMenu(PAS.l("mainmenu_layout_watermarks"));
@@ -347,6 +370,9 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_item_parm_start = new JMenuItem(PAS.l("mainmenu_parm_start"));
 			m_item_parm_refresh = new JMenuItem(PAS.l("common_refresh"));
 			m_item_parm_close = new JMenuItem(PAS.l("common_close"));
+			
+			m_item_help_about = new JMenuItem(PAS.l("mainmenu_help_about"));
+			m_item_training_mode = new JCheckBoxMenuItem(PAS.l("mainmenu_trainingmode"));
 			
 			//m_item_gps_epsilon = new JMenu("Point epsilon");
 			//m_item_gps_epsilon_slider = new SliderMenuItem(get_pas(), "");
@@ -711,6 +737,9 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_item_parm_start.setActionCommand("act_start_parm");
 			m_item_parm_refresh.setActionCommand("act_refresh_parm");
 			m_item_parm_close.setActionCommand("act_close_parm");
+			
+			m_item_help_about.setActionCommand("act_help_about");
+			m_item_training_mode.setActionCommand("act_trainingmode");
 		}
 
 	}
@@ -763,8 +792,8 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		//System.out.println(getWidth() + " , " + getHeight());
 
 		setBounds(0,0,getWidth(),getHeight());
-		m_menubar.setPreferredSize(new Dimension(getWidth(), 20));
-		m_menubar.setMinimumSize(new Dimension(500, 20));
+		m_menubar.setPreferredSize(new Dimension(getWidth(), 25));
+		m_menubar.setMinimumSize(new Dimension(500, 25));
 		m_menubar.revalidate();
 		//m_menubar.doLayout();
 		//setBounds(0, 0, getWidth()-20, 20);

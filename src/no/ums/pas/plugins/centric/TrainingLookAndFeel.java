@@ -12,9 +12,11 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
+
 import no.ums.pas.PAS;
 
-class TrainingLookAndFeel extends MetalLookAndFeel
+public class TrainingLookAndFeel extends WindowsLookAndFeel
 {
 
 	private final ColorUIResource primary1 = new ColorUIResource(255, 255, 0);
@@ -30,7 +32,7 @@ class TrainingLookAndFeel extends MetalLookAndFeel
 			"TabbedPane.tabAreaBackground", new Color(255, 100, 240),
 			"TabbedPane.background", new Color(255, 100, 240)
 		};
-		setCurrentTheme(new TrainingTheme());
+		//setCurrentTheme(new TrainingTheme());
 
 		/*defaults = UIManager.getDefaults();
 		defaults.putDefaults(newSettings);
@@ -46,8 +48,35 @@ class TrainingLookAndFeel extends MetalLookAndFeel
 			Object key = en.nextElement();
 			System.out.println("key = " + key + " value = " + ui.get(key));
 		}*/
+		UIManager.getDefaults().putDefaults(setMyDefaultColors());
 
 	}
+	
+	private Object[] setMyDefaultColors() {
+		Color c = new ColorUIResource(new Color(250,220,250));
+		Color txt = new ColorUIResource(new Color(0,0,0));
+			return new Object[] {
+		  "Panel.background", c,
+	      "TabbedPane.background", c,
+	      //"Table.background", c,
+	      "Label.background", c,
+	      "RadioButton.background", c,
+	      "InternalFrame.activeTitleBackground", c,
+	      //"Label.foreground", txt,
+	      "TabbedPane.foreground", txt,
+	      "RadioButton.foreground", txt,
+	      "MenuItem.foreground", txt,
+	      "List.foreground", txt,
+	      //"TextField.foreground", txt,
+	      "Button.foreground", txt,
+	      "CheckBoxMenuItem.foreground", txt,
+	      "TextArea.foreground", txt,
+	      "Menu.foreground", txt,
+	      "Button.background", c,
+	      "Menu.background", c
+		};
+	}
+
 	
 	@Override
 	public String getDescription() {

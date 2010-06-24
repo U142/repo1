@@ -224,6 +224,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	Dimension dim_map;
 	private int m_n_repaints = 0;
 	private static boolean m_b_parm_open = false;
+	public static boolean TRAINING_MODE = false;
+	
+	
 	public static void setParmOpen(boolean b)
 	{
 		m_b_parm_open = b;
@@ -1150,6 +1153,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			//System.out.println("Saving Language settings");
 		}
 		pasplugin.onShowMainWindow();
+		pasplugin.onStartSystemMessageThread(this.get_pasactionlistener(), 5000);
 	}
 	/*public void setAppTitle(String s)
 	{

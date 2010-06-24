@@ -108,7 +108,7 @@ public class ParmController extends MainController {
 	protected void drawLayers() {
 		
 	}
-	protected void drawLayers(Graphics g) {
+	public void drawLayers(Graphics g) {
 		long n_start = System.currentTimeMillis();
 		try {
 			Iterator it = get_shapelist().iterator();

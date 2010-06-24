@@ -496,7 +496,9 @@ public class SendController implements ActionListener {
 					{
 						if(PAS.get_pas() != null) {
 							PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_SENDING_);
-							PAS.get_pas().get_eastcontent().get_sendingpanel().add(obj.get_toolbar());		
+							if(PAS.get_pas().get_eastcontent().get_sendingpanel()!=null &&
+									obj.get_toolbar()!=null)
+								PAS.get_pas().get_eastcontent().get_sendingpanel().add(obj.get_toolbar());		
 						}
 						get_sendings().add(obj);
 						set_activesending(obj);

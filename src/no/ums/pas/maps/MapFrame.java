@@ -1335,12 +1335,14 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		if(getWidth()<=0 || getHeight()<=0)
+		int w = getWidth();
+		int h = getHeight();
+		if(w<=0 || h<=0)
 		{
 			return;
 		}
 
-		setPreferredSize(new Dimension(getWidth(), getHeight()));
+		setPreferredSize(new Dimension(w, h));
 	}
 
 

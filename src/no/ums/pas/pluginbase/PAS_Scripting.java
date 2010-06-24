@@ -2,6 +2,8 @@ package no.ums.pas.pluginbase;
 
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,19 +18,28 @@ import javax.xml.ws.soap.SOAPFaultException;
 import no.ums.pas.*;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
+import no.ums.pas.core.logon.DeptArray;
+import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Logon;
+import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
+import no.ums.pas.core.ws.WSGetSystemMessages;
+import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.ums.errorhandling.Error;
 
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.*;
@@ -49,6 +60,15 @@ public class PAS_Scripting extends PasScriptingInterface
 
 
 
+
+	@Override
+	public boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws) {
+		if(ws==WSRESULTCODE.OK)
+			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
+		else
+			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
+		return true;
+	}
 
 	@Override
 	public boolean onBeforeLogon()
@@ -195,6 +215,9 @@ public class PAS_Scripting extends PasScriptingInterface
 		menu.get_parm().add(menu.get_item_parm_start());
 		menu.get_parm().add(menu.get_item_parm_refresh());
 		menu.get_parm().add(menu.get_item_parm_close());
+		
+		menu.get_menu_help().add(menu.get_item_help_about());
+
 		//m_menu_gps.add(m_item_gps_epsilon);
 		//m_item_gps_epsilon.add(m_item_gps_epsilon_slider);
 		
@@ -564,6 +587,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		try
 		{
 			PAS.get_pas().setEnabled(false);
+			//PAS.get_pas().setVisible(false);
 			info.set_session_active(false);
 			if(!PAS.APP_EXIT)
 			{
@@ -616,12 +640,235 @@ public class PAS_Scripting extends PasScriptingInterface
 			public void run()
 			{
 				PAS.get_pas().setEnabled(true);
-				onSetInitialLookAndFeel(ui.getClass().getClassLoader());
+				//PAS.get_pas().setVisible(true);
+				//onSetInitialLookAndFeel(ui.getClass().getClassLoader());
+				onSetUserLookAndFeel(PAS.get_pas().get_settings(), ui);
 				onSetAppTitle(PAS.get_pas(), "", ui);
+				PAS.get_pas().toFront();
 			}
 		});
 		return true;
 	}
+
+
+	@Override
+	public boolean onStartSystemMessageThread(final ActionListener callback, final int n_interval_msec) {
+		new Thread("PAS System Messages") {
+			public void run()
+			{
+				while(!PAS.APP_EXIT)
+				{
+					try
+					{
+						onExecAskForSystemMessage(callback);
+						Thread.sleep(n_interval_msec);
+					}
+					catch(Exception e)
+					{
+						
+					}
+				}
+			}
+		}.start();
+		return true;
+	}
+
+	@Override
+	public boolean onExecAskForSystemMessage(ActionListener callback) {
+		WSGetSystemMessages msg = new WSGetSystemMessages(callback);
+		msg.runNonThreaded();
+		return true;
+	}
+
+	@Override
+	public boolean onHelpAbout() {
+		return false;
+	}
+
+	@Override
+	public boolean onTrainingMode(boolean b) {
+		System.out.println("TrainingMode=" + b);
+		return true;
+	}
+	
+	/**
+	 * Function to determine if a user has activated training mode
+	 * @param ui UserInfo struct may be used to determine if it's training mode
+	 * @return true if user is in training mode
+	 */
+	@Override
+	protected boolean IsInTrainingMode(final UserInfo userinfo)
+	{
+		//boolean cansend = (userinfo.get_current_department().get_userprofile().get_send() >= 1);
+		//return !cansend;
+		return PAS.TRAINING_MODE;
+	}
+
+
+	@Override
+	public boolean onLogonAddControls(LogonPanel p) {
+		p.add_controls();
+		return true;
+	}
+
+	@Override
+	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
+		System.out.println("onCustomizeLogonDlg");
+		return true;
+	}
+
+	@Override
+	public boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g) {
+		return true;
+	}
+
+	@Override
+	public boolean onMapCalcNewCoords(Navigation nav, PAS p) {
+		p.get_statuscontroller().calcHouseCoords();
+		p.get_housecontroller().calcHouseCoords();
+		if(p.get_statuscontroller().get_sendinglist()!=null) {
+			for(int i=0; i < p.get_statuscontroller().get_sendinglist().size(); i++) {
+				try {
+					if(p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape()!=null)
+						p.get_statuscontroller().get_sendinglist().get_sending(i).get_shape().calc_coortopix(nav);
+				} catch(Exception e) {
+					
+				}
+			}
+		}
+		
+		try
+		{
+			for(int i=0; i < p.get_sendcontroller().get_sendings().size(); i++)
+			{
+				try
+				{
+					p.get_sendcontroller().get_sendings().get(i).get_sendproperties().calc_coortopix();
+				}
+				catch(Exception e)
+				{
+					
+				}
+				
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		p.get_gpscontroller().calcGpsCoords();	
+		if(p.get_parmcontroller()!=null)
+			p.get_parmcontroller().calc_coortopix();
+		if(p.get_eastcontent().get_taspanel()!=null)
+			p.get_eastcontent().get_taspanel().calc_coortopix();
+		try
+		{
+			DeptArray depts = p.get_userinfo().get_departments();
+			for(int i=0; i < depts.size(); i++)
+			{
+				((DeptInfo)depts.get(i)).CalcCoorRestrictionShapes();
+			}
+			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
+			for(int i=0; i < list.size(); i++)
+			{
+				list.get(i).calc_coortopix(p.get_navigation());
+			}
+			//get_pas().get_userinfo().get_current_department().CalcCoorRestrictionShapes();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			p.get_mappane().get_active_shape().calc_coortopix(PAS.get_pas().get_navigation());
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return true;
+	}
+
+
+
+
+
+
+
+	@Override
+	public boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p) {
+		try
+		{
+			
+			DeptArray depts = p.get_userinfo().get_departments();
+			//depts.ClearCombinedRestrictionShapelist();
+			//depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
+			//depts.test();
+			for(int i=0; i < depts.size(); i++)
+			{
+				((DeptInfo)depts.get(i)).drawRestrictionShapes(g, nav);
+			}
+			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
+			for(int i=0; i < list.size(); i++)
+			{
+				list.get(i).draw(g, nav, false, true, false, null, true, true, 2, false);
+			}
+
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(p.get_parmcontroller()!=null)
+			p.get_parmcontroller().drawLayers(g);
+		try {
+			p.get_sendcontroller().draw_polygons(g, PAS.get_pas().get_mappane().get_current_mousepos());
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		try {
+			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+		} catch(Exception e) { }
+		if(p.get_mainmenu().get_selectmenu().get_bar().get_show_houses())
+			p.get_housecontroller().drawItems(g);
+		try {
+			p.get_mappane().draw_pinpoint(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		try {
+			p.get_mappane().draw_adredit(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		try {
+			if(p.get_mappane().get_mode()==MapFrame.MAP_MODE_HOUSEEDITOR_) {
+				switch(p.get_mappane().get_submode()) {
+					case MapFrame.MAP_HOUSEEDITOR_SET_PRIVATE_COOR:
+					case MapFrame.MAP_HOUSEEDITOR_SET_COMPANY_COOR:
+						p.get_mappane().draw_moveinhab_text(g);
+						break;
+				}
+						
+			}
+		} catch(Exception e) { }
+		try {
+			p.get_statuscontroller().drawItems(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		//get_pas().get_mappane().drawOnEvents(m_gfx_buffer);
+		try {
+			p.get_gpscontroller().drawItems(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		try {
+			p.get_housecontroller().draw_details(g);
+		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		try {
+			if(p.get_eastcontent().get_taspanel()!=null)
+			{
+				p.get_eastcontent().get_taspanel().drawItems((Graphics2D)g);
+				p.get_eastcontent().get_taspanel().drawLog((Graphics2D)g);
+			}
+		} catch(Exception e) { 
+			e.printStackTrace();
+		}
+		return true;
+	}
+
 	
 	
 		

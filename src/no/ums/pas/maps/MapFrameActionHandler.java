@@ -472,7 +472,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				PolygonStruct current_polygon = null;
 				try
 				{
-					current_polygon = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
+					current_polygon = get_mappane().get_active_shape().typecast_polygon();//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
 				}
 				catch(Exception e)
 				{

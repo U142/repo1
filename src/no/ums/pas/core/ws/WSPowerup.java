@@ -27,10 +27,12 @@ public class WSPowerup extends WSThread
 			//URL wsdl = new URL("http://localhost/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			new Pasws(wsdl, service).getPaswsSoap12().powerup();
+			setResult(WSRESULTCODE.OK);
 			//OnDownloadFinished();			
 		}
 		catch(Exception e)
 		{
+			setResult(WSRESULTCODE.FAILED);
 			throw e;
 		}
 		finally
@@ -47,7 +49,7 @@ public class WSPowerup extends WSThread
 	public void OnDownloadFinished()
 	{
 		if(m_callback!=null)
-			m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_powerup"));
+			m_callback.actionPerformed(new ActionEvent(getResult(), ActionEvent.ACTION_PERFORMED, "act_powerup"));
 	}
 
 }

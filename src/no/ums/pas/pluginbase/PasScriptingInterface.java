@@ -1,5 +1,6 @@
 package no.ums.pas.pluginbase;
 
+import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.LookAndFeel;
@@ -19,8 +21,10 @@ import org.geotools.data.ows.Layer;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
@@ -30,6 +34,7 @@ import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
+import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UGabSearchResultList;
@@ -158,6 +163,8 @@ public abstract class PasScriptingInterface
 			operating_system = OPERATING_SYSTEM.WIN;
 		System.out.println("Operating System: "+os);
 	}
+	
+	public abstract boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws);
 
 	/**
 	 * Function is executed right before logon
@@ -353,5 +360,80 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract boolean onSessionRenewed(UserInfo ui);
+	
+	/**
+	 * Function to start a new thread for polling system messages
+	 * @param callback To notify when each download has completed
+	 * @param n_interval_msec Msec interval between polling
+	 * @return
+	 */
+	public abstract boolean onStartSystemMessageThread(ActionListener callback, int n_interval_msec);
+	
+	/**
+	 * Function that's called on interval from SystemMessageThread
+	 * @param callback To notify and send a list of system messages to the specified actionlistener
+	 * @return
+	 */
+	protected abstract boolean onExecAskForSystemMessage(ActionListener callback);
+	
+	/**
+	 * Function called if user clicks on Help-About menu
+	 * @return
+	 */
+	public abstract boolean onHelpAbout();
+	
+	/**
+	 * Function called if user has selected to (de)activate training mode
+	 * @param b true if Training Mode should be activated
+	 * @return
+	 */
+	public abstract boolean onTrainingMode(boolean b);
+	
+	/**
+	 * Function to determine if user has enabled TrainingMode.
+	 * Default - if PAS.TRAINING_MODE==true
+	 * @param userinfo May be used to determine if user is in TrainingMode
+	 * @return If in training mode or not
+	 */
+	protected abstract boolean IsInTrainingMode(final UserInfo userinfo);
+	
+	/**
+	 * Define which controls are to be added
+	 * @param p The LogonPanel containing predefined controls
+	 * @return
+	 */
+	public abstract boolean onLogonAddControls(LogonPanel p);
+	
+	/**
+	 * Final adjustments to the LogonDialog before it's shown
+	 * @param dlg
+	 * @return
+	 */
+	public abstract boolean onCustomizeLogonDlg(LogonDialog dlg);
+	
+	/**
+	 * After paint is called from JMenuBar
+	 * @param bar pointer to the bar
+	 * @param g Graphics context for the JMenuBar
+	 * @return
+	 */
+	public abstract boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g);
+
+	/**
+	 * After map navigation we need to recalc coors to pix
+	 * @param nav current Navigation class
+	 * @param p Used for access of variables to recalc
+	 * @return
+	 */
+	public abstract boolean onMapCalcNewCoords(Navigation nav, PAS p);
+	
+	/**
+	 * When the map needs repaint it calls this function
+	 * @param nav current Navigation class
+	 * @param g Graphics context to paint on
+	 * @param p Used for access of variables to paint
+	 * @return
+	 */
+	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);
 }
 

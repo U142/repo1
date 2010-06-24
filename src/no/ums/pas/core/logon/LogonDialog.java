@@ -30,6 +30,7 @@ import org.jvnet.substance.utils.params.PropertiesFileParamReader;
 import no.ums.pas.*;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -58,6 +59,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	private LogonInfo m_logoninfo = null;
 	public LogonInfo get_logoninfo() { return m_logoninfo; }
 	private LogonPanel m_panel;
+	public LogonPanel get_logonpanel() { return m_panel; }
 	private Logon m_logon;
 	private String m_sz_errortext;
 	private boolean m_b_logonproc_start = false;
@@ -81,8 +83,17 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	}
 	public boolean get_logonproc_start() { return m_b_logonproc_start; }
 	public void set_errortext(String s) { 
+		set_errortext(s, true);
+	}
+	
+	public void set_errortext(String s, boolean b_error)
+	{
 		m_sz_errortext = s;
 		m_panel.m_lbl_errormsg.setText(s);
+		if(b_error)
+			m_panel.m_lbl_errormsg.setForeground(Color.RED);
+		else
+			m_panel.m_lbl_errormsg.setForeground(new Color(0,140,0));
 	}
 	
 	public void fillNSInfo() {
@@ -91,7 +102,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	}
 	protected void set_response(boolean b_quit) {
 		m_logon.set_response(b_quit);
-		set_errortext(PAS.l("common_contacting_server"));
+		set_errortext(PAS.l("common_contacting_server"), false);
 	}
 	protected void enableInput(boolean b) {
 		m_panel.m_txt_userid.setEnabled(b);
@@ -148,7 +159,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			this.setAlwaysOnTop(true);
 		m_panel = new LogonPanel(PAS.get_pas());
 		m_panel.m_txt_passwd.addComponentListener(this);
-		m_panel.add_controls();
+		//m_panel.add_controls();
+		PAS.pasplugin.onLogonAddControls(m_panel);
 		add_panel();
 		
 		try {
@@ -183,7 +195,12 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		if("act_powerup".equals(e.getActionCommand()))
 		{
 			//setTitle("Logon to UMS PAS - (WebService active)");
-			setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
+			WSRESULTCODE result = (WSRESULTCODE)e.getSource();
+			/*if(result==WSRESULTCODE.OK)
+				setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
+			else
+				setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));*/
+			PAS.pasplugin.onAfterPowerUp(this, result);
 		}
 	}
 	
@@ -212,7 +229,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		
 	}
 
-	class LanguageCombo extends StdTextLabel
+	public class LanguageCombo extends StdTextLabel
 	{
 		String languageid;
 		public String getLanguageid() { return languageid; }
@@ -235,7 +252,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		}
 	}
 	
-	class LogonPanel extends DefaultPanel implements KeyListener, FocusListener { //implements ActionListener {
+	public class LogonPanel extends DefaultPanel implements KeyListener, FocusListener { //implements ActionListener {
 	
 		public static final long serialVersionUID = 1;
 		private StdTextArea	m_txt_userid;
@@ -250,7 +267,19 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		private StdTextLabel m_lbl_language;
 		private JComboBox m_combo_language;
 		
-		LogonPanel(PAS pas) {
+		public StdTextArea getUserId() { return m_txt_userid; }
+		public StdTextArea getCompId() { return m_txt_compid; }
+		public JPasswordField getPasswd() { return m_txt_passwd; }
+		public StdTextLabel getLblUserId() { return m_lbl_userid; }
+		public StdTextLabel getLblCompId() { return m_lbl_compid; }
+		public StdTextLabel getLblPasswd() { return m_lbl_passwd; }
+		public NSList getNSList() { return m_nslist; }
+		public StdTextLabel getLblLanguage() { return m_lbl_language; }
+		public JComboBox getLanguageCombo() { return m_combo_language; }
+		public JButton getBtnSubmit() { return m_btn_submit; }
+		public StdTextLabel getLblError() { return m_lbl_errormsg; }
+		
+		public LogonPanel(PAS pas) {
 			super();
 			m_txt_userid = new StdTextArea("", false);
 			m_txt_compid = new StdTextArea("", false);
@@ -275,12 +304,12 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_txt_compid.setPreferredSize(new Dimension(100, 15));
 			m_txt_passwd.setPreferredSize(new Dimension(100, 15));
 			m_combo_language.setPreferredSize(new Dimension(100,15));
-			m_lbl_userid.setPreferredSize(new Dimension(75, 15));
-			m_lbl_compid.setPreferredSize(new Dimension(75, 15));
-			m_lbl_passwd.setPreferredSize(new Dimension(75, 15));
-			m_lbl_language.setPreferredSize(new Dimension(75, 15));
-			m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(380, 15));
+			m_lbl_userid.setPreferredSize(new Dimension(100, 15));
+			m_lbl_compid.setPreferredSize(new Dimension(100, 15));
+			m_lbl_passwd.setPreferredSize(new Dimension(100, 15));
+			m_lbl_language.setPreferredSize(new Dimension(100, 15));
+			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
+			m_lbl_errormsg.setPreferredSize(new Dimension(200, 15));
 			m_btn_submit.setActionCommand(ENABLE);
 			m_btn_submit.setActionCommand("act_logon");
 			m_btn_submit.addActionListener(this);

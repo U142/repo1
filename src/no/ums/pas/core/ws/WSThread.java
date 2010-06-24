@@ -10,12 +10,23 @@ import no.ums.pas.ums.errorhandling.Error;
 
 public abstract class WSThread extends Thread
 {
+	public static enum WSRESULTCODE
+	{
+		NOT_SET,
+		OK,
+		SOAPFAULT,
+		FAILED,
+	};
 	public static String GenJobId()
 	{
 		return UUID.randomUUID().toString();
 	}
 	ActionListener m_callback;
 	String sz_cb_cmd;
+	protected WSRESULTCODE result = WSRESULTCODE.NOT_SET;
+	protected void setResult(WSRESULTCODE c) { result = c; }
+	public WSRESULTCODE getResult() { return result; }
+	
 	public void set_callbackcmd(String sz)
 	{
 		sz_cb_cmd = sz;

@@ -64,6 +64,23 @@ public interface PaswsSoap {
 
     /**
      * 
+     * @param timestamp
+     * @param l
+     * @return
+     *     returns no.ums.ws.pas.USYSTEMMESSAGES
+     */
+    @WebMethod(operationName = "GetSystemMessages", action = "http://ums.no/ws/pas/GetSystemMessages")
+    @WebResult(name = "GetSystemMessagesResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "GetSystemMessages", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetSystemMessages")
+    @ResponseWrapper(localName = "GetSystemMessagesResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetSystemMessagesResponse")
+    public USYSTEMMESSAGES getSystemMessages(
+        @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO l,
+        @WebParam(name = "timestamp", targetNamespace = "http://ums.no/ws/pas/")
+        long timestamp);
+
+    /**
+     * 
      * @param ui
      * @param l
      * @return

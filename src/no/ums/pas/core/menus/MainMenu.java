@@ -740,6 +740,17 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		{
 			PAS.active_theme.editColor(ThemeColorComponent.COL_ULTRA_LIGHT);						
 		}
+		else if("act_help_about".equals(e.getActionCommand()))
+		{
+			PAS.pasplugin.onHelpAbout();
+		}
+		else if("act_trainingmode".equals(e.getActionCommand()))
+		{
+			AbstractButton a = (AbstractButton)e.getSource();
+			boolean b = a.getModel().isSelected();
+			PAS.TRAINING_MODE = b;
+			PAS.pasplugin.onTrainingMode(b);
+		}
 		else
 		{
 			PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.DEFAULT_CURSOR));	
