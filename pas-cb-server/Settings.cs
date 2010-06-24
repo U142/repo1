@@ -61,6 +61,7 @@ namespace pas_cb_server
 
             return ret;
         }
+        
         public static bool SetUserValues(XmlAttributeCollection attr, Settings uv)
         {
             bool bRetval = true;
@@ -120,6 +121,7 @@ namespace pas_cb_server
 
             return bRetval;
         }
+
         public static void init()
         {
             // Required values
@@ -146,37 +148,6 @@ namespace pas_cb_server
                 Settings.GetValue("Syslog", false),
                 Settings.GetValue("LogFileName", "cbserver"),
                 Settings.GetValue("LogFile", true));
-        }
-        public static void start()
-        {
-            // Write startup info
-            Log.WriteLog(String.Format("Debug mode: {0}", Settings.debug), 9);
-            Log.WriteLog(String.Format("Dump path: {0}", Settings.sz_dumppath), 9);
-            Log.WriteLog(String.Format("Parse path: {0}", Settings.sz_parsepath), 9);
-
-            if (Settings.l_statuspollinterval > 0)
-                Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
-            else
-                Log.WriteLog(String.Format("Status poll interval is disabled"), 9);
-
-            // Set CPU affinity
-            if (Settings.l_cpuaffinity > 0)
-                System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)Settings.l_cpuaffinity;
-
-            // Start threads
-            Settings.running = true; // has to be set before threads start
-
-            Log.WriteLog("Starting keyreader thread", 9);
-            new Thread(new ThreadStart(Tools.KeyReaderThread)).Start();
-
-            Log.WriteLog("Starting parser thread", 9);
-            new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
-
-            if (Settings.l_statuspollinterval > 0)
-            {
-                Log.WriteLog("Starting status thread", 9);
-                new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
-            }
         }
 
         private static string add_slash(string path)
