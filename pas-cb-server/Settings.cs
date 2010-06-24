@@ -7,16 +7,24 @@ using System.Data.Odbc;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Threading;
 
 namespace pas_cb_server
 {
     public class Settings : _settings
     {
         // General (global settings used in the app)
+        public static bool debug;
+        public static bool running;
+
         public static string sz_parsepath;
         public static string sz_dumppath;
         public static string sz_dbconn;
+        public static int l_cpuaffinity;
         public static int l_statuspollinterval;
+        public static int l_retryinterval;
+        public static int l_retries;
+        public static int l_messagetype;
 
         // Instanced settings
         public int l_comppk = 0;
@@ -37,8 +45,8 @@ namespace pas_cb_server
             
             try
             {
-                ret.l_deptpk = _settings.GetInt("DeptPK");
-                ret.l_comppk = _settings.GetInt("CompPK");
+                ret.l_deptpk = Settings.GetInt("DeptPK");
+                ret.l_comppk = Settings.GetInt("CompPK");
                 ret.sz_compid = Database.GetCompID(ret.l_comppk);
                 ret.sz_deptid = Database.GetDeptID(ret.l_deptpk);
                 ret.sz_password = "";
@@ -111,6 +119,72 @@ namespace pas_cb_server
             }
 
             return bRetval;
+        }
+        public static void init()
+        {
+            // Required values
+            Settings.sz_parsepath = add_slash(Settings.GetString("ParsePath"));
+            Settings.sz_dbconn = String.Format("DSN={0};UID={1};PWD={2};",
+                Settings.GetString("DSN"),
+                Settings.GetString("UID"),
+                Settings.GetString("PWD"));
+
+            // Optional values
+            Settings.debug = Settings.GetValue("Debug", false);
+            Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", ""));
+            Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
+            Settings.l_retryinterval = Settings.GetValue("RetryInterval", 60);
+            Settings.l_retries = Settings.GetValue("Retries", 2);
+            Settings.l_messagetype = Settings.GetValue("MessageType", 7);
+            Settings.l_cpuaffinity = Settings.GetValue("CPUAffinity", 0);
+
+            // Init log, default is syslog off / logfile on
+            Log.InitLog(
+                Settings.GetValue("SyslogApp", "cbserver"),
+                Settings.GetValue("SyslogServer", "localhost"),
+                Settings.GetValue("SyslogPort", 514),
+                Settings.GetValue("Syslog", false),
+                Settings.GetValue("LogFileName", "cbserver"),
+                Settings.GetValue("LogFile", true));
+        }
+        public static void start()
+        {
+            // Write startup info
+            Log.WriteLog(String.Format("Debug mode: {0}", Settings.debug), 9);
+            Log.WriteLog(String.Format("Dump path: {0}", Settings.sz_dumppath), 9);
+            Log.WriteLog(String.Format("Parse path: {0}", Settings.sz_parsepath), 9);
+
+            if (Settings.l_statuspollinterval > 0)
+                Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
+            else
+                Log.WriteLog(String.Format("Status poll interval is disabled"), 9);
+
+            // Set CPU affinity
+            if (Settings.l_cpuaffinity > 0)
+                System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)Settings.l_cpuaffinity;
+
+            // Start threads
+            Settings.running = true; // has to be set before threads start
+
+            Log.WriteLog("Starting keyreader thread", 9);
+            new Thread(new ThreadStart(Tools.KeyReaderThread)).Start();
+
+            Log.WriteLog("Starting parser thread", 9);
+            new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
+
+            if (Settings.l_statuspollinterval > 0)
+            {
+                Log.WriteLog("Starting status thread", 9);
+                new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
+            }
+        }
+
+        private static string add_slash(string path)
+        {
+            if (path.Length > 0 && !path.EndsWith(@"\"))
+                path += @"\";
+
+            return path;
         }
     }
 

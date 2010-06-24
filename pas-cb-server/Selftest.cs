@@ -190,33 +190,6 @@ namespace pas_cb_server.test
                 OdbcCommand cmd = new OdbcCommand(sz_query, conn);
 
                 conn.Open();
-                /*
-                                sql = String.Format("INSERT INTO MDVSENDINGINFO(l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
-                                                      "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
-                                                      "l_removedup, l_type, f_dynacall, l_addresstypes, l_maxchannels) " +
-                                                      "VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, '{7}', {8}, {9}, {10}, {11}, " +
-                                                      "{12}, {13}, {14}, {15}, {16}, {17})",
-                                                0,
-                                                0,
-                                                oAlert.l_refno,
-                                                DateTime.Now.ToString("yyyyMMdd"),
-                                                DateTime.Now.ToString("HHmm"),
-                                                0,
-                                                0,
-                                                "CB alert", // + land eller multiple
-                                                1,
-                                                oUser.l_comppk,
-                                                oUser.l_deptpk,
-                                                0,
-                                                5,
-                                                1,
-                                                Database.MESSAGETYPE,
-                                                2,
-                                                1048576,
-                                                0);
-                                cmd.CommandText = sql;
-                                cmd.ExecuteNonQuery();
-                */
                 foreach (message msg in oAlert.textmessages)
                 {
                     sz_query = String.Format("sp_cb_ins_lbatext {0}, '{1}', {2}",
@@ -228,26 +201,10 @@ namespace pas_cb_server.test
                 }
                 foreach (Operator op in oUser.operators)
                 {
-                    /*sz_query = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
-                                         "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
-                                         "{6}, '{7}', '{8}', {9}, {10}, {11})",
-                                         oAlert.l_refno,
-                                         100,
-                                         -1,
-                                         -1,
-                                         -1,
-                                         0,
-                                         1,
-                                         "",
-                                         "",
-                                         0,
-                                         op.l_operator,
-                                         Database.MESSAGETYPE);*/
-                    
                     sz_query = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}",
                                         oAlert.l_refno,
                                         op.l_operator,
-                                        Database.MESSAGETYPE);
+                                        Settings.l_messagetype);
                     cmd.CommandText = sz_query;
                     cmd.ExecuteNonQuery();
                 }

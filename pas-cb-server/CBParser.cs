@@ -16,16 +16,15 @@ namespace pas_cb_server
 
         public static void CheckFilesThread()
         {
-            while (CBServer.running)
+            while (Settings.running)
             {
                 try
                 {
-                    int lRetryInterval = Settings.GetValue("RetryInterval", 60); // defaults to 60 seconds
                     string[] fileEntries = null;
                     fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                     foreach (string fileName in fileEntries)
                     {
-                        if (!CBServer.running) break;
+                        if (!Settings.running) break;
                         lRetVal = ParseXMLFile(fileName);
                         if (lRetVal == Constant.OK)
                         {
@@ -47,9 +46,9 @@ namespace pas_cb_server
                     fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                     foreach (string fileName in fileEntries)
                     {
-                        if (!CBServer.running) break;
+                        if (!Settings.running) break;
                         FileInfo fFile = new FileInfo(fileName);
-                        if (fFile.LastAccessTime.AddSeconds(lRetryInterval).CompareTo(DateTime.Now) <= 0)
+                        if (fFile.LastAccessTime.AddSeconds(Settings.l_retryinterval).CompareTo(DateTime.Now) <= 0)
                         {
                             lRetVal = ParseXMLFile(fileName);
                             if (lRetVal == Constant.OK)
@@ -317,12 +316,6 @@ namespace pas_cb_server
         // info needed to start a cb sending
         public int l_projectpk;
         public int l_refno;
-
-        /* these shouldn't be needed as they are in the user settings as well
-        public int l_comppk;
-        public int l_deptpk;
-        public int l_userpk;
-        public string sz_password;*/
 
         public int l_sched_utc;
         public int l_validity;

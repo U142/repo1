@@ -125,7 +125,7 @@ namespace pas_cb_server
         public static void FlushLog()
         {
             //Flushes the log queue to a file
-            while (CBServer.running || qlog.Count > 0)
+            while (Settings.running || qlog.Count > 0)
             {
                 if (qlog.Count > 0)
                 {

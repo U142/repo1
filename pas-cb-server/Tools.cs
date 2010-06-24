@@ -60,7 +60,7 @@ namespace pas_cb_server
         }
         public static void KeyReaderThread()
         {
-            while (CBServer.running)
+            while (Settings.running)
             {
                 if (Console.KeyAvailable)
                 {

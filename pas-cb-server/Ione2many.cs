@@ -85,7 +85,7 @@ namespace pas_cb_server
             newmsgreq.channelindicator = def.l_channelindicator;
             newmsgreq.category = def.l_category;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
@@ -158,7 +158,7 @@ namespace pas_cb_server
             newmsgreq.channelindicator = def.l_channelindicator;
             newmsgreq.category = def.l_category;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
@@ -222,7 +222,7 @@ namespace pas_cb_server
 
             changereq.schedulemethod = def.l_schedulemethod;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(changereq, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
@@ -280,7 +280,7 @@ namespace pas_cb_server
 
             killreq.schedulemethod = def.l_schedulemethod;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(killreq, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
@@ -333,7 +333,7 @@ namespace pas_cb_server
             inforeq.cbccberequesthandle = Database.GetHandle(op);
             inforeq.messagehandle = l_msghandle;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(inforeq, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
@@ -479,7 +479,7 @@ namespace pas_cb_server
             loginreq.cbename = op.sz_login_name;
             loginreq.password = op.sz_login_password;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(loginreq, op, "Login", l_refno);
                 return new CBCLOGINREQRESULT();

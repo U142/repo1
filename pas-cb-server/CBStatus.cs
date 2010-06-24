@@ -11,14 +11,14 @@ namespace pas_cb_server
     {
         public static void CheckStatusThread()
         {
-            while (CBServer.running)
+            while (Settings.running)
             {
                 CheckStatus();
 
                 for (int i = 0; i < Settings.l_statuspollinterval; i++)
                 {
                     Thread.Sleep(1000);
-                    if (!CBServer.running)
+                    if (!Settings.running)
                         break;
                 }
             }
@@ -58,11 +58,9 @@ namespace pas_cb_server
                             Log.WriteLog(String.Format("{0} Status for AlertiX messages not supported (op={1}, job={2})", l_refno, op.sz_operatorname, sz_jobid), 2);
                             break;
                         case 2: // one2many
-                            //ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op));
                             CB_one2many.GetAlertStatus(l_refno, l_status, int.Parse(sz_jobid), op);
                             break;
                         case 3: // tmobile
-                            //Log.WriteLog(String.Format("{0} Status for t-mobile messages not supported (op={1}, job={2})", l_refno, op.sz_operatorname, sz_jobid), 2);
                             CB_tmobile.GetAlertStatus(l_refno, l_status, BitConverter.GetBytes(int.Parse(sz_jobid)), op);
                             break;
                         default:

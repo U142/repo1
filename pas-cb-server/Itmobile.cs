@@ -70,7 +70,7 @@ namespace pas_cb_server
                     break;
             }
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
@@ -159,7 +159,7 @@ namespace pas_cb_server
                     break;
             }
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(t_alert, op, "NewMessagePLMN", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
@@ -210,7 +210,7 @@ namespace pas_cb_server
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on defautl values:
+            // based on default values:
             t_alert_info.IBAG_priority = def.priority;
             t_alert_info.IBAG_prioritySpecified = true;
             t_alert_info.IBAG_category = def.category;
@@ -225,7 +225,7 @@ namespace pas_cb_server
 
             t_alert.IBAG_alert_info = t_alert_info;
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
@@ -275,7 +275,7 @@ namespace pas_cb_server
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
@@ -325,7 +325,7 @@ namespace pas_cb_server
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
 
-            if (CBServer.debug)
+            if (Settings.debug)
             {
                 dump_request(t_alert, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);

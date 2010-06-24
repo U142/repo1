@@ -8,7 +8,7 @@ namespace pas_cb_server
 {
     public class Database
     {
-        // 7 = CB, 6 = TCS, 5 = TAS, 4 = PAS
+        /*// 7 = CB, 6 = TCS, 5 = TAS, 4 = PAS
         private static int MESSAGETYPEfield = umssettings._settings.GetValue("MessageType", 7);
         public static int MESSAGETYPE
         {
@@ -16,7 +16,7 @@ namespace pas_cb_server
             {
                 return MESSAGETYPEfield;
             }
-        }
+        }*/
 
         public static string GetCompID(int l_comppk)
         {
@@ -191,21 +191,21 @@ namespace pas_cb_server
         public static int UpdateTries(int lReference, int lTempStatus, int lEndStatus, int lResponse, int lOperator, LBATYPE Type)
         {
             //int lMaxTries = 1; // Is really retries so 4 will give 5 tries total
-            int lRetries = Settings.GetValue("Retries", 2);
+            /*int lRetries = Settings.GetValue("Retries", 2);*/
             int lRetVal = 0;
             string szQuery = "";
 
             if (Type == LBATYPE.LBAS)
             {
-                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
+                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + Settings.l_retries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
             }
             else if (Type == LBATYPE.TAS)
             {
-                szQuery = "sp_tas_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
+                szQuery = "sp_tas_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + Settings.l_retries.ToString() + ", " + lResponse.ToString() + ", " + lOperator.ToString();
             }
             else if (Type == LBATYPE.CB)
             {
-                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + lRetries.ToString() + " , " + lResponse.ToString() + ", " + lOperator.ToString();
+                szQuery = "sp_lba_upd_sendtries " + lReference.ToString() + ", " + lTempStatus.ToString() + ", " + lEndStatus.ToString() + ", " + Settings.l_retries.ToString() + " , " + lResponse.ToString() + ", " + lOperator.ToString();
             }
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);

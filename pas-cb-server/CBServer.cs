@@ -5,59 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+//using System.ServiceProcess;
 using umssettings;
 using CookComputing.XmlRpc;
 
 namespace pas_cb_server
 {
-    class CBServer
+    class CBServer// : ServiceBase
     {
-        public static bool running = true;
-        public static bool debug = false;
-
         static void Main(string[] args)
         {
             // Add custom handler for ctrl+c
             Console.CancelKeyPress += new ConsoleCancelEventHandler(exit);
             
-
             // Get Config values and initialize
             try
             {
-                // ParsePath and DBConn are required
-                Settings.sz_parsepath = add_slash(Settings.GetString("ParsePath"));
-                Log.WriteLog(String.Format("Parse path: {0}", Settings.sz_parsepath), 9);
-
-                Settings.sz_dbconn = String.Format("DSN={0};UID={1};PWD={2};", Settings.GetString("DSN"), Settings.GetString("UID"), Settings.GetString("PWD"));
-
-                // Init log values default is both syslog and log files
-                Log.InitLog(Settings.GetValue("SyslogApp", "cbserver"), Settings.GetValue("SyslogServer", "localhost"), Settings.GetValue("SyslogPort", 514), Settings.GetValue("Syslog", false), Settings.GetValue("LogFileName", "cbserver"), Settings.GetValue("LogFile", true));
-                
-                Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
-                if(Settings.l_statuspollinterval>0)
-                    Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
-                else
-                    Log.WriteLog(String.Format("Status poll interval is manual (disabled)"), 9);
-
-
-                // debug info
-                debug = Settings.GetValue("Debug", false);
-                Log.WriteLog(String.Format("Debug mode: {0}", debug), 9);
-                Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", ""));
-                Log.WriteLog(String.Format("Dump path: {0}", Settings.sz_dumppath), 9);
+                // Get all config values
+                Settings.init();
 
                 // Start threads
-                Log.WriteLog("Starting keyreader thread", 9);
-                new Thread(new ThreadStart(Tools.KeyReaderThread)).Start();
-
-                Log.WriteLog("Starting parser thread", 9);
-                new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
-
-                if (Settings.l_statuspollinterval > 0)
-                {
-                    Log.WriteLog("Starting status thread", 9);
-                    new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
-                }
+                Settings.start();
             }
             catch (Exception e)
             {
@@ -65,7 +33,7 @@ namespace pas_cb_server
                 return;
             }
 
-            while (running)
+            while (Settings.running)
             {
                 Thread.Sleep(100);
             };
@@ -77,15 +45,7 @@ namespace pas_cb_server
         {
             Trace.WriteLine("Stopping...\nPress ctrl+c again to force exit.");
             args.Cancel = true;
-            running = false;
-        }
-
-        private static string add_slash(string path)
-        {
-            if (path.Length > 0 && !path.EndsWith(@"\"))
-                path += @"\";
-
-            return path;
+            Settings.running = false;
         }
     }
 }

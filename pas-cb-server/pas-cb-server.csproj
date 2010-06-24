@@ -42,6 +42,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -59,7 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CBServer.cs" />
+    <Compile Include="CBServer.cs">
+    </Compile>
     <Compile Include="Selftest.cs" />
     <Compile Include="CBStatus.cs" />
     <Compile Include="Tools.cs" />
