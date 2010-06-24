@@ -86,6 +86,21 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public USYSTEMMESSAGES GetSystemMessages(ULOGONINFO l, long timestamp)
+        {
+            try
+            {
+                new ULogon().CheckLogon(ref l, false);
+                USYSTEMMESSAGES ret = new USYSTEMMESSAGES();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
         public bool SavePasUiSettings(ULOGONINFO l, UPASUISETTINGS ui)
         {
             try
@@ -111,6 +126,8 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
+
+
         /*[WebMethod]
         public UPASLOGON TestLogon()
         {
@@ -317,7 +334,7 @@ namespace com.ums.ws.pas
             USendDb db = new USendDb();
             try
             {
-                if (!db.CheckLogon(ref logoninfo))
+                if (!db.CheckLogon(ref logoninfo, true))
                 {
                     UMAXALLOC max = new UMAXALLOC();
                     max.n_maxalloc = -1; //represents failed
@@ -474,7 +491,7 @@ namespace com.ums.ws.pas
             try
             {
                 UmsDb db = new UmsDb();
-                db.CheckLogon(ref l);
+                db.CheckLogon(ref l, true);
                 return report.GetWeatherReport(ref s);
             }
             catch (Exception e)

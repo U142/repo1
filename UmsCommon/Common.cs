@@ -631,6 +631,11 @@ namespace com.ums.UmsCommon
         public String sessionid;
     }
 
+    public class USYSTEMMESSAGES
+    {
+        public long l_timestamp;
+    }
+
 
     public class BBPROJECT
     {

@@ -226,7 +226,7 @@ namespace com.ums.PAS.Database
             {
                 
                 USendDb logoncheck = new USendDb();
-                if (!logoncheck.CheckLogon(ref l))
+                if (!logoncheck.CheckLogon(ref l, true))
                 {
                     throw new ULogonFailedException();
                 }

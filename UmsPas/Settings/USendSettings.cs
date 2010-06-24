@@ -41,7 +41,7 @@ namespace com.ums.PAS.Settings
                 throw new UDbConnectionException();
             }
 
-            if (!m_db.CheckLogon(ref m_logon))
+            if (!m_db.CheckLogon(ref m_logon, true))
             {
                 throw new ULogonFailedException();
             }

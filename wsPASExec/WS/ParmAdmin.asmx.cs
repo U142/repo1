@@ -177,7 +177,7 @@ namespace com.ums.ws.parm
 
             try
             {
-                bool b = db.CheckLogon(ref logoninfo); //l_userpk, l_comppk, l_deptpk, sz_userid, sz_compid, sz_deptid, sz_password);
+                bool b = db.CheckLogon(ref logoninfo, true); //l_userpk, l_comppk, l_deptpk, sz_userid, sz_compid, sz_deptid, sz_password);
                 if (!b)
                     return null;
             }

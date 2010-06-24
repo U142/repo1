@@ -20,7 +20,7 @@ namespace com.ums.PAS.Project
             response.n_responsecode = -1;
 
             PASUmsDb db = new PASUmsDb();
-            if (!db.CheckLogon(ref logon))
+            if (!db.CheckLogon(ref logon, true))
             {
                 response.sz_responsetext = "Error in logon";
                 return response;

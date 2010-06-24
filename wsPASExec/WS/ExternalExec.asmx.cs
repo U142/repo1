@@ -53,7 +53,7 @@ namespace com.ums.ws.parm
                 PASUmsDb db = new PASUmsDb();
                 try
                 {
-                    if (db.CheckLogonLiteral(ref logoninfo))
+                    if (db.CheckLogonLiteral(ref logoninfo, true))
                     {
                         List<PAEVENT> events = new List<PAEVENT>();
                         db.GetEventAlertStructure(ref logoninfo, ref events);
@@ -416,7 +416,7 @@ namespace com.ums.ws.parm
             try
             {
                 PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
-                if (!db.CheckLogon(ref logon))
+                if (!db.CheckLogon(ref logon, true))
                 {
                     //logon failed
                     ret.resultcode = -1;
@@ -500,7 +500,7 @@ namespace com.ums.ws.parm
             try
             {
                 PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 60);
-                if (!db.CheckLogon(ref logon))
+                if (!db.CheckLogon(ref logon, true))
                 {
                     //logon failed
                     ret.resultcode = -1;

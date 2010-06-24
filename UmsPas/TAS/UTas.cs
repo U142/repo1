@@ -75,7 +75,7 @@ namespace com.ums.PAS.TAS
             try
             {
                 db = new UTasDb();
-                if (!db.CheckLogon(ref logon))
+                if (!db.CheckLogon(ref logon, true))
                     throw new ULogonFailedException();
             }
             catch (Exception e)

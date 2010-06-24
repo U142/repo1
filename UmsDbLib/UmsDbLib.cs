@@ -106,7 +106,7 @@ namespace com.ums.UmsDbLib
         }
 
 
-        public bool CheckLogonLiteral(ref ULOGONINFO info)
+        public bool CheckLogonLiteral(ref ULOGONINFO info, bool b_update_session)
         {
             bool b_ret = false;
             if (!m_b_dbconn)
@@ -152,7 +152,7 @@ namespace com.ums.UmsDbLib
                 setLastError(e.Message);
                 throw new UDbQueryException("CheckLogon");
             }
-            checkSessionIntegrity(ref info);
+            checkSessionIntegrity(ref info, b_update_session);
             /*finally
             {
                 CloseRecordSet();
@@ -165,7 +165,7 @@ namespace com.ums.UmsDbLib
             return b_ret;
         }
 
-        public bool CheckLogon(ref ULOGONINFO info)
+        public bool CheckLogon(ref ULOGONINFO info, bool b_update_session)
         {
             bool b_ret = false;
             if (!m_b_dbconn)
@@ -192,11 +192,8 @@ namespace com.ums.UmsDbLib
                     }
                 }
                 rs.Close();
-                checkSessionIntegrity(ref info);
+                checkSessionIntegrity(ref info, b_update_session);
 
-                szSQL = String.Format("sp_pas_updatesession {0}, '{1}', '{2}'",
-                                    info.l_userpk, info.sessionid, info.sz_password);
-                ExecNonQuery(szSQL);
 
             }
             catch (SoapException e)
@@ -229,7 +226,7 @@ namespace com.ums.UmsDbLib
             return b_ret;
         }
 
-        protected bool checkSessionIntegrity(ref ULOGONINFO info)
+        protected bool checkSessionIntegrity(ref ULOGONINFO info, bool b_update_session)
         {
             if (info.l_userpk <= 0)
                 throw new ULogonFailedException();
@@ -276,6 +273,13 @@ namespace com.ums.UmsDbLib
                 RemoveSession(ref info);
                 throw new SoapException("Session Expired", SoapException.ServerFaultCode, new USessionExpiredException(seconds));
             }
+            if (b_update_session)
+            {
+                szSQL = String.Format("sp_pas_updatesession {0}, '{1}', '{2}'",
+                        info.l_userpk, info.sessionid, info.sz_password);
+                ExecNonQuery(szSQL);
+            }
+
             //USessionExpiredException(seconds, new Exception("Session expired"));
 
             return true;

@@ -17,7 +17,7 @@ namespace com.ums.PAS.messagelib
         {
             try
             {
-                base.CheckLogon(ref logon);
+                base.CheckLogon(ref logon, true);
             }
             catch (Exception e)
             {

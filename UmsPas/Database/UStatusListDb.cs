@@ -38,7 +38,7 @@ namespace com.ums.PAS.Database
         {
             try
             {
-                if (!CheckLogon(ref logon))
+                if (!CheckLogon(ref logon, true))
                 {
                     throw new ULogonFailedException();
                 }

@@ -87,9 +87,9 @@ namespace com.ums.UmsParm
             {
                 bool b = false;
                 if (logoninfo.l_comppk > 0 && logoninfo.l_deptpk > 0 && logoninfo.l_userpk > 0)
-                    b = db.CheckLogon(ref this.logoninfo); //l_userpk, l_comppk, l_deptpk, sz_userid, sz_compid, sz_deptid, sz_password);
+                    b = db.CheckLogon(ref this.logoninfo, true); //l_userpk, l_comppk, l_deptpk, sz_userid, sz_compid, sz_deptid, sz_password);
                 else
-                    b = db.CheckLogonLiteral(ref this.logoninfo);
+                    b = db.CheckLogonLiteral(ref this.logoninfo, true);
                 if (b)
                 {
                     return true;

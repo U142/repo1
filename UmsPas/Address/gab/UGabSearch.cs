@@ -166,7 +166,7 @@ namespace com.ums.PAS.Address.gab
             UmsDb db = new UmsDb();
             try
             {
-                db.CheckLogon(ref m_logoninfo);
+                db.CheckLogon(ref m_logoninfo, true);
             }
             catch(Exception e)
             {
