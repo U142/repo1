@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.ServiceProcess;
 using umssettings;
 using CookComputing.XmlRpc;
 
@@ -12,65 +13,54 @@ namespace pas_cb_server
 {
     class CBServer
     {
-        static void Main(string[] args)
-        {
-            // Add custom handler for ctrl+c
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(exit);
+        public static bool running = true;
 
-            // Get Config values and initialize
+        static void Main(string[] args)
+        {            
             try
             {
-                // Get settings
-                Settings.init();
-
-                // Write startup info
-                Log.WriteLog(String.Format("Debug mode: {0}", Settings.debug), 9);
-                Log.WriteLog(String.Format("Dump path: {0}", Settings.sz_dumppath), 9);
-                Log.WriteLog(String.Format("Parse path: {0}", Settings.sz_parsepath), 9);
-
-                if (Settings.l_statuspollinterval > 0)
-                    Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
-                else
-                    Log.WriteLog(String.Format("Status poll interval is disabled"), 9);
-
-                // Set CPU affinity
-                if (Settings.l_cpuaffinity > 0)
-                    System.Diagnostics.Process.GetCurrentProcess().ProcessorAffinity = (System.IntPtr)Settings.l_cpuaffinity;
-
-                // Start threads
-                Settings.running = true; // has to be set before threads start
-
-                Log.WriteLog("Starting keyreader thread", 9);
-                new Thread(new ThreadStart(Tools.KeyReaderThread)).Start();
-
-                Log.WriteLog("Starting parser thread", 9);
-                new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
-
-                if (Settings.l_statuspollinterval > 0)
+                // check for interactive (console) or service mode
+                if (Environment.UserInteractive)
                 {
-                    Log.WriteLog("Starting status thread", 9);
-                    new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
+                    // Add custom handler for ctrl+c
+                    Console.CancelKeyPress += new ConsoleCancelEventHandler(exit);
+
+                    CBService serv = new CBService();
+                    serv.start(args);
+
+                    while (CBServer.running)
+                    {
+                        Thread.Sleep(100);
+                    };
+
+                    serv.stop();
+
+                    Console.CancelKeyPress -= new ConsoleCancelEventHandler(exit);
+                }
+                else
+                {
+                    ServiceBase[] ServicesToRun;
+                    ServicesToRun = new ServiceBase[] 
+		            { 
+			            new CBService() 
+		            };
+                    ServiceBase.Run(ServicesToRun);
                 }
             }
             catch (Exception e)
             {
                 Trace.WriteLine(e.Message);
+                CBServer.running = false;
                 return;
             }
-
-            while (Settings.running)
-            {
-                Thread.Sleep(100);
-            };
-
-            Console.CancelKeyPress -= new ConsoleCancelEventHandler(exit);
         }
 
         protected static void exit(object sender, ConsoleCancelEventArgs args)
         {
-            Trace.WriteLine("Stopping...\nPress ctrl+c again to force exit.");
+            Log.WriteLog(String.Format("Shutting down ({0} threads) (interactive mode)", Interlocked.Read(ref Settings.threads)), 0);
+            Trace.WriteLine("\nStopping...\nPress ctrl+c again to force exit.");
             args.Cancel = true;
-            Settings.running = false;
+            CBServer.running = false;
         }
     }
 }

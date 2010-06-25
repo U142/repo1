@@ -15,7 +15,7 @@ namespace pas_cb_server
     {
         // General (global settings used in the app)
         public static bool debug;
-        public static bool running;
+        public static long threads = 0;
 
         public static string sz_parsepath;
         public static string sz_dumppath;
@@ -130,10 +130,10 @@ namespace pas_cb_server
                 Settings.GetString("DSN"),
                 Settings.GetString("UID"),
                 Settings.GetString("PWD"));
-
+            
             // Optional values
             Settings.debug = Settings.GetValue("Debug", false);
-            Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", ""));
+            Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", exec_folder()));
             Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
             Settings.l_retryinterval = Settings.GetValue("RetryInterval", 60);
             Settings.l_retries = Settings.GetValue("Retries", 2);
@@ -146,6 +146,7 @@ namespace pas_cb_server
                 Settings.GetValue("SyslogServer", "localhost"),
                 Settings.GetValue("SyslogPort", 514),
                 Settings.GetValue("Syslog", false),
+                add_slash(Settings.GetValue("LogFilePath", exec_folder())),
                 Settings.GetValue("LogFileName", "cbserver"),
                 Settings.GetValue("LogFile", true));
         }
@@ -156,6 +157,18 @@ namespace pas_cb_server
                 path += @"\";
 
             return path;
+        }
+
+        public static string exec_folder()
+        {
+            try
+            {
+                return add_slash(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 
@@ -302,7 +315,7 @@ namespace pas_cb_server
 
             try
             {
-                StreamReader r = new StreamReader(String.Format(@"operators/{0}.xml", sz_operatorname));
+                StreamReader r = new StreamReader(String.Format(@"{0}operators/{1}.xml", Settings.exec_folder() ,sz_operatorname));
                 XmlSerializer s = new XmlSerializer(type);
 
                 ret = s.Deserialize(r);

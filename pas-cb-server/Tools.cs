@@ -60,7 +60,7 @@ namespace pas_cb_server
         }
         public static void KeyReaderThread()
         {
-            while (Settings.running)
+            while (CBServer.running)
             {
                 if (Console.KeyAvailable)
                 {
@@ -117,6 +117,7 @@ namespace pas_cb_server
                 }
             }
             Log.WriteLog("Stopped keyreader thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
         }
     }
 }

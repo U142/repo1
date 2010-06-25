@@ -32,6 +32,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CookComputing.XmlRpcV2, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
@@ -40,9 +42,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions">
@@ -63,6 +67,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBServer.cs">
+    </Compile>
+    <Compile Include="CBService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CBService.Designer.cs">
+      <DependentUpon>CBService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CBServiceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CBServiceInstaller.Designer.cs">
+      <DependentUpon>CBServiceInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Selftest.cs" />
     <Compile Include="CBStatus.cs" />
@@ -91,6 +107,14 @@
     <Content Include="operators\T-Mobile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CBService.resx">
+      <DependentUpon>CBService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CBServiceInstaller.resx">
+      <DependentUpon>CBServiceInstaller.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

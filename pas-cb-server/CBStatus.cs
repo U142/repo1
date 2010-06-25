@@ -11,14 +11,14 @@ namespace pas_cb_server
     {
         public static void CheckStatusThread()
         {
-            while (Settings.running)
+            while (CBServer.running)
             {
                 CheckStatus();
 
                 for (int i = 0; i < Settings.l_statuspollinterval; i++)
                 {
                     Thread.Sleep(1000);
-                    if (!Settings.running)
+                    if (!CBServer.running)
                         break;
                 }
             }
@@ -78,6 +78,8 @@ namespace pas_cb_server
                     String.Format("Statuscheck failed: {0}", e), 
                     2);
             }
+            Log.WriteLog("Stopped status thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
         }
     }
 }

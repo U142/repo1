@@ -16,7 +16,7 @@ namespace pas_cb_server
 
         public static void CheckFilesThread()
         {
-            while (Settings.running)
+            while (CBServer.running)
             {
                 try
                 {
@@ -24,7 +24,7 @@ namespace pas_cb_server
                     fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                     foreach (string fileName in fileEntries)
                     {
-                        if (!Settings.running) break;
+                        if (!CBServer.running) break;
                         lRetVal = ParseXMLFile(fileName);
                         if (lRetVal == Constant.OK)
                         {
@@ -46,7 +46,7 @@ namespace pas_cb_server
                     fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                     foreach (string fileName in fileEntries)
                     {
-                        if (!Settings.running) break;
+                        if (!CBServer.running) break;
                         FileInfo fFile = new FileInfo(fileName);
                         if (fFile.LastAccessTime.AddSeconds(Settings.l_retryinterval).CompareTo(DateTime.Now) <= 0)
                         {
@@ -76,6 +76,7 @@ namespace pas_cb_server
                 Thread.Sleep(1000);
             }
             Log.WriteLog("Stopped parser thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
         }
 
         private static int ParseXMLFile(string sz_filename)

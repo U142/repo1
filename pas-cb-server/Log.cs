@@ -25,18 +25,19 @@ namespace pas_cb_server
         private static bool blogfile = false;
         private static string szlogfilename = "";
         private static Queue<string> qlog = new Queue<string>();
-        public static void InitLog(string app, string sysloghost, int syslogport, bool syslog, string logfilename, bool logfile)
+        public static void InitLog(string app, string sysloghost, int syslogport, bool syslog, string logfilepath, string logfilename, bool logfile)
         {
             try
             {
                 blogfile = logfile;
                 if (blogfile)
                 {
-                    szlogfilename = logfilename;
+                    szlogfilename = logfilepath + logfilename;
                     WriteLog(
                         "Using logfile, starting file log thread",
                         9);
                     new Thread(new ThreadStart(FlushLog)).Start();
+                    Interlocked.Increment(ref Settings.threads);
                 }
                 else
                 {
@@ -49,6 +50,7 @@ namespace pas_cb_server
                 {
                     if (UCommon.Initialize(app, sysloghost, syslogport))
                     {
+                        ULog.setLogTo((long)ULog.ULOGTO.SYSLOG);
                         bsyslog = syslog;
                         WriteLog(
                             String.Format("Syslog initialized ({0}) ({1}) ({2})", app, sysloghost, syslogport.ToString()),
@@ -125,7 +127,7 @@ namespace pas_cb_server
         public static void FlushLog()
         {
             //Flushes the log queue to a file
-            while (Settings.running || qlog.Count > 0)
+            while (CBServer.running || qlog.Count > 0)
             {
                 if (qlog.Count > 0)
                 {
@@ -152,6 +154,7 @@ namespace pas_cb_server
             }
 
             WriteLog("Stopped file log thread", 9); // wont be in log files
+            Interlocked.Decrement(ref Settings.threads);
         }
 
     }
