@@ -387,6 +387,7 @@ namespace pas_cb_server
                                     , cellcount.cellcount2gtotal
                                     , cellcount.cellcount3gsuccess
                                     , cellcount.cellcount3gtotal), 0);
+                                Database.UpdateHistCell(l_refno, op.l_operator, cellcount.cellcount2gtotal, cellcount.cellcount2gsuccess, cellcount.cellcount3gtotal, cellcount.cellcount3gsuccess);
                             }
                         }
                         if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)

@@ -184,6 +184,8 @@ namespace pas_cb_server
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
             {
+                // insert LBAHISTCELL
+                Database.InsertHistCell(oAlert.l_refno, op.l_operator);
                 switch (op.l_type)
                 {
                     case 1: // AlertiX (not supported)

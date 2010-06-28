@@ -127,6 +127,40 @@ namespace pas_cb_server
             return ret;
         }
 
+        public static int InsertHistCell(int l_refno, int l_operator)
+        {
+            Database.ExecuteNonQuery(
+                String.Format("sp_cb_ins_cellhist {0},{1}", 
+                l_refno, 
+                l_operator));
+            return Constant.OK;
+        }
+        public static int UpdateHistCell(int l_refno, int l_operator)
+        {
+            return UpdateHistCell(l_refno, l_operator, 0, 0, 0, 0, 0, 0);
+        }
+        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok)
+        {
+            return UpdateHistCell(l_refno, l_operator, l_2gtotal, l_2gok, 0, 0, 0, 0);
+        }
+        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok)
+        {
+            return UpdateHistCell(l_refno, l_operator, l_2gtotal, l_2gok, l_3gtotal, l_3gok, 0, 0);
+        }
+        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
+        {
+            Database.ExecuteNonQuery(
+                String.Format("sp_cb_upd_cellhist {0},{1},{2},{3},{4},{5},{6},{7}",
+                l_refno,
+                l_operator,
+                l_2gtotal,
+                l_2gok,
+                l_3gtotal,
+                l_3gok,
+                l_4gtotal,
+                l_4gok));
+            return Constant.OK;
+        }
         public static int SetSendingStatus(Operator op, int l_refno, int l_status)
         {
             string szQuery;
@@ -282,6 +316,24 @@ namespace pas_cb_server
             return (int)Database.ExecuteScalar("sp_refno_out");
         }
 
+        private static void ExecuteNonQuery(string sz_sql)
+        {
+            try
+            {
+                OdbcConnection conn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(sz_sql, conn);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.ExecuteNonQuery (exception={0}) (sql={1})", e.Message, sz_sql),
+                    String.Format("Database.ExecuteNonQuery (exception={0}) (sql={1})", e, sz_sql),
+                    2);
+            }
+        }
         private static object ExecuteScalar(string sz_query)
         {
             object ret = null;

@@ -22,6 +22,8 @@ namespace pas_cb_server
                         break;
                 }
             }
+            Log.WriteLog("Stopped status thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
         }
 
         public static void CheckStatus()
@@ -78,8 +80,6 @@ namespace pas_cb_server
                     String.Format("Statuscheck failed: {0}", e), 
                     2);
             }
-            Log.WriteLog("Stopped status thread", 9);
-            Interlocked.Decrement(ref Settings.threads);
         }
     }
 }

@@ -337,16 +337,27 @@ namespace pas_cb_server
             if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
             {
                 float cb_percentage = 0;
-                int cb_cells = 0;
-                int cb_ok = 0;
+                int l_2gtotal = 0;
+                int l_2gok = 0;
+                int l_3gtotal = 0;
+                int l_3gok = 0;
 
                 foreach (IBAG_status_report report in t_alert_response.IBAG_status_report)
                 {
-                    cb_cells += report.IBAG_cell_count;
-                    cb_ok += report.IBAG_cell_broadcast_info_count;
+                    if (report.IBAG_network_type == IBAG_network_type.GSM)
+                    {
+                        l_2gtotal += report.IBAG_cell_count;
+                        l_2gok += report.IBAG_cell_broadcast_info_count;
+                    }
+                    else if (report.IBAG_network_type == IBAG_network_type.UMTS)
+                    {
+                        l_3gtotal += report.IBAG_cell_count;
+                        l_3gok += report.IBAG_cell_broadcast_info_count;
+                    }
                 }
+                Database.UpdateHistCell(l_refno, op.l_operator, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
 
-                cb_percentage = (float)cb_ok/(float)cb_cells;
+                cb_percentage = ((float)l_2gok+(float)l_3gok)/((float)l_2gtotal+(float)l_3gtotal);
 
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                     , l_refno
@@ -357,6 +368,11 @@ namespace pas_cb_server
                 // ok, insert appropriate info in database
                 if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
                     Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+                return Constant.OK;
+            }
+            else if(t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[]{"200"})
+            {
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                 return Constant.OK;
             }
             else
