@@ -60,7 +60,7 @@ namespace pas_cb_server
                     , loginres.cbccberequesthandle
                     , loginres.cbccbestatuscode
                     , loginres.messagetext), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
 
             // login OK, update status to parsing
@@ -116,7 +116,7 @@ namespace pas_cb_server
                     , newmsgres.cbccbestatuscode
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, newmsgres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
         public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
@@ -134,7 +134,7 @@ namespace pas_cb_server
                     , loginres.cbccberequesthandle
                     , loginres.cbccbestatuscode
                     , loginres.messagetext), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
 
             // login OK, update status to parsing
@@ -189,7 +189,7 @@ namespace pas_cb_server
                     , newmsgres.cbccbestatuscode
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, newmsgres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
@@ -207,7 +207,7 @@ namespace pas_cb_server
                     , loginres.cbccberequesthandle
                     , loginres.cbccbestatuscode
                     , loginres.messagetext), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
 
             // login OK, update status to parsing
@@ -253,7 +253,7 @@ namespace pas_cb_server
                     , changeres.cbccbestatuscode
                     , changeres.messagetext
                     , changereq.messagehandle), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, changeres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
@@ -271,7 +271,7 @@ namespace pas_cb_server
                     , loginres.cbccberequesthandle
                     , loginres.cbccbestatuscode
                     , loginres.messagetext), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
 
             CBCKILLREQUEST killreq = new CBCKILLREQUEST();
@@ -308,7 +308,7 @@ namespace pas_cb_server
                     , killres.cbccberequesthandle
                     , killres.cbccbestatuscode
                     , killres.messagetext), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, killres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
         public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op)

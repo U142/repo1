@@ -98,7 +98,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type
                     , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
             }
         }
         public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
@@ -187,7 +187,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type
                     , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
             }
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
@@ -253,7 +253,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type
                     , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
             }
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
@@ -303,7 +303,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type
                     , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 200, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
             }
         }
         public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op)
@@ -473,6 +473,25 @@ namespace pas_cb_server
             }
 
             return ret.ToArray();
+        }
+        private static int get_IBAG_response_code(string[] response_codes)
+        {
+            int ret = 0;
+
+            try
+            {
+                if (response_codes.Length > 0)
+                    ret = int.Parse(response_codes[0]);
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Exception getting response code: {0}", e.Message),
+                    String.Format("Exception getting response code: {0}", e),
+                    2);
+            }
+
+            return ret;
         }
     }
 
