@@ -88,7 +88,7 @@ namespace pas_cb_server
             if (Settings.debug)
             {
                 dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
                 return Constant.OK;
             }
 
@@ -104,7 +104,7 @@ namespace pas_cb_server
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 0);
                 // update database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, newmsgres.messagehandle.ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
             else
@@ -161,7 +161,7 @@ namespace pas_cb_server
             if (Settings.debug)
             {
                 dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
                 return Constant.OK;
             }
 
@@ -177,7 +177,7 @@ namespace pas_cb_server
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 0);
                 // update database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, newmsgres.messagehandle.ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
             else
@@ -241,7 +241,7 @@ namespace pas_cb_server
                     , changeres.messagetext
                     , changereq.messagehandle), 0);
                 // update database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, changereq.messagehandle.ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                 return Constant.OK;
             }
             else
@@ -311,9 +311,10 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, killres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
-        public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op)
+        public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op, decimal l_expires_ts) // expires not in use
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
             CBCLOGINREQRESULT loginres = cbc_login(cbc, op, l_refno);

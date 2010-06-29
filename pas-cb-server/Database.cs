@@ -191,11 +191,11 @@ namespace pas_cb_server
 
             return Constant.OK;
         }
-        public static int SetSendingStatus(Operator op, int l_refno, int l_status, string sz_jobid)
+        public static int SetSendingStatus(Operator op, int l_refno, int l_status, string sz_jobid, string sz_expires)
         {
             string szQuery;
 
-            szQuery = "UPDATE LBASEND SET l_status=?, sz_jobid=? WHERE l_refno=? AND l_operator=?";
+            szQuery = "UPDATE LBASEND SET l_status=?, sz_jobid=?, l_started_ts=?, l_expires_ts=? WHERE l_refno=? AND l_operator=?";
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
@@ -204,6 +204,8 @@ namespace pas_cb_server
             {
                 cmd.Parameters.Add("status", OdbcType.Int).Value = l_status;
                 cmd.Parameters.Add("jobid", OdbcType.VarChar).Value = sz_jobid;
+                cmd.Parameters.Add("started", OdbcType.Decimal).Value = DateTime.Now.ToString("yyyyMMddHHmmss");
+                cmd.Parameters.Add("endtime", OdbcType.Decimal).Value = sz_expires;
                 cmd.Parameters.Add("refno", OdbcType.Int).Value = l_refno;
                 cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
 

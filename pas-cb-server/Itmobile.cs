@@ -73,7 +73,7 @@ namespace pas_cb_server
             if (Settings.debug)
             {
                 dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
             
@@ -87,7 +87,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type), 0);
                 // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number,0).ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
             else
@@ -162,7 +162,7 @@ namespace pas_cb_server
             if (Settings.debug)
             {
                 dump_request(t_alert, op, "NewMessagePLMN", oAlert.l_refno);
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1");
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
 
@@ -176,7 +176,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type), 0);
                 // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
             else
@@ -242,7 +242,7 @@ namespace pas_cb_server
                     , oAlert.l_refno
                     , t_alert_response.IBAG_message_type), 0);
                 // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBPREPARING, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString());
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                 return Constant.OK;
             }
             else
@@ -306,7 +306,7 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
             }
         }
-        public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op)
+        public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op, decimal l_expires_ts)
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
@@ -368,6 +368,11 @@ namespace pas_cb_server
                 // ok, insert appropriate info in database
                 if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
                     Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+                
+                // set as finished if expiry date has passed
+                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+
                 return Constant.OK;
             }
             else if(t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[]{"200"})

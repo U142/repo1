@@ -112,6 +112,24 @@ namespace pas_cb_server
                     uv.sz_userid = Database.GetUserID(uv.l_userpk);
 
                 uv.operators = Operator.GetOperators(uv);
+                
+                /*// Get default values
+                foreach (Operator op in uv.operators)
+                {
+                    switch (op.l_type)
+                    {
+                        case 1: // AlertiX (not supported)
+                            break;
+                        case 2: // one2many
+                            op.def_values = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
+                            break;
+                        case 3: // tmobile
+                            op.def_values = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
+                            break;
+                        default:
+                            break;
+                    }
+                }*/
             }
             catch (Exception e)
             {
@@ -184,9 +202,11 @@ namespace pas_cb_server
         public string sz_login_id = "";
         public string sz_login_name = "";
         public string sz_login_password = "";
-        
-        public Version api_version = new Version("2.3");
-        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.RD;
+
+        //public object def_values = null;
+
+        public Version api_version = null;
+        public COORDINATESYSTEM coordinate_type = COORDINATESYSTEM.WGS84;
 
         // methods
         public static Operator Getoperator(int l_operator)
@@ -198,7 +218,9 @@ namespace pas_cb_server
                                         OP.sz_url,
                                         OP.sz_user sz_login_id,
                                         OP.sz_name sz_login_name,
-                                        OP.sz_password sz_login_password
+                                        OP.sz_password sz_login_password,
+                                        isnull(OP.sz_version, '1.0') sz_version,
+                                        isnull(OP.l_coordinatetype, 0) l_coordinatetype
                                     FROM
                                         LBAOPERATORS OP
                                     WHERE
@@ -228,6 +250,8 @@ namespace pas_cb_server
                     op.sz_login_id = rsOperators.GetString(4);
                     op.sz_login_name = rsOperators.GetString(5);
                     op.sz_login_password = rsOperators.GetString(6);
+                    op.api_version = new Version(rsOperators.GetString(7));
+                    op.coordinate_type = (COORDINATESYSTEM)rsOperators.GetInt32(8);
                 }
                 rsOperators.Close();
                 rsOperators.Dispose();
@@ -255,7 +279,9 @@ namespace pas_cb_server
                                         OP.sz_url,
                                         isnull(OD.sz_userid, OP.sz_user) sz_login_id,
                                         isnull(OD.sz_username, OP.sz_name) sz_login_name,
-                                        isnull(OD.sz_userpassword, OP.sz_password) sz_login_password
+                                        isnull(OD.sz_userpassword, OP.sz_password) sz_login_password,
+                                        isnull(OP.sz_version, '1.0') sz_version,
+                                        isnull(OP.l_coordinatetype, 0) l_coordinatetype
                                     FROM
                                         LBAOPERATORS OP, 
                                         LBAOPERATORS_X_DEPT OD 
@@ -290,6 +316,8 @@ namespace pas_cb_server
                     op.sz_login_id = rsOperators.GetString(4);
                     op.sz_login_name = rsOperators.GetString(5);
                     op.sz_login_password = rsOperators.GetString(6);
+                    op.api_version = new Version(rsOperators.GetString(7));
+                    op.coordinate_type = (COORDINATESYSTEM)rsOperators.GetInt32(8);
 
                     Operators.Add(op);
                 }

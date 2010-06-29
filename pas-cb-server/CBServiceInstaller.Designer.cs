@@ -33,8 +33,8 @@
             // 
             // cb_serviceInstaller
             // 
-            this.cb_serviceInstaller.DisplayName = "Cell Broadcast Service";
-            this.cb_serviceInstaller.ServiceName = "CBService";
+            this.cb_serviceInstaller.DisplayName = "Cell Broadcast Server";
+            this.cb_serviceInstaller.ServiceName = "CBServer";
             // 
             // cb_serviceProcessInstaller
             // 
