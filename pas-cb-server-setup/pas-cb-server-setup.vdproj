@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9D49350B3DC840FBA6917C786AB7BBD5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,8 +45,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C00B285B6FE726949817585A7A4F3B42"
+        "MsmKey" = "8:_F54B43AAA6EB4057B17C425B029EC1BA"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -53,6 +59,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_84936F79232D432F9AFD845F504108AA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C00B285B6FE726949817585A7A4F3B42"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -73,6 +85,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -89,6 +109,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -174,6 +202,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast.sql"
+            "TargetName" = "8:cellbroadcast.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D49350B3DC840FBA6917C786AB7BBD5"
             {
             "SourcePath" = "8:..\\..\\!docs\\interface2specification-v0.3b.pdf"
@@ -256,6 +304,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F54B43AAA6EB4057B17C425B029EC1BA"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast-defaultvalues.sql"
+            "TargetName" = "8:cellbroadcast-defaultvalues.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -272,6 +340,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_86C0B0D16F844CBD9DA2B91E4C291223"
+                    {
+                    "Name" = "8:database"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_480479005639498B8F97F9D559D5EB64"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_5C38536A0C0D4D0984E61AE8716AF223"
@@ -914,7 +993,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_84936F79232D432F9AFD845F504108AA"
             {
-            "SourcePath" = "8:..\\pas-cb-server\\obj\\Debug\\CBServer.exe"
+            "SourcePath" = "8:..\\pas-cb-server\\obj\\Release\\CBServer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
