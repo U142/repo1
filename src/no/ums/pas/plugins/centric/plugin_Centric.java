@@ -17,6 +17,7 @@ import java.awt.*;
 import javax.imageio.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,7 @@ import java.awt.event.*;
 import no.ums.pas.send.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -203,46 +205,356 @@ public class plugin_Centric extends PAS_Scripting
 		return super.onAddSendOptionToolbar(toolbar);
 	}
 	
+	class SystemMessagesPanel extends DefaultPanel implements ComponentListener{
+		class MessageList extends JList
+		{
+			MessageListRenderer renderer = new MessageListRenderer();
+			MessageList()
+			{
+				super(new DefaultListModel());
+				setCellRenderer(renderer);
+				setVisibleRowCount(1);
+				//setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
+			}
+			DefaultListModel getDefaultModel() { return (DefaultListModel)this.getModel(); }
+			class MessageListRenderer extends DefaultPanel implements ListCellRenderer
+			{
+				public JLabel [] cols;
+				MessageListRenderer()
+				{
+					super();
+					int n_columns = 2;
+					//setLayout(new GridLayout(1, n_columns));
+					cols = new JLabel[n_columns];
+					cols[0] = new JLabel("");
+					cols[1] = new JLabel("");
+					set_gridconst(0, 0, 1, 1);
+					get_gridconst().fill = GridBagConstraints.VERTICAL;
+					get_gridconst().anchor = GridBagConstraints.WEST;
+					add(cols[0], m_gridconst);
+					set_gridconst(1, 0, 1, 1);
+					get_gridconst().fill = GridBagConstraints.VERTICAL;
+					add(cols[1], m_gridconst);
+					cols[0].setPreferredSize(new Dimension(150, 10));
+					cols[0].setHorizontalTextPosition(JLabel.LEFT);
+					//setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
+				}
+				@Override
+				public Component getListCellRendererComponent(JList list,
+						Object value, int index, boolean isSelected,
+						boolean cellHasFocus) {
+					if(value.getClass().equals(String[].class))
+					{
+						
+						String [] vals = (String[])value;
+						cols[0].setText(vals[0]);
+						cols[1].setText(vals[1]);
+					}
+					else
+					{
+						cols[0].setText("None");
+						cols[1].setText("None");
+					}
+					return this;
+					//return super.getListCellRendererComponent(list, value, index, isSelected,
+					//		cellHasFocus);
+				}
+				@Override
+				public void actionPerformed(ActionEvent e) {					
+				}
+				@Override
+				public void add_controls() {
+				}
+				@Override
+				public void init() {
+				}
+				
+			}
+		}
+		int n_current_height;
+		int n_max = 100;
+		int n_min = 20;
+		//Timer timer_scroll;
+		boolean expanded = false;
+		MessageList list;
+		JScrollPane scrollpane;
+		JButton btn_expand = new JButton("v");
+		SystemMessagesPanel()
+		{
+			super();
+			//timer_scroll = new Timer(50, this); 
+			n_current_height = n_min;
+			list = new MessageList();
+			list.getDefaultModel().addElement(new String [] { "28.06.2010 13:54", "Important messages from the operators or from the system" });
+			list.setEnabled(false);
+			scrollpane = new JScrollPane(list);
+			Font f = new Font(UIManager.getString("Common.Fontface"), Font.PLAIN, 14);
+			list.setFont(f);
+			int height = list.getFontMetrics(f).getHeight();
+			n_current_height = height;
+			n_min = n_current_height;
+			
+			btn_expand.addActionListener(this);
+			addComponentListener(this);
+			add_controls();
+		}
+		@Override
+		public int getWantedHeight() {
+			return n_current_height;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource().equals(btn_expand))
+			{
+				//expand button clicked
+				expanded = !expanded;
+				if(expanded)
+					n_current_height = n_max;
+				else
+				{
+					n_current_height = n_min;
+					list.getDefaultModel().addElement(new String [] { new Date().toString(), "test" });
+				}
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
+						revalidate();
+					}
+				});				
+				//if(!timer_scroll.isRunning())
+				//	timer_scroll.start();
+			}
+			/*else if(e.getSource().equals(timer_scroll))
+			{
+				n_current_height += (expanded ? 10 : -10);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
+						//centerpane.setPreferredSize(new Dimension(centerpane.getWidth(), centerpane.getHeight()));						
+						//btn_expand.revalidate();
+						//list.revalidate();
+						revalidate();
+						systemmessagepanel.validate();
+					}
+				});				
+				if(expanded && n_current_height>=n_max)
+					timer_scroll.stop();
+				else if(!expanded && n_current_height<=n_min)
+					timer_scroll.stop();
+			}*/
+		}
+
+		@Override
+		public void add_controls() {
+			get_gridconst().fill = GridBagConstraints.BOTH;
+			set_gridconst(0, 0, 1, 1);
+			add(scrollpane, m_gridconst);
+			get_gridconst().fill = GridBagConstraints.HORIZONTAL;
+			set_gridconst(1, 0, 1, 1);
+			add(btn_expand, m_gridconst);
+		}
+
+		@Override
+		public void init() {
+			
+		}
+		@Override
+		public void componentResized(ComponentEvent e) {
+			int btn_size = getWantedHeight();
+			scrollpane.setPreferredSize(new Dimension(getWidth()-n_min, getHeight()));
+			btn_expand.setPreferredSize(new Dimension(n_min, n_min));
+			scrollpane.revalidate();
+			btn_expand.revalidate();
+			SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
+			revalidate();
+			super.componentResized(e);
+			//PAS.get_pas().applyResize();
+		}
+	}
+	
+	class UserInfoPane extends DefaultPanel implements ComponentListener
+	{
+		@Override
+		public int getWantedHeight() {
+			return 25;
+		}
+
+		StdTextLabel lbl_userinfo = new StdTextLabel("");
+		UserInfoPane()
+		{
+			super();
+			setLayout(new BorderLayout());
+			//setPreferredSize(new Dimension(10,getWantedHeight()));
+			//setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
+			lbl_userinfo.setBackground(Color.white);
+			lbl_userinfo.setVerticalTextPosition(JLabel.CENTER);
+			//lbl_userinfo.setHorizontalAlignment(SwingConstants.LEFT);
+			addComponentListener(this);
+			add_controls();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+		
+		public void updateUserInfo(UserInfo ui)
+		{
+			String str = " " + ui.get_realname();
+			switch(ui.get_departments().size())
+			{
+			case 1:
+				str+=" - Regional user - ";
+				break;
+			default:
+				str+=" - Regional Super User - ";
+				break;
+			}
+			for(int i = 0; i < ui.get_departments().size(); i++)
+				str += " \"" + ((DeptInfo)ui.get_departments().get(i)).get_deptid() + "\"";
+			lbl_userinfo.setText(str);
+		}
+
+		@Override
+		public void add_controls() {
+			//set_gridconst(0, 0, 1, 1);
+			//add(lbl_userinfo, m_gridconst);
+			add(lbl_userinfo);
+		}
+
+		@Override
+		public void init() {
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			int w = getWidth();
+			int h = getHeight();
+			//if(w<=0 || h<=0)
+			//	return;
+			//if(w>5000 || h>5000)
+			//	return;
+			int x = w;
+			lbl_userinfo.setPreferredSize(new Dimension(w, getWantedHeight()));
+			lbl_userinfo.revalidate();
+			super.componentResized(e);
+		}
+		
+	}
+	
+	class Northpane extends DefaultPanel implements ComponentListener
+	{
+		Northpane()
+		{
+			super();
+			addComponentListener(this);
+			
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+
+		@Override
+		public void add_controls() {
+		}
+
+		@Override
+		public void init() {
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			super.componentResized(e);
+			int w = getWidth();
+			int h = getHeight();
+			/*for(int i=0; i < getComponentCount(); i++)
+			{
+				getComponent(i).setPreferredSize(new Dimension(w,h/2));
+			}*/
+			PAS.get_pas().get_mainmenu().setPreferredSize(new Dimension(w, h));
+		}
+	}
+	
+	class CenterPane extends DefaultPanel implements ComponentListener
+	{
+		CenterPane()
+		{
+			super();
+			setLayout(new BorderLayout());
+			addComponentListener(this);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+
+		@Override
+		public void add_controls() {
+		}
+
+		@Override
+		public void init() {
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			//super.componentResized(e);
+			DefaultPanel p = (DefaultPanel)e.getComponent();
+			int w = p.getWidth();
+			int h = p.getHeight();
+			int sysmsg_height = systemmessagepanel.getWantedHeight();
+			int userinfo_height = userinfopane.getWantedHeight();
+			PAS.get_pas().get_mappane().set_dimension(new Dimension(w, h-sysmsg_height-userinfo_height));
+			systemmessagepanel.setPreferredSize(new Dimension(w, sysmsg_height));
+			userinfopane.setPreferredSize(new Dimension(w, userinfo_height));
+			//PAS.get_pas().get_mappane().revalidate();
+			systemmessagepanel.revalidate();
+			userinfopane.revalidate();
+			//PAS.get_pas().applyResize();
+		}
+		
+	}
+	
+	
+	SystemMessagesPanel systemmessagepanel = new SystemMessagesPanel();
+	Northpane northpane = new Northpane();
+	CenterPane centerpane = new CenterPane();
+	UserInfoPane userinfopane = new UserInfoPane();
+	
 	@Override
 	public boolean onAddPASComponents(final PAS p)
 	{
+		
 		System.out.println("onAddPASComponents");
-		p.add(p.get_mappane(), BorderLayout.CENTER);
-		p.add(p.get_mainmenu(), BorderLayout.NORTH);
-		p.add(p.get_southcontent(), BorderLayout.SOUTH);
-		p.add(p.get_eastcontent(), BorderLayout.EAST);
-		//p.setJMenuBar(p.get_mainmenu().get_selectmenu().get_bar());
-
-		//p.setJMenuBar(p.get_mainmenu().get_selectmenu().get_bar());
-		/*DefaultPanel panel = new DefaultPanel() {
-			
-			@Override
-			public void init() {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void add_controls() {				
-				set_gridconst(0, 0, 2, 1, GridBagConstraints.WEST);
-				add(p.get_mainmenu(), get_gridconst());
-				
-				set_gridconst(0, 1, 1, 1);
-				add(p.get_mappane(), get_gridconst());
-				
-				set_gridconst(1, 1, 1, 1);
-				add(p.get_eastcontent(), get_gridconst());				
-			}
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
-		panel.add_controls();
-		p.getContentPane().add(panel, GridBagConstraints.CENTER);*/
-
+		
+		/*centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
+		centerpane.add(systemmessagepanel, centerpane.get_gridconst());
+		
+		centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
+		centerpane.add(PAS.get_pas().get_mappane(), centerpane.get_gridconst());
+		
+		centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
+		centerpane.add(userinfopane, centerpane.get_gridconst());*/
+		
+		centerpane.add(systemmessagepanel, BorderLayout.NORTH);
+		centerpane.add(PAS.get_pas().get_mappane(), BorderLayout.CENTER);
+		centerpane.add(userinfopane, BorderLayout.SOUTH);
+		
+		p.getContentPane().add(centerpane, BorderLayout.CENTER);
+		//p.getContentPane().add(p.get_mappane(), BorderLayout.CENTER);
+		
+		
+		//p.add(p.get_mainmenu(), BorderLayout.NORTH);
+		northpane.set_gridconst(0, 0, 1, 1, GridBagConstraints.NORTH);
+		northpane.add(p.get_mainmenu(), northpane.get_gridconst());
+		//northpane.set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTH);
+		//northpane.add(systemmessagepanel, northpane.get_gridconst());
+		p.getContentPane().add(northpane, BorderLayout.NORTH);
+		
+		p.getContentPane().add(p.get_southcontent(), BorderLayout.SOUTH);
+		p.getContentPane().add(p.get_eastcontent(), BorderLayout.EAST);
 
 		
 		//p.get_mappane().add(wms_layer_selector, BorderLayout.WEST);
@@ -252,7 +564,13 @@ public class plugin_Centric extends PAS_Scripting
 	}
 	
 
-	
+	@Override
+	public boolean onFrameResize(JFrame f, ComponentEvent e) {
+		//northpane.setPreferredSize(new Dimension(f.getWidth(), 52));
+		//centerpane.setPreferredSize(new Dimension(f.getWidth(), f.getHeight()));
+		return super.onFrameResize(f, e);
+	}
+
 	@Override
 	public boolean onSetInitialMapBounds(Navigation nav, UserInfo ui)
 	{
@@ -288,6 +606,7 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onDepartmentChanged(PAS pas)
 	{
 		super.onDepartmentChanged(pas);
+		userinfopane.updateUserInfo(pas.get_userinfo());
 		//PAS.get_pas().setAppTitle("UMS/Centric - " + pas.get_userinfo().get_current_department().get_deptid());
 		return true;
 	}
@@ -587,7 +906,8 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
-		return true;
+		return super.onAddInfoTab(tab, panel);
+		//return true;
 	}
 
 	@Override

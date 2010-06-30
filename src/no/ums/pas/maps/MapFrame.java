@@ -465,6 +465,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap)
 	{
 		super();
+		setPreferredSize(new Dimension(100,100));
 		setLayout(new BorderLayout());
 		
 		try
@@ -1086,8 +1087,13 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		}
 
 	}
+	@Override
 	public void setSize(Dimension d) {
 		super.setSize(d);
+	}
+	@Override
+	public void setPreferredSize(Dimension d) {
+		super.setPreferredSize(d);
 	}
 	
 	public Image get_mapimage() {

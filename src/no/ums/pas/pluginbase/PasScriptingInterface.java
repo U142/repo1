@@ -1,7 +1,9 @@
 package no.ums.pas.pluginbase;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -435,5 +437,7 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);
+	
+	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
 }
 

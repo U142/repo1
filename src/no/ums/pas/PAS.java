@@ -1280,8 +1280,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			if(m_settings.getWindowHeight() > 0 && m_settings.getWindowWidth() > 0)
 			//if(checkWindowBoundsToScreen(dim_pos, dim_size))
 			{
-				this.setSize(new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight()));
-				m_b_hasinitedsize = true;
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						setSize(new Dimension(m_settings.getWindowWidth(), m_settings.getWindowHeight()));
+						m_b_hasinitedsize = true;
+					}
+				});
 			}
 			else
 			{
@@ -1292,7 +1297,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			if(m_settings.isWindowFullscreen())
 				this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			else
-				this.setLocation(m_settings.getXpos(), m_settings.getYpos());
+			{
+				setLocation(m_settings.getXpos(), m_settings.getYpos());						
+			}
 		} catch(Exception e) {
 			Error.getError().addError(PAS.l("common_error"), "Error setting GUI size", e, Error.SEVERITY_ERROR);
 		}
@@ -1324,6 +1331,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			SwingUtilities.invokeLater(new Runnable(){
 				public void run()
 				{
+					validate();
 					//SubstanceLookAndFeel.setCurrentButtonShaper(new org.jvnet.substance.button.StandardButtonShaper());
 					setVisible(true);
 					
@@ -1393,7 +1401,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void windowDeiconified(WindowEvent e) { }
 	public void windowIconified(WindowEvent e) { }
 	public void windowOpened(WindowEvent e) { }
-	public void componentShown(ComponentEvent e) { }	
 	public void componentMoved(ComponentEvent e) { }
 
 	private int n_previous_mapwidth = 0;
@@ -1438,6 +1445,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public void componentResized(ComponentEvent e) {
 		//this.setResizable(true);
+		int w = getWidth();
+		int h = getHeight();
+		System.out.println("Size = " + w + " " + h);
+		pasplugin.onFrameResize(this, e);
 		if(resizeWaitingTimer==null && !m_b_firstmap) //start resizing
 		{
 			this.resizeWaitingTimer = new Timer(RESIZE_DELAY, get_pasactionlistener());
@@ -1446,11 +1457,21 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		else if(!m_b_firstmap)
 			this.resizeWaitingTimer.restart(); //still resizing
 		else if(m_b_firstmap) //done resizing
-			applyResize();
+		{
+			//applyResize(false);
+			//moved to componentShown
+		}
+		applyResize(false);
 		
 	}
-	
-	public void applyResize()
+	boolean b_gui_initialized = false;
+	public void componentShown(ComponentEvent e) {
+		String s = "test";
+		b_gui_initialized = true;
+		applyResize(true);
+	}	
+
+	public void applyResize(boolean b_from_timer)
 	{
 		System.out.println("Resizing " + getWidth() + ", " + getHeight());
 		if(getWidth()<=0 || getHeight()<=0)
@@ -1473,6 +1494,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				if(!isVisible())
 					return;		
 			}
+			int n_mapheight = get_mappane().getHeight();
+			int n_mapwidth = get_mappane().getWidth();
+			if(n_mapheight>2000 || n_mapwidth>2000)
+			{
+				System.out.println("Mappane size too large");
+				return;
+			}
 			if((get_mappane().getWidth()!=n_previous_mapwidth || get_mappane().getHeight() != n_previous_mapheight) && (get_mappane().getWidth() > 0 && get_mappane().getHeight()>0)) {
 				b_need_new_map = true;
 				n_previous_mapwidth = get_mappane().getWidth();
@@ -1490,19 +1518,22 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			System.out.println("  MapSize = " + dim_map.width + ", " + dim_map.height);
 			get_navigation().set_dimension(dim_map);
 			get_mappane().set_dimension(dim_map2);
+			get_eastcontent().revalidate();
 			//get_mappane().revalidate();
 			get_drawthread().resize(dim_map);
 			get_mappane().revalidate();
-			//get_mainmenu().setPreferredSize(new Dimension(getWidth(), 44));
+			
+			int w = getWidth();
+			//get_mainmenu().setSize(new Dimension(getWidth(), 70));
 			get_mainmenu().revalidate();
-			if(b_need_new_map) {
+			if(b_from_timer) {
 				System.out.println("New mapsize = " + dim_map.toString());
 				//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 				get_mappane().load_map(!m_b_firstmap);
 				get_eastcontent().actionPerformed(new ActionEvent(PAS.get_pas().get_navigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 				//get_navigation().reloadMap();
 			}
-			if(m_b_firstmap) {
+			if(m_b_firstmap && b_from_timer) {
 				//checkLoadParm();
 				m_b_firstmap = false;
 				m_b_hasinitedsize = true;

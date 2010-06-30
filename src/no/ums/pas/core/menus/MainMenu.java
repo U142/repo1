@@ -189,7 +189,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		m_sz_current_action = "";
 		
 		//setSize(get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth(), 40);
-		setBounds(0,0,/*get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth()*/getWidth(), 41);
+		int w = getWidth();
+		setBounds(0,0,/*get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth()*/w, 41);
 		prepare_controls();
 		add_controls();
 		doLayout();
@@ -202,16 +203,16 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		
 	}
 	public void componentResized(ComponentEvent e) {
-		
-		if(getWidth()<=0 || getHeight()<=0)
+		int w = getWidth();
+		int h = getHeight();
+		if(w<=0 || h<=0)
 		{
 			super.componentResized(e);
 			return;
 		}
 			
-		int n_width = getWidth();
-		setBounds(0, 0, getWidth(), getHeight());
-		m_selectmenu.setBounds(0, 0, getWidth(), 22);//new Dimension(getWidth(), 20));
+		setBounds(0, 0, w, h);
+		m_selectmenu.setBounds(0, 0, w, 22);//new Dimension(getWidth(), 20));
 		//m_selectmenu.revalidate();
 		//m_selectmenu.setPreferredSize(new Dimension(getWidth(), 18));
 		//m_selectmenu.get_bar().setPreferredSize(new Dimension(getWidth(), 18));

@@ -63,7 +63,7 @@ public class PASActions implements ActionListener {
 		{
 			PAS.get_pas().resizeWaitingTimer.stop();
 			PAS.get_pas().resizeWaitingTimer = null;
-			PAS.get_pas().applyResize();
+			PAS.get_pas().applyResize(true);
 		}
 		else if("act_set_parm_closed".equals(e.getActionCommand())) {
 			PAS.setParmOpen(false);//parm_open = false;
