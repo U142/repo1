@@ -122,6 +122,30 @@ namespace com.ums.ws.parm
             }
         }
 
+        [WebMethod]
+        public UPAOBJECTRESULT ExecPAShapeUpdate(ULOGONINFO logon, PAOBJECT obj, PASHAPETYPES type)
+        {
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+
+                UPAOBJECTRESULT ret = new UPAOBJECTRESULT();
+                
+                ret.pk = HandlePAObjectUpdate(obj.parmop, ref logon, ref obj, type);
+                createOutXml();
+                //bool changed = write_server_shape(ref obj, type);
+
+                outxml.insertEndElement(); //PAROOT
+                outxml.insertEndDocument();
+                outxml.finalize();
+                db.close();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         [WebMethod]
         public int Defines(UEllipse e, UPolygon p, UGeminiStreet s, ULocationBasedAlert l)
@@ -691,12 +715,7 @@ namespace com.ums.ws.parm
 
         protected bool write_server_shape(ref PAOBJECT obj)
         {
-            /*TEMP - update department restriction*/
-            /*String outxml = "", md5 = "";
-            obj.m_shape.CreateXml(ref outxml, ref md5);
-            bool changed = false;
-            db.UpdatePAShape(m_logon.l_deptpk, outxml, PASHAPETYPES.PADEPARTMENTRESTRICTION, ref changed);
-            */
+            
             //only polygons supported
             String szDbShapeString = "";
             String l_pk = "o" + obj.l_objectpk;
@@ -705,8 +724,19 @@ namespace com.ums.ws.parm
             bool b_ret = _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w, ref szDbShapeString);
             w.Close();
             bool bShapeChanged = false;
-            db.UpdatePAShape(obj.l_objectpk, szDbShapeString, PASHAPETYPES.PAOBJECT, ref bShapeChanged);
+            db.UpdatePAShape(obj.l_objectpk, szDbShapeString, PASHAPETYPES.PAOBJECT, ref bShapeChanged); // Må finne pashapetypes
             return b_ret;
+        }
+
+        protected bool write_server_shape(ref PAOBJECT obj, PASHAPETYPES type)
+        {
+            /*TEMP - update department restriction*/
+            String outxml = "", md5 = "";
+ 
+            obj.m_shape.CreateXml(ref outxml, ref md5);
+            bool changed = false;
+            db.UpdatePAShape(m_logon.l_deptpk, outxml, type, ref changed);
+            return changed;
         }
 
         protected StreamWriter _create_server_shape_file(String l_pk, FileMode fmode)
@@ -1522,6 +1552,81 @@ namespace com.ums.ws.parm
 
             return counter;
         }
+        [WebMethod]
+        public List<PAOBJECT> GetRegions()
+        {
+            List<PAOBJECT> objList = new List<PAOBJECT>();
+
+            String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO LEFT JOIN PASHAPE SH ON PO.l_objectpk=SH.l_pk WHERE PO.l_deptpk={0} AND (SH.l_type={1} OR SH.l_type={2})",
+                                           /*m_logon.l_deptpk*/1, (int)PASHAPETYPES.PADEPARTMENTRESTRICTION, (int)PASHAPETYPES.PAUSERRESTRICTION);
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                String l_objectpk, l_deptpk, l_importpk, sz_name, sz_description;
+                String l_categorypk, l_parent, sz_address, sz_postno, sz_place;
+                String sz_phone, sz_metadata, f_isobjectfolder, l_timestamp, sz_shape_xml;
+                while (rs.Read())
+                {
+                    PAOBJECT obj = new PAOBJECT();
+                    obj.l_objectpk = long.Parse(rs.GetString(0));
+                    obj.l_deptpk = long.Parse(rs.GetString(1));
+                    obj.l_importpk = long.Parse(rs.GetString(2));
+                    try
+                    {
+                        sz_name = rs.GetString(3);
+                    }
+                    catch (Exception)
+                    {
+                        sz_name = " ";
+                    }
+                    try
+                    {
+                        sz_description = rs.GetString(4);
+                    }
+                    catch (Exception)
+                    {
+                        sz_description = " ";
+                    }
+                    obj.sz_name = sz_name.Replace("&", "&amp;");
+                    obj.sz_description = sz_description.Replace("&", "&amp;");
+                    obj.l_categorypk = long.Parse(rs.GetString(5));
+                    obj.l_parent = long.Parse(rs.GetString(6));
+                    obj.sz_address = rs.GetString(7);
+                    obj.sz_postno = rs.GetString(8);
+                    obj.sz_place = rs.GetString(9);
+                    obj.sz_phone = rs.GetString(10);
+                    try
+                    {
+                        sz_metadata = rs.GetString(11);
+                    }
+                    catch (Exception)
+                    {
+                        sz_metadata = " ";
+                    }
+                    obj.b_isobjectfolder = rs.GetString(12).Equals("1")?true:false;
+                    obj.l_timestamp = long.Parse(rs.GetString(13));
+                    try
+                    {
+                        sz_shape_xml = rs.GetString(14);
+                    }
+                    catch (Exception)
+                    {
+                        sz_shape_xml = "";
+                    }
+                    obj.m_shape = UPolygon.ParseFromXml(sz_shape_xml).poly();
+                    objList.Add(obj);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { db.close(); }
+
+            return objList;
+        }
 
         private int GetAlerts()
         {
@@ -1989,11 +2094,11 @@ namespace com.ums.ws.parm
                 String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
                 obj.l_timestamp = long.Parse(l_timestamp);
                 String sz_sql;
-                String sz_name = obj.sz_name.Replace("'", "''");
-                String sz_address = obj.sz_address.Replace("'", "''");
-                String sz_postno = obj.sz_postno.Replace("'", "''");
-                String sz_place = obj.sz_place.Replace("'", "''");
-                String sz_phone = obj.sz_phone.Replace("'", "''");
+                String sz_name = obj.sz_name != null?obj.sz_name.Replace("'", "''"):"";
+                String sz_address = obj.sz_address != null?obj.sz_address.Replace("'", "''"):"";
+                String sz_postno = obj.sz_postno != null?obj.sz_postno.Replace("'", "''"):"";
+                String sz_place = obj.sz_place != null?obj.sz_place.Replace("'", "''"):"";
+                String sz_phone = obj.sz_phone != null?obj.sz_phone.Replace("'", "''"):"";
 
                 sz_sql = String.Format(UCommon.UGlobalizationInfo,
                     "sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
@@ -2013,6 +2118,63 @@ namespace com.ums.ws.parm
                                 if(typeof(UPolygon).Equals(obj.m_shape.GetType()))
                                 {
                                     write_server_shape(ref obj);
+                                }
+                            }
+                            break;
+                        case PARMOPERATION.delete:
+                            try
+                            {
+                                _delete_server_shape_file("o", obj.l_objectpk.ToString());
+                                db.DeletePAShape(obj.l_objectpk, PASHAPETYPES.PAOBJECT);
+                            }
+                            catch (Exception) { }
+                            break;
+                    }
+                }
+
+                return n_ret;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        public long HandlePAObjectUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAOBJECT obj, PASHAPETYPES type)
+        {
+            try
+            {
+                m_logon = logon;
+                sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+                String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
+                obj.l_timestamp = long.Parse(l_timestamp);
+                String sz_sql;
+                String sz_name = obj.sz_name != null ? obj.sz_name.Replace("'", "''") : "";
+                String sz_address = obj.sz_address != null ? obj.sz_address.Replace("'", "''") : "";
+                String sz_postno = obj.sz_postno != null ? obj.sz_postno.Replace("'", "''") : "";
+                String sz_place = obj.sz_place != null ? obj.sz_place.Replace("'", "''") : "";
+                String sz_phone = obj.sz_phone != null ? obj.sz_phone.Replace("'", "''") : "";
+
+                sz_sql = String.Format(UCommon.UGlobalizationInfo,
+                    "sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
+                       operation.ToString().ToLower(), obj.l_objectpk, logon.l_userpk, logon.l_comppk, logon.l_deptpk, obj.l_importpk, sz_name, obj.l_categorypk,
+                       obj.l_parent, sz_address, sz_postno, sz_place, sz_phone, l_timestamp, (obj.b_isobjectfolder ? 1 : 0));
+
+                long n_ret = db_exec(sz_sql, "paobject", operation.ToString().ToLower(), obj.l_temppk.ToString(), obj.sz_description, false);
+                obj.l_objectpk = n_ret;
+                if (n_ret > 0)
+                {
+                    switch (operation)
+                    {
+                        case PARMOPERATION.insert:
+                        case PARMOPERATION.update:
+                            if (obj.m_shape != null)
+                            {
+                                if (typeof(UPolygon).Equals(obj.m_shape.GetType()))
+                                {
+                                    write_server_shape(ref obj, type);
                                 }
                             }
                             break;

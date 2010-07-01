@@ -23,6 +23,7 @@ using com.ums.UmsDbLib;
 using com.ums.PAS.Weather;
 using com.ums.PAS.messagelib;
 
+using System.Collections.Generic;
 
 namespace com.ums.ws.pas
 {
@@ -538,7 +539,67 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
-
+        [WebMethod]
+        public ULBAMESSAGE DeleteLBAMessage(ULOGONINFO logon, ULBAMESSAGE message)
+        {
+            try
+            {
+                return new UMessageLib(ref logon).DeleteLBAMessage(ref logon, ref message);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public ULBAMESSAGELIST GetLBAMessageLibrary(ULOGONINFO logon, UBBMESSAGELISTFILTER filter)
+        {
+            try
+            {
+                ULBAMESSAGELIST ret = new UMessageLib(ref logon).GetLBAMessageList(ref logon, filter);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public ULBAMESSAGE InsertLBAMessage(ULOGONINFO logon, ULBAMESSAGE message)
+        {
+            try
+            {
+                return new UMessageLib(ref logon).InsertLBAMessage(ref logon, ref message);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public ULBADURATION InsertLBADuration(ULOGONINFO logon, ULBADURATION duration)
+        {
+            try
+            {
+                return new UMessageLib(ref logon).InsertLBADuration(ref logon, ref duration);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public List<ULBADURATION> GetLBADuration(ULOGONINFO logon)
+        {
+            try
+            {
+                return new UMessageLib(ref logon).GetLBADuration(ref logon);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         /*[WebMethod]
         public UWeatherReportResults GetWeatherTest()
         {

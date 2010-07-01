@@ -1048,4 +1048,33 @@ namespace com.ums.UmsCommon
         public long n_timefilter;
     }
 
+    public class ULBAMESSAGE // Used for NLALERT
+    {
+        public long n_messagepk;
+        public int n_deptpk;
+        public String sz_name;
+        public String sz_description;
+        public long n_langpk;
+        public long n_parentpk;
+        public int n_depth;
+        public long n_timestamp;
+        public String sz_message;
+    }
+
+    public class ULBAMESSAGELIST // Used for NLALERT
+    {
+        public List<ULBAMESSAGE> list;
+        public List<ULBAMESSAGE> deleted;
+        public long n_servertimestamp;
+    }
+
+    public class ULBADURATION // Used for NLALERT
+    {
+        public long n_durationpk;
+        public int n_duration;
+        public int n_interval;
+        public int n_repetition;
+        public int n_deptpk;
+    }
+
 }
