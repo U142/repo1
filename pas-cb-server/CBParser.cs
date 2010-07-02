@@ -18,61 +18,62 @@ namespace pas_cb_server
         {
             while (CBServer.running)
             {
-                try
-                {
-                    string[] fileEntries = null;
-                    fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
-                    foreach (string fileName in fileEntries)
+                if(!CBServer.parserpaused)
+                    try
                     {
-                        if (!CBServer.running) break;
-                        lRetVal = ParseXMLFile(fileName);
-                        if (lRetVal == Constant.OK)
+                        string[] fileEntries = null;
+                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                        foreach (string fileName in fileEntries)
                         {
-                            Thread.Sleep(500);
-                            File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
-                        }
-                        else if (lRetVal == Constant.RETRY)
-                        {
-                            Thread.Sleep(500);
-                            File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
-                        }
-                        else // lRetVal -2 (Constant.FAILED)
-                        {
-                            Thread.Sleep(500);
-                            File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
-                        }
-                    }
-
-                    fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
-                    foreach (string fileName in fileEntries)
-                    {
-                        if (!CBServer.running) break;
-                        FileInfo fFile = new FileInfo(fileName);
-                        if (fFile.LastAccessTime.AddSeconds(Settings.l_retryinterval).CompareTo(DateTime.Now) <= 0)
-                        {
+                            if (!CBServer.running) break;
                             lRetVal = ParseXMLFile(fileName);
                             if (lRetVal == Constant.OK)
                             {
                                 Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
+                                File.Move(fileName, fileName.Replace("\\eat\\", "\\done\\"));
                             }
                             else if (lRetVal == Constant.RETRY)
                             {
                                 Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                                File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
                             }
                             else // lRetVal -2 (Constant.FAILED)
                             {
                                 Thread.Sleep(500);
-                                File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
+                                File.Move(fileName, fileName.Replace("\\eat\\", "\\failed\\"));
+                            }
+                        }
+
+                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                        foreach (string fileName in fileEntries)
+                        {
+                            if (!CBServer.running) break;
+                            FileInfo fFile = new FileInfo(fileName);
+                            if (fFile.LastAccessTime.AddSeconds(Settings.l_retryinterval).CompareTo(DateTime.Now) <= 0)
+                            {
+                                lRetVal = ParseXMLFile(fileName);
+                                if (lRetVal == Constant.OK)
+                                {
+                                    Thread.Sleep(500);
+                                    File.Move(fileName, fileName.Replace("\\retry\\", "\\done\\"));
+                                }
+                                else if (lRetVal == Constant.RETRY)
+                                {
+                                    Thread.Sleep(500);
+                                    File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                                }
+                                else // lRetVal -2 (Constant.FAILED)
+                                {
+                                    Thread.Sleep(500);
+                                    File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
+                                }
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    Log.WriteLog("Exception during file poll: " + e.Message, 2);
-                }
+                    catch (Exception e)
+                    {
+                        Log.WriteLog("Exception during file poll: " + e.Message, 2);
+                    }
                 Thread.Sleep(1000);
             }
             Log.WriteLog("Stopped parser thread", 9);

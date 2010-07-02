@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using com.ums.UmsCommon.CoorConvert;
+using System.Reflection;
 
 namespace pas_cb_server
 {
@@ -51,12 +52,15 @@ namespace pas_cb_server
             Console.WriteLine("# List of commands:");
             Console.WriteLine("#");
             Console.WriteLine("#   h, ?\tthis page");
+            Console.WriteLine("#   i\t\tforce status check (all active alerts)");
             Console.WriteLine("#   ctrl+t\trun self test");
             Console.WriteLine("#   ctrl+p\trun PLMN self test");
             Console.WriteLine("#   ctrl+m\tmodify current self test");
             Console.WriteLine("#   ctrl+k\tkill current self test");
-            Console.WriteLine("#   ctrl+i\tforce status check (all active alerts)");
             Console.WriteLine("#   ctrl+c\tstop parser");
+            Console.WriteLine("#   p\t\tpause/resume parser thread");
+            Console.WriteLine(String.Format("\r\nAssembly: {0}", Assembly.GetAssembly(typeof(CBServer)).FullName));
+            Console.WriteLine("Parser thread is {0}", CBServer.parserpaused ? "paused" : "running");
         }
         public static void KeyReaderThread()
         {
@@ -84,7 +88,12 @@ namespace pas_cb_server
                                 if (key.Modifiers == ConsoleModifiers.Control)
                                     test.Selftest.NewAlertPLMN();
                                 else
-                                    Console.WriteLine("# Use ctrl+p to run PLMN test");
+                                {
+                                    //Console.WriteLine("# Use ctrl+p to run PLMN test");
+                                    // Pause parser thread
+                                    Console.WriteLine("{0} parser thread.", CBServer.parserpaused ? "Starting" : "Pausing");
+                                    CBServer.parserpaused = !CBServer.parserpaused;
+                                }
                                 break;
                             case ConsoleKey.K:
                                 if (key.Modifiers == ConsoleModifiers.Control)

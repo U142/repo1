@@ -8,15 +8,19 @@ using System.Threading;
 using System.ServiceProcess;
 using umssettings;
 using CookComputing.XmlRpc;
+using System.Reflection;
 
 namespace pas_cb_server
 {
     class CBServer
     {
         public static bool running = true;
+        public static bool parserpaused = false;
 
         static void Main(string[] args)
-        {            
+        {
+            Trace.WriteLine(String.Format("Starting {0}\r\n", Assembly.GetAssembly(typeof(CBServer)).FullName));
+
             try
             {
                 // check for interactive (console) or service mode
