@@ -19,6 +19,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
@@ -42,6 +43,9 @@ import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
 import no.ums.pas.maps.defines.*;
+import no.ums.ws.pas.ArrayOfUBBNEWS;
+import no.ums.ws.pas.UBBNEWS;
+import no.ums.ws.pas.USYSTEMMESSAGES;
 
 
 public class plugin_Centric extends PAS_Scripting
@@ -207,39 +211,124 @@ public class plugin_Centric extends PAS_Scripting
 		return super.onAddSendOptionToolbar(toolbar);
 	}
 	
+	
+	
+	@Override
+	protected boolean onHandleSystemMessages(USYSTEMMESSAGES sysmsg) {
+		final List<UBBNEWS> news = sysmsg.getNews().getNewslist().getUBBNEWS();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				for(int i=0; i < news.size(); i++)
+				{
+					UBBNEWS bbnews = news.get(i);
+					systemmessagepanel.list.getDefaultModel().addOnTop(bbnews);
+				}
+				systemmessagepanel.list.getDefaultModel().sort();
+			}
+		});
+		return true;				
+	}
+
+
+
 	class SystemMessagesPanel extends DefaultPanel implements ComponentListener{
+		
+		class UMSListModel extends DefaultListModel
+		{
+			public void sort()
+			{
+				Object [] list = this.toArray();
+				if(list.length<=1)
+					return;
+				UBBNEWS tmp;
+				for(int i=0; i < list.length; i++)
+				{
+					UBBNEWS b1 = (UBBNEWS)list[i];
+					for(int j=i+1; j < list.length; j++)
+					{
+						UBBNEWS b2 = (UBBNEWS)list[j];
+						if(b1.getLTimestampDb()<b2.getLTimestampDb())
+						{
+							tmp = b1;
+							list[i] = b2;
+							list[j] = tmp;
+						}
+					}
+				}
+				for(int i=0; i < list.length; i++)
+				{
+					UBBNEWS bbn = (UBBNEWS)list[i];
+					this.setElementAt(bbn, i);
+					recordset.put(bbn.getLNewspk(), bbn);
+				}
+			}
+			Hashtable<Long, Object> recordset = new Hashtable<Long, Object>();
+			public void addOnTop(Object arg1) {
+				this.add(0, arg1);
+			}
+			@Override
+			public void add(int arg0, Object arg1) {
+				Long key = ((UBBNEWS)arg1).getLNewspk();
+				if(recordset.containsKey(key))
+				{
+					UBBNEWS original = (UBBNEWS)recordset.get(key);
+					int n = super.indexOf(original);
+					if(n!=-1)
+					{
+						UBBNEWS news = (UBBNEWS)arg1;
+						if(news.getFActive()>=1)
+						{
+							super.set(n, news);
+							recordset.put(((UBBNEWS)arg1).getLNewspk(), arg1);
+							System.out.println("newspk " + original.getLNewspk() + " updated");
+						}
+						else
+						{
+							//to be deleted
+							super.remove(n);
+							recordset.remove(original.getLNewspk());
+							System.out.println("newspk " + original.getLNewspk() + " deleted");
+						}
+					}
+					else
+					{
+						System.out.println("news " + original + " not found in list");
+					}
+				}
+				else
+				{
+					recordset.put(key, arg1);
+					super.add(arg0, arg1);
+					System.out.println("newspk " + ((UBBNEWS)arg1).getLNewspk() + " inserted");
+				}
+			}
+
+			@Override
+			public void addElement(Object arg0) {
+				//super.addElement(arg0);
+				add(0, arg0);
+			}
+			
+		}
 		class MessageList extends JList
 		{
 			MessageListRenderer renderer = new MessageListRenderer();
 			MessageList()
 			{
-				super(new DefaultListModel());
+				super(new UMSListModel());
 				setCellRenderer(renderer);
 				setVisibleRowCount(1);
 				//setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
 			}
-			DefaultListModel getDefaultModel() { return (DefaultListModel)this.getModel(); }
+			UMSListModel getDefaultModel() { return (UMSListModel)this.getModel(); }
 			class MessageListRenderer extends DefaultPanel implements ListCellRenderer
 			{
-				public JLabel [] cols;
+				protected JLabel lbl_renderer;
 				MessageListRenderer()
 				{
 					super();
-					int n_columns = 2;
-					//setLayout(new GridLayout(1, n_columns));
-					cols = new JLabel[n_columns];
-					cols[0] = new JLabel("");
-					cols[1] = new JLabel("");
-					set_gridconst(0, 0, 1, 1);
-					get_gridconst().fill = GridBagConstraints.VERTICAL;
-					get_gridconst().anchor = GridBagConstraints.WEST;
-					add(cols[0], m_gridconst);
-					set_gridconst(1, 0, 1, 1);
-					get_gridconst().fill = GridBagConstraints.VERTICAL;
-					add(cols[1], m_gridconst);
-					cols[0].setPreferredSize(new Dimension(150, 10));
-					cols[0].setHorizontalTextPosition(JLabel.LEFT);
-					//setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(""));
+					lbl_renderer = new JLabel("");
 				}
 				@Override
 				public Component getListCellRendererComponent(JList list,
@@ -249,15 +338,22 @@ public class plugin_Centric extends PAS_Scripting
 					{
 						
 						String [] vals = (String[])value;
-						cols[0].setText(vals[0]);
-						cols[1].setText(vals[1]);
+						lbl_renderer.setText(vals[0] + "    " + vals[1]);
+						//cols[0].setText(vals[0]);
+						//cols[1].setText(vals[1]);
+					}
+					else if(value.getClass().equals(UBBNEWS.class))
+					{
+						UBBNEWS news = (UBBNEWS)value;
+						lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
 					}
 					else
 					{
-						cols[0].setText("None");
-						cols[1].setText("None");
+						lbl_renderer.setText("NA");
+						//cols[0].setText("None");
+						//cols[1].setText("None");
 					}
-					return this;
+					return lbl_renderer;
 					//return super.getListCellRendererComponent(list, value, index, isSelected,
 					//		cellHasFocus);
 				}
@@ -272,11 +368,26 @@ public class plugin_Centric extends PAS_Scripting
 				}
 				
 			}
+			@Override
+			public String getToolTipText(MouseEvent arg0) {
+				Point p = arg0.getPoint();
+				int location = locationToIndex(p);
+				if(location>=0)
+				{
+					UBBNEWS b = (UBBNEWS)list.getDefaultModel().getElementAt(location);
+					String html = "<html><table>";
+					html += "<tr><td><b>" + PAS.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
+					html += "<tr><td><b>" + PAS.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
+					html += "<tr><td colspan=2>" + b.getNewstext().getSzNews() + "</td></tr>";
+					html += "</html>";
+					return html;
+				}
+				return "";
+			}
 		}
 		int n_current_height;
 		int n_max = 100;
-		int n_min = 20;
-		//Timer timer_scroll;
+		int n_min = 25;
 		boolean expanded = false;
 		MessageList list;
 		JScrollPane scrollpane;
@@ -284,10 +395,8 @@ public class plugin_Centric extends PAS_Scripting
 		SystemMessagesPanel()
 		{
 			super();
-			//timer_scroll = new Timer(50, this); 
 			n_current_height = n_min;
 			list = new MessageList();
-			list.getDefaultModel().addElement(new String [] { "28.06.2010 13:54", "Important messages from the operators or from the system" });
 			list.setEnabled(false);
 			scrollpane = new JScrollPane(list);
 			Font f = new Font(UIManager.getString("Common.Fontface"), Font.PLAIN, 14);
@@ -315,7 +424,6 @@ public class plugin_Centric extends PAS_Scripting
 				else
 				{
 					n_current_height = n_min;
-					list.getDefaultModel().addElement(new String [] { new Date().toString(), "test" });
 				}
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
@@ -324,28 +432,7 @@ public class plugin_Centric extends PAS_Scripting
 						revalidate();
 					}
 				});				
-				//if(!timer_scroll.isRunning())
-				//	timer_scroll.start();
 			}
-			/*else if(e.getSource().equals(timer_scroll))
-			{
-				n_current_height += (expanded ? 10 : -10);
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-						SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
-						//centerpane.setPreferredSize(new Dimension(centerpane.getWidth(), centerpane.getHeight()));						
-						//btn_expand.revalidate();
-						//list.revalidate();
-						revalidate();
-						systemmessagepanel.validate();
-					}
-				});				
-				if(expanded && n_current_height>=n_max)
-					timer_scroll.stop();
-				else if(!expanded && n_current_height<=n_min)
-					timer_scroll.stop();
-			}*/
 		}
 
 		@Override
@@ -364,15 +451,29 @@ public class plugin_Centric extends PAS_Scripting
 		}
 		@Override
 		public void componentResized(ComponentEvent e) {
+			
+			n_min=22;
+			list.setFixedCellHeight(n_min);
+			int w = getWidth();
 			int btn_size = getWantedHeight();
 			scrollpane.setPreferredSize(new Dimension(getWidth()-n_min, getHeight()));
-			btn_expand.setPreferredSize(new Dimension(n_min, n_min));
-			scrollpane.revalidate();
-			btn_expand.revalidate();
+			btn_expand.setPreferredSize(new Dimension(n_min, getHeight()));
+			int scroll_width = 0;
+			int scroll_height = 0;
+			if(this.scrollpane.getVerticalScrollBar().isVisible())
+			{
+				scroll_width = this.scrollpane.getVerticalScrollBar().getWidth();
+			}
+			if(this.scrollpane.getHorizontalScrollBar().isVisible())
+			{
+				scroll_height = this.scrollpane.getHorizontalScrollBar().getHeight();
+			}
+			scroll_width-=5;
 			SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
+			scrollpane.revalidate();
 			revalidate();
+
 			super.componentResized(e);
-			//PAS.get_pas().applyResize();
 		}
 	}
 	
