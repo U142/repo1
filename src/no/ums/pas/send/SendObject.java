@@ -115,7 +115,7 @@ public class SendObject extends Object {
 	public void set_type(int n_type) {
 		switch(n_type) {
 		case SendProperties.SENDING_TYPE_POLYGON_:
-			//m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(PAS.get_pas().get_navigation(), PAS.get_pas().get_mappane().get_dimension()), m_toolbar, new Col(m_default_color));
+			//m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(variables.NAVIGATION, PAS.get_pas().get_mappane().get_dimension()), m_toolbar, new Col(m_default_color));
 			m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
 			get_callback().actionPerformed(new ActionEvent(new Integer(MapFrame.MAP_MODE_SENDING_POLY), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;

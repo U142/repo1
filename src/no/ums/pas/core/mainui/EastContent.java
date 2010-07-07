@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import no.ums.pas.*;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -103,16 +104,20 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_sendingpanel  = new SendingPanel(dim_panelsize);
 				m_sendingpanel.doInit();
 				m_tabbedpane = new EastTabbedPane();
-				if(m_infopanel!=null)
-					m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());
+				try { 
+					if(m_infopanel!=null)
+						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 				m_taspanel = null;
 				//this.setPreferredSize(new Dimension(get_pas().get_eastwidth()-50, 500));
 				m_gridlayout = new GridBagLayout();//GridLayout(0, 2, 50, 20);
 				m_gridconst  = new GridBagConstraints();
 				setLayout(m_gridlayout);
 				
-				if(m_infopanel!=null)
-					PAS.pasplugin.onAddInfoTab(m_tabbedpane, m_infopanel);
+				
+				PAS.pasplugin.onAddInfoTab(m_tabbedpane, m_infopanel);
 				/*m_tabbedpane.addTab(PAS.l("main_infotab_title"), null,
 									m_infopanel,
 									//sp,

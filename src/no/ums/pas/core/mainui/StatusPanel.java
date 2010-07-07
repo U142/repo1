@@ -15,6 +15,7 @@ import javax.swing.border.*;
 
 import no.ums.pas.*;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
@@ -752,7 +753,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
-				//PAS.get_pas().get_navigation().gotoMap(PAS.get_pas().get_mappane().get_active_shape().calc_bounds());
+				//variables.NAVIGATION.gotoMap(PAS.get_pas().get_mappane().get_active_shape().calc_bounds());
 				getBoundsTing();
 			}	
 		}
@@ -771,7 +772,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					}
 					try
 					{
-						PAS.get_pas().get_navigation().gotoMap(CommonFunc.calc_bounds(shapes));
+						variables.NAVIGATION.gotoMap(CommonFunc.calc_bounds(shapes));
 					}
 					catch(Exception e)
 					{

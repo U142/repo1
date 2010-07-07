@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.tools.Timeout;
 
 //import Core.Controllers.*;
@@ -286,7 +287,7 @@ public class Houses {
 		for(int i=0; i < get_houses().size(); i++)
 		{
 			current = get_houses().get(i);
-			Dimension p = PAS.get_pas().get_navigation().coor_to_screen(current.get_lon(), current.get_lat(), true);
+			Dimension p = variables.NAVIGATION.coor_to_screen(current.get_lon(), current.get_lat(), true);
 			current.set_screencoords(p);
 			
 			if(b_joinhouses)

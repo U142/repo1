@@ -607,6 +607,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			}
 		}
 		else if("act_new_project".equals(e.getActionCommand())) {
+			// 
 			PAS.get_pas().invoke_project(false);
 		}
 		else if("act_close_project".equals(e.getActionCommand())) {

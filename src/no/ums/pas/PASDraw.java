@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.util.List;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.DeptArray.POINT_DIRECTION;

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
@@ -454,7 +455,7 @@ public class SosiFile extends Object {
 			
 			//PAS.get_pas().add_event("Parsing finished");
 			//PAS.get_pas().add_event("Goto " + get_bounding().toString());
-			//PAS.get_pas().get_navigation().gotoMap(get_bounding());
+			//variables.NAVIGATION.gotoMap(get_bounding());
 			
 			return true;
 		}
@@ -523,7 +524,7 @@ public class SosiFile extends Object {
 								//get_callback().actionPerformed(new ActionEvent())
 								//SendObject sendobj = new SendObject(PAS.get_pas());
 								get_flater().add_flate(n_kurvenr);
-								m_sendobj = new SendObject("Imported kurve " + n_kurvenr, SendProperties.SENDING_TYPE_POLYGON_, n_kurvenr, PAS.get_pas().get_sendcontroller(), PAS.get_pas().get_navigation());
+								m_sendobj = new SendObject("Imported kurve " + n_kurvenr, SendProperties.SENDING_TYPE_POLYGON_, n_kurvenr, PAS.get_pas().get_sendcontroller(), variables.NAVIGATION);
 								//set_callback(sendobj.get_sendproperties().get_toolbar().get_import_callback());
 								int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(n_kurvenr);
 								if(n_flate==-1) {

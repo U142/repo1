@@ -5,6 +5,7 @@ import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.mainui.*;
 import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSSendSettings;
@@ -114,7 +115,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		
 		if(ac == null){
 			this.setTitle(PAS.l("main_parm_alert_dlg_new"));
-			m_alert = new AlertController(PAS.get_pas().get_parmcontroller(),PAS.get_pas().get_navigation(), this);
+			m_alert = new AlertController(PAS.get_pas().get_parmcontroller(),variables.NAVIGATION, this);
 			createAlert();
 		} else {
 			this.setTitle(PAS.l("main_parm_alert_dlg_edit"));

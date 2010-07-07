@@ -9,6 +9,7 @@ import java.awt.event.*;
 import javax.xml.namespace.QName;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.vars;
@@ -51,7 +52,7 @@ public class SendPropertiesPolygon extends SendProperties {
 	@Override
 	public void calc_coortopix()
 	{
-		get_shapestruct().calc_coortopix(PAS.get_pas().get_navigation());
+		get_shapestruct().calc_coortopix(variables.NAVIGATION);
 	}
 
 

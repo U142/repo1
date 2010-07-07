@@ -21,6 +21,7 @@ import javax.swing.plaf.ProgressBarUI;
 
 import no.ums.pas.*;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.UserInfo;
@@ -1121,7 +1122,7 @@ public class StatusSending extends Object {
 		
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
-				PAS.get_pas().get_navigation().gotoMap(get_shape().calc_bounds());
+				variables.NAVIGATION.gotoMap(get_shape().calc_bounds());
 			} else if(e.getSource().equals(m_btn_cancel_lba_sending))
 			{
 				//CANCEL

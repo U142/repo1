@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.util.*;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.ws.pas.*;
 
@@ -60,7 +61,7 @@ public class DeptInfo extends Object {
 		{
 			try
 			{
-				get_restriction_shapes().get(i).calc_coortopix(PAS.get_pas().get_navigation());
+				get_restriction_shapes().get(i).calc_coortopix(variables.NAVIGATION);
 			}
 			catch(Exception e)
 			{
@@ -130,11 +131,11 @@ public class DeptInfo extends Object {
 							(int)ell.getColAlpha()), 
 							new Color(0,0,0));
 			ellipsestruct.set_ellipse_center(
-					PAS.get_pas().get_navigation(), 
-					new MapPoint(PAS.get_pas().get_navigation(), new MapPointLL(ell.getLon(), ell.getLat())));
+					variables.NAVIGATION, 
+					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getLon(), ell.getLat())));
 			ellipsestruct.set_ellipse_corner(
-					PAS.get_pas().get_navigation(),
-					new MapPoint(PAS.get_pas().get_navigation(), new MapPointLL(ell.getX(), ell.getY())));
+					variables.NAVIGATION,
+					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getX(), ell.getY())));
 			return ellipsestruct;
 					
 		}

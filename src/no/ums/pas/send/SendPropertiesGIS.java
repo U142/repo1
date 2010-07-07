@@ -12,6 +12,7 @@ import java.awt.event.*;
 import javax.xml.namespace.QName;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
@@ -59,7 +60,7 @@ public class SendPropertiesGIS extends SendProperties {
 		try
 		{
 			get_houses().calcHouseCoords();
-			get_shapestruct().calc_coortopix(PAS.get_pas().get_navigation());
+			get_shapestruct().calc_coortopix(variables.NAVIGATION);
 		}
 		catch(Exception e)
 		{

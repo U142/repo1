@@ -44,7 +44,7 @@ public class Sending_AddressPanelPolygon extends Sending_AddressPanel {
 			/*NavStruct bounds = get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().calc_bounds();
 			form = new HttpPostForm(get_url());
 			
-			get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(PolygonStruct.SHOW_POLYGON_SIMPLIFIED_PRMETERS, 50, PAS.get_pas().get_navigation());
+			get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(PolygonStruct.SHOW_POLYGON_SIMPLIFIED_PRMETERS, 50, variables.NAVIGATION);
 			m_lbl_pointcount.setText("Polygon points: " + 
 					((SendPropertiesPolygon)get_parent().get_sendobject().get_sendproperties()).get_shapestruct().typecast_polygon().get_size() +
 					" Simplified: " + ((SendPropertiesPolygon)get_parent().get_sendobject().get_sendproperties()).get_shapestruct().typecast_polygon().get_show_size());

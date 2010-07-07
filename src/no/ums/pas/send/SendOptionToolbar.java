@@ -94,9 +94,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	JToggleButton m_btn_finalize;
 	SendingColorPicker m_colorpicker;
 	ColorButton m_btn_color;
-	JButton m_btn_send;
-	JButton m_btn_close;
-	JButton m_btn_open;
+	public JButton m_btn_send;
+	public JButton m_btn_close;
+	public JButton m_btn_open;
 	private int m_n_addresstypes = 0;
 	ActionListener m_callback;
 	protected ActionListener get_callback() { return m_callback; }
@@ -1081,7 +1081,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 	}
 	
-	protected class MunicipalCheckbox extends JCheckBox
+	public class MunicipalCheckbox extends JCheckBox
 	{
 		//protected String sz_munid;
 		//protected String sz_munname;
@@ -1456,8 +1456,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			//this.m_btn_finalize.doClick();
 			//PAS.get_pas().get_drawthread().set_suspended(false);
 			//PAS.get_pas().kickRepaint();
-			//PAS.get_pas().get_navigation().gotoMap(sosi.get_bounding());
-			/*PAS.get_pas().get_navigation().gotoMap(sosi.get_polygon().calc_bounds());
+			//variables.NAVIGATION.gotoMap(sosi.get_bounding());
+			/*variables.NAVIGATION.gotoMap(sosi.get_polygon().calc_bounds());
 			try {
 				PAS.get_pas().kickRepaint();
 				//Thread.sleep(2000);

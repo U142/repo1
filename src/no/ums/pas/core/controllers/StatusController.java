@@ -6,6 +6,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.mainui.*;
 import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSGetStatusItems;
@@ -651,7 +652,7 @@ public class StatusController extends Controller implements ActionListener {
 
 	public synchronized void set_nav_init(NavStruct nav) {
 		m_nav_init = nav;
-		PAS.get_pas().get_navigation().setNavigation(nav._lbo, nav._rbo,
+		variables.NAVIGATION.setNavigation(nav._lbo, nav._rbo,
 				nav._ubo, nav._bbo);
 		PAS.get_pas().get_mappane().load_map(true);
 		// PAS.get_pas().kickRepaint();
@@ -711,7 +712,7 @@ public class StatusController extends Controller implements ActionListener {
 						.get_shape();
 				if (m_b_viewpolygon) {
 					try {
-						shape.draw(gfx, PAS.get_pas().get_navigation(), false,
+						shape.draw(gfx, variables.NAVIGATION, false,
 								true, false, null);
 					} catch (Exception e) {
 
@@ -765,7 +766,7 @@ public class StatusController extends Controller implements ActionListener {
 			if (current != null) {
 				// PAS.get_pas().add_event("Going to " + current.get_lon() + " "
 				// + current.get_lat(), null);
-				PAS.get_pas().get_navigation().exec_adrsearch(
+				variables.NAVIGATION.exec_adrsearch(
 						current.get_lon(), current.get_lat(), 100);
 			}
 		}

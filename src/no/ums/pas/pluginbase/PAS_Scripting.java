@@ -39,6 +39,7 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.PasScriptingInterface;
+import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -394,6 +395,11 @@ public class PAS_Scripting extends PasScriptingInterface
 				panel,
 				//sp,
 				PAS.l("main_infotab_title_tooltip"));
+		return true;
+	}
+	
+	public boolean onAddCentricSend(JTabbedPane tab, CentricSendOptionToolbar panel) {
+		tab.addTab("fjols", null, panel, "Tooltip");
 		return true;
 	}
 
@@ -874,9 +880,6 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onFrameResize(JFrame f, ComponentEvent e) {
 		return true;
-	}
+	}	
 
-	
-	
-		
 }

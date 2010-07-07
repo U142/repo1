@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
@@ -453,11 +454,11 @@ public class MapLoader {
 					
 				}
 
-				PAS.get_pas().get_navigation().setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			 
 			if(m_img_load==null)
 			{
-				PAS.get_pas().get_navigation().setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 				m_img_load =  null;
 				if(m_retry==null)
 					m_retry = new AutoLoadRetry(info);
@@ -469,7 +470,7 @@ public class MapLoader {
 		{
 			//m_retry = null;
 			setErrorMsg(e.getMessage());
-			PAS.get_pas().get_navigation().setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+			variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			m_img_load =  null;
 			e.printStackTrace();
 			if(m_retry==null)
@@ -480,12 +481,7 @@ public class MapLoader {
 		return m_img_load;
 
 	}
-	Image load_map(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, int n_mapsite, String sz_portrayal, Navigation m_navigation, MapFrame m_mappane) {
-		this.m_navigation = m_navigation;
-		this.m_mappane = m_mappane;
-		return load_map(n_lbo, n_rbo, n_ubo, n_bbo, dim, n_mapsite, sz_portrayal);
-	}
-	
+		
 	Image load_map(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, int n_mapsite, String sz_portrayal) {	
 		ObjectFactory of = new ObjectFactory();
 		UMapInfo info = of.createUMapInfo();
@@ -521,18 +517,14 @@ public class MapLoader {
 					Pasws pas = new Pasws(wsdl, service); //new java.net.URL(PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL"), new javax.xml.namespace.QName("http://ums.no/", "pasws"));
 					UPASMap map = pas.getPaswsSoap12().getMap(info);
 					UMapInfo mapinfo = map.getMapinfo();
-					if(PAS.get_pas()!=null)
-						PAS.get_pas().get_navigation().setHeaderBounds((float)mapinfo.getLBo(), (float)mapinfo.getRBo(), (float)mapinfo.getUBo(), (float)mapinfo.getBBo());
-					else
-						m_navigation.setHeaderBounds((float)mapinfo.getLBo(), (float)mapinfo.getRBo(), (float)mapinfo.getUBo(), (float)mapinfo.getBBo());
-					//PAS.get_pas().get_navigation().setHeaderBounds(0, 0, 0, 0);
+					
+					variables.NAVIGATION.setHeaderBounds((float)mapinfo.getLBo(), (float)mapinfo.getRBo(), (float)mapinfo.getUBo(), (float)mapinfo.getBBo());
+					
+					//variables.NAVIGATION.setHeaderBounds(0, 0, 0, 0);
 					
 					m_img_load = Toolkit.getDefaultToolkit().createImage(map.getImage());
 					MediaTracker tracker;
-					if(PAS.get_pas() != null)
-						tracker = new MediaTracker(PAS.get_pas().get_mappane());
-					else
-						tracker = new MediaTracker(m_mappane);
+					tracker = new MediaTracker(variables.MAPPANE);
 					//MediaTracker tracker = m_mtracker;
 					tracker.addImage(m_img_load, 0);
 					try {
@@ -591,7 +583,7 @@ public class MapLoader {
 		if(m_img_load==null)
 		{
 			if(PAS.get_pas() != null)
-				PAS.get_pas().get_navigation().setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			else
 				m_navigation.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			if(m_retry==null)

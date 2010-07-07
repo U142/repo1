@@ -27,6 +27,7 @@ import no.ums.pas.send.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -195,13 +196,14 @@ public class plugin_Centric extends PAS_Scripting
 	@Override 
 	public boolean onAddSendOptionToolbar(SendOptionToolbar toolbar)
 	{
+		//CentricSendOptionToolbar ctoolbar = new CentricSendOptionToolbar(new SendObject(PAS.get_pas(),PAS.get_pas().get_pasactionlistener()),PAS.get_pas().get_pasactionlistener(),toolbar.get_sendingid());
 		toolbar.show_buttons(
 				SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_|
 				SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_|
 				SendOptionToolbar.BTN_OPEN_|
 				SendOptionToolbar.TXT_RECIPIENTTYPES_|
 				SendOptionToolbar.BTN_ADRTYPES_NOFAX_, 
-				false);
+				true);
 		return super.onAddSendOptionToolbar(toolbar);
 	}
 	
@@ -626,6 +628,10 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public InfoPanel onCreateInfoPanel() {
+		//CentricSendOptionToolbar ctoolbar = new CentricSendOptionToolbar();
+		//ctoolbar.doInit();
+		//return ctoolbar;
+		
 		InfoPanel panel = new CentricInfoPanel();
 		panel.doInit();
 		return panel;
@@ -906,8 +912,10 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
-		return super.onAddInfoTab(tab, panel);
-		//return true;
+		boolean ret = true;
+		//ret = super.onAddInfoTab(tab, panel);
+		tab.addTab("test", null, new CentricSendOptionToolbar(), "fjols");
+		return ret;
 	}
 
 	@Override

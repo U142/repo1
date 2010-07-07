@@ -15,6 +15,7 @@ import java.awt.geom.PathIterator;
 
 import javax.swing.UIManager;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Utils;
@@ -53,7 +54,8 @@ public class PolygonStruct extends ShapeStruct {
 	private ArrayList<Double> m_ellipse_coor_lon = new ArrayList<Double>(), m_ellipse_coor_lat = new ArrayList<Double>();
 	private ArrayList<Boolean> m_b_isadded = new ArrayList<Boolean>();
 	private Hashtable<Integer, String> hash_coors_added = new Hashtable<Integer, String>(); 
-	private int [] m_int_x, m_int_y;
+	private int [] m_int_x;
+	private int [] m_int_y;
 	private int [] m_show_int_x, m_show_int_y;
 //	private int [] m_simplified_int_x, m_simplified_int_y;
 	private boolean m_b_needcoortopix = true;
@@ -146,8 +148,8 @@ public class PolygonStruct extends ShapeStruct {
 			int next = ((i+1) % get_size());
 			MapPointLL ll1 = new MapPointLL(get_coor_lon(i), get_coor_lat(i));
 			MapPointLL ll2 = new MapPointLL(get_coor_lon(next), get_coor_lat(next));
-			MapPoint mp1 = new MapPoint(PAS.PAS.get_pas().get_navigation(), ll1);
-			MapPoint mp2 = new MapPoint(PAS.PAS.get_pas().get_navigation(), ll2);
+			MapPoint mp1 = new MapPoint(PAS.variables.NAVIGATION, ll1);
+			MapPoint mp2 = new MapPoint(PAS.variables.NAVIGATION, ll2);
 			//sqm += mp1.get_x()*mp2.get_y() - mp2.get_x()*mp1.get_y();
 			sqm += ll1.get_lon()*ll2.get_lat() - ll2.get_lon()*ll1.get_lat() * 30.92;
 		}
@@ -1432,7 +1434,7 @@ public class PolygonStruct extends ShapeStruct {
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;
 		this.m_b_needcoortopix = true;
-		calc_coortopix(no.ums.pas.PAS.get_pas().get_navigation());
+		calc_coortopix(variables.NAVIGATION);
 
 		/*int int_mod = 10000;
 		Polygon javapoly = new Polygon();
@@ -1484,7 +1486,7 @@ public class PolygonStruct extends ShapeStruct {
 			it.next();
 		}
 		this.m_b_needcoortopix = true;
-		calc_coortopix(PAS.PAS.get_pas().get_navigation());*/
+		calc_coortopix(PAS.variables.NAVIGATION);*/
 
 	}
 	

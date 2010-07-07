@@ -8,6 +8,7 @@ import javax.swing.*;
 //import netscape.javascript.JSObject;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.popupmenus.PUPolyPoint;
@@ -1148,7 +1149,10 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	}
 	
 	public void kickRepaint() {
-		get_drawthread().setRepaint(get_mapimage());
+		if(variables.MAPPANE.get_image() != null)
+			get_drawthread().setRepaint(variables.MAPPANE.get_mapimage());
+		else
+			variables.MAPPANE.load_map();
 		repaint();
 		validate();
 	}
@@ -1159,10 +1163,10 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		}
 		else if("act_add_polypoint".equals(e.getActionCommand())) {
 			MapPoint p;
-			if(PAS.get_pas() != null)
-				p = new MapPoint(PAS.get_pas().get_navigation(), new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
-			else
-				p = new MapPoint(m_navigation, new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
+			
+			p = new MapPoint(variables.NAVIGATION, new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
+			
+				
 			//((SendPropertiesPolygon)get_activesending().get_sendproperties()).get_polygon().add_coor(new Double(p.get_lon()), new Double(p.get_lat()));
 			try
 			{
@@ -1210,27 +1214,27 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		else if("act_set_ellipse_center".equals(e.getActionCommand())) {
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_ellipse().set_ellipse_center(PAS.get_pas().get_navigation(), p);
+				get_active_shape().typecast_ellipse().set_ellipse_center(variables.NAVIGATION, p);
 			} catch(Exception err) {  }
 		}
 		else if("act_set_ellipse_corner".equals(e.getActionCommand())) {
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_ellipse().set_ellipse_corner(PAS.get_pas().get_navigation(), p);
+				get_active_shape().typecast_ellipse().set_ellipse_corner(variables.NAVIGATION, p);
 			} catch(Exception err) { }
 		}
 		else if("act_set_polygon_ellipse_center".equals(e.getActionCommand()))
 		{
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_polygon().set_ellipse_center(PAS.get_pas().get_navigation(), p);
+				get_active_shape().typecast_polygon().set_ellipse_center(variables.NAVIGATION, p);
 			} catch(Exception err) {  }			
 		}
 		else if("act_set_polygon_ellipse_corner".equals(e.getActionCommand()))
 		{
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_polygon().set_ellipse_corner(PAS.get_pas().get_navigation(), p);
+				get_active_shape().typecast_polygon().set_ellipse_corner(variables.NAVIGATION, p);
 			} catch(Exception err) { }			
 		}
 		else if("act_onmouseover_houses".equals(e.getActionCommand())) {

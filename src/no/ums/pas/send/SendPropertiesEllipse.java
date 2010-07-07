@@ -11,6 +11,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HttpPostForm;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.*;
@@ -50,7 +51,7 @@ public class SendPropertiesEllipse extends SendProperties {
 	@Override
 	public void calc_coortopix()
 	{
-		get_shapestruct().calc_coortopix(PAS.get_pas().get_navigation());
+		get_shapestruct().calc_coortopix(variables.NAVIGATION);
 	}
 
 	

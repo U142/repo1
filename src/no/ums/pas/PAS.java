@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 
 
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.*;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.logon.*;
@@ -871,9 +872,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				{
 					m_mapproperties = new MapitemProperties();
 					m_sendcontroller = new SendController(PAS.get_pas());
+					variables.SENDCONTROLLER = m_sendcontroller;
 				
 					m_drawthread = new PASDraw(PAS.get_pas(), PAS.get_pas(), Thread.NORM_PRIORITY, dim_map.width, dim_map.height);
+					variables.DRAW = m_drawthread;
 					m_navigation = new Navigation(PAS.get_pas().get_pasactionlistener(), dim_map.width, dim_map.height);
+					variables.NAVIGATION = m_navigation;
 					//m_httpreq = new HTTPReq(get_sitename(), get_navigation());
 					
 				}
@@ -1033,6 +1037,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					}
 
 					m_userinfo = new UserInfo(logon.get_userinfo());
+					variables.USERINFO = m_userinfo;
 					m_userinfo.set_sitename(m_sz_sitename);
 					m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
 					m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
@@ -1185,9 +1190,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					try
 					{
 						m_mappane = new MapFrame(dim_map.width, dim_map.height, m_drawthread, m_navigation, null, true);
-						m_mappane.setSize(new Dimension(dim_map.width, dim_map.height));
-						//m_maplayeredpane = new MapLayeredPane(m_mappane);
-						//m_maplayeredpane.setPreferredSize(new Dimension(dim_map.width, dim_map.height));
+						variables.MAPPANE = m_mappane;
 						m_mappane.addActionListener(get_pasactionlistener());
 						m_drawthread.setMapImage(get_mappane().get_mapimage());
 						//m_drawthread.setMapOverlay(get_mappane().get_mapoverlay());
@@ -1530,7 +1533,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				System.out.println("New mapsize = " + dim_map.toString());
 				//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 				get_mappane().load_map(!m_b_firstmap);
-				get_eastcontent().actionPerformed(new ActionEvent(PAS.get_pas().get_navigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+				if(get_eastcontent() != null)
+					get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 				//get_navigation().reloadMap();
 			}
 			if(m_b_firstmap && b_from_timer) {
@@ -1913,7 +1917,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public void init_parmcontroller() {
-		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());		
+		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
+		variables.PARMCONTROLLER = m_parmcontroller;
 	}
 	
 	synchronized public void add_event(String sz_text, Exception err) { 

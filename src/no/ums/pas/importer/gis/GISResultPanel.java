@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.*;
@@ -240,7 +241,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 			updateStatistics();
 		}
 		else {
-			PAS.get_pas().get_navigation().exec_adrsearch(i.get_lon(), i.get_lat(), 200);
+			variables.NAVIGATION.exec_adrsearch(i.get_lon(), i.get_lat(), 200);
 		}
 	}
 	

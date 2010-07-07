@@ -40,6 +40,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -402,7 +403,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				ActionEvent ae = new ActionEvent(settings,ActionEvent.ACTION_PERFORMED,"act_save_settingsobject");
 				PAS.get_pas().actionPerformed(ae);
 				//PAS.get_pas().get_mappane().load_map();
-				PAS.get_pas().get_navigation().reloadMap();
+				variables.NAVIGATION.reloadMap();
 				this.dispose();
 			} else
 				m_lbl_error.setText(errormsg);

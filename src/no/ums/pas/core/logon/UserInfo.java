@@ -120,7 +120,7 @@ public class UserInfo extends Object {
 	 "l_houseeditor", "l_addresstypes", "sz_defaultnumber"
 	 */
 	
-	void add_department(int l_deptpk, String sz_deptid, String sz_stdcc, float lbo, float rbo, float ubo, float bbo,
+	public void add_department(int l_deptpk, String sz_deptid, String sz_stdcc, float lbo, float rbo, float ubo, float bbo,
 					boolean f_default, int l_deptpri, int l_maxalloc, String sz_userprofilename, 
 					String sz_userprofiledesc, int l_status, int l_newsending, int l_parm, int l_fleetcontrol,
 					int l_cellbroadcast, int l_houseeditor, long l_addresstypes, String sz_defaultnumber,

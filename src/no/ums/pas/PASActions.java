@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.logon.DeptInfo;
@@ -118,7 +119,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_loadmap".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().load_map(true);
-			PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(PAS.get_pas().get_navigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+			PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 			//PAS.get_pas().kickRepaint();
 		}
 		else if("act_download_houses".equals(e.getActionCommand())) {
@@ -143,17 +144,17 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_map_goto_point".equals(e.getActionCommand())) {
 			NavPoint p = (NavPoint)e.getSource();
-			PAS.get_pas().get_navigation().exec_adrsearch(p.get_lon(), p.get_lat(), p.get_zoom());
+			variables.NAVIGATION.exec_adrsearch(p.get_lon(), p.get_lat(), p.get_zoom());
 		}
 		else if("act_map_goto_area".equals(e.getActionCommand())) {
 			NavStruct nav = (NavStruct)e.getSource();
-			PAS.get_pas().get_navigation().setNavigation(nav);
+			variables.NAVIGATION.setNavigation(nav);
 			PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_show_world".equals(e.getActionCommand())) {
 			//NavStruct nav = new NavStruct(-150, 150, 80, -80);
-			PAS.get_pas().get_navigation().setNavigation(Navigation.NAV_WORLD);
+			variables.NAVIGATION.setNavigation(Navigation.NAV_WORLD);
 			PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
@@ -617,7 +618,7 @@ public class PASActions implements ActionListener {
 				if(PAS.get_pas().get_userinfo().get_current_department().get_nav_init()!=null)
 					actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			}*/
-			PAS.pasplugin.onSetInitialMapBounds(PAS.get_pas().get_navigation(), PAS.get_pas().get_userinfo());
+			PAS.pasplugin.onSetInitialMapBounds(variables.NAVIGATION, PAS.get_pas().get_userinfo());
 			PAS.get_pas().get_mappane().load_map(false);
 			/*
 			// Denne skal oppdatere weatherdata
@@ -630,7 +631,7 @@ public class PASActions implements ActionListener {
 						{
 							if(!parm_open)
 								actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-							PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(PAS.get_pas().get_navigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+							PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 						}
 						catch(Exception err) {}
 					}

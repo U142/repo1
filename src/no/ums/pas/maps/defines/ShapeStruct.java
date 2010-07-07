@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 
@@ -80,7 +81,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		{
 			calc_area_sqm();
 			calc_bounds();
-			calc_coortopix(no.ums.pas.PAS.get_pas().get_navigation());
+			calc_coortopix(variables.NAVIGATION);
 		}
 		catch(Exception e)
 		{

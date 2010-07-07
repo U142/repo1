@@ -56,6 +56,7 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.TreeRenderer;
 import no.ums.pas.core.defines.tree.TreeTable;
@@ -246,11 +247,11 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				{
 					ULBACOUNTRY c = (ULBACOUNTRY)dmtn.getUserObject();
 					System.out.println(c.getSzName());
-					if(!PAS.get_pas().get_navigation().pointVisible(c.getWeightpoint()))
+					if(!variables.NAVIGATION.pointVisible(c.getWeightpoint()))
 					{
 						zoomToCountry(c);
 						//NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-						//PAS.get_pas().get_navigation().gotoMap(nav);
+						//variables.NAVIGATION.gotoMap(nav);
 					}
 					pnl_details.setCountry(ctli);
 					startRepaintTimer();
@@ -260,7 +261,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 					System.out.println(c.getSzName());
 					//zoomToContinent(c);
 					//NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-					//PAS.get_pas().get_navigation().gotoMap(nav);
+					//variables.NAVIGATION.gotoMap(nav);
 					pnl_details.setCountry(null);
 					startRepaintTimer();
 				}
@@ -566,12 +567,12 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	protected void zoomToCountry(ULBACOUNTRY c)
 	{
 		NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-		PAS.get_pas().get_navigation().gotoMap(nav);		
+		variables.NAVIGATION.gotoMap(nav);		
 	}
 	protected void zoomToContinent(ULBACONTINENT c)
 	{
 		NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
-		PAS.get_pas().get_navigation().gotoMap(nav);				
+		variables.NAVIGATION.gotoMap(nav);				
 	}
 
 	public TasPanel(ActionListener callback)
@@ -1610,9 +1611,9 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		b_paint_continents = false;
 		b_paint_countrytext = false;
 		f_detaillevel = 1.0f;
-		//int mapwidth = Math.abs(PAS.get_pas().get_navigation().get_mapwidthmeters().intValue());
-		//double modifier = Math.cos(PAS.get_pas().get_navigation().getHeaderBBO() * CoorConverter.deg2rad);
-		double mapwidth = PAS.get_pas().get_navigation().getDeltaLon();
+		//int mapwidth = Math.abs(variables.NAVIGATION.get_mapwidthmeters().intValue());
+		//double modifier = Math.cos(variables.NAVIGATION.getHeaderBBO() * CoorConverter.deg2rad);
+		double mapwidth = variables.NAVIGATION.getDeltaLon();
 		System.out.println("MapWidth deg = " + mapwidth);
 		double levels [] = new double[] { 180, 90, 50, 40, 2, 1, 0.5 }; 
 		
@@ -1681,7 +1682,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(ll==null)
 					continue;
 				UMapPoint screen = new UMapPoint();
-				Dimension d = PAS.get_pas().get_navigation().coor_to_screen(ll.getLon(), ll.getLat(), true);
+				Dimension d = variables.NAVIGATION.coor_to_screen(ll.getLon(), ll.getLat(), true);
 				if(d!=null)
 				{
 					screen.setLon(d.width);
@@ -1702,7 +1703,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(ll==null)
 					continue;
 				UMapPoint screen = new UMapPoint();
-				Dimension d = PAS.get_pas().get_navigation().coor_to_screen(ll.getLon(), ll.getLat(), false);
+				Dimension d = variables.NAVIGATION.coor_to_screen(ll.getLon(), ll.getLat(), false);
 				if(d!=null)
 				{
 					screen.setLon(d.width);

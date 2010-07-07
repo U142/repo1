@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.vars;
@@ -43,8 +44,8 @@ public class HouseController extends Controller {
 	}
 	
 	void create_filter() {
-		m_nav = new NavStruct(PAS.get_pas().get_navigation().get_lbo().doubleValue(), PAS.get_pas().get_navigation().get_rbo().doubleValue(),
-				PAS.get_pas().get_navigation().get_ubo().doubleValue(), PAS.get_pas().get_navigation().get_bbo().doubleValue());
+		m_nav = new NavStruct(variables.NAVIGATION.get_lbo().doubleValue(), variables.NAVIGATION.get_rbo().doubleValue(),
+				variables.NAVIGATION.get_ubo().doubleValue(), variables.NAVIGATION.get_bbo().doubleValue());
 	}
 
 	public void show_addresstypes(int n_types) {
@@ -113,8 +114,8 @@ public class HouseController extends Controller {
 			get_http_req().m_b_interrupted = false;
 		}*/
 		create_filter();
-		//if(PAS.get_pas().get_navigation().get_mapwidthmeters().intValue() > get_max_meters_width()) {
-			//PAS.get_pas().add_event("House visibility exceeded - " + get_max_meters_width() + " / " + PAS.get_pas().get_navigation().get_mapwidthmeters().intValue(), null);
+		//if(variables.NAVIGATION.get_mapwidthmeters().intValue() > get_max_meters_width()) {
+			//PAS.get_pas().add_event("House visibility exceeded - " + get_max_meters_width() + " / " + variables.NAVIGATION.get_mapwidthmeters().intValue(), null);
 		set_visibility_change(true);
 		//	return;
 		//}

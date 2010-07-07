@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.ws.pas.tas.UMapPoint;
 
@@ -187,8 +188,8 @@ public class Navigation {
 	public boolean too_small(NavStruct nav) {
 		int n_minzoom = 60;
 
-		MapPoint mp1 = new MapPoint(PAS.get_pas().get_navigation(), new MapPointLL(nav._rbo, nav._ubo));
-		MapPoint mp2 = new MapPoint(PAS.get_pas().get_navigation(), new MapPointLL(nav._lbo, nav._bbo));
+		MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
+		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
 		
 		if(calc_distance(mp1, mp2) < n_minzoom)
 			return true;
