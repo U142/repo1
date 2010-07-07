@@ -1399,6 +1399,23 @@ namespace com.ums.UmsParm
         }
     }
 
+    public class PACBSENDING // Used for NLALERT
+    {
+        public long n_refno;
+        public long n_projectpk;
+        public String sz_name;
+        public String sz_message;
+        public DateTime datetime;
+        public long n_deptpk;
+        public long n_userpk;
+        public long n_comppk;
+        public UShape m_shape;
+        public int n_repetition;
+        public int n_interval;
+        public int n_duration;
+    }
+
+
     public class TAS_SENDING : SMS_SENDING
     {
         private bool m_b_allow_response;

@@ -154,6 +154,16 @@ namespace com.ums.ws.parm
         }
 
         [WebMethod]
+        public PACBSENDING sendPACBSending(ULOGONINFO logon, PACBSENDING sending)
+        {
+            db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            //ch
+            db.Send(ref logon, ref sending);
+
+            return new PACBSENDING();
+        }
+
+        [WebMethod]
         public UPAALERTRESTULT ExecAlertUpdate(ULOGONINFO logon, PAALERT a)
         {
             try

@@ -1077,4 +1077,6 @@ namespace com.ums.UmsCommon
         public int n_deptpk;
     }
 
+
+
 }

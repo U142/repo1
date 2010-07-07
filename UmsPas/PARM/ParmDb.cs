@@ -1076,6 +1076,23 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool Send(ref ULOGONINFO logon, ref PACBSENDING sending)
+        {
+            try
+            {
+                
+                // Insert into LBASEND
+                db.InsertLBARecord_2_0(-1,?,?,
+                // Write to eat
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+        }
+
         public List<int> GetOperatorsForSend(long l_alertpk, long l_deptpk)
         {
             List<int> operators = new List<int>();
