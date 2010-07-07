@@ -12,6 +12,8 @@ import no.ums.ws.pas.USYSTEMMESSAGES;
 public class WSGetSystemMessages extends WSThread
 {
 	USYSTEMMESSAGES ret;
+	long n_dbtimestamp = 0;
+	public USYSTEMMESSAGES getSystemMessages() { return ret; }
 	
 	public WSGetSystemMessages(ActionListener callback)
 	{
@@ -38,7 +40,8 @@ public class WSGetSystemMessages extends WSThread
 			logon.setSzStdcc("");
 			URL wsdl = new URL(vars.WSDL_PAS);
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			ret = new Pasws(wsdl, service).getPaswsSoap12().getSystemMessages(logon, 0);
+			ret = new Pasws(wsdl, service).getPaswsSoap12().getSystemMessages(logon, n_dbtimestamp);
+			n_dbtimestamp = ret.getNews().getLTimestampDb();
 			
 		}
 		catch(Exception e)
@@ -54,7 +57,7 @@ public class WSGetSystemMessages extends WSThread
 
 	@Override
 	public void OnDownloadFinished() {
-		System.out.println("System messages downloaded");
+		//System.out.println("System messages downloaded");
 	}
 	
 }

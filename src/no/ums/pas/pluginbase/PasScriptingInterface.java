@@ -39,7 +39,9 @@ import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.ws.pas.UBBNEWSLIST;
 import no.ums.ws.pas.UGabSearchResultList;
+import no.ums.ws.pas.USYSTEMMESSAGES;
 
 
 /**
@@ -377,6 +379,13 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	protected abstract boolean onExecAskForSystemMessage(ActionListener callback);
+	
+	/**
+	 * Function that's called after a new list of System Messages are downloaded
+	 * @param system message object. List of news/messages from system/operators
+	 * @return
+	 */
+	protected abstract boolean onHandleSystemMessages(USYSTEMMESSAGES sysmsg);
 	
 	/**
 	 * Function called if user clicks on Help-About menu

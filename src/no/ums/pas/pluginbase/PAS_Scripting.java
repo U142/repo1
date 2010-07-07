@@ -42,6 +42,8 @@ import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.pas.UBBNEWSLIST;
+import no.ums.ws.pas.USYSTEMMESSAGES;
 
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.*;
@@ -680,10 +682,20 @@ public class PAS_Scripting extends PasScriptingInterface
 		return true;
 	}
 
+	WSGetSystemMessages ws_getsystemmessages;
 	@Override
 	public boolean onExecAskForSystemMessage(ActionListener callback) {
-		WSGetSystemMessages msg = new WSGetSystemMessages(callback);
-		msg.runNonThreaded();
+		if(ws_getsystemmessages==null)
+			ws_getsystemmessages = new WSGetSystemMessages(callback);
+		ws_getsystemmessages.runNonThreaded();
+		onHandleSystemMessages(ws_getsystemmessages.getSystemMessages());
+		return true;
+	}
+	
+	
+
+	@Override
+	protected boolean onHandleSystemMessages(USYSTEMMESSAGES sysmsg) {
 		return true;
 	}
 
