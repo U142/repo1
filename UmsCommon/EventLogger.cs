@@ -95,6 +95,20 @@ namespace com.ums.UmsCommon
 
     public static class ULog
     {
+        public enum ULOGTO
+        {
+            SYSLOG = 1,
+            EVENTLOG = 2,
+        };
+        public static long logto = (long)ULOGTO.EVENTLOG | (long)ULOGTO.SYSLOG;
+        /**
+         * Flag ULOGTO
+         */
+        public static void setLogTo(long n)
+        {
+            logto = n;
+        }
+
         public static void write(long l_refno, String s)
         {
             String o = String.Format("INFO Refno {0}\n{1}", l_refno, s);
@@ -152,39 +166,45 @@ namespace com.ums.UmsCommon
             }
             try
             {
-                EventLog log = new EventLog();
-                log.Source = UCommon.appname;
-                log.WriteEntry(s + "\r\n" + sz_stack, type);
+                if ((logto & ((long)ULOGTO.EVENTLOG)) == (long)ULOGTO.EVENTLOG)
+                {
+                    EventLog log = new EventLog();
+                    log.Source = UCommon.appname;
+                    log.WriteEntry(s + "\r\n" + sz_stack, type);
+                }
             }
             catch (Exception)
             {
             }
-            if (!USysLog._inited)
-                return;
-            try
+            if ((logto & ((long)ULOGTO.SYSLOG)) == (long)ULOGTO.SYSLOG)
             {
-                USysLog.ULEVEL syslogtype;
-                switch (type)
+                if (!USysLog._inited)
+                    return;
+                try
                 {
-                    case EventLogEntryType.Error:
-                        syslogtype = USysLog.ULEVEL.crit;
-                        break;
-                    case EventLogEntryType.Information:
-                        syslogtype = USysLog.ULEVEL.info;
-                        break;
-                    case EventLogEntryType.Warning:
-                        syslogtype = USysLog.ULEVEL.warning;
-                        break;
-                    default:
-                        syslogtype = USysLog.ULEVEL.warning;
-                        break;
+                    USysLog.ULEVEL syslogtype;
+                    switch (type)
+                    {
+                        case EventLogEntryType.Error:
+                            syslogtype = USysLog.ULEVEL.crit;
+                            break;
+                        case EventLogEntryType.Information:
+                            syslogtype = USysLog.ULEVEL.info;
+                            break;
+                        case EventLogEntryType.Warning:
+                            syslogtype = USysLog.ULEVEL.warning;
+                            break;
+                        default:
+                            syslogtype = USysLog.ULEVEL.warning;
+                            break;
+
+                    }
+                    USysLog.send(UCommon.appname + ": " + s, USysLog.UFACILITY.syslog, syslogtype);
+                }
+                catch (Exception)
+                {
 
                 }
-                USysLog.send(UCommon.appname + ": " + s, USysLog.UFACILITY.syslog, syslogtype);
-            }
-            catch (Exception)
-            {
-
             }
         }
     }

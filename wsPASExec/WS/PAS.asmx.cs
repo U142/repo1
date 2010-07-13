@@ -91,8 +91,10 @@ namespace com.ums.ws.pas
         {
             try
             {
-                new ULogon().CheckLogon(ref l, false);
+                ULogon logon = new ULogon();
+                logon.CheckLogon(ref l, false);
                 USYSTEMMESSAGES ret = new USYSTEMMESSAGES();
+                ret.news = logon.getSystemMessages_news(ref l, timestamp);
                 return ret;
             }
             catch (Exception e)

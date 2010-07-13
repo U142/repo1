@@ -1076,13 +1076,13 @@ namespace com.ums.UmsParm
             }
         }
 
-        public bool Send(ref ULOGONINFO logon, ref PACBSENDING sending)
+        public bool Send(ref ULOGONINFO logon, ref CB_SENDING sending)
         {
             try
             {
                 
                 // Insert into LBASEND
-                db.InsertLBARecord_2_0(-1,?,?,
+                //db.InsertLBARecord_2_0(-1,?,?,
                 // Write to eat
                 return true;
             }

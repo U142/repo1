@@ -276,6 +276,17 @@ namespace com.ums.ws.parm
             return response;
         }
 
+        [WebMethod]
+        public XmlDocument ExecCBSending(ULOGONINFO logon, CB_SENDING sending)
+        {
+            XmlDocument doc = new XmlDocument();
+            PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            db.Send(ref logon, ref sending);
+
+            return doc;
+        }
+
+
         /*
          * Common function for ExecPolygonSending, ExecEllipseSending and ExecGixSending
          */

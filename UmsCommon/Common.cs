@@ -634,6 +634,37 @@ namespace com.ums.UmsCommon
     public class USYSTEMMESSAGES
     {
         public long l_timestamp;
+        public UBBNEWSLIST news;
+
+    }
+
+    public class UBBNEWSLIST
+    {
+        public long l_timestamp_db;
+        public List<UBBNEWS> newslist = new List<UBBNEWS>();
+    }
+    public class UBBNEWS
+    {
+        public long l_newspk;
+        public long l_created;
+        public int l_validms;
+        public long l_type;
+        public long l_incident_start;
+        public long l_incident_end;
+        public int f_active;
+        public int l_deptpk;
+        public int l_severity;
+        public int l_operator;
+        public int l_errorcode;
+        public long l_userpk;
+        public long l_timestamp_db;
+        public String sz_userid;
+        public UBBNEWSTEXT newstext;
+    }
+    public class UBBNEWSTEXT
+    {
+        public long l_langpk;
+        public String sz_news;
     }
 
 

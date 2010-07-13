@@ -1399,21 +1399,6 @@ namespace com.ums.UmsParm
         }
     }
 
-    public class PACBSENDING // Used for NLALERT
-    {
-        public long n_refno;
-        public long n_projectpk;
-        public String sz_name;
-        public String sz_message;
-        public DateTime datetime;
-        public long n_deptpk;
-        public long n_userpk;
-        public long n_comppk;
-        public UShape m_shape;
-        public int n_repetition;
-        public int n_interval;
-        public int n_duration;
-    }
 
 
     public class TAS_SENDING : SMS_SENDING
@@ -1493,6 +1478,26 @@ namespace com.ums.UmsParm
         {
             l_resend_status = resendStatus;
         }
+    }
+
+    public class CB_SENDING // Used for NLALERT
+    {
+        public BBPROJECT m_project;
+        public String sz_name;
+        public String sz_message;
+        public long l_datetime;
+        public long l_deptpk;
+        public long l_userpk;
+        public long l_comppk;
+        public UShape m_shape;
+        public int l_repetition;
+        public int l_interval;
+        public int l_duration;
+    }
+
+    public class CB_SENDING_RETURN
+    {
+        public long n_refno;
     }
 
     public class PAS_SENDING

@@ -331,6 +331,52 @@ namespace com.ums.UmsDbLib
 
         }
 
+        public UBBNEWSLIST getSystemMessages_news(ref ULOGONINFO l, long n_timestamp)
+        {
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime();
+            long now = getDbClock();
+            UDATETIME dt = new UDATETIME(now);
+            //long filetime = dt.getDT().ToFileTime();
+            TimeSpan ts = dt.getDT().ToLocalTime() - epoch;
+            long filetime = (long)ts.TotalSeconds;
+            UBBNEWSLIST list = new UBBNEWSLIST();
+            list.l_timestamp_db = now;
+            //sp_pas_getnews deptpk, timestamp
+            String sql = String.Format("sp_get_news_by_dept {0}, {1}",
+                                        l.l_deptpk, n_timestamp);
+            try
+            {
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    UBBNEWS news = new UBBNEWS();
+                    news.l_newspk = rs.GetInt64(0);
+                    news.l_created = rs.GetInt64(1);
+                    news.l_validms = rs.GetInt32(2);
+                    news.newstext = new UBBNEWSTEXT();
+                    //news.newstext.l_langpk = rs.GetInt64(3);
+                    news.newstext.sz_news = rs.GetString(3);
+                    news.l_type = rs.GetInt64(4);
+                    news.l_incident_start = rs.GetInt64(5);
+                    news.l_incident_end = rs.GetInt64(6);
+                    news.f_active = rs.GetInt32(7);
+                    news.l_deptpk = rs.GetInt32(8);
+                    news.l_severity = rs.GetInt32(9);
+                    news.l_operator = rs.GetInt32(10);
+                    news.l_errorcode = rs.GetInt32(11);
+                    news.l_userpk = rs.GetInt64(12);
+                    news.l_timestamp_db = rs.GetInt64(13);
+                    list.newslist.Add(news);
+                }
+                rs.Close();
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         /*initialize database connection*/
         protected bool init()
         {
