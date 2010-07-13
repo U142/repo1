@@ -322,12 +322,15 @@ public class MapLoader {
 	
 	private void setWmsAuthenticator(final String usr, final char[] pass)
 	{
-		java.net.Authenticator.setDefault(new java.net.Authenticator() {
-		    protected java.net.PasswordAuthentication getPasswordAuthentication() {
-		      return new java.net.PasswordAuthentication(usr,
-		pass);
-		    }
-		  });		
+		if(usr.length()>0 && pass.length > 0)
+		{
+			java.net.Authenticator.setDefault(new java.net.Authenticator() {
+			    protected java.net.PasswordAuthentication getPasswordAuthentication() {
+			      return new java.net.PasswordAuthentication(usr,
+			pass);
+			    }
+			  });		
+		}
 	}
 	
 	private void setWmsAuthenticator()
@@ -389,6 +392,8 @@ public class MapLoader {
 			if(!m_sz_wms_url.equals(sz_wms_url))
 			{
 				wms = new WebMapServer(new java.net.URL(sz_wms_url));
+				wms.getCapabilities().getRequest().getGetMap().setGet(new URL(sz_wms_url));
+				//TEMP solution
 			}
 			request =  wms.createGetMapRequest();
 			if(capabilities==null || !m_sz_wms_url.equals(sz_wms_url))
@@ -400,7 +405,7 @@ public class MapLoader {
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
-			 request.setTransparent(false);
+			 request.setTransparent(true);
 			 request.setSRS("EPSG:4326");
 			 //request.setFormat("image/png");
 			 request.setFormat(PAS.get_pas().get_settings().getSelectedWmsFormat());
