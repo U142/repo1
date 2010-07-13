@@ -2,13 +2,22 @@ package no.ums.pas.plugins.centric;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import nl.bzk.services.nl_alert.mapsearch.*;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
+import no.ums.pas.pluginbase.PluginLoader;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.*;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.ws.vars;
 import no.ums.ws.pas.*;
 import no.ums.pas.*;
 
@@ -19,13 +28,70 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	/**
 	 * Edit how to search for addresses (e.g. another Web Service)
 	 * Must return a UGabSearchResultList
+	 * Translate return values into a UGabSearchResultList to return
 	 */
-	/*@Override
+	@Override
 	public UGabSearchResultList onExecSearch(SearchPanelVals spr) throws Exception
 	{
+		PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch.jar");
 		System.out.println("CentricAddressSearch.onExecSearch");
-		return null;
-	}*/
+		nl.bzk.services.nl_alert.mapsearch.ObjectFactory of = new nl.bzk.services.nl_alert.mapsearch.ObjectFactory();
+		java.net.URL wsdl;
+		try
+		{			
+			String WSDL_CENTRIC_MAPSEARCH = "http://www.centric.nl/services/nl-alert/mapsearch/MapSearchService.asmx?WSDL";
+			wsdl = new java.net.URL(WSDL_CENTRIC_MAPSEARCH);//PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL"); 
+			QName service = new QName("http://www.bzk.nl/services/nl-alert/mapsearch/", "MapSearchService");
+			MapSearchService myService = new MapSearchService(wsdl, service);
+			MapSearchResponse temp_response = myService.
+								getMapSearchServiceSoap().
+								doMapSearch(
+										10, 
+										spr.get_number(), 
+										spr.get_address(), 
+										spr.get_postno(),
+										spr.get_postarea(),
+										spr.get_region());
+			List<MapMatches> list = temp_response.getMatches().getMapMatches();
+			UGabSearchResultList response = new UGabSearchResultList();
+			List<UGabResult> results = new ArrayList<UGabResult>();
+			ArrayOfUGabResult arr_res = new ArrayOfUGabResult();
+			for(int i=0; i < list.size(); i++)
+			{
+				MapMatches m = list.get(i);
+				UGabResult ugabresult = new UGabResult();
+				ugabresult.setLat(m.getLat());
+				ugabresult.setLon(m.getLon());
+				ugabresult.setMatch(m.getMatch());
+				ugabresult.setName(m.getName());
+				ugabresult.setPostno(m.getName());
+				ugabresult.setRegion(m.getRegion());
+				switch(m.getScope())
+				{
+				default:
+					ugabresult.setType(GABTYPE.HOUSE);
+					break;
+				}
+				arr_res.getUGabResult().add(ugabresult);
+				
+			}
+			response.setBHaserror(false);
+			response.setList(arr_res);
+			/*Pasws myService = new Pasws(wsdl, service);
+			UGabSearchResultList response = myService.getPaswsSoap12().gabSearch(params, logoninfo);
+			if(response.isBHaserror())
+			{
+				no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), response.getSzErrortext(), new Exception(response.getSzExceptiontext()), 1);
+				throw new Exception(response.getSzErrortext());
+			}*/
+			return response;
+		} 
+		catch(Exception e)
+		{
+			throw e;
+		}
+		
+	}
 	
 	
 	@Override

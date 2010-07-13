@@ -22,4 +22,18 @@ public class PluginLoader
 			throw e;
 		}
 	}
+	public static boolean LoadExternalJar(String host, String jarname)
+		throws Exception
+	{
+		try
+		{
+			new NetworkClassLoader(host, jarname, FILETYPE.JAR);
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }
