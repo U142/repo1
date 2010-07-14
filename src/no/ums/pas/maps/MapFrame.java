@@ -85,7 +85,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public final static int MAP_HOUSEEDITOR_SET_COOR_NONE		= 4;
 	
 	Dimension m_dimension;
-	MapLoader m_maploader; 
+	public MapLoader m_maploader; 
 	int m_n_mapsite;
 	private Cursor m_cursor_draw;
 	private Cursor m_cursor_illegal_draw;
@@ -139,8 +139,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public Cursor get_cursor_draw_merge() { return m_cursor_draw_merge; }
 	public Cursor get_cursor_draw_pin_to_border() { return m_cursor_draw_pin_to_border; }
 
-	Image m_img_onscreen = null;
-	Image m_img_loading = null;
+	public Image m_img_onscreen = null;
+	public Image m_img_loading = null;
 	//Image m_img_overlay = null;
 	//Image m_img_overlay_onscreen = null;
 	
@@ -262,7 +262,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	int m_n_prev_mode = MAP_MODE_PAN;
 	int m_n_current_submode = 0;
 	private Inhabitant m_current_inhab_move = null;
-	Cursor m_current_cursor;
+	public Cursor m_current_cursor;
 	Robot m_robot;
 	String m_sz_mapportrayal = "By";
 	UMSMapObject m_current_object = null;
@@ -814,8 +814,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		gfx.drawRect(x1, y1, x2-x1, y2-y1);		 
 	}
 	
-	int get_mapsite() { return m_n_mapsite; }
-	String get_mapportrayal() { return m_sz_mapportrayal; }
+	public int get_mapsite() { return m_n_mapsite; }
+	public String get_mapportrayal() { return m_sz_mapportrayal; }
 	//void set_mapportrayal(String sz_portrayal) { m_sz_mapportrayal = sz_portrayal; } 
 	/*void set_mapsite(int n_mapsite) { 
 		m_n_mapsite = n_mapsite; 

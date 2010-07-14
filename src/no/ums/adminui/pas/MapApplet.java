@@ -1,4 +1,4 @@
-package no.ums.pas.maps;
+package no.ums.adminui.pas;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -76,6 +76,8 @@ import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.importer.*;
+import no.ums.pas.maps.*;
+import no.ums.pas.maps.defines.*;
 
 public class MapApplet extends JApplet implements ActionListener {
 	/**

@@ -1,4 +1,4 @@
-package no.ums.pas.maps;
+package no.ums.adminui.pas;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -8,6 +8,8 @@ import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
+import no.ums.pas.maps.*;
+import no.ums.pas.maps.defines.*;
 
 public class MapFrameAdmin extends MapFrame {
 
@@ -71,7 +73,7 @@ public class MapFrameAdmin extends MapFrame {
 			if(m_img_loading==null)
 			{
 			}
-			for(int i=0;i<m_overlays.size();++i) {
+			for(int i=0;i<getOverlays().size();++i) {
 				/*if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_gsm().isSelected())
 					showAllOverlays(1, true);
 				else
@@ -130,7 +132,7 @@ public class MapFrameAdmin extends MapFrame {
 				{
 				}
 			}
-			g.drawImage(get_drawthread().get_buff_image(), get_actionhandler().getPanDragPoint().get_x(), get_actionhandler().getPanDragPoint().get_y(), m_dimension.width, m_dimension.height, this);
+			g.drawImage(get_drawthread().get_buff_image(), get_actionhandler().getPanDragPoint().get_x(), get_actionhandler().getPanDragPoint().get_y(), getMinimumSize().width, getMinimumSize().height, this);
 		}
 		catch(Exception e)
 		{

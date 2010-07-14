@@ -347,7 +347,7 @@ public class MapLoader {
 		});
 	}
 
-	Image load_map_wms(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, String sz_wms_url)
+	public Image load_map_wms(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, String sz_wms_url)
 	{
 		try
 		{
@@ -487,7 +487,7 @@ public class MapLoader {
 
 	}
 		
-	Image load_map(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, int n_mapsite, String sz_portrayal) {	
+	public Image load_map(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, int n_mapsite, String sz_portrayal) {	
 		ObjectFactory of = new ObjectFactory();
 		UMapInfo info = of.createUMapInfo();
 		info.setLBo((float)n_lbo);
