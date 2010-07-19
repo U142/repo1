@@ -25,6 +25,15 @@ public class NetworkClassLoader extends ClassLoader {
 		this.filetype = f;
 	}
 	
+	public NetworkClassLoader(String host, String jarfile, String classname)
+	{
+		super();
+		this.filename = jarfile + "." + FILETYPE.JAR.name().toLowerCase();
+		this.classname = classname;
+		this.host = host;
+		this.filetype = FILETYPE.JAR;
+	}
+	
 	
 	public Class<PasScriptingInterface> loadClass() throws ClassNotFoundException {
 		if(filetype==FILETYPE.CLASS)

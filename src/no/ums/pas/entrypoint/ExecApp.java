@@ -33,6 +33,7 @@ public class ExecApp {
 		String sz_import = "";
 		String sz_pasws = "";
 		String sz_plugin = null;
+		String sz_force_wms = null;
 		boolean debug = false;
 		String sz_codebase = null;
 		String[] arr_args = args;
@@ -57,6 +58,9 @@ public class ExecApp {
 						break;
 					case 'p':
 						sz_plugin = args[i].substring(2);
+						break;
+					case 'm':
+						sz_force_wms = args[i].substring(2);
 						break;
 					case 'f':
 						if(args[i].length()>3)
@@ -96,12 +100,13 @@ public class ExecApp {
 		final String f_codebase = sz_codebase;
 		final String f_plugin = sz_plugin;
 		final String [] f_args = args;
+		final String f_force_wms = sz_force_wms;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
 				loadPlugin(f_codebase, f_plugin);
 				PAS.pasplugin.onSetInitialLookAndFeel(this.getClass().getClassLoader());
-				m_pas = new PAS(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_args);
+				m_pas = new PAS(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_force_wms, f_args);
 			}
 		});
 /*		m_pas.init();

@@ -5,7 +5,6 @@ import javax.swing.*;
 
 import no.ums.pas.*;
 import no.ums.pas.cellbroadcast.CountryCodes;
-import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;

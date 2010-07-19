@@ -84,6 +84,7 @@ public class DeptInfo extends Object {
 		m_sz_defaultnumber = sz_defaultnumber;
 		m_municipals = municipals;
 		m_l_pas = l_pas;
+		System.out.println("Department=" + m_sz_deptid);
 		m_restriction_shapestructs = ConvertUShapes_to_ShapeStructs(restriction_shapes.getUShape());
 	}
 	

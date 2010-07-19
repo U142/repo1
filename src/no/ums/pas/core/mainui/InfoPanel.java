@@ -232,9 +232,16 @@ public class InfoPanel extends GeneralPanel {
 
 	public void actionPerformed(ActionEvent e) {
 		if("act_maploaded".equals(e.getActionCommand())) {
-			Navigation nav = (Navigation)e.getSource();
-			set_mapdimpix(nav.getDimension().width, nav.getDimension().height);
-			set_mapdimmeters(nav.get_mapwidthmeters().intValue(), nav.get_mapheightmeters().intValue());
+			try
+			{
+				Navigation nav = (Navigation)e.getSource();
+				set_mapdimpix(nav.getDimension().width, nav.getDimension().height);
+				set_mapdimmeters(nav.get_mapwidthmeters().intValue(), nav.get_mapheightmeters().intValue());
+			}
+			catch(Exception err)
+			{
+				
+			}
 			if(m_weatherinfo!=null)
 				m_weatherinfo.updateWeatherData();
 			// Update weather data

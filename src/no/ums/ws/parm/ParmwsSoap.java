@@ -273,6 +273,23 @@ public interface ParmwsSoap {
 
     /**
      * 
+     * @param cb
+     * @param logon
+     * @return
+     *     returns no.ums.ws.parm.CBSENDINGRESPONSE
+     */
+    @WebMethod(operationName = "ExecCBOperation", action = "http://ums.no/ws/parm/ExecCBOperation")
+    @WebResult(name = "ExecCBOperationResult", targetNamespace = "http://ums.no/ws/parm/")
+    @RequestWrapper(localName = "ExecCBOperation", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.ExecCBOperation")
+    @ResponseWrapper(localName = "ExecCBOperationResponse", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.ExecCBOperationResponse")
+    public CBSENDINGRESPONSE execCBOperation(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/parm/")
+        ULOGONINFO logon,
+        @WebParam(name = "cb", targetNamespace = "http://ums.no/ws/parm/")
+        CBOPERATIONBASE cb);
+
+    /**
+     * 
      * @param szSchedtime
      * @param szFunction
      * @param szCompid

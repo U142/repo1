@@ -271,6 +271,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static int g_n_parmversion = 2;
 	public static String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
+	public static String OVERRIDE_WMS_SITE = null;
 	
 	public static boolean APP_EXIT = false;
 	
@@ -563,18 +564,20 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public PAS() {
-		this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null);
+		this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null, null);
 	}
 	public PAS(String sz_sitename)
 	{
-		this(sz_sitename, null, null, null, false, null, null, null);
+		this(sz_sitename, null, null, null, false, null, null, null, null);
 	}
 	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 
-			boolean b_debug, String sz_codebase, String sz_plugin, String [] args)
+			boolean b_debug, String sz_codebase, String sz_plugin, 
+			String sz_force_wms_site, String [] args)
 	{
 		super();
 		g_b_debug = b_debug;
 		sz_script_class = sz_plugin;
+		OVERRIDE_WMS_SITE = sz_force_wms_site;
 		try
 		{
 			//setLocale("en", "EN");
@@ -1012,7 +1015,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		try
 		{
-			String defaultlang = m_settings.getLanguage();
+			//String defaultlang = m_settings.getLanguage();
+			String defaultlang = pasplugin.getDefaultLocale(m_settings);
 			if(defaultlang.length() > 0)
 				setLocale(defaultlang);
 		}
@@ -1044,6 +1048,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					UPASUISETTINGS ui = logon.get_uisettings();
 					if(ui.isInitialized())
 					{
+						if(OVERRIDE_WMS_SITE!=null)
+						{
+							ui.setLMapserver(1);
+							ui.setSzWmsSite(OVERRIDE_WMS_SITE);
+							ui.setSzWmsFormat("image/png");
+							ui.setSzWmsLayers("Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road");
+							ui.setSzWmsUsername("");
+							ui.setSzWmsPassword("");
+						}
 						setVisualSettings(ui);
 						try {
 							//new MailCtrl("ums.no", "mail.ums.no", 25, "mh@ums.no", "mh@ums.no", this, "PAS Error", "dilldall");

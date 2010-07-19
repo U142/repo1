@@ -304,6 +304,8 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
 							g2d.drawString(PAS.l("common_initializing"), 20, 50);
 						}
+						else if(m_mapimg==null)
+							System.out.println("m_mapimg==null");
 						else
 							System.out.println("None of the above");
 						b_firstmap = false;

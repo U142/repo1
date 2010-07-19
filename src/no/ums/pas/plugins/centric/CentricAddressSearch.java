@@ -33,7 +33,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	@Override
 	public UGabSearchResultList onExecSearch(SearchPanelVals spr) throws Exception
 	{
-		PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch.jar");
+		//PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch", "ObjectFactory");
 		System.out.println("CentricAddressSearch.onExecSearch");
 		nl.bzk.services.nl_alert.mapsearch.ObjectFactory of = new nl.bzk.services.nl_alert.mapsearch.ObjectFactory();
 		java.net.URL wsdl;

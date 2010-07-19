@@ -916,6 +916,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void load_map() {
 		//m_img_loading.flush();
 
+		System.out.println("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
 		PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer()==MAPSERVER.DEFAULT ? true : false));
 		if(m_maploader.IsLoadingMapImage())
 			return;
@@ -1011,34 +1012,41 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	
 	public synchronized void load_map(boolean b_threaded) {
 		//ensures that nothing is drawn until this new map is ready
-		PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
-		if(b_threaded)
+		try
 		{
-			
-			Thread th = new Thread("Load map thread") {
+			PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
+			if(b_threaded)
+			{
 				
-				public void run()
-				{
-					//b_loading_in_progress = true;
-					SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("common_map"));
-					PAS.get_pas().kickRepaint();
-					load_map();
-					SetIsLoading(false, "");
-					/*while(get_mapimage()==null)
+				Thread th = new Thread("Load map thread") {
+					
+					public void run()
 					{
-						try
+						//b_loading_in_progress = true;
+						SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("common_map"));
+						PAS.get_pas().kickRepaint();
+						load_map();
+						SetIsLoading(false, "");
+						/*while(get_mapimage()==null)
 						{
-							Thread.sleep(10);
-						}
-						catch(Exception e) { }
-					}*/
-					PAS.get_pas().kickRepaint();
-				}
-			};
-			th.setPriority(Thread.NORM_PRIORITY);
-			th.start();
-		} else
-			load_map();
+							try
+							{
+								Thread.sleep(10);
+							}
+							catch(Exception e) { }
+						}*/
+						PAS.get_pas().kickRepaint();
+					}
+				};
+				th.setPriority(Thread.NORM_PRIORITY);
+				th.start();
+			} else
+				load_map();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	public void set_cursor(Cursor cur)
 	{		

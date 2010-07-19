@@ -1096,6 +1096,11 @@ public class plugin_Centric extends PAS_Scripting
 
 		return true;
 	}
+
+	@Override
+	public String getDefaultLocale(Settings s) {
+		return "nl_NL";
+	}
 	
 	
 

@@ -22,12 +22,12 @@ public class PluginLoader
 			throw e;
 		}
 	}
-	public static boolean LoadExternalJar(String host, String jarname)
+	public static boolean LoadExternalJar(String host, String jarfile, String classname)
 		throws Exception
 	{
 		try
 		{
-			new NetworkClassLoader(host, jarname, FILETYPE.JAR);
+			new NetworkClassLoader(host, jarfile, classname).loadClass();
 			return true;
 		}
 		catch(Exception e)

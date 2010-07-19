@@ -23,7 +23,7 @@ public class ExecApplet extends JApplet implements Runnable {
 		String sz_userid = "";
 		String sz_compid = "";
 		System.out.println("Using site: " + sz_sitename);
-		m_pas = new PAS(sz_sitename, sz_userid, sz_compid, "", false, null, null, null);
+		m_pas = new PAS(sz_sitename, sz_userid, sz_compid, "", false, null, null, null, null);
 		try {
 			m_pas.setVisible(true);
 			m_pas.setBounds(0,0,1280,1024);

@@ -448,5 +448,7 @@ public abstract class PasScriptingInterface
 	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);
 	
 	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
+	
+	public abstract String getDefaultLocale(Settings s);
 }
 

@@ -39,7 +39,6 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.UBBNEWSLIST;
@@ -400,10 +399,6 @@ public class PAS_Scripting extends PasScriptingInterface
 		return true;
 	}
 	
-	public boolean onAddCentricSend(JTabbedPane tab, CentricSendOptionToolbar panel) {
-		tab.addTab("fjols", null, panel, "Tooltip");
-		return true;
-	}
 
 
 
@@ -892,6 +887,12 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onFrameResize(JFrame f, ComponentEvent e) {
 		return true;
+	}
+
+
+	@Override
+	public String getDefaultLocale(Settings s) {
+		return s.getLanguage();
 	}	
 
 }
