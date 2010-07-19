@@ -1,5 +1,6 @@
 package no.ums.pas.plugins.centric;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,9 +13,12 @@ import java.util.GregorianCalendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -100,7 +104,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public CentricSendOptionToolbar() {
 		//super();
 		init();
-		// TODO Auto-generated constructor stub
+		
+		
+		
+
 	}
 	public void doInit() {
 		init();

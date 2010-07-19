@@ -18,8 +18,10 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="operation" type="{http://ums.no/ws/parm/}CB_OPERATION"/>
- *         &lt;element name="n_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="n_code" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_projectpk" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_timestamp" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_code" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,17 +33,23 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CB_SENDING_RESPONSE", propOrder = {
     "operation",
-    "nRefno",
-    "nCode"
+    "lProjectpk",
+    "lTimestamp",
+    "lRefno",
+    "lCode"
 })
 public class CBSENDINGRESPONSE {
 
     @XmlElement(required = true)
     protected CBOPERATION operation;
-    @XmlElement(name = "n_refno")
-    protected long nRefno;
-    @XmlElement(name = "n_code")
-    protected long nCode;
+    @XmlElement(name = "l_projectpk")
+    protected long lProjectpk;
+    @XmlElement(name = "l_timestamp")
+    protected long lTimestamp;
+    @XmlElement(name = "l_refno")
+    protected long lRefno;
+    @XmlElement(name = "l_code")
+    protected long lCode;
 
     /**
      * Gets the value of the operation property.
@@ -68,35 +76,67 @@ public class CBSENDINGRESPONSE {
     }
 
     /**
-     * Gets the value of the nRefno property.
+     * Gets the value of the lProjectpk property.
      * 
      */
-    public long getNRefno() {
-        return nRefno;
+    public long getLProjectpk() {
+        return lProjectpk;
     }
 
     /**
-     * Sets the value of the nRefno property.
+     * Sets the value of the lProjectpk property.
      * 
      */
-    public void setNRefno(long value) {
-        this.nRefno = value;
+    public void setLProjectpk(long value) {
+        this.lProjectpk = value;
     }
 
     /**
-     * Gets the value of the nCode property.
+     * Gets the value of the lTimestamp property.
      * 
      */
-    public long getNCode() {
-        return nCode;
+    public long getLTimestamp() {
+        return lTimestamp;
     }
 
     /**
-     * Sets the value of the nCode property.
+     * Sets the value of the lTimestamp property.
      * 
      */
-    public void setNCode(long value) {
-        this.nCode = value;
+    public void setLTimestamp(long value) {
+        this.lTimestamp = value;
+    }
+
+    /**
+     * Gets the value of the lRefno property.
+     * 
+     */
+    public long getLRefno() {
+        return lRefno;
+    }
+
+    /**
+     * Sets the value of the lRefno property.
+     * 
+     */
+    public void setLRefno(long value) {
+        this.lRefno = value;
+    }
+
+    /**
+     * Gets the value of the lCode property.
+     * 
+     */
+    public long getLCode() {
+        return lCode;
+    }
+
+    /**
+     * Sets the value of the lCode property.
+     * 
+     */
+    public void setLCode(long value) {
+        this.lCode = value;
     }
 
 }
