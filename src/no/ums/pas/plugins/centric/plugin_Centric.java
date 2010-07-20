@@ -741,7 +741,7 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public ImageIcon onLoadAppIcon() {
 		//return super.onLoadAppIcon();
-		return no.ums.pas.ums.tools.ImageLoader.load_icon("no/ums/pas/plugins/centric/", "alert-icon.png", getClass().getClassLoader());
+		return no.ums.pas.ums.tools.ImageLoader.load_icon("no/ums/pas/plugins/centric/", "centiccLogo16.png", getClass().getClassLoader());
 		/*try
 		{
 			//return new ImageIcon(getClass().getClassLoader().getResource("no/ums/pas/plugins/centric/alert-icon.png"));
