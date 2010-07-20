@@ -3,6 +3,7 @@ package no.ums.adminui.pas;
 import java.awt.Cursor;
 import java.awt.Graphics;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.maps.defines.Navigation;
@@ -10,6 +11,7 @@ import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.*;
 import no.ums.pas.maps.defines.*;
+import no.ums.pas.ums.errorhandling.Error;
 
 public class MapFrameAdmin extends MapFrame {
 
@@ -120,6 +122,81 @@ public class MapFrameAdmin extends MapFrame {
 		kickRepaint();
 		
 	}
+	@Override
+	public void set_mode(int n_mode)
+	{
+		//let settings decide
+		if(n_mode==MAP_MODE_PAN || n_mode==MAP_MODE_PAN_BY_DRAG)
+		{
+			if(PAS.get_pas() != null && PAS.get_pas().get_settings().getPanByDrag())
+				n_mode = MAP_MODE_PAN_BY_DRAG;
+			else
+				n_mode = MAP_MODE_PAN;
+		}
+		switch(n_mode) {
+			case MAP_MODE_PAN:
+				set_cursor(new Cursor(Cursor.HAND_CURSOR));
+				m_n_prev_mode = m_n_current_mode;
+				if(PAS.get_pas() != null)
+					PAS.get_pas().get_mainmenu().clickMapMode(n_mode, true);
+				break;
+			case MAP_MODE_PAN_BY_DRAG:
+				set_cursor(new Cursor(Cursor.MOVE_CURSOR));
+				m_n_prev_mode = m_n_current_mode;
+				if(PAS.get_pas() != null)
+					PAS.get_pas().get_mainmenu().clickMapMode(n_mode, true);
+				break;
+			case MAP_MODE_ZOOM:
+				set_cursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+				m_n_prev_mode = m_n_current_mode;
+				if(PAS.get_pas() != null)
+					PAS.get_pas().get_mainmenu().clickMapMode(n_mode, true);
+				break;
+			case MAP_MODE_HOUSESELECT:
+				set_cursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				m_n_prev_mode = m_n_current_mode;
+				break;
+			case MAP_MODE_SENDING_POLY:
+			case MAP_MODE_PAINT_RESTRICTIONAREA:
+				try {
+					//setCursor(PAS.get_pas().get_mainmenu().get_cursor_draw());
+					//setCursor(get_cursor_draw());
+					if(get_active_shape() == null)
+						set_active_shape(new PolygonStruct(variables.NAVIGATION.getDimension()));
+					set_cursor(get_cursor_draw());
+				} catch(Exception e) {
+					Error.getError().addError("MapFrame","Exception in set_mode",e,1);
+				}
+				break;
+			case MAP_MODE_OBJECT_MOVE:
+				try {
+					get_current_object().setMoving(true);
+					//setCursor(new Cursor(Cursor.MOVE_CURSOR));
+					set_cursor(new Cursor(Cursor.MOVE_CURSOR));
+				} catch(Exception e) {
+					
+				}
+				break;
+			case MAP_MODE_HOUSEEDITOR_:
+				//setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+				//set_submode(m_n_current_submode);
+				//new Core.MainUI.HouseEditorDlg(null);
+				m_n_prev_mode = m_n_current_mode;
+				break;
+			case MAP_MODE_SENDING_ELLIPSE:
+			case MAP_MODE_SENDING_ELLIPSE_POLYGON:
+				//setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+				set_cursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+				break;
+			case MAP_MODE_ASSIGN_EPICENTRE:
+				//setCursor(get_cursor_epicentre());
+				set_cursor(get_cursor_epicentre());
+				break;
+		}
+		m_n_current_mode = n_mode;
+
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

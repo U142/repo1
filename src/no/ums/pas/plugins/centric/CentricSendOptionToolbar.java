@@ -19,16 +19,20 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.PAS;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
@@ -38,8 +42,13 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
+import no.ums.ws.parm.CBALERTPOLYGON;
+import no.ums.ws.parm.CBMESSAGE;
 import no.ums.ws.parm.CBMESSAGELIST;
 import no.ums.ws.parm.CBOPERATIONBASE;
+import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.parm.UPolygon;
+import no.ums.ws.parm.UPolypoint;
 
 public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
 
@@ -162,14 +171,62 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_time_minute = new JComboBox(new String[] { "30" });*/
 		
 		m_cbx_risk = new JComboBox();
+		/*m_cbx_risk.setRenderer(new DefaultListCellRenderer() { 
+
+            JLabel lbl = new JLabel(""); 
+            
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
+                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
+                    { 
+                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
+                            lbl.setText(base.getSzName()); 
+                            return lbl; 
+                    } 
+                    return super.getListCellRendererComponent(list, value, index, isSelected, 
+                                    cellHasFocus); 
+            } 
+            
+		});*/
 		m_cbx_risk.setPreferredSize(new Dimension(300,20));
 		m_cbx_risk.addFocusListener(this);
 		
 		m_cbx_reaction = new JComboBox();
+		/*m_cbx_reaction.setRenderer(new DefaultListCellRenderer() { 
+
+            JLabel lbl = new JLabel(""); 
+            
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
+                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
+                    { 
+                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
+                            lbl.setText(base.getSzName()); 
+                            return lbl; 
+                    } 
+                    return super.getListCellRendererComponent(list, value, index, isSelected, 
+                                    cellHasFocus); 
+            } 
+            
+		});*/
 		m_cbx_reaction.setPreferredSize(new Dimension(300,20));
 		m_cbx_reaction.addFocusListener(this);
 		
 		m_cbx_originator = new JComboBox();
+		/*m_cbx_originator.setRenderer(new DefaultListCellRenderer() { 
+
+            JLabel lbl = new JLabel(""); 
+            
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
+                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
+                    { 
+                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
+                            lbl.setText(base.getSzName()); 
+                            return lbl; 
+                    } 
+                    return super.getListCellRendererComponent(list, value, index, isSelected, 
+                                    cellHasFocus); 
+            } 
+            
+		});*/
 		m_cbx_originator.setPreferredSize(new Dimension(300,20));
 		m_cbx_originator.addFocusListener(this);
 		
@@ -389,16 +446,38 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getActionCommand().equals("act_send")) {
 			// Check if summary is active, create send object, display send object preview
-			//PACBSENDING sending = new PACBSENDING();
-			//sending.sz_name = m_txt_alert_name.getText();
-			//sending.sz_message = m_txt_message.getText();
-			//sending.datetime = c.getTime();
+			
+			CBMESSAGE msg = new CBMESSAGE();
+			msg.setSzText(m_txt_message.getText());
+			msg.setLChannel(991); // This is stored in userinfo
+			CBMESSAGELIST msglist = new CBMESSAGELIST();
+			msglist.getMessage().add(msg);
 			//sending.n_deptpk = PAS.get_pas().get_userinfo().get_current_department().get_deptpk();
 			//sending.n_userpk = PAS.get_pas().get_userinfo().get_userpk();
 			//sending.n_comppk = PAS.get_pas().get_userinfo().get_comppk();
+			CBALERTPOLYGON poly = new CBALERTPOLYGON();
+			
+			//poly.setLProjectpk(Long.parseLong(PAS.get_pas().get_current_project().get_projectpk()));
+			//poly.setLValidity(value);
+			poly.setLSchedUtc(c.getTimeInMillis());
+			poly.setTextmessages(msglist);
+			UPolygon polygon = new UPolygon();
+			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
+			for(int i=0;i<ps.get_coors_lat().size();++i) {
+				UPolypoint pp = new UPolypoint();
+				pp.setLat(ps.get_coor_lat(i));
+				pp.setLon(ps.get_coor_lon(i));
+				polygon.getPolypoint().add(pp);
+			}
+			poly.setAlertpolygon(polygon);
+			WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
+			send.start();
 		}
 		else if(e.getActionCommand().equals("act_goto_summary")) {
 			showSummary();
+		}
+		if(e.getActionCommand().equals("act_somethingsomething")){
+			JOptionPane.showMessageDialog(this, "Refno: " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			add_controls();

@@ -17,6 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import no.ums.ws.parm.admin.ArrayOfPAOBJECT;
+import no.ums.ws.parm.admin.PAOBJECT;
+import no.ums.ws.parm.admin.ParmAdmin;
+import no.ums.ws.parm.admin.UPolypoint;
+import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UDEPARTMENT;
 import no.ums.ws.pas.UNSLOOKUP;
 import no.ums.ws.pas.UPASLOGON;
@@ -90,6 +95,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	public Image m_image;
 	public String coors;
 	public SendPropertiesPolygon sp;
+	public UserInfo m_info;
 	
 	public void init() {
 		try {
@@ -102,9 +108,9 @@ public class MapApplet extends JApplet implements ActionListener {
 		resize(800,600);
 		vars.init("https://secure.ums2.no/centricws/WS/");
 		PAS.setLocale("en","GB");
-		LogonInfo info = new LogonInfo("mh","ums","mh123,1","GB");
+		LogonInfo info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
 		WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
-		
+				
 		try {
 			PAS.pasplugin = new PAS_Scripting();
 		} catch(Exception e) {
@@ -187,9 +193,11 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.addActionListener(this);
 				
 		
+		m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
 		//m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 		//m_mappane.set_mode(MapFrame.MAP_MODE_PAN);
-		m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
+		//m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
+		
 		//JPanel jall = new JPanel();
 		//jall.add(new JLabel("jallaballa"));
 		//add(jall);
@@ -238,7 +246,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		if("act_logon".equals(e.getActionCommand()))
 		{
-			UserInfo m_info;
+			
 			boolean b_results_ready;
 			UPASLOGON l = (UPASLOGON)e.getSource();
 			if(!l.isFGranted())
@@ -264,6 +272,18 @@ public class MapApplet extends JApplet implements ActionListener {
 						d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
 			}
 			//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
+			//m_info.get_departments().ClearCombinedRestrictionShapelist();			
+			ParmAdmin pa = new ParmAdmin();
+			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions().getPAOBJECT();
+			for(int i = 0; i<obj.size();++i){
+				PAOBJECT o = obj.get(i);
+				PolygonStruct ps = new PolygonStruct(m_navigation.getDimension());
+				//List<UPolypoint> ppl = o.getMShape().getMArrayPolypoints().getUPolypoint();
+				List<UPolypoint> ppl = o.getMShape().getPolypoint();
+				for(int j=0;j<ppl.size();++j)
+					ps.add_coor(ppl.get(j).getLon(), ppl.get(j).getLat());
+				m_info.get_departments().m_combined_shapestruct_list.add(ps);
+			}
 			m_info.get_departments().CreateCombinedRestrictionShape();
 			if(m_info.get_departments().get_combined_restriction_shape() != null) {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
@@ -651,6 +671,26 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		//test = fjols;
 		repaint();
+	}
+	private PolygonStruct parseCoors(String coors){
+		String[] l = coors.split("¤");
+		
+		PolygonStruct s = new PolygonStruct(new Dimension(m_mappane.get_dimension().width,m_mappane.get_dimension().height));
+		//PolygonStruct s = new PolygonStruct(new Dimension(640,480));
+		
+		String[] clat = l[0].split("\\|");
+		String[] clon = l[1].split("\\|");
+		
+		for(int i=0;i<clat.length;++i) {
+			s.add_coor(Double.parseDouble(clon[i].replace(',', '.')),Double.parseDouble(clat[i].replace(',', '.')));
+		}
+		return s;
+	}
+	public void addRestriction(String coors) {
+		PolygonStruct s = parseCoors(coors);
+		m_info.get_departments().m_combined_shapestruct_list.add(s);
+		m_info.get_departments().CreateCombinedRestrictionShape();
+		//set restriction shape
 	}
 	public void pan() {
 		m_mappane.set_mode(MapFrame.MAP_MODE_PAN);

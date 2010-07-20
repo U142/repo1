@@ -104,7 +104,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	}
 	public boolean get_isdragging() { return m_b_isdragging; }
 	
-	private void setCursorPos(int x, int y)
+	protected void setCursorPos(int x, int y)
 	{
 		m_dim_cursorpos = new Dimension(x,y);	
 	}
@@ -817,7 +817,22 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					{
 						addAction("act_add_polypoint", p);
 					}
-					PAS.get_pas().kickRepaint();					
+					if(PAS.get_pas() == null)
+					{
+						variables.DRAW.setRepaint(get_mappane().get_mapimage());
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run()
+							{
+								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+								//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+								get_mappane().repaint();
+								get_mappane().validate();
+							}
+						});
+					}
+					else
+						PAS.get_pas().kickRepaint();					
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE) {
 					try {

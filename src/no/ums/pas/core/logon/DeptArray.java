@@ -135,7 +135,7 @@ public class DeptArray extends ArrayList<Object> {
 		PolygonStruct combined_shapestruct = new PolygonStruct(null, Color.black, new Color(0,0,0,0));
 		int point_count = 0;
 		n_total_points = 0;
-		while(it!=null)
+		while(it!=null && !it.isDone())
 		{
 			double [] coors = new double[2];
 			double f_prev_moveto_x = 0;

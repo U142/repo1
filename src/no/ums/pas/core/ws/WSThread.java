@@ -21,7 +21,7 @@ public abstract class WSThread extends Thread
 	{
 		return UUID.randomUUID().toString();
 	}
-	ActionListener m_callback;
+	protected ActionListener m_callback;
 	String sz_cb_cmd;
 	protected WSRESULTCODE result = WSRESULTCODE.NOT_SET;
 	protected void setResult(WSRESULTCODE c) { result = c; }

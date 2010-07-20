@@ -258,15 +258,15 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	
 	MapFrameActionHandler m_actionhandler;
 	int m_n_current_cursor = Cursor.DEFAULT_CURSOR;
-	int m_n_current_mode = MAP_MODE_PAN;
-	int m_n_prev_mode = MAP_MODE_PAN;
+	protected int m_n_current_mode = MAP_MODE_PAN;
+	protected int m_n_prev_mode = MAP_MODE_PAN;
 	int m_n_current_submode = 0;
 	private Inhabitant m_current_inhab_move = null;
 	public Cursor m_current_cursor;
 	Robot m_robot;
 	String m_sz_mapportrayal = "By";
 	UMSMapObject m_current_object = null;
-	UMSMapObject get_current_object() { return m_current_object; }
+	protected UMSMapObject get_current_object() { return m_current_object; }
 	void set_current_object(UMSMapObject obj) { m_current_object = obj; }
 	private Draw m_drawthread;
 	private Navigation m_navigation;
