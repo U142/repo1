@@ -38,6 +38,8 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
+import no.ums.ws.parm.CBMESSAGELIST;
+import no.ums.ws.parm.CBOPERATIONBASE;
 
 public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
 
@@ -104,10 +106,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public CentricSendOptionToolbar() {
 		//super();
 		init();
-		
-		
-		
-
 	}
 	public void doInit() {
 		init();

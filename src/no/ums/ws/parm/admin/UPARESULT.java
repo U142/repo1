@@ -32,8 +32,8 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlSeeAlso({
     UPAALERTRESTULT.class,
-    UPAOBJECTRESULT.class,
-    UPAEVENTRESULT.class
+    UPAEVENTRESULT.class,
+    UPAOBJECTRESULT.class
 })
 public class UPARESULT {
 

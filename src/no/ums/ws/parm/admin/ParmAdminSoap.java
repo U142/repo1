@@ -59,6 +59,26 @@ public interface ParmAdminSoap {
 
     /**
      * 
+     * @param obj
+     * @param logon
+     * @param type
+     * @return
+     *     returns no.ums.ws.parm.admin.UPAOBJECTRESULT
+     */
+    @WebMethod(operationName = "ExecPAShapeUpdate", action = "http://ums.no/ws/parm/admin/ExecPAShapeUpdate")
+    @WebResult(name = "ExecPAShapeUpdateResult", targetNamespace = "http://ums.no/ws/parm/admin/")
+    @RequestWrapper(localName = "ExecPAShapeUpdate", targetNamespace = "http://ums.no/ws/parm/admin/", className = "no.ums.ws.parm.admin.ExecPAShapeUpdate")
+    @ResponseWrapper(localName = "ExecPAShapeUpdateResponse", targetNamespace = "http://ums.no/ws/parm/admin/", className = "no.ums.ws.parm.admin.ExecPAShapeUpdateResponse")
+    public UPAOBJECTRESULT execPAShapeUpdate(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/parm/admin/")
+        ULOGONINFO logon,
+        @WebParam(name = "obj", targetNamespace = "http://ums.no/ws/parm/admin/")
+        PAOBJECT obj,
+        @WebParam(name = "type", targetNamespace = "http://ums.no/ws/parm/admin/")
+        PASHAPETYPES type);
+
+    /**
+     * 
      * @param e
      * @param s
      * @param p
@@ -119,5 +139,16 @@ public interface ParmAdminSoap {
         String szFilename,
         @WebParam(name = "sz_polyfilename", targetNamespace = "http://ums.no/ws/parm/admin/")
         String szPolyfilename);
+
+    /**
+     * 
+     * @return
+     *     returns no.ums.ws.parm.admin.ArrayOfPAOBJECT
+     */
+    @WebMethod(operationName = "GetRegions", action = "http://ums.no/ws/parm/admin/GetRegions")
+    @WebResult(name = "GetRegionsResult", targetNamespace = "http://ums.no/ws/parm/admin/")
+    @RequestWrapper(localName = "GetRegions", targetNamespace = "http://ums.no/ws/parm/admin/", className = "no.ums.ws.parm.admin.GetRegions")
+    @ResponseWrapper(localName = "GetRegionsResponse", targetNamespace = "http://ums.no/ws/parm/admin/", className = "no.ums.ws.parm.admin.GetRegionsResponse")
+    public ArrayOfPAOBJECT getRegions();
 
 }

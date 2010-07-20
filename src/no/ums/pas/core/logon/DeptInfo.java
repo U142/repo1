@@ -115,10 +115,15 @@ public class DeptInfo extends Object {
 							(int)upolygon.getColBlue(), 
 							(int)upolygon.getColAlpha()), 
 							new Color(0,0,0));
-			List<UPolypoint> list = upolygon.getMArrayPolypoints().getUPolypoint();
-			for(int i=0; i < list.size(); i++)
+			//if(upolygon.getMArrayPolypoints()!=null)
+			if(upolygon.getPolypoint()!=null)
 			{
-				polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat());
+				//List<UPolypoint> list = upolygon.getMArrayPolypoints().getUPolypoint();
+				List<UPolypoint> list = upolygon.getPolypoint();
+				for(int i=0; i < list.size(); i++)
+				{
+					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat());
+				}
 			}
 			return polygonstruct;
 		}

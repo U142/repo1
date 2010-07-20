@@ -16,8 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="UPolypoint">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="xcoord" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
- *       &lt;attribute name="ycoord" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
+ *       &lt;attribute name="lon" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
+ *       &lt;attribute name="lat" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -30,40 +30,40 @@ import javax.xml.bind.annotation.XmlType;
 public class UPolypoint {
 
     @XmlAttribute(required = true)
-    protected double xcoord;
+    protected double lon;
     @XmlAttribute(required = true)
-    protected double ycoord;
+    protected double lat;
 
     /**
-     * Gets the value of the xcoord property.
+     * Gets the value of the lon property.
      * 
      */
-    public double getXcoord() {
-        return xcoord;
+    public double getLon() {
+        return lon;
     }
 
     /**
-     * Sets the value of the xcoord property.
+     * Sets the value of the lon property.
      * 
      */
-    public void setXcoord(double value) {
-        this.xcoord = value;
+    public void setLon(double value) {
+        this.lon = value;
     }
 
     /**
-     * Gets the value of the ycoord property.
+     * Gets the value of the lat property.
      * 
      */
-    public double getYcoord() {
-        return ycoord;
+    public double getLat() {
+        return lat;
     }
 
     /**
-     * Sets the value of the ycoord property.
+     * Sets the value of the lat property.
      * 
      */
-    public void setYcoord(double value) {
-        this.ycoord = value;
+    public void setLat(double value) {
+        this.lat = value;
     }
 
 }

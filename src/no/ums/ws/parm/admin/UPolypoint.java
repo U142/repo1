@@ -3,6 +3,7 @@ package no.ums.ws.parm.admin;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -15,10 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="UPolypoint">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="lon" type="{http://www.w3.org/2001/XMLSchema}double"/>
- *         &lt;element name="lat" type="{http://www.w3.org/2001/XMLSchema}double"/>
- *       &lt;/sequence>
+ *       &lt;attribute name="lon" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
+ *       &lt;attribute name="lat" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -27,13 +26,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UPolypoint", propOrder = {
-    "lon",
-    "lat"
-})
+@XmlType(name = "UPolypoint")
 public class UPolypoint {
 
+    @XmlAttribute(required = true)
     protected double lon;
+    @XmlAttribute(required = true)
     protected double lat;
 
     /**

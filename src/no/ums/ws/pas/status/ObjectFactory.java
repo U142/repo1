@@ -30,27 +30,43 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetStatusItemsResponse }
+     * Create an instance of {@link USMSINSTATS }
      * 
      */
-    public GetStatusItemsResponse createGetStatusItemsResponse() {
-        return new GetStatusItemsResponse();
+    public USMSINSTATS createUSMSINSTATS() {
+        return new USMSINSTATS();
     }
 
     /**
-     * Create an instance of {@link ArrayOfLong }
+     * Create an instance of {@link UStatusListResults }
      * 
      */
-    public ArrayOfLong createArrayOfLong() {
-        return new ArrayOfLong();
+    public UStatusListResults createUStatusListResults() {
+        return new UStatusListResults();
     }
 
     /**
-     * Create an instance of {@link GetStatusItemsTestResponse }
+     * Create an instance of {@link GetSmsStatsResponse }
      * 
      */
-    public GetStatusItemsTestResponse createGetStatusItemsTestResponse() {
-        return new GetStatusItemsTestResponse();
+    public GetSmsStatsResponse createGetSmsStatsResponse() {
+        return new GetSmsStatsResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetStatusListResponse }
+     * 
+     */
+    public GetStatusListResponse createGetStatusListResponse() {
+        return new GetStatusListResponse();
+    }
+
+    /**
+     * Create an instance of {@link UStatusListItem }
+     * 
+     */
+    public UStatusListItem createUStatusListItem() {
+        return new UStatusListItem();
     }
 
     /**
@@ -59,6 +75,30 @@ public class ObjectFactory {
      */
     public ArrayOfUSMSINSTATS createArrayOfUSMSINSTATS() {
         return new ArrayOfUSMSINSTATS();
+    }
+
+    /**
+     * Create an instance of {@link GetStatusItemsTest }
+     * 
+     */
+    public GetStatusItemsTest createGetStatusItemsTest() {
+        return new GetStatusItemsTest();
+    }
+
+    /**
+     * Create an instance of {@link GetStatusItems }
+     * 
+     */
+    public GetStatusItems createGetStatusItems() {
+        return new GetStatusItems();
+    }
+
+    /**
+     * Create an instance of {@link GetStatusItemsResponse }
+     * 
+     */
+    public GetStatusItemsResponse createGetStatusItemsResponse() {
+        return new GetStatusItemsResponse();
     }
 
     /**
@@ -78,46 +118,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetSmsStatsResponse }
-     * 
-     */
-    public GetSmsStatsResponse createGetSmsStatsResponse() {
-        return new GetSmsStatsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetStatusItemsTest }
-     * 
-     */
-    public GetStatusItemsTest createGetStatusItemsTest() {
-        return new GetStatusItemsTest();
-    }
-
-    /**
-     * Create an instance of {@link USMSINSTATS }
-     * 
-     */
-    public USMSINSTATS createUSMSINSTATS() {
-        return new USMSINSTATS();
-    }
-
-    /**
-     * Create an instance of {@link GetStatusItems }
-     * 
-     */
-    public GetStatusItems createGetStatusItems() {
-        return new GetStatusItems();
-    }
-
-    /**
-     * Create an instance of {@link UStatusListItem }
-     * 
-     */
-    public UStatusListItem createUStatusListItem() {
-        return new UStatusListItem();
-    }
-
-    /**
      * Create an instance of {@link ArrayOfUStatusListItem }
      * 
      */
@@ -126,11 +126,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetStatusListResponse }
+     * Create an instance of {@link ArrayOfLong }
      * 
      */
-    public GetStatusListResponse createGetStatusListResponse() {
-        return new GetStatusListResponse();
+    public ArrayOfLong createArrayOfLong() {
+        return new ArrayOfLong();
+    }
+
+    /**
+     * Create an instance of {@link GetStatusItemsTestResponse }
+     * 
+     */
+    public GetStatusItemsTestResponse createGetStatusItemsTestResponse() {
+        return new GetStatusItemsTestResponse();
     }
 
     /**
@@ -147,14 +155,6 @@ public class ObjectFactory {
      */
     public GetStatusList createGetStatusList() {
         return new GetStatusList();
-    }
-
-    /**
-     * Create an instance of {@link UStatusListResults }
-     * 
-     */
-    public UStatusListResults createUStatusListResults() {
-        return new UStatusListResults();
     }
 
 }

@@ -1,9 +1,10 @@
 
 package no.ums.ws.parm.admin;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{http://ums.no/ws/parm/admin/}UShape">
  *       &lt;sequence>
- *         &lt;element name="m_array_polypoints" type="{http://ums.no/ws/parm/admin/}ArrayOfUPolypoint" minOccurs="0"/>
+ *         &lt;element name="polypoint" type="{http://ums.no/ws/parm/admin/}UPolypoint" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -28,37 +29,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UPolygon", propOrder = {
-    "mArrayPolypoints"
+    "polypoint"
 })
 public class UPolygon
     extends UShape
 {
 
-    @XmlElement(name = "m_array_polypoints")
-    protected ArrayOfUPolypoint mArrayPolypoints;
+    protected List<UPolypoint> polypoint;
 
     /**
-     * Gets the value of the mArrayPolypoints property.
+     * Gets the value of the polypoint property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfUPolypoint }
-     *     
-     */
-    public ArrayOfUPolypoint getMArrayPolypoints() {
-        return mArrayPolypoints;
-    }
-
-    /**
-     * Sets the value of the mArrayPolypoints property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the polypoint property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfUPolypoint }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPolypoint().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link UPolypoint }
+     * 
+     * 
      */
-    public void setMArrayPolypoints(ArrayOfUPolypoint value) {
-        this.mArrayPolypoints = value;
+    public List<UPolypoint> getPolypoint() {
+        if (polypoint == null) {
+            polypoint = new ArrayList<UPolypoint>();
+        }
+        return this.polypoint;
     }
 
 }

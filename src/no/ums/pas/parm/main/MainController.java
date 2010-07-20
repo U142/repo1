@@ -508,8 +508,9 @@ public class MainController implements ActionListener, TreeModelListener,
 					point.setLon(lon);
 					points.getUPolypoint().add(point);
 				}
-	
-				polygon.setMArrayPolypoints(points);
+				//polygon.setMArrayPolypoints(points);
+				polygon.getPolypoint().addAll(points.getUPolypoint());
+
 				polygon.setColAlpha(p.get_fill_color().getAlpha());
 				polygon.setColBlue(p.get_fill_color().getBlue());
 				polygon.setColGreen(p.get_fill_color().getGreen());
@@ -618,7 +619,8 @@ public class MainController implements ActionListener, TreeModelListener,
 					p.setLon(from.get_coor_lon(i));
 					points.getUPolypoint().add(p);
 				}
-				poly.setMArrayPolypoints(points);
+				poly.getPolypoint().addAll(points.getUPolypoint());
+				//poly.setMArrayPolypoints(points);
 			}
 			else if(alert.getM_shape().getClass().equals(EllipseStruct.class))
 			{
