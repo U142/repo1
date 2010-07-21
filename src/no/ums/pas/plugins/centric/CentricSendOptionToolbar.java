@@ -117,7 +117,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private Calendar c;
 	
-	final LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
+	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
 	
 	public CentricSendOptionToolbar() {
 		//super();
@@ -440,6 +440,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		add_spacing(DIR_VERTICAL, 5);
 		
+		set_gridconst(0, inc_panels(), 8, 1);
+		//progress.get_progress().setSize(new Dimension(450,25));
+		progress.set_totalitems(0, PAS.l("main_statustext_lba_sending"));
+		progress.get_progress().setPreferredSize(new Dimension(450,25));
+		progress.stop_and_hide();
+		add(progress.get_progress(), m_gridconst);
+		
+		add_spacing(DIR_VERTICAL, 5);
+		
 		if(m_btn_cancel == null) {
 			m_btn_cancel = new JButton("Cancel");
 			m_btn_cancel.addActionListener(this);
@@ -496,15 +505,16 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
 			send.start();
 			
+			m_btn_send.setEnabled(false);
+			m_btn_cancel.setEnabled(false);
+			
 			try
 			{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
-						progress.setModal(true);
 						progress.set_totalitems(0, PAS.l("main_statustext_lba_sending"));
-						progress.start_and_show();
-						
+						progress.get_progress().setVisible(true);
 					}
 				});
 			}
@@ -519,6 +529,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getActionCommand().equals("act_somethingsomething")){
 			JOptionPane.showMessageDialog(this, "Refno: " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 			progress.stop_and_hide();
+			m_btn_cancel.setEnabled(true);
+			m_btn_send.setEnabled(true);
+			m_btn_reset.doClick();
+			add_controls();
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			add_controls();
@@ -600,10 +614,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public void keyReleased(KeyEvent e) {
 		final int max = 92;
 		if(e.getSource() == m_txt_message) {
-			if(m_txt_message.getText().length() > (max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
+			if(m_txt_message.getText().length() > ((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
-					m_txt_message.getText().substring(0,(max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
-				m_txt_message.setText(m_txt_message.getText().substring(0,(max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
+					m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
+				m_txt_message.setText(m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length())))); // -2 because of " " and "/n"
 			}
 			else
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
