@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -51,7 +53,7 @@ import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.parm.UPolygon;
 import no.ums.ws.parm.UPolypoint;
 
-public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
+public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, KeyListener {
 
 	/**
 	 * 
@@ -161,6 +163,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_message.setWrapStyleWord(true);
 		m_txt_message.setLineWrap(true);
 		m_txt_message.addFocusListener(this);
+		m_txt_message.addKeyListener(this);
 		//m_txt_message.setPreferredSize(new Dimension(300,200));
 		
 		m_txt_messagescroll = new JScrollPane(m_txt_message);
@@ -351,10 +354,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		/*
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_lbl_pages, m_gridconst);
+		*/
 		set_gridconst(2, get_panel(), 1, 1);
 		add(m_lbl_characters, m_gridconst);
-		*/
-		
+				
 		/*
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_rad_immediate, m_gridconst);
@@ -587,5 +590,30 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			
 		}*/
 
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		final int max = 92;
+		if(e.getSource() == m_txt_message) {
+			if(m_txt_message.getText().length() > (max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
+				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
+					m_txt_message.getText().substring(0,(max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
+				m_txt_message.setText(m_txt_message.getText().substring(0,(max - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
+			}
+			else
+				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
+				
+			m_lbl_characters.setText("Characters " + m_txt_preview.getText().length() + "/92");
+		}
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
