@@ -28,6 +28,7 @@ import javax.swing.border.BevelBorder;
 
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.defines.GISShape;
@@ -68,6 +69,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private StdTextLabel m_lbl_risk;
 	private StdTextLabel m_lbl_reaction;
 	private StdTextLabel m_lbl_originator;
+	private StdTextLabel m_lbl_pages;
+	private StdTextLabel m_lbl_characters;
 	
 	private StdTextArea m_txt_alert_name;
 	private String m_sz_date;
@@ -111,6 +114,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private JButton m_btn_cancel;
 	
 	private Calendar c;
+	
+	final LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
 	
 	public CentricSendOptionToolbar() {
 		//super();
@@ -249,7 +254,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		m_txt_previewscroll = new JScrollPane(m_txt_preview);
 		m_txt_previewscroll.setPreferredSize(new Dimension(300,100));
-				
+		
+		m_lbl_pages = new StdTextLabel("Page 1/25");
+		m_lbl_characters = new StdTextLabel("Character 25/92", 150);
+		
 		m_btn_send = new JButton("Send Alert");
 		m_btn_send.setPreferredSize(new Dimension(300,30));
 		m_btn_address_book = new JButton("image"); // Add image/icon
@@ -339,6 +347,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_txt_previewscroll, m_gridconst);
 		
 		add_spacing(DIR_VERTICAL, 5);
+		
+		/*
+		set_gridconst(1, inc_panels(), 1, 1);
+		add(m_lbl_pages, m_gridconst);
+		set_gridconst(2, get_panel(), 1, 1);
+		add(m_lbl_characters, m_gridconst);
+		*/
+		
 		/*
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_rad_immediate, m_gridconst);
@@ -448,7 +464,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			// Check if summary is active, create send object, display send object preview
 			
 			CBMESSAGE msg = new CBMESSAGE();
-			msg.setSzText(m_txt_message.getText());
+			msg.setSzText(m_txt_preview.getText());
 			msg.setLChannel(991); // This is stored in userinfo
 			CBMESSAGELIST msglist = new CBMESSAGELIST();
 			msglist.getMessage().add(msg);
@@ -463,6 +479,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			poly.setTextmessages(msglist);
 			UPolygon polygon = new UPolygon();
 			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
+			if(ps == null) {
+				JOptionPane.showMessageDialog(this, "Alert area is missing");
+				return;
+			}
 			for(int i=0;i<ps.get_coors_lat().size();++i) {
 				UPolypoint pp = new UPolypoint();
 				pp.setLat(ps.get_coor_lat(i));
@@ -472,12 +492,30 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			poly.setAlertpolygon(polygon);
 			WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
 			send.start();
+			
+			try
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						progress.setModal(true);
+						progress.set_totalitems(0, PAS.l("main_statustext_lba_sending"));
+						progress.start_and_show();
+						
+					}
+				});
+			}
+			catch(Exception ex)
+			{
+				
+			}
 		}
 		else if(e.getActionCommand().equals("act_goto_summary")) {
 			showSummary();
 		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
 			JOptionPane.showMessageDialog(this, "Refno: " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
+			progress.stop_and_hide();
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			add_controls();
