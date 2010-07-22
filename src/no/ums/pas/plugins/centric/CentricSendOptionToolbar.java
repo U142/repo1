@@ -592,6 +592,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
 				m_txt_message.getText());
 		checkInputs();
+		updateCharacters();
 	}
 	
 	public void componentResized(ComponentEvent e) {
