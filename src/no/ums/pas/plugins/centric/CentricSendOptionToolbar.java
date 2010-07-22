@@ -136,9 +136,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_lbl_date = new StdTextLabel("Date:",new Dimension(150,20));
 		m_lbl_time = new StdTextLabel("Time:",new Dimension(150,20));*/
 		
-		m_lbl_risk = new StdTextLabel("Risk:",new Dimension(150,20));
-		m_lbl_reaction = new StdTextLabel("Reaction:",new Dimension(150,20));
-		m_lbl_originator = new StdTextLabel("Originator:",new Dimension(150,20));
+		m_lbl_risk = new StdTextLabel(PAS.l("common_risk") + ":",new Dimension(150,20));
+		m_lbl_reaction = new StdTextLabel(PAS.l("common_reaction") + ":",new Dimension(150,20));
+		m_lbl_originator = new StdTextLabel(PAS.l("common_originator") + ":",new Dimension(150,20));
 				
 		m_txt_alert_name = new StdTextArea("",new Dimension(300,20));
 		m_txt_alert_name.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -422,7 +422,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_txt_previewscroll, m_gridconst);
 		set_gridconst(0, inc_panels(), 1, 1);
 		if(m_btn_print==null)
-			m_btn_print = new JButton("Print summary");
+			m_btn_print = new JButton(PAS.l("common_print_summary"));
 		add(m_btn_print, m_gridconst);
 		
 		

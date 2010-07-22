@@ -720,9 +720,9 @@ public class plugin_Centric extends PAS_Scripting
 		boolean trainingmode = IsInTrainingMode(userinfo);
 		System.out.println("onSetAppTitle");
 		pas.setMainTitle(
-				"UMS/Centric Burger Alert - " + 
+				"NL Alert - " + 
 				pas.get_userinfo().get_current_department().get_deptid() + 
-				(trainingmode ? "  [TRAINING MODE] " : " ") + s);
+				(trainingmode ? "  [" + PAS.l("mainmenu_trainingmode").toUpperCase() + "] " : " ") + s);
 		pas.setTitle(pas.getMainTitle());
 		return true;
 	}
@@ -880,7 +880,7 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public boolean onHelpAbout() {
 		
-		JOptionPane.showMessageDialog(PAS.get_pas(), "Blablabla...", "About NL Alert", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_aboutbox_content"), PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return super.onHelpAbout();
 	}
 
@@ -986,9 +986,9 @@ public class plugin_Centric extends PAS_Scripting
 		//MARK LIVE/TRAINING MODE
 		g.setFont(UIManager.getFont("InternalFrame.titleFont"));
 
-		String str = "LIVE";
+		String str = PAS.l("common_live").toUpperCase();
 		if(IsInTrainingMode(PAS.get_pas().get_userinfo()))
-			str = "TRAINING MODE";
+			str = PAS.l("mainmenu_trainingmode").toUpperCase();
 		int strwidth = g.getFontMetrics().stringWidth(str);
 		int x = bar.getWidth()/2 - strwidth/2;
 		int y = bar.getHeight()/2-9;
