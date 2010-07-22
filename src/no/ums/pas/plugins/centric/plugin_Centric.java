@@ -183,6 +183,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu.remove(menu.get_menu_layout());
 		menu.remove(menu.get_parm());
 		menu.remove(menu.get_status());
+		menu.remove(menu.get_menu_config());
+		menu.remove(menu.get_view());
 		menu.get_menu_file().remove(menu.get_item_new_sending());
 		menu.get_menu_file().remove(menu.get_item_file_print_map());
 		menu.get_menu_file().remove(menu.get_item_file_save_map());
@@ -190,9 +192,21 @@ public class plugin_Centric extends PAS_Scripting
 		menu.get_status().remove(menu.get_item_status_export());
 		menu.get_status().remove(menu.get_item_status_updates());
 		menu.get_view().remove(menu.get_item_view_showhouses());
-		menu.get_item_view_showhouses().setSelected(false);
+		
+		//menu.get_item_view_showhouses().setSelected(false);
+		
+		//menu.get_item_address_book().setMaximumSize(new Dimension(menu.get_item_address_book().getPreferredSize().width, menu.get_item_address_book().getMaximumSize().height));
+		//menu.get_item_training_mode().setMaximumSize(new Dimension(menu.get_item_training_mode().getPreferredSize().width, menu.get_item_training_mode().getMaximumSize().height));
+		JMenu menu_addressbook, menu_trainingmode;
+		menu.add((menu_addressbook = new JMenu(PAS.l("common_address_book"))));
+		menu.add((menu_trainingmode= new JMenu(PAS.l("mainmenu_trainingmode"))));
+		
+		menu_addressbook.add(menu.get_item_address_book());
+		menu.get_item_address_book().setEnabled(false);
+		menu_trainingmode.add(menu.get_item_training_mode());
+		
+		
 		menu.add(menu.get_menu_help());
-		menu.get_menu_config().add(menu.get_item_training_mode());
 
 		//menu.set_show_houses_invoke(false);
 		return true;

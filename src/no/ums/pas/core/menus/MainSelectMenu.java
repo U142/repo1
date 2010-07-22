@@ -198,6 +198,10 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			return m_item_help_about;
 		}
+		public JMenuItem get_item_address_book()
+		{
+			return m_item_address_book;
+		}
 		//public JMenuItem get_search() { return m_item_navigate_search; }
 		
 		protected JMenuItem m_item_new_sending;
@@ -247,6 +251,8 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		protected JMenuItem m_item_parm_close;
 		
 		protected JMenuItem m_item_help_about;
+		protected JMenuItem m_item_address_book;
+
 		
 		//private JMenu m_item_gps_epsilon;
 		//private SliderMenuItem m_item_gps_epsilon_slider;
@@ -373,6 +379,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			
 			m_item_help_about = new JMenuItem(PAS.l("mainmenu_help_about"));
 			m_item_training_mode = new JCheckBoxMenuItem(PAS.l("mainmenu_trainingmode"));
+			m_item_address_book = new JMenuItem(PAS.l("common_address_book"));
 			
 			//m_item_gps_epsilon = new JMenu("Point epsilon");
 			//m_item_gps_epsilon_slider = new SliderMenuItem(get_pas(), "");
@@ -740,6 +747,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			
 			m_item_help_about.setActionCommand("act_help_about");
 			m_item_training_mode.setActionCommand("act_trainingmode");
+			m_item_address_book.setActionCommand("act_address_book");
 		}
 
 	}
