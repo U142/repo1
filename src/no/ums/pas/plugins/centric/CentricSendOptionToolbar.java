@@ -285,6 +285,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_message.setEditable(true);
 		m_txt_sender_name.setEditable(true);
 		m_txt_date_time.setEditable(true);
+		
+		variables.MAPPANE.addMouseListener(this);
+		variables.MAPPANE.addKeyListener(this);
 		setVisible(true);
 	}
 	
