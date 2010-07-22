@@ -132,7 +132,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.set_gridconst(2, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_search(), menu.m_gridconst);
 		
-		JButton btn_goto_restriction = new JButton("Home");
+		JButton btn_goto_restriction = new JButton(PAS.l("common_navigate_home"));
 		btn_goto_restriction.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		btn_goto_restriction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -524,10 +524,10 @@ public class plugin_Centric extends PAS_Scripting
 			switch(ui.get_departments().size())
 			{
 			case 1:
-				str+=" - Regional user - ";
+				str+=" - $Regional user - ";
 				break;
 			default:
-				str+=" - Regional Super User - ";
+				str+=" - $Regional Super User - ";
 				break;
 			}
 			for(int i = 0; i < ui.get_departments().size(); i++)

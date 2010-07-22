@@ -15,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
+import no.ums.pas.PAS;
+
 class DisclaimerDialog extends JDialog {
 	private boolean b_confirmed = false;
 	public boolean isConfirmed() { return b_confirmed; }
@@ -26,13 +28,13 @@ class DisclaimerDialog extends JDialog {
 	public void init()
 	{
 		this.setLayout(new BorderLayout());
-		setTitle("Disclaimer and Broker/Administrator information Window");
+		setTitle(PAS.l("disclaimer_heading"));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(700,400);
 		setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
 		setModal(true);
-		JTextArea area = new JTextArea("Disclaimer text\n\nIf you use this application...\n\n\n\n\n");
+		JTextArea area = new JTextArea(PAS.l("disclaimer_text"));
 		JScrollPane scrollPane = new JScrollPane(area);
 		area.setEditable(false);
 		area.setLineWrap(true);
@@ -49,9 +51,9 @@ class DisclaimerDialog extends JDialog {
 		}
 		JLabel lbl = new JLabel(img);
 		
-		final JLabel helpdesk = new JLabel("For helpdesk call: 0123-456789");
-		final JButton btn_ok = new JButton("Accept");
-		final JButton btn_cancel = new JButton("Decline");
+		final JLabel helpdesk = new JLabel(PAS.l("common_helpdesk_contact"));//"For helpdesk call: 0123-456789");
+		final JButton btn_ok = new JButton(PAS.l("common_accept"));
+		final JButton btn_cancel = new JButton(PAS.l("common_decline"));
 		btn_ok.addActionListener(new ActionListener()
 		{
 			@Override
