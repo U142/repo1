@@ -9,6 +9,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,6 +32,7 @@ import javax.swing.border.BevelBorder;
 
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
@@ -53,7 +56,7 @@ import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.parm.UPolygon;
 import no.ums.ws.parm.UPolypoint;
 
-public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, KeyListener {
+public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, KeyListener, MouseListener {
 
 	/**
 	 * 
@@ -143,10 +146,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_alert_name = new StdTextArea("",new Dimension(300,20));
 		m_txt_alert_name.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		m_txt_alert_name.addFocusListener(this);
+		m_txt_alert_name.addKeyListener(this);
 		
 		m_txt_sender_name = new StdTextArea("",new Dimension(300,20));
 		m_txt_sender_name.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		m_txt_sender_name.addFocusListener(this);
+		m_txt_sender_name.addKeyListener(this);
 		
 		m_txt_date_time = new StdTextArea("",new Dimension(300,20));
 		m_txt_date_time.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -389,6 +394,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, inc_panels(), 2, 1);
 		add(m_btn_send, m_gridconst);
 		m_btn_send.setActionCommand("act_goto_summary");
+		m_btn_send.setEnabled(false);
 		//set_gridconst(3, get_panel(), 1, 1);
 		//add(m_btn_close, m_gridconst);
 		
@@ -458,6 +464,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_cancel, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_btn_send, m_gridconst);
+		if(PAS.TRAINING_MODE)
+			m_btn_send.setEnabled(false);
+		else
+			m_btn_send.setEnabled(true);
+		
 		m_btn_send.setActionCommand("act_send");
 		revalidate();
 		repaint();
@@ -491,7 +502,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			poly.setTextmessages(msglist);
 			UPolygon polygon = new UPolygon();
 			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
-			if(ps == null) {
+			if(ps == null || ps.get_coors_lat().size()<3) {
 				JOptionPane.showMessageDialog(this, "Alert area is missing");
 				return;
 			}
@@ -533,6 +544,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(true);
 			m_btn_reset.doClick();
 			add_controls();
+			//onSendFinished(e);
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			add_controls();
@@ -572,7 +584,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
 				m_txt_message.getText());
-		
+		checkInputs();
 	}
 	
 	public void componentResized(ComponentEvent e) {
@@ -613,7 +625,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	@Override
 	public void keyReleased(KeyEvent e) {
 		final int max = 92;
-		if(e.getSource() == m_txt_message) {
+		if(e.getSource() == m_txt_message || e.getSource() == m_txt_alert_name) {
 			if(m_txt_message.getText().length() > ((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
 					m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
@@ -624,10 +636,48 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				
 			m_lbl_characters.setText("Characters " + m_txt_preview.getText().length() + "/92");
 		}
+		checkInputs();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
+		return;
+	}
+	public void onSendFinished(ActionEvent e) {
+		PAS.get_pas().get_eastcontent().set_centricstatus(new CentricStatus((CBSENDINGRESPONSE)e.getSource()));
+		PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_CENTRIC_STATUS_);
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		checkInputs();
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		checkInputs();
+	}
+	private void checkInputs() {
+		boolean enable_send = true;
+		if(m_txt_alert_name.getText().length()<1)
+			enable_send = false;
+		if(m_txt_sender_name.getText().length()<1)
+			enable_send = false;
+		if(m_txt_message.getText().length()<1)
+			enable_send = false;
+		if(variables.MAPPANE.get_active_shape()==null || ((PolygonStruct)variables.MAPPANE.get_active_shape()).get_coors_lat().size()<3)
+			enable_send = false;
 		
+		if(enable_send)
+			m_btn_send.setEnabled(true);
+		else
+			m_btn_send.setEnabled(false);
 	}
 }
