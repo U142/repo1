@@ -24,6 +24,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -449,6 +450,19 @@ public abstract class PasScriptingInterface
 	
 	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
 	
+	/**
+	 * Get default Locale for this site(e.g. no_NO)
+	 * @param s
+	 * @return
+	 */
 	public abstract String getDefaultLocale(Settings s);
+	
+	/**
+	 * Get users preferred language
+	 * @param l
+	 * @param s
+	 * @return
+	 */
+	public abstract String getUserLocale(LogonInfo l, Settings s);
 }
 

@@ -893,6 +893,11 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public String getDefaultLocale(Settings s) {
 		return s.getLanguage();
+	}
+	
+	@Override
+	public String getUserLocale(LogonInfo l, Settings s) {
+		return l.get_language();
 	}	
 
 }

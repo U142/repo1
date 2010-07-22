@@ -1085,7 +1085,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						
 					}
 					//else
-					String lang = logon.getLogonInfo().get_language();
+					//String lang = logon.getLogonInfo().get_language();
+					String lang = pasplugin.getUserLocale(logon.getLogonInfo(), m_settings);
 					if(lang.length()>0)
 					{
 						if(!lang.equals(defaultLang))

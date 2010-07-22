@@ -144,7 +144,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.add(btn_goto_restriction, menu.m_gridconst);
 
 		
-		JButton btn_draw_polygon = new JButton("Draw Polygon");
+		JButton btn_draw_polygon = new JButton(PAS.l("main_sending_type_polygon"));
 		btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		btn_draw_polygon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -157,7 +157,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(btn_draw_polygon, menu.m_gridconst);
 
-		JButton btn_draw_ellipse = new JButton("Draw Ellipse");
+		JButton btn_draw_ellipse = new JButton(PAS.l("main_sending_type_ellipse"));
 		btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		btn_draw_ellipse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -1015,7 +1015,7 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
 		boolean ret = true;
 		//ret = super.onAddInfoTab(tab, panel);
-		tab.addTab("test", null, new CentricSendOptionToolbar(), "fjols");
+		tab.addTab(PAS.l("mainmenu_file_newsending"), null, new CentricSendOptionToolbar(), PAS.l("main_parmtab_popup_generate_sending"));
 		return ret;
 	}
 
@@ -1099,6 +1099,11 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public String getDefaultLocale(Settings s) {
+		return "nl_NL";
+	}
+
+	@Override
+	public String getUserLocale(LogonInfo l, Settings s) {
 		return "nl_NL";
 	}
 	

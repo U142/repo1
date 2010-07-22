@@ -1185,7 +1185,7 @@ public class PolygonStruct extends ShapeStruct {
 			double epsilon = 10.0;
 			MapPointLL p1 = intersects.get(0);
 			double dist = Math.sqrt( Math.pow((Math.abs(p1.get_lat() - current_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - current_point.get_lon()) * 3600 * 30.92 * Math.cos(current_point.get_lat()) ),2) );
-			System.out.println("dist="+dist);
+			//System.out.println("dist="+dist);
 			if(dist<epsilon && num_intersects>1)
 			{
 				first_intersect = intersects.get(1);

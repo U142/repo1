@@ -127,10 +127,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		init();
 	}
 	public void init() {
-		m_lbl_alert_name = new StdTextLabel("Event name:",new Dimension(150,20));
-		m_lbl_sender_name = new StdTextLabel("Sender:", new Dimension(150,20));
-		m_lbl_date_time = new StdTextLabel("Date - Time:", new Dimension(150,20));
-		m_lbl_message = new StdTextLabel("Message:",new Dimension(150,20));
+		m_lbl_alert_name = new StdTextLabel(PAS.l("projectdlg_projectname") + ":",new Dimension(150,20));
+		m_lbl_sender_name = new StdTextLabel(PAS.l("main_sending_lba_sender_text") + ":", new Dimension(150,20));
+		m_lbl_date_time = new StdTextLabel(PAS.l("common_date") + " - " + PAS.l("common_time") + ":", new Dimension(150,20));
+		m_lbl_message = new StdTextLabel(PAS.l("common_message_content") + ":",new Dimension(150,20));
 		/*m_lbl_channel = new StdTextLabel("Channel:",new Dimension(150,20));
 		m_lbl_duration = new StdTextLabel("Duration:",new Dimension(150,20));
 		m_lbl_date = new StdTextLabel("Date:",new Dimension(150,20));
@@ -156,7 +156,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_date_time.setText(m_sz_date);
 		m_txt_date_time.addFocusListener(this);
 		
-		m_btn_update = new JButton("Update");
+		m_btn_update = new JButton(PAS.l("common_update"));
 		m_btn_update.addActionListener(this);
 		
 		m_txt_message = new JTextArea("",10,10);
@@ -258,15 +258,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_previewscroll = new JScrollPane(m_txt_preview);
 		m_txt_previewscroll.setPreferredSize(new Dimension(300,100));
 		
-		m_lbl_pages = new StdTextLabel("Page 1/25");
-		m_lbl_characters = new StdTextLabel("Character 25/92", 150);
+		m_lbl_pages = new StdTextLabel(PAS.l("common_page") + " 1/25");
+		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 25/92", 150);
 		
-		m_btn_send = new JButton("Send Alert");
+		m_btn_send = new JButton(PAS.l("main_sending_send"));
 		m_btn_send.setPreferredSize(new Dimension(300,30));
 		m_btn_address_book = new JButton("image"); // Add image/icon
 		
 		m_btn_save_message = new JButton("Save message");
-		m_btn_reset = new JButton("Reset");
+		m_btn_reset = new JButton(PAS.l("common_reset"));
 		m_btn_reset.addActionListener(this);
 		
 		m_btn_send.addActionListener(this);
@@ -319,7 +319,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 5);
 		
 		set_gridconst(8, inc_panels(), 1, 1);
-		add(m_btn_address_book, m_gridconst);
+		//add(m_btn_address_book, m_gridconst);
 		
 		add_spacing(DIR_VERTICAL, 10);
 		
@@ -398,7 +398,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_reset, m_gridconst);
 		
 		set_gridconst(2, get_panel(), 1, 1);
-		add(m_btn_save_message, m_gridconst);
+		//add(m_btn_save_message, m_gridconst);
 		revalidate();
 		repaint();
 	}
@@ -450,7 +450,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 5);
 		
 		if(m_btn_cancel == null) {
-			m_btn_cancel = new JButton("Cancel");
+			m_btn_cancel = new JButton(PAS.l("common_cancel"));
 			m_btn_cancel.addActionListener(this);
 		}
 		
@@ -527,7 +527,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			showSummary();
 		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
-			JOptionPane.showMessageDialog(this, "Refno: " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
+			JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 			progress.stop_and_hide();
 			m_btn_cancel.setEnabled(true);
 			m_btn_send.setEnabled(true);
