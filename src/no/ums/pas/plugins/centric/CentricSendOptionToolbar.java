@@ -160,6 +160,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_sz_date = getFormatedDate();
 		m_txt_date_time.setText(m_sz_date);
 		m_txt_date_time.addFocusListener(this);
+		m_txt_date_time.setEnabled(false);
 		
 		m_btn_update = new JButton(PAS.l("common_update"));
 		m_btn_update.addActionListener(this);
@@ -561,6 +562,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//m_cbx_reaction.setSelectedIndex(0);
 			//m_cbx_originator.setSelectedIndex(0);
 			m_txt_preview.setText("");
+			updateCharacters();
+			variables.MAPPANE.set_active_shape(new PolygonStruct(variables.NAVIGATION.getDimension()));
+			variables.MAPPANE.repaint();
 		}
 	}
 	
@@ -637,7 +641,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			else
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
 				
-			m_lbl_characters.setText("Characters " + m_txt_preview.getText().length() + "/92");
+			updateCharacters();
 		}
 		checkInputs();
 	}
@@ -682,5 +686,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(true);
 		else
 			m_btn_send.setEnabled(false);
+	}
+	
+	private void updateCharacters() {
+		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/92");
 	}
 }
