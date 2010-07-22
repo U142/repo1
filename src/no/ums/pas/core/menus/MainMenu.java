@@ -202,6 +202,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		//setBackground(new Color(191, 191, 191)); //Color.white);		
 		
 	}
+	
+	
+	@Override
+	public int getWantedHeight() {
+		return 50;
+	}
 	public void componentResized(ComponentEvent e) {
 		int w = getWidth();
 		int h = getHeight();
@@ -213,7 +219,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			
 		setBounds(0, 0, w, h);
 		m_selectmenu.setBounds(0, 0, w, 22);//new Dimension(getWidth(), 20));
-		//m_selectmenu.revalidate();
+		m_selectmenu.revalidate();
 		//m_selectmenu.setPreferredSize(new Dimension(getWidth(), 18));
 		//m_selectmenu.get_bar().setPreferredSize(new Dimension(getWidth(), 18));
 		//System.out.println("Menu resized to " + getWidth() + ", " + getHeight());

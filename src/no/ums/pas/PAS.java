@@ -1542,6 +1542,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			
 			int w = getWidth();
 			//get_mainmenu().setSize(new Dimension(getWidth(), 70));
+			get_mainmenu().setPreferredSize(new Dimension(getWidth()-10, get_mainmenu().getWantedHeight()));
 			get_mainmenu().revalidate();
 			if(b_from_timer) {
 				System.out.println("New mapsize = " + dim_map.toString());
