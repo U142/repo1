@@ -898,6 +898,15 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
 		return l.get_language();
+	}
+
+
+	@Override
+	public EastContent onCreateEastContent() {
+		return new EastContent(PAS.get_pas());
 	}	
+	
+	
+	
 
 }

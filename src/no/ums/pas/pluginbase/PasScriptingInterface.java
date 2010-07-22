@@ -464,5 +464,8 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract String getUserLocale(LogonInfo l, Settings s);
+	
+	
+	public abstract EastContent onCreateEastContent();
 }
 

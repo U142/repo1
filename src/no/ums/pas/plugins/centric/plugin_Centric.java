@@ -33,6 +33,7 @@ import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.GeneralPanel;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
@@ -1105,6 +1106,11 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
 		return "nl_NL";
+	}
+
+	@Override
+	public EastContent onCreateEastContent() {
+		return new CentricEastContent();
 	}
 	
 	
