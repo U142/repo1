@@ -1217,7 +1217,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						m_inhabitantframe = new InhabitantFrame(PAS.get_pas());
 						m_gpsframe = new GPSFrame(get_gpscontroller());
 						m_southcontent = new SouthContent(PAS.get_pas());
-						m_eastcontent = new EastContent(PAS.get_pas());
+						m_eastcontent = pasplugin.onCreateEastContent();//new EastContent(PAS.get_pas());
 						get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 					}
 					catch(Exception e)
