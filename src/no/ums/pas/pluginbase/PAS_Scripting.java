@@ -220,6 +220,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		menu.get_parm().add(menu.get_item_parm_close());
 		
 		menu.get_menu_help().add(menu.get_item_help_about());
+		menu.get_menu_help().add(menu.get_item_contact_information());
 
 		//m_menu_gps.add(m_item_gps_epsilon);
 		//m_item_gps_epsilon.add(m_item_gps_epsilon_slider);
@@ -904,6 +905,19 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public EastContent onCreateEastContent() {
 		return new EastContent(PAS.get_pas());
+	}
+
+
+
+	@Override
+	public boolean onOpenAddressBook() {
+		return false;
+	}
+
+
+	@Override
+	public boolean onShowContactinformation() {
+		return false;
 	}	
 	
 	

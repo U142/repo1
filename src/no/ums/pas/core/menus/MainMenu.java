@@ -759,6 +759,14 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			PAS.TRAINING_MODE = b;
 			PAS.pasplugin.onTrainingMode(b);
 		}
+		else if("act_show_contact_information".equals(e.getActionCommand()))
+		{
+			PAS.pasplugin.onShowContactinformation();
+		}
+		else if("act_address_book".equals(e.getActionCommand()))
+		{
+			PAS.pasplugin.onOpenAddressBook();
+		}
 		else
 		{
 			PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.DEFAULT_CURSOR));	

@@ -207,6 +207,7 @@ public class plugin_Centric extends PAS_Scripting
 		
 		
 		menu.add(menu.get_menu_help());
+		
 
 		//menu.set_show_houses_invoke(false);
 		return true;
@@ -1125,6 +1126,18 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public EastContent onCreateEastContent() {
 		return new CentricEastContent();
+	}
+
+	@Override
+	public boolean onOpenAddressBook() {
+		return super.onOpenAddressBook();
+	}
+
+	@Override
+	public boolean onShowContactinformation() {
+		//show contact information
+		JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_helpdesk_contact"), PAS.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
+		return true;
 	}
 	
 	

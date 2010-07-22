@@ -467,5 +467,9 @@ public abstract class PasScriptingInterface
 	
 	
 	public abstract EastContent onCreateEastContent();
+	
+	public abstract boolean onShowContactinformation();
+	
+	public abstract boolean onOpenAddressBook();
 }
 
