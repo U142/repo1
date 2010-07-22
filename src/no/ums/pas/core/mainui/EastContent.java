@@ -5,7 +5,6 @@ import javax.swing.*;
 
 import no.ums.pas.*;
 import no.ums.pas.cellbroadcast.CountryCodes;
-import no.ums.pas.plugins.centric.CentricStatus;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -67,11 +66,11 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	private HouseEditorDlg m_houseeditor = null;
 	private ImageIcon m_icon_close = null;
 	private TasPanel m_taspanel = null;
-	private CentricStatus m_centricstatus = null;
+	//private CentricStatus m_centricstatus = null;
 	
-	public void addCentricStatus(CentricStatus status) {
+	/*public void addCentricStatus(CentricStatus status) {
 		m_tabbedpane.add(PAS.l("main_statustab_title"),status);
-	}
+	}*/
 	PAS get_pas() { return m_pas; }
 	public StatuscodeFrame get_statuscodeframe() { return get_pas().get_statuscontroller().get_statuscodeframe(); }
 	public InhabitantFrame get_inhabitantframe() { return get_pas().get_inhabitantframe(); }
@@ -84,8 +83,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public SendingPanel get_sendingpanel() { return m_sendingpanel ;}
 	public HouseEditorDlg get_houseeditor() { return m_houseeditor; }
 	public TasPanel get_taspanel() { return m_taspanel; }
-	public CentricStatus get_centricstatus() { return m_centricstatus; }
-	public void set_centricstatus(CentricStatus status) { m_centricstatus = status; }
+	//public CentricStatus get_centricstatus() { return m_centricstatus; }
+	//public void set_centricstatus(CentricStatus status) { m_centricstatus = status; }
 	
 	public ParmPanel get_parm() {
 		if(PAS.get_pas().get_parmcontroller()!=null)
@@ -440,10 +439,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					if(get_taspanel()!=null)
 						get_tabbedpane().setSelectedComponent(get_taspanel());
 					break;
-				case PANEL_CENTRIC_STATUS_:
+				/*case PANEL_CENTRIC_STATUS_:
 					if(get_centricstatus()!=null)
 						get_tabbedpane().setSelectedComponent(get_centricstatus());
-					break;
+					break;*/
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -497,10 +496,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						}
 					}
 				case PANEL_CENTRIC_STATUS_:
-					if(find_component(m_centricstatus)==-1)
+					/*if(find_component(m_centricstatus)==-1)
 					{
 						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_centricstatus, PAS.l("main_statustab_title_tooltip"));
-					}
+					}*/
 					break;
 			}
 		}

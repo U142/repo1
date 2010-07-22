@@ -647,7 +647,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		return;
 	}
 	public void onSendFinished(ActionEvent e) {
-		PAS.get_pas().get_eastcontent().set_centricstatus(new CentricStatus((CBSENDINGRESPONSE)e.getSource()));
+		//PAS.get_pas().get_eastcontent().set_centricstatus(new CentricStatus((CBSENDINGRESPONSE)e.getSource()));
 		PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_CENTRIC_STATUS_);
 	}
 	@Override
