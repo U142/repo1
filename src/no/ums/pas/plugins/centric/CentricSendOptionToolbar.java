@@ -265,7 +265,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_previewscroll.setPreferredSize(new Dimension(300,100));
 		
 		m_lbl_pages = new StdTextLabel(PAS.l("common_page") + " 1/25");
-		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 25/92", 150);
+		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/92", 150);
 		
 		m_btn_send = new JButton(PAS.l("main_sending_send"));
 		m_btn_send.setPreferredSize(new Dimension(300,30));
@@ -632,7 +632,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	@Override
 	public void keyReleased(KeyEvent e) {
 		final int max = 92;
-		if(e.getSource() == m_txt_message || e.getSource() == m_txt_alert_name) {
+		if(e.getSource() == m_txt_message || e.getSource() == m_txt_sender_name) {
 			if(m_txt_message.getText().length() > ((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
 					m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
