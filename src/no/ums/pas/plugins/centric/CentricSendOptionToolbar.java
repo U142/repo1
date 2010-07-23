@@ -122,6 +122,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
 	
+	private CentricStatus m_centricstatus;
+	
 	public CentricSendOptionToolbar() {
 		//super();
 		init();
@@ -495,6 +497,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			msg.setLChannel(991); // This is stored in userinfo
 			CBMESSAGELIST msglist = new CBMESSAGELIST();
 			msglist.getMessage().add(msg);
+			
 			//sending.n_deptpk = PAS.get_pas().get_userinfo().get_current_department().get_deptpk();
 			//sending.n_userpk = PAS.get_pas().get_userinfo().get_userpk();
 			//sending.n_comppk = PAS.get_pas().get_userinfo().get_comppk();
@@ -504,6 +507,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//poly.setLValidity(value);
 			poly.setLSchedUtc(c.getTimeInMillis());
 			poly.setTextmessages(msglist);
+			
 			UPolygon polygon = new UPolygon();
 			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
 			if(ps == null || ps.get_coors_lat().size()<3) {
@@ -517,8 +521,16 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				polygon.getPolypoint().add(pp);
 			}
 			poly.setAlertpolygon(polygon);
-			WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
-			send.start();
+			try {
+				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
+				send.start();
+			}
+			catch(Exception ex) {
+				JOptionPane.showMessageDialog(this, PAS.l("common_error" + ": ") + ex.getMessage());
+				progress.stop_and_hide();
+				m_btn_cancel.setEnabled(true);
+				m_btn_send.setEnabled(true);
+			}
 			
 			m_btn_send.setEnabled(false);
 			m_btn_cancel.setEnabled(false);
@@ -548,7 +560,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(true);
 			m_btn_reset.doClick();
 			add_controls();
-			//onSendFinished(e);
+			onSendFinished(e);
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			add_controls();
@@ -652,8 +664,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		return;
 	}
 	public void onSendFinished(ActionEvent e) {
-		//PAS.get_pas().get_eastcontent().set_centricstatus(new CentricStatus((CBSENDINGRESPONSE)e.getSource()));
-		PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_CENTRIC_STATUS_);
+		if(m_centricstatus == null)
+			m_centricstatus = new CentricStatus((CBSENDINGRESPONSE)e.getSource());
+		else
+			m_centricstatus.set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
+			
+		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
+		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+		// update status ting med CBSendingresponse?
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {

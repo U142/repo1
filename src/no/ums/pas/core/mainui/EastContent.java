@@ -42,7 +42,6 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public static final int PANEL_HOUSEEDITOR_ = 6;
 	public static final int PANEL_PARM_ = 7;
 	public static final int PANEL_TAS_ = 8;
-	public static final int PANEL_CENTRIC_STATUS_ = 9;
 
 	PAS m_pas;
 	private GridBagLayout	m_gridlayout;
@@ -53,7 +52,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public LoadingPanel get_gps_loadingpanel() { return null; }
 	private int m_n_panels = 0;
 	private int inc_panels() { return m_n_panels++; }
-	private EastTabbedPane m_tabbedpane;
+	protected EastTabbedPane m_tabbedpane;
 	public EastTabbedPane get_tabbedpane() { return m_tabbedpane; }
 	public void setIndexZero() {
 		m_tabbedpane.setSelectedIndex(0);
@@ -66,11 +65,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	private HouseEditorDlg m_houseeditor = null;
 	private ImageIcon m_icon_close = null;
 	private TasPanel m_taspanel = null;
-	//private CentricStatus m_centricstatus = null;
 	
-	/*public void addCentricStatus(CentricStatus status) {
-		m_tabbedpane.add(PAS.l("main_statustab_title"),status);
-	}*/
 	PAS get_pas() { return m_pas; }
 	public StatuscodeFrame get_statuscodeframe() { return get_pas().get_statuscontroller().get_statuscodeframe(); }
 	public InhabitantFrame get_inhabitantframe() { return get_pas().get_inhabitantframe(); }
@@ -83,8 +78,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public SendingPanel get_sendingpanel() { return m_sendingpanel ;}
 	public HouseEditorDlg get_houseeditor() { return m_houseeditor; }
 	public TasPanel get_taspanel() { return m_taspanel; }
-	//public CentricStatus get_centricstatus() { return m_centricstatus; }
-	//public void set_centricstatus(CentricStatus status) { m_centricstatus = status; }
+	
 	
 	public ParmPanel get_parm() {
 		if(PAS.get_pas().get_parmcontroller()!=null)
@@ -281,7 +275,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	
 	
 	
-	class EastTabbedPane extends JTabbedPane implements ComponentListener, ChangeListener {
+	protected class EastTabbedPane extends JTabbedPane implements ComponentListener, ChangeListener {
 		public static final long serialVersionUID = 1;
 		EastTabbedPane() {
 			super();
@@ -439,10 +433,6 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					if(get_taspanel()!=null)
 						get_tabbedpane().setSelectedComponent(get_taspanel());
 					break;
-				/*case PANEL_CENTRIC_STATUS_:
-					if(get_centricstatus()!=null)
-						get_tabbedpane().setSelectedComponent(get_centricstatus());
-					break;*/
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -495,12 +485,6 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 							get_tabbedpane().addTab(PAS.l("main_tas_title") + " (" + CountryCodes.getCountryByCCode(PAS.get_pas().get_userinfo().get_current_department().get_stdcc()) + ")", null, get_taspanel(), PAS.l("main_tas_title"));
 						}
 					}
-				case PANEL_CENTRIC_STATUS_:
-					/*if(find_component(m_centricstatus)==-1)
-					{
-						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_centricstatus, PAS.l("main_statustab_title_tooltip"));
-					}*/
-					break;
 			}
 		}
 		catch(Exception e)
@@ -519,7 +503,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	
 	
 	
-	private int find_component(Component c) {
+	protected int find_component(Component c) {
 		if(c==null)
 			return -1;
 		Component arr [] = get_tabbedpane().getComponents();
