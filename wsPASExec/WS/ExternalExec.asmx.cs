@@ -14,10 +14,12 @@ using com.ums.UmsFile;
 using com.ums.PARM.AlertExec;
 using com.ums.PAS.Address;
 using com.ums.PAS.Database;
+using com.ums.PAS.CB;
 using System.Xml;
 using com.ums.UmsCommon.Audio;
 using System.Collections.Generic;
-
+using System.Xml.Serialization;
+using System.Text;
 
 namespace com.ums.ws.parm
 {
@@ -276,14 +278,108 @@ namespace com.ums.ws.parm
             return response;
         }
 
-        [WebMethod]
-        public XmlDocument ExecCBSending(ULOGONINFO logon, CB_SENDING sending)
+        /*[WebMethod]
+        public XmlDocument ExecCBSending(ULOGONINFO logon, CB_ALERT_POLYGON sending)
         {
             XmlDocument doc = new XmlDocument();
             PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
             db.Send(ref logon, ref sending);
 
             return doc;
+        }*/
+
+        /*[WebMethod]
+        public bool _cb_export(CB_ALERT_KILL kill
+                                ,CB_ALERT_PLMN plmn
+                                ,CB_ALERT_POLYGON poly
+                                ,CB_ALERT_UPDATE update)
+        {
+            return true;
+        }*/
+
+        [XmlInclude(typeof(CB_ALERT_KILL))]
+        [XmlInclude(typeof(CB_ALERT_PLMN))]
+        [XmlInclude(typeof(CB_ALERT_POLYGON))]
+        [XmlInclude(typeof(CB_ALERT_UPDATE))]
+
+
+        /*[WebMethod]
+        public CB_SENDING_RESPONSE testCBOperation()
+        {
+            try
+            {
+                ULOGONINFO logon = new ULOGONINFO();
+                logon.l_userpk = 1;
+                logon.l_comppk = 1;
+                logon.l_deptpk = 1;
+                CB_ALERT_POLYGON cb = new CB_ALERT_POLYGON();
+                cb.shape = new UPolygon();
+                cb.shape.addPoint(50, 10);
+                cb.shape.addPoint(60, 11);
+                cb.shape.addPoint(55, 10.5);
+                cb.l_projectpk = 0;
+                cb.sz_projectname = "Morten tester";
+                cb.l_sched_utc = 20100719154600;
+                cb.l_validity = 7;
+                cb.originator = new CB_ORIGINATOR();
+                cb.reaction = new CB_REACTION();
+                cb.risk = new CB_RISK();
+                cb.sz_name = "test";
+                cb.sz_sender = "UMS";
+                CB_MESSAGE msg = new CB_MESSAGE();
+                msg.l_cbchannel = 919;
+                msg.sz_text = "Extreme weersomstandigheden waarschuwing in dit gebied tot 4:15pm";
+                cb.textmessages.list.Add(msg);
+                CB_OPERATION_BASE send = (CB_OPERATION_BASE)cb;
+                return new CBGenerateSending(ref logon, ref send).Send();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
+
+        /*[WebMethod]
+        public bool tmpRestrictionShape()
+        {
+            CB_ALERT_POLYGON p = CB_ALERT_POLYGON.Deserialize("S:\\UMS\\var\\CB\\eat\\CB_NewAlertPolygon_62_100145.xml", Encoding.UTF8);
+            String xml = "", md5 = "";
+            p.shape.CreateXml(ref xml, ref md5);
+            return true;
+        }*/
+
+        /**
+         * Execute a CB-operation (send poly, send plnm, update, kill)
+         * Fill operation-base from logon-info
+         * Get a refno
+         * Insert into DB
+         * Serialize CB_OPERATION
+         */
+        [WebMethod]
+        public CB_SENDING_RESPONSE ExecCBOperation(ULOGONINFO logon, CB_OPERATION_BASE cb)
+        {
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                db.CheckLogon(ref logon, true);
+                db.close();
+
+                //SEND BASE MAY BE Send Poly, Send nationwide or Update sending
+                if (typeof(CB_SEND_BASE).Equals(cb.GetType().BaseType))
+                {
+                    return new CBGenerateSending(ref logon, ref cb).Send();
+                }
+                //Kill sending
+                else if(typeof(CB_ALERT_KILL).Equals(cb))
+                {
+                    return new CBGenerateSending(ref logon, ref cb).KillSending();
+                }
+                throw new Exception("Sending definition not found for " + cb.GetType());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
 

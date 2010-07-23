@@ -55,6 +55,8 @@
     <Compile Include="Address\UAddressList.cs" />
     <Compile Include="Address\UInhabitantsByDistance.cs" />
     <Compile Include="Address\UMapAddressSearch.cs" />
+    <Compile Include="CB\CBCommon.cs" />
+    <Compile Include="CB\CBGenerateSending.cs" />
     <Compile Include="Database\UAdrDb.cs" />
     <Compile Include="Database\ULogon.cs" />
     <Compile Include="Database\USendDb.cs" />

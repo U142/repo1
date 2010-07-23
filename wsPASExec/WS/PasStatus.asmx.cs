@@ -12,6 +12,8 @@ using com.ums.PAS.Status;
 using com.ums.UmsCommon.CoorConvert;
 using System.Xml;
 using System.Collections.Generic;
+using com.ums.PAS.CB;
+using com.ums.PAS.Database;
 
 namespace com.ums.ws.pas.status
 {
@@ -50,6 +52,21 @@ namespace com.ums.ws.pas.status
             catch (USessionExpiredException e)
             {
                 throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
+        public CB_PROJECT_STATUS_RESPONSE GetCBStatus(CB_PROJECT_STATUS_REQUEST req)
+        {
+            try
+            {
+                UStatusItemsDb s = new UStatusItemsDb();
+                s.CheckLogon(ref req.logon, true);
+                return s.GetStatusItems(ref req);
             }
             catch (Exception e)
             {

@@ -23,6 +23,7 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_temp = ConfigurationSettings.AppSettings["sz_path_temp"]; //"D:\\ums\\temp\\";
             UCommon.UPATHS.sz_path_mapsendings = ConfigurationSettings.AppSettings["sz_path_mapsendings"]; //"D:\\ums\\mapsendings\\";
             UCommon.UPATHS.sz_path_lba = ConfigurationSettings.AppSettings["sz_path_lba"]; //"D:\\ums\\lba\\";
+            UCommon.UPATHS.sz_path_cb = ConfigurationSettings.AppSettings["sz_path_cb"];
             UCommon.UPATHS.sz_path_tas = ConfigurationSettings.AppSettings["sz_path_tas"];
             UCommon.UPATHS.sz_path_parmtemp = ConfigurationSettings.AppSettings["sz_parm_path_temp"];
             UCommon.UPATHS.sz_path_parmzipped = ConfigurationSettings.AppSettings["sz_parm_path_zipped"];

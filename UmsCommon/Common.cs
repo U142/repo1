@@ -7,6 +7,8 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Collections;
 using System.Security.Cryptography;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace com.ums.UmsCommon
 {
@@ -44,6 +46,13 @@ namespace com.ums.UmsCommon
     public class SessionStore
     {
 
+    }
+
+    public enum LBA_SENDINGTYPES
+    {
+        TAS = 5,
+        LBAS = 4,
+        CELLBROADCAST = 7,
     }
 
     public class PercentProgress
@@ -156,6 +165,7 @@ namespace com.ums.UmsCommon
         PAOBJECT = 4,
         PAUSERRESTRICTION = 8,
         PADEPARTMENTRESTRICTION = 16,
+        PASENDING = 32,
     }
 
     public static class Helpers
@@ -371,6 +381,7 @@ namespace com.ums.UmsCommon
             public static String sz_path_temp;
             public static String sz_path_mapsendings;
             public static String sz_path_lba;
+            public static String sz_path_cb;
             public static String sz_path_tas;
             public static String sz_path_parmtemp;
             public static String sz_path_parmzipped;
@@ -670,14 +681,20 @@ namespace com.ums.UmsCommon
 
     public class BBPROJECT
     {
-        public String sz_projectpk;
+        [XmlAttribute("l_projectpk")] public String sz_projectpk;
+        [XmlIgnore]
         public String sz_name;
+        [XmlIgnore]
         public String sz_created;
+        [XmlIgnore]
         public String sz_updated;
+        [XmlIgnore]
         public int n_deptpk;
 
         /*sending specifics*/
+        [XmlIgnore]
         public int n_sendingcount; //sendings attached to project
+        [XmlIgnore]
         public List<MDVSENDINGINFO> mdvsendinginfo = new List<MDVSENDINGINFO>(); //collection of mdvsendinginfo
     }
 
@@ -713,24 +730,24 @@ namespace com.ums.UmsCommon
     public class MDVSENDINGINFO
     {
         public long l_refno;
-        public String sz_fields;
-        public String sz_sepused;
+        public String sz_fields = "";
+        public String sz_sepused = "";
         public long l_namepos;
         public long l_addresspos;
         public long l_lastantsep;
         //public long l_refno;
-        public String l_createdate;
-        public String l_createtime;
-        public String l_scheddate;
-        public String l_schedtime;
-        public String sz_sendingname;
+        public String l_createdate = "";
+        public String l_createtime = "";
+        public String l_scheddate = "";
+        public String l_schedtime = "";
+        public String sz_sendingname = "";
         public long l_sendingstatus;
         public long l_companypk;
         public long l_deptpk;
         public long l_nofax;
         public long l_removedup;
         public long l_group;
-        public String sz_groups;
+        public String sz_groups = "";
         public long l_type;
         public long f_dynacall; //1 = normal voice, 2 = simulation
         public long l_addresstypes; 
@@ -942,15 +959,24 @@ namespace com.ums.UmsCommon
         public int l_subscribers;
         public int l_operator;
     }
+
+    public class ULBAHISTCELL
+    {
+        public int l_operator;
+        public String sz_operator;
+        public int l_2gtotal;
+        public int l_2gok;
+        public int l_3gtotal;
+        public int l_3gok;
+        public int l_4gtotal;
+        public int l_4gok;
+        public long l_timestamp;
+    }
     public class ULBASEND_TS
     {
         public int l_status;
         public long l_ts;
         public int l_operator;
-    }
-    public class ULBAHISTCELL
-    {
-
     }
 
     public class ULBASENDING

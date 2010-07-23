@@ -2,6 +2,7 @@
 using System.Data.Odbc;
 using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
+using com.ums.PAS.CB;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -1076,7 +1077,7 @@ namespace com.ums.UmsParm
             }
         }
 
-        public bool Send(ref ULOGONINFO logon, ref CB_SENDING sending)
+        public bool Send(ref ULOGONINFO logon, ref CB_ALERT_POLYGON sending)
         {
             try
             {
@@ -1483,8 +1484,14 @@ namespace com.ums.UmsParm
                 for (int i = 0; i < a.getLanguageCount(); i++)
                 {
                     String strname = a.getLanguage(i).getName();
+                    if (strname == null)
+                        strname = "Default";
                     String stroadc = a.getLanguage(i).getCBOadc();
+                    if (stroadc == null)
+                        stroadc = "Default";
                     String strtext = a.getLanguage(i).getText();
+                    if (strtext == null)
+                        strtext = "Default";
                     if (strname.Length > 50)
                         strname = strname.Substring(0, 50);
                     if (stroadc.Length > 20)

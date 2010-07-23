@@ -12,19 +12,28 @@ using System.Data.Odbc;
 
 namespace com.ums.PAS.Project
 {
-    public class UProject
+    public class UProject : PASUmsDb
     {
         public UPROJECT_RESPONSE uproject(ref ULOGONINFO logon, ref UPROJECT_REQUEST req)
         {
             UPROJECT_RESPONSE response = new UPROJECT_RESPONSE();
             response.n_responsecode = -1;
 
-            PASUmsDb db = new PASUmsDb();
-            if (!db.CheckLogon(ref logon, true))
+            //PASUmsDb db = new PASUmsDb();
+            /*FLYTT CheckLogon til asmx filene for felles sjekk
+             * 
+             * try
             {
-                response.sz_responsetext = "Error in logon";
-                return response;
+                if (!db.CheckLogon(ref logon, true))
+                {
+                    response.sz_responsetext = "Error in logon";
+                    return response;
+                }
             }
+            catch (Exception e)
+            {
+                throw e;
+            }*/
 
             try
             {
@@ -36,7 +45,7 @@ namespace com.ums.PAS.Project
                         break;
                 }
 
-                OdbcDataReader dr = db.ExecReader(String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk), UmsDb.UREADER_AUTOCLOSE);
+                OdbcDataReader dr = ExecReader(String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk), UmsDb.UREADER_AUTOCLOSE);
 
                 while (dr.Read())
                 {
@@ -48,7 +57,7 @@ namespace com.ums.PAS.Project
                     response.n_responsecode = 0;
                 }
                 dr.Close();
-                db.close();
+                close();
             }
             catch (Exception e)
             {

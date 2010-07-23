@@ -12,6 +12,7 @@ using com.ums.UmsDbLib;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using com.ums.PAS.Status;
+using com.ums.PAS.CB;
 
 namespace com.ums.PAS.Database
 {
@@ -22,6 +23,12 @@ namespace com.ums.PAS.Database
         {
 
         }
+        public UStatusItemsDb()
+            : base(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
+        {
+
+        }
+
 
         public UNonFinalStatusCodes GetNotFinalStatusCodes(ref UStatusItemSearchParams p)
         {
@@ -324,6 +331,22 @@ namespace com.ums.PAS.Database
             return ret;
         }
 
+        public CB_PROJECT_STATUS_RESPONSE GetStatusItems(ref CB_PROJECT_STATUS_REQUEST req)
+        {
+            CB_PROJECT_STATUS_RESPONSE response = new CB_PROJECT_STATUS_RESPONSE();
+
+            //fill projectinfo
+            //get all refno's from project
+                //fill sendingname from MDVSENDINGINFO
+                //fill shape (UPolygon) deserialized from PASHAPE pk=refno, type=32
+                //fill languages from LBASEND_TEXT
+                //fill timestamps from LBASEND_TS
+                //fill stuff from LBASEND
+                //file stuff from LBAHISTCELL
+            return response;
+        }
+
+
         public List<UStatusItem> GetStatusItems(ref UStatusItemSearchParams p)
         {
             List<UStatusItem> ret = new List<UStatusItem>();
@@ -405,7 +428,7 @@ namespace com.ums.PAS.Database
         public void setAdrInfo(String str)
         {
             sz_adrinfo = str;
-            string [] p = str.Split('|');
+            string[] p = str.Split('|');
             if (p.Length >= 1)
                 sz_adrname = p[0];
             else
@@ -437,4 +460,5 @@ namespace com.ums.PAS.Database
         }
 
     }
+
 }

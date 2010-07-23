@@ -469,7 +469,16 @@ namespace com.ums.ws.pas
         [WebMethod]
         public UPROJECT_RESPONSE UCreateProject(ULOGONINFO logon, UPROJECT_REQUEST req)
         {
-            return new UProject().uproject(ref logon, ref req);
+            UProject p = new UProject();
+            try
+            {
+                p.CheckLogon(ref logon, true);
+                return p.uproject(ref logon, ref req);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
         
         [WebMethod]

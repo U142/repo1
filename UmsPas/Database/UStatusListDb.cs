@@ -141,6 +141,8 @@ namespace com.ums.PAS.Database
                         "SELECT * FROM v_StatusListSms " +
                         "UNION " +
                         "SELECT * FROM v_StatusListLBA " +
+                        "UNION " +
+                        "SELECT * FROM v_StatusListCB " +
                         "WHERE l_deptpk in ({0}) " +
                         "ORDER BY l_refno DESC",
                         szDeptList);

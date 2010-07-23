@@ -192,7 +192,8 @@ namespace com.ums.UmsDbLib
                     }
                 }
                 rs.Close();
-                checkSessionIntegrity(ref info, b_update_session);
+                if(b_ret)
+                    checkSessionIntegrity(ref info, b_update_session);
 
 
             }

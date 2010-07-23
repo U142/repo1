@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using com.ums.PAS.Database;
 using System.Xml;
+using System.Text;
 using System.Security.Cryptography;
+using System.Xml.Serialization;
+using System.IO;
 
 
 namespace com.ums.UmsParm
@@ -154,8 +157,15 @@ namespace com.ums.UmsParm
         public static int SENDINGTYPE_MUNICIPAL = 9;
         public static int SENDINGTYPE_TESTSENDING = 0;//imported list
 
-
-        public float col_red, col_green, col_blue, col_alpha;
+        //[XmlIgnore]
+        [XmlAttribute("col_red")]
+        public float col_red;
+        [XmlAttribute("col_green")]
+        public float col_green;
+        [XmlAttribute("col_blue")]
+        public float col_blue;
+        [XmlAttribute("col_alpha")]
+        public float col_alpha;
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }
@@ -1077,6 +1087,49 @@ namespace com.ums.UmsParm
 
     public class UPolygon : UShape
     {
+        //[XmlElement("alertpolygon")]
+        /*public UPolypoint[] Items
+        {
+            get
+            {
+                UPolypoint[] items = new UPolypoint[this.getSize()];
+                m_array_polypoints.CopyTo(items);
+                return items;
+            }
+            set
+            {
+                if (value == null) return;
+                UPolypoint[] items = (UPolypoint[])value;
+                m_array_polypoints.Clear();
+                foreach (UPolypoint item in items)
+                    m_array_polypoints.Add(item);
+            }
+        }*/
+
+        public String Serialize()
+        {
+            XmlSerializer s = new XmlSerializer(typeof(UPolygon));
+            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+            xmlnsEmpty.Add("", "");
+
+            //TextWriter w = new StreamWriter(tmp_file, false, Encoding.UTF8);
+            MemoryStream m = new MemoryStream();
+            //StringWriter stringWriter = new StringWriter(new StringBuilder());
+            //TextWriter textWriter = new StreamWriter(m, Encoding.UTF8);
+
+            XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
+            s.Serialize(xmlWriter, this, xmlnsEmpty);
+            //textWriter.Close();
+            //String xml = new String(m, 0, m.Length, Encoding.UTF8);//textWriter.ToString();
+            //m.Close();
+            String xml;
+            xml = Encoding.UTF8.GetString(m.GetBuffer());
+            xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));
+            xml = xml.Substring(0, (xml.LastIndexOf(Convert.ToChar(62)) + 1));
+            return xml;
+        }
+
+        [XmlElement("polypoint")] 
         public List<UPolypoint> m_array_polypoints;
         public List<UPolypoint> getPolygon() { return m_array_polypoints; }
         public long getSize() { return m_array_polypoints.Count; }
@@ -1222,7 +1275,8 @@ namespace com.ums.UmsParm
 
     public class UPolypoint
     {
-        public double lon, lat;
+        [XmlAttribute("lon")] public double lon;
+        [XmlAttribute("lat")] public double lat;
         public double getLon() { return lon; }
         public double getLat() { return lat; }
 
@@ -1480,25 +1534,7 @@ namespace com.ums.UmsParm
         }
     }
 
-    public class CB_SENDING // Used for NLALERT
-    {
-        public BBPROJECT m_project;
-        public String sz_name;
-        public String sz_message;
-        public long l_datetime;
-        public long l_deptpk;
-        public long l_userpk;
-        public long l_comppk;
-        public UShape m_shape;
-        public int l_repetition;
-        public int l_interval;
-        public int l_duration;
-    }
 
-    public class CB_SENDING_RETURN
-    {
-        public long n_refno;
-    }
 
     public class PAS_SENDING
     {

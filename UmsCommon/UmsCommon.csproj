@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="CAP\CommonAlertProtocol.cs" />
     <Compile Include="CoorConvert\Constants.cs" />
     <Compile Include="CoorConvert\RDConvert.cs" />
     <Compile Include="CoorConvert\UTM.cs" />
