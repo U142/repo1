@@ -17,8 +17,15 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="CB_OPERATION_BASE">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="risk" type="{http://ums.no/ws/parm/}CB_RISK" minOccurs="0"/>
+ *         &lt;element name="reaction" type="{http://ums.no/ws/parm/}CB_REACTION" minOccurs="0"/>
+ *         &lt;element name="originator" type="{http://ums.no/ws/parm/}CB_ORIGINATOR" minOccurs="0"/>
+ *       &lt;/sequence>
  *       &lt;attribute name="l_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="l_projectpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
+ *       &lt;attribute name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="sz_sender" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="l_comppk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="l_deptpk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="l_userpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
@@ -30,23 +37,106 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "CB_OPERATION_BASE")
+@XmlType(name = "CB_OPERATION_BASE", propOrder = {
+    "risk",
+    "reaction",
+    "originator"
+})
 @XmlSeeAlso({
     CBALERTKILL.class,
     CBSENDBASE.class
 })
 public abstract class CBOPERATIONBASE {
 
+    protected CBRISK risk;
+    protected CBREACTION reaction;
+    protected CBORIGINATOR originator;
     @XmlAttribute(name = "l_refno", required = true)
     protected long lRefno;
     @XmlAttribute(name = "l_projectpk", required = true)
     protected long lProjectpk;
+    @XmlAttribute(name = "sz_projectname")
+    protected String szProjectname;
+    @XmlAttribute(name = "sz_sender")
+    protected String szSender;
     @XmlAttribute(name = "l_comppk", required = true)
     protected int lComppk;
     @XmlAttribute(name = "l_deptpk", required = true)
     protected int lDeptpk;
     @XmlAttribute(name = "l_userpk", required = true)
     protected long lUserpk;
+
+    /**
+     * Gets the value of the risk property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBRISK }
+     *     
+     */
+    public CBRISK getRisk() {
+        return risk;
+    }
+
+    /**
+     * Sets the value of the risk property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBRISK }
+     *     
+     */
+    public void setRisk(CBRISK value) {
+        this.risk = value;
+    }
+
+    /**
+     * Gets the value of the reaction property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBREACTION }
+     *     
+     */
+    public CBREACTION getReaction() {
+        return reaction;
+    }
+
+    /**
+     * Sets the value of the reaction property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBREACTION }
+     *     
+     */
+    public void setReaction(CBREACTION value) {
+        this.reaction = value;
+    }
+
+    /**
+     * Gets the value of the originator property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBORIGINATOR }
+     *     
+     */
+    public CBORIGINATOR getOriginator() {
+        return originator;
+    }
+
+    /**
+     * Sets the value of the originator property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBORIGINATOR }
+     *     
+     */
+    public void setOriginator(CBORIGINATOR value) {
+        this.originator = value;
+    }
 
     /**
      * Gets the value of the lRefno property.
@@ -78,6 +168,54 @@ public abstract class CBOPERATIONBASE {
      */
     public void setLProjectpk(long value) {
         this.lProjectpk = value;
+    }
+
+    /**
+     * Gets the value of the szProjectname property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSzProjectname() {
+        return szProjectname;
+    }
+
+    /**
+     * Sets the value of the szProjectname property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSzProjectname(String value) {
+        this.szProjectname = value;
+    }
+
+    /**
+     * Gets the value of the szSender property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSzSender() {
+        return szSender;
+    }
+
+    /**
+     * Sets the value of the szSender property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSzSender(String value) {
+        this.szSender = value;
     }
 
     /**
