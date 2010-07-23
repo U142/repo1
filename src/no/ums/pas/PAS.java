@@ -1061,12 +1061,18 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						if(OVERRIDE_WMS_SITE!=null)
 						{
-							ui.setLMapserver(1);
-							ui.setSzWmsSite(OVERRIDE_WMS_SITE);
-							ui.setSzWmsFormat("image/png");
-							ui.setSzWmsLayers("Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road");
-							ui.setSzWmsUsername("");
-							ui.setSzWmsPassword("");
+							String [] arr = OVERRIDE_WMS_SITE.split(";");
+							if(arr!=null && arr.length>=3)
+							{
+								ui.setLMapserver(1);
+								ui.setSzWmsSite(arr[0]);
+								ui.setSzWmsFormat(arr[1]);
+								ui.setSzWmsLayers(arr[2]);
+								if(arr.length>=4)
+									ui.setSzWmsUsername(arr[3]);
+								if(arr.length>=5)
+									ui.setSzWmsPassword(arr[4]);
+							}
 						}
 						setVisualSettings(ui);
 						try {
