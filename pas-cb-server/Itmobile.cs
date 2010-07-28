@@ -16,28 +16,30 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_sent_date_time = DateTime.Now;
+            t_alert.IBAG_sent_date_time = dtm_cap;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Alert;
-            t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+            t_alert.IBAG_cap_sent_date_time = dtm_cap;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
             // based on default values:
             t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
 
             IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
             List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
             t_alert_area.IBAG_area_description = "Polygon";
-            t_alert_area.IBAG_polygon = get_IBAG_polygon(oAlert, op);
+            t_alert_area.IBAG_polygon = new string[] { get_IBAG_polygon(oAlert, op) };
             t_alert_arealist.Add(t_alert_area);
 
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on defautl values:
+            // based on default values:
             t_alert_info.IBAG_priority = def.priority;
             t_alert_info.IBAG_prioritySpecified = true;
             t_alert_info.IBAG_category = def.category;
@@ -45,8 +47,11 @@ namespace pas_cb_server
             t_alert_info.IBAG_urgency = def.urgency;
             t_alert_info.IBAG_certainty = def.certainty;
             t_alert_info.IBAG_event_code = def.event_code;
+            t_alert_info.IBAG_response_type = def.response_type;
+            t_alert_info.IBAG_response_typeSpecified = true;
+            t_alert_info.IBAG_channel_category = def.sz_channel_category;
 
-            t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
+            t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
             t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
@@ -57,7 +62,12 @@ namespace pas_cb_server
             switch(op.coordinate_type)
             {
                 case COORDINATESYSTEM.UTM31:
+                    t_alert_area.IBAG_utm_zone = "31U";
+                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
+                    t_alert_info.IBAG_coordinate_systemSpecified = true;
+                    break;
                 case COORDINATESYSTEM.UTM32:
+                    t_alert_area.IBAG_utm_zone = "32U";
                     t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
                     t_alert_info.IBAG_coordinate_systemSpecified = true;
                     break;
@@ -105,19 +115,21 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_sent_date_time = DateTime.Now;
+            t_alert.IBAG_sent_date_time = dtm_cap;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Alert;
-            t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+            t_alert.IBAG_cap_sent_date_time = dtm_cap;
             t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
             // based on default values:
             t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
 
             IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
             List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
@@ -126,7 +138,7 @@ namespace pas_cb_server
             t_alert_arealist.Add(t_alert_area);
 
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on defautl values:
+            // based on default values:
             t_alert_info.IBAG_priority = def.priority;
             t_alert_info.IBAG_prioritySpecified = true;
             t_alert_info.IBAG_category = def.category;
@@ -134,8 +146,11 @@ namespace pas_cb_server
             t_alert_info.IBAG_urgency = def.urgency;
             t_alert_info.IBAG_certainty = def.certainty;
             t_alert_info.IBAG_event_code = def.event_code;
+            t_alert_info.IBAG_response_type = def.response_type;
+            t_alert_info.IBAG_response_typeSpecified = true;
+            t_alert_info.IBAG_channel_category = def.sz_channel_category;
 
-            t_alert_info.IBAG_expires_date_time = DateTime.Now.AddMinutes(oAlert.l_validity);
+            t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
             t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
             t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
             t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
@@ -143,10 +158,16 @@ namespace pas_cb_server
 
             t_alert.IBAG_alert_info = t_alert_info;
 
-            switch (op.coordinate_type)
+            // Coordinate type shouldn't be needed for PLMN alerts
+/*            switch (op.coordinate_type)
             {
                 case COORDINATESYSTEM.UTM31:
+                    t_alert_area.IBAG_utm_zone = "31U";
+                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
+                    t_alert_info.IBAG_coordinate_systemSpecified = true;
+                    break;
                 case COORDINATESYSTEM.UTM32:
+                    t_alert_area.IBAG_utm_zone = "32U";
                     t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
                     t_alert_info.IBAG_coordinate_systemSpecified = true;
                     break;
@@ -157,7 +178,8 @@ namespace pas_cb_server
                 default:
                     t_alert_info.IBAG_coordinate_systemSpecified = false;
                     break;
-            }
+            }*/
+            t_alert_info.IBAG_coordinate_systemSpecified = false;
 
             if (Settings.debug)
             {
@@ -194,6 +216,7 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
             t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
@@ -208,6 +231,7 @@ namespace pas_cb_server
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
             // based on default values:
@@ -260,6 +284,7 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
             t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
@@ -274,6 +299,8 @@ namespace pas_cb_server
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
+            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
             if (Settings.debug)
             {
@@ -310,6 +337,7 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
             t_alert.IBAG_referenced_message_number = message_number;
@@ -324,6 +352,7 @@ namespace pas_cb_server
             t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
             t_alert.IBAG_sender = def.sz_sender;
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
             if (Settings.debug)
             {
@@ -396,16 +425,31 @@ namespace pas_cb_server
         private static void dump_request(object cap_request, Operator op, string sz_method, int l_refno)
         {
             XmlSerializer s = new XmlSerializer(cap_request.GetType());
-            TextWriter w = new StringWriter();
+            TextWriter w = new StringWriter(Encoding.UTF8);
             s.Serialize(w, cap_request);
 
             DebugLog.dump(w.ToString(), op, sz_method, l_refno);
         }
-        
+
+        public class StringWriter : System.IO.StringWriter
+        {
+            public StringWriter(Encoding encoding)
+            {
+                _encoding = encoding;
+            }
+
+            Encoding _encoding;
+
+            public override Encoding Encoding
+            {
+                get { return _encoding; }
+            }
+        }
         private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters)
         {
             XmlSerializer s = new XmlSerializer(typeof(IBAG_Alert_Attributes));
-            TextWriter w = new StringWriter();
+            TextWriter w = new StringWriter(Encoding.UTF8);
+            
             s.Serialize(w, parameters);
 
             WebRequest webRequest = WebRequest.Create(op.sz_url);
@@ -462,7 +506,7 @@ namespace pas_cb_server
                     return IBAG_text_language.Dutch;
             }
         }
-        private static string[] get_IBAG_polygon(AlertInfo oAlert, Operator op)
+        private static string get_IBAG_polygon(AlertInfo oAlert, Operator op)
         {
             List<string> ret = new List<string>();
             NumberFormatInfo coorformat = new NumberFormatInfo();
@@ -476,8 +520,9 @@ namespace pas_cb_server
                 Tools.ConvertCoordinate(wgs84pt, out xcoord, out ycoord, op.coordinate_type);
                 ret.Add(String.Format(coorformat, "{0}, {1}", xcoord, ycoord));
             }
+            ret.Add(ret.ElementAt(0));
 
-            return ret.ToArray();
+            return string.Join(" ", ret.ToArray());
         }
         private static int get_IBAG_response_code(string[] response_codes)
         {
@@ -511,11 +556,16 @@ namespace pas_cb_server
         public string sz_cap_identifier = "";
         [XmlElement("cap_sender")]
         public string sz_cap_sender = "";
+        [XmlElement("cap_alert_uri")]
+        public string sz_cap_alert_uri = "";
+        [XmlElement("channel_category")]
+        public string sz_channel_category = "";
         public IBAG_priority priority = IBAG_priority.Background;
         public IBAG_category category = IBAG_category.Geo;
         public IBAG_severity severity = IBAG_severity.Severe;
         public IBAG_urgency urgency = IBAG_urgency.Expected;
         public IBAG_event_code event_code = IBAG_event_code.CDW;
         public IBAG_certainty certainty = IBAG_certainty.Likely;
+        public IBAG_response_type response_type = IBAG_response_type.Shelter;
     }
 }

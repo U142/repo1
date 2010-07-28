@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading;
 using com.ums.UmsCommon.CoorConvert;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace pas_cb_server
 {
     class Tools
     {
+        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+
         // convert a coordinate point
         public static void ConvertCoordinate(PolyPoint wgs84pt, out double xcoord, out double ycoord, COORDINATESYSTEM coordtype)
         {
@@ -127,6 +130,78 @@ namespace pas_cb_server
             }
             Log.WriteLog("Stopped keyreader thread", 9);
             Interlocked.Decrement(ref Settings.threads);
+        }
+
+        // gsm 7bit conversion
+        public static string decodegsm(byte[] encoded)
+        {
+            List<byte> decoded = new List<byte>();
+
+            int i_shift = 0;
+
+            byte b_add = 0;
+            byte b_base = 0;
+            byte b_result = 0;
+
+            foreach (byte enc in encoded)
+            {
+                // for every 7th shifts, add the adder byte before adding the next byte
+                if (i_shift == 7)
+                {
+                    decoded.Add(b_add);
+
+                    // reset shift and add
+                    i_shift = 0;
+                    b_add = 0;
+                }
+
+                // get base byte, shifted to the left and masked with 0fffffff (since it's 7 bits, not 8 bits)
+                b_base = (byte)((enc << i_shift) & 0x7f);
+                b_result = (byte)(b_base + b_add);
+
+                decoded.Add(b_result);
+
+                i_shift++;
+                // get next adder byte which is based on this encoded byte (the 1st, 8th, 15th etc. are 0)
+                b_add = (byte)((enc >> (8 - i_shift)));
+            }
+
+            return Encoding.ASCII.GetString(decoded.ToArray());
+        }
+        public static byte[] encodegsm(string decoded)
+        {
+            List<byte> encoded = new List<byte>();
+            byte[] b_decoded = Encoding.ASCII.GetBytes(decoded);
+
+            int i_shift = 0;
+            int i_pos = 0;
+
+            byte b_add = 0;
+            byte b_base = 0;
+            byte b_result = 0;
+
+            for (i_pos = 0; i_pos < b_decoded.Length; i_pos++)
+            {
+                b_add = 0; // init
+                if ((i_pos + 1) < b_decoded.Length)
+                    b_add = (byte)(b_decoded[i_pos + 1] << (7 - i_shift)); // get adder value from next byte
+
+                if (i_shift < 7)
+                {
+                    // get base byte, shifted to the right and masked with 0fffffff (since it's 7 bits, not 8 bits)
+                    b_base = (byte)((b_decoded[i_pos] >> i_shift) & 0x7f);
+                    b_result = (byte)(b_base + b_add);
+
+                    encoded.Add(b_result);
+                    i_shift++;
+                }
+                else
+                {
+                    i_shift = 0;
+                }
+            }
+
+            return encoded.ToArray();
         }
     }
 }

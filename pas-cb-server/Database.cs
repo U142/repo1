@@ -313,6 +313,52 @@ namespace pas_cb_server
 
             return ret;
         }
+        public static DateTime GetCreateTime(Operator op, int l_refno)
+        {
+            DateTime ret = new DateTime();
+            Decimal ts = 0;
+            string szQuery;
+
+            szQuery = String.Format("SELECT l_created_ts FROM LBASEND WHERE l_refno={0} AND l_operator={1}"
+                , l_refno
+                , op.l_operator);
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+            OdbcDataReader rs;
+
+            try
+            {
+                dbConn.Open();
+                rs = cmd.ExecuteReader();
+
+                if (rs.Read())
+                    if (!rs.IsDBNull(0))
+                        ts = rs.GetDecimal(0);
+
+                rs.Close();
+                rs.Dispose();
+                cmd.Dispose();
+                dbConn.Close();
+                dbConn.Dispose();
+
+                if (ts.ToString().Length == 14)
+                {
+                    ret = DateTime.ParseExact(ts.ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                else
+                    throw new Exception("Could not get created timestamp");
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.GetCreateTime (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.GetCreateTime (exception={0}) (sql={1})", e, szQuery),
+                    2);
+            }
+
+            return new DateTime(ret.Ticks, DateTimeKind.Local);
+        }
         public static int GetRefno()
         {
             return (int)Database.ExecuteScalar("sp_refno_out");

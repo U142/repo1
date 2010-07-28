@@ -12,7 +12,7 @@
     public partial class CBCMSGNETWORKCELLCOUNTREQRESULT 
     {
         public int cbccberequesthandle;
-        public int cbecbcstatuscode;
+        public int cbccbestatuscode;
         public int messageclass;
         [XmlRpcMissingMapping(MappingAction.Ignore)]
         public string messagetext;
@@ -488,7 +488,15 @@
         [XmlRpcMissingMapping(MappingAction.Ignore)]
         public string password;
     }
-    
+
+    public partial class CBCLOGOUTREQUEST
+    {
+        public int cbccberequesthandle;
+    }
+    public partial class CBCLOGOUTREQRESULT
+    {
+        public int cbccbestatuscode;
+    }
     public partial class CBCNEWMSGPLMNREQUEST 
     {
         public int cbccberequesthandle;

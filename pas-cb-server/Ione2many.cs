@@ -20,6 +20,9 @@ namespace pas_cb_server
         [XmlRpcMethod("CBCLOGINREQUEST")]
         CBCLOGINREQRESULT CBC_Login(CBCLOGINREQUEST req);
 
+        [XmlRpcMethod("CBCLOGOUTREQUEST")]
+        CBCLOGOUTREQRESULT CBC_Logout(CBCLOGOUTREQUEST req);
+
         [XmlRpcMethod("CBCNEWMSGREQUEST")]
         CBCNEWMSGREQRESULT CBC_NewMsg(CBCNEWMSGREQUEST req);
 
@@ -89,10 +92,14 @@ namespace pas_cb_server
             {
                 dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
+                cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
             }
 
             CBCNEWMSGREQRESULT newmsgres = cbc.CBC_NewMsg(newmsgreq);
+
+            // log out
+            cbc_logout(cbc, op, oAlert.l_refno);
 
             if (newmsgres.cbccbestatuscode == 0)
             {
@@ -162,10 +169,14 @@ namespace pas_cb_server
             {
                 dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
+                cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
             }
 
             CBCNEWMSGPLMNREQRESULT newmsgres = cbc.CBC_NewMsgPLMN(newmsgreq);
+
+            // log out
+            cbc_logout(cbc, op, oAlert.l_refno);
 
             if (newmsgres.cbccbestatuscode == 0)
             {
@@ -226,10 +237,14 @@ namespace pas_cb_server
             {
                 dump_request(changereq, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
+                cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
             }
 
             CBCCHANGEREQRESULT changeres = cbc.CBC_ChangeMsg(changereq);
+
+            // log out
+            cbc_logout(cbc, op, oAlert.l_refno);
 
             if (changeres.cbccbestatuscode == 0)
             {
@@ -284,10 +299,14 @@ namespace pas_cb_server
             {
                 dump_request(killreq, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
             }
             
             CBCKILLREQRESULT killres = cbc.CBC_KillMsg(killreq);
+
+            // log out
+            cbc_logout(cbc, op, oAlert.l_refno);
 
             if (killres.cbccbestatuscode == 0)
             {
@@ -338,10 +357,12 @@ namespace pas_cb_server
             {
                 dump_request(inforeq, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                cbc_logout(cbc, op, l_refno);
                 return Constant.OK;
             }
 
             CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
+
             if (infores.cbccbestatuscode == 0)
             {
                 string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.Last().messagestatus);
@@ -377,7 +398,7 @@ namespace pas_cb_server
                             r_cellcount.messagehandle = l_msghandle;
 
                             CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
-                            if (cellcount.cbecbcstatuscode == 0)
+                            if (cellcount.cbccbestatuscode == 0)
                             {
                                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, 2gSuccess={4}, 2gTotal={5}, 3gSuccess={6}, 3gTotal={7})"
                                     , l_refno
@@ -410,6 +431,10 @@ namespace pas_cb_server
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }
+                
+                // log out
+                cbc_logout(cbc, op, l_refno);
+
                 return Constant.OK;
             }
             else
@@ -427,7 +452,13 @@ namespace pas_cb_server
 
         private static PAGELISTDATA get_pagelist(AlertInfo oAlert, Operator op)
         {
-            byte[] bytemsg = System.Text.Encoding.ASCII.GetBytes(oAlert.alert_message.sz_text);
+            string gsmmsg = oAlert.alert_message.sz_text;
+            if (gsmmsg.Length > 93) // crop if > 1 page
+                gsmmsg = gsmmsg.Substring(0, 93);
+            else if (gsmmsg.Length < 93) // pad with CR if < 1 page
+                gsmmsg = gsmmsg.PadRight(93, '\r');
+
+            byte[] bytemsg = Tools.encodegsm(gsmmsg);
 
             // only 1 page pr. alert
             PAGEDATA[] msg_page = new PAGEDATA[1];
@@ -479,7 +510,7 @@ namespace pas_cb_server
             loginreq.cbccberequesthandle = Database.GetHandle(op);
             loginreq.infoprovname = op.sz_login_id;
             loginreq.cbename = op.sz_login_name;
-            loginreq.password = op.sz_login_password;
+            loginreq.password = Convert.ToBase64String(Encoding.ASCII.GetBytes(op.sz_login_password));
 
             if (Settings.debug)
             {
@@ -489,6 +520,20 @@ namespace pas_cb_server
             else
             {
                 return cbc.CBC_Login(loginreq);
+            }
+        }
+        private static void cbc_logout(Ione2many cbc, Operator op, int l_refno)
+        {
+            CBCLOGOUTREQUEST logoutreq = new CBCLOGOUTREQUEST();
+            logoutreq.cbccberequesthandle = Database.GetHandle(op);
+
+            if (Settings.debug)
+            {
+                dump_request(logoutreq, op, "Logout", l_refno);
+            }
+            else
+            {
+                CBCLOGOUTREQRESULT res = cbc.CBC_Logout(logoutreq);
             }
         }
         private static String get_messagestatus(Int32 messagestatus)
