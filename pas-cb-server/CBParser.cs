@@ -129,11 +129,21 @@ namespace pas_cb_server
                             // retry operators that failed?
                             if (hRet.ContainsValue(Constant.RETRY)) // if at least one operator has RETRY, return RETRY
                                 lReturn = Constant.RETRY;
-                            else if(hRet.ContainsValue(Constant.FAILED)) // if none has retry, but at least one has FAILED, return FAILED
+                            else if (hRet.ContainsValue(Constant.FAILED)) // if none has retry, but at least one has FAILED, return FAILED
                                 lReturn = Constant.FAILED;
-                            
+
                             // if neither these, assume OK (default)
                         }
+                        else
+                        {
+                            Log.WriteLog("ERROR: Missing operation attribute in CB tag", 2);
+                            lReturn = Constant.FAILED;
+                        }
+                    }
+                    else
+                    {
+                        Log.WriteLog("ERROR: Missing CB tag in XML file", 2);
+                        lReturn = Constant.FAILED;
                     }
                     oReader.Close();
                 }
@@ -141,7 +151,10 @@ namespace pas_cb_server
             catch (Exception e)
             {
                 oReader.Close();
-                Log.WriteLog("ERROR: Exception while reading XML " + e.Message, "ERROR: Exception while reading XML " + e.ToString(), 0);
+                Log.WriteLog(
+                    "ERROR: Exception while reading XML " + e.Message, 
+                    "ERROR: Exception while reading XML " + e.ToString(), 
+                    0);
                 lReturn = Constant.FAILED;
             }
             return lReturn;
@@ -152,7 +165,12 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert;
 
-            GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
+            int l_getalert = GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
+            if (l_getalert != Constant.OK)
+            {
+                ret.Add(0, l_getalert);
+                return ret;
+            }
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -181,7 +199,13 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert;
 
-            GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
+            //GetAlert(xmlCB, oUser, Operation.NEWPLNM, out oAlert);
+            int l_getalert = GetAlert(xmlCB, oUser, Operation.NEWPLNM, out oAlert);
+            if (l_getalert != Constant.OK)
+            {
+                ret.Add(0, l_getalert);
+                return ret;
+            }
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -211,7 +235,13 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert = new AlertInfo();
 
-            GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
+            //GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
+            int l_getalert = GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
+            if (l_getalert != Constant.OK)
+            {
+                ret.Add(0, l_getalert);
+                return ret;
+            }
 
             // update a given alert at each operator
             foreach (Operator op in oUser.operators)
@@ -239,7 +269,13 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert = new AlertInfo();
 
-            GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+            //GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+            int l_getalert = GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+            if (l_getalert != Constant.OK)
+            {
+                ret.Add(0, l_getalert);
+                return ret;
+            }
 
             // kill a given alert at each operator
             foreach (Operator op in oUser.operators)
@@ -276,7 +312,7 @@ namespace pas_cb_server
             {
                 oAlert.l_projectpk = int.Parse(xmlCB.Attributes.GetNamedItem("l_projectpk").Value);
                 oAlert.l_refno = int.Parse(xmlCB.Attributes.GetNamedItem("l_refno").Value);
-                oAlert.l_sched_utc = int.Parse(xmlCB.Attributes.GetNamedItem("l_sched_utc").Value);
+                oAlert.l_sched_utc = long.Parse(xmlCB.Attributes.GetNamedItem("l_sched_utc").Value);
 
                 if (type == Operation.KILL)
                     return Constant.OK; // return if kill, don't need more information
@@ -292,8 +328,8 @@ namespace pas_cb_server
                     foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
                     {
                         PolyPoint pt = new PolyPoint();
-                        pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("xcord").Value, coorformat);
-                        pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("ycord").Value, coorformat);
+                        pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("lon").Value, coorformat);
+                        pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("lat").Value, coorformat);
 
                         oAlert.alert_polygon.Add(pt);
                     }
@@ -301,7 +337,11 @@ namespace pas_cb_server
             }
             catch(Exception e)
             {
-                Log.WriteLog(String.Format("Incorrect XML format: {0}", e.Message), 2);
+                Log.WriteLog(
+                    String.Format("Incorrect XML format: {0}", e.Message),
+                    String.Format("Incorrect XML format: {0}", e), 
+                    2);
+                return Constant.FAILED;
             }
 
             return Constant.OK;
@@ -322,7 +362,7 @@ namespace pas_cb_server
         public int l_projectpk;
         public int l_refno;
 
-        public int l_sched_utc;
+        public long l_sched_utc;
         public int l_validity;
 
         public AlertMessage alert_message;

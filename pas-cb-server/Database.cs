@@ -135,30 +135,48 @@ namespace pas_cb_server
                 l_operator));
             return Constant.OK;
         }
-        public static int UpdateHistCell(int l_refno, int l_operator)
+        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage)
         {
-            return UpdateHistCell(l_refno, l_operator, 0, 0, 0, 0, 0, 0);
+            return UpdateHistCell(l_refno, l_operator, l_successpercentage, 0, 0, 0, 0, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok)
+        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok)
         {
-            return UpdateHistCell(l_refno, l_operator, l_2gtotal, l_2gok, 0, 0, 0, 0);
+            return UpdateHistCell(l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, 0, 0, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok)
+        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok)
         {
-            return UpdateHistCell(l_refno, l_operator, l_2gtotal, l_2gok, l_3gtotal, l_3gok, 0, 0);
+            return UpdateHistCell(l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
+        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
         {
-            Database.ExecuteNonQuery(
-                String.Format("sp_cb_upd_cellhist {0},{1},{2},{3},{4},{5},{6},{7}",
-                l_refno,
-                l_operator,
-                l_2gtotal,
-                l_2gok,
-                l_3gtotal,
-                l_3gok,
-                l_4gtotal,
-                l_4gok));
+            string sz_sql = "exec sp_cb_upd_cellhist ?,?,?,?,?,?,?,?,?";
+
+            try
+            {
+                OdbcConnection conn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(sz_sql, conn);
+
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = l_refno;
+                cmd.Parameters.Add("operator", OdbcType.Int).Value = l_operator;
+                cmd.Parameters.Add("2gtot", OdbcType.Int).Value = l_2gtotal;
+                cmd.Parameters.Add("2gok", OdbcType.Int).Value = l_2gok;
+                cmd.Parameters.Add("3gtot", OdbcType.Int).Value = l_3gtotal;
+                cmd.Parameters.Add("3gok", OdbcType.Int).Value = l_3gok;
+                cmd.Parameters.Add("4gtot", OdbcType.Int).Value = l_4gtotal;
+                cmd.Parameters.Add("4gok", OdbcType.Int).Value = l_4gok;
+                cmd.Parameters.Add("success", OdbcType.Double).Value = (double)l_successpercentage;
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.UpdateHistCell (exception={0}) (sql={1})", e.Message, sz_sql),
+                    String.Format("Database.UpdateHistCell (exception={0}) (sql={1})", e, sz_sql),
+                    2);
+            }
             return Constant.OK;
         }
         public static int SetSendingStatus(Operator op, int l_refno, int l_status)
@@ -373,6 +391,7 @@ namespace pas_cb_server
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception e)
             {
@@ -393,6 +412,7 @@ namespace pas_cb_server
 
                 conn.Open();
                 ret = cmd.ExecuteScalar();
+                conn.Close();
             }
             catch (Exception e)
             {

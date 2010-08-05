@@ -246,7 +246,7 @@ namespace pas_cb_server.test
     }
     public class polypoint
     {
-        [XmlAttribute]public double xcord;
-        [XmlAttribute]public double ycord;
+        [XmlAttribute("lon")]public double xcord;
+        [XmlAttribute("lat")]public double ycord;
     }
 }

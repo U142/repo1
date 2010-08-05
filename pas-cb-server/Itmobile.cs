@@ -158,16 +158,15 @@ namespace pas_cb_server
 
             t_alert.IBAG_alert_info = t_alert_info;
 
-            // Coordinate type shouldn't be needed for PLMN alerts
-/*            switch (op.coordinate_type)
+            switch (op.coordinate_type)
             {
                 case COORDINATESYSTEM.UTM31:
-                    t_alert_area.IBAG_utm_zone = "31U";
+//                    t_alert_area.IBAG_utm_zone = "31U";
                     t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
                     t_alert_info.IBAG_coordinate_systemSpecified = true;
                     break;
                 case COORDINATESYSTEM.UTM32:
-                    t_alert_area.IBAG_utm_zone = "32U";
+//                    t_alert_area.IBAG_utm_zone = "32U";
                     t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
                     t_alert_info.IBAG_coordinate_systemSpecified = true;
                     break;
@@ -178,8 +177,7 @@ namespace pas_cb_server
                 default:
                     t_alert_info.IBAG_coordinate_systemSpecified = false;
                     break;
-            }*/
-            t_alert_info.IBAG_coordinate_systemSpecified = false;
+            }
 
             if (Settings.debug)
             {
@@ -384,10 +382,10 @@ namespace pas_cb_server
                         l_3gok += report.IBAG_cell_broadcast_info_count;
                     }
                 }
-                Database.UpdateHistCell(l_refno, op.l_operator, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
+                cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
 
-                cb_percentage = ((float)l_2gok+(float)l_3gok)/((float)l_2gtotal+(float)l_3gtotal);
-
+                Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
+                
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                     , l_refno
                     , op.sz_operatorname
@@ -520,7 +518,7 @@ namespace pas_cb_server
                 Tools.ConvertCoordinate(wgs84pt, out xcoord, out ycoord, op.coordinate_type);
                 ret.Add(String.Format(coorformat, "{0}, {1}", xcoord, ycoord));
             }
-            ret.Add(ret.ElementAt(0));
+            ret.Add(ret.ElementAt(0)); // finnish with first coordinate to close the polygon
 
             return string.Join(" ", ret.ToArray());
         }
