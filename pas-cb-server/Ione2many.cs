@@ -358,6 +358,15 @@ namespace pas_cb_server
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid == "")
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)"
+                    , oAlert.l_refno
+                    , op.sz_operatorname), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+            }
+
             try // run login, return if it fails with exception or failed login
             {
                 CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
@@ -383,7 +392,7 @@ namespace pas_cb_server
 
             CBCKILLREQUEST killreq = new CBCKILLREQUEST();
             killreq.cbccberequesthandle = Database.GetHandle(op);
-            killreq.messagehandle = int.Parse(Database.GetJobID(op, oAlert.l_refno)); // get handle
+            killreq.messagehandle = int.Parse(sz_jobid); // get handle
 
             killreq.schedulemethod = def.l_schedulemethod;
 
@@ -488,7 +497,7 @@ namespace pas_cb_server
                 if (infores.cbccbestatuscode == 0)
                 {
                     string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.Last().messagestatus);
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%, expires={8:G}, updates={9}, message=\"{10}\")"
+/*                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%, expires={8:G}, updates={9}, message=\"{10}\")"
                         , l_refno
                         , op.sz_operatorname
                         , infores.cbccberequesthandle
@@ -499,7 +508,16 @@ namespace pas_cb_server
                         , infores.successpercentage
                         , DateTime.ParseExact(infores.messageinfolist.intervalinfo.Last().endtime, "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture)
                         , infores.messageinfolist.nrofintervals
-                        , Tools.decodegsm(infores.messageinfolist.intervalinfo.Last().pagelist.page.Last().pagecontents)), 0);
+                        , Tools.decodegsm(infores.messageinfolist.intervalinfo.Last().pagelist.page.Last().pagecontents)), 0);*/
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%)"
+                        , l_refno
+                        , op.sz_operatorname
+                        , infores.cbccberequesthandle
+                        , infores.cbccbestatuscode
+                        , infores.messagetext
+                        , l_msghandle
+                        , sz_messagestatus
+                        , infores.successpercentage), 0);
 
                     switch (infores.messageinfolist.intervalinfo.Last().messagestatus)
                     {
