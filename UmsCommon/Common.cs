@@ -682,8 +682,7 @@ namespace com.ums.UmsCommon
     public class BBPROJECT
     {
         [XmlAttribute("l_projectpk")] public String sz_projectpk;
-        [XmlIgnore]
-        public String sz_name;
+        [XmlAttribute("sz_projectname")] public String sz_name;
         [XmlIgnore]
         public String sz_created;
         [XmlIgnore]
@@ -971,6 +970,7 @@ namespace com.ums.UmsCommon
         public int l_4gtotal;
         public int l_4gok;
         public long l_timestamp;
+        public float l_successpercentage;
     }
     public class ULBASEND_TS
     {
@@ -1132,6 +1132,22 @@ namespace com.ums.UmsCommon
         public int n_interval;
         public int n_repetition;
         public int n_deptpk;
+    }
+
+    public class ULBAPARAMETER // Used for NLALERT
+    {
+        public long l_parameterspk;
+	    public int l_incorrect;
+	    public int l_autologoff;
+	    public String sz_adminemail;
+	    public int l_channelno;
+	    public int l_test_channelno;
+	    public int l_heartbeat;
+	    public int l_duration;
+	    public int l_interval;
+	    public int l_repetition;
+	    public int l_deptpk;
+        public int l_comppk;
     }
 
 

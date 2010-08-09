@@ -611,6 +611,30 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
+        [WebMethod]
+        public ULBAPARAMETER GetCBParameters(ULOGONINFO logon)
+        {
+            try
+            {
+                return new UCBSettings(ref logon).getLBAParameter(logon);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [WebMethod]
+        public bool updateCBParameters(ULOGONINFO logon, ULBAPARAMETER param)
+        {
+            try
+            {
+                return new UCBSettings(ref logon).updateLBAParameter(param);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         /*[WebMethod]
         public UWeatherReportResults GetWeatherTest()
         {

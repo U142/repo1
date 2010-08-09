@@ -123,7 +123,7 @@ namespace com.ums.PAS.CB
         public String sz_name;
 
         [XmlAttribute("operation")]
-        protected CB_OPERATION operation;
+        public CB_OPERATION operation;
 
         [XmlAttribute("l_refno")]
         public long l_refno;
@@ -306,5 +306,8 @@ namespace com.ums.PAS.CB
         public String sz_sendingname;
         public MDVSENDINGINFO mdv;
         public UShape shape;
+        public long l_created_ts;
+        public long l_started_ts;
+        public int l_channel;
     }
 }

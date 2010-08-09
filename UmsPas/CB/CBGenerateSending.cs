@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using com.ums.UmsCommon;
 using com.ums.UmsParm;
 using com.ums.PAS.Project;
-
+using System.IO;
 
 namespace com.ums.PAS.CB
 {
@@ -50,7 +50,7 @@ namespace com.ums.PAS.CB
             
             //fetch refno
             alert.setRefno(db.newRefno());
-
+            
             BBPROJECT project = new BBPROJECT();
 
             //Create a new project if not specified
@@ -78,7 +78,7 @@ namespace com.ums.PAS.CB
 
             //retrieve message object from send-object
             CB_MESSAGE message = alert.textmessages.list[0];
-
+            
             //insert records into LBASEND
             List<Int32> operatorfilter = null;
             db.InsertLBARecord_2_0(-1, alert.l_refno, 
@@ -102,6 +102,8 @@ namespace com.ums.PAS.CB
             ps.l_refno = alert.l_refno;
             db.InsertMDVSENDINGINFO(ref ps);
 
+            // Insert record into LBASEND_TEXT_CC
+            db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();
@@ -112,12 +114,16 @@ namespace com.ums.PAS.CB
             CB_ALERT_POLYGON poly = (CB_ALERT_POLYGON)alert;
             String polyxml = "", md5 = "";
             //poly.shape.CreateXml(ref polyxml, ref md5);
+            poly.l_validity = db.getCBDuration(alert.l_deptpk, alert.l_refno);
+
             String xml = poly.shape.Serialize();
             bool changed = false;
             db.UpdatePAShape(poly.l_refno, xml, PASHAPETYPES.PASENDING, ref changed);
 
 
             //CREATE SEND XML FILE
+            // set status 199 and move to eat
+            db.updateStatus(alert.l_refno, 199);
             alert.Serialize(UCommon.UPATHS.sz_path_cb);
             //alert.Serialize("s:\\temp\\", "CB_test.xml");
 
@@ -135,7 +141,9 @@ namespace com.ums.PAS.CB
          */
         public CB_SENDING_RESPONSE KillSending()
         {
-            PASUmsDb db = new PASUmsDb();
+            //PASUmsDb db = new PASUmsDb();
+            CB_ALERT_KILL kill = (CB_ALERT_KILL)operation;
+            kill.Serialize(UCommon.UPATHS.sz_path_cb);
             return new CB_SENDING_RESPONSE();
         }
     }

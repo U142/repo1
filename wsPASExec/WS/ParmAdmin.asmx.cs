@@ -736,7 +736,7 @@ namespace com.ums.ws.parm
  
             obj.m_shape.CreateXml(ref outxml, ref md5);
             bool changed = false;
-            db.UpdatePAShape(m_logon.l_deptpk, outxml, type, ref changed);
+            db.UpdatePAShape(obj.l_objectpk, outxml, type, ref changed);
             return changed;
         }
 

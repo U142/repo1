@@ -370,7 +370,7 @@ namespace com.ums.ws.parm
                     return new CBGenerateSending(ref logon, ref cb).Send();
                 }
                 //Kill sending
-                else if(typeof(CB_ALERT_KILL).Equals(cb))
+                else if(typeof(CB_ALERT_KILL).Equals(cb.GetType()))
                 {
                     return new CBGenerateSending(ref logon, ref cb).KillSending();
                 }

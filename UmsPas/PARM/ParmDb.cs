@@ -1081,7 +1081,7 @@ namespace com.ums.UmsParm
         {
             try
             {
-                
+                //Parmdb
                 // Insert into LBASEND
                 //db.InsertLBARecord_2_0(-1,?,?,
                 // Write to eat
@@ -1148,16 +1148,34 @@ namespace com.ums.UmsParm
                 List<int> operators = GetOperatorsForSend(l_alertpk, l_deptpk);
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
+                    /*szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
                                              "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
                                              "{6}, '{7}', '{8}', {9}, {10}, {11})",
                                              l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
                                              sz_jobid, sz_areaid, n_function, operators[i], l_type);
+                    */
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}", l_refno, operators[i], l_type);
                     ExecNonQuery(szSQL);
                 }
                     /*}
                 }
                 rs.Close();*/
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
+        public bool insertLBATEXTCC(long l_refno, String sz_message, int l_channel)
+        {
+            string szSQL = "";
+            try
+            {
+                szSQL = String.Format("sp_cb_ins_lbatext {0}, '{1}', {2}", l_refno, sz_message, l_channel);
+                ExecNonQuery(szSQL);
                 return true;
             }
             catch (Exception e)
@@ -1636,6 +1654,44 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+        }
+
+        public Boolean updateStatus(long l_refno, int l_status)
+        {
+            String szSQL = "";
+
+            try
+            {
+                szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1}", l_status, l_refno);
+                ExecNonQuery(szSQL);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+        public int getCBDuration(int l_deptpk, long l_refno)
+        {
+            String szSQL = "";
+            int l_duration = 0;
+
+            try
+            {
+                szSQL = String.Format("SELECT l_duration FROM LBADURATION WHERE l_deptpk={0}", l_deptpk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                    l_duration = rs.GetInt32(0);
+                rs.Close();
+                return l_duration;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+            
         }
     }
 }

@@ -1277,6 +1277,7 @@ namespace com.ums.UmsParm
     {
         [XmlAttribute("lon")] public double lon;
         [XmlAttribute("lat")] public double lat;
+
         public double getLon() { return lon; }
         public double getLat() { return lat; }
 
