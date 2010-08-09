@@ -471,5 +471,11 @@ public abstract class PasScriptingInterface
 	public abstract boolean onShowContactinformation();
 	
 	public abstract boolean onOpenAddressBook();
+	
+	public abstract boolean onOpenProject();
+	
+	public abstract boolean onCloseProject();
+	
+	
 }
 

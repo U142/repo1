@@ -8,8 +8,7 @@ import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
+
 
 import org.jvnet.substance.SubstanceLookAndFeel;
 //import org.jvnet.substance.api.SubstanceSkin;

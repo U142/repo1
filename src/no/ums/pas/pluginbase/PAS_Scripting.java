@@ -918,6 +918,16 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onShowContactinformation() {
 		return false;
+	}
+
+	@Override
+	public boolean onCloseProject() {
+		return false;
+	}
+
+	@Override
+	public boolean onOpenProject() {
+		return false;
 	}	
 	
 	

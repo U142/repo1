@@ -2377,8 +2377,8 @@ public class StatusSending extends Object {
 			set_gridconst(0, inc_panels(), 2, 1); //5
 			//m_pa_tabbed.setPreferredSize(new Dimension(200, 150));
 			add(m_pa_tabbed, m_gridconst);
-			m_pa_tabbed.addTab("operator 1", new PAStatusTab());
-			m_pa_tabbed.addTab("operator 2", new PAStatusTab());
+			//m_pa_tabbed.addTab("operator 1", new PAStatusTab());
+			//m_pa_tabbed.addTab("operator 2", new PAStatusTab());
 			/*
 			if(get_type()==5) {
 				add_spacing(DIR_VERTICAL, 10);

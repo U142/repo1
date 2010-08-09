@@ -1139,8 +1139,23 @@ public class plugin_Centric extends PAS_Scripting
 		JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_helpdesk_contact"), PAS.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}
-	
-	
+
+	@Override
+	public boolean onCloseProject() {
+		try {
+			((CentricEastContent)PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
+			((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(null);
+			
+			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).setProjectpk(0);
+			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
+			return true;
+		}catch(Exception e) { return false; }
+	}
+
+	@Override
+	public boolean onOpenProject() {
+		return super.onOpenProject();
+	}
 
 
 }

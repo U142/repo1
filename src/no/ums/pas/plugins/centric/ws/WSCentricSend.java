@@ -22,10 +22,10 @@ import no.ums.ws.parm.admin.ParmAdmin;
 public class WSCentricSend extends WSThread {
 
 	private String action;
-	private CBSENDBASE cbsb;
+	private CBOPERATIONBASE cbsb;
 	private CBSENDINGRESPONSE cbsr;
 	
-	public WSCentricSend(ActionListener callback, String action, CBSENDBASE cbsb) {
+	public WSCentricSend(ActionListener callback, String action, CBOPERATIONBASE cbsb) {
 		super(callback);
 		this.cbsb = cbsb;
 		this.action = action;
@@ -35,6 +35,8 @@ public class WSCentricSend extends WSThread {
 	public void OnDownloadFinished() {
 		if(m_callback!=null && cbsr!=null)
 			m_callback.actionPerformed(new ActionEvent(cbsr, ActionEvent.ACTION_PERFORMED, action));
+		else
+			m_callback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_error"));
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class WSCentricSend extends WSThread {
 		l.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 		l.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
 		l.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
-		CBALERTPOLYGON jall = new CBALERTPOLYGON();
+		
 		cbsr = new Parmws(wsdl, service).getParmwsSoap12().execCBOperation(l, cbsb);
 	}
 
