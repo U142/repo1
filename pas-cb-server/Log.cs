@@ -177,7 +177,8 @@ namespace pas_cb_server
             File.AppendAllText(sz_filename, sz_header);
             File.AppendAllText(sz_filename, sz_text + "\r\n\r\n");
 
-            Log.WriteLog(String.Format("{0} (op={1}) {2} DUMPED", l_refno, op.sz_operatorname, sz_method), 0);
+            if (!Settings.live) // don't spam the log with dump messages while running in live mode
+                Log.WriteLog(String.Format("{0} (op={1}) {2} DUMPED", l_refno, op.sz_operatorname, sz_method), 0);
         }
     }
 }

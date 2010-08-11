@@ -15,6 +15,7 @@ namespace pas_cb_server
     {
         // General (global settings used in the app)
         public static bool debug;
+        public static bool live;
         public static long threads = 0;
 
         public static string sz_parsepath;
@@ -151,6 +152,7 @@ namespace pas_cb_server
             
             // Optional values
             Settings.debug = Settings.GetValue("Debug", false);
+            Settings.live = Settings.GetValue("Live", false);
             Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", exec_folder()));
             Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
             Settings.l_retryinterval = Settings.GetValue("RetryInterval", 60);

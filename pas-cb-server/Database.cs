@@ -182,6 +182,7 @@ namespace pas_cb_server
         public static int SetSendingStatus(Operator op, int l_refno, int l_status)
         {
             string szQuery;
+            int ret = 0;
 
             szQuery = "UPDATE LBASEND SET l_status=? WHERE l_refno=? AND l_operator=?";
 
@@ -195,7 +196,7 @@ namespace pas_cb_server
                 cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
 
                 dbConn.Open();
-                cmd.ExecuteNonQuery();
+                ret = cmd.ExecuteNonQuery();
 
                 dbConn.Close();
             }
@@ -212,6 +213,7 @@ namespace pas_cb_server
         public static int SetSendingStatus(Operator op, int l_refno, int l_status, string sz_jobid, string sz_expires)
         {
             string szQuery;
+            int ret = 0;
 
             szQuery = "UPDATE LBASEND SET l_status=?, sz_jobid=?, l_started_ts=?, l_expires_ts=? WHERE l_refno=? AND l_operator=?";
 
@@ -228,7 +230,7 @@ namespace pas_cb_server
                 cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
 
                 dbConn.Open();
-                cmd.ExecuteNonQuery();
+                ret = cmd.ExecuteNonQuery();
 
                 dbConn.Close();
             }
@@ -380,6 +382,30 @@ namespace pas_cb_server
         public static int GetRefno()
         {
             return (int)Database.ExecuteScalar("sp_refno_out");
+        }
+        public static bool VerifyRefno(int l_refno, int l_operator)
+        {
+            bool ret = true;
+            string sz_query = String.Format("SELECT l_refno FROM LBASEND WHERE l_refno={0} and l_operator={1}", l_refno, l_operator);
+
+            try
+            {
+                object refno = Database.ExecuteScalar(sz_query);
+                if (refno == null)
+                    return false;
+                else if ((int)refno != l_refno)
+                    return false;
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.VerifyRefno (exception={0}) (sql={1})", e.Message, sz_query),
+                    String.Format("Database.VerifyRefno (exception={0}) (sql={1})", e, sz_query),
+                    2);
+                return false;
+            }
+
+            return ret;
         }
 
         private static void ExecuteNonQuery(string sz_sql)

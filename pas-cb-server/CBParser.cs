@@ -175,21 +175,33 @@ namespace pas_cb_server
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
             {
-                Database.InsertHistCell(oAlert.l_refno, op.l_operator);
-                switch (op.l_type)
+                // check for refno in LBASEND
+                if (Database.VerifyRefno(oAlert.l_refno, op.l_operator))
                 {
-                    case 1: // AlertiX (not supported)
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
-                    case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op));
-                        break;
-                    case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op));
-                        break;
-                    default:
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
+                    // insert LBAHISTCELL
+                    Database.InsertHistCell(oAlert.l_refno, op.l_operator);
+                    switch (op.l_type)
+                    {
+                        case 1: // AlertiX (not supported)
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                        case 2: // one2many
+                            ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op));
+                            break;
+                        case 3: // tmobile
+                            ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op));
+                            break;
+                        default:
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                    }
+                }
+                else
+                {
+                    Log.WriteLog(
+                        String.Format("{0} (op={1}) no record found in LBASEND", oAlert.l_refno, op.sz_operatorname)
+                        , 2);
+                    ret.Add(op.l_operator, Constant.FAILED);
                 }
             }
             return ret;
@@ -210,22 +222,33 @@ namespace pas_cb_server
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
             {
-                // insert LBAHISTCELL
-                Database.InsertHistCell(oAlert.l_refno, op.l_operator);
-                switch (op.l_type)
+                // check for refno in LBASEND
+                if (Database.VerifyRefno(oAlert.l_refno, op.l_operator))
                 {
-                    case 1: // AlertiX (not supported)
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
-                    case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.CreateAlertPLMN(oAlert, op));
-                        break;
-                    case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.CreateAlertPLMN(oAlert, op));
-                        break;
-                    default:
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
+                    // insert LBAHISTCELL
+                    Database.InsertHistCell(oAlert.l_refno, op.l_operator);
+                    switch (op.l_type)
+                    {
+                        case 1: // AlertiX (not supported)
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                        case 2: // one2many
+                            ret.Add(op.l_operator, CB_one2many.CreateAlertPLMN(oAlert, op));
+                            break;
+                        case 3: // tmobile
+                            ret.Add(op.l_operator, CB_tmobile.CreateAlertPLMN(oAlert, op));
+                            break;
+                        default:
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                    }
+                }
+                else
+                {
+                    Log.WriteLog(
+                        String.Format("{0} (op={1}) no record found in LBASEND", oAlert.l_refno, op.sz_operatorname)
+                        , 2);
+                    ret.Add(op.l_operator, Constant.FAILED);
                 }
             }
             return ret;

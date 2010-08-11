@@ -428,14 +428,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cell Broadcast Server"
-        "ProductCode" = "8:{2255C919-B5C3-45D3-A749-B03950DADA5D}"
-        "PackageCode" = "8:{6DB585AA-7EFF-481E-9B47-AE6A3E4F86FE}"
+        "ProductCode" = "8:{2CE98F5A-027B-4BEB-B574-72A0C52A5C2D}"
+        "PackageCode" = "8:{F864771B-2918-4118-946E-453416506677}"
         "UpgradeCode" = "8:{2ED8E5BA-DDE9-423D-AAB5-342B08A3D7B9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.0"
+        "ProductVersion" = "8:1.1.1"
         "Manufacturer" = "8:UMS"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1019,7 +1019,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_33D6157A19F349A49B22BBFCAC8F74C7"
             {
-            "SourcePath" = "8:..\\pas-cb-server\\obj\\x64\\Release\\CBServer.exe"
+            "SourcePath" = "8:..\\pas-cb-server\\obj\\x86\\Debug\\CBServer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"

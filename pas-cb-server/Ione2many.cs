@@ -50,6 +50,16 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
+            // check if job already have been submitted
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid != "")
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
+                    , 0);
+                return Constant.OK;
+            }
+
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
@@ -99,9 +109,9 @@ namespace pas_cb_server
             newmsgreq.channelindicator = def.l_channelindicator;
             newmsgreq.category = def.l_category;
 
-            if (Settings.debug)
+            dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(newmsgreq, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
                 cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
@@ -110,6 +120,7 @@ namespace pas_cb_server
             try // send message
             {
                 CBCNEWMSGREQRESULT newmsgres = cbc.CBC_NewMsg(newmsgreq);
+                dump_request(newmsgres, op, "NewMessageResult", oAlert.l_refno);
 
                 // log out
                 //cbc_logout(cbc, op, oAlert.l_refno); // handled by finally clause instead
@@ -155,6 +166,16 @@ namespace pas_cb_server
         }
         public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
         {
+            // check if job already have been submitted
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid != "")
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
+                    , 0);
+                return Constant.OK;
+            }
+
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
@@ -203,9 +224,9 @@ namespace pas_cb_server
             newmsgreq.channelindicator = def.l_channelindicator;
             newmsgreq.category = def.l_category;
 
-            if (Settings.debug)
+            dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(newmsgreq, op, "NewMessagePLMN", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", newmsgreq.endtime);
                 cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
@@ -214,6 +235,7 @@ namespace pas_cb_server
             try // send message
             {
                 CBCNEWMSGPLMNREQRESULT newmsgres = cbc.CBC_NewMsgPLMN(newmsgreq);
+                dump_request(newmsgreq, op, "NewMessagePLMNResult", oAlert.l_refno);
 
                 // log out
                 //cbc_logout(cbc, op, oAlert.l_refno); // handled by finally clause instead
@@ -298,9 +320,9 @@ namespace pas_cb_server
 
             changereq.schedulemethod = def.l_schedulemethod;
 
-            if (Settings.debug)
+            dump_request(changereq, op, "UpdMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(changereq, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                 cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
@@ -309,6 +331,7 @@ namespace pas_cb_server
             try // update message
             {
                 CBCCHANGEREQRESULT changeres = cbc.CBC_ChangeMsg(changereq);
+                dump_request(changeres, op, "UpdMessageResult", oAlert.l_refno);
 
                 // log out
                 //cbc_logout(cbc, op, oAlert.l_refno); // handled by finally clause instead
@@ -354,10 +377,6 @@ namespace pas_cb_server
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
         {
-            Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
-            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
-            cbc.Url = op.sz_url;
-
             string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
             if (sz_jobid == "")
             {
@@ -366,6 +385,10 @@ namespace pas_cb_server
                     , op.sz_operatorname), 2);
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
+
+            Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
+            CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
+            cbc.Url = op.sz_url;
 
             try // run login, return if it fails with exception or failed login
             {
@@ -396,9 +419,9 @@ namespace pas_cb_server
 
             killreq.schedulemethod = def.l_schedulemethod;
 
-            if (Settings.debug)
+            dump_request(killreq, op, "KillMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(killreq, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
                 cbc_logout(cbc, op, oAlert.l_refno);
                 return Constant.OK;
@@ -407,6 +430,7 @@ namespace pas_cb_server
             try
             {
                 CBCKILLREQRESULT killres = cbc.CBC_KillMsg(killreq);
+                dump_request(killres, op, "KillMessageResult", oAlert.l_refno);
 
                 // log out
                 //cbc_logout(cbc, op, oAlert.l_refno); // handled by finally clause instead
@@ -482,9 +506,9 @@ namespace pas_cb_server
             inforeq.cbccberequesthandle = Database.GetHandle(op);
             inforeq.messagehandle = l_msghandle;
 
-            if (Settings.debug)
+            dump_request(inforeq, op, "InfoMessage", l_refno);
+            if (!Settings.live)
             {
-                dump_request(inforeq, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                 cbc_logout(cbc, op, l_refno);
                 return Constant.OK;
@@ -493,6 +517,7 @@ namespace pas_cb_server
             try // get status
             {
                 CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
+                dump_request(infores, op, "InfoMessageResult", l_refno);
 
                 if (infores.cbccbestatuscode == 0)
                 {
@@ -536,8 +561,10 @@ namespace pas_cb_server
                                 CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
                                 r_cellcount.cbccberequesthandle = Database.GetHandle(op);
                                 r_cellcount.messagehandle = l_msghandle;
+                                dump_request(r_cellcount, op, "CellCount", l_refno);
 
                                 CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
+                                dump_request(cellcount, op, "CellCountResult", l_refno);
                                 if (cellcount.cbccbestatuscode == 0)
                                 {
                                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, 2gSuccess={4}, 2gTotal={5}, 3gSuccess={6}, 3gTotal={7})"
@@ -610,19 +637,24 @@ namespace pas_cb_server
 
         private static PAGELISTDATA get_pagelist(AlertInfo oAlert, Operator op)
         {
-            string gsmmsg = oAlert.alert_message.sz_text;
-            if (gsmmsg.Length > 93) // crop if > 1 page
-                gsmmsg = gsmmsg.Substring(0, 93);
-            else if (gsmmsg.Length < 93) // pad with CR if < 1 page
-                gsmmsg = gsmmsg.PadRight(93, '\r');
+            List<string> gsmmsglist = Tools.SplitMessage(oAlert.alert_message.sz_text, 93, 10);
 
-            byte[] bytemsg = Tools.encodegsm(gsmmsg);
+            PAGEDATA[] msg_page = new PAGEDATA[gsmmsglist.Count];
+            int iPage = 0;
+            
+            foreach (string gsmmsg in gsmmsglist)
+            {
+                string tmp = gsmmsg;
+                if (tmp.Length < 93) // pad with CR if < 1 page
+                    tmp = tmp.PadRight(93, '\r');
 
-            // only 1 page pr. alert
-            PAGEDATA[] msg_page = new PAGEDATA[1];
-            msg_page[0] = new PAGEDATA();
-            msg_page[0].pagecontents = bytemsg;
-            msg_page[0].pagelength = bytemsg.Length;
+                byte[] bytemsg = Tools.encodegsm(tmp);
+
+                msg_page[iPage] = new PAGEDATA();
+                msg_page[iPage].pagecontents = bytemsg;
+                msg_page[iPage].pagelength = bytemsg.Length;
+                iPage++;
+            }
 
             PAGELISTDATA msg_pagelist = new PAGELISTDATA();
             msg_pagelist.nrofpages = msg_page.Length;
@@ -665,36 +697,49 @@ namespace pas_cb_server
         }
         private static CBCLOGINREQRESULT cbc_login(Ione2many cbc, Operator op, int l_refno)
         {
-            CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
-            loginreq.cbccberequesthandle = Database.GetHandle(op);
-            loginreq.infoprovname = op.sz_login_id;
-            loginreq.cbename = op.sz_login_name;
-            loginreq.password = Convert.ToBase64String(Encoding.ASCII.GetBytes(op.sz_login_password));
+            CBCLOGINREQRESULT ret = new CBCLOGINREQRESULT();
 
-            if (Settings.debug)
+            try
             {
+                CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
+                loginreq.cbccberequesthandle = Database.GetHandle(op);
+                loginreq.infoprovname = op.sz_login_id;
+                loginreq.cbename = op.sz_login_name;
+                loginreq.password = Convert.ToBase64String(Encoding.ASCII.GetBytes(op.sz_login_password));
+
                 dump_request(loginreq, op, "Login", l_refno);
-                return new CBCLOGINREQRESULT();
+
+                if (Settings.live)
+                {
+                    ret = cbc.CBC_Login(loginreq);
+                    dump_request(ret, op, "LoginResult", l_refno);
+                }
+
             }
-            else
+            catch (Exception e)
             {
-                return cbc.CBC_Login(loginreq);
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
+                    2);
             }
+            return ret;
         }
         private static void cbc_logout(Ione2many cbc, Operator op, int l_refno)
         {
+            CBCLOGOUTREQRESULT res;
+
             try
             {
                 CBCLOGOUTREQUEST logoutreq = new CBCLOGOUTREQUEST();
                 logoutreq.cbccberequesthandle = Database.GetHandle(op);
 
-                if (Settings.debug)
+                dump_request(logoutreq, op, "Logout", l_refno);
+
+                if (Settings.live)
                 {
-                    dump_request(logoutreq, op, "Logout", l_refno);
-                }
-                else
-                {
-                    CBCLOGOUTREQRESULT res = cbc.CBC_Logout(logoutreq);
+                    res = cbc.CBC_Logout(logoutreq);
+                    dump_request(res, op, "LogoutResult", l_refno);
                 }
             }
             catch (Exception e)
@@ -725,19 +770,22 @@ namespace pas_cb_server
         }
         private static void dump_request(object xmlrpcrequest, Operator op, string method, int refno)
         {
-            XmlRpcSerializer ser = new XmlRpcSerializer();
-            XmlRpcRequest req = new XmlRpcRequest();
+            if (Settings.debug)
+            {
+                XmlRpcSerializer ser = new XmlRpcSerializer();
+                XmlRpcRequest req = new XmlRpcRequest();
 
-            req.method = xmlrpcrequest.GetType().Name;
-            req.args = new object[] { xmlrpcrequest };
+                req.method = xmlrpcrequest.GetType().Name;
+                req.args = new object[] { xmlrpcrequest };
 
-            Stream st = new MemoryStream();
-            ser.SerializeRequest(st, req);
-            st.Seek(0, SeekOrigin.Begin);
+                Stream st = new MemoryStream();
+                ser.SerializeRequest(st, req);
+                st.Seek(0, SeekOrigin.Begin);
 
-            StreamReader sr = new StreamReader(st);
+                StreamReader sr = new StreamReader(st);
 
-            DebugLog.dump(sr.ReadToEnd(), op, method, refno);
+                DebugLog.dump(sr.ReadToEnd(), op, method, refno);
+            }
         }
     }
 

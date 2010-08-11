@@ -14,6 +14,16 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op)
         {
+            // check if job already have been submitted
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid != "")
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
+                    , 0);
+                return Constant.OK;
+            }
+
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
@@ -80,39 +90,61 @@ namespace pas_cb_server
                     break;
             }
 
-            if (Settings.debug)
+            dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
-            
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
 
-            if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+            try
             {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (code={3})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type), 0);
-                // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
-                return Constant.OK;
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno);
+
+                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (code={3})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type), 0);
+                    // ok, insert appropriate info in database
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
+                    return Constant.OK;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (code={3}, msg={4})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (code={3}, msg={4})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type
-                    , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) NewMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) NewMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
+                    2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
         public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
         {
+            // check if job already have been submitted
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid != "")
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
+                    , 0);
+                return Constant.OK;
+            }
+
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
@@ -179,35 +211,47 @@ namespace pas_cb_server
                     break;
             }
 
-            if (Settings.debug)
+            dump_request(t_alert, op, "NewMessagePLMN", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(t_alert, op, "NewMessagePLMN", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
                 return Constant.OK;
             }
 
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+            try
+            {
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                dump_request(t_alert_response, op, "NewMessagePLMNResult", oAlert.l_refno);
 
-            if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN OK (code={3})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type), 0);
-                // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
-                return Constant.OK;
+                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN OK (code={3})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type), 0);
+                    // ok, insert appropriate info in database
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
+                    return Constant.OK;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN FAILED (code={3}, msg={4})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN FAILED (code={3}, msg={4})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type
-                    , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) NewMessagePLMN EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) NewMessagePLMN EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
+                    2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
         public static int UpdateAlert(AlertInfo oAlert, Operator op)
@@ -247,45 +291,66 @@ namespace pas_cb_server
 
             t_alert.IBAG_alert_info = t_alert_info;
 
-            if (Settings.debug)
+            dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                 return Constant.OK;
             }
 
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+            try
+            {
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno);
 
-            if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage OK (code={3})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type), 0);
-                // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
-                return Constant.OK;
+                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage OK (code={3})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type), 0);
+                    // ok, insert appropriate info in database
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
+                    return Constant.OK;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage FAILED (code={3}, msg={4})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage FAILED (code={3}, msg={4})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type
-                    , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) UpdateMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) UpdateMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
+                    2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
         public static int KillAlert(AlertInfo oAlert, Operator op)
         {
+            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+            if (sz_jobid == "")
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)"
+                    , oAlert.l_refno
+                    , op.sz_operatorname), 2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+            }
+
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
+            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
             t_alert.IBAG_sent_date_time = DateTime.Now;
             t_alert.IBAG_status = IBAG_status.Actual;
             t_alert.IBAG_message_type = IBAG_message_type.Cancel;
@@ -300,35 +365,47 @@ namespace pas_cb_server
             t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
             t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-            if (Settings.debug)
+            dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
+            if (!Settings.live)
             {
-                dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
                 return Constant.OK;
             }
 
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+            try
+            {
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno);
 
-            if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (code={3})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type), 0);
-                // ok, insert appropriate info in database
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
-                return Constant.OK;
+                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (code={3})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type), 0);
+                    // ok, insert appropriate info in database
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                    return Constant.OK;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (code={3}, msg={4})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (code={3}, msg={4})"
-                    , oAlert.l_refno
-                    , op.sz_operatorname
-                    , oAlert.l_refno
-                    , t_alert_response.IBAG_message_type
-                    , t_alert_response.IBAG_note.First()), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
+                    2);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
         public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op, decimal l_expires_ts)
@@ -352,81 +429,96 @@ namespace pas_cb_server
             t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
             t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-            if (Settings.debug)
+            dump_request(t_alert, op, "InfoMessage", l_refno);
+            if (!Settings.live)
             {
-                dump_request(t_alert, op, "InfoMessage", l_refno);
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                 return Constant.OK;
             }
 
-            IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-
-            if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
+            try
             {
-                float cb_percentage = 0;
-                int l_2gtotal = 0;
-                int l_2gok = 0;
-                int l_3gtotal = 0;
-                int l_3gok = 0;
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                dump_request(t_alert_response, op, "InfoMessageResult", l_refno);
 
-                foreach (IBAG_status_report report in t_alert_response.IBAG_status_report)
+                if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
                 {
-                    if (report.IBAG_network_type == IBAG_network_type.GSM)
+                    float cb_percentage = 0;
+                    int l_2gtotal = 0;
+                    int l_2gok = 0;
+                    int l_3gtotal = 0;
+                    int l_3gok = 0;
+
+                    foreach (IBAG_status_report report in t_alert_response.IBAG_status_report)
                     {
-                        l_2gtotal += report.IBAG_cell_count;
-                        l_2gok += report.IBAG_cell_broadcast_info_count;
+                        if (report.IBAG_network_type == IBAG_network_type.GSM)
+                        {
+                            l_2gtotal += report.IBAG_cell_count;
+                            l_2gok += report.IBAG_cell_broadcast_info_count;
+                        }
+                        else if (report.IBAG_network_type == IBAG_network_type.UMTS)
+                        {
+                            l_3gtotal += report.IBAG_cell_count;
+                            l_3gok += report.IBAG_cell_broadcast_info_count;
+                        }
                     }
-                    else if (report.IBAG_network_type == IBAG_network_type.UMTS)
-                    {
-                        l_3gtotal += report.IBAG_cell_count;
-                        l_3gok += report.IBAG_cell_broadcast_info_count;
-                    }
+                    cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
+
+                    Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
+
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
+                        , l_refno
+                        , op.sz_operatorname
+                        , BitConverter.ToInt32(t_alert.IBAG_message_number, 0)
+                        , BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0)
+                        , cb_percentage), 0);
+                    // ok, insert appropriate info in database
+                    if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
+                        Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+
+                    // set as finished if expiry date has passed
+                    if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                        Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+
+                    return Constant.OK;
                 }
-                cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
-
-                Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
-                
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
-                    , l_refno
-                    , op.sz_operatorname
-                    , BitConverter.ToInt32(t_alert.IBAG_message_number,0)
-                    , BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number,0)
-                    , cb_percentage), 0);
-                // ok, insert appropriate info in database
-                if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
-                    Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
-                
-                // set as finished if expiry date has passed
-                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[] { "200" })
+                {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-
-                return Constant.OK;
+                    return Constant.OK;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
+                        , l_refno
+                        , op.sz_operatorname
+                        , BitConverter.ToInt32(t_alert.IBAG_message_number, 0)
+                        , BitConverter.ToInt32(t_alert.IBAG_referenced_message_number, 0)
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    return Constant.FAILED;
+                }
             }
-            else if(t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[]{"200"})
+            catch (Exception e)
             {
-                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                return Constant.OK;
-            }
-            else
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
-                    , l_refno
-                    , op.sz_operatorname
-                    , BitConverter.ToInt32(t_alert.IBAG_message_number,0)
-                    , BitConverter.ToInt32(t_alert.IBAG_referenced_message_number,0)
-                    , t_alert_response.IBAG_message_type
-                    , t_alert_response.IBAG_note.First()), 2);
-                return Constant.FAILED;
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
+                    2);
+                return Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
 
         private static void dump_request(object cap_request, Operator op, string sz_method, int l_refno)
         {
-            XmlSerializer s = new XmlSerializer(cap_request.GetType());
-            TextWriter w = new StringWriter(Encoding.UTF8);
-            s.Serialize(w, cap_request);
+            if (Settings.debug)
+            {
+                XmlSerializer s = new XmlSerializer(cap_request.GetType());
+                TextWriter w = new StringWriter(Encoding.UTF8);
+                s.Serialize(w, cap_request);
 
-            DebugLog.dump(w.ToString(), op, sz_method, l_refno);
+                DebugLog.dump(w.ToString(), op, sz_method, l_refno);
+            }
         }
 
         public class StringWriter : System.IO.StringWriter

@@ -11,7 +11,8 @@ namespace pas_cb_server
 {
     class Tools
     {
-        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+        //static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+        static readonly Regex GSM_Extended_Regex = new Regex("[|^€{}\\[\\]~\\\\]");
 
         // convert a coordinate point
         public static void ConvertCoordinate(PolyPoint wgs84pt, out double xcoord, out double ycoord, COORDINATESYSTEM coordtype)
@@ -202,6 +203,56 @@ namespace pas_cb_server
             }
 
             return encoded.ToArray();
+        }
+
+        // message splitting (for pages)
+        public static List<string> SplitMessage(string msgtext, int maxmsglength, int maxsplitoffset)
+        {
+            int lStartPos = 0;
+            bool bDone = false;
+            string szTmpMess = "";
+            List<string> tmp = new List<string>();
+            List<string> ret = new List<string>();
+            char[] whitespace = new char[] { ' ', '.', ',', '-' };
+
+            if (msgtext.Length + GSM_Extended_Regex.Matches(msgtext).Count > maxmsglength) // må splittes
+            {
+                while (!bDone)
+                {
+                    bool lookForWhitespace = false;
+                    szTmpMess = msgtext.Substring(lStartPos);
+
+                    // klipp opp meldingen
+                    while (szTmpMess.Length + GSM_Extended_Regex.Matches(szTmpMess).Count > maxmsglength)
+                    {
+                        szTmpMess = szTmpMess.Remove(szTmpMess.Length - 1, 1);
+                        lookForWhitespace = true;
+                    }
+                    // søk etter første whitespace innenfor maxsplitoffset
+                    if (((szTmpMess.Length - szTmpMess.LastIndexOfAny(whitespace)) < maxsplitoffset) && lookForWhitespace)
+                        szTmpMess = szTmpMess.Remove(szTmpMess.LastIndexOfAny(whitespace));
+
+                    tmp.Add(szTmpMess.Trim());
+                    lStartPos += szTmpMess.Length;
+
+                    if (lStartPos == msgtext.Length)
+                        bDone = true;
+                }
+            }
+
+            if (tmp.Count > 1)
+            {
+                foreach (string msg in tmp)
+                {
+                    ret.Add(msg);
+                }
+            }
+            else
+            {
+                ret.Add(msgtext);
+            }
+
+            return ret;
         }
     }
 }

@@ -64,7 +64,7 @@ namespace pas_cb_server.test
 
             message msg = new message();
             msg.l_channel = 1;
-            msg.sz_text = "-- self test message --";
+            msg.sz_text = "-- Self Test Message --\r\nThis message is longer than one page, should be automatically split into several pages and padded. Also the text is being split between words if possible.";
 
             alert.textmessages.Add(msg);
 
