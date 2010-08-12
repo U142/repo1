@@ -666,7 +666,8 @@ namespace pas_cb_server
         {
             AREADATA msg_area = new AREADATA();
             msg_area.coordinatepair = get_coordinatepair(oAlert, op);
-            msg_area.nrofcoordinatepair = oAlert.alert_polygon.Count;
+            //msg_area.nrofcoordinatepair = oAlert.alert_polygon.Count + 1; // coordinate pair 1 starts and ends the list, and needs to be included in the count as well
+            msg_area.nrofcoordinatepair = msg_area.coordinatepair.Count();
             msg_area.coordinatesystem = 0; // CBC v1.3 only support one co-ordinate system
 
             return msg_area;
