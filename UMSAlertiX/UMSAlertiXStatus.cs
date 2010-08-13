@@ -338,6 +338,9 @@ namespace UMSAlertiX
                         oController.log.WriteLog("jobid: " + idJob.value + " error (" + aStatusResponse.code.ToString() + ") (" + aStatusResponse.message + ")");
                         lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=0, l_proc=0, l_status=1000, l_response=" + aStatusResponse.code.ToString() + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString() + " AND sz_jobid='" + idJob.value + "'", oController.dsn);
                         break;
+                    case 201:   // still preparing (do nothing, but log a warning)
+                        oController.log.WriteLog("jobid: " + idJob.value + " warning (" + aStatusResponse.code.ToString() + ") (" + aStatusResponse.message + ")");
+                        break;
                     default:
                         // set to cancelled
                         oController.log.WriteLog("jobid: " + idJob.value + " error (" + aStatusResponse.code.ToString() + ") (" + aStatusResponse.message + ")");
