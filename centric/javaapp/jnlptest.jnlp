@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<jnlp spec="1.0+" codebase="file:////S://Projects//cdm//trunk//WebSites//centric//javaapp">
+  <information>
+    <title>jnlptest</title>
+    <vendor>UMS</vendor>
+    <homepage href="www.ums.no" />
+    <description>Jnlp test</description>
+  </information>
+  <offline-allowed />
+  <security>
+    <j2ee-application-client-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.2+" />
+    <jar href="admin.jar"/>
+    <jar href="Maps.jar"/>
+    <jar href="Core.jar"/>
+    <jar href="PAS.jar"/>
+    <jar href="UMS.jar"/>
+    <jar href="Send.jar"/>
+    <jar href="substance.3.3.0.1.jar" />
+    <jar href="substance.jar" />
+    <jar href="PASIcons.jar" />
+    <jar href="no.ums.jar" />
+    <jar href="Importer.jar" />
+    <jar href="localization.jar" />
+    <jar href="plugins.jar" />
+  </resources>
+  <applet-desc documentBase="\javaapp\admin.jar"
+      name="TimePilot"
+      main-class="no.ums.adminui.pas.MapApplet"
+      width="527"
+      height="428">
+    </applet-desc>
+</jnlp>

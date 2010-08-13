@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/pas/status" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/pas/status" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/pas/status">
+      <s:element name="GetSmsStats">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="n_refno" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ULOGONINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_priserver" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altservers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSmsStatsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSmsStatsResult" type="tns:ArrayOfUSMSINSTATS" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUSMSINSTATS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="USMSINSTATS" nillable="true" type="tns:USMSINSTATS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="USMSINSTATS">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_answercode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_count" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatusList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusListResult" type="tns:UStatusListResults" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UStatusListResults">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfUStatusListItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUStatusListItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UStatusListItem" nillable="true" type="tns:UStatusListItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UStatusListItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="n_sendingtype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_totitem" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_altjmp" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_refno" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_createdate" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_createtime" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_sendingstatus" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_groups" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_group" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_projectpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_projectname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_createtimestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_updatetimestamp" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCBStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="req" type="tns:CB_PROJECT_STATUS_REQUEST" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CB_PROJECT_STATUS_REQUEST">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_projectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timefilter" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCBStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCBStatusResult" type="tns:CB_PROJECT_STATUS_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CB_PROJECT_STATUS_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_db_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="project" type="tns:BBPROJECT" />
+          <s:element minOccurs="0" maxOccurs="1" name="statuslist" type="tns:ArrayOfCB_STATUS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BBPROJECT">
+        <s:attribute name="l_projectpk" type="s:string" />
+        <s:attribute name="sz_projectname" type="s:string" />
+      </s:complexType>
+      <s:complexType name="ArrayOfCB_STATUS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_STATUS" nillable="true" type="tns:CB_STATUS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CB_STATUS">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ULBASENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="mdv" type="tns:MDVSENDINGINFO" />
+              <s:element minOccurs="0" maxOccurs="1" name="shape" type="tns:UShape" />
+              <s:element minOccurs="1" maxOccurs="1" name="l_created_ts" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="l_started_ts" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="l_last_ts" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="l_channel" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ULBASENDING">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_cbtype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_response" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_items" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_proc" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_retries" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_requesttype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_simulation" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operator" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_areaid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="histcc" type="tns:ArrayOfULBAHISTCC" />
+          <s:element minOccurs="0" maxOccurs="1" name="histcell" type="tns:ArrayOfULBAHISTCELL" />
+          <s:element minOccurs="0" maxOccurs="1" name="send_ts" type="tns:ArrayOfULBASEND_TS" />
+          <s:element minOccurs="0" maxOccurs="1" name="languages" type="tns:ArrayOfLBALanguage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBAHISTCC">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBAHISTCC" nillable="true" type="tns:ULBAHISTCC" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBAHISTCC">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_cc" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_delivered" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_expired" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_failed" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_unknown" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_submitted" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_queued" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_subscribers" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBAHISTCELL">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBAHISTCELL" nillable="true" type="tns:ULBAHISTCELL" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBAHISTCELL">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operator" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_2gtotal" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_2gok" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_3gtotal" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_3gok" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_4gtotal" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_4gok" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_successpercentage" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBASEND_TS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBASEND_TS" nillable="true" type="tns:ULBASEND_TS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBASEND_TS">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_ts" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBALanguage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBALanguage" nillable="true" type="tns:LBALanguage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBALanguage">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_textpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_cb_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_otoa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_ccodes" type="tns:ArrayOfLBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBACCode" nillable="true" type="tns:LBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ccode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MDVSENDINGINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_fields" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sepused" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_namepos" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresspos" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lastantsep" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_createdate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_createtime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_scheddate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_schedtime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_sendingstatus" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_companypk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_nofax" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_removedup" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_group" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_groups" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_type" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_dynacall" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profilepk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxchannels" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_queuestatus" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_totitem" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_processed" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altjmp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_alloc" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxalloc" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_oadc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_qreftype" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_linktype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_resendrefno" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_messagetext" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_actionprofilename" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UShape" abstract="true">
+        <s:attribute name="col_red" type="s:float" use="required" />
+        <s:attribute name="col_green" type="s:float" use="required" />
+        <s:attribute name="col_blue" type="s:float" use="required" />
+        <s:attribute name="col_alpha" type="s:float" use="required" />
+      </s:complexType>
+      <s:element name="GetStatusItems">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="search" type="tns:UStatusItemSearchParams" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UStatusItemSearchParams">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="_l_projectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="_l_item_filter" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="_l_date_filter" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="_l_time_filter" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="_l_refno_filter" type="tns:ArrayOfLong" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLong">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="long" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatusItemsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusItemsResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusItemsTest">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetStatusItemsTestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusItemsTestResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllMesagesThisMonth">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="period" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllMesagesThisMonthResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAllMesagesThisMonthResult" type="tns:ArrayOfCB_MESSAGE_MONTHLY_REPORT_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCB_MESSAGE_MONTHLY_REPORT_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_MESSAGE_MONTHLY_REPORT_RESPONSE" nillable="true" type="tns:CB_MESSAGE_MONTHLY_REPORT_RESPONSE" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE_MONTHLY_REPORT_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_usertype" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operatorname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_simulate" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_response" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_retries" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_last_ts" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addressedcells" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetSmsStatsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSmsStats" />
+  </wsdl:message>
+  <wsdl:message name="GetSmsStatsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSmsStatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatusList" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCBStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCBStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetCBStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCBStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusItemsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatusItems" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusItemsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusItemsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusItemsTestSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatusItemsTest" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusItemsTestSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusItemsTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAllMesagesThisMonthSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAllMesagesThisMonth" />
+  </wsdl:message>
+  <wsdl:message name="GetAllMesagesThisMonthSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAllMesagesThisMonthResponse" />
+  </wsdl:message>
+  <wsdl:portType name="PasStatusSoap">
+    <wsdl:operation name="GetSmsStats">
+      <wsdl:input message="tns:GetSmsStatsSoapIn" />
+      <wsdl:output message="tns:GetSmsStatsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusList">
+      <wsdl:input message="tns:GetStatusListSoapIn" />
+      <wsdl:output message="tns:GetStatusListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCBStatus">
+      <wsdl:input message="tns:GetCBStatusSoapIn" />
+      <wsdl:output message="tns:GetCBStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItems">
+      <wsdl:input message="tns:GetStatusItemsSoapIn" />
+      <wsdl:output message="tns:GetStatusItemsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItemsTest">
+      <wsdl:input message="tns:GetStatusItemsTestSoapIn" />
+      <wsdl:output message="tns:GetStatusItemsTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMesagesThisMonth">
+      <wsdl:input message="tns:GetAllMesagesThisMonthSoapIn" />
+      <wsdl:output message="tns:GetAllMesagesThisMonthSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PasStatusSoap" type="tns:PasStatusSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetSmsStats">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetSmsStats" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusList">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetStatusList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCBStatus">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetCBStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItems">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetStatusItems" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItemsTest">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetStatusItemsTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMesagesThisMonth">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/GetAllMesagesThisMonth" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="PasStatusSoap12" type="tns:PasStatusSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetSmsStats">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetSmsStats" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusList">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetStatusList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCBStatus">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetCBStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItems">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetStatusItems" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusItemsTest">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetStatusItemsTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMesagesThisMonth">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/GetAllMesagesThisMonth" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PasStatus">
+    <wsdl:port name="PasStatusSoap" binding="tns:PasStatusSoap">
+      <soap:address location="http://localhost/WS/PasStatus.asmx" />
+    </wsdl:port>
+    <wsdl:port name="PasStatusSoap12" binding="tns:PasStatusSoap12">
+      <soap12:address location="http://localhost/WS/PasStatus.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
