@@ -103,12 +103,12 @@ namespace pas_cb_server
                                 case "NewAlertPolygon":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
                                         return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser);
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWAREA);
                                     break;
                                 case "NewAlertPLMN":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
                                         return Constant.FAILED;
-                                    hRet = CreateAlertPLMN(oDoc.SelectSingleNode("cb"), oUser);
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLNM);
                                     break;
                                 case "UpdateAlert":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
@@ -160,12 +160,12 @@ namespace pas_cb_server
             return lReturn;
         }
 
-        private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser)
+        private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser, Operation operation)
         {
             Hashtable ret = new Hashtable();
             AlertInfo oAlert;
 
-            int l_getalert = GetAlert(xmlCB, oUser, Operation.NEWAREA, out oAlert);
+            int l_getalert = GetAlert(xmlCB, oUser, operation, out oAlert);
             if (l_getalert != Constant.OK)
             {
                 ret.Add(0, l_getalert);
@@ -186,57 +186,10 @@ namespace pas_cb_server
                             ret.Add(op.l_operator, Constant.FAILED);
                             break;
                         case 2: // one2many
-                            ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op));
+                            ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op, operation));
                             break;
                         case 3: // tmobile
-                            ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op));
-                            break;
-                        default:
-                            ret.Add(op.l_operator, Constant.FAILED);
-                            break;
-                    }
-                }
-                else
-                {
-                    Log.WriteLog(
-                        String.Format("{0} (op={1}) no record found in LBASEND", oAlert.l_refno, op.sz_operatorname)
-                        , 2);
-                    ret.Add(op.l_operator, Constant.FAILED);
-                }
-            }
-            return ret;
-        }
-        private static Hashtable CreateAlertPLMN(XmlNode xmlCB, Settings oUser)
-        {
-            Hashtable ret = new Hashtable();
-            AlertInfo oAlert;
-
-            //GetAlert(xmlCB, oUser, Operation.NEWPLNM, out oAlert);
-            int l_getalert = GetAlert(xmlCB, oUser, Operation.NEWPLNM, out oAlert);
-            if (l_getalert != Constant.OK)
-            {
-                ret.Add(0, l_getalert);
-                return ret;
-            }
-
-            // create an alert for each operator
-            foreach (Operator op in oUser.operators)
-            {
-                // check for refno in LBASEND
-                if (Database.VerifyRefno(oAlert.l_refno, op.l_operator))
-                {
-                    // insert LBAHISTCELL
-                    Database.InsertHistCell(oAlert.l_refno, op.l_operator);
-                    switch (op.l_type)
-                    {
-                        case 1: // AlertiX (not supported)
-                            ret.Add(op.l_operator, Constant.FAILED);
-                            break;
-                        case 2: // one2many
-                            ret.Add(op.l_operator, CB_one2many.CreateAlertPLMN(oAlert, op));
-                            break;
-                        case 3: // tmobile
-                            ret.Add(op.l_operator, CB_tmobile.CreateAlertPLMN(oAlert, op));
+                            ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op, operation));
                             break;
                         default:
                             ret.Add(op.l_operator, Constant.FAILED);
@@ -369,14 +322,6 @@ namespace pas_cb_server
 
             return Constant.OK;
         }
-
-        private enum Operation
-        {
-            NEWAREA,
-            NEWPLNM,
-            UPDATE,
-            KILL
-        }
     }
 
     public class AlertInfo
@@ -402,5 +347,12 @@ namespace pas_cb_server
     {
         public float x; // longitude
         public float y; // latitude
+    }
+    public enum Operation
+    {
+        NEWAREA,
+        NEWPLNM,
+        UPDATE,
+        KILL
     }
 }

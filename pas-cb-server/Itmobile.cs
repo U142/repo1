@@ -12,11 +12,18 @@ namespace pas_cb_server
 {
     public class CB_tmobile
     {
-        public static int CreateAlert(AlertInfo oAlert, Operator op)
+        public static int CreateAlert(AlertInfo oAlert, Operator op, Operation operation)
         {
             // check if job already have been submitted
             string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid != "")
+            if (sz_jobid == null)
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) failed checking if broadcast was already submitted, aborting", oAlert.l_refno, op.sz_operatorname, sz_jobid)
+                    , 0);
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+            }
+            else if (sz_jobid != "")
             {
                 Log.WriteLog(
                     String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
@@ -28,77 +35,87 @@ namespace pas_cb_server
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
-            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_sent_date_time = dtm_cap;
-            t_alert.IBAG_status = IBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_message_type.Alert;
-            t_alert.IBAG_cap_sent_date_time = dtm_cap;
-            t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-            // based on default values:
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
-            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
-            t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
-            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
-
-            IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
-            List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
-            t_alert_area.IBAG_area_description = "Polygon";
-            t_alert_area.IBAG_polygon = new string[] { get_IBAG_polygon(oAlert, op) };
-            t_alert_arealist.Add(t_alert_area);
-
-            IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on default values:
-            t_alert_info.IBAG_priority = def.priority;
-            t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = def.category;
-            t_alert_info.IBAG_severity = def.severity;
-            t_alert_info.IBAG_urgency = def.urgency;
-            t_alert_info.IBAG_certainty = def.certainty;
-            t_alert_info.IBAG_event_code = def.event_code;
-            t_alert_info.IBAG_response_type = def.response_type;
-            t_alert_info.IBAG_response_typeSpecified = true;
-            t_alert_info.IBAG_channel_category = def.sz_channel_category;
-
-            t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
-            t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
-            t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
-            t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
-            t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
-
-            t_alert.IBAG_alert_info = t_alert_info;
-
-            switch(op.coordinate_type)
-            {
-                case COORDINATESYSTEM.UTM31:
-                    t_alert_area.IBAG_utm_zone = "31U";
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                case COORDINATESYSTEM.UTM32:
-                    t_alert_area.IBAG_utm_zone = "32U";
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                case COORDINATESYSTEM.WGS84:
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.WGS84;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                default:
-                    t_alert_info.IBAG_coordinate_systemSpecified = false;
-                    break;
-            }
-
-            dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
-            if (!Settings.live)
-            {
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
-                return Constant.OK;
-            }
-
             try
             {
+                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_sent_date_time = dtm_cap;
+                t_alert.IBAG_status = IBAG_status.Actual;
+                t_alert.IBAG_message_type = IBAG_message_type.Alert;
+                t_alert.IBAG_cap_sent_date_time = dtm_cap;
+                t_alert.IBAG_cap_sent_date_timeSpecified = true;
+
+                // based on default values:
+                t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+                t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+                t_alert.IBAG_sender = def.sz_sender;
+                t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+                t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
+
+                IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
+                List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
+                if (operation == Operation.NEWAREA)
+                {
+                    t_alert_area.IBAG_area_description = "Polygon";
+                    t_alert_area.IBAG_polygon = new string[] { get_IBAG_polygon(oAlert, op) };
+                }
+                else if (operation == Operation.NEWPLNM)
+                {
+                    t_alert_area.IBAG_area_description = "Netherlands Nationwide";
+                    t_alert_area.IBAG_geocode = new string[] { "NL" };
+                }
+                t_alert_arealist.Add(t_alert_area);
+
+                IBAG_alert_info t_alert_info = new IBAG_alert_info();
+                // based on default values:
+                t_alert_info.IBAG_priority = def.priority;
+                t_alert_info.IBAG_prioritySpecified = true;
+                t_alert_info.IBAG_category = def.category;
+                t_alert_info.IBAG_severity = def.severity;
+                t_alert_info.IBAG_urgency = def.urgency;
+                t_alert_info.IBAG_certainty = def.certainty;
+                t_alert_info.IBAG_event_code = def.event_code;
+                t_alert_info.IBAG_response_type = def.response_type;
+                t_alert_info.IBAG_response_typeSpecified = true;
+                t_alert_info.IBAG_channel_category = def.sz_channel_category;
+
+                t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
+                t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
+                t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
+                t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
+                t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
+
+                t_alert.IBAG_alert_info = t_alert_info;
+
+                switch(op.coordinate_type)
+                {
+                    case COORDINATESYSTEM.UTM31:
+                        if (operation == Operation.NEWAREA)
+                            t_alert_area.IBAG_utm_zone = "31U";
+                        t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
+                        t_alert_info.IBAG_coordinate_systemSpecified = true;
+                        break;
+                    case COORDINATESYSTEM.UTM32:
+                        if (operation == Operation.NEWAREA)
+                            t_alert_area.IBAG_utm_zone = "32U";
+                        t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
+                        t_alert_info.IBAG_coordinate_systemSpecified = true;
+                        break;
+                    case COORDINATESYSTEM.WGS84:
+                        t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.WGS84;
+                        t_alert_info.IBAG_coordinate_systemSpecified = true;
+                        break;
+                    default:
+                        t_alert_info.IBAG_coordinate_systemSpecified = false;
+                        break;
+                }
+
+                dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
+                if (!Settings.live)
+                {
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
+                    return Constant.OK;
+                }
+
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
                 dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno);
 
@@ -129,127 +146,6 @@ namespace pas_cb_server
                 Log.WriteLog(
                     String.Format("{0} (op={1}) NewMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) NewMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
-                    2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-        }
-        public static int CreateAlertPLMN(AlertInfo oAlert, Operator op)
-        {
-            // check if job already have been submitted
-            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid != "")
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
-                    , 0);
-                return Constant.OK;
-            }
-
-            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
-            IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-
-            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_sent_date_time = dtm_cap;
-            t_alert.IBAG_status = IBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_message_type.Alert;
-            t_alert.IBAG_cap_sent_date_time = dtm_cap;
-            t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-            // based on default values:
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
-            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
-            t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
-            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
-
-            IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
-            List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
-            t_alert_area.IBAG_area_description = "Netherlands Nationwide";
-            t_alert_area.IBAG_geocode = new string[]{"NL"};
-            t_alert_arealist.Add(t_alert_area);
-
-            IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on default values:
-            t_alert_info.IBAG_priority = def.priority;
-            t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = def.category;
-            t_alert_info.IBAG_severity = def.severity;
-            t_alert_info.IBAG_urgency = def.urgency;
-            t_alert_info.IBAG_certainty = def.certainty;
-            t_alert_info.IBAG_event_code = def.event_code;
-            t_alert_info.IBAG_response_type = def.response_type;
-            t_alert_info.IBAG_response_typeSpecified = true;
-            t_alert_info.IBAG_channel_category = def.sz_channel_category;
-
-            t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
-            t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
-            t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
-            t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
-            t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
-
-            t_alert.IBAG_alert_info = t_alert_info;
-
-            switch (op.coordinate_type)
-            {
-                case COORDINATESYSTEM.UTM31:
-//                    t_alert_area.IBAG_utm_zone = "31U";
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                case COORDINATESYSTEM.UTM32:
-//                    t_alert_area.IBAG_utm_zone = "32U";
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.UTM;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                case COORDINATESYSTEM.WGS84:
-                    t_alert_info.IBAG_coordinate_system = IBAG_coordinate_system.WGS84;
-                    t_alert_info.IBAG_coordinate_systemSpecified = true;
-                    break;
-                default:
-                    t_alert_info.IBAG_coordinate_systemSpecified = false;
-                    break;
-            }
-
-            dump_request(t_alert, op, "NewMessagePLMN", oAlert.l_refno);
-            if (!Settings.live)
-            {
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
-                return Constant.OK;
-            }
-
-            try
-            {
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-                dump_request(t_alert_response, op, "NewMessagePLMNResult", oAlert.l_refno);
-
-                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
-                {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN OK (code={3})"
-                        , oAlert.l_refno
-                        , op.sz_operatorname
-                        , oAlert.l_refno
-                        , t_alert_response.IBAG_message_type), 0);
-                    // ok, insert appropriate info in database
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
-                    return Constant.OK;
-                }
-                else
-                {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN FAILED (code={3}, msg={4})"
-                        , oAlert.l_refno
-                        , op.sz_operatorname
-                        , oAlert.l_refno
-                        , t_alert_response.IBAG_message_type
-                        , t_alert_response.IBAG_note.First()), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) NewMessagePLMN EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) NewMessagePLMN EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
                     2);
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
@@ -509,15 +405,25 @@ namespace pas_cb_server
             }
         }
 
-        private static void dump_request(object cap_request, Operator op, string sz_method, int l_refno)
+        private static void dump_request(object cap_request, Operator op, string method, int refno)
         {
             if (Settings.debug)
             {
-                XmlSerializer s = new XmlSerializer(cap_request.GetType());
-                TextWriter w = new StringWriter(Encoding.UTF8);
-                s.Serialize(w, cap_request);
+                try
+                {
+                    XmlSerializer s = new XmlSerializer(cap_request.GetType());
+                    TextWriter w = new StringWriter(Encoding.UTF8);
+                    s.Serialize(w, cap_request);
 
-                DebugLog.dump(w.ToString(), op, sz_method, l_refno);
+                    DebugLog.dump(w.ToString(), op, method, refno);
+                }
+                catch (Exception e)
+                {
+                    Log.WriteLog(
+                        String.Format("{0} (op={1}) DebugDump {3} EXCEPTION (msg={2})", refno, op.sz_operatorname, e.Message, method),
+                        String.Format("{0} (op={1}) DebugDump {3} EXCEPTION (msg={2})", refno, op.sz_operatorname, e, method),
+                        2);
+                }
             }
         }
 

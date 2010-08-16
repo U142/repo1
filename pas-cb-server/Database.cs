@@ -206,6 +206,7 @@ namespace pas_cb_server
                     String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e.Message, szQuery),
                     String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e, szQuery),
                     2);
+                return Constant.FAILED;
             }
 
             return Constant.OK;
@@ -286,6 +287,7 @@ namespace pas_cb_server
                     String.Format("Database.UpdateTries (exception={0}) (sql={1})", e.Message, szQuery),
                     String.Format("Database.UpdateTries (exception={0}) (sql={1})", e, szQuery),
                     2);
+                lRetVal = Constant.FAILED;
             }
 
             return lRetVal;
@@ -293,7 +295,12 @@ namespace pas_cb_server
 
         public static int GetHandle(Operator op)
         {
-            return (int)Database.ExecuteScalar("sp_cb_gethandle " + op.l_operator);
+            object handle = Database.ExecuteScalar("sp_cb_gethandle " + op.l_operator);
+            if(handle!=null)
+                return (int)handle;
+            else
+                return 0;
+
         }
         public static string GetJobID(Operator op, int l_refno)
         {
@@ -329,6 +336,7 @@ namespace pas_cb_server
                     String.Format("Database.GetJobID (exception={0}) (sql={1})", e.Message, szQuery),
                     String.Format("Database.GetJobID (exception={0}) (sql={1})", e, szQuery),
                     2);
+                return null;
             }
 
             return ret;
@@ -381,29 +389,22 @@ namespace pas_cb_server
         }
         public static int GetRefno()
         {
-            return (int)Database.ExecuteScalar("sp_refno_out");
+            object refno = Database.ExecuteScalar("sp_refno_out");
+            if (refno != null)
+                return (int)refno;
+            else
+                return 0;
         }
         public static bool VerifyRefno(int l_refno, int l_operator)
         {
             bool ret = true;
             string sz_query = String.Format("SELECT l_refno FROM LBASEND WHERE l_refno={0} and l_operator={1}", l_refno, l_operator);
 
-            try
-            {
-                object refno = Database.ExecuteScalar(sz_query);
-                if (refno == null)
-                    return false;
-                else if ((int)refno != l_refno)
-                    return false;
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("Database.VerifyRefno (exception={0}) (sql={1})", e.Message, sz_query),
-                    String.Format("Database.VerifyRefno (exception={0}) (sql={1})", e, sz_query),
-                    2);
+            object refno = Database.ExecuteScalar(sz_query);
+            if (refno == null)
                 return false;
-            }
+            else if ((int)refno != l_refno)
+                return false;
 
             return ret;
         }
