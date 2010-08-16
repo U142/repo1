@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 
 
 import java.util.*;
@@ -24,12 +25,17 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.CoorConverter.LLCoor;
 
+import org.geotools.data.PrjFileReader;
 import org.geotools.data.shapefile.ShpFiles;
+import org.geotools.data.shapefile.dbf.DbaseFileReader;
+import org.geotools.data.shapefile.shp.IndexFile;
 import org.geotools.data.shapefile.shp.ShapefileHeader;
 import org.geotools.data.shapefile.shp.ShapefileReader.Record;
 import org.geotools.geometry.jts.GeometryCoordinateSequenceTransformer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.cs.CoordinateSystem;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class ShapeImporter extends FileParser
 {
@@ -43,7 +49,55 @@ public class ShapeImporter extends FileParser
 		try
 		{
 			ShpFiles shp = new ShpFiles(file);
-			org.geotools.data.shapefile.shp.ShapefileReader shape = new org.geotools.data.shapefile.shp.ShapefileReader(shp, false, false);
+			GeometryFactory fact = new GeometryFactory();
+			org.geotools.data.shapefile.prj.PrjFileReader prj = new org.geotools.data.shapefile.prj.PrjFileReader(shp);
+			CoordinateReferenceSystem ref = prj.getCoodinateSystem();
+			prj.close();
+			DbaseFileReader dbf = new DbaseFileReader(shp, true, Charset.forName("ISO-8859-1"));
+			String projection_code = ref.getName().getCode();
+			System.out.println("Projection = " + projection_code);
+			List<String> dbf_fields = new ArrayList<String>();
+			List<Object[]> dbf_content = new ArrayList<Object[]>();
+			List<String> dbf_strings = new ArrayList<String>();
+			int n_fields = dbf.getHeader().getNumFields();
+			for(int i=0; i < n_fields; i++)
+			{
+				String s = dbf.getHeader().getFieldName(i);
+				dbf_fields.add(s);
+				System.out.println("Field" + i + "=" + s);
+			}
+			while(dbf.hasNext())
+			{
+				//Object [] fields = dbf.readEntry();
+				String output = "DBF: ";
+				Object [] fields = new Object[n_fields];
+				for(int i=0; i < n_fields; i++)
+				{
+					Object o = dbf.readField(i);
+					output += o + ",";
+				}
+				dbf_content.add(fields);
+				dbf_strings.add(output);
+				System.out.println(output);
+				/*dbf.readField(fieldNum)
+				//String output = "DBF " + ": ";
+				String output = "";
+				for(int i=0; i < fields.length; i++)
+					output += fields[i] + ", ";
+				dbf_content.add(fields);
+				dbf_strings.add(output);*/
+				
+			}
+			dbf.close();
+			/*IndexFile indexfile = new IndexFile(shp, true);
+			for(int i=0; i < indexfile.getRecordCount(); i++)
+			{
+				int n_contentlength = indexfile.getContentLength(i);
+				System.out.println("" + n_contentlength);
+			}*/
+
+			org.geotools.data.shapefile.shp.ShapefileReader shape = new org.geotools.data.shapefile.shp.ShapefileReader(shp, false, false, fact);
+			int n = fact.getSRID();
 			ShapefileHeader header = shape.getHeader();
 			int totalshapes = 0;
 			while(shape.hasNext())
@@ -79,14 +133,18 @@ public class ShapeImporter extends FileParser
 						com.vividsolutions.jts.geom.Coordinate [] coors = g.getCoordinates();
 						PolygonStruct poly = new PolygonStruct(new java.awt.Dimension(1,1));
 						poly.shapeID = (totalshapes+1);
-						poly.shapeName = "Imported Polygon";
+						poly.shapeName = dbf_strings.get(totalshapes);
 						//poly.SetBounds(geom.getBoundary()., bounds._rbo, bounds._ubo, bounds._bbo);
 						for(int p = 0; p < coors.length; p++)
 						{
-							if(coors[p].x>180 || coors[p].x < -180)
+							no.ums.pas.ums.tools.CoorConverter conv = new CoorConverter();
+							if(projection_code.toLowerCase().equals("rd_new"))
 							{
-								
-								no.ums.pas.ums.tools.CoorConverter conv = new CoorConverter();
+								LLCoor ll = conv.rd_to_wgs84(coors[p].x, coors[p].y);
+								poly.add_coor(ll.get_lon(), ll.get_lat());								
+							}
+							else if(coors[p].x>180 || coors[p].x < -180)
+							{
 								LLCoor ll1 = conv.UTM2LL(23, coors[p].y, coors[p].x, "32V");
 								poly.add_coor(ll1.get_lon(), ll1.get_lat());
 							}
@@ -140,10 +198,18 @@ public class ShapeImporter extends FileParser
 						{
 							if(coors[p].x>180 || coors[p].x < -180)
 							{
-								
 								no.ums.pas.ums.tools.CoorConverter conv = new CoorConverter();
-								LLCoor ll1 = conv.UTM2LL(23, coors[p].y, coors[p].x, "32V");
-								poly.add_coor(ll1.get_lon(), ll1.get_lat());
+								//assume UTM
+								if(coors[p].x > 5000000)
+								{
+									LLCoor ll1 = conv.UTM2LL(23, coors[p].y, coors[p].x, "32V");
+									poly.add_coor(ll1.get_lon(), ll1.get_lat());
+								}
+								else //assume RD
+								{
+									LLCoor ll = conv.rd_to_wgs84(coors[p].x, coors[p].y);
+									poly.add_coor(ll.get_lon(), ll.get_lat());
+								}
 							}
 							else
 							{

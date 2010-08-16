@@ -1061,17 +1061,25 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						if(OVERRIDE_WMS_SITE!=null)
 						{
-							String [] arr = OVERRIDE_WMS_SITE.split(";");
-							if(arr!=null && arr.length>=3)
+							if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 							{
-								ui.setLMapserver(1);
-								ui.setSzWmsSite(arr[0]);
-								ui.setSzWmsFormat(arr[1]);
-								ui.setSzWmsLayers(arr[2]);
-								if(arr.length>=4)
-									ui.setSzWmsUsername(arr[3]);
-								if(arr.length>=5)
-									ui.setSzWmsPassword(arr[4]);
+								ui.setLMapserver(0);
+								
+							}
+							else
+							{
+								String [] arr = OVERRIDE_WMS_SITE.split(";");
+								if(arr!=null && arr.length>=3)
+								{
+									ui.setLMapserver(1);
+									ui.setSzWmsSite(arr[0]);
+									ui.setSzWmsFormat(arr[1]);
+									ui.setSzWmsLayers(arr[2]);
+									if(arr.length>=4)
+										ui.setSzWmsUsername(arr[3]);
+									if(arr.length>=5)
+										ui.setSzWmsPassword(arr[4]);
+								}
 							}
 						}
 						setVisualSettings(ui);

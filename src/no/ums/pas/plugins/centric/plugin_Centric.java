@@ -41,6 +41,7 @@ import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
 import no.ums.pas.maps.defines.*;
@@ -170,6 +171,33 @@ public class plugin_Centric extends PAS_Scripting
 		});
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(btn_draw_ellipse, menu.m_gridconst);
+
+		final JButton btn_import = new JButton(PAS.l("common_import"));
+		btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		btn_import.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(e.getSource().equals(btn_import))
+				{
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run()
+						{
+							ImportPolygon i = new ImportPolygon(null, "act_polygon_imported", false, null);
+						}
+					});
+				}
+				else if(e.getActionCommand().equals("act_polygon_imported"))
+				{
+				
+				}
+				else if(e.getActionCommand().equals("act_set_shape"))
+				{
+					
+				}
+			}			
+		});
+		menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.add(btn_import, menu.m_gridconst);
 		
 		return true;
 	}

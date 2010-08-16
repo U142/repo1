@@ -87,6 +87,10 @@ public class CoorConverter {
 		public double getEasting() { return f_easting; }
 		public String getZone() { return sz_zone; }
 	}	
+	public class Correction {
+		public Double phi;
+		public Double lambda;
+	}
 
 	
 	public CoorConverter() {
@@ -263,4 +267,108 @@ public class CoorConverter {
 		Long = LongOrigin + Long * CoorConverter.rad2deg;
 		return new LLCoor(Long, Lat);
 	}
+	
+	//RD <-> WGS
+    // constants
+    private static long x0 = 155000;
+    private static long y0 = 463000;
+    private static double k = 0.9999079;
+    private static double bigr = 6382644.571;
+    private static double m = 0.003773954;
+    private static double n = 1.000475857;
+    private static double lambda0 = 0.094032038;
+    private static double phi0 = 0.910296727;
+    private static double l0 = 0.094032038;
+    private static double b0 = 0.909684757;
+    private static double e = 0.081696831;
+    private static double a = 6377397.155;
+
+    public UTMCoor wgs84_to_rd(double Lat, double Long)
+    {
+        // correction to lat/lon?
+        Double phicor = 0.0, lamcor = 0.0; 
+        Correction corr = correction(Lat, Long);
+        phicor = corr.phi;
+        lamcor = corr.lambda;
+        double phibes = Lat - phicor;
+        double lambes = Long - lamcor;
+
+        // convert to RD
+        double phi = phibes / 180 * Math.PI;
+        double lambda = lambes / 180 * Math.PI;
+        double qprime = Math.log(Math.tan(phi / 2 + Math.PI / 4));
+        double dq = e / 2 * Math.log((e * Math.sin(phi) + 1) / (1 - e * Math.sin(phi)));
+        double q = qprime - dq;
+        double w = n * q + m;
+        double b = Math.atan(Math.exp(w)) * 2 - Math.PI / 2;
+        double dl = n * (lambda - lambda0);
+        double d_1 = Math.sin((b - b0) / 2);
+        double d_2 = Math.sin(dl / 2);
+        double s2psihalf = d_1 * d_1 + d_2 * d_2 * Math.cos(b) * Math.cos(b0);
+        double cpsihalf = Math.sqrt(1 - s2psihalf);
+        double spsihalf = Math.sqrt(s2psihalf);
+        double tpsihalf = spsihalf / cpsihalf;
+        double spsi = spsihalf * 2 * cpsihalf;
+        double cpsi = 1 - s2psihalf * 2;
+        double sa = Math.sin(dl) * Math.cos(b) / spsi;
+        double ca = (Math.sin(b) - Math.sin(b0) * cpsi) / (Math.cos(b0) * spsi);
+        double r = k * 2 * bigr * tpsihalf;
+        Double X, Y;
+        X = r * sa + x0;
+        Y = r * ca + y0;
+        UTMCoor utm = new UTMCoor(X, Y, "");
+        return utm;
+    }
+
+    public LLCoor rd_to_wgs84(double X, double Y)
+    {
+        // convert to WGS84
+        double d_1 = X - x0;
+        double d_2 = Y - y0;
+        double r = Math.sqrt(d_1 * d_1 + d_2 * d_2);
+        double sa; if (r != 0) sa = d_1 / r; else sa = 0;
+        double ca; if (r != 0) ca = d_2 / r; else ca = 0;
+        double psi = Math.atan2(r, k * 2 * bigr) * 2;
+        double cpsi = Math.cos(psi);
+        double spsi = Math.sin(psi);
+        double sb = ca * Math.cos(b0) * spsi + Math.sin(b0) * cpsi;
+        double cb = Math.sqrt(1 - sb * sb);
+        double b = Math.acos(cb);
+        double sdl = sa * spsi / cb;
+        double dl = Math.asin(sdl);
+        double lambda = dl / n + lambda0;
+        double w = Math.log(Math.tan(b / 2 + Math.PI / 4));
+        double q = (w - m) / n;
+        double phiprime = Math.atan(Math.exp(q)) * 2 - Math.PI / 2;
+        double dq, phi; phi = phiprime;
+        for (int i = 0; i < 4; i++) // adjust dq and phi 4 times
+        {
+            dq = e / 2 * Math.log((e * Math.sin(phi) + 1) / (1 - e * Math.sin(phi)));
+            phi = Math.atan(Math.exp(q + dq)) * 2 - Math.PI / 2;
+        }
+        lambda = lambda / Math.PI * 180;
+        phi = phi / Math.PI * 180;
+
+        // correction to lat/lon?
+        Double phicor = 0.0, lamcor = 0.0; 
+        Correction corr = correction(phi, lambda);
+        phicor = corr.phi;
+        lamcor = corr.lambda;
+        Double Lat,Long;
+        Lat = phi + phicor;
+        Long = lambda + lamcor;
+        LLCoor ll = new LLCoor(Long, Lat);
+        return ll;
+    }
+
+    private Correction correction(double phi, double lambda)
+    {
+        double dphi = phi - 52;
+        double dlam = lambda - 5;
+        Correction corr = new Correction();
+        corr.phi = (-96.862 - dphi * 11.714 - dlam * 0.125) * 0.00001;
+        corr.lambda = (dphi * 0.329 - 37.902 - dlam * 14.667) * 0.00001;
+        return corr;
+    }
+    
 }
