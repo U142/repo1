@@ -33,10 +33,14 @@ namespace pas_cb_server
 
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
 
             try
             {
+                // update status to parsing
+                if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+
+                DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
                 t_alert.IBAG_sent_date_time = dtm_cap;
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -117,9 +121,18 @@ namespace pas_cb_server
                 }
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-                dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno);
+                if(t_alert_response != null)
+                    dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno);
 
-                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                if (t_alert_response == null)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                }
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (code={3})"
                         , oAlert.l_refno
@@ -154,52 +167,65 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-
-            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
-            t_alert.IBAG_sent_date_time = DateTime.Now;
-            t_alert.IBAG_status = IBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_message_type.Update;
-            t_alert.IBAG_cap_sent_date_time = DateTime.Now;
-            t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-            // based on default values:
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
-            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
-            t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
-            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
-
-            IBAG_alert_info t_alert_info = new IBAG_alert_info();
-            // based on default values:
-            t_alert_info.IBAG_priority = def.priority;
-            t_alert_info.IBAG_prioritySpecified = true;
-            t_alert_info.IBAG_category = def.category;
-            t_alert_info.IBAG_severity = def.severity;
-            t_alert_info.IBAG_urgency = def.urgency;
-            t_alert_info.IBAG_certainty = def.certainty;
-            t_alert_info.IBAG_event_code = def.event_code;
-
-            t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
-            t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
-            t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
-
-            t_alert.IBAG_alert_info = t_alert_info;
-
-            dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
-            if (!Settings.live)
-            {
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
-                return Constant.OK;
-            }
 
             try
             {
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-                dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno);
+                // update status to parsing
+                if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
-                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
+                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
+                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_status = IBAG_status.Actual;
+                t_alert.IBAG_message_type = IBAG_message_type.Update;
+                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_timeSpecified = true;
+
+                // based on default values:
+                t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+                t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+                t_alert.IBAG_sender = def.sz_sender;
+                t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+                t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+
+                IBAG_alert_info t_alert_info = new IBAG_alert_info();
+                // based on default values:
+                t_alert_info.IBAG_priority = def.priority;
+                t_alert_info.IBAG_prioritySpecified = true;
+                t_alert_info.IBAG_category = def.category;
+                t_alert_info.IBAG_severity = def.severity;
+                t_alert_info.IBAG_urgency = def.urgency;
+                t_alert_info.IBAG_certainty = def.certainty;
+                t_alert_info.IBAG_event_code = def.event_code;
+
+                t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
+                t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
+                t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
+
+                t_alert.IBAG_alert_info = t_alert_info;
+
+                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
+                if (!Settings.live)
+                {
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
+                    return Constant.OK;
+                }
+
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                if (t_alert_response != null)
+                    dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno);
+
+                if (t_alert_response == null)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                }
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage OK (code={3})"
                         , oAlert.l_refno
@@ -243,37 +269,46 @@ namespace pas_cb_server
 
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-
-            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
-            t_alert.IBAG_sent_date_time = DateTime.Now;
-            t_alert.IBAG_status = IBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_message_type.Cancel;
-            t_alert.IBAG_cap_sent_date_time = DateTime.Now;
-            t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-            // based on default values:
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
-            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
-            t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
-            t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
-            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
-
-            dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
-            if (!Settings.live)
-            {
-                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
-                return Constant.OK;
-            }
 
             try
             {
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-                dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno);
+                DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
+                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
+                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_status = IBAG_status.Actual;
+                t_alert.IBAG_message_type = IBAG_message_type.Cancel;
+                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
-                if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                // based on default values:
+                t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+                t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+                t_alert.IBAG_sender = def.sz_sender;
+                t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+                t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
+                t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+
+                dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
+                if (!Settings.live)
+                {
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                    return Constant.OK;
+                }
+
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                if (t_alert_response != null)
+                    dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno);
+
+                if (t_alert_response == null)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                }
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (code={3})"
                         , oAlert.l_refno
@@ -308,36 +343,45 @@ namespace pas_cb_server
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
-            DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
-
-            t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
-            t_alert.IBAG_referenced_message_number = message_number;
-            t_alert.IBAG_sent_date_time = DateTime.Now;
-            t_alert.IBAG_status = IBAG_status.Actual;
-            t_alert.IBAG_message_type = IBAG_message_type.EMS;
-            t_alert.IBAG_cap_sent_date_time = DateTime.Now;
-            t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-            // based on default values:
-            t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
-            t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
-            t_alert.IBAG_sender = def.sz_sender;
-            t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
-            t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
-
-            dump_request(t_alert, op, "InfoMessage", l_refno);
-            if (!Settings.live)
-            {
-                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                return Constant.OK;
-            }
 
             try
             {
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
-                dump_request(t_alert_response, op, "InfoMessageResult", l_refno);
+                DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
+                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_referenced_message_number = message_number;
+                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_status = IBAG_status.Actual;
+                t_alert.IBAG_message_type = IBAG_message_type.EMS;
+                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
-                if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
+                // based on default values:
+                t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+                t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+                t_alert.IBAG_sender = def.sz_sender;
+                t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
+                t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
+
+                dump_request(t_alert, op, "InfoMessage", l_refno);
+                if (!Settings.live)
+                {
+                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                    return Constant.OK;
+                }
+
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                if (t_alert_response != null)
+                    dump_request(t_alert_response, op, "InfoMessageResult", l_refno);
+
+                if (t_alert_response == null)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                        , l_refno
+                        , op.sz_operatorname
+                        , l_refno), 2);
+                    return Constant.FAILED;
+                }
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
                 {
                     float cb_percentage = 0;
                     int l_2gtotal = 0;

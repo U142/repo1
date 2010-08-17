@@ -156,7 +156,7 @@ namespace pas_cb_server
             try // update message
             {
                 // login OK, update status to parsing
-                if(Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING)!=Constant.OK)
+                if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
                 CBCCHANGEREQUEST changereq = new CBCCHANGEREQUEST();

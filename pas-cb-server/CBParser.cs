@@ -60,7 +60,8 @@ namespace pas_cb_server
                                 else if (lRetVal == Constant.RETRY)
                                 {
                                     Thread.Sleep(500);
-                                    File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                                    File.SetLastAccessTime(fileName, DateTime.Now);
+                                    //File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
                                 }
                                 else // lRetVal -2 (Constant.FAILED)
                                 {

@@ -241,6 +241,7 @@ namespace pas_cb_server
                     String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e.Message, szQuery),
                     String.Format("Database.SetSendingStatus (exception={0}) (sql={1})", e, szQuery),
                     2);
+                return Constant.FAILED;
             }
 
             return Constant.OK;
@@ -355,35 +356,25 @@ namespace pas_cb_server
             OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
             OdbcDataReader rs;
 
-            try
+            dbConn.Open();
+            rs = cmd.ExecuteReader();
+
+            if (rs.Read())
+                if (!rs.IsDBNull(0))
+                    ts = rs.GetDecimal(0);
+
+            rs.Close();
+            rs.Dispose();
+            cmd.Dispose();
+            dbConn.Close();
+            dbConn.Dispose();
+
+            if (ts.ToString().Length == 14)
             {
-                dbConn.Open();
-                rs = cmd.ExecuteReader();
-
-                if (rs.Read())
-                    if (!rs.IsDBNull(0))
-                        ts = rs.GetDecimal(0);
-
-                rs.Close();
-                rs.Dispose();
-                cmd.Dispose();
-                dbConn.Close();
-                dbConn.Dispose();
-
-                if (ts.ToString().Length == 14)
-                {
-                    ret = DateTime.ParseExact(ts.ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else
-                    throw new Exception("Could not get created timestamp");
+                ret = DateTime.ParseExact(ts.ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("Database.GetCreateTime (exception={0}) (sql={1})", e.Message, szQuery),
-                    String.Format("Database.GetCreateTime (exception={0}) (sql={1})", e, szQuery),
-                    2);
-            }
+            else
+                throw new Exception("Could not get created timestamp");
 
             return new DateTime(ret.Ticks, DateTimeKind.Local);
         }
