@@ -163,20 +163,6 @@
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_961A5D71449C4D90BC21801EE3FC0363"
-            {
-            "Name" = "8:Primary output from pas-cb-server (Active)"
-            "Condition" = "8:NOT PREVIOUSVERSIONSINSTALLED"
-            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
-            "FileType" = "3:2"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_4C210E98_CBB2_4CD4_8BA3_1047E58BCD63"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_B93799C3AEF64CFE84A824AB54B5444E"
             {
             "Name" = "8:Primary output from pas-cb-server (Active)"
@@ -202,6 +188,20 @@
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
             "Identifier" = "8:_E1155746_1BE9_4F48_9EF4_8F064185E5E1"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_F7828BA69D854D4682BE771CB1AC6123"
+            {
+            "Name" = "8:Primary output from pas-cb-server (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_4C210E98_CBB2_4CD4_8BA3_1047E58BCD63"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
@@ -429,7 +429,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cell Broadcast Server"
         "ProductCode" = "8:{9469D51F-B834-41E7-AB29-D6EB6489A3C5}"
-        "PackageCode" = "8:{CB697B89-AC81-4CFC-BBF5-7ECE567A9A96}"
+        "PackageCode" = "8:{1934EFA8-0CB1-4231-96B8-E504DD435960}"
         "UpgradeCode" = "8:{2ED8E5BA-DDE9-423D-AAB5-342B08A3D7B9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
