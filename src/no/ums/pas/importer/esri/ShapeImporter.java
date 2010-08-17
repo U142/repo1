@@ -68,7 +68,7 @@ public class ShapeImporter extends FileParser
 			}
 			while(dbf.hasNext())
 			{
-				//Object [] fields = dbf.readEntry();
+				Object [] arrfields = dbf.readEntry();
 				String output = "DBF: ";
 				Object [] fields = new Object[n_fields];
 				for(int i=0; i < n_fields; i++)

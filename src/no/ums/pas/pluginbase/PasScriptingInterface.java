@@ -40,6 +40,7 @@ import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UBBNEWSLIST;
 import no.ums.ws.pas.UGabSearchResultList;
@@ -448,6 +449,14 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);
+	
+	public abstract void addShapeToPaint(ShapeStruct s);
+	
+	public abstract void removeShapeToPaint(ShapeStruct s);
+	
+	public abstract void clearShapesToPaint();
+	
+	public abstract List<ShapeStruct> getShapesToPaint(); 
 	
 	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
 	

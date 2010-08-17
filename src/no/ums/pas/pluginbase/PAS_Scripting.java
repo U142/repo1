@@ -772,6 +772,10 @@ public class PAS_Scripting extends PasScriptingInterface
 		{
 			
 		}
+		for(int i=0; i < getShapesToPaint().size(); i++)
+		{
+			getShapesToPaint().get(i).calc_coortopix(nav);
+		}
 		p.get_gpscontroller().calcGpsCoords();	
 		if(p.get_parmcontroller()!=null)
 			p.get_parmcontroller().calc_coortopix();
@@ -809,7 +813,24 @@ public class PAS_Scripting extends PasScriptingInterface
 
 
 
-
+	protected List<ShapeStruct> shapes_to_paint = new ArrayList<ShapeStruct>();
+	public void addShapeToPaint(ShapeStruct s)
+	{
+		shapes_to_paint.add(s);
+	}
+	public void removeShapeToPaint(ShapeStruct s)
+	{
+		shapes_to_paint.remove(s);
+	}
+	public void clearShapesToPaint()
+	{
+		shapes_to_paint.clear();
+	}
+	
+	@Override
+	public List<ShapeStruct> getShapesToPaint() {
+		return shapes_to_paint;
+	}
 
 
 	@Override
@@ -844,6 +865,10 @@ public class PAS_Scripting extends PasScriptingInterface
 		try {
 			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
 		} catch(Exception e) { }
+		for(int i=0; i < getShapesToPaint().size(); i++)
+		{
+			getShapesToPaint().get(i).draw(g, nav, true, true, false, null, true, true, 1, true);
+		}
 		if(p.get_mainmenu().get_selectmenu().get_bar().get_show_houses())
 			p.get_housecontroller().drawItems(g);
 		try {

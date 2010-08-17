@@ -59,11 +59,11 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		add(m_status_tabbed, m_gridconst);
 		
 		m_event = new CentricEventStatus();
-		m_status_tabbed.addTab("Event Name", m_event);
+		m_status_tabbed.addTab(PAS.l("projectdlg_projectname"), m_event);
 		
 		
 		m_messages = new JPanel();
-		m_status_tabbed.addTab("Messages", m_messages);
+		m_status_tabbed.addTab(PAS.l("main_sending_lba_heading_messages"), m_messages);
 		
 		/*
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -158,12 +158,12 @@ class CentricMessagesStatus extends DefaultPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private StdTextLabel m_lbl_message = new StdTextLabel(PAS.l("main_sending_lba_message"));
-	private StdTextArea m_txt_message = new StdTextArea("messidj");
+	private StdTextArea m_txt_message = new StdTextArea(PAS.l("common_message_content"));
 	private JTabbedPane m_tabbed_operators = new JTabbedPane();
-	private JButton m_btn_kill = new JButton("Kill");
-	private JButton m_btn_update = new JButton("Update");
-	private JButton m_btn_resend = new JButton("Resend");
-	private JButton m_btn_send_to_address_book = new JButton("Send to Address book");
+	private JButton m_btn_kill = new JButton(PAS.l("common_kill_sending"));
+	private JButton m_btn_update = new JButton(PAS.l("common_update"));
+	private JButton m_btn_resend = new JButton(PAS.l("main_status_resend"));
+	private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
 	
 	public CentricMessagesStatus() { // Sende med status ting
 		
@@ -230,8 +230,8 @@ class CentricOperatorStatus extends DefaultPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(PAS.l("common_completed"));
-	private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("total"));
-	private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("percent"));
+	private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("common_total"));
+	private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("common_percent"));
 	private StdTextLabel m_lbl_completed = new StdTextLabel("");
 	private StdTextLabel m_lbl_total = new StdTextLabel("");
 	private StdTextLabel m_lbl_percent = new StdTextLabel("");

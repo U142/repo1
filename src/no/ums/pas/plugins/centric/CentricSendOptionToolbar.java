@@ -277,7 +277,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		*/
 		
 		//Preview ting
-		m_lbl_preview = new StdTextLabel("Preview:",new Dimension(150,20));
+		m_lbl_preview = new StdTextLabel(PAS.l("common_preview"),new Dimension(150,20));
 		m_txt_preview = new JTextArea("",10,10);
 		m_txt_preview.setWrapStyleWord(true);
 		m_txt_preview.setLineWrap(true);

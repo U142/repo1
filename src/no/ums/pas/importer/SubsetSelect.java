@@ -73,6 +73,7 @@ public class SubsetSelect extends JDialog  {
 		p.setLocation(p.x, p.y+PAS.get_pas().getHeight()/4);
 		setLocation(p);
 		setVisible(true);
+		
 	}
 	
 	protected void doResize()
@@ -137,6 +138,7 @@ public class SubsetSelect extends JDialog  {
 				{
 					Object [] data = { m_shapes[i], m_shapes[i].shapeName };
 					this.insert_row(data, -1);
+					//PAS.pasplugin.addShapeToPaint(m_shapes[i]);
 				}
 			}
 		}

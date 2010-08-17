@@ -319,7 +319,7 @@ public class ImportPolygon implements ActionListener {
 					return;
 				}
 
-				String [] sz_columns = { "ID", "Name" };
+				String [] sz_columns = { PAS.l("common_id"), PAS.l("common_name") };
 				int [] n_width = { 50, 250 };
 				boolean [] b_edit = { false, false };
 				Dimension d = new Dimension(400, 500);

@@ -43,10 +43,10 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	
 	private JTabbedPane m_tabbed_operators = new JTabbedPane();
 	public JTabbedPane get_tpane() { return m_tabbed_operators; }
-	private JButton m_btn_kill = new JButton("Kill");
+	private JButton m_btn_kill = new JButton(PAS.l("common_kill_sending"));
 	private JButton m_btn_new_message = new JButton(PAS.l("main_tas_panel_new_message"));
-	private JButton m_btn_resend = new JButton("Resend");
-	private JButton m_btn_send_to_address_book = new JButton("Send to Address book");
+	private JButton m_btn_resend = new JButton(PAS.l("main_status_resend"));
+	private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
 	private CentricMessages m_parent;
 	public CentricMessages get_parent() { return m_parent; }
 	
