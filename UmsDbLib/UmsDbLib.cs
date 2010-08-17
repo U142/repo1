@@ -367,6 +367,113 @@ namespace com.ums.UmsDbLib
                     news.l_errorcode = rs.GetInt32(11);
                     news.l_userpk = rs.GetInt64(12);
                     news.l_timestamp_db = rs.GetInt64(13);
+                    news.sz_operatorname = rs.GetString(14);
+                    list.newslist.Add(news);
+                }
+                rs.Close();
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public UBBNEWS UpdateSystemMessages(UBBNEWS message)
+        {
+            message.l_timestamp_db = getDbClock();
+            if (message.l_incident_end > message.l_timestamp_db)
+                message.f_active = 1;
+            String sql = String.Format("sp_store_system_message {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},'{11}'",
+                                        message.l_newspk, message.l_timestamp_db, message.l_type, message.l_incident_start, 
+                                        message.l_incident_end, message.f_active, message.l_deptpk, message.l_severity, 
+                                        message.l_operator, message.l_errorcode, message.l_userpk, message.newstext.sz_news);
+            try
+            {
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    message.l_newspk = (long)rs.GetDecimal(0);
+                }
+                rs.Close();
+                return message;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public UBBNEWSLIST getAllSystemMessages()
+        {
+            UBBNEWSLIST list = new UBBNEWSLIST();
+            list.l_timestamp_db = getDbClock();
+            String sql = "sp_get_active_sysmessages";
+
+            try
+            {
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    UBBNEWS news = new UBBNEWS();
+                    news.l_newspk = rs.GetInt64(0);
+                    news.l_created = rs.GetInt64(1);
+                    news.l_validms = rs.GetInt32(2);
+                    news.newstext = new UBBNEWSTEXT();
+                    //news.newstext.l_langpk = rs.GetInt64(3);
+                    news.newstext.sz_news = rs.GetString(3);
+                    news.l_type = rs.GetInt64(4);
+                    news.l_incident_start = rs.GetInt64(5);
+                    news.l_incident_end = rs.GetInt64(6);
+                    news.f_active = rs.GetInt32(7);
+                    news.l_deptpk = rs.GetInt32(8);
+                    news.l_severity = rs.GetInt32(9);
+                    news.l_operator = rs.GetInt32(10);
+                    news.l_errorcode = rs.GetInt32(11);
+                    news.l_userpk = rs.GetInt64(12);
+                    news.l_timestamp_db = rs.GetInt64(13);
+                    news.sz_operatorname = rs.GetString(14);
+                    list.newslist.Add(news);
+                }
+                rs.Close();
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        //sp_get_sysmessages_monthly
+        public UBBNEWSLIST getSystemMessages_monthly(ref ULOGONINFO l, long l_period)
+        {           
+            UBBNEWSLIST list = new UBBNEWSLIST();
+
+            String sql = String.Format("sp_get_sysmessages_monthly {0}, {1}",
+                                        l_period, l_period + 100000000); // one month, works even for december
+            try
+            {
+                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    UBBNEWS news = new UBBNEWS();
+                    news.l_newspk = rs.GetInt64(0);
+                    news.l_created = rs.GetInt64(1);
+                    news.l_validms = rs.GetInt32(2);
+                    news.newstext = new UBBNEWSTEXT();
+                    //news.newstext.l_langpk = rs.GetInt64(3);
+                    news.newstext.sz_news = rs.GetString(3);
+                    news.l_type = rs.GetInt64(4);
+                    news.l_incident_start = rs.GetInt64(5);
+                    news.l_incident_end = rs.GetInt64(6);
+                    news.f_active = rs.GetInt32(7);
+                    news.l_deptpk = rs.GetInt32(8);
+                    news.l_severity = rs.GetInt32(9);
+                    news.l_operator = rs.GetInt32(10);
+                    news.l_errorcode = rs.GetInt32(11);
+                    news.l_userpk = rs.GetInt64(12);
+                    news.l_timestamp_db = rs.GetInt64(13);
+                    news.sz_operatorname = rs.GetString(14);
                     list.newslist.Add(news);
                 }
                 rs.Close();

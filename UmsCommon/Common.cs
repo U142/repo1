@@ -671,6 +671,7 @@ namespace com.ums.UmsCommon
         public long l_timestamp_db;
         public String sz_userid;
         public UBBNEWSTEXT newstext;
+        public String sz_operatorname;
     }
     public class UBBNEWSTEXT
     {
@@ -678,6 +679,40 @@ namespace com.ums.UmsCommon
         public String sz_news;
     }
 
+    public class UBBUSER
+    {
+        public long l_userpk;
+        public String sz_userid;
+        public String sz_password;
+        public String sz_name;
+        public String sz_surname;
+        public int l_comppk;
+        public int l_deptpk;
+        public long l_profilepk;
+        public String sz_bdate;
+        public int f_disabled;
+        public int l_logontries;
+        public int f_nopasswd_change;
+        public int l_ivrlogon;
+        public int l_language;
+        public String sz_adrlistserie;
+        public int l_adrlist_sort;
+        public int l_adrlist_search;
+        public String sz_statusserie;
+        public int l_status_sort;
+        public int l_status_search;
+        public int f_keepalive;
+        public int l_recprpage;
+        public int l_audiosetup;
+        public int l_status_owned_groups;
+        public String sz_email;
+        public String sz_paspassword;
+        public int l_allow_nondept_resend;
+        public String sz_timezone;
+        public int f_blocklist_default;
+        public int f_session_expires_sec;
+        public String sz_hash_paspwd;
+    }
 
     public class BBPROJECT
     {

@@ -367,7 +367,7 @@ namespace com.ums.PAS.Database
                     cbs = new CB_STATUS();
                     cbs.f_simulation = rs.GetInt16(2);
                     cbs.histcc = null;
-                    cbs.shape = null; // UShape
+                    //cbs.shape = UShape.ParseFromXml(rs.GetString()); // UShape
                     cbs.sz_areaid = rs.GetString(10);
                     cbs.sz_jobid = rs.GetString(11);
                     cbs.sz_operator = rs.GetString(1); // "KPN";
@@ -383,8 +383,9 @@ namespace com.ums.PAS.Database
                     cbs.languages = null; // List<LBALanguage>
                     cbs.l_started_ts = rs.IsDBNull(19) ? (long)0 : (long)rs.GetDecimal(19);
                     cbs.l_created_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(20);
+                    cbs.l_last_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(23);
                     cbs.sz_sendingname = rs.GetString(13);
-                    cbs.l_channel = rs.GetInt32(22);
+                    cbs.l_channel = rs.GetInt16(22);
                     //OdbcDataReader mdv = ExecReader(String.Format("sp_cb_get_mdvsendinginfo {0}", l_refno), UmsDb.UREADER_AUTOCLOSE);
                     MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
                     sendinginfo.sz_sendingname = rs.GetString(13);
@@ -536,6 +537,59 @@ namespace com.ums.PAS.Database
             }
             return ret;
         }
+
+        public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetMonthlyMessageReport(long month)
+        {
+            List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> ret = new List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE>();
+            try
+            {
+                OdbcDataReader rs = ExecReader(String.Format("sp_cb_get_messages_month {0}, {1}", month, month + 100000000), UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
+                    item.l_refno = (long)rs.GetDecimal(0);
+                    item.sz_operatorname = rs.GetString(1);
+                    item.l_simulate = rs.GetInt32(2);
+                    item.l_type = rs.GetInt16(3);
+                    item.l_response = rs.GetInt32(4);
+                    item.l_retries = rs.GetInt32(5);
+                    item.l_status = rs.GetInt32(6);
+                    item.l_last_ts = (long)rs.GetDecimal(7);
+                    item.sz_text = rs.GetString(8);
+                    item.l_addressedcells = rs.GetInt32(9);
+                    ret.Add(item);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return ret;
+        }
+
+        public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetOperatorPerformanceThisMonth(long month)
+        {
+            List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> ret = new List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE>();
+            try
+            {
+                OdbcDataReader rs = ExecReader(String.Format("sp_cb_get_operator_performance_month {0}, {1}", month, month + 100000000), UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
+                    item.l_operator = (int)rs.GetInt32(0);
+                    item.sz_operatorname = rs.GetString(1);
+                    item.l_performance = rs.GetFloat(2);
+                    ret.Add(item);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return ret;
+        }
     }
 
 
@@ -611,6 +665,24 @@ namespace com.ums.PAS.Database
             sz_postarea = str.Substring(s);*/
         }
 
+    }
+
+    public class CB_MESSAGE_MONTHLY_REPORT_RESPONSE
+    {
+        public String sz_usertype;
+        public String sz_userid;
+        public long l_refno;
+        public int l_operator;
+        public String sz_operatorname;
+        public int l_simulate;
+        public int l_type;
+        public int l_response;
+        public int l_retries;
+        public int l_status;
+        public long l_last_ts;
+        public String sz_text;
+        public int l_addressedcells;
+        public float l_performance;
     }
 
 }

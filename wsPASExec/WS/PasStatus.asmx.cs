@@ -105,6 +105,22 @@ namespace com.ums.ws.pas.status
 
         }
 
+        [WebMethod]
+        public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetAllMesagesThisMonth(ULOGONINFO logoninfo, long period)
+        {
+            UStatusItemsDb s = new UStatusItemsDb();
+            s.CheckLogon(ref logoninfo, true);
+            return s.GetMonthlyMessageReport(period);
+        }
+        
+        [WebMethod]
+        public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetOperatorPerformanceThisMonth(ULOGONINFO logoninfo, long period)
+        {
+            UStatusItemsDb s = new UStatusItemsDb();
+            s.CheckLogon(ref logoninfo, true);
+            return s.GetOperatorPerformanceThisMonth(period);
+        }
+
         /*[WebMethod]
         public String TestCoor()
         {

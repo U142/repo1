@@ -308,6 +308,7 @@ namespace com.ums.PAS.CB
         public UShape shape;
         public long l_created_ts;
         public long l_started_ts;
+        public long l_last_ts;
         public int l_channel;
     }
 }

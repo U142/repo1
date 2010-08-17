@@ -77,6 +77,12 @@ namespace com.ums.ws.parm
                 return false;
             }
         }
+        
+        public class CB_USER_REGION_RESPONSE
+        {
+            public List<PAOBJECT> regionlist;
+            public UBBUSER user;
+        }
 
 
         [WebMethod]
@@ -1554,7 +1560,168 @@ namespace com.ums.ws.parm
             return counter;
         }
         [WebMethod]
-        public List<PAOBJECT> GetRegions()
+        public List<CB_USER_REGION_RESPONSE> GetUserRegion(ULOGONINFO logoninfo, List<UBBUSER> user)
+        {
+            // Check logon
+            List<CB_USER_REGION_RESPONSE> response = new List<CB_USER_REGION_RESPONSE>();
+            String sz_sql;
+            UBBUSER tempuser;
+            try
+            {
+                for(int i=0;i<user.Count;++i) {
+                    List<PAOBJECT> olist = new List<PAOBJECT>();
+                    tempuser = new UBBUSER();
+                    sz_sql = String.Format("SELECT u.l_userpk, u.sz_userid, u.sz_name, u.sz_surname, u.l_comppk, u.l_deptpk, o.*, SH.* " +
+                                             "FROM BBUSER u " +
+                                             "LEFT JOIN PAOBJECT o ON u.l_deptpk=u.l_deptpk " +
+                                             "LEFT JOIN PASHAPE SH ON o.l_objectpk=SH.l_pk " +
+                                            "WHERE o.l_objectpk = SH.l_pk " +
+                                              "AND u.l_userpk = {0}", user[i].l_userpk);
+                    
+                    db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                    OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                    
+                    while (rs.Read())
+                    {
+                        tempuser.l_userpk = (long)rs.GetDecimal(0);
+                        tempuser.sz_userid = rs.GetString(1);
+                        tempuser.sz_name = rs.GetString(2);
+                        if (rs.IsDBNull(3))
+                            tempuser.sz_surname = "";
+                        else
+                            tempuser.sz_surname = rs.GetString(3);
+                        tempuser.l_comppk = rs.GetInt32(4);
+                        tempuser.l_deptpk = rs.GetInt32(5);
+                        PAOBJECT obj = new PAOBJECT();
+                        obj.l_deptpk = rs.GetInt32(5);
+                        obj.l_objectpk = (long)rs.GetDecimal(6);
+                        obj.sz_name = rs.GetString(9);
+                        olist.Add(obj);
+                    }
+
+                    CB_USER_REGION_RESPONSE tmp = new CB_USER_REGION_RESPONSE();
+                    tmp.user = tempuser;
+                    tmp.regionlist = olist;
+                    response.Add(tmp);
+                }
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        [WebMethod]
+        public List<UDEPARTMENT> GetRestrictionAreas(ULOGONINFO logoninfo)
+        {
+            List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
+            string sz_sql = "SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml " +
+                              "FROM v_BBDEPARTMENT DEP " +
+                              "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
+                             "WHERE SH.l_type = 16";
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    UDEPARTMENT obj = new UDEPARTMENT();
+                    obj.l_deptpk = rs.GetInt32(0);
+                    obj.l_deptpri = rs.GetInt16(1);
+                    obj.sz_deptid = rs.GetString(2);
+                    obj.f_map = rs.GetInt16(3);
+                    UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
+                    obj.restrictionShapes.Add(shape);
+                    dlist.Add(obj);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { db.close(); }
+            
+            return dlist;
+        }
+
+        [WebMethod]
+        public UBBUSER StoreUser(ULOGONINFO logoninfo, UBBUSER user, int[] deptk)
+        {
+            string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper());
+                             
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+
+                if (rs.HasRows)
+                    throw new SoapException("User ID already exists", XmlQualifiedName.Empty);
+
+                rs.Close();
+
+                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}",
+                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk);
+
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    user.l_userpk = (long)rs.GetDecimal(0);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { db.close(); }
+
+            return user;
+        }
+
+        [WebMethod]
+        public List<UBBUSER> GetUsers(ULOGONINFO logoninfo)
+        {
+            List<UBBUSER> ulist = new List<UBBUSER>();
+
+            String sz_sql = "SELECT * FROM BBUSER";
+
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    UBBUSER obj = new UBBUSER();
+                    obj.l_userpk = (long)rs.GetDecimal(0);
+                    obj.sz_userid = rs.GetString(1);
+                    obj.sz_name = rs.GetString(3);
+                    if (rs.IsDBNull(4))
+                        obj.sz_surname = "";
+                    else
+                        obj.sz_surname = rs.GetString(4);
+                    obj.l_comppk = rs.GetInt32(5);
+                    obj.l_deptpk = rs.GetInt32(6);
+                    obj.l_profilepk = rs.GetInt32(7);
+                    ulist.Add(obj);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { db.close(); }
+
+            return ulist;
+        }
+        [WebMethod]
+        public List<PAOBJECT> GetRegions(ULOGONINFO logoninfo)
         {
             List<PAOBJECT> objList = new List<PAOBJECT>();
 
@@ -1563,6 +1730,7 @@ namespace com.ums.ws.parm
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_objectpk, l_deptpk, l_importpk, sz_name, sz_description;
                 String l_categorypk, l_parent, sz_address, sz_postno, sz_place;
@@ -1628,7 +1796,38 @@ namespace com.ums.ws.parm
 
             return objList;
         }
+        [WebMethod]
+        public List<UBBUSER> GetAccessPermissions(long objectpk)
+        {
+            List<UBBUSER> list = new List<UBBUSER>();
+            String sz_sql = String.Format("SELECT u.sz_userid, o.sz_name " +
+                                            "FROM BBUSER u, PAOBJECT o " +
+                                            "LEFT JOIN PASHAPE SH ON o.l_objectpk=SH.l_pk " +
+                                           "WHERE (u.l_userpk = o.l_userpk " +
+                                              "OR u.l_deptpk = o.l_deptpk) " +
+                                             "AND (SH.l_type={0} OR SH.l_type={1}) " +
+                                             "AND o.l_objectpk = {2} ", PASHAPETYPES.PADEPARTMENTRESTRICTION.GetHashCode(), PASHAPETYPES.PAUSERRESTRICTION.GetHashCode(), objectpk);
+            try
+            {
+                
+                UBBUSER user;
 
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+
+                while (rs.Read())
+                {
+                    user = new UBBUSER();
+                    user.sz_userid = rs.GetString(0);
+                    list.Add(user);
+                }
+
+                return list;
+                
+            }
+            catch (Exception e) { return list; }
+
+        }
         private int GetAlerts()
         {
             DateTime start = DateTime.Now;

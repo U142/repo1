@@ -477,7 +477,7 @@ namespace com.ums.PAS.Database
                         String xml = rs["sz_restriction_shape"].ToString();
                         UShape restrictionshape = UShape.ParseFromXml(xml);
                         dept.AddRestrictionShape(ref restrictionshape);
-
+                        
                         if (l_dept_houseeditor <= 0)
                             dept.l_houseeditor = 0;
                         if (l_dept_pas_send <= 0)

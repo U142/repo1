@@ -104,6 +104,56 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public USYSTEMMESSAGES GetAllSystemMessages(ULOGONINFO l)
+        {
+            try
+            {
+                ULogon logon = new ULogon();
+                logon.CheckLogon(ref l, false);
+                USYSTEMMESSAGES ret = new USYSTEMMESSAGES();
+                ret.news = logon.getAllSystemMessages();
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
+        public UBBNEWS UpdateSystemMessage(ULOGONINFO l, UBBNEWS message)
+        {
+            try
+            {
+                ULogon logon = new ULogon();
+                logon.CheckLogon(ref l, false);
+
+                return logon.UpdateSystemMessages(message);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
+        public USYSTEMMESSAGES GetSystemMessagesMonth(ULOGONINFO l, long period)
+        {
+            try
+            {
+                ULogon logon = new ULogon();
+                logon.CheckLogon(ref l, false);
+                USYSTEMMESSAGES ret = new USYSTEMMESSAGES();
+                ret.news = logon.getSystemMessages_monthly(ref l, period);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
         public bool SavePasUiSettings(ULOGONINFO l, UPASUISETTINGS ui)
         {
             try
