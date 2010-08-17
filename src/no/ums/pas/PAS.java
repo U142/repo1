@@ -2,6 +2,7 @@ package no.ums.pas;
 
 import java.awt.*;
 
+import javax.print.attribute.standard.JobMessageFromOperator;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.FontUIResource;
@@ -1004,6 +1005,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//Kun default logon settings skal lastes her. resten kommer fra Logon WS
 		try {
 			m_settings = xmlreader.loadLogonSettings(m_settings);
+			variables.SETTINGS = m_settings;
 		} catch(Exception e) {
 			Error.getError().addError(PAS.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
 		}
@@ -1821,32 +1823,38 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public int invoke_project(boolean bNewSending) {
 		System.out.println(PAS.l("project_ask_new_project"));
-		if(this.m_current_project!=null) {
-			Object[] options;
-			if(get_userinfo().get_current_department().get_pas_rights() == 4)
-				options = new Object[] { PAS.l("common_yes") };
-			else
-				options = new Object[] { PAS.l("common_discard_sendings"), PAS.l("common_keep_sendings") };
-
-			Object input = JOptionPane.showInputDialog(PAS.get_pas(), PAS.l("project_ask_close_current_project") +" <" + m_current_project.get_projectname() + ">", PAS.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]); 
-			if(input != null) {
-				if(input.equals(PAS.l("common_keep_sendings"))) {
-					m_keep_sendings = true;
-					System.out.println("m_keep_sendings=" + m_keep_sendings);
+		
+		int answer = PAS.pasplugin.onInvokeProject();
+		if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
+			return ProjectDlg.ACT_PROJECTDLG_CANCEL;
+		else {
+			if(this.m_current_project!=null) {
+				Object[] options;
+				if(get_userinfo().get_current_department().get_pas_rights() == 4)
+					options = new Object[] { PAS.l("common_yes") };
+				else
+					options = new Object[] { PAS.l("common_discard_sendings"), PAS.l("common_keep_sendings") };
+	
+				Object input = JOptionPane.showInputDialog(PAS.get_pas(), PAS.l("project_ask_close_current_project") +" <" + m_current_project.get_projectname() + ">", PAS.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]); 
+				if(input != null) {
+					if(input.equals(PAS.l("common_keep_sendings"))) {
+						m_keep_sendings = true;
+						System.out.println("m_keep_sendings=" + m_keep_sendings);
+					}
+					else
+						m_keep_sendings = false;
 				}
 				else
-					m_keep_sendings = false;
+					return ProjectDlg.ACT_PROJECTDLG_CANCEL;
 			}
-			else
-				return ProjectDlg.ACT_PROJECTDLG_CANCEL;
-		}
-		
-		if(get_eastcontent().get_taspanel() != null && this.m_current_project != null) {
-			PAS.get_pas().close_active_project(true, true);
-			while(get_current_project() != null)
-				;
-		}
+			
+			if(get_eastcontent().get_taspanel() != null && this.m_current_project != null) {
+				PAS.get_pas().close_active_project(true, true);
+				while(get_current_project() != null)
+					;
+			}
 				
+		}
 		ProjectDlg dlg = new ProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
 		dlg.setVisible(true);
 		return dlg.getSelectedAction();

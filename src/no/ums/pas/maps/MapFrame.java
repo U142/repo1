@@ -931,7 +931,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 				m_img_loading = m_maploader.load_map(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), get_mapsite(), get_mapportrayal());
 				break;
 			case WMS:
-				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), PAS.get_pas().get_settings().getWmsSite());
+				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), variables.SETTINGS.getWmsSite());
 			}
 			
 			//m_img_loading = wmsimg;

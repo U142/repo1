@@ -31,6 +31,7 @@ import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSGetSystemMessages;
@@ -926,8 +927,12 @@ public class PAS_Scripting extends PasScriptingInterface
 	}
 
 	@Override
-	public boolean onOpenProject() {
+	public boolean onOpenProject(Project project) {
 		return false;
+	}
+
+	public int onInvokeProject() {
+		return -1;
 	}	
 	
 	

@@ -179,7 +179,8 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			}
 		}
 		protected void openProject(Project proj) {
-			PAS.get_pas().actionPerformed(new ActionEvent(proj, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
+			if(!PAS.pasplugin.onOpenProject(proj))
+				PAS.get_pas().actionPerformed(new ActionEvent(proj, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
 			close_dialog();			
 		}
 		public void init_controls() {

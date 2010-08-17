@@ -101,9 +101,9 @@ public class WSCentricStatus extends WSThread {
 				if(!found) {
 					CentricMessageStatus tmp = new CentricMessageStatus(status_panel.get_messages(), cbpres.getStatuslist().getCBSTATUS().get(j).getLRefno());
 					
-					if(cbs.getLStatus() >= 540)  // Active
+					if(cbs.getLStatus() < 1000)  // Active
 						tp.add("A " + cbs.getSzSendingname(), tmp);
-					if(cbs.getLStatus() == 1000) // Finished
+					if(cbs.getLStatus() >= 1000) // Finished
 						tp.add("F " + cbs.getSzSendingname(), tmp);
 					
 					tp.setSelectedComponent(tmp);
@@ -202,7 +202,10 @@ public class WSCentricStatus extends WSThread {
 		cos.start = cbs.getLCreatedTs();
 		cos.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(cbs.getLCreatedTs())));
 		// Duration
-		cos.timestamp = cbpres.getLDbTimestamp();
+		if(cbs.getLStatus()>=1000) // Finished
+			cos.timestamp = cbs.getLLastTs();
+		else
+			cos.timestamp = cbpres.getLDbTimestamp();
 		cos.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),cbpres.getLDbTimestamp())) + " " + PAS.l("common_minutes_maybe"));
 	}
 

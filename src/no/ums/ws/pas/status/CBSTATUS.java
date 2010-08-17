@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="shape" type="{http://ums.no/ws/pas/status}UShape" minOccurs="0"/>
  *         &lt;element name="l_created_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_started_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_last_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_channel" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/extension>
@@ -38,6 +39,7 @@ import javax.xml.bind.annotation.XmlType;
     "shape",
     "lCreatedTs",
     "lStartedTs",
+    "lLastTs",
     "lChannel"
 })
 public class CBSTATUS
@@ -52,6 +54,8 @@ public class CBSTATUS
     protected long lCreatedTs;
     @XmlElement(name = "l_started_ts")
     protected long lStartedTs;
+    @XmlElement(name = "l_last_ts")
+    protected long lLastTs;
     @XmlElement(name = "l_channel")
     protected int lChannel;
 
@@ -157,6 +161,22 @@ public class CBSTATUS
      */
     public void setLStartedTs(long value) {
         this.lStartedTs = value;
+    }
+
+    /**
+     * Gets the value of the lLastTs property.
+     * 
+     */
+    public long getLLastTs() {
+        return lLastTs;
+    }
+
+    /**
+     * Sets the value of the lLastTs property.
+     * 
+     */
+    public void setLLastTs(long value) {
+        this.lLastTs = value;
     }
 
     /**

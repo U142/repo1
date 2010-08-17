@@ -2,6 +2,8 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
+import no.ums.pas.plugins.centric.status.CentricStatusController;
+
 import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -38,6 +40,7 @@ import no.ums.pas.core.mainui.GeneralPanel;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
@@ -45,6 +48,7 @@ import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
 import no.ums.pas.maps.defines.*;
+import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.pas.ArrayOfUBBNEWS;
 import no.ums.ws.pas.UBBNEWS;
 import no.ums.ws.pas.USYSTEMMESSAGES;
@@ -1059,7 +1063,10 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
 		boolean ret = true;
 		//ret = super.onAddInfoTab(tab, panel);
-		tab.addTab(PAS.l("mainmenu_file_newsending"), null, new CentricSendOptionToolbar(), PAS.l("main_parmtab_popup_generate_sending"));
+		CentricSendOptionToolbar send = new CentricSendOptionToolbar();
+		CentricVariables.centric_send = send;
+		//((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(send);
+		tab.addTab(PAS.l("mainmenu_file_newsending"), null, send, PAS.l("main_parmtab_popup_generate_sending"));
 		return ret;
 	}
 
@@ -1174,16 +1181,68 @@ public class plugin_Centric extends PAS_Scripting
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(null);
 			
-			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).setProjectpk(0);
+			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0);
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
+			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
+			
 			return true;
 		}catch(Exception e) { return false; }
 	}
 
 	@Override
-	public boolean onOpenProject() {
-		return super.onOpenProject();
+	public boolean onOpenProject(Project project) {
+		try {
+			// Does the same thing as after sending a message
+			CentricSendOptionToolbar csend = CentricVariables.centric_send;
+			csend.set_projectpk(Long.parseLong(project.get_projectpk()));
+			
+			CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
+			
+			CBSENDINGRESPONSE res = new CBSENDINGRESPONSE(); // Just to use the same
+			res.setLProjectpk(Long.parseLong(project.get_projectpk()));
+			
+			if(m_centricstatuscontroller == null)
+				m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
+			else
+				m_centricstatuscontroller.set_cbsendingresponse(res);
+			
+			return true;
+			
+		} catch(Exception e) { return false; }
 	}
-
+	
+	@Override
+	public int onInvokeProject() {
+		try {
+			int answer = 0;
+			if(((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSTATUS_) != null) {
+				// Inform and close open status
+				answer = confirmClosing();
+				if(answer == JOptionPane.YES_OPTION) 
+					if(onCloseProject())
+						return answer;
+			}
+			return answer;
+		} catch(Exception e) { return 0; }
+	}
+	
+	private int confirmClosing() {
+		JFrame frame = get_frame();
+		int answer;
+		answer = JOptionPane.showConfirmDialog(frame, PAS.l("project_cb_ask_new_close_event"), null, JOptionPane.YES_NO_OPTION);
+		frame.dispose();
+		return answer;
+	}
+	
+	private JFrame get_frame() {
+		JFrame frame = new JFrame();
+		frame.setUndecorated(true);
+		Point p = no.ums.pas.ums.tools.Utils.get_dlg_location_centered(0,0);
+		p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
+		frame.setLocation(p);
+		frame.setVisible(true);
+		frame.setAlwaysOnTop(true);
+		return frame;
+	}
 
 }

@@ -62,7 +62,7 @@ public class MapFrameAdmin extends MapFrame {
 		get_drawthread().set_need_imageupdate();
 		//m_img_onscreen = null;
 		try {
-			switch(MAPSERVER.DEFAULT)
+			switch(variables.SETTINGS.getMapServer())
 			{
 			case DEFAULT:
 				m_img_loading = m_maploader.load_map(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), get_mapsite(), get_mapportrayal());

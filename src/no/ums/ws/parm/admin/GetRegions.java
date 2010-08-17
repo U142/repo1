@@ -3,6 +3,7 @@ package no.ums.ws.parm.admin;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -16,6 +17,9 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="logoninfo" type="{http://ums.no/ws/parm/admin/}ULOGONINFO"/>
+ *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -24,9 +28,37 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
+@XmlType(name = "", propOrder = {
+    "logoninfo"
+})
 @XmlRootElement(name = "GetRegions")
 public class GetRegions {
 
+    @XmlElement(required = true)
+    protected ULOGONINFO logoninfo;
+
+    /**
+     * Gets the value of the logoninfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ULOGONINFO }
+     *     
+     */
+    public ULOGONINFO getLogoninfo() {
+        return logoninfo;
+    }
+
+    /**
+     * Sets the value of the logoninfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ULOGONINFO }
+     *     
+     */
+    public void setLogoninfo(ULOGONINFO value) {
+        this.logoninfo = value;
+    }
 
 }

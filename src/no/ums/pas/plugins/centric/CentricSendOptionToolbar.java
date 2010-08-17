@@ -115,6 +115,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private JButton m_btn_save_message;
 	private JButton m_btn_reset;
 	
+	public JButton get_reset() { return m_btn_reset; }
+	
 	private JTextArea m_txt_warning;
 	private JScrollPane m_txt_warningscroll;
 	
@@ -132,7 +134,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private long m_projectpk;
 	
-	public void setProjectpk(long projectpk) { m_projectpk = projectpk; }
+	public void set_projectpk(long projectpk) { 
+		if(projectpk == 0)
+			m_txt_event_name.setEnabled(true);
+		else
+			m_txt_event_name.setEnabled(false);
+		m_projectpk = projectpk;
+	}
+	
+	public CentricStatusController get_statuscontroller() { return m_centricstatuscontroller; }
 	
 	public CentricSendOptionToolbar() {
 		//super();
@@ -683,11 +693,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	public void onSendFinished(ActionEvent e) {
 		// Start update timer
-		m_projectpk = ((CBSENDINGRESPONSE)e.getSource()).getLProjectpk();
+		set_projectpk(((CBSENDINGRESPONSE)e.getSource()).getLProjectpk());
 		if(m_centricstatuscontroller == null)
 			m_centricstatuscontroller = new CentricStatusController(e, this);
-		else
+		else {
 			m_centricstatuscontroller.set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
+			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {

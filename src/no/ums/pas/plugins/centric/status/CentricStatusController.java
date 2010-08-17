@@ -29,7 +29,23 @@ public class CentricStatusController extends StatusController {
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(centricsend);
 		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 		// update status ting med CBSendingresponse?
+		runTimer();
+
+	}
+	
+	public CentricStatusController(long projectpk, CentricSendOptionToolbar centricsend) {
+		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
+		res.setLProjectpk(projectpk);
+		set_cbsendingresponse(res);
+		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
+		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(centricsend);
+		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 		
+		m_projectpk = projectpk;
+		runTimer();
+	}
+	
+	private void runTimer() {
 		int delay = 5000; //milliseconds
 		ActionListener taskPerformer = new ActionListener() {
 			@Override

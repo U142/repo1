@@ -37,6 +37,7 @@ import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendOptionToolbar;
@@ -472,10 +473,11 @@ public abstract class PasScriptingInterface
 	
 	public abstract boolean onOpenAddressBook();
 	
-	public abstract boolean onOpenProject();
+	public abstract boolean onOpenProject(Project project);
 	
 	public abstract boolean onCloseProject();
-	
+
+	public abstract int onInvokeProject();
 	
 }
 

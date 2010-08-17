@@ -587,7 +587,7 @@ public class MapLoader {
 		//m_pas.get_drawthread().add_image(m_img_load);
 		if(m_img_load==null)
 		{
-			if(PAS.get_pas() != null)
+			if(PAS.get_pas() == null)
 				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			else
 				m_navigation.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);

@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import no.ums.ws.parm.admin.ArrayOfPAOBJECT;
 import no.ums.ws.parm.admin.PAOBJECT;
 import no.ums.ws.parm.admin.ParmAdmin;
+import no.ums.ws.parm.admin.ULOGONINFO;
 import no.ums.ws.parm.admin.UPolypoint;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UDEPARTMENT;
@@ -48,6 +49,7 @@ import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.SettingsGUI;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.UserInfo.NSLookup;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.StatusPanel;
@@ -96,7 +98,8 @@ public class MapApplet extends JApplet implements ActionListener {
 	public String coors;
 	public SendPropertiesPolygon sp;
 	public UserInfo m_info;
-	
+	private ULOGONINFO logoninfo;
+	private LogonInfo info;
 	public void init() {
 		try {
 			System.setSecurityManager(null);
@@ -108,9 +111,9 @@ public class MapApplet extends JApplet implements ActionListener {
 		resize(800,600);
 		vars.init("https://secure.ums2.no/centricws/WS/");
 		PAS.setLocale("en","GB");
-		LogonInfo info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
+		info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
 		WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
-				
+		
 		try {
 			PAS.pasplugin = new PAS_Scripting();
 		} catch(Exception e) {
@@ -121,10 +124,18 @@ public class MapApplet extends JApplet implements ActionListener {
 		//MapPanel mp = new MapPanel("http://vb4utv");		
 		m_drawthread = new MAPDraw(this,Thread.NORM_PRIORITY,640,480);
 		variables.DRAW = m_drawthread;
+		Settings m_settings = new Settings();
+		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road")
+		m_settings.setMapServer(MAPSERVER.WMS);
 		m_mappane = new MapFrameAdmin(640, 480, m_drawthread, m_navigation, new HTTPReq("http://vb4utv"), true);
-		m_mappane.initialize();
+		//http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road
+		//m_mappane.initialize();
+		//m_mappane.SetIsLoading(true, "map");
 		variables.MAPPANE = m_mappane;
+		m_drawthread.setMapImage(m_mappane.get_image());
 		m_drawthread.set_mappane(m_mappane);
+		m_mappane.initialize();
+		
 		SendController m_sendcontroller = new SendController();
 		m_drawthread.set_sendcontroller(m_sendcontroller);
 		variables.SENDCONTROLLER = m_sendcontroller;
@@ -192,8 +203,8 @@ public class MapApplet extends JApplet implements ActionListener {
 		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
 		m_mappane.addActionListener(this);
 				
-		
-		m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+		m_mappane.SetIsLoading(false, "map");
+		//m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
 		//m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 		//m_mappane.set_mode(MapFrame.MAP_MODE_PAN);
 		//m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
@@ -249,6 +260,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 			boolean b_results_ready;
 			UPASLOGON l = (UPASLOGON)e.getSource();
+			
 			if(!l.isFGranted())
 			{
 				//m_info = new UserInfo("0", 0, l.getSzUserid(),l.getSzCompid(),"", "");
@@ -273,8 +285,17 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 			//m_info.get_departments().ClearCombinedRestrictionShapelist();			
+			logoninfo = new ULOGONINFO();
+			logoninfo.setSzUserid(l.getSzUserid());
+			logoninfo.setSzCompid(l.getSzCompid());
+			logoninfo.setSzPassword(info.get_passwd());
+			logoninfo.setLComppk(l.getLComppk());
+			logoninfo.setLDeptpk(m_info.get_default_deptpk());
+			logoninfo.setLUserpk(l.getLUserpk());
+			logoninfo.setSessionid(l.getSessionid());
+			
 			ParmAdmin pa = new ParmAdmin();
-			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions().getPAOBJECT();
+			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions(logoninfo).getPAOBJECT();
 			for(int i = 0; i<obj.size();++i){
 				PAOBJECT o = obj.get(i);
 				PolygonStruct ps = new PolygonStruct(m_navigation.getDimension());
@@ -733,6 +754,10 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		
 		return coors;
+	}
+	
+	public boolean logon(String userid, String company, String password) {
+		return true;
 	}
 }
  

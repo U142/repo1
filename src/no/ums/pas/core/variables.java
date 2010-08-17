@@ -2,6 +2,7 @@ package no.ums.pas.core;
 
 import no.ums.pas.Draw;
 import no.ums.pas.ParmController;
+import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
@@ -15,5 +16,6 @@ public class variables {
 	public static Draw DRAW = null;
 	public static Navigation NAVIGATION = null;
 	public static MapFrame MAPPANE = null;
+	public static Settings SETTINGS = null;
 	
 }

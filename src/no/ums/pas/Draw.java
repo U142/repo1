@@ -285,11 +285,15 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
 							g2d.drawString(PAS.l("maps_error_loading"), 20, 50);
-							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 14));
-							g2d.drawString(PAS.l("maps_error_send_from_parm"), 20, 100);
-							g2d.drawString(PAS.l("maps_error_alt_quicksend_from_parm"), 40, 150);
-							g2d.drawString(PAS.l("maps_error_alt_generate_sending_from_parm"), 40, 180);
-							g2d.drawString(PAS.l("maps_error_alt_gis_import"), 40, 210);
+							if(PAS.get_pas() != null) {
+								
+								g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 14));
+								g2d.drawString(PAS.l("maps_error_send_from_parm"), 20, 100);
+								g2d.drawString(PAS.l("maps_error_alt_quicksend_from_parm"), 40, 150);
+								g2d.drawString(PAS.l("maps_error_alt_generate_sending_from_parm"), 40, 180);
+								g2d.drawString(PAS.l("maps_error_alt_gis_import"), 40, 210);
+							}
+							
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 12));
 							//int sec = 10;
 							g2d.drawString(PAS.l("maps_error_auto_retry_in") + " " + get_mappane().getMapLoader().getSecondsToReload() + " " + PAS.l("common_seconds"), 20, 280);

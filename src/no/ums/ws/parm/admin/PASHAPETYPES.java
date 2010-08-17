@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="PAOBJECT"/>
  *     &lt;enumeration value="PAUSERRESTRICTION"/>
  *     &lt;enumeration value="PADEPARTMENTRESTRICTION"/>
+ *     &lt;enumeration value="PASENDING"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -31,7 +32,8 @@ public enum PASHAPETYPES {
     PAEVENT,
     PAOBJECT,
     PAUSERRESTRICTION,
-    PADEPARTMENTRESTRICTION;
+    PADEPARTMENTRESTRICTION,
+    PASENDING;
 
     public String value() {
         return name();
