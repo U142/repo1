@@ -675,12 +675,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		final int max = 92;
 		if(e.getSource() == m_txt_message || e.getSource() == m_txt_sender_name) {
 			if(m_txt_message.getText().length() > ((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
-				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\r\n" +
+				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
 					m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
 				m_txt_message.setText(m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length())))); // -2 because of " " and "/n"
 			}
 			else
-				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\r\n" + m_txt_message.getText());
+				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
 				
 			updateCharacters();
 		}
