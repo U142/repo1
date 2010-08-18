@@ -19,12 +19,11 @@ namespace pas_cb_server
 
         static void Main(string[] args)
         {
-            Trace.WriteLine(String.Format("Starting {0}\r\n", Assembly.GetAssembly(typeof(CBServer)).FullName));
-
-            try
+            // check for interactive (console) or service mode
+            if (Environment.UserInteractive)
             {
-                // check for interactive (console) or service mode
-                if (Environment.UserInteractive)
+                Trace.WriteLine(String.Format("Starting {0}\r\n", Assembly.GetAssembly(typeof(CBServer)).FullName));
+                try
                 {
                     // Add custom handler for ctrl+c
                     Console.CancelKeyPress += new ConsoleCancelEventHandler(exit);
@@ -41,21 +40,27 @@ namespace pas_cb_server
 
                     Console.CancelKeyPress -= new ConsoleCancelEventHandler(exit);
                 }
-                else
+                catch (Exception e)
                 {
-                    ServiceBase[] ServicesToRun;
-                    ServicesToRun = new ServiceBase[] 
+                    if (Environment.UserInteractive)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.Write("Press any key to continue . . . ");
+                        Console.ReadKey();
+                    }
+
+                    CBServer.running = false;
+                    return;
+                }
+            }
+            else
+            {
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[] 
 		            { 
 			            new CBService() 
 		            };
-                    ServiceBase.Run(ServicesToRun);
-                }
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e.Message);
-                CBServer.running = false;
-                return;
+                ServiceBase.Run(ServicesToRun);
             }
         }
 

@@ -15,7 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+        "MsmKey" = "8:_3D337284E70C417C8D5A10ED285145AA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_66C61399CC4047319FF933750AAAD6D7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8177A050B7D0438AB22B1D23EF97903A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -27,20 +39,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9D49350B3DC840FBA6917C786AB7BBD5"
+        "MsmKey" = "8:_C00B285B6FE726949817585A7A4F3B42"
+        "OwnerKey" = "8:_8177A050B7D0438AB22B1D23EF97903A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D0196AF559144694848827695F5F6A46"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C00B285B6FE726949817585A7A4F3B42"
-        "OwnerKey" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E9FA6BE69623CDBA22C7E1F8FC3DFB43"
-        "OwnerKey" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+        "OwnerKey" = "8:_8177A050B7D0438AB22B1D23EF97903A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+        "OwnerKey" = "8:_8177A050B7D0438AB22B1D23EF97903A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -149,59 +161,59 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_64747CF26C7A44EC869DAC177C2A8A8C"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_32C52CEAFC074B34B61246811A40C817"
             {
             "Name" = "8:Primary output from pas-cb-server (Active)"
             "Condition" = "8:"
-            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Object" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "FileType" = "3:2"
             "InstallAction" = "3:3"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_8298AC1C_610C_40B4_8AF2_8E05A28EEF7D"
+            "Identifier" = "8:_4C0949FB_D1FF_4AFB_A1CD_CCEE286BB34F"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_B93799C3AEF64CFE84A824AB54B5444E"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A82E03551B1240D6B17CEB2C715EBAD1"
             {
             "Name" = "8:Primary output from pas-cb-server (Active)"
             "Condition" = "8:"
-            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Object" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "FileType" = "3:2"
             "InstallAction" = "3:4"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_9DDCBCB1_24B0_45B5_AAF6_72A4EA405657"
+            "Identifier" = "8:_6CD8584D_C91A_4245_845C_D57D6DEE76CE"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_BE72DB39C747425096D975646FD6B10B"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_BFB3C6D488C24C89949367A344D7F712"
             {
             "Name" = "8:Primary output from pas-cb-server (Active)"
             "Condition" = "8:NOT PREVIOUSVERSIONSINSTALLED"
-            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Object" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "FileType" = "3:2"
             "InstallAction" = "3:2"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_E1155746_1BE9_4F48_9EF4_8F064185E5E1"
+            "Identifier" = "8:_A62F29B8_69B8_4BB6_B4BF_B1002F236E9D"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_F7828BA69D854D4682BE771CB1AC6123"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_E3AC6F4A11B846CFBFE6BEF929AD2D94"
             {
             "Name" = "8:Primary output from pas-cb-server (Active)"
             "Condition" = "8:NOT PREVIOUSVERSIONSINSTALLED"
-            "Object" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Object" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_4C210E98_CBB2_4CD4_8BA3_1047E58BCD63"
+            "Identifier" = "8:_2D0C07D6_46DA_4329_B718_2F66165999C4"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
@@ -228,10 +240,30 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3D337284E70C417C8D5A10ED285145AA"
             {
-            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast.sql"
-            "TargetName" = "8:cellbroadcast.sql"
+            "SourcePath" = "8:..\\..\\!docs\\Changelog.pdf"
+            "TargetName" = "8:Changelog.pdf"
+            "Tag" = "8:"
+            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_66C61399CC4047319FF933750AAAD6D7"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast-changes-1.1.1.sql"
+            "TargetName" = "8:cellbroadcast-changes-1.1.1.sql"
             "Tag" = "8:"
             "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
             "Condition" = "8:"
@@ -248,12 +280,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D49350B3DC840FBA6917C786AB7BBD5"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
             {
-            "SourcePath" = "8:..\\..\\!docs\\interface2specification-v0.3b.pdf"
-            "TargetName" = "8:interface2specification-v0.3b.pdf"
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast.sql"
+            "TargetName" = "8:cellbroadcast.sql"
             "Tag" = "8:"
-            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -297,6 +329,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D0196AF559144694848827695F5F6A46"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\interface2documentation.pdf"
+            "TargetName" = "8:interface2documentation.pdf"
+            "Tag" = "8:"
+            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E9FA6BE69623CDBA22C7E1F8FC3DFB43"
@@ -429,7 +481,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cell Broadcast Server"
         "ProductCode" = "8:{CD1BAC4B-00B2-40F1-AF82-DFC155064406}"
-        "PackageCode" = "8:{9439D267-7518-476D-A062-63E252C324DE}"
+        "PackageCode" = "8:{03D46131-B933-474A-B46C-1B051C14B337}"
         "UpgradeCode" = "8:{2ED8E5BA-DDE9-423D-AAB5-342B08A3D7B9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -556,7 +608,21 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_9D49350B3DC840FBA6917C786AB7BBD5"
+            "Target" = "8:_D0196AF559144694848827695F5F6A46"
+            "Folder" = "8:_21859CD2C6604BB8B14665D8778E060C"
+            "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_47569AA912F14CEDBA5D4558915662B3"
+            {
+            "Name" = "8:Changes"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_3D337284E70C417C8D5A10ED285145AA"
             "Folder" = "8:_21859CD2C6604BB8B14665D8778E060C"
             "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
             "Icon" = "8:"
@@ -570,7 +636,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Target" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "Folder" = "8:_DCD7AEF12FEE454CADD3B3B6BA875921"
             "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
             "Icon" = "8:"
@@ -584,7 +650,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_6C23E1BBC5FE4073AB82A704025694AA"
+            "Target" = "8:_8177A050B7D0438AB22B1D23EF97903A"
             "Folder" = "8:_21859CD2C6604BB8B14665D8778E060C"
             "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
             "Icon" = "8:"
@@ -1017,9 +1083,9 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6C23E1BBC5FE4073AB82A704025694AA"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8177A050B7D0438AB22B1D23EF97903A"
             {
-            "SourcePath" = "8:..\\pas-cb-server\\obj\\x86\\Debug\\CBServer.exe"
+            "SourcePath" = "8:..\\pas-cb-server\\obj\\x86\\Release\\CBServer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"

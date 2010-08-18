@@ -145,6 +145,9 @@ namespace pas_cb_server
         {
             // Required values
             Settings.sz_parsepath = add_slash(Settings.GetString("ParsePath"));
+            // Check that all sub-paths exist (throws exception if one is missing
+            verify_parsefolder();
+
             Settings.sz_dbconn = String.Format("DSN={0};UID={1};PWD={2};",
                 Settings.GetString("DSN"),
                 Settings.GetString("UID"),
@@ -152,7 +155,7 @@ namespace pas_cb_server
             
             // Optional values
             Settings.debug = Settings.GetValue("Debug", false);
-            Settings.live = Settings.GetValue("Live", false);
+            Settings.live = Settings.GetValue("Live", true);
             Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", exec_folder()));
             Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
             Settings.l_retryinterval = Settings.GetValue("RetryInterval", 60);
@@ -176,7 +179,19 @@ namespace pas_cb_server
             if (path.Length > 0 && !path.EndsWith(@"\"))
                 path += @"\";
 
+            if (!Directory.Exists(path))
+                throw new Exception(String.Format("Could not find path {0}", path));
+
             return path;
+        }
+        private static void verify_parsefolder()
+        {
+            string[] subfolders = { "eat", "retry", "failed", "done" };
+            foreach (string folder in subfolders)
+            {
+                if (!Directory.Exists(Settings.sz_parsepath + folder))
+                    throw new Exception(String.Format("Could not find path {0}", Settings.sz_parsepath + folder));
+            }
         }
 
         public static string exec_folder()

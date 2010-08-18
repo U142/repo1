@@ -21,13 +21,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
+        "MsmKey" = "8:_471EFB3EE40E4E96BEF57C24C3A9C44E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9D49350B3DC840FBA6917C786AB7BBD5"
+        "MsmKey" = "8:_6117231190C84D28BE467E5164BB84D8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -41,6 +47,12 @@
         {
         "MsmKey" = "8:_E9FA6BE69623CDBA22C7E1F8FC3DFB43"
         "OwnerKey" = "8:_33D6157A19F349A49B22BBFCAC8F74C7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F3097768C3AB4F0098C2F1DE132A3146"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -228,10 +240,30 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_471EFB3EE40E4E96BEF57C24C3A9C44E"
             {
-            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast.sql"
-            "TargetName" = "8:cellbroadcast.sql"
+            "SourcePath" = "8:..\\..\\!docs\\interface2documentation.pdf"
+            "TargetName" = "8:interface2documentation.pdf"
+            "Tag" = "8:"
+            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6117231190C84D28BE467E5164BB84D8"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast-changes-1.1.1.sql"
+            "TargetName" = "8:cellbroadcast-changes-1.1.1.sql"
             "Tag" = "8:"
             "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
             "Condition" = "8:"
@@ -248,12 +280,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D49350B3DC840FBA6917C786AB7BBD5"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88B758EA0EBD4489B4B5D8F23BFF5BD9"
             {
-            "SourcePath" = "8:..\\..\\!docs\\interface2specification-v0.3b.pdf"
-            "TargetName" = "8:interface2specification-v0.3b.pdf"
+            "SourcePath" = "8:..\\..\\!docs\\cellbroadcast.sql"
+            "TargetName" = "8:cellbroadcast.sql"
             "Tag" = "8:"
-            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Folder" = "8:_86C0B0D16F844CBD9DA2B91E4C291223"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -328,6 +360,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F3097768C3AB4F0098C2F1DE132A3146"
+            {
+            "SourcePath" = "8:..\\..\\!docs\\Changelog.pdf"
+            "TargetName" = "8:Changelog.pdf"
+            "Tag" = "8:"
+            "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F54B43AAA6EB4057B17C425B029EC1BA"
@@ -429,7 +481,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cell Broadcast Server"
         "ProductCode" = "8:{DB78E2CF-09B4-4C60-94DA-D15804C5A3A9}"
-        "PackageCode" = "8:{245513C5-E3B7-4E74-BF6C-F08D553B10EA}"
+        "PackageCode" = "8:{ACB67274-D1A9-4D21-8D5B-F40CFA63DE65}"
         "UpgradeCode" = "8:{2ED8E5BA-DDE9-423D-AAB5-342B08A3D7B9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -556,7 +608,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_9D49350B3DC840FBA6917C786AB7BBD5"
+            "Target" = "8:_471EFB3EE40E4E96BEF57C24C3A9C44E"
             "Folder" = "8:_21859CD2C6604BB8B14665D8778E060C"
             "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
             "Icon" = "8:"
@@ -586,6 +638,20 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_33D6157A19F349A49B22BBFCAC8F74C7"
             "Folder" = "8:_DCD7AEF12FEE454CADD3B3B6BA875921"
+            "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D9E05A7E0DB541DF84D68B720A41FC07"
+            {
+            "Name" = "8:Changes"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_F3097768C3AB4F0098C2F1DE132A3146"
+            "Folder" = "8:_21859CD2C6604BB8B14665D8778E060C"
             "WorkingFolder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
             "Icon" = "8:"
             "Feature" = "8:"
@@ -1019,7 +1085,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_33D6157A19F349A49B22BBFCAC8F74C7"
             {
-            "SourcePath" = "8:..\\pas-cb-server\\obj\\x86\\Debug\\CBServer.exe"
+            "SourcePath" = "8:..\\pas-cb-server\\obj\\x86\\Release\\CBServer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0F36235B9F334B64B1C5DDBF46F43907"
