@@ -29,31 +29,35 @@ public partial class area_edit : System.Web.UI.Page
             //UPASLOGON pl = pasws.PasLogon(logoninfo);
             //UDEPARTMENT[] depts = pl.departments;
             ParmAdmin pa = new ParmAdmin();
-            PAOBJECT[] obj = pa.GetRegions(Util.convertLogonInfoParmAdmin(logoninfo));
+            com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(logoninfo));
 
             for (int i = 0; i < obj.Length; ++i)
             {
-                
                 string jall = "";
-                com.ums.ws.parm.admin.UPolygon p = (com.ums.ws.parm.admin.UPolygon)obj[i].m_shape; ;
-                for (int k = 0; k < p.polypoint.Length; ++k)
+                com.ums.ws.parm.admin.UShape[] shape = obj[i].restrictionShapes;
+
+                for (int j = 0; j < shape.Length; ++j)
                 {
-                    jall += p.polypoint[k].lat;
-                    if (k + 1 < p.polypoint.Length)
-                        jall += "|";
+                    com.ums.ws.parm.admin.UPolygon p = (com.ums.ws.parm.admin.UPolygon)shape[j];
+                    for (int k = 0; k < p.polypoint.Length; ++k)
+                    {
+                        jall += p.polypoint[k].lat;
+                        if (k + 1 < p.polypoint.Length)
+                            jall += "|";
+                    }
+
+                    jall += "¤";
+
+                    for (int k = 0; k < p.polypoint.Length; ++k)
+                    {
+                        jall += p.polypoint[k].lon;
+                        if (k + 1 < p.polypoint.Length)
+                            jall += "|";
+
+                    }
+                    //txt_area.Text += "\n";
+                    lst_areas.Items.Add(new ListItem(obj[i].sz_deptid, jall));
                 }
-
-                jall += "¤";
-
-                for (int k = 0; k < p.polypoint.Length; ++k)
-                {
-                    jall += p.polypoint[k].lon;
-                    if (k + 1 < p.polypoint.Length)
-                        jall += "|";
-
-                }
-                //txt_area.Text += "\n";
-                lst_areas.Items.Add(new ListItem(obj[i].sz_name, jall));
             }
         }
 
@@ -84,10 +88,12 @@ public partial class area_edit : System.Web.UI.Page
         PAOBJECT obj = new PAOBJECT();
         obj.sz_name = txt_name.Text;
         obj.parmop = PARMOPERATION.insert;
-        obj.l_deptpk = 1;
+        
         obj.m_shape = p;
 
         com.ums.ws.pas.ULOGONINFO li = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        
+        obj.l_deptpk = li.l_deptpk;
 
         UPAOBJECTRESULT res = pa.ExecPAShapeUpdate(Util.convertLogonInfoParmAdmin(li),obj,PASHAPETYPES.PADEPARTMENTRESTRICTION);
 

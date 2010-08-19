@@ -40,11 +40,11 @@
         </td>
     </tr>
 </table>
-All messages sent this month
+All messages sent this month <asp:Button ID="btn_messages_month" runat="server" Text="Export to CSV" OnClick="btn_messages_month_Click" />
 <table id="tbl_output" runat="server" border="1"></table>
-Operator performance
+Operator performance <asp:Button ID="btn_performance_month" runat="server" Text="Export to CSV" OnClick="btn_performance_month_Click" />
 <table id="tbl_operatorperformance" runat="server" border="1"></table>
-System messages in this month
+System messages in this month <asp:Button ID="btn_sysmessages_month" runat="server" Text="Export to CSV" OnClick="btn_sysmessages_month_Click" />
 <table id="tbl_sysmessages" runat="server" border="1"></table>
 
 </div>

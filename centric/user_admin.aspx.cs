@@ -19,7 +19,6 @@ using com.ums.ws.parm.admin;
 public partial class user_admin : System.Web.UI.Page
 {
     private PAOBJECT[] objects;
-    private List<PAUser> users;
     private PAUser pau = null;
 
     List<UBBUSER> users;
@@ -32,32 +31,18 @@ public partial class user_admin : System.Web.UI.Page
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
-            //UPASLOGON pl = pws.PasLogon(li);
-            //UDEPARTMENT[] depts = pl.departments;
             ParmAdmin pa = new ParmAdmin();
-            objects = (PAOBJECT[])Session["objects"];
-            if (objects == null)
-            {
-                objects = pa.GetRegions(Util.convertLogonInfoParmAdmin(li));
-                Session["objects"] = objects;
-            }
-            if (users == null)
-                users = (List<PAUser>)Session["users"];    
 
-            for (int i = 0; i < objects.Length; ++i)
-                lst_regions.Items.Add(new ListItem(objects[i].sz_name, objects[i].l_objectpk.ToString()));
-        
+            UBBUSER[] ulist = pa.GetUsers(Util.convertLogonInfoParmAdmin(li));
+            Session["users"] = ulist;
+            for(int i = 0; i< ulist.Length; ++i)
+                lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled==1?"yes":"no"),ulist[i].l_userpk.ToString()));
+            
+            com.ums.ws.parm.admin.UDEPARTMENT[] departments = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(li));
+            Session["regions"] = departments;
+            for (int i = 0; i < departments.Length; ++i)
+                lst_regions.Items.Add(new ListItem(departments[i].sz_deptid, departments[i].l_deptpk.ToString()));
         }
-    }
-
-    private UBBUSER getSelectedUser()
-    {
-        UBBUSER[] users = (UBBUSER[])Session["users"];
-        for(int i=0;i<users.Length;++i) {
-            if (users[i].l_userpk == long.Parse(lst_users.SelectedValue))
-                return users[i];
-        }
-        return null;
     }
 
     protected void btn_save_Click(object sender, EventArgs e)
@@ -71,13 +56,18 @@ public partial class user_admin : System.Web.UI.Page
         if (user == null) // Not selected
             user = new UBBUSER();
 
+        /*
         if (chk_blocked.Checked)
             DateTime.Parse(txt_blocked.Text);
+        */
 
         user.sz_name = txt_firstname.Text;
         user.sz_userid = txt_username.Text;
         if (txt_password.Text.Length > 0)
+        {
             user.sz_paspassword = txt_password.Text;
+            user.sz_hash_paspwd = Helper.CreateSHA512Hash(txt_password.Text);
+        }
         else
             user.sz_paspassword = "";
 
@@ -95,69 +85,56 @@ public partial class user_admin : System.Web.UI.Page
         }
 
         if (rad_administrator.Checked)
+        {
+            // No regions allowed
             user.l_profilepk = 7;
-        else if(rad_national.Checked)
+        }
+        else if (rad_national.Checked)
+        {
+            // All regions?
             user.l_profilepk = 5;
+        }
         else if (rad_sregional.Checked)
             user.l_profilepk = 3;
         else if (rad_regional.Checked)
+        {
+            // Only on region
             user.l_profilepk = 2;
+            user.l_deptpk = int.Parse(lst_regions.SelectedValue);
+        }
 
-        List<UBBUSER> users = new List<UBBUSER>();
-        
-        users.Add(user);
-        Session["users"] = users;
+        UBBUSER[] users = (UBBUSER[])Session["users"];
+        if (users == null)
+            users = new UBBUSER[1];
         
         // Send med UBBUSER og restriction area kan bare sette departmentpk på bbuser forresten?
+        com.ums.ws.pas.ULOGONINFO li = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        ParmAdmin pa = new ParmAdmin();
 
-        deselect();
+        int[] regions = lst_regions.GetSelectedIndices();
+        int[] regionpk = new int[regions.Length];
+        
+        for(int i=0;i<regions.Length;++i) {
+            regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
+        }
+
+        user = pa.StoreUser(Util.convertLogonInfoParmAdmin(li), user, regionpk);
+        if (user != null)
+        {
+            users[users.Length - 1] = user;
+            Session["users"] = users;
+            lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+            deselect();
+        }
+        
     }
 
     protected void btn_create_Click(object sender, EventArgs e)
     {
-        deselect();
+        reset();
     }
 
-    protected void btn_edit_Click(object sender, EventArgs e)
-    {
-        ListItem li = lst_users.SelectedItem;
-        pau = null;
-        
-        for (int i = 0; i < users.Count; ++i)
-            if (users[i].UserPK == long.Parse(li.Value))
-                pau = users[i];
-        
-        if (pau != null)
-        {
-            txt_firstname.Text = pau.FirstName;
-            txt_username.Text = pau.UserId;
-            txt_password.Text = pau.Password;
-            chk_blocked.Checked = pau.Blocked;
-            if(pau.Blocked)
-                txt_blocked.Text = pau.DateBlocked.ToString("dd-MM-yyyy");
-            if (pau.Type == 0)
-                rad_administrator.Checked = true;
-            else if (pau.Type == 1)
-                rad_national.Checked = true;
-            else if (pau.Type == 2)
-                rad_sregional.Checked = true;
-            else if (pau.Type == 3)
-                rad_regional.Checked = true;
-
-            for(int i=0;i<lst_regions.Items.Count;++i)
-                lst_regions.Items[i].Selected = false;
-
-            for (int i = 0; i < pau.Regions.Count; ++i)
-                for (int j = 0; j < lst_regions.Items.Count; ++j)                
-                    if (pau.Regions[i].l_objectpk == long.Parse(lst_regions.Items[j].Value))
-                        lst_regions.Items[i].Selected = true;
-            
-        }
-
-        Session["pau"] = pau;
-    }
-
-    private void deselect()
+    private void reset()
     {
         txt_firstname.Text = "";
         txt_username.Text = "";
@@ -170,11 +147,90 @@ public partial class user_admin : System.Web.UI.Page
         rad_national.Checked = false;
         rad_regional.Checked = false;
         rad_sregional.Checked = false;
+
+        lst_regions.SelectedIndex = -1;
+        lst_users.SelectedIndex = -1;
     }
 
-    protected void enableButtons(object sender, EventArgs e)
+    private void deselect()
     {
-        btn_delete.Enabled = true;
-        btn_edit.Enabled = true;
+        lst_regions.SelectedIndex = -1;
+    }
+
+    private void selectAllRegions()
+    {
+        for (int i = 0; i < lst_regions.Items.Count; ++i)
+            lst_regions.Items[i].Selected = true;
+    }
+
+    private UBBUSER getSelectedUser()
+    {
+        UBBUSER[] users = (UBBUSER[])Session["users"];
+        if (users != null && lst_users.SelectedIndex != -1)
+        {
+            for (int i = 0; i < users.Length; ++i)
+            {
+                if (users[i].l_userpk == long.Parse(lst_users.SelectedValue))
+                    return users[i];
+            }
+        }
+        return null;
+    }
+
+    protected void fill_form(object sender, EventArgs e)
+    {
+        UBBUSER user = getSelectedUser();
+
+        if (user != null)
+        {
+            txt_firstname.Text = user.sz_name;
+            txt_username.Text = user.sz_userid;
+            selectType(user);
+            chk_blocked.Checked = user.f_disabled==1?true:false;
+            lst_regions.SelectedValue = user.l_deptpk.ToString();
+            
+        }
+    }
+
+    private void selectType(UBBUSER user)
+    {
+        rad_regional.Checked = false;
+        rad_sregional.Checked = false;
+        rad_national.Checked = false;
+        rad_administrator.Checked = false;
+
+        switch (user.l_profilepk)
+        {
+            case 2: // regional
+                rad_regional.Checked = true;
+                break;
+            case 3:
+                rad_sregional.Checked = true;
+                break;
+            case 5:
+                rad_national.Checked = true;
+                break;
+            case 7:
+                rad_administrator.Checked = true;
+                break;
+        }
+
+        
+    }
+
+    protected void admin_Checked(object sender, EventArgs e)
+    {
+        if (rad_administrator.Checked)
+        {
+            deselect();
+            lst_regions.Enabled = false;
+        }
+        else if (rad_national.Checked)
+        {
+            lst_regions.Enabled = false;
+            selectAllRegions();
+        }
+        else
+            lst_regions.Enabled = true;
     }
 }

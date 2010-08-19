@@ -12,7 +12,7 @@ public partial class parameters : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         inclogons_range.MaximumValue = Int32.MaxValue.ToString();
-        autologoff_range.MaximumValue = Int32.MaxValue.ToString();
+        //autologoff_range.MaximumValue = Int32.MaxValue.ToString();
         rng_channel.MaximumValue = Int32.MaxValue.ToString();
         rng_heartbeat.MaximumValue = Int32.MaxValue.ToString();
         rng_interval.MaximumValue = Int32.MaxValue.ToString();
@@ -29,7 +29,7 @@ public partial class parameters : System.Web.UI.Page
             ULBAPARAMETER param = pws.GetCBParameters(logon);
 
             txt_inclogons.Text = param.l_incorrect.ToString();
-            txt_autologoff.Text = param.l_autologoff.ToString();
+            //txt_autologoff.Text = param.l_autologoff.ToString();
             txt_adminemail.Text = param.sz_adminemail;
             txt_channel.Text = param.l_channelno.ToString();
             txt_test_channel.Text = param.l_test_channelno.ToString();
@@ -44,7 +44,7 @@ public partial class parameters : System.Web.UI.Page
         ULBAPARAMETER param = new ULBAPARAMETER();
 
         param.l_incorrect = int.Parse(txt_inclogons.Text);
-        param.l_autologoff = int.Parse(txt_autologoff.Text);
+        //param.l_autologoff = int.Parse(txt_autologoff.Text);
         param.sz_adminemail = txt_adminemail.Text;
         param.l_channelno = int.Parse(txt_channel.Text);
         param.l_test_channelno = int.Parse(txt_test_channel.Text);

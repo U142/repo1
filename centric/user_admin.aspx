@@ -7,7 +7,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <asp:ListBox ID="lst_users" runat="server" Height="100" Width="450" OnSelectedIndexChanged="enableButtons"></asp:ListBox>
+                <asp:ListBox ID="lst_users" runat="server" Height="100" Width="450" OnSelectedIndexChanged="fill_form" AutoPostBack="True"></asp:ListBox>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -15,10 +15,10 @@
                 <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_Click"/>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:Button ID="btn_edit" runat="server" Text="Edit" OnClick="btn_edit_Click" Enabled="false" />
+                &nbsp;
             </asp:TableCell>
             <asp:TableCell>
-                <asp:Button ID="btn_delete" runat="server" Text="Delete" OnClick="btn_delete_Click" Enabled="false" />
+                &nbsp;
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -29,7 +29,7 @@
                 <asp:Label ID="Label1" runat="server" Text="User"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_username" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txt_username" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="validate_username" ControlToValidate="txt_username" Text="*" ErrorMessage="User is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
                 <asp:CheckBox ID="chk_blocked" runat="server" />
@@ -41,7 +41,7 @@
                 <asp:Label ID="Label3" runat="server" Text="User name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_firstname" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txt_firstname" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator1" ControlToValidate="txt_firstname" Text="*" ErrorMessage="Username is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
                 <asp:TextBox ID="txt_blocked" runat="server" Width="70"></asp:TextBox>
@@ -66,28 +66,28 @@
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" value="2" />
+                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" value="2" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label5" runat="server" Text="Regional"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_sregional" runat="server" GroupName="users" value="3" />
+                <asp:RadioButton ID="rad_sregional" runat="server" GroupName="users" value="3" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label6" runat="server" Text="Super Regional"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_national" runat="server" GroupName="users" value="5" />
+                <asp:RadioButton ID="rad_national" runat="server" GroupName="users" value="5" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label7" runat="server" Text="National"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_administrator" runat="server" GroupName="users" value="7" />
+                <asp:RadioButton ID="rad_administrator" runat="server" GroupName="users" value="7" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label8" runat="server" Text="Administrator"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
@@ -101,6 +101,9 @@
             <asp:TableCell ColumnSpan="4" HorizontalAlign="Right">
                 <asp:Button ID="btn_save" runat="server" Text="Save" OnClick="btn_save_Click"/>
             </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell ColumnSpan="3"><asp:ValidationSummary ID="ValidationSummary1" runat="server" /></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
 </asp:Content>

@@ -96,5 +96,10 @@ public partial class report_accesspruser : System.Web.UI.Page
                 tbl_output.Rows.Add(header);
             }
         }
+        btn_export_to_csv.Visible = true;
+    }
+    protected void btn_export_to_csv_Click(object sender, EventArgs e)
+    {
+
     }
 }

@@ -39,8 +39,9 @@ public class Helper
     public static string FormatDate(long timestamp)
     {
         string tmp = timestamp.ToString();
-
-        return tmp.Substring(6, 2) + "-" + tmp.Substring(4, 2) + "-" + tmp.Substring(0, 4) + " " + tmp.Substring(8, 2) + ":" + tmp.Substring(10, 2);
+        if (timestamp > 0)
+            return tmp.Substring(6, 2) + "-" + tmp.Substring(4, 2) + "-" + tmp.Substring(0, 4) + " " + tmp.Substring(8, 2) + ":" + tmp.Substring(10, 2);
+        else return "0";
 
     }
 }

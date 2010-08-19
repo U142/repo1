@@ -25,6 +25,9 @@ public partial class systemmessages : System.Web.UI.Page
         if (messages == null)
             messages = new USYSTEMMESSAGES();
 
+        txt_activate.Enabled = false;
+        txt_deactivate.Enabled = false;
+
         if (!IsPostBack)
         {
             pasws pws = new pasws();
@@ -37,7 +40,19 @@ public partial class systemmessages : System.Web.UI.Page
             {
                 lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
             }
+            UBBNEWS news = (UBBNEWS)Session["edit"];
+            if (news != null)
+            {
+                lst_messages.SelectedValue = news.l_newspk.ToString();
+                lst_messages_selectedindex(this, new EventArgs());
+            }
+            Session.Remove("edit");
             Session["messages"] = sysm;
+        }
+        else
+        {
+            txt_activate.Text = Request.QueryString["txt_activate"];
+            txt_deactivate.Text = Request.QueryString["txt_deactivate"];
         }
     }
     protected void btn_activate_message_Click(object sender, EventArgs e)
@@ -223,10 +238,10 @@ public partial class systemmessages : System.Web.UI.Page
                     ddl_type.Enabled = true;
                     ddl_activate_h.Enabled = true;
                     ddl_activate_m.Enabled = true;
-                    txt_activate.Enabled = true;
+                    //txt_activate.Enabled = true;
                     ddl_deactivate_h.Enabled = true;
                     ddl_deactivate_m.Enabled = true;
-                    txt_deactivate.Enabled = true;
+                    //txt_deactivate.Enabled = true;
                 }
                 else // Only allow changes to deactivate
                 {
@@ -235,10 +250,10 @@ public partial class systemmessages : System.Web.UI.Page
                     ddl_type.Enabled = false;
                     ddl_activate_h.Enabled = false;
                     ddl_activate_m.Enabled = false;
-                    txt_activate.Enabled = false;
+                    //txt_activate.Enabled = false;
                     ddl_deactivate_h.Enabled = true;
                     ddl_deactivate_m.Enabled = true;
-                    txt_deactivate.Enabled = true;
+                    //txt_deactivate.Enabled = true;
                 }
             }
         }

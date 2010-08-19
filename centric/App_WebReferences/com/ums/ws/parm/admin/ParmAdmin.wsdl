@@ -435,6 +435,105 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="PAOBJECT" nillable="true" type="tns:PAOBJECT" />
         </s:sequence>
       </s:complexType>
+      <s:element name="GetRestrictionAreas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRestrictionAreasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRestrictionAreasResult" type="tns:ArrayOfUDEPARTMENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UDEPARTMENT" nillable="true" type="tns:UDEPARTMENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="lbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="rbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="ubo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="bbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_default" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxalloc" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofilename" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofiledesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_newsending" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parm" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_fleetcontrol" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lba" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_houseeditor" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_defaultnumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_map" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pas" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="municipals" type="tns:ArrayOfUMunicipalDef" />
+          <s:element minOccurs="0" maxOccurs="1" name="typedef1" type="tns:UPolygon" />
+          <s:element minOccurs="0" maxOccurs="1" name="typedef2" type="tns:UEllipse" />
+          <s:element minOccurs="0" maxOccurs="1" name="typedef3" type="tns:UBoundingRect" />
+          <s:element minOccurs="0" maxOccurs="1" name="restrictionShapes" type="tns:ArrayOfUShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UMunicipalDef" nillable="true" type="tns:UMunicipalDef" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalname" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UBoundingRect">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="_left" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_right" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_top" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="_bottom" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUShape">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="tns:UShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="StoreUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="tns:UBBUSER" />
+            <s:element minOccurs="0" maxOccurs="1" name="deptk" type="tns:ArrayOfInt" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="StoreUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="StoreUserResult" type="tns:UBBUSER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetUsers">
         <s:complexType>
           <s:sequence>
@@ -521,6 +620,18 @@
   <wsdl:message name="GetUserRegionSoapOut">
     <wsdl:part name="parameters" element="tns:GetUserRegionResponse" />
   </wsdl:message>
+  <wsdl:message name="GetRestrictionAreasSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRestrictionAreas" />
+  </wsdl:message>
+  <wsdl:message name="GetRestrictionAreasSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRestrictionAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="StoreUserSoapIn">
+    <wsdl:part name="parameters" element="tns:StoreUser" />
+  </wsdl:message>
+  <wsdl:message name="StoreUserSoapOut">
+    <wsdl:part name="parameters" element="tns:StoreUserResponse" />
+  </wsdl:message>
   <wsdl:message name="GetUsersSoapIn">
     <wsdl:part name="parameters" element="tns:GetUsers" />
   </wsdl:message>
@@ -567,6 +678,14 @@
     <wsdl:operation name="GetUserRegion">
       <wsdl:input message="tns:GetUserRegionSoapIn" />
       <wsdl:output message="tns:GetUserRegionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <wsdl:input message="tns:GetRestrictionAreasSoapIn" />
+      <wsdl:output message="tns:GetRestrictionAreasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StoreUser">
+      <wsdl:input message="tns:StoreUserSoapIn" />
+      <wsdl:output message="tns:StoreUserSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUsers">
       <wsdl:input message="tns:GetUsersSoapIn" />
@@ -639,6 +758,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserRegion">
       <soap:operation soapAction="http://ums.no/ws/parm/admin/GetUserRegion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StoreUser">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/StoreUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -732,6 +869,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserRegion">
       <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetUserRegion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StoreUser">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/StoreUser" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

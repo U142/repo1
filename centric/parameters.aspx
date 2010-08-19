@@ -19,18 +19,6 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="Label2" runat="server" Text="Automatic logoff"></asp:Label>
-            </asp:TableCell>
-            <asp:TableCell>
-                <asp:TextBox ID="txt_autologoff" runat="server"></asp:TextBox>                
-            </asp:TableCell>
-            <asp:TableCell>
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="*" ErrorMessage="Auto logoff time missing" ControlToValidate="txt_autologoff" ></asp:RequiredFieldValidator>
-                <asp:RangeValidator id="autologoff_range" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_autologoff" Text="*" ErrorMessage="Integer value required for auto logoff"></asp:RangeValidator>
-            </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>
                 <asp:Label ID="Label3" runat="server" Text="Administrator email"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>

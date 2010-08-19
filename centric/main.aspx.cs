@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 using com.ums.ws.pas;
 
-public partial class _Default : System.Web.UI.Page 
+public partial class main : System.Web.UI.Page 
 {
     private USYSTEMMESSAGES messages;
 
@@ -74,7 +74,7 @@ public partial class _Default : System.Web.UI.Page
             String ting = txt_activate.Text + " " + ddl_activate_h.SelectedValue + ":" + ddl_activate_m.SelectedValue;
             try
             {
-                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text.Substring(0, 4) + txt_activate.Text.Substring(5, 2) + txt_activate.Text.Substring(7, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
             }
             catch (Exception ex)
             {
@@ -124,6 +124,9 @@ public partial class _Default : System.Web.UI.Page
         if (news != null)
         {
             Session["edit"] = news;
+            Server.Transfer("systemmessages.aspx");
+            /*
+           
             ddl_operator.SelectedValue = news.l_operator.ToString();
             ddl_type.SelectedValue = news.l_type.ToString();
             txt_message.Text = news.newstext.sz_news;
@@ -152,7 +155,7 @@ public partial class _Default : System.Web.UI.Page
                 txt_deactivate.Text = Helper.FormatDate(news.l_incident_end).Substring(0, 10);
                 ddl_deactivate_h.SelectedValue = news.l_incident_end.ToString().Substring(8, 2);
                 ddl_deactivate_m.SelectedValue = news.l_incident_end.ToString().Substring(10, 2);
-            }
+            }*/
         }
 
     }

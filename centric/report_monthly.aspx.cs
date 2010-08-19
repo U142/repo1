@@ -71,6 +71,8 @@ public partial class report_monthly : System.Web.UI.Page
         PasStatus pasws = new PasStatus();
         com.ums.ws.pas.ULOGONINFO l = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
         CB_MESSAGE_MONTHLY_REPORT_RESPONSE[] res = pasws.GetAllMesagesThisMonth(Util.convertLogonInfoPasStatus(l), createTimestamp());
+        
+        Session["messages_month"] = res;
 
         tbl_output.Rows.Clear();
 
@@ -145,9 +147,52 @@ public partial class report_monthly : System.Web.UI.Page
             tbl_output.Rows.Add(row);
         }
 
+        // System operator performance this month
+        res = pasws.GetOperatorPerformanceThisMonth(Util.convertLogonInfoPasStatus(l), createTimestamp());
+        
+        Session["performance_month"] = res;
+
+        tbl_operatorperformance.Rows.Clear();
+        header = new HtmlTableRow();
+
+        lbl_header = new Label();
+        lbl_header.Text = "Operator";
+        hc = new HtmlTableCell();
+        hc.Controls.Add(lbl_header);
+        header.Cells.Add(hc);
+
+        lbl_header = new Label();
+        lbl_header.Text = "Performance";
+        hc = new HtmlTableCell();
+        hc.Controls.Add(lbl_header);
+        header.Cells.Add(hc);
+
+        tbl_operatorperformance.Rows.Add(header);
+
+        for (int i = 0; i < res.Length; ++i)
+        {
+            HtmlTableRow row = new HtmlTableRow();
+            Label txt = new Label();
+            txt.Text = res[i].sz_operatorname;
+            HtmlTableCell cell = new HtmlTableCell();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+
+            cell = new HtmlTableCell();
+            txt = new Label();
+            txt.Text = res[i].l_performance.ToString();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+            tbl_operatorperformance.Rows.Add(row);
+        }
+
+
         // System messages this month
         pasws pas = new pasws();
         USYSTEMMESSAGES msg = pas.GetSystemMessagesMonth(l, createTimestamp());
+        
+        Session["sysmessage_month"] = msg;
+
         tbl_sysmessages.Rows.Clear();
         header = new HtmlTableRow();
 
@@ -224,5 +269,20 @@ public partial class report_monthly : System.Web.UI.Page
             row.Cells.Add(cell);
             tbl_sysmessages.Rows.Add(row);
         }
+    }
+
+    protected void btn_messages_month_Click(object sender, EventArgs e)
+    {
+        Util.WriteMonthlyReportToCSV((CB_MESSAGE_MONTHLY_REPORT_RESPONSE[])Session["messages_month"]);
+    }
+    
+    protected void btn_performance_month_Click(object sender, EventArgs e)
+    {
+        Util.WriteMonthlyPerformanceToCSV((CB_MESSAGE_MONTHLY_REPORT_RESPONSE[])Session["performance_month"]);
+    }
+    
+    protected void btn_sysmessages_month_Click(object sender, EventArgs e)
+    {
+        Util.WriteMonthlySystemMessagesToCSV((USYSTEMMESSAGES)Session["sysmessage_month"]);
     }
 }

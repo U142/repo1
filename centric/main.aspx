@@ -1,6 +1,9 @@
-﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="main.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="main.aspx.cs" Inherits="main" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
+    <asp:ToolkitScriptManager ID="ScriptManager1" runat="server" CombineScripts="false"></asp:ToolkitScriptManager>
     <asp:Table ID="Table2" runat="server">
         <asp:TableRow>
             <asp:TableCell ColumnSpan="2"><asp:Label ID="lbl_active_sysm" runat="server" Text="Active system messages"></asp:Label></asp:TableCell>
@@ -16,8 +19,8 @@
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
-            <asp:TableCell><asp:Button ID="btn_edit" runat="server" Text="Edit" OnClick="btn_edit_Click"/></asp:TableCell>
-            <asp:TableCell><asp:Button ID="btn_deactivate" runat="server" Text="Deactivate" /></asp:TableCell>
+            <asp:TableCell><asp:Button ID="btn_edit" runat="server" Text="Edit" OnClick="btn_edit_Click" CausesValidation="false" /></asp:TableCell>
+            <asp:TableCell><asp:Button ID="btn_deactivate" runat="server" Text="Deactivate"  CausesValidation="false" /></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
     <asp:Table ID="Table1" runat="server">
@@ -27,6 +30,7 @@
         <asp:TableRow>
             <asp:TableCell RowSpan="4">
                 <asp:TextBox ID="txt_message" runat="server" Height="79px" TextMode="MultiLine" Width="465px"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txt_message" Text="*" ErrorMessage="Text is requred"></asp:RequiredFieldValidator>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="lbl_operator" runat="server" Text="Operator"></asp:Label>
@@ -61,7 +65,8 @@
                 <asp:Label ID="lbl_activate_on" runat="server" Text="Activate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_activate" runat="server"></asp:TextBox> 
+                 <asp:CalendarExtender ID="CalendarExtender1" runat="server" PopupPosition="Right" PopupButtonID="Image1" TargetControlID="txt_activate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+                <asp:TextBox ID="txt_activate" runat="server" Enabled="false" Width="70px"></asp:TextBox>&nbsp;<asp:Image ID="Image1" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_activate_h" runat="server">
@@ -105,6 +110,7 @@
                     <asp:ListItem>50</asp:ListItem>
                     <asp:ListItem>55</asp:ListItem>
                 </asp:DropDownList>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_activate" Text="*" ErrorMessage="Activation date is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -112,7 +118,8 @@
                 <asp:Label ID="lbl_deactivate_on" runat="server" Text="Deactivate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_deactivate" runat="server"></asp:TextBox> 
+                <asp:CalendarExtender ID="CalendarExtender2" runat="server" PopupPosition="Right" PopupButtonID="Image2" TargetControlID="txt_deactivate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+                <asp:TextBox ID="txt_deactivate" runat="server" Enabled="false" Width="70px"></asp:TextBox>&nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_deactivate_h" runat="server">
@@ -157,6 +164,9 @@
                     <asp:ListItem>55</asp:ListItem>
                 </asp:DropDownList>
             </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell><asp:ValidationSummary ID="ValidationSummary1" runat="server"></asp:ValidationSummary></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
 </asp:Content>

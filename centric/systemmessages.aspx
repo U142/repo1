@@ -1,10 +1,14 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="systemmessages.aspx.cs" Inherits="systemmessages" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
-    <asp:Table ID="Table2" runat="server">
-        <asp:TableRow>
+    <asp:ToolkitScriptManager ID="ScriptManager1" runat="server"></asp:ToolkitScriptManager>
+    
+    <asp:Table ID="Table2" runat="server" GridLines="Both">
+        <asp:TableHeaderRow>
             <asp:TableCell ColumnSpan="6"><asp:Label ID="lbl_active_sysm" runat="server" Text="Overview System messages"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="6">
                 <asp:ListBox ID="lst_messages" runat="server" Height="200px" Width="471px" OnSelectedIndexChanged="lst_messages_selectedindex" AutoPostBack="True">
@@ -56,7 +60,11 @@
                 <asp:Label ID="lbl_activate_on" runat="server" Text="Activate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell Width="70px">
-                <asp:TextBox ID="txt_activate" runat="server" Width="60px"></asp:TextBox> 
+                
+                <asp:CalendarExtender ID="CalendarExtender1" runat="server" PopupPosition="Right" PopupButtonID="Image1"
+                        TargetControlID="txt_activate" Format="dd-MM-yyyy">
+                    </asp:CalendarExtender>
+                <asp:TextBox ID="txt_activate" runat="server" Width="70px" Enabled="false"></asp:TextBox>&nbsp;<asp:Image ID="Image1" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_activate_h" runat="server">
@@ -109,7 +117,11 @@
                 <asp:Label ID="lbl_deactivate_on" runat="server" Text="Deactivate on"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_deactivate" runat="server" Width="60px"></asp:TextBox> 
+                    
+                    <asp:CalendarExtender ID="CalendarExtender2" runat="server" PopupPosition="Right" PopupButtonID="Image2"
+                        TargetControlID="txt_deactivate" Format="dd-MM-yyyy">
+                </asp:CalendarExtender>
+                <asp:TextBox ID="txt_deactivate" runat="server" Width="70px" Enabled="false"></asp:TextBox>&nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="images/Calendar_scheduleHS.png" /> 
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_deactivate_h" runat="server">
@@ -140,7 +152,7 @@
                 </asp:DropDownList>
             </asp:TableCell>
             <asp:TableCell>:&nbsp;&nbsp;</asp:TableCell>
-            <asp:TableCell Width="120px">
+            <asp:TableCell Width="70px">
                 <asp:DropDownList ID="ddl_deactivate_m" runat="server">
                     <asp:ListItem>00</asp:ListItem>
                     <asp:ListItem>05</asp:ListItem>
