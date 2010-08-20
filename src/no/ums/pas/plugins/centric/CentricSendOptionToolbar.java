@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -29,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -38,8 +40,12 @@ import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.plugins.centric.send.RROComboBox;
+import no.ums.pas.plugins.centric.send.RROComboEditor;
+import no.ums.pas.plugins.centric.send.RROComboRenderer;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
+import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.PAS;
 import no.ums.pas.send.SendObject;
@@ -53,13 +59,16 @@ import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.parm.CBALERTPOLYGON;
 import no.ums.ws.parm.CBMESSAGE;
 import no.ums.ws.parm.CBMESSAGELIST;
-import no.ums.ws.parm.CBOPERATIONBASE;
-import no.ums.ws.parm.CBORIGINATOR;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.parm.UPolygon;
 import no.ums.ws.parm.UPolypoint;
+import no.ums.ws.parm.CBMESSAGEFIELDS;
+import no.ums.ws.parm.CBORIGINATOR;
+import no.ums.ws.parm.CBREACTION;
+import no.ums.ws.parm.CBRISK;
 
-public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, KeyListener, MouseListener {
+public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, 
+																	KeyListener, MouseListener {
 
 	/**
 	 * 
@@ -97,9 +106,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private JTextArea m_txt_preview;
 	private JScrollPane m_txt_previewscroll;
 	
-	private JComboBox m_cbx_risk;
-	private JComboBox m_cbx_reaction;
-	private JComboBox m_cbx_originator;
+	private RROComboBox m_cbx_risk;
+	private RROComboBox m_cbx_reaction;
+	private RROComboBox m_cbx_originator;
 	private JComboBox m_cbx_time_hour;
 	private JComboBox m_cbx_time_minute;
 	
@@ -147,6 +156,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public CentricSendOptionToolbar() {
 		//super();
 		init();
+		
+		WSCentricRRO rro = new WSCentricRRO(this, "act_download_risk_reaction_originator_finished");
+		try
+		{
+			rro.call();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 	public void doInit() {
 		init();
@@ -206,66 +226,36 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_time_hour = new JComboBox(new String[] { "15" });
 		m_cbx_time_minute = new JComboBox(new String[] { "30" });*/
 		
-		m_cbx_risk = new JComboBox();
-		/*m_cbx_risk.setRenderer(new DefaultListCellRenderer() { 
-
-            JLabel lbl = new JLabel(""); 
-            
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
-                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
-                    { 
-                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
-                            lbl.setText(base.getSzName()); 
-                            return lbl; 
-                    } 
-                    return super.getListCellRendererComponent(list, value, index, isSelected, 
-                                    cellHasFocus); 
-            } 
-            
-		});*/
+		m_cbx_risk = new RROComboBox(CBRISK.class);
 		m_cbx_risk.setPreferredSize(new Dimension(300,20));
 		m_cbx_risk.addFocusListener(this);
 		
-		m_cbx_reaction = new JComboBox();
-		/*m_cbx_reaction.setRenderer(new DefaultListCellRenderer() { 
-
-            JLabel lbl = new JLabel(""); 
-            
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
-                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
-                    { 
-                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
-                            lbl.setText(base.getSzName()); 
-                            return lbl; 
-                    } 
-                    return super.getListCellRendererComponent(list, value, index, isSelected, 
-                                    cellHasFocus); 
-            } 
-            
-		});*/
+		m_cbx_reaction = new RROComboBox(CBREACTION.class);
 		m_cbx_reaction.setPreferredSize(new Dimension(300,20));
 		m_cbx_reaction.addFocusListener(this);
 		
-		m_cbx_originator = new JComboBox();
-		/*m_cbx_originator.setRenderer(new DefaultListCellRenderer() { 
-
-            JLabel lbl = new JLabel(""); 
-            
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
-                    if(value.getClass().equals(CB_MESSAGE_FIELDS_BASE.class)) 
-                    { 
-                            CB_MESSAGE_FIELDS_BASE base = (CB_MESSAGE_FIELDS_BASE)value; 
-                            lbl.setText(base.getSzName()); 
-                            return lbl; 
-                    } 
-                    return super.getListCellRendererComponent(list, value, index, isSelected, 
-                                    cellHasFocus); 
-            } 
-            
-		});*/
+		m_cbx_originator = new RROComboBox(CBORIGINATOR.class);
 		m_cbx_originator.setPreferredSize(new Dimension(300,20));
 		m_cbx_originator.addFocusListener(this);
 		
+		
+		m_cbx_originator.setRenderer(new RROComboRenderer(m_cbx_originator));
+		m_cbx_reaction.setRenderer(new RROComboRenderer(m_cbx_reaction));
+		m_cbx_risk.setRenderer(new RROComboRenderer(m_cbx_risk));
+		
+		m_cbx_originator.setEditor(new RROComboEditor());
+		m_cbx_reaction.setEditor(new RROComboEditor());
+		m_cbx_risk.setEditor(new RROComboEditor());
+		
+		m_cbx_risk.setEditable(false);
+		m_cbx_reaction.setEditable(false);
+		m_cbx_originator.setEditable(false);
+
+		m_cbx_originator.addActionListener(this);
+		m_cbx_reaction.addActionListener(this);
+		m_cbx_risk.addActionListener(this);
+		
+
 		/*
 		m_lbl_immediate = new StdTextLabel("Immidiately");
 		m_lbl_schedule = new StdTextLabel("Schedule");
@@ -531,6 +521,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			poly.setLProjectpk(m_projectpk);
 			poly.setSzProjectname(m_txt_event_name.getText());
 			
+			System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
+			System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
+			System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
+			poly.setRisk((CBRISK)m_cbx_risk.getSelectedItem());
+			poly.setReaction((CBREACTION)m_cbx_reaction.getSelectedItem());
+			poly.setOriginator((CBORIGINATOR)m_cbx_originator.getSelectedItem());
+			
 			UPolygon polygon = new UPolygon();
 			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
 			if(ps == null || ps.get_coors_lat().size()<3) {
@@ -606,6 +603,63 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			variables.MAPPANE.set_active_shape(new PolygonStruct(variables.NAVIGATION.getDimension()));
 			variables.MAPPANE.repaint();
 		}
+		else if("act_download_risk_reaction_originator_finished".equals(e.getActionCommand()))
+		{
+			CBMESSAGEFIELDS cbm = (CBMESSAGEFIELDS)e.getSource();
+			List<CBRISK> risk = cbm.getRiskList().getCBRISK();
+			List<CBREACTION> reaction = cbm.getReactionList().getCBREACTION();
+			List<CBORIGINATOR> originator = cbm.getOriginatorList().getCBORIGINATOR();
+			for(int i=0; i < risk.size(); i++)
+				m_cbx_risk.addItem(risk.get(i));
+			for(int i=0; i < reaction.size(); i++)
+				m_cbx_reaction.addItem(reaction.get(i));
+			for(int i=0; i < originator.size(); i++)
+				m_cbx_originator.addItem(originator.get(i));
+		}
+		else if(e.getSource().equals(m_cbx_originator))
+		{
+			System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
+			if(m_cbx_originator.getSelectedIndex()==-1)
+				return;
+			if(e.getActionCommand().equals("comboBoxEdited"))
+			{
+				
+			}
+			else if(e.getActionCommand().equals("comboBoxChanged"))
+			{
+				
+			}
+		}
+		else if(e.getSource().equals(m_cbx_reaction))
+		{
+			System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
+			if(m_cbx_reaction.getSelectedIndex()==-1)
+				return;
+			if(e.getActionCommand().equals("comboBoxEdited"))
+			{
+				
+			}
+			else if(e.getActionCommand().equals("comboBoxChanged"))
+			{
+				
+			}
+		}
+		else if(e.getSource().equals(m_cbx_risk))
+		{
+			System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
+			if(e.getActionCommand().equals("comboBoxEdited"))
+			{
+				if(m_cbx_risk.getSelectedIndex()==-1)
+				{
+				}
+				
+			}
+			else if(e.getActionCommand().equals("comboBoxChanged"))
+			{
+				
+			}
+		}
+
 	}
 	
 	private String getFormatedDate() {

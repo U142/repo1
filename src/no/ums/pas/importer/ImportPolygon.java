@@ -329,6 +329,7 @@ public class ImportPolygon implements ActionListener {
 					for(int i=0; i < m_shapes_found.size(); i++)
 					{
 						ss[i] = m_shapes_found.get(i);
+						//PAS.pasplugin.addShapeToPaint(ss[i]);
 					}
 					new SubsetSelect(sz_columns, n_width, b_edit, d, m_callback, ss);
 				}

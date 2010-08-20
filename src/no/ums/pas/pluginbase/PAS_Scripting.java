@@ -867,7 +867,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		} catch(Exception e) { }
 		for(int i=0; i < getShapesToPaint().size(); i++)
 		{
-			getShapesToPaint().get(i).draw(g, nav, true, true, false, null, true, true, 1, true);
+			getShapesToPaint().get(i).draw(g, nav, true, true, false, null, true, true, 1, false);
 		}
 		if(p.get_mainmenu().get_selectmenu().get_bar().get_show_houses())
 			p.get_housecontroller().drawItems(g);

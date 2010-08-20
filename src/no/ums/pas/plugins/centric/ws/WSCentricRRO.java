@@ -6,14 +6,19 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import no.ums.pas.PAS;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.ws.parm.CBALERTPOLYGON;
 import no.ums.ws.parm.admin.ParmAdmin;
+import no.ums.ws.parm.CBMESSAGEFIELDS;
+import no.ums.ws.parm.*;
+import no.ums.ws.parm.ULOGONINFO;
 
 public class WSCentricRRO extends WSThread {
 
-	//CBMESSAGE_FIELDS ret;
+	CBMESSAGEFIELDS ret;
 	String action;
 	public WSCentricRRO(ActionListener callback, String act) {
 		super(callback);
@@ -22,17 +27,34 @@ public class WSCentricRRO extends WSThread {
 
 	@Override
 	public void OnDownloadFinished() {
-		/*if(m_callback != null)
-			m_callback.actionPerformed(new ActionEvent(ret, ActionEvent.ACTION_PERFORMED, action));*/
+		if(m_callback != null)
+			m_callback.actionPerformed(new ActionEvent(ret, ActionEvent.ACTION_PERFORMED, action));
 	}
 
 	@Override
 	public void call() throws Exception {
-		URL wsdl = new URL(vars.WSDL_PARMADMIN);
-		QName service = new QName("http://ums.no/ws/parm/", "parmws");
-		
-		//ret = new ParmAdmin(wsdl, service).getParmAdminSoap12().getMessageFields();
-		
+		try
+		{
+			URL wsdl = new URL(vars.WSDL_EXTERNALEXEC);
+			QName service = new QName("http://ums.no/ws/parm/", "parmws");
+			
+			ULOGONINFO logon = new ULOGONINFO();
+			UserInfo i = PAS.get_pas().get_userinfo();
+			logon.setLComppk(i.get_comppk());
+			logon.setLDeptpk(i.get_current_department().get_deptpk());
+			logon.setLUserpk(new Long(i.get_userpk()));
+			logon.setSessionid(i.get_sessionid());
+			logon.setSzPassword(i.get_passwd());
+			//ret = new ParmAdmin(wsdl, service).getParmAdminSoap12().getMessageFields();
+			ret = new Parmws(wsdl, service).getParmwsSoap12().getCBSendingFields(logon);
+			
+			
+			OnDownloadFinished();
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
 	}
 
 	@Override

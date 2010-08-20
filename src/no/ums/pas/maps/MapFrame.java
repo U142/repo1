@@ -1108,6 +1108,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public Image get_mapimage() {
 		return m_img_onscreen;	
 	}
+	public void set_mapimage(Image i) {
+		m_img_onscreen = i;
+	}
 	public Image get_mapoverlay(int n) {
 		//return m_img_overlay_onscreen;
 		Image ret = null;

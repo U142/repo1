@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.plugins.centric.status.CentricStatus;
+import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.ums.errorhandling.Error;
 
 public class CentricEastContent extends EastContent
@@ -25,9 +26,13 @@ public class CentricEastContent extends EastContent
 	
 	public CentricEastContent()
 	{
-		super(PAS.get_pas());	
+		super(PAS.get_pas());
 	}
 	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
+	}
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub

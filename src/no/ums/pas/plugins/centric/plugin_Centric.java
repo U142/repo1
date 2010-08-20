@@ -176,7 +176,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(btn_draw_ellipse, menu.m_gridconst);
 
-		/*final JButton btn_import = new JButton(PAS.l("common_import"));
+		final JButton btn_import = new JButton(PAS.l("common_import"));
 		btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		btn_import.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -201,7 +201,7 @@ public class plugin_Centric extends PAS_Scripting
 			}			
 		});
 		menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(btn_import, menu.m_gridconst);*/
+		menu.add(btn_import, menu.m_gridconst);
 		
 		return true;
 	}
@@ -1148,7 +1148,7 @@ public class plugin_Centric extends PAS_Scripting
 		{
 			for(int i=0; i < getShapesToPaint().size(); i++)
 			{
-				getShapesToPaint().get(i).draw(g, nav, true, true, false, null, true, true, 1, true);
+				getShapesToPaint().get(i).draw(g, nav, false, true, false, null, true, true, 1, false);
 			}
 		}
 		catch(Exception e)
