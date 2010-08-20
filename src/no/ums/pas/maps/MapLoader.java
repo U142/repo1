@@ -408,12 +408,12 @@ public class MapLoader {
 			 request.setTransparent(true);
 			 request.setSRS("EPSG:4326");
 			 //request.setFormat("image/png");
-			 request.setFormat(PAS.get_pas().get_settings().getSelectedWmsFormat());
+			 request.setFormat(variables.SETTINGS.getSelectedWmsFormat());
 			 
 			 m_selected_layers.clear(); //remove
 			 for(int i=0; i < layers.length; i++) 
 			 {
-				 if(PAS.get_pas().get_settings().getSelectedWmsLayers().contains(layers[i].getName()))
+				 if(variables.SETTINGS.getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
 			 }
 			 
@@ -437,7 +437,7 @@ public class MapLoader {
 			 GetMapResponse response =  wms.issueRequest(request);
 			 //BufferedReader in = new BufferedReader(new InputStreamReader(response.getInputStream()));
 			 m_img_load = ImageIO.read(response.getInputStream());
-				MediaTracker tracker = new MediaTracker(PAS.get_pas().get_mappane());
+				MediaTracker tracker = new MediaTracker(variables.MAPPANE);
 			 	//MediaTracker tracker = m_mtracker;
 				tracker.addImage(m_img_load, 0);
 				try {

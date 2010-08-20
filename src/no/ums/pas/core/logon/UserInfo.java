@@ -126,6 +126,7 @@ public class UserInfo extends Object {
 					int l_cellbroadcast, int l_houseeditor, long l_addresstypes, String sz_defaultnumber,
 					List<UMunicipalDef> municipals, int l_pas, ArrayOfUShape restriction_shapes)
 	{
+		try {
 		NavStruct nav_init = new NavStruct(lbo, rbo, ubo, bbo);
 		UserProfile m_userprofile = new UserProfile(sz_userprofilename, sz_userprofiledesc, l_fleetcontrol,
 									l_parm, l_status, l_newsending, l_cellbroadcast, l_houseeditor,
@@ -133,6 +134,7 @@ public class UserInfo extends Object {
 		DeptInfo dept = get_departments().add(l_deptpk, sz_deptid, sz_stdcc, nav_init, f_default, l_deptpri, 
 										l_maxalloc, sz_defaultnumber, m_userprofile, municipals, l_pas, 
 										restriction_shapes);
+		
 		if(f_default)
 		{
 			m_n_default_deptpk = l_deptpk;
@@ -143,6 +145,7 @@ public class UserInfo extends Object {
 			m_default_dept = dept;
 			this.set_current_department(dept);
 		}
+		} catch(Exception e) { System.out.println("ninja"); }
 	}
 			
 	/*void add_department(String [] s) {

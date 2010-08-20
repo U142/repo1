@@ -16,7 +16,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
+import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.parm.admin.ArrayOfPAOBJECT;
 import no.ums.ws.parm.admin.PAOBJECT;
 import no.ums.ws.parm.admin.ParmAdmin;
@@ -119,22 +121,44 @@ public class MapApplet extends JApplet implements ActionListener {
 		} catch(Exception e) {
 			System.out.print("fjols");
 		}
+		
 		m_navigation = new Navigation(this,640,480);
 		variables.NAVIGATION = m_navigation;
-		//MapPanel mp = new MapPanel("http://vb4utv");		
+		
+	}
+	
+	private void afterLogon() {
+		
 		m_drawthread = new MAPDraw(this,Thread.NORM_PRIORITY,640,480);
 		variables.DRAW = m_drawthread;
 		Settings m_settings = new Settings();
-		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road")
+		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
 		m_settings.setMapServer(MAPSERVER.WMS);
-		m_mappane = new MapFrameAdmin(640, 480, m_drawthread, m_navigation, new HTTPReq("http://vb4utv"), true);
+		String [] arr = "http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road".split(";");
+		if(arr!=null && arr.length>=3)
+		{
+			m_settings.setWmsSite(arr[0]);
+			m_settings.setSelectedWmsFormat(arr[1]);
+			m_settings.setSelectedWmsLayers(arr[2]);
+			if(arr.length>=4)
+				m_settings.setWmsUsername(arr[3]);
+			if(arr.length>=5)
+				m_settings.setWmsPassword(arr[4]);
+		}
+		variables.SETTINGS = m_settings;
+		
+		
+	}
+	
+	private void afterAfterLogon() {
+		//m_mappane = new MapFrameAdmin(640, 480, m_drawthread, m_navigation, new HTTPReq("http://vb4utv"), true);
 		//http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road
 		//m_mappane.initialize();
 		//m_mappane.SetIsLoading(true, "map");
-		variables.MAPPANE = m_mappane;
-		m_drawthread.setMapImage(m_mappane.get_image());
-		m_drawthread.set_mappane(m_mappane);
-		m_mappane.initialize();
+		//variables.MAPPANE = m_mappane;
+		//m_drawthread.setMapImage(m_mappane.get_image());
+		//m_drawthread.set_mappane(m_mappane);
+		//m_mappane.initialize();
 		
 		SendController m_sendcontroller = new SendController();
 		m_drawthread.set_sendcontroller(m_sendcontroller);
@@ -196,7 +220,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		contentpane.setLayout(new FlowLayout());
 		contentpane.add(pnl_buttons, BorderLayout.PAGE_START);
 		contentpane.add(m_mappane, BorderLayout.PAGE_END);*/
-		add(m_mappane);
+		//add(m_mappane);
 		//m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By");
 		//m_drawthread.setRepaint(m_image);
 		//m_drawthread.setNeedRepaint();
@@ -270,6 +294,8 @@ public class MapApplet extends JApplet implements ActionListener {
 				return;
 			}
 			
+			afterLogon();
+			
 			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
 					l.getSzCompid(), l.getSzName(), l.getSzSurname(),"");
 			UPASUISETTINGS m_pasui_settings = l.getUisettings();
@@ -294,6 +320,8 @@ public class MapApplet extends JApplet implements ActionListener {
 			logoninfo.setLUserpk(l.getLUserpk());
 			logoninfo.setSessionid(l.getSessionid());
 			
+			
+			
 			ParmAdmin pa = new ParmAdmin();
 			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions(logoninfo).getPAOBJECT();
 			for(int i = 0; i<obj.size();++i){
@@ -316,14 +344,20 @@ public class MapApplet extends JApplet implements ActionListener {
 			variables.USERINFO = m_info;
 			variables.NAVIGATION.setNavigation(m_info.get_nav_init());
 			
-			m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By");
-			m_drawthread.setRepaint(m_image);
-			variables.DRAW.set_neednewcoors(true);
-			variables.DRAW.set_need_imageupdate();
-			m_mappane.repaint();
-			m_mappane.validate();
+			m_mappane = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+			variables.MAPPANE = m_mappane;
+			m_image = m_mappane.m_maploader.load_map(variables.NAVIGATION.getNavLBO(), variables.NAVIGATION.getNavRBO(), variables.NAVIGATION.getNavUBO(), variables.NAVIGATION.getNavBBO(), this.getSize(), 0, "By");
+			m_drawthread.setMapImage(m_mappane.get_image());
+			m_drawthread.set_mappane(m_mappane);
+			//m_drawthread.setRepaint(m_image);
+			//variables.DRAW.set_neednewcoors(true);
+			//variables.DRAW.set_need_imageupdate();
+			m_mappane.initialize();
+			//m_mappane.repaint();
+			//m_mappane.validate();
+			add(m_mappane);
 			b_results_ready = true;
-			
+			afterAfterLogon();
 		}
 		else if("act_download_houses".equals(e.getActionCommand())){
 			variables.DRAW.set_neednewcoors(true);
