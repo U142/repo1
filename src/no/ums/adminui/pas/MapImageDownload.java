@@ -55,8 +55,9 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		variables.SETTINGS = m_settings;
 		
 		MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
-		maploader.load_map_wms(5.3353, 7.2271, 53.466, 52.2176, new Dimension(640,480),variables.SETTINGS.getWmsSite()); 
-		variables.DRAW.setMapImage(variables.MAPPANE.get_image());
+		Image img = maploader.load_map_wms(5.3353, 7.2271, 53.466, 52.2176, new Dimension(640,480),variables.SETTINGS.getWmsSite()); 
+		//variables.DRAW.setMapImage(variables.MAPPANE.get_image());
+		variables.MAPPANE.set_mapimage(img);
 		variables.DRAW.set_mappane(variables.MAPPANE);
 		//m_drawthread.setRepaint(m_image);
 		//variables.DRAW.set_neednewcoors(true);
