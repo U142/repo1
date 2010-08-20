@@ -1659,13 +1659,13 @@ namespace com.ums.ws.parm
                 db.CheckLogon(ref logoninfo, true);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
-                if (rs.HasRows)
+                if (rs.HasRows && user.l_userpk == 0)
                     throw new SoapException("User ID already exists", XmlQualifiedName.Empty);
 
                 rs.Close();
 
-                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}",
-                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk);
+                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}'",
+                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd);
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -1673,6 +1673,11 @@ namespace com.ums.ws.parm
                     user.l_userpk = (long)rs.GetDecimal(0);
                 }
                 rs.Close();
+                for (int i = 0; i < deptk.Length; ++i)
+                {
+                    sz_sql = String.Format("INSERT INTO BBUSERPROFILE_X_DEPT VALUES( {0}, {1}, {2})", user.l_profilepk, user.l_userpk, deptk[i]);
+                    db.ExecNonQuery(sz_sql);
+                }
             }
             catch (Exception e)
             {
@@ -2387,8 +2392,13 @@ namespace com.ums.ws.parm
                             catch (Exception) { }
                             break;
                     }
+                    
                 }
-
+                if (operation == PARMOPERATION.insert) // I had to put it here or else it wouldn't write the shapefile and couldn't put it in the switch
+                {
+                    sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9}, {10}", logon.l_comppk, obj.l_objectpk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
+                    db.ExecNonQuery(sz_sql);
+                }
                 return n_ret;
 
             }
