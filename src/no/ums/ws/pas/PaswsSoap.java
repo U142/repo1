@@ -81,6 +81,54 @@ public interface PaswsSoap {
 
     /**
      * 
+     * @param l
+     * @return
+     *     returns no.ums.ws.pas.USYSTEMMESSAGES
+     */
+    @WebMethod(operationName = "GetAllSystemMessages", action = "http://ums.no/ws/pas/GetAllSystemMessages")
+    @WebResult(name = "GetAllSystemMessagesResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "GetAllSystemMessages", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetAllSystemMessages")
+    @ResponseWrapper(localName = "GetAllSystemMessagesResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetAllSystemMessagesResponse")
+    public USYSTEMMESSAGES getAllSystemMessages(
+        @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO l);
+
+    /**
+     * 
+     * @param message
+     * @param l
+     * @return
+     *     returns no.ums.ws.pas.UBBNEWS
+     */
+    @WebMethod(operationName = "UpdateSystemMessage", action = "http://ums.no/ws/pas/UpdateSystemMessage")
+    @WebResult(name = "UpdateSystemMessageResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "UpdateSystemMessage", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.UpdateSystemMessage")
+    @ResponseWrapper(localName = "UpdateSystemMessageResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.UpdateSystemMessageResponse")
+    public UBBNEWS updateSystemMessage(
+        @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO l,
+        @WebParam(name = "message", targetNamespace = "http://ums.no/ws/pas/")
+        UBBNEWS message);
+
+    /**
+     * 
+     * @param l
+     * @param period
+     * @return
+     *     returns no.ums.ws.pas.USYSTEMMESSAGES
+     */
+    @WebMethod(operationName = "GetSystemMessagesMonth", action = "http://ums.no/ws/pas/GetSystemMessagesMonth")
+    @WebResult(name = "GetSystemMessagesMonthResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "GetSystemMessagesMonth", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetSystemMessagesMonth")
+    @ResponseWrapper(localName = "GetSystemMessagesMonthResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetSystemMessagesMonthResponse")
+    public USYSTEMMESSAGES getSystemMessagesMonth(
+        @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO l,
+        @WebParam(name = "period", targetNamespace = "http://ums.no/ws/pas/")
+        long period);
+
+    /**
+     * 
      * @param ui
      * @param l
      * @return
@@ -555,5 +603,36 @@ public interface PaswsSoap {
     public ArrayOfULBADURATION getLBADuration(
         @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/pas/")
         ULOGONINFO logon);
+
+    /**
+     * 
+     * @param logon
+     * @return
+     *     returns no.ums.ws.pas.ULBAPARAMETER
+     */
+    @WebMethod(operationName = "GetCBParameters", action = "http://ums.no/ws/pas/GetCBParameters")
+    @WebResult(name = "GetCBParametersResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "GetCBParameters", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetCBParameters")
+    @ResponseWrapper(localName = "GetCBParametersResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetCBParametersResponse")
+    public ULBAPARAMETER getCBParameters(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO logon);
+
+    /**
+     * 
+     * @param param
+     * @param logon
+     * @return
+     *     returns boolean
+     */
+    @WebMethod(action = "http://ums.no/ws/pas/updateCBParameters")
+    @WebResult(name = "updateCBParametersResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "updateCBParameters", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.UpdateCBParameters")
+    @ResponseWrapper(localName = "updateCBParametersResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.UpdateCBParametersResponse")
+    public boolean updateCBParameters(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO logon,
+        @WebParam(name = "param", targetNamespace = "http://ums.no/ws/pas/")
+        ULBAPARAMETER param);
 
 }

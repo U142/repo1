@@ -1,17 +1,6 @@
 package no.ums.pas;
 
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.util.List;
-
-import no.ums.pas.core.variables;
-import no.ums.pas.core.logon.DeptArray;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.DeptArray.POINT_DIRECTION;
-import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.ums.errorhandling.Error;
 
 
 public class PASDraw extends Draw {

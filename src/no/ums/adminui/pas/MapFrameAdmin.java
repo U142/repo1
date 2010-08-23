@@ -223,5 +223,17 @@ public class MapFrameAdmin extends MapFrame {
 	{
 		super.paint(g);
 	}
+	
+	//skal egentlig tegnes opp i draw_layers i Draw thread.
+	//Draw thread har også ansvar for å kjøre calc_coortopix på alle shapes
+	@Override
+	public void drawOnEvents(Graphics gfx) {
+		try
+		{
+			get_active_shape().draw(gfx, variables.NAVIGATION, false, true, false, null, true, true, 1, false);
+		}
+		catch(Exception e) { }
+		super.drawOnEvents(gfx);
+	}
 
 }

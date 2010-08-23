@@ -3,7 +3,7 @@ package no.ums.ws.pas;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
@@ -17,12 +17,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="UShape">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="col_red" type="{http://www.w3.org/2001/XMLSchema}float"/>
- *         &lt;element name="col_green" type="{http://www.w3.org/2001/XMLSchema}float"/>
- *         &lt;element name="col_blue" type="{http://www.w3.org/2001/XMLSchema}float"/>
- *         &lt;element name="col_alpha" type="{http://www.w3.org/2001/XMLSchema}float"/>
- *       &lt;/sequence>
+ *       &lt;attribute name="col_red" use="required" type="{http://www.w3.org/2001/XMLSchema}float" />
+ *       &lt;attribute name="col_green" use="required" type="{http://www.w3.org/2001/XMLSchema}float" />
+ *       &lt;attribute name="col_blue" use="required" type="{http://www.w3.org/2001/XMLSchema}float" />
+ *       &lt;attribute name="col_alpha" use="required" type="{http://www.w3.org/2001/XMLSchema}float" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -31,12 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UShape", propOrder = {
-    "colRed",
-    "colGreen",
-    "colBlue",
-    "colAlpha"
-})
+@XmlType(name = "UShape")
 @XmlSeeAlso({
     UPolygon.class,
     UBoundingRect.class,
@@ -44,13 +37,13 @@ import javax.xml.bind.annotation.XmlType;
 })
 public abstract class UShape {
 
-    @XmlElement(name = "col_red")
+    @XmlAttribute(name = "col_red", required = true)
     protected float colRed;
-    @XmlElement(name = "col_green")
+    @XmlAttribute(name = "col_green", required = true)
     protected float colGreen;
-    @XmlElement(name = "col_blue")
+    @XmlAttribute(name = "col_blue", required = true)
     protected float colBlue;
-    @XmlElement(name = "col_alpha")
+    @XmlAttribute(name = "col_alpha", required = true)
     protected float colAlpha;
 
     /**

@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="l_timestamp_db" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="sz_userid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="newstext" type="{http://ums.no/ws/pas/}UBBNEWSTEXT" minOccurs="0"/>
+ *         &lt;element name="sz_operatorname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -56,7 +57,8 @@ import javax.xml.bind.annotation.XmlType;
     "lUserpk",
     "lTimestampDb",
     "szUserid",
-    "newstext"
+    "newstext",
+    "szOperatorname"
 })
 public class UBBNEWS {
 
@@ -89,6 +91,8 @@ public class UBBNEWS {
     @XmlElement(name = "sz_userid")
     protected String szUserid;
     protected UBBNEWSTEXT newstext;
+    @XmlElement(name = "sz_operatorname")
+    protected String szOperatorname;
 
     /**
      * Gets the value of the lNewspk property.
@@ -344,6 +348,30 @@ public class UBBNEWS {
      */
     public void setNewstext(UBBNEWSTEXT value) {
         this.newstext = value;
+    }
+
+    /**
+     * Gets the value of the szOperatorname property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSzOperatorname() {
+        return szOperatorname;
+    }
+
+    /**
+     * Sets the value of the szOperatorname property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSzOperatorname(String value) {
+        this.szOperatorname = value;
     }
 
 }

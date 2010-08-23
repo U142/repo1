@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="reaction" type="{http://ums.no/ws/parm/}CB_REACTION" minOccurs="0"/>
  *         &lt;element name="originator" type="{http://ums.no/ws/parm/}CB_ORIGINATOR" minOccurs="0"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="operation" use="required" type="{http://ums.no/ws/parm/}CB_OPERATION" />
  *       &lt;attribute name="l_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="l_projectpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -51,6 +52,8 @@ public abstract class CBOPERATIONBASE {
     protected CBRISK risk;
     protected CBREACTION reaction;
     protected CBORIGINATOR originator;
+    @XmlAttribute(required = true)
+    protected CBOPERATION operation;
     @XmlAttribute(name = "l_refno", required = true)
     protected long lRefno;
     @XmlAttribute(name = "l_projectpk", required = true)
@@ -136,6 +139,30 @@ public abstract class CBOPERATIONBASE {
      */
     public void setOriginator(CBORIGINATOR value) {
         this.originator = value;
+    }
+
+    /**
+     * Gets the value of the operation property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBOPERATION }
+     *     
+     */
+    public CBOPERATION getOperation() {
+        return operation;
+    }
+
+    /**
+     * Sets the value of the operation property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBOPERATION }
+     *     
+     */
+    public void setOperation(CBOPERATION value) {
+        this.operation = value;
     }
 
     /**

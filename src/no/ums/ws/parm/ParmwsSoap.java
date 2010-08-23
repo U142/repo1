@@ -273,6 +273,17 @@ public interface ParmwsSoap {
 
     /**
      * 
+     * @return
+     *     returns boolean
+     */
+    @WebMethod(action = "http://ums.no/ws/parm/tmpRestrictionShape")
+    @WebResult(name = "tmpRestrictionShapeResult", targetNamespace = "http://ums.no/ws/parm/")
+    @RequestWrapper(localName = "tmpRestrictionShape", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.TmpRestrictionShape")
+    @ResponseWrapper(localName = "tmpRestrictionShapeResponse", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.TmpRestrictionShapeResponse")
+    public boolean tmpRestrictionShape();
+
+    /**
+     * 
      * @param cb
      * @param logon
      * @return
@@ -505,5 +516,19 @@ public interface ParmwsSoap {
         String szJobid,
         @WebParam(name = "b_confirm", targetNamespace = "http://ums.no/ws/parm/")
         boolean bConfirm);
+
+    /**
+     * 
+     * @param logon
+     * @return
+     *     returns no.ums.ws.parm.CBMESSAGEFIELDS
+     */
+    @WebMethod(action = "http://ums.no/ws/parm/getCBSendingFields")
+    @WebResult(name = "getCBSendingFieldsResult", targetNamespace = "http://ums.no/ws/parm/")
+    @RequestWrapper(localName = "getCBSendingFields", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.GetCBSendingFields")
+    @ResponseWrapper(localName = "getCBSendingFieldsResponse", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.GetCBSendingFieldsResponse")
+    public CBMESSAGEFIELDS getCBSendingFields(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/parm/")
+        ULOGONINFO logon);
 
 }

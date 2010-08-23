@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import org.opengis.filter.expression.Add;
 
 import no.ums.pas.Draw;
+import no.ums.pas.MAPDraw;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
@@ -77,12 +78,16 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		variables.DRAW.set_mappane(variables.MAPPANE);
 		variables.DRAW.create_image();
 		variables.MAPPANE.load_map();
+		//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)
+		shape.calc_coortopix(variables.NAVIGATION);
 		variables.MAPPANE.kickRepaint();
 		//variables.MAPPANE.initialize();
 		//variables.MAPPANE.SetIsLoading(false, "map");
 		
 		add(variables.MAPPANE);
 	}
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
