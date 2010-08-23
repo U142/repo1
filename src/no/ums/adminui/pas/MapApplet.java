@@ -133,7 +133,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		variables.DRAW = m_drawthread;
 		Settings m_settings = new Settings();
 		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
-		m_settings.setMapServer(MAPSERVER.WMS);
+		m_settings.setMapServer(MAPSERVER.DEFAULT);
 		String [] arr = "http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road".split(";");
 		if(arr!=null && arr.length>=3)
 		{
@@ -321,8 +321,9 @@ public class MapApplet extends JApplet implements ActionListener {
 			logoninfo.setSessionid(l.getSessionid());
 			
 			
-			
+			/*
 			ParmAdmin pa = new ParmAdmin();
+			
 			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions(logoninfo).getPAOBJECT();
 			for(int i = 0; i<obj.size();++i){
 				PAOBJECT o = obj.get(i);
@@ -332,7 +333,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				for(int j=0;j<ppl.size();++j)
 					ps.add_coor(ppl.get(j).getLon(), ppl.get(j).getLat());
 				m_info.get_departments().m_combined_shapestruct_list.add(ps);
-			}
+			}*/
 			m_info.get_departments().CreateCombinedRestrictionShape();
 			if(m_info.get_departments().get_combined_restriction_shape() != null) {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
@@ -346,8 +347,8 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 			m_mappane = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 			variables.MAPPANE = m_mappane;
-			m_image = m_mappane.m_maploader.load_map(variables.NAVIGATION.getNavLBO(), variables.NAVIGATION.getNavRBO(), variables.NAVIGATION.getNavUBO(), variables.NAVIGATION.getNavBBO(), this.getSize(), 0, "By");
-			m_drawthread.setMapImage(m_mappane.get_image());
+			m_mappane.load_map();//variables.NAVIGATION.getNavLBO(), variables.NAVIGATION.getNavRBO(), variables.NAVIGATION.getNavUBO(), variables.NAVIGATION.getNavBBO(), this.getSize(), 0, "By");
+			//m_drawthread.setMapImage(m_mappane.get_image());
 			m_drawthread.set_mappane(m_mappane);
 			//m_drawthread.setRepaint(m_image);
 			//variables.DRAW.set_neednewcoors(true);

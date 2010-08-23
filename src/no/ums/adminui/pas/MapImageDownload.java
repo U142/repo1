@@ -16,9 +16,13 @@ import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
+import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolygonStruct;
 
 public class MapImageDownload extends JApplet implements ActionListener {
 	
@@ -32,15 +36,17 @@ public class MapImageDownload extends JApplet implements ActionListener {
 	}
 	
 	public MapImageDownload() {
+		this.setSize(new Dimension(640,480));
 		JPanel pnl_map = new JPanel();
 		add(pnl_map);
 		variables.NAVIGATION = new Navigation(this,640,480);
 		variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,640,480);
 		variables.MAPPANE = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 		Settings m_settings = new Settings();
+		vars.init("http://localhost/WS/");
 		
 		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
-		m_settings.setMapServer(MAPSERVER.WMS);
+		m_settings.setMapServer(MAPSERVER.DEFAULT);
 		String [] arr = "http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road".split(";");
 		if(arr!=null && arr.length>=3)
 		{
@@ -55,17 +61,26 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		variables.SETTINGS = m_settings;
 		
 		MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
-		Image img = maploader.load_map_wms(5.3353, 7.2271, 53.466, 52.2176, new Dimension(640,480),variables.SETTINGS.getWmsSite()); 
-		//variables.DRAW.setMapImage(variables.MAPPANE.get_image());
-		variables.MAPPANE.set_mapimage(img);
+		PolygonStruct shape = new PolygonStruct(variables.NAVIGATION.getDimension());
+		shape.add_coor(5.7096, 52.8261);
+		shape.add_coor(5.7523, 52.8122);
+		shape.add_coor(5.779, 52.8307);
+		shape.add_coor(5.753, 52.7864);
+		shape.add_coor(5.6982, 52.7854);
+		shape.add_coor(5.6707, 52.8011);
+		variables.MAPPANE.set_active_shape(shape);
+		
+		NavStruct nav = shape.typecast_polygon().calc_bounds();
+		variables.NAVIGATION.setNavigation(nav);
+		variables.MAPPANE.setAllOverlays();
+		//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
 		variables.DRAW.set_mappane(variables.MAPPANE);
-		//m_drawthread.setRepaint(m_image);
-		//variables.DRAW.set_neednewcoors(true);
-		//variables.DRAW.set_need_imageupdate();
-		variables.MAPPANE.initialize();
-		variables.MAPPANE.SetIsLoading(false, "map");
-		//m_mappane.repaint();
-		//m_mappane.validate();
+		variables.DRAW.create_image();
+		variables.MAPPANE.load_map();
+		variables.MAPPANE.kickRepaint();
+		//variables.MAPPANE.initialize();
+		//variables.MAPPANE.SetIsLoading(false, "map");
+		
 		add(variables.MAPPANE);
 	}
 

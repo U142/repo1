@@ -75,6 +75,7 @@ public class MapFrameAdmin extends MapFrame {
 			if(m_img_loading==null)
 			{
 			}
+			
 			for(int i=0;i<getOverlays().size();++i) {
 				/*if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_gsm().isSelected())
 					showAllOverlays(1, true);
@@ -94,7 +95,8 @@ public class MapFrameAdmin extends MapFrame {
 		}
 		try
 		{
-			m_img_onscreen.flush();
+			if(m_img_onscreen != null)
+				m_img_onscreen.flush();
 		}
 		catch(Exception e)
 		{
