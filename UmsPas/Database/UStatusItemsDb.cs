@@ -338,7 +338,7 @@ namespace com.ums.PAS.Database
             try
             {
                 szSQL = String.Format("sp_cb_get_projectinfo {0}", req.l_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     
                 BBPROJECT p = new BBPROJECT();
                 while (rs.Read())
@@ -356,36 +356,30 @@ namespace com.ums.PAS.Database
                 szSQL = String.Format("sp_cb_get_cbstatus {0}", req.l_projectpk);
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 long l_refno;
-                CB_STATUS cbs;
+                CB_STATUS cbs = null;
                 List<CB_STATUS> statuslist = new List<CB_STATUS>();
                 ULBAHISTCELL test = new ULBAHISTCELL();
-                
+
                 while (rs.Read())
                 {
                     l_refno = rs.GetInt32(0);
 
-                    cbs = new CB_STATUS();
-                    cbs.f_simulation = rs.GetInt16(2);
-                    cbs.histcc = null;
-                    //cbs.shape = UShape.ParseFromXml(rs.GetString()); // UShape
-                    cbs.sz_areaid = rs.GetString(10);
-                    cbs.sz_jobid = rs.GetString(11);
-                    cbs.sz_operator = rs.GetString(1); // "KPN";
-                    cbs.l_cbtype = (int)LBA_SENDINGTYPES.CELLBROADCAST;
-                    cbs.l_items = rs.GetInt32(4);
-                    cbs.l_operator = rs.GetInt32(12);
-                    cbs.l_proc = rs.GetInt32(5);
-                    cbs.l_refno = l_refno;
-                    cbs.l_requesttype = (int)rs.GetByte(6);
-                    cbs.l_response = rs.GetInt32(7);
-                    cbs.l_retries = rs.GetByte(8);
-                    cbs.l_status = rs.GetInt32(9);
-                    cbs.languages = null; // List<LBALanguage>
-                    cbs.l_started_ts = rs.IsDBNull(19) ? (long)0 : (long)rs.GetDecimal(19);
-                    cbs.l_created_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(20);
-                    cbs.l_last_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(23);
-                    cbs.sz_sendingname = rs.GetString(13);
-                    cbs.l_channel = rs.GetInt16(22);
+                    //create a new CBS for this refno. then add operators to it
+                    if (cbs == null || cbs.l_refno != l_refno)
+                    {
+                        cbs = new CB_STATUS();
+                        cbs.f_simulation = rs.GetInt16(2);
+                        cbs.l_refno = l_refno;
+                        //cbs.shape = UShape.ParseFromXml(rs.GetString()); // UShape
+                        cbs.l_started_ts = rs.IsDBNull(19) ? (long)0 : (long)rs.GetDecimal(19);
+                        cbs.l_created_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(20);
+                        cbs.l_last_ts = rs.IsDBNull(20) ? (long)0 : (long)rs.GetDecimal(23);
+                        cbs.sz_sendingname = rs.GetString(13);
+                        cbs.l_channel = rs.GetInt16(22);
+                        cbs.operators = new List<ULBASENDING>();
+                        statuslist.Add(cbs);
+                    }
+
                     //OdbcDataReader mdv = ExecReader(String.Format("sp_cb_get_mdvsendinginfo {0}", l_refno), UmsDb.UREADER_AUTOCLOSE);
                     MDVSENDINGINFO sendinginfo = new MDVSENDINGINFO();
                     sendinginfo.sz_sendingname = rs.GetString(13);
@@ -395,39 +389,28 @@ namespace com.ums.PAS.Database
                     sendinginfo.l_createtime = rs.GetInt16(17).ToString();
                     sendinginfo.l_group = rs.GetInt32(18);
                     sendinginfo.sz_messagetext = rs.GetString(21);
-                    /*
-                    while(mdv.Read()) {
-                        sendinginfo.sz_fields = mdv.GetString(1);
-                        sendinginfo.sz_sepused = mdv.GetString(2);
-                        //sendinginfo.l_namepos = (long)mdv.GetInt32(3);
-                        sendinginfo.l_addresspos = mdv.GetInt32(4);
-                        sendinginfo.l_lastantsep = mdv.GetInt32(5);
-                        sendinginfo.l_refno = l_refno;
-                        sendinginfo.l_createdate = mdv.GetInt32(7).ToString();
-                        sendinginfo.l_createtime = mdv.GetInt16(8).ToString();
-                        sendinginfo.l_scheddate = mdv.GetInt32(9).ToString();
-                        sendinginfo.l_schedtime = mdv.GetInt16(10).ToString();
-                        sendinginfo.sz_sendingname = mdv.GetString(11);
-                        sendinginfo.l_sendingstatus = mdv.GetInt32(12);
-                        sendinginfo.l_companypk = mdv.GetInt32(13);
-                        sendinginfo.l_deptpk = mdv.GetInt32(14);
-                        sendinginfo.l_nofax = mdv.GetInt32(15);
-                        sendinginfo.l_removedup = mdv.GetInt32(16);
-                        sendinginfo.l_group = mdv.GetInt32(17);
-                        //sendinginfo.sz_groups = mdv.GetString(18);
-                        sendinginfo.l_type = mdv.GetInt32(19);
-                        sendinginfo.f_dynacall = mdv.GetInt16(20);
-                        sendinginfo.l_addresstypes = mdv.GetInt32(21);
-                        sendinginfo.l_userpk = mdv.GetInt64(22);
-                        //f_lowres
-                        sendinginfo.l_maxchannels = mdv.GetInt32(24);
-                    }
-                    mdv.Close();*/
-                    cbs.mdv = sendinginfo; // MDVSENDINGINFO
 
+                    ULBASENDING cb_operator = new ULBASENDING();
+                    cb_operator.histcc = null;
+                    cb_operator.sz_areaid = rs.GetString(10);
+                    cb_operator.sz_jobid = rs.GetString(11);
+                    cb_operator.sz_operator = rs.GetString(1); // "KPN";
+                    cb_operator.l_cbtype = (int)LBA_SENDINGTYPES.CELLBROADCAST;
+                    cb_operator.l_items = rs.GetInt32(4);
+                    cb_operator.l_operator = rs.GetInt32(12);
+                    cb_operator.l_proc = rs.GetInt32(5);
+                    cb_operator.l_requesttype = (int)rs.GetByte(6);
+                    cb_operator.l_response = rs.GetInt32(7);
+                    cb_operator.l_retries = rs.GetByte(8);
+                    cb_operator.l_status = rs.GetInt32(9);
+                    cb_operator.languages = null; // List<LBALanguage>
+
+                    //add operator to current refno
+                    cbs.operators.Add(cb_operator);
+
+                    cbs.mdv = sendinginfo; // MDVSENDINGINFO                    
                     
-                    
-                    statuslist.Add(cbs);
+                    //statuslist.Add(cbs);
                 }
                 rs.Close();
 
@@ -435,55 +418,76 @@ namespace com.ums.PAS.Database
 
                 for (int i = 0; i < statuslist.Count; ++i)
                 {
-                    List<ULBAHISTCELL> histlist = new List<ULBAHISTCELL>();
-
-                    szSQL = String.Format("sp_cb_get_histcell {0}, {1}", statuslist[i].l_refno, statuslist[i].l_operator);
-                    OdbcDataReader histrs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                    
-                    ULBAHISTCELL hc;
-                    while (histrs.Read())
+                    for (int j = 0; j < statuslist[i].operators.Count; ++j)
                     {
-                        hc = new ULBAHISTCELL();
-                        hc.l_operator = histrs.GetInt32(1);
-                        hc.l_2gtotal = histrs.GetInt32(2);
-                        hc.l_2gok = histrs.GetInt32(3);
-                        hc.l_3gtotal = histrs.GetInt32(4);
-                        hc.l_3gok = histrs.GetInt32(5);
-                        hc.l_4gtotal = histrs.GetInt32(6);
-                        hc.l_4gok = histrs.GetInt32(7);
-                        hc.l_timestamp = long.Parse(histrs.GetDecimal(8).ToString());
-                        try
+                        List<ULBAHISTCELL> histlist = new List<ULBAHISTCELL>();
+
+                        szSQL = String.Format("sp_cb_get_histcell {0}, {1}", statuslist[i].l_refno, statuslist[i].operators[j].l_operator);
+                        OdbcDataReader histrs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+
+                        ULBAHISTCELL hc;
+                        while (histrs.Read())
                         {
-                            hc.l_successpercentage = histrs.GetFloat(9);
+                            hc = new ULBAHISTCELL();
+                            hc.l_operator = histrs.GetInt32(1);
+                            hc.l_2gtotal = histrs.GetInt32(2);
+                            hc.l_2gok = histrs.GetInt32(3);
+                            hc.l_3gtotal = histrs.GetInt32(4);
+                            hc.l_3gok = histrs.GetInt32(5);
+                            hc.l_4gtotal = histrs.GetInt32(6);
+                            hc.l_4gok = histrs.GetInt32(7);
+                            hc.l_timestamp = long.Parse(histrs.GetDecimal(8).ToString());
+                            try
+                            {
+                                hc.l_successpercentage = histrs.GetFloat(9);
+                            }
+                            catch (Exception ex) { hc.l_successpercentage = (float)0.0; }
+                            hc.sz_operator = histrs.GetString(10);
+                            histlist.Add(hc);
                         }
-                        catch (Exception ex) { hc.l_successpercentage = (float)0.0; }
-                        hc.sz_operator = histrs.GetString(10);
-                        histlist.Add(hc);
+                        histrs.Close();
+                        statuslist[i].operators[j].histcell = histlist;
                     }
-                    histrs.Close();
-                    statuslist[i].histcell = histlist;
                 }
 
 
                 for (int i = 0; i < statuslist.Count; ++i)
                 {
-                    szSQL = String.Format("sp_cb_get_lbasend_ts {0}, {1}", statuslist[i].l_refno, statuslist[i].l_operator);
-                    OdbcDataReader sendts = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                    List<ULBASEND_TS> liststs = new List<ULBASEND_TS>();
-                    ULBASEND_TS lbasend;
-                    while (sendts.Read())
+                    for (int j = 0; j < statuslist[i].operators.Count; ++j)
                     {
-                        lbasend = new ULBASEND_TS();
-                        lbasend.l_status = sendts.GetInt32(1);
-                        lbasend.l_ts = sendts.GetInt64(2);
-                        lbasend.l_operator = sendts.GetInt16(3);
-                        liststs.Add(lbasend);
+                        szSQL = String.Format("sp_cb_get_lbasend_ts {0}, {1}", statuslist[i].l_refno, statuslist[i].operators[j].l_operator);
+                        OdbcDataReader sendts = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        List<ULBASEND_TS> liststs = new List<ULBASEND_TS>();
+                        ULBASEND_TS lbasend;
+                        while (sendts.Read())
+                        {
+                            lbasend = new ULBASEND_TS();
+                            lbasend.l_status = sendts.GetInt32(1);
+                            lbasend.l_ts = sendts.GetInt64(2);
+                            lbasend.l_operator = sendts.GetInt16(3);
+                            liststs.Add(lbasend);
+                        }
+                        sendts.Close();
+                        statuslist[i].operators[j].send_ts = liststs; // List<ULBASEND_TS>
                     }
-                    sendts.Close();
-                    statuslist[i].send_ts = liststs; // List<ULBASEND_TS>
                 }
 
-                response.l_db_timestamp = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+                for (int i = 0; i < statuslist.Count; ++i)
+                {
+                    CB_STATUS cb = statuslist[i];
+                    szSQL = String.Format("SELECT sz_xml FROM PASHAPE WHERE l_pk={0} AND l_type={1}",
+                        cb.l_refno, (long)PASHAPETYPES.PASENDING);
+                    OdbcDataReader rs_poly = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    if (rs_poly.Read())
+                    {
+
+                        UPolygon poly = UPolygon.Deserialize(rs_poly.GetString(0));
+                        cb.shape = (UShape)poly;
+                    }
+                    rs_poly.Close();
+                }
+
+                response.l_db_timestamp = getDbClock();//long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
                 p.n_sendingcount = statuslist.Count;
                 response.project = p;
                 response.statuslist = statuslist;

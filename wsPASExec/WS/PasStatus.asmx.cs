@@ -14,6 +14,8 @@ using System.Xml;
 using System.Collections.Generic;
 using com.ums.PAS.CB;
 using com.ums.PAS.Database;
+using com.ums.UmsParm;
+using System.Xml.Serialization;
 
 namespace com.ums.ws.pas.status
 {
@@ -28,6 +30,9 @@ namespace com.ums.ws.pas.status
 
     public class PasStatus : System.Web.Services.WebService
     {
+        [XmlInclude(typeof(UPolygon))]
+        [XmlInclude(typeof(UEllipse))]
+        [XmlInclude(typeof(UBoundingRect))]
 
         [WebMethod]
         public List<USMSINSTATS> GetSmsStats(ULOGONINFO logoninfo, long n_refno)
@@ -35,6 +40,7 @@ namespace com.ums.ws.pas.status
             List<USMSINSTATS> ret = new List<USMSINSTATS>();
             return ret;
         }
+
 
 
         /*

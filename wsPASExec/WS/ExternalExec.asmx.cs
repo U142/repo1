@@ -34,6 +34,12 @@ namespace com.ums.ws.parm
     public class parmws : System.Web.Services.WebService
     {
 
+        [XmlInclude(typeof(CB_ALERT_KILL))]
+        [XmlInclude(typeof(CB_ALERT_PLMN))]
+        [XmlInclude(typeof(CB_ALERT_POLYGON))]
+        [XmlInclude(typeof(CB_ALERT_UPDATE))]
+
+
         [WebMethod]
         public PAEVENT[] GetEventListTest()
         {
@@ -297,10 +303,6 @@ namespace com.ums.ws.parm
             return true;
         }*/
 
-        [XmlInclude(typeof(CB_ALERT_KILL))]
-        [XmlInclude(typeof(CB_ALERT_PLMN))]
-        [XmlInclude(typeof(CB_ALERT_POLYGON))]
-        [XmlInclude(typeof(CB_ALERT_UPDATE))]
 
 
         /*[WebMethod]
@@ -339,14 +341,20 @@ namespace com.ums.ws.parm
             }
         }*/
 
-        /*[WebMethod]
+        [WebMethod]
         public bool tmpRestrictionShape()
         {
-            CB_ALERT_POLYGON p = CB_ALERT_POLYGON.Deserialize("S:\\UMS\\var\\CB\\eat\\CB_NewAlertPolygon_62_100145.xml", Encoding.UTF8);
+            CB_ALERT_POLYGON p = CB_ALERT_POLYGON.Deserialize("S:\\UMS\\var\\CB\\eat\\CB_NewAlertPolygon_395_100514.xml", Encoding.UTF8);
             String xml = "", md5 = "";
             p.shape.CreateXml(ref xml, ref md5);
+            int n_deptpk = 4;
+            UmsDb db = new UmsDb();
+            String szSQL = String.Format("UPDATE PASHAPE SET sz_xml='{0}', sz_md5='{1}' WHERE l_pk={2} AND l_type=16",
+                                xml, md5, n_deptpk);
+            db.ExecNonQuery(szSQL);
+            
             return true;
-        }*/
+        }
 
         /**
          * Execute a CB-operation (send poly, send plnm, update, kill)
@@ -808,6 +816,45 @@ namespace com.ums.ws.parm
                 parm.setAlertInfo(false, "0", 0, 0, "", "Error closing Database resources", e.Message, ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_WARNING);
             }
         }
+
+        [WebMethod]
+        public CB_MESSAGE_FIELDS getCBSendingFields(ULOGONINFO logon)
+        {
+            try
+            {
+                UmsDb db = new UmsDb();
+                CB_MESSAGE_FIELDS ret = new CB_MESSAGE_FIELDS();
+                ret.l_db_timestamp = db.getDbClock();
+                List<CB_ORIGINATOR> originators = new List<CB_ORIGINATOR>();
+                List<CB_RISK> risk = new List<CB_RISK>();
+                List<CB_REACTION> reaction = new List<CB_REACTION>();
+
+                originators.Add(new CB_ORIGINATOR(1, "Originator1"));
+                originators.Add(new CB_ORIGINATOR(2, "Originator2"));
+                originators.Add(new CB_ORIGINATOR(3, "Originator3"));
+
+                risk.Add(new CB_RISK(4, "Risk1"));
+                risk.Add(new CB_RISK(5, "Risk2"));
+                risk.Add(new CB_RISK(6, "Risk3"));
+
+                reaction.Add(new CB_REACTION(7, "Reaction1"));
+                reaction.Add(new CB_REACTION(8, "Reaction2"));
+                reaction.Add(new CB_REACTION(9, "Reaction3"));
+
+
+                ret.originator_list = originators;
+                ret.risk_list = risk;
+                ret.reaction_list = reaction;
+
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
+
 
 }

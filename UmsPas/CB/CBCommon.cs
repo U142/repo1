@@ -37,12 +37,43 @@ namespace com.ums.PAS.CB
 
     public class CB_RISK : CB_MESSAGE_FIELDS_BASE
     {
+        public CB_RISK()
+        {
+            l_pk = -1;
+            sz_name = "Not set";
+        }
+        public CB_RISK(long pk, String s)
+        {
+            l_pk = pk;
+            sz_name = s;
+        }
+
     }
     public class CB_REACTION : CB_MESSAGE_FIELDS_BASE
     {
+        public CB_REACTION()
+        {
+            l_pk = -1;
+            sz_name = "Not set";
+        }
+        public CB_REACTION(long pk, String s)
+        {
+            l_pk = pk;
+            sz_name = s;
+        }
     }
     public class CB_ORIGINATOR : CB_MESSAGE_FIELDS_BASE
     {
+        public CB_ORIGINATOR()
+        {
+            l_pk = -1;
+            sz_name = "Not set";
+        }
+        public CB_ORIGINATOR(long pk, String s)
+        {
+            l_pk = pk;
+            sz_name = s;
+        }
     }
 
     public class CB_MESSAGE
@@ -179,11 +210,27 @@ namespace com.ums.PAS.CB
     [XmlRoot("cb")]
     public abstract class CB_SEND_BASE : CB_OPERATION_BASE
     {
+        public CB_SEND_BASE()
+        {
+            risk = new CB_RISK();
+            reaction = new CB_REACTION();
+            originator = new CB_ORIGINATOR();
+        }
         [XmlAttribute("l_sched_utc")]
         public long l_sched_utc;
 
         [XmlElement("textmessages")]
         public CB_MESSAGELIST textmessages = null;
+
+        [XmlElement("risk")]
+        public CB_RISK risk;
+
+        [XmlElement("reaction")]
+        public CB_REACTION reaction;
+
+        [XmlElement("originator")]
+        public CB_ORIGINATOR originator;
+
 
     }
 
@@ -202,6 +249,7 @@ namespace com.ums.PAS.CB
 
         [XmlAttribute("l_validity")]
         public int l_validity;
+
 
         protected override XmlSerializer CreateSerializer()
         {
@@ -301,14 +349,18 @@ namespace com.ums.PAS.CB
         public List<CB_STATUS> statuslist;
     }
 
-    public class CB_STATUS : ULBASENDING
+    public class CB_STATUS
     {
         public String sz_sendingname;
         public MDVSENDINGINFO mdv;
         public UShape shape;
+        public long l_refno;
+        public long l_combined_status;
         public long l_created_ts;
         public long l_started_ts;
         public long l_last_ts;
         public int l_channel;
+        public int f_simulation;
+        public List<ULBASENDING> operators;
     }
 }

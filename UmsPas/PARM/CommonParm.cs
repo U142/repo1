@@ -1105,6 +1105,23 @@ namespace com.ums.UmsParm
                     m_array_polypoints.Add(item);
             }
         }*/
+        public static UPolygon Deserialize(String xml)
+        {
+            UPolygon cob = new UPolygon();
+            StringReader read = new StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(cob.GetType());
+            XmlReader reader = new XmlTextReader(read);
+            try
+            {
+                cob = (UPolygon)serializer.Deserialize(reader);
+                return cob;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
         public String Serialize()
         {

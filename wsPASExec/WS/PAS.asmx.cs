@@ -22,6 +22,7 @@ using System.Text;
 using com.ums.UmsDbLib;
 using com.ums.PAS.Weather;
 using com.ums.PAS.messagelib;
+using com.ums.PAS.CB;
 
 using System.Collections.Generic;
 
@@ -685,6 +686,7 @@ namespace com.ums.ws.pas
                 throw e;
             }
         }
+
         /*[WebMethod]
         public UWeatherReportResults GetWeatherTest()
         {
