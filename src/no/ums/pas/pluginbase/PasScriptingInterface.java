@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,6 +22,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.geotools.data.ows.Layer;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.logon.LogonDialog;
@@ -452,11 +454,11 @@ public abstract class PasScriptingInterface
 	
 	public abstract void addShapeToPaint(ShapeStruct s);
 	
-	public abstract void removeShapeToPaint(ShapeStruct s);
+	public abstract boolean removeShapeToPaint(long id);
 	
 	public abstract void clearShapesToPaint();
 	
-	public abstract List<ShapeStruct> getShapesToPaint(); 
+	public abstract Hashtable<String, ShapeStruct> getShapesToPaint(); 
 	
 	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
 	
@@ -487,6 +489,8 @@ public abstract class PasScriptingInterface
 	public abstract boolean onCloseProject();
 
 	public abstract int onInvokeProject();
+	
+	public abstract StatusController onCreateStatusController();
 	
 }
 

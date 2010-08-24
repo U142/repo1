@@ -12,6 +12,7 @@ import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.send.*;
 import no.ums.pas.ums.tools.StdTextLabel;
 
@@ -146,7 +147,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 			get_parent().actionPerformed(e);
 			switch(get_parent().get_sendobject().get_sendproperties().get_sendingtype()) {
 				case SendProperties.SENDING_TYPE_POLYGON_:
-					get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(PolygonStruct.SHOW_POLYGON_SIMPLIFIED_PRPIXELS, 5, variables.NAVIGATION);
+					get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(DETAILMODE.SHOW_POLYGON_SIMPLIFIED_PRPIXELS, 5, variables.NAVIGATION);
 					PAS.get_pas().kickRepaint();
 					break;
 			}

@@ -31,6 +31,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.core.variables;
+import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -1110,9 +1111,15 @@ public class plugin_Centric extends PAS_Scripting
 		{
 			
 		}
-		for(int i=0; i < getShapesToPaint().size(); i++)
+		/*for(int i=0; i < getShapesToPaint().size(); i++)
 		{
-			getShapesToPaint().get(i).calc_coortopix(nav);
+			if(getShapesToPaint().get(i)!=null)
+				getShapesToPaint().get(i).calc_coortopix(nav);
+		}*/
+		Enumeration<ShapeStruct> en = getShapesToPaint().elements();
+		while(en.hasMoreElements())
+		{
+			en.nextElement().calc_coortopix(nav);
 		}
 
 
@@ -1146,10 +1153,11 @@ public class plugin_Centric extends PAS_Scripting
 
 		try
 		{
-			for(int i=0; i < getShapesToPaint().size(); i++)
+			Enumeration<ShapeStruct> en = getShapesToPaint().elements();
+			while(en.hasMoreElements())
 			{
-				getShapesToPaint().get(i).draw(g, nav, false, true, false, null, true, true, 1, false);
-			}
+				en.nextElement().draw(g, nav, false, true, false, null, true, true, 1, true);
+			}			
 		}
 		catch(Exception e)
 		{
@@ -1196,11 +1204,14 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public boolean onCloseProject() {
 		try {
+			((CentricStatusController)PAS.get_pas().get_statuscontroller()).StopUpdates();
+			PAS.pasplugin.clearShapesToPaint();
+			PAS.get_pas().kickRepaint();
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(null);
 			
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0);
-			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
+			//((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
 			
 			return true;
@@ -1214,19 +1225,24 @@ public class plugin_Centric extends PAS_Scripting
 			CentricSendOptionToolbar csend = CentricVariables.centric_send;
 			csend.set_projectpk(Long.parseLong(project.get_projectpk()));
 			
-			CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
+			//CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
 			
 			CBSENDINGRESPONSE res = new CBSENDINGRESPONSE(); // Just to use the same
 			res.setLProjectpk(Long.parseLong(project.get_projectpk()));
 			
-			if(m_centricstatuscontroller == null)
+			((CentricStatusController)PAS.get_pas().get_statuscontroller()).OpenStatus(Long.parseLong(project.get_projectpk()),csend);
+			/*if(m_centricstatuscontroller == null)
 				m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
 			else
-				m_centricstatuscontroller.set_cbsendingresponse(res);
+				m_centricstatuscontroller.set_cbsendingresponse(res);*/
+			
 			
 			return true;
 			
-		} catch(Exception e) { return false; }
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false; 
+		}
 	}
 	
 	@Override
@@ -1261,6 +1277,11 @@ public class plugin_Centric extends PAS_Scripting
 		frame.setVisible(true);
 		frame.setAlwaysOnTop(true);
 		return frame;
+	}
+
+	@Override
+	public StatusController onCreateStatusController() {
+		return new CentricStatusController();
 	}
 
 }

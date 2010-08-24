@@ -26,9 +26,27 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public static final int SHAPE_POLYGON = 1;
 	public static final int SHAPE_GISIMPORT = 2;
 	public static final int SHAPE_MUNICIPAL = 9;
+	
+	/*public static final int SHOW_POLYGON_FULL					= 1;
+	public static final int SHOW_POLYGON_SIMPLIFIED_PRPIXELS	= 2;
+	public static final int SHOW_POLYGON_SIMPLIFIED_PRMETERS	= 3;
+*/
+	public enum DETAILMODE
+	{
+		SHOW_POLYGON_FULL,
+		SHOW_POLYGON_SIMPLIFIED_PRPIXELS,
+		SHOW_POLYGON_SIMPLIFIED_PRMETERS,
+	}
 
 	protected boolean m_b_hidden = false;
 	protected double m_f_area_sqm = 0;
+	
+	protected DETAILMODE m_n_current_show_mode = DETAILMODE.SHOW_POLYGON_SIMPLIFIED_PRPIXELS;
+	public void setDetailMode(DETAILMODE nmode)
+	{
+		m_n_current_show_mode = nmode;
+	}
+
 	protected double get_area_sqm()
 	{
 		return m_f_area_sqm;
@@ -61,9 +79,10 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	
 	public String toString()
 	{
-		return new Integer(shapeID).toString();
+		return new Long(shapeID).toString();
 	}
-	public int shapeID = 0;
+	public long shapeID = 0;
+	public void setShapeId(long n) { shapeID = n; }
 	public String shapeName = "";
 	private ImageIcon m_icon_epicentre;
 	private MapPoint m_p_epicentre = null;
@@ -120,6 +139,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	
 	protected Color m_fill_color;
 	protected Color m_border_color;
+	protected Color m_text_color = new Color(0,0,0,200);
 	public PolygonStruct typecast_polygon() { return (PolygonStruct)this; }
 	public EllipseStruct typecast_ellipse() { return (EllipseStruct)this; }
 	public MunicipalStruct typecast_municipal() { return (MunicipalStruct)this; }
@@ -154,6 +174,11 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 			e.printStackTrace();
 			Error.getError().addError("ShapeStruct","Exception in set_fill_color",e,1);
 		}
+	}
+	
+	public Color get_text_color() { return m_text_color; }
+	public void set_text_color(Color col) {
+		m_text_color = col;
 	}
 	
 

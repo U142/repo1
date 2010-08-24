@@ -15,17 +15,21 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="CB_STATUS">
  *   &lt;complexContent>
- *     &lt;extension base="{http://ums.no/ws/pas/status}ULBASENDING">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="sz_sendingname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="mdv" type="{http://ums.no/ws/pas/status}MDVSENDINGINFO" minOccurs="0"/>
  *         &lt;element name="shape" type="{http://ums.no/ws/pas/status}UShape" minOccurs="0"/>
+ *         &lt;element name="l_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="l_combined_status" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_created_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_started_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_last_ts" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_channel" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="f_simulation" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="operators" type="{http://ums.no/ws/pas/status}ArrayOfULBASENDING" minOccurs="0"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -37,19 +41,25 @@ import javax.xml.bind.annotation.XmlType;
     "szSendingname",
     "mdv",
     "shape",
+    "lRefno",
+    "lCombinedStatus",
     "lCreatedTs",
     "lStartedTs",
     "lLastTs",
-    "lChannel"
+    "lChannel",
+    "fSimulation",
+    "operators"
 })
-public class CBSTATUS
-    extends ULBASENDING
-{
+public class CBSTATUS {
 
     @XmlElement(name = "sz_sendingname")
     protected String szSendingname;
     protected MDVSENDINGINFO mdv;
     protected UShape shape;
+    @XmlElement(name = "l_refno")
+    protected long lRefno;
+    @XmlElement(name = "l_combined_status")
+    protected long lCombinedStatus;
     @XmlElement(name = "l_created_ts")
     protected long lCreatedTs;
     @XmlElement(name = "l_started_ts")
@@ -58,6 +68,9 @@ public class CBSTATUS
     protected long lLastTs;
     @XmlElement(name = "l_channel")
     protected int lChannel;
+    @XmlElement(name = "f_simulation")
+    protected int fSimulation;
+    protected ArrayOfULBASENDING operators;
 
     /**
      * Gets the value of the szSendingname property.
@@ -132,6 +145,38 @@ public class CBSTATUS
     }
 
     /**
+     * Gets the value of the lRefno property.
+     * 
+     */
+    public long getLRefno() {
+        return lRefno;
+    }
+
+    /**
+     * Sets the value of the lRefno property.
+     * 
+     */
+    public void setLRefno(long value) {
+        this.lRefno = value;
+    }
+
+    /**
+     * Gets the value of the lCombinedStatus property.
+     * 
+     */
+    public long getLCombinedStatus() {
+        return lCombinedStatus;
+    }
+
+    /**
+     * Sets the value of the lCombinedStatus property.
+     * 
+     */
+    public void setLCombinedStatus(long value) {
+        this.lCombinedStatus = value;
+    }
+
+    /**
      * Gets the value of the lCreatedTs property.
      * 
      */
@@ -193,6 +238,46 @@ public class CBSTATUS
      */
     public void setLChannel(int value) {
         this.lChannel = value;
+    }
+
+    /**
+     * Gets the value of the fSimulation property.
+     * 
+     */
+    public int getFSimulation() {
+        return fSimulation;
+    }
+
+    /**
+     * Sets the value of the fSimulation property.
+     * 
+     */
+    public void setFSimulation(int value) {
+        this.fSimulation = value;
+    }
+
+    /**
+     * Gets the value of the operators property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfULBASENDING }
+     *     
+     */
+    public ArrayOfULBASENDING getOperators() {
+        return operators;
+    }
+
+    /**
+     * Sets the value of the operators property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOfULBASENDING }
+     *     
+     */
+    public void setOperators(ArrayOfULBASENDING value) {
+        this.operators = value;
     }
 
 }

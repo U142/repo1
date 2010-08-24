@@ -46,9 +46,6 @@ import org.jvnet.substance.SubstanceLookAndFeel;
  
 public class PolygonStruct extends ShapeStruct {
 	
-	public static final int SHOW_POLYGON_FULL					= 1;
-	public static final int SHOW_POLYGON_SIMPLIFIED_PRPIXELS	= 2;
-	public static final int SHOW_POLYGON_SIMPLIFIED_PRMETERS	= 3;
 	
 	private ArrayList<Double> m_coor_lon, m_coor_lat, m_coor_show_lon = null, m_coor_show_lat = null;
 	private ArrayList<Double> m_ellipse_coor_lon = new ArrayList<Double>(), m_ellipse_coor_lat = new ArrayList<Double>();
@@ -59,7 +56,6 @@ public class PolygonStruct extends ShapeStruct {
 	private int [] m_show_int_x, m_show_int_y;
 //	private int [] m_simplified_int_x, m_simplified_int_y;
 	private boolean m_b_needcoortopix = true;
-	private int m_n_current_show_mode = SHOW_POLYGON_SIMPLIFIED_PRPIXELS;
 	
 	
 	private Dimension m_dim_mapsize;
@@ -707,7 +703,7 @@ public class PolygonStruct extends ShapeStruct {
 		m_n_lod_meters = n_meters;
 	}
 	
-	public void setCurrentViewMode(int SHOW, int n_lod, Navigation nav) {
+	public void setCurrentViewMode(DETAILMODE SHOW, int n_lod, Navigation nav) {
 		switch(SHOW) 
 		{
 		case SHOW_POLYGON_SIMPLIFIED_PRMETERS:
@@ -1001,7 +997,8 @@ public class PolygonStruct extends ShapeStruct {
 							width+factor*2, height+factor, 10, 10);
 					Font fOldFont = g.getFont();
 					g.setFont(f);
-					g.setColor(Color.black);
+					//g.setColor(Color.black);
+					g.setColor(get_text_color());
 					g.drawString(this.shapeName, m_center_pix.get_x()-width/2, m_center_pix.get_y()+2);
 					g.setFont(fOldFont);
 					g.setColor(gOldColor);

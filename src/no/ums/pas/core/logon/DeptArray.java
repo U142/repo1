@@ -13,6 +13,7 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.pas.*;
 
@@ -188,7 +189,7 @@ public class DeptArray extends ArrayList<Object> {
 			it.next();
 		}
 		System.out.println("Combined Pointcount = " + n_total_points);
-		combined_shapestruct.setCurrentViewMode(PolygonStruct.SHOW_POLYGON_FULL, 0, null);
+		combined_shapestruct.setCurrentViewMode(DETAILMODE.SHOW_POLYGON_FULL, 0, null);
 
 		m_combined_shapestruct_list.add(combined_shapestruct);
 	}

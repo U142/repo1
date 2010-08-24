@@ -8,6 +8,8 @@ import java.util.*;
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
+import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.ws.pas.*;
 
 /*struct class containing user-info*/
@@ -94,77 +96,14 @@ public class DeptInfo extends Object {
 		for(int i=0; i < s.size(); i++)
 		{
 			UShape ushape = s.get(i);
-			ShapeStruct shapestruct = ConvertUShape_to_ShapeStruct(ushape);
+			ShapeStruct shapestruct = UShapeToShape.ConvertUShape_to_ShapeStruct(ushape);
 			shapestruct.shapeName = m_sz_deptid;
 			ret.add(shapestruct);
 			if(shapestruct.getClass().equals(PolygonStruct.class))
-				shapestruct.typecast_polygon().setCurrentViewMode(PolygonStruct.SHOW_POLYGON_FULL, 0, null);
+				shapestruct.typecast_polygon().setCurrentViewMode(DETAILMODE.SHOW_POLYGON_FULL, 0, null);
 			shapestruct.set_fill_color(Color.black);
 
 		}
 		return ret;
-	}
-	protected ShapeStruct ConvertUShape_to_ShapeStruct(UShape ushape)
-	{
-		if(ushape.getClass().equals(UPolygon.class))
-		{
-			UPolygon upolygon = (UPolygon)ushape;
-			PolygonStruct polygonstruct = new PolygonStruct(null, 
-					new Color((int)upolygon.getColRed(), 
-							(int)upolygon.getColGreen(), 
-							(int)upolygon.getColBlue(), 
-							(int)upolygon.getColAlpha()), 
-							new Color(0,0,0));
-			//if(upolygon.getMArrayPolypoints()!=null)
-			if(upolygon.getPolypoint()!=null)
-			{
-				//List<UPolypoint> list = upolygon.getMArrayPolypoints().getUPolypoint();
-				List<UPolypoint> list = upolygon.getPolypoint();
-				for(int i=0; i < list.size(); i++)
-				{
-					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat());
-				}
-			}
-			return polygonstruct;
-		}
-		else if(ushape.getClass().equals(UEllipse.class))
-		{
-			UEllipse ell = (UEllipse)ushape;
-			EllipseStruct ellipsestruct = new EllipseStruct(
-					new Color((int)ell.getColRed(), 
-							(int)ell.getColGreen(), 
-							(int)ell.getColBlue(), 
-							(int)ell.getColAlpha()), 
-							new Color(0,0,0));
-			ellipsestruct.set_ellipse_center(
-					variables.NAVIGATION, 
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getLon(), ell.getLat())));
-			ellipsestruct.set_ellipse_corner(
-					variables.NAVIGATION,
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getX(), ell.getY())));
-			return ellipsestruct;
-					
-		}
-		else if(ushape.getClass().equals(UBoundingRect.class))
-		{
-			UBoundingRect upolygon = (UBoundingRect)ushape;
-			PolygonStruct polygonstruct = new PolygonStruct(null, 
-					new Color((int)upolygon.getColRed(), 
-							(int)upolygon.getColGreen(), 
-							(int)upolygon.getColBlue(), 
-							(int)upolygon.getColAlpha()), 
-							new Color(0,0,0));
-			polygonstruct.add_coor(upolygon.getLeft(), upolygon.getTop());
-			polygonstruct.add_coor(upolygon.getRight(), upolygon.getTop());
-			polygonstruct.add_coor(upolygon.getRight(), upolygon.getBottom());
-			polygonstruct.add_coor(upolygon.getLeft(), upolygon.getBottom());
-			
-			//Hide if the restriction area is the whole world
-			if(upolygon.getLeft()==-180 && upolygon.getRight()==180 &&
-					upolygon.getBottom()==-90 && upolygon.getTop()==90)
-				polygonstruct.setHidden(true);
-			return polygonstruct;
-		}
-		return null;
 	}
 }

@@ -58,7 +58,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		m_parent = parent;
 		m_l_refno = l_refno;
 		add_controls();
-		
+		addComponentListener(this);
 	}
 
 	@Override
@@ -134,14 +134,15 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		m_txt_message.setEnabled(false);
 		
 		m_txt_previewscroll = new JScrollPane(m_txt_message);
-		m_txt_previewscroll.setPreferredSize(new Dimension(50,50));
+		m_txt_previewscroll.setPreferredSize(new Dimension(330,100));
 		
 		//m_gridconst.fill = GridBagConstraints.BOTH;
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_message, m_gridconst);
-		set_gridconst(1, get_panel(), 1, 1);
-		add(m_txt_message, m_gridconst);
+		set_gridconst(1, get_panel(), 3, 1);
+		add(m_txt_previewscroll, m_gridconst);
 		
+		add_spacing(DIR_VERTICAL, 20);
 		
 		set_gridconst(0, inc_panels(), 4, 1);
 		add(m_tabbed_operators, m_gridconst);
@@ -150,7 +151,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		//m_tabbed_operators.add("Vodafone",new CentricOperatorStatus(this, false,3));
 		//m_tabbed_operators.add("T-Mobile",new CentricOperatorStatus(this, false,2));
 		m_tabbed_operators.add(PAS.l("common_total"), new CentricOperatorStatus(this, true,-1));
-		m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/3));	
+		m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
 		
 		
 		
@@ -162,7 +163,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		add(m_btn_send_to_address_book, m_gridconst);
 		
 		
-		setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height/2));
+		setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height));
 		
 		this.revalidate();
 		repaint();
@@ -171,10 +172,12 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		// TODO Auto-generated method stub
 		super.componentResized(e);
-		m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/3));	
-		setPreferredSize(new Dimension(m_parent.getSize().width-10, m_parent.getSize().height/2));
+		setPreferredSize(new Dimension(getWidth(), getHeight()));
+		m_tabbed_operators.setPreferredSize(new Dimension(getWidth()-30, getHeight()/2));
+		m_txt_previewscroll.setPreferredSize(new Dimension(getWidth()-30-m_lbl_message.getPreferredSize().width, 100));
+		//m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
+		//setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height));
 	}
 
 	@Override

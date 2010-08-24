@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 
 
@@ -17,6 +19,7 @@ import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import no.ums.pas.*;
+import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
 import no.ums.pas.core.logon.DeptArray;
@@ -39,6 +42,7 @@ import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
@@ -772,10 +776,12 @@ public class PAS_Scripting extends PasScriptingInterface
 		{
 			
 		}
-		for(int i=0; i < getShapesToPaint().size(); i++)
+		Enumeration<ShapeStruct> en = getShapesToPaint().elements();
+		while(en.hasMoreElements())
 		{
-			getShapesToPaint().get(i).calc_coortopix(nav);
-		}
+			en.nextElement().calc_coortopix(nav);
+		}			
+
 		p.get_gpscontroller().calcGpsCoords();	
 		if(p.get_parmcontroller()!=null)
 			p.get_parmcontroller().calc_coortopix();
@@ -813,22 +819,34 @@ public class PAS_Scripting extends PasScriptingInterface
 
 
 
-	protected List<ShapeStruct> shapes_to_paint = new ArrayList<ShapeStruct>();
+	protected Hashtable<String, ShapeStruct> shapes_to_paint = new Hashtable<String, ShapeStruct>();
 	public void addShapeToPaint(ShapeStruct s)
 	{
-		shapes_to_paint.add(s);
+		if(s!=null)
+		{
+			s.setDetailMode(DETAILMODE.SHOW_POLYGON_FULL);
+			shapes_to_paint.put("s" + s.shapeID, s);
+		}
 	}
-	public void removeShapeToPaint(ShapeStruct s)
+	
+	public boolean removeShapeToPaint(long id)
 	{
-		shapes_to_paint.remove(s);
+		if(shapes_to_paint.containsKey(id))
+		{
+			shapes_to_paint.remove(id);
+			return true;
+		}
+		return false;
 	}
+	
+	
 	public void clearShapesToPaint()
 	{
 		shapes_to_paint.clear();
 	}
 	
 	@Override
-	public List<ShapeStruct> getShapesToPaint() {
+	public Hashtable<String, ShapeStruct> getShapesToPaint() {
 		return shapes_to_paint;
 	}
 
@@ -865,10 +883,13 @@ public class PAS_Scripting extends PasScriptingInterface
 		try {
 			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
 		} catch(Exception e) { }
-		for(int i=0; i < getShapesToPaint().size(); i++)
+
+		Enumeration<ShapeStruct> en = getShapesToPaint().elements();
+		while(en.hasMoreElements())
 		{
-			getShapesToPaint().get(i).draw(g, nav, true, true, false, null, true, true, 1, false);
-		}
+			en.nextElement().draw(g, nav, true, true, false, null, true, true, 1, false);
+		}			
+
 		if(p.get_mainmenu().get_selectmenu().get_bar().get_show_houses())
 			p.get_housecontroller().drawItems(g);
 		try {
@@ -932,6 +953,17 @@ public class PAS_Scripting extends PasScriptingInterface
 	public EastContent onCreateEastContent() {
 		return new EastContent(PAS.get_pas());
 	}
+
+
+
+	@Override
+	public StatusController onCreateStatusController() {
+		return new StatusController();
+	}
+
+
+
+
 
 
 

@@ -39,7 +39,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		java.net.URL wsdl;
 		try
 		{			
-			String WSDL_CENTRIC_MAPSEARCH = "http://www.centric.nl/services/nl-alert/mapsearch/MapSearchService.asmx?WSDL";
+			String WSDL_CENTRIC_MAPSEARCH = "http://94.228.135.14/MapSearchService.asmx?WSDL";
 			wsdl = new java.net.URL(WSDL_CENTRIC_MAPSEARCH);//PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL"); 
 			QName service = new QName("http://www.bzk.nl/services/nl-alert/mapsearch/", "MapSearchService");
 			MapSearchService myService = new MapSearchService(wsdl, service);

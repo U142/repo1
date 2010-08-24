@@ -107,7 +107,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		add(m_lbl_percent, m_gridconst);
 		
 		
-		setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, (m_parent.getPreferredSize().height/3)-10));
+		setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, (m_parent.getPreferredSize().height)-10));
 		
 		this.revalidate();
 		repaint();

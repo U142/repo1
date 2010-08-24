@@ -137,9 +137,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
 	
 	private CentricStatus m_centricstatus;
-	private CentricStatusController m_centricstatuscontroller;
+	//private CentricStatusController m_centricstatuscontroller;
 	
-	public void set_centricController(CentricStatusController controller) { m_centricstatuscontroller = controller; }
+	public CentricStatusController getStatusController() { return (CentricStatusController)PAS.get_pas().get_statuscontroller(); }
+	
+	//public void set_centricController(CentricStatusController controller) { m_centricstatuscontroller = controller; }
 	
 	private long m_projectpk;
 	
@@ -151,7 +153,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_projectpk = projectpk;
 	}
 	
-	public CentricStatusController get_statuscontroller() { return m_centricstatuscontroller; }
+	//public CentricStatusController get_statuscontroller() { return m_centricstatuscontroller; }
 	
 	public CentricSendOptionToolbar() {
 		//super();
@@ -748,10 +750,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public void onSendFinished(ActionEvent e) {
 		// Start update timer
 		set_projectpk(((CBSENDINGRESPONSE)e.getSource()).getLProjectpk());
-		if(m_centricstatuscontroller == null)
-			m_centricstatuscontroller = new CentricStatusController(e, this);
-		else {
-			m_centricstatuscontroller.set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
+		//if(m_centricstatuscontroller == null)
+		//	m_centricstatuscontroller = new CentricStatusController(e, this);
+		//else {
+		{
+			getStatusController().set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
+			getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 		}
 	}
