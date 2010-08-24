@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.*;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
@@ -100,16 +101,17 @@ public class PrintCtrl implements Printable {
 		
 		PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
-		PAS.get_pas().get_drawthread().set_suspended(true);
+		variables.DRAW.set_suspended(true);
 	    if (printJob.printDialog()) {
 	        try {
 	        	printJob.setCopies(1);
 	        	printJob.print();
 	        } catch(PrinterException pe) {
-	          PAS.get_pas().add_event("Error printing: " + pe, pe);
+	          if(PAS.get_pas() != null)
+	        	PAS.get_pas().add_event("Error printing: " + pe, pe);
 	          Error.getError().addError("PrintCtrl","Exception in print",pe,1);
 	        } finally {
-	        	PAS.get_pas().get_drawthread().set_suspended(false);
+	        	variables.DRAW.set_suspended(false);
 	        }
 	    }
 	}

@@ -15,6 +15,9 @@ import no.ums.pas.ums.errorhandling.Error;
 
 public class MapFrameAdmin extends MapFrame {
 
+	private Graphics m_gfx;
+	public Graphics get_gfx() { return m_gfx; }
+	
 	public MapFrameAdmin(int n_width, int n_height, Draw drawthread,
 			Navigation nav, HTTPReq http, boolean b_enable_snap) {
 		super(n_width, n_height, drawthread, nav, http, b_enable_snap);
@@ -231,6 +234,7 @@ public class MapFrameAdmin extends MapFrame {
 		try
 		{
 			get_active_shape().draw(gfx, variables.NAVIGATION, false, true, false, null, true, true, 1, false);
+			m_gfx = gfx;
 		}
 		catch(Exception e) { }
 		super.drawOnEvents(gfx);
