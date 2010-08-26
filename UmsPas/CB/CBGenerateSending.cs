@@ -61,6 +61,7 @@ namespace com.ums.PAS.CB
                     UProject pr = new UProject();
                     UPROJECT_REQUEST project_request = new UPROJECT_REQUEST();
                     project_request.sz_name = alert.sz_projectname;
+                    project_request.sz_name.Replace("'", "''");
 
                     UPROJECT_RESPONSE resp = pr.uproject(ref logon, ref project_request);
                     project.sz_projectpk = resp.n_projectpk.ToString();
@@ -87,8 +88,8 @@ namespace com.ums.PAS.CB
 
             //TODO: insert record into MDVSENDINGINFO
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-            mdv.sz_messagetext = message.sz_text;
-            mdv.sz_oadc = alert.sz_sender;
+            mdv.sz_messagetext = message.sz_text.Replace("'", "''");
+            mdv.sz_oadc = alert.sz_sender.Replace("'", "''");
             mdv.sz_sendingname = "Alert " + alert.l_refno;
             mdv.l_scheddate = "0";
             mdv.l_schedtime = "0";

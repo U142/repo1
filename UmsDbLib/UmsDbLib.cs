@@ -367,7 +367,10 @@ namespace com.ums.UmsDbLib
                     news.l_errorcode = rs.GetInt32(11);
                     news.l_userpk = rs.GetInt64(12);
                     news.l_timestamp_db = rs.GetInt64(13);
-                    news.sz_operatorname = rs.GetString(14);
+                    if (rs.IsDBNull(14))
+                        news.sz_operatorname = "Unknown";
+                    else
+                        news.sz_operatorname = rs.GetString(14);
                     list.newslist.Add(news);
                 }
                 rs.Close();
