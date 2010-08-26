@@ -22,6 +22,7 @@ import no.ums.pas.*;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Logon;
@@ -35,11 +36,14 @@ import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
@@ -824,8 +828,10 @@ public class PAS_Scripting extends PasScriptingInterface
 	{
 		if(s!=null)
 		{
-			s.setDetailMode(DETAILMODE.SHOW_POLYGON_FULL);
-			shapes_to_paint.put("s" + s.shapeID, s);
+			if(!shapes_to_paint.containsKey("s" + s.shapeID))
+			{
+				shapes_to_paint.put("s" + s.shapeID, s);
+			}
 		}
 	}
 	
@@ -930,6 +936,21 @@ public class PAS_Scripting extends PasScriptingInterface
 		}
 		return true;
 	}
+	
+	
+	@Override
+	public boolean onMapGotoShapesToPaint() {
+		if(shapes_to_paint.size()==0)
+			return false;
+		NavStruct nav = CommonFunc.calc_bounds(shapes_to_paint.values().toArray());
+		PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		return true;
+	}
+
+
+
+
+
 
 
 	@Override
@@ -990,9 +1011,25 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	public int onInvokeProject() {
 		return -1;
-	}	
-	
-	
-	
+	}
+
+
+	@Override
+	public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
+		return true;
+	}
+
+	@Override
+	public ProjectDlg onCreateOpenProjectDlg(JFrame parent,
+			ActionListener callback, String cmdSave, boolean bNewsending) {
+		return new ProjectDlg(parent, callback, cmdSave, bNewsending);
+	}
+
+	@Override
+	public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
+		toolbar.lock_sending(bLock);
+		return true;
+	}
+
 
 }

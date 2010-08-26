@@ -1855,7 +1855,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 				
 		}
-		ProjectDlg dlg = new ProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
+		ProjectDlg dlg = PAS.pasplugin.onCreateOpenProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
+		//new ProjectDlg(this, get_pasactionlistener(), "act_project_saved", bNewSending);
 		dlg.setVisible(true);
 		return dlg.getSelectedAction();
 	}
@@ -1950,7 +1951,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 							get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
 							m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-							setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
+							//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
+							PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
 							m_current_project = null;
 						}
 						get_mappane().SetIsLoading(false, "");

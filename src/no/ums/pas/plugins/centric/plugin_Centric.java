@@ -2,6 +2,8 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
+import no.ums.pas.plugins.centric.send.CentricProjectDlg;
+import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
 
 import javax.swing.*;
@@ -42,6 +44,7 @@ import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.*;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
@@ -53,6 +56,7 @@ import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.pas.ArrayOfUBBNEWS;
 import no.ums.ws.pas.UBBNEWS;
 import no.ums.ws.pas.USYSTEMMESSAGES;
+import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 
 
 public class plugin_Centric extends PAS_Scripting
@@ -125,6 +129,10 @@ public class plugin_Centric extends PAS_Scripting
 		return true;
 	}
 	
+	private JButton menu_btn_draw_polygon;
+	private JButton menu_btn_draw_ellipse;
+	private JButton menu_btn_import;
+	
 	@Override
 	public boolean onAddMainMenuButtons(MainMenu menu)
 	{
@@ -151,9 +159,9 @@ public class plugin_Centric extends PAS_Scripting
 		menu.add(btn_goto_restriction, menu.m_gridconst);
 
 		
-		JButton btn_draw_polygon = new JButton(PAS.l("main_sending_type_polygon"));
-		btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
-		btn_draw_polygon.addActionListener(new ActionListener() {
+		menu_btn_draw_polygon = new JButton(PAS.l("main_sending_type_polygon"));
+		menu_btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		menu_btn_draw_polygon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
@@ -162,11 +170,11 @@ public class plugin_Centric extends PAS_Scripting
 			}
 		});
 		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(btn_draw_polygon, menu.m_gridconst);
+		menu.add(menu_btn_draw_polygon, menu.m_gridconst);
 
-		JButton btn_draw_ellipse = new JButton(PAS.l("main_sending_type_ellipse"));
-		btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
-		btn_draw_ellipse.addActionListener(new ActionListener() {
+		menu_btn_draw_ellipse = new JButton(PAS.l("main_sending_type_ellipse"));
+		menu_btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		menu_btn_draw_ellipse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
@@ -175,14 +183,14 @@ public class plugin_Centric extends PAS_Scripting
 			}
 		});
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(btn_draw_ellipse, menu.m_gridconst);
+		menu.add(menu_btn_draw_ellipse, menu.m_gridconst);
 
-		final JButton btn_import = new JButton(PAS.l("common_import"));
-		btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
-		btn_import.addActionListener(new ActionListener() {
+		menu_btn_import = new JButton(PAS.l("common_import"));
+		menu_btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		menu_btn_import.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				if(e.getSource().equals(btn_import))
+				if(e.getSource().equals(menu_btn_import))
 				{
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run()
@@ -201,8 +209,8 @@ public class plugin_Centric extends PAS_Scripting
 				}
 			}			
 		});
-		menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(btn_import, menu.m_gridconst);
+		//menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		//menu.add(menu_btn_import, menu.m_gridconst);
 		
 		return true;
 	}
@@ -236,6 +244,7 @@ public class plugin_Centric extends PAS_Scripting
 		
 		menu_addressbook.add(menu.get_item_address_book());
 		menu.get_item_address_book().setEnabled(false);
+		menu.get_item_view_showhouses().setSelected(false);
 		menu_trainingmode.add(menu.get_item_training_mode());
 		
 		
@@ -768,10 +777,21 @@ public class plugin_Centric extends PAS_Scripting
 	{
 		boolean trainingmode = IsInTrainingMode(userinfo);
 		System.out.println("onSetAppTitle");
-		pas.setMainTitle(
-				"NL Alert - " + 
-				pas.get_userinfo().get_current_department().get_deptid() + 
-				(trainingmode ? "  [" + PAS.l("mainmenu_trainingmode").toUpperCase() + "] " : " ") + s);
+		String maintitle = "NL Alert";
+		CentricStatusController sc = (CentricStatusController)PAS.get_pas().get_statuscontroller();
+		if(sc!=null)
+		{
+			CentricStatus status = sc.getOpenedStatus();
+			if(status!=null)
+			{
+				CBPROJECTSTATUSRESPONSE event = status.getResultSet();
+				String projectname = event.getProject().getSzProjectname();
+				maintitle += " - " + projectname;
+			}
+		}
+		pas.setMainTitle(maintitle);
+				//pas.get_userinfo().get_current_department().get_deptid());
+				//+(trainingmode ? "  [" + PAS.l("mainmenu_trainingmode").toUpperCase() + "] " : " ") + s);
 		pas.setTitle(pas.getMainTitle());
 		return true;
 	}
@@ -1156,7 +1176,7 @@ public class plugin_Centric extends PAS_Scripting
 			Enumeration<ShapeStruct> en = getShapesToPaint().elements();
 			while(en.hasMoreElements())
 			{
-				en.nextElement().draw(g, nav, false, true, false, null, true, true, 1, true);
+				en.nextElement().draw(g, nav, false, true, false, null, true, true, 2, true);
 			}			
 		}
 		catch(Exception e)
@@ -1165,7 +1185,9 @@ public class plugin_Centric extends PAS_Scripting
 		}
 
 		try {
-			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+			boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
+			boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
+			p.get_mappane().get_active_shape().draw(g, nav, false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
 		} catch(Exception e) { }
 		try {
 			p.get_mappane().draw_pinpoint(g);
@@ -1284,4 +1306,44 @@ public class plugin_Centric extends PAS_Scripting
 		return new CentricStatusController();
 	}
 
+	@Override
+	public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
+		Class c = pane.getSelectedComponent().getClass();
+		if(c.equals(CentricSendOptionToolbar.class))
+		{
+			enableSendButtons(true);
+		}
+		else if(c.equals(CentricStatus.class))
+		{
+			enableSendButtons(false);
+		}
+		return super.onEastContentTabClicked(e, pane);
+	}
+	
+	private void enableSendButtons(boolean b)
+	{
+		menu_btn_draw_ellipse.setVisible(b);
+		menu_btn_draw_polygon.setVisible(b);
+		menu_btn_import.setVisible(b);
+	}
+
+	@Override
+	public ProjectDlg onCreateOpenProjectDlg(JFrame parent,
+			ActionListener callback, String cmdSave, boolean bNewsending) {
+		return new CentricProjectDlg(parent, callback);
+	}
+
+	@Override
+	public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
+		CentricVariables.centric_send.lockSending(bLock);
+		if(bLock)
+			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+		else
+			variables.MAPPANE.set_prev_paintmode();
+		enableSendButtons(!bLock);
+		PAS.get_pas().kickRepaint();
+		return bLock;
+	}
+	
+	
 }

@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener {
+public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {
 	/**
 	 * 
 	 */
@@ -98,7 +98,36 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public ShapeStruct get_active_shape() { return m_active_shape; }
 	public MapLoader getMapLoader() { return m_maploader; }
 	
+	public boolean isInPaintMode()
+	{
+		switch(get_mode())
+		{
+		case MAP_MODE_PAINT_RESTRICTIONAREA:
+		case MAP_MODE_SENDING_ELLIPSE:
+		case MAP_MODE_SENDING_ELLIPSE_POLYGON:
+		case MAP_MODE_SENDING_POLY:
+			return true;
+		}
+		return false;
+	}
 	
+	@Override
+	public void mouseClicked(MouseEvent e) {		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		setMouseInsideCanvas(true);
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		setMouseInsideCanvas(false);
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
 	public void set_active_shape(ShapeStruct s) { 
 		m_active_shape = s;
 		try
@@ -131,7 +160,12 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void set_current_snappoint(PolySnapStruct p) { m_polysnapstruct = p; }
 	public PolySnapStruct get_current_snappoint() { return m_polysnapstruct; } 
 
-
+	protected boolean b_mouse_inside_canvas = true;
+	protected void setMouseInsideCanvas(boolean b) { 
+		b_mouse_inside_canvas = b;
+		PAS.get_pas().kickRepaint();
+	}
+	public boolean getMouseInsideCanvas() { return b_mouse_inside_canvas; }
 	
 	public Cursor get_cursor_draw() { return m_cursor_draw; }
 	public Cursor get_cursor_illegal_draw() { return m_cursor_illegal_draw; }
@@ -260,6 +294,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	int m_n_current_cursor = Cursor.DEFAULT_CURSOR;
 	protected int m_n_current_mode = MAP_MODE_PAN;
 	protected int m_n_prev_mode = MAP_MODE_PAN;
+	protected int m_n_prev_paint_mode = MAP_MODE_SENDING_POLY;
 	int m_n_current_submode = 0;
 	private Inhabitant m_current_inhab_move = null;
 	public Cursor m_current_cursor;
@@ -567,6 +602,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		}
 		addComponentListener(this);
 		addMouseWheelListener(this);
+		addMouseListener(this);
 	}
 	public Dimension getMinimumSize() {
 		return m_dimension;
@@ -635,6 +671,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	
 	public void set_mode(int n_mode)
 	{
+		boolean b_was_in_paint_mode = isInPaintMode();
+		if(b_was_in_paint_mode)
+			m_n_prev_paint_mode = get_mode();
 		//let settings decide
 		if(n_mode==MAP_MODE_PAN || n_mode==MAP_MODE_PAN_BY_DRAG)
 		{
@@ -702,6 +741,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 				break;
 		}
 		m_n_current_mode = n_mode;
+		boolean b_is_in_paint_mode = isInPaintMode();
+		if(b_was_in_paint_mode || b_is_in_paint_mode)
+			PAS.get_pas().kickRepaint();
 
 	}
 	public void set_submode(int n_mode) {
@@ -735,6 +777,10 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void set_prev_mode()
 	{
 		set_mode(m_n_prev_mode);
+	}
+	public void set_prev_paintmode()
+	{
+		set_mode(m_n_prev_paint_mode);
 	}
 	public int get_mode() { return m_n_current_mode; }
 	public int get_submode() { return m_n_current_submode; }

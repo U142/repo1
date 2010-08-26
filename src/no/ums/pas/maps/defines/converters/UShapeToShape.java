@@ -9,6 +9,7 @@ import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.ws.pas.UBoundingRect;
 import no.ums.ws.pas.UEllipse;
 import no.ums.ws.pas.UPolygon;
@@ -29,6 +30,7 @@ public class UShapeToShape
 							(int)upolygon.getColBlue(), 
 							(int)upolygon.getColAlpha()), 
 							new Color(0,0,0));
+			polygonstruct.setDetailMode(DETAILMODE.SHOW_POLYGON_FULL);
 			//if(upolygon.getMArrayPolypoints()!=null)
 			if(upolygon.getPolypoint()!=null)
 			{

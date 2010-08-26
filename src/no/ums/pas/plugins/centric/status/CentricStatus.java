@@ -56,9 +56,17 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	private CBPROJECTSTATUSREQUEST cbsreq = new CBPROJECTSTATUSREQUEST();
 	private CBPROJECTSTATUSRESPONSE cbsres = null;
 	
+	public CBPROJECTSTATUSRESPONSE getResultSet()
+	{
+		return cbsres;
+	}
+	
 	private boolean ready = true;
 	public boolean isReady() { return ready; }
 	private WSCentricStatus ws;
+	private boolean b_active = true;
+	public void setClosed() { b_active = false; }
+	public boolean isClosed() { return !b_active; }
 	
 	private Hashtable<Long, CentricMessageStatus> hash_messagestatus;
 
@@ -102,7 +110,12 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		cbsreq.setLogon(l);
 		
 		try {
-			ws = new WSCentricStatus(this,"act_status_downloaded",cbsreq,this);
+			if(isClosed())
+			{
+				ready = true;
+				return;
+			}
+			ws = new WSCentricStatus(this,"act_status_downloaded",cbsreq);
 			ws.start();
 			//WSCentricStatus getStatus = new WSCentricStatus(this,"act_status_downloaded",cbsreq,this);
 			//getStatus.start();
@@ -201,8 +214,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("act_status_downloaded")){
 			cbsres = (CBPROJECTSTATUSRESPONSE)e.getSource();
-			cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 			updateStatus(cbsres);
+			cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 			for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 				m_status_tabbed.setIconAt(i, null);
 			
@@ -212,6 +225,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	
 	protected void updateStatus(CBPROJECTSTATUSRESPONSE cbp)
 	{
+		if(isClosed())
+			return;
 		getTabbedPane().setTitleAt(0, cbp.getProject().getSzProjectname());
 		JTabbedPane tp = get_messages().get_tpane();
 		
@@ -297,7 +312,9 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			shape.setShapeId(cbs.getLRefno());
 			shape.shapeName = cbs.getSzSendingname();
 			shape.set_fill_color(new Color(255, 50, 50, 100));
-			shape.set_text_color(new Color(200, 0, 0, 230));
+			shape.set_border_color(new Color(255, 50, 50, 200));
+			shape.set_text_color(new Color(255, 255, 255, 255));
+			shape.set_text_bg_color(new Color(50, 0, 0, 100));
 			PAS.pasplugin.addShapeToPaint(shape);
 		}
 		
@@ -305,7 +322,15 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		get_event().get_sent().setText(String.valueOf(sendings.size()));
 		get_event().get_active().setText(String.valueOf(active.size()));
 		updateTotal();
-		PAS.get_pas().kickRepaint();		
+		PAS.get_pas().kickRepaint();
+		
+		//this is the first status download. Load map
+		if(cbsreq.getLTimefilter()<=0)
+		{
+			PAS.pasplugin.onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
+			PAS.pasplugin.onMapGotoShapesToPaint();
+		}
+
 	}
 	
 	private void updateTotal() {

@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.plugins.centric.status.CentricStatus;

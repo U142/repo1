@@ -40,6 +40,26 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 
 	protected boolean m_b_hidden = false;
 	protected double m_f_area_sqm = 0;
+	protected boolean m_b_editable = true;
+	
+	/**
+	 * set if the shape is locked for further editing
+	 * @param b true to lock this shape
+	 */
+	public void setEditable(boolean b)
+	{
+		m_b_editable = !b;
+		System.out.println("Shape setEditable="+m_b_editable);
+	}
+	
+	/**
+	 * If sending is "locked", the shape should not be editable
+	 * @return true if editable
+	 */
+	public boolean isEditable()
+	{
+		return m_b_editable;
+	}
 	
 	protected DETAILMODE m_n_current_show_mode = DETAILMODE.SHOW_POLYGON_SIMPLIFIED_PRPIXELS;
 	public void setDetailMode(DETAILMODE nmode)
@@ -140,6 +160,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	protected Color m_fill_color;
 	protected Color m_border_color;
 	protected Color m_text_color = new Color(0,0,0,200);
+	protected Color m_text_bg_color = new Color(0,0,0,100);
 	public PolygonStruct typecast_polygon() { return (PolygonStruct)this; }
 	public EllipseStruct typecast_ellipse() { return (EllipseStruct)this; }
 	public MunicipalStruct typecast_municipal() { return (MunicipalStruct)this; }
@@ -179,6 +200,10 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public Color get_text_color() { return m_text_color; }
 	public void set_text_color(Color col) {
 		m_text_color = col;
+	}
+	public Color get_text_bg_color() { return m_text_bg_color; }
+	public void set_text_bg_color(Color col) {
+		m_text_bg_color = col;
 	}
 	
 

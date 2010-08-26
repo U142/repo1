@@ -160,6 +160,13 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		{
 			
 		}
+		m_tabbedpane.addChangeListener(new ChangeListener() {			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				PAS.pasplugin.onEastContentTabClicked(EastContent.this, m_tabbedpane);
+			}
+		});
+
 	}
 	
 	public void InitTAS()

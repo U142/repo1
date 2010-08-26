@@ -512,6 +512,8 @@ public class PolygonStruct extends ShapeStruct {
 	}
 
 	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates) {
+		if(!isEditable())
+			return;
 		int index = get_size();
 		double dlon = ((int)(lon * 10000))/10000.0;
 		double dlat = ((int)(lat * 10000))/10000.0;
@@ -984,11 +986,12 @@ public class PolygonStruct extends ShapeStruct {
 					FontMetrics fm = g.getFontMetrics(f);
 					int width = fm.stringWidth(this.shapeName);
 					int height = fm.getHeight();
-					Color bg = new Color(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getRed(),
+					/*Color bg = new Color(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getRed(),
 							SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getGreen(),
 							SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getBlue(),
 							70);
-					g.setColor(bg);
+					g.setColor(bg);*/
+					g.setColor(get_text_bg_color());
 					int factor = 5;
 					g.fillRoundRect(m_center_pix.get_x()-width/2-factor, m_center_pix.get_y()-height/2-factor, 
 							width+factor*2, height+factor, 10, 10);
@@ -1011,7 +1014,7 @@ public class PolygonStruct extends ShapeStruct {
 				Error.getError().addError("PolyStruct","Exception in draw",e,1);
 			}
 		}	
-		if(bEditmode && !bFinalized) {
+		if(bEditmode && !bFinalized && variables.MAPPANE.getMouseInsideCanvas()) {
 			draw_last_line(nav, g, p);
 			draw_first_line(nav, g, p);
 		}
@@ -1035,17 +1038,23 @@ public class PolygonStruct extends ShapeStruct {
 	MapPoint m_p_corner;
 	
 	public void set_ellipse(Navigation nav, MapPoint p_center, MapPoint p_corner) {
+		if(!isEditable())
+			return;
 		m_p_center = p_center;
 		m_p_corner = p_corner;		
 		recalc_shape(nav);
 		finalize();
 	}
 	public void set_ellipse_center(Navigation nav, MapPoint p_center) {
+		if(!isEditable())
+			return;
 		set_ellipse(nav, p_center, m_p_corner);
 		//recalc_shape(nav);
 		//finalize();
 	}
 	public void set_ellipse_corner(Navigation nav, MapPoint p_corner) {
+		if(!isEditable())
+			return;
 		set_ellipse(nav, m_p_center, p_corner);
 		//recalc_shape(nav);
 		//finalize();

@@ -38,6 +38,7 @@ import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.plugins.centric.send.RROComboBox;
@@ -70,6 +71,10 @@ import no.ums.ws.parm.CBRISK;
 public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, 
 																	KeyListener, MouseListener {
 
+	int MAX_MESSAGELENGTH_PR_PAGE = 92;
+	int MAX_PAGES = 25;
+	int MAX_EVENTNAME_LENGTH = 50;
+	
 	/**
 	 * 
 	 */
@@ -249,9 +254,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_reaction.setEditor(new RROComboEditor());
 		m_cbx_risk.setEditor(new RROComboEditor());
 		
-		m_cbx_risk.setEditable(false);
-		m_cbx_reaction.setEditable(false);
-		m_cbx_originator.setEditable(false);
+		m_cbx_risk.setEditable(true);
+		m_cbx_reaction.setEditable(true);
+		m_cbx_originator.setEditable(true);
 
 		m_cbx_originator.addActionListener(this);
 		m_cbx_reaction.addActionListener(this);
@@ -278,8 +283,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_previewscroll = new JScrollPane(m_txt_preview);
 		m_txt_previewscroll.setPreferredSize(new Dimension(300,100));
 		
-		m_lbl_pages = new StdTextLabel(PAS.l("common_page") + " 1/25");
-		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/92", 150);
+		m_lbl_pages = new StdTextLabel(PAS.l("common_page") + " 1/" + MAX_PAGES);
+		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/" + MAX_MESSAGELENGTH_PR_PAGE, 150);
 		
 		m_btn_send = new JButton(PAS.l("main_sending_send"));
 		m_btn_send.setPreferredSize(new Dimension(300,30));
@@ -304,6 +309,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		variables.MAPPANE.addMouseListener(this);
 		variables.MAPPANE.addKeyListener(this);
 		setVisible(true);
+		
+		m_btn_update.doClick();
 	}
 	
 	public void add_controls() {
@@ -493,6 +500,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 	}
 	
+	public boolean lockSending(boolean b)
+	{
+		PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
+		ps.setEditable(b);
+		return b;
+	}
+	
 	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(m_btn_update)) {
 			if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
@@ -503,6 +517,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getActionCommand().equals("act_send")) {
 			// Check if summary is active, create send object, display send object preview
+			if(PAS.TRAINING_MODE)
+			{
+				m_btn_send.setEnabled(false);
+				return;
+			}
 			
 			CBMESSAGE msg = new CBMESSAGE();
 			msg.setSzText(m_txt_preview.getText());
@@ -573,7 +592,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 		}
 		else if(e.getActionCommand().equals("act_goto_summary")) {
+			//lock the painting
+			PAS.pasplugin.onLockSending(null, true);
 			showSummary();
+			//variables.NAVIGATION.setNavigation(variables.MAPPANE.get_active_shape().calc_bounds());
+			PAS.get_pas().actionPerformed(new ActionEvent(variables.MAPPANE.get_active_shape().calc_bounds(),
+										ActionEvent.ACTION_PERFORMED,
+										"act_map_goto_area"));
 		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
 			//JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
@@ -590,6 +615,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(true);
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
+			//lock the painting
+			PAS.pasplugin.onLockSending(null, false);			
 			add_controls();
 		}
 		if(e.getSource().equals(m_btn_reset)){
@@ -723,28 +750,32 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getSource().equals(m_txt_event_name)) {
+			if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
+				return;
+			if(m_txt_event_name.getText().length() + m_sz_date.length() + 1 > MAX_EVENTNAME_LENGTH)
+				m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 1)));
+		}
+
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
-		final int max = 92;
 		if(e.getSource() == m_txt_message || e.getSource() == m_txt_sender_name) {
-			if(m_txt_message.getText().length() > ((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
+			if(m_txt_message.getText().length() > ((MAX_MESSAGELENGTH_PR_PAGE-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
-					m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
-				m_txt_message.setText(m_txt_message.getText().substring(0,((max-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length())))); // -2 because of " " and "/n"
+					m_txt_message.getText().substring(0,((MAX_MESSAGELENGTH_PR_PAGE-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
+				m_txt_message.setText(m_txt_message.getText().substring(0,((MAX_MESSAGELENGTH_PR_PAGE-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length())))); // -2 because of " " and "/n"
 			}
 			else
 				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
 				
 			updateCharacters();
 		}
+
 		checkInputs();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		return;
 	}
 	public void onSendFinished(ActionEvent e) {
@@ -756,7 +787,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		{
 			getStatusController().set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
 			getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
-			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
+			variables.MAPPANE.set_active_shape(null);
+			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
 		}
 	}
 	@Override
@@ -794,6 +828,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	
 	private void updateCharacters() {
-		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/92");
+		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/" + MAX_MESSAGELENGTH_PR_PAGE);
 	}
 }

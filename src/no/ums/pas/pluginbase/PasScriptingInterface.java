@@ -24,6 +24,7 @@ import org.geotools.data.ows.Layer;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.LogonInfo;
@@ -40,6 +41,7 @@ import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -452,6 +454,12 @@ public abstract class PasScriptingInterface
 	 */
 	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);
 	
+	/**
+	 * Call to load map with bounds of all shapes to paint
+	 * @return
+	 */
+	public abstract boolean onMapGotoShapesToPaint();
+	
 	public abstract void addShapeToPaint(ShapeStruct s);
 	
 	public abstract boolean removeShapeToPaint(long id);
@@ -492,5 +500,29 @@ public abstract class PasScriptingInterface
 	
 	public abstract StatusController onCreateStatusController();
 	
+	/**
+	 * 
+	 * @param e EastContent that's the source of the click
+	 * @param pane The affected tabbed pane
+	 * @return
+	 */
+	public abstract boolean onEastContentTabClicked(EastContent e, JTabbedPane pane);
+	
+	/**
+	 * Called if user clicked create/open project. Create a JDialog based on base type no.ums.pas.core.project.ProjectDlg
+	 * @param parent parent frame
+	 * @param callback will call back if a new project is created
+	 * @param cmd_save action command to call back for new project
+	 * @param b_newsending if a new sending is to be attached to this project
+	 * @return a new instance of ProjectDlg
+	 */
+	public abstract ProjectDlg onCreateOpenProjectDlg(JFrame parent, ActionListener callback, String cmd_save, boolean b_newsending);
+	
+	/**
+	 * Function called when a sending is locked (no more painting allowed before final send confirmation)
+	 * @param toolbar SendOptionToolbar containing the shape of the sending
+	 * @return true if sending was locked successfully
+	 */
+	public abstract boolean onLockSending(SendOptionToolbar toolbar, boolean bLock);
 }
 

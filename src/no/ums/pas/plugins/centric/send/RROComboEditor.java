@@ -33,6 +33,7 @@ public class RROComboEditor extends BasicComboBoxEditor
 	@Override
 	public void focusGained(FocusEvent arg0) {
 		super.focusGained(arg0);
+		((JTextComponent)getEditorComponent()).selectAll();
 	}
 	@Override
 	public void focusLost(FocusEvent arg0) {

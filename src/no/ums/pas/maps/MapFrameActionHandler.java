@@ -100,7 +100,6 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	
 	private void set_isdragging(boolean b) { 
 		m_b_isdragging = b;
-		System.out.println("dragging = " + b);
 	}
 	public boolean get_isdragging() { return m_b_isdragging; }
 	
@@ -235,9 +234,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 				}
 				break;
-			case KeyEvent.VK_T:
+			/*case KeyEvent.VK_T:
 				PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
-				break;
+				break;*/
 		}
 	}
 	
@@ -494,7 +493,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				if(get_mappane().get_mode()==MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON)
 				{
 					current_polygon.ellipseToRestrictionlines(list.get(i).typecast_polygon());
-					continue;
+					return true;
 				}
 				
 				boolean b = list.get(i).pointInsideShape(p.get_mappointll());

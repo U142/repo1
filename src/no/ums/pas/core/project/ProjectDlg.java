@@ -33,7 +33,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	
 	private JFrame m_parent;
 	private Project m_project = new Project();
-	private ProjectPanel m_projectpanel = new ProjectPanel(null, true);
+	protected ProjectPanel m_projectpanel;
 	protected ProjectPanel get_projectpanel() { return m_projectpanel; }
 	private ActionListener m_callback;
 	private String m_sz_callback_action;
@@ -58,16 +58,21 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		m_sz_callback_action = sz_callback_action;
 		m_b_newsending = bNewSending;
 		addComponentListener(this);
+		init();
 		Dimension d = new Dimension(500, 350);
 		Dimension ul = Utils.screendlg_upperleft(d);
 		setBounds(ul.width, ul.height, d.width, d.height);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(d.width, d.height));
-		init();
+
 	}
 	protected void close_dialog() {
 		super.setVisible(false);
 	}
+	protected void createPanel() {
+		m_projectpanel = new ProjectPanel(true);
+	}
 	protected void init() {
+		createPanel();
 		getContentPane().add(m_projectpanel, BorderLayout.CENTER);
 	}
 	protected void save() {
@@ -87,24 +92,24 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		}
 	}
 	
-	class ProjectPanel extends DefaultPanel {
+	public class ProjectPanel extends DefaultPanel {
 		public static final long serialVersionUID = 1;
-		private StdTextLabel m_lbl_errormsg = new StdTextLabel("",false, 200);
-		private StdTextLabel m_lbl_projectname = new StdTextLabel(PAS.l("projectdlg_projectname") + ":", true, 75);
-		private StdTextArea m_txt_projectname = new StdTextArea("", false, 200);
-		private JButton m_btn_save = new JButton(PAS.l("common_save"));
-		private JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
+		protected StdTextLabel m_lbl_errormsg = new StdTextLabel("",false, 200);
+		protected StdTextLabel m_lbl_projectname = new StdTextLabel(PAS.l("projectdlg_projectname") + ":", true, 75);
+		protected StdTextArea m_txt_projectname = new StdTextArea("", false, 200);
+		protected JButton m_btn_save = new JButton(PAS.l("common_save"));
+		protected JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
 		protected ProjectList m_project_list;
-		private ArrayList<StatusListObject> m_arr_sendings;
-		private ArrayList<Project> m_arr_projects;
-		private JButton m_btn_open = new JButton(PAS.l("common_open"));
+		protected ArrayList<StatusListObject> m_arr_sendings;
+		protected ArrayList<Project> m_arr_projects;
+		protected JButton m_btn_open = new JButton(PAS.l("common_open"));
 		public ProjectList get_projectlist() { return m_project_list; }
 		protected Project m_proj;
 		
 		//private LoadingPanel m_loader = new LoadingPanel("Idle...", new Dimension(300, 20));
 		//protected LoadingPanel get_loader() { return m_loader; }
 		
-		ProjectPanel(PAS pas, boolean bNewSending) {
+		public ProjectPanel(boolean bNewSending) {
 			super();
 			//m_loader.removeComponentListener(m_loader);
 //			if(bNewSending)
