@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
     <asp:Table ID="Table2" runat="server">
-        <asp:TableRow>
-            <asp:TableCell><asp:Label ID="Label4" runat="server" Text="Overview Parameters"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Overview Parameters"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell>
                 <asp:Label ID="Label1" runat="server" Text="Incorrect logons"></asp:Label>

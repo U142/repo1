@@ -31,6 +31,10 @@ public partial class predefine_text : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+            if (l == null)
+                Server.Transfer("logoff.aspx");
+
             btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
             
             ht = new Hashtable();
@@ -44,9 +48,7 @@ public partial class predefine_text : System.Web.UI.Page
 
             pws = new pasws();
 
-            ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
-            if (l == null)
-                Server.Transfer("logoff.aspx");
+           
             
             ULBAMESSAGELIST list = pws.GetLBAMessageLibrary(l, f);
             //List<PredefinedText> pdt = db.getPredefinedText();
@@ -56,10 +58,10 @@ public partial class predefine_text : System.Web.UI.Page
                 if (list.list[i].n_parentpk > 0)
                 {
                     TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
-                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_message, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
                 }
                 else
-                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_message, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
 
                 ht.Add(list.list[i].n_messagepk, list.list[i]);
             }
@@ -105,7 +107,7 @@ public partial class predefine_text : System.Web.UI.Page
             pws = new pasws();
         ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
 
-        int id = (int)pdt.n_messagepk;
+        long id = (long)pdt.n_messagepk;
         if (id == 0)
             id = -1;
         pdt.n_messagepk = id;
@@ -128,8 +130,8 @@ public partial class predefine_text : System.Web.UI.Page
         }
         else if (tn != null) //update
         {
-            ((PredefinedText)ht[parent]).Text = txt_message.Text;
-            ((PredefinedText)ht[parent]).Name = txt_name.Text;
+            ((ULBAMESSAGE)ht[parent]).sz_message = txt_message.Text;
+            ((ULBAMESSAGE)ht[parent]).sz_name = txt_name.Text;
             TreeView1.Nodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
             ht.Add(id, pdt);
             tn.Text = txt_name.Text;
@@ -162,9 +164,19 @@ public partial class predefine_text : System.Web.UI.Page
             if (nodes[i].Value.Equals(id) && delete)
             {
                 for (int j = 0; j < nodes[i].ChildNodes.Count; ++j)
-                    deleteNode(nodes[i].ChildNodes, nodes[i].ChildNodes[j].Value);
-                nodes.Remove(nodes[i]);
-                ht.Remove(id);
+                        deleteNode(nodes[i].ChildNodes, nodes[i].ChildNodes[j].Value);
+
+                if (pws == null)
+                    pws = new pasws();
+                ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+                ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(id)];
+
+                ULBAMESSAGE ret = pws.DeleteLBAMessage(l, pdt);
+                if (ret != null)
+                {
+                    nodes.Remove(nodes[i]);
+                    ht.Remove(long.Parse(id));
+                }
             }
             else if (nodes[i].Value.Equals(id))
                 return nodes[i];
@@ -181,14 +193,7 @@ public partial class predefine_text : System.Web.UI.Page
 
     protected void delete_click(object sender, EventArgs e)
     {
-        if (pws == null)
-            pws = new pasws();
-        ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
-        ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(txt_id.Text)];
-
-        ULBAMESSAGE ret = pws.DeleteLBAMessage(l, pdt);
-        if(ret != null)
-            deleteNode(TreeView1.Nodes, txt_id.Text);
+       deleteNode(TreeView1.Nodes, txt_id.Text);
     }
 
     protected void new_click(object sender, EventArgs e)
@@ -201,9 +206,9 @@ public partial class predefine_text : System.Web.UI.Page
     protected void edit_click(object sender, EventArgs e)
     {
         txt_parent.Text = "false";
-        PredefinedText pdt = (PredefinedText)ht[txt_id.Text];
-        txt_name.Text = pdt.Name;
-        txt_message.Text = pdt.Text;
+        ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(txt_id.Text)];
+        txt_name.Text = pdt.sz_name;
+        txt_message.Text = pdt.sz_message;
     }
 
     private string addJavaScript(string name, long id)

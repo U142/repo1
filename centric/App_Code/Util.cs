@@ -36,13 +36,26 @@ public class Util
         return logoninfo;
     }
 
+    public static com.ums.ws.pas.admin.ULOGONINFO convertLogonInfoPasAdmin(com.ums.ws.pas.ULOGONINFO l)
+    {
+        com.ums.ws.pas.admin.ULOGONINFO logoninfo = new com.ums.ws.pas.admin.ULOGONINFO();
+        logoninfo.l_deptpk = l.l_deptpk;
+        logoninfo.l_userpk = l.l_userpk;
+        logoninfo.l_comppk = l.l_comppk;
+        logoninfo.sz_password = l.sz_password;
+        logoninfo.sessionid = l.sessionid;
+        return logoninfo;
+    }
+
     public static String convertDate(long l_date)
     {
         String date = l_date.ToString();
         if (l_date == 0)
             return "";
+        else if (l_date.ToString().Length == 8)
+            return date.Substring(6, 2) + "-" + date.Substring(4, 2) + "-" + date.Substring(0, 4);
         else
-            return date.Substring(6,2) + "-" + date.Substring(4, 2) + "-" + date.Substring(0, 4) + " " + date.Substring(8,2) + ":" + date.Substring(10,2);
+            return date.Substring(6, 2) + "-" + date.Substring(4, 2) + "-" + date.Substring(0, 4) + " " + date.Substring(8, 2) + ":" + date.Substring(10, 2);
     }
 
     private static void AddComma(string value, StringBuilder stringBuilder)
@@ -179,18 +192,16 @@ public class Util
         WriteAccessPerUserColumnName();
         foreach (CB_USER_REGION_RESPONSE reg in region)
         {
-            WriteAccessPerUser(reg);
+            foreach(PAOBJECT obj in reg.regionlist)
+                WriteAccessPerUser(obj, reg);
         }
         HttpContext.Current.Response.End();
     }
-    private static void WriteAccessPerUser(CB_USER_REGION_RESPONSE reg)
+    private static void WriteAccessPerUser(PAOBJECT obj, CB_USER_REGION_RESPONSE res)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < reg.regionlist.Length; ++i)
-        {
-            AddComma(reg.user.sz_userid, stringBuilder);
-            AddComma(reg.regionlist[i].sz_name, stringBuilder);
-        }
+        AddComma(res.user.sz_userid, stringBuilder);
+        AddComma(obj.sz_name, stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
@@ -205,7 +216,7 @@ public class Util
     /*******************************
      * Users per access permission *
      *******************************/
-    public static void WriteUsersPerAccessPermissionToCSV(UBBUSER[] userlist, string areaname)
+    public static void WriteUsersPerAccessPermissionToCSV(UBBUSER[] userlist, String[] areaname)
     {
         string attachment = "attachment; filename=AccessPermissions.csv";
         HttpContext.Current.Response.Clear();
@@ -214,10 +225,11 @@ public class Util
         HttpContext.Current.Response.AddHeader("content-disposition", attachment);
         HttpContext.Current.Response.ContentType = "text/csv";
         HttpContext.Current.Response.AddHeader("Pragma", "public");
-        WriteAccessPerUserColumnName();
-        foreach (UBBUSER user in userlist)
+        WriteUsersPerAccessPermissionColumnName();
+        foreach (string area in areaname)
         {
-            WriteUsersPerAccessPermission(user, areaname);
+            foreach(UBBUSER user in userlist)
+                WriteUsersPerAccessPermission(user, area);
         }
         HttpContext.Current.Response.End();
     }
@@ -225,7 +237,7 @@ public class Util
     {
         StringBuilder stringBuilder = new StringBuilder();
         AddComma(areaname, stringBuilder);
-        AddComma(user.sz_name, stringBuilder);
+        AddComma(user.sz_userid, stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }

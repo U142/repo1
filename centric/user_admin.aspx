@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
     <asp:Table ID="Table1" runat="server">
-        <asp:TableRow>
-            <asp:TableCell><asp:Label runat="server" ID="lbl_overview" Text="Overview Users"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label runat="server" ID="lbl_overview" Text="Overview Users"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
                 <asp:ListBox ID="lst_users" runat="server" Height="100" Width="450" OnSelectedIndexChanged="fill_form" AutoPostBack="True"></asp:ListBox>
@@ -21,9 +21,9 @@
                 &nbsp;
             </asp:TableCell>
         </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell><asp:Label runat="server" ID="lbl_userdetails" Text="User Details"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label runat="server" ID="lbl_userdetails" Text="User Details"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell>
                 <asp:Label ID="Label1" runat="server" Text="User"></asp:Label>
@@ -45,14 +45,6 @@
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
                 <asp:TextBox ID="txt_blocked" runat="server" Width="70"></asp:TextBox>
-            </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>
-                <asp:Label ID="Label4" runat="server" Text="Password"></asp:Label>
-            </asp:TableCell>
-            <asp:TableCell>
-                <asp:TextBox ID="txt_password" runat="server" TextMode="Password"></asp:TextBox>
             </asp:TableCell>
         </asp:TableRow>
          <asp:TableRow>
@@ -94,7 +86,15 @@
         <asp:TableRow>
         <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:ListBox ID="lst_regions" runat="server" SelectionMode="Multiple"></asp:ListBox>
+                <asp:ListBox ID="lst_regions" runat="server" SelectionMode="Multiple"></asp:ListBox><asp:RequiredFieldValidator runat="server" id="req_regions" ControlToValidate="lst_regions" Text="*" ErrorMessage="Region must be selected"></asp:RequiredFieldValidator>
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="Label4" runat="server" Text="Password"></asp:Label>
+            </asp:TableCell>
+            <asp:TableCell>
+                <asp:TextBox ID="txt_password" runat="server" TextMode="Password"></asp:TextBox>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -106,4 +106,6 @@
             <asp:TableCell ColumnSpan="3"><asp:ValidationSummary ID="ValidationSummary1" runat="server" /></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
+    <asp:Label runat="server" ID="lbl_feedback" Text=""></asp:Label>
+    <asp:TextBox runat="server" ID="selected" Text="" Visible="false"/>
 </asp:Content>

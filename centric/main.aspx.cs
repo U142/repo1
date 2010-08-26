@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Collections.Generic;
 
 using com.ums.ws.pas;
+using com.ums.ws.pas.admin;
 
 public partial class main : System.Web.UI.Page 
 {
@@ -27,12 +28,15 @@ public partial class main : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            //txt_activate.Attributes.Add("readonly", "readonly");
+            //txt_deactivate.Attributes.Add("readonly", "readonly");
+
             pasws pws = new pasws();
-            ULOGONINFO logon = (ULOGONINFO)Session["logoninfo"];
+            com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
             USYSTEMMESSAGES sysm = pws.GetSystemMessages(logon,0);
-
+             
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
                 lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
@@ -65,6 +69,7 @@ public partial class main : System.Web.UI.Page
         newstext.sz_news = txt_message.Text;
         sysm.news.newslist[sysm.news.newslist.Length - 1].newstext = newstext;
         sysm.news.newslist[sysm.news.newslist.Length-1].l_operator = int.Parse(ddl_operator.SelectedItem.Value);
+        sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname = ddl_operator.SelectedItem.Text;
         sysm.news.newslist[sysm.news.newslist.Length - 1].l_type = int.Parse(ddl_type.SelectedItem.Value);
         sysm.news.newslist[sysm.news.newslist.Length - 1].f_active = 1;
         if(txt_activate.Text.Length>0)
@@ -74,7 +79,7 @@ public partial class main : System.Web.UI.Page
             String ting = txt_activate.Text + " " + ddl_activate_h.SelectedValue + ":" + ddl_activate_m.SelectedValue;
             try
             {
-                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text.Substring(0, 4) + txt_activate.Text.Substring(5, 2) + txt_activate.Text.Substring(7, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text.Substring(6, 4) + txt_activate.Text.Substring(3, 2) + txt_activate.Text.Substring(6, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
             }
             catch (Exception ex)
             {
@@ -85,7 +90,8 @@ public partial class main : System.Web.UI.Page
         }
         if (txt_deactivate.Text.Length > 0)
         {
-            sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+            //sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+            sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end = long.Parse(txt_deactivate.Text.Substring(6, 4) + txt_deactivate.Text.Substring(3, 2) + txt_deactivate.Text.Substring(0, 2) + ddl_deactivate_h.SelectedValue + ddl_deactivate_m.SelectedValue + "00");
             //IFormatProvider format = new CultureInfo("nb-NO");
             /*IFormatProvider format = new CultureInfo("nl-NL");
             String ting = txt_deactivate.Text + " " + ddl_deactivate_h.SelectedValue + ":" + ddl_deactivate_m.SelectedValue;
@@ -99,9 +105,11 @@ public partial class main : System.Web.UI.Page
             }*/
         }
         pasws ws = new pasws();
-        ULOGONINFO logon = (ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+
         // Stores the new message and returns it with l_newspk
         sysm.news.newslist[sysm.news.newslist.Length - 1] = ws.UpdateSystemMessage(logon, sysm.news.newslist[sysm.news.newslist.Length - 1]);
+        sysm.news.newslist[sysm.news.newslist.Length - 1].l_deptpk = logon.l_deptpk;
 
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)
@@ -109,7 +117,7 @@ public partial class main : System.Web.UI.Page
         lst_messages.Items.Add(new ListItem(sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname + " " + sysm.news.newslist[sysm.news.newslist.Length - 1].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start) + (sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end)), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
         //messages.Remove(tsm);
         //messages.Add(sm);
-        Session["messages"] = messages;
+        Session["messages"] = sysm;
         reset();
         Session.Remove("edit");
     }
@@ -199,5 +207,15 @@ public partial class main : System.Web.UI.Page
         
         return null;
         
+    }
+
+    protected void btn_deactivate_Click(object sender, EventArgs e)
+    {
+        PasAdmin pasa = new PasAdmin();
+        com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
+        if (res.successful)
+            lst_messages.Items.Remove(lst_messages.SelectedItem);
+                
     }
 }

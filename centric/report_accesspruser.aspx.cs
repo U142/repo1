@@ -52,6 +52,8 @@ public partial class report_accesspruser : System.Web.UI.Page
 
         CB_USER_REGION_RESPONSE[] response = pa.GetUserRegion(logoninfo, ulist);
 
+        Session["region_response"] = response;
+
         for(int i=0; i< response.Length; ++i) {
             
             if (response[i].regionlist.Length > 0)
@@ -96,10 +98,12 @@ public partial class report_accesspruser : System.Web.UI.Page
                 tbl_output.Rows.Add(header);
             }
         }
-        btn_export_to_csv.Visible = true;
+        if(response.Length>0)
+            btn_export_to_csv.Visible = true;
     }
+    
     protected void btn_export_to_csv_Click(object sender, EventArgs e)
     {
-
+        Util.WriteAccessPerUserToCSV((CB_USER_REGION_RESPONSE[])Session["region_response"]);
     }
 }

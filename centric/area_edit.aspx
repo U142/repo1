@@ -18,9 +18,9 @@
         }
     </script>
     <asp:Table ID="table" runat="server">
-        <asp:TableRow>
-            <asp:TableCell><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
                 <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  ></asp:ListBox>
@@ -30,9 +30,9 @@
             <asp:TableCell>
                 <asp:Button ID="Button2" runat="server" Text="Create" /></asp:TableCell>
         </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell>
                 <asp:Label ID="Label1" runat="server" Text="Authorization area"></asp:Label>

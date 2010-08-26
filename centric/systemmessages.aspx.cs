@@ -21,15 +21,16 @@ public partial class systemmessages : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+       
+
         messages = (USYSTEMMESSAGES)Session["messages"];
         if (messages == null)
             messages = new USYSTEMMESSAGES();
 
-        txt_activate.Enabled = false;
-        txt_deactivate.Enabled = false;
-
         if (!IsPostBack)
         {
+            //txt_activate.Attributes.Add("readonly","readonly");
+            //txt_deactivate.Attributes.Add("readonly", "readonly");
             pasws pws = new pasws();
             ULOGONINFO logon = (ULOGONINFO)Session["logoninfo"];
             if (logon == null)
@@ -49,11 +50,7 @@ public partial class systemmessages : System.Web.UI.Page
             Session.Remove("edit");
             Session["messages"] = sysm;
         }
-        else
-        {
-            txt_activate.Text = Request.QueryString["txt_activate"];
-            txt_deactivate.Text = Request.QueryString["txt_deactivate"];
-        }
+       
     }
     protected void btn_activate_message_Click(object sender, EventArgs e)
     {
@@ -138,8 +135,12 @@ public partial class systemmessages : System.Web.UI.Page
             news.l_userpk = logon.l_userpk;
             news.l_type = long.Parse(ddl_type.SelectedValue);
             news.l_operator = int.Parse(ddl_operator.SelectedValue);
-            news.l_incident_start = long.Parse(txt_activate.Text + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
-            news.l_incident_end = long.Parse(txt_deactivate.Text + ddl_deactivate_h.SelectedValue + ddl_deactivate_m.SelectedValue + "00");
+            news.l_incident_start = long.Parse(txt_activate.Text.Substring(6, 4) + txt_activate.Text.Substring(3, 2) + txt_activate.Text.Substring(0, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+            //
+            if (txt_deactivate.Text.Length == 0 || txt_deactivate.Text.Length == 1)
+                news.l_incident_end = 0;
+            else
+                news.l_incident_end = long.Parse(txt_deactivate.Text.Substring(6, 4) + txt_deactivate.Text.Substring(3, 2) + txt_deactivate.Text.Substring(0, 2) + ddl_deactivate_h.SelectedValue + ddl_deactivate_m.SelectedValue + "00");
             news.newstext.sz_news = txt_message.Text;
 
             pasws pws = new pasws();
@@ -207,7 +208,7 @@ public partial class systemmessages : System.Web.UI.Page
                 ddl_type.SelectedValue = messages.news.newslist[i].l_type.ToString();
 
                 if (messages.news.newslist[i].l_incident_start.ToString().Length >= 8)
-                    txt_activate.Text = messages.news.newslist[i].l_incident_start.ToString().Substring(0, 8);
+                    txt_activate.Text = Util.convertDate(long.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(0, 8)));
                 else
                      txt_activate.Text = "";
                 if (messages.news.newslist[i].l_incident_start.ToString().Length >= 10)
@@ -219,7 +220,7 @@ public partial class systemmessages : System.Web.UI.Page
                 else
                     ddl_activate_m.SelectedIndex = 0;
                 if (messages.news.newslist[i].l_incident_end.ToString().Length >= 8)
-                    txt_deactivate.Text = messages.news.newslist[i].l_incident_end.ToString().Substring(0, 8);
+                    txt_deactivate.Text = Util.convertDate(long.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(0, 8)));
                 else
                     txt_deactivate.Text = "";
                 if(messages.news.newslist[i].l_incident_end.ToString().Length >= 10)
@@ -231,13 +232,14 @@ public partial class systemmessages : System.Web.UI.Page
                 else
                     ddl_deactivate_m.SelectedIndex = 0;
 
-                if (messages.news.l_timestamp_db < messages.news.newslist[i].l_incident_end || messages.news.newslist[i].l_incident_end == 0) //active
+                if (messages.news.l_timestamp_db < messages.news.newslist[i].l_incident_end || messages.news.newslist[i].l_incident_end == 0) //active egentlig f_active
                 {
                     txt_message.Enabled = true;
                     ddl_operator.Enabled = true;
                     ddl_type.Enabled = true;
                     ddl_activate_h.Enabled = true;
                     ddl_activate_m.Enabled = true;
+                    CalendarExtender1.Enabled = true;
                     //txt_activate.Enabled = true;
                     ddl_deactivate_h.Enabled = true;
                     ddl_deactivate_m.Enabled = true;
@@ -250,6 +252,7 @@ public partial class systemmessages : System.Web.UI.Page
                     ddl_type.Enabled = false;
                     ddl_activate_h.Enabled = false;
                     ddl_activate_m.Enabled = false;
+                    CalendarExtender1.Enabled = false;
                     //txt_activate.Enabled = false;
                     ddl_deactivate_h.Enabled = true;
                     ddl_deactivate_m.Enabled = true;

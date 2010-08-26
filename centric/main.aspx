@@ -5,10 +5,10 @@
 <asp:Content ContentPlaceHolderID="body" runat="server">
     <asp:ToolkitScriptManager ID="ScriptManager1" runat="server" CombineScripts="false"></asp:ToolkitScriptManager>
     <asp:Table ID="Table2" runat="server">
-        <asp:TableRow>
-            <asp:TableCell ColumnSpan="2"><asp:Label ID="lbl_active_sysm" runat="server" Text="Active system messages"></asp:Label></asp:TableCell>
-            <asp:TableCell><asp:Label ID="Label1" runat="server" Text="Message text"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left" ColumnSpan="2"><asp:Label ID="lbl_active_sysm" runat="server" Text="Active system messages"></asp:Label></asp:TableHeaderCell>
+            <asp:TableHeaderCell HorizontalAlign="Left" ><asp:Label ID="Label1" runat="server" Text="Message text"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="2">
                 <asp:ListBox ID="lst_messages" runat="server" Height="336px" Width="471px" OnSelectedIndexChanged="lst_messages_selectedindex" AutoPostBack="True">
@@ -20,13 +20,13 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell><asp:Button ID="btn_edit" runat="server" Text="Edit" OnClick="btn_edit_Click" CausesValidation="false" /></asp:TableCell>
-            <asp:TableCell><asp:Button ID="btn_deactivate" runat="server" Text="Deactivate"  CausesValidation="false" /></asp:TableCell>
+            <asp:TableCell><asp:Button ID="btn_deactivate" runat="server" Text="Deactivate"  CausesValidation="false" OnClick="btn_deactivate_Click" /></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
     <asp:Table ID="Table1" runat="server">
-        <asp:TableRow>
-            <asp:TableCell ColumnSpan="4"><asp:Label ID="lbl_new_sysm" runat="server" Text="New System message"></asp:Label></asp:TableCell>
-        </asp:TableRow>
+        <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left" ColumnSpan="4"><asp:Label ID="lbl_new_sysm" runat="server" Text="New System message"></asp:Label></asp:TableHeaderCell>
+        </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell RowSpan="4">
                 <asp:TextBox ID="txt_message" runat="server" Height="79px" TextMode="MultiLine" Width="465px"></asp:TextBox>
@@ -40,8 +40,6 @@
                     <asp:ListItem Text="KPN" Value="1"></asp:ListItem>
                     <asp:ListItem Text="T-Mobile" Value="2"></asp:ListItem>
                     <asp:ListItem Text="Vodafone" Value="3"></asp:ListItem>
-                    <asp:ListItem Text="UMS" Value="4"></asp:ListItem>
-                    <asp:ListItem Text="Centric" Value="5"></asp:ListItem>
                 </asp:DropDownList>
             </asp:TableCell>
             <asp:TableCell RowSpan="4">
@@ -66,7 +64,8 @@
             </asp:TableCell>
             <asp:TableCell>
                  <asp:CalendarExtender ID="CalendarExtender1" runat="server" PopupPosition="Right" PopupButtonID="Image1" TargetControlID="txt_activate" Format="dd-MM-yyyy"></asp:CalendarExtender>
-                <asp:TextBox ID="txt_activate" runat="server" Enabled="false" Width="70px"></asp:TextBox>&nbsp;<asp:Image ID="Image1" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
+                <asp:TextBox ID="txt_activate" runat="server" Width="70px" ></asp:TextBox>&nbsp;<asp:Image ID="Image1" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ErrorMessage="Date has to be blank, 0 or in this format dd-MM-yyyy" Text="*" ControlToValidate="txt_activate" ValidationExpression="(\d{2}-\d{2}-\d{4})|([0])"></asp:RegularExpressionValidator>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_activate_h" runat="server">
@@ -110,7 +109,6 @@
                     <asp:ListItem>50</asp:ListItem>
                     <asp:ListItem>55</asp:ListItem>
                 </asp:DropDownList>
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_activate" Text="*" ErrorMessage="Activation date is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -119,7 +117,8 @@
             </asp:TableCell>
             <asp:TableCell>
                 <asp:CalendarExtender ID="CalendarExtender2" runat="server" PopupPosition="Right" PopupButtonID="Image2" TargetControlID="txt_deactivate" Format="dd-MM-yyyy"></asp:CalendarExtender>
-                <asp:TextBox ID="txt_deactivate" runat="server" Enabled="false" Width="70px"></asp:TextBox>&nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
+                <asp:TextBox ID="txt_deactivate" runat="server" Width="70px" ></asp:TextBox>&nbsp;<asp:Image ID="Image2" runat="server" ImageUrl="images/Calendar_scheduleHS.png" />
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Date has to be blank, 0 or in this format dd-MM-yyyy" Text="*" ControlToValidate="txt_deactivate" ValidationExpression="(\d{2}-\d{2}-\d{4})|([0])"></asp:RegularExpressionValidator>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_deactivate_h" runat="server">

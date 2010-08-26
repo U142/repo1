@@ -20,6 +20,10 @@ public partial class report_monthly : System.Web.UI.Page
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
+            btn_messages_month.Visible = false;
+            btn_performance_month.Visible = false;
+            btn_sysmessages_month.Visible = false;
+
             fillDropDown();
             //UPASLOGON pl = pasws.PasLogon(logoninfo);
             //UDEPARTMENT[] depts = pl.departments;
@@ -141,11 +145,16 @@ public partial class report_monthly : System.Web.UI.Page
 
             cell = new HtmlTableCell();
             txt = new Label();
-            txt.Text = "N/A";
+            txt.Text = res[i].l_performance.ToString();
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             tbl_output.Rows.Add(row);
         }
+
+        if(res.Length > 0)
+            btn_messages_month.Visible = true;
+        else
+            btn_messages_month.Visible = false;
 
         // System operator performance this month
         res = pasws.GetOperatorPerformanceThisMonth(Util.convertLogonInfoPasStatus(l), createTimestamp());
@@ -186,6 +195,10 @@ public partial class report_monthly : System.Web.UI.Page
             tbl_operatorperformance.Rows.Add(row);
         }
 
+        if (res.Length > 0)
+            btn_performance_month.Visible = true;
+        else
+            btn_performance_month.Visible = false;
 
         // System messages this month
         pasws pas = new pasws();
@@ -269,6 +282,11 @@ public partial class report_monthly : System.Web.UI.Page
             row.Cells.Add(cell);
             tbl_sysmessages.Rows.Add(row);
         }
+
+        if (news.Length > 0)
+            btn_sysmessages_month.Visible = true;
+        else
+            btn_sysmessages_month.Visible = false;
     }
 
     protected void btn_messages_month_Click(object sender, EventArgs e)

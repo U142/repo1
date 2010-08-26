@@ -3,10 +3,10 @@
 <asp:Content ContentPlaceHolderID="body" runat="server">
 
 <asp:Table runat="server" BorderStyle="Dashed">
-    <asp:TableRow>
-        <asp:TableCell><asp:Label ID="Label3" runat="server" Text="Overview predefined texts"></asp:Label></asp:TableCell>
-        <asp:TableCell><asp:Label ID="Label1" runat="server" Text="Details predefined text"></asp:Label></asp:TableCell>
-    </asp:TableRow>
+    <asp:TableHeaderRow>
+        <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview predefined texts"></asp:Label></asp:TableHeaderCell>
+        <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label1" runat="server" Text="Details predefined text"></asp:Label></asp:TableHeaderCell>
+    </asp:TableHeaderRow>
     <asp:TableRow>
         <asp:TableCell RowSpan="2" VerticalAlign="Top">
             <asp:TreeView ID="TreeView1" runat="server" OnSelectedNodeChanged="TreeView1_changed" style="overflow:auto" Width="200" oncontextmenu="return showmenuie5(event)" BorderColor="AliceBlue" HoverNodeStyle-BackColor="WhiteSmoke" Height="200">
@@ -31,22 +31,21 @@
 <asp:TextBox ID="txt_id" runat="server" style="visibility:hidden"></asp:TextBox>
 <div ID="Panel2" runat="server" style="visibility:hidden" bordercolor="Black" onmouseover="highlightie5(event)" onmouseout="lowlightie5(event)" onclick="jumptoie5(event)"> 
       <div>
-        <asp:LinkButton ID="LinkButton1" runat="server" OnClick="new_click" 
-          >New Node
+        <asp:LinkButton ID="LinkButton1" runat="server" OnClick="new_click" BackColor="White"
+          >New Predefined Text
         </asp:LinkButton>
+        &nbsp;
       </div>
       <div >
-        <asp:LinkButton ID="LinkButton2" runat="server"  OnClick="edit_click"
-          >Edit Node
+        <asp:LinkButton ID="LinkButton2" runat="server"  OnClick="edit_click" BackColor="White"
+          >Edit Predefined Text
         </asp:LinkButton>
+        &nbsp;
       </div> 
-      <hr />
-
       <div>
-        <asp:LinkButton ID="LinkButton3" runat="server" OnClick="delete_click"
-          >Delete Node
+        <asp:LinkButton ID="LinkButton3" runat="server" OnClick="delete_click" BackColor="White"
+          >Delete Predefined Text
         </asp:LinkButton>
       </div> 
-      <hr /> 
 </div>
 </asp:Content>

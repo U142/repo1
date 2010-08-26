@@ -3,13 +3,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
 <div>
 
-<table>
-    <tr>
-        <td>Monthly Report</td>
-    </tr>
-    <tr>
-        <td>Month:</td>
-        <td>
+<asp:Table ID="table" runat="server">
+    <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left">Monthly Report</asp:TableHeaderCell>
+    </asp:TableHeaderRow>
+    <asp:TableRow>
+        <asp:TableCell>Month:</asp:TableCell>
+        <asp:TableCell>
             <asp:DropDownList ID="ddl_month" runat="server">
                 <asp:ListItem Text="January" Value="01"></asp:ListItem>
                 <asp:ListItem Text="Feburary" Value="02"></asp:ListItem>
@@ -24,27 +24,44 @@
                 <asp:ListItem Text="November" Value="11"></asp:ListItem>
                 <asp:ListItem Text="December" Value="12"></asp:ListItem>
             </asp:DropDownList>
-        </td>
-    </tr>
-    <tr>
-        <td>Year:</td>
-        <td>
+        </asp:TableCell>
+    </asp:TableRow>
+    <asp:TableRow>
+        <asp:TableCell>Year:</asp:TableCell>
+        <asp:TableCell>
             <asp:DropDownList ID="ddl_year" runat="server">
             </asp:DropDownList>
-        </td>
-    </tr>
-     <tr>
-        <td>&nbsp;</td>
-        <td>
+        </asp:TableCell>
+    </asp:TableRow>
+    <asp:TableRow>
+        <asp:TableCell>&nbsp;</asp:TableCell>
+        <asp:TableCell>
             <asp:Button ID="btn_show" runat="server" Text="Show" OnClick="btn_showClick" />
-        </td>
-    </tr>
-</table>
-All messages sent this month <asp:Button ID="btn_messages_month" runat="server" Text="Export to CSV" OnClick="btn_messages_month_Click" />
+        </asp:TableCell>
+    </asp:TableRow>
+</asp:Table>
+<asp:Table ID="table1" runat="server">
+    <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left">All messages sent this month </asp:TableHeaderCell>
+            <asp:TableCell><asp:Button ID="btn_messages_month" runat="server" Text="Export to CSV" OnClick="btn_messages_month_Click" /></asp:TableCell>
+    </asp:TableHeaderRow>
+</asp:Table>
 <table id="tbl_output" runat="server" border="1"></table>
-Operator performance <asp:Button ID="btn_performance_month" runat="server" Text="Export to CSV" OnClick="btn_performance_month_Click" />
+
+<asp:Table ID="table2" runat="server">
+    <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left">Operator performance</asp:TableHeaderCell>
+            <asp:TableCell><asp:Button ID="btn_performance_month" runat="server" Text="Export to CSV" OnClick="btn_performance_month_Click" /></asp:TableCell>
+    </asp:TableHeaderRow>
+</asp:Table>
 <table id="tbl_operatorperformance" runat="server" border="1"></table>
-System messages in this month <asp:Button ID="btn_sysmessages_month" runat="server" Text="Export to CSV" OnClick="btn_sysmessages_month_Click" />
+
+<asp:Table ID="table3" runat="server">
+    <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left">System messages in this month </asp:TableHeaderCell>
+            <asp:TableCell><asp:Button ID="btn_sysmessages_month" runat="server" Text="Export to CSV" OnClick="btn_sysmessages_month_Click" /></asp:TableCell>
+    </asp:TableHeaderRow>
+</asp:Table>
 <table id="tbl_sysmessages" runat="server" border="1"></table>
 
 </div>

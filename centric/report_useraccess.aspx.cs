@@ -20,14 +20,12 @@ public partial class report_useraccess : System.Web.UI.Page
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
-            //UPASLOGON pl = pasws.PasLogon(logoninfo);
-            //UDEPARTMENT[] depts = pl.departments;
             ParmAdmin pa = new ParmAdmin();
-            PAOBJECT[] obj = pa.GetRegions(Util.convertLogonInfoParmAdmin(l));
+            com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(l));
 
             for (int i = 0; i < obj.Length; ++i)
             {
-                lst_areas.Items.Add(new ListItem(obj[i].sz_name, obj[i].l_objectpk.ToString()));
+                lst_areas.Items.Add(new ListItem(obj[i].sz_deptid, obj[i].l_deptpk.ToString()));
             }
         }
     }
@@ -43,6 +41,7 @@ public partial class report_useraccess : System.Web.UI.Page
         for (int i = 0; i < selection.Length; ++i)
         {
             ulist = pa.GetAccessPermissions(long.Parse(lst_areas.Items[selection[i]].Value));
+            Session["userlist"] = ulist;
             if (ulist.Length > 0)
             {
                 HtmlTableRow header = new HtmlTableRow();
@@ -85,5 +84,16 @@ public partial class report_useraccess : System.Web.UI.Page
                 tbl_output.Rows.Add(header);
             }
         }
+        btn_export_user_access.Visible = true;
+    }
+
+    protected void btn_export_user_access_Click(object sender, EventArgs e)
+    {
+        String[] areas = new String[lst_areas.GetSelectedIndices().Length];
+        for (int i = 0; i < lst_areas.GetSelectedIndices().Length; ++i)
+        {
+            areas[i] = lst_areas.Items[i].Text;
+        }
+        Util.WriteUsersPerAccessPermissionToCSV((UBBUSER[])Session["userlist"], areas);
     }
 }
