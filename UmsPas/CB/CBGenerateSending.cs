@@ -79,6 +79,7 @@ namespace com.ums.PAS.CB
 
             //retrieve message object from send-object
             CB_MESSAGE message = alert.textmessages.list[0];
+            message.sz_text = message.sz_text.Replace("'", "''");
             
             //insert records into LBASEND
             List<Int32> operatorfilter = null;
@@ -86,9 +87,8 @@ namespace com.ums.PAS.CB
                                 199, -1, -1, -1, 0, 1, "", "", 0,
                                 ref operatorfilter, logon.l_deptpk, (int)LBA_SENDINGTYPES.CELLBROADCAST);
 
-            //TODO: insert record into MDVSENDINGINFO
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-            mdv.sz_messagetext = message.sz_text.Replace("'", "''");
+            mdv.sz_messagetext = message.sz_text;
             mdv.sz_oadc = alert.sz_sender.Replace("'", "''");
             mdv.sz_sendingname = "Alert " + alert.l_refno;
             mdv.l_scheddate = "0";
@@ -103,8 +103,9 @@ namespace com.ums.PAS.CB
             ps.l_refno = alert.l_refno;
             db.InsertMDVSENDINGINFO(ref ps);
 
-            // Insert record into LBASEND_TEXT_CC
-            db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
+            //Insert record into LBASEND_TEXT_CC
+            //removed, will be inserted in loc.addLanguage
+            //db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();

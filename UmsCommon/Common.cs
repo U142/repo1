@@ -13,6 +13,26 @@ using System.Xml.Serialization;
 namespace com.ums.UmsCommon
 {
 
+    public enum MDVSENDINGINFO_GROUP
+    {
+        ADDRESSLIST = 0,
+        GROUPSENDING = 1,
+        MAP_POLYGON = 2,
+        MAP_ELLIPSE = 3,
+        MAP_GEMINI = 4,
+        MAP_LBA = 8,
+        MAP_CB_POLYGON = 16,
+        MAP_CB_ELLIPSE = 32,
+        MAP_CB_NATIONAL = 64,
+        MAP_CB_TESTSENDING = 128,
+    }
+
+    public enum BBUSER_BLOCK_REASONS
+    {
+        REACHED_RETRY_LIMIT = 1,
+        BLOCKED_BY_ADMIN = 2,
+    }
+
     /**
      * Value used in Backbone log procedures/tables (e.g sp_log_BBMESSAGES => log_BBMESSAGES)
      */
