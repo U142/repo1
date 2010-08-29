@@ -31,7 +31,7 @@ public partial class predefine_text : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+            com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (l == null)
                 Server.Transfer("logoff.aspx");
 
@@ -50,7 +50,7 @@ public partial class predefine_text : System.Web.UI.Page
 
            
             
-            ULBAMESSAGELIST list = pws.GetLBAMessageLibrary(l, f);
+            ULBAMESSAGELIST list = pws.GetLBAMessageLibrary(Util.convertLogonInfoPas(l), f);
             //List<PredefinedText> pdt = db.getPredefinedText();
 
             for (int i = 0; i < list.list.Length; ++i)
@@ -105,7 +105,7 @@ public partial class predefine_text : System.Web.UI.Page
 
         if (pws == null)
             pws = new pasws();
-        ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
         long id = (long)pdt.n_messagepk;
         if (id == 0)
@@ -113,7 +113,7 @@ public partial class predefine_text : System.Web.UI.Page
         pdt.n_messagepk = id;
         pdt.n_deptpk = l.l_deptpk;
         pdt.n_parentpk = long.Parse(parent);
-            pdt = pws.InsertLBAMessage(l, pdt);
+            pdt = pws.InsertLBAMessage(Util.convertLogonInfoPas(l), pdt);
 
 
             id = (int)pdt.n_messagepk;
@@ -168,10 +168,10 @@ public partial class predefine_text : System.Web.UI.Page
 
                 if (pws == null)
                     pws = new pasws();
-                ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+                com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
                 ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(id)];
 
-                ULBAMESSAGE ret = pws.DeleteLBAMessage(l, pdt);
+                ULBAMESSAGE ret = pws.DeleteLBAMessage(Util.convertLogonInfoPas(l), pdt);
                 if (ret != null)
                 {
                     nodes.Remove(nodes[i]);
@@ -189,6 +189,8 @@ public partial class predefine_text : System.Web.UI.Page
         ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(TreeView1.SelectedNode.Value)];
         txt_message.Text = pdt.sz_message;
         txt_name.Text = pdt.sz_name;
+        txt_message.Enabled = false;
+        txt_name.Enabled = false;
     }
 
     protected void delete_click(object sender, EventArgs e)
@@ -200,6 +202,8 @@ public partial class predefine_text : System.Web.UI.Page
     {
         txt_name.Text = "";
         txt_message.Text = "";
+        txt_message.Enabled = true;
+        txt_name.Enabled = true;
         txt_name.Focus();
     }
 
@@ -209,6 +213,8 @@ public partial class predefine_text : System.Web.UI.Page
         ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(txt_id.Text)];
         txt_name.Text = pdt.sz_name;
         txt_message.Text = pdt.sz_message;
+        txt_message.Enabled = true;
+        txt_name.Enabled = true;
     }
 
     private string addJavaScript(string name, long id)

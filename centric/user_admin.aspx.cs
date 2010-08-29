@@ -24,48 +24,163 @@ public partial class user_admin : System.Web.UI.Page
 
     List<com.ums.ws.pas.admin.UBBUSER> users;
 
+    protected Table Table
+    {
+        get
+        {
+            return (Table)ViewState["table"];
+        }
+        set
+        {
+            ViewState["table"] = value;
+        }
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        com.ums.ws.pas.ULOGONINFO li = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+         com.ums.ws.pas.admin.ULOGONINFO li = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         
         if (li == null)
             Server.Transfer("logon.aspx");
+
+
         if (!IsPostBack)
         {
             PasAdmin pa = new PasAdmin();
-            ParmAdmin parma = new ParmAdmin();
-
             GetUsersResponse res = pa.doGetUsers(Util.convertLogonInfoPasAdmin(li));
             if (res.successful)
             {
                 com.ums.ws.pas.admin.UBBUSER[] ulist = res.user;
                 Session["users"] = ulist;
-                for (int i = 0; i < ulist.Length; ++i)
-                    lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled == 1 ? "yes" : "no"), ulist[i].l_userpk.ToString()));
 
-                com.ums.ws.parm.admin.UDEPARTMENT[] departments = parma.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(li));
-                Session["regions"] = departments;
-                for (int i = 0; i < departments.Length; ++i)
-                    lst_regions.Items.Add(new ListItem(departments[i].sz_deptid, departments[i].l_deptpk.ToString()));
+                buildTable(ulist);
             }
+
+            PasAdmin pasadmin = new PasAdmin();
+
+            GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li);
+            com.ums.ws.pas.admin.UDEPARTMENT[] departments = resp.restrictions;
+            Session["regions"] = departments;
+            for (int i = 0; i < departments.Length; ++i)
+                lst_regions.Items.Add(new ListItem(departments[i].sz_deptid, departments[i].l_deptpk.ToString()));
+        }
+        else
+            buildTable((com.ums.ws.pas.admin.UBBUSER[])Session["users"]);
+
+    }
+    private void buildTable(com.ums.ws.pas.admin.UBBUSER[] ulist)
+    {
+        TableHeaderRow hr = new TableHeaderRow();
+
+        TableHeaderCell hc = new TableHeaderCell();
+        hc.HorizontalAlign = HorizontalAlign.Left;
+        hc.Text = "User";
+        hr.Cells.Add(hc);
+
+        hc = new TableHeaderCell();
+        hc.HorizontalAlign = HorizontalAlign.Left;
+        hc.Text = "User name";
+        hr.Cells.Add(hc);
+
+        hc = new TableHeaderCell();
+        hc.HorizontalAlign = HorizontalAlign.Left;
+        hc.Text = "User type";
+        hr.Cells.Add(hc);
+
+        hc = new TableHeaderCell();
+        hc.HorizontalAlign = HorizontalAlign.Left;
+        hc.Text = "Blocked";
+        hr.Cells.Add(hc);
+        tbl_users.Rows.Add(hr);
+
+        TableRow tr;
+        TableCell tc;
+        for (int i = 0; i < ulist.Length; ++i)
+        {
+            tr = new TableRow();
+            tc = new TableCell();
+            LinkButton lb = new LinkButton();
+            lb.Text = ulist[i].sz_userid;
+            //tc.Text = ulist[i].sz_userid;
+            lb.CommandArgument = ulist[i].l_userpk.ToString();
+            lb.CausesValidation = false;
+            lb.ID = "lb_view" + ulist[i].l_userpk.ToString();
+            lb.Click += new EventHandler(this.btn_view_click);
+            tc.Controls.Add(lb);
+            tr.Cells.Add(tc);
+
+            tc = new TableCell();
+            tc.Text = ulist[i].sz_name;
+            tr.Cells.Add(tc);
+
+            tc = new TableCell();
+            tc.Text = Util.userType(ulist[i].l_profilepk);
+            tr.Cells.Add(tc);
+
+            tc = new TableCell();
+            tc.Text = (ulist[i].f_disabled == 1 ? "yes" : "no");
+            tr.Cells.Add(tc);
+            /*
+            tc = new TableCell();
+            Button btn_view = new Button();
+            btn_view.CommandArgument = ulist[i].l_userpk.ToString();
+            btn_view.ID = "btn_view" + ulist[i].l_userpk.ToString();
+            btn_view.CausesValidation = false;
+            btn_view.Text = "View";
+            btn_view.Click += new EventHandler(this.btn_view_click);
+            tc.Controls.Add(btn_view);
+            tr.Cells.Add(tc);
+            */
+
+            tbl_users.Rows.Add(tr);
+            //lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled == 1 ? "yes" : "no"), ulist[i].l_userpk.ToString()));
         }
     }
+    protected void btn_view_click(object sender, EventArgs e)
+    {
+        LinkButton btn_test = (LinkButton)sender;
+        txt_organization.Text = btn_test.CommandArgument;
+        com.ums.ws.pas.admin.UBBUSER user = getSelectedUser(long.Parse(btn_test.CommandArgument));
+        if (user != null)
+        {
+            deselect();
+            txt_firstname.Text = user.sz_name;
+            txt_username.Text = user.sz_userid;
+            selectType(user);
+            chk_blocked.Checked = user.f_disabled == 1 ? true : false;
+            if (user.f_disabled == 1)
+                txt_blocked.Text = Util.convertDate(user.l_disabled_timestamp).Substring(0, 10);
+            else
+                txt_blocked.Text = "";
+            //lst_regions.SelectedValue = user.l_deptpk.ToString();
+            for (int i = 0; i < lst_regions.Items.Count; ++i)
+            {
+                for (int j = 0; j < user.l_deptpklist.Length; ++j)
+                {
+                    if (lst_regions.Items[i].Value == user.l_deptpklist[j].ToString())
+                        lst_regions.Items[i].Selected = true;
+                }
+            }
+            selected.Text = user.l_userpk.ToString();
 
+        }
+        
+    }
     protected void btn_save_Click(object sender, EventArgs e)
     {
-
-        com.ums.ws.pas.admin.UBBUSER user = getSelectedUser();
-
-        // sjekk om l_userpk finnes hvis ikke lag nytt objekt
-        // Oprett user sett verdier for 
+        com.ums.ws.pas.admin.UBBUSER user;
+        bool update = false;
+        
+        if (selected.Text.Length > 0)
+        {
+            user = getSelectedUser(int.Parse(selected.Text));
+            update = true;
+        }
+        else
+            user = getSelectedUser(0);
 
         if (user == null) // Not selected
             user = new com.ums.ws.pas.admin.UBBUSER();
-
-        /*
-        if (chk_blocked.Checked)
-            DateTime.Parse(txt_blocked.Text);
-        */
 
         user.sz_name = txt_firstname.Text;
         user.sz_userid = txt_username.Text.ToUpper();
@@ -114,7 +229,7 @@ public partial class user_admin : System.Web.UI.Page
             users = new com.ums.ws.pas.admin.UBBUSER[1];
         
         // Send med UBBUSER og restriction area kan bare sette departmentpk på bbuser forresten?
-        com.ums.ws.pas.ULOGONINFO li = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO li = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         PasAdmin pasadmin = new PasAdmin();
 
         int[] regions = lst_regions.GetSelectedIndices();
@@ -129,16 +244,31 @@ public partial class user_admin : System.Web.UI.Page
         if (res.successful)
         {
             user = res.user;
-            users[users.Length - 1] = user;
-            Session["users"] = users;
-            if (lst_users.SelectedIndex == -1)
-                lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+            if (update)
+            {
+                for (int i = 0; i < users.Length; ++i)
+                {
+                    if (users[i].l_userpk == user.l_userpk)
+                        users[i] = user;
+                }
+                tbl_users.Rows.Clear();
+                buildTable(users);
+            }
             else
             {
-                int i = 0;
-                i = lst_users.SelectedIndex;
-                lst_users.Items.Remove(lst_users.SelectedItem);
-                lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+                users[users.Length - 1] = user;
+                Session["users"] = users;
+                if (lst_users.SelectedIndex == -1)
+                    lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+                else
+                {
+                    int i = 0;
+                    i = lst_users.SelectedIndex;
+                    lst_users.Items.Remove(lst_users.SelectedItem);
+                    lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+                }
+                tbl_users.Rows.Clear();
+                buildTable(users);
             }
             deselect();
         }
@@ -199,6 +329,19 @@ public partial class user_admin : System.Web.UI.Page
                     return users[i];
             }
         }
+
+        return null;
+    }
+
+    private com.ums.ws.pas.admin.UBBUSER getSelectedUser(long id)
+    {
+        com.ums.ws.pas.admin.UBBUSER[] users = (com.ums.ws.pas.admin.UBBUSER[])Session["users"];
+
+        for (int i = 0; i < users.Length; ++i)
+        {
+            if (users[i].l_userpk == id)
+                return users[i];
+        }
         return null;
     }
 
@@ -213,6 +356,10 @@ public partial class user_admin : System.Web.UI.Page
             txt_username.Text = user.sz_userid;
             selectType(user);
             chk_blocked.Checked = user.f_disabled==1?true:false;
+            if (user.f_disabled == 1)
+                txt_blocked.Text = Util.convertDate(user.l_disabled_timestamp).Substring(0, 10);
+            else
+                txt_blocked.Text = "";
             //lst_regions.SelectedValue = user.l_deptpk.ToString();
             for(int i=0;i<lst_regions.Items.Count;++i)
             {
@@ -250,7 +397,6 @@ public partial class user_admin : System.Web.UI.Page
                 break;
             case 7:
                 rad_administrator.Checked = true;
-                req_regions.Enabled = false;
                 break;
         }
         admin_Checked(this, null);
@@ -262,12 +408,15 @@ public partial class user_admin : System.Web.UI.Page
     {
         if (rad_administrator.Checked)
         {
-            deselect();
+            lst_regions.SelectionMode = ListSelectionMode.Multiple;
+            selectAllRegions();
+            req_regions.Enabled = false;
             lst_regions.Enabled = false;
         }
         else if (rad_national.Checked)
         {
             lst_regions.Enabled = false;
+            req_regions.Enabled = true;
             lst_regions.SelectionMode = ListSelectionMode.Multiple;
             selectAllRegions();
         }
@@ -275,6 +424,7 @@ public partial class user_admin : System.Web.UI.Page
         {
             deselect();
             lst_regions.Enabled = true;
+            req_regions.Enabled = true;
             lst_regions.SelectionMode = ListSelectionMode.Single;
         }
         else

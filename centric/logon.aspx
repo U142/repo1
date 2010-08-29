@@ -39,7 +39,7 @@
                         <asp:Label ID="lbl_password" runat="server" Text="Password:"></asp:Label>
                     </asp:TableCell>
                     <asp:TableCell>
-                        <asp:TextBox ID="txt_password" runat="server" TextMode="Password"></asp:TextBox>
+                        <asp:TextBox ID="txt_password" runat="server" TextMode="Password" style="width:150px"></asp:TextBox>
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>
@@ -48,6 +48,11 @@
                     </asp:TableCell>
                     <asp:TableCell HorizontalAlign="Right">
                         <asp:Button ID="btn_cancel" runat="server" Text="Cancel" Width="60" />
+                    </asp:TableCell>
+                </asp:TableRow>
+                <asp:TableRow>
+                    <asp:TableCell HorizontalAlign="Center" ColumnSpan="2">
+                        <asp:Label ID="lbl_error" runat="server" Text="" ></asp:Label>
                     </asp:TableCell>
                 </asp:TableRow>
             </asp:Table>

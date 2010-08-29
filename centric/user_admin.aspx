@@ -7,7 +7,10 @@
         </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <asp:ListBox ID="lst_users" runat="server" Height="100" Width="450" OnSelectedIndexChanged="fill_form" AutoPostBack="True"></asp:ListBox>
+                <asp:ListBox ID="lst_users" runat="server" Height="100" Width="450" OnSelectedIndexChanged="fill_form" AutoPostBack="True" Visible="false"></asp:ListBox>
+                <asp:Table runat="server" ID="tbl_users" GridLines="Both">
+                    
+                </asp:Table>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -44,7 +47,7 @@
                 <asp:TextBox ID="txt_firstname" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator1" ControlToValidate="txt_firstname" Text="*" ErrorMessage="Username is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
-                <asp:TextBox ID="txt_blocked" runat="server" Width="70"></asp:TextBox>
+                <asp:TextBox ID="txt_blocked" runat="server" Width="70" Enabled="false"></asp:TextBox>
             </asp:TableCell>
         </asp:TableRow>
          <asp:TableRow>

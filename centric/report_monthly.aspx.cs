@@ -9,13 +9,14 @@ using System.Web.UI.HtmlControls;
 
 using com.ums.ws.pas.status;
 using com.ums.ws.pas;
+using com.ums.ws.pas.admin;
 
 public partial class report_monthly : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
         PasStatus ps = new PasStatus();
-        com.ums.ws.pas.ULOGONINFO l = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+         com.ums.ws.pas.admin.ULOGONINFO l = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
@@ -72,17 +73,83 @@ public partial class report_monthly : System.Web.UI.Page
 
     protected void btn_showClick(object sender, EventArgs e)
     {
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+
+        PasAdmin pa = new PasAdmin();
+        GetTotalNumberOfMessagesResponse tnmres = pa.doGetTotalNumberOfMessages(l, createTimestamp());
+        Session["totalMessages"] = tnmres;
+        HtmlTableRow header = new HtmlTableRow();
+        HtmlTableCell hc = new HtmlTableCell();
+        Label lbl_header = new Label();
+
+        if (tnmres.successful)
+        {
+            lbl_header.Text = "Total number of events";
+            hc.Controls.Add(lbl_header);
+            header.Cells.Add(hc);
+
+            lbl_header = new Label();
+            lbl_header.Text = "Total number of regional messages sent";
+            hc = new HtmlTableCell();
+            hc.Controls.Add(lbl_header);
+            header.Cells.Add(hc);
+
+            lbl_header = new Label();
+            lbl_header.Text = "Total number of national messages sent";
+            hc = new HtmlTableCell();
+            hc.Controls.Add(lbl_header);
+            header.Cells.Add(hc);
+
+            lbl_header = new Label();
+            lbl_header.Text = "Total number of test messages sent";
+            hc = new HtmlTableCell();
+            hc.Controls.Add(lbl_header);
+            header.Cells.Add(hc);
+
+            tbl_total_messages.Rows.Add(header);
+
+            HtmlTableRow row = new HtmlTableRow();
+            Label txt = new Label();
+            txt.Text = tnmres.total_events.ToString();
+            HtmlTableCell cell = new HtmlTableCell();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+
+            cell = new HtmlTableCell();
+            txt = new Label();
+            txt.Text = tnmres.total_regional.ToString();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+
+            cell = new HtmlTableCell();
+            txt = new Label();
+            txt.Text = tnmres.total_national.ToString();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+
+            cell = new HtmlTableCell();
+            txt = new Label();
+            txt.Text = tnmres.total_test.ToString();
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+            tbl_total_messages.Rows.Add(row);
+
+            btn_messages_total.Visible = true;
+        }
+        else
+            btn_messages_total.Visible = false;
+
         PasStatus pasws = new PasStatus();
-        com.ums.ws.pas.ULOGONINFO l = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        
         CB_MESSAGE_MONTHLY_REPORT_RESPONSE[] res = pasws.GetAllMesagesThisMonth(Util.convertLogonInfoPasStatus(l), createTimestamp());
         
         Session["messages_month"] = res;
 
         tbl_output.Rows.Clear();
 
-        HtmlTableRow header = new HtmlTableRow();
-        HtmlTableCell hc = new HtmlTableCell();
-        Label lbl_header = new Label();
+        header = new HtmlTableRow();
+        hc = new HtmlTableCell();
+        lbl_header = new Label();
         lbl_header.Text = "Regional/National/Test:";
         hc.Controls.Add(lbl_header);
         header.Cells.Add(hc);
@@ -95,6 +162,12 @@ public partial class report_monthly : System.Web.UI.Page
 
         lbl_header = new Label();
         lbl_header.Text = "Username";
+        hc = new HtmlTableCell();
+        hc.Controls.Add(lbl_header);
+        header.Cells.Add(hc);
+
+        lbl_header = new Label();
+        lbl_header.Text = "Operator";
         hc = new HtmlTableCell();
         hc.Controls.Add(lbl_header);
         header.Cells.Add(hc);
@@ -117,7 +190,7 @@ public partial class report_monthly : System.Web.UI.Page
         {
             HtmlTableRow row = new HtmlTableRow();
             Label txt = new Label();
-            txt.Text = "N/A";
+            txt.Text = Util.sendingType(res[i]);
             HtmlTableCell cell = new HtmlTableCell();
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
@@ -138,6 +211,13 @@ public partial class report_monthly : System.Web.UI.Page
 
             cell = new HtmlTableCell();
             txt = new Label();
+            txt.Text = res[i].sz_operatorname;
+            cell.Controls.Add(txt);
+            row.Cells.Add(cell);
+            tbl_output.Rows.Add(row);
+            
+            cell = new HtmlTableCell();
+            txt = new Label();
             txt.Text = res[i].l_addressedcells.ToString();
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
@@ -145,7 +225,7 @@ public partial class report_monthly : System.Web.UI.Page
 
             cell = new HtmlTableCell();
             txt = new Label();
-            txt.Text = res[i].l_performance.ToString();
+            txt.Text = Math.Round(res[i].l_performance,1).ToString();
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             tbl_output.Rows.Add(row);
@@ -189,7 +269,7 @@ public partial class report_monthly : System.Web.UI.Page
 
             cell = new HtmlTableCell();
             txt = new Label();
-            txt.Text = res[i].l_performance.ToString();
+            txt.Text = Math.Round(res[i].l_performance, 1).ToString();
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             tbl_operatorperformance.Rows.Add(row);
@@ -202,7 +282,7 @@ public partial class report_monthly : System.Web.UI.Page
 
         // System messages this month
         pasws pas = new pasws();
-        USYSTEMMESSAGES msg = pas.GetSystemMessagesMonth(l, createTimestamp());
+        USYSTEMMESSAGES msg = pas.GetSystemMessagesMonth(Util.convertLogonInfoPas(l), createTimestamp());
         
         Session["sysmessage_month"] = msg;
 
@@ -263,7 +343,7 @@ public partial class report_monthly : System.Web.UI.Page
             // Type
             cell = new HtmlTableCell();
             txt = new Label();
-            txt.Text = news[i].l_type.ToString();
+            txt.Text = Util.sysMessageType(news[i].l_type);
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             
@@ -289,6 +369,12 @@ public partial class report_monthly : System.Web.UI.Page
             btn_sysmessages_month.Visible = false;
     }
 
+    protected void btn_messages_total_month_Click(object sender, EventArgs e)
+    {
+        GetTotalNumberOfMessagesResponse tnmres = (GetTotalNumberOfMessagesResponse) Session["totalMessages"];
+        Util.WriteMonthlyTotalReportToCSV(tnmres.total_events, tnmres.total_regional, tnmres.total_national, tnmres.total_test);
+    }
+
     protected void btn_messages_month_Click(object sender, EventArgs e)
     {
         Util.WriteMonthlyReportToCSV((CB_MESSAGE_MONTHLY_REPORT_RESPONSE[])Session["messages_month"]);
@@ -303,4 +389,6 @@ public partial class report_monthly : System.Web.UI.Page
     {
         Util.WriteMonthlySystemMessagesToCSV((USYSTEMMESSAGES)Session["sysmessage_month"]);
     }
+
+    
 }

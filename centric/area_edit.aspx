@@ -3,18 +3,31 @@
 <asp:Content ContentPlaceHolderID="body" runat="server">
     <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
     <script type="text/javascript">
-        function getzShitz() {
+        function getShape() {
             //alert(document.mapapplet.get());
             document.getElementById("ctl00_body_txt_coor").value = document.mapapplet.get();
             return false;
         }
-        function setzShitz() {
+        function setShape(coor, id, obsolete, timestamp, deptname) {
             var lon = [58.9132, 58.9449, 58.7498, 58.6927];
             var lat = [6.0121, 6.0121, 6.4075, 5.9722];
-            var index = document.getElementById("ctl00_body_lst_areas").selectedIndex;
+            //var index = document.getElementById("ctl00_body_lst_areas").selectedIndex;
             //alert(document.getElementById("ctl00_body_lst_areas").options[index].value);
-            document.mapapplet.put(document.getElementById("ctl00_body_lst_areas").options[index].value);
-            return false;
+            //document.mapapplet.put(document.getElementById("ctl00_body_lst_areas").options[index].value);
+            document.getElementById("ctl00_body_txt_id").value = id;
+            document.getElementById("ctl00_body_txt_obsolete_holder").value = obsolete;
+            document.getElementById("ctl00_body_txt_timestamp").value = timestamp;
+            document.getElementById("ctl00_body_txt_name").disabled = true;
+            document.getElementById("ctl00_body_txt_name").value = deptname;
+            if (obsolete == 1)
+                document.getElementById("ctl00_body_chk_obsolete").checked = true;
+            else
+                document.getElementById("ctl00_body_chk_obsolete").checked = false;
+            document.getElementById("ctl00_body_txt_obsolete").value = timestamp;
+            document.mapapplet.put(document.getElementById(coor).value);
+            
+            
+            //return false;
         }
     </script>
     <asp:Table ID="table" runat="server">
@@ -23,12 +36,13 @@
         </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  ></asp:ListBox>
+                <asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640"  Visible="false" ></asp:ListBox>
+                <asp:Table runat="server" ID="tbl_areas" GridLines="Both"></asp:Table>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Button ID="Button2" runat="server" Text="Create" /></asp:TableCell>
+                <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_click"/></asp:TableCell>
         </asp:TableRow>
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label4" runat="server" Text="Details Authorization area"></asp:Label></asp:TableHeaderCell>
@@ -40,11 +54,11 @@
             <asp:TableCell>
                 <asp:TextBox ID="txt_name" runat="server"></asp:TextBox></asp:TableCell>
             <asp:TableCell>
-                <asp:CheckBox ID="CheckBox1" runat="server" />
+                <asp:CheckBox ID="chk_obsolete" runat="server" />
                 <asp:Label ID="Label2" runat="server" Text="Obsolete"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="TextBox3" runat="server" Text="12.12.2010"></asp:TextBox>
+                <asp:TextBox ID="txt_obsolete" runat="server" Text="" Enabled="false" ></asp:TextBox>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -67,9 +81,12 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell HorizontalAlign="Right" ColumnSpan="4">
-                <asp:Button ID="btn_save" runat="server" Text="Save" OnClientClick="javascript:getzShitz();" OnClick="btn_save_Click" />
+                <asp:Button ID="btn_save" runat="server" Text="Save" OnClientClick="javascript:getShape();" OnClick="btn_save_Click" />
             </asp:TableCell>
         </asp:TableRow>
     </asp:Table>
     <asp:TextBox ID="txt_coor" runat="server" style="visibility:hidden"></asp:TextBox>
+    <asp:TextBox ID="txt_id" runat="server"  style="visibility:hidden"></asp:TextBox>
+    <asp:TextBox ID="txt_obsolete_holder" runat="server"  style="visibility:hidden"></asp:TextBox>
+    <asp:TextBox ID="txt_timestamp" runat="server"  style="visibility:hidden"></asp:TextBox>
 </asp:Content>

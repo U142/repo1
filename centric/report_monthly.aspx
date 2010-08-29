@@ -40,6 +40,15 @@
         </asp:TableCell>
     </asp:TableRow>
 </asp:Table>
+
+<asp:Table ID="table4" runat="server">
+    <asp:TableHeaderRow>
+            <asp:TableHeaderCell HorizontalAlign="Left">Total messages </asp:TableHeaderCell>
+            <asp:TableCell><asp:Button ID="btn_messages_total" runat="server" Text="Export to CSV" OnClick="btn_messages_total_month_Click" Visible="false"/></asp:TableCell>
+    </asp:TableHeaderRow>
+</asp:Table>
+<table id="tbl_total_messages" runat="server" border="1"></table>
+
 <asp:Table ID="table1" runat="server">
     <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left">All messages sent this month </asp:TableHeaderCell>

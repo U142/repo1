@@ -15,7 +15,7 @@ public partial class report_useraccess : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         pasws pasws = new pasws();
-        com.ums.ws.pas.ULOGONINFO l = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+         com.ums.ws.pas.admin.ULOGONINFO l = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)

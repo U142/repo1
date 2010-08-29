@@ -11,7 +11,7 @@
         </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="6">
-                <asp:ListBox ID="lst_messages" runat="server" Height="200px" Width="471px" OnSelectedIndexChanged="lst_messages_selectedindex" AutoPostBack="True">
+                <asp:ListBox ID="lst_messages" runat="server" Height="200px" Width="471px" Font-Names="Courier New" OnSelectedIndexChanged="lst_messages_selectedindex" AutoPostBack="True">
                 </asp:ListBox>
             </asp:TableCell>
         </asp:TableRow>

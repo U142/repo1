@@ -82,6 +82,10 @@
         </s:sequence>
       </s:complexType>
       <s:complexType name="UShape" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="f_disabled" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
+        </s:sequence>
         <s:attribute name="col_red" type="s:float" use="required" />
         <s:attribute name="col_green" type="s:float" use="required" />
         <s:attribute name="col_blue" type="s:float" use="required" />
@@ -410,8 +414,22 @@
           <s:element minOccurs="1" maxOccurs="1" name="f_blocklist_default" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="f_session_expires_sec" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="sz_hash_paspwd" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_deptpklist" type="tns:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_reasoncode" type="tns:BBUSER_BLOCK_REASONS" />
         </s:sequence>
       </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="BBUSER_BLOCK_REASONS">
+        <s:restriction base="s:string">
+          <s:enumeration value="REACHED_RETRY_LIMIT" />
+          <s:enumeration value="BLOCKED_BY_ADMIN" />
+        </s:restriction>
+      </s:simpleType>
       <s:element name="GetUserRegionResponse">
         <s:complexType>
           <s:sequence>
@@ -513,27 +531,6 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="tns:UShape" />
         </s:sequence>
       </s:complexType>
-      <s:element name="StoreUser">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
-            <s:element minOccurs="0" maxOccurs="1" name="user" type="tns:UBBUSER" />
-            <s:element minOccurs="0" maxOccurs="1" name="deptk" type="tns:ArrayOfInt" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfInt">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="StoreUserResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="StoreUserResult" type="tns:UBBUSER" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="GetUsers">
         <s:complexType>
           <s:sequence>
@@ -626,12 +623,6 @@
   <wsdl:message name="GetRestrictionAreasSoapOut">
     <wsdl:part name="parameters" element="tns:GetRestrictionAreasResponse" />
   </wsdl:message>
-  <wsdl:message name="StoreUserSoapIn">
-    <wsdl:part name="parameters" element="tns:StoreUser" />
-  </wsdl:message>
-  <wsdl:message name="StoreUserSoapOut">
-    <wsdl:part name="parameters" element="tns:StoreUserResponse" />
-  </wsdl:message>
   <wsdl:message name="GetUsersSoapIn">
     <wsdl:part name="parameters" element="tns:GetUsers" />
   </wsdl:message>
@@ -682,10 +673,6 @@
     <wsdl:operation name="GetRestrictionAreas">
       <wsdl:input message="tns:GetRestrictionAreasSoapIn" />
       <wsdl:output message="tns:GetRestrictionAreasSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="StoreUser">
-      <wsdl:input message="tns:StoreUserSoapIn" />
-      <wsdl:output message="tns:StoreUserSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUsers">
       <wsdl:input message="tns:GetUsersSoapIn" />
@@ -767,15 +754,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetRestrictionAreas">
       <soap:operation soapAction="http://ums.no/ws/parm/admin/GetRestrictionAreas" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="StoreUser">
-      <soap:operation soapAction="http://ums.no/ws/parm/admin/StoreUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -885,15 +863,6 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="StoreUser">
-      <soap12:operation soapAction="http://ums.no/ws/parm/admin/StoreUser" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetUsers">
       <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetUsers" style="document" />
       <wsdl:input>
@@ -924,10 +893,10 @@
   </wsdl:binding>
   <wsdl:service name="ParmAdmin">
     <wsdl:port name="ParmAdminSoap" binding="tns:ParmAdminSoap">
-      <soap:address location="https://secure.ums2.no/centricws/WS/ParmAdmin.asmx" />
+      <soap:address location="http://localhost/WS/ParmAdmin.asmx" />
     </wsdl:port>
     <wsdl:port name="ParmAdminSoap12" binding="tns:ParmAdminSoap12">
-      <soap12:address location="https://secure.ums2.no/centricws/WS/ParmAdmin.asmx" />
+      <soap12:address location="http://localhost/WS/ParmAdmin.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

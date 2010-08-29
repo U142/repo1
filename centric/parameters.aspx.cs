@@ -23,10 +23,10 @@ public partial class parameters : System.Web.UI.Page
         {
             // web service load settings
             pasws pws = new pasws();
-            ULOGONINFO logon = (ULOGONINFO)Session["logoninfo"];
+            com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (logon == null)
                 Server.Transfer("logon.aspx");
-            ULBAPARAMETER param = pws.GetCBParameters(logon);
+            ULBAPARAMETER param = pws.GetCBParameters(Util.convertLogonInfoPas(logon));
 
             txt_inclogons.Text = param.l_incorrect.ToString();
             //txt_autologoff.Text = param.l_autologoff.ToString();

@@ -14,7 +14,61 @@ using com.ums.ws.parm.admin;
 /// </summary>
 public class Util
 {
-    public static com.ums.ws.parm.admin.ULOGONINFO convertLogonInfoParmAdmin(com.ums.ws.pas.ULOGONINFO l)
+    public static String sysMessageType(long type)
+    {
+        switch (type)
+        {
+            case 0:
+                return "Planned outage";
+            case 1:
+                return "Unplanned outage";
+            case 2:
+                return "Other";
+            default:
+                return "Unknown";
+        }
+    }
+
+    public static String userType(long type)
+    {
+        switch (type)
+        {
+            case 2:
+                return "Regional";
+            case 3:
+                return "Super Regional";
+            case 5:
+                return "National";
+            case 7: 
+                return "Administrator";
+            default:
+                return "Unknown";
+        }
+    }
+
+    public static String sendingType(CB_MESSAGE_MONTHLY_REPORT_RESPONSE res)
+    {
+        if(res.l_type == 70)
+            return "Test";
+        else if(res.l_type == 7 && res.l_group == 16)
+            return "National";
+        else if(res.l_type == 7 && (res.l_group == 2 || res.l_group == 8))
+            return "Regional";
+        else
+            return "Unknown";
+    }
+
+    public static String padForListBox(UBBNEWS news)
+    {
+        String listboxthingy = "";
+
+        listboxthingy = news.sz_operatorname.PadRight(8, '#') + " " + Helper.FormatDate(news.l_incident_start) + (news.l_incident_end.ToString().Length > 1 ? "-" + Helper.FormatDate(news.l_incident_end) : "".PadRight(17, '#')) + " " + news.newstext.sz_news;
+
+
+        return HttpUtility.HtmlDecode(listboxthingy.Replace("#", "&nbsp;"));
+    }
+
+    public static com.ums.ws.parm.admin.ULOGONINFO convertLogonInfoParmAdmin(com.ums.ws.pas.admin.ULOGONINFO l)
     {
         com.ums.ws.parm.admin.ULOGONINFO logoninfo = new com.ums.ws.parm.admin.ULOGONINFO();
         logoninfo.l_deptpk = l.l_deptpk;
@@ -25,7 +79,7 @@ public class Util
         return logoninfo;
     }
 
-    public static com.ums.ws.pas.status.ULOGONINFO convertLogonInfoPasStatus(com.ums.ws.pas.ULOGONINFO l)
+    public static com.ums.ws.pas.status.ULOGONINFO convertLogonInfoPasStatus(com.ums.ws.pas.admin.ULOGONINFO l)
     {
         com.ums.ws.pas.status.ULOGONINFO logoninfo = new com.ums.ws.pas.status.ULOGONINFO();
         logoninfo.l_deptpk = l.l_deptpk;
@@ -36,9 +90,20 @@ public class Util
         return logoninfo;
     }
 
-    public static com.ums.ws.pas.admin.ULOGONINFO convertLogonInfoPasAdmin(com.ums.ws.pas.ULOGONINFO l)
+    public static com.ums.ws.pas.admin.ULOGONINFO convertLogonInfoPasAdmin(com.ums.ws.pas.admin.ULOGONINFO l)
     {
         com.ums.ws.pas.admin.ULOGONINFO logoninfo = new com.ums.ws.pas.admin.ULOGONINFO();
+        logoninfo.l_deptpk = l.l_deptpk;
+        logoninfo.l_userpk = l.l_userpk;
+        logoninfo.l_comppk = l.l_comppk;
+        logoninfo.sz_password = l.sz_password;
+        logoninfo.sessionid = l.sessionid;
+        return logoninfo;
+    }
+
+    public static com.ums.ws.pas.ULOGONINFO convertLogonInfoPas(com.ums.ws.pas.admin.ULOGONINFO l)
+    {
+        com.ums.ws.pas.ULOGONINFO logoninfo = new com.ums.ws.pas.ULOGONINFO();
         logoninfo.l_deptpk = l.l_deptpk;
         logoninfo.l_userpk = l.l_userpk;
         logoninfo.l_comppk = l.l_comppk;
@@ -60,8 +125,53 @@ public class Util
 
     private static void AddComma(string value, StringBuilder stringBuilder)
     {
-        stringBuilder.Append(value.Replace(',', ' '));
+        value = value.Replace('\n', ' ');
+        value = value.Replace('\r', ' ');
+        stringBuilder.Append(value.Replace(',', '.'));
         stringBuilder.Append(", ");
+    }
+
+    private static void AddLast(string value, StringBuilder stringBuilder)
+    {
+        value = value.Replace('\n', ' ');
+        value = value.Replace('\r', ' ');
+        stringBuilder.Append(value.Replace(',', '.'));
+    }
+
+    /*********************************
+     ***** Monthly total messages ****
+     *********************************/
+    public static void WriteMonthlyTotalReportToCSV(long total_events, long total_regional, long total_national, long total_test)
+    {
+        string attachment = "attachment; filename=MonthlyTotalReport.csv";
+        HttpContext.Current.Response.Clear();
+        HttpContext.Current.Response.ClearHeaders();
+        HttpContext.Current.Response.ClearContent();
+        HttpContext.Current.Response.AddHeader("content-disposition", attachment);
+        HttpContext.Current.Response.ContentType = "text/csv";
+        HttpContext.Current.Response.AddHeader("Pragma", "public");
+        WriteMonthlyTotalReportColumnName();
+        WriteMonthlyTotalReport(total_events, total_regional, total_national, total_test);
+        
+        HttpContext.Current.Response.End();
+    }
+
+    private static void WriteMonthlyTotalReport(long total_events, long total_regional, long total_national, long total_test)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        AddComma(total_events.ToString(), stringBuilder);
+        AddComma(total_regional.ToString(), stringBuilder);
+        AddComma(total_national.ToString(), stringBuilder);
+        AddLast(total_test.ToString(), stringBuilder);
+        HttpContext.Current.Response.Write(stringBuilder.ToString());
+        HttpContext.Current.Response.Write(Environment.NewLine);
+    }
+
+    private static void WriteMonthlyTotalReportColumnName()
+    {
+        string columnNames = "Total number of events, Total number of regional messages sent, Total number of national messages sent, Total number of test messages sent";
+        HttpContext.Current.Response.Write(columnNames);
+        HttpContext.Current.Response.Write(Environment.NewLine);
     }
 
     /*************************
@@ -87,18 +197,19 @@ public class Util
     private static void WriteMonthlyReport(CB_MESSAGE_MONTHLY_REPORT_RESPONSE monthlyreport)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        AddComma("N/A", stringBuilder);
-        AddComma(monthlyreport.sz_text, stringBuilder);
-        AddComma("N/A", stringBuilder);
+        AddComma("\"" + Util.sendingType(monthlyreport) + "\"", stringBuilder);
+        AddComma("\"" + monthlyreport.sz_text + "\"", stringBuilder);
+        AddComma("\"" + monthlyreport.sz_userid + "\"", stringBuilder);
+        AddComma("\"" + monthlyreport.sz_operatorname + "\"", stringBuilder);
         AddComma(monthlyreport.l_addressedcells.ToString(), stringBuilder);
-        AddComma(monthlyreport.l_performance.ToString(), stringBuilder);
+        AddLast(Math.Round(monthlyreport.l_performance,1).ToString(), stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
 
     private static void WriteMonthlyReportColumnName()
     {
-        string columnNames = "Regional/National/Test, Message, Username, #addressed cells, Operator performance";
+        string columnNames = "Regional/National/Test, Message, Username, Operator, #addressed cells, Operator performance";
         HttpContext.Current.Response.Write(columnNames);
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
@@ -133,8 +244,8 @@ public class Util
     private static void WriteMonthlyPerformance(CB_MESSAGE_MONTHLY_REPORT_RESPONSE performance)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        AddComma(performance.sz_operatorname, stringBuilder);
-        AddComma(performance.l_performance.ToString(), stringBuilder);
+        AddComma("\"" + performance.sz_operatorname + "\"", stringBuilder);
+        AddLast(Math.Round(performance.l_performance, 1).ToString(), stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
@@ -161,11 +272,11 @@ public class Util
     private static void WriteMonthlySystemMessages(UBBNEWS sysmessage)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        AddComma(sysmessage.newstext.sz_news, stringBuilder);
-        AddComma(sysmessage.sz_operatorname, stringBuilder);
-        AddComma(sysmessage.l_type.ToString(), stringBuilder);
-        AddComma(sysmessage.l_incident_start.ToString(), stringBuilder);
-        AddComma(sysmessage.l_incident_end.ToString(), stringBuilder);
+        AddComma("\"" + sysmessage.newstext.sz_news + "\"", stringBuilder);
+        AddComma("\"" + sysmessage.sz_operatorname + "\"", stringBuilder);
+        AddComma("\"" + Util.sysMessageType(sysmessage.l_type) + "\"", stringBuilder);
+        AddComma("\"" + Util.convertDate(sysmessage.l_incident_start) + "\"", stringBuilder);
+        AddLast("\"" + Util.convertDate(sysmessage.l_incident_end) + "\"", stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
@@ -200,8 +311,8 @@ public class Util
     private static void WriteAccessPerUser(PAOBJECT obj, CB_USER_REGION_RESPONSE res)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        AddComma(res.user.sz_userid, stringBuilder);
-        AddComma(obj.sz_name, stringBuilder);
+        AddComma("\"" + res.user.sz_userid + "\"", stringBuilder);
+        AddLast("\"" + obj.sz_name + "\"", stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }
@@ -236,8 +347,8 @@ public class Util
     private static void WriteUsersPerAccessPermission(UBBUSER user, string areaname)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        AddComma(areaname, stringBuilder);
-        AddComma(user.sz_userid, stringBuilder);
+        AddComma("\"" + areaname + "\"", stringBuilder);
+        AddLast("\"" + user.sz_userid + "\"", stringBuilder);
         HttpContext.Current.Response.Write(stringBuilder.ToString());
         HttpContext.Current.Response.Write(Environment.NewLine);
     }

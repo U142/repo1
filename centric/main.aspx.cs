@@ -32,14 +32,16 @@ public partial class main : System.Web.UI.Page
             //txt_deactivate.Attributes.Add("readonly", "readonly");
 
             pasws pws = new pasws();
-            com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+            com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
-            USYSTEMMESSAGES sysm = pws.GetSystemMessages(logon,0);
+            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0);
              
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
-                lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
+                if (sysm.news.newslist[i].l_incident_end > sysm.news.newslist[i].l_timestamp_db || sysm.news.newslist[i].l_incident_end == 0)
+                    lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
+                    //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
             }
             Session["messages"] = sysm;
         }
@@ -105,16 +107,17 @@ public partial class main : System.Web.UI.Page
             }*/
         }
         pasws ws = new pasws();
-        com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
         // Stores the new message and returns it with l_newspk
-        sysm.news.newslist[sysm.news.newslist.Length - 1] = ws.UpdateSystemMessage(logon, sysm.news.newslist[sysm.news.newslist.Length - 1]);
+        sysm.news.newslist[sysm.news.newslist.Length - 1] = ws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), sysm.news.newslist[sysm.news.newslist.Length - 1]);
         sysm.news.newslist[sysm.news.newslist.Length - 1].l_deptpk = logon.l_deptpk;
 
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)
             lst_messages.Items.Remove(lst_messages.SelectedItem);
-        lst_messages.Items.Add(new ListItem(sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname + " " + sysm.news.newslist[sysm.news.newslist.Length - 1].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start) + (sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end)), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
+        //lst_messages.Items.Add(new ListItem(sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname + " " + sysm.news.newslist[sysm.news.newslist.Length - 1].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start) + (sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_end)), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
+        lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[sysm.news.newslist.Length - 1]), sysm.news.newslist[sysm.news.newslist.Length - 1].l_newspk.ToString()));
         //messages.Remove(tsm);
         //messages.Add(sm);
         Session["messages"] = sysm;
@@ -212,7 +215,7 @@ public partial class main : System.Web.UI.Page
     protected void btn_deactivate_Click(object sender, EventArgs e)
     {
         PasAdmin pasa = new PasAdmin();
-        com.ums.ws.pas.ULOGONINFO logon = (com.ums.ws.pas.ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
         if (res.successful)
             lst_messages.Items.Remove(lst_messages.SelectedItem);
