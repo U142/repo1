@@ -1693,5 +1693,67 @@ namespace com.ums.UmsParm
             }
             
         }
+        public UShape setPAShapeObsolete(UDEPARTMENT department,UShape shape)
+        {
+            String szSQL = "";
+
+            try
+            {
+                long l_timestamp = getDbClock();
+                szSQL = String.Format("sp_cb_set_pashape_obsolete {0}, {1}, {2}", department.l_deptpk, l_timestamp, shape.f_disabled);
+                ExecNonQuery(szSQL);
+
+                shape.l_disabled_timestamp = l_timestamp;
+
+                return shape;
+            }
+            catch (Exception e)
+            {
+                ULog.error(department.l_deptpk, szSQL, e.Message);
+                throw e;
+            }
+        }
+        public void getTotalNumberOfMessages(long period, ref long total_events, ref long total_regional, ref long total_national, ref long total_test)
+        {
+            String szSQL = "";
+            try
+            {
+                // Events
+                szSQL = String.Format("sp_cb_get_events_month {0}, {1}", period, period + 100000000);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                    if(!rs.IsDBNull(0))
+                        total_events = (long)rs.GetInt32(0);
+                rs.Close();
+
+                // Regional
+                szSQL = String.Format("sp_cb_get_regional_month {0}, {1}", period, period + 100000000);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                    if (!rs.IsDBNull(0))
+                        total_regional = (long)rs.GetInt32(0);
+                rs.Close();
+
+                // National
+                szSQL = String.Format("sp_cb_get_national_month {0}, {1}", period, period + 100000000);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                    if (!rs.IsDBNull(0))
+                        total_national = (long)rs.GetInt32(0);
+                rs.Close();
+
+                // Test
+                szSQL = String.Format("sp_cb_get_test_month {0}, {1}", period, period + 100000000);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                    if (!rs.IsDBNull(0))
+                        total_test = (long)rs.GetInt32(0);
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

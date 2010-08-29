@@ -1571,12 +1571,11 @@ namespace com.ums.ws.parm
                 for(int i=0;i<user.Count;++i) {
                     List<PAOBJECT> olist = new List<PAOBJECT>();
                     tempuser = new UBBUSER();
-                    sz_sql = String.Format("SELECT u.l_userpk, u.sz_userid, u.sz_name, u.sz_surname, u.l_comppk, u.l_deptpk, o.*, SH.* " +
-                                             "FROM BBUSER u " +
-                                             "LEFT JOIN PAOBJECT o ON u.l_deptpk=u.l_deptpk " +
-                                             "LEFT JOIN PASHAPE SH ON o.l_objectpk=SH.l_pk " +
-                                            "WHERE o.l_objectpk = SH.l_pk " +
-                                              "AND u.l_userpk = {0}", user[i].l_userpk);
+                    sz_sql = String.Format("SELECT u.l_userpk, u.sz_userid, u.sz_name, u.sz_surname, u.l_comppk, up.l_deptpk, up.l_deptpk, dept.sz_deptid " +
+                                             "FROM BBUSERPROFILE_X_DEPT up, BBUSER u, BBDEPARTMENT dept " +
+                                            "WHERE up.l_userpk = u.l_userpk " +
+		                                      "AND dept.l_deptpk = up.l_deptpk " +
+                                              "AND up.l_userpk = {0}", user[i].l_userpk);
                     
                     db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                     OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -1595,7 +1594,7 @@ namespace com.ums.ws.parm
                         PAOBJECT obj = new PAOBJECT();
                         obj.l_deptpk = rs.GetInt32(5);
                         obj.l_objectpk = (long)rs.GetDecimal(6);
-                        obj.sz_name = rs.GetString(9);
+                        obj.sz_name = rs.GetString(7);
                         olist.Add(obj);
                     }
 
@@ -1617,7 +1616,7 @@ namespace com.ums.ws.parm
         public List<UDEPARTMENT> GetRestrictionAreas(ULOGONINFO logoninfo)
         {
             List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
-            string sz_sql = "SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml " +
+            string sz_sql = "SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
                               "FROM v_BBDEPARTMENT DEP " +
                               "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                              "WHERE SH.l_type = 16";
@@ -1634,6 +1633,8 @@ namespace com.ums.ws.parm
                     obj.sz_deptid = rs.GetString(2);
                     obj.f_map = rs.GetInt16(3);
                     UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
+                    shape.f_disabled = rs.GetInt16(6);
+                    shape.l_disabled_timestamp = (long)rs.GetDecimal(5);
                     obj.restrictionShapes.Add(shape);
                     dlist.Add(obj);
                 }
@@ -1646,46 +1647,6 @@ namespace com.ums.ws.parm
             finally { db.close(); }
             
             return dlist;
-        }
-
-        [WebMethod]
-        public UBBUSER StoreUser(ULOGONINFO logoninfo, UBBUSER user, int[] deptk)
-        {
-            string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper());
-                             
-            try
-            {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
-                db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
-
-                if (rs.HasRows && user.l_userpk == 0)
-                    throw new SoapException("User ID already exists", XmlQualifiedName.Empty);
-
-                rs.Close();
-
-                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}'",
-                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd);
-
-                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
-                while (rs.Read())
-                {
-                    user.l_userpk = (long)rs.GetDecimal(0);
-                }
-                rs.Close();
-                for (int i = 0; i < deptk.Length; ++i)
-                {
-                    sz_sql = String.Format("INSERT INTO BBUSERPROFILE_X_DEPT VALUES( {0}, {1}, {2})", user.l_profilepk, user.l_userpk, deptk[i]);
-                    db.ExecNonQuery(sz_sql);
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally { db.close(); }
-
-            return user;
         }
 
         [WebMethod]
@@ -1714,6 +1675,15 @@ namespace com.ums.ws.parm
                     obj.l_deptpk = rs.GetInt32(6);
                     obj.l_profilepk = rs.GetInt32(7);
                     ulist.Add(obj);
+                }
+                rs.Close();
+                foreach(UBBUSER u in ulist) {
+                    sz_sql = String.Format("SELECT l_deptpk FROM BBUSERPROFILE_X_DEPT WHERE l_userpk={0}", u.l_userpk);
+                    rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                    List<int> deptlist = new List<int>();
+                    while (rs.Read())
+                        deptlist.Add(rs.GetInt32(0));
+                    u.l_deptpklist = deptlist.ToArray();
                 }
                 rs.Close();
             }
@@ -1805,13 +1775,10 @@ namespace com.ums.ws.parm
         public List<UBBUSER> GetAccessPermissions(long objectpk)
         {
             List<UBBUSER> list = new List<UBBUSER>();
-            String sz_sql = String.Format("SELECT u.sz_userid, o.sz_name " +
-                                            "FROM BBUSER u, PAOBJECT o " +
-                                            "LEFT JOIN PASHAPE SH ON o.l_objectpk=SH.l_pk " +
-                                           "WHERE (u.l_userpk = o.l_userpk " +
-                                              "OR u.l_deptpk = o.l_deptpk) " +
-                                             "AND (SH.l_type={0} OR SH.l_type={1}) " +
-                                             "AND o.l_objectpk = {2} ", PASHAPETYPES.PADEPARTMENTRESTRICTION.GetHashCode(), PASHAPETYPES.PAUSERRESTRICTION.GetHashCode(), objectpk);
+            String sz_sql = String.Format("SELECT u.sz_userid " +
+                                            "FROM BBUSERPROFILE_X_DEPT up, BBUSER u " +
+                                           "WHERE u.l_userpk = up.l_userpk " +
+                                             "AND up.l_deptpk = {0}", objectpk);
             try
             {
                 

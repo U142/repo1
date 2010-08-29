@@ -600,5 +600,282 @@ namespace com.ums.PAS.Database
             return ret;
         }
 
+        public UPASLOGON CBAdminLogon(ref ULOGONINFO l) // Fort å gale, akkurat likt bare endret SP
+        {
+            UPASLOGON ret = new UPASLOGON();
+            String szSQL;
+
+            try
+            {
+                bool b_default_dept_set = false;
+                l.sz_compid = l.sz_compid.ToUpper();
+                l.sz_userid = l.sz_userid.ToUpper();
+                l.sz_compid = l.sz_compid.Replace("'", "''");
+                l.sz_userid = l.sz_userid.Replace("'", "''");
+                l.sz_password = l.sz_password.Replace("'", "''");
+                byte[] utf8pass = Encoding.UTF8.GetBytes(l.sz_password);
+                byte[] asciipass = Encoding.ASCII.GetBytes(l.sz_password);
+                String pass = Encoding.GetEncoding("iso-8859-1").GetString(utf8pass);
+                //pass = "mh123,1µ°Õ";
+                //l.sz_password = l.sz_password.ToUpper();
+                //Get userinfo
+
+                szSQL = String.Format("sp_cb_pasadmin_logon '{0}', '{1}', '{2}'",
+                    l.sz_userid,
+                    l.sz_password,
+                    l.sz_compid);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
+
+                if (!rs.HasRows)  //logon failed
+                {
+                    ret.f_granted = false;
+                    ret.l_comppk = 0;
+                    ret.sessionid = "-1";
+                    try
+                    {
+                        //find the userpk to log a failed logon
+                        szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
+                                                l.sz_userid, l.sz_compid);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                        if (rs.Read())
+                        {
+                            ret.l_userpk = rs.GetInt64(0);
+                        }
+                        else
+                            ret.l_userpk = 0;
+                        rs.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        ret.l_userpk = 0;
+                        throw e;
+                    }
+                }
+                else //logon ok
+                {
+                    ret.f_granted = true;
+                    ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
+                }
+                if (ret.l_userpk > 0 && UCommon.USETTINGS.b_enable_nslookup)
+                {
+                    UNSLOOKUP ns = new UNSLOOKUP();
+                    NsLookup(ref ns);
+                    ns.f_success = ret.f_granted;
+                    SaveNsLookup(ret.l_userpk, ref ns);
+                }
+
+                if (!ret.f_granted)
+                {
+                    ret.l_userpk = 0;
+                    return ret;
+                }
+
+
+                if (rs.Read()) //logon succeeded
+                {
+                    ret.f_granted = true;
+                    ret.sz_name = rs["sz_name"].ToString();
+                    ret.sz_surname = rs["sz_surname"].ToString();
+                    ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
+                    ret.l_comppk = Int32.Parse(rs["l_comppk"].ToString());
+                    ret.sz_userid = rs["sz_userid"].ToString();
+                    ret.sz_compid = rs["sz_compid"].ToString();
+                    ret.l_language = Int32.Parse(rs["l_language"].ToString());
+                    ret.sessionid = l.sessionid;
+                    do //parse departments
+                    {
+                        UDEPARTMENT dept = new UDEPARTMENT(); //CREATE NEW DEPARTMENT
+
+                        try
+                        {
+                            String sz_nav = rs["l_mapinit"].ToString().Replace(",", ".");
+                            String[] bounds = sz_nav.Split('|');
+                            if (bounds.Length >= 4)
+                            {
+                                dept.lbo = float.Parse(bounds[0], UCommon.UGlobalizationInfo);
+                                dept.ubo = float.Parse(bounds[1], UCommon.UGlobalizationInfo);
+                                dept.rbo = float.Parse(bounds[2], UCommon.UGlobalizationInfo);
+                                dept.bbo = float.Parse(bounds[3], UCommon.UGlobalizationInfo);
+                            }
+                            else
+                            {
+                                dept.lbo = 3.0f;
+                                dept.rbo = 31.0f;
+                                dept.ubo = 71.0f;
+                                dept.bbo = 57.0f;
+
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            dept.lbo = 3.0f;
+                            dept.rbo = 31.0f;
+                            dept.ubo = 71.0f;
+                            dept.bbo = 57.0f;
+                        }
+                        Int32 l_deptpk, l_default_deptpk;
+                        long l_profilepk, l_default_profilepk;
+                        Int32 l_dept_parm, l_dept_fleetcontrol, l_dept_houseeditor, l_dept_pas_send, l_pas_send;
+
+                        l_deptpk = Int32.Parse(rs["l_deptpk"].ToString());
+                        l_default_deptpk = Int32.Parse(rs["l_default_deptpk"].ToString());
+                        l_profilepk = long.Parse(rs["l_profilepk"].ToString());
+                        l_default_profilepk = long.Parse(rs["l_default_profilepk"].ToString());
+                        if (l_deptpk == l_default_deptpk && l_profilepk == l_default_profilepk)
+                        {
+                            dept.f_default = true;
+                            b_default_dept_set = true;
+                        }
+                        else
+                            dept.f_default = false;
+
+                        dept.l_deptpk = l_deptpk;
+                        dept.sz_deptid = rs["sz_deptid"].ToString();
+                        dept.sz_stdcc = rs["sz_stdcc"].ToString();
+                        dept.l_deptpri = Int32.Parse(rs["l_deptpri"].ToString());
+                        dept.l_maxalloc = Int32.Parse(rs["l_maxalloc"].ToString());
+                        dept.sz_userprofilename = rs["sz_userprofilename"].ToString();
+                        dept.sz_userprofiledesc = rs["sz_userprofiledesc"].ToString();
+                        dept.l_status = Int32.Parse(rs["l_status"].ToString());
+                        dept.l_newsending = Int32.Parse(rs["l_newsending"].ToString());
+                        dept.l_parm = Int32.Parse(rs["l_parm"].ToString());
+                        dept.l_fleetcontrol = Int32.Parse(rs["l_fleetcontrol"].ToString());
+                        l_dept_parm = Int32.Parse(rs["l_dept_parm"].ToString());
+                        l_dept_fleetcontrol = Int32.Parse(rs["l_dept_fleetcontrol"].ToString());
+                        l_dept_houseeditor = Int32.Parse(rs["l_dept_houseeditor"].ToString());
+                        dept.l_houseeditor = Int32.Parse(rs["l_houseeditor"].ToString());
+                        l_dept_pas_send = Int32.Parse(rs["l_dept_pas_send"].ToString());
+                        l_pas_send = Int32.Parse(rs["l_pas_send"].ToString());
+                        dept.l_addresstypes = long.Parse(rs["l_addresstypes"].ToString());
+                        dept.sz_defaultnumber = rs["sz_defaultnumber"].ToString();
+                        dept.f_map = Int32.Parse(rs["f_map"].ToString());
+                        dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
+                        String xml = rs["sz_restriction_shape"].ToString();
+                        UShape restrictionshape = UShape.ParseFromXml(xml);
+                        dept.AddRestrictionShape(ref restrictionshape);
+
+                        if (l_dept_houseeditor <= 0)
+                            dept.l_houseeditor = 0;
+                        if (l_dept_pas_send <= 0)
+                            dept.l_newsending = 0;
+                        if ((l_pas_send & 1) == 1 && (l_dept_pas_send & 1) == 0)
+                            l_pas_send -= 1;
+                        if ((l_pas_send & 2) == 2 && (l_dept_pas_send & 2) == 0)
+                            l_pas_send -= 2;
+                        dept.l_newsending = l_pas_send;
+
+                        if (l_dept_parm <= 0)
+                            dept.l_parm = 0;
+                        if (l_dept_fleetcontrol <= 0)
+                            dept.l_fleetcontrol = 0;
+
+                        //check the folkereg adr database of this department if the user has access to municipals
+                        if (UCommon.USETTINGS.b_enable_adrdb)
+                        {
+                            try
+                            {
+                                UmsDbConnParams p = new UmsDbConnParams();
+                                p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc; // +"_reg";
+                                p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
+                                p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
+                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60, dept.l_deptpk);
+                                dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
+                                adr.close();
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+                        //if(dept.f_map>0)
+                        ret.departments.Add(dept); //ADD DEPARTMENT TO LIST
+                    } while (rs.Read());
+
+                    if (!b_default_dept_set)
+                    {
+                        if (ret.departments.Count > 0)
+                            ret.departments[0].f_default = true; //set a department to default
+                    }
+
+                    rs.Close();
+
+                    //Create a new session
+                    //start session
+                    try
+                    {
+                        String szSessionSql = String.Format("sp_pas_startsession {0}, '{1}', '{2}'",
+                                                ret.l_userpk, l.sessionid, l.sz_password);
+                        ExecNonQuery(szSessionSql);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+
+
+                    if (UCommon.USETTINGS.b_enable_nslookup)
+                    {
+                        //READ NS TABLE
+                        szSQL = String.Format("SELECT * FROM BBUSER_NSLOOKUP WHERE l_userpk={0} ORDER BY l_lastdatetime DESC",
+                                               ret.l_userpk);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                        {
+                            UNSLOOKUP ns = new UNSLOOKUP();
+                            ns.sz_domain = rs["sz_domain"].ToString();
+                            ns.sz_ip = rs["sz_ip"].ToString();
+                            ns.l_lastdatetime = long.Parse(rs["l_lastdatetime"].ToString());
+                            ns.sz_location = rs["sz_location"].ToString();
+                            ns.f_success = bool.Parse((rs["f_success"].ToString().Equals("1") ? "true" : "false"));
+                            ret.nslookups.Add(ns);
+                        }
+                        rs.Close();
+                    }
+
+                    //READ UI SETTINGS
+                    ret.uisettings = LoadLanguageAndVisuals(ret.l_userpk, false);
+
+                } //end of department read
+                /*else //no records, logon failed
+                {
+                    ret.f_granted = false;
+                    ret.l_comppk = 0;
+                    try
+                    {
+                        //find the userpk to log a failed logon
+                        szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
+                                                l.sz_userid, l.sz_compid);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        if (rs.Read())
+                        {
+                            ret.l_userpk = rs.GetInt64(0);
+                            if (ret.l_userpk > 0)
+                            {
+                                UNSLOOKUP ns = new UNSLOOKUP();
+                                NsLookup(ref ns);
+                                ns.f_success = ret.f_granted;
+                                SaveNsLookup(ret.l_userpk, ref ns);
+                            }
+                        }
+                        else
+                            ret.l_userpk = 0;
+                    }
+                    catch (Exception)
+                    {
+                        ret.l_userpk = 0;
+                    }
+                }*/
+
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return ret;
+        }
+
     }
 }

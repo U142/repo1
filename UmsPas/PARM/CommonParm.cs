@@ -166,6 +166,8 @@ namespace com.ums.UmsParm
         public float col_blue;
         [XmlAttribute("col_alpha")]
         public float col_alpha;
+        public int f_disabled;
+        public long l_disabled_timestamp;
         public UPolygon poly() { return (UPolygon)this; }
         public UEllipse ellipse() { return (UEllipse)this; }
         public UGIS gis() { return (UGIS)this; }

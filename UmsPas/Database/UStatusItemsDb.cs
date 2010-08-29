@@ -547,7 +547,8 @@ namespace com.ums.PAS.Database
             List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> ret = new List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE>();
             try
             {
-                OdbcDataReader rs = ExecReader(String.Format("sp_cb_get_messages_month {0}, {1}", month, month + 100000000), UmsDb.UREADER_AUTOCLOSE);
+                String sz_sql = String.Format("sp_cb_get_messages_month {0}, {1}", month, month + 100000000);
+                OdbcDataReader rs = ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
@@ -561,6 +562,15 @@ namespace com.ums.PAS.Database
                     item.l_last_ts = (long)rs.GetDecimal(7);
                     item.sz_text = rs.GetString(8);
                     item.l_addressedcells = rs.GetInt32(9);
+                    if (rs.IsDBNull(10))
+                        item.l_performance = -1;
+                    else
+                        item.l_performance = (float)(rs.GetDouble(10));
+                    if (rs.IsDBNull(11))
+                        item.sz_userid = "N/A";
+                    else
+                        item.sz_userid = rs.GetString(11);
+                    item.l_group = rs.GetInt32(12);
                     ret.Add(item);
                 }
                 rs.Close();
@@ -687,6 +697,7 @@ namespace com.ums.PAS.Database
         public String sz_text;
         public int l_addressedcells;
         public float l_performance;
+        public int l_group;
     }
 
 }

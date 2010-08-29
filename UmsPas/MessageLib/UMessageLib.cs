@@ -287,10 +287,10 @@ namespace com.ums.PAS.messagelib
                 ULBAMESSAGELIST ret = new ULBAMESSAGELIST();
                 ret.n_servertimestamp = base.getDbClock();
                 ret.list = new List<ULBAMESSAGE>();
-                String szSQL = String.Format("SELECT l_deptpk, sz_description, sz_text, l_messagepk, isnull(l_langpk,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0) " +
+                String szSQL = String.Format("SELECT l_deptpk, sz_description, sz_text, l_messagepk, isnull(l_langpk,-1), isnull(l_parentpk,-1), isnull(l_depth,0) as l_depth, isnull(l_timestamp,0) " +
                                             "FROM LBAMESSAGES " +
                                             "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} " +
-                                            "ORDER BY l_depth",
+                                            "ORDER BY l_depth, l_messagepk",
                                             logon.l_deptpk, filter.n_timefilter);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())

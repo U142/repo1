@@ -732,6 +732,9 @@ namespace com.ums.UmsCommon
         public int f_blocklist_default;
         public int f_session_expires_sec;
         public String sz_hash_paspwd;
+        public int[] l_deptpklist;
+        public long l_disabled_timestamp;
+        public BBUSER_BLOCK_REASONS l_disabled_reasoncode;
     }
 
     public class BBPROJECT
