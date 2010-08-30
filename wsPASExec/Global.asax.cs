@@ -53,6 +53,7 @@ namespace com.ums.wsPASExec
 
             UCommon.USETTINGS.l_gisimport_chunksize = int.Parse(ConfigurationSettings.AppSettings["l_gisimport_chunksize"]);
             UCommon.USETTINGS.l_gisimport_db_timeout = int.Parse(ConfigurationSettings.AppSettings["l_gisimport_db_timeout"]);
+            UCommon.USETTINGS.l_max_logontries = int.Parse(ConfigurationSettings.AppSettings["l_max_logontries"]);
 
             UCommon.USETTINGS.b_enable_adrdb = Boolean.Parse(ConfigurationSettings.AppSettings["b_enable_adrdb"]);
             UCommon.USETTINGS.b_enable_nslookup = Boolean.Parse(ConfigurationSettings.AppSettings["b_enable_nslookup"]);

@@ -39,6 +39,12 @@ namespace com.ums.UmsCommon
         BLOCKED_BY_ADMIN = 2,
     }
 
+    public struct UPOWERUP_RESPONSE
+    {
+        public int l_max_logontries;
+    }
+
+
     /**
      * Value used in Backbone log procedures/tables (e.g sp_log_BBMESSAGES => log_BBMESSAGES)
      */
@@ -389,6 +395,7 @@ namespace com.ums.UmsCommon
             public static int l_tts_timeout;
         }
 
+
         public struct USETTINGS
         {
             public static bool b_enable_adrdb;
@@ -397,6 +404,7 @@ namespace com.ums.UmsCommon
             public static String sz_url_weather_forecast;
             public static int l_gisimport_chunksize;
             public static int l_gisimport_db_timeout;
+            public static int l_max_logontries;
         }
 
         public struct UPATHS
@@ -740,6 +748,7 @@ namespace com.ums.UmsCommon
         public String sz_hash_paspwd;
         public int[] l_deptpklist;
         public long l_disabled_timestamp;
+        public String sz_organization;
         public BBUSER_BLOCK_REASONS l_disabled_reasoncode;
     }
 

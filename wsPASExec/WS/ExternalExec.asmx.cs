@@ -829,17 +829,17 @@ namespace com.ums.ws.parm
                 List<CB_RISK> risk = new List<CB_RISK>();
                 List<CB_REACTION> reaction = new List<CB_REACTION>();
 
-                originators.Add(new CB_ORIGINATOR(1, "Originator1"));
-                originators.Add(new CB_ORIGINATOR(2, "Originator2"));
-                originators.Add(new CB_ORIGINATOR(3, "Originator3"));
+                originators.Add(new CB_ORIGINATOR(1, "Afz. Burg. Den Oudsten"));
+                originators.Add(new CB_ORIGINATOR(2, "Afz. Burg. Wolfsen"));
+                originators.Add(new CB_ORIGINATOR(3, "Afz. Burg. Krikke"));
 
-                risk.Add(new CB_RISK(4, "Risk1"));
-                risk.Add(new CB_RISK(5, "Risk2"));
-                risk.Add(new CB_RISK(6, "Risk3"));
+                risk.Add(new CB_RISK(4, "Explosiegevaar"));
+                risk.Add(new CB_RISK(5, "Gezondheidsklachten"));
+                risk.Add(new CB_RISK(6, "Ernstige Wateroverlast"));
 
-                reaction.Add(new CB_REACTION(7, "Reaction1"));
-                reaction.Add(new CB_REACTION(8, "Reaction2"));
-                reaction.Add(new CB_REACTION(9, "Reaction3"));
+                reaction.Add(new CB_REACTION(7, "Verlaat de wijk"));
+                reaction.Add(new CB_REACTION(8, "Blijf binnen"));
+                reaction.Add(new CB_REACTION(9, "Verlaat het gebied"));
 
 
                 ret.originator_list = originators;

@@ -61,10 +61,10 @@
     <Compile Include="CoorConvert\UTM.cs" />
     <Compile Include="EventLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\VB\Conference.cs" />
-    <Compile Include="Properties\VB\Infosentral.cs" />
-    <Compile Include="Properties\VB\Pincode.cs" />
     <Compile Include="UExceptions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\VB\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

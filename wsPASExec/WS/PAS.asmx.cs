@@ -196,9 +196,11 @@ namespace com.ums.ws.pas
          * Will powerup the webservice if it's been shut down
          */
         [WebMethod]
-        public String Powerup()
+        public UPOWERUP_RESPONSE Powerup()
         {
-            return "OK";
+            UPOWERUP_RESPONSE r = new UPOWERUP_RESPONSE();
+            r.l_max_logontries = UCommon.USETTINGS.l_max_logontries;
+            return r;
         }
 
         [WebMethod]

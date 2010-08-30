@@ -307,14 +307,16 @@ namespace com.ums.PAS.Database
 
                 OdbcCommand cmdLogon = conn.CreateCommand();
                 cmdLogon.CommandType = CommandType.StoredProcedure;
-                cmdLogon.CommandText = "{ CALL sp_pas_logon (?,?,?) }";
+                cmdLogon.CommandText = "{ CALL sp_pas_logon (?,?,?,?) }";
                 cmdLogon.Parameters.Add("@sz_userid", OdbcType.VarChar, 50).Value = l.sz_userid;
                 cmdLogon.Parameters.Add("@sz_paspassword", OdbcType.Char, 128).Value = l.sz_password;
                 cmdLogon.Parameters.Add("@sz_compid", OdbcType.VarChar, 50).Value = l.sz_compid;
+                cmdLogon.Parameters.Add("@l_max_tries", OdbcType.Int).Value = UCommon.USETTINGS.l_max_logontries;
                 OdbcDataReader rs = cmdLogon.ExecuteReader();
 
                 if (!rs.HasRows)  //logon failed
                 {
+                    rs.Close();
                     ret.f_granted = false;
                     ret.l_comppk = 0;
                     ret.sessionid = "-1";
@@ -340,7 +342,8 @@ namespace com.ums.PAS.Database
                 }
                 else //logon ok
                 {
-                    BBUSER_BLOCK_REASONS reason = (BBUSER_BLOCK_REASONS)Enum.Parse(typeof(BBUSER_BLOCK_REASONS), (rs["l_blocked_reasoncode"].ToString()));
+                    object block_reason = rs["l_blocked_reasoncode"];
+                    BBUSER_BLOCK_REASONS reason = (BBUSER_BLOCK_REASONS)Enum.Parse(typeof(BBUSER_BLOCK_REASONS), block_reason.ToString());
                     switch (reason)
                     {
                         case BBUSER_BLOCK_REASONS.NONE:
@@ -380,6 +383,7 @@ namespace com.ums.PAS.Database
                     ret.sz_compid = rs["sz_compid"].ToString();
                     ret.l_language = Int32.Parse(rs["l_language"].ToString());
                     ret.sessionid = l.sessionid;
+                    ret.sz_organization = rs["sz_organization"].ToString();
                     do //parse departments
                     {
                         UDEPARTMENT dept = new UDEPARTMENT(); //CREATE NEW DEPARTMENT

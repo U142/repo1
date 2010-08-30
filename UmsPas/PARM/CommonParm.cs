@@ -58,6 +58,7 @@ namespace com.ums.UmsParm
         public UPASUISETTINGS uisettings;
         public String sessionid;
         public BBUSER_BLOCK_REASONS reason = BBUSER_BLOCK_REASONS.NONE;
+        public String sz_organization;
     }
 
     public class UPASUISETTINGS
