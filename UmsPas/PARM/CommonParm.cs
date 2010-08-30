@@ -57,6 +57,7 @@ namespace com.ums.UmsParm
         public List<UDEPARTMENT> departments = new List<UDEPARTMENT>();
         public UPASUISETTINGS uisettings;
         public String sessionid;
+        public BBUSER_BLOCK_REASONS reason = BBUSER_BLOCK_REASONS.NONE;
     }
 
     public class UPASUISETTINGS

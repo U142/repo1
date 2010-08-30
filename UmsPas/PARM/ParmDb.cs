@@ -1174,6 +1174,7 @@ namespace com.ums.UmsParm
             string szSQL = "";
             try
             {
+                sz_message = sz_message.Replace("'", "''");
                 szSQL = String.Format("sp_cb_ins_lbatext {0}, '{1}', {2}", l_refno, sz_message, l_channel);
                 ExecNonQuery(szSQL);
                 return true;

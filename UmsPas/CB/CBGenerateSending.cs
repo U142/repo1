@@ -61,7 +61,7 @@ namespace com.ums.PAS.CB
                     UProject pr = new UProject();
                     UPROJECT_REQUEST project_request = new UPROJECT_REQUEST();
                     project_request.sz_name = alert.sz_projectname;
-                    project_request.sz_name.Replace("'", "''");
+                    project_request.sz_name = project_request.sz_name.Replace("'", "''");
 
                     UPROJECT_RESPONSE resp = pr.uproject(ref logon, ref project_request);
                     project.sz_projectpk = resp.n_projectpk.ToString();
@@ -79,7 +79,7 @@ namespace com.ums.PAS.CB
 
             //retrieve message object from send-object
             CB_MESSAGE message = alert.textmessages.list[0];
-            message.sz_text = message.sz_text.Replace("'", "''");
+            //message.sz_text = message.sz_text.Replace("'", "''");
             
             //insert records into LBASEND
             List<Int32> operatorfilter = null;
@@ -88,7 +88,7 @@ namespace com.ums.PAS.CB
                                 ref operatorfilter, logon.l_deptpk, (int)LBA_SENDINGTYPES.CELLBROADCAST);
 
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-            mdv.sz_messagetext = message.sz_text;
+            mdv.sz_messagetext = message.sz_text.Replace("'", "''");
             mdv.sz_oadc = alert.sz_sender.Replace("'", "''");
             mdv.sz_sendingname = "Alert " + alert.l_refno;
             mdv.l_scheddate = "0";
@@ -105,7 +105,7 @@ namespace com.ums.PAS.CB
 
             //Insert record into LBASEND_TEXT_CC
             //removed, will be inserted in loc.addLanguage
-            //db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
+            db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();

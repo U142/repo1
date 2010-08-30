@@ -18,17 +18,23 @@ namespace com.ums.UmsCommon
         ADDRESSLIST = 0,
         GROUPSENDING = 1,
         MAP_POLYGON = 2,
-        MAP_ELLIPSE = 3,
-        MAP_GEMINI = 4,
-        MAP_LBA = 8,
-        MAP_CB_POLYGON = 16,
-        MAP_CB_ELLIPSE = 32,
-        MAP_CB_NATIONAL = 64,
-        MAP_CB_TESTSENDING = 128,
+        MAP_GEMINI_GNOBNO = 3,
+        MAP_GEMINI_STREETID = 4,
+        MAP_ELLIPSE = 8,
+        MAP_MUNICIPAL = 9,
+        MAP_LBA_VOICE = 11,
+        MAP_CB_NATIONAL = 16,
+    }
+
+    public enum MDVSENDINGINFO_TYPE
+    {
+        CB_SENDING = 7,
+        CB_TESTSENDING = 70,
     }
 
     public enum BBUSER_BLOCK_REASONS
     {
+        NONE = 0,
         REACHED_RETRY_LIMIT = 1,
         BLOCKED_BY_ADMIN = 2,
     }

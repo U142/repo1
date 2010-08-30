@@ -10,6 +10,8 @@ using System.Data.Odbc;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace com.ums.PAS.Database
 {
@@ -302,53 +304,14 @@ namespace com.ums.PAS.Database
                 byte[] utf8pass = Encoding.UTF8.GetBytes(l.sz_password);
                 byte[] asciipass = Encoding.ASCII.GetBytes(l.sz_password);
                 String pass = Encoding.GetEncoding("iso-8859-1").GetString(utf8pass);
-                //pass = "mh123,1µ°Õ";
-                //l.sz_password = l.sz_password.ToUpper();
-                //Get userinfo
-                /*szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
-                                    "isnull(BU.l_profilepk,0) l_default_profilepk, isnull(BUXD.l_profilepk,-1) l_profilepk, " +
-                                    "BD.l_deptpk, BU.l_comppk, BU.sz_userid, BD.sz_deptid, BC.sz_compid, " +
-                                    "isnull(BD.l_mapinit, '') l_mapinit, isnull(BD.sz_stdcc, '0047') sz_stdcc, BD.l_deptpri, " +
-                                    "isnull(BD.l_maxalloc, 180) l_maxalloc, BUP.sz_name sz_userprofilename, " +
-                                    "BUP.sz_description sz_userprofiledesc, isnull(BUP.l_status, 0) l_status, " +
-                                    "isnull(l_newsending, 0) l_newsending, isnull(BUP.l_parm, 0) l_parm, " +
-                                    "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
-                                    "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
-                                    "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
-                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language, SH.sz_xml sz_restriction_shape " +
-                                    "FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP, PASHAPE SH " +
-                                    "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
-                                    "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
-                                    "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1 AND BD.l_deptpk*=SH.l_pk",
-                                    l.sz_userid, l.sz_password, l.sz_compid);*/
-                /*szSQL = String.Format("SELECT BU.l_userpk, BU.sz_name, BU.sz_surname, BU.l_deptpk l_default_deptpk, " +
-                                    "isnull(BU.l_profilepk,0) l_default_profilepk, isnull(BUXD.l_profilepk,-1) l_profilepk, " +
-                                    "BD.l_deptpk, BU.l_comppk, BU.sz_userid, BD.sz_deptid, BC.sz_compid, " +
-                                    "isnull(BD.l_mapinit, '') l_mapinit, isnull(BD.sz_stdcc, '0047') sz_stdcc, BD.l_deptpri, " +
-                                    "isnull(BD.l_maxalloc, 180) l_maxalloc, BUP.sz_name sz_userprofilename, " +
-                                    "BUP.sz_description sz_userprofiledesc, isnull(BUP.l_status, 0) l_status, " +
-                                    "isnull(l_newsending, 0) l_newsending, isnull(BUP.l_parm, 0) l_parm, " +
-                                    "isnull(BUP.l_fleetcontrol, 0) l_fleetcontrol, isnull(BD.l_pas,0) l_dept_pas, BD.l_parm l_dept_parm, " +
-                                    "BD.l_fleetcontrol l_dept_fleetcontrol, isnull(BD.l_houseeditor, 0) l_dept_houseeditor, " +
-                                    "isnull(BUP.l_houseeditor, 0) l_houseeditor, isnull(BD.l_pas_send, 0) l_dept_pas_send, " +
-                                    "isnull(BUP.l_pas_send, 0) l_pas_send, BD.l_addresstypes, BD.sz_defaultnumber, isnull(BD.f_map,0) f_map, isnull(BU.l_language,2) l_language, SH.sz_xml sz_restriction_shape " +
-                                    //"FROM BBUSER BU, BBCOMPANY BC, v_BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP, PASHAPE SH " +
-                                    "FROM BBUSER BU, BBCOMPANY BC, "+
-                                    "v_BBDEPARTMENT BD LEFT OUTER JOIN PASHAPE SH ON BD.l_deptpk=SH.l_pk AND SH.l_type={3}, " +
-                                    "BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP " +
-                                    
 
-
-                                    "WHERE UPPER(BU.sz_userid)='{0}' AND BU.sz_paspassword='{1}' AND BU.l_comppk=BC.l_comppk AND " +
-                                    "UPPER(BC.sz_compid)='{2}' AND BUXD.l_userpk=BU.l_userpk AND BUXD.l_deptpk=BD.l_deptpk AND " +
-                                    "BUXD.l_userpk=BU.l_userpk AND BUP.l_profilepk=BUXD.l_profilepk AND BD.l_pas>=1",
-                                    l.sz_userid, l.sz_password, l.sz_compid, (int)PASHAPETYPES.PADEPARTMENTRESTRICTION);*/
-                szSQL = String.Format("sp_pas_logon '{0}', '{1}', '{2}'",
-                    l.sz_userid,
-                    l.sz_password,
-                    l.sz_compid);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-
+                OdbcCommand cmdLogon = conn.CreateCommand();
+                cmdLogon.CommandType = CommandType.StoredProcedure;
+                cmdLogon.CommandText = "{ CALL sp_pas_logon (?,?,?) }";
+                cmdLogon.Parameters.Add("@sz_userid", OdbcType.VarChar, 50).Value = l.sz_userid;
+                cmdLogon.Parameters.Add("@sz_paspassword", OdbcType.Char, 128).Value = l.sz_password;
+                cmdLogon.Parameters.Add("@sz_compid", OdbcType.VarChar, 50).Value = l.sz_compid;
+                OdbcDataReader rs = cmdLogon.ExecuteReader();
 
                 if (!rs.HasRows)  //logon failed
                 {
@@ -377,8 +340,19 @@ namespace com.ums.PAS.Database
                 }
                 else //logon ok
                 {
-                    ret.f_granted = true;
-                    ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
+                    BBUSER_BLOCK_REASONS reason = (BBUSER_BLOCK_REASONS)Enum.Parse(typeof(BBUSER_BLOCK_REASONS), (rs["l_blocked_reasoncode"].ToString()));
+                    switch (reason)
+                    {
+                        case BBUSER_BLOCK_REASONS.NONE:
+                            ret.f_granted = true;
+                            ret.l_userpk = long.Parse(rs["l_userpk"].ToString());
+                            break;
+                        case BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN:
+                        case BBUSER_BLOCK_REASONS.REACHED_RETRY_LIMIT:
+                            ret.f_granted = false;
+                            ret.reason = reason;
+                            break;
+                    }
                 }
                 if (ret.l_userpk > 0 && UCommon.USETTINGS.b_enable_nslookup)
                 {
