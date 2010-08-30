@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="sz_text" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="l_addressedcells" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="l_performance" type="{http://www.w3.org/2001/XMLSchema}float"/>
+ *         &lt;element name="l_group" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -54,7 +55,8 @@ import javax.xml.bind.annotation.XmlType;
     "lLastTs",
     "szText",
     "lAddressedcells",
-    "lPerformance"
+    "lPerformance",
+    "lGroup"
 })
 public class CBMESSAGEMONTHLYREPORTRESPONSE {
 
@@ -86,6 +88,8 @@ public class CBMESSAGEMONTHLYREPORTRESPONSE {
     protected int lAddressedcells;
     @XmlElement(name = "l_performance")
     protected float lPerformance;
+    @XmlElement(name = "l_group")
+    protected int lGroup;
 
     /**
      * Gets the value of the szUsertype property.
@@ -341,6 +345,22 @@ public class CBMESSAGEMONTHLYREPORTRESPONSE {
      */
     public void setLPerformance(float value) {
         this.lPerformance = value;
+    }
+
+    /**
+     * Gets the value of the lGroup property.
+     * 
+     */
+    public int getLGroup() {
+        return lGroup;
+    }
+
+    /**
+     * Sets the value of the lGroup property.
+     * 
+     */
+    public void setLGroup(int value) {
+        this.lGroup = value;
     }
 
 }

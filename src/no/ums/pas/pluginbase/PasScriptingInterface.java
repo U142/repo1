@@ -42,12 +42,14 @@ import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UBBNEWSLIST;
 import no.ums.ws.pas.UGabSearchResultList;
+import no.ums.ws.pas.UPOWERUPRESPONSE;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 
 
@@ -175,7 +177,7 @@ public abstract class PasScriptingInterface
 		System.out.println("Operating System: "+os);
 	}
 	
-	public abstract boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws);
+	public abstract boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
 
 	/**
 	 * Function is executed right before logon

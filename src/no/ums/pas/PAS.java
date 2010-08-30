@@ -877,8 +877,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}		
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		dim_screen = screenSize;
-		scr_x = screenSize.width;
-		scr_y = screenSize.height;
+		scr_x = screenSize.width-10;
+		scr_y = screenSize.height-100;
 		dim_map = new Dimension(scr_x, scr_y);
 		try
 		{

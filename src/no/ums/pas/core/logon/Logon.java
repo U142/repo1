@@ -50,6 +50,10 @@ public class Logon implements ActionListener {
 	private void setLoggedOn() { m_b_isloggedon = true; }
 	private int m_n_logontries = 1;
 	private int m_n_max_tries = 3;
+	public void setMaxTries(int n)
+	{
+		m_n_max_tries = n;
+	}
 	private boolean m_b_cantryagain = true;
 	private boolean m_b_doexit = false;
 	private String wantedlanguage = "";
@@ -212,7 +216,18 @@ public class Logon implements ActionListener {
 		}*/
 		else if(m_info==null) {
 			set_last_error("Error: " + proc.get_last_error());
-			dlg.set_errortext(String.format(PAS.l("error_logon_invalid_userinfo_format"), getLogonTries(), getMaxLogonTries())); //"Invalid user-information (try " + getLogonTries() + " / " + getMaxLogonTries() + ")");
+			switch(proc.getReason())
+			{
+			case BLOCKED_BY_ADMIN:
+				dlg.set_errortext("User Blocked By Admin");
+				break;
+			case NONE:
+				dlg.set_errortext(String.format(PAS.l("error_logon_invalid_userinfo_format"), getLogonTries(), getMaxLogonTries())); //"Invalid user-information (try " + getLogonTries() + " / " + getMaxLogonTries() + ")");
+				break;
+			case REACHED_RETRY_LIMIT:
+				dlg.set_errortext("User Reached retry limit");
+				break;
+			}
 			m_logoninfo = null;
 			if(canTryAgain()) {
 				incLogonTries();
@@ -254,7 +269,7 @@ public class Logon implements ActionListener {
 			}
 			
 			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
-					l.getSzCompid(), l.getSzName(), l.getSzSurname(), l.getSessionid());
+					l.getSzCompid(), l.getSzName(), l.getSzSurname(), l.getSessionid(), l.getSzOrganization());
 			m_info.set_session_active(true);
 			m_pasui_settings = l.getUisettings();
 			if(!b_request_newsession)

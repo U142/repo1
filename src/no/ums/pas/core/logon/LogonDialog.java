@@ -35,6 +35,7 @@ import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.ws.pas.UPOWERUPRESPONSE;
 
 import org.opengis.coverage.grid.Grid;
 
@@ -61,6 +62,18 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	private LogonPanel m_panel;
 	public LogonPanel get_logonpanel() { return m_panel; }
 	private Logon m_logon;
+	public void setMaxLogonTries(int i)
+	{
+		try
+		{
+			m_logon.setMaxTries(i);
+			System.out.println("set max logontries to " + i);
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
 	private String m_sz_errortext;
 	private boolean m_b_logonproc_start = false;
 	protected String wantedlanguage = "";
@@ -194,13 +207,8 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		/*powerup command finished, WebService is active*/
 		if("act_powerup".equals(e.getActionCommand()))
 		{
-			//setTitle("Logon to UMS PAS - (WebService active)");
-			WSRESULTCODE result = (WSRESULTCODE)e.getSource();
-			/*if(result==WSRESULTCODE.OK)
-				setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
-			else
-				setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));*/
-			PAS.pasplugin.onAfterPowerUp(this, result);
+			WSPowerup powerup = (WSPowerup)e.getSource();
+			PAS.pasplugin.onAfterPowerUp(this, powerup);
 		}
 	}
 	

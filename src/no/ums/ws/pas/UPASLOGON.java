@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="departments" type="{http://ums.no/ws/pas/}ArrayOfUDEPARTMENT" minOccurs="0"/>
  *         &lt;element name="uisettings" type="{http://ums.no/ws/pas/}UPASUISETTINGS" minOccurs="0"/>
  *         &lt;element name="sessionid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="reason" type="{http://ums.no/ws/pas/}BBUSER_BLOCK_REASONS"/>
+ *         &lt;element name="sz_organization" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -50,7 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "nslookups",
     "departments",
     "uisettings",
-    "sessionid"
+    "sessionid",
+    "reason",
+    "szOrganization"
 })
 public class UPASLOGON {
 
@@ -74,6 +78,10 @@ public class UPASLOGON {
     protected ArrayOfUDEPARTMENT departments;
     protected UPASUISETTINGS uisettings;
     protected String sessionid;
+    @XmlElement(required = true)
+    protected BBUSERBLOCKREASONS reason;
+    @XmlElement(name = "sz_organization")
+    protected String szOrganization;
 
     /**
      * Gets the value of the fGranted property.
@@ -329,6 +337,54 @@ public class UPASLOGON {
      */
     public void setSessionid(String value) {
         this.sessionid = value;
+    }
+
+    /**
+     * Gets the value of the reason property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BBUSERBLOCKREASONS }
+     *     
+     */
+    public BBUSERBLOCKREASONS getReason() {
+        return reason;
+    }
+
+    /**
+     * Sets the value of the reason property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BBUSERBLOCKREASONS }
+     *     
+     */
+    public void setReason(BBUSERBLOCKREASONS value) {
+        this.reason = value;
+    }
+
+    /**
+     * Gets the value of the szOrganization property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSzOrganization() {
+        return szOrganization;
+    }
+
+    /**
+     * Sets the value of the szOrganization property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSzOrganization(String value) {
+        this.szOrganization = value;
     }
 
 }

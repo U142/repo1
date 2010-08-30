@@ -47,6 +47,7 @@ import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
+import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
@@ -185,7 +186,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu_btn_draw_ellipse, menu.m_gridconst);
 
-		menu_btn_import = new JButton(PAS.l("common_import"));
+		/*menu_btn_import = new JButton(PAS.l("common_import"));
 		menu_btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		menu_btn_import.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -210,7 +211,7 @@ public class plugin_Centric extends PAS_Scripting
 			}			
 		});
 		//menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		//menu.add(menu_btn_import, menu.m_gridconst);
+		//menu.add(menu_btn_import, menu.m_gridconst);*/
 		
 		return true;
 	}
@@ -403,7 +404,8 @@ public class plugin_Centric extends PAS_Scripting
 					else if(value.getClass().equals(UBBNEWS.class))
 					{
 						UBBNEWS news = (UBBNEWS)value;
-						lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
+						//lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
+						lbl_renderer.setText(news.getNewstext().getSzNews());
 					}
 					else
 					{
@@ -971,11 +973,17 @@ public class plugin_Centric extends PAS_Scripting
 	
 	
 	@Override
-	public boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws) {
-		if(ws==WSRESULTCODE.OK)
+	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
+		if(ws.getResult()==WSRESULTCODE.OK)
 			dlg.set_errortext(PAS.l("logon_ws_active"), false);
 		else
 			dlg.set_errortext(PAS.l("logon_ws_inactive"));
+		try
+		{
+			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
+		}
+		catch(Exception e)
+		{}
 		return true;
 	}
 
@@ -1198,12 +1206,14 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public String getDefaultLocale(Settings s) {
-		return "nl_NL";
+		//return "nl_NL";
+		return "en_GB";
 	}
 
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
-		return "nl_NL";
+		//return "nl_NL";
+		return "en_GB";
 	}
 
 	@Override
@@ -1324,7 +1334,7 @@ public class plugin_Centric extends PAS_Scripting
 	{
 		menu_btn_draw_ellipse.setVisible(b);
 		menu_btn_draw_polygon.setVisible(b);
-		menu_btn_import.setVisible(b);
+		//menu_btn_import.setVisible(b);
 	}
 
 	@Override

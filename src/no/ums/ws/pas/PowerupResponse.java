@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="PowerupResult" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="PowerupResult" type="{http://ums.no/ws/pas/}UPOWERUP_RESPONSE"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,18 +34,18 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "PowerupResponse")
 public class PowerupResponse {
 
-    @XmlElement(name = "PowerupResult")
-    protected String powerupResult;
+    @XmlElement(name = "PowerupResult", required = true)
+    protected UPOWERUPRESPONSE powerupResult;
 
     /**
      * Gets the value of the powerupResult property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link UPOWERUPRESPONSE }
      *     
      */
-    public String getPowerupResult() {
+    public UPOWERUPRESPONSE getPowerupResult() {
         return powerupResult;
     }
 
@@ -54,10 +54,10 @@ public class PowerupResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link UPOWERUPRESPONSE }
      *     
      */
-    public void setPowerupResult(String value) {
+    public void setPowerupResult(UPOWERUPRESPONSE value) {
         this.powerupResult = value;
     }
 

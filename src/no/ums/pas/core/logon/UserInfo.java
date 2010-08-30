@@ -23,6 +23,7 @@ public class UserInfo extends Object {
 	private String m_sz_userpk;
 	private int m_n_default_deptpk;
 	private String m_sz_sitename;
+	private String m_sz_organization;
 	NavStruct m_nav_init = null;
 	public void set_session_active(boolean b) { m_b_session_active = b; }
 	public boolean is_session_active() { return m_b_session_active; }
@@ -44,6 +45,7 @@ public class UserInfo extends Object {
 	public void set_sessionid(String sz_sessionid) { m_sz_sessionid = sz_sessionid; }
 	public String get_sitename() { return m_sz_sitename; }
 	public void set_sitename(String sz_site) { m_sz_sitename = sz_site; }
+	public String get_organization() { return m_sz_organization; }
 	private MailAccount m_account;
 	public MailAccount get_mailaccount() {
 		if(m_account==null)
@@ -61,7 +63,7 @@ public class UserInfo extends Object {
 	public void set_current_department(DeptInfo dept) { m_current_dept = dept; }
 	
 	public UserInfo(String n_userpk, int n_comppk, String sz_userid, String sz_compid,
-			String sz_name, String sz_surname, String sessionid) {
+			String sz_name, String sz_surname, String sessionid, String sz_organization) {
 		m_sz_userid = sz_userid;
 		m_sz_compid = sz_compid;
 		m_n_comppk  = n_comppk;
@@ -69,6 +71,7 @@ public class UserInfo extends Object {
 		m_sz_name = sz_name;
 		m_sz_surname = sz_surname;
 		m_sz_sessionid = sessionid;
+		m_sz_organization = sz_organization;
 		m_departments = new DeptArray();
 	}
 	/*public UserInfo(String [] s) {
@@ -91,6 +94,7 @@ public class UserInfo extends Object {
 		m_sz_name   = info.m_sz_name;
 		m_sz_surname= info.m_sz_surname;
 		m_sz_sessionid = info.m_sz_sessionid;
+		m_sz_organization = info.m_sz_organization;
 		m_departments = new DeptArray();
 		m_departments.m_combined_shapestruct_list = info.get_departments().get_combined_restriction_shape();
 		/*m_departments = (DeptArray)info.m_departments.clone();*/

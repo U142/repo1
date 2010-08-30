@@ -297,7 +297,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			afterLogon();
 			
 			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
-					l.getSzCompid(), l.getSzName(), l.getSzSurname(),"");
+					l.getSzCompid(), l.getSzName(), l.getSzSurname(),"", l.getSzOrganization());
 			UPASUISETTINGS m_pasui_settings = l.getUisettings();
 			List<UDEPARTMENT> depts = l.getDepartments().getUDEPARTMENT();
 			for(int i=0; i < depts.size(); i++)

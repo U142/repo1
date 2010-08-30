@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 import com.sun.xml.internal.ws.util.JAXWSUtils;
 
 import no.ums.pas.PAS;
+import no.ums.ws.pas.BBUSERBLOCKREASONS;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.ULOGONINFO;
 import no.ums.ws.pas.UPASLOGON;
@@ -21,6 +22,8 @@ public class WSLogon extends WSThread
 {
 	protected String sz_username, sz_companyid, sz_password;
 	UPASLOGON ret;
+	BBUSERBLOCKREASONS reason = BBUSERBLOCKREASONS.NONE;
+	public BBUSERBLOCKREASONS getReason() { return reason; }
 	protected boolean b_responded = false;
 	public boolean getResponded() { return b_responded;}
 	String sz_last_error = "";
@@ -60,6 +63,7 @@ public class WSLogon extends WSThread
 			l.setSzDeptid("");
 			
 			ret = new Pasws(wsdl, service).getPaswsSoap12().pasLogon(l);
+			reason = ret.getReason();
 		}
 		catch(Exception e)
 		{

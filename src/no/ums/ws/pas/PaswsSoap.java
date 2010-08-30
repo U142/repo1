@@ -161,13 +161,13 @@ public interface PaswsSoap {
     /**
      * 
      * @return
-     *     returns java.lang.String
+     *     returns no.ums.ws.pas.UPOWERUPRESPONSE
      */
     @WebMethod(operationName = "Powerup", action = "http://ums.no/ws/pas/Powerup")
     @WebResult(name = "PowerupResult", targetNamespace = "http://ums.no/ws/pas/")
     @RequestWrapper(localName = "Powerup", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.Powerup")
     @ResponseWrapper(localName = "PowerupResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.PowerupResponse")
-    public String powerup();
+    public UPOWERUPRESPONSE powerup();
 
     /**
      * 

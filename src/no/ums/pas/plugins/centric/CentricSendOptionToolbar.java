@@ -545,9 +545,21 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
 			System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
 			System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
-			poly.setRisk((CBRISK)m_cbx_risk.getSelectedItem());
-			poly.setReaction((CBREACTION)m_cbx_reaction.getSelectedItem());
-			poly.setOriginator((CBORIGINATOR)m_cbx_originator.getSelectedItem());
+			//poly.setRisk((CBRISK)m_cbx_risk.getSelectedItem());
+			//poly.setReaction((CBREACTION)m_cbx_reaction.getSelectedItem());
+			//poly.setOriginator((CBORIGINATOR)m_cbx_originator.getSelectedItem());
+			CBRISK risk = new CBRISK();
+			risk.setLPk(-1);
+			risk.setSzName(m_cbx_risk.getSelectedItem().toString());
+			CBREACTION reaction = new CBREACTION();
+			reaction.setLPk(-1);
+			reaction.setSzName(m_cbx_reaction.getSelectedItem().toString());
+			CBORIGINATOR originator = new CBORIGINATOR();
+			originator.setLPk(-1);
+			originator.setSzName(m_cbx_originator.getSelectedItem().toString());
+			poly.setRisk(risk);
+			poly.setReaction(reaction);
+			poly.setOriginator(originator);
 			
 			UPolygon polygon = new UPolygon();
 			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();

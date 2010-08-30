@@ -312,7 +312,7 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 							System.out.println("m_mapimg==null");
 						else
 							System.out.println("None of the above");
-						b_firstmap = false;
+						//b_firstmap = false;
 						setPainted();			
 						return;
 						//System.out.println(get_lasterror());

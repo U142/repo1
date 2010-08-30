@@ -7,11 +7,15 @@ import javax.xml.namespace.QName;
 
 import no.ums.pas.PAS;
 import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UPOWERUPRESPONSE;
 
 
 
 public class WSPowerup extends WSThread
 {
+	UPOWERUPRESPONSE resp = null;
+	public UPOWERUPRESPONSE getResponse() { return resp; }
+	
 	public WSPowerup(ActionListener callback)
 	{
 		super(callback);
@@ -26,7 +30,7 @@ public class WSPowerup extends WSThread
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			new Pasws(wsdl, service).getPaswsSoap12().powerup();
+			resp = new Pasws(wsdl, service).getPaswsSoap12().powerup();
 			setResult(WSRESULTCODE.OK);
 			//OnDownloadFinished();			
 		}
@@ -49,7 +53,7 @@ public class WSPowerup extends WSThread
 	public void OnDownloadFinished()
 	{
 		if(m_callback!=null)
-			m_callback.actionPerformed(new ActionEvent(getResult(), ActionEvent.ACTION_PERFORMED, "act_powerup"));
+			m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_powerup"));
 	}
 
 }

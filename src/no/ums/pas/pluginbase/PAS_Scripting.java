@@ -40,6 +40,7 @@ import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
 import no.ums.pas.core.ws.WSGetSystemMessages;
+import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.CommonFunc;
@@ -51,6 +52,7 @@ import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.UBBNEWSLIST;
+import no.ums.ws.pas.UPOWERUPRESPONSE;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 
 import org.geotools.data.ows.Layer;
@@ -74,11 +76,17 @@ public class PAS_Scripting extends PasScriptingInterface
 
 
 	@Override
-	public boolean onAfterPowerUp(LogonDialog dlg, WSRESULTCODE ws) {
-		if(ws==WSRESULTCODE.OK)
+	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
+		if(ws.getResult()==WSRESULTCODE.OK)
 			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
 		else
 			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
+		try
+		{
+			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
+		}
+		catch(Exception e)
+		{}
 		return true;
 	}
 
