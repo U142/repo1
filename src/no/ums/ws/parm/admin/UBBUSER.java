@@ -48,6 +48,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="f_blocklist_default" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="f_session_expires_sec" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="sz_hash_paspwd" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="l_deptpklist" type="{http://ums.no/ws/parm/admin/}ArrayOfInt" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -88,7 +89,8 @@ import javax.xml.bind.annotation.XmlType;
     "szTimezone",
     "fBlocklistDefault",
     "fSessionExpiresSec",
-    "szHashPaspwd"
+    "szHashPaspwd",
+    "lDeptpklist"
 })
 public class UBBUSER {
 
@@ -154,6 +156,8 @@ public class UBBUSER {
     protected int fSessionExpiresSec;
     @XmlElement(name = "sz_hash_paspwd")
     protected String szHashPaspwd;
+    @XmlElement(name = "l_deptpklist")
+    protected ArrayOfInt lDeptpklist;
 
     /**
      * Gets the value of the lUserpk property.
@@ -737,6 +741,30 @@ public class UBBUSER {
      */
     public void setSzHashPaspwd(String value) {
         this.szHashPaspwd = value;
+    }
+
+    /**
+     * Gets the value of the lDeptpklist property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfInt }
+     *     
+     */
+    public ArrayOfInt getLDeptpklist() {
+        return lDeptpklist;
+    }
+
+    /**
+     * Sets the value of the lDeptpklist property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOfInt }
+     *     
+     */
+    public void setLDeptpklist(ArrayOfInt value) {
+        this.lDeptpklist = value;
     }
 
 }

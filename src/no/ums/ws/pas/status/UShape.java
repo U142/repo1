@@ -4,7 +4,6 @@ package no.ums.ws.pas.status;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -30,10 +29,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UShape")
-@XmlSeeAlso({
-    UEllipse.class,
-    UPolygon.class
-})
 public abstract class UShape {
 
     @XmlAttribute(name = "col_red", required = true)

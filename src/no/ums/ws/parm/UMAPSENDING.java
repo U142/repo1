@@ -92,12 +92,12 @@ import javax.xml.bind.annotation.XmlType;
     "nMaxchannels"
 })
 @XmlSeeAlso({
-    UPOLYGONSENDING.class,
-    UTASSENDING.class,
     UMUNICIPALSENDING.class,
     UTESTSENDING.class,
+    UGISSENDING.class,
     UELLIPSESENDING.class,
-    UGISSENDING.class
+    UPOLYGONSENDING.class,
+    UTASSENDING.class
 })
 public class UMAPSENDING {
 
