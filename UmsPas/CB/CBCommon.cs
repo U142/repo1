@@ -25,6 +25,14 @@ namespace com.ums.PAS.CB
         public List<CB_ORIGINATOR> originator_list = new List<CB_ORIGINATOR>();
     }
 
+    public enum ULBAMESSAGEFIELDTYPE : int
+    {
+        RISK = 1,
+        REACTION = 2,
+        ORIGINATOR = 3,
+        MESSAGEPART = 4,
+    }
+
     public class CB_MESSAGE_FIELDS_BASE
     {
         [XmlAttribute("l_pk")]
@@ -33,46 +41,76 @@ namespace com.ums.PAS.CB
         public String sz_name;
         [XmlIgnore]
         public long l_timestamp;
+        [XmlIgnore]
+        public ULBAMESSAGEFIELDTYPE type;
+
+        public static CB_MESSAGE_FIELDS_BASE Create(int l_fieldtype, long l_source_pk, String sz_text)
+        {
+            ULBAMESSAGEFIELDTYPE type = (ULBAMESSAGEFIELDTYPE)Enum.Parse(typeof(ULBAMESSAGEFIELDTYPE), l_fieldtype.ToString());
+            switch (type)
+            {
+                case ULBAMESSAGEFIELDTYPE.MESSAGEPART:
+                    return new CB_MESSAGEPART(l_source_pk, sz_text);
+                case ULBAMESSAGEFIELDTYPE.ORIGINATOR:
+                    return new CB_ORIGINATOR(l_source_pk, sz_text);
+                case ULBAMESSAGEFIELDTYPE.REACTION:
+                    return new CB_REACTION(l_source_pk, sz_text);
+                case ULBAMESSAGEFIELDTYPE.RISK:
+                    return new CB_RISK(l_source_pk, sz_text);
+                default:
+                    return new CB_MESSAGE_FIELDS_BASE();
+            }
+        }
     }
 
     public class CB_RISK : CB_MESSAGE_FIELDS_BASE
     {
-        public CB_RISK()
+        public CB_RISK() : this(-1, "Not set")
         {
-            l_pk = -1;
-            sz_name = "Not set";
         }
         public CB_RISK(long pk, String s)
         {
             l_pk = pk;
             sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.RISK;
         }
 
     }
     public class CB_REACTION : CB_MESSAGE_FIELDS_BASE
     {
-        public CB_REACTION()
+        public CB_REACTION() : this(-1, "Not set")
         {
-            l_pk = -1;
-            sz_name = "Not set";
         }
         public CB_REACTION(long pk, String s)
         {
             l_pk = pk;
             sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.REACTION;
         }
     }
     public class CB_ORIGINATOR : CB_MESSAGE_FIELDS_BASE
     {
-        public CB_ORIGINATOR()
+        public CB_ORIGINATOR() : this(-1, "Not set")
         {
-            l_pk = -1;
-            sz_name = "Not set";
         }
         public CB_ORIGINATOR(long pk, String s)
         {
             l_pk = pk;
             sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.ORIGINATOR;
+        }
+    }
+
+    public class CB_MESSAGEPART : CB_MESSAGE_FIELDS_BASE
+    {
+        public CB_MESSAGEPART() : this(-1, "")
+        {
+        }
+        public CB_MESSAGEPART(long pk, String s)
+        {
+            l_pk = pk;
+            sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.MESSAGEPART;
         }
     }
 
@@ -215,9 +253,13 @@ namespace com.ums.PAS.CB
             risk = new CB_RISK();
             reaction = new CB_REACTION();
             originator = new CB_ORIGINATOR();
+            messagepart = new CB_MESSAGEPART();
         }
         [XmlAttribute("l_sched_utc")]
         public long l_sched_utc;
+
+        [XmlElement("messagepart")]
+        public CB_MESSAGEPART messagepart;
 
         [XmlElement("textmessages")]
         public CB_MESSAGELIST textmessages = null;
@@ -230,6 +272,13 @@ namespace com.ums.PAS.CB
 
         [XmlElement("originator")]
         public CB_ORIGINATOR originator;
+
+
+        [XmlAttribute("mdvgroup")]
+        public MDVSENDINGINFO_GROUP mdvgroup;
+
+        [XmlAttribute("l_validity")]
+        public int l_validity;
 
 
     }
@@ -245,11 +294,6 @@ namespace com.ums.PAS.CB
         }
         [XmlElement("alertpolygon")]
         public UPolygon shape;
-
-
-        [XmlAttribute("l_validity")]
-        public int l_validity;
-
 
         protected override XmlSerializer CreateSerializer()
         {
@@ -286,8 +330,9 @@ namespace com.ums.PAS.CB
             textmessages = new CB_MESSAGELIST();
             this.operation = CB_OPERATION.NewAlertPLNM;
         }
-        [XmlAttribute("l_validity")]
-        public int l_validity;
+
+        [XmlElement("alertplmn")]
+        public UPLMN shape;
 
         protected override XmlSerializer CreateSerializer()
         {
@@ -353,6 +398,11 @@ namespace com.ums.PAS.CB
     {
         public String sz_sendingname;
         public MDVSENDINGINFO mdv;
+        public CB_MESSAGEPART messagepart;
+        public CB_RISK risk;
+        public CB_REACTION reaction;
+        public CB_ORIGINATOR originator;
+
         public UShape shape;
         public long l_refno;
         public long l_combined_status;

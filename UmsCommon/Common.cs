@@ -24,6 +24,7 @@ namespace com.ums.UmsCommon
         MAP_MUNICIPAL = 9,
         MAP_LBA_VOICE = 11,
         MAP_CB_NATIONAL = 16,
+        MAP_POLYGONAL_ELLIPSE = 32,
     }
 
     public enum MDVSENDINGINFO_TYPE

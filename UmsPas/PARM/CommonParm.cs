@@ -184,6 +184,17 @@ namespace com.ums.UmsParm
         protected abstract bool ParseFromXml(ref XmlDocument d);
         protected abstract String CreateXml(ref USimpleXmlWriter d);
 
+        public static UShape Deserialize(String xml)
+        {
+            if (xml.IndexOf("UPolygon") >= 0)
+            {
+                return UPolygon.Deserialize(xml);
+            }
+            else if (xml.IndexOf("UPLMN") >= 0)
+                return UPLMN.Deserialize(xml);
+            return null;
+        }
+
         public bool CreateXml(ref String outxml, ref String md5)
         {
             try
@@ -1089,26 +1100,58 @@ namespace com.ums.UmsParm
 
     }
 
+    public class UPLMN : UShape
+    {
+        public static UPLMN Deserialize(String xml)
+        {
+            UPLMN cob = new UPLMN();
+            StringReader read = new StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(cob.GetType());
+            XmlReader reader = new XmlTextReader(read);
+            try
+            {
+                cob = (UPLMN)serializer.Deserialize(reader);
+                return cob;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public String Serialize()
+        {
+            XmlSerializer s = new XmlSerializer(typeof(UPLMN));
+            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+            xmlnsEmpty.Add("", "");
+            MemoryStream m = new MemoryStream();
+            XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
+            s.Serialize(xmlWriter, this, xmlnsEmpty);
+            String xml;
+            xml = Encoding.UTF8.GetString(m.GetBuffer());
+            xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));
+            xml = xml.Substring(0, (xml.LastIndexOf(Convert.ToChar(62)) + 1));
+            return xml;
+        }
+        protected override string CreateXml(ref USimpleXmlWriter d)
+        {
+            throw new NotImplementedException();
+        }
+        protected override bool ParseFromXml(ref XmlDocument d)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFile(ref AdrfileWriter w)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool WriteAddressFileGUI(ref AdrfileGUIWriter w)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class UPolygon : UShape
     {
-        //[XmlElement("alertpolygon")]
-        /*public UPolypoint[] Items
-        {
-            get
-            {
-                UPolypoint[] items = new UPolypoint[this.getSize()];
-                m_array_polypoints.CopyTo(items);
-                return items;
-            }
-            set
-            {
-                if (value == null) return;
-                UPolypoint[] items = (UPolypoint[])value;
-                m_array_polypoints.Clear();
-                foreach (UPolypoint item in items)
-                    m_array_polypoints.Add(item);
-            }
-        }*/
         public static UPolygon Deserialize(String xml)
         {
             UPolygon cob = new UPolygon();
@@ -1132,17 +1175,9 @@ namespace com.ums.UmsParm
             XmlSerializer s = new XmlSerializer(typeof(UPolygon));
             XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
             xmlnsEmpty.Add("", "");
-
-            //TextWriter w = new StreamWriter(tmp_file, false, Encoding.UTF8);
             MemoryStream m = new MemoryStream();
-            //StringWriter stringWriter = new StringWriter(new StringBuilder());
-            //TextWriter textWriter = new StreamWriter(m, Encoding.UTF8);
-
             XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
             s.Serialize(xmlWriter, this, xmlnsEmpty);
-            //textWriter.Close();
-            //String xml = new String(m, 0, m.Length, Encoding.UTF8);//textWriter.ToString();
-            //m.Close();
             String xml;
             xml = Encoding.UTF8.GetString(m.GetBuffer());
             xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));

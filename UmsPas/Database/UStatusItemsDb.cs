@@ -481,10 +481,32 @@ namespace com.ums.PAS.Database
                     if (rs_poly.Read())
                     {
 
-                        UPolygon poly = UPolygon.Deserialize(rs_poly.GetString(0));
-                        cb.shape = (UShape)poly;
+                        UShape shape = UShape.Deserialize(rs_poly.GetString(0));
+                        cb.shape = shape;
                     }
                     rs_poly.Close();
+                }
+                for (int i = 0; i < statuslist.Count; ++i)
+                {
+                    CB_STATUS cb = statuslist[i];
+                    szSQL = String.Format("sp_pas_get_lbamessagefields {0}", cb.l_refno);
+                    OdbcDataReader rs_mf = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    while (rs_mf.Read())
+                    {
+                        int l_fieldtype = Int32.Parse(rs_mf["l_fieldtype"].ToString());
+                        long l_source_pk = Int64.Parse(rs_mf["l_source_pk"].ToString());
+                        String sz_text = rs_mf["sz_text"].ToString();
+                        CB_MESSAGE_FIELDS_BASE value = CB_MESSAGE_FIELDS_BASE.Create(l_fieldtype, l_source_pk, sz_text);
+                        if (value.GetType().Equals(typeof(CB_RISK)))
+                            cb.risk = (CB_RISK)value;
+                        else if (value.GetType().Equals(typeof(CB_REACTION)))
+                            cb.reaction = (CB_REACTION)value;
+                        else if (value.GetType().Equals(typeof(CB_ORIGINATOR)))
+                            cb.originator = (CB_ORIGINATOR)value;
+                        else if (value.GetType().Equals(typeof(CB_MESSAGEPART)))
+                            cb.messagepart = (CB_MESSAGEPART)value;
+                    }
+                    rs_mf.Close();
                 }
 
                 response.l_db_timestamp = getDbClock();//long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));

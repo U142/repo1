@@ -33,6 +33,7 @@ namespace com.ums.ws.pas.status
         [XmlInclude(typeof(UPolygon))]
         [XmlInclude(typeof(UEllipse))]
         [XmlInclude(typeof(UBoundingRect))]
+        [XmlInclude(typeof(UPLMN))]
 
         [WebMethod]
         public List<USMSINSTATS> GetSmsStats(ULOGONINFO logoninfo, long n_refno)

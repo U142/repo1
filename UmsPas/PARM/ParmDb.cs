@@ -1714,6 +1714,24 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+
+        public bool insertLBASENDMessageField(long l_refno, CB_MESSAGE_FIELDS_BASE msgpart)
+        {
+            String szSQL = "";
+            try
+            {
+                msgpart.sz_name = msgpart.sz_name.Replace("'", "''");
+                szSQL = String.Format("sp_pas_ins_lbamessagefield {0}, {1}, {2}, '{3}'",
+                            l_refno, (long)msgpart.type, msgpart.l_pk, msgpart.sz_name);
+                ExecNonQuery(szSQL);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public void getTotalNumberOfMessages(long period, ref long total_events, ref long total_regional, ref long total_national, ref long total_test)
         {
             String szSQL = "";

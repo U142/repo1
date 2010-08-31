@@ -42,7 +42,7 @@ namespace com.ums.PAS.CB
             }
             else if (alert.GetType().Equals(typeof(CB_ALERT_PLMN)))
             {
-                throw new USendingTypeNotSupportedException(alert.GetType().ToString());
+                //throw new USendingTypeNotSupportedException(alert.GetType().ToString());
             }
 
             CB_SENDING_RESPONSE response = new CB_SENDING_RESPONSE();
@@ -95,9 +95,10 @@ namespace com.ums.PAS.CB
             mdv.l_schedtime = "0";
             mdv.l_createdate = "0";
             mdv.l_createtime = "0";
-            mdv.l_group = 2; //POLYGON
+            mdv.l_group = (long)alert.mdvgroup; //POLYGON
             mdv.l_deptpk = alert.l_deptpk;
-            mdv.l_type = (int)LBA_SENDINGTYPES.CELLBROADCAST;
+            mdv.l_userpk = logon.l_userpk;
+            mdv.l_type = (long)LBA_SENDINGTYPES.CELLBROADCAST;
             PAS_SENDING ps = new PAS_SENDING();
             ps.m_sendinginfo = mdv;
             ps.l_refno = alert.l_refno;
@@ -105,22 +106,38 @@ namespace com.ums.PAS.CB
 
             //Insert record into LBASEND_TEXT_CC
             //removed, will be inserted in loc.addLanguage
-            db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
+            //db.insertLBATEXTCC(alert.l_refno, message.sz_text, message.l_cbchannel);
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();
-            loc.addLanguage("Channel " + message.l_cbchannel, alert.sz_sender, "0", message.sz_text);
+            ULocationBasedAlert.LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sz_sender, "0", message.sz_text);
+            lang.AddCCode(message.l_cbchannel.ToString());
             db.InjectLBALanguages(alert.l_refno, ref loc);
 
-            //Save shape to PASHAPES for status lookup
-            CB_ALERT_POLYGON poly = (CB_ALERT_POLYGON)alert;
-            String polyxml = "", md5 = "";
-            //poly.shape.CreateXml(ref polyxml, ref md5);
-            poly.l_validity = db.getCBDuration(alert.l_deptpk, alert.l_refno);
+            alert.l_validity = db.getCBDuration(alert.l_deptpk, alert.l_refno);
 
-            String xml = poly.shape.Serialize();
-            bool changed = false;
-            db.UpdatePAShape(poly.l_refno, xml, PASHAPETYPES.PASENDING, ref changed);
+            //Save shape to PASHAPES for status lookup
+            if (alert.GetType().Equals(typeof(CB_ALERT_POLYGON)))
+            {
+                CB_ALERT_POLYGON poly = (CB_ALERT_POLYGON)alert;
+                String xml = poly.shape.Serialize();
+                bool changed = false;
+                db.UpdatePAShape(alert.l_refno, xml, PASHAPETYPES.PASENDING, ref changed);
+            }
+            else if (alert.GetType().Equals(typeof(CB_ALERT_PLMN)))
+            {
+                CB_ALERT_PLMN plmn = (CB_ALERT_PLMN)alert;
+                plmn.shape.Serialize();
+                String xml = plmn.shape.Serialize();
+                bool changed = false;
+                db.UpdatePAShape(alert.l_refno, xml, PASHAPETYPES.PASENDING, ref changed);
+            }
+
+            //Insert messageparts for this sending (RRO and the messagepart)
+            db.insertLBASENDMessageField(alert.l_refno, alert.messagepart);
+            db.insertLBASENDMessageField(alert.l_refno, alert.risk);
+            db.insertLBASENDMessageField(alert.l_refno, alert.reaction);
+            db.insertLBASENDMessageField(alert.l_refno, alert.originator);
 
 
             //CREATE SEND XML FILE
