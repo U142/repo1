@@ -41,6 +41,8 @@ import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
 import no.ums.pas.plugins.centric.send.RROComboBox;
 import no.ums.pas.plugins.centric.send.RROComboEditor;
 import no.ums.pas.plugins.centric.send.RROComboRenderer;
@@ -57,10 +59,16 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
+import no.ums.ws.parm.CBALERTPLMN;
 import no.ums.ws.parm.CBALERTPOLYGON;
 import no.ums.ws.parm.CBMESSAGE;
 import no.ums.ws.parm.CBMESSAGELIST;
+import no.ums.ws.parm.CBMESSAGEPART;
+import no.ums.ws.parm.CBOPERATIONBASE;
+import no.ums.ws.parm.CBSENDBASE;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.parm.MDVSENDINGINFOGROUP;
+import no.ums.ws.parm.UPLMN;
 import no.ums.ws.parm.UPolygon;
 import no.ums.ws.parm.UPolypoint;
 import no.ums.ws.parm.CBMESSAGEFIELDS;
@@ -502,7 +510,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	public boolean lockSending(boolean b)
 	{
-		PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
+		ShapeStruct ps = variables.MAPPANE.get_active_shape();
 		ps.setEditable(b);
 		return b;
 	}
@@ -529,25 +537,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			CBMESSAGELIST msglist = new CBMESSAGELIST();
 			msglist.getMessage().add(msg);
 			
-			//sending.n_deptpk = PAS.get_pas().get_userinfo().get_current_department().get_deptpk();
-			//sending.n_userpk = PAS.get_pas().get_userinfo().get_userpk();
-			//sending.n_comppk = PAS.get_pas().get_userinfo().get_comppk();
-			CBALERTPOLYGON poly = new CBALERTPOLYGON();
-			
-			//poly.setLProjectpk(Long.parseLong(PAS.get_pas().get_current_project().get_projectpk()));
-			//poly.setLValidity(value);
-			poly.setLSchedUtc(0);
-			poly.setTextmessages(msglist);
-			poly.setSzSender(m_txt_sender_name.getText());
-			poly.setLProjectpk(m_projectpk);
-			poly.setSzProjectname(m_txt_event_name.getText());
-			
-			System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
-			System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
-			System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
-			//poly.setRisk((CBRISK)m_cbx_risk.getSelectedItem());
-			//poly.setReaction((CBREACTION)m_cbx_reaction.getSelectedItem());
-			//poly.setOriginator((CBORIGINATOR)m_cbx_originator.getSelectedItem());
 			CBRISK risk = new CBRISK();
 			risk.setLPk(-1);
 			risk.setSzName(m_cbx_risk.getSelectedItem().toString());
@@ -557,25 +546,59 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			CBORIGINATOR originator = new CBORIGINATOR();
 			originator.setLPk(-1);
 			originator.setSzName(m_cbx_originator.getSelectedItem().toString());
-			poly.setRisk(risk);
-			poly.setReaction(reaction);
-			poly.setOriginator(originator);
+
+			CBSENDBASE operation = null;
 			
-			UPolygon polygon = new UPolygon();
-			PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
-			if(ps == null || ps.get_coors_lat().size()<3) {
-				JOptionPane.showMessageDialog(this, "Alert area is missing");
-				return;
+			
+			
+			
+			ShapeStruct shape = variables.MAPPANE.get_active_shape();
+			
+			if(shape.getClass().equals(PolygonStruct.class))
+			{
+				operation = new CBALERTPOLYGON();
+				UPolygon polygon = new UPolygon();
+				PolygonStruct ps = (PolygonStruct)variables.MAPPANE.get_active_shape();
+				if(ps == null || ps.get_coors_lat().size()<3) {
+					JOptionPane.showMessageDialog(this, "Alert area is missing");
+					return;
+				}
+				for(int i=0;i<ps.get_coors_lat().size();++i) {
+					UPolypoint pp = new UPolypoint();
+					pp.setLat(ps.get_coor_lat(i));
+					pp.setLon(ps.get_coor_lon(i));
+					polygon.getPolypoint().add(pp);
+				}
+				((CBALERTPOLYGON)operation).setAlertpolygon(polygon);
+				if(ps.isElliptical())
+					operation.setMdvgroup(MDVSENDINGINFOGROUP.MAP_POLYGONAL_ELLIPSE);
+				else
+					operation.setMdvgroup(MDVSENDINGINFOGROUP.MAP_POLYGON);
 			}
-			for(int i=0;i<ps.get_coors_lat().size();++i) {
-				UPolypoint pp = new UPolypoint();
-				pp.setLat(ps.get_coor_lat(i));
-				pp.setLon(ps.get_coor_lon(i));
-				polygon.getPolypoint().add(pp);
+			else if(shape.getClass().equals(PLMNShape.class))
+			{
+				operation = new CBALERTPLMN();
+				operation.setMdvgroup(MDVSENDINGINFOGROUP.MAP_CB_NATIONAL);
+				((CBALERTPLMN)operation).setAlertplmn(new UPLMN());
 			}
-			poly.setAlertpolygon(polygon);
+			
+			//commons
+			operation.setLSchedUtc(0);
+			operation.setTextmessages(msglist);
+			operation.setSzSender(m_txt_sender_name.getText());
+			operation.setLProjectpk(m_projectpk);
+			operation.setSzProjectname(m_txt_event_name.getText());
+			
+			operation.setRisk(risk);
+			operation.setReaction(reaction);
+			operation.setOriginator(originator);
+			CBMESSAGEPART messagepart = new CBMESSAGEPART();
+			messagepart.setLPk(-1);
+			messagepart.setSzName(m_txt_message.getText());
+			operation.setMessagepart(messagepart);
+
 			try {
-				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", poly);
+				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", operation);
 				send.start();
 			}
 			catch(Exception ex) {
@@ -830,8 +853,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			enable_send = false;
 		if(m_txt_message.getText().length()<1)
 			enable_send = false;
-		if(variables.MAPPANE.get_active_shape()==null || ((PolygonStruct)variables.MAPPANE.get_active_shape()).get_coors_lat().size()<3)
+		if(variables.MAPPANE.get_active_shape()==null)
 			enable_send = false;
+		else
+		{
+			if(!variables.MAPPANE.get_active_shape().can_lock())
+				enable_send = false;
+		}
 		
 		if(enable_send)
 			m_btn_send.setEnabled(true);

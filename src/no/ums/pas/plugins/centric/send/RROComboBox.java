@@ -25,7 +25,14 @@ public class RROComboBox extends JComboBox
 	@Override
 	public Object getSelectedItem() {
 		Object o = super.getSelectedItem();
-		return o;
+		if(o==null)
+			return null;
+		if(o.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class))
+		{
+			return ((CBMESSAGEFIELDSBASE)o).getSzName();
+		}
+		else
+			return o.toString();
 		/*if(o==null)
 			return null;
 		if(o.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class))

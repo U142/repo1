@@ -21,6 +21,8 @@ public class UShapeToShape
 {
 	public static ShapeStruct ConvertUShape_to_ShapeStruct(no.ums.ws.pas.status.UShape ushape)
 	{
+		if(ushape==null)
+			return null;
 		if(ushape.getClass().equals(no.ums.ws.pas.status.UPolygon.class))
 		{
 			no.ums.ws.pas.status.UPolygon upolygon = (no.ums.ws.pas.status.UPolygon)ushape;

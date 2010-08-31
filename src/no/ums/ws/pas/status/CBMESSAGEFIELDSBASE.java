@@ -1,5 +1,5 @@
 
-package no.ums.ws.parm;
+package no.ums.ws.pas.status;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,8 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "CB_MESSAGE_FIELDS_BASE")
 @XmlSeeAlso({
     CBMESSAGEPART.class,
-    CBRISK.class,
     CBORIGINATOR.class,
+    CBRISK.class,
     CBREACTION.class
 })
 public class CBMESSAGEFIELDSBASE {

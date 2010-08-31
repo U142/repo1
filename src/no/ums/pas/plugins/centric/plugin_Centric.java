@@ -2,6 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
+import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
 import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
@@ -132,19 +133,22 @@ public class plugin_Centric extends PAS_Scripting
 	
 	private JButton menu_btn_draw_polygon;
 	private JButton menu_btn_draw_ellipse;
+	private JButton menu_btn_draw_plmn;
 	private JButton menu_btn_import;
 	
 	@Override
 	public boolean onAddMainMenuButtons(MainMenu menu)
 	{
-		menu.set_gridconst(0, 0, 15, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 0, 15, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_selectmenu().get_bar(), menu.m_gridconst);
 
-		menu.set_gridconst(0, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.reset_xpanels();
+		
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_pan(), menu.m_gridconst);
-		menu.set_gridconst(1, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom(), menu.m_gridconst);
-		menu.set_gridconst(2, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_search(), menu.m_gridconst);
 		
 		JButton btn_goto_restriction = new JButton(PAS.l("common_navigate_home"));
@@ -156,21 +160,22 @@ public class plugin_Centric extends PAS_Scripting
 			}
 		});
 		
-		menu.set_gridconst(3, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(btn_goto_restriction, menu.m_gridconst);
 
+		menu.add_spacing(DefaultPanel.DIR_HORIZONTAL, 30);
 		
 		menu_btn_draw_polygon = new JButton(PAS.l("main_sending_type_polygon"));
 		menu_btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		menu_btn_draw_polygon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+				variables.MAPPANE.set_active_shape(new PolygonStruct(null));
+				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 				PAS.get_pas().repaint();
 			}
 		});
-		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu_btn_draw_polygon, menu.m_gridconst);
 
 		menu_btn_draw_ellipse = new JButton(PAS.l("main_sending_type_ellipse"));
@@ -178,14 +183,27 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_ellipse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				PAS.get_pas().get_mappane().set_active_shape(new PolygonStruct(null));
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
+				variables.MAPPANE.set_active_shape(new PolygonStruct(null));
+				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
 				PAS.get_pas().repaint();
 			}
 		});
-		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu_btn_draw_ellipse, menu.m_gridconst);
 
+		menu_btn_draw_plmn = new JButton(PAS.l("main_sending_type_national"));
+		menu_btn_draw_plmn.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
+		menu_btn_draw_plmn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+				variables.MAPPANE.set_active_shape(new PLMNShape());
+				PAS.get_pas().repaint();
+			}
+		});
+		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.add(menu_btn_draw_plmn, menu.m_gridconst);
+		
 		/*menu_btn_import = new JButton(PAS.l("common_import"));
 		menu_btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
 		menu_btn_import.addActionListener(new ActionListener() {
@@ -565,14 +583,28 @@ public class plugin_Centric extends PAS_Scripting
 		public void updateUserInfo(UserInfo ui)
 		{
 			String str = " " + ui.get_realname();
-			switch(ui.get_departments().size())
+			/*switch(ui.get_departments().size())
 			{
 			case 1:
-				str+=" - $Regional user - ";
+				str+=PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
 				break;
 			default:
-				str+=" - $Regional Super User - ";
+				str+=PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
 				break;
+			}*/
+			str += " - ";
+			int member_of_dept = ui.get_departments().size();
+			switch(ui.get_current_department().get_pas_rights())
+			{
+			case 1: //regional or regional super user
+				if(member_of_dept==1)
+					str+=PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
+				else
+					str+=PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";					
+				break;
+			case 2: //national user
+				str+=PAS.l("logon_rights_national_user") + " - "; //" - $Regional Super User - ";					
+				break;				
 			}
 			for(int i = 0; i < ui.get_departments().size(); i++)
 				str += " \"" + ((DeptInfo)ui.get_departments().get(i)).get_deptid() + "\"";
@@ -1334,6 +1366,8 @@ public class plugin_Centric extends PAS_Scripting
 	{
 		menu_btn_draw_ellipse.setVisible(b);
 		menu_btn_draw_polygon.setVisible(b);
+		
+		menu_btn_draw_plmn.setVisible(b && variables.USERINFO.get_current_department().get_pas_rights()>=2);
 		//menu_btn_import.setVisible(b);
 	}
 

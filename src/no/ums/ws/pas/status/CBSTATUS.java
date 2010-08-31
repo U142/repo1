@@ -19,6 +19,10 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="sz_sendingname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="mdv" type="{http://ums.no/ws/pas/status}MDVSENDINGINFO" minOccurs="0"/>
+ *         &lt;element name="messagepart" type="{http://ums.no/ws/pas/status}CB_MESSAGEPART" minOccurs="0"/>
+ *         &lt;element name="risk" type="{http://ums.no/ws/pas/status}CB_RISK" minOccurs="0"/>
+ *         &lt;element name="reaction" type="{http://ums.no/ws/pas/status}CB_REACTION" minOccurs="0"/>
+ *         &lt;element name="originator" type="{http://ums.no/ws/pas/status}CB_ORIGINATOR" minOccurs="0"/>
  *         &lt;element name="shape" type="{http://ums.no/ws/pas/status}UShape" minOccurs="0"/>
  *         &lt;element name="l_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_combined_status" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -40,6 +44,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "CB_STATUS", propOrder = {
     "szSendingname",
     "mdv",
+    "messagepart",
+    "risk",
+    "reaction",
+    "originator",
     "shape",
     "lRefno",
     "lCombinedStatus",
@@ -55,6 +63,10 @@ public class CBSTATUS {
     @XmlElement(name = "sz_sendingname")
     protected String szSendingname;
     protected MDVSENDINGINFO mdv;
+    protected CBMESSAGEPART messagepart;
+    protected CBRISK risk;
+    protected CBREACTION reaction;
+    protected CBORIGINATOR originator;
     protected UShape shape;
     @XmlElement(name = "l_refno")
     protected long lRefno;
@@ -118,6 +130,102 @@ public class CBSTATUS {
      */
     public void setMdv(MDVSENDINGINFO value) {
         this.mdv = value;
+    }
+
+    /**
+     * Gets the value of the messagepart property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBMESSAGEPART }
+     *     
+     */
+    public CBMESSAGEPART getMessagepart() {
+        return messagepart;
+    }
+
+    /**
+     * Sets the value of the messagepart property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBMESSAGEPART }
+     *     
+     */
+    public void setMessagepart(CBMESSAGEPART value) {
+        this.messagepart = value;
+    }
+
+    /**
+     * Gets the value of the risk property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBRISK }
+     *     
+     */
+    public CBRISK getRisk() {
+        return risk;
+    }
+
+    /**
+     * Sets the value of the risk property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBRISK }
+     *     
+     */
+    public void setRisk(CBRISK value) {
+        this.risk = value;
+    }
+
+    /**
+     * Gets the value of the reaction property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBREACTION }
+     *     
+     */
+    public CBREACTION getReaction() {
+        return reaction;
+    }
+
+    /**
+     * Sets the value of the reaction property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBREACTION }
+     *     
+     */
+    public void setReaction(CBREACTION value) {
+        this.reaction = value;
+    }
+
+    /**
+     * Gets the value of the originator property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBORIGINATOR }
+     *     
+     */
+    public CBORIGINATOR getOriginator() {
+        return originator;
+    }
+
+    /**
+     * Sets the value of the originator property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBORIGINATOR }
+     *     
+     */
+    public void setOriginator(CBORIGINATOR value) {
+        this.originator = value;
     }
 
     /**

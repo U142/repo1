@@ -3,7 +3,6 @@ package no.ums.ws.parm;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -19,7 +18,6 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="alertpolygon" type="{http://ums.no/ws/parm/}UPolygon" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="l_validity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -36,8 +34,6 @@ public class CBALERTPOLYGON
 {
 
     protected UPolygon alertpolygon;
-    @XmlAttribute(name = "l_validity", required = true)
-    protected int lValidity;
 
     /**
      * Gets the value of the alertpolygon property.
@@ -61,22 +57,6 @@ public class CBALERTPOLYGON
      */
     public void setAlertpolygon(UPolygon value) {
         this.alertpolygon = value;
-    }
-
-    /**
-     * Gets the value of the lValidity property.
-     * 
-     */
-    public int getLValidity() {
-        return lValidity;
-    }
-
-    /**
-     * Sets the value of the lValidity property.
-     * 
-     */
-    public void setLValidity(int value) {
-        this.lValidity = value;
     }
 
 }

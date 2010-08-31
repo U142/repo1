@@ -309,13 +309,16 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				}
 			}
 			ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(cbs.getShape());
-			shape.setShapeId(cbs.getLRefno());
-			shape.shapeName = cbs.getSzSendingname();
-			shape.set_fill_color(new Color(255, 50, 50, 100));
-			shape.set_border_color(new Color(255, 50, 50, 200));
-			shape.set_text_color(new Color(255, 255, 255, 255));
-			shape.set_text_bg_color(new Color(50, 0, 0, 100));
-			PAS.pasplugin.addShapeToPaint(shape);
+			if(shape!=null)
+			{
+				shape.setShapeId(cbs.getLRefno());
+				shape.shapeName = cbs.getSzSendingname();
+				shape.set_fill_color(new Color(255, 50, 50, 100));
+				shape.set_border_color(new Color(255, 50, 50, 200));
+				shape.set_text_color(new Color(255, 255, 255, 255));
+				shape.set_text_bg_color(new Color(50, 0, 0, 100));
+				PAS.pasplugin.addShapeToPaint(shape);
+			}
 		}
 		
 		

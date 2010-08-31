@@ -1059,6 +1059,10 @@ public class PolygonStruct extends ShapeStruct {
 		//recalc_shape(nav);
 		//finalize();
 	}
+	public boolean isElliptical()
+	{
+		return (ellipse_polygon!=null ? true : false);
+	}
 	PolygonStruct ellipse_polygon = null;
 	public void recalc_shape(Navigation nav)
 	{

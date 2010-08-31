@@ -472,13 +472,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				
 				//check line intersects with last line (last polypoint and mouse pos)
 				PolygonStruct current_polygon = null;
-				current_polygon = get_mappane().get_active_shape().typecast_polygon();
 				try
 				{
+					current_polygon = get_mappane().get_active_shape().typecast_polygon();
 					//current_polygon = variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
 				}
 				catch(Exception e)
 				{
+					return true;
 					//current_polygon = variables.PARMCONTROLLER.get_shape().typecast_polygon();
 				}
 				try

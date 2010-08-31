@@ -3,7 +3,6 @@ package no.ums.ws.parm;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -16,7 +15,9 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="CB_ALERT_PLMN">
  *   &lt;complexContent>
  *     &lt;extension base="{http://ums.no/ws/parm/}CB_SEND_BASE">
- *       &lt;attribute name="l_validity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;sequence>
+ *         &lt;element name="alertplmn" type="{http://ums.no/ws/parm/}UPLMN" minOccurs="0"/>
+ *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -25,28 +26,37 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "CB_ALERT_PLMN")
+@XmlType(name = "CB_ALERT_PLMN", propOrder = {
+    "alertplmn"
+})
 public class CBALERTPLMN
     extends CBSENDBASE
 {
 
-    @XmlAttribute(name = "l_validity", required = true)
-    protected int lValidity;
+    protected UPLMN alertplmn;
 
     /**
-     * Gets the value of the lValidity property.
+     * Gets the value of the alertplmn property.
      * 
+     * @return
+     *     possible object is
+     *     {@link UPLMN }
+     *     
      */
-    public int getLValidity() {
-        return lValidity;
+    public UPLMN getAlertplmn() {
+        return alertplmn;
     }
 
     /**
-     * Sets the value of the lValidity property.
+     * Sets the value of the alertplmn property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link UPLMN }
+     *     
      */
-    public void setLValidity(int value) {
-        this.lValidity = value;
+    public void setAlertplmn(UPLMN value) {
+        this.alertplmn = value;
     }
 
 }

@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlSeeAlso({
     UGIS.class,
     UPolygon.class,
-    ULocationBasedAlert.class
+    ULocationBasedAlert.class,
+    UPLMN.class
 })
 public abstract class UShape {
 
