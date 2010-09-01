@@ -231,13 +231,14 @@ namespace com.ums.PAS.messagelib
                         //NOT A VALID MESSAGE
                     }
                     // Gets messages for specific country codes
+                    UmsDb db = new UmsDb();
                     msg.ccmessage = new List<UCCMessage>();
                     szSQL = String.Format("SELECT l_cc, sz_text " +
                                             "FROM BBMESSAGE_SMSCONTENT " +
                                             "WHERE l_messagepk={0} " +
                                             "ORDER BY l_cc",
                                             msg.n_messagepk);
-                    OdbcDataReader rsCC = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    OdbcDataReader rsCC = db.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     while (rsCC.Read())
                     {
                         UCCMessage ccm = new UCCMessage();
@@ -246,6 +247,7 @@ namespace com.ums.PAS.messagelib
                         msg.ccmessage.Add(ccm);
                     }
                     rsCC.Close();
+                    db.close();
                     ret.list.Add(msg);
                 }
                 rs.Close();
