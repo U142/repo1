@@ -22,6 +22,15 @@ namespace com.ums.ws.pas
     public class PasAdmin : System.Web.Services.WebService
     {
 
+        public class UPASLOG
+        {
+            public Int64 l_id;
+            public long l_userpk;
+            public Int16 l_operation;
+            public long l_timestamp;
+            public String sz_desc;
+        }
+
         public class Response
         {
             // status
@@ -96,8 +105,8 @@ namespace com.ums.ws.pas
                 rs.Close();
                 long l_timestamp = db.getDbClock();
                 user.l_disabled_timestamp = l_timestamp;
-                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', {9}, {10}",
-                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN);
+                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', {9}, {10}, '{11}'",
+                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN, user.sz_organization);
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -124,6 +133,7 @@ namespace com.ums.ws.pas
                 res.user = user;
                 res.errorCode = -1;
                 res.reason = e.Message;
+                return res;
             }
             finally { db.close(); }
 
@@ -186,6 +196,10 @@ namespace com.ums.ws.pas
                             obj.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
                         
                     }
+                    if(rs.IsDBNull(33))
+                        obj.sz_organization = "";
+                    else
+                        obj.sz_organization = rs.GetString(33);
                     ulist.Add(obj);
                 }
                 rs.Close();
@@ -373,7 +387,6 @@ namespace com.ums.ws.pas
                 res.successful = false;
                 res.errorCode = -1;
                 res.reason = e.Message;
-                throw e;
             }
 
             res = new GetRestrictionAreasResponse();
@@ -385,6 +398,117 @@ namespace com.ums.ws.pas
         {
             // return value
             public List<UDEPARTMENT> restrictions;
+        }
+
+        [WebMethod]
+        public GetUserActivityResponse doGetUserActivity(ULOGONINFO logoninfo, long period)
+        {
+            PASUmsDb db;
+            GetUserActivityResponse res;
+            List<UPASLOG> loglist = new List<UPASLOG>();
+
+            List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
+            string sz_sql = String.Format(
+                            "SELECT * " +
+                              "FROM PASLOG " +
+                             "WHERE l_timestamp BETWEEN {0} AND {1}", period, period + 100000000);
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                UPASLOG log;
+                
+                while (rs.Read())
+                {
+                    log = new UPASLOG();
+                    log.l_id = rs.GetInt64(0);
+                    log.l_userpk = (long)rs.GetDecimal(1);
+                    log.l_operation = rs.GetInt16(2);
+                    log.l_timestamp = (long)rs.GetDecimal(3);
+                    log.sz_desc = rs.GetString(4);
+                    loglist.Add(log);
+                }
+                rs.Close();
+                db.close();
+            }
+            catch (Exception e)
+            {
+                res = new GetUserActivityResponse();
+                res.successful = false;
+                res.errorCode = -1;
+                res.reason = e.Message;
+                throw e;
+            }
+
+            res = new GetUserActivityResponse();
+            res.successful = true;
+            res.log = loglist;
+            return res;
+        }
+        public class GetUserActivityResponse : Response
+        {
+            // return value
+            public List<UPASLOG> log;
+        }
+
+        [WebMethod]
+        public GetSingleRestricionResponse doGetSingleRestricion(ULOGONINFO logoninfo, long areaid)
+        {
+            PASUmsDb db;
+            GetSingleRestricionResponse res;
+
+            string sz_sql = String.Format("SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
+                              "FROM v_BBDEPARTMENT DEP " +
+                              "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
+                             "WHERE SH.l_type = 16 " + 
+                             "AND SH.l_pk = {0}", areaid);
+            try
+            {
+                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.HasRows)
+                {
+                    rs.Read();
+                    UDEPARTMENT obj = new UDEPARTMENT();
+                    obj.l_deptpk = rs.GetInt32(0);
+                    obj.l_deptpri = rs.GetInt16(1);
+                    obj.sz_deptid = rs.GetString(2);
+                    obj.f_map = rs.GetInt16(3);
+                    UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
+                    shape.f_disabled = rs.GetInt16(6);
+                    shape.l_disabled_timestamp = (long)rs.GetDecimal(5);
+                    obj.restrictionShapes.Add(shape);
+                    res = new GetSingleRestricionResponse();
+                    res.restriction = obj;
+                    res.successful = true;
+                }
+                else
+                {
+                    res = new GetSingleRestricionResponse();
+                    res.successful = false;
+                    res.reason = "No restriction found";
+                    res.errorCode = -1;
+                }
+                rs.Close();
+                db.close();
+            }
+            catch (Exception e)
+            {
+                res = new GetSingleRestricionResponse();
+                res.successful = false;
+                res.errorCode = -1;
+                res.reason = e.Message;
+                return res;
+            }
+
+            return res;
+        }
+        public class GetSingleRestricionResponse : Response
+        {
+            // return value
+            public UDEPARTMENT restriction;
         }
 
     }

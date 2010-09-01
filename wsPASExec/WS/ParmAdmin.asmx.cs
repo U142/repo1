@@ -1591,6 +1591,7 @@ namespace com.ums.ws.parm
                             tempuser.sz_surname = rs.GetString(3);
                         tempuser.l_comppk = rs.GetInt32(4);
                         tempuser.l_deptpk = rs.GetInt32(5);
+                        tempuser.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
                         PAOBJECT obj = new PAOBJECT();
                         obj.l_deptpk = rs.GetInt32(5);
                         obj.l_objectpk = (long)rs.GetDecimal(6);
@@ -1674,6 +1675,7 @@ namespace com.ums.ws.parm
                     obj.l_comppk = rs.GetInt32(5);
                     obj.l_deptpk = rs.GetInt32(6);
                     obj.l_profilepk = rs.GetInt32(7);
+                    obj.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
                     ulist.Add(obj);
                 }
                 rs.Close();
@@ -1791,6 +1793,7 @@ namespace com.ums.ws.parm
                 {
                     user = new UBBUSER();
                     user.sz_userid = rs.GetString(0);
+                    user.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
                     list.Add(user);
                 }
 

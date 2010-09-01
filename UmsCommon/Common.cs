@@ -751,6 +751,7 @@ namespace com.ums.UmsCommon
         public long l_disabled_timestamp;
         public String sz_organization;
         public BBUSER_BLOCK_REASONS l_disabled_reasoncode;
+        public String sz_organization;
     }
 
     public class BBPROJECT
