@@ -124,7 +124,8 @@ public abstract class TreeRenderer extends DefaultTreeCellRenderer {//SubstanceD
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
 			boolean leaf, int row, boolean hasFocus)
 	{
-		return new JLabel("No renderer defined");
+		return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+		//return new JLabel("No renderer defined");
 	}
 
 }

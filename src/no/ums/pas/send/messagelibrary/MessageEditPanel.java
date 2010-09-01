@@ -41,12 +41,19 @@ import no.ums.pas.sound.SoundTextTemplatePanel;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.ws.pas.ArrayOfUCCMessage;
 import no.ums.ws.pas.UBBMESSAGE;
 import no.ums.ws.pas.UCCMessage;
 
 
 public class MessageEditPanel extends DefaultPanel implements ComponentListener, KeyListener, ItemListener
 {
+	protected boolean b_enable_multi_cc = false;
+	protected boolean b_editor_mode = false;
+	public boolean isEditorMode()
+	{
+		return b_editor_mode;
+	}
 	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^€{}\\[\\]~\\\\]");
 	protected ActionListener callback;
 	protected MessageLibNode m_msg = null;
@@ -55,6 +62,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	protected JButton btn_new_lang = new JButton(PAS.l("common_new"));
 	protected JButton btn_save = new JButton(PAS.l("common_save"));
 	protected JButton btn_cancel = new JButton(PAS.l("common_cancel"));
+	protected JButton btn_select = new JButton(PAS.l("common_select"));
 	protected StdTextLabel lbl_counter = new StdTextLabel("",120);
 	private SoundRecorderPanel m_rec;
 	//private SoundTTSPanel m_tts;
@@ -63,11 +71,19 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	
 	public MessageEditPanel(ActionListener callback)
 	{
+		this(callback, false, true);
+	}
+	
+	public MessageEditPanel(ActionListener callback, boolean b_editor_mode, boolean b_enable_multi_cc)
+	{
 		super();
+		this.b_editor_mode = b_editor_mode;
+		this.b_enable_multi_cc = b_enable_multi_cc;
 		this.callback = callback;
 		btn_save.setEnabled(false);
-		btn_cancel.setEnabled(false);
+		btn_cancel.setEnabled(!isEditorMode());
 		btn_new_lang.setEnabled(false);
+		btn_select.setEnabled(false);
 		
 		addComponentListener(this);
 		m_tabbedpane = new JTabbedPane();
@@ -101,6 +117,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		cbx_lang.addItemListener(this);
 		btn_save.addActionListener(this);
 		btn_cancel.addActionListener(this);
+		btn_select.addActionListener(this);
 		add_controls();
 		init();
 		txt_name.addKeyListener(this);
@@ -123,13 +140,16 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	public void setActiveMessage(MessageLibNode msg)
 	{
 		m_msg = msg;
-		txt_name.setEnabled(true);
+		//txt_name.setEnabled(true);
+		enableInputs(true);
 		
 		if(msg==null)
 		{
 			//this.setVisible(false);
-			btn_cancel.setEnabled(false);
+			if(isEditorMode())
+				btn_cancel.setEnabled(false);
 			btn_save.setEnabled(false);
+			btn_select.setEnabled(false);
 			txt_name.setText("");
 			m_template.setTextMessage("");
 			return;
@@ -150,15 +170,19 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		}
 		if(!msg.getIsSaved())
 		{
-			btn_cancel.setEnabled(true);
+			if(isEditorMode())
+				btn_cancel.setEnabled(true);
 			btn_save.setEnabled(true);
 			btn_new_lang.setEnabled(true);
+			btn_select.setEnabled(false);
 		}
 		else
-		{			
-			btn_cancel.setEnabled(false);
+		{
+			if(isEditorMode())
+				btn_cancel.setEnabled(false);
 			btn_save.setEnabled(false);
 			btn_new_lang.setEnabled(false);
+			btn_select.setEnabled(true);
 		}
 		
 		/*else if(msg.getFTemplate()==0)
@@ -183,7 +207,8 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	public void keyTyped(KeyEvent e) {
 		if(m_msg!=null) {
 			m_msg.setIsSaved(false);
-			btn_cancel.setEnabled(true);
+			if(isEditorMode())
+				btn_cancel.setEnabled(true);
 			btn_save.setEnabled(true);
 		}
 	}
@@ -194,8 +219,10 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		{
 			if(m_msg!=null)
 			{
-				txt_name.setEnabled(false);
-				btn_cancel.setEnabled(false);
+				//txt_name.setEnabled(false);
+				enableInputs(false);
+				if(isEditorMode())
+					btn_cancel.setEnabled(false);
 				btn_save.setEnabled(false);
 				saveCurrent((CCode)cbx_lang.getSelectedItem());
 				m_msg.getMessage().setSzName(txt_name.getText());
@@ -205,13 +232,27 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		}
 		else if(e.getSource().equals(btn_cancel))
 		{
-			m_msg.setIsSaved(true);
-			setActiveMessage(getActiveMessage());
+			if(isEditorMode())
+			{
+				m_msg.setIsSaved(true);
+				setActiveMessage(getActiveMessage());
+			}
+			else
+			{
+				callback.actionPerformed(new ActionEvent("Cancel", ActionEvent.ACTION_PERFORMED, MessageLibDlg.ACT_MESSAGE_SELECTION_CANCELLED));
+			}
+		}
+		else if(e.getSource().equals(btn_select))
+		{
+			if(m_msg!=null) {
+				callback.actionPerformed(new ActionEvent(m_msg, ActionEvent.ACTION_PERFORMED, MessageLibDlg.ACT_MESSAGE_SELECTED));
+			}
 		}
 		else if("act_msg_content_changed".equals(e.getActionCommand()))
 		{			
 			if(m_msg!=null) {
-				btn_cancel.setEnabled(true);
+				if(isEditorMode())
+					btn_cancel.setEnabled(true);
 				btn_save.setEnabled(true);
 				m_msg.setIsSaved(false);
 			}
@@ -243,19 +284,35 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		add(lbl_name, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
 		add(txt_name, m_gridconst);
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(lbl_lang, m_gridconst);
-		cbx_lang.setPreferredSize(new Dimension(150,20));
-		set_gridconst(1, get_panel(), 1, 1);
-		add(cbx_lang, m_gridconst);
+		if(b_enable_multi_cc)
+		{
+			set_gridconst(0, inc_panels(), 1, 1);
+			add(lbl_lang, m_gridconst);
+			cbx_lang.setPreferredSize(new Dimension(150,20));
+			set_gridconst(1, get_panel(), 1, 1);
+			add(cbx_lang, m_gridconst);
+		}
 		set_gridconst(0, inc_panels(), 3, 1);
 		add(m_tabbedpane, m_gridconst);
 		set_gridconst(0, inc_panels(), 1, 1);
-		add(btn_save, m_gridconst);
+		if(isEditorMode())
+		{
+			add(btn_save, m_gridconst);
+		}
+		else
+		{
+			add(btn_select, m_gridconst);
+		}
 		set_gridconst(1, get_panel(), 1, 1);
 		add(btn_cancel, m_gridconst);
 		set_gridconst(2, get_panel(), 1, 1);
 		add(lbl_counter, m_gridconst);
+	}
+	
+	public void enableInputs(boolean b)
+	{
+		m_template.setTextEnabled(b && isEditorMode());
+		txt_name.setEnabled(b && isEditorMode());
 	}
 
 	@Override
@@ -319,42 +376,75 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	
 	private void saveCurrent(CCode cc) {
 		if(m_template.getTextMessage().length()>0) {
-			int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
-			boolean found = false;
-			
-			for(int i=0;i<cccount;++i) {
-				if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
-					m_msg.getMessage().getCcmessage().getUCCMessage().get(i).setSzMessage(m_template.getTextMessage());
-					found = true;
+			if(b_enable_multi_cc)
+			{
+				int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
+				boolean found = false;
+				
+				for(int i=0;i<cccount;++i) {
+					if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
+						m_msg.getMessage().getCcmessage().getUCCMessage().get(i).setSzMessage(m_template.getTextMessage());
+						found = true;
+					}
+				}
+				if(!found && cc.getNCCode() != -1 && !m_msg.getMessage().getSzMessage().equals(m_template.getTextMessage())) {
+					UCCMessage ccmsg = new UCCMessage();
+					ccmsg.setLCc(cc.getNCCode());
+					ccmsg.setSzMessage(m_template.getTextMessage());
+					m_msg.getMessage().getCcmessage().getUCCMessage().add(ccmsg);
+				}
+				else if(!found && cc.getNCCode() == -1) {
+					m_msg.getMessage().setSzMessage(m_template.getTextMessage());
 				}
 			}
-			if(!found && cc.getNCCode() != -1 && !m_msg.getMessage().getSzMessage().equals(m_template.getTextMessage())) {
-				UCCMessage ccmsg = new UCCMessage();
-				ccmsg.setLCc(cc.getNCCode());
-				ccmsg.setSzMessage(m_template.getTextMessage());
-				m_msg.getMessage().getCcmessage().getUCCMessage().add(ccmsg);
-			}
-			else if(!found && cc.getNCCode() == -1) {
+			else
+			{
 				m_msg.getMessage().setSzMessage(m_template.getTextMessage());
+				UCCMessage ccmsg = new UCCMessage();
+				ccmsg.setLCc(-1);
+				ccmsg.setSzMessage(m_template.getTextMessage());
+				ArrayOfUCCMessage arr = new ArrayOfUCCMessage();
+				arr.getUCCMessage().add(ccmsg);
+				/*UBBMESSAGE msg = new UBBMESSAGE();
+				msg.setCcmessage(arr);*/
+				m_msg.getMessage().setCcmessage(arr);
+				//m_msg.getMessage().getCcmessage().getUCCMessage().add(ccmsg);
 			}
 		}
 		else {
 			// Remove 
-			int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
-			for(int i=0;i<cccount;++i) {
-				if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
-					m_msg.getMessage().getCcmessage().getUCCMessage().remove(i);
+			try
+			{
+				int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
+				for(int i=0;i<cccount;++i) {
+					if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
+						m_msg.getMessage().getCcmessage().getUCCMessage().remove(i);
+					}
 				}
+			}
+			catch(Exception e)
+			{
+				
 			}
 		}
 	}
 	
 	private String getTextByCC(CCode cc) {
-		int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
-		
-		for(int i=0;i<cccount;++i) {
-			if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
-				return m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getSzMessage();
+		if(b_enable_multi_cc)
+		{
+			try
+			{
+				int cccount = m_msg.getMessage().getCcmessage().getUCCMessage().size();
+				
+				for(int i=0;i<cccount;++i) {
+					if(cc.getNCCode() == m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getLCc()){	
+						return m_msg.getMessage().getCcmessage().getUCCMessage().get(i).getSzMessage();
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				
 			}
 		}
 		return  m_msg.getMessage().getSzMessage();

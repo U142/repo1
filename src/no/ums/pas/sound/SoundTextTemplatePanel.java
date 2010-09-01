@@ -26,6 +26,10 @@ public class SoundTextTemplatePanel extends DefaultPanel implements KeyListener
 	public String getTextMessage() {
 		return text_editor.getTextArea().getText();
 	}
+	public void setTextEnabled(boolean b)
+	{
+		text_editor.get_txt_messagetext().setEnabled(b);
+	}
 	public void setTextMessage(String s)
 	{
 		if(s==null)

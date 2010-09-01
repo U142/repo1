@@ -3,6 +3,7 @@ package no.ums.pas.send.messagelibrary;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -45,6 +46,8 @@ import no.ums.pas.core.defines.tree.TreeTable;
 import no.ums.pas.core.defines.tree.TreeUpdater;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
+import no.ums.pas.core.defines.tree.UMSTree.TREEICONSIZE;
+import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
 import no.ums.pas.core.ws.WSMessageLib;
 import no.ums.pas.core.ws.WSMessageLibDelete;
 import no.ums.pas.send.messagelibrary.tree.*;
@@ -59,6 +62,7 @@ public class MessageLibTreePanel extends DefaultPanel
 {
 	public static int MESSAGELIB_UPDATE_INTERVAL = 10;
 	
+	TREEMODE mode;
 	MsgLibLoader loader = new MsgLibLoader();
 	MessageLibTree tree;
 	public MessageLibTree getTree() { return tree; }
@@ -68,24 +72,27 @@ public class MessageLibTreePanel extends DefaultPanel
 	ActionListener callback;
 	JLabel lbl_loader = new JLabel(no.ums.pas.ums.tools.ImageLoader.load_icon("refresh_64.png"));
 	
-	public MessageLibTreePanel(ActionListener callback, int UPDATE_INTERVAL)
+	public MessageLibTreePanel(ActionListener callback, int UPDATE_INTERVAL, boolean b_editormode)
 	{
-		this(callback, UMSTree.TREEMODE.EDITOR, UPDATE_INTERVAL);
+		this(callback, UMSTree.TREEMODE.EDITOR, UPDATE_INTERVAL, b_editormode);
 	}
 	
-	public MessageLibTreePanel(ActionListener callback, UMSTree.TREEMODE mode, int UPDATE_INTERVAL)
+	public MessageLibTreePanel(ActionListener callback, UMSTree.TREEMODE mode, int UPDATE_INTERVAL, boolean b_editormode)
 	{
 		super();
 		this.callback = callback;
 		//tree.setPreferredSize(new Dimension(200, 200));
 		tree = new MessageLibTree(this, mode, UPDATE_INTERVAL);
+		tree.setIconSize(TREEICONSIZE.MEDIUM);
+		this.mode = mode;
 		//tree.setBorder(UMS.Tools.TextFormat.CreateStdBorder("Message library"));
 		pane = new JScrollPane(tree);
+		tree.setRowHeight(tree.getIconSize());
 		pane.setOpaque(false);
-		pane.setBackground(new Color(0,0,0,0));
+		//pane.setBackground(new Color(0,0,0,0));
 		//pane.setBorder(null);
 		
-		this.setBackground(new Color(255,0,0,127));
+		//this.setBackground(new Color(255,0,0,127));
 		this.setOpaque(false);
 		lbl_loader.setVisible(false);
 		//MessageLibDlg.this.add(pane);
@@ -304,7 +311,6 @@ public class MessageLibTreePanel extends DefaultPanel
 				@Override
 				public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
 						boolean leaf, int row, boolean hasFocus){
-					//super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 					
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 					Object o = node.getUserObject();
@@ -324,7 +330,7 @@ public class MessageLibTreePanel extends DefaultPanel
 						//e.printStackTrace();
 						return this;
 					}
-					setBackground(new Color(0,0,0,0));
+					//setBackground(new Color(0,0,0,0));
 					int w = totalwidth; //getWidth();
 					this.setPreferredSize(new Dimension(100, 30));
 					UBBMESSAGE msg = (UBBMESSAGE)o;
@@ -345,35 +351,36 @@ public class MessageLibTreePanel extends DefaultPanel
 						this.setIcon(ImageLoader.load_icon("speaker3d_" + getIconSize() + ".png"));
 					}
 					this.setText(msg.getSzName());
+					setOpaque(true);
+					if(sel)
+					{
+						this.setBackground(SystemColor.textHighlight);
+						this.setForeground(SystemColor.textHighlightText);
+					}
+					else
+					{
+						this.setBackground(SystemColor.control);
+						this.setForeground(SystemColor.textText);
+					}
 					if(isFilterActive())
 					{
 						if(msgnode.isFoundInSearch())
 						{
-							//Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getExtraLightColor();
 							Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getExtraLightColor();
 							Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 100);
-							//this.setBackground(c2);
 							this.setForeground(Color.black);
+							this.setText("*" + this.getText() + "*");
 						}
 						else
 						{
-							//BorderFactory.c
-							//this.setBackground(new Color(0,0,0,0));
 							this.setForeground(new Color(0,0,0,70));
-							//this.setVisible(false);
-							
-							//this.setText("");
 						}
 					}
-					else
-						this.setForeground(Color.black);
-					if(sel)
-					{
-					}
-					else
-						this.setBorder(null);
+
+					setPreferredSize(new Dimension(800, 40));
 					if(msg.getSzMessage().trim().length() == 0)
 						this.setForeground(Color.red);
+					//return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 					return this;
 				}
 				@Override
@@ -515,6 +522,7 @@ public class MessageLibTreePanel extends DefaultPanel
 		JMenu menu_new;
 		JMenuItem menu_item_new_txt_template;
 		JMenuItem menu_item_delete;
+		JMenuItem menu_select;
 		
 		public MessageLibTree(ActionListener callback)
 		{
@@ -550,7 +558,7 @@ public class MessageLibTreePanel extends DefaultPanel
 				
 			};*/
 			super.setModel(model);
-
+			menu_select = new JMenu(PAS.l("common_select"));
 			menu_new = new JMenu(PAS.l("common_new"));
 			menu_item_new_txt_template = new JMenuItem("New text template");
 			menu_item_new_txt_template.addActionListener(this);
@@ -570,6 +578,9 @@ public class MessageLibTreePanel extends DefaultPanel
 			case SELECTION_WITH_EDIT:
 				popup.add(menu_new);
 				popup.add(menu_item_delete);
+				break;
+			case SELECTION_ONLY:
+				//popup.add(menu_select);
 				break;
 				
 			}

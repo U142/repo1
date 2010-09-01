@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
+import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -25,12 +26,14 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 	protected MessageEditPanel editpanel;
 	protected StdSearchArea search;
 	protected StdTextLabel lbl_treeinfo;
+	protected ActionListener callback = null;
 	
-	public MessageLibPanel(int UPDATE_INTERVAL)
+	public MessageLibPanel(ActionListener callback, int UPDATE_INTERVAL, boolean b_editor_mode, boolean b_enable_multi_cc)
 	{
 		super();
-		treepanel = new MessageLibTreePanel(this, UPDATE_INTERVAL);
-		editpanel = new MessageEditPanel(this);
+		this.callback = callback;
+		treepanel = new MessageLibTreePanel(this, (b_editor_mode ? TREEMODE.EDITOR : TREEMODE.SELECTION_ONLY), UPDATE_INTERVAL, b_editor_mode);
+		editpanel = new MessageEditPanel(this, b_editor_mode, b_enable_multi_cc);
 		search = new StdSearchArea("", false, PAS.l("common_search"));
 		search.addActionListener(this);
 		lbl_treeinfo = new StdTextLabel("  " + PAS.l("main_message_library_tree_info"));
@@ -94,6 +97,16 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 		{
 			treepanel.tree.actionPerformed(e);
 		}
+		else if(MessageLibDlg.ACT_MESSAGE_SELECTED.equals(e.getActionCommand()))
+		{
+			MessageLibNode node = (MessageLibNode)e.getSource();
+			if(callback!=null)
+				callback.actionPerformed(new ActionEvent(node.getMessage(), ActionEvent.ACTION_PERFORMED, MessageLibDlg.ACT_MESSAGE_SELECTED));
+		}
+		else if(MessageLibDlg.ACT_MESSAGE_SELECTION_CANCELLED.equals(e.getActionCommand()))
+		{
+			callback.actionPerformed(e);
+		}
 	}
 
 	@Override
@@ -101,8 +114,11 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 		add_spacing(DIR_VERTICAL, 5);
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(search, m_gridconst);
-		set_gridconst(1, get_panel(), 1, 1);
-		add(lbl_treeinfo, m_gridconst);
+		if(editpanel.isEditorMode())
+		{
+			set_gridconst(1, get_panel(), 1, 1);
+			add(lbl_treeinfo, m_gridconst);
+		}
 		add_spacing(DIR_VERTICAL, 5);
 		set_gridconst(0, inc_panels(), 2, 1);
 		add(treepanel, m_gridconst);

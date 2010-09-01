@@ -2,6 +2,8 @@ package no.ums.pas.send.messagelibrary;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -10,16 +12,31 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
+import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
+import no.ums.ws.pas.UBBMESSAGE;
 
 
 
 
-public class MessageLibDlg extends JDialog implements ComponentListener
+public class MessageLibDlg extends JDialog implements ComponentListener, ActionListener
 {
-	MessageLibPanel panel = new MessageLibPanel(MessageLibTreePanel.MESSAGELIB_UPDATE_INTERVAL);
+	public static final String ACT_MESSAGE_SELECTED = "act_message_selected";
+	public static final String ACT_MESSAGE_SELECTION_CANCELLED = "act_message_selection_cancelled";
+	MessageLibPanel panel;
+	ActionListener callback;
 	public MessageLibDlg(JFrame parent)
 	{
-		super(parent, "Message Library", false);
+		this(parent, true, true);
+	}
+	public MessageLibDlg(JFrame parent, boolean b_editor_mode, boolean b_enable_multi_cc)
+	{
+		this(null, parent, b_editor_mode, b_enable_multi_cc);
+	}
+	public MessageLibDlg(ActionListener callback, JFrame parent, boolean b_editor_mode, boolean b_enable_multi_cc)
+	{
+		super(parent, PAS.l("main_sending_audio_type_library"), false);
+		this.callback = callback;
+		panel = new MessageLibPanel(this, MessageLibTreePanel.MESSAGELIB_UPDATE_INTERVAL, b_editor_mode, b_enable_multi_cc);
 		final Rectangle rect = PAS.get_pas().get_settings().getRectMessageLibDlg();
 		//super("Message Library");
 		setAlwaysOnTop(true);
@@ -77,6 +94,22 @@ public class MessageLibDlg extends JDialog implements ComponentListener
 		panel.setVisible(true);
 		panel.Start();
 	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(ACT_MESSAGE_SELECTED.equals(e.getActionCommand()))
+		{
+			if(callback!=null)
+			{
+				UBBMESSAGE msg = (UBBMESSAGE)e.getSource();
+				callback.actionPerformed(new ActionEvent(msg, ActionEvent.ACTION_PERFORMED, ACT_MESSAGE_SELECTED));
+				this.setVisible(false);
+			}
+		}
+		else if(ACT_MESSAGE_SELECTION_CANCELLED.equals(e.getActionCommand()))
+		{
+			this.setVisible(false);
+		}
+	}
 	
-
+	
 }

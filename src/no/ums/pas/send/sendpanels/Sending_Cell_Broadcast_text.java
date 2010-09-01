@@ -295,7 +295,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_combo_templates.addActionListener(this);
 		m_combo_templates.setActionCommand("act_smstemplate_changed");
 		
-		tree_msglib = new MessageLibTreePanel(Sending_Cell_Broadcast_text.this, UMSTree.TREEMODE.SELECTION_ONLY,0);
+		tree_msglib = new MessageLibTreePanel(Sending_Cell_Broadcast_text.this, UMSTree.TREEMODE.SELECTION_ONLY,0, false);
 		tree_msglib.getTree().setIconSize(TREEICONSIZE.SMALL);
 		txt_msglib_search = new StdSearchArea("", false, "Search");
 		txt_msglib_search.addActionListener(this);
