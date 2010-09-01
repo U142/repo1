@@ -203,6 +203,7 @@ public class plugin_Centric extends PAS_Scripting
 		});
 		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu_btn_draw_plmn, menu.m_gridconst);
+		enableSendButtons(true);
 		
 		/*menu_btn_import = new JButton(PAS.l("common_import"));
 		menu_btn_import.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
@@ -594,7 +595,7 @@ public class plugin_Centric extends PAS_Scripting
 			}*/
 			str += " - ";
 			int member_of_dept = ui.get_departments().size();
-			switch(ui.get_current_department().get_pas_rights())
+			switch(ui.get_current_department().get_userprofile().get_send())
 			{
 			case 1: //regional or regional super user
 				if(member_of_dept==1)
@@ -997,6 +998,14 @@ public class plugin_Centric extends PAS_Scripting
 		{
 			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
 		}
+		try
+		{
+			CentricVariables.centric_send.trainingModeChanged();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		PAS.get_pas().repaint();
 		//onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
 		return super.onTrainingMode(b);
@@ -1277,7 +1286,7 @@ public class plugin_Centric extends PAS_Scripting
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0);
 			//((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
-			
+			PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
 			return true;
 		}catch(Exception e) { return false; }
 	}
@@ -1299,6 +1308,7 @@ public class plugin_Centric extends PAS_Scripting
 				m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
 			else
 				m_centricstatuscontroller.set_cbsendingresponse(res);*/
+			PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
 			
 			
 			return true;
@@ -1367,7 +1377,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_ellipse.setVisible(b);
 		menu_btn_draw_polygon.setVisible(b);
 		
-		menu_btn_draw_plmn.setVisible(b && variables.USERINFO.get_current_department().get_pas_rights()>=2);
+		int send = variables.USERINFO.get_current_department().get_userprofile().get_send();
+		menu_btn_draw_plmn.setVisible(b && send>=2);
 		//menu_btn_import.setVisible(b);
 	}
 

@@ -10,11 +10,13 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
+import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
 import no.ums.ws.pas.UBoundingRect;
 import no.ums.ws.pas.UEllipse;
 import no.ums.ws.pas.UPolygon;
 import no.ums.ws.pas.UPolypoint;
 import no.ums.ws.pas.UShape;
+import no.ums.ws.pas.UPLMN;
 
 
 public class UShapeToShape
@@ -83,6 +85,11 @@ public class UShapeToShape
 				polygonstruct.setHidden(true);
 			return polygonstruct;
 		}
+		else if(ushape.getClass().equals(no.ums.ws.pas.status.UPLMN.class))
+		{
+			PLMNShape plmn = new PLMNShape();
+			return plmn;
+		}
 		return null;
 	}
 
@@ -146,6 +153,11 @@ public class UShapeToShape
 					upolygon.getBottom()==-90 && upolygon.getTop()==90)
 				polygonstruct.setHidden(true);
 			return polygonstruct;
+		}
+		else if(ushape.getClass().equals(UPLMN.class))
+		{
+			UPLMN uplmn = (UPLMN)ushape;
+			return new PLMNShape();
 		}
 		return null;
 	}

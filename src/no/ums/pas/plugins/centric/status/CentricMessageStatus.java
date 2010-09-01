@@ -14,9 +14,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.plugins.centric.CentricEastContent;
+import no.ums.pas.plugins.centric.CentricVariables;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -74,6 +76,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		}
 		else if(e.getSource().equals(m_btn_new_message)) {
 			PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSEND_);
+			//CentricVariables.centric_send.fillMessage();
 		}
 		else if(e.getSource().equals(m_btn_send_to_address_book)) {
 			

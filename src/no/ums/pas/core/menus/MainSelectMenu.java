@@ -351,6 +351,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_item_new_sending = new JMenuItem(PAS.l("mainmenu_file_newsending"));
 			m_item_new_project = new JMenuItem(PAS.l("mainmenu_file_project"));
 			m_item_close_project = new JMenuItem(PAS.l("mainmenu_file_project_close"));
+			m_item_close_project.setEnabled(false);
 			m_item_fileimport = new JMenuItem(PAS.l("mainmenu_file_import"));
 			m_item_file_print_map = new JMenuItem(PAS.l("mainmenu_file_printmap"));
 			m_item_file_save_map = new JMenuItem(PAS.l("mainmenu_file_savemap"));

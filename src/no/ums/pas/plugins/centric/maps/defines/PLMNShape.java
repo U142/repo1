@@ -53,7 +53,7 @@ public class PLMNShape extends ShapeStruct
 		Color oldColor = g.getColor();
 		int x = variables.MAPPANE.getWidth()/2;
 		int y = variables.MAPPANE.getHeight()/2;
-		g.setFont(new Font("Arial", Font.BOLD, 20));
+		g.setFont(new Font("Arial", Font.BOLD, 40));
 		String sOutput = PAS.l("main_sending_type_national");
 		int borderline = 10;
 		int height = g.getFontMetrics().getHeight();

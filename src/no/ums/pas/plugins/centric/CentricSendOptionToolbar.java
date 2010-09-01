@@ -1,7 +1,9 @@
 package no.ums.pas.plugins.centric;
 
+import java.awt.AWTKeyStroke;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -14,7 +16,9 @@ import java.awt.event.MouseListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -36,6 +40,7 @@ import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.LoadingFrame;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.MapFrame;
@@ -59,6 +64,7 @@ import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.ExpiryMins;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextAreaNoTab;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.parm.CBALERTPLMN;
@@ -87,6 +93,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	int MAX_EVENTNAME_LENGTH = 50;
 	int MAX_TOTAL_CHARS = MAX_MESSAGELENGTH_PR_PAGE * MAX_PAGES;
 	
+	enum MODE
+	{
+		INITIALIZING,
+		MESSAGE_WRITING,
+		SHOWING_SUMMARY,
+		SENDING,
+	}
+	
 	/**
 	 * 
 	 */
@@ -110,7 +124,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private String m_sz_date;
 	private StdTextArea m_txt_sender_name;
 	private StdTextArea m_txt_date_time;
-	private JTextArea m_txt_message;
+	private StdTextAreaNoTab m_txt_message;
 	private JScrollPane m_txt_messagescroll;
 	
 	//private JComboBox m_cbx_channel;
@@ -152,6 +166,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private Calendar c;
 	
+	protected MODE current_mode = MODE.MESSAGE_WRITING;
+	
 	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
 	
 	private CentricStatus m_centricstatus;
@@ -175,6 +191,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	public CentricSendOptionToolbar() {
 		//super();
+		current_mode = MODE.INITIALIZING;
 		init();
 		
 		WSCentricRRO rro = new WSCentricRRO(this, "act_download_risk_reaction_originator_finished");
@@ -230,11 +247,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//m_btn_update.setPreferredSize(new Dimension(50, 20));
 		m_btn_update.addActionListener(this);
 		
-		m_txt_message = new JTextArea("",10,10);
+		m_txt_message = new StdTextAreaNoTab(this, "",10,10);
 		m_txt_message.setWrapStyleWord(true);
 		m_txt_message.setLineWrap(true);
 		m_txt_message.addFocusListener(this);
 		m_txt_message.addKeyListener(this);
+		/*m_txt_message.setFocusTraversalKeysEnabled(true);
+		Set<AWTKeyStroke> forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+		Set<AWTKeyStroke> backwardKeys = getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+		m_txt_message.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
+		m_txt_message.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
+*/
 		//m_txt_message.setPreferredSize(new Dimension(300,200));
 		
 		m_txt_messagescroll = new JScrollPane(m_txt_message);
@@ -275,6 +298,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_cbx_reaction.setEditor(new RROComboEditor());
 		m_cbx_risk.setEditor(new RROComboEditor());
 		
+		m_cbx_originator.getEditor().getEditorComponent().addFocusListener(this);
+		m_cbx_reaction.getEditor().getEditorComponent().addFocusListener(this);
+		m_cbx_risk.getEditor().getEditorComponent().addFocusListener(this);
+
+		m_cbx_originator.getEditor().getEditorComponent().addKeyListener(this);
+		m_cbx_reaction.getEditor().getEditorComponent().addKeyListener(this);
+		m_cbx_risk.getEditor().getEditorComponent().addKeyListener(this);
+
 		m_cbx_risk.setEditable(true);
 		m_cbx_reaction.setEditable(true);
 		m_cbx_originator.setEditable(true);
@@ -311,11 +342,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.setPreferredSize(new Dimension(input_width,30));
 		m_btn_address_book = new JButton("image"); // Add image/icon
 		
+		
+		
 		m_btn_save_message = new JButton("Save message");
 		m_btn_reset = new JButton(PAS.l("common_reset"));
 		m_btn_reset.addActionListener(this);
-		
+		m_btn_reset.addFocusListener(this);
 		m_btn_send.addActionListener(this);
+		m_btn_send.addFocusListener(this);
 		//m_btn_close = new JButton(ImageLoader.load_icon("delete_24.png"));
 		//m_btn_close.addActionListener(this);
 		//m_btn_close.setActionCommand("act_sending_close");
@@ -330,8 +364,27 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		variables.MAPPANE.addMouseListener(this);
 		variables.MAPPANE.addKeyListener(this);
 		setVisible(true);
-		
-		m_btn_update.doClick();
+		m_btn_reset.doClick();
+	}
+	
+	protected void checkForEnableSendButton()
+	{
+		switch(current_mode)
+		{
+		case INITIALIZING: //no checks, wait for the first reset click
+			m_btn_send.setEnabled(false);
+			break;
+		case MESSAGE_WRITING: //if all fields are filled, we may enable send button
+			boolean b = checkInputs();
+			m_btn_send.setEnabled(b);
+			break;
+		case SHOWING_SUMMARY: //if training mode is off, we may enable send button
+			m_btn_send.setEnabled(!PAS.TRAINING_MODE);
+			break;
+		case SENDING:
+			m_btn_send.setEnabled(false);
+			break;
+		}
 	}
 	
 	public void add_controls() {
@@ -442,7 +495,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, inc_panels(), 2, 1);
 		add(m_btn_send, m_gridconst);
 		m_btn_send.setActionCommand("act_goto_summary");
-		m_btn_send.setEnabled(false);
 		//set_gridconst(3, get_panel(), 1, 1);
 		//add(m_btn_close, m_gridconst);
 		
@@ -461,7 +513,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		removeAll();
 		reset_panels();
-		
 		set_gridconst(0, get_panel(), 1, 1);
 		add(m_lbl_event_name, m_gridconst);
 		set_gridconst(1, get_panel(), 7, 1);
@@ -512,10 +563,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_cancel, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_btn_send, m_gridconst);
-		if(PAS.TRAINING_MODE)
-			m_btn_send.setEnabled(false);
-		else
-			m_btn_send.setEnabled(true);
 		
 		m_btn_send.setActionCommand("act_send");
 		revalidate();
@@ -528,6 +575,23 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		ShapeStruct ps = variables.MAPPANE.get_active_shape();
 		ps.setEditable(b);
 		return b;
+	}
+	
+	public void trainingModeChanged()
+	{
+		/*if(PAS.TRAINING_MODE)
+			m_btn_send.setEnabled(false);
+		else
+			m_btn_send.setEnabled(true);*/
+		checkForEnableSendButton();
+		
+	}
+	
+	protected void resetRRO()
+	{
+		m_cbx_risk.setSelectedItem("");
+		m_cbx_reaction.setSelectedItem("");
+		m_cbx_originator.setSelectedItem("");
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
@@ -551,6 +615,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getActionCommand().equals("act_send")) {
 			// Check if summary is active, create send object, display send object preview
+			trainingModeChanged();
 			if(PAS.TRAINING_MODE)
 			{
 				m_btn_send.setEnabled(false);
@@ -624,6 +689,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			operation.setMessagepart(messagepart);
 
 			try {
+				current_mode = MODE.SENDING;
 				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", operation);
 				send.start();
 			}
@@ -631,10 +697,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				JOptionPane.showMessageDialog(this, PAS.l("common_error" + ": ") + ex.getMessage());
 				progress.stop_and_hide();
 				m_btn_cancel.setEnabled(true);
-				m_btn_send.setEnabled(true);
+				//m_btn_send.setEnabled(true);
+				checkForEnableSendButton();
+				current_mode = MODE.SHOWING_SUMMARY;
 			}
 			
-			m_btn_send.setEnabled(false);
+			//m_btn_send.setEnabled(false);
+			checkForEnableSendButton();
 			m_btn_cancel.setEnabled(false);
 			
 			try
@@ -655,7 +724,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		else if(e.getActionCommand().equals("act_goto_summary")) {
 			//lock the painting
 			PAS.pasplugin.onLockSending(null, true);
+			current_mode = MODE.SHOWING_SUMMARY;
 			showSummary();
+			checkForEnableSendButton();
 			//variables.NAVIGATION.setNavigation(variables.MAPPANE.get_active_shape().calc_bounds());
 			PAS.get_pas().actionPerformed(new ActionEvent(variables.MAPPANE.get_active_shape().calc_bounds(),
 										ActionEvent.ACTION_PERFORMED,
@@ -665,15 +736,20 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 			progress.stop_and_hide();
 			m_btn_cancel.setEnabled(true);
-			m_btn_send.setEnabled(true);
+			//m_btn_send.setEnabled(true);
+			checkForEnableSendButton();
 			//m_btn_reset.doClick();
 			add_controls();
+			current_mode = MODE.MESSAGE_WRITING;
+			checkForEnableSendButton();
 			onSendFinished(e);
 		}
 		else if(e.getActionCommand().equals("act_error")) {
 			progress.stop_and_hide();
 			m_btn_cancel.setEnabled(true);
-			m_btn_send.setEnabled(true);
+			current_mode = MODE.SHOWING_SUMMARY;
+			checkForEnableSendButton();
+			//m_btn_send.setEnabled(true);
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			//lock the painting
@@ -689,9 +765,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//m_cbx_reaction.setSelectedIndex(0);
 			//m_cbx_originator.setSelectedIndex(0);
 			m_txt_preview.setText("");
+			resetRRO();
 			updateCharacters();
 			variables.MAPPANE.set_active_shape(new PolygonStruct(variables.NAVIGATION.getDimension()));
 			variables.MAPPANE.repaint();
+			checkForEnableSendButton();
+			current_mode = MODE.MESSAGE_WRITING;
+			m_btn_update.doClick();
 		}
 		else if("act_download_risk_reaction_originator_finished".equals(e.getActionCommand()))
 		{
@@ -708,7 +788,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_originator))
 		{
-			System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
+			//System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
 			if(m_cbx_originator.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -719,10 +799,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 				
 			}
+			checkForEnableSendButton();
 		}
 		else if(e.getSource().equals(m_cbx_reaction))
 		{
-			System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
+			//System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
 			if(m_cbx_reaction.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -733,10 +814,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 				
 			}
+			checkForEnableSendButton();
 		}
 		else if(e.getSource().equals(m_cbx_risk))
 		{
-			System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
+			//System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
 			if(e.getActionCommand().equals("comboBoxEdited"))
 			{
 				if(m_cbx_risk.getSelectedIndex()==-1)
@@ -748,6 +830,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 				
 			}
+			checkForEnableSendButton();
 		}
 
 	}
@@ -764,18 +847,20 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
 				m_txt_event_name.setText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));				
 		}
+		checkForEnableSendButton();
+		updateCharacters();
 			
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
 		if(arg0.getSource().equals(m_txt_event_name)) {
 			m_txt_event_name.setText(m_txt_event_name.getText() + " " + m_sz_date);
 		}
 		m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\r\n" +
 				m_txt_message.getText());
-		checkInputs();
+		//checkInputs();
+		checkForEnableSendButton();
 		updateCharacters();
 	}
 	
@@ -832,8 +917,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				
 			updateCharacters();
 		}
-
-		checkInputs();
+		checkForEnableSendButton();
+		//checkInputs();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -847,9 +932,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//else {
 		{
 			getStatusController().set_cbsendingresponse((CBSENDINGRESPONSE)e.getSource());
-			getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
-			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
-			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
+			//getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
+			CBSENDINGRESPONSE resp = (CBSENDINGRESPONSE)e.getSource();
+			Project p = new Project();
+			p.set_projectpk(new Long(resp.getLProjectpk()).toString());
+			PAS.pasplugin.onOpenProject(p);
+			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
+			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
 			variables.MAPPANE.set_active_shape(null);
 			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
 		}
@@ -862,16 +951,18 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		checkInputs();
+		//checkInputs();
+		checkForEnableSendButton();
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		checkInputs();
+		//checkInputs();
+		checkForEnableSendButton();
 	}
-	private void checkInputs() {
+	private boolean checkInputs() {
 		boolean enable_send = true;
 		if(m_txt_event_name.getText().length()<1)
 			enable_send = false;
@@ -881,16 +972,22 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			enable_send = false;
 		if(variables.MAPPANE.get_active_shape()==null)
 			enable_send = false;
-		else
+		if(m_cbx_originator.getSelectedItem().toString().length()<=0)
+			enable_send = false;
+		if(m_cbx_risk.getSelectedItem().toString().length()<=0)
+			enable_send = false;
+		if(m_cbx_reaction.getSelectedItem().toString().length()<=0)
+			enable_send = false;
+		//else
 		{
-			if(!variables.MAPPANE.get_active_shape().can_lock())
+			if(variables.MAPPANE.get_active_shape()!=null && !variables.MAPPANE.get_active_shape().can_lock())
 				enable_send = false;
 		}
-		
-		if(enable_send)
+		return enable_send;
+		/*if(enable_send)
 			m_btn_send.setEnabled(true);
 		else
-			m_btn_send.setEnabled(false);
+			m_btn_send.setEnabled(false);*/
 	}
 	
 	private void updateCharacters() {

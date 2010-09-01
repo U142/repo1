@@ -40,9 +40,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="f_map" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="l_pas" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="municipals" type="{http://ums.no/ws/pas/}ArrayOfUMunicipalDef" minOccurs="0"/>
- *         &lt;element name="typedef1" type="{http://ums.no/ws/pas/}UPolygon" minOccurs="0"/>
- *         &lt;element name="typedef2" type="{http://ums.no/ws/pas/}UEllipse" minOccurs="0"/>
- *         &lt;element name="typedef3" type="{http://ums.no/ws/pas/}UBoundingRect" minOccurs="0"/>
  *         &lt;element name="restrictionShapes" type="{http://ums.no/ws/pas/}ArrayOfUShape" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -77,9 +74,6 @@ import javax.xml.bind.annotation.XmlType;
     "fMap",
     "lPas",
     "municipals",
-    "typedef1",
-    "typedef2",
-    "typedef3",
     "restrictionShapes"
 })
 public class UDEPARTMENT {
@@ -125,9 +119,6 @@ public class UDEPARTMENT {
     @XmlElement(name = "l_pas")
     protected int lPas;
     protected ArrayOfUMunicipalDef municipals;
-    protected UPolygon typedef1;
-    protected UEllipse typedef2;
-    protected UBoundingRect typedef3;
     protected ArrayOfUShape restrictionShapes;
 
     /**
@@ -544,78 +535,6 @@ public class UDEPARTMENT {
      */
     public void setMunicipals(ArrayOfUMunicipalDef value) {
         this.municipals = value;
-    }
-
-    /**
-     * Gets the value of the typedef1 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UPolygon }
-     *     
-     */
-    public UPolygon getTypedef1() {
-        return typedef1;
-    }
-
-    /**
-     * Sets the value of the typedef1 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UPolygon }
-     *     
-     */
-    public void setTypedef1(UPolygon value) {
-        this.typedef1 = value;
-    }
-
-    /**
-     * Gets the value of the typedef2 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UEllipse }
-     *     
-     */
-    public UEllipse getTypedef2() {
-        return typedef2;
-    }
-
-    /**
-     * Sets the value of the typedef2 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UEllipse }
-     *     
-     */
-    public void setTypedef2(UEllipse value) {
-        this.typedef2 = value;
-    }
-
-    /**
-     * Gets the value of the typedef3 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UBoundingRect }
-     *     
-     */
-    public UBoundingRect getTypedef3() {
-        return typedef3;
-    }
-
-    /**
-     * Sets the value of the typedef3 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UBoundingRect }
-     *     
-     */
-    public void setTypedef3(UBoundingRect value) {
-        this.typedef3 = value;
     }
 
     /**
