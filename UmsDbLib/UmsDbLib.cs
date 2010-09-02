@@ -565,8 +565,8 @@ namespace com.ums.UmsDbLib
         public bool newProject(String sz_projectname /*in*/, ref ULOGONINFO l /*in*/, ref BBPROJECT p /*out*/)
         {
             bool b_ret = false;
-            String szSQL = String.Format("sp_project '{0}', 0, '{1}', {2}, {3}", 
-                                        "insert", sz_projectname, UCommon.UGetDateNow() + UCommon.UGetTimeNow(), l.l_deptpk);
+            String szSQL = String.Format("sp_project '{0}', 0, '{1}', {2}, {3}, {4}", 
+                                        "insert", sz_projectname, UCommon.UGetDateNow() + UCommon.UGetTimeNow(), l.l_deptpk, l.l_userpk);
             try
             {
                 OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);

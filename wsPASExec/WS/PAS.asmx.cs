@@ -23,6 +23,7 @@ using com.ums.UmsDbLib;
 using com.ums.PAS.Weather;
 using com.ums.PAS.messagelib;
 using com.ums.PAS.CB;
+using System.Xml.Serialization;
 
 using System.Collections.Generic;
 
@@ -43,7 +44,7 @@ namespace com.ums.ws.pas
 
     public class pasws : System.Web.Services.WebService
     {
-        public class imports
+        /*public class imports
         {
             public LBALanguage l1;
             public LBACCode l2;
@@ -52,7 +53,14 @@ namespace com.ums.ws.pas
         public imports _no_use()
         {
             return new imports();
-        }
+        }*/
+
+        [XmlInclude(typeof(UPolygon))]
+        [XmlInclude(typeof(UEllipse))]
+        [XmlInclude(typeof(UBoundingRect))]
+        [XmlInclude(typeof(UPLMN))]
+        [XmlInclude(typeof(LBALanguage))]
+        [XmlInclude(typeof(LBACCode))]
 
         [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)

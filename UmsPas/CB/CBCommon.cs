@@ -280,6 +280,9 @@ namespace com.ums.PAS.CB
         [XmlAttribute("l_validity")]
         public int l_validity;
 
+        [XmlAttribute("l_parent_refno")]
+        public long l_parent_refno; //link for resend in BBPROJECT_X_REFNO
+
 
     }
 

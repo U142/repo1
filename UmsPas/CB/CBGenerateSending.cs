@@ -75,7 +75,7 @@ namespace com.ums.PAS.CB
                 throw e;
             }
             //attach refno to project
-            db.linkRefnoToProject(ref project, alert.l_refno, 0, 0);
+            db.linkRefnoToProject(ref project, alert.l_refno, 0, alert.l_parent_refno);
 
             //retrieve message object from send-object
             CB_MESSAGE message = alert.textmessages.list[0];

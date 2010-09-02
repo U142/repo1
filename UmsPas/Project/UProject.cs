@@ -45,7 +45,8 @@ namespace com.ums.PAS.Project
                         break;
                 }
 
-                OdbcDataReader dr = ExecReader(String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk), UmsDb.UREADER_AUTOCLOSE);
+                String szSQLProject = String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}, {5}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk, logon.l_userpk);
+                OdbcDataReader dr = ExecReader(szSQLProject, UmsDb.UREADER_AUTOCLOSE);
 
                 while (dr.Read())
                 {

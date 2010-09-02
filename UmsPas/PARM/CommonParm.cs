@@ -120,9 +120,6 @@ namespace com.ums.UmsParm
         public int f_map;
         public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
         public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
-        public UPolygon typedef1;
-        public UEllipse typedef2;
-        public UBoundingRect typedef3;
         public void AddMunicipal(String sz_id, String sz_name)
         {
             UMunicipalDef d = new UMunicipalDef();
