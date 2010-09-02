@@ -1,9 +1,19 @@
 package no.ums.pas.plugins.centric;
+package no.ums.pas.plugins.centric;
 
 import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.TextArea;
+import java.awt.Toolkit;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -13,6 +23,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageFilter;
+import java.awt.image.ReplicateScaleFilter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -21,20 +34,26 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+
+import com.sun.awt.AWTUtilities;
 
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -61,11 +80,14 @@ import no.ums.pas.send.SendProperties;
 import no.ums.pas.send.SendOptionToolbar.MunicipalCheckbox;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
+import no.ums.pas.tas.statistics.UMSChartFrame;
 import no.ums.pas.ums.tools.ExpiryMins;
 import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.PrintCtrl;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextAreaNoTab;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.parm.CBALERTPLMN;
 import no.ums.ws.parm.CBALERTPOLYGON;
@@ -100,6 +122,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		SHOWING_SUMMARY,
 		SENDING,
 	}
+	
+	int m_pages = 1;
 	
 	/**
 	 * 
@@ -526,8 +550,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, get_panel(), 3, 2);
 		add(m_txt_previewscroll, m_gridconst);
 		set_gridconst(0, inc_panels(), 1, 1);
-		if(m_btn_print==null)
+		if(m_btn_print==null) {
 			m_btn_print = new JButton(PAS.l("common_print_summary"));
+			m_btn_print.setActionCommand("act_print_summary");
+			m_btn_print.addActionListener(this);
+		}
 		add(m_btn_print, m_gridconst);
 		
 		
@@ -832,6 +859,100 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			checkForEnableSendButton();
 		}
+		else if(e.getActionCommand().equals("act_print_summary")) {
+			int preferred_resolution = 1920;
+			int actual_screensize = Toolkit.getDefaultToolkit().getScreenSize().width;
+			int width = 800;
+			int height = 800;
+			String timestamp = String.valueOf(Utils.get_current_datetime());
+			
+			// Scales to screen resolution
+			double temp;
+			temp = (double)preferred_resolution/actual_screensize;
+			int lablefont = Math.round(((float)actual_screensize/preferred_resolution) * 5);
+			int textboxfont = Math.round(((float)actual_screensize/preferred_resolution) * 16);
+			width = (int)(((double)actual_screensize/preferred_resolution) * width);
+			height = (int)(((double)actual_screensize/preferred_resolution) * height);
+			JFrame printFrame = new JFrame();
+			
+			Container container = printFrame.getContentPane();
+			printFrame.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
+			
+			JLabel message = new JLabel("<html><font size=" + lablefont + ">--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---</font></html>"); 
+			message.setOpaque(false);
+			message.setBackground(new Color(Color.TRANSLUCENT));
+			message.setAlignmentX(LEFT_ALIGNMENT);
+			printFrame.add(message, container);
+			// Space
+			JLabel space = new JLabel(" ");
+			printFrame.add(space, container);
+			// Image goes here
+			JPanel pnl = new JPanel();
+			pnl.setLayout(new BorderLayout());
+			JLabel image = new JLabel();
+			Image img;
+			
+			int actual_width = variables.DRAW.get_buff_image().getWidth(this);
+			int actual_height = variables.DRAW.get_buff_image().getHeight(this);
+			
+			if(actual_height < actual_width) {
+				if(actual_width<width) {
+					width = actual_width;
+					height = actual_height;
+					img = variables.DRAW.get_buff_image();
+				}
+				else {
+					double percent_of_actual = ((double)actual_width/(double)width);
+					height = (int)((double)actual_height / percent_of_actual);
+					img = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+					
+				}
+			}
+			else {
+				if(actual_height<height) {
+					width = actual_width;
+					height = actual_height;
+					img = variables.DRAW.get_buff_image();
+				}
+				else {
+					double percent_of_actual = ((double)actual_height/(double)height);
+					width = (int)((double)actual_width / percent_of_actual);
+					img = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+					
+				}
+			}
+			
+			image.setIcon(new ImageIcon(img));
+			pnl.add(image,BorderLayout.PAGE_START);
+			JTextArea txt = new JTextArea(10,60);
+			txt.setWrapStyleWord(true);
+			txt.setLineWrap(true);
+			txt.setOpaque(false);
+			txt.setFocusable(false);
+			txt.getCaret().setVisible(false);
+			txt.setBackground(new Color(Color.TRANSLUCENT));
+			Font font = new Font(message.getFont().getName(), Font.PLAIN, textboxfont);
+			txt.setFont(font);
+			txt.setText(PAS.l("common_message_content") + ":\n" + m_txt_preview.getText());
+			pnl.add(txt, BorderLayout.LINE_START);
+			pnl.add(new JLabel("<html><font size=" + lablefont + ">" + PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length() + "</font></html>"), BorderLayout.PAGE_END);
+			pnl.setBackground(new Color(Color.TRANSLUCENT));
+			pnl.setOpaque(false);
+			pnl.setAlignmentX(LEFT_ALIGNMENT);
+			printFrame.add(pnl, container);
+			message = new JLabel("<html><font size=" + lablefont + ">--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---</font></html>");
+			message.setAlignmentX(LEFT_ALIGNMENT);
+			message.setOpaque(false);
+			message.setBackground(new Color(Color.TRANSLUCENT));
+			printFrame.add(message, container);
+			printFrame.pack();
+			container.setBackground(Color.WHITE);
+			printFrame.setSize(printFrame.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height - (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.05));
+			//printFrame.setVisible(true);
+			PrintCtrl pctrl = new PrintCtrl(printFrame, printFrame);
+			pctrl.print();
+			printFrame.dispose();
+		}
 
 	}
 	
@@ -993,4 +1114,5 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private void updateCharacters() {
 		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/" + MAX_TOTAL_CHARS);
 	}
+	
 }

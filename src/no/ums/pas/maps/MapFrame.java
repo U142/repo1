@@ -163,7 +163,21 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	protected boolean b_mouse_inside_canvas = true;
 	protected void setMouseInsideCanvas(boolean b) { 
 		b_mouse_inside_canvas = b;
-		PAS.get_pas().kickRepaint();
+		if(PAS.get_pas()!=null)
+			PAS.get_pas().kickRepaint();
+		else {
+			variables.DRAW.setRepaint(variables.MAPPANE.get_mapimage());
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run()
+				{
+					//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+					//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+					//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+					variables.MAPPANE.repaint();
+					variables.MAPPANE.validate();
+				}
+			});
+		}
 	}
 	public boolean getMouseInsideCanvas() { return b_mouse_inside_canvas; }
 	

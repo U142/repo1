@@ -125,6 +125,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_navigation = new Navigation(this,640,480);
 		variables.NAVIGATION = m_navigation;
 		
+		
 	}
 	
 	private void afterLogon() {
@@ -343,13 +344,17 @@ public class MapApplet extends JApplet implements ActionListener {
 				}
 			}
 			variables.USERINFO = m_info;
-			variables.NAVIGATION.setNavigation(m_info.get_nav_init());
-			
+			//variables.NAVIGATION.setNavigation(m_info.get_nav_init());
+			//variables.NAVIGATION.setNavigation(new NavStruct(3.3353,53.55,7.2271,50.2176));
+			//variables.NAVIGATION.setNavigation(new NavStruct(40,53,45,50));
+			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144));
+			//variables.NAVIGATION.setNavigation(new NavStruct(53.55,3.3353,50.2176,7.2271));
 			m_mappane = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 			variables.MAPPANE = m_mappane;
 			m_mappane.load_map();//variables.NAVIGATION.getNavLBO(), variables.NAVIGATION.getNavRBO(), variables.NAVIGATION.getNavUBO(), variables.NAVIGATION.getNavBBO(), this.getSize(), 0, "By");
 			//m_drawthread.setMapImage(m_mappane.get_image());
 			m_drawthread.set_mappane(m_mappane);
+			
 			//m_drawthread.setRepaint(m_image);
 			//variables.DRAW.set_neednewcoors(true);
 			//variables.DRAW.set_need_imageupdate();
@@ -726,7 +731,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		//test = fjols;
-		repaint();
+		variables.MAPPANE.kickRepaint();
 	}
 	private PolygonStruct parseCoors(String coors){
 		String[] l = coors.split("¤");
