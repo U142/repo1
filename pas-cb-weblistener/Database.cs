@@ -7,6 +7,14 @@ using pas_cb_server.tmobile;
 
 namespace pas_cb_weblistener
 {
+    public class lol
+    {
+        private static bool _sveinedrid = true;
+        public static bool sveinedrid()
+        {
+            return _sveinedrid;
+        }
+    }
     public class Database
     {
         public static int GetHandle(int l_operator)
