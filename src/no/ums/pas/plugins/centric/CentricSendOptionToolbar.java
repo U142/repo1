@@ -66,7 +66,8 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.pas.plugins.centric.send.RROComboBox;
 import no.ums.pas.plugins.centric.send.RROComboEditor;
 import no.ums.pas.plugins.centric.send.RROComboRenderer;
@@ -106,6 +107,7 @@ import no.ums.ws.parm.CBORIGINATOR;
 import no.ums.ws.parm.CBREACTION;
 import no.ums.ws.parm.CBRISK;
 import no.ums.ws.pas.UBBMESSAGE;
+import no.ums.ws.pas.status.CBSTATUS;
 
 public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, 
 																	KeyListener, MouseListener {
@@ -193,6 +195,16 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	protected MODE current_mode = MODE.MESSAGE_WRITING;
 	
 	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
+	
+	protected long n_parent_refno = 0;
+	public void setParentRefno(long parent_refno)
+	{
+		n_parent_refno = parent_refno;
+	}
+	public long getParentRefno()
+	{
+		return n_parent_refno;
+	}
 	
 	private CentricStatus m_centricstatus;
 	//private CentricStatusController m_centricstatuscontroller;
@@ -368,7 +380,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		
 		
-		m_btn_save_message = new JButton("Save message");
+		m_btn_save_message = new JButton(PAS.l("main_sending_save_message_template"));
 		m_btn_reset = new JButton(PAS.l("common_reset"));
 		m_btn_reset.addActionListener(this);
 		m_btn_reset.addFocusListener(this);
@@ -395,7 +407,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	{
 		switch(current_mode)
 		{
-		case INITIALIZING: //no checks, wait for the first reset click
+		case INITIALIZING: //no checks, wait for the first automated reset click to goto MESSAGE_WRITING mode
 			m_btn_send.setEnabled(false);
 			break;
 		case MESSAGE_WRITING: //if all fields are filled, we may enable send button
@@ -409,6 +421,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(false);
 			break;
 		}
+		m_btn_save_message.setEnabled(false);
 	}
 	
 	public void add_controls() {
@@ -528,7 +541,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_reset, m_gridconst);
 		
 		set_gridconst(2, get_panel(), 1, 1);
-		//add(m_btn_save_message, m_gridconst);
+		add(m_btn_save_message, m_gridconst);
 		revalidate();
 		repaint();
 	}
@@ -600,7 +613,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	public boolean lockSending(boolean b)
 	{
 		ShapeStruct ps = variables.MAPPANE.get_active_shape();
-		ps.setEditable(b);
+		ps.setEditable(!b);
 		return b;
 	}
 	
@@ -710,6 +723,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			operation.setRisk(risk);
 			operation.setReaction(reaction);
 			operation.setOriginator(originator);
+			operation.setLParentRefno(n_parent_refno);
 			CBMESSAGEPART messagepart = new CBMESSAGEPART();
 			messagepart.setLPk(-1);
 			messagepart.setSzName(m_txt_message.getText());
@@ -1115,4 +1129,45 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/" + MAX_TOTAL_CHARS);
 	}
 	
+	public void fromTemplate(CBSTATUS cb)
+	{
+		String sz_msgpart = "";
+		String sz_originator = "";
+		String sz_risk = "";
+		String sz_reaction = "";
+		
+		if(cb.getMessagepart()!=null)
+			sz_msgpart = cb.getMessagepart().getSzName();
+		if(cb.getOriginator()!=null)
+			sz_originator = cb.getOriginator().getSzName();
+		if(cb.getRisk()!=null)
+			sz_risk = cb.getRisk().getSzName();
+		if(cb.getReaction()!=null)
+			sz_reaction = cb.getReaction().getSzName();
+
+		m_txt_message.setText(sz_msgpart);
+		m_cbx_originator.setSelectedItem(sz_originator);		
+		m_cbx_risk.setSelectedItem(sz_risk);
+		m_cbx_reaction.setSelectedItem(sz_reaction);
+		setParentRefno(cb.getLRefno());
+
+		checkForEnableSendButton();
+		int l_group = (int)cb.getMdv().getLGroup();
+		//MDVSENDINGINFOGROUP group = Enum.valueOf(MDVSENDINGINFOGROUP.class, new Long(l_group).toString());
+		if(cb.getShape()!=null)
+		{
+			boolean b_poly_is_elliptical = false;
+			switch(l_group)
+			{
+			case 32:
+				b_poly_is_elliptical = true;
+				break;
+			}
+			ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(cb.getShape());
+			shape.enableSendColor();
+			variables.MAPPANE.set_active_shape(shape);
+			variables.MAPPANE.setPaintModeBasedOnActiveShape(b_poly_is_elliptical);
+		}
+		
+	}
 }
