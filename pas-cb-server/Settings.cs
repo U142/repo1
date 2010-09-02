@@ -40,14 +40,16 @@ namespace pas_cb_server
         public Operator[] operators;
 
         // methods
-        public static Settings SystemUser()
+        public static Settings SystemUser(int l_deptpk, int l_comppk)
         {
             Settings ret = new Settings();
             
             try
             {
-                ret.l_deptpk = Settings.GetInt("DeptPK");
-                ret.l_comppk = Settings.GetInt("CompPK");
+                //ret.l_deptpk = Settings.GetInt("DeptPK");
+                //ret.l_comppk = Settings.GetInt("CompPK");
+                ret.l_deptpk = l_deptpk;
+                ret.l_comppk = l_comppk;
                 ret.sz_compid = Database.GetCompID(ret.l_comppk);
                 ret.sz_deptid = Database.GetDeptID(ret.l_deptpk);
                 ret.sz_password = "";
@@ -271,10 +273,7 @@ namespace pas_cb_server
                     op.coordinate_type = (COORDINATESYSTEM)rsOperators.GetInt32(8);
                 }
                 rsOperators.Close();
-                rsOperators.Dispose();
-                cmdOperators.Dispose();
                 dbConn.Close();
-                dbConn.Dispose();
             }
             catch (Exception e)
             {
@@ -339,10 +338,7 @@ namespace pas_cb_server
                     Operators.Add(op);
                 }
                 rsOperators.Close();
-                rsOperators.Dispose();
-                cmdOperators.Dispose();
                 dbConn.Close();
-                dbConn.Dispose();
             }
             catch (Exception e)
             {
@@ -446,6 +442,51 @@ namespace pas_cb_server
         // job errors from AlertiX
         public const int ERR_JobError = 42201;
 
+    }
+
+    public class LBAParameter 
+    {
+        // populate when creating to make sure the latest information is used
+        public LBAParameter()
+        {
+            string qry = String.Format(@"SELECT l_comppk, l_deptpk, l_channelno, l_test_channelno, l_heartbeat FROM LBAPARAMETER");
+
+            try
+            {
+                OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(qry, dbConn);
+
+                dbConn.Open();
+
+                OdbcDataReader rs = cmd.ExecuteReader();
+
+                if (rs.Read())
+                {
+                    this.l_comppk = rs.GetInt32(0);
+                    this.l_deptpk = rs.GetInt32(1);
+                    this.l_channelno = rs.GetInt32(2);
+                    this.l_testchannelno = rs.GetInt32(3);
+                    this.l_heartbeat = rs.GetInt32(4);
+                }
+                // close
+                rs.Close();
+                dbConn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("LBAParameter constructor failed (exception={0})", e.Message),
+                    String.Format("LBAParameter constructor failed (exception={0})", e),
+                    2);
+            }
+        }
+
+        public int l_comppk;
+        public int l_deptpk;
+
+        public int l_channelno;
+        public int l_testchannelno;
+        public int l_heartbeat;
     }
 
     public enum LBATYPE

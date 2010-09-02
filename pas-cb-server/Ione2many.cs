@@ -796,7 +796,5 @@ namespace pas_cb_server
         public int? l_channelindicator = null;
         [XmlElement("category")]
         public int l_category = 0;
-        [XmlElement("testchannel")]
-        public int l_testchannel = 500;
     }
 }

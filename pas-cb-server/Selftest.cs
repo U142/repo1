@@ -27,7 +27,8 @@ namespace pas_cb_server.test
 
         public static void NewAlert()
         {
-            Settings oUser = Settings.SystemUser();
+            LBAParameter oParams = new LBAParameter();
+            Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
             cb alert = new cb();
             polypoint pt;
 
@@ -63,7 +64,7 @@ namespace pas_cb_server.test
             alert.alertpolygon.Add(pt);
 
             message msg = new message();
-            msg.l_channel = 1;
+            msg.l_channel = oParams.l_testchannelno;
             msg.sz_text = "-- Self Test Message --\r\nThis message is longer than one page, should be automatically split into several pages and padded. Also the text is being split between words if possible.";
 
             alert.textmessages.Add(msg);
@@ -85,7 +86,8 @@ namespace pas_cb_server.test
         }
         public static void NewAlertPLMN()
         {
-            Settings oUser = Settings.SystemUser();
+            LBAParameter oParams = new LBAParameter();
+            Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
             cb alert = new cb();
 
             currentTestRef = Database.GetRefno();
@@ -98,7 +100,7 @@ namespace pas_cb_server.test
             alert.textmessages = new List<message>();
 
             message msg = new message();
-            msg.l_channel = 1;
+            msg.l_channel = oParams.l_testchannelno;
             msg.sz_text = "-- self test message --";
 
             alert.textmessages.Add(msg);
@@ -128,7 +130,8 @@ namespace pas_cb_server.test
             }
             else
             {
-                Settings oUser = Settings.SystemUser();
+                LBAParameter oParams = new LBAParameter();
+                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
                 cb alert = new cb();
 
                 alert.l_refno = currentTestRef;
@@ -155,7 +158,8 @@ namespace pas_cb_server.test
             }
             else
             {
-                Settings oUser = Settings.SystemUser();
+                LBAParameter oParams = new LBAParameter();
+                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
                 cb alert = new cb();
 
                 alert.l_refno = currentTestRef;
@@ -165,7 +169,7 @@ namespace pas_cb_server.test
 
                 alert.textmessages = new List<message>();
                 message msg = new message();
-                msg.l_channel = 1;
+                msg.l_channel = oParams.l_testchannelno;
                 msg.sz_text = "-- self test message - UPDATED --";
 
                 alert.textmessages.Add(msg);

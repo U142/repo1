@@ -60,12 +60,14 @@ namespace pas_cb_server
                                 else if (lRetVal == Constant.RETRY)
                                 {
                                     Thread.Sleep(500);
+                                    Log.WriteLog(String.Format("{0} failed, will retry.", fileName), 1);
                                     File.SetLastAccessTime(fileName, DateTime.Now);
                                     //File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
                                 }
                                 else // lRetVal -2 (Constant.FAILED)
                                 {
                                     Thread.Sleep(500);
+                                    Log.WriteLog(String.Format("{0} failed.", fileName), 2);
                                     File.Move(fileName, fileName.Replace("\\retry\\", "\\failed\\"));
                                 }
                             }
@@ -304,11 +306,18 @@ namespace pas_cb_server
                 {
                     foreach (XmlNode xml_pt in xmlCB.SelectSingleNode("alertpolygon").ChildNodes)
                     {
-                        PolyPoint pt = new PolyPoint();
-                        pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("lon").Value, coorformat);
-                        pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("lat").Value, coorformat);
+                        if (xml_pt.Name == "polypoint")
+                        {
+                            PolyPoint pt = new PolyPoint();
+                            pt.x = float.Parse(xml_pt.Attributes.GetNamedItem("lon").Value, coorformat);
+                            pt.y = float.Parse(xml_pt.Attributes.GetNamedItem("lat").Value, coorformat);
 
-                        oAlert.alert_polygon.Add(pt);
+                            oAlert.alert_polygon.Add(pt);
+                        }
+                        else
+                        {
+                            Log.WriteLog(String.Format("Warning, unrecognized element in alertpolygon: {0}", xml_pt.Name), 1);
+                        }
                     }
                 }
             }
