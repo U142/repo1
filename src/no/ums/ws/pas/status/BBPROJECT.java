@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="l_projectpk" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="l_userpk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -33,6 +34,8 @@ public class BBPROJECT {
     protected String lProjectpk;
     @XmlAttribute(name = "sz_projectname")
     protected String szProjectname;
+    @XmlAttribute(name = "l_userpk", required = true)
+    protected int lUserpk;
 
     /**
      * Gets the value of the lProjectpk property.
@@ -80,6 +83,22 @@ public class BBPROJECT {
      */
     public void setSzProjectname(String value) {
         this.szProjectname = value;
+    }
+
+    /**
+     * Gets the value of the lUserpk property.
+     * 
+     */
+    public int getLUserpk() {
+        return lUserpk;
+    }
+
+    /**
+     * Sets the value of the lUserpk property.
+     * 
+     */
+    public void setLUserpk(int value) {
+        this.lUserpk = value;
     }
 
 }

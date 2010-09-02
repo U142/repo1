@@ -175,11 +175,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	SouthContent m_southcontent;
 	EastContent m_eastcontent;
 	
-	private String m_sz_sitename;
-	private String m_sz_param_userid;
-	private String m_sz_param_compid;
-	private String m_sz_pasws_site;
-	private String m_sz_codebase;
+	private String PAS_SITENAME;
+	private String PAS_OVERRIDE_USERID = null;
+	private String PAS_OVERRIDE_COMPID = null;
+	private String PAS_WS_SITE;;
+	private String PAS_CODEBASE;
 	StatusController m_statuscontroller = null;
 	GPSController m_gpscontroller = null;
 	HouseController m_housecontroller = null;
@@ -249,10 +249,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	//public MapLayeredPane get_maplayeredpane() { return m_maplayeredpane; }
 	public MainMenu get_mainmenu() { return m_mainmenu; }
 	public HTTPReq get_httpreq() { return m_httpreq; }
-	public String get_sitename() { return m_sz_sitename; }
-	public String get_pasws() { return m_sz_pasws_site; }
-	public String get_codebase() { return m_sz_codebase; }
-	public String get_plugin_codebase() { return m_sz_codebase + "/plugins/"; }
+	public String get_sitename() { return PAS_SITENAME; }
+	public String get_pasws() { return PAS_WS_SITE; }
+	public String get_codebase() { return PAS_CODEBASE; }
+	public String get_plugin_codebase() { return PAS_CODEBASE + "/plugins/"; }
 	public StatusController get_statuscontroller() { return m_statuscontroller; }
 	public GPSController get_gpscontroller() { return m_gpscontroller; }
 	public HouseController get_housecontroller() { return m_housecontroller; }
@@ -268,7 +268,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static Locale locale;
 	public static ResourceBundle lang;
 	public static ResourceBundle defaultLang = null;
-	public static boolean g_b_debug = false;
+	public static boolean DEBUGMODE = false;
 	public static int g_n_parmversion = 2;
 	public static String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
@@ -435,7 +435,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static String l(String s) {
 		try
 		{
-			if(g_b_debug)
+			if(DEBUGMODE)
 				return sz_mark_language_words + lang.getString(s) + sz_mark_language_words;
 			else
 				return lang.getString(s);
@@ -565,19 +565,41 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public PAS() {
-		this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null, null);
+		super();
+		//this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null, null);
+		//init();
+		m_pas = this;
+		g_pas = this;
 	}
 	public PAS(String sz_sitename)
 	{
 		this(sz_sitename, null, null, null, false, null, null, null, null);
 	}
+	
+	public void setDebug(boolean b) { DEBUGMODE = b; }
+	public void setPlugin(String s) { PASPLUGIN = s; }
+	public void setForceWMSSite(String s) { OVERRIDE_WMS_SITE = s; }
+	public void setSiteName(String s) { PAS_SITENAME = s; }
+	public void setPasWsSite(String s) {
+		if(s.length()==0)
+		{
+			PAS_WS_SITE = PAS_SITENAME + "/ExecAlert/WS/";
+		}
+		else
+			PAS_WS_SITE = s;
+	}
+	public void setCodeBase(String s) { PAS_CODEBASE = s; }
+	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
+	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
+	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
+	
 	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 
 			boolean b_debug, String sz_codebase, String sz_plugin, 
 			String sz_force_wms_site, String [] args)
 	{
 		super();
-		g_b_debug = b_debug;
-		sz_script_class = sz_plugin;
+		DEBUGMODE = b_debug;
+		PASPLUGIN = sz_plugin;
 		OVERRIDE_WMS_SITE = sz_force_wms_site;
 		try
 		{
@@ -592,15 +614,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//ImageLoader.setClassLoader(getClass().getClassLoader());
 		m_pas = this;
 		g_pas = this;
-		m_sz_sitename = sz_sitename;
+		PAS_SITENAME = sz_sitename;
 		if(sz_pasws.length()==0)
 		{
-			m_sz_pasws_site = m_sz_sitename + "/ExecAlert/WS/";
+			PAS_WS_SITE = PAS_SITENAME + "/ExecAlert/WS/";
 		}
 		else
-			m_sz_pasws_site = sz_pasws;
-		m_sz_codebase = sz_codebase;
-		System.out.println("Using WS " + m_sz_pasws_site);
+			PAS_WS_SITE = sz_pasws;
+		PAS_CODEBASE = sz_codebase;
+		System.out.println("Using WS " + PAS_WS_SITE);
 		
 		try
 		{
@@ -612,14 +634,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			
 		}
 		//m_lookandfeel = new SubstanceBusinessBlackSteelLookAndFeel();
-		m_sz_param_compid = sz_compid;
-		m_sz_param_userid = sz_userid;
+		PAS_OVERRIDE_COMPID = sz_compid;
+		PAS_OVERRIDE_USERID = sz_userid;
 
 		//LBASEND.CreateLbaStatusHash();
 		
 		
 		m_sz_program_args = args;
-		init();
+		//init();
 	}
 	
 	public void parseAdditionalParameters(String [] params)
@@ -729,7 +751,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 
-	protected static String sz_script_class = "PAS_Scripting";
+	protected static String PASPLUGIN = "PAS_Scripting";
 	
 	public static PasScriptingInterface pasplugin;
 	
@@ -837,11 +859,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		
 		String sz_userid, sz_compid, sz_passwd;
-		sz_userid = m_sz_param_userid; //this.getParameter("sz_userid");
-		sz_compid = m_sz_param_compid; //this.getParameter("sz_compid");
+		sz_userid = PAS_OVERRIDE_USERID; //this.getParameter("sz_userid");
+		sz_compid = PAS_OVERRIDE_COMPID; //this.getParameter("sz_compid");
 		sz_passwd = ""; //this.getParameter("sz_passwd");
-		if(m_sz_sitename==null)
-			m_sz_sitename = "https://secure.ums.no/vb4/";
+		if(PAS_SITENAME==null)
+			PAS_SITENAME = "https://secure.ums.no/vb4/";
 		this.addComponentListener(this);
 		this.addWindowListener(this);
 		
@@ -1016,7 +1038,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				try
 				{
-					LoadVisualSettings(get_pasactionlistener(), m_settings.getUsername(), m_settings.getCompany(), false);
+					//LoadVisualSettings(get_pasactionlistener(), m_settings.getUsername(), m_settings.getCompany(), false);
 					//initSubstance();
 				}
 				catch(Exception e)
@@ -1044,7 +1066,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			//SwingUtilities.invokeAndWait(new Runnable() {
 			//	public void run()
 				{
-					
+					if(PAS_OVERRIDE_COMPID!=null)
+					{
+						m_settings.setCompany(PAS_OVERRIDE_COMPID);
+					}
+					if(PAS_OVERRIDE_USERID!=null)
+					{
+						m_settings.setUsername(PAS_OVERRIDE_USERID);
+					}
 					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany()), m_settings.getLanguage(), false);
 					if(!logon.isLoggedOn())
 						System.exit(0);
@@ -1055,7 +1084,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 					m_userinfo = new UserInfo(logon.get_userinfo());
 					variables.USERINFO = m_userinfo;
-					m_userinfo.set_sitename(m_sz_sitename);
+					m_userinfo.set_sitename(PAS_SITENAME);
 					m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
 					m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
 					UPASUISETTINGS ui = logon.get_uisettings();

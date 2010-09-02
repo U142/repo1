@@ -10,7 +10,7 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.ws.pas.UBoundingRect;
 import no.ums.ws.pas.UEllipse;
 import no.ums.ws.pas.UPolygon;

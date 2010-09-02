@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.pas.plugins.centric.CentricEastContent;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATUS;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -138,14 +140,21 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		
 	}
 	
-	public void putMessageStatus(CentricMessageStatus cms)
+	public void putMessageStatus(long refno, CentricMessageStatus cms)
 	{
-		hash_messagestatus.put(cms.get_refno(), cms);
+		hash_messagestatus.put(refno, cms);
 	}
 	
 	public Hashtable<Long, CentricMessageStatus> getHashMessageStatus()
 	{
 		return hash_messagestatus;
+	}
+	
+	public boolean containsMessageStatus(long refno)
+	{
+		if(hash_messagestatus.containsKey(refno))
+			return true;
+		return false;
 	}
 
 	@Override
@@ -214,7 +223,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("act_status_downloaded")){
 			cbsres = (CBPROJECTSTATUSRESPONSE)e.getSource();
-			updateStatus(cbsres);
+			updateProjectStatus(cbsres);
 			cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 			for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 				m_status_tabbed.setIconAt(i, null);
@@ -223,7 +232,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		}
 	}
 	
-	protected void updateStatus(CBPROJECTSTATUSRESPONSE cbp)
+	
+	protected void updateProjectStatus(CBPROJECTSTATUSRESPONSE cbp)
 	{
 		if(isClosed())
 			return;
@@ -231,13 +241,74 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		JTabbedPane tp = get_messages().get_tpane();
 		
 		CentricMessageStatus ms;
-		CBSTATUS cbs;
+		//CBSTATUS cbs;
 		
 		boolean found;
 		int n_sendings = 0;
 		int n_sendings_active = 0;
-		
 		Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
+		Hashtable<Long, Long> active = new Hashtable<Long, Long>();
+
+		
+		List<CBSTATUS> cbstatuslist = cbp.getStatuslist().getCBSTATUS();
+		for(int j=0; j < cbstatuslist.size(); ++j)
+		{
+			CBSTATUS currentstatus = cbstatuslist.get(j);
+			CentricMessageStatus currentui = null;
+			
+			//get or create a UI pane
+			if(containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
+			{
+				currentui = getHashMessageStatus().get(currentstatus.getLRefno());
+			}
+			else //new status, needs to be added to tabbed pane
+			{
+				currentui = new CentricMessageStatus(get_messages(), currentstatus);
+				putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
+				currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());
+				tp.add(currentstatus.getSzSendingname(), currentui);
+			}
+			//Update data in UI pane
+			if(currentui!=null) //just to be sure we have an existing or new pointer
+				currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
+			sendings.put(new Long(currentstatus.getLRefno()), new Long(currentstatus.getLRefno()));
+			OPERATOR_STATUS status = currentui.getOperatorStatus();
+			String lbl_pane = "";
+			switch(status)
+			{
+			case INITIALIZING:
+			case ACTIVE:
+				lbl_pane = "A ";
+				break;
+			case FINISHED:
+				lbl_pane = "F ";
+				break;
+			}
+			lbl_pane += currentstatus.getMdv().getSzSendingname();
+			try
+			{
+				int n = tp.indexOfComponent(currentui);
+				if(n>=0)
+					tp.setTitleAt(n, lbl_pane);
+			}
+			catch(Exception e)
+			{
+				
+			}
+			ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(currentstatus.getShape());
+			if(shape!=null)
+			{
+				shape.setShapeId(currentstatus.getLRefno());
+				shape.shapeName = currentstatus.getSzSendingname();
+				shape.set_fill_color(new Color(255, 50, 50, 100));
+				shape.set_border_color(new Color(255, 50, 50, 200));
+				shape.set_text_color(new Color(255, 255, 255, 255));
+				shape.set_text_bg_color(new Color(50, 0, 0, 100));
+				PAS.pasplugin.addShapeToPaint(shape);
+			}
+
+		}
+		/*Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
 		Hashtable<Long, Long> active = new Hashtable<Long, Long>();
 		
 		for(int j=0;j<cbp.getStatuslist().getCBSTATUS().size();++j) {
@@ -320,11 +391,12 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				PAS.pasplugin.addShapeToPaint(shape);
 			}
 		}
-		
+		*/
 		
 		get_event().get_sent().setText(String.valueOf(sendings.size()));
 		get_event().get_active().setText(String.valueOf(active.size()));
-		updateTotal();
+		
+		
 		PAS.get_pas().kickRepaint();
 		
 		//this is the first status download. Load map
@@ -336,94 +408,6 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 	}
 	
-	private void updateTotal() {
-		
-		CentricOperatorStatus cos;
-		JTabbedPane tp = get_messages().get_tpane();
-		
-		for(int j=0;j<tp.getComponentCount();++j) {
-			int total=0;
-			int unknown=0;
-			int total_ok=0;
-			float total_percent=0;
-			long start = 0;
-			long timestamp = 0;
-			int channel=0;
-			
-			CentricMessageStatus ms = (CentricMessageStatus)tp.getComponentAt(j);
-			
-			for(int i=1;i<ms.get_tpane().getComponentCount();++i) {
-				cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(i);
-				total += cos.total<0?0:cos.total;
-				unknown += cos.unknown<0?0:cos.unknown;
-				total_ok += cos.total_ok<0?0:cos.total_ok;
-				total_percent += cos.percent;
-				start = cos.start;
-				timestamp = cos.timestamp;
-				channel = cos.channel;
-			}
-			
-			cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(0);
-			cos.total = total;
-			cos.unknown = unknown;
-			cos.total_ok = total_ok;
-			total_percent = (total_percent/(ms.get_tpane().getComponentCount()-1));
-			cos.percent = total_percent;
-			cos.get_lbl_channel().setText(String.valueOf(channel));
-			cos.get_lbl_completed().setText(String.valueOf(total_ok<0?"N/A":total_ok));
-			cos.get_lbl_unknown().setText(String.valueOf(total<0?"N/A":unknown));
-			cos.get_lbl_total().setText(String.valueOf(total<0?"N/A":total));
-			cos.get_lbl_percent().setText(String.valueOf(total_percent));
-			// Start
-			cos.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(start)));
-			// Duration
-			cos.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(start,timestamp) + " " + PAS.l("common_minutes_maybe")));
-		}
-	}
-	
-	private void setOperatorValues(CBPROJECTSTATUSRESPONSE cbp, 
-								CBSTATUS cbs, 
-								ULBASENDING operator, 
-								CentricOperatorStatus cos) {
-		
-		ULBAHISTCELL histcell = null;
-		if(operator.getHistcell().getULBAHISTCELL().size() > 0)
-			histcell = operator.getHistcell().getULBAHISTCELL().get(operator.getHistcell().getULBAHISTCELL().size()-1);
-		
-		int total_ok = 0;
-		int total_unknown = 0;
-		int total = 0;
-		float percent = 0;
-		
-		if(histcell != null) {
-			total_ok = histcell.getL2Gok() + histcell.getL3Gok() + histcell.getL4Gok();
-			total = histcell.getL2Gtotal() + histcell.getL3Gtotal() + histcell.getL4Gtotal();
-			total_unknown = total - total_ok;
-			cos.total = total;
-			cos.total_ok = total_ok;
-			cos.unknown = total_unknown;
-			percent = histcell.getLSuccesspercentage();
-			
-			
-		}
-		cos.percent = percent;
-		cos.get_lbl_completed().setText(String.valueOf(total_ok<0?"N/A":total_ok));
-		cos.get_lbl_unknown().setText(String.valueOf(total<0?"N/A":total_unknown));
-		cos.get_lbl_total().setText(String.valueOf(total<0?"N/A":total));
-		cos.get_lbl_percent().setText(String.valueOf(percent));
-		// Channel
-		cos.get_lbl_channel().setText(String.valueOf(cbs.getLChannel()));
-		cos.channel = cbs.getLChannel();
-		// Start
-		cos.start = cbs.getLCreatedTs();
-		cos.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(cbs.getLCreatedTs())));
-		// Duration
-		if(operator.getLStatus()>=1000) // Finished
-			cos.timestamp = cbs.getLLastTs();
-		else
-			cos.timestamp = cbp.getLDbTimestamp();
-		cos.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),cbp.getLDbTimestamp())) + " " + PAS.l("common_minutes_maybe"));
-	}
 }
 
 

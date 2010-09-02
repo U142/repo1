@@ -2,7 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
-import no.ums.pas.plugins.centric.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
@@ -64,6 +64,8 @@ import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 public class plugin_Centric extends PAS_Scripting
 {
 	WMSLayerSelectorPanel wms_layer_selector = new WMSLayerSelectorPanel();
+
+	int CURRENT_TAB = CentricEastContent.PANEL_CENTRICSEND_;
 
 	public plugin_Centric()
 	{
@@ -150,6 +152,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu.add(menu.get_btn_zoom(), menu.m_gridconst);
 		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_search(), menu.m_gridconst);
+		menu.get_btn_search().setEnabled(false); //IDDIATTS
 		
 		JButton btn_goto_restriction = new JButton(PAS.l("common_navigate_home"));
 		btn_goto_restriction.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
@@ -820,8 +823,11 @@ public class plugin_Centric extends PAS_Scripting
 			if(status!=null)
 			{
 				CBPROJECTSTATUSRESPONSE event = status.getResultSet();
-				String projectname = event.getProject().getSzProjectname();
-				maintitle += " - " + projectname;
+				if(event!=null)
+				{
+					String projectname = event.getProject().getSzProjectname();
+					maintitle += " - " + projectname;
+				}
 			}
 		}
 		pas.setMainTitle(maintitle);
@@ -1085,9 +1091,10 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
-		dlg.setSize(new Dimension(350,250));
+		dlg.setSize(new Dimension(350,200));
+		dlg.get_logonpanel().getLblCompId().setVisible(false);
+		dlg.get_logonpanel().getCompId().setVisible(false);
 		dlg.get_logonpanel().getCompId().setEditable(false);
-		dlg.get_logonpanel().getCompId().setText("UMS");
 		dlg.get_logonpanel().getBtnSubmit().setText(PAS.l("common_ok"));
 
 		/*dlg.get_logonpanel().getNSList().setVisible(false);
@@ -1220,24 +1227,32 @@ public class plugin_Centric extends PAS_Scripting
 			e.printStackTrace();
 		}
 
-		try
+		//only paint status shapes if in status tab
+		if(CentricEastContent.CURRENT_PANEL==CentricEastContent.PANEL_CENTRICSTATUS_)
 		{
-			Enumeration<ShapeStruct> en = getShapesToPaint().elements();
-			while(en.hasMoreElements())
+			try
 			{
-				en.nextElement().draw(g, nav, false, true, false, null, true, true, 2, true);
-			}			
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
+				Enumeration<ShapeStruct> en = getShapesToPaint().elements();
+				while(en.hasMoreElements())
+				{
+					en.nextElement().draw(g, nav, false, true, false, null, true, true, 2, true);
+				}			
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 
-		try {
-			boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
-			boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
-			p.get_mappane().get_active_shape().draw(g, nav, false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
-		} catch(Exception e) { }
+		//only paint send shapes if in send tab
+		if(CentricEastContent.CURRENT_PANEL==CentricEastContent.PANEL_CENTRICSEND_)
+		{
+			try {
+				boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
+				boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
+				p.get_mappane().get_active_shape().draw(g, nav, false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+			} catch(Exception e) { }
+		}
 		try {
 			p.get_mappane().draw_pinpoint(g);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
@@ -1360,15 +1375,22 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
-		Class c = pane.getSelectedComponent().getClass();
-		if(c.equals(CentricSendOptionToolbar.class))
+		switch(CentricEastContent.CURRENT_PANEL)
 		{
+		case CentricEastContent.PANEL_CENTRICSEND_:
+			if(variables.MAPPANE.get_active_shape()!=null)
+				variables.MAPPANE.get_active_shape().setEditable(true);
+			variables.MAPPANE.set_prev_paintmode();
 			enableSendButtons(true);
-		}
-		else if(c.equals(CentricStatus.class))
-		{
+			break;
+		case CentricEastContent.PANEL_CENTRICSTATUS_:
+			if(variables.MAPPANE.get_active_shape()!=null)
+				variables.MAPPANE.get_active_shape().setEditable(false);
+			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
 			enableSendButtons(false);
+			break;
 		}
+		PAS.get_pas().kickRepaint();
 		return super.onEastContentTabClicked(e, pane);
 	}
 	

@@ -33,7 +33,6 @@ public class MapLoader {
 	Image m_img_load = null;
 	MediaTracker m_mtracker;
 	HTTPReq m_httpreq;
-	Navigation m_navigation;
 	MapFrame m_mappane;
 	//LoadingFrame m_loadingframe = null;
 	Component m_mapcomponent;
@@ -590,7 +589,7 @@ public class MapLoader {
 			if(PAS.get_pas() == null)
 				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			else
-				m_navigation.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
 		}

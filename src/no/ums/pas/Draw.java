@@ -1,11 +1,13 @@
 package no.ums.pas;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.SystemColor;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.Component;
@@ -14,7 +16,6 @@ import java.awt.RenderingHints;
 import no.ums.pas.maps.*;
 import no.ums.pas.ums.errorhandling.Error;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
 
 	public class Draw /*extends Thread */implements ImageObserver /*, Runnable*/ {
 		Dimension m_dimension;
@@ -268,17 +269,19 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 					}
 					else {
 						//get_mappane().superPaint(m_gfx_buffer);
+						//get_mappane().paint(m_gfx_buffer);
+						
 						Graphics2D g2d = (Graphics2D)m_gfx_buffer;
+						//clear screen
+						Color oldBg = g2d.getBackground();
+						g2d.setBackground(SystemColor.control);
+						g2d.clearRect(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+						g2d.setBackground(oldBg);
 						//FontSet g2d.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
 
-						//Substance 3.3
-						g2d.setColor(SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor());
-						g2d.setColor(SubstanceLookAndFeel.getActiveColorScheme().getForegroundColor());
 						
-						//Substance 5.2
-						//g2d.setColor(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getUltraLightColor());
-						//g2d.setColor(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getForegroundColor());
-						
+						g2d.setColor(SystemColor.textText);
+												
 
 						//if(get_suspended())
 						if(!get_mappane().getMapLoader().IsLoadingMapImage() && !b_firstmap)

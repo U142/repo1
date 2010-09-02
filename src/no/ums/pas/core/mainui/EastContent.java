@@ -41,6 +41,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public static final int PANEL_HOUSEEDITOR_ = 6;
 	public static final int PANEL_PARM_ = 7;
 	public static final int PANEL_TAS_ = 8;
+	
+	public static int CURRENT_PANEL = PANEL_INFO_;
 
 	PAS m_pas;
 	private GridBagLayout	m_gridlayout;
@@ -163,10 +165,15 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		m_tabbedpane.addChangeListener(new ChangeListener() {			
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				PAS.pasplugin.onEastContentTabClicked(EastContent.this, m_tabbedpane);
+				tabChanged();
 			}
 		});
 
+	}
+	
+	protected void tabChanged()
+	{
+		PAS.pasplugin.onEastContentTabClicked(EastContent.this, m_tabbedpane);		
 	}
 	
 	public void InitTAS()

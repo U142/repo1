@@ -111,6 +111,30 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		return false;
 	}
 	
+	public boolean setPaintModeBasedOnActiveShape(boolean bForcePolyIsElliptical)
+	{
+		if(get_active_shape()==null)
+			return false;
+		
+		Class cl = get_active_shape().getClass();
+		if(cl.equals(PolygonStruct.class))
+		{
+			PolygonStruct poly = (PolygonStruct)get_active_shape();
+			if(poly.isElliptical() || bForcePolyIsElliptical)
+				set_mode(MAP_MODE_SENDING_ELLIPSE_POLYGON);
+			else
+				set_mode(MAP_MODE_SENDING_POLY);
+		}
+		else if(cl.equals(EllipseStruct.class))
+			set_mode(MAP_MODE_SENDING_ELLIPSE);
+		else if(cl.equals(PLMNShape.class))
+			set_mode(MAP_MODE_PAN);
+		else if(cl.equals(TasStruct.class))
+			set_mode(MAP_MODE_PAN);
+		
+		return true;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {		
 	}

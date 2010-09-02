@@ -1,4 +1,4 @@
-package no.ums.pas.plugins.centric.maps.defines;
+package no.ums.pas.maps.defines;
 
 import java.awt.Color;
 import java.awt.Dimension;

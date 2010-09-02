@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="l_sched_utc" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="mdvgroup" use="required" type="{http://ums.no/ws/parm/}MDVSENDINGINFO_GROUP" />
  *       &lt;attribute name="l_validity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="l_parent_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -53,6 +54,8 @@ public abstract class CBSENDBASE
     protected MDVSENDINGINFOGROUP mdvgroup;
     @XmlAttribute(name = "l_validity", required = true)
     protected int lValidity;
+    @XmlAttribute(name = "l_parent_refno", required = true)
+    protected long lParentRefno;
 
     /**
      * Gets the value of the messagepart property.
@@ -156,6 +159,22 @@ public abstract class CBSENDBASE
      */
     public void setLValidity(int value) {
         this.lValidity = value;
+    }
+
+    /**
+     * Gets the value of the lParentRefno property.
+     * 
+     */
+    public long getLParentRefno() {
+        return lParentRefno;
+    }
+
+    /**
+     * Sets the value of the lParentRefno property.
+     * 
+     */
+    public void setLParentRefno(long value) {
+        this.lParentRefno = value;
     }
 
 }

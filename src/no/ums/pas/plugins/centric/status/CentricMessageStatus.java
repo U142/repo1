@@ -5,6 +5,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,15 +22,18 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricVariables;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATUS;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.parm.CBALERTKILL;
 import no.ums.ws.parm.CBSENDBASE;
 import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.CBSTATUS;
+import no.ums.ws.pas.status.ULBASENDING;
 
 public class CentricMessageStatus extends DefaultPanel implements ComponentListener {
 
@@ -51,16 +57,107 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
 	private CentricMessages m_parent;
 	public CentricMessages get_parent() { return m_parent; }
+	protected Hashtable<Integer, CentricOperatorStatus> hash_operators = new Hashtable<Integer, CentricOperatorStatus>(); //operatorpk as key
+	protected CentricOperatorStatus total_statuspane = null;
 	
-	private long m_l_refno;
-	public long get_refno() { return m_l_refno; }
 	
-	public CentricMessageStatus(CentricMessages parent, long l_refno) { // Sende med status ting
+	
+	protected boolean containsOperator(int pk)
+	{
+		if(hash_operators.containsKey(pk))
+			return true;
+		return false;
+	}
+	protected void putOperator(int pk, CentricOperatorStatus operator)
+	{
+		hash_operators.put(pk, operator);
+	}
+	
+	public Hashtable<Integer, CentricOperatorStatus> getOperators()
+	{
+		return hash_operators;
+	}
+	//private long m_l_refno;
+	public long get_refno() { 
+		return lastcbstatus.getLRefno(); 
+	}
+	private CBSTATUS lastcbstatus = null;
+	
+	public CentricMessageStatus(CentricMessages parent, CBSTATUS cbstatus) { // Sende med status ting
 		super();
 		m_parent = parent;
-		m_l_refno = l_refno;
+		//m_l_refno = l_refno;
 		add_controls();
 		addComponentListener(this);
+	}
+	
+	public void UpdateStatus(CBSTATUS cbstatus, long project_timestamp)
+	{
+		lastcbstatus = cbstatus;
+		
+		this.get_txt_message().setText(lastcbstatus.getMdv().getSzMessagetext());
+		setName(lastcbstatus.getSzSendingname());
+		List<ULBASENDING> arr_operators = cbstatus.getOperators().getULBASENDING();
+		
+		for(int oper=0; oper < arr_operators.size(); oper++)
+		{
+			ULBASENDING operator = arr_operators.get(oper);
+			CentricOperatorStatus currentoperator = null;
+			if(containsOperator(operator.getLOperator()))
+			{
+				currentoperator = hash_operators.get(operator.getLOperator());
+			}
+			else
+			{
+				currentoperator = new CentricOperatorStatus(this, false, operator);
+				get_tpane().add(operator.getSzOperator(), currentoperator);
+				putOperator(operator.getLOperator(), currentoperator);
+				//hash_operators.put(operator.getLOperator(), currentoperator);
+			}
+			if(currentoperator!=null)
+				currentoperator.UpdateStatus(cbstatus, operator, project_timestamp);
+					
+			
+			/*if(operator.getLStatus()<1000) // All statuses under 1000 are still active
+				active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
+			
+			for(int i=0;i<m_tabbed_operators.getComponentCount();++i) {
+				ms = (CentricMessageStatus)m_tabbed_operators.getComponentAt(i);
+				
+				// Does the message already exist?
+				if(ms.get_refno() == cbs.getLRefno()) {
+					ms.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
+					ms.setName(cbs.getSzSendingname());
+					
+					if(operator.getLStatus() >= 540)  // Active
+						tp.setTitleAt(i,"A " + cbs.getSzSendingname());
+					if(operator.getLStatus() == 1000) // Finished
+						tp.setTitleAt(i,"F " + cbs.getSzSendingname());
+
+					CentricOperatorStatus cos;
+					
+					
+					boolean operator_found = false;
+					for(int k=0;k<ms.get_tpane().getComponentCount();++k) {
+						//cos.get_lbl_channel().setText(histcell.g);
+						cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(k);
+						if(cos.get_operator() == operator.getLOperator()) {
+							setOperatorValues(cbp, cbs, operator, cos);
+							operator_found = true;
+						}
+					}
+					if(!operator_found) {
+						cos = new CentricOperatorStatus(ms, false, operator.getLOperator());
+						setOperatorValues(cbp, cbs, operator, cos);
+						ms.get_tpane().add(operator.getSzOperator(), cos);
+					}
+					
+					found = true;
+				}
+			}*/
+		}
+		updateTotal(project_timestamp);
+
 	}
 
 	@Override
@@ -68,7 +165,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		if(e.getSource().equals(m_btn_kill)) {
 			if(confirmKill()) {
 				CBALERTKILL kill = new CBALERTKILL();
-				kill.setLRefno(m_l_refno);
+				kill.setLRefno(get_refno());
 				
 				WSCentricSend send = new WSCentricSend(this,"act_kill_cb", kill); 
 				send.start();
@@ -76,7 +173,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		}
 		else if(e.getSource().equals(m_btn_new_message)) {
 			PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSEND_);
-			//CentricVariables.centric_send.fillMessage();
+			CentricVariables.centric_send.fromTemplate(lastcbstatus);
 		}
 		else if(e.getSource().equals(m_btn_send_to_address_book)) {
 			
@@ -153,9 +250,12 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		//m_tabbed_operators.add("KPN",new CentricOperatorStatus(this, false,1));
 		//m_tabbed_operators.add("Vodafone",new CentricOperatorStatus(this, false,3));
 		//m_tabbed_operators.add("T-Mobile",new CentricOperatorStatus(this, false,2));
-		m_tabbed_operators.add(PAS.l("common_total"), new CentricOperatorStatus(this, true,-1));
+		ULBASENDING operator =new ULBASENDING();
+		operator.setLOperator(-1); //mark operatorpk as -1 for total pane
+		total_statuspane = new CentricOperatorStatus(this, true,operator);
+		m_tabbed_operators.add(PAS.l("common_total"), total_statuspane);
 		m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
-		
+		putOperator(operator.getLOperator(), total_statuspane);
 		
 		
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -171,6 +271,21 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		this.revalidate();
 		repaint();
 		init();
+	}
+	
+	public OPERATOR_STATUS getOperatorStatus()
+	{
+		OPERATOR_STATUS worst_status = OPERATOR_STATUS.INITIALIZING;
+		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
+		while(en.hasMoreElements())
+		{
+			CentricOperatorStatus op = en.nextElement();
+			if(op.getOperatorStatus().ordinal() < worst_status.ordinal())
+			{
+				worst_status = op.getOperatorStatus();
+			}
+		}
+		return worst_status;
 	}
 
 	@Override
@@ -188,6 +303,69 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		setVisible(true);
 	}
 	
+	private void updateTotal(long db_timestamp) {
 	
+		CentricOperatorStatus cos;
+	
+		int total=0;
+		int unknown=0;
+		int total_ok=0;
+		float total_percent=0;
+		long start = Long.parseLong("99999999999999");
+		long timestamp = 0;
+		int channel=0;
+
+		Enumeration<CentricOperatorStatus> operators = getOperators().elements();
+		while(operators.hasMoreElements())
+		{
+
+			CentricOperatorStatus operator = operators.nextElement();
+			switch(operator.m_operator.getLOperator())
+			{
+				case -1: //the totals tab pane
+					break;
+				default: //operator tab pane
+					total += operator.total<0?0:operator.total;
+					unknown += operator.unknown<0?0:operator.unknown;
+					total_ok += operator.total_ok<0?0:operator.total_ok;
+					total_percent += operator.percent;
+					if(operator.start<start) //use oldest start timestamp
+						start = operator.start;
+					if(operator.timestamp > timestamp)
+						timestamp = operator.timestamp; //use newest timestamp
+					
+					channel = operator.channel;						
+					break;
+			}
+		}
+		switch(getOperatorStatus()) //get worst status. If the message is still alive, use now as timestamp
+		{
+		case ACTIVE:
+		case INITIALIZING:
+			timestamp = db_timestamp;
+			break;
+		case FINISHED:
+			//use the latest timestamp from operators
+			break;
+		}
+		total_statuspane.total = total;
+		total_statuspane.unknown = unknown;
+		total_statuspane.total_ok = total_ok;
+		int num_operators = getOperators().size()-1;
+		total_percent = (num_operators>=1 ? total_percent/num_operators : 0);
+		//total_percent = (total_percent/(ms.get_tpane().getComponentCount()-1));
+		total_statuspane.percent = total_percent;
+		total_statuspane.get_lbl_channel().setText(String.valueOf(channel));
+		total_statuspane.get_lbl_completed().setText(String.valueOf(total_ok<0?"N/A":total_ok));
+		total_statuspane.get_lbl_unknown().setText(String.valueOf(total<0?"N/A":unknown));
+		total_statuspane.get_lbl_total().setText(String.valueOf(total<0?"N/A":total));
+		total_statuspane.get_lbl_percent().setText(String.valueOf(total_percent));
+		// Start
+		total_statuspane.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(start)));
+		// Duration
+		total_statuspane.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(start,timestamp) + " " + PAS.l("common_minutes_maybe")));
+
+	}
+
 	
 }

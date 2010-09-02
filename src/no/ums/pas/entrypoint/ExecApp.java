@@ -3,21 +3,13 @@ import java.net.URL;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import no.ums.pas.*;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.pluginbase.PluginLoader;
 import no.ums.pas.ums.errorhandling.Error;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel;
-import org.jvnet.substance.utils.SubstanceTitlePane;
-import org.jvnet.substance.utils.SubstanceTitlePane.SubstanceMenuBar;
 
 
 public class ExecApp {
@@ -28,8 +20,8 @@ public class ExecApp {
 		connect_timeout = System.getProperties().get("sun.net.client.defaultConnectTimeout");
 		read_timeout = System.getProperties().get("sun.net.client.defaultReadTimeout");
 		String sz_sitename = "http://vb4utv/";
-		String sz_userid = "";
-		String sz_compid = "";
+		String sz_userid = null;
+		String sz_compid = null;
 		String sz_import = "";
 		String sz_pasws = "";
 		String sz_plugin = null;
@@ -74,10 +66,7 @@ public class ExecApp {
 			}
 		}
 		//JFrame.setDefaultLookAndFeelDecorated(true);
-		
-		//Substance 3.3
-		//SubstanceTitlePane.setCanHaveHeapStatusPanel(true);
-		
+				
 		System.out.println("Using site: " + sz_sitename);
 		
 		try
@@ -92,27 +81,26 @@ public class ExecApp {
 			e.printStackTrace();
 			sz_codebase = sz_sitename;
 		}
-		final String f_sitename = sz_sitename;
-		final String f_userid = sz_userid;
-		final String f_compid = sz_compid;
-		final String f_pasws = sz_pasws;
-		final boolean f_debug = debug;
-		final String f_codebase = sz_codebase;
-		final String f_plugin = sz_plugin;
-		final String [] f_args = args;
-		final String f_force_wms = sz_force_wms;
+		
+		m_pas = new PAS(); //(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_force_wms, f_args);
+		m_pas.setSiteName(sz_sitename);
+		m_pas.setOverrideUserId(sz_userid);
+		m_pas.setOverrideCompId(sz_compid);
+		m_pas.setPasWsSite(sz_pasws);
+		m_pas.setDebug(debug);
+		m_pas.setCodeBase(sz_codebase);
+		m_pas.setPlugin(sz_plugin);
+		m_pas.setProgramArguments(args);
+		m_pas.setForceWMSSite(sz_force_wms);
+		loadPlugin(sz_codebase, sz_plugin);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				loadPlugin(f_codebase, f_plugin);
 				PAS.pasplugin.onSetInitialLookAndFeel(this.getClass().getClassLoader());
-				m_pas = new PAS(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_force_wms, f_args);
+				m_pas.init();
 			}
 		});
-/*		m_pas.init();
-		m_pas.setBounds(0, 0, 1280, 1000);
-		m_pas.setVisible(true);
-		m_pas.setState(javax.swing.JFrame.MAXIMIZED_BOTH);*/
 	}
 	
 	private static void loadPlugin(String sz_codebase, String sz_plugin)

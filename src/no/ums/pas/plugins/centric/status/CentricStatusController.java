@@ -68,6 +68,7 @@ public class CentricStatusController extends StatusController {
 		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 		res.setLProjectpk(l_projectpk);
 		set_cbsendingresponse(res);
+		m_centricstatus = new CentricStatus(res);
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(centricsend);
 		PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);

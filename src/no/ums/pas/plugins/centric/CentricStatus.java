@@ -197,8 +197,8 @@ class CentricMessagesStatus extends DefaultPanel {
 		add(m_lbl_message, m_gridconst);
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_txt_message, m_gridconst);
-		set_gridconst(0, inc_panels(), 3, 1);
-		add(m_tabbed_operators);
+		//set_gridconst(0, inc_panels(), 3, 1);
+		//add(m_tabbed_operators);
 		
 		m_tabbed_operators.add("KPN",new CentricOperatorStatus());
 		m_tabbed_operators.add("Vodafone",new CentricOperatorStatus());

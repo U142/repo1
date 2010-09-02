@@ -5,15 +5,26 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentListener;
+import java.util.List;
 
 import javax.swing.JTabbedPane;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.pas.status.CBSTATUS;
+import no.ums.ws.pas.status.ULBAHISTCELL;
+import no.ums.ws.pas.status.ULBASENDING;
 
 public class CentricOperatorStatus extends DefaultPanel implements ComponentListener {
 
+	public enum OPERATOR_STATUS
+	{
+		INITIALIZING,
+		ACTIVE,
+		FINISHED,
+	}
 	/**
 	 * 
 	 */
@@ -34,8 +45,10 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	private StdTextLabel m_lbl_start = new StdTextLabel("23-06-2010 22:00",200);
 	private StdTextLabel m_lbl_unknown = new StdTextLabel("");
 	
-	private int m_operator;
-	public int get_operator() { return m_operator; }
+	//private int m_operator;
+	public ULBASENDING get_operator() { return m_operator; }
+	protected ULBASENDING m_operator;
+	public int get_operatorpk() { return m_operator.getLOperator(); }
 	private CentricMessageStatus m_parent;
 	public int total;
 	public int total_ok;
@@ -54,7 +67,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	public StdTextLabel get_lbl_start() { return m_lbl_start; }
 	public StdTextLabel get_lbl_unknown() { return m_lbl_unknown; }
 	
-	public CentricOperatorStatus(CentricMessageStatus parent, boolean is_total, int operator) {
+	public CentricOperatorStatus(CentricMessageStatus parent, boolean is_total, ULBASENDING operator) {
 		// Operator
 		super();
 		m_parent = parent;
@@ -120,5 +133,103 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		setVisible(true);		
 	}
 
+	public void UpdateStatus(CBSTATUS cbs, ULBASENDING operator, long db_timestamp)
+	{
+		m_operator = operator;
+		List<ULBAHISTCELL> arr_cellstatus = m_operator.getHistcell().getULBAHISTCELL();
+		ULBAHISTCELL histcell = null;
+		if(arr_cellstatus.size()>0)
+			histcell = arr_cellstatus.get(0);
+		
+		int tmp_total_ok = 0;
+		int tmp_total_unknown = 0;
+		int tmp_total = 0;
+		float tmp_percent = 0;
+		
+		if(histcell != null) {
+			tmp_total_ok = histcell.getL2Gok() + histcell.getL3Gok() + histcell.getL4Gok();
+			tmp_total = histcell.getL2Gtotal() + histcell.getL3Gtotal() + histcell.getL4Gtotal();
+			tmp_total_unknown = tmp_total - total_ok;
+			
+			total = tmp_total;
+			total_ok = tmp_total_ok;
+			unknown = tmp_total_unknown;
+			tmp_percent = Math.round((((float)total_ok/(float)total)*100.0));//histcell.getLSuccesspercentage();
+			
+			
+		}
+		percent = tmp_percent;
+		if(total<=0)
+			percent=0;
+		get_lbl_completed().setText(String.valueOf(total_ok<0?PAS.l("common_na"):total_ok));
+		get_lbl_unknown().setText(String.valueOf(total<0?PAS.l("common_na"):tmp_total_unknown));
+		get_lbl_total().setText(String.valueOf(total<0?PAS.l("common_na"):total));
+		get_lbl_unknown().setText(String.valueOf(unknown<0?PAS.l("common_na"):unknown));
+		get_lbl_percent().setText(String.valueOf(percent));
+		// Channel
+		get_lbl_channel().setText(String.valueOf(cbs.getLChannel()));
+		channel = cbs.getLChannel();
+		// Start
+		start = cbs.getLCreatedTs();
+		get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(cbs.getLCreatedTs())));
+		// Duration
+		if(operator.getLStatus()>=1000) // Finished
+			timestamp = cbs.getLLastTs();
+		else
+			timestamp = db_timestamp;
+		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),db_timestamp)) + " " + PAS.l("common_minutes_maybe"));
+		
+		/*
+		ULBAHISTCELL histcell = null;
+		if(operator.getHistcell().getULBAHISTCELL().size() > 0)
+			histcell = operator.getHistcell().getULBAHISTCELL().get(operator.getHistcell().getULBAHISTCELL().size()-1);
+		
+		int total_ok = 0;
+		int total_unknown = 0;
+		int total = 0;
+		float percent = 0;
+		
+		if(histcell != null) {
+			total_ok = histcell.getL2Gok() + histcell.getL3Gok() + histcell.getL4Gok();
+			total = histcell.getL2Gtotal() + histcell.getL3Gtotal() + histcell.getL4Gtotal();
+			total_unknown = total - total_ok;
+			cos.total = total;
+			cos.total_ok = total_ok;
+			cos.unknown = total_unknown;
+			percent = histcell.getLSuccesspercentage();
+			
+			
+		}
+		cos.percent = percent;
+		cos.get_lbl_completed().setText(String.valueOf(total_ok<0?"N/A":total_ok));
+		cos.get_lbl_unknown().setText(String.valueOf(total<0?"N/A":total_unknown));
+		cos.get_lbl_total().setText(String.valueOf(total<0?"N/A":total));
+		cos.get_lbl_percent().setText(String.valueOf(percent));
+		// Channel
+		cos.get_lbl_channel().setText(String.valueOf(cbs.getLChannel()));
+		cos.channel = cbs.getLChannel();
+		// Start
+		cos.start = cbs.getLCreatedTs();
+		cos.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(cbs.getLCreatedTs())));
+		// Duration
+		if(operator.getLStatus()>=1000) // Finished
+			cos.timestamp = cbs.getLLastTs();
+		else
+			cos.timestamp = cbp.getLDbTimestamp();
+		cos.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),cbp.getLDbTimestamp())) + " " + PAS.l("common_minutes_maybe"));
+
+		 */
+	}
+	
+	public OPERATOR_STATUS getOperatorStatus()
+	{
+		int status = get_operator().getLStatus();
+		if(get_operator().getLStatus() == 1000)
+			return OPERATOR_STATUS.FINISHED;
+		else if(get_operator().getLStatus() >= 540)
+			return OPERATOR_STATUS.ACTIVE;
+		else
+			return OPERATOR_STATUS.INITIALIZING;
+	}
 }
 

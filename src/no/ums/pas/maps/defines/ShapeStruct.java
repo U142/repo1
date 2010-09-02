@@ -37,6 +37,17 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		SHOW_POLYGON_SIMPLIFIED_PRPIXELS,
 		SHOW_POLYGON_SIMPLIFIED_PRMETERS,
 	}
+	
+	public void enableSendColor()
+	{
+		set_fill_color(new Color((float)0.0, (float)0.0, (float)1.0, (float)0.2));
+		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
+	}
+	public void enableStatusColor()
+	{
+		set_fill_color(new Color((float)1.0, (float)0.0, (float)0.0, (float)0.2));
+		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
+	}
 
 	protected boolean m_b_hidden = false;
 	protected double m_f_area_sqm = 0;
@@ -48,7 +59,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	 */
 	public void setEditable(boolean b)
 	{
-		m_b_editable = !b;
+		m_b_editable = b;
 		System.out.println("Shape setEditable="+m_b_editable);
 	}
 	
