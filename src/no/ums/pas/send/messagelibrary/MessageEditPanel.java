@@ -182,7 +182,10 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 				btn_cancel.setEnabled(false);
 			btn_save.setEnabled(false);
 			btn_new_lang.setEnabled(false);
-			btn_select.setEnabled(true);
+			//if(msg.isLeaf())
+				btn_select.setEnabled(true);
+			//else
+			//	btn_select.setEnabled(false);
 		}
 		
 		/*else if(msg.getFTemplate()==0)

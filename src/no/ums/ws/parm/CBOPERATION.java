@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;simpleType name="CB_OPERATION">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="NewAlertPolygon"/>
- *     &lt;enumeration value="NewAlertPLNM"/>
+ *     &lt;enumeration value="NewAlertPLMN"/>
  *     &lt;enumeration value="UpdateAlert"/>
  *     &lt;enumeration value="KillAlert"/>
  *   &lt;/restriction>
@@ -29,8 +29,8 @@ public enum CBOPERATION {
 
     @XmlEnumValue("NewAlertPolygon")
     NEW_ALERT_POLYGON("NewAlertPolygon"),
-    @XmlEnumValue("NewAlertPLNM")
-    NEW_ALERT_PLNM("NewAlertPLNM"),
+    @XmlEnumValue("NewAlertPLMN")
+    NEW_ALERT_PLMN("NewAlertPLMN"),
     @XmlEnumValue("UpdateAlert")
     UPDATE_ALERT("UpdateAlert"),
     @XmlEnumValue("KillAlert")

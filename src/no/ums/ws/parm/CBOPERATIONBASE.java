@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="l_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="l_projectpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="sz_sender" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="l_comppk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="l_deptpk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="l_userpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
@@ -60,8 +59,6 @@ public abstract class CBOPERATIONBASE {
     protected long lProjectpk;
     @XmlAttribute(name = "sz_projectname")
     protected String szProjectname;
-    @XmlAttribute(name = "sz_sender")
-    protected String szSender;
     @XmlAttribute(name = "l_comppk", required = true)
     protected int lComppk;
     @XmlAttribute(name = "l_deptpk", required = true)
@@ -219,30 +216,6 @@ public abstract class CBOPERATIONBASE {
      */
     public void setSzProjectname(String value) {
         this.szProjectname = value;
-    }
-
-    /**
-     * Gets the value of the szSender property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSzSender() {
-        return szSender;
-    }
-
-    /**
-     * Sets the value of the szSender property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSzSender(String value) {
-        this.szSender = value;
     }
 
     /**

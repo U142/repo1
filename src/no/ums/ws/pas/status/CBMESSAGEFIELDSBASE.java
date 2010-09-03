@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CB_MESSAGE_FIELDS_BASE")
 @XmlSeeAlso({
+    CBSENDER.class,
     CBMESSAGEPART.class,
     CBORIGINATOR.class,
     CBRISK.class,

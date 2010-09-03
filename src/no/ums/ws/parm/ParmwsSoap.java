@@ -273,17 +273,6 @@ public interface ParmwsSoap {
 
     /**
      * 
-     * @return
-     *     returns boolean
-     */
-    @WebMethod(action = "http://ums.no/ws/parm/tmpRestrictionShape")
-    @WebResult(name = "tmpRestrictionShapeResult", targetNamespace = "http://ums.no/ws/parm/")
-    @RequestWrapper(localName = "tmpRestrictionShape", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.TmpRestrictionShape")
-    @ResponseWrapper(localName = "tmpRestrictionShapeResponse", targetNamespace = "http://ums.no/ws/parm/", className = "no.ums.ws.parm.TmpRestrictionShapeResponse")
-    public boolean tmpRestrictionShape();
-
-    /**
-     * 
      * @param cb
      * @param logon
      * @return

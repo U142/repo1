@@ -25,6 +25,8 @@ import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.pas.plugins.centric.CentricEastContent;
+import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
+import no.ums.pas.plugins.centric.CentricVariables;
 import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATUS;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -239,7 +241,11 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			return;
 		getTabbedPane().setTitleAt(0, cbp.getProject().getSzProjectname());
 		JTabbedPane tp = get_messages().get_tpane();
-		
+		CentricSendOptionToolbar csend = CentricVariables.centric_send;
+		csend.set_projectpk(
+				Long.parseLong(cbp.getProject().getLProjectpk()), 
+				cbp.getProject().getSzProjectname());
+
 		CentricMessageStatus ms;
 		//CBSTATUS cbs;
 		
@@ -279,6 +285,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			case INITIALIZING:
 			case ACTIVE:
 				lbl_pane = "A ";
+				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
 			case FINISHED:
 				lbl_pane = "F ";

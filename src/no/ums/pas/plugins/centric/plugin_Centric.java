@@ -303,7 +303,8 @@ public class plugin_Centric extends PAS_Scripting
 				for(int i=0; i < news.size(); i++)
 				{
 					UBBNEWS bbnews = news.get(i);
-					systemmessagepanel.list.getDefaultModel().addOnTop(bbnews);
+					//systemmessagepanel.list.getDefaultModel().addOnTop(bbnews);
+					systemmessagepanel.list.getDefaultModel().handleMessage(bbnews);
 				}
 				systemmessagepanel.list.getDefaultModel().sort();
 			}
@@ -345,9 +346,59 @@ public class plugin_Centric extends PAS_Scripting
 				}
 			}
 			Hashtable<Long, Object> recordset = new Hashtable<Long, Object>();
-			public void addOnTop(Object arg1) {
-				this.add(0, arg1);
+			
+			public void handleMessage(UBBNEWS b)
+			{
+				if(b.getFActive()>=1) //insert/update
+				{
+					if(recordset.containsKey(b.getLNewspk()))
+					{
+						update(b);
+					}
+					else
+					{
+						addOnTop(b);
+					}
+				}
+				else //remove
+				{
+					if(recordset.containsKey(b.getLNewspk()))
+					{
+						remove(b);
+					}
+				}
 			}
+			protected void addOnTop(Object arg1) {
+				
+				UBBNEWS news = (UBBNEWS)arg1;
+				if(news.getFActive()>=1)
+					this.add(0, arg1);
+			}
+			
+			protected void remove(UBBNEWS o)
+			{
+				UBBNEWS original = (UBBNEWS)recordset.get(o.getLNewspk());
+				int index = super.indexOf(original);
+				if(index>=0)
+				{
+					super.remove(index);
+					if(recordset.containsKey(o.getLNewspk()))
+					{
+						recordset.remove(o.getLNewspk());
+					}
+				}
+			}
+			protected void update(UBBNEWS o)
+			{
+				UBBNEWS original = (UBBNEWS)recordset.get(o.getLNewspk());
+				int index = super.indexOf(original);
+				if(index>=0)
+				{
+					super.set(index, o);
+					recordset.put(o.getLNewspk(), o);
+				}
+			}
+			
 			@Override
 			public void add(int arg0, Object arg1) {
 				Long key = ((UBBNEWS)arg1).getLNewspk();
@@ -1298,10 +1349,11 @@ public class plugin_Centric extends PAS_Scripting
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(null);
 			
-			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0);
+			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0, "");
 			//((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
 			PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
+			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
 			return true;
 		}catch(Exception e) { return false; }
 	}
@@ -1311,7 +1363,7 @@ public class plugin_Centric extends PAS_Scripting
 		try {
 			// Does the same thing as after sending a message
 			CentricSendOptionToolbar csend = CentricVariables.centric_send;
-			csend.set_projectpk(Long.parseLong(project.get_projectpk()));
+			//csend.set_projectpk(Long.parseLong(project.get_projectpk()), project.get_projectname());
 			
 			//CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
 			

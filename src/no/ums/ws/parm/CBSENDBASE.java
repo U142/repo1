@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="messagepart" type="{http://ums.no/ws/parm/}CB_MESSAGEPART" minOccurs="0"/>
  *         &lt;element name="textmessages" type="{http://ums.no/ws/parm/}CB_MESSAGELIST" minOccurs="0"/>
+ *         &lt;element name="sender" type="{http://ums.no/ws/parm/}CB_SENDER" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="l_sched_utc" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
  *       &lt;attribute name="mdvgroup" use="required" type="{http://ums.no/ws/parm/}MDVSENDINGINFO_GROUP" />
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CB_SEND_BASE", propOrder = {
     "messagepart",
-    "textmessages"
+    "textmessages",
+    "sender"
 })
 @XmlSeeAlso({
     CBALERTUPDATE.class,
@@ -48,6 +50,7 @@ public abstract class CBSENDBASE
 
     protected CBMESSAGEPART messagepart;
     protected CBMESSAGELIST textmessages;
+    protected CBSENDER sender;
     @XmlAttribute(name = "l_sched_utc", required = true)
     protected long lSchedUtc;
     @XmlAttribute(required = true)
@@ -103,6 +106,30 @@ public abstract class CBSENDBASE
      */
     public void setTextmessages(CBMESSAGELIST value) {
         this.textmessages = value;
+    }
+
+    /**
+     * Gets the value of the sender property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBSENDER }
+     *     
+     */
+    public CBSENDER getSender() {
+        return sender;
+    }
+
+    /**
+     * Sets the value of the sender property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBSENDER }
+     *     
+     */
+    public void setSender(CBSENDER value) {
+        this.sender = value;
     }
 
     /**

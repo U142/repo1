@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="risk" type="{http://ums.no/ws/pas/status}CB_RISK" minOccurs="0"/>
  *         &lt;element name="reaction" type="{http://ums.no/ws/pas/status}CB_REACTION" minOccurs="0"/>
  *         &lt;element name="originator" type="{http://ums.no/ws/pas/status}CB_ORIGINATOR" minOccurs="0"/>
+ *         &lt;element name="sender" type="{http://ums.no/ws/pas/status}CB_SENDER" minOccurs="0"/>
  *         &lt;element name="shape" type="{http://ums.no/ws/pas/status}UShape" minOccurs="0"/>
  *         &lt;element name="l_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="l_combined_status" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -48,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
     "risk",
     "reaction",
     "originator",
+    "sender",
     "shape",
     "lRefno",
     "lCombinedStatus",
@@ -67,6 +69,7 @@ public class CBSTATUS {
     protected CBRISK risk;
     protected CBREACTION reaction;
     protected CBORIGINATOR originator;
+    protected CBSENDER sender;
     protected UShape shape;
     @XmlElement(name = "l_refno")
     protected long lRefno;
@@ -226,6 +229,30 @@ public class CBSTATUS {
      */
     public void setOriginator(CBORIGINATOR value) {
         this.originator = value;
+    }
+
+    /**
+     * Gets the value of the sender property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBSENDER }
+     *     
+     */
+    public CBSENDER getSender() {
+        return sender;
+    }
+
+    /**
+     * Sets the value of the sender property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBSENDER }
+     *     
+     */
+    public void setSender(CBSENDER value) {
+        this.sender = value;
     }
 
     /**
