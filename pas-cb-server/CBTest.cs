@@ -242,6 +242,7 @@ namespace pas_cb_server.cb_test
         {
             while (CBServer.running)
             {
+
                 Thread.Sleep(1000);
             }
             Log.WriteLog("Stopped heartbeat thread", 9);
