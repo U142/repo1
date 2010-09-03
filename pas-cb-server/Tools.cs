@@ -84,13 +84,13 @@ namespace pas_cb_server
                                 break;
                             case ConsoleKey.T:
                                 if (key.Modifiers == ConsoleModifiers.Control)
-                                    test.Selftest.NewAlert();
+                                    cb_test.CBSelftest.NewAlert();
                                 else
                                     Console.WriteLine("# Use ctrl+t to run test");
                                 break;
                             case ConsoleKey.P:
                                 if (key.Modifiers == ConsoleModifiers.Control)
-                                    test.Selftest.NewAlertPLMN();
+                                    cb_test.CBSelftest.NewAlertPLMN();
                                 else
                                 {
                                     //Console.WriteLine("# Use ctrl+p to run PLMN test");
@@ -101,13 +101,13 @@ namespace pas_cb_server
                                 break;
                             case ConsoleKey.K:
                                 if (key.Modifiers == ConsoleModifiers.Control)
-                                    test.Selftest.KillAlert();
+                                    cb_test.CBSelftest.KillAlert();
                                 else
                                     Console.WriteLine("# Use ctrl+k to kill current test");
                                 break;
                             case ConsoleKey.M:
                                 if (key.Modifiers == ConsoleModifiers.Control)
-                                    test.Selftest.UpdateAlert();
+                                    cb_test.CBSelftest.UpdateAlert();
                                 else
                                     Console.WriteLine("# Use ctrl+m to modify current test");
                                 break;
@@ -118,6 +118,16 @@ namespace pas_cb_server
                             case ConsoleKey.H:
                             case ConsoleKey.Help:
                                 PrintHelp();
+                                break;
+                            case ConsoleKey.MediaNext:
+                            case ConsoleKey.MediaPlay:
+                            case ConsoleKey.MediaPrevious:
+                            case ConsoleKey.MediaStop:
+                            case ConsoleKey.LaunchApp1:
+                            case ConsoleKey.LaunchApp2:
+                            case ConsoleKey.LaunchMail:
+                            case ConsoleKey.LaunchMediaSelect:
+                                // just ignore these keys
                                 break;
                             default:
                                 Console.WriteLine("# Unknown command '{0}'. Press 'h' or '?' for a list of available commands.", key.Key.ToString().ToLower());

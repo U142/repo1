@@ -110,7 +110,7 @@
     <Compile Include="CBServiceInstaller.Designer.cs">
       <DependentUpon>CBServiceInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="Selftest.cs" />
+    <Compile Include="CBTest.cs" />
     <Compile Include="CBStatus.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Database.cs" />

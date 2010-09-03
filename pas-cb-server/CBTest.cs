@@ -6,20 +6,21 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Data.Odbc;
+using System.Threading;
 
-namespace pas_cb_server.test
+namespace pas_cb_server.cb_test
 {
-    class Selftest
+    class CBSelftest
     {
         private static int currentTestRef = 0;
-        public static int TestReference
+        private static int TestReference
         {
             get
             {
                 return currentTestRef;
             }
         }
-        public static void TestEnded(int status)
+        private static void TestEnded(int status)
         {
             Log.WriteLog(String.Format("Test alert {0} ended width status {1}", currentTestRef, status), 0);
             currentTestRef = 0;
@@ -222,6 +223,29 @@ namespace pas_cb_server.test
             }
 
             return Constant.OK;
+        }
+    }
+
+    class CBTest
+    {
+        public static void RandomTestThread()
+        {
+            while (CBServer.running)
+            {
+                Thread.Sleep(1000);
+            }
+            Log.WriteLog("Stopped randomtest thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
+        }
+
+        public static void HeartbeatThread()
+        {
+            while (CBServer.running)
+            {
+                Thread.Sleep(1000);
+            }
+            Log.WriteLog("Stopped heartbeat thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
         }
     }
 

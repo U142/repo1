@@ -54,6 +54,14 @@ namespace pas_cb_server
                 new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
                 Interlocked.Increment(ref Settings.threads);
 
+                Log.WriteLog("Starting heartbeat thread", 9);
+                new Thread(new ThreadStart(cb_test.CBTest.RandomTestThread)).Start();
+                Interlocked.Increment(ref Settings.threads);
+
+                Log.WriteLog("Starting test thread", 9);
+                new Thread(new ThreadStart(cb_test.CBTest.HeartbeatThread)).Start();
+                Interlocked.Increment(ref Settings.threads);
+
                 if (Environment.UserInteractive)
                 {
                     Log.WriteLog("Starting keyreader thread", 9);
