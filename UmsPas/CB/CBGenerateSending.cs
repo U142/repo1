@@ -89,7 +89,7 @@ namespace com.ums.PAS.CB
 
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
             mdv.sz_messagetext = message.sz_text.Replace("'", "''");
-            mdv.sz_oadc = alert.sz_sender.Replace("'", "''");
+            mdv.sz_oadc = alert.sender.sz_name.Replace("'", "''");
             mdv.sz_sendingname = "Alert " + alert.l_refno;
             mdv.l_scheddate = "0";
             mdv.l_schedtime = "0";
@@ -110,7 +110,7 @@ namespace com.ums.PAS.CB
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();
-            ULocationBasedAlert.LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sz_sender, "0", message.sz_text);
+            ULocationBasedAlert.LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sender.sz_name, "0", message.sz_text);
             lang.AddCCode(message.l_cbchannel.ToString());
             db.InjectLBALanguages(alert.l_refno, ref loc);
 
@@ -138,6 +138,7 @@ namespace com.ums.PAS.CB
             db.insertLBASENDMessageField(alert.l_refno, alert.risk);
             db.insertLBASENDMessageField(alert.l_refno, alert.reaction);
             db.insertLBASENDMessageField(alert.l_refno, alert.originator);
+            db.insertLBASENDMessageField(alert.l_refno, alert.sender);
 
 
             //CREATE SEND XML FILE

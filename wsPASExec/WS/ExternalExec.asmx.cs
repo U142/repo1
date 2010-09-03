@@ -341,7 +341,7 @@ namespace com.ums.ws.parm
             }
         }*/
 
-        [WebMethod]
+        /*[WebMethod]
         public bool tmpRestrictionShape()
         {
             CB_ALERT_POLYGON p = CB_ALERT_POLYGON.Deserialize("S:\\UMS\\var\\CB\\eat\\CB_NewAlertPolygon_395_100514.xml", Encoding.UTF8);
@@ -354,7 +354,7 @@ namespace com.ums.ws.parm
             db.ExecNonQuery(szSQL);
             
             return true;
-        }
+        }*/
 
         /**
          * Execute a CB-operation (send poly, send plnm, update, kill)

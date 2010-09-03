@@ -12,7 +12,7 @@ namespace com.ums.PAS.CB
     public enum CB_OPERATION
     {
         NewAlertPolygon,
-        NewAlertPLNM,
+        NewAlertPLMN,
         UpdateAlert,
         KillAlert,
     }
@@ -31,6 +31,7 @@ namespace com.ums.PAS.CB
         REACTION = 2,
         ORIGINATOR = 3,
         MESSAGEPART = 4,
+        SENDER = 5,
     }
 
     public class CB_MESSAGE_FIELDS_BASE
@@ -57,6 +58,8 @@ namespace com.ums.PAS.CB
                     return new CB_REACTION(l_source_pk, sz_text);
                 case ULBAMESSAGEFIELDTYPE.RISK:
                     return new CB_RISK(l_source_pk, sz_text);
+                case ULBAMESSAGEFIELDTYPE.SENDER:
+                    return new CB_SENDER(l_source_pk, sz_text);
                 default:
                     return new CB_MESSAGE_FIELDS_BASE();
             }
@@ -98,6 +101,19 @@ namespace com.ums.PAS.CB
             l_pk = pk;
             sz_name = s;
             type = ULBAMESSAGEFIELDTYPE.ORIGINATOR;
+        }
+    }
+    public class CB_SENDER : CB_MESSAGE_FIELDS_BASE
+    {
+        public CB_SENDER()
+            : this(-1, "Not set")
+        {
+        }
+        public CB_SENDER(long pk, String s)
+        {
+            l_pk = pk;
+            sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.SENDER;
         }
     }
 
@@ -207,8 +223,6 @@ namespace com.ums.PAS.CB
         [XmlAttribute("sz_projectname")]
         public String sz_projectname = "";
 
-        [XmlAttribute("sz_sender")]
-        public String sz_sender = "";
         
         [XmlIgnore]
         public DateTime datetime = new DateTime();
@@ -254,6 +268,7 @@ namespace com.ums.PAS.CB
             reaction = new CB_REACTION();
             originator = new CB_ORIGINATOR();
             messagepart = new CB_MESSAGEPART();
+            sender = new CB_SENDER();
         }
         [XmlAttribute("l_sched_utc")]
         public long l_sched_utc;
@@ -272,6 +287,9 @@ namespace com.ums.PAS.CB
 
         [XmlElement("originator")]
         public CB_ORIGINATOR originator;
+
+        [XmlElement("sender")]
+        public CB_SENDER sender;
 
 
         [XmlAttribute("mdvgroup")]
@@ -331,7 +349,7 @@ namespace com.ums.PAS.CB
         public CB_ALERT_PLMN()
         {
             textmessages = new CB_MESSAGELIST();
-            this.operation = CB_OPERATION.NewAlertPLNM;
+            this.operation = CB_OPERATION.NewAlertPLMN;
         }
 
         [XmlElement("alertplmn")]
@@ -405,6 +423,7 @@ namespace com.ums.PAS.CB
         public CB_RISK risk;
         public CB_REACTION reaction;
         public CB_ORIGINATOR originator;
+        public CB_SENDER sender;
 
         public UShape shape;
         public long l_refno;

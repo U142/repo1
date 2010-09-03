@@ -505,6 +505,8 @@ namespace com.ums.PAS.Database
                             cb.originator = (CB_ORIGINATOR)value;
                         else if (value.GetType().Equals(typeof(CB_MESSAGEPART)))
                             cb.messagepart = (CB_MESSAGEPART)value;
+                        else if (value.GetType().Equals(typeof(CB_SENDER)))
+                            cb.sender = (CB_SENDER)value;
                     }
                     rs_mf.Close();
                 }
