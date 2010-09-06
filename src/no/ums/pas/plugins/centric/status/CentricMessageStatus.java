@@ -60,6 +60,11 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	protected Hashtable<Integer, CentricOperatorStatus> hash_operators = new Hashtable<Integer, CentricOperatorStatus>(); //operatorpk as key
 	protected CentricOperatorStatus total_statuspane = null;
 	
+	protected static Dimension MINIMUM_SIZE = new Dimension(400,400);
+	public static Dimension GETMINIMUMSIZE()
+	{
+		return MINIMUM_SIZE;
+	}
 	
 	
 	protected boolean containsOperator(int pk)
@@ -290,10 +295,13 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 
 	@Override
 	public void componentResized(ComponentEvent e) {
+		if(getWidth()<=0 || getHeight()<=0)
+			return;
 		super.componentResized(e);
 		setPreferredSize(new Dimension(getWidth(), getHeight()));
 		m_tabbed_operators.setPreferredSize(new Dimension(getWidth()-30, getHeight()/2));
 		m_txt_previewscroll.setPreferredSize(new Dimension(getWidth()-30-m_lbl_message.getPreferredSize().width, 100));
+		MINIMUM_SIZE = new Dimension(getWidth(), getHeight());
 		//m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
 		//setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height));
 	}

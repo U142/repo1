@@ -466,6 +466,13 @@ public class plugin_Centric extends PAS_Scripting
 				public Component getListCellRendererComponent(JList list,
 						Object value, int index, boolean isSelected,
 						boolean cellHasFocus) {
+					
+					int width = MessageList.this.getWidth();
+					
+					int scrollwidth = 0;
+					if(scrollpane.getVerticalScrollBar().isVisible())
+						scrollwidth = scrollpane.getVerticalScrollBar().getWidth();
+					width -= scrollwidth;
 					if(value.getClass().equals(String[].class))
 					{
 						
@@ -478,7 +485,12 @@ public class plugin_Centric extends PAS_Scripting
 					{
 						UBBNEWS news = (UBBNEWS)value;
 						//lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
-						lbl_renderer.setText(news.getNewstext().getSzNews());
+						String text_to_write = news.getNewstext().getSzNews();
+						int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
+						//if(text_width>=width)
+						//	text_to_write = text_to_write.substring(0, Math.min(text_to_write.length()-1, 70));
+						lbl_renderer.setText(text_to_write);
+						lbl_renderer.setPreferredSize(new Dimension(width, getHeight()));
 					}
 					else
 					{
@@ -532,6 +544,7 @@ public class plugin_Centric extends PAS_Scripting
 			list = new MessageList();
 			list.setEnabled(false);
 			scrollpane = new JScrollPane(list);
+			scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			Font f = new Font(UIManager.getString("Common.Fontface"), Font.PLAIN, 14);
 			list.setFont(f);
 			int height = list.getFontMetrics(f).getHeight();
@@ -585,6 +598,7 @@ public class plugin_Centric extends PAS_Scripting
 		@Override
 		public void componentResized(ComponentEvent e) {
 			
+			int set_height = n_current_height;
 			n_min=22;
 			list.setFixedCellHeight(n_min);
 			int w = getWidth();
@@ -600,9 +614,10 @@ public class plugin_Centric extends PAS_Scripting
 			if(this.scrollpane.getHorizontalScrollBar().isVisible())
 			{
 				scroll_height = this.scrollpane.getHorizontalScrollBar().getHeight();
+				//set_height = n_current_height+scroll_height;
 			}
 			scroll_width-=5;
-			SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), n_current_height));
+			SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), set_height));
 			scrollpane.revalidate();
 			revalidate();
 

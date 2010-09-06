@@ -18,6 +18,8 @@ public class CentricEastContent extends EastContent
 	public static final int PANEL_CENTRICSTATUS_ = 9;
 	public static final int PANEL_CENTRICSEND_ = 10;
 	
+	public static int CURRENT_PANEL = PANEL_CENTRICSEND_;
+	
 	private CentricStatus m_centricstatus = null;
 	private CentricSendOptionToolbar m_centricsend = null;
 	

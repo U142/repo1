@@ -225,10 +225,20 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("act_status_downloaded")){
 			cbsres = (CBPROJECTSTATUSRESPONSE)e.getSource();
-			updateProjectStatus(cbsres);
-			cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
-			for(int i=0;i<m_status_tabbed.getComponentCount();++i)
-				m_status_tabbed.setIconAt(i, null);
+			if(cbsres.getProject()!=null && Long.parseLong(cbsres.getProject().getLProjectpk())>0)
+			{
+				updateProjectStatus(cbsres);
+				cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
+				for(int i=0;i<m_status_tabbed.getComponentCount();++i)
+					m_status_tabbed.setIconAt(i, null);
+				System.out.println("Status update complete");
+				
+			}
+			else
+			{
+				//Status update failed
+				System.out.println("Status update failed");
+			}
 			
 			ready = true;
 		}

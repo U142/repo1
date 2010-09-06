@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.plugins.centric.status.CentricStatus;
+import no.ums.ws.pas.status.BBPROJECT;
 import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.PasStatus;
@@ -29,6 +30,15 @@ public class WSCentricStatus extends WSThread {
 
 	@Override
 	public void OnDownloadFinished() {
+		if(cbpres==null)
+		{
+			cbpres = new CBPROJECTSTATUSRESPONSE();
+			cbpres.setLDbTimestamp(0);
+			BBPROJECT p = new BBPROJECT();
+			p.setLProjectpk("-1");
+			cbpres.setProject(p);
+		}
+		
 		if(m_callback!=null && cbpres!=null) {
 			//cbpreq.setLTimefilter(cbpres.getLDbTimestamp());
 			m_callback.actionPerformed(new ActionEvent(cbpres, ActionEvent.ACTION_PERFORMED, action));

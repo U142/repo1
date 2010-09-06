@@ -214,7 +214,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	//public void set_centricController(CentricStatusController controller) { m_centricstatuscontroller = controller; }
 	
-	private long m_projectpk;
+	private long m_projectpk = 0;
 	public boolean projectOpen() { return m_projectpk>0; }
 	
 	public void set_projectpk(long projectpk, String sz_projectname) { 
@@ -314,6 +314,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_messagescroll.setPreferredSize(new Dimension(input_width,100));
 		
 		m_btn_messagelib = new JButton(PAS.l("main_sending_audio_type_library"));
+		m_btn_messagelib.setToolTipText(PAS.l("main_sending_audio_type_library"));
 		m_btn_messagelib.setPreferredSize(new Dimension(btn_width, btn_height));
 		m_btn_messagelib.addActionListener(this);
 		
@@ -448,7 +449,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_lbl_event_name, m_gridconst);
 		set_gridconst(1, get_panel(), 7, 1);
 		add(m_txt_event_name, m_gridconst);
-		m_txt_event_name.setEnabled(true);
+		//m_txt_event_name.setEnabled(true);
+		m_txt_event_name.setEnabled(!projectOpen());
+		
 		
 		add_spacing(DIR_VERTICAL, 5);
 		
@@ -567,13 +570,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private void showSummary() {
 		
+		if(projectOpen())
+			m_txt_event_name.setEnabled(false);
 		removeAll();
 		reset_panels();
 		set_gridconst(0, get_panel(), 1, 1);
 		add(m_lbl_event_name, m_gridconst);
 		set_gridconst(1, get_panel(), 7, 1);
 		add(m_txt_event_name, m_gridconst);
-		m_txt_event_name.setEnabled(false);
 		
 		add_spacing(DIR_VERTICAL, 5);
 		
@@ -657,13 +661,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(m_btn_update)) {
-			m_sz_date = getFormatedDate();
 			if(!projectOpen())
 			{
 				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
 					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));
+				m_sz_date = getFormatedDate();
 				m_txt_event_name.setText(m_txt_event_name.getText() + " " + m_sz_date);
 			}
+			else
+				m_sz_date = getFormatedDate();
 			m_txt_date_time.setText(m_sz_date);
 		}
 		else if(e.getSource().equals(m_btn_messagelib))
@@ -827,7 +833,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			add_controls();
 		}
 		if(e.getSource().equals(m_btn_reset)){
-			//m_btn_update.doClick();
 			if(!projectOpen())
 				m_txt_event_name.setText(variables.USERINFO.get_organization());
 			//m_txt_sender_name.setText(variables.USERINFO.get_organization());
@@ -1051,13 +1056,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(m_txt_sender_name.getText().length()>0)
 			sz_totalmessage += m_txt_sender_name.getText() + " ";
 		sz_totalmessage += m_txt_date_time.getText() + "\n";
-		if(risk.length()>0)
-			sz_totalmessage += risk + "\n";
-		if(reaction.length()>0)
-			sz_totalmessage += reaction + "\n";
-		if(originator.length()>0)
-			sz_totalmessage += originator + "\n";
 		sz_totalmessage += m_txt_message.getText();
+		if(risk.length()>0)
+			sz_totalmessage += "\n" + risk;
+		if(reaction.length()>0)
+			sz_totalmessage += "\n" + reaction;
+		if(originator.length()>0)
+			sz_totalmessage += "\n" + originator;
 		m_txt_preview.setText(sz_totalmessage);
 		updateCharacters();
 	}
@@ -1144,6 +1149,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
 			variables.MAPPANE.set_active_shape(null);
 			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+			m_btn_reset.doClick();
 		}
 	}
 	@Override
@@ -1199,6 +1205,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	public void fromTemplate(CBSTATUS cb)
 	{
+		m_txt_event_name.setEnabled(false);
+		if(current_mode==MODE.SHOWING_SUMMARY)
+			m_btn_cancel.doClick();
 		String sz_msgpart = "";
 		String sz_originator = "";
 		String sz_risk = "";
@@ -1240,6 +1249,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			variables.MAPPANE.set_active_shape(shape);
 			variables.MAPPANE.setPaintModeBasedOnActiveShape(b_poly_is_elliptical);
 		}
+		m_btn_update.doClick();
 		updatePreviewText();
 
 		
