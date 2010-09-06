@@ -111,7 +111,7 @@ namespace pas_cb_server
                                 case "NewAlertPLMN":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
                                         return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLNM);
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN);
                                     break;
                                 case "UpdateAlert":
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
@@ -122,6 +122,16 @@ namespace pas_cb_server
                                     if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
                                         return Constant.FAILED;
                                     hRet = KillAlert(oDoc.SelectSingleNode("cb"), oUser);
+                                    break;
+                                case "NewAlertTest":
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return Constant.FAILED;
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN_TEST);
+                                    break;
+                                case "NewAlertHeartbeat":
+                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
+                                        return Constant.FAILED;
+                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN_HEARTBEAT);
                                     break;
                                 default:
                                     Log.WriteLog("ERROR: Operation not recognized", 2);
@@ -361,7 +371,9 @@ namespace pas_cb_server
     public enum Operation
     {
         NEWAREA,
-        NEWPLNM,
+        NEWPLMN,
+        NEWPLMN_TEST,
+        NEWPLMN_HEARTBEAT,
         UPDATE,
         KILL
     }

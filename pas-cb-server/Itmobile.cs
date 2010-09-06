@@ -33,6 +33,9 @@ namespace pas_cb_server
 
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+            IBAG_alert_info t_alert_info = new IBAG_alert_info();
+            IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
+            List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
 
             try
             {
@@ -40,37 +43,64 @@ namespace pas_cb_server
                 if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
+                // Set alert attributes
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
                 t_alert.IBAG_sent_date_time = dtm_cap;
-                t_alert.IBAG_status = IBAG_status.Actual;
-                t_alert.IBAG_message_type = IBAG_message_type.Alert;
                 t_alert.IBAG_cap_sent_date_time = dtm_cap;
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
-
-                // based on default values:
+                // from default values
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
                 t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
                 t_alert.IBAG_sender = def.sz_sender;
                 t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
                 t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
 
-                IBAG_Alert_Area t_alert_area = new IBAG_Alert_Area();
-                List<IBAG_Alert_Area> t_alert_arealist = new List<IBAG_Alert_Area>();
+                // Default values which varies from test and normal messages
+                switch (operation)
+                {
+                    case Operation.NEWPLMN_HEARTBEAT:
+                        t_alert.IBAG_status = IBAG_status.NetworkTest;
+                        t_alert.IBAG_message_type = IBAG_message_type.Alert;
+                        break;
+                    case Operation.NEWPLMN_TEST:
+                        t_alert.IBAG_status = IBAG_status.Actual;
+                        t_alert.IBAG_message_type = IBAG_message_type.Alert;
+                        t_alert_info.IBAG_channel_category = def.sz_test_channel_category;
+                        break;
+                    case Operation.NEWAREA:
+                    case Operation.NEWPLMN:
+                    default:
+                        t_alert.IBAG_status = IBAG_status.Actual;
+                        t_alert.IBAG_message_type = IBAG_message_type.Alert;
+                        t_alert_info.IBAG_channel_category = def.sz_channel_category;
+                        break;
+                }
+                
+                // Get alert area
                 if (operation == Operation.NEWAREA)
                 {
+                    // Get polygon for area alerts
                     t_alert_area.IBAG_area_description = "Polygon";
                     t_alert_area.IBAG_polygon = new string[] { get_IBAG_polygon(oAlert, op) };
                 }
-                else if (operation == Operation.NEWPLNM)
+                else if (
+                    operation == Operation.NEWPLMN ||
+                    operation == Operation.NEWPLMN_HEARTBEAT ||
+                    operation == Operation.NEWPLMN_TEST)
                 {
+                    // Insert Netherlands Nationwide for all PLMN messages (live and tests)
                     t_alert_area.IBAG_area_description = "Netherlands Nationwide";
                     t_alert_area.IBAG_geocode = new string[] { "NL" };
                 }
                 t_alert_arealist.Add(t_alert_area);
 
-                IBAG_alert_info t_alert_info = new IBAG_alert_info();
-                // based on default values:
+                // Set alert info 
+                t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
+                t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
+                t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
+                t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
+                // from default values
                 t_alert_info.IBAG_priority = def.priority;
                 t_alert_info.IBAG_prioritySpecified = true;
                 t_alert_info.IBAG_category = def.category;
@@ -80,14 +110,8 @@ namespace pas_cb_server
                 t_alert_info.IBAG_event_code = def.event_code;
                 t_alert_info.IBAG_response_type = def.response_type;
                 t_alert_info.IBAG_response_typeSpecified = true;
-                t_alert_info.IBAG_channel_category = def.sz_channel_category;
 
-                t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
-                t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
-                t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
-                t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
                 t_alert_info.IBAG_Alert_Area = t_alert_arealist.ToArray();
-
                 t_alert.IBAG_alert_info = t_alert_info;
 
                 switch(op.coordinate_type)
@@ -600,6 +624,8 @@ namespace pas_cb_server
         public string sz_cap_alert_uri = "";
         [XmlElement("channel_category")]
         public string sz_channel_category = "";
+        [XmlElement("test_channel_category")]
+        public string sz_test_channel_category = "";
         public IBAG_priority priority = IBAG_priority.Background;
         public IBAG_category category = IBAG_category.Geo;
         public IBAG_severity severity = IBAG_severity.Severe;

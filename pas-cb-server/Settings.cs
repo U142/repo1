@@ -23,6 +23,7 @@ namespace pas_cb_server
         public static string sz_dbconn;
         public static int l_cpuaffinity;
         public static int l_statuspollinterval;
+        public static int l_heartbeatinterval;
         public static int l_retryinterval;
         public static int l_retries;
         public static int l_messagetype;
@@ -403,6 +404,8 @@ namespace pas_cb_server
         // CellBroadcast
         public const int CBPREPARING = 500;
         public const int CBQUEUED = 510;
+        public const int CBUSERCONFIRMED = 520;
+        public const int CBUSERCANCELLED = 530;
         public const int CBACTIVE = 540;
         public const int CBPAUSED = 590;
 

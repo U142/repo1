@@ -104,7 +104,7 @@ namespace pas_cb_server
                 {
                     case Operation.NEWAREA:
                         return cbc_newalert(cbc, op, oAlert, def);
-                    case Operation.NEWPLNM:
+                    case Operation.NEWPLMN:
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     default:
                         return Constant.FAILED;
@@ -225,7 +225,7 @@ namespace pas_cb_server
                 Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)"
                     , oAlert.l_refno
                     , op.sz_operatorname), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
 
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
@@ -243,7 +243,7 @@ namespace pas_cb_server
                         , loginres.cbccberequesthandle
                         , loginres.cbccbestatuscode
                         , loginres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
                 }
             }
             catch (Exception e)
@@ -252,7 +252,7 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) (KillAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) (KillAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
                     2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
 
             try
@@ -281,7 +281,7 @@ namespace pas_cb_server
                         , killres.cbccberequesthandle
                         , killreq.messagehandle), 0);
                     // update database
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.USERCANCELLED);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
                 else
@@ -292,7 +292,7 @@ namespace pas_cb_server
                         , killres.cbccberequesthandle
                         , killres.cbccbestatuscode
                         , killres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, killres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, killres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
                 }
             }
             catch (Exception e)
@@ -301,7 +301,7 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
                     2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
             finally
             {
