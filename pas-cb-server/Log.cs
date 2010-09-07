@@ -103,7 +103,8 @@ namespace pas_cb_server
                 WriteSysLog(consoletext, severity);
 
             if (blogfile && severity != 9) // add to logfile queue if enabled, but don't log severity 9
-                qlog.Enqueue(szLogLine);
+                lock (qlog)
+                    qlog.Enqueue(szLogLine);
 
             Trace.WriteLine(szConsoleLine);
         }
@@ -139,7 +140,8 @@ namespace pas_cb_server
                     try
                     {
                         TextWriter fLogfile = File.AppendText(szLogFilename);
-                        fLogfile.WriteLine(qlog.Dequeue());
+                        lock (qlog)
+                            fLogfile.WriteLine(qlog.Dequeue());
                         fLogfile.Close();
                     }
                     catch (Exception e)

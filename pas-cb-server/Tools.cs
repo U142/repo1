@@ -11,7 +11,7 @@ namespace pas_cb_server
 {
     class Tools
     {
-        //static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
         static readonly Regex GSM_Extended_Regex = new Regex("[|^€{}\\[\\]~\\\\]");
 
         // convert a coordinate point
@@ -127,6 +127,13 @@ namespace pas_cb_server
                             case ConsoleKey.LaunchApp2:
                             case ConsoleKey.LaunchMail:
                             case ConsoleKey.LaunchMediaSelect:
+                            case ConsoleKey.Applications:
+                            case ConsoleKey.LeftWindows:
+                            case ConsoleKey.RightWindows:
+                            case ConsoleKey.LeftArrow:
+                            case ConsoleKey.RightArrow:
+                            case ConsoleKey.UpArrow:
+                            case ConsoleKey.DownArrow:
                                 // just ignore these keys
                                 break;
                             default:
@@ -236,13 +243,18 @@ namespace pas_cb_server
                     while (szTmpMess.Length + GSM_Extended_Regex.Matches(szTmpMess).Count > maxmsglength)
                     {
                         szTmpMess = szTmpMess.Remove(szTmpMess.Length - 1, 1);
-                        lookForWhitespace = true;
+                        if (maxsplitoffset > 0) // ignorere søk på whitespace hvis maxsplitoffset er 0
+                            lookForWhitespace = true;
                     }
                     // søk etter første whitespace innenfor maxsplitoffset
-                    if (((szTmpMess.Length - szTmpMess.LastIndexOfAny(whitespace)) < maxsplitoffset) && lookForWhitespace)
+                    if (lookForWhitespace && ((szTmpMess.Length - szTmpMess.LastIndexOfAny(whitespace)) < maxsplitoffset))
                         szTmpMess = szTmpMess.Remove(szTmpMess.LastIndexOfAny(whitespace));
 
-                    tmp.Add(szTmpMess.Trim());
+                    if (maxsplitoffset > 0) // Trim hvis splitting skjer på whitespace
+                        tmp.Add(szTmpMess.Trim());
+                    else // ikke Trim hvis splittingen skjer på maxlength og ignorerer maxsplitoffset
+                        tmp.Add(szTmpMess);
+
                     lStartPos += szTmpMess.Length;
 
                     if (lStartPos == msgtext.Length)
@@ -263,6 +275,10 @@ namespace pas_cb_server
             }
 
             return ret;
+        }
+        public static string CleanMessage(string msgtext)
+        {
+            return GSM_Alphabet_Regex.Replace(msgtext, "?");
         }
     }
 }

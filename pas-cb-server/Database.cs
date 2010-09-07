@@ -179,6 +179,52 @@ namespace pas_cb_server
             }
             return Constant.OK;
         }
+        public static int GetSendingStatus(Operator op, int l_refno, out bool expired)
+        {
+            string szQuery;
+            int ret = Constant.FAILED;
+            expired = false;
+
+            szQuery = "SELECT l_status, l_expires_ts FROM LBASEND WHERE l_refno=? AND l_operator=?";
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmd = new OdbcCommand(szQuery, dbConn);
+
+            try
+            {
+                cmd.Parameters.Add("refno", OdbcType.Int).Value = l_refno;
+                cmd.Parameters.Add("operator", OdbcType.Int).Value = op.l_operator;
+
+                dbConn.Open();
+                OdbcDataReader rs = cmd.ExecuteReader();
+                if (rs.Read())
+                {
+                    DateTime ts_expires;
+                    string sz_ts = "";
+
+                    if (!rs.IsDBNull(0))
+                        ret = rs.GetInt32(0);
+                    if (!rs.IsDBNull(1))
+                        sz_ts = rs.GetDecimal(1).ToString();
+
+                    ts_expires = DateTime.ParseExact(sz_ts, "yyyyMMddHHmmss", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                    if (DateTime.Compare(ts_expires, DateTime.Now) >= 0) // message has expired
+                        expired = true;
+                }
+
+                dbConn.Close();
+
+                return ret;
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.GetSendingStatus (exception={0}) (sql={1})", e.Message, szQuery),
+                    String.Format("Database.GetSendingStatus (exception={0}) (sql={1})", e, szQuery),
+                    2);
+                return ret;
+            }
+        }
         public static int SetSendingStatus(Operator op, int l_refno, int l_status)
         {
             string szQuery;

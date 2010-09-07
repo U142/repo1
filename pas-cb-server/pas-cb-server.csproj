@@ -129,6 +129,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Changes.txt" />
     <Content Include="operators\Vodafone.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

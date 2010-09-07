@@ -97,41 +97,33 @@ namespace pas_cb_server
                 if (oReader.Read())
                 {
                     oDoc.Load(oReader);
-                    if (oDoc.SelectSingleNode("cb") != null)
+                    XmlNode xmlCB = oDoc.SelectSingleNode("cb");
+                    if (xmlCB != null)
                     {
-                        if (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation") != null)
+                        if (xmlCB.Attributes.GetNamedItem("operation") != null)
                         {
-                            switch (oDoc.SelectSingleNode("cb").Attributes.GetNamedItem("operation").Value)
+                            if (!Settings.SetUserValues(xmlCB.Attributes, oUser))
+                                return Constant.FAILED;
+
+                            switch (xmlCB.Attributes.GetNamedItem("operation").Value)
                             {
                                 case "NewAlertPolygon":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWAREA);
+                                    hRet = CreateAlert(xmlCB, oUser, Operation.NEWAREA);
                                     break;
                                 case "NewAlertPLMN":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN);
-                                    break;
-                                case "UpdateAlert":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = UpdateAlert(oDoc.SelectSingleNode("cb"), oUser);
-                                    break;
-                                case "KillAlert":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = KillAlert(oDoc.SelectSingleNode("cb"), oUser);
+                                    hRet = CreateAlert(xmlCB, oUser, Operation.NEWPLMN);
                                     break;
                                 case "NewAlertTest":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN_TEST);
+                                    hRet = CreateAlert(xmlCB, oUser, Operation.NEWPLMN_TEST);
                                     break;
                                 case "NewAlertHeartbeat":
-                                    if (!Settings.SetUserValues(oDoc.SelectSingleNode("cb").Attributes, oUser))
-                                        return Constant.FAILED;
-                                    hRet = CreateAlert(oDoc.SelectSingleNode("cb"), oUser, Operation.NEWPLMN_HEARTBEAT);
+                                    hRet = CreateAlert(xmlCB, oUser, Operation.NEWPLMN_HEARTBEAT);
+                                    break;
+                                case "UpdateAlert":
+                                    hRet = UpdateAlert(xmlCB, oUser);
+                                    break;
+                                case "KillAlert":
+                                    hRet = KillAlert(xmlCB, oUser);
                                     break;
                                 default:
                                     Log.WriteLog("ERROR: Operation not recognized", 2);
@@ -191,22 +183,37 @@ namespace pas_cb_server
                 // check for refno in LBASEND
                 if (Database.VerifyRefno(oAlert.l_refno, op.l_operator))
                 {
-                    // insert LBAHISTCELL
-                    Database.InsertHistCell(oAlert.l_refno, op.l_operator);
-                    switch (op.l_type)
+                    // check if message has been submitted for this operator
+                    string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
+                    if (sz_jobid == null)
                     {
-                        case 1: // AlertiX (not supported)
-                            ret.Add(op.l_operator, Constant.FAILED);
-                            break;
-                        case 2: // one2many
-                            ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op, operation));
-                            break;
-                        case 3: // tmobile
-                            ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op, operation));
-                            break;
-                        default:
-                            ret.Add(op.l_operator, Constant.FAILED);
-                            break;
+                        Log.WriteLog(String.Format("{0} (op={1}) failed checking if broadcast was already submitted, aborting", oAlert.l_refno, op.sz_operatorname, sz_jobid), 0);
+                        ret.Add(op.l_operator, Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB));
+                    }
+                    else if (sz_jobid != "")
+                    {
+                        Log.WriteLog(String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid), 0);
+                        ret.Add(op.l_operator, Constant.OK);
+                    }
+                    else
+                    {
+                        // insert LBAHISTCELL
+                        Database.InsertHistCell(oAlert.l_refno, op.l_operator);
+                        switch (op.l_type)
+                        {
+                            case 1: // AlertiX (not supported)
+                                ret.Add(op.l_operator, Constant.FAILED);
+                                break;
+                            case 2: // one2many
+                                ret.Add(op.l_operator, CB_one2many.CreateAlert(oAlert, op, operation));
+                                break;
+                            case 3: // tmobile
+                                ret.Add(op.l_operator, CB_tmobile.CreateAlert(oAlert, op, operation));
+                                break;
+                            default:
+                                ret.Add(op.l_operator, Constant.FAILED);
+                                break;
+                        }
                     }
                 }
                 else
@@ -269,20 +276,42 @@ namespace pas_cb_server
             // kill a given alert at each operator
             foreach (Operator op in oUser.operators)
             {
-                switch (op.l_type)
+                // get jobid and check if message has expired
+                bool expired = false;
+                string sz_jobid = Database.GetJobID(op, oAlert.l_refno);                
+
+                if (Database.GetSendingStatus(op, oAlert.l_refno, out expired) == Constant.CANCELLING)
                 {
-                    case 1: // AlertiX (not supported)
+                    // message has expired, stop trying to cancel and set to finished instead
+                    if (expired)
+                    {
+                        Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
                         ret.Add(op.l_operator, Constant.FAILED);
-                        break;
-                    case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.KillAlert(oAlert, op));
-                        break;
-                    case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.KillAlert(oAlert, op));
-                        break;
-                    default:
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
+                    }
+                }
+                else if (sz_jobid == "")
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)", oAlert.l_refno, op.sz_operatorname), 2);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                    ret.Add(op.l_operator, Constant.RETRY);
+                }
+                else
+                {
+                    switch (op.l_type)
+                    {
+                        case 1: // AlertiX (not supported)
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                        case 2: // one2many
+                            ret.Add(op.l_operator, CB_one2many.KillAlert(oAlert, op, sz_jobid));
+                            break;
+                        case 3: // tmobile
+                            ret.Add(op.l_operator, CB_tmobile.KillAlert(oAlert, op, sz_jobid));
+                            break;
+                        default:
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                    }
                 }
             }
             return ret;
@@ -310,7 +339,7 @@ namespace pas_cb_server
 
                 XmlAttributeCollection xml_message = xmlCB.SelectSingleNode("textmessages").SelectSingleNode("message").Attributes;
                 oAlert.alert_message.l_channel = int.Parse(xml_message.GetNamedItem("l_channel").Value);
-                oAlert.alert_message.sz_text = xml_message.GetNamedItem("sz_text").Value;
+                oAlert.alert_message.sz_text = Tools.CleanMessage(xml_message.GetNamedItem("sz_text").Value);
 
                 if (type == Operation.NEWAREA) // get poly for new area messages
                 {

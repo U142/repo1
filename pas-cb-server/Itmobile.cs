@@ -14,23 +14,6 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op, Operation operation)
         {
-            // check if job already have been submitted
-            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid == null)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) failed checking if broadcast was already submitted, aborting", oAlert.l_refno, op.sz_operatorname, sz_jobid)
-                    , 0);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-            else if (sz_jobid != "")
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
-                    , 0);
-                return Constant.OK;
-            }
-
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
             IBAG_alert_info t_alert_info = new IBAG_alert_info();
@@ -62,6 +45,7 @@ namespace pas_cb_server
                     case Operation.NEWPLMN_HEARTBEAT:
                         t_alert.IBAG_status = IBAG_status.NetworkTest;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
+                        t_alert_info.IBAG_channel_category = def.sz_heartbeat_channel_category;
                         break;
                     case Operation.NEWPLMN_TEST:
                         t_alert.IBAG_status = IBAG_status.Actual;
@@ -280,17 +264,8 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
-        public static int KillAlert(AlertInfo oAlert, Operator op)
+        public static int KillAlert(AlertInfo oAlert, Operator op, string sz_jobid)
         {
-            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid == "")
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)"
-                    , oAlert.l_refno
-                    , op.sz_operatorname), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
@@ -330,7 +305,9 @@ namespace pas_cb_server
                         , oAlert.l_refno
                         , op.sz_operatorname
                         , oAlert.l_refno), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                    return Constant.RETRY;
+                    //return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
                 {
@@ -351,7 +328,9 @@ namespace pas_cb_server
                         , oAlert.l_refno
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                    return Constant.RETRY;
+                    //return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
                 }
             }
             catch (Exception e)
@@ -360,7 +339,9 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
                     2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                return Constant.RETRY;
+                //return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
         public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op, decimal l_expires_ts)
@@ -626,6 +607,8 @@ namespace pas_cb_server
         public string sz_channel_category = "";
         [XmlElement("test_channel_category")]
         public string sz_test_channel_category = "";
+        [XmlElement("heartbeat_channel_category")]
+        public string sz_heartbeat_channel_category = "";
         public IBAG_priority priority = IBAG_priority.Background;
         public IBAG_category category = IBAG_category.Geo;
         public IBAG_severity severity = IBAG_severity.Severe;

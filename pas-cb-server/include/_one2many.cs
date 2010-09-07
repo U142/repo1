@@ -108,7 +108,7 @@
         public string btsname;
         public int? reason;
     }
-    
+
     public partial class CBCNEWMSGCELLREQRESULT 
     {
         public int cbccberequesthandle;

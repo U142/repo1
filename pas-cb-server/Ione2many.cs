@@ -50,50 +50,14 @@ namespace pas_cb_server
     {
         public static int CreateAlert(AlertInfo oAlert, Operator op, Operation operation)
         {
-            // check if job already have been submitted
-            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid == null)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) failed checking if broadcast was already submitted, aborting", oAlert.l_refno, op.sz_operatorname, sz_jobid)
-                    , 0);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-            else if (sz_jobid != "")
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid)
-                    , 0);
-                return Constant.OK;
-            }
-
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            try // run login, return if it fails with exception or failed login
-            {
-                CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
-                if (loginres.cbccbestatuscode != 0) // login failed
-                {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (CreateAlert) Login FAILED (code={3}, msg={4})"
-                        , oAlert.l_refno
-                        , op.sz_operatorname
-                        , loginres.cbccberequesthandle
-                        , loginres.cbccbestatuscode
-                        , loginres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) (CreateAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) (CreateAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
-                    2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-
+            int l_logincode;
+            if (!cbc_login(cbc, op, oAlert.l_refno, "CreateAlert", out l_logincode))
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, l_logincode, op.l_operator, LBATYPE.CB);
+            
             try // login OK, send message
             {
                 // update status to parsing
@@ -105,6 +69,8 @@ namespace pas_cb_server
                     case Operation.NEWAREA:
                         return cbc_newalert(cbc, op, oAlert, def);
                     case Operation.NEWPLMN:
+                    case Operation.NEWPLMN_TEST:
+                    case Operation.NEWPLMN_HEARTBEAT:
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     default:
                         return Constant.FAILED;
@@ -130,28 +96,9 @@ namespace pas_cb_server
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            try // run login, return if it fails with exception or failed login
-            {
-                CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
-                if (loginres.cbccbestatuscode != 0) // login failed
-                {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (UpdateAlert) Login FAILED (code={3}, msg={4})"
-                        , oAlert.l_refno
-                        , op.sz_operatorname
-                        , loginres.cbccberequesthandle
-                        , loginres.cbccbestatuscode
-                        , loginres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) (UpdateAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) (UpdateAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
-                    2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
+            int l_logincode;
+            if (!cbc_login(cbc, op, oAlert.l_refno, "UpdateAlert", out l_logincode))
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, l_logincode, op.l_operator, LBATYPE.CB);
 
             try // update message
             {
@@ -217,43 +164,15 @@ namespace pas_cb_server
                 cbc_logout(cbc, op, oAlert.l_refno);
             }
         }
-        public static int KillAlert(AlertInfo oAlert, Operator op)
+        public static int KillAlert(AlertInfo oAlert, Operator op, string sz_jobid)
         {
-            string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
-            if (sz_jobid == "")
-            {
-                Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)"
-                    , oAlert.l_refno
-                    , op.sz_operatorname), 2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
-
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            try // run login, return if it fails with exception or failed login
-            {
-                CBCLOGINREQRESULT loginres = cbc_login(cbc, op, oAlert.l_refno);
-                if (loginres.cbccbestatuscode != 0) // login failed
-                {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) (KillAlert) Login FAILED (code={3}, msg={4})"
-                        , oAlert.l_refno
-                        , op.sz_operatorname
-                        , loginres.cbccberequesthandle
-                        , loginres.cbccbestatuscode
-                        , loginres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, loginres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) (KillAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) (KillAlert) Login EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
-                    2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
-            }
+            int l_logincode;
+            if (!cbc_login(cbc, op, oAlert.l_refno, "KillAlert", out l_logincode))
+                return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, l_logincode, op.l_operator, LBATYPE.CB);
 
             try
             {
@@ -280,7 +199,6 @@ namespace pas_cb_server
                         , op.sz_operatorname
                         , killres.cbccberequesthandle
                         , killreq.messagehandle), 0);
-                    // update database
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
@@ -292,7 +210,8 @@ namespace pas_cb_server
                         , killres.cbccberequesthandle
                         , killres.cbccbestatuscode
                         , killres.messagetext), 2);
-                    return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, killres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                    return Constant.RETRY;
                 }
             }
             catch (Exception e)
@@ -301,7 +220,8 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) KillMessage EXCEPTION (msg={2})", oAlert.l_refno, op.sz_operatorname, e),
                     2);
-                return Database.UpdateTries(oAlert.l_refno, Constant.CANCELLING, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
+                return Constant.RETRY;
             }
             finally
             {
@@ -315,29 +235,9 @@ namespace pas_cb_server
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
 
-            try // run login, return if it fails with exception or failed login
-            {
-                CBCLOGINREQRESULT loginres = cbc_login(cbc, op, l_refno);
-                if (loginres.cbccbestatuscode != 0) // login failed
-                {
-                    Log.WriteLog(String.Format("{0} {1} (op={2}) (req={3}) (GetAlertStatus) Login FAILED (code={4}, msg={5})"
-                        , l_refno
-                        , l_msghandle
-                        , op.sz_operatorname
-                        , loginres.cbccberequesthandle
-                        , loginres.cbccbestatuscode
-                        , loginres.messagetext), 2);
-                    return Constant.FAILED;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog(
-                    String.Format("{0} (op={1}) (GetAlertStatus) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) (GetAlertStatus) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
-                    2);
+            int l_logincode;
+            if (!cbc_login(cbc, op, l_refno, "GetAlertStatus", out l_logincode))
                 return Constant.FAILED;
-            }
 
             if (op.api_version >= new Version(2, 4)) // use cell count
             {
@@ -512,7 +412,7 @@ namespace pas_cb_server
 
         private static PAGELISTDATA get_pagelist(AlertInfo oAlert, Operator op)
         {
-            List<string> gsmmsglist = Tools.SplitMessage(oAlert.alert_message.sz_text, 93, 10);
+            List<string> gsmmsglist = Tools.SplitMessage(oAlert.alert_message.sz_text, 93, 0);
 
             PAGEDATA[] msg_page = new PAGEDATA[gsmmsglist.Count];
             int iPage = 0;
@@ -571,26 +471,50 @@ namespace pas_cb_server
 
             return ret.ToArray();
         }
-        private static CBCLOGINREQRESULT cbc_login(Ione2many cbc, Operator op, int l_refno)
+        private static bool cbc_login(Ione2many cbc, Operator op, int l_refno, string sz_method, out int l_cbccbestatuscode)
         {
-            // try..catch should be handled by calling code
-            CBCLOGINREQRESULT ret = new CBCLOGINREQRESULT();
+            l_cbccbestatuscode = -1;
 
-            CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
-            loginreq.cbccberequesthandle = Database.GetHandle(op);
-            loginreq.infoprovname = op.sz_login_id;
-            loginreq.cbename = op.sz_login_name;
-            loginreq.password = Convert.ToBase64String(Encoding.ASCII.GetBytes(op.sz_login_password));
-
-            dump_request(loginreq, op, "Login", l_refno);
-
-            if (Settings.live)
+            try // run login, return if it fails with exception or failed login
             {
-                ret = cbc.CBC_Login(loginreq);
-                dump_request(ret, op, "LoginResult", l_refno);
+                CBCLOGINREQRESULT loginres = new CBCLOGINREQRESULT();
+                CBCLOGINREQUEST loginreq = new CBCLOGINREQUEST();
+                
+                loginreq.cbccberequesthandle = Database.GetHandle(op);
+                loginreq.infoprovname = op.sz_login_id;
+                loginreq.cbename = op.sz_login_name;
+                loginreq.password = Convert.ToBase64String(Encoding.ASCII.GetBytes(op.sz_login_password));
+
+                dump_request(loginreq, op, "Login", l_refno);
+
+                if (Settings.live)
+                {
+                    loginres = cbc.CBC_Login(loginreq);
+                    dump_request(loginres, op, "LoginResult", l_refno);
+                }
+
+                if (loginres.cbccbestatuscode != 0) // login failed
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) ({5}) Login FAILED (code={3}, msg={4})"
+                        , l_refno
+                        , op.sz_operatorname
+                        , loginres.cbccberequesthandle
+                        , loginres.cbccbestatuscode
+                        , loginres.messagetext
+                        , sz_method), 2);
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) ({3}) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message, sz_method),
+                    String.Format("{0} (op={1}) ({3}) Login EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e, sz_method),
+                    2);
+                return false;
             }
 
-            return ret;
+            return true; // login successful
         }
         private static void cbc_logout(Ione2many cbc, Operator op, int l_refno)
         {
@@ -620,6 +544,7 @@ namespace pas_cb_server
         private static int cbc_newalert(Ione2many cbc, Operator op, AlertInfo oAlert, CB_one2many_defaults def)
         {
             CBCNEWMSGREQUEST newmsgreq = new CBCNEWMSGREQUEST();
+
             newmsgreq.cbccberequesthandle = Database.GetHandle(op);
 
             newmsgreq.area = get_area(oAlert, op);
@@ -659,6 +584,20 @@ namespace pas_cb_server
                     , newmsgres.messagehandle), 0);
                 // update database
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
+                return Constant.OK;
+            }
+            else if (newmsgres.cbccbestatuscode == 1029) // no cells in area
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (no cells in area) (handle={5})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , newmsgres.cbccberequesthandle
+                    , newmsgres.cbccbestatuscode
+                    , newmsgres.messagetext
+                    , newmsgres.messagehandle), 0);
+                // update database
+                Database.UpdateHistCell(oAlert.l_refno, op.l_operator, 100);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
             else
@@ -714,6 +653,20 @@ namespace pas_cb_server
                     , newmsgres.messagehandle), 0);
                 // update database
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
+                return Constant.OK;
+            }
+            else if (newmsgres.cbccbestatuscode == 1029) // no cells in area
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessagePLMN OK (no cells in area) (handle={5})"
+                    , oAlert.l_refno
+                    , op.sz_operatorname
+                    , newmsgres.cbccberequesthandle
+                    , newmsgres.cbccbestatuscode
+                    , newmsgres.messagetext
+                    , newmsgres.messagehandle), 0);
+                // update database
+                Database.UpdateHistCell(oAlert.l_refno, op.l_operator, 100);
+                Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
             else
