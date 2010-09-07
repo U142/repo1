@@ -24,6 +24,7 @@ using com.ums.PAS.Weather;
 using com.ums.PAS.messagelib;
 using com.ums.PAS.CB;
 using System.Xml.Serialization;
+using System.Data.Odbc;
 
 using System.Collections.Generic;
 
@@ -690,6 +691,45 @@ namespace com.ums.ws.pas
             try
             {
                 return new UCBSettings(ref logon).updateLBAParameter(param);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
+        public List<UDEPARTMENT> getRestrictionShapes(ULOGONINFO logon, RESTRICTION_TYPE type)
+        {
+            try
+            {
+                ULogon l = new ULogon();
+                l.CheckLogon(ref logon, false);
+
+                List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
+                string sz_sql = String.Format("SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
+                                  "FROM v_BBDEPARTMENT DEP " +
+                                  "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
+                                 "WHERE SH.l_type = {0} AND DEP.l_comppk = {1}", (int)type, logon.l_comppk);
+
+                UmsDb db = new UmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    UDEPARTMENT obj = new UDEPARTMENT();
+                    obj.l_deptpk = rs.GetInt32(0);
+                    obj.l_deptpri = rs.GetInt16(1);
+                    obj.sz_deptid = rs.GetString(2);
+                    obj.f_map = rs.GetInt16(3);
+                    UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
+                    shape.f_disabled = rs.GetInt16(6);
+                    shape.l_disabled_timestamp = (long)rs.GetDecimal(5);
+                    obj.restrictionShapes.Add(shape);
+                    dlist.Add(obj);
+                }
+                rs.Close();
+                db.close();
+                return dlist;
             }
             catch (Exception e)
             {

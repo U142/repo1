@@ -392,7 +392,7 @@ namespace com.ums.UmsDbLib
             String sql = String.Format("sp_store_system_message {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},'{11}'",
                                         message.l_newspk, message.l_timestamp_db, message.l_type, message.l_incident_start, 
                                         message.l_incident_end, message.f_active, message.l_deptpk, message.l_severity, 
-                                        message.l_operator, message.l_errorcode, message.l_userpk, message.newstext.sz_news);
+                                        message.l_operator, message.l_errorcode, -1, message.newstext.sz_news);
             try
             {
                 OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);

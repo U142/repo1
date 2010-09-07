@@ -401,22 +401,38 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
-        public GetUserActivityResponse doGetUserActivity(ULOGONINFO logoninfo, long period)
+        public GetUserActivityResponse doGetUserActivity(ULOGONINFO logoninfo, long period, List<UBBUSER> users)
         {
             PASUmsDb db;
             GetUserActivityResponse res;
             List<UPASLOG> loglist = new List<UPASLOG>();
 
             List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
+            string sz_sql_part = "";
+            
+            for(int i=0;i<users.Count;++i)
+            {
+                if(i==0)
+                    sz_sql_part += "AND (";
+                sz_sql_part += "l_userpk=" + users[i].l_userpk + " ";
+                if (i + 1 < users.Count)
+                    sz_sql_part += "OR ";
+                else
+                    sz_sql_part += ")";
+            }
             string sz_sql = String.Format(
                             "SELECT * " +
                               "FROM PASLOG " +
-                             "WHERE l_timestamp BETWEEN {0} AND {1}", period, period + 100000000);
+                             "WHERE l_timestamp BETWEEN {0} AND {1} ", period, period + 100000000);
+            sz_sql += sz_sql_part;
+
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
+                OdbcDataReader refno;
                 UPASLOG log;
                 
                 while (rs.Read())
@@ -425,9 +441,68 @@ namespace com.ums.ws.pas
                     log.l_id = rs.GetInt64(0);
                     log.l_userpk = (long)rs.GetDecimal(1);
                     log.l_operation = rs.GetInt16(2);
-                    log.l_timestamp = (long)rs.GetDecimal(3);
+                    log.l_timestamp = (long)rs.GetDecimal(3);    
                     log.sz_desc = rs.GetString(4);
                     loglist.Add(log);
+                }
+                rs.Close();
+
+                foreach (UPASLOG paslog in loglist)
+                {
+                    if (paslog.l_operation == 104) // New sending
+                    {
+                        string msg_text = "";
+                        string event_name = "";
+
+                        string desc = paslog.sz_desc;
+                        desc = desc.Substring(desc.IndexOf("l_refno"));
+                        desc = desc.Substring(0,desc.IndexOf(','));
+                        long l_refno = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
+                        sz_sql = String.Format("SELECT distinct l_refno, sz_text FROM LBASEND_TEXT where l_refno={0}", l_refno);
+                        rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                            msg_text = rs.GetString(1);
+
+                        desc = paslog.sz_desc;
+                        desc = desc.Substring(desc.IndexOf("l_projectpk"));
+                        desc = desc.Substring(0,desc.IndexOf(','));
+                        long l_projectpk = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
+                        sz_sql = String.Format("SELECT distinct l_projectpk, sz_name FROM BBPROJECT where l_projectpk={0}", l_projectpk);
+                        rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                            event_name = rs.GetString(1);
+
+                        paslog.sz_desc = event_name + " - " + msg_text;
+
+                    }
+                    else if (paslog.l_operation == 101) // New event
+                    {
+                        string desc = paslog.sz_desc;
+                        desc = desc.Substring(desc.IndexOf("l_projectpk"));
+                        desc = desc.Substring(0, desc.IndexOf(','));
+                        long l_projectpk = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
+                        sz_sql = String.Format("SELECT distinct l_projectpk, sz_name FROM BBPROJECT where l_projectpk={0}", l_projectpk);
+                        rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                            paslog.sz_desc = rs.GetString(1);
+                    }
+                    else if (paslog.l_operation == 107 || paslog.l_operation == 111 || paslog.l_operation == 200) // info on user createing a sending, sending to operator or kill sending
+                    {
+                        string msg_text = "";
+                        string event_name = "";
+                        string desc = paslog.sz_desc;
+                        desc = desc.Substring(desc.IndexOf("l_refno"));
+                        desc = desc.Substring(0, desc.IndexOf(','));
+                        long l_refno = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
+                        sz_sql = String.Format("SELECT distinct st.l_refno, st.sz_text, p.sz_name " +
+                                                 "FROM LBASEND_TEXT st, BBPROJECT p, BBPROJECT_X_REFNO pxr " +
+                                                "WHERE st.l_refno={0} " + 
+                                                  "AND st.l_refno=pxr.l_refno " +
+                                                  "AND p.l_projectpk = pxr.l_projectpk", l_refno);
+                        rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                        while (rs.Read())
+                            paslog.sz_desc = rs.GetString(2) + " - " + rs.GetString(1);
+                    }
                 }
                 rs.Close();
                 db.close();
