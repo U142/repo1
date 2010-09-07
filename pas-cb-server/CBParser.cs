@@ -170,7 +170,7 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert;
 
-            int l_getalert = GetAlert(xmlCB, oUser, operation, out oAlert);
+            int l_getalert = ParseAlertXml(xmlCB, oUser, operation, out oAlert);
             if (l_getalert != Constant.OK)
             {
                 ret.Add(0, l_getalert);
@@ -232,7 +232,7 @@ namespace pas_cb_server
             AlertInfo oAlert = new AlertInfo();
 
             //GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
-            int l_getalert = GetAlert(xmlCB, oUser, Operation.UPDATE, out oAlert);
+            int l_getalert = ParseAlertXml(xmlCB, oUser, Operation.UPDATE, out oAlert);
             if (l_getalert != Constant.OK)
             {
                 ret.Add(0, l_getalert);
@@ -242,20 +242,31 @@ namespace pas_cb_server
             // update a given alert at each operator
             foreach (Operator op in oUser.operators)
             {
-                switch (op.l_type)
+                // check for refno in LBASEND
+                if (Database.VerifyRefno(oAlert.l_refno, op.l_operator))
                 {
-                    case 1: // AlertiX (not supported)
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
-                    case 2: // one2many
-                        ret.Add(op.l_operator, CB_one2many.UpdateAlert(oAlert, op));
-                        break;
-                    case 3: // tmobile
-                        ret.Add(op.l_operator, CB_tmobile.UpdateAlert(oAlert, op));
-                        break;
-                    default:
-                        ret.Add(op.l_operator, Constant.FAILED);
-                        break;
+                    switch (op.l_type)
+                    {
+                        case 1: // AlertiX (not supported)
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                        case 2: // one2many
+                            ret.Add(op.l_operator, CB_one2many.UpdateAlert(oAlert, op));
+                            break;
+                        case 3: // tmobile
+                            ret.Add(op.l_operator, CB_tmobile.UpdateAlert(oAlert, op));
+                            break;
+                        default:
+                            ret.Add(op.l_operator, Constant.FAILED);
+                            break;
+                    }
+                }
+                else
+                {
+                    Log.WriteLog(
+                        String.Format("{0} (op={1}) no record found in LBASEND", oAlert.l_refno, op.sz_operatorname)
+                        , 2);
+                    ret.Add(op.l_operator, Constant.FAILED);
                 }
             }
             return ret;
@@ -266,7 +277,7 @@ namespace pas_cb_server
             AlertInfo oAlert = new AlertInfo();
 
             //GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
-            int l_getalert = GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+            int l_getalert = ParseAlertXml(xmlCB, oUser, Operation.KILL, out oAlert);
             if (l_getalert != Constant.OK)
             {
                 ret.Add(0, l_getalert);
@@ -315,7 +326,7 @@ namespace pas_cb_server
             }
             return ret;
         }
-        private static int GetAlert(XmlNode xmlCB, Settings oUser, Operation type, out AlertInfo oAlert)
+        private static int ParseAlertXml(XmlNode xmlCB, Settings oUser, Operation type, out AlertInfo oAlert)
         {
             oAlert = new AlertInfo();
             oAlert.alert_message = new AlertMessage();

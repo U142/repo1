@@ -234,179 +234,37 @@ namespace pas_cb_server
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
             cbc.Url = op.sz_url;
+            string sz_method = "";
 
             int l_logincode;
             if (!cbc_login(cbc, op, l_refno, "GetAlertStatus", out l_logincode))
                 return Constant.FAILED;
 
-            if (op.api_version >= new Version(2, 4)) // use cell count
+            try // get status
             {
-                try // get status
+                if (op.api_version >= new Version(2, 4)) // use cell count
                 {
-                    CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
-                    r_cellcount.cbccberequesthandle = Database.GetHandle(op);
-                    r_cellcount.messagehandle = l_msghandle;
-
-                    dump_request(r_cellcount, op, "CellCount", l_refno);
-                    if (!Settings.live)
-                    {
-                        Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                        return Constant.OK;
-                    }
-
-                    CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
-                    dump_request(cellcount, op, "CellCountResult", l_refno);
-                    if (cellcount.cbccbestatuscode == 0)
-                    {
-                        float cb_percentage = 0;
-                        int l_2gtotal = 0;
-                        int l_2gok = 0;
-                        int l_3gtotal = 0;
-                        int l_3gok = 0;
-
-                        l_2gtotal += cellcount.cellcount2gtotal;
-                        l_2gok += cellcount.cellcount2gsuccess;
-
-                        l_3gtotal += cellcount.cellcount3gtotal;
-                        l_3gok += cellcount.cellcount3gsuccess;
-
-                        cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
-
-                        Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, cellcount.cellcount2gtotal, cellcount.cellcount2gsuccess, cellcount.cellcount3gtotal, cellcount.cellcount3gsuccess);
-
-                        Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, success={4:0.00}%)"
-                            , l_refno
-                            , op.sz_operatorname
-                            , r_cellcount.cbccberequesthandle
-                            , l_msghandle
-                            , cb_percentage), 0);
-
-                        // ok, insert appropriate info in database
-                        if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
-                            Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
-
-                        // set as finished if expiry date has passed
-                        if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
-                            Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-
-                        return Constant.OK;
-                    }
-                    else
-                    {
-                        Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount FAILED (code={3}, msg={4}, handle={5})"
-                            , l_refno
-                            , op.sz_operatorname
-                            , cellcount.cbccberequesthandle
-                            , cellcount.cbccbestatuscode
-                            , cellcount.messagetext
-                            , l_msghandle), 2);
-                        return Constant.FAILED;
-                    }
+                    sz_method = "CellCount";
+                    return cbc_cellcount(cbc, op, l_refno, l_msghandle, l_status, l_expires_ts);
                 }
-                catch (Exception e)
+                else // use infomsg
                 {
-                    Log.WriteLog(
-                        String.Format("{0} (op={1}) CellCount EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
-                        String.Format("{0} (op={1}) CellCount EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
-                        2);
-                    return Constant.FAILED;
-                }
-                finally
-                {
-                    // always log out
-                    cbc_logout(cbc, op, l_refno);
+                    sz_method = "InfoMessage";
+                    return cbc_infomsg(cbc, op, l_refno, l_msghandle, l_status);
                 }
             }
-            else // use infomsg
+            catch (Exception e)
             {
-                try // get status
-                {
-                    CBCINFOMSGREQUEST inforeq = new CBCINFOMSGREQUEST();
-                    inforeq.cbccberequesthandle = Database.GetHandle(op);
-                    inforeq.messagehandle = l_msghandle;
-
-                    dump_request(inforeq, op, "InfoMessage", l_refno);
-                    if (!Settings.live)
-                    {
-                        Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                        return Constant.OK;
-                    }
-
-                    CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
-                    dump_request(infores, op, "InfoMessageResult", l_refno);
-
-                    if (infores.cbccbestatuscode == 0)
-                    {
-                        string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.Last().messagestatus);
-                        Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%)"
-                            , l_refno
-                            , op.sz_operatorname
-                            , infores.cbccberequesthandle
-                            , infores.cbccbestatuscode
-                            , infores.messagetext
-                            , l_msghandle
-                            , sz_messagestatus
-                            , infores.successpercentage), 0);
-
-                        switch (infores.messageinfolist.intervalinfo.Last().messagestatus)
-                        {
-                            case 0:   // Processing
-                                if (l_status != Constant.CBPREPARING)
-                                    Database.SetSendingStatus(op, l_refno, Constant.CBPREPARING);
-                                break;
-                            case 10:  // Planned
-                                if (l_status != Constant.CBQUEUED)
-                                    Database.SetSendingStatus(op, l_refno, Constant.CBQUEUED);
-                                break;
-                            case 20:  // Starting
-                            case 30:  // Running
-                                Database.UpdateHistCell(l_refno, op.l_operator, (float)infores.successpercentage, -1, -1, -1, -1, -1, -1);
-                                if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
-                                    Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
-                                break;
-                            case 40:  // Killing
-                                if (l_status != Constant.CANCELLING)
-                                    Database.SetSendingStatus(op, l_refno, Constant.CANCELLING);
-                                break;
-                            case 50:  // Recurring (paused)
-                                if (l_status != Constant.CBPAUSED)
-                                    Database.SetSendingStatus(op, l_refno, Constant.CBPAUSED);
-                                break;
-                            case 100: // Killed
-                            case 110: // Expired
-                            case 120: // Error
-                            case 130: // Disabled
-                            case 140: // Deleted (PLNM override)
-                                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                                break;
-                        }
-                        return Constant.OK;
-                    }
-                    else
-                    {
-                        Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (code={3}, msg={4}, handle={5})"
-                            , l_refno
-                            , op.sz_operatorname
-                            , infores.cbccberequesthandle
-                            , infores.cbccbestatuscode
-                            , infores.messagetext
-                            , l_msghandle), 2);
-                        return Constant.FAILED;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.WriteLog(
-                        String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
-                        String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
-                        2);
-                    return Constant.FAILED;
-                }
-                finally
-                {
-                    // always log out
-                    cbc_logout(cbc, op, l_refno);
-                }
+                Log.WriteLog(
+                    String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message, sz_method),
+                    String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e, sz_method),
+                    2);
+                return Constant.FAILED;
+            }
+            finally
+            {
+                // always log out
+                cbc_logout(cbc, op, l_refno);
             }
         }
 
@@ -679,6 +537,143 @@ namespace pas_cb_server
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 2);
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, newmsgres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
+            }
+        }
+        private static int cbc_cellcount(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, decimal l_expires_ts)
+        {
+            CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
+            r_cellcount.cbccberequesthandle = Database.GetHandle(op);
+            r_cellcount.messagehandle = l_msghandle;
+
+            dump_request(r_cellcount, op, "CellCount", l_refno);
+            if (!Settings.live)
+            {
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
+
+            CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
+            dump_request(cellcount, op, "CellCountResult", l_refno);
+            if (cellcount.cbccbestatuscode == 0)
+            {
+                float cb_percentage = 0;
+                int l_2gtotal = 0;
+                int l_2gok = 0;
+                int l_3gtotal = 0;
+                int l_3gok = 0;
+
+                l_2gtotal += cellcount.cellcount2gtotal;
+                l_2gok += cellcount.cellcount2gsuccess;
+
+                l_3gtotal += cellcount.cellcount3gtotal;
+                l_3gok += cellcount.cellcount3gsuccess;
+
+                cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
+
+                Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, cellcount.cellcount2gtotal, cellcount.cellcount2gsuccess, cellcount.cellcount3gtotal, cellcount.cellcount3gsuccess);
+
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, success={4:0.00}%)"
+                    , l_refno
+                    , op.sz_operatorname
+                    , r_cellcount.cbccberequesthandle
+                    , l_msghandle
+                    , cb_percentage), 0);
+
+                // ok, insert appropriate info in database
+                if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
+                    Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+
+                // set as finished if expiry date has passed
+                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+
+                return Constant.OK;
+            }
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount FAILED (code={3}, msg={4}, handle={5})"
+                    , l_refno
+                    , op.sz_operatorname
+                    , cellcount.cbccberequesthandle
+                    , cellcount.cbccbestatuscode
+                    , cellcount.messagetext
+                    , l_msghandle), 2);
+                return Constant.FAILED;
+            }
+        }
+        private static int cbc_infomsg(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status)
+        {
+            CBCINFOMSGREQUEST inforeq = new CBCINFOMSGREQUEST();
+            inforeq.cbccberequesthandle = Database.GetHandle(op);
+            inforeq.messagehandle = l_msghandle;
+
+            dump_request(inforeq, op, "InfoMessage", l_refno);
+            if (!Settings.live)
+            {
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                return Constant.OK;
+            }
+
+            CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
+            dump_request(infores, op, "InfoMessageResult", l_refno);
+
+            if (infores.cbccbestatuscode == 0)
+            {
+                string sz_messagestatus = get_messagestatus(infores.messageinfolist.intervalinfo.Last().messagestatus);
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={5}, status={6}, success={7:0.00}%)"
+                    , l_refno
+                    , op.sz_operatorname
+                    , infores.cbccberequesthandle
+                    , infores.cbccbestatuscode
+                    , infores.messagetext
+                    , l_msghandle
+                    , sz_messagestatus
+                    , infores.successpercentage), 0);
+
+                switch (infores.messageinfolist.intervalinfo.Last().messagestatus)
+                {
+                    case 0:   // Processing
+                        if (l_status != Constant.CBPREPARING)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBPREPARING);
+                        break;
+                    case 10:  // Planned
+                        if (l_status != Constant.CBQUEUED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBQUEUED);
+                        break;
+                    case 20:  // Starting
+                    case 30:  // Running
+                        Database.UpdateHistCell(l_refno, op.l_operator, (float)infores.successpercentage, -1, -1, -1, -1, -1, -1);
+                        if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
+                        break;
+                    case 40:  // Killing
+                        if (l_status != Constant.CANCELLING)
+                            Database.SetSendingStatus(op, l_refno, Constant.CANCELLING);
+                        break;
+                    case 50:  // Recurring (paused)
+                        if (l_status != Constant.CBPAUSED)
+                            Database.SetSendingStatus(op, l_refno, Constant.CBPAUSED);
+                        break;
+                    case 100: // Killed
+                    case 110: // Expired
+                    case 120: // Error
+                    case 130: // Disabled
+                    case 140: // Deleted (PLNM override)
+                        Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                        break;
+                }
+                return Constant.OK;
+            }
+            else
+            {
+                Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (code={3}, msg={4}, handle={5})"
+                    , l_refno
+                    , op.sz_operatorname
+                    , infores.cbccberequesthandle
+                    , infores.cbccbestatuscode
+                    , infores.messagetext
+                    , l_msghandle), 2);
+                return Constant.FAILED;
             }
         }
         private static String get_messagestatus(Int32 messagestatus)
