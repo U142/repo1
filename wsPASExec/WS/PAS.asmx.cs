@@ -699,12 +699,19 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
-        public List<UDEPARTMENT> getRestrictionShapes(ULOGONINFO logon, RESTRICTION_TYPE type)
+        public List<UDEPARTMENT> getRestrictionShapes(ULOGONINFO logon, PASHAPETYPES type)
         {
             try
             {
-                ULogon l = new ULogon();
-                l.CheckLogon(ref logon, false);
+                if (type.Equals(PASHAPETYPES.PAALERT) ||
+                    type.Equals(PASHAPETYPES.PAEVENT) ||
+                    type.Equals(PASHAPETYPES.PAOBJECT) ||
+                    type.Equals(PASHAPETYPES.PASENDING))
+                {
+                    throw new NotImplementedException();
+                }
+                PASUmsDb db = new PASUmsDb();
+                db.CheckLogon(ref logon, false);
 
                 List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
                 string sz_sql = String.Format("SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
@@ -712,7 +719,6 @@ namespace com.ums.ws.pas
                                   "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                                  "WHERE SH.l_type = {0} AND DEP.l_comppk = {1}", (int)type, logon.l_comppk);
 
-                UmsDb db = new UmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {

@@ -88,11 +88,11 @@ namespace com.ums.UmsCommon
         CELLBROADCAST = 7,
     }
 
-    public enum RESTRICTION_TYPE
+    /*public enum RESTRICTION_TYPE
     {
         PAUSERRESTRICTION = 8,
         PADEPARTMENTRESTRICTION = 16,
-    }
+    }*/
 
     public class PercentProgress
     {
