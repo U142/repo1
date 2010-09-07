@@ -350,6 +350,11 @@ namespace com.ums.PAS.Database
                     p.sz_projectpk = rs.GetDecimal(0).ToString();
                     p.sz_name = rs.GetString(1);
                     p.sz_updated = rs.GetDecimal(2).ToString();
+                    Type t = rs.GetFieldType(6);
+                    if (!rs.IsDBNull(6))
+                        p.l_finished = rs.GetByte(6);//int.Parse(rs.GetString(6));
+                    else
+                        p.l_finished = 0;
                 }
                 rs.Close();
 

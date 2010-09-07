@@ -380,7 +380,7 @@ namespace com.ums.ws.parm
                 //Kill sending
                 else if(typeof(CB_ALERT_KILL).Equals(cb.GetType()))
                 {
-                    return new CBGenerateSending(ref logon, ref cb).KillSending();
+                    return new CBGenerateSending(ref logon, ref cb).Send();
                 }
                 throw new Exception("Sending definition not found for " + cb.GetType());
             }

@@ -30,20 +30,21 @@ namespace com.ums.PAS.CB
          */
         public CB_SENDING_RESPONSE Send()
         {
-            CB_SEND_BASE alert = (CB_SEND_BASE)operation;
 
             //verify class
-            if (alert.GetType().Equals(typeof(CB_ALERT_POLYGON)))
+            if (operation.GetType().Equals(typeof(CB_ALERT_POLYGON)))
             {
             }
-            else if(alert.GetType().Equals(typeof(CB_ALERT_KILL)))
+            else if (operation.GetType().Equals(typeof(CB_ALERT_KILL)))
             {
-                throw new USendingTypeNotSupportedException(alert.GetType().ToString());
+                //throw new USendingTypeNotSupportedException(alert.GetType().ToString());
+                return KillSending();
             }
-            else if (alert.GetType().Equals(typeof(CB_ALERT_PLMN)))
+            else if (operation.GetType().Equals(typeof(CB_ALERT_PLMN)))
             {
                 //throw new USendingTypeNotSupportedException(alert.GetType().ToString());
             }
+            CB_SEND_BASE alert = (CB_SEND_BASE)operation;
 
             CB_SENDING_RESPONSE response = new CB_SENDING_RESPONSE();
             PASUmsDb db = new PASUmsDb();
@@ -54,6 +55,7 @@ namespace com.ums.PAS.CB
             BBPROJECT project = new BBPROJECT();
 
             //Create a new project if not specified
+            bool b_project_is_valid = true;
             try
             {
                 if (alert.l_projectpk <= 0)
@@ -66,9 +68,15 @@ namespace com.ums.PAS.CB
                     UPROJECT_RESPONSE resp = pr.uproject(ref logon, ref project_request);
                     project.sz_projectpk = resp.n_projectpk.ToString();
                     alert.l_projectpk = resp.n_projectpk;
+                    b_project_is_valid = true;
                 }
                 else
+                {
                     project.sz_projectpk = alert.l_projectpk.ToString();
+
+                    //check if project is valid and user may access it
+                    db.ProjectIsValid(alert.l_projectpk, ref logon);
+                }
             }
             catch (Exception e)
             {
@@ -159,12 +167,49 @@ namespace com.ums.PAS.CB
         /**
          * Kill the message. Update DB, then Serialize
          */
-        public CB_SENDING_RESPONSE KillSending()
+        protected CB_SENDING_RESPONSE KillSending()
         {
-            //PASUmsDb db = new PASUmsDb();
-            CB_ALERT_KILL kill = (CB_ALERT_KILL)operation;
-            kill.Serialize(UCommon.UPATHS.sz_path_cb);
-            return new CB_SENDING_RESPONSE();
+            PASUmsDb db = new PASUmsDb();
+
+            CB_SENDING_RESPONSE response = new CB_SENDING_RESPONSE();
+            response.l_projectpk = operation.l_projectpk;
+            response.l_refno = operation.l_refno;
+            response.l_timestamp = db.getDbClock();
+            response.l_code = -1;
+
+            //Check if this sending has been killed before
+            bool b_can_be_killed = true;
+            List<ULBASENDING> sendings = new List<ULBASENDING>();
+            db.GetLbaSendsByRefno(operation.l_refno, ref sendings);
+            for (int i = 0; i < sendings.Count; i++)
+            {
+                if (sendings[i].l_status == 530 ||
+                    sendings[i].l_status == 800)
+                {
+                    b_can_be_killed = false;
+                }
+            }
+            if (b_can_be_killed)
+            {
+                try
+                {
+                    CB_ALERT_KILL kill = (CB_ALERT_KILL)operation;
+                    kill.Serialize(UCommon.UPATHS.sz_path_cb);
+                    //mark sending as cancelled by user
+                    db.updateStatus(operation.l_refno, 530);
+                    response.l_code = 0;
+                }
+                catch (Exception err)
+                {
+                    response.l_code = -1;
+                }
+            }
+            else
+            {
+                response.l_code = -2;
+            }
+
+            return response;
         }
     }
 }

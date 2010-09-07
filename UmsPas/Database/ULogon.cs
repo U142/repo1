@@ -461,9 +461,11 @@ namespace com.ums.PAS.Database
                         if (l_dept_pas_send <= 0)
                             dept.l_newsending = 0;
                         if ((l_pas_send & 1) == 1 && (l_dept_pas_send & 1) == 0)
-                            l_pas_send -= 1;
+                            l_pas_send &= ~1;
+                            //l_pas_send -= 1;
                         if ((l_pas_send & 2) == 2 && (l_dept_pas_send & 2) == 0)
-                            l_pas_send -= 2;
+                            l_pas_send &= ~2;
+                            //l_pas_send -= 2;
                         dept.l_newsending = l_pas_send;
 
                         if (l_dept_parm <= 0)

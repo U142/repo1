@@ -82,6 +82,29 @@ namespace com.ums.ws.pas.status
         }
 
         [WebMethod]
+        public UPROJECT_FINISHED_RESPONSE MarkProjectAsFinished(ULOGONINFO logon, long l_projectpk)
+        {
+            try
+            {
+                UPROJECT_FINISHED_RESPONSE response = new UPROJECT_FINISHED_RESPONSE();
+                UStatusItemsDb db = new UStatusItemsDb();
+                db.CheckLogon(ref logon, true);
+                BBPROJECT p = (BBPROJECT)response;
+                if (db.FillProject(l_projectpk, ref p))
+                {
+                    if (db.FinishProject(l_projectpk))
+                        p.l_finished = 1;
+
+                }
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [WebMethod]
         public byte[] GetStatusItems(ULOGONINFO logoninfo, UStatusItemSearchParams search)
         {
             UStatusItemSearch itemsearch = new UStatusItemSearch(ref logoninfo, ref search);

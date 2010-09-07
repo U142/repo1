@@ -28,6 +28,7 @@ namespace com.ums.PAS.Status
         public int n_deptpk;
         public String sz_deptid;
         public long n_projectpk;
+        public int n_finished;
         public String sz_projectname;
         public long n_createtimestamp;
         public long n_updatetimestamp;

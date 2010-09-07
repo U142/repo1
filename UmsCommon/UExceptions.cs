@@ -98,6 +98,21 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UProjectIsMarkedAsFinishedException : UException
+    {
+        public UProjectIsMarkedAsFinishedException()
+            : base("The project is marked as ended")
+        {
+        }
+    }
+    public class UEventIsMarkedAsFinishedException : UException
+    {
+        public UEventIsMarkedAsFinishedException()
+            : base("The Event is marked as ended")
+        {
+        }
+    }
+
     public class ULBANoOperatorsReadyForConfirmCancel : UException
     {
         public ULBANoOperatorsReadyForConfirmCancel()

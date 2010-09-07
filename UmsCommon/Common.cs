@@ -767,11 +767,15 @@ namespace com.ums.UmsCommon
         public String sz_created;
         [XmlIgnore]
         public String sz_updated;
-        [XmlIgnore]
+
+        [XmlAttribute("l_deptpk")]
         public int n_deptpk;
 
         [XmlAttribute("l_userpk")]
-        public int n_userpk;
+        public long n_userpk;
+
+        [XmlAttribute("l_finished")]
+        public int l_finished;
 
         /*sending specifics*/
         [XmlIgnore]
@@ -1233,6 +1237,9 @@ namespace com.ums.UmsCommon
         public int l_comppk;
     }
 
-
+    public class UPROJECT_FINISHED_RESPONSE : BBPROJECT
+    {
+        
+    }
 
 }

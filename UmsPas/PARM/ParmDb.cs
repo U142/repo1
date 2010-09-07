@@ -745,6 +745,66 @@ namespace com.ums.UmsParm
             return true;
         }
 
+        /**
+         * Check if user may add a sending to this project
+         */
+        public bool ProjectIsValid(long n_projectpk, ref ULOGONINFO l)
+        {
+            try
+            {
+                BBPROJECT p = new BBPROJECT();
+                this.FillProject(n_projectpk, ref p);
+                if (p.l_finished == 0)
+                    return true;
+                else
+                    throw new UEventIsMarkedAsFinishedException();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public bool FillProject(long n_projectpk, ref BBPROJECT p)
+        {
+            try
+            {
+                String szSQL = String.Format("SELECT l_projectpk, sz_name, isnull(l_createtimestamp,0), isnull(l_updatetimestamp,0), isnull(l_deptpk,0), isnull(l_userpk,0), isnull(l_finished,0) FROM BBPROJECT WHERE l_projectpk={0}",
+                                n_projectpk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    p.sz_projectpk = rs.GetString(0);
+                    p.sz_name = rs.GetString(1);
+                    p.sz_created = rs.GetString(2);
+                    p.sz_updated = rs.GetString(3);
+                    p.n_deptpk = rs.GetInt32(4);
+                    p.n_userpk = rs.GetInt64(5);
+                    p.l_finished = rs.GetInt16(6);
+                }
+                rs.Close();
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+        }
+        public bool FinishProject(long n_projectpk)
+        {
+            try
+            {
+                String szSQL = String.Format("UPDATE BBPROJECT SET l_finished=1 WHERE l_projectpk={0}", n_projectpk);
+                return ExecNonQuery(szSQL);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool InsertBBVALID(ref PAS_SENDING s)
         {
             return InsertBBVALID(ref s.l_refno, ref s.m_valid);
@@ -1260,7 +1320,7 @@ namespace com.ums.UmsParm
             }
         }
 
-        public bool GetLbaSendsByRefno(int n_refno, ref List<ULBASENDING> list)
+        public bool GetLbaSendsByRefno(long n_refno, ref List<ULBASENDING> list)
         {
             bool b = false;
             try
