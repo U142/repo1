@@ -717,21 +717,31 @@ namespace com.ums.ws.pas
                 string sz_sql = String.Format("SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
                                   "FROM v_BBDEPARTMENT DEP " +
                                   "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
-                                 "WHERE SH.l_type = {0} AND DEP.l_comppk = {1}", (int)type, logon.l_comppk);
+                                 "WHERE SH.l_type = {0} AND DEP.l_comppk = {1} ORDER BY DEP.l_deptpk", (int)type, logon.l_comppk);
 
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+
+                UDEPARTMENT obj = new UDEPARTMENT();
+                obj.l_deptpk = -1;
+
                 while (rs.Read())
                 {
-                    UDEPARTMENT obj = new UDEPARTMENT();
-                    obj.l_deptpk = rs.GetInt32(0);
-                    obj.l_deptpri = rs.GetInt16(1);
-                    obj.sz_deptid = rs.GetString(2);
-                    obj.f_map = rs.GetInt16(3);
+                    int tmppk = rs.GetInt32(0);
+                    if (tmppk != obj.l_deptpk)
+                    {
+                        obj = new UDEPARTMENT();
+                        obj.l_deptpk = rs.GetInt32(0);
+                        obj.l_deptpri = rs.GetInt16(1);
+                        obj.sz_deptid = rs.GetString(2);
+                        obj.f_map = rs.GetInt16(3);
+                        dlist.Add(obj);
+                    }
+
+
                     UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
                     shape.f_disabled = rs.GetInt16(6);
                     shape.l_disabled_timestamp = (long)rs.GetDecimal(5);
                     obj.restrictionShapes.Add(shape);
-                    dlist.Add(obj);
                 }
                 rs.Close();
                 db.close();
