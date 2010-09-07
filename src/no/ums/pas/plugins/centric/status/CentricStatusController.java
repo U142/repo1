@@ -32,8 +32,11 @@ public class CentricStatusController extends StatusController {
 	public long getProjectpk() { return m_projectpk; }
 	private boolean ready = true;
 	public boolean isReady() { return ready; }
-	private Timer m_timer = null;
-	
+	private CentricStatusTimer m_timer = null;
+	public boolean isStopped()
+	{
+		return (getProjectpk()<=0 ? true : false);
+	}
 	
 	
 	public CentricStatusController()
@@ -67,7 +70,7 @@ public class CentricStatusController extends StatusController {
 	public boolean OpenStatus(long l_projectpk, CentricSendOptionToolbar centricsend) {
 		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 		res.setLProjectpk(l_projectpk);
-		set_cbsendingresponse(res);
+		set_cbsendingresponse(res, false);
 		if(getOpenedStatus()==null)
 			m_centricstatus = new CentricStatus(res);
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
@@ -80,35 +83,64 @@ public class CentricStatusController extends StatusController {
 	}
 	
 	
+	ActionListener taskPerformer = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(m_centricstatus.isReady() && getProjectpk()>0) {
+				CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
+				res.setLProjectpk(m_projectpk);
+				
+				m_centricstatus.set_cbsendingresponse(res);
+				m_centricstatus.getCBStatus(res);
+				System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
+			}
+			else
+			{
+				System.out.println("CentricStatusControl busy...");
+			}
+			m_timer.setDelay(m_timer.getRecurringDelay());
+		}
+	};
+	protected class CentricStatusTimer extends Timer
+	{
+		public ActionListener getTaskPerformer() { return taskPerformer; }
+		public int getRecurringDelay() { return recurring_delay; }
+		int recurring_delay = 10000;
+		public CentricStatusTimer(int initial_delay, int recurring_delay)
+		{
+			super(initial_delay, taskPerformer);
+			this.recurring_delay = recurring_delay;
+		}
+	}
+	public void forceQuickUpdate()
+	{
+		if(m_timer!=null)
+		{
+			m_timer.setDelay(1);
+		}
+	}
+
 	
 	private void runTimer() {
-		int delay = 10000; //milliseconds
-		ActionListener taskPerformer = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(m_centricstatus.isReady() && getProjectpk()>0) {
-					CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
-					res.setLProjectpk(m_projectpk);
-					
-					m_centricstatus.set_cbsendingresponse(res);
-				}
-				else
-				{
-					System.out.println("CentricStatusControl busy...");
-				}
-			}
-		};
 		if(getProjectpk()>0)
 		{
-			m_timer = new Timer(delay, taskPerformer);
-			m_timer.start();
+			if(m_timer==null || !m_timer.isRunning())
+			{
+				int initial_delay = 1; //milliseconds
+				int recurring_delay = 10000;
+				m_timer = new CentricStatusTimer(initial_delay, recurring_delay);
+				m_timer.start();
+			}
 		}
 	}
 	
-	public void set_cbsendingresponse(CBSENDINGRESPONSE res) {
+	public void set_cbsendingresponse(CBSENDINGRESPONSE res, boolean b_isnewsending) {
 		if(m_centricstatus == null)
 			m_centricstatus = new CentricStatus(res);
 		else
 			m_centricstatus.set_cbsendingresponse(res);
+		if(b_isnewsending)
+			forceQuickUpdate();
+		runTimer();
 	}
 }

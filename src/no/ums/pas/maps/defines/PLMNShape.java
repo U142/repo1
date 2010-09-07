@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
@@ -16,10 +18,16 @@ import no.ums.pas.maps.defines.ShapeStruct;
 
 public class PLMNShape extends ShapeStruct
 {
-
+	public PLMNShape()
+	{
+		super();
+		set_fill_color(new Color((float)0.0, (float)0.0, (float)1.0, (float)0.2));
+		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
+		set_text_color(get_fill_color());
+	}
+	
 	@Override
 	protected void calc_area_sqm() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -30,7 +38,6 @@ public class PLMNShape extends ShapeStruct
 
 	@Override
 	public void calc_coortopix(Navigation n) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -41,7 +48,6 @@ public class PLMNShape extends ShapeStruct
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -49,24 +55,45 @@ public class PLMNShape extends ShapeStruct
 	public void draw(Graphics g, Navigation nav, boolean bDashed,
 			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
 			boolean bFill, int pensize, boolean bPaintShapeName) {
+		Graphics2D g2d = (Graphics2D)g;
 		Font oldFont = g.getFont();
 		Color oldColor = g.getColor();
 		int x = variables.MAPPANE.getWidth()/2;
 		int y = variables.MAPPANE.getHeight()/2;
 		g.setFont(new Font("Arial", Font.BOLD, 40));
-		String sOutput = PAS.l("main_sending_type_national");
+		String sOutput = "";
+		sOutput = PAS.l("main_sending_type_national") + "\n" + shapeName;
+		String[] arr = sOutput.split("\n");
+
 		int borderline = 10;
+		int lines = arr.length;
 		int height = g.getFontMetrics().getHeight();
-		int width = g.getFontMetrics().stringWidth(sOutput);
+		int widths [] = new int[lines];
+		int maxwidth = 0;
+		for(int i=0; i < lines; i++)
+		{
+			int width = g.getFontMetrics().stringWidth(arr[i]);
+			if(width>maxwidth)
+				maxwidth = width;
+			widths[i] = width;
+		}
 		int maxascent = g.getFontMetrics().getMaxAscent();
-		int wHalf = width/2;
+		int wHalf = maxwidth/2;
 		int hHalf = height/2;
-		g.setColor(new Color(0, 0, 0, 200));
-		g.drawRoundRect(x-wHalf-borderline, y-maxascent - borderline, width + borderline*2, height + borderline*2, 10, 10);
-		g.setColor(new Color(255, 255, 255, 200));
-		g.fillRoundRect(x-wHalf-borderline, y-maxascent - borderline, width + borderline*2, height + borderline*2, 10, 10);
-		g.setColor(new Color(255, 0, 0, 200));
-		g.drawString(sOutput, x - wHalf, y);
+		//g.setColor(new Color(0, 0, 0, 200));
+		//g.setColor(new Color(255, 255, 255, 200));
+		g.setColor(get_text_bg_color());
+		g.fillRoundRect(x-wHalf-borderline, y-maxascent - borderline, maxwidth + borderline*2, height*lines + borderline*2, 10, 10);
+
+		g.setColor(Color.black);
+		g.drawRoundRect(x-wHalf-borderline, y-maxascent - borderline, maxwidth + borderline*2, height*lines + borderline*2, 10, 10);
+
+		//g.setColor(new Color(255, 0, 0, 200));
+		g.setColor(get_text_color());
+		for(int i=0; i < lines; i++)
+		{
+			g.drawString(arr[i], x - widths[i]/2, y + height*i);
+		}
 		
 		g.setColor(oldColor);
 		g.setFont(oldFont);
@@ -80,20 +107,17 @@ public class PLMNShape extends ShapeStruct
 
 	@Override
 	public NavStruct getFullBBox() {
-		// TODO Auto-generated method stub
-		return null;
+		return calc_bounds();
 	}
 
 	@Override
 	public boolean pointInsideShape(MapPointLL ll) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public PolySnapStruct snap_to_point(Point p1, int nMaxDistance,
 			boolean bCurrent, Dimension dimMap, Navigation nav) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

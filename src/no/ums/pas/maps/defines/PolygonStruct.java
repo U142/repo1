@@ -61,6 +61,17 @@ public class PolygonStruct extends ShapeStruct {
 	private Dimension m_dim_mapsize;
 	public Dimension get_mapsize() { return m_dim_mapsize; }
 	
+	public PolygonStruct()
+	{
+		this(DETAILMODE.SHOW_POLYGON_FULL, 10000.0);
+	}
+	
+	public PolygonStruct(DETAILMODE mode, double precision)
+	{
+		this(new Dimension());
+		setDetailMode(mode);
+		POINT_PRECISION = precision;
+	}
 	public PolygonStruct(Dimension dim_mapsize) {
 		set_fill_color(new Color((float)0.0, (float)0.0, (float)1.0, (float)0.2));
 		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
@@ -508,18 +519,29 @@ public class PolygonStruct extends ShapeStruct {
 		return m_bounds;
 	}
 	public void add_coor(Double lon, Double lat) {
-		this.add_coor(lon, lat, false);
+		this.add_coor(lon, lat, false, POINT_PRECISION);
+	}
+	
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates)
+	{
+		this.add_coor(lon, lat, b_allow_duplicates, POINT_PRECISION);
+	}
+	
+	public void add_coor(Double lon, Double lat, double precision) {
+		add_coor(lon, lat, false, precision);
 	}
 
-	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates) {
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision) {
 		if(!isEditable())
 			return;
 		int index = get_size();
-		double dlon = ((int)(lon * 10000))/10000.0;
-		double dlat = ((int)(lat * 10000))/10000.0;
+		double dlon = ((int)(lon * precision))/precision;
+		double dlat = ((int)(lat * precision))/precision;
 		String id = dlon+"_"+dlat;
-		if(!b_allow_duplicates && hash_coors_added.contains(id))
+		if(!b_allow_duplicates && hash_coors_added.contains(id) && !isElliptical())
 			return;
+		if(hash_coors_added.contains(id))
+			System.out.println("contains point");
 		m_coor_lon.add(dlon);
 		m_coor_lat.add(dlat);
 		m_b_isadded.add(false);
@@ -1071,15 +1093,18 @@ public class PolygonStruct extends ShapeStruct {
 		m_ellipse_coor_lon.clear();
 		
 		if(ellipse_polygon==null)
-			ellipse_polygon = new PolygonStruct(null);
+			ellipse_polygon = new PolygonStruct();
 		Utils.ConvertEllipseToPolygon(
 				m_p_center.get_lon(), 
 				m_p_center.get_lat(), 
 				m_p_corner.get_lon(), 
 				m_p_corner.get_lat(), 
-				50, 0, ellipse_polygon);
+				60, 0, 
+				POINT_PRECISION,
+				ellipse_polygon);
 		this.m_ellipse_coor_lat = ellipse_polygon.get_coors_lat();
 		this.m_ellipse_coor_lon = ellipse_polygon.get_coors_lon();
+		System.out.println("points="+m_ellipse_coor_lat.size());
 		ellipse_polygon.set_border_color(this.get_border_color());
 		ellipse_polygon.set_fill_color(this.get_fill_color());
 		this.m_b_needcoortopix = true;
@@ -1122,7 +1147,7 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			int idx = (i % restrict.get_size());
 			MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
-			poly.add_coor(ll.get_lon(), ll.get_lat());
+			poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION);
 		}
 	}
 	
@@ -1236,9 +1261,9 @@ public class PolygonStruct extends ShapeStruct {
 			if(first_intersect!=null && first_intersect.getPointReference()>=0 && n_entered_polygon_at_idx>=0)
 			{
 				if(b_cur_inside)
-					newpoly.add_coor(current_point.get_lon(), current_point.get_lat());
+					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
 				if(num_intersects>0)
-					newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat());
+					newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);
 				
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, first_intersect.getPointReference(), n_entered_polygon_at_idx);
 				return;
@@ -1246,7 +1271,7 @@ public class PolygonStruct extends ShapeStruct {
 			else if(n_first_entered_polygon_at_idx>=0 && n_left_polygon_at_idx>=0) //we end at the outside, make a line from last intersect to first intersect
 			{
 				if(b_cur_inside)
-					newpoly.add_coor(current_point.get_lon(), current_point.get_lat());
+					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, 
 						n_left_polygon_at_idx, n_first_entered_polygon_at_idx );
 				return;
@@ -1258,23 +1283,23 @@ public class PolygonStruct extends ShapeStruct {
 		if(b_back_inside && first_intersect!=null)
 		{
 			if(b_cur_inside)
-				newpoly.add_coor(current_point.get_lon(), current_point.get_lat());
+				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
 			if(n_left_polygon_at_idx!=first_intersect.getPointReference())
 			{
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, n_left_polygon_at_idx, first_intersect.getPointReference());
 				//n_left_polygon_at_idx = -1;
 			}
-			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat());
+			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);
 		}
 		else if(b_cur_inside && intersects.size()==0)
 		{
-			newpoly.add_coor(current_point.get_lon(), current_point.get_lat());
+			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
 		}
 		else if(!b_back_inside && num_intersects>0)
 		{
 			if(b_cur_inside)
-				newpoly.add_coor(current_point.get_lon(), current_point.get_lat());
-			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat());			
+				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
+			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);			
 		}
 
 		if(num_intersects==0)
@@ -1438,7 +1463,7 @@ public class PolygonStruct extends ShapeStruct {
 	
 	public void ellipseToRestrictionlines(PolygonStruct restrict)
 	{
-		PolygonStruct newpoly = new PolygonStruct(null);
+		PolygonStruct newpoly = new PolygonStruct();
 		//iterateEllipse(newpoly, restrict, 0, false, null, null);
 		iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
 		this.m_coor_lat = newpoly.m_coor_lat;

@@ -4,6 +4,7 @@ package no.ums.ws.pas.status;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -18,7 +19,9 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="l_projectpk" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="l_userpk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="l_deptpk" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="l_userpk" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
+ *       &lt;attribute name="l_finished" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -28,14 +31,21 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BBPROJECT")
+@XmlSeeAlso({
+    UPROJECTFINISHEDRESPONSE.class
+})
 public class BBPROJECT {
 
     @XmlAttribute(name = "l_projectpk")
     protected String lProjectpk;
     @XmlAttribute(name = "sz_projectname")
     protected String szProjectname;
+    @XmlAttribute(name = "l_deptpk", required = true)
+    protected int lDeptpk;
     @XmlAttribute(name = "l_userpk", required = true)
-    protected int lUserpk;
+    protected long lUserpk;
+    @XmlAttribute(name = "l_finished", required = true)
+    protected int lFinished;
 
     /**
      * Gets the value of the lProjectpk property.
@@ -86,10 +96,26 @@ public class BBPROJECT {
     }
 
     /**
+     * Gets the value of the lDeptpk property.
+     * 
+     */
+    public int getLDeptpk() {
+        return lDeptpk;
+    }
+
+    /**
+     * Sets the value of the lDeptpk property.
+     * 
+     */
+    public void setLDeptpk(int value) {
+        this.lDeptpk = value;
+    }
+
+    /**
      * Gets the value of the lUserpk property.
      * 
      */
-    public int getLUserpk() {
+    public long getLUserpk() {
         return lUserpk;
     }
 
@@ -97,8 +123,24 @@ public class BBPROJECT {
      * Sets the value of the lUserpk property.
      * 
      */
-    public void setLUserpk(int value) {
+    public void setLUserpk(long value) {
         this.lUserpk = value;
+    }
+
+    /**
+     * Gets the value of the lFinished property.
+     * 
+     */
+    public int getLFinished() {
+        return lFinished;
+    }
+
+    /**
+     * Sets the value of the lFinished property.
+     * 
+     */
+    public void setLFinished(int value) {
+        this.lFinished = value;
     }
 
 }

@@ -79,6 +79,9 @@ public class LBASEND
 	 * 41.000+ => PAS WebServices
 	 * 42.000+ => LBAS Server
 	 */
+	
+	public static final int LBASTATUS_GENERAL_ERROR = -2;
+
 	public static final int LBASTATUS_INITED = 100;
 	public static final int LBASTATUS_COULD_NOT_PUBLISH_LBA_FILE = 41100;
 	public static final int LBASTATUS_SENT_TO_LBA = 199;
@@ -100,7 +103,16 @@ public class LBASEND
 	public static final int TASSTATUS_CONFIRMED_BY_USER = 420;
 	public static final int TASSTATUS_CANCELLED_BY_USER = 430;
 	public static final int TASSTATUS_SENDING = 440;
-	
+
+	public static final int CBSTATUS_PREPARING_CELLVISION = 500;
+	public static final int CBSTATUS_PROCESSING_SUBSCRIBERS_CELLVISION = 505;
+	public static final int CBSTATUS_PREPARED_CELLVISION = 510; // denne settes av TAS server dersom l_Requesttype=1
+	public static final int CBSTATUS_PREPARED_CELLVISION_COUNT_COMPLETE = 511; //denne settes av TAS server dersom l_Requesttype=1 og CC statistikk er ferdig
+	public static final int CBSTATUS_CONFIRMED_BY_USER = 520;
+	public static final int CBSTATUS_CANCELLED_BY_USER = 530;
+	public static final int CBSTATUS_SENDING = 540;
+	public static final int CBSTATUS_PAUSED = 590;
+
 	
 	public static final int LBASTATUS_CANCEL_IN_PROGRESS = 800;
 	public static final int LBASTATUS_FINISHED = 1000;

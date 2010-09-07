@@ -70,6 +70,23 @@ public interface PasStatusSoap {
 
     /**
      * 
+     * @param lProjectpk
+     * @param logon
+     * @return
+     *     returns no.ums.ws.pas.status.UPROJECTFINISHEDRESPONSE
+     */
+    @WebMethod(operationName = "MarkProjectAsFinished", action = "http://ums.no/ws/pas/status/MarkProjectAsFinished")
+    @WebResult(name = "MarkProjectAsFinishedResult", targetNamespace = "http://ums.no/ws/pas/status")
+    @RequestWrapper(localName = "MarkProjectAsFinished", targetNamespace = "http://ums.no/ws/pas/status", className = "no.ums.ws.pas.status.MarkProjectAsFinished")
+    @ResponseWrapper(localName = "MarkProjectAsFinishedResponse", targetNamespace = "http://ums.no/ws/pas/status", className = "no.ums.ws.pas.status.MarkProjectAsFinishedResponse")
+    public UPROJECTFINISHEDRESPONSE markProjectAsFinished(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/pas/status")
+        ULOGONINFO logon,
+        @WebParam(name = "l_projectpk", targetNamespace = "http://ums.no/ws/pas/status")
+        long lProjectpk);
+
+    /**
+     * 
      * @param logoninfo
      * @param search
      * @return

@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="n_deptpk" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="sz_deptid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="n_projectpk" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="n_finished" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="sz_projectname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="n_createtimestamp" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="n_updatetimestamp" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -58,6 +59,7 @@ import javax.xml.bind.annotation.XmlType;
     "nDeptpk",
     "szDeptid",
     "nProjectpk",
+    "nFinished",
     "szProjectname",
     "nCreatetimestamp",
     "nUpdatetimestamp"
@@ -92,6 +94,8 @@ public class UStatusListItem {
     protected String szDeptid;
     @XmlElement(name = "n_projectpk")
     protected long nProjectpk;
+    @XmlElement(name = "n_finished")
+    protected int nFinished;
     @XmlElement(name = "sz_projectname")
     protected String szProjectname;
     @XmlElement(name = "n_createtimestamp")
@@ -345,6 +349,22 @@ public class UStatusListItem {
      */
     public void setNProjectpk(long value) {
         this.nProjectpk = value;
+    }
+
+    /**
+     * Gets the value of the nFinished property.
+     * 
+     */
+    public int getNFinished() {
+        return nFinished;
+    }
+
+    /**
+     * Sets the value of the nFinished property.
+     * 
+     */
+    public void setNFinished(int value) {
+        this.nFinished = value;
     }
 
     /**

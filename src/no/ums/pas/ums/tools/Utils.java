@@ -107,7 +107,7 @@ public final class Utils {
 		return ret;
 		
 	}
-    public synchronized static boolean ConvertEllipseToPolygon(double centerx, double centery, double cornerx, double cornery, int steps, int angle, PolygonStruct poly)
+    public synchronized static boolean ConvertEllipseToPolygon(double centerx, double centery, double cornerx, double cornery, int steps, int angle, double precision, PolygonStruct poly)
     {
         int curStep = 0;
 
@@ -117,23 +117,24 @@ public final class Utils {
         double a = Math.abs(cornerx - centerx);
         double b = Math.abs(cornery - centery);
 
-        double beta = -angle * (Math.PI / 180);
+        double beta = -angle * (Math.PI / 180.0);
         double sinbeta = Math.sin(beta);
         double cosbeta = Math.cos(beta);
 
         for (double i = 360; i > 0.0; i -= 360.0 / steps)
         {
-            double alpha = i * (Math.PI / 180);
+            double alpha = i * (Math.PI / 180.0);
             double sinalpha = Math.sin(alpha);
             double cosalpha = Math.cos(alpha);
 
             //polygon[curStep, 0] = centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta);
             //polygon[curStep, 1] = centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta);
-            poly.add_coor(centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta), centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta));
+            poly.add_coor(centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta), centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta), true, precision);
 
             curStep++;
         }
 
         return true;
     }    
+    
 }

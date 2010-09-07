@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.pas.status.CBSTATUS;
@@ -19,8 +20,13 @@ import no.ums.ws.pas.status.ULBASENDING;
 
 public class CentricOperatorStatus extends DefaultPanel implements ComponentListener {
 
+	/**
+	 * Ordinal worst to best
+	 */
 	public enum OPERATOR_STATUS
 	{
+		ERROR,
+		KILLING,
 		INITIALIZING,
 		ACTIVE,
 		FINISHED,
@@ -224,12 +230,46 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	public OPERATOR_STATUS getOperatorStatus()
 	{
 		int status = get_operator().getLStatus();
-		if(get_operator().getLStatus() == 1000)
+		/*if(get_operator().getLStatus() == 1000)
 			return OPERATOR_STATUS.FINISHED;
 		else if(get_operator().getLStatus() >= 540)
 			return OPERATOR_STATUS.ACTIVE;
 		else
-			return OPERATOR_STATUS.INITIALIZING;
+			return OPERATOR_STATUS.INITIALIZING;*/
+		OPERATOR_STATUS operatorstatus = OPERATOR_STATUS.INITIALIZING;
+		switch(get_operator().getLStatus())
+		{
+		case LBASEND.LBASTATUS_INITED:
+		case LBASEND.LBASTATUS_SENT_TO_LBA:
+		case LBASEND.LBASTATUS_PARSING_LBAS:
+		case LBASEND.LBASTATUS_PARSING_LBAS_FAILED_TO_SEND:
+		case LBASEND.CBSTATUS_PREPARING_CELLVISION:
+		case LBASEND.CBSTATUS_PROCESSING_SUBSCRIBERS_CELLVISION:
+		case LBASEND.CBSTATUS_PREPARED_CELLVISION:
+		case LBASEND.CBSTATUS_PREPARED_CELLVISION_COUNT_COMPLETE:
+		case LBASEND.CBSTATUS_CONFIRMED_BY_USER:
+		case LBASEND.CBSTATUS_SENDING:
+		case LBASEND.CBSTATUS_PAUSED:
+			operatorstatus = OPERATOR_STATUS.ACTIVE;
+			break;
+		case LBASEND.CBSTATUS_CANCELLED_BY_USER:
+		case LBASEND.LBASTATUS_CANCEL_IN_PROGRESS:
+			operatorstatus = OPERATOR_STATUS.KILLING;
+			break;
+			
+		case LBASEND.LBASTATUS_FINISHED:
+		case LBASEND.LBASTATUS_CANCELLED:
+		case LBASEND.LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM:
+			operatorstatus = OPERATOR_STATUS.FINISHED;
+			break;
+		case LBASEND.LBASTATUS_GENERAL_ERROR:
+			operatorstatus = OPERATOR_STATUS.ERROR;
+			break;
+		}
+		if(get_operator().getLStatus()>=40000)
+			operatorstatus = OPERATOR_STATUS.ERROR;
+		
+		return operatorstatus;
 	}
 }
 

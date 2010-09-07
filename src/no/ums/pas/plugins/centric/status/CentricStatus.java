@@ -92,10 +92,10 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void set_cbsendingresponse(CBSENDINGRESPONSE res) { 
 		this.res = res;
 		// update infoting
-		getCBStatus(res);
+		//getCBStatus(res); //wait for timer
 	}
 	
-	private void getCBStatus(CBSENDINGRESPONSE res) {
+	public void getCBStatus(CBSENDINGRESPONSE res) {
 		//ImageIcon icon = ImageLoader.load_icon("remembermilk_orange.gif");
 		//for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 		//	m_status_tabbed.setIconAt(i, icon);
@@ -138,7 +138,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		add_controls();
 		cbsreq = new CBPROJECTSTATUSREQUEST();
 		cbsreq.setLTimefilter(0);
-		getCBStatus(res);
+		//getCBStatus(res);
 		
 	}
 	
@@ -297,8 +297,15 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				lbl_pane = "A ";
 				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
+			case KILLING:
+				lbl_pane = "K ";
+				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+				break;
 			case FINISHED:
 				lbl_pane = "F ";
+				break;
+			case ERROR:
+				lbl_pane = "E ";
 				break;
 			}
 			lbl_pane += currentstatus.getMdv().getSzSendingname();

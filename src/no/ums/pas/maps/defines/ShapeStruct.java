@@ -27,6 +27,12 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public static final int SHAPE_GISIMPORT = 2;
 	public static final int SHAPE_MUNICIPAL = 9;
 	
+	public double POINT_PRECISION = 10000.0;
+	
+	public void setPrecision(double d) {
+		POINT_PRECISION = d;
+	}
+	
 	/*public static final int SHOW_POLYGON_FULL					= 1;
 	public static final int SHOW_POLYGON_SIMPLIFIED_PRPIXELS	= 2;
 	public static final int SHOW_POLYGON_SIMPLIFIED_PRMETERS	= 3;
@@ -168,7 +174,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		return SHAPE_UNKNOWN;
 	}
 	
-	protected Color m_fill_color;
+	protected Color m_fill_color = new Color(0, 0, 200, 200);
 	protected Color m_border_color;
 	protected Color m_text_color = new Color(0,0,0,200);
 	protected Color m_text_bg_color = new Color(0,0,0,100);
@@ -180,6 +186,11 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 
 	public ShapeStruct() {
 		m_icon_epicentre = ImageLoader.load_icon("epicentre_pinpoint.png");
+	}
+	public ShapeStruct(DETAILMODE mode, double precision) {
+		this();
+		setDetailMode(mode);
+		POINT_PRECISION = precision;
 	}
 	public Color get_border_color() { return m_border_color; }
 	public void set_border_color(Color col) { m_border_color = col; }
@@ -210,7 +221,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	
 	public Color get_text_color() { return m_text_color; }
 	public void set_text_color(Color col) {
-		m_text_color = col;
+		m_text_color = new Color(col.getRed(), col.getGreen(), col.getBlue(), 200);
 	}
 	public Color get_text_bg_color() { return m_text_bg_color; }
 	public void set_text_bg_color(Color col) {

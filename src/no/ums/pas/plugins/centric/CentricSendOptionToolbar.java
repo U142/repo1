@@ -1140,7 +1140,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//	m_centricstatuscontroller = new CentricStatusController(e, this);
 		//else {
 		{
-			getStatusController().set_cbsendingresponse(response);
+			getStatusController().set_cbsendingresponse(response, true);
 			//getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
 			Project p = new Project();
 			p.set_projectpk(new Long(response.getLProjectpk()).toString());

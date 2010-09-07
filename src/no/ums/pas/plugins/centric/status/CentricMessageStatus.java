@@ -30,6 +30,7 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.parm.CBALERTKILL;
 import no.ums.ws.parm.CBSENDBASE;
+import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.CBSTATUS;
@@ -92,6 +93,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		super();
 		m_parent = parent;
 		//m_l_refno = l_refno;
+		lastcbstatus = cbstatus;
 		add_controls();
 		addComponentListener(this);
 	}
@@ -169,10 +171,12 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(m_btn_kill)) {
 			if(confirmKill()) {
+				m_btn_kill.setEnabled(false);
 				CBALERTKILL kill = new CBALERTKILL();
+				//kill.setLProjectpk()
+				//kill.setLProjectpk(lastcbstatus.get)
 				kill.setLRefno(get_refno());
-				
-				WSCentricSend send = new WSCentricSend(this,"act_kill_cb", kill); 
+				WSCentricSend send = new WSCentricSend(this,"act_cb_killed", kill); 
 				send.start();
 			}
 		}
@@ -183,8 +187,18 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		else if(e.getSource().equals(m_btn_send_to_address_book)) {
 			
 		}
-		if(e.getActionCommand().equals("act_kill_cb")) {
-			
+		if(e.getActionCommand().equals("act_cb_killed")) {
+			CBSENDINGRESPONSE response = (CBSENDINGRESPONSE)e.getSource();
+			switch((int)response.getLCode())
+			{
+			case 0: //ok
+				break;
+			case -1: //error writing file / updating status
+				m_btn_kill.setEnabled(true);
+				break;
+			case -2: //already killed
+				break;
+			}
 		}
 		if(e.getActionCommand().equals("act_get_cb_status")) {
 			CBPROJECTSTATUSRESPONSE res = (CBPROJECTSTATUSRESPONSE)e.getSource();
@@ -206,7 +220,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	private boolean confirmKill() {
 		JFrame frame = get_frame();
 		int answer;
-		answer = JOptionPane.showConfirmDialog(frame, PAS.l("common_are_you_sure"), null, JOptionPane.YES_NO_OPTION);
+		answer = JOptionPane.showConfirmDialog(frame, PAS.l("common_are_you_sure"), PAS.l("common_kill_sending") + " " + get_refno(), JOptionPane.YES_NO_OPTION);
 		frame.dispose();
 		if(answer == JOptionPane.YES_OPTION)
 			return true;
@@ -311,7 +325,8 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		setVisible(true);
 	}
 	
-	private void updateTotal(long db_timestamp) {
+	private void updateTotal(long db_timestamp) 
+	{
 	
 		CentricOperatorStatus cos;
 	
@@ -348,13 +363,15 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		}
 		switch(getOperatorStatus()) //get worst status. If the message is still alive, use now as timestamp
 		{
-		case ACTIVE:
-		case INITIALIZING:
-			timestamp = db_timestamp;
-			break;
-		case FINISHED:
-			//use the latest timestamp from operators
-			break;
+			case ACTIVE:
+			case INITIALIZING:
+			case KILLING:
+				timestamp = db_timestamp;
+				break;
+			case FINISHED:
+			case ERROR:
+				//use the latest timestamp from operators
+				break;
 		}
 		total_statuspane.total = total;
 		total_statuspane.unknown = unknown;
@@ -372,8 +389,17 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		total_statuspane.get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(start)));
 		// Duration
 		total_statuspane.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(start,timestamp) + " " + PAS.l("common_minutes_maybe")));
-
+		
+		switch(getOperatorStatus())
+		{
+		case KILLING:
+		case FINISHED:
+		case ERROR:
+		case INITIALIZING:
+			m_btn_kill.setEnabled(false);
+			break;
+		}
 	}
-
+	
 	
 }
