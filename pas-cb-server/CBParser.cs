@@ -278,7 +278,7 @@ namespace pas_cb_server
             {
                 // get jobid and check if message has expired
                 bool expired = false;
-                string sz_jobid = Database.GetJobID(op, oAlert.l_refno);                
+                string sz_jobid = Database.GetJobID(op, oAlert.l_refno);
 
                 if (Database.GetSendingStatus(op, oAlert.l_refno, out expired) == Constant.CANCELLING)
                 {
@@ -291,9 +291,8 @@ namespace pas_cb_server
                 }
                 else if (sz_jobid == "")
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID)", oAlert.l_refno, op.sz_operatorname), 2);
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
-                    ret.Add(op.l_operator, Constant.RETRY);
+                    Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID, ignoring)", oAlert.l_refno, op.sz_operatorname), 1);
+                    ret.Add(op.l_operator, Constant.OK);
                 }
                 else
                 {
