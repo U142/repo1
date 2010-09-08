@@ -540,8 +540,8 @@ public class PolygonStruct extends ShapeStruct {
 		String id = dlon+"_"+dlat;
 		if(!b_allow_duplicates && hash_coors_added.contains(id) && !isElliptical())
 			return;
-		if(hash_coors_added.contains(id))
-			System.out.println("contains point");
+		//if(hash_coors_added.contains(id))
+		//	System.out.println("contains point");
 		m_coor_lon.add(dlon);
 		m_coor_lat.add(dlat);
 		m_b_isadded.add(false);

@@ -671,13 +671,14 @@ public class plugin_Centric extends PAS_Scripting
 					str+=PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
 				else
 					str+=PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";					
+				for(int i = 0; i < ui.get_departments().size(); i++)
+					str += " \"" + ((DeptInfo)ui.get_departments().get(i)).get_deptid() + "\"";
 				break;
 			case 2: //national user
-				str+=PAS.l("logon_rights_national_user") + " - "; //" - $Regional Super User - ";					
+				str+=PAS.l("logon_rights_national_user"); //" - $Regional Super User - ";					
 				break;				
 			}
-			for(int i = 0; i < ui.get_departments().size(); i++)
-				str += " \"" + ((DeptInfo)ui.get_departments().get(i)).get_deptid() + "\"";
+			
 			lbl_userinfo.setText(str);
 		}
 

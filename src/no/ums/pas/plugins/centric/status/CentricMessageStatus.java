@@ -296,7 +296,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	
 	public OPERATOR_STATE getOperatorStatus()
 	{
-		OPERATOR_STATE worst_status = OPERATOR_STATE.INITIALIZING;
+		OPERATOR_STATE worst_status = OPERATOR_STATE.DUMMY_OPERATOR;
 		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
 		while(en.hasMoreElements())
 		{
@@ -320,10 +320,10 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			{
 				case ACTIVE:
 				case INITIALIZING:
+				case ERROR:
 					ret = true;
 					break;
 				case FINISHED:
-				case ERROR:
 				case KILLING:
 				case DUMMY_OPERATOR:
 					break;
@@ -419,6 +419,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 				break;
 			case FINISHED:
 			case ERROR:
+			case DUMMY_OPERATOR:
 				//use the latest timestamp from operators
 				break;
 		}
