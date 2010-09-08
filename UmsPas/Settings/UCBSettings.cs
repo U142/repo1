@@ -30,7 +30,7 @@ namespace com.ums.PAS.Settings
             try
             {
                 String szSQL;
-                szSQL = String.Format("sp_cb_upd_LBAPARAMETER {0},{1},'{2}',{3},{4},{5},{6},{7},{8},{9},{10}", param.l_incorrect, param.l_autologoff, param.sz_adminemail,
+                szSQL = String.Format("sp_cb_upd_LBAPARAMETER {0},{1},'{2}',{3},{4},{5},{6},{7},{8},{9},{10}", param.l_incorrect, param.l_autologoff, param.sz_adminemail.Replace("'","''"),
                     param.l_channelno, param.l_test_channelno, param.l_heartbeat, param.l_duration, param.l_interval, param.l_repetition, param.l_deptpk, param.l_comppk);
 
                 return ExecNonQuery(szSQL);

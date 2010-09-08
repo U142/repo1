@@ -66,21 +66,22 @@ namespace com.ums.PAS.messagelib
             }
         }
 
-        public UBBMESSAGE InsertMessage(ref UBBMESSAGE msg)
+        public UBBMESSAGE InsertMessage(int comppk, ref UBBMESSAGE msg)
         {
             try
             {
                 String langpk = msg.n_langpk.ToString();
                 if (msg.n_langpk < 0)
                     langpk = "NULL";
-                String szSQL = String.Format("sp_ins_messages_tree {0}, {1}, '{2}', '{3}', {4}, {5}, '{6}', {7}, {8}, {9}, {10}",
+                String szSQL = String.Format("sp_ins_messages_tree {0}, {1}, {2}, '{3}', '{4}', {5}, {6}, '{7}', {8}, {9}, {10}, {11}",
+                                    comppk,
                                     msg.n_deptpk,
                                     (int)Enum.Parse(typeof(UBBMODULEDEF), msg.n_type.ToString()),
-                                    msg.sz_name,
-                                    msg.sz_description,
+                                    msg.sz_name.Replace("'","''"),
+                                    msg.sz_description== null?msg.sz_description:msg.sz_description.Replace("'", "''"),
                                     langpk,
                                     msg.f_template,
-                                    msg.sz_filename,
+                                    msg.sz_filename == null ? msg.sz_filename : msg.sz_filename.Replace("'", "''"),
                                     msg.n_ivrcode,
                                     msg.n_categorypk,
                                     msg.n_parentpk,
@@ -96,7 +97,7 @@ namespace com.ums.PAS.messagelib
 
                     for (int i = 0; i < msg.ccmessage.Count; ++i)
                     {
-                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message);
+                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message.Replace("'","''"));
                         ExecNonQuery(szSQL);
                     }
 
@@ -276,148 +277,6 @@ namespace com.ums.PAS.messagelib
                 throw e;
             }
 
-        }
-        /*
-         * 
-         * Get messages for NLALERT
-         * 
-         */
-        public ULBAMESSAGELIST GetLBAMessageList(ref ULOGONINFO logon, UBBMESSAGELISTFILTER filter)
-        {
-            try
-            {
-                ULBAMESSAGELIST ret = new ULBAMESSAGELIST();
-                ret.n_servertimestamp = base.getDbClock();
-                ret.list = new List<ULBAMESSAGE>();
-                String szSQL = String.Format("SELECT l_deptpk, sz_description, sz_text, l_messagepk, isnull(l_langpk,-1), isnull(l_parentpk,-1), isnull(l_depth,0) as l_depth, isnull(l_timestamp,0) " +
-                                            "FROM LBAMESSAGES " +
-                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} " +
-                                            "ORDER BY l_depth, l_messagepk",
-                                            logon.l_deptpk, filter.n_timefilter);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                while (rs.Read())
-                {
-                    ULBAMESSAGE msg = new ULBAMESSAGE();
-                    msg.n_deptpk = rs.GetInt32(0);
-                    
-                    msg.sz_name = rs.GetString(1);
-                    msg.sz_message = rs.GetString(2);
-                    msg.n_messagepk = rs.GetInt64(3);
-                    msg.n_langpk = rs.GetInt32(4);
-                    msg.n_parentpk = rs.GetInt64(5);
-                    msg.n_depth = rs.GetInt32(6);
-                    try
-                    {
-                        msg.n_timestamp = rs.GetInt64(7);
-                    }
-                    catch (Exception e)
-                    {
-                        msg.n_timestamp = 0;
-                    }
-
-                    ret.list.Add(msg);
-                }
-                rs.Close();
-
-                //ALSO GET DELETED if this is an update
-                ret.deleted = new List<ULBAMESSAGE>();
-                if (filter.n_timefilter > 0)
-                {
-                    szSQL = String.Format("SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND l_deptpk={1}",
-                                    filter.n_timefilter, logon.l_deptpk);
-                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                    while (rs.Read())
-                    {
-                        ULBAMESSAGE msg = new ULBAMESSAGE();
-                        msg.n_messagepk = rs.GetInt64(0);
-                        ret.deleted.Add(msg);
-                    }
-                    rs.Close();
-                }
-
-                return ret;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
-        /*
-         * 
-         * Delete messages for NLALERT
-         * 
-         */
-        public ULBAMESSAGE DeleteLBAMessage(ref ULOGONINFO logon, ref ULBAMESSAGE msg)
-        {
-            try
-            {
-                String szSQL;
-                /*
-                szSQL = String.Format("sp_log_BBMESSAGES {0}, {1}, {2}, {3}",
-                                    logon.l_userpk, logon.l_comppk, (int)UDbOperation.DELETE,//(int)Enum.Parse(typeof(UDbOperation), UDbOperation.DELETE.ToString()),
-                                    msg.n_messagepk);
-                if (!ExecNonQuery(szSQL))
-                {
-                    msg.b_valid = false;
-                    return msg;
-                }
-                */
-                szSQL = String.Format("DELETE FROM LBAMESSAGES WHERE l_messagepk={0} AND l_deptpk={1}",
-                                        msg.n_messagepk, msg.n_deptpk);
-                if (!ExecNonQuery(szSQL))
-                    msg.n_messagepk = -1;
-                
-                return msg;
-            }
-            catch (Exception e)
-            {
-                msg.n_messagepk = -1;
-                throw e;
-            }
-        }
-        /*
-         * 
-         * Delete messages for NLALERT
-         * 
-         */
-        public ULBAMESSAGE InsertLBAMessage(ref ULOGONINFO logon, ref ULBAMESSAGE msg)
-        {
-            try
-            {
-                String langpk = msg.n_langpk.ToString();
-                if (msg.n_langpk < 0)
-                    langpk = "NULL";
-                String szSQL = String.Format("sp_ins_lbamessages_tree {0}, '{1}', '{2}', {3}, {4}, {5}",
-                                    msg.n_deptpk,
-                                    msg.sz_name,
-                                    msg.sz_message,
-                                    langpk,
-                                    msg.n_parentpk,
-                                    msg.n_messagepk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                if (rs.Read())
-                {
-                    msg.n_messagepk = rs.GetInt64(0);
-                    msg.n_timestamp = rs.GetInt64(1);
-                    // Delete existing messages
-                    //szSQL = String.Format("sp_prep_message_smscontent {0}", msg.n_messagepk);
-                    //ExecNonQuery(szSQL);
-                }
-                else
-                {
-                    msg.n_messagepk = -1;
-                }
-
-                rs.Close();
-
-                return msg;
-            }
-            catch (Exception e)
-            {
-                msg.n_messagepk = -1;
-                throw e;
-            }
         }
         /*
          * 

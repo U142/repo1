@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="C#" CodeBehind="PasAdmin.asmx.cs" Class="com.ums.ws.pas.PasAdmin" %>
+﻿<%@ WebService Language="C#" CodeBehind="PasAdmin.asmx.cs" Class="com.ums.ws.pas.admin.PasAdmin" %>

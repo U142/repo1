@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminCommon.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="CAP\CommonAlertProtocol.cs" />
     <Compile Include="CoorConvert\Constants.cs" />

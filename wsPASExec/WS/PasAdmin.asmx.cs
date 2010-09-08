@@ -8,8 +8,11 @@ using com.ums.UmsDbLib;
 using com.ums.PAS.Database;
 using com.ums.UmsParm;
 using System.Data.Odbc;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Linq;
 
-namespace com.ums.ws.pas
+namespace com.ums.ws.pas.admin
 {
     /// <summary>
     /// Summary description for PasAdmin
@@ -21,23 +24,7 @@ namespace com.ums.ws.pas
     // [System.Web.Script.Services.ScriptService]
     public class PasAdmin : System.Web.Services.WebService
     {
-
-        public class UPASLOG
-        {
-            public Int64 l_id;
-            public long l_userpk;
-            public Int16 l_operation;
-            public long l_timestamp;
-            public String sz_desc;
-        }
-
-        public class Response
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-        }
+        [XmlInclude(typeof(UPolygon))]    
 
         [WebMethod]
         public DeactivateMessageResponse doDeactivateMessage(ULOGONINFO logon, long l_newspk)
@@ -49,7 +36,7 @@ namespace com.ums.ws.pas
                 ULogon l = new ULogon();
 
                 l.CheckLogon(ref logon, true);
-                string sz_sql = String.Format("sp_cb_upd_deactivate_message {0}", l_newspk);
+                string sz_sql = String.Format("sp_cb_upd_activate_message {0}, {1}", l_newspk, 0);
                 l.ExecNonQuery(sz_sql);
             }
             catch (Exception e)
@@ -69,22 +56,11 @@ namespace com.ums.ws.pas
             res.successful = true;
             return res;
         }
-        public class DeactivateMessageResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public long l_newspk;
-
-        }
 
         [WebMethod]
         public StoreUserResponse doStoreUser(ULOGONINFO logoninfo, UBBUSER user, int[] deptk)
         {
-            string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper());
+            string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper().Replace("'", "''"));
             StoreUserResponse res = new StoreUserResponse();
             PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
 
@@ -106,7 +82,7 @@ namespace com.ums.ws.pas
                 long l_timestamp = db.getDbClock();
                 user.l_disabled_timestamp = l_timestamp;
                 sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', {9}, {10}, '{11}'",
-                user.l_userpk, user.sz_userid.ToUpper(), user.sz_name, user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN, user.sz_organization);
+                user.l_userpk, user.sz_userid.ToUpper().Replace("'", "''"), user.sz_name.Replace("'", "''"), user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN, user.sz_organization.Replace("'", "''"));
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -140,17 +116,6 @@ namespace com.ums.ws.pas
             res.successful = true;
             res.user = user;
             return res;
-        }
-        public class StoreUserResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public UBBUSER user;
-
         }
 
         [WebMethod]
@@ -227,17 +192,7 @@ namespace com.ums.ws.pas
             res.user = ulist;
             return res;
         }
-        public class GetUsersResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public List<UBBUSER> user;
-
-        }
+        
 
         [WebMethod]
         public PasLogonResponse doPasLogon(ULOGONINFO logoninfo)
@@ -267,16 +222,6 @@ namespace com.ums.ws.pas
             }
 
         }
-        public class PasLogonResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public UPASLOGON logon;
-        }
 
         [WebMethod]
         public SetPAShapeObsoleteResponse doSetPAShapeObsolete(ULOGONINFO logoninfo, UDEPARTMENT department, UShape shape)
@@ -301,17 +246,7 @@ namespace com.ums.ws.pas
             }
 
         }
-        public class SetPAShapeObsoleteResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public UShape shape;
-        }
-
+        
         [WebMethod]
         public GetTotalNumberOfMessagesResponse doGetTotalNumberOfMessages(ULOGONINFO logoninfo, long l_period)
         {
@@ -335,48 +270,53 @@ namespace com.ums.ws.pas
             }
 
         }
-        public class GetTotalNumberOfMessagesResponse
-        {
-            // status
-            public bool successful;
-            public int errorCode;
-            public string reason;
-
-            // return value
-            public long total_events;
-            public long total_regional;
-            public long total_national;
-            public long total_test;
-        }
+        
 
         [WebMethod]
-        public GetRestrictionAreasResponse doGetRestrictionAreas(ULOGONINFO logoninfo)
+        public GetRestrictionAreasResponse doGetRestrictionAreas(ULOGONINFO logoninfo, PASHAPETYPES type)
         {
             PASUmsDb db;
             GetRestrictionAreasResponse res;
 
+            if (type.Equals(PASHAPETYPES.PAALERT) ||
+                   type.Equals(PASHAPETYPES.PAEVENT) ||
+                   type.Equals(PASHAPETYPES.PAOBJECT) ||
+                   type.Equals(PASHAPETYPES.PASENDING))
+            {
+                throw new NotImplementedException();
+            }
+
             List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
-            string sz_sql = "SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
-                              "FROM v_BBDEPARTMENT DEP " +
-                              "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
-                             "WHERE SH.l_type = 16";
+            string sz_sql = String.Format("SELECT l_deptpk, l_deptpri, sz_deptid, f_map, SH.sz_xml, isnull(SH.l_disabled_timestamp,0) as l_disabled_timestamp, isnull(SH.f_disabled, 0) as f_disabled " +
+                                            "FROM v_BBDEPARTMENT DEP " +
+                                            "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
+                                           "WHERE SH.l_type = {0} AND DEP.l_comppk = {1} ORDER BY DEP.l_deptpk", (int)type, logoninfo.l_comppk);
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+
+                UDEPARTMENT obj = new UDEPARTMENT();
+                obj.l_deptpk = -1;
+
                 while (rs.Read())
                 {
-                    UDEPARTMENT obj = new UDEPARTMENT();
-                    obj.l_deptpk = rs.GetInt32(0);
-                    obj.l_deptpri = rs.GetInt16(1);
-                    obj.sz_deptid = rs.GetString(2);
-                    obj.f_map = rs.GetInt16(3);
+                    int tmppk = rs.GetInt32(0);
+                    if (tmppk != obj.l_deptpk)
+                    {
+                        obj = new UDEPARTMENT();
+                        obj.l_deptpk = rs.GetInt32(0);
+                        obj.l_deptpri = rs.GetInt16(1);
+                        obj.sz_deptid = rs.GetString(2);
+                        obj.f_map = rs.GetInt16(3);
+                        dlist.Add(obj);
+                    }
+
                     UShape shape = UPolygon.ParseFromXml(rs.GetString(4));
                     shape.f_disabled = rs.GetInt16(6);
                     shape.l_disabled_timestamp = (long)rs.GetDecimal(5);
                     obj.restrictionShapes.Add(shape);
-                    dlist.Add(obj);
                 }
                 rs.Close();
                 db.close();
@@ -394,12 +334,7 @@ namespace com.ums.ws.pas
             res.restrictions = dlist;
             return res;
         }
-        public class GetRestrictionAreasResponse: Response
-        {
-            // return value
-            public List<UDEPARTMENT> restrictions;
-        }
-
+        
         [WebMethod]
         public GetUserActivityResponse doGetUserActivity(ULOGONINFO logoninfo, long period, List<UBBUSER> users)
         {
@@ -521,11 +456,7 @@ namespace com.ums.ws.pas
             res.log = loglist;
             return res;
         }
-        public class GetUserActivityResponse : Response
-        {
-            // return value
-            public List<UPASLOG> log;
-        }
+        
 
         [WebMethod]
         public GetSingleRestricionResponse doGetSingleRestricion(ULOGONINFO logoninfo, long areaid)
@@ -540,7 +471,7 @@ namespace com.ums.ws.pas
                              "AND SH.l_pk = {0}", areaid);
             try
             {
-                db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+                db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.HasRows)
@@ -580,11 +511,121 @@ namespace com.ums.ws.pas
 
             return res;
         }
+       
+        [WebMethod]
+        public CheckAccessResponse doCheckAccess(ULOGONINFO logoninfo, ACCESSPAGE accesspage)
+        {
+            PASUmsDb db;
+            CheckAccessResponse res;
+
+            switch (accesspage)
+            {
+                case ACCESSPAGE.PREDEFINEDTEXT:
+                    break;
+                case ACCESSPAGE.RESTRICTIONAREA:
+                    break;
+            }
+            
+            string sz_sql = "";
+            
+            try
+            {
+                db = new PASUmsDb();
+                db.CheckLogon(ref logoninfo, true);
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.HasRows)
+                {
+                    rs.Read();
+                    res = new CheckAccessResponse();
+                    res.granted = true;
+                    res.successful = true;
+                }
+                else
+                {
+                    res = new CheckAccessResponse();
+                    res.successful = false;
+                    res.reason = "Function occupied by another user, please try again later";
+                    res.errorCode = -1;
+                }
+                rs.Close();
+                db.close();
+            }
+            catch (Exception e)
+            {
+                res = new CheckAccessResponse();
+                res.successful = false;
+                res.errorCode = -1;
+                res.reason = e.Message;
+                return res;
+            }
+
+            return res;
+        }
+
+        // Responses
+        public class DeactivateMessageResponse : Response
+        {
+            // return value
+            public long l_newspk;
+        }
+
+        public class StoreUserResponse : Response
+        {
+            // return value
+            public UBBUSER user;
+
+        }
+
+        public class GetUsersResponse : Response
+        {
+            // return value
+            public List<UBBUSER> user;
+
+        }
+
+        public class PasLogonResponse : Response
+        {
+            // return value
+            public UPASLOGON logon;
+        }
+
+        public class SetPAShapeObsoleteResponse : Response
+        {
+            // return value
+            public UShape shape;
+        }
+        public class GetTotalNumberOfMessagesResponse : Response
+        {
+            // return value
+            public long total_events;
+            public long total_regional;
+            public long total_national;
+            public long total_test;
+        }
+
+        public class GetRestrictionAreasResponse : Response
+        {
+            // return value
+            public List<UDEPARTMENT> restrictions;
+        }
+
+        public class GetUserActivityResponse : Response
+        {
+            // return value
+            public List<UPASLOG> log;
+        }
+
         public class GetSingleRestricionResponse : Response
         {
             // return value
             public UDEPARTMENT restriction;
         }
 
+        public class CheckAccessResponse : Response
+        {
+            // return value
+            public bool granted;
+        }
+       
     }
 }
