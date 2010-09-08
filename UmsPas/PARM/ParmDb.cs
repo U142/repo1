@@ -1432,6 +1432,32 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+
+        public int getLBAChannelByComppk(long n_refno, int l_deptpk, int l_comppk)
+        {
+            try
+            {
+                int n_channel = -1;
+                String szSQL = String.Format("sp_cb_get_LBAPARAMETER {0}, {1}", l_deptpk, l_comppk);
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    n_channel = Int32.Parse(rs["l_channelno"].ToString());
+                }
+
+                rs.Close();
+                if(n_channel>=0)
+                    return n_channel;
+                else
+                    throw new UNoCellBroadcastChannelAssignedForCompanyException();
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, "Error occured in getLBAChannelByComppk", e.Message);
+                throw new UGetCellBroadcastChannelException();
+            }
+        }
+
         public List<ULBASENDING> GetLBAOperatorsReadyForConfirmCancel(int l_refno)
         {
             try
@@ -1725,6 +1751,26 @@ namespace com.ums.UmsParm
             {
                 szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1}", l_status, l_refno);
                 ExecNonQuery(szSQL);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
+        public Boolean updateStatusForOperators(long l_refno, int l_status, List<ULBASENDING> operators)
+        {
+            String szSQL = "";
+            try
+            {
+                for (int i = 0; i < operators.Count; ++i)
+                {
+                    szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1} AND l_operator={2}",
+                                            l_status, l_refno, operators[i].l_operator);
+                    ExecNonQuery(szSQL);
+                }
                 return true;
             }
             catch (Exception e)

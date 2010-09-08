@@ -30,14 +30,14 @@ namespace com.ums.PAS.messagelib
             try
             {
                 String szSQL;
-                szSQL = String.Format("sp_log_BBMESSAGES {0}, {1}, {2}, {3}",
+                /*szSQL = String.Format("sp_log_BBMESSAGES {0}, {1}, {2}, {3}",
                                     logon.l_userpk, logon.l_comppk, (int)UDbOperation.DELETE,//(int)Enum.Parse(typeof(UDbOperation), UDbOperation.DELETE.ToString()),
                                     msg.n_messagepk);
                 if (!ExecNonQuery(szSQL))
                 {
                     msg.b_valid = false;
                     return msg;
-                }
+                }*/
 
                 szSQL = String.Format("DELETE FROM BBMESSAGES WHERE l_messagepk={0} AND l_deptpk={1}",
                                         msg.n_messagepk, msg.n_deptpk);
@@ -140,11 +140,19 @@ namespace com.ums.PAS.messagelib
                 UBBMESSAGELIST ret = new UBBMESSAGELIST();
                 ret.n_servertimestamp = base.getDbClock();
                 ret.list = new List<UBBMESSAGE>();
-                String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
+                /*String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
                                             "FROM BBMESSAGES " +
                                             "WHERE l_deptpk IN (-1,{0}) AND isnull(l_timestamp,0)>={1} AND f_template=1 " +
                                             "ORDER BY l_depth",
-                                            logon.l_deptpk, filter.n_timefilter);
+                                            logon.l_deptpk, filter.n_timefilter);*/
+                String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
+                                            "FROM BBMESSAGES " +
+                                            "WHERE l_deptpk={0} AND isnull(l_timestamp,0)>={1} AND f_template=1 " +
+                                            "UNION " +
+                                            "SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
+                                            "FROM BBMESSAGES " +
+                                            "WHERE l_comppk={2} AND l_deptpk=-1 AND isnull(l_timestamp,0)>={1} AND f_template=1",
+                                            logon.l_deptpk, filter.n_timefilter, logon.l_comppk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
@@ -246,6 +254,8 @@ namespace com.ums.PAS.messagelib
                         ccm.l_cc = rsCC.GetInt32(0);
                         ccm.sz_message = rsCC.GetString(1);
                         msg.ccmessage.Add(ccm);
+                        if (ccm.l_cc == -1)
+                            msg.sz_message = ccm.sz_message;
                     }
                     rsCC.Close();
                     db.close();
@@ -257,8 +267,10 @@ namespace com.ums.PAS.messagelib
                 ret.deleted = new List<UBBMESSAGE>();
                 if(filter.n_timefilter>0)
                 {
-                    szSQL = String.Format("SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND l_deptpk={1}",
-                                    filter.n_timefilter, logon.l_deptpk);
+                    szSQL = String.Format("SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND l_deptpk={1}" +
+                                            " UNION " +
+                                            "SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND log_l_comppk={2} AND l_deptpk=-1",
+                                    filter.n_timefilter, logon.l_deptpk, logon.l_comppk);
                     rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     while (rs.Read())
                     {

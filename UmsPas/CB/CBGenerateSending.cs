@@ -25,6 +25,7 @@ namespace com.ums.PAS.CB
 
         }
 
+
         /**
          * Send the message. Get refno, Insert into DB, then Serialize
          */
@@ -53,6 +54,23 @@ namespace com.ums.PAS.CB
             alert.setRefno(db.newRefno());
             
             BBPROJECT project = new BBPROJECT();
+
+            //check that there's assigned a CB channel for this company
+            //in the first version, only one channel is used pr company. 
+            //May be changed to be one channel per language
+            try
+            {
+                int n_cb_channel = db.getLBAChannelByComppk(operation.l_refno, logon.l_deptpk, logon.l_comppk);
+                for(int i=0; i < alert.textmessages.list.Count; i++)
+                {
+                    alert.textmessages.list[i].l_cbchannel = n_cb_channel;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
 
             //Create a new project if not specified
             bool b_project_is_valid = true;
@@ -164,6 +182,62 @@ namespace com.ums.PAS.CB
             return response;
         }
 
+        protected List<ULBASENDING> _getOperatorsThatCanBeKilled(ref PASUmsDb db)
+        {
+            List<ULBASENDING> ret = new List<ULBASENDING>();
+            List<ULBASENDING> sendings = new List<ULBASENDING>();
+            db.GetLbaSendsByRefno(operation.l_refno, ref sendings);
+            for (int i = 0; i < sendings.Count; i++)
+            {
+                ULBASENDING s = sendings[i];
+                ULBAOPERATORSTATE operatorstatus = ULBAOPERATORSTATE.INITIALIZING;
+                switch (s.l_status)
+                {
+                    case (int)ULBASTATUSCODES.LBASTATUS_INITED:
+		            case (int)ULBASTATUSCODES.LBASTATUS_SENT_TO_LBA:
+		            case (int)ULBASTATUSCODES.LBASTATUS_PARSING_LBAS:
+		            case (int)ULBASTATUSCODES.LBASTATUS_PARSING_LBAS_FAILED_TO_SEND:
+		            case (int)ULBASTATUSCODES.CBSTATUS_PREPARING_CELLVISION:
+		            case (int)ULBASTATUSCODES.CBSTATUS_PROCESSING_SUBSCRIBERS_CELLVISION:
+		            case (int)ULBASTATUSCODES.CBSTATUS_PREPARED_CELLVISION:
+		            case (int)ULBASTATUSCODES.CBSTATUS_PREPARED_CELLVISION_COUNT_COMPLETE:
+		            case (int)ULBASTATUSCODES.CBSTATUS_CONFIRMED_BY_USER:
+		            case (int)ULBASTATUSCODES.CBSTATUS_SENDING:
+		            case (int)ULBASTATUSCODES.CBSTATUS_PAUSED:
+			            operatorstatus = ULBAOPERATORSTATE.ACTIVE;
+			            break;
+		            case (int)ULBASTATUSCODES.CBSTATUS_CANCELLED_BY_USER:
+		            case (int)ULBASTATUSCODES.LBASTATUS_CANCEL_IN_PROGRESS:
+			            operatorstatus = ULBAOPERATORSTATE.KILLING;
+			            break;
+            			
+		            case (int)ULBASTATUSCODES.LBASTATUS_FINISHED:
+		            case (int)ULBASTATUSCODES.LBASTATUS_CANCELLED:
+		            case (int)ULBASTATUSCODES.LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM:
+			            operatorstatus = ULBAOPERATORSTATE.FINISHED;
+			            break;
+		            case (int)ULBASTATUSCODES.LBASTATUS_GENERAL_ERROR:
+			            operatorstatus = ULBAOPERATORSTATE.ERROR;
+			            break;
+                }
+                if (s.l_status >= 40000)
+                    operatorstatus = ULBAOPERATORSTATE.ERROR;
+
+                //check if we have a kill
+                switch (operatorstatus)
+                {
+                    case ULBAOPERATORSTATE.ACTIVE:
+                    case ULBAOPERATORSTATE.INITIALIZING:
+                    case ULBAOPERATORSTATE.ERROR:
+                        ret.Add(s);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return ret;
+        }
+
         /**
          * Kill the message. Update DB, then Serialize
          */
@@ -178,8 +252,8 @@ namespace com.ums.PAS.CB
             response.l_code = -1;
 
             //Check if this sending has been killed before
-            bool b_can_be_killed = true;
-            List<ULBASENDING> sendings = new List<ULBASENDING>();
+            bool b_can_be_killed = false;
+            /*List<ULBASENDING> sendings = new List<ULBASENDING>();
             db.GetLbaSendsByRefno(operation.l_refno, ref sendings);
             for (int i = 0; i < sendings.Count; i++)
             {
@@ -188,7 +262,10 @@ namespace com.ums.PAS.CB
                 {
                     b_can_be_killed = false;
                 }
-            }
+            }*/
+            List<ULBASENDING> sendings = _getOperatorsThatCanBeKilled(ref db);
+            if (sendings.Count > 0)
+                b_can_be_killed = true;
             if (b_can_be_killed)
             {
                 try
@@ -196,7 +273,7 @@ namespace com.ums.PAS.CB
                     CB_ALERT_KILL kill = (CB_ALERT_KILL)operation;
                     kill.Serialize(UCommon.UPATHS.sz_path_cb);
                     //mark sending as cancelled by user
-                    db.updateStatus(operation.l_refno, 530);
+                    db.updateStatusForOperators(operation.l_refno, 530, sendings);
                     response.l_code = 0;
                 }
                 catch (Exception err)

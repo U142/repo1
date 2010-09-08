@@ -38,6 +38,8 @@ namespace com.ums.ws.parm
         [XmlInclude(typeof(CB_ALERT_PLMN))]
         [XmlInclude(typeof(CB_ALERT_POLYGON))]
         [XmlInclude(typeof(CB_ALERT_UPDATE))]
+        [XmlInclude(typeof(ULBAOPERATORSTATE))]
+        [XmlInclude(typeof(ULBASTATUSCODES))]
 
 
         [WebMethod]
@@ -52,6 +54,25 @@ namespace com.ums.ws.parm
             return null;
 
         }
+
+        /*[WebMethod]
+        public String testPolymatch()
+        {
+            UPolygon poly = new UPolygon();
+            poly.addPoint(0, 0);
+            poly.addPoint(0, 10);
+            poly.addPoint(10, 0);
+            UPolygon poly2 = new UPolygon();
+            poly2.addPoint(0, 0);
+            poly2.addPoint(0, -10);
+            poly2.addPoint(-10, 0);
+
+            List<UPolygon> arr = new List<UPolygon>();
+            arr.Add(poly2);
+            poly.findPolysWithSharedBorder(ref arr);
+
+            return "OK";
+        }*/
 
         [WebMethod]
         public PAEVENT[] GetEventList(com.ums.UmsCommon.ULOGONINFO logoninfo)

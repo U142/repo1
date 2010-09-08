@@ -10,6 +10,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections.Generic;
 
 
 namespace com.ums.UmsParm
@@ -1196,6 +1197,60 @@ namespace com.ums.UmsParm
         {
             m_array_polypoints = new List<UPolypoint>();
         }
+
+        [XmlIgnore]
+        Hashtable hash_points = null;
+
+        public Hashtable getHashPoints()
+        {
+            return hash_points;
+        }
+
+        public void createPointHash()
+        {
+            hash_points = new Hashtable();
+            for (int i = 0; i < m_array_polypoints.Count; ++i)
+            {
+                UPolypoint point = m_array_polypoints[i];
+                String key = _generatePointHashKey(ref point);
+                hash_points.Add(key, m_array_polypoints);
+            }
+        }
+        protected String _generatePointHashKey(ref UPolypoint p)
+        {
+            return p.lon + "_" + p.lat;
+        }
+
+        public List<UPolygon> findPolysWithSharedBorder(ref List<UPolygon> in_polygons)
+        {
+            if (getHashPoints() == null)
+                createPointHash();
+            List<UPolygon> ret = new List<UPolygon>();
+            //traverse list of in polygons
+            for (int i = 0; i < in_polygons.Count; ++i)
+            {
+                UPolygon p = in_polygons[i];
+                //check that point-hash is made for dest poly
+                if (p.getHashPoints() == null)
+                    p.createPointHash();
+
+                //traverse polypoints in destination polygon
+                IDictionaryEnumerator arr_in_points = p.getHashPoints().GetEnumerator();
+                while(arr_in_points.MoveNext())
+                {
+                    String in_key = (String)arr_in_points.Key;
+                    if (getHashPoints().ContainsKey(in_key))
+                    {
+                        //we have a match on at least one polypoint
+                        ret.Add(p);
+                        break;
+                    }
+                }
+                
+            }
+            return ret;
+        }
+
         public void addPoint(double lon, double lat)
         {
             m_array_polypoints.Add(new UPolypoint(lon, lat));

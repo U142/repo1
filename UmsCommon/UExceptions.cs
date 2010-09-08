@@ -98,6 +98,23 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UNoCellBroadcastChannelAssignedForCompanyException : UException
+    {
+        public UNoCellBroadcastChannelAssignedForCompanyException()
+            : base("No CB-channel assigned for company")
+        {
+        }
+    }
+
+    public class UGetCellBroadcastChannelException : UException
+    {
+        public UGetCellBroadcastChannelException()
+            : base("Error retrieving CB-channel")
+        {
+        }
+
+    }
+
     public class UProjectIsMarkedAsFinishedException : UException
     {
         public UProjectIsMarkedAsFinishedException()
