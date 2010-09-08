@@ -126,11 +126,35 @@ namespace pas_cb_server.cb_test
                      * if server crashes and restarts
                      */
 
+                    LBAParameter oParams = new LBAParameter();
+                    Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+
+                    cb oAlert = new cb();
+                    message msg = new message();
+
+                    msg.l_channel = oParams.l_heartbeat;
+                    msg.sz_text = "<heartbeat message>";
+
+                    oAlert.l_comppk = oUser.l_comppk;
+                    oAlert.l_deptpk = oUser.l_deptpk;
+                    oAlert.l_projectpk = 0;
+                    oAlert.l_refno = Database.GetRefno();
+                    oAlert.operation = "NewAlertHeartbeat";
+                    oAlert.l_validity = 5;
+
+                    oAlert.textmessages = new List<message>();
+                    oAlert.textmessages.Add(msg);
 
                 }
             }
             Log.WriteLog("Stopped heartbeat thread", 9);
             Interlocked.Decrement(ref Settings.threads);
+        }
+        public static int CreateXML(Settings oUser, cb oAlert)
+        {
+            int ret = 0;
+
+            return ret;
         }
         public static int NewAlert()
         {

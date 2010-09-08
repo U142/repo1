@@ -160,7 +160,8 @@ namespace pas_cb_server
             Settings.debug = Settings.GetValue("Debug", false);
             Settings.live = Settings.GetValue("Live", true);
             Settings.sz_dumppath = add_slash(Settings.GetValue("DumpPath", exec_folder()));
-            Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60);
+            Settings.l_statuspollinterval = Settings.GetValue("StatusPollInterval", 60); // seconds
+            Settings.l_heartbeatinterval = Settings.GetValue("HeartBeatInterval", 10); // minutes
             Settings.l_retryinterval = Settings.GetValue("RetryInterval", 60);
             Settings.l_retries = Settings.GetValue("Retries", 2);
             Settings.l_messagetype = Settings.GetValue("MessageType", 7);
