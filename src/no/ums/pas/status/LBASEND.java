@@ -80,6 +80,7 @@ public class LBASEND
 	 * 42.000+ => LBAS Server
 	 */
 	
+	public static final int LBASTATUS_DUMMY_OPERATOR = -999;
 	public static final int LBASTATUS_GENERAL_ERROR = -2;
 
 	public static final int LBASTATUS_INITED = 100;

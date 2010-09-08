@@ -295,8 +295,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_combo_templates.addActionListener(this);
 		m_combo_templates.setActionCommand("act_smstemplate_changed");
 		
-		tree_msglib = new MessageLibTreePanel(Sending_Cell_Broadcast_text.this, UMSTree.TREEMODE.SELECTION_ONLY,0, false);
-		tree_msglib.getTree().setIconSize(TREEICONSIZE.SMALL);
+		//tree_msglib = new MessageLibTreePanel(Sending_Cell_Broadcast_text.this, UMSTree.TREEMODE.SELECTION_ONLY,10, false);
+		//tree_msglib.getTree().setIconSize(TREEICONSIZE.SMALL);
 		txt_msglib_search = new StdSearchArea("", false, "Search");
 		txt_msglib_search.addActionListener(this);
 		txt_msglib_search.setPreferredSize(new Dimension(150, 20));
@@ -477,11 +477,13 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	public void downloadMessageLib()
 	{
-		tree_msglib.getTree().startUpdater(true);
+		if(tree_msglib!=null)
+			tree_msglib.getTree().startUpdater(true);
 	}
 	public void stopMessageLib()
 	{
-		tree_msglib.getTree().stopUpdater();
+		if(tree_msglib!=null)
+			tree_msglib.getTree().stopUpdater();
 	}
 	
 	public void setSendingType(int nType) {
@@ -651,16 +653,22 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		}
 		else if(StdSearchArea.ACTION_SEARCH_CLEARED.equals(e.getActionCommand()))
 		{
-			tree_msglib.getTree().getTreeRenderer().setSearchString("");
-			tree_msglib.getTree().searchTreeNode("");
+			if(tree_msglib!=null)
+			{
+				tree_msglib.getTree().getTreeRenderer().setSearchString("");
+				tree_msglib.getTree().searchTreeNode("");
+			}
 		}
 		else if(StdSearchArea.ACTION_SEARCH_UPDATED.equals(e.getActionCommand()))
 		{
-			tree_msglib.getTree().getTreeRenderer().setSearchString((String)e.getSource());
-			List<UMSTreeNode> l = tree_msglib.getTree().searchTreeNode((String)e.getSource());
-			for(int i=0; i < l.size(); i++)
+			if(tree_msglib!=null)
 			{
-				tree_msglib.getTree().scrollPathToVisible(tree_msglib.getTree().getPath(l.get(i)));
+				tree_msglib.getTree().getTreeRenderer().setSearchString((String)e.getSource());
+				List<UMSTreeNode> l = tree_msglib.getTree().searchTreeNode((String)e.getSource());
+				for(int i=0; i < l.size(); i++)
+				{
+					tree_msglib.getTree().scrollPathToVisible(tree_msglib.getTree().getPath(l.get(i)));
+				}
 			}
 		}
 
@@ -970,7 +978,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			return;
 		}
 		m_panel_messages.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		tree_msglib.setPreferredSize(new Dimension(getWidth()-40, 120));
+		if(tree_msglib!=null)
+			tree_msglib.setPreferredSize(new Dimension(getWidth()-40, 120));
 		//m_sp_messagetext.setPreferredSize(new Dimension(getWidth()-100, 150));
 		super.componentResized(e);
 	}

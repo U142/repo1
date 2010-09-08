@@ -624,4 +624,21 @@ public interface PaswsSoap {
         @WebParam(name = "param", targetNamespace = "http://ums.no/ws/pas/")
         ULBAPARAMETER param);
 
+    /**
+     * 
+     * @param logon
+     * @param type
+     * @return
+     *     returns no.ums.ws.pas.ArrayOfUDEPARTMENT
+     */
+    @WebMethod(action = "http://ums.no/ws/pas/getRestrictionShapes")
+    @WebResult(name = "getRestrictionShapesResult", targetNamespace = "http://ums.no/ws/pas/")
+    @RequestWrapper(localName = "getRestrictionShapes", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetRestrictionShapes")
+    @ResponseWrapper(localName = "getRestrictionShapesResponse", targetNamespace = "http://ums.no/ws/pas/", className = "no.ums.ws.pas.GetRestrictionShapesResponse")
+    public ArrayOfUDEPARTMENT getRestrictionShapes(
+        @WebParam(name = "logon", targetNamespace = "http://ums.no/ws/pas/")
+        ULOGONINFO logon,
+        @WebParam(name = "type", targetNamespace = "http://ums.no/ws/pas/")
+        PASHAPETYPES type);
+
 }

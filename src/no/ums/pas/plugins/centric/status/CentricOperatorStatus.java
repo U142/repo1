@@ -23,13 +23,14 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	/**
 	 * Ordinal worst to best
 	 */
-	public enum OPERATOR_STATUS
+	public enum OPERATOR_STATE
 	{
 		ERROR,
 		KILLING,
 		INITIALIZING,
 		ACTIVE,
 		FINISHED,
+		DUMMY_OPERATOR,
 	}
 	/**
 	 * 
@@ -227,7 +228,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		 */
 	}
 	
-	public OPERATOR_STATUS getOperatorStatus()
+	public OPERATOR_STATE getOperatorStatus()
 	{
 		int status = get_operator().getLStatus();
 		/*if(get_operator().getLStatus() == 1000)
@@ -236,7 +237,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 			return OPERATOR_STATUS.ACTIVE;
 		else
 			return OPERATOR_STATUS.INITIALIZING;*/
-		OPERATOR_STATUS operatorstatus = OPERATOR_STATUS.INITIALIZING;
+		OPERATOR_STATE operatorstatus = OPERATOR_STATE.INITIALIZING;
 		switch(get_operator().getLStatus())
 		{
 		case LBASEND.LBASTATUS_INITED:
@@ -250,24 +251,27 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		case LBASEND.CBSTATUS_CONFIRMED_BY_USER:
 		case LBASEND.CBSTATUS_SENDING:
 		case LBASEND.CBSTATUS_PAUSED:
-			operatorstatus = OPERATOR_STATUS.ACTIVE;
+			operatorstatus = OPERATOR_STATE.ACTIVE;
 			break;
 		case LBASEND.CBSTATUS_CANCELLED_BY_USER:
 		case LBASEND.LBASTATUS_CANCEL_IN_PROGRESS:
-			operatorstatus = OPERATOR_STATUS.KILLING;
+			operatorstatus = OPERATOR_STATE.KILLING;
 			break;
 			
 		case LBASEND.LBASTATUS_FINISHED:
 		case LBASEND.LBASTATUS_CANCELLED:
 		case LBASEND.LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM:
-			operatorstatus = OPERATOR_STATUS.FINISHED;
+			operatorstatus = OPERATOR_STATE.FINISHED;
 			break;
 		case LBASEND.LBASTATUS_GENERAL_ERROR:
-			operatorstatus = OPERATOR_STATUS.ERROR;
+			operatorstatus = OPERATOR_STATE.ERROR;
+			break;
+		case LBASEND.LBASTATUS_DUMMY_OPERATOR:
+			operatorstatus = OPERATOR_STATE.DUMMY_OPERATOR;
 			break;
 		}
 		if(get_operator().getLStatus()>=40000)
-			operatorstatus = OPERATOR_STATUS.ERROR;
+			operatorstatus = OPERATOR_STATE.ERROR;
 		
 		return operatorstatus;
 	}

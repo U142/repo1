@@ -27,7 +27,7 @@ import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.plugins.centric.CentricVariables;
-import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATUS;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -288,7 +288,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			if(currentui!=null) //just to be sure we have an existing or new pointer
 				currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
 			sendings.put(new Long(currentstatus.getLRefno()), new Long(currentstatus.getLRefno()));
-			OPERATOR_STATUS status = currentui.getOperatorStatus();
+			OPERATOR_STATE status = currentui.getOperatorStatus();
 			String lbl_pane = "";
 			switch(status)
 			{

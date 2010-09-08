@@ -45,7 +45,7 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 	}
 	public void Start()
 	{
-		treepanel.tree.startUpdater(true);
+		treepanel.tree.startUpdater();
 	}
 	public void Stop()
 	{

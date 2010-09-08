@@ -22,9 +22,10 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricVariables;
-import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATUS;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
+import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
@@ -271,6 +272,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		//m_tabbed_operators.add("T-Mobile",new CentricOperatorStatus(this, false,2));
 		ULBASENDING operator =new ULBASENDING();
 		operator.setLOperator(-1); //mark operatorpk as -1 for total pane
+		operator.setLStatus(LBASEND.LBASTATUS_DUMMY_OPERATOR);
 		total_statuspane = new CentricOperatorStatus(this, true,operator);
 		m_tabbed_operators.add(PAS.l("common_total"), total_statuspane);
 		m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
@@ -292,9 +294,9 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		init();
 	}
 	
-	public OPERATOR_STATUS getOperatorStatus()
+	public OPERATOR_STATE getOperatorStatus()
 	{
-		OPERATOR_STATUS worst_status = OPERATOR_STATUS.INITIALIZING;
+		OPERATOR_STATE worst_status = OPERATOR_STATE.INITIALIZING;
 		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
 		while(en.hasMoreElements())
 		{
@@ -305,6 +307,53 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			}
 		}
 		return worst_status;
+	}
+	
+	public boolean getAtLeastOneOperatorCanBeKilled()
+	{
+		boolean ret = false;
+		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
+		while(en.hasMoreElements())
+		{
+			CentricOperatorStatus op = en.nextElement();
+			switch(op.getOperatorStatus())
+			{
+				case ACTIVE:
+				case INITIALIZING:
+					ret = true;
+					break;
+				case FINISHED:
+				case ERROR:
+				case KILLING:
+				case DUMMY_OPERATOR:
+					break;
+			}
+			if(ret)
+				break;
+			
+		}
+		return ret;
+	}
+	
+	public boolean getAllOperatorsFinished()
+	{
+		boolean ret = true;
+		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
+		while(en.hasMoreElements())
+		{
+			CentricOperatorStatus op = en.nextElement();
+			switch(op.getOperatorStatus())
+			{
+			case FINISHED:
+			case DUMMY_OPERATOR:
+				break;
+			default:
+				ret = false;
+			}
+			if(!ret)
+				break;
+		}		
+		return ret;
 	}
 
 	@Override
@@ -390,15 +439,19 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		// Duration
 		total_statuspane.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(start,timestamp) + " " + PAS.l("common_minutes_maybe")));
 		
-		switch(getOperatorStatus())
+		/*switch(getOperatorStatus())
 		{
 		case KILLING:
 		case FINISHED:
 		case ERROR:
-		case INITIALIZING:
+		//case INITIALIZING:
 			m_btn_kill.setEnabled(false);
 			break;
-		}
+		default:
+			m_btn_kill.setEnabled(true);
+			break;
+		}*/
+		m_btn_kill.setEnabled(getAtLeastOneOperatorCanBeKilled());
 	}
 	
 	
