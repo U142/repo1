@@ -43,7 +43,12 @@ namespace pas_cb_server
                 if (Settings.l_statuspollinterval > 0)
                     Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
                 else
-                    Log.WriteLog(String.Format("Status poll interval is disabled"), 9);
+                    Log.WriteLog(String.Format("Status poll is disabled"), 9);
+
+                if (Settings.l_heartbeatinterval > 0)
+                    Log.WriteLog(String.Format("Heartbeat interval is {0} minutes", Settings.l_heartbeatinterval), 9);
+                else
+                    Log.WriteLog(String.Format("Heartbeat is disabled"), 9);
 
                 // Set CPU affinity
                 if (Settings.l_cpuaffinity > 0)
@@ -54,13 +59,16 @@ namespace pas_cb_server
                 new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
                 Interlocked.Increment(ref Settings.threads);
 
-                Log.WriteLog("Starting heartbeat thread", 9);
+                Log.WriteLog("Starting test thread", 9);
                 new Thread(new ThreadStart(cb_test.CBTest.RandomTestThread)).Start();
                 Interlocked.Increment(ref Settings.threads);
 
-                Log.WriteLog("Starting test thread", 9);
-                new Thread(new ThreadStart(cb_test.CBTest.HeartbeatThread)).Start();
-                Interlocked.Increment(ref Settings.threads);
+                if (Settings.l_heartbeatinterval > 0)
+                {
+                    Log.WriteLog("Starting heartbeat thread", 9);
+                    new Thread(new ThreadStart(cb_test.CBTest.HeartbeatThread)).Start();
+                    Interlocked.Increment(ref Settings.threads);
+                }
 
                 if (Environment.UserInteractive)
                 {

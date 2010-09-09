@@ -33,10 +33,6 @@ namespace pas_cb_server.cb_test
             cb alert = new cb();
             polypoint pt;
 
-            int l_testref = 0;
-            l_testref = Database.GetRefno();
-
-            alert.l_refno = l_testref;
             alert.operation = "NewAlertPolygon";
             alert.l_comppk = oUser.l_comppk;
             alert.l_deptpk = oUser.l_deptpk;
@@ -80,10 +76,6 @@ namespace pas_cb_server.cb_test
             Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
             cb alert = new cb();
 
-            int l_testref = 0;
-            l_testref = Database.GetRefno();
-
-            alert.l_refno = l_testref;
             alert.operation = "NewAlertPLMN";
             alert.l_comppk = oUser.l_comppk;
             alert.l_deptpk = oUser.l_deptpk;
@@ -192,7 +184,6 @@ namespace pas_cb_server.cb_test
                         oAlert.l_comppk = oUser.l_comppk;
                         oAlert.l_deptpk = oUser.l_deptpk;
                         oAlert.l_projectpk = 0;
-                        oAlert.l_refno = Database.GetRefno();
                         oAlert.operation = "NewAlertTest";
                         oAlert.l_validity = 5;
 
@@ -201,7 +192,7 @@ namespace pas_cb_server.cb_test
 
                         // test time is now, or has passed, send test and generate new time
                         ts_nexttest = Database.GenerateNextTestTime();
-                        Log.WriteLog(String.Format("Random test message sent with refno: {0}, next message scheduled for {1}.", NewAlert(oAlert), ts_nexttest), 0);
+                        Log.WriteLog(String.Format("Random test message sent with refno: {0}, next message scheduled for {1}.", NewAlert(oAlert, 70), ts_nexttest), 0);
                     }
                 }
                 else
@@ -240,26 +231,28 @@ namespace pas_cb_server.cb_test
                      * if server crashes and restarts
                      */
 
-                    LBAParameter oParams = new LBAParameter();
-                    Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+                    if (CBServer.running)
+                    {
+                        LBAParameter oParams = new LBAParameter();
+                        Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
 
-                    cb oAlert = new cb();
-                    message msg = new message();
+                        cb oAlert = new cb();
+                        message msg = new message();
 
-                    msg.l_channel = oParams.l_heartbeat;
-                    msg.sz_text = Settings.GetValue("HeartBeatMessageText", "heartbeat");
+                        msg.l_channel = oParams.l_heartbeat;
+                        msg.sz_text = Settings.GetValue("HeartBeatMessageText", "heartbeat");
 
-                    oAlert.l_comppk = oUser.l_comppk;
-                    oAlert.l_deptpk = oUser.l_deptpk;
-                    oAlert.l_projectpk = 0;
-                    oAlert.l_refno = Database.GetRefno();
-                    oAlert.operation = "NewAlertHeartbeat";
-                    oAlert.l_validity = 5;
+                        oAlert.l_comppk = oUser.l_comppk;
+                        oAlert.l_deptpk = oUser.l_deptpk;
+                        oAlert.l_projectpk = 0;
+                        oAlert.operation = "NewAlertHeartbeat";
+                        oAlert.l_validity = 5;
 
-                    oAlert.textmessages = new List<message>();
-                    oAlert.textmessages.Add(msg);
+                        oAlert.textmessages = new List<message>();
+                        oAlert.textmessages.Add(msg);
 
-                    Log.WriteLog(String.Format("New heartbeat message sent with refno: {0}, next message in {1} minutes.", NewAlert(oAlert), Settings.l_heartbeatinterval), 0);
+                        Log.WriteLog(String.Format("New heartbeat message sent with refno: {0}, next message in {1} minutes.", NewAlert(oAlert), Settings.l_heartbeatinterval), 0);
+                    }
                 }
             }
             Log.WriteLog("Stopped heartbeat thread", 9);
@@ -274,6 +267,10 @@ namespace pas_cb_server.cb_test
         }
         public static int NewAlert(cb alert)
         {
+            return NewAlert(alert, null);
+        }
+        public static int NewAlert(cb alert, int? l_sendinginfo_type)
+        {
             LBAParameter oParams = new LBAParameter();
             Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
 
@@ -284,7 +281,7 @@ namespace pas_cb_server.cb_test
             string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
 
             // insert to LBASEND
-            if (InsertSending(oUser, alert) != Constant.OK)
+            if (InsertSending(oUser, alert, l_sendinginfo_type) != Constant.OK)
             {
                 Log.WriteLog(String.Format("Test failed to insert into database, aborting"), 2);
                 return -1;
@@ -298,7 +295,7 @@ namespace pas_cb_server.cb_test
             return l_testref;
         }
 
-        private static int InsertSending(Settings oUser, cb oAlert)
+        private static int InsertSending(Settings oUser, cb oAlert, int? l_sendinginfo_type)
         {
             string sz_query = "";
 
@@ -326,12 +323,50 @@ namespace pas_cb_server.cb_test
                     cmd.CommandText = sz_query;
                     cmd.ExecuteNonQuery();
                 }
+                conn.Close();
             }
             catch (Exception e)
             {
                 Log.WriteLog(
                     String.Format("Database.InsertSending (exception={0}) (sql={1})", e.Message, sz_query),
                     String.Format("Database.InsertSending (exception={0}) (sql={1})", e, sz_query),
+                    2);
+            }
+            if (l_sendinginfo_type.HasValue)
+            {
+                return InsertSendingInfo(oAlert, l_sendinginfo_type.Value);
+            }
+
+            return Constant.OK;
+        }
+        private static int InsertSendingInfo(cb oAlert, int l_sendinginfo_type)
+        {
+            string sz_query = "";
+
+            try
+            {
+                OdbcConnection conn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(sz_query, conn);
+
+                conn.Open();
+
+                sz_query = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_namepos, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_removedup, l_group, sz_groups, l_type, f_dynacall, l_addresstypes, l_userpk, f_lowres, l_maxchannels) VALUES('','',NULL,0,0,{0},0,0,0,0,'Alert {0}',0,{1},{2},0,0,{3},NULL,{4},0,0,0,NULL,0)"
+                    , oAlert.l_refno
+                    , oAlert.l_comppk
+                    , oAlert.l_deptpk
+                    , 16 // group
+                    , l_sendinginfo_type);
+
+                cmd.CommandText = sz_query;
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.InsertSendinginfo (exception={0}) (sql={1})", e.Message, sz_query),
+                    String.Format("Database.InsertSendinginfo (exception={0}) (sql={1})", e, sz_query),
                     2);
             }
 
