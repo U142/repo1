@@ -5,9 +5,6 @@
   <cap_identifier>Netherlands Govt. Agency</cap_identifier>
   <cap_sender>nl-cas-agency@cas.gov</cap_sender>
   <cap_alert_uri>http://www.alcatel-lucent.com</cap_alert_uri>
-  <channel_category>ETWS - Other Emergency Types</channel_category>
-  <test_channel_category>ETWS - Test Message</test_channel_category>
-  <heartbeat_channel_category>ETWS - Test Message</heartbeat_channel_category>
   <priority>Normal</priority>
   <category>Met</category>
   <severity>Severe</severity>

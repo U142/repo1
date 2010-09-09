@@ -26,137 +26,7 @@ namespace pas_cb_server.cb_test
             currentTestRef = 0;
         }
 
-        public static void NewAlert() { }
-        public static void NewAlertPLMN() { }
-        public static void KillAlert()
-        {
-            if (currentTestRef == 0)
-            {
-                Log.WriteLog("No test alerts to kill.", 9);
-                Console.Write("Enter refno to kill: ");
-                currentTestRef = int.Parse(Console.ReadLine());
-            }
-            else
-            {
-                LBAParameter oParams = new LBAParameter();
-                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
-                cb alert = new cb();
-
-                alert.l_refno = currentTestRef;
-                alert.operation = "KillAlert";
-                alert.l_comppk = oUser.l_comppk;
-                alert.l_deptpk = oUser.l_deptpk;
-
-                string filename = String.Format(@"{0}eat\CB_KILL_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
-                Log.WriteLog(String.Format("Initiating self test (Kill Alert). Filename='{0}'", filename), 0);
-
-                XmlSerializer s = new XmlSerializer(typeof(cb));
-                StreamWriter w = new StreamWriter(filename);
-                s.Serialize(w, alert);
-                w.Close();
-
-                currentTestRef = 0;
-            }
-        }
-        public static void UpdateAlert()
-        {
-            if (currentTestRef == 0)
-            {
-                Log.WriteLog("No test alerts to kill.", 9);
-            }
-            else
-            {
-                LBAParameter oParams = new LBAParameter();
-                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
-                cb alert = new cb();
-
-                alert.l_refno = currentTestRef;
-                alert.operation = "UpdateAlert";
-                alert.l_comppk = oUser.l_comppk;
-                alert.l_deptpk = oUser.l_deptpk;
-
-                alert.textmessages = new List<message>();
-                message msg = new message();
-                msg.l_channel = oParams.l_testchannelno;
-                msg.sz_text = "-- self test message - UPDATED --";
-
-                alert.textmessages.Add(msg);
-
-                string filename = String.Format(@"{0}eat\CB_UPDATE_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
-                Log.WriteLog(String.Format("Initiating self test (Update Alert). Filename='{0}'", filename), 0);
-
-                XmlSerializer s = new XmlSerializer(typeof(cb));
-                StreamWriter w = new StreamWriter(filename);
-                s.Serialize(w, alert);
-                w.Close();
-            }
-        }
-    }
-
-    class CBTest
-    {
-        public static void RandomTestThread()
-        {
-            while (CBServer.running)
-            {
-                Thread.Sleep(1000);
-            }
-            Log.WriteLog("Stopped randomtest thread", 9);
-            Interlocked.Decrement(ref Settings.threads);
-        }
-
-        public static void HeartbeatThread()
-        {
-            while (CBServer.running)
-            {
-                // sleep for l_heartbeatinterval minutes
-                for (int i = 0; i < Settings.l_heartbeatinterval * 60; i++)
-                {
-                    if (!CBServer.running) break; // exit sleep loop if server is stopped
-
-                    Thread.Sleep(1000);
-                }
-
-                if (CBServer.running) // check if server is still running
-                {
-                    /* 
-                     * send heartbeat message (run after sleep, so it doesn't fire 
-                     * immediately when starting up, but waits for the interval.
-                     * Should prevent duplicate messages when restarting server, or
-                     * if server crashes and restarts
-                     */
-
-                    LBAParameter oParams = new LBAParameter();
-                    Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
-
-                    cb oAlert = new cb();
-                    message msg = new message();
-
-                    msg.l_channel = oParams.l_heartbeat;
-                    msg.sz_text = "<heartbeat message>";
-
-                    oAlert.l_comppk = oUser.l_comppk;
-                    oAlert.l_deptpk = oUser.l_deptpk;
-                    oAlert.l_projectpk = 0;
-                    oAlert.l_refno = Database.GetRefno();
-                    oAlert.operation = "NewAlertHeartbeat";
-                    oAlert.l_validity = 5;
-
-                    oAlert.textmessages = new List<message>();
-                    oAlert.textmessages.Add(msg);
-
-                }
-            }
-            Log.WriteLog("Stopped heartbeat thread", 9);
-            Interlocked.Decrement(ref Settings.threads);
-        }
-        public static int CreateXML(Settings oUser, cb oAlert)
-        {
-            int ret = 0;
-
-            return ret;
-        }
-        public static int NewAlert()
+        public static void NewAlert() 
         {
             LBAParameter oParams = new LBAParameter();
             Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
@@ -196,36 +66,22 @@ namespace pas_cb_server.cb_test
             alert.alertpolygon.Add(pt);
 
             message msg = new message();
-            msg.l_channel = oParams.l_testchannelno;
-            msg.sz_text = "-- Self Test Message --\r\nThis message is longer than one page, should be automatically split into several pages and padded. Also the text is being split between words if possible.";
+            msg.l_channel = oParams.l_channelno;
+            msg.sz_text = "Polygon alert text";
 
             alert.textmessages.Add(msg);
 
-            string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
-            Log.WriteLog(String.Format("Initiating self test (New Alert). Filename='{0}'", filename), 0);
-
-            // insert to LBASEND
-            if (InsertSending(oUser, alert) != Constant.OK)
-            {
-                Log.WriteLog(String.Format("Self test failed to insert into database, aborting"), 2);
-                return -1;
-            }
-
-            XmlSerializer s = new XmlSerializer(typeof(cb));
-            StreamWriter w = new StreamWriter(filename);
-            s.Serialize(w, alert);
-            w.Close();
-
-            return l_testref;
+            currentTestRef = CBTest.NewAlert(alert);
+            Log.WriteLog(String.Format("Self test message sent with refno: {0}.", currentTestRef), 0);
         }
-        public static int NewAlertPLMN()
+        public static void NewAlertPLMN() 
         {
             LBAParameter oParams = new LBAParameter();
             Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
             cb alert = new cb();
 
             int l_testref = 0;
-            l_testref  = Database.GetRefno();
+            l_testref = Database.GetRefno();
 
             alert.l_refno = l_testref;
             alert.operation = "NewAlertPLMN";
@@ -235,18 +91,202 @@ namespace pas_cb_server.cb_test
             alert.textmessages = new List<message>();
 
             message msg = new message();
-            msg.l_channel = oParams.l_testchannelno;
-            msg.sz_text = "-- self test message --";
+            msg.l_channel = oParams.l_channelno;
+            msg.sz_text = "Nationwide alert text";
 
             alert.textmessages.Add(msg);
 
+            currentTestRef = CBTest.NewAlert(alert);
+            Log.WriteLog(String.Format("Self test message (nationwide) sent with refno: {0}.", currentTestRef), 0);
+        }
+        public static void KillAlert()
+        {
+            if (currentTestRef == 0)
+            {
+                Log.WriteLog("No test alerts to kill.", 9);
+                Console.Write("Enter refno to kill: ");
+                currentTestRef = int.Parse(Console.ReadLine());
+            }
+            else
+            {
+                LBAParameter oParams = new LBAParameter();
+                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+                cb alert = new cb();
+
+                alert.l_refno = currentTestRef;
+                alert.operation = "KillAlert";
+                alert.l_comppk = oUser.l_comppk;
+                alert.l_deptpk = oUser.l_deptpk;
+
+                string filename = String.Format(@"{0}eat\CB_KILL_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+                //Log.WriteLog(String.Format("Initiating self test (Kill Alert). Filename='{0}'", filename), 0);
+
+                XmlSerializer s = new XmlSerializer(typeof(cb));
+                StreamWriter w = new StreamWriter(filename);
+                s.Serialize(w, alert);
+                w.Close();
+
+                currentTestRef = 0;
+            }
+        }
+        public static void UpdateAlert()
+        {
+            if (currentTestRef == 0)
+            {
+                Log.WriteLog("No test alerts to kill.", 9);
+            }
+            else
+            {
+                LBAParameter oParams = new LBAParameter();
+                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+                cb alert = new cb();
+
+                alert.l_refno = currentTestRef;
+                alert.operation = "UpdateAlert";
+                alert.l_comppk = oUser.l_comppk;
+                alert.l_deptpk = oUser.l_deptpk;
+
+                alert.textmessages = new List<message>();
+                message msg = new message();
+                msg.l_channel = oParams.l_testchannelno;
+                msg.sz_text = "-- self test message - UPDATED --";
+
+                alert.textmessages.Add(msg);
+
+                string filename = String.Format(@"{0}eat\CB_UPDATE_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
+                //Log.WriteLog(String.Format("Initiating self test (Update Alert). Filename='{0}'", filename), 0);
+
+                XmlSerializer s = new XmlSerializer(typeof(cb));
+                StreamWriter w = new StreamWriter(filename);
+                s.Serialize(w, alert);
+                w.Close();
+            }
+        }
+    }
+
+    class CBTest
+    {
+        private static DateTime? ts_nexttest = null;
+
+        public static void RandomTestThread()
+        {
+            // Get ts_nexttest from database when starting up
+            ts_nexttest = Database.GetNextTest();
+
+            while (CBServer.running)
+            {
+                if (ts_nexttest.HasValue)
+                {
+                    // next test has a time, check if it's time to send
+                    if (ts_nexttest.Value.CompareTo(DateTime.Now) < 0)
+                    {
+                        LBAParameter oParams = new LBAParameter();
+                        Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+
+                        cb oAlert = new cb();
+                        message msg = new message();
+
+                        msg.l_channel = oParams.l_testchannelno;
+                        msg.sz_text = Settings.GetValue("TestMessageText", "test");
+
+                        oAlert.l_comppk = oUser.l_comppk;
+                        oAlert.l_deptpk = oUser.l_deptpk;
+                        oAlert.l_projectpk = 0;
+                        oAlert.l_refno = Database.GetRefno();
+                        oAlert.operation = "NewAlertTest";
+                        oAlert.l_validity = 5;
+
+                        oAlert.textmessages = new List<message>();
+                        oAlert.textmessages.Add(msg);
+
+                        // test time is now, or has passed, send test and generate new time
+                        ts_nexttest = Database.GenerateNextTestTime();
+                        Log.WriteLog(String.Format("Random test message sent with refno: {0}, next message scheduled for {1}.", NewAlert(oAlert), ts_nexttest), 0);
+                    }
+                }
+                else
+                {
+                    // next test is not set yet, check if it exists in the database
+                    ts_nexttest = Database.GetNextTest();
+                    if (!ts_nexttest.HasValue)
+                    {
+                        // no time set in database either, generate new
+                        ts_nexttest = Database.GenerateNextTestTime();
+                    }
+                }
+                Thread.Sleep(1000);
+            }
+            Log.WriteLog("Stopped randomtest thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
+        }
+        public static void HeartbeatThread()
+        {
+            while (CBServer.running)
+            {
+                if (CBServer.running) // check if server is still running
+                {
+                    // sleep for l_heartbeatinterval minutes
+                    for (int i = 0; i < Settings.l_heartbeatinterval * 60; i++)
+                    {
+                        if (!CBServer.running) break; // exit sleep loop if server is stopped
+
+                        Thread.Sleep(1000);
+                    }
+
+                    /* 
+                     * send heartbeat message (run after sleep, so it doesn't fire 
+                     * immediately when starting up, but waits for the interval.
+                     * Should prevent duplicate messages when restarting server, or
+                     * if server crashes and restarts
+                     */
+
+                    LBAParameter oParams = new LBAParameter();
+                    Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+
+                    cb oAlert = new cb();
+                    message msg = new message();
+
+                    msg.l_channel = oParams.l_heartbeat;
+                    msg.sz_text = Settings.GetValue("HeartBeatMessageText", "heartbeat");
+
+                    oAlert.l_comppk = oUser.l_comppk;
+                    oAlert.l_deptpk = oUser.l_deptpk;
+                    oAlert.l_projectpk = 0;
+                    oAlert.l_refno = Database.GetRefno();
+                    oAlert.operation = "NewAlertHeartbeat";
+                    oAlert.l_validity = 5;
+
+                    oAlert.textmessages = new List<message>();
+                    oAlert.textmessages.Add(msg);
+
+                    Log.WriteLog(String.Format("New heartbeat message sent with refno: {0}, next message in {1} minutes.", NewAlert(oAlert), Settings.l_heartbeatinterval), 0);
+                }
+            }
+            Log.WriteLog("Stopped heartbeat thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
+        }
+
+        public static int CreateXML(Settings oUser, cb oAlert)
+        {
+            int ret = 0;
+
+            return ret;
+        }
+        public static int NewAlert(cb alert)
+        {
+            LBAParameter oParams = new LBAParameter();
+            Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+
+            int l_testref = 0;
+            l_testref  = Database.GetRefno();
+
+            alert.l_refno = l_testref;
             string filename = String.Format(@"{0}eat\CB_SEND_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
-            Log.WriteLog(String.Format("Initiating self test (New Alert). Filename='{0}'", filename), 0);
 
             // insert to LBASEND
             if (InsertSending(oUser, alert) != Constant.OK)
             {
-                Log.WriteLog(String.Format("Self test failed to insert into database, aborting"), 2);
+                Log.WriteLog(String.Format("Test failed to insert into database, aborting"), 2);
                 return -1;
             }
 

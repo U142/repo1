@@ -69,8 +69,10 @@ namespace pas_cb_server
                     case Operation.NEWAREA:
                         return cbc_newalert(cbc, op, oAlert, def);
                     case Operation.NEWPLMN:
+                        return cbc_newalert_plmn(cbc, op, oAlert, def);
                     case Operation.NEWPLMN_TEST:
                     case Operation.NEWPLMN_HEARTBEAT:
+                        oAlert.l_repetitioninterval = (int)(oAlert.l_validity * 60 / 1.883); // set repetition interval so only one message is sent
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     default:
                         return Constant.FAILED;
@@ -410,11 +412,11 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
+            newmsgreq.repetitioninterval = oAlert.l_repetitioninterval;
 
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
             newmsgreq.displaymode = def.l_displaymode;
-            newmsgreq.repetitioninterval = def.l_repetitioninterval;
             newmsgreq.schedulemethod = def.l_schedulemethod;
             newmsgreq.recurrency = def.l_recurrency;
             newmsgreq.recurrencyendtime = def.recurrencyendtime;
@@ -479,11 +481,11 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
+            newmsgreq.repetitioninterval = oAlert.l_repetitioninterval;
 
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
             newmsgreq.displaymode = def.l_displaymode;
-            newmsgreq.repetitioninterval = def.l_repetitioninterval;
             newmsgreq.schedulemethod = def.l_schedulemethod;
             newmsgreq.recurrency = def.l_recurrency;
             newmsgreq.recurrencyendtime = def.recurrencyendtime;
@@ -732,8 +734,6 @@ namespace pas_cb_server
         public int l_datacodingscheme = 0;
         [XmlElement("displaymode")]
         public int l_displaymode = 0;
-        [XmlElement("repetitioninterval")]
-        public int l_repetitioninterval = 11;
         [XmlElement("schedulemethod")]
         public int l_schedulemethod = 1;
         [XmlElement("recurrency")]

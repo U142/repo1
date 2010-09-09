@@ -445,6 +445,30 @@ namespace pas_cb_server
 
             return ret;
         }
+        public static string GetChannelName(int l_operator, int l_channelno)
+        {
+            return (string)ExecuteScalar(String.Format("SELECT sz_channelname FROM LBAOPERATORS_CHANNELNAMES WHERE l_operator={0} AND l_channelno={1}", l_operator, l_channelno));
+        }
+        public static DateTime? GetNextTest()
+        {
+            DateTime? ret = null;
+            object tmp = ExecuteScalar("SELECT l_next_test_ts FROM LBAPARAMETER");
+            if (tmp != null)
+                if (tmp.GetType() == typeof(decimal))
+                    if (tmp.ToString().Length == 14)
+                        ret = DateTime.ParseExact(tmp.ToString(), "yyyyMMddHHmmss", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+
+            return ret;
+        }
+        public static DateTime GenerateNextTestTime()
+        {
+            Random random = new Random();
+            DateTime ts_ret = DateTime.Today.AddDays(1).AddSeconds(random.Next(24 * 60 * 60)); // random time tomorrow
+
+            ExecuteNonQuery(String.Format("UPDATE LBAPARAMETER SET l_next_test_ts={0}", ts_ret.ToString("yyyyMMddHHmmss")));
+
+            return ts_ret;
+        }
 
         private static void ExecuteNonQuery(string sz_sql)
         {

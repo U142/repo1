@@ -168,6 +168,7 @@ namespace pas_cb_server
         private static Hashtable CreateAlert(XmlNode xmlCB, Settings oUser, Operation operation)
         {
             Hashtable ret = new Hashtable();
+            LBAParameter lbaparam = new LBAParameter();
             AlertInfo oAlert;
 
             int l_getalert = ParseAlertXml(xmlCB, oUser, operation, out oAlert);
@@ -176,6 +177,9 @@ namespace pas_cb_server
                 ret.Add(0, l_getalert);
                 return ret;
             }
+
+            // Set values from LBAParam
+            oAlert.l_repetitioninterval = lbaparam.l_repetitioninterval;
 
             // create an alert for each operator
             foreach (Operator op in oUser.operators)
@@ -388,6 +392,7 @@ namespace pas_cb_server
         // info needed to start a cb sending
         public int l_projectpk;
         public int l_refno;
+        public int l_repetitioninterval;
 
         public long l_sched_utc;
         public int l_validity;

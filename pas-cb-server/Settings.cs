@@ -453,7 +453,7 @@ namespace pas_cb_server
         // populate when creating to make sure the latest information is used
         public LBAParameter()
         {
-            string qry = String.Format(@"SELECT l_comppk, l_deptpk, l_channelno, l_test_channelno, l_heartbeat FROM LBAPARAMETER");
+            string qry = String.Format(@"SELECT l_comppk, l_deptpk, l_channelno, l_test_channelno, l_heartbeat, l_interval FROM LBAPARAMETER");
 
             try
             {
@@ -471,6 +471,7 @@ namespace pas_cb_server
                     this.l_channelno = rs.GetInt32(2);
                     this.l_testchannelno = rs.GetInt32(3);
                     this.l_heartbeat = rs.GetInt32(4);
+                    this.l_repetitioninterval = rs.GetInt32(5);
                 }
                 // close
                 rs.Close();
@@ -491,6 +492,7 @@ namespace pas_cb_server
         public int l_channelno;
         public int l_testchannelno;
         public int l_heartbeat;
+        public int l_repetitioninterval;
     }
 
     public enum LBATYPE

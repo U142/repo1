@@ -1,14 +1,16 @@
-﻿1.1.4
+﻿1.2.0
 =====
 CBServer
-	* Removed l_testchannel from one2many operator XML.
-	* Added test_channel_category and heartbeat_channel_category to alcatel-lucentt operator XML.
+	* Changed version to 1.2
+	* Removed l_testchannel and l_repetitioninterval from one2many operator XML.
+	* Added test_channel_category and heartbeat_channel_category to alcatel-lucentt operator XML. (removed)
 	* Changed retries for kill messages to infinite (as long as message is active).
 	* Changed kill status to CANCELLING, and retries to failed kill messages will not update the LBASEND tables tries or status.
 	* Added support for test and heartbeat messages in CreateAlert.
 	* Added LBAParameter class which reads values from the LBAPARAMETER table (test channels and system user)
 	* Added specific handeling of status code 1029 from one2many api (no cells in area)
 	* Changed database to allow recursive triggers (ALTER DATABASE <database> SET RECURSIVE_TRIGGERS ON)
+	* Added table LBAOPERATOR_CHANNELNAMES to allow easier editing of operator specific channel names
 
 1.1.3
 =====

@@ -26,6 +26,16 @@ namespace pas_cb_server
                 if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
+                string sz_channel_category = Database.GetChannelName(op.l_operator, oAlert.alert_message.l_channel);
+                if(sz_channel_category == null && operation != Operation.NEWPLMN_HEARTBEAT)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAIELD (missing channel category name)"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , oAlert.l_refno), 2);
+                    return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, -1, op.l_operator, LBATYPE.CB);
+                }
+
                 // Set alert attributes
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
@@ -45,19 +55,28 @@ namespace pas_cb_server
                     case Operation.NEWPLMN_HEARTBEAT:
                         t_alert.IBAG_status = IBAG_status.NetworkTest;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
-                        t_alert_info.IBAG_channel_category = def.sz_heartbeat_channel_category;
+                        t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
+                        t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
                     case Operation.NEWPLMN_TEST:
                         t_alert.IBAG_status = IBAG_status.Actual;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
-                        t_alert_info.IBAG_channel_category = def.sz_test_channel_category;
+                        t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
+                        t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
                     case Operation.NEWAREA:
                     case Operation.NEWPLMN:
                     default:
                         t_alert.IBAG_status = IBAG_status.Actual;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
-                        t_alert_info.IBAG_channel_category = def.sz_channel_category;
+                        t_alert_info.IBAG_gsm_repetition_period = oAlert.l_repetitioninterval;
+                        t_alert_info.IBAG_umts_repetition_period = oAlert.l_repetitioninterval;
+                        t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
+                        t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
                 }
                 
@@ -84,6 +103,8 @@ namespace pas_cb_server
                 t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
                 t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
                 t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
+                if(sz_channel_category != null)
+                    t_alert_info.IBAG_channel_category = sz_channel_category;
                 // from default values
                 t_alert_info.IBAG_priority = def.priority;
                 t_alert_info.IBAG_prioritySpecified = true;
@@ -603,12 +624,6 @@ namespace pas_cb_server
         public string sz_cap_sender = "";
         [XmlElement("cap_alert_uri")]
         public string sz_cap_alert_uri = "";
-        [XmlElement("channel_category")]
-        public string sz_channel_category = "";
-        [XmlElement("test_channel_category")]
-        public string sz_test_channel_category = "";
-        [XmlElement("heartbeat_channel_category")]
-        public string sz_heartbeat_channel_category = "";
         public IBAG_priority priority = IBAG_priority.Background;
         public IBAG_category category = IBAG_category.Geo;
         public IBAG_severity severity = IBAG_severity.Severe;
