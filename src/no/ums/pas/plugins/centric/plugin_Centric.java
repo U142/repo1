@@ -330,11 +330,14 @@ public class plugin_Centric extends PAS_Scripting
 					for(int j=i+1; j < list.length; j++)
 					{
 						UBBNEWS b2 = (UBBNEWS)list[j];
-						if(b1.getLTimestampDb()<b2.getLTimestampDb())
+						//if(b1.getLTimestampDb()<b2.getLTimestampDb())
+						if(b1.getLIncidentStart()>b2.getLIncidentStart())
 						{
 							tmp = b1;
 							list[i] = b2;
 							list[j] = tmp;
+							i=i-1;
+							break;
 						}
 					}
 				}
@@ -342,7 +345,8 @@ public class plugin_Centric extends PAS_Scripting
 				{
 					UBBNEWS bbn = (UBBNEWS)list[i];
 					this.setElementAt(bbn, i);
-					recordset.put(bbn.getLNewspk(), bbn);
+					//System.out.println("setElementAt " + i + " " + bbn.getLNewspk());
+					recordset.put(genHashKey(bbn), bbn);
 				}
 			}
 			Hashtable<Long, Object> recordset = new Hashtable<Long, Object>();
@@ -351,22 +355,27 @@ public class plugin_Centric extends PAS_Scripting
 			{
 				if(b.getFActive()>=1) //insert/update
 				{
-					if(recordset.containsKey(b.getLNewspk()))
+					//System.out.println("newspk="+b.getLNewspk());
+					if(recordset.containsKey(genHashKey(b)))
 					{
 						update(b);
 					}
 					else
 					{
-						addOnTop(b);
+						add(0, b);//addOnTop(b);
 					}
 				}
 				else //remove
 				{
-					if(recordset.containsKey(b.getLNewspk()))
+					if(recordset.containsKey(genHashKey(b)))
 					{
 						remove(b);
 					}
 				}
+			}
+			protected long genHashKey(UBBNEWS b)
+			{
+				return b.getLNewspk();
 			}
 			protected void addOnTop(Object arg1) {
 				
@@ -375,34 +384,36 @@ public class plugin_Centric extends PAS_Scripting
 					this.add(0, arg1);
 			}
 			
-			protected void remove(UBBNEWS o)
+			protected void remove(UBBNEWS b)
 			{
-				UBBNEWS original = (UBBNEWS)recordset.get(o.getLNewspk());
+				UBBNEWS original = (UBBNEWS)recordset.get(genHashKey(b));
 				int index = super.indexOf(original);
 				if(index>=0)
 				{
 					super.remove(index);
-					if(recordset.containsKey(o.getLNewspk()))
+					if(recordset.containsKey(genHashKey(b)))
 					{
-						recordset.remove(o.getLNewspk());
+						recordset.remove(genHashKey(b));
+						System.out.println("newspk " + b.getLNewspk() + " removed");
 					}
 				}
 			}
-			protected void update(UBBNEWS o)
+			protected void update(UBBNEWS b)
 			{
-				UBBNEWS original = (UBBNEWS)recordset.get(o.getLNewspk());
+				UBBNEWS original = (UBBNEWS)recordset.get(genHashKey(b));
 				int index = super.indexOf(original);
 				if(index>=0)
 				{
-					super.set(index, o);
-					recordset.put(o.getLNewspk(), o);
+					super.set(index, b);
+					System.out.println("newspk " + b.getLNewspk() + " updated");
+					recordset.put(genHashKey(b), b);
 				}
 			}
 			
 			@Override
 			public void add(int arg0, Object arg1) {
 				Long key = ((UBBNEWS)arg1).getLNewspk();
-				if(recordset.containsKey(key))
+				/*if(recordset.containsKey(key))
 				{
 					UBBNEWS original = (UBBNEWS)recordset.get(key);
 					int n = super.indexOf(original);
@@ -428,19 +439,20 @@ public class plugin_Centric extends PAS_Scripting
 						System.out.println("news " + original + " not found in list");
 					}
 				}
-				else
+				else*/
 				{
-					recordset.put(key, arg1);
+					recordset.put(genHashKey((UBBNEWS)arg1), arg1);
+					//list.getDefaultModel().add(arg0, arg1);
 					super.add(arg0, arg1);
 					System.out.println("newspk " + ((UBBNEWS)arg1).getLNewspk() + " inserted");
 				}
 			}
 
-			@Override
+			/*@Override
 			public void addElement(Object arg0) {
 				//super.addElement(arg0);
 				add(0, arg0);
-			}
+			}*/
 			
 		}
 		class MessageList extends JList
@@ -485,7 +497,7 @@ public class plugin_Centric extends PAS_Scripting
 					{
 						UBBNEWS news = (UBBNEWS)value;
 						//lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
-						String text_to_write = news.getNewstext().getSzNews();
+						String text_to_write = news.getLNewspk() + " " + news.getNewstext().getSzNews();
 						int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
 						//if(text_width>=width)
 						//	text_to_write = text_to_write.substring(0, Math.min(text_to_write.length()-1, 70));
@@ -520,10 +532,10 @@ public class plugin_Centric extends PAS_Scripting
 				if(location>=0)
 				{
 					UBBNEWS b = (UBBNEWS)list.getDefaultModel().getElementAt(location);
-					String html = "<html><table>";
-					html += "<tr><td><b>" + PAS.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
-					html += "<tr><td><b>" + PAS.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
-					html += "<tr><td colspan=2>" + b.getNewstext().getSzNews() + "</td></tr>";
+					String html = "<html><table width=300>";
+					html += "<tr><td colspan=1><b>" + PAS.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
+					html += "<tr><td colspan=1><b>" + PAS.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
+					html += "<tr><td colspan=2 style=\"word-wrap: break-word\">" + b.getNewstext().getSzNews() + "</td></tr>";
 					html += "</html>";
 					return html;
 				}

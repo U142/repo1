@@ -1603,7 +1603,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			if(b_from_timer) {
 				System.out.println("New mapsize = " + dim_map.toString());
 				//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
-				get_mappane().load_map(!m_b_firstmap);
+				get_mappane().load_map(true);//!m_b_firstmap);
 				if(get_eastcontent() != null)
 					get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 				//get_navigation().reloadMap();

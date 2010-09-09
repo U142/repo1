@@ -7,6 +7,7 @@ import javax.xml.namespace.QName;
 
 import no.ums.pas.PAS;
 import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UBBNEWSLISTFILTER;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 
 public class WSGetSystemMessages extends WSThread
@@ -40,7 +41,7 @@ public class WSGetSystemMessages extends WSThread
 			logon.setSzStdcc("");
 			URL wsdl = new URL(vars.WSDL_PAS);
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			ret = new Pasws(wsdl, service).getPaswsSoap12().getSystemMessages(logon, n_dbtimestamp);
+			ret = new Pasws(wsdl, service).getPaswsSoap12().getSystemMessages(logon, n_dbtimestamp, UBBNEWSLISTFILTER.IN_BETWEEN_START_END);
 			n_dbtimestamp = ret.getNews().getLTimestampDb();
 			
 		}

@@ -54,6 +54,7 @@ public interface PaswsSoap {
     /**
      * 
      * @param timestamp
+     * @param selectmode
      * @param l
      * @return
      *     returns no.ums.ws.pas.USYSTEMMESSAGES
@@ -66,7 +67,9 @@ public interface PaswsSoap {
         @WebParam(name = "l", targetNamespace = "http://ums.no/ws/pas/")
         ULOGONINFO l,
         @WebParam(name = "timestamp", targetNamespace = "http://ums.no/ws/pas/")
-        long timestamp);
+        long timestamp,
+        @WebParam(name = "selectmode", targetNamespace = "http://ums.no/ws/pas/")
+        UBBNEWSLISTFILTER selectmode);
 
     /**
      * 

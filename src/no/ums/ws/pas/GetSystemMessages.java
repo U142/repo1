@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="l" type="{http://ums.no/ws/pas/}ULOGONINFO"/>
  *         &lt;element name="timestamp" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="selectmode" type="{http://ums.no/ws/pas/}UBBNEWSLIST_FILTER"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,7 +32,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "l",
-    "timestamp"
+    "timestamp",
+    "selectmode"
 })
 @XmlRootElement(name = "GetSystemMessages")
 public class GetSystemMessages {
@@ -39,6 +41,8 @@ public class GetSystemMessages {
     @XmlElement(required = true)
     protected ULOGONINFO l;
     protected long timestamp;
+    @XmlElement(required = true)
+    protected UBBNEWSLISTFILTER selectmode;
 
     /**
      * Gets the value of the l property.
@@ -78,6 +82,30 @@ public class GetSystemMessages {
      */
     public void setTimestamp(long value) {
         this.timestamp = value;
+    }
+
+    /**
+     * Gets the value of the selectmode property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link UBBNEWSLISTFILTER }
+     *     
+     */
+    public UBBNEWSLISTFILTER getSelectmode() {
+        return selectmode;
+    }
+
+    /**
+     * Sets the value of the selectmode property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link UBBNEWSLISTFILTER }
+     *     
+     */
+    public void setSelectmode(UBBNEWSLISTFILTER value) {
+        this.selectmode = value;
     }
 
 }
