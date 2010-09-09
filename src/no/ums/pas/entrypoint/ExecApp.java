@@ -3,6 +3,7 @@ import java.net.URL;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import no.ums.pas.*;
@@ -15,10 +16,14 @@ import no.ums.pas.ums.errorhandling.Error;
 public class ExecApp {
 	public static PAS m_pas;
 	public static void main(String[] args) {
-		Object connect_timeout = System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", "20000") ;
-		Object read_timeout = System.getProperties().setProperty("sun.net.client.defaultReadTimeout", "3600000" ) ;
+		//Object connect_timeout = System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", "20000") ;
+		//Object read_timeout = System.getProperties().setProperty("sun.net.client.defaultReadTimeout", "3600000" ) ;
+		Object connect_timeout;
+		Object read_timeout;
 		connect_timeout = System.getProperties().get("sun.net.client.defaultConnectTimeout");
 		read_timeout = System.getProperties().get("sun.net.client.defaultReadTimeout");
+		System.out.println("sun.net.client.defaultConnectTimeout=" + connect_timeout);
+		System.out.println("sun.net.client.defaultReadTimeout=" + read_timeout);
 		String sz_sitename = "http://vb4utv/";
 		String sz_userid = null;
 		String sz_compid = null;
@@ -116,6 +121,7 @@ public class ExecApp {
 		{
 			PAS.pasplugin = null;
 			Error.getError().addError("Failed to load plugin", "Could not load the plugin \"" + sz_plugin + "\"", e, Error.SEVERITY_ERROR);
+			JOptionPane.showMessageDialog(null, "Unable to load plugin \"" + sz_plugin + "\"" + sz_codebase, "Unable to load plugin", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		if(PAS.pasplugin==null)

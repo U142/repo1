@@ -48,7 +48,10 @@ import no.ums.pas.ums.errorhandling.Error;
 		public void set_mappane(MapFrame f) { m_mappane = f; }
 		protected MapFrame get_mappane() { return m_mappane; }
 		protected boolean b_firstmap = true;
-		
+		public void setFirstMap(boolean b)
+		{
+			b_firstmap = b;
+		}
 		
 		/*public boolean get_suspended() {
 			return (m_n_suspension_instances > 0 ? true : false); 

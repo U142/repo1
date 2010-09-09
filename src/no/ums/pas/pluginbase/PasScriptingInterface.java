@@ -44,6 +44,7 @@ import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendOptionToolbar;
@@ -461,6 +462,8 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract boolean onMapGotoShapesToPaint();
+	
+	public abstract boolean onMapLoadFailed(MapLoader loader);
 	
 	public abstract void addShapeToPaint(ShapeStruct s);
 	

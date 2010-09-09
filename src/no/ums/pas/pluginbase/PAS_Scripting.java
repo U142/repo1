@@ -19,6 +19,7 @@ import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import no.ums.pas.*;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
@@ -43,6 +44,7 @@ import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
@@ -952,6 +954,13 @@ public class PAS_Scripting extends PasScriptingInterface
 			return false;
 		NavStruct nav = CommonFunc.calc_bounds(shapes_to_paint.values().toArray());
 		PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		return true;
+	}
+
+	
+	@Override
+	public boolean onMapLoadFailed(MapLoader loader) {
+		variables.DRAW.setFirstMap(false);
 		return true;
 	}
 

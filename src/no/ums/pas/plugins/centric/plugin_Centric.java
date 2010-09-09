@@ -497,7 +497,7 @@ public class plugin_Centric extends PAS_Scripting
 					{
 						UBBNEWS news = (UBBNEWS)value;
 						//lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
-						String text_to_write = news.getLNewspk() + " " + news.getNewstext().getSzNews();
+						String text_to_write = news.getNewstext().getSzNews();
 						int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
 						//if(text_width>=width)
 						//	text_to_write = text_to_write.substring(0, Math.min(text_to_write.length()-1, 70));

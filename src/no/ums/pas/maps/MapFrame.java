@@ -1038,6 +1038,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		} catch(Exception e) {
 			//System.out.println("Error loading map " + e.getMessage());
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
+			e.printStackTrace();
+			PAS.pasplugin.onMapLoadFailed(this.get_maploader());
 		}
 		try
 		{
