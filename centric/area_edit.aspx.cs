@@ -25,11 +25,18 @@ public partial class area_edit : System.Web.UI.Page
         if (logoninfo == null)
             Server.Transfer("logon.aspx");
 
+        userid.Attributes.Add("value", logoninfo.l_userpk.ToString());
+        compid.Attributes.Add("value", logoninfo.l_comppk.ToString());
+        deptid.Attributes.Add("value", logoninfo.l_deptpk.ToString());
+        password.Attributes.Add("value", logoninfo.sz_password);
+        session.Attributes.Add("value", logoninfo.sessionid);
+        
+        lbl_error.ForeColor = System.Drawing.Color.Red;
 
         if (!IsPostBack)
         {
             PasAdmin pa = new PasAdmin();
-            GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo);
+            GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo,com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
             Session["restrictions"] = obj;
             buildTable(obj);
@@ -79,6 +86,8 @@ public partial class area_edit : System.Web.UI.Page
 
     private void buildTable(com.ums.ws.pas.admin.UDEPARTMENT[] obj)
     {
+        tbl_areas.Rows.Clear();
+
         TableHeaderRow hr = new TableHeaderRow();
 
         TableHeaderCell hc = new TableHeaderCell();
@@ -168,28 +177,37 @@ public partial class area_edit : System.Web.UI.Page
             SetPAShapeObsoleteResponse res;
             for (int i = 0; i < obj.Length; ++i)
             {
-                if (obj[i].l_deptpk == int.Parse(txt_id.Text))
+                if (obj[i].l_deptpk == int.Parse(txt_id.Text) && chk_obsolete.Checked)
                 {
                     obj[i].restrictionShapes[0].f_disabled = 1;
                     res = pa.doSetPAShapeObsolete(li, obj[i], obj[i].restrictionShapes[0]);
                     if (res.successful)
+                    {
                         if (res.shape.f_disabled == 1)
                         {
-                            chk_obsolete.Checked = true;
-                            txt_obsolete.Text = Util.convertDate(res.shape.l_disabled_timestamp).Substring(0,10);
+                            chk_obsolete.Enabled = false;
+                            txt_obsolete.Text = Util.convertDate(res.shape.l_disabled_timestamp).Substring(0, 10);
                             txt_name.Text = obj[i].sz_deptid;
                             obj[i].restrictionShapes[0] = res.shape;
                             txt_name.Enabled = false;
+                            chk_obsolete.Enabled = false;
                         }
                         else
                         {
+                            chk_obsolete.Enabled = true;
                             chk_obsolete.Checked = false;
                             txt_obsolete.Text = "";
                             obj[i].restrictionShapes[0] = res.shape;
                             txt_name.Text = obj[i].sz_deptid;
                             txt_name.Enabled = false;
                         }
-                        
+                        lbl_error.Text = "";
+                    }
+                    else
+                    {
+                        lbl_error.Text = res.reason;
+                        obj[i].restrictionShapes[0].f_disabled = 0;
+                    }
                 }
             }
             tbl_areas.Rows.Clear();
@@ -225,14 +243,36 @@ public partial class area_edit : System.Web.UI.Page
             obj.m_shape = p;
 
 
-
             obj.l_deptpk = li.l_deptpk;
 
-            UPAOBJECTRESULT res = pa.ExecPAShapeUpdate(Util.convertLogonInfoParmAdmin(li), obj, PASHAPETYPES.PADEPARTMENTRESTRICTION);
+            UPAOBJECTRESULT res = pa.ExecPAShapeUpdate(Util.convertLogonInfoParmAdmin(li), obj, com.ums.ws.parm.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
 
             if (res != null)
-                lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
+            {
+                com.ums.ws.pas.admin.UDEPARTMENT[] deptlist = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
+                //lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
+                PasAdmin pasa = new PasAdmin();
+                GetSingleRestricionResponse response = pasa.doGetSingleRestricion(li, res.pk);
+                if (response.successful)
+                {
+                    com.ums.ws.pas.admin.UDEPARTMENT[] tmp = new com.ums.ws.pas.admin.UDEPARTMENT[deptlist.Length + 1];
+                    deptlist.CopyTo(tmp, 0);
+                    tmp[tmp.Length - 1] = response.restriction;
+                    Session["restrictions"] = tmp;
+                    buildTable(tmp);
+
+                    txt_name.Text = "";
+                    txt_name.Enabled = false;
+                    btn_draw.Disabled = true;
+                }
+            }
+            else
+            {
+                lbl_error.ForeColor = System.Drawing.Color.Red;
+                lbl_error.Text = "Error saving shape";
+            }
         }
+        
     }
     protected void btn_create_click(object sender, EventArgs e)
     {
@@ -243,6 +283,8 @@ public partial class area_edit : System.Web.UI.Page
         txt_timestamp.Text = "";
         txt_id.Text = "";
         chk_obsolete.Checked = false;
+        btn_draw.Disabled = false;
+        chk_obsolete.Enabled = true;
         //tbl_areas.Rows.Clear();
     }
 }

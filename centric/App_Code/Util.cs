@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Web;
 using System.Data;
@@ -8,12 +9,17 @@ using System.Text;
 using com.ums.ws.pas.status;
 using com.ums.ws.pas;
 using com.ums.ws.parm.admin;
+using com.ums.ws.pas.admin;
+using System.Configuration;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Summary description for Util
 /// </summary>
 public class Util
 {
+    public static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+
     public static String sysMessageType(long type)
     {
         switch (type)
@@ -52,7 +58,7 @@ public class Util
             return "Test";
         else if(res.l_type == 7 && res.l_group == 16)
             return "National";
-        else if(res.l_type == 7 && (res.l_group == 2 || res.l_group == 8))
+        else if (res.l_type == 7 && (res.l_group == 2 || res.l_group == 8 || res.l_group == 32))
             return "Regional";
         else
             return "Unknown";
@@ -289,6 +295,47 @@ public class Util
     }
 
     /*******************************
+     * Monthly user activity       *
+     *******************************/
+    public static void WriteUserActivityMonthlyToCSV(UPASLOG[] loglist, Hashtable users)
+    {
+        string attachment = "attachment; filename=UserActivity.csv";
+        HttpContext.Current.Response.Clear();
+        HttpContext.Current.Response.ClearHeaders();
+        HttpContext.Current.Response.ClearContent();
+        HttpContext.Current.Response.AddHeader("content-disposition", attachment);
+        HttpContext.Current.Response.ContentType = "text/csv";
+        HttpContext.Current.Response.AddHeader("Pragma", "public");
+        WriteUserActivityMonthlyColumnName();
+        foreach (UPASLOG log in loglist)
+        {
+            WriteUserActivityMonthly(log, users);
+        }
+        HttpContext.Current.Response.End();
+    }
+    private static void WriteUserActivityMonthly(UPASLOG log, Hashtable users)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        AddComma(log.l_id.ToString(), stringBuilder);
+        if (log.l_userpk == -1)
+            AddComma("\"Administrator\"", stringBuilder);
+        else
+            AddComma("\"" + ((com.ums.ws.pas.admin.UBBUSER)users[log.l_userpk]).sz_userid + "\"", stringBuilder);
+        AddComma("\"" + ConfigurationSettings.AppSettings[log.l_operation.ToString()] + "\"", stringBuilder);
+        AddComma(log.l_timestamp.ToString(), stringBuilder);
+        AddLast("\"" + log.sz_desc + "\"", stringBuilder);
+        HttpContext.Current.Response.Write(stringBuilder.ToString());
+        HttpContext.Current.Response.Write(Environment.NewLine);
+    }
+
+    private static void WriteUserActivityMonthlyColumnName()
+    {
+        string columnNames = "Log id, Username, Operation, Timestamp, Description";
+        HttpContext.Current.Response.Write(columnNames);
+        HttpContext.Current.Response.Write(Environment.NewLine);
+    }
+
+    /*******************************
      * Access permissions per user *
      *******************************/
     public static void WriteAccessPerUserToCSV(CB_USER_REGION_RESPONSE[] region)
@@ -327,7 +374,7 @@ public class Util
     /*******************************
      * Users per access permission *
      *******************************/
-    public static void WriteUsersPerAccessPermissionToCSV(UBBUSER[] userlist, String[] areaname)
+    public static void WriteUsersPerAccessPermissionToCSV(com.ums.ws.parm.admin.UBBUSER[] userlist, String[] areaname)
     {
         string attachment = "attachment; filename=AccessPermissions.csv";
         HttpContext.Current.Response.Clear();
@@ -339,12 +386,12 @@ public class Util
         WriteUsersPerAccessPermissionColumnName();
         foreach (string area in areaname)
         {
-            foreach(UBBUSER user in userlist)
+            foreach (com.ums.ws.parm.admin.UBBUSER user in userlist)
                 WriteUsersPerAccessPermission(user, area);
         }
         HttpContext.Current.Response.End();
     }
-    private static void WriteUsersPerAccessPermission(UBBUSER user, string areaname)
+    private static void WriteUsersPerAccessPermission(com.ums.ws.parm.admin.UBBUSER user, string areaname)
     {
         StringBuilder stringBuilder = new StringBuilder();
         AddComma("\"" + areaname + "\"", stringBuilder);

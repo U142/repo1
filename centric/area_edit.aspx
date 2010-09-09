@@ -9,27 +9,51 @@
             return false;
         }
         function setShape(coor, id, obsolete, timestamp, deptname) {
-            var lon = [58.9132, 58.9449, 58.7498, 58.6927];
-            var lat = [6.0121, 6.0121, 6.4075, 5.9722];
-            //var index = document.getElementById("ctl00_body_lst_areas").selectedIndex;
-            //alert(document.getElementById("ctl00_body_lst_areas").options[index].value);
-            //document.mapapplet.put(document.getElementById("ctl00_body_lst_areas").options[index].value);
+            
             document.getElementById("ctl00_body_txt_id").value = id;
             document.getElementById("ctl00_body_txt_obsolete_holder").value = obsolete;
             document.getElementById("ctl00_body_txt_timestamp").value = timestamp;
             document.getElementById("ctl00_body_txt_name").disabled = true;
             document.getElementById("ctl00_body_txt_name").value = deptname;
-            if (obsolete == 1)
+            
+            if (obsolete == 1) {
                 document.getElementById("ctl00_body_chk_obsolete").checked = true;
-            else
+                document.getElementById("ctl00_body_chk_obsolete").disabled = true;
+                document.getElementById("ctl00_body_chk_obsolete").parentElement.setAttribute('disabled','true');
+            }
+            else {
                 document.getElementById("ctl00_body_chk_obsolete").checked = false;
+                document.getElementById("ctl00_body_chk_obsolete").disabled = false;
+                document.getElementById("ctl00_body_chk_obsolete").parentElement.removeAttribute('disabled');
+            }
             document.getElementById("ctl00_body_txt_obsolete").value = timestamp;
-            document.mapapplet.put(document.getElementById(coor).value);
+            try {
+                document.mapapplet.put(id);
+            } catch (err) { }
+            
             
             
             //return false;
         }
+        function SendRequest() {
+            PasAdmin.disco.GetServerResponse("Test", OnComplete, OnError, OnTimeOut);
+        }
+        function OnComplete(arg) {
+            alert(arg);
+        }
+        function OnTimeOut(arg) {
+            alert("timeOut has occured");
+        }
+        function OnError(arg) {
+            alert("error has occured: " + arg._message);
+        }
     </script>
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+        <Services>
+            <asp:ServiceReference path="http://localhost/WS/PasAdmin.asmx" />
+        </Services>
+    </asp:ScriptManager>
+    <input type="button" ID="jall" Text="test ws" onclick="SendRequest()" />
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>
@@ -52,9 +76,9 @@
                 <asp:Label ID="Label1" runat="server" Text="Authorization area"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_name" runat="server"></asp:TextBox></asp:TableCell>
+                <asp:TextBox ID="txt_name" runat="server" Enabled="false"></asp:TextBox></asp:TableCell>
             <asp:TableCell>
-                <asp:CheckBox ID="chk_obsolete" runat="server" />
+                <asp:CheckBox ID="chk_obsolete" runat="server" Enabled="false" />
                 <asp:Label ID="Label2" runat="server" Text="Obsolete"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
@@ -63,13 +87,18 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell><input type="button" id="btn_zoom" value="zoom" OnClick="javascript:document.mapapplet.zoom();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_pan" value="pan" OnClick="javascript:document.mapapplet.pan();" /></asp:TableCell>
-            <asp:TableCell><input type="button" id="btn_draw" value="draw" OnClick="javascript:document.mapapplet.draw();" /></asp:TableCell>
+            <asp:TableCell><input type="button" id="btn_pan" runat="server" value="pan" OnClick="javascript:document.mapapplet.pan();" /></asp:TableCell>
+            <asp:TableCell><input type="button" id="btn_draw" runat="server" value="draw" OnClick="javascript:document.mapapplet.draw();" disabled="true"/></asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <applet name="mapapplet" id="mapapplet" width="640" height="480">
-                    <param name="jnlp_href" value="javaapp/jnlptest.jnlp" />
+                <applet name="mapapplet" id="mapapplet" runat="server" width="640" height="480">
+                    <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
+                    <param id="compid" name="compid" runat="server" value="dette er noe tekst" />
+                    <param id="deptid" name="deptid" runat="server" value="dette er noe tekst" />
+                    <param id="password" name="password" runat="server" value="dette er noe tekst" />
+                    <param id="session" name="session" runat="server" value="dette er noe tekst" />
+                    <param name="jnlp_href" value="javaapp/jnlptest.jnlp?text=heisann" />
                 </applet>
                 <!--
                 <script type="text/javascript">
@@ -84,7 +113,12 @@
                 <asp:Button ID="btn_save" runat="server" Text="Save" OnClientClick="javascript:getShape();" OnClick="btn_save_Click" />
             </asp:TableCell>
         </asp:TableRow>
-    </asp:Table>
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="lbl_error" runat="server" Text=""></asp:Label>
+            </asp:TableCell>
+        </asp:TableRow>
+    </asp:Table>    
     <asp:TextBox ID="txt_coor" runat="server" style="visibility:hidden"></asp:TextBox>
     <asp:TextBox ID="txt_id" runat="server"  style="visibility:hidden"></asp:TextBox>
     <asp:TextBox ID="txt_obsolete_holder" runat="server"  style="visibility:hidden"></asp:TextBox>

@@ -87,6 +87,7 @@
           <s:element minOccurs="1" maxOccurs="1" name="n_deptpk" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="n_projectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_finished" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="sz_projectname" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="n_createtimestamp" type="s:long" />
           <s:element minOccurs="1" maxOccurs="1" name="n_updatetimestamp" type="s:long" />
@@ -123,6 +124,9 @@
       <s:complexType name="BBPROJECT">
         <s:attribute name="l_projectpk" type="s:string" />
         <s:attribute name="sz_projectname" type="s:string" />
+        <s:attribute name="l_deptpk" type="s:int" use="required" />
+        <s:attribute name="l_userpk" type="s:long" use="required" />
+        <s:attribute name="l_finished" type="s:int" use="required" />
       </s:complexType>
       <s:complexType name="ArrayOfCB_STATUS">
         <s:sequence>
@@ -133,6 +137,11 @@
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="mdv" type="tns:MDVSENDINGINFO" />
+          <s:element minOccurs="0" maxOccurs="1" name="messagepart" type="tns:CB_MESSAGEPART" />
+          <s:element minOccurs="0" maxOccurs="1" name="risk" type="tns:CB_RISK" />
+          <s:element minOccurs="0" maxOccurs="1" name="reaction" type="tns:CB_REACTION" />
+          <s:element minOccurs="0" maxOccurs="1" name="originator" type="tns:CB_ORIGINATOR" />
+          <s:element minOccurs="0" maxOccurs="1" name="sender" type="tns:CB_SENDER" />
           <s:element minOccurs="0" maxOccurs="1" name="shape" type="tns:UShape" />
           <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
           <s:element minOccurs="1" maxOccurs="1" name="l_combined_status" type="s:long" />
@@ -184,26 +193,46 @@
           <s:element minOccurs="0" maxOccurs="1" name="sz_actionprofilename" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:complexType name="CB_MESSAGEPART">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE_FIELDS_BASE">
+        <s:attribute name="l_pk" type="s:long" use="required" />
+        <s:attribute name="sz_name" type="s:string" />
+      </s:complexType>
+      <s:complexType name="CB_SENDER">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_ORIGINATOR">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_REACTION">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_RISK">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
       <s:complexType name="UShape" abstract="true">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="f_disabled" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
-        </s:sequence>
         <s:attribute name="col_red" type="s:float" use="required" />
         <s:attribute name="col_green" type="s:float" use="required" />
         <s:attribute name="col_blue" type="s:float" use="required" />
         <s:attribute name="col_alpha" type="s:float" use="required" />
+        <s:attribute name="f_disabled" type="s:int" use="required" />
+        <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
       </s:complexType>
-      <s:complexType name="UEllipse">
+      <s:complexType name="UPLMN">
         <s:complexContent mixed="false">
-          <s:extension base="tns:UShape">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
-              <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
-              <s:element minOccurs="1" maxOccurs="1" name="x" type="s:double" />
-              <s:element minOccurs="1" maxOccurs="1" name="y" type="s:double" />
-            </s:sequence>
-          </s:extension>
+          <s:extension base="tns:UShape" />
         </s:complexContent>
       </s:complexType>
       <s:complexType name="UBoundingRect">
@@ -214,6 +243,18 @@
               <s:element minOccurs="1" maxOccurs="1" name="_right" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="_top" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="_bottom" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UEllipse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="x" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="y" type="s:double" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -331,6 +372,26 @@
           <s:element minOccurs="0" maxOccurs="1" name="ccode" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="MarkProjectAsFinished">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_projectpk" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MarkProjectAsFinishedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MarkProjectAsFinishedResult" type="tns:UPROJECT_FINISHED_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPROJECT_FINISHED_RESPONSE">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BBPROJECT" />
+        </s:complexContent>
+      </s:complexType>
       <s:element name="GetStatusItems">
         <s:complexType>
           <s:sequence>
@@ -444,6 +505,12 @@
   <wsdl:message name="GetCBStatusSoapOut">
     <wsdl:part name="parameters" element="tns:GetCBStatusResponse" />
   </wsdl:message>
+  <wsdl:message name="MarkProjectAsFinishedSoapIn">
+    <wsdl:part name="parameters" element="tns:MarkProjectAsFinished" />
+  </wsdl:message>
+  <wsdl:message name="MarkProjectAsFinishedSoapOut">
+    <wsdl:part name="parameters" element="tns:MarkProjectAsFinishedResponse" />
+  </wsdl:message>
   <wsdl:message name="GetStatusItemsSoapIn">
     <wsdl:part name="parameters" element="tns:GetStatusItems" />
   </wsdl:message>
@@ -480,6 +547,10 @@
     <wsdl:operation name="GetCBStatus">
       <wsdl:input message="tns:GetCBStatusSoapIn" />
       <wsdl:output message="tns:GetCBStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MarkProjectAsFinished">
+      <wsdl:input message="tns:MarkProjectAsFinishedSoapIn" />
+      <wsdl:output message="tns:MarkProjectAsFinishedSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetStatusItems">
       <wsdl:input message="tns:GetStatusItemsSoapIn" />
@@ -520,6 +591,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetCBStatus">
       <soap:operation soapAction="http://ums.no/ws/pas/status/GetCBStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarkProjectAsFinished">
+      <soap:operation soapAction="http://ums.no/ws/pas/status/MarkProjectAsFinished" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -586,6 +666,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetCBStatus">
       <soap12:operation soapAction="http://ums.no/ws/pas/status/GetCBStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarkProjectAsFinished">
+      <soap12:operation soapAction="http://ums.no/ws/pas/status/MarkProjectAsFinished" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

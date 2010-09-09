@@ -20,14 +20,6 @@
                 </asp:TableHeaderRow>
                 <asp:TableRow>
                     <asp:TableCell>
-                        <asp:Label ID="lbl_company" runat="server" Text="Company:"></asp:Label>
-                    </asp:TableCell>
-                    <asp:TableCell>
-                        <asp:TextBox ID="txt_company" runat="server"></asp:TextBox>
-                    </asp:TableCell>
-                </asp:TableRow>
-                <asp:TableRow>
-                    <asp:TableCell>
                         <asp:Label ID="lbl_user" runat="server" Text="Username:"></asp:Label>
                     </asp:TableCell>
                     <asp:TableCell>
@@ -53,6 +45,14 @@
                 <asp:TableRow>
                     <asp:TableCell HorizontalAlign="Center" ColumnSpan="2">
                         <asp:Label ID="lbl_error" runat="server" Text="" ></asp:Label>
+                    </asp:TableCell>
+                </asp:TableRow>
+                <asp:TableRow>
+                    <asp:TableCell>
+                        <asp:Label ID="lbl_company" runat="server" Text="Company:" style="visibility:hidden"></asp:Label>
+                    </asp:TableCell>
+                    <asp:TableCell>
+                        <asp:TextBox ID="txt_company" runat="server" style="visibility:hidden"></asp:TextBox>
                     </asp:TableCell>
                 </asp:TableRow>
             </asp:Table>

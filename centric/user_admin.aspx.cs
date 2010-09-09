@@ -43,29 +43,27 @@ public partial class user_admin : System.Web.UI.Page
         if (li == null)
             Server.Transfer("logon.aspx");
 
+        PasAdmin pa = new PasAdmin();
+        GetUsersResponse res = pa.doGetUsers(Util.convertLogonInfoPasAdmin(li));
+        if (res.successful)
+        {
+            com.ums.ws.pas.admin.UBBUSER[] ulist = res.user;
+            Session["users"] = ulist;
+
+            buildTable(ulist);
+        }
 
         if (!IsPostBack)
         {
-            PasAdmin pa = new PasAdmin();
-            GetUsersResponse res = pa.doGetUsers(Util.convertLogonInfoPasAdmin(li));
-            if (res.successful)
-            {
-                com.ums.ws.pas.admin.UBBUSER[] ulist = res.user;
-                Session["users"] = ulist;
-
-                buildTable(ulist);
-            }
-
             PasAdmin pasadmin = new PasAdmin();
 
-            GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li);
+            GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] departments = resp.restrictions;
             Session["regions"] = departments;
             for (int i = 0; i < departments.Length; ++i)
-                lst_regions.Items.Add(new ListItem(departments[i].sz_deptid, departments[i].l_deptpk.ToString()));
+                if(departments[i].restrictionShapes[0].f_disabled == 0)
+                    lst_regions.Items.Add(new ListItem(departments[i].sz_deptid, departments[i].l_deptpk.ToString()));
         }
-        else
-            buildTable((com.ums.ws.pas.admin.UBBUSER[])Session["users"]);
 
     }
     private void buildTable(com.ums.ws.pas.admin.UBBUSER[] ulist)
@@ -74,12 +72,12 @@ public partial class user_admin : System.Web.UI.Page
 
         TableHeaderCell hc = new TableHeaderCell();
         hc.HorizontalAlign = HorizontalAlign.Left;
-        hc.Text = "User";
+        hc.Text = "Username";
         hr.Cells.Add(hc);
 
         hc = new TableHeaderCell();
         hc.HorizontalAlign = HorizontalAlign.Left;
-        hc.Text = "User name";
+        hc.Text = "Full name";
         hr.Cells.Add(hc);
 
         hc = new TableHeaderCell();
@@ -139,13 +137,14 @@ public partial class user_admin : System.Web.UI.Page
     protected void btn_view_click(object sender, EventArgs e)
     {
         LinkButton btn_test = (LinkButton)sender;
-        txt_organization.Text = btn_test.CommandArgument;
+
         com.ums.ws.pas.admin.UBBUSER user = getSelectedUser(long.Parse(btn_test.CommandArgument));
         if (user != null)
         {
             deselect();
             txt_firstname.Text = user.sz_name;
             txt_username.Text = user.sz_userid;
+            txt_organization.Text = user.sz_organization;
             selectType(user);
             chk_blocked.Checked = user.f_disabled == 1 ? true : false;
             if (user.f_disabled == 1)
@@ -162,7 +161,7 @@ public partial class user_admin : System.Web.UI.Page
                 }
             }
             selected.Text = user.l_userpk.ToString();
-
+            RequiredFieldValidator2.Enabled = false;
         }
         
     }
@@ -184,6 +183,7 @@ public partial class user_admin : System.Web.UI.Page
 
         user.sz_name = txt_firstname.Text;
         user.sz_userid = txt_username.Text.ToUpper();
+        user.sz_organization = txt_organization.Text;
         if (txt_password.Text.Length > 0)
         {
             user.sz_paspassword = txt_password.Text;
@@ -243,6 +243,8 @@ public partial class user_admin : System.Web.UI.Page
 
         if (res.successful)
         {
+            lbl_feedback.Text = "";
+
             user = res.user;
             if (update)
             {
@@ -279,12 +281,15 @@ public partial class user_admin : System.Web.UI.Page
         }
             
         reset();
+        resetRegions();
+        RequiredFieldValidator2.Enabled = true;
         // user stored
         
     }
 
     protected void btn_create_Click(object sender, EventArgs e)
     {
+        RequiredFieldValidator2.Enabled = true;
         reset();
     }
 
@@ -293,13 +298,14 @@ public partial class user_admin : System.Web.UI.Page
         txt_firstname.Text = "";
         txt_username.Text = "";
         txt_password.Text = "";
+        txt_organization.Text = "";
 
         chk_blocked.Checked = false;
         txt_blocked.Text = "";
 
         rad_administrator.Checked = false;
         rad_national.Checked = false;
-        rad_regional.Checked = false;
+        rad_regional.Checked = true;
         rad_sregional.Checked = false;
 
         lst_regions.SelectedIndex = -1;
@@ -354,6 +360,7 @@ public partial class user_admin : System.Web.UI.Page
             deselect();
             txt_firstname.Text = user.sz_name;
             txt_username.Text = user.sz_userid;
+            txt_organization.Text = user.sz_organization;
             selectType(user);
             chk_blocked.Checked = user.f_disabled==1?true:false;
             if (user.f_disabled == 1)
@@ -403,11 +410,57 @@ public partial class user_admin : System.Web.UI.Page
 
         
     }
+    protected void region_select(object sender, EventArgs e)
+    {
+        if (Session["sregion"] != "true")
+        {
+            com.ums.ws.pas.admin.ULOGONINFO li = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+
+            PasAdmin pa = new PasAdmin();
+            int[] indices = lst_regions.GetSelectedIndices();
+            com.ums.ws.pas.admin.UDEPARTMENT dept = null;
+            com.ums.ws.pas.admin.UPolygon poly = null;
+            List<com.ums.ws.pas.admin.UPolygon> comparepoly = new List<com.ums.ws.pas.admin.UPolygon>();
+            com.ums.ws.pas.admin.UDEPARTMENT[] depts = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["regions"];
+
+            foreach (int ind in indices)
+            {
+                // Selected restriction area
+                dept = depts[ind];
+                foreach (com.ums.ws.pas.admin.UShape shape in dept.restrictionShapes)
+                {
+                    poly = (com.ums.ws.pas.admin.UPolygon)shape;
+                }
+            }
+
+            foreach (com.ums.ws.pas.admin.UDEPARTMENT comparedept in depts)
+            {
+                foreach (com.ums.ws.pas.admin.UShape shape in comparedept.restrictionShapes)
+                {
+                    comparepoly.Add((com.ums.ws.pas.admin.UPolygon)shape);
+                }
+            }
+
+            FindPolysWithSharedBorderResponse res = pa.doFindPolysWithSharedBorder(li, dept, depts);
+            if (res.successful)
+            {
+                lst_regions.Items.Clear();
+                foreach (com.ums.ws.pas.admin.UDEPARTMENT region in res.deptlist)
+                {
+                    if(region.restrictionShapes[0].f_disabled == 0)
+                        lst_regions.Items.Add(new ListItem(region.sz_deptid, region.l_deptpk.ToString()));
+                }
+                lst_regions.SelectedValue = dept.l_deptpk.ToString();
+            }
+            Session["sregion"] = "true";
+        }
+    }
 
     protected void admin_Checked(object sender, EventArgs e)
     {
         if (rad_administrator.Checked)
         {
+            resetRegions();
             lst_regions.SelectionMode = ListSelectionMode.Multiple;
             selectAllRegions();
             req_regions.Enabled = false;
@@ -415,6 +468,7 @@ public partial class user_admin : System.Web.UI.Page
         }
         else if (rad_national.Checked)
         {
+            resetRegions();
             lst_regions.Enabled = false;
             req_regions.Enabled = true;
             lst_regions.SelectionMode = ListSelectionMode.Multiple;
@@ -422,15 +476,34 @@ public partial class user_admin : System.Web.UI.Page
         }
         else if (rad_regional.Checked)
         {
+            resetRegions();
             deselect();
             lst_regions.Enabled = true;
             req_regions.Enabled = true;
             lst_regions.SelectionMode = ListSelectionMode.Single;
         }
-        else
+        else if (rad_sregional.Checked)
         {
+            resetRegions();
             lst_regions.Enabled = true;
             lst_regions.SelectionMode = ListSelectionMode.Multiple;
         }
+    }
+
+    private void resetRegions()
+    {
+        lst_regions.Items.Clear();
+        com.ums.ws.pas.admin.UDEPARTMENT[] depts = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["regions"];
+        foreach (com.ums.ws.pas.admin.UDEPARTMENT region in depts)
+        {
+            if (region.restrictionShapes[0].f_disabled == 0)
+                lst_regions.Items.Add(new ListItem(region.sz_deptid, region.l_deptpk.ToString()));
+        }
+    }
+
+    protected void reload_regions_click(object sender, EventArgs e)
+    {
+        Session.Remove("sregion");
+        resetRegions();
     }
 }

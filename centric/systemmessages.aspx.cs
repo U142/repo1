@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Collections.Generic;
 
 using com.ums.ws.pas;
+using com.ums.ws.pas.admin;
 
 public partial class systemmessages : System.Web.UI.Page
 {
@@ -26,7 +27,7 @@ public partial class systemmessages : System.Web.UI.Page
         messages = (USYSTEMMESSAGES)Session["messages"];
         if (messages == null)
             messages = new USYSTEMMESSAGES();
-
+        
         if (!IsPostBack)
         {
             //txt_activate.Attributes.Add("readonly","readonly");
@@ -48,6 +49,15 @@ public partial class systemmessages : System.Web.UI.Page
                 lst_messages.SelectedValue = news.l_newspk.ToString();
                 lst_messages_selectedindex(this, new EventArgs());
             }
+
+            PasAdmin padmin = new PasAdmin();
+            GetOperatorsResponse res = padmin.doGetOperators(logon);
+            if (res.successful)
+            {
+                foreach (LBAOPERATOR op in res.oplist)
+                    ddl_operator.Items.Add(new ListItem(op.sz_operatorname, op.l_operator.ToString()));
+            }
+
             Session.Remove("edit");
             Session["messages"] = sysm;
         }
@@ -146,9 +156,14 @@ public partial class systemmessages : System.Web.UI.Page
 
             pasws pws = new pasws();
             news = pws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), news);
+            ddl_operator.SelectedValue = news.l_operator.ToString();
+            news.sz_operatorname = ddl_operator.Items[ddl_operator.SelectedIndex].Text;
 
             Session["edit"] = news;
-
+            int selectedindex = lst_messages.SelectedIndex;
+            lst_messages.Items.RemoveAt(selectedindex);
+            lst_messages.Items.Insert(selectedindex, new ListItem(Util.padForListBox(news), news.l_newspk.ToString()));
+            lst_messages.SelectedIndex = selectedindex;
             ddl_operator.SelectedValue = news.l_operator.ToString();
             ddl_type.SelectedValue = news.l_type.ToString();
             txt_message.Text = news.newstext.sz_news;
@@ -235,7 +250,8 @@ public partial class systemmessages : System.Web.UI.Page
 
                 if (messages.news.l_timestamp_db < messages.news.newslist[i].l_incident_end || messages.news.newslist[i].l_incident_end == 0) //active egentlig f_active
                 {
-                    txt_message.Enabled = true;
+                    txt_message.Attributes.Remove("onFocus");
+                    activate_validate.Enabled = true;
                     ddl_operator.Enabled = true;
                     ddl_type.Enabled = true;
                     ddl_activate_h.Enabled = true;
@@ -248,7 +264,8 @@ public partial class systemmessages : System.Web.UI.Page
                 }
                 else // Only allow changes to deactivate
                 {
-                    txt_message.Enabled = false;
+                    txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    activate_validate.Enabled = false;
                     ddl_operator.Enabled = false;
                     ddl_type.Enabled = false;
                     ddl_activate_h.Enabled = false;

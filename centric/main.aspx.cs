@@ -9,6 +9,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 using System.Globalization;
 using System.Collections.Generic;
@@ -30,19 +31,28 @@ public partial class main : System.Web.UI.Page
         {
             //txt_activate.Attributes.Add("readonly", "readonly");
             //txt_deactivate.Attributes.Add("readonly", "readonly");
-
+            //txt_activate.Text = DateTime.Now.ToString("dd-MM-yyyy");
             pasws pws = new pasws();
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
-            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0);
+            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0, UBBNEWSLIST_FILTER.ACTIVE);
              
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
-                if (sysm.news.newslist[i].l_incident_end > sysm.news.newslist[i].l_timestamp_db || sysm.news.newslist[i].l_incident_end == 0)
+                if (sysm.news.newslist[i].l_incident_end > sysm.news.l_timestamp_db || sysm.news.newslist[i].l_incident_end == 0)
                     lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
                     //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
             }
+
+            PasAdmin padmin = new PasAdmin();
+            GetOperatorsResponse res = padmin.doGetOperators(logon);
+            if (res.successful)
+            {
+                foreach (LBAOPERATOR op in res.oplist)
+                    ddl_operator.Items.Add(new ListItem(op.sz_operatorname, op.l_operator.ToString()));
+            }
+
             Session["messages"] = sysm;
         }
     }
@@ -73,7 +83,7 @@ public partial class main : System.Web.UI.Page
         sysm.news.newslist[sysm.news.newslist.Length-1].l_operator = int.Parse(ddl_operator.SelectedItem.Value);
         sysm.news.newslist[sysm.news.newslist.Length - 1].sz_operatorname = ddl_operator.SelectedItem.Text;
         sysm.news.newslist[sysm.news.newslist.Length - 1].l_type = int.Parse(ddl_type.SelectedItem.Value);
-        sysm.news.newslist[sysm.news.newslist.Length - 1].f_active = 1;
+        sysm.news.newslist[sysm.news.newslist.Length - 1].f_active = 0;
         if(txt_activate.Text.Length>0)
         {
             //IFormatProvider format = new CultureInfo("nb-NO");
@@ -81,7 +91,7 @@ public partial class main : System.Web.UI.Page
             String ting = txt_activate.Text + " " + ddl_activate_h.SelectedValue + ":" + ddl_activate_m.SelectedValue;
             try
             {
-                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text.Substring(6, 4) + txt_activate.Text.Substring(3, 2) + txt_activate.Text.Substring(6, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
+                sysm.news.newslist[sysm.news.newslist.Length - 1].l_incident_start = long.Parse(txt_activate.Text.Substring(6, 4) + txt_activate.Text.Substring(3, 2) + txt_activate.Text.Substring(0, 2) + ddl_activate_h.SelectedValue + ddl_activate_m.SelectedValue + "00");
             }
             catch (Exception ex)
             {
@@ -221,4 +231,5 @@ public partial class main : System.Web.UI.Page
             lst_messages.Items.Remove(lst_messages.SelectedItem);
                 
     }
+  
 }

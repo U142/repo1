@@ -14,7 +14,6 @@ public partial class logon : System.Web.UI.Page
         if (!IsPostBack)
         {
             txt_company.Text = "UMS";
-            txt_user.Text = "MH";
         }
 
 
@@ -61,6 +60,7 @@ public partial class logon : System.Web.UI.Page
         catch (Exception ex)
         {
             // Verifyting
+            lbl_error.Text = ex.Message;
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Web.UI.HtmlControls;
 
 using com.ums.ws.pas;
 using com.ums.ws.parm.admin;
+using com.ums.ws.pas.admin;
 
 public partial class report_authorizationarea : System.Web.UI.Page
 {
@@ -55,48 +56,59 @@ public partial class report_authorizationarea : System.Web.UI.Page
 
         for (int i = 0; i < lst_areas.GetSelectedIndices().Length; ++i)
         {
-            for(int j=0; j< obj.Length;++j) {
-                if (int.Parse(lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Value) == obj[j].l_deptpk)
-                {
-                    HtmlTableRow row = new HtmlTableRow();
-                    Label txt = new Label();
-                    txt.Text = obj[j].sz_deptid;
-                    HtmlTableCell cell = new HtmlTableCell();
-                    cell.Controls.Add(txt);
-                    row.Cells.Add(cell);
-
-                    cell = new HtmlTableCell();
-                    txt = new Label();
-
-                    String lat = "";
-                    String lon = "";
-                    
-                    com.ums.ws.parm.admin.UPolygon poly;
-                    
-                    for (int k = 0; k < obj[j].restrictionShapes.Length; ++k)
+            PasAdmin pasadmin = new PasAdmin();
+            IsShapeActiveInPeriodResponse res = pasadmin.doIsShapeActiveInPeriod((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], int.Parse(lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Value), createTimestamp());
+            if (res.successful)
+            {
+                for(int j=0; j< obj.Length;++j) {
+                
+                    if (int.Parse(lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Value) == obj[j].l_deptpk)
                     {
-                        poly = (com.ums.ws.parm.admin.UPolygon)obj[j].restrictionShapes[k];
+                        bool add = true;
+                        HtmlTableRow row = new HtmlTableRow();
+                        Label txt = new Label();
+                        txt.Text = obj[j].sz_deptid;
+                        HtmlTableCell cell = new HtmlTableCell();
+                        cell.Controls.Add(txt);
+                        row.Cells.Add(cell);
 
-                        for (int l = 0; l < poly.polypoint.Length; ++l)
+                        cell = new HtmlTableCell();
+                        txt = new Label();
+
+                        String lat = "";
+                        String lon = "";
+
+                        com.ums.ws.parm.admin.UPolygon poly;
+
+                        for (int k = 0; k < obj[j].restrictionShapes.Length; ++k)
                         {
-                            lat += poly.polypoint[l].lat;
-                            if (l + 1 < poly.polypoint.Length)
-                                lat += "|";
-                            lon += poly.polypoint[l].lon;
-                            if (l + 1 < poly.polypoint.Length)
-                                lon += "|";
+                            poly = (com.ums.ws.parm.admin.UPolygon)obj[j].restrictionShapes[k];
+
+                            if (poly.f_disabled == 1 && poly.l_disabled_timestamp < createTimestamp() + 100000000)
+                                add = false;
+
+                            for (int l = 0; l < poly.polypoint.Length; ++l)
+                            {
+                                lat += poly.polypoint[l].lat;
+                                if (l + 1 < poly.polypoint.Length)
+                                    lat += "|";
+                                lon += poly.polypoint[l].lon;
+                                if (l + 1 < poly.polypoint.Length)
+                                    lon += "|";
+                            }
                         }
+
+                        txt.Text = "<applet name='MapImageDownload" + obj[j].l_deptpk + "' id='MapImageDownload" + obj[j].l_deptpk + "' width='80' height='30'> " +
+                                        "<param name=lat value='" + lat + "' >" +
+                                        "<param name=lon value='" + lon + "' >" +
+                                        "<param name=jnlp_href value='javaapp/report_authorization_area.jnlp'>" +
+                                   "</applet>";
+                        cell.Controls.Add(txt);
+                        row.Cells.Add(cell);
+                        if (add)
+                            tbl_output.Rows.Add(row);
+
                     }
-
-                    txt.Text = "<applet name='MapImageDownload" + obj[j].l_deptpk + "' id='MapImageDownload" + obj[j].l_deptpk + "' width='80' height='30'> " +
-                                    "<param name=lat value='" + lat + "' >" +
-                                    "<param name=lon value='" + lon + "' >" +
-                                    "<param name=jnlp_href value='javaapp/report_authorization_area.jnlp'>" +
-                               "</applet>";
-                    cell.Controls.Add(txt);
-                    row.Cells.Add(cell);
-                    tbl_output.Rows.Add(row);
-
                 }
             }
         }
@@ -126,5 +138,12 @@ public partial class report_authorizationarea : System.Web.UI.Page
             list.Value = i.ToString();
             ddl_year.Items.Add(list);
         }
+    }
+    
+    private long createTimestamp()
+    {
+        String timestamp = "";
+        timestamp = ddl_year.SelectedValue + ddl_month.SelectedValue;
+        return long.Parse(timestamp.PadRight(14, '0'));
     }
 }

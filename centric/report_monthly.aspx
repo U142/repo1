@@ -47,7 +47,7 @@
             <asp:TableCell><asp:Button ID="btn_messages_total" runat="server" Text="Export to CSV" OnClick="btn_messages_total_month_Click" Visible="false"/></asp:TableCell>
     </asp:TableHeaderRow>
 </asp:Table>
-<table id="tbl_total_messages" runat="server" border="1"></table>
+<table id="tbl_total_messages" runat="server" border="1" width="700px"></table>
 
 <asp:Table ID="table1" runat="server">
     <asp:TableHeaderRow>
@@ -55,7 +55,7 @@
             <asp:TableCell><asp:Button ID="btn_messages_month" runat="server" Text="Export to CSV" OnClick="btn_messages_month_Click" /></asp:TableCell>
     </asp:TableHeaderRow>
 </asp:Table>
-<table id="tbl_output" runat="server" border="1"></table>
+<table id="tbl_output" runat="server" border="1" width="700px"></table>
 
 <asp:Table ID="table2" runat="server">
     <asp:TableHeaderRow>
@@ -63,7 +63,7 @@
             <asp:TableCell><asp:Button ID="btn_performance_month" runat="server" Text="Export to CSV" OnClick="btn_performance_month_Click" /></asp:TableCell>
     </asp:TableHeaderRow>
 </asp:Table>
-<table id="tbl_operatorperformance" runat="server" border="1"></table>
+<table id="tbl_operatorperformance" runat="server" border="1" width="700px"></table>
 
 <asp:Table ID="table3" runat="server">
     <asp:TableHeaderRow>
@@ -71,7 +71,7 @@
             <asp:TableCell><asp:Button ID="btn_sysmessages_month" runat="server" Text="Export to CSV" OnClick="btn_sysmessages_month_Click" /></asp:TableCell>
     </asp:TableHeaderRow>
 </asp:Table>
-<table id="tbl_sysmessages" runat="server" border="1"></table>
+<table id="tbl_sysmessages" runat="server" border="1" width="700px"></table>
 
 </div>
 </asp:Content>

@@ -7,6 +7,15 @@
             <asp:TableHeaderCell HorizontalAlign="Left">User Activities</asp:TableHeaderCell>
         </asp:TableHeaderRow>
         <asp:TableRow>
+            <asp:TableCell VerticalAlign="Top">Users:</asp:TableCell>
+            <asp:TableCell>
+                <asp:ListBox ID="lst_users" runat="server" SelectionMode="Multiple"></asp:ListBox>
+            </asp:TableCell>
+            <asp:TableCell VerticalAlign="Top">
+                <asp:Button ID="btn_deselect" runat="server" Text="Deselect" OnClick="btn_deselect_click"/>
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
             <asp:TableCell>Month:</asp:TableCell>
             <asp:TableCell>
                 <asp:DropDownList ID="ddl_month" runat="server">
@@ -32,8 +41,16 @@
                 </asp:DropDownList>
             </asp:TableCell>
         </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell ColumnSpan="2">
+                <asp:Button ID="btn_show" runat="server" Text="Show" OnClick="btn_show_click"/></asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell ColumnSpan="2">
+                <asp:Button ID="btn_export" runat="server" Text="Export to CSV" OnClick="btn_export_click" Visible="false" /></asp:TableCell>
+        </asp:TableRow>
     </asp:Table>
-    <table id="tbl_output" runat="server">
+    <table id="tbl_output" runat="server" border="1">
     </table>
     </div>
 </asp:Content>

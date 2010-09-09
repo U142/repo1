@@ -2,42 +2,6 @@
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/pas/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/pas/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/pas/">
-      <s:element name="_no_use">
-        <s:complexType />
-      </s:element>
-      <s:element name="_no_useResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="_no_useResult" type="tns:imports" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="imports">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="l1" type="tns:LBALanguage" />
-          <s:element minOccurs="0" maxOccurs="1" name="l2" type="tns:LBACCode" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="LBALanguage">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="l_textpk" type="s:long" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_cb_oadc" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_otoa" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="m_ccodes" type="tns:ArrayOfLBACCode" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfLBACCode">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="LBACCode" nillable="true" type="tns:LBACCode" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="LBACCode">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="ccode" type="s:string" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="PasLogon">
         <s:complexType>
           <s:sequence>
@@ -83,6 +47,8 @@
           <s:element minOccurs="0" maxOccurs="1" name="departments" type="tns:ArrayOfUDEPARTMENT" />
           <s:element minOccurs="0" maxOccurs="1" name="uisettings" type="tns:UPASUISETTINGS" />
           <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="reason" type="tns:BBUSER_BLOCK_REASONS" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_organization" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="ArrayOfUNSLOOKUP">
@@ -129,9 +95,6 @@
           <s:element minOccurs="1" maxOccurs="1" name="f_map" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="l_pas" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="municipals" type="tns:ArrayOfUMunicipalDef" />
-          <s:element minOccurs="0" maxOccurs="1" name="typedef1" type="tns:UPolygon" />
-          <s:element minOccurs="0" maxOccurs="1" name="typedef2" type="tns:UEllipse" />
-          <s:element minOccurs="0" maxOccurs="1" name="typedef3" type="tns:UBoundingRect" />
           <s:element minOccurs="0" maxOccurs="1" name="restrictionShapes" type="tns:ArrayOfUShape" />
         </s:sequence>
       </s:complexType>
@@ -146,24 +109,18 @@
           <s:element minOccurs="0" maxOccurs="1" name="sz_municipalname" type="s:string" />
         </s:sequence>
       </s:complexType>
-      <s:complexType name="UPolygon">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:UShape">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="tns:UPolypoint" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
+      <s:complexType name="ArrayOfUShape">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="tns:UShape" />
+        </s:sequence>
       </s:complexType>
       <s:complexType name="UShape" abstract="true">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="f_disabled" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
-        </s:sequence>
         <s:attribute name="col_red" type="s:float" use="required" />
         <s:attribute name="col_green" type="s:float" use="required" />
         <s:attribute name="col_blue" type="s:float" use="required" />
         <s:attribute name="col_alpha" type="s:float" use="required" />
+        <s:attribute name="f_disabled" type="s:int" use="required" />
+        <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
       </s:complexType>
       <s:complexType name="UBoundingRect">
         <s:complexContent mixed="false">
@@ -189,14 +146,23 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:complexType name="UPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="tns:UPolypoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
       <s:complexType name="UPolypoint">
         <s:attribute name="lon" type="s:double" use="required" />
         <s:attribute name="lat" type="s:double" use="required" />
       </s:complexType>
-      <s:complexType name="ArrayOfUShape">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="tns:UShape" />
-        </s:sequence>
+      <s:complexType name="UPLMN">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape" />
+        </s:complexContent>
       </s:complexType>
       <s:complexType name="UPASUISETTINGS">
         <s:sequence>
@@ -234,6 +200,13 @@
           <s:element minOccurs="1" maxOccurs="1" name="l_lba_update_percent" type="s:int" />
         </s:sequence>
       </s:complexType>
+      <s:simpleType name="BBUSER_BLOCK_REASONS">
+        <s:restriction base="s:string">
+          <s:enumeration value="NONE" />
+          <s:enumeration value="REACHED_RETRY_LIMIT" />
+          <s:enumeration value="BLOCKED_BY_ADMIN" />
+        </s:restriction>
+      </s:simpleType>
       <s:element name="PasLogoff">
         <s:complexType>
           <s:sequence>
@@ -385,10 +358,15 @@
       <s:element name="PowerupResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="PowerupResult" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="PowerupResult" type="tns:UPOWERUP_RESPONSE" />
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:complexType name="UPOWERUP_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_max_logontries" type="s:int" />
+        </s:sequence>
+      </s:complexType>
       <s:element name="GetMap">
         <s:complexType>
           <s:sequence>
@@ -1137,119 +1115,6 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="UBBMESSAGE" nillable="true" type="tns:UBBMESSAGE" />
         </s:sequence>
       </s:complexType>
-      <s:element name="DeleteLBAMessage">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
-            <s:element minOccurs="0" maxOccurs="1" name="message" type="tns:ULBAMESSAGE" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ULBAMESSAGE">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="n_messagepk" type="s:long" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_deptpk" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_langpk" type="s:long" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_parentpk" type="s:long" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_depth" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_timestamp" type="s:long" />
-          <s:element minOccurs="0" maxOccurs="1" name="sz_message" type="s:string" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="DeleteLBAMessageResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DeleteLBAMessageResult" type="tns:ULBAMESSAGE" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLBAMessageLibrary">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
-            <s:element minOccurs="0" maxOccurs="1" name="filter" type="tns:UBBMESSAGELISTFILTER" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLBAMessageLibraryResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLBAMessageLibraryResult" type="tns:ULBAMESSAGELIST" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ULBAMESSAGELIST">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfULBAMESSAGE" />
-          <s:element minOccurs="0" maxOccurs="1" name="deleted" type="tns:ArrayOfULBAMESSAGE" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_servertimestamp" type="s:long" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfULBAMESSAGE">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBAMESSAGE" nillable="true" type="tns:ULBAMESSAGE" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="InsertLBAMessage">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
-            <s:element minOccurs="0" maxOccurs="1" name="message" type="tns:ULBAMESSAGE" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="InsertLBAMessageResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="InsertLBAMessageResult" type="tns:ULBAMESSAGE" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="InsertLBADuration">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
-            <s:element minOccurs="0" maxOccurs="1" name="duration" type="tns:ULBADURATION" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ULBADURATION">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="n_durationpk" type="s:long" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_duration" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_interval" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_repetition" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="n_deptpk" type="s:int" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="InsertLBADurationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="InsertLBADurationResult" type="tns:ULBADURATION" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLBADuration">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLBADurationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLBADurationResult" type="tns:ArrayOfULBADURATION" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfULBADURATION">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBADURATION" nillable="true" type="tns:ULBADURATION" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="GetCBParameters">
         <s:complexType>
           <s:sequence>
@@ -1295,14 +1160,33 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="getRestrictionShapes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:PASHAPETYPES" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="PASHAPETYPES">
+        <s:restriction base="s:string">
+          <s:enumeration value="PAALERT" />
+          <s:enumeration value="PAEVENT" />
+          <s:enumeration value="PAOBJECT" />
+          <s:enumeration value="PAUSERRESTRICTION" />
+          <s:enumeration value="PADEPARTMENTRESTRICTION" />
+          <s:enumeration value="PASENDING" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="getRestrictionShapesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getRestrictionShapesResult" type="tns:ArrayOfUDEPARTMENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
-  <wsdl:message name="_no_useSoapIn">
-    <wsdl:part name="parameters" element="tns:_no_use" />
-  </wsdl:message>
-  <wsdl:message name="_no_useSoapOut">
-    <wsdl:part name="parameters" element="tns:_no_useResponse" />
-  </wsdl:message>
   <wsdl:message name="PasLogonSoapIn">
     <wsdl:part name="parameters" element="tns:PasLogon" />
   </wsdl:message>
@@ -1489,36 +1373,6 @@
   <wsdl:message name="GetMessageLibrarySoapOut">
     <wsdl:part name="parameters" element="tns:GetMessageLibraryResponse" />
   </wsdl:message>
-  <wsdl:message name="DeleteLBAMessageSoapIn">
-    <wsdl:part name="parameters" element="tns:DeleteLBAMessage" />
-  </wsdl:message>
-  <wsdl:message name="DeleteLBAMessageSoapOut">
-    <wsdl:part name="parameters" element="tns:DeleteLBAMessageResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetLBAMessageLibrarySoapIn">
-    <wsdl:part name="parameters" element="tns:GetLBAMessageLibrary" />
-  </wsdl:message>
-  <wsdl:message name="GetLBAMessageLibrarySoapOut">
-    <wsdl:part name="parameters" element="tns:GetLBAMessageLibraryResponse" />
-  </wsdl:message>
-  <wsdl:message name="InsertLBAMessageSoapIn">
-    <wsdl:part name="parameters" element="tns:InsertLBAMessage" />
-  </wsdl:message>
-  <wsdl:message name="InsertLBAMessageSoapOut">
-    <wsdl:part name="parameters" element="tns:InsertLBAMessageResponse" />
-  </wsdl:message>
-  <wsdl:message name="InsertLBADurationSoapIn">
-    <wsdl:part name="parameters" element="tns:InsertLBADuration" />
-  </wsdl:message>
-  <wsdl:message name="InsertLBADurationSoapOut">
-    <wsdl:part name="parameters" element="tns:InsertLBADurationResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetLBADurationSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLBADuration" />
-  </wsdl:message>
-  <wsdl:message name="GetLBADurationSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLBADurationResponse" />
-  </wsdl:message>
   <wsdl:message name="GetCBParametersSoapIn">
     <wsdl:part name="parameters" element="tns:GetCBParameters" />
   </wsdl:message>
@@ -1531,11 +1385,13 @@
   <wsdl:message name="updateCBParametersSoapOut">
     <wsdl:part name="parameters" element="tns:updateCBParametersResponse" />
   </wsdl:message>
+  <wsdl:message name="getRestrictionShapesSoapIn">
+    <wsdl:part name="parameters" element="tns:getRestrictionShapes" />
+  </wsdl:message>
+  <wsdl:message name="getRestrictionShapesSoapOut">
+    <wsdl:part name="parameters" element="tns:getRestrictionShapesResponse" />
+  </wsdl:message>
   <wsdl:portType name="paswsSoap">
-    <wsdl:operation name="_no_use">
-      <wsdl:input message="tns:_no_useSoapIn" />
-      <wsdl:output message="tns:_no_useSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="PasLogon">
       <wsdl:input message="tns:PasLogonSoapIn" />
       <wsdl:output message="tns:PasLogonSoapOut" />
@@ -1660,26 +1516,6 @@
       <wsdl:input message="tns:GetMessageLibrarySoapIn" />
       <wsdl:output message="tns:GetMessageLibrarySoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="DeleteLBAMessage">
-      <wsdl:input message="tns:DeleteLBAMessageSoapIn" />
-      <wsdl:output message="tns:DeleteLBAMessageSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLBAMessageLibrary">
-      <wsdl:input message="tns:GetLBAMessageLibrarySoapIn" />
-      <wsdl:output message="tns:GetLBAMessageLibrarySoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBAMessage">
-      <wsdl:input message="tns:InsertLBAMessageSoapIn" />
-      <wsdl:output message="tns:InsertLBAMessageSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBADuration">
-      <wsdl:input message="tns:InsertLBADurationSoapIn" />
-      <wsdl:output message="tns:InsertLBADurationSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLBADuration">
-      <wsdl:input message="tns:GetLBADurationSoapIn" />
-      <wsdl:output message="tns:GetLBADurationSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetCBParameters">
       <wsdl:input message="tns:GetCBParametersSoapIn" />
       <wsdl:output message="tns:GetCBParametersSoapOut" />
@@ -1688,18 +1524,13 @@
       <wsdl:input message="tns:updateCBParametersSoapIn" />
       <wsdl:output message="tns:updateCBParametersSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="getRestrictionShapes">
+      <wsdl:input message="tns:getRestrictionShapesSoapIn" />
+      <wsdl:output message="tns:getRestrictionShapesSoapOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="paswsSoap" type="tns:paswsSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="_no_use">
-      <soap:operation soapAction="http://ums.no/ws/pas/_no_use" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="PasLogon">
       <soap:operation soapAction="http://ums.no/ws/pas/PasLogon" style="document" />
       <wsdl:input>
@@ -1979,51 +1810,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="DeleteLBAMessage">
-      <soap:operation soapAction="http://ums.no/ws/pas/DeleteLBAMessage" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLBAMessageLibrary">
-      <soap:operation soapAction="http://ums.no/ws/pas/GetLBAMessageLibrary" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBAMessage">
-      <soap:operation soapAction="http://ums.no/ws/pas/InsertLBAMessage" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBADuration">
-      <soap:operation soapAction="http://ums.no/ws/pas/InsertLBADuration" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLBADuration">
-      <soap:operation soapAction="http://ums.no/ws/pas/GetLBADuration" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetCBParameters">
       <soap:operation soapAction="http://ums.no/ws/pas/GetCBParameters" style="document" />
       <wsdl:input>
@@ -2042,18 +1828,18 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getRestrictionShapes">
+      <soap:operation soapAction="http://ums.no/ws/pas/getRestrictionShapes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="paswsSoap12" type="tns:paswsSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="_no_use">
-      <soap12:operation soapAction="http://ums.no/ws/pas/_no_use" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="PasLogon">
       <soap12:operation soapAction="http://ums.no/ws/pas/PasLogon" style="document" />
       <wsdl:input>
@@ -2333,51 +2119,6 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="DeleteLBAMessage">
-      <soap12:operation soapAction="http://ums.no/ws/pas/DeleteLBAMessage" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLBAMessageLibrary">
-      <soap12:operation soapAction="http://ums.no/ws/pas/GetLBAMessageLibrary" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBAMessage">
-      <soap12:operation soapAction="http://ums.no/ws/pas/InsertLBAMessage" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="InsertLBADuration">
-      <soap12:operation soapAction="http://ums.no/ws/pas/InsertLBADuration" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLBADuration">
-      <soap12:operation soapAction="http://ums.no/ws/pas/GetLBADuration" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetCBParameters">
       <soap12:operation soapAction="http://ums.no/ws/pas/GetCBParameters" style="document" />
       <wsdl:input>
@@ -2389,6 +2130,15 @@
     </wsdl:operation>
     <wsdl:operation name="updateCBParameters">
       <soap12:operation soapAction="http://ums.no/ws/pas/updateCBParameters" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRestrictionShapes">
+      <soap12:operation soapAction="http://ums.no/ws/pas/getRestrictionShapes" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

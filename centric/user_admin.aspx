@@ -1,6 +1,14 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="user_admin.aspx.cs" Inherits="user_admin" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
+    <script type="text/javascript">
+        function passwordValidator(oSrc, args) {
+            if (document.getElementById("ctl00_body_selected").value.length == 0) {
+                args.isValid = false;
+            }
+        }
+ 
+    </script>
     <asp:Table ID="Table1" runat="server">
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label runat="server" ID="lbl_overview" Text="Overview Users"></asp:Label></asp:TableHeaderCell>
@@ -15,7 +23,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_Click"/>
+                <asp:Button ID="btn_create" runat="server" Text="Create" OnClick="btn_create_Click" CausesValidation="false" />
             </asp:TableCell>
             <asp:TableCell>
                 &nbsp;
@@ -29,7 +37,7 @@
         </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="Label1" runat="server" Text="User"></asp:Label>
+                <asp:Label ID="Label1" runat="server" Text="Username"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:TextBox ID="txt_username" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="validate_username" ControlToValidate="txt_username" Text="*" ErrorMessage="User is required"></asp:RequiredFieldValidator>
@@ -41,7 +49,7 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="Label3" runat="server" Text="User name"></asp:Label>
+                <asp:Label ID="Label3" runat="server" Text="Full name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
                 <asp:TextBox ID="txt_firstname" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="RequiredFieldValidator1" ControlToValidate="txt_firstname" Text="*" ErrorMessage="Username is required"></asp:RequiredFieldValidator>
@@ -61,7 +69,7 @@
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" value="2" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
+                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" value="2" OnCheckedChanged="admin_Checked" AutoPostBack="True" Checked="true" />
                 <asp:Label ID="Label5" runat="server" Text="Regional"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
@@ -89,7 +97,10 @@
         <asp:TableRow>
         <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:ListBox ID="lst_regions" runat="server" SelectionMode="Multiple"></asp:ListBox><asp:RequiredFieldValidator runat="server" id="req_regions" ControlToValidate="lst_regions" Text="*" ErrorMessage="Region must be selected"></asp:RequiredFieldValidator>
+                <asp:ListBox ID="lst_regions" runat="server" SelectionMode="Multiple" OnSelectedIndexChanged="region_select" AutoPostBack="True"></asp:ListBox><asp:RequiredFieldValidator runat="server" id="req_regions" ControlToValidate="lst_regions" Text="*" ErrorMessage="Region must be selected"></asp:RequiredFieldValidator>
+            </asp:TableCell>
+            <asp:TableCell HorizontalAlign="Right">
+                <asp:Button ID="btn_reload_regions" runat="server" Text="Reload regions" onclick="reload_regions_click" CausesValidation="false"/>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -97,7 +108,8 @@
                 <asp:Label ID="Label4" runat="server" Text="Password"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_password" runat="server" TextMode="Password"></asp:TextBox>
+                <asp:TextBox ID="txt_password" runat="server" TextMode="Password" style="width:150px"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_password" Text="*" ErrorMessage="Password is required"></asp:RequiredFieldValidator>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
@@ -110,5 +122,5 @@
         </asp:TableRow>
     </asp:Table>
     <asp:Label runat="server" ID="lbl_feedback" Text=""></asp:Label>
-    <asp:TextBox runat="server" ID="selected" Text="" Visible="false"/>
+    <asp:TextBox runat="server" ID="selected" Text="" style="visibility:hidden" onchange="alert('Value');" />
 </asp:Content>

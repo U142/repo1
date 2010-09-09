@@ -53,11 +53,11 @@ public partial class parameters : System.Web.UI.Page
         param.l_repetition = int.Parse(txt_repetitions.Text);
 
         pasws pws = new pasws();
-        ULOGONINFO logon = (ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (logon == null)
             Server.Transfer("logon.aspx");
         param.l_deptpk = logon.l_deptpk;
         param.l_comppk = logon.l_comppk;
-        pws.updateCBParameters(logon, param);
+        pws.updateCBParameters(Util.convertLogonInfoPas(logon), param);
     }
 }

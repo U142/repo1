@@ -196,6 +196,7 @@ public partial class report_monthly : System.Web.UI.Page
             row.Cells.Add(cell);
             
             cell = new HtmlTableCell();
+            cell.Attributes.Add("style", "WORD-BREAK:BREAK-ALL;");
             txt = new Label();
             txt.Text = res[i].sz_text;
             cell.Controls.Add(txt);
@@ -204,7 +205,7 @@ public partial class report_monthly : System.Web.UI.Page
 
             cell = new HtmlTableCell();
             txt = new Label();
-            txt.Text = "N/A";
+            txt.Text = res[i].sz_userid;
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             tbl_output.Rows.Add(row);
@@ -330,6 +331,7 @@ public partial class report_monthly : System.Web.UI.Page
             Label txt = new Label();
             txt.Text = news[i].newstext.sz_news;
             HtmlTableCell cell = new HtmlTableCell();
+            cell.Attributes.Add("style", "WORD-BREAK:BREAK-ALL;");
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             

@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using com.ums.ws.pas;
 
@@ -50,7 +51,7 @@ public partial class predefine_text : System.Web.UI.Page
 
            
             
-            ULBAMESSAGELIST list = pws.GetLBAMessageLibrary(Util.convertLogonInfoPas(l), f);
+            UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
             //List<PredefinedText> pdt = db.getPredefinedText();
 
             for (int i = 0; i < list.list.Length; ++i)
@@ -65,79 +66,137 @@ public partial class predefine_text : System.Web.UI.Page
 
                 ht.Add(list.list[i].n_messagepk, list.list[i]);
             }
-
-            
-
-            foreach (TreeNode node in TreeView1.Nodes)
-            {
-
-                //new TreeNode = new TreeNode("test" + i++);
-            }
         }
+    }
+    
+    private char[] validateMessage(String text)
+    {
+        Regex re = Util.GSM_Alphabet_Regex;
+        MatchCollection mc = re.Matches(text);
+        char[] ret = new char[mc.Count];
+        for(int i=0;i<mc.Count;++i)
+            ret[i] = text.Substring(mc[i].Index,1).ToCharArray()[0];
+        return ret;
     }
 
     protected void btn_save_Click(object sender, EventArgs e)
     {
-        string parent;
-        
-
-        parent = txt_id.Text;
-
-        if (!parent.Equals("-1") && parent.Length > 0)
+        string parent = "";
+        lbl_error.Text = "";
+        UBBMESSAGE pdt = null;
+        char[] invalid = validateMessage(txt_message.Text);
+        if (invalid.Length > 0)
         {
-            int result;
-
-            if (!Int32.TryParse(parent, out result))
-                result = -1;
-
-            parent = result.ToString();
+            lbl_error.Text = "Invalid characters(comma separated): ";
+            for (int i = 0; i < invalid.Length; ++i)
+            {
+                lbl_error.Text += invalid[i].ToString() + ", ";
+            }
         }
-        else if (parent.Length == 0)
-            parent = "-1";
-
-        ULBAMESSAGE pdt = new ULBAMESSAGE();
-        pdt.sz_name = txt_name.Text; 
-        pdt.sz_message = txt_message.Text;
-        
-        //PredefinedText pdt = new PredefinedText(txt_message.Text, ht.Count, txt_name.Text, int.Parse(parent));
-
-        TreeNode tn = getNode(TreeView1.Nodes, parent);
-
-        if (pws == null)
-            pws = new pasws();
-        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-
-        long id = (long)pdt.n_messagepk;
-        if (id == 0)
-            id = -1;
-        pdt.n_messagepk = id;
-        pdt.n_deptpk = l.l_deptpk;
-        pdt.n_parentpk = long.Parse(parent);
-            pdt = pws.InsertLBAMessage(Util.convertLogonInfoPas(l), pdt);
-
-
-            id = (int)pdt.n_messagepk;
-        //int id = db.addPredefinedText(pdt);
-
-        if (tn != null && txt_parent.Text.Equals("true"))
+        else
         {
-            tn.ChildNodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
-            tn.Expand();
-            ht.Add(id, pdt);
-            txt_parent.Text = "";
-            txt_name.Text = "";
-            txt_message.Text = "";
-        }
-        else if (tn != null) //update
-        {
-            ((ULBAMESSAGE)ht[parent]).sz_message = txt_message.Text;
-            ((ULBAMESSAGE)ht[parent]).sz_name = txt_name.Text;
-            TreeView1.Nodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
-            ht.Add(id, pdt);
-            tn.Text = txt_name.Text;
-            txt_parent.Text = "";
-            txt_name.Text = "";
-            txt_message.Text = "";
+            try
+            {
+                ht = (Hashtable)Session["ht"];
+
+                if (txt_parent.Text.Equals("true"))
+                    parent = txt_id.Text;
+                else
+                {
+                    pdt = (UBBMESSAGE)ht[long.Parse(txt_id.Text)];
+                }
+
+                if (!parent.Equals("-1") && parent.Length > 0)
+                {
+                    int result;
+
+                    if (!Int32.TryParse(parent, out result))
+                        result = -1;
+
+                    parent = result.ToString();
+                }
+                else if (parent.Length == 0)
+                    parent = "-1";
+
+                if (pdt == null)
+                    pdt = new UBBMESSAGE();
+
+                pdt.sz_name = txt_name.Text;
+                UCCMessage message = new UCCMessage();
+                message.l_cc = -1;
+                pdt.f_template = 1;
+                message.sz_message = txt_message.Text;
+                pdt.ccmessage = new UCCMessage[] { message };
+
+                //PredefinedText pdt = new PredefinedText(txt_message.Text, ht.Count, txt_name.Text, int.Parse(parent));
+
+
+
+                if (pws == null)
+                    pws = new pasws();
+                com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+
+                long id = (long)pdt.n_messagepk;
+                if (id == 0)
+                    id = -1;
+                pdt.n_messagepk = id;
+                pdt.n_deptpk = -1;
+                if (pdt.n_parentpk == 0)
+                    pdt.n_parentpk = long.Parse(parent);
+                pdt = pws.InsertMessageLibrary(Util.convertLogonInfoPas(l), pdt);
+
+
+                id = (int)pdt.n_messagepk;
+                //int id = db.addPredefinedText(pdt);
+
+                TreeNode tn = getNode(TreeView1.Nodes, pdt.n_parentpk.ToString());
+
+                if (tn == null)
+                    tn = getNode(TreeView1.Nodes, pdt.n_messagepk.ToString());
+
+                if (tn != null && txt_parent.Text.Equals("true"))
+                {
+                    tn.ChildNodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
+                    tn.Expand();
+                    ht.Add(id, pdt);
+                    txt_parent.Text = "";
+                    txt_name.Text = "";
+                    txt_message.Text = "";
+                    txt_name.Enabled = false;
+                    //txt_message.Enabled = false;
+                    txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    btn_save.Enabled = false;
+                }
+                else if (tn == null) // Root
+                {
+                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
+                    ht.Add(id, pdt);
+                    txt_parent.Text = "";
+                    txt_name.Text = "";
+                    txt_message.Text = "";
+                    txt_name.Enabled = false;
+                    //txt_message.Enabled = false;
+                    txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    btn_save.Enabled = false;
+                }
+                else if (tn != null) //update
+                {
+                    ht.Remove(pdt.n_messagepk);
+                    ht.Add(pdt.n_messagepk, pdt);
+                    TreeNode tmptn = getNode(TreeView1.Nodes, pdt.n_messagepk.ToString());
+                    tmptn.Text = addJavaScript(pdt.sz_name, id);
+                    //TreeView1.Nodes.Add(new TreeNode(addJavaScript(txt_name.Text, id), id.ToString()));
+                    txt_parent.Text = "";
+                    //txt_message.Enabled = false;
+                    txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    txt_name.Enabled = false;
+                    btn_save.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                lbl_error.Text = ex.Message;
+            }
         }
        
     }
@@ -169,9 +228,9 @@ public partial class predefine_text : System.Web.UI.Page
                 if (pws == null)
                     pws = new pasws();
                 com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-                ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(id)];
+                UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(id)];
 
-                ULBAMESSAGE ret = pws.DeleteLBAMessage(Util.convertLogonInfoPas(l), pdt);
+                UBBMESSAGE ret = pws.DeleteMessageLibrary(Util.convertLogonInfoPas(l), pdt);
                 if (ret != null)
                 {
                     nodes.Remove(nodes[i]);
@@ -186,35 +245,72 @@ public partial class predefine_text : System.Web.UI.Page
 
     protected void TreeView1_changed(object sender, EventArgs e)
     {
-        ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(TreeView1.SelectedNode.Value)];
-        txt_message.Text = pdt.sz_message;
+        UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(TreeView1.SelectedNode.Value)];
+        txt_message.Text = pdt.ccmessage[0].sz_message;
         txt_name.Text = pdt.sz_name;
-        txt_message.Enabled = false;
+        //txt_message.Enabled = false;
+        txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
         txt_name.Enabled = false;
+        btn_save.Enabled = false;
+        lbl_error.Text = "";
     }
 
     protected void delete_click(object sender, EventArgs e)
     {
-       deleteNode(TreeView1.Nodes, txt_id.Text);
+        if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+        {
+            deleteNode(TreeView1.Nodes, txt_id.Text);
+            txt_message.Enabled = false;
+            txt_name.Enabled = false;
+            txt_parent.Text = "";
+            txt_id.Text = "";
+            txt_message.Text = "";
+            txt_name.Text = "";
+            lbl_error.Text = "";
+        }
+        else
+        {
+            txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+            txt_name.Enabled = false;
+            btn_save.Enabled = false;
+            lbl_error.Text = "Node must be selected";
+        }
     }
 
     protected void new_click(object sender, EventArgs e)
     {
         txt_name.Text = "";
         txt_message.Text = "";
-        txt_message.Enabled = true;
+        txt_message.Attributes.Remove("onFocus");
+        //txt_message.Enabled = true;
         txt_name.Enabled = true;
+        btn_save.Enabled = true;
         txt_name.Focus();
+        lbl_error.Text = "";
+        txt_message.Attributes.Remove("onFocus");
     }
 
     protected void edit_click(object sender, EventArgs e)
     {
-        txt_parent.Text = "false";
-        ULBAMESSAGE pdt = (ULBAMESSAGE)ht[long.Parse(txt_id.Text)];
-        txt_name.Text = pdt.sz_name;
-        txt_message.Text = pdt.sz_message;
-        txt_message.Enabled = true;
-        txt_name.Enabled = true;
+        if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+        {
+            txt_parent.Text = "false";
+            UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(txt_id.Text)];
+            txt_name.Text = pdt.sz_name;
+            txt_message.Text = pdt.ccmessage[0].sz_message;
+            //txt_message.Enabled = true;
+            txt_message.Attributes.Remove("onFocus");
+            txt_name.Enabled = true;
+            btn_save.Enabled = true;
+            lbl_error.Text = "";
+        }
+        else
+        {
+            txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+            txt_name.Enabled = false;
+            btn_save.Enabled = false;
+            lbl_error.Text = "Node must be selected";
+        }
     }
 
     private string addJavaScript(string name, long id)
@@ -229,5 +325,6 @@ public partial class predefine_text : System.Web.UI.Page
         tmp = name.Substring(name.IndexOf("oncontextmenu='return showmenuie5(event)' >"));
         return tmp;
     }
+    
 }
 

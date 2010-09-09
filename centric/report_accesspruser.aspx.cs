@@ -15,7 +15,7 @@ public partial class report_accesspruser : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         pasws pasws = new pasws();
-         com.ums.ws.pas.admin.ULOGONINFO l = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
@@ -36,7 +36,7 @@ public partial class report_accesspruser : System.Web.UI.Page
 
     protected void btn_showClick(object sender, EventArgs e)
     {
-         com.ums.ws.pas.admin.ULOGONINFO l = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         com.ums.ws.parm.admin.ULOGONINFO logoninfo = Util.convertLogonInfoParmAdmin(l);
 
         ParmAdmin pa = new ParmAdmin();
