@@ -690,6 +690,12 @@ namespace com.ums.UmsCommon
 
     }
 
+    public enum UBBNEWSLIST_FILTER
+    {
+        ACTIVE = 1,
+        IN_BETWEEN_START_END = 2,
+
+    }
     public class UBBNEWSLIST
     {
         public long l_timestamp_db;

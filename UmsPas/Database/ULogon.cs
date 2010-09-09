@@ -311,7 +311,7 @@ namespace com.ums.PAS.Database
                 cmdLogon.Parameters.Add("@sz_userid", OdbcType.VarChar, 50).Value = l.sz_userid;
                 cmdLogon.Parameters.Add("@sz_paspassword", OdbcType.Char, 128).Value = l.sz_password;
                 cmdLogon.Parameters.Add("@sz_compid", OdbcType.VarChar, 50).Value = l.sz_compid;
-                cmdLogon.Parameters.Add("@l_max_tries", OdbcType.Int).Value = UCommon.USETTINGS.l_max_logontries;
+                cmdLogon.Parameters.Add("@l_max_tries", OdbcType.Int).Value = 0;//0 will get max from db. UCommon.USETTINGS.l_max_logontries;
                 OdbcDataReader rs = cmdLogon.ExecuteReader();
 
                 if (!rs.HasRows)  //logon failed

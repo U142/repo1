@@ -51,10 +51,10 @@ namespace com.ums.PAS.messagelib
                     return msg;
                 }
                 UFile filetxt = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
-                if(File.Exists(filetxt.full()))
+                if (File.Exists(filetxt.full()))
                     File.Delete(filetxt.full());
                 UFile filewav = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".wav");
-                if(File.Exists(filewav.full()))
+                if (File.Exists(filewav.full()))
                     File.Delete(filewav.full());
                 return msg;
             }
@@ -77,8 +77,8 @@ namespace com.ums.PAS.messagelib
                                     comppk,
                                     msg.n_deptpk,
                                     (int)Enum.Parse(typeof(UBBMODULEDEF), msg.n_type.ToString()),
-                                    msg.sz_name.Replace("'","''"),
-                                    msg.sz_description== null?msg.sz_description:msg.sz_description.Replace("'", "''"),
+                                    msg.sz_name.Replace("'", "''"),
+                                    msg.sz_description == null ? msg.sz_description : msg.sz_description.Replace("'", "''"),
                                     langpk,
                                     msg.f_template,
                                     msg.sz_filename == null ? msg.sz_filename : msg.sz_filename.Replace("'", "''"),
@@ -97,7 +97,7 @@ namespace com.ums.PAS.messagelib
 
                     for (int i = 0; i < msg.ccmessage.Count; ++i)
                     {
-                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message.Replace("'","''"));
+                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message.Replace("'", "''"));
                         ExecNonQuery(szSQL);
                     }
 
@@ -165,7 +165,7 @@ namespace com.ums.PAS.messagelib
                             msg.n_type = UBBMODULEDEF.DIALOGUE;
                         else
                             msg.n_type = (UBBMODULEDEF)type;
-                        
+
                     }
                     catch (Exception)
                     {
@@ -198,7 +198,7 @@ namespace com.ums.PAS.messagelib
                         msg.n_categorypk = 0;
                     }
                     msg.b_valid = false;
-                    if (msg.f_template == 1 || msg.n_langpk>=0) //Text template or TTS, there should exist a txt-file
+                    if (msg.f_template == 1 || msg.n_langpk >= 0) //Text template or TTS, there should exist a txt-file
                     {
                         try
                         {
@@ -217,12 +217,12 @@ namespace com.ums.PAS.messagelib
                             msg.audiostream = null;
                         }
                     }
-                    if (msg.f_template<=0) //WAV message, either TTS or rec/upload
+                    if (msg.f_template <= 0) //WAV message, either TTS or rec/upload
                     {
                         try
                         {
                             UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".wav");
-                            if(File.Exists(f.full()))
+                            if (File.Exists(f.full()))
                             {
                                 msg.audiostream = File.ReadAllBytes(f.full());
                                 msg.b_valid = true;
@@ -265,7 +265,7 @@ namespace com.ums.PAS.messagelib
 
                 //ALSO GET DELETED if this is an update
                 ret.deleted = new List<UBBMESSAGE>();
-                if(filter.n_timefilter>0)
+                if (filter.n_timefilter > 0)
                 {
                     szSQL = String.Format("SELECT l_messagepk FROM log_BBMESSAGES WHERE log_l_timestamp>={0} AND l_deptpk={1}" +
                                             " UNION " +
@@ -289,112 +289,6 @@ namespace com.ums.PAS.messagelib
                 throw e;
             }
 
-        }
-        /*
-         * 
-         * Insert duration for NLALERT
-         * 
-         */
-        public ULBADURATION InsertLBADuration(ref ULOGONINFO logon, ref ULBADURATION duration)
-        {
-            try
-            {
-
-                String szSQL = String.Format("sp_ins_lbaduration {0}, {1}, {2}, {3}, {4}",
-                                    duration.n_deptpk,
-                                    duration.n_duration,
-                                    duration.n_interval,
-                                    duration.n_repetition,
-                                    duration.n_durationpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                if (rs.Read())
-                {
-                    duration.n_durationpk = rs.GetInt64(0);
-                }
-                else
-                {
-                    duration.n_durationpk = -1;
-                }
-
-                rs.Close();
-
-                return duration;
-            }
-            catch (Exception e)
-            {
-                duration.n_durationpk = -1;
-                throw e;
-            }
-        }
-        /*
-         * 
-         * get duration list for NLALERT
-         * 
-         */
-        public List<ULBADURATION> GetLBADuration(ref ULOGONINFO logon)
-        {
-            try
-            {
-
-                String szSQL = String.Format("SELECT l_durationpk, l_duration, l_interval, l_repetition, l_deptpk FROM LBADURATION WHERE l_deptpk = {0}",
-                                    logon.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-
-                List<ULBADURATION> dl = new List<ULBADURATION>();
-                ULBADURATION d;
-                while (rs.Read())
-                {
-                    d = new ULBADURATION();
-                    d.n_durationpk = rs.GetInt64(0);
-                    d.n_duration = rs.GetInt32(1);
-                    d.n_interval = rs.GetInt32(2);
-                    d.n_repetition = rs.GetInt32(3);
-                    d.n_deptpk = rs.GetInt32(4);
-                    dl.Add(d);
-                }
-                
-                rs.Close();
-
-                return dl;
-            }
-            catch (Exception e)
-            {
-                return new List<ULBADURATION>();
-                throw e;
-            }
-        }
-        /*
-         * 
-         * Delete duration for NLALERT
-         * 
-         */
-        public ULBADURATION DeleteLBADuration(ref ULOGONINFO logon, ref ULBADURATION duration)
-        {
-            try
-            {
-                String szSQL;
-                /*
-                szSQL = String.Format("sp_log_BBMESSAGES {0}, {1}, {2}, {3}",
-                                    logon.l_userpk, logon.l_comppk, (int)UDbOperation.DELETE,//(int)Enum.Parse(typeof(UDbOperation), UDbOperation.DELETE.ToString()),
-                                    msg.n_messagepk);
-                if (!ExecNonQuery(szSQL))
-                {
-                    msg.b_valid = false;
-                    return msg;
-                }
-                */
-                szSQL = String.Format("DELETE FROM LBADURATION WHERE l_durationpk={0} AND l_deptpk={1}",
-                                        duration.n_durationpk, duration.n_deptpk);
-                if (!ExecNonQuery(szSQL))
-                    duration.n_durationpk = -1;
-
-                return duration;
-            }
-            catch (Exception e)
-            {
-                duration.n_durationpk = -1;
-                throw e;
-            }
         }
     }
 }

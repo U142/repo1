@@ -97,14 +97,14 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
-        public USYSTEMMESSAGES GetSystemMessages(ULOGONINFO l, long timestamp)
+        public USYSTEMMESSAGES GetSystemMessages(ULOGONINFO l, long timestamp, UBBNEWSLIST_FILTER selectmode)
         {
             try
             {
                 ULogon logon = new ULogon();
                 logon.CheckLogon(ref l, false);
                 USYSTEMMESSAGES ret = new USYSTEMMESSAGES();
-                ret.news = logon.getSystemMessages_news(ref l, timestamp);
+                ret.news = logon.getSystemMessages_news(ref l, timestamp, selectmode);
                 return ret;
             }
             catch (Exception e)

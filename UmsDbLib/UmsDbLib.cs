@@ -332,7 +332,8 @@ namespace com.ums.UmsDbLib
 
         }
 
-        public UBBNEWSLIST getSystemMessages_news(ref ULOGONINFO l, long n_timestamp)
+
+        public UBBNEWSLIST getSystemMessages_news(ref ULOGONINFO l, long n_timestamp, UBBNEWSLIST_FILTER selectmode)
         {
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime();
             long now = getDbClock();
@@ -343,8 +344,18 @@ namespace com.ums.UmsDbLib
             UBBNEWSLIST list = new UBBNEWSLIST();
             list.l_timestamp_db = now;
             //sp_pas_getnews deptpk, timestamp
-            String sql = String.Format("sp_get_news_by_dept {0}, {1}",
+            String sql = "";
+            switch (selectmode)
+            {
+                case UBBNEWSLIST_FILTER.ACTIVE:
+                    sql = String.Format("sp_get_news_by_dept {0}, {1}",
                                         l.l_deptpk, n_timestamp);
+                    break;
+                case UBBNEWSLIST_FILTER.IN_BETWEEN_START_END:
+                    sql = String.Format("sp_get_news_by_startend {0}, {1}",
+                                        l.l_deptpk, n_timestamp);
+                    break;
+            }
             try
             {
                 OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
