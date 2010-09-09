@@ -1598,6 +1598,7 @@ namespace com.ums.ws.parm
                         obj.sz_name = rs.GetString(7);
                         olist.Add(obj);
                     }
+                    rs.Close();
 
                     CB_USER_REGION_RESPONSE tmp = new CB_USER_REGION_RESPONSE();
                     tmp.user = tempuser;
@@ -1686,8 +1687,8 @@ namespace com.ums.ws.parm
                     while (rs.Read())
                         deptlist.Add(rs.GetInt32(0));
                     u.l_deptpklist = deptlist.ToArray();
+                    rs.Close();
                 }
-                rs.Close();
             }
             catch (Exception e)
             {
@@ -1796,6 +1797,7 @@ namespace com.ums.ws.parm
                     user.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
                     list.Add(user);
                 }
+                rs.Close();
 
                 return list;
                 

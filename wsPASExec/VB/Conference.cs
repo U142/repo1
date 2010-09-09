@@ -218,6 +218,7 @@ namespace wsPASExec.VB
                     status.SendingStatus = (SendingStatusCode)dr.GetInt32(4);
                     statuses.Add(status);
                 }
+                dr.Close();
             }
             catch (SoapException se)
             {

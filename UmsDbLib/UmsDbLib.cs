@@ -764,7 +764,9 @@ namespace com.ums.UmsDbLib
             OdbcDataReader tempreader;
             tempreader = m_cmd.ExecuteReader();
             if (OPENMODE == UREADER_AUTOCLOSE)
+            {
                 m_reader = tempreader;//m_cmd.ExecuteReader());
+            }
             else
                 m_reader = null;
             /*else

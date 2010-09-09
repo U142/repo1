@@ -67,6 +67,7 @@ namespace com.ums.PAS.Settings
                     param.l_deptpk = logon.l_deptpk;
                     param.l_comppk = logon.l_comppk;
                 }
+                odr.Close();
 
                 return param;
             }

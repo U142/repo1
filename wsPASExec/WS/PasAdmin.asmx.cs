@@ -176,8 +176,8 @@ namespace com.ums.ws.pas.admin
                     while (rs.Read())
                         deptlist.Add(rs.GetInt32(0));
                     u.l_deptpklist = deptlist.ToArray();
+                    rs.Close();
                 }
-                rs.Close();
             }
             catch (Exception e)
             {
@@ -397,6 +397,7 @@ namespace com.ums.ws.pas.admin
                         rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                         while (rs.Read())
                             msg_text = rs.GetString(1);
+                        rs.Close();
 
                         desc = paslog.sz_desc;
                         desc = desc.Substring(desc.IndexOf("l_projectpk"));
@@ -406,6 +407,7 @@ namespace com.ums.ws.pas.admin
                         rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                         while (rs.Read())
                             event_name = rs.GetString(1);
+                        rs.Close();
 
                         paslog.sz_desc = event_name + " - " + msg_text;
 
@@ -420,6 +422,7 @@ namespace com.ums.ws.pas.admin
                         rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                         while (rs.Read())
                             paslog.sz_desc = rs.GetString(1);
+                        rs.Close();
                     }
                     else if (paslog.l_operation == 107 || paslog.l_operation == 111 || paslog.l_operation == 200) // info on user createing a sending, sending to operator or kill sending
                     {
@@ -437,9 +440,9 @@ namespace com.ums.ws.pas.admin
                         rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                         while (rs.Read())
                             paslog.sz_desc = rs.GetString(2) + " - " + rs.GetString(1);
+                        rs.Close();
                     }
                 }
-                rs.Close();
                 db.close();
             }
             catch (Exception e)
