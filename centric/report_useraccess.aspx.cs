@@ -37,11 +37,11 @@ public partial class report_useraccess : System.Web.UI.Page
         ParmAdmin pa = new ParmAdmin();
 
         tbl_output.Rows.Clear();
-        
+        List<UBBUSER[]> total = new List<UBBUSER[]>();
         for (int i = 0; i < selection.Length; ++i)
         {
             ulist = pa.GetAccessPermissions(long.Parse(lst_areas.Items[selection[i]].Value));
-            Session["userlist"] = ulist;
+            total.Add(ulist);
             if (ulist.Length > 0)
             {
                 HtmlTableRow header = new HtmlTableRow();
@@ -84,6 +84,7 @@ public partial class report_useraccess : System.Web.UI.Page
                 tbl_output.Rows.Add(header);
             }
         }
+        Session["userlist"] = total;
         btn_export_user_access.Visible = true;
     }
 
@@ -94,6 +95,7 @@ public partial class report_useraccess : System.Web.UI.Page
         {
             areas[i] = lst_areas.Items[i].Text;
         }
-        Util.WriteUsersPerAccessPermissionToCSV((UBBUSER[])Session["userlist"], areas);
+        List<UBBUSER[]> users = (List<UBBUSER[]>)Session["userlist"];
+        Util.WriteUsersPerAccessPermissionToCSV(users, areas);
     }
 }

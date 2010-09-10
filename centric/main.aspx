@@ -1,35 +1,10 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="main.aspx.cs" Inherits="main" %>
-
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
    
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
     <script type="text/javascript">
-        /*
-        Må sjekke følgende:
-        Har activate verid?
-        -Ja-
-        Er den før dagens dato
-        -Nei-
-        Gudd
-        -Ja-
-        Feilmelding
-        -Nei-
-        har deactivate verdi?
-        -Ja-
-        er den mindre enn dagens dato?
-        -Nei-
-        Gudd
-        -Ja-
-        Feilmelding
-        er den mindre enn activate?
-        -Nei-
-        Gudd
-        -Ja-
-        Feilmelding
-        
-        
-        */
+       
         function validateActivate(oSrc, args) {
             if (document.getElementById("ctl00_body_txt_activate").value.length > 1) {
                 // Sjekk format

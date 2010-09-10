@@ -4,7 +4,7 @@
     <div>
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
-            <asp:TableHeaderCell HorizontalAlign="Left">Access permissions per user</asp:TableHeaderCell>
+            <asp:TableHeaderCell HorizontalAlign="Left">User per access permission</asp:TableHeaderCell>
         </asp:TableHeaderRow>
         <asp:TableRow>
             <asp:TableCell><asp:ListBox ID="lst_areas" runat="server" Height="150" Width="640" SelectionMode="Multiple"></asp:ListBox></asp:TableCell>

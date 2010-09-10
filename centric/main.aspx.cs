@@ -36,7 +36,7 @@ public partial class main : System.Web.UI.Page
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
-            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0, UBBNEWSLIST_FILTER.ACTIVE);
+            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0,UBBNEWSLIST_FILTER.ACTIVE);
              
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {

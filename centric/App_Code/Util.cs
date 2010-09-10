@@ -374,7 +374,7 @@ public class Util
     /*******************************
      * Users per access permission *
      *******************************/
-    public static void WriteUsersPerAccessPermissionToCSV(com.ums.ws.parm.admin.UBBUSER[] userlist, String[] areaname)
+    public static void WriteUsersPerAccessPermissionToCSV(List<com.ums.ws.parm.admin.UBBUSER[]> userlist, String[] areaname)
     {
         string attachment = "attachment; filename=AccessPermissions.csv";
         HttpContext.Current.Response.Clear();
@@ -384,10 +384,10 @@ public class Util
         HttpContext.Current.Response.ContentType = "text/csv";
         HttpContext.Current.Response.AddHeader("Pragma", "public");
         WriteUsersPerAccessPermissionColumnName();
-        foreach (string area in areaname)
+        for(int i=0; i<areaname.Length;++i)
         {
-            foreach (com.ums.ws.parm.admin.UBBUSER user in userlist)
-                WriteUsersPerAccessPermission(user, area);
+            foreach (com.ums.ws.parm.admin.UBBUSER user in userlist[i])
+                WriteUsersPerAccessPermission(user, areaname[i]);
         }
         HttpContext.Current.Response.End();
     }

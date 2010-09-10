@@ -230,6 +230,19 @@
         <s:attribute name="f_disabled" type="s:int" use="required" />
         <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
       </s:complexType>
+      <s:complexType name="UPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="tns:UPolypoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPolypoint">
+        <s:attribute name="lon" type="s:double" use="required" />
+        <s:attribute name="lat" type="s:double" use="required" />
+      </s:complexType>
       <s:complexType name="UPLMN">
         <s:complexContent mixed="false">
           <s:extension base="tns:UShape" />
@@ -258,19 +271,6 @@
             </s:sequence>
           </s:extension>
         </s:complexContent>
-      </s:complexType>
-      <s:complexType name="UPolygon">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:UShape">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="tns:UPolypoint" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="UPolypoint">
-        <s:attribute name="lon" type="s:double" use="required" />
-        <s:attribute name="lat" type="s:double" use="required" />
       </s:complexType>
       <s:complexType name="ArrayOfULBASENDING">
         <s:sequence>

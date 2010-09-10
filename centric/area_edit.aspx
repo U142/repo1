@@ -1,5 +1,5 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true" CodeFile="area_edit.aspx.cs" Inherits="area_edit" %>
-
+<%@ MasterType TypeName="MasterPage" %>
 <asp:Content ContentPlaceHolderID="body" runat="server">
     <script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
     <script type="text/javascript">
@@ -35,25 +35,8 @@
             
             //return false;
         }
-        function SendRequest() {
-            PasAdmin.disco.GetServerResponse("Test", OnComplete, OnError, OnTimeOut);
-        }
-        function OnComplete(arg) {
-            alert(arg);
-        }
-        function OnTimeOut(arg) {
-            alert("timeOut has occured");
-        }
-        function OnError(arg) {
-            alert("error has occured: " + arg._message);
-        }
+        
     </script>
-    <asp:ScriptManager ID="ScriptManager1" runat="server">
-        <Services>
-            <asp:ServiceReference path="http://localhost/WS/PasAdmin.asmx" />
-        </Services>
-    </asp:ScriptManager>
-    <input type="button" ID="jall" Text="test ws" onclick="SendRequest()" />
     <asp:Table ID="table" runat="server">
         <asp:TableHeaderRow>
             <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview Authorization Areas"></asp:Label></asp:TableHeaderCell>

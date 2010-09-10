@@ -17,6 +17,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using com.ums.ws.pas;
+using com.ums.ws.pas.admin;
 
 public partial class predefine_text : System.Web.UI.Page
 {
@@ -29,6 +30,8 @@ public partial class predefine_text : System.Web.UI.Page
     {
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
+        
+        //Master.BodyTag.Attributes.Add("onunload", "setUnlock('page=predefine_text')");
 
         if (!IsPostBack)
         {
@@ -36,36 +39,46 @@ public partial class predefine_text : System.Web.UI.Page
             if (l == null)
                 Server.Transfer("logoff.aspx");
 
-            btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
+            PasAdmin pa = new PasAdmin();
+            //CheckAccessResponse ares = pa.doSetOccupied(l, ACCESSPAGE.PREDEFINEDTEXT, true);
             
-            ht = new Hashtable();
+            //if (ares.successful && ares.granted)
+            //{
 
-            Session.Add("ht", ht);
-            
+                btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
 
-            UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
-            //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-            f.n_timefilter = 0;
+                ht = new Hashtable();
 
-            pws = new pasws();
+                Session.Add("ht", ht);
 
-           
-            
-            UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
-            //List<PredefinedText> pdt = db.getPredefinedText();
 
-            for (int i = 0; i < list.list.Length; ++i)
-            {
-                if (list.list[i].n_parentpk > 0)
+                UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
+                //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+                f.n_timefilter = 0;
+
+                pws = new pasws();
+
+
+
+                UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
+                //List<PredefinedText> pdt = db.getPredefinedText();
+
+                for (int i = 0; i < list.list.Length; ++i)
                 {
-                    TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
-                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
-                }
-                else
-                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                    if (list.list[i].n_parentpk > 0)
+                    {
+                        TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
+                        tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                    }
+                    else
+                        TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
 
-                ht.Add(list.list[i].n_messagepk, list.list[i]);
-            }
+                    ht.Add(list.list[i].n_messagepk, list.list[i]);
+                }
+                
+            //}
+            //else
+                //Server.Transfer("Currently_busy.aspx");
         }
     }
     

@@ -17,5 +17,19 @@ public partial class MasterPage : System.Web.UI.MasterPage
     {
         if (Session["logoninfo"] == null)
             Response.Redirect("logon.aspx");
+
+
+    }
+    
+    public HtmlGenericControl BodyTag
+    {
+        get
+        {
+            return bd;
+        }
+        set
+        {
+            bd = value;
+        }
     }
 }

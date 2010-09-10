@@ -1,4 +1,5 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true" CodeFile="predefine_text.aspx.cs" Inherits="predefine_text" Theme="sampleTheme" %>
+<%@ MasterType TypeName="MasterPage" %>
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
 

@@ -141,15 +141,54 @@
             document.onclick=hidemenuie5
        }
        
-       function loadXMLDoc()
-       {
-           if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+      
+       var xmlhttp;
+
+       function InitXmlHttp() {
+           // Attempt to initialize xmlhttp object
+           try {
+               xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+           }
+           catch (e) {
+               // Try to use different activex object
+               try {
+                   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+               }
+               catch (E) {
+                   xmlhttp = false;
+               }
+           }
+
+           // If not initialized, create XMLHttpRequest object
+           if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
                xmlhttp = new XMLHttpRequest();
            }
-           else {// code for IE6, IE5
-               xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+           // Define function call for when Request obj state has changed
+           xmlhttp.onreadystatechange = XMLHttpRequestCompleted;
+       }
+
+       function setUnlock(parameter) {
+           InitXmlHttp();
+           xmlhttp.onreadystatechange = XMLHttpRequestCompleted;
+           xmlhttp.open("GET", "" + "Handler.ashx?" + parameter, true);
+           xmlhttp.send(null);
+       }
+
+       function XMLHttpRequestCompleted() {
+           if (xmlhttp.readyState == 4) {
+               if (xmlhttp.status == 200) {
+                   try {
+                       document.getElementById("bd").removeAttribute("onunload");
+                   }
+                   catch (e) {
+                       alert('Error: ' + e.getMessage());
+                   }
+               }
+               else
+                   alert("AJAX Error: " + xmlhttp.status + " : " + xmlhttp.statusText);
            }
        }
+       
 
        function validateDate(strValue) {
            /************************************************
@@ -221,7 +260,7 @@
     -->
     </script>
 </head>
-<body>
+<body runat="server" id="bd">
     <form id="form1" runat="server">
     <div>
     <asp:Table ID="table" runat="server">

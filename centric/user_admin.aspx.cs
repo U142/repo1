@@ -148,9 +148,16 @@ public partial class user_admin : System.Web.UI.Page
             selectType(user);
             chk_blocked.Checked = user.f_disabled == 1 ? true : false;
             if (user.f_disabled == 1)
+            {
+                if (user.l_disabled_reasoncode == com.ums.ws.pas.admin.BBUSER_BLOCK_REASONS.REACHED_RETRY_LIMIT)
+                    RequiredFieldValidator2.Enabled = true;
                 txt_blocked.Text = Util.convertDate(user.l_disabled_timestamp).Substring(0, 10);
+            }
             else
+            {
                 txt_blocked.Text = "";
+                RequiredFieldValidator2.Enabled = false;
+            }
             //lst_regions.SelectedValue = user.l_deptpk.ToString();
             for (int i = 0; i < lst_regions.Items.Count; ++i)
             {
@@ -161,7 +168,7 @@ public partial class user_admin : System.Web.UI.Page
                 }
             }
             selected.Text = user.l_userpk.ToString();
-            RequiredFieldValidator2.Enabled = false;
+            
         }
         
     }
@@ -234,51 +241,58 @@ public partial class user_admin : System.Web.UI.Page
 
         int[] regions = lst_regions.GetSelectedIndices();
         int[] regionpk = new int[regions.Length];
-        
-        for(int i=0;i<regions.Length;++i) {
-            regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
-        }
 
-        StoreUserResponse res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
+         StoreUserResponse res;
 
-        if (res.successful)
+        if (user.l_profilepk == 3)
         {
-            lbl_feedback.Text = "";
-
-            user = res.user;
-            if (update)
+            for (int i = 0; i < regions.Length; ++i)
             {
-                for (int i = 0; i < users.Length; ++i)
+                regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
+            }
+            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
+        }
+        else
+            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[int.Parse(lst_regions.Items[0].Value)]);
+
+            if (res.successful)
+            {
+                lbl_feedback.Text = "";
+
+                user = res.user;
+                if (update)
                 {
-                    if (users[i].l_userpk == user.l_userpk)
-                        users[i] = user;
+                    for (int i = 0; i < users.Length; ++i)
+                    {
+                        if (users[i].l_userpk == user.l_userpk)
+                            users[i] = user;
+                    }
+                    tbl_users.Rows.Clear();
+                    buildTable(users);
                 }
-                tbl_users.Rows.Clear();
-                buildTable(users);
+                else
+                {
+                    users[users.Length - 1] = user;
+                    Session["users"] = users;
+                    if (lst_users.SelectedIndex == -1)
+                        lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+                    else
+                    {
+                        int i = 0;
+                        i = lst_users.SelectedIndex;
+                        lst_users.Items.Remove(lst_users.SelectedItem);
+                        lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
+                    }
+                    tbl_users.Rows.Clear();
+                    buildTable(users);
+                }
+                deselect();
             }
             else
             {
-                users[users.Length - 1] = user;
-                Session["users"] = users;
-                if (lst_users.SelectedIndex == -1)
-                    lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
-                else
-                {
-                    int i = 0;
-                    i = lst_users.SelectedIndex;
-                    lst_users.Items.Remove(lst_users.SelectedItem);
-                    lst_users.Items.Insert(i, new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
-                }
-                tbl_users.Rows.Clear();
-                buildTable(users);
+                lbl_feedback.Text = res.reason;
+                lbl_feedback.ForeColor = System.Drawing.Color.Red;
             }
-            deselect();
-        }
-        else
-        {
-            lbl_feedback.Text = res.reason;
-            lbl_feedback.ForeColor = System.Drawing.Color.Red;
-        }
             
         reset();
         resetRegions();

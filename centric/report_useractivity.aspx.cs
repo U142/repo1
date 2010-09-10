@@ -139,43 +139,51 @@ public partial class report_useractivity : System.Web.UI.Page
                 
                 tbl_output.Rows.Add(header);
 
+                String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
+                HashSet<short> hide = new HashSet<short>();
+                for (int i = 0; i < tmp.Length; ++i)
+                    hide.Add(short.Parse(tmp[i]));
+
                 for (int j = 0; j < res.log.Length; ++j)
                 {
-                    HtmlTableRow row = new HtmlTableRow();
-                    Label lbldesc = new Label();
-                    lbldesc.Text = res.log[j].l_id.ToString();
-                    HtmlTableCell cell = new HtmlTableCell();
-                    cell.Controls.Add(lbldesc);
-                    
-                    row.Cells.Add(cell);
-                    cell = new HtmlTableCell();
-                    lbldesc = new Label();
-                    if(res.log[j].l_userpk == -1) 
-                        lbldesc.Text = "Administrator";
-                    else
-                        lbldesc.Text = ((UBBUSER)users[res.log[j].l_userpk]).sz_userid;
-                    cell.Controls.Add(lbldesc);
-                    row.Cells.Add(cell);
-                    
-                    cell = new HtmlTableCell();
-                    lbldesc = new Label();
-                    lbldesc.Text = ConfigurationSettings.AppSettings[res.log[j].l_operation.ToString()];
-                    cell.Controls.Add(lbldesc);
-                    row.Cells.Add(cell);
+                    if (!hide.Contains(res.log[j].l_operation))
+                    {
+                        HtmlTableRow row = new HtmlTableRow();
+                        Label lbldesc = new Label();
+                        lbldesc.Text = res.log[j].l_id.ToString();
+                        HtmlTableCell cell = new HtmlTableCell();
+                        cell.Controls.Add(lbldesc);
 
-                    cell = new HtmlTableCell();
-                    lbldesc = new Label();
-                    lbldesc.Text = res.log[j].l_timestamp.ToString();
-                    cell.Controls.Add(lbldesc);
-                    row.Cells.Add(cell);
+                        row.Cells.Add(cell);
+                        cell = new HtmlTableCell();
+                        lbldesc = new Label();
+                        if (res.log[j].l_userpk == -1)
+                            lbldesc.Text = "Administrator";
+                        else
+                            lbldesc.Text = ((UBBUSER)users[res.log[j].l_userpk]).sz_userid;
+                        cell.Controls.Add(lbldesc);
+                        row.Cells.Add(cell);
 
-                    cell = new HtmlTableCell();
-                    lbldesc = new Label();
-                    lbldesc.Text = res.log[j].sz_desc;
-                    cell.Controls.Add(lbldesc);
-                    row.Cells.Add(cell);
-                    
-                    tbl_output.Rows.Add(row);
+                        cell = new HtmlTableCell();
+                        lbldesc = new Label();
+                        lbldesc.Text = ConfigurationSettings.AppSettings[res.log[j].l_operation.ToString()];
+                        cell.Controls.Add(lbldesc);
+                        row.Cells.Add(cell);
+
+                        cell = new HtmlTableCell();
+                        lbldesc = new Label();
+                        lbldesc.Text = res.log[j].l_timestamp.ToString();
+                        cell.Controls.Add(lbldesc);
+                        row.Cells.Add(cell);
+
+                        cell = new HtmlTableCell();
+                        lbldesc = new Label();
+                        lbldesc.Text = res.log[j].sz_desc;
+                        cell.Controls.Add(lbldesc);
+                        row.Cells.Add(cell);
+
+                        tbl_output.Rows.Add(row);
+                    }
                 }
             }
             else
