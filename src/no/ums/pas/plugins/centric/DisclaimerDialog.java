@@ -43,7 +43,7 @@ class DisclaimerDialog extends JDialog {
 		ImageIcon img = null;
 		try
 		{
-			img = new ImageIcon(this.getClass().getResource("logo.png"));
+			img = new ImageIcon(this.getClass().getResource("icons/logo.jpg")); //logo.png"));
 		}
 		catch(Exception e)
 		{

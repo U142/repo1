@@ -51,6 +51,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.text.JTextComponent;
 
 import com.sun.awt.AWTUtilities;
 
@@ -570,7 +571,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private void showSummary() {
 		
-		if(projectOpen())
+		//if(projectOpen())
 			m_txt_event_name.setEnabled(false);
 		removeAll();
 		reset_panels();
@@ -1066,6 +1067,30 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_preview.setText(sz_totalmessage);
 		updateCharacters();
 	}
+		
+	protected int getTextLengthOfFields()
+	{
+		int total = m_txt_sender_name.getText().length() + 
+				m_txt_date_time.getText().length() + 
+				m_cbx_risk.getEditor().getItem().toString().length() + 
+				m_cbx_reaction.getEditor().getItem().toString().length() +
+				m_cbx_originator.getEditor().getItem().toString().length();
+		//add autogen spaces and linebreak
+		String risk = m_cbx_risk.getEditor().getItem().toString();
+		String reaction = m_cbx_reaction.getEditor().getItem().toString();
+		String originator = m_cbx_originator.getEditor().getItem().toString();
+
+		if(risk.length()>0)
+			total++;
+		if(reaction.length()>0)
+			total++;
+		if(originator.length()>0)
+			total++;
+		if(m_txt_sender_name.getText().length()>0)
+			total++;
+		return total;
+	}
+
 	
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
@@ -1108,29 +1133,110 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 1)));
 			}
 		}
+		else if(e.getSource().equals(m_txt_message))
+		{
+		}
+		else if(e.getSource().equals(m_txt_sender_name))
+		{
+			
+		}
 
 	}
+	
+	protected boolean checkIfInputAllowed(KeyEvent e, int num_chars_selected)
+	{
+		if(e.getSource().equals(m_txt_message) || 
+				e.getSource().equals(m_txt_sender_name) || 
+				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
+				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
+				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
+			updatePreviewText();
+			int n_total_len = m_txt_preview.getText().length();
+			if(e.getSource().equals(m_txt_message))
+			{
+				int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
+				int len_of_message = m_txt_message.getText().length();
+				//if(len_of_message<n_chars_left_for_message)
+				{
+					if(m_txt_message.getText().length() >= n_chars_left_for_message-1) {
+						return false;
+					}
+				}
+			}
+			else //if(e.getSource().equals(m_txt_sender_name))
+			{
+				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
+					return false;
+			}
+		}
+
+		return true;
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getSource() == m_txt_message || e.getSource() == m_txt_sender_name) {
-			if(m_txt_message.getText().length() > ((MAX_TOTAL_CHARS-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))) {
-				//m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" +
-				//	m_txt_message.getText().substring(0,((MAX_TOTAL_CHARS-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length()))));
-				m_txt_message.setText(m_txt_message.getText().substring(0,((MAX_TOTAL_CHARS-2) - (m_txt_sender_name.getText().length() + m_txt_date_time.getText().length())))); // -2 because of " " and "/n"
+		/*if(e.getSource().equals(m_txt_message) || 
+				e.getSource().equals(m_txt_sender_name) || 
+				e.getSource().equals(m_cbx_risk) ||
+				e.getSource().equals(m_cbx_reaction) ||
+				e.getSource().equals(m_cbx_originator)) {
+			updatePreviewText();
+			int n_total_len = m_txt_preview.getText().length();
+			if(e.getSource().equals(m_txt_message))
+			{
+				int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields();
+				int len_of_message = m_txt_message.getText().length();
+				//if(len_of_message<n_chars_left_for_message)
+				{
+					if(m_txt_message.getText().length() >= n_chars_left_for_message) {
+						m_txt_message.setText(m_txt_message.getText().substring(0, n_chars_left_for_message-1));
+					}
+				}
 			}
-			else
-				m_txt_preview.setText(m_txt_sender_name.getText() + " " + m_txt_date_time.getText() + "\n" + m_txt_message.getText());
-				
-			//updateCharacters();
-		}
+			else if(e.getSource().equals(m_txt_sender_name))
+			{
+			}
+		}*/
 		updatePreviewText();
 		checkForEnableSendButton();
 		//checkInputs();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
-		//updateCharacters();
-
+		if(e.getSource().equals(m_txt_message) || 
+				e.getSource().equals(m_txt_sender_name) || 
+				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
+				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
+				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
+			JTextComponent c = (JTextComponent)e.getSource();
+			int before = m_txt_preview.getText().length();
+			int char_selection = c.getSelectionEnd()-c.getSelectionStart();
+			//System.out.println("c="+char_selection);
+			boolean b = checkIfInputAllowed(e, char_selection);
+			int after = m_txt_preview.getText().length();
+			int number_of_chars = after-before;
+			if(!b)
+			{
+				e.consume();
+			}
+			{
+				//remove chars if > max
+				if(after>MAX_TOTAL_CHARS)
+				{
+					try
+					{
+						int diff = after-(MAX_TOTAL_CHARS);
+						int current_len = c.getText().length();
+						c.setText(c.getText().substring(0, current_len-diff));
+					}
+					catch(Exception err)
+					{
+						
+					}
+				}
+			}
+			//System.out.println("Before="+before+" After="+after);
+		}
 	}
 	public void onSendFinished(ActionEvent e) {
 		// Start update timer
@@ -1144,7 +1250,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
 			Project p = new Project();
 			p.set_projectpk(new Long(response.getLProjectpk()).toString());
-			PAS.pasplugin.onOpenProject(p);
+			PAS.pasplugin.onOpenProject(p, response.getLRefno());
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
 			variables.MAPPANE.set_active_shape(null);

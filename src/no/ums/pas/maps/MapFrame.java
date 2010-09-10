@@ -1022,18 +1022,21 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			if(m_img_loading==null)
 			{
 			}
-			for(int i=0;i<m_overlays.size();++i) {
-				/*if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_gsm().isSelected())
-					showAllOverlays(1, true);
-				else
-					showAllOverlays(1, false);
-				
-				if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_umts().isSelected())
-					showAllOverlays(4, true);
-				else
-					showAllOverlays(4, false);
-					*/
-				start_gsm_coverage_loader();
+			if(m_overlays!=null)
+			{
+				for(int i=0;i<m_overlays.size();++i) {
+					/*if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_gsm().isSelected())
+						showAllOverlays(1, true);
+					else
+						showAllOverlays(1, false);
+					
+					if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_umts().isSelected())
+						showAllOverlays(4, true);
+					else
+						showAllOverlays(4, false);
+						*/
+					start_gsm_coverage_loader();
+				}
 			}
 		} catch(Exception e) {
 			//System.out.println("Error loading map " + e.getMessage());

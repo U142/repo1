@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -72,6 +73,22 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void setClosed() { b_active = false; }
 	public boolean isClosed() { return !b_active; }
 	
+	private boolean b_flip_to_new_sending = false;
+	//if a new sending is sent, we should show this in status view
+	public boolean getFlipToNewSending()
+	{
+		return b_flip_to_new_sending;
+	}
+	public void resetFlipToNewSending()
+	{
+		b_flip_to_new_sending = false;
+	}
+	public void setFlipToNewSending()
+	{
+		b_flip_to_new_sending = true;
+	}
+
+	
 	private Hashtable<Long, CentricMessageStatus> hash_messagestatus;
 
 	
@@ -87,15 +104,22 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		//m_messages.componentResized(e);
 	}
 
-	private CBSENDINGRESPONSE res;
+	private CBSENDINGRESPONSE last_sendingresult;
 	
-	public void set_cbsendingresponse(CBSENDINGRESPONSE res) { 
-		this.res = res;
+	public boolean set_cbsendingresponse(CBSENDINGRESPONSE res) { 
+		if(this.last_sendingresult==null || 
+			this.last_sendingresult.getLProjectpk()!=res.getLProjectpk() ||
+			(res.getLRefno()>0 && res.getLRefno()!=last_sendingresult.getLRefno()))
+		{
+			this.last_sendingresult = res;
+			return true;
+		}
+		return false;
 		// update infoting
 		//getCBStatus(res); //wait for timer
 	}
 	
-	public void getCBStatus(CBSENDINGRESPONSE res) {
+	public void getCBStatus() {
 		//ImageIcon icon = ImageLoader.load_icon("remembermilk_orange.gif");
 		//for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 		//	m_status_tabbed.setIconAt(i, icon);
@@ -110,7 +134,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		l.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 		
 		//cbsreq = new CBPROJECTSTATUSREQUEST();
-		cbsreq.setLProjectpk(res.getLProjectpk());
+		cbsreq.setLProjectpk(last_sendingresult.getLProjectpk());
 		cbsreq.setLogon(l);
 		
 		try {
@@ -133,7 +157,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	
 	public CentricStatus(CBSENDINGRESPONSE res) {
 		super();
-		this.res = res;
+		this.last_sendingresult = res;
 		hash_messagestatus = new Hashtable<Long, CentricMessageStatus>();
 		add_controls();
 		cbsreq = new CBPROJECTSTATUSREQUEST();
@@ -174,7 +198,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-10,PAS.get_pas().get_eastcontent().getHeight()-50));
 		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width-10,getPreferredSize().height-10));
 		
-		m_event = new CentricEventStatus(res, this);
+		m_event = new CentricEventStatus(last_sendingresult, this);
 		m_status_tabbed.addTab("Event Name", m_event);
 		
 		
@@ -282,7 +306,15 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				currentui = new CentricMessageStatus(get_messages(), currentstatus);
 				putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
 				currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());
-				tp.add(currentstatus.getSzSendingname(), currentui);
+				final JTabbedPane final_tp = tp;
+				final CentricMessageStatus final_cms = currentui;
+				final String szSendingName = currentstatus.getSzSendingname();
+				SwingUtilities.invokeLater(new Runnable() {					
+					@Override
+					public void run() {
+						final_tp.add(szSendingName, final_cms);						
+					}
+				});
 			}
 			//Update data in UI pane
 			if(currentui!=null) //just to be sure we have an existing or new pointer
@@ -332,90 +364,39 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			}
 
 		}
-		/*Hashtable<Long, Long> sendings = new Hashtable<Long, Long>();
-		Hashtable<Long, Long> active = new Hashtable<Long, Long>();
-		
-		for(int j=0;j<cbp.getStatuslist().getCBSTATUS().size();++j) {
-			found = false;
-			cbs = cbp.getStatuslist().getCBSTATUS().get(j);
-			sendings.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
-			
-			List<ULBASENDING> arr_operators = cbs.getOperators().getULBASENDING();
-			
-			for(int oper=0; oper < arr_operators.size(); oper++)
-			{
-				ULBASENDING operator = arr_operators.get(oper);
-				
-				if(operator.getLStatus()<1000) // All statuses under 1000 are still active
-					active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));
-				
-				for(int i=0;i<tp.getComponentCount();++i) {
-					ms = (CentricMessageStatus)tp.getComponentAt(i);
-					
-					// Does the message already exist?
-					if(ms.get_refno() == cbs.getLRefno()) {
-						ms.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
-						ms.setName(cbs.getSzSendingname());
-						
-						if(operator.getLStatus() >= 540)  // Active
-							tp.setTitleAt(i,"A " + cbs.getSzSendingname());
-						if(operator.getLStatus() == 1000) // Finished
-							tp.setTitleAt(i,"F " + cbs.getSzSendingname());
 
-						CentricOperatorStatus cos;
-						
-						
-						boolean operator_found = false;
-						for(int k=0;k<ms.get_tpane().getComponentCount();++k) {
-							//cos.get_lbl_channel().setText(histcell.g);
-							cos = (CentricOperatorStatus)ms.get_tpane().getComponentAt(k);
-							if(cos.get_operator() == operator.getLOperator()) {
-								setOperatorValues(cbp, cbs, operator, cos);
-								operator_found = true;
+		//do gui stuff if status was opened due to a new sending. Flip to sending-panels and the new mesage
+		final JTabbedPane final_tp = tp;
+		//setFlipToNewSending();
+		if(getFlipToNewSending())
+		{
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					//flip to messages view
+					m_status_tabbed.setSelectedComponent(m_messages);
+					
+					long newRefno = last_sendingresult.getLRefno();
+					if(hash_messagestatus.containsKey(newRefno))
+					{
+						CentricMessageStatus cms = hash_messagestatus.get(newRefno);
+						if(cms!=null)
+						{
+							try
+							{
+								final_tp.setSelectedComponent(cms);
+								resetFlipToNewSending();
+							}
+							catch(Exception e)
+							{
+								e.printStackTrace();
 							}
 						}
-						if(!operator_found) {
-							cos = new CentricOperatorStatus(ms, false, operator.getLOperator());
-							setOperatorValues(cbp, cbs, operator, cos);
-							ms.get_tpane().add(operator.getSzOperator(), cos);
-						}
-						
-						found = true;
 					}
 				}
-			}
-			if(!found) {
-				CentricMessageStatus tmp = new CentricMessageStatus(get_messages(), cbp.getStatuslist().getCBSTATUS().get(j).getLRefno());
-				tmp.get_txt_message().setText(cbs.getMdv().getSzMessagetext());
-
-				if(cbs.getLCombinedStatus() < 1000)  // Active
-					tp.add("A " + cbs.getSzSendingname(), tmp);
-				if(cbs.getLCombinedStatus() >= 1000) // Finished
-					tp.add("F " + cbs.getSzSendingname(), tmp);
-				
-				tp.setSelectedComponent(tmp);
-				for(int oper = 0; oper < arr_operators.size(); ++oper)
-				{
-					ULBASENDING operator = arr_operators.get(oper);
-					CentricOperatorStatus cos = new CentricOperatorStatus(tmp, false, operator.getLOperator());
-
-					setOperatorValues(cbp, cbs, operator, cos);
-					tmp.get_tpane().add(operator.getSzOperator(),cos);
-				}
-			}
-			ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(cbs.getShape());
-			if(shape!=null)
-			{
-				shape.setShapeId(cbs.getLRefno());
-				shape.shapeName = cbs.getSzSendingname();
-				shape.set_fill_color(new Color(255, 50, 50, 100));
-				shape.set_border_color(new Color(255, 50, 50, 200));
-				shape.set_text_color(new Color(255, 255, 255, 255));
-				shape.set_text_bg_color(new Color(50, 0, 0, 100));
-				PAS.pasplugin.addShapeToPaint(shape);
-			}
+			});
 		}
-		*/
 		
 		get_event().get_sent().setText(String.valueOf(sendings.size()));
 		get_event().get_active().setText(String.valueOf(active.size()));

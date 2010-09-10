@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
@@ -118,7 +119,15 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			else
 			{
 				currentoperator = new CentricOperatorStatus(this, false, operator);
-				get_tpane().add(operator.getSzOperator(), currentoperator);
+				final String szOperator = operator.getSzOperator();
+				final CentricOperatorStatus final_cos = currentoperator;
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						get_tpane().add(szOperator, final_cos);						
+					}
+				});
 				putOperator(operator.getLOperator(), currentoperator);
 				//hash_operators.put(operator.getLOperator(), currentoperator);
 			}

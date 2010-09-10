@@ -1022,7 +1022,7 @@ public class PAS_Scripting extends PasScriptingInterface
 	}
 
 	@Override
-	public boolean onOpenProject(Project project) {
+	public boolean onOpenProject(Project project, long nFromNewRefno) {
 		return false;
 	}
 

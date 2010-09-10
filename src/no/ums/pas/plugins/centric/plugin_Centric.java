@@ -330,8 +330,8 @@ public class plugin_Centric extends PAS_Scripting
 					for(int j=i+1; j < list.length; j++)
 					{
 						UBBNEWS b2 = (UBBNEWS)list[j];
-						//if(b1.getLTimestampDb()<b2.getLTimestampDb())
-						if(b1.getLIncidentStart()>b2.getLIncidentStart())
+						if(b1.getLTimestampDb()<b2.getLTimestampDb())
+						//if(b1.getLIncidentStart()>b2.getLIncidentStart())
 						{
 							tmp = b1;
 							list[i] = b2;
@@ -894,7 +894,7 @@ public class plugin_Centric extends PAS_Scripting
 	{
 		boolean trainingmode = IsInTrainingMode(userinfo);
 		System.out.println("onSetAppTitle");
-		String maintitle = "NL Alert";
+		String maintitle = PAS.l("common_app_title");
 		CentricStatusController sc = (CentricStatusController)PAS.get_pas().get_statuscontroller();
 		if(sc!=null)
 		{
@@ -1170,11 +1170,27 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
-		dlg.setSize(new Dimension(350,200));
+		dlg.setSize(new Dimension(300,200));
 		dlg.get_logonpanel().getLblCompId().setVisible(false);
 		dlg.get_logonpanel().getCompId().setVisible(false);
 		dlg.get_logonpanel().getCompId().setEditable(false);
 		dlg.get_logonpanel().getBtnSubmit().setText(PAS.l("common_ok"));
+
+		/*dlg.get_logonpanel().get_gridconst().anchor = GridBagConstraints.CENTER;
+		dlg.get_logonpanel().add_spacing(DefaultPanel.DIR_VERTICAL, 10);
+		dlg.get_logonpanel().set_gridconst(0, dlg.get_logonpanel().inc_panels(), 7, 1);
+		try
+		{
+			ImageIcon img = new ImageIcon(this.getClass().getResource("icons/logo.jpg")); //logo.png"));
+			JLabel lbl = new JLabel(img);
+
+			dlg.get_logonpanel().add(lbl, dlg.get_logonpanel().get_gridconst());
+			dlg.get_logonpanel().revalidate();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}*/
 
 		/*dlg.get_logonpanel().getNSList().setVisible(false);
 		dlg.get_logonpanel().getCompId().setEditable(false);
@@ -1347,8 +1363,8 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
-		//return "nl_NL";
-		return "en_GB";
+		return "nl_NL";
+		//return "en_GB";
 	}
 
 	@Override
@@ -1389,7 +1405,7 @@ public class plugin_Centric extends PAS_Scripting
 	}
 
 	@Override
-	public boolean onOpenProject(Project project) {
+	public boolean onOpenProject(Project project, long nFromNewRefno) {
 		try {
 			// Does the same thing as after sending a message
 			CentricSendOptionToolbar csend = CentricVariables.centric_send;
@@ -1400,7 +1416,7 @@ public class plugin_Centric extends PAS_Scripting
 			CBSENDINGRESPONSE res = new CBSENDINGRESPONSE(); // Just to use the same
 			res.setLProjectpk(Long.parseLong(project.get_projectpk()));
 			
-			((CentricStatusController)PAS.get_pas().get_statuscontroller()).OpenStatus(Long.parseLong(project.get_projectpk()),csend);
+			((CentricStatusController)PAS.get_pas().get_statuscontroller()).OpenStatus(Long.parseLong(project.get_projectpk()),csend,nFromNewRefno);
 			/*if(m_centricstatuscontroller == null)
 				m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
 			else

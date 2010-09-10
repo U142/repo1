@@ -67,10 +67,10 @@ public class CentricStatusController extends StatusController {
 		return true;
 	}*/
 	
-	public boolean OpenStatus(long l_projectpk, CentricSendOptionToolbar centricsend) {
+	public boolean OpenStatus(long l_projectpk, CentricSendOptionToolbar centricsend, long nFromNewRefno) {
 		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 		res.setLProjectpk(l_projectpk);
-		set_cbsendingresponse(res, false);
+		set_cbsendingresponse(res, (nFromNewRefno>0));
 		if(getOpenedStatus()==null)
 			m_centricstatus = new CentricStatus(res);
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
@@ -90,8 +90,8 @@ public class CentricStatusController extends StatusController {
 				CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 				res.setLProjectpk(m_projectpk);
 				
-				m_centricstatus.set_cbsendingresponse(res);
-				m_centricstatus.getCBStatus(res);
+				//m_centricstatus.set_cbsendingresponse(res);
+				m_centricstatus.getCBStatus();
 				System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
 			}
 			else
@@ -117,6 +117,7 @@ public class CentricStatusController extends StatusController {
 		if(m_timer!=null)
 		{
 			m_timer.setDelay(1);
+			System.out.println("Forced Quick Status Update");
 		}
 	}
 
@@ -135,10 +136,15 @@ public class CentricStatusController extends StatusController {
 	}
 	
 	public void set_cbsendingresponse(CBSENDINGRESPONSE res, boolean b_isnewsending) {
-		if(m_centricstatus == null)
+		if(m_centricstatus == null) //this is an old sending
+		{
 			m_centricstatus = new CentricStatus(res);
+		}
+		//else if(!b_isnewsending)
 		else
-			m_centricstatus.set_cbsendingresponse(res);
+			b_isnewsending = m_centricstatus.set_cbsendingresponse(res);
+		if(b_isnewsending)
+			m_centricstatus.setFlipToNewSending();
 		if(b_isnewsending)
 			forceQuickUpdate();
 		runTimer();

@@ -497,7 +497,7 @@ public abstract class PasScriptingInterface
 	
 	public abstract boolean onOpenAddressBook();
 	
-	public abstract boolean onOpenProject(Project project);
+	public abstract boolean onOpenProject(Project project, long nFromNewRefno);
 	
 	public abstract boolean onCloseProject();
 

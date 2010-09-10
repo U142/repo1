@@ -123,6 +123,7 @@ public class ExecApp {
 			Error.getError().addError("Failed to load plugin", "Could not load the plugin \"" + sz_plugin + "\"", e, Error.SEVERITY_ERROR);
 			JOptionPane.showMessageDialog(null, "Unable to load plugin \"" + sz_plugin + "\"" + sz_codebase, "Unable to load plugin", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		if(PAS.pasplugin==null)
 		{

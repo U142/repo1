@@ -19,7 +19,7 @@ public class RROComboBox extends JComboBox
 	@Override
 	public void setSelectedItem(Object anObject) {
 		super.setSelectedItem(anObject);
-		System.out.println("setSelectedItem="+anObject);
+		//System.out.println("setSelectedItem="+anObject);
 	}
 
 	@Override
