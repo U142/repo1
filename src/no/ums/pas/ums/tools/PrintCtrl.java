@@ -259,12 +259,17 @@ public class PrintCtrl implements Printable {
 	        	//componentToBePrinted = null;
 	        	//componentToBePrinted.paint(g2d);
 	        }
-	        else {
+	        else if(componentToBePrinted != null){
 	        	g2d.scale(scale, scale);
 	        	componentToBePrinted.paint(g2d);
 	        	g2d.translate(0, PAS.get_pas().get_mapsize().getHeight()+5);
 	        }
-	        enableDoubleBuffering(componentToBePrinted);
+	        else {
+	        	g2d.scale(scale, scale);
+	        	g2d.translate(0, PAS.get_pas().get_mapsize().getHeight()+5);
+	        }
+	        if(componentToBePrinted != null)
+	        	enableDoubleBuffering(componentToBePrinted);
 	        return(PAGE_EXISTS);
 	    }
     }
