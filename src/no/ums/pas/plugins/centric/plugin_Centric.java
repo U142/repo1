@@ -1364,8 +1364,8 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
-		return "nl_NL";
-		//return "en_GB";
+		//return "nl_NL";
+		return "en_GB";
 	}
 
 	@Override

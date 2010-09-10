@@ -1252,8 +1252,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void kickRepaint() {
 		if(variables.MAPPANE.get_image() != null)
 			get_drawthread().setRepaint(variables.MAPPANE.get_mapimage());
-		else
-			variables.MAPPANE.load_map();
+		//else
+		//	variables.MAPPANE.load_map();
 		repaint();
 		validate();
 	}

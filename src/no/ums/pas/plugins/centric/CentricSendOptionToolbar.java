@@ -223,7 +223,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(projectpk <= 0)
 		{
 			m_txt_event_name.setEnabled(true);
-			m_btn_reset.doClick();
+			autoClickButton(m_btn_reset);
 			
 		}
 		else
@@ -419,7 +419,19 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		variables.MAPPANE.addMouseListener(this);
 		variables.MAPPANE.addKeyListener(this);
 		setVisible(true);
-		m_btn_reset.doClick();
+		//m_btn_reset.doClick();
+		autoClickButton(m_btn_reset);
+	}
+	
+	protected void autoClickButton(final JButton b)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				b.doClick();
+			}
+		});
 	}
 	
 	protected void checkForEnableSendButton()
@@ -816,7 +828,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_cancel.setEnabled(true);
 			//m_btn_send.setEnabled(true);
 			checkForEnableSendButton();
-			//m_btn_reset.doClick();
 			add_controls();
 			current_mode = MODE.MESSAGE_WRITING;
 			checkForEnableSendButton();
@@ -850,7 +861,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			variables.MAPPANE.repaint();
 			checkForEnableSendButton();
 			current_mode = MODE.MESSAGE_WRITING;
-			m_btn_update.doClick();
+			autoClickButton(m_btn_update);
 			updatePreviewText();
 			updateCharacters();
 
@@ -1259,7 +1270,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
 			variables.MAPPANE.set_active_shape(null);
 			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
-			m_btn_reset.doClick();
+			autoClickButton(m_btn_reset);
 		}
 	}
 	@Override
@@ -1317,7 +1328,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	{
 		m_txt_event_name.setEnabled(false);
 		if(current_mode==MODE.SHOWING_SUMMARY)
-			m_btn_cancel.doClick();
+			autoClickButton(m_btn_cancel);
 		String sz_msgpart = "";
 		String sz_originator = "";
 		String sz_risk = "";
@@ -1359,7 +1370,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			variables.MAPPANE.set_active_shape(shape);
 			variables.MAPPANE.setPaintModeBasedOnActiveShape(b_poly_is_elliptical);
 		}
-		m_btn_update.doClick();
+		autoClickButton(m_btn_update);
 		updatePreviewText();
 
 		
