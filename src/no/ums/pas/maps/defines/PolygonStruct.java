@@ -1,5 +1,6 @@
 package no.ums.pas.maps.defines;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,6 +16,7 @@ import java.awt.geom.PathIterator;
 
 import javax.swing.UIManager;
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
@@ -519,19 +521,19 @@ public class PolygonStruct extends ShapeStruct {
 		return m_bounds;
 	}
 	public void add_coor(Double lon, Double lat) {
-		this.add_coor(lon, lat, false, POINT_PRECISION);
+		this.add_coor(lon, lat, false, POINT_PRECISION, true);
 	}
 	
 	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates)
 	{
-		this.add_coor(lon, lat, b_allow_duplicates, POINT_PRECISION);
+		this.add_coor(lon, lat, b_allow_duplicates, POINT_PRECISION, true);
 	}
 	
 	public void add_coor(Double lon, Double lat, double precision) {
-		add_coor(lon, lat, false, precision);
+		add_coor(lon, lat, false, precision, true);
 	}
 
-	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision) {
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision, boolean finalize_after) {
 		if(!isEditable())
 			return;
 		int index = get_size();
@@ -546,8 +548,8 @@ public class PolygonStruct extends ShapeStruct {
 		m_coor_lat.add(dlat);
 		m_b_isadded.add(false);
 		hash_coors_added.put(index, id);
-		
-		finalize();
+		if(finalize_after)
+			finalizeShape();
 	}
 	public void set_activepoint(PolySnapStruct at) {
 		//at.get_polyindex() set this as last point
@@ -610,7 +612,7 @@ public class PolygonStruct extends ShapeStruct {
 			{
 				m_b_isadded.remove(n_index);
 			}
-			finalize();
+			finalizeShape();
 		}
 	}
 	public void move_at(int n_index) {
@@ -620,7 +622,7 @@ public class PolygonStruct extends ShapeStruct {
 		m_coor_lon.set(n_index, new Double(lon));
 		m_coor_lat.set(n_index, new Double(lat));
 		hash_coors_added.put(n_index, lon+"_"+lat);
-		finalize();
+		finalizeShape();
 	}
 	public NavStruct calc_bounds() {
 		ArrayList<Double> arr_use_lon = null, arr_use_lat = null;
@@ -697,6 +699,8 @@ public class PolygonStruct extends ShapeStruct {
 				m_int_x[i] = screen.width;
 				m_int_y[i] = screen.height;
 			}
+			//variables.DRAW.set_neednewcoors(true);
+			//PAS.get_pas().kickRepaint();
 		}
 		catch(Exception e)
 		{
@@ -716,6 +720,13 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		if(ellipse_polygon!=null)
 			ellipse_polygon.calc_coortopix(nav);
+		if(isElliptical())
+		{
+			if(m_p_center!=null)
+				m_p_center.recalc_pix(nav);
+			if(m_p_corner!=null)
+				m_p_corner.recalc_pix(nav);
+		}
 	}
 	private int m_n_lod = 5;
 	private int m_n_lod_meters = 5;
@@ -917,6 +928,10 @@ public class PolygonStruct extends ShapeStruct {
 				ellipse_polygon.draw(g, nav, true, true, true, p, bBorder, false, 1, false);
 				//return;
 			}
+			else
+			{
+				//System.out.println("not ell");
+			}
 		}
 		
 		Color col_dot = new Color(get_fill_color().getRed(), get_fill_color().getGreen(), get_fill_color().getBlue());
@@ -1036,10 +1051,32 @@ public class PolygonStruct extends ShapeStruct {
 				Error.getError().addError("PolyStruct","Exception in draw",e,1);
 			}
 		}	
-		if(bEditmode && !bFinalized && variables.MAPPANE.getMouseInsideCanvas()) {
+		if(bEditmode && !bFinalized && variables.MAPPANE.getMouseInsideCanvas() && !isElliptical()) {
 			draw_last_line(nav, g, p);
 			draw_first_line(nav, g, p);
 		}
+		/*if(isElliptical()) //paint helper-lines
+		{
+			int n_diameter_x = (m_p_corner.get_x() - m_p_center.get_x()) * 2;
+			int n_diameter_y = (m_p_corner.get_y() - m_p_center.get_y()) * 2;
+			float m_n_diameter_width_pix   	= Math.abs(m_p_corner.get_x() - m_p_center.get_x()) * 2;
+			float m_n_diameter_height_pix		= Math.abs(m_p_corner.get_y() - m_p_center.get_y()) * 2;
+			//double m_n_diameter_width_meters	= nav.calc_distance(m_p_center.get_x(), m_p_center.get_y(), m_p_corner.get_x(), m_p_center.get_y())*2;
+			//double m_n_diameter_height_meters	= nav.calc_distance(m_p_center.get_x(), m_p_center.get_y(), m_p_center.get_x(), m_p_corner.get_y())*2;
+			double m_n_diameter_width_meters = Math.abs(nav.distance_xy_M(m_p_center.get_lon(), m_p_center.get_lat(), m_p_corner.get_lon(), m_p_center.get_lat()).x * 2);
+			double m_n_diameter_height_meters = Math.abs(nav.distance_xy_M(m_p_center.get_lon(), m_p_center.get_lat(), m_p_center.get_lon(), m_p_corner.get_lat()).y * 2);
+			
+			g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
+			g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
+			g2d.drawLine((int)(m_p_center.get_x() - m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2), (int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2));
+			g2d.drawLine((int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2), (int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() - m_n_diameter_height_pix/2));
+			//FontSet g2d.setFont(new Font("Arial", Font.BOLD, 11));
+			String sz_width = Math.round(m_n_diameter_width_meters) + "m";
+			String sz_height= Math.round(m_n_diameter_height_meters) + "m";
+			g2d.drawString(sz_height, (m_p_center.get_x() + m_n_diameter_width_pix/2) + 5, m_p_center.get_y());
+			g2d.drawString(sz_width,m_p_center.get_x(), (m_p_center.get_y() + m_n_diameter_height_pix/2) + 17);
+			
+		}*/
 		//if(get_size()>0)
 		//	g.drawString(get_area_sqm()+"m2", get_pix_int_x()[0], get_pix_int_y()[0]);
 		super.draw_epicentre(g);
@@ -1050,8 +1087,16 @@ public class PolygonStruct extends ShapeStruct {
 		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 2, false);
 	}
 	public boolean can_lock() {
-		if(get_size() >= 3) {
-			return true;
+		if(isElliptical())
+		{
+			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_x()!=m_p_corner.get_x() && m_p_center.get_y()!=m_p_corner.get_y())
+				return true;
+		}
+		else
+		{
+			if(get_size() >= 3) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -1063,15 +1108,15 @@ public class PolygonStruct extends ShapeStruct {
 		if(!isEditable())
 			return;
 		m_p_center = p_center;
-		m_p_corner = p_corner;		
+		m_p_corner = p_corner;
 		recalc_shape(nav);
-		finalize();
+		finalizeShape();
 	}
 	public void set_ellipse_center(Navigation nav, MapPoint p_center) {
 		if(!isEditable())
 			return;
-		set_ellipse(nav, p_center, m_p_corner);
-		//recalc_shape(nav);
+		//ellipse_polygon = null; //reset
+		set_ellipse(nav, p_center, p_center);
 		//finalize();
 	}
 	public void set_ellipse_corner(Navigation nav, MapPoint p_corner) {
@@ -1099,12 +1144,12 @@ public class PolygonStruct extends ShapeStruct {
 				m_p_center.get_lat(), 
 				m_p_corner.get_lon(), 
 				m_p_corner.get_lat(), 
-				60, 0, 
+				50, 0, 
 				POINT_PRECISION,
 				ellipse_polygon);
 		this.m_ellipse_coor_lat = ellipse_polygon.get_coors_lat();
 		this.m_ellipse_coor_lon = ellipse_polygon.get_coors_lon();
-		System.out.println("points="+m_ellipse_coor_lat.size());
+		//System.out.println("points="+m_ellipse_coor_lat.size());
 		ellipse_polygon.set_border_color(this.get_border_color());
 		ellipse_polygon.set_fill_color(this.get_fill_color());
 		this.m_b_needcoortopix = true;
@@ -1147,8 +1192,9 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			int idx = (i % restrict.get_size());
 			MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
-			poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION);
+			poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);
 		}
+		poly.finalizeShape();
 	}
 	
 	protected void iterateEllipse(PolygonStruct newpoly,
@@ -1261,9 +1307,9 @@ public class PolygonStruct extends ShapeStruct {
 			if(first_intersect!=null && first_intersect.getPointReference()>=0 && n_entered_polygon_at_idx>=0)
 			{
 				if(b_cur_inside)
-					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
+					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION, false);
 				if(num_intersects>0)
-					newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);
+					newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION, false);
 				
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, first_intersect.getPointReference(), n_entered_polygon_at_idx);
 				return;
@@ -1271,7 +1317,7 @@ public class PolygonStruct extends ShapeStruct {
 			else if(n_first_entered_polygon_at_idx>=0 && n_left_polygon_at_idx>=0) //we end at the outside, make a line from last intersect to first intersect
 			{
 				if(b_cur_inside)
-					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
+					newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION, false);
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, 
 						n_left_polygon_at_idx, n_first_entered_polygon_at_idx );
 				return;
@@ -1283,23 +1329,23 @@ public class PolygonStruct extends ShapeStruct {
 		if(b_back_inside && first_intersect!=null)
 		{
 			if(b_cur_inside)
-				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
+				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION, false);
 			if(n_left_polygon_at_idx!=first_intersect.getPointReference())
 			{
 				followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_END, n_left_polygon_at_idx, first_intersect.getPointReference());
 				//n_left_polygon_at_idx = -1;
 			}
-			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);
+			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION, false);
 		}
 		else if(b_cur_inside && intersects.size()==0)
 		{
-			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
+			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION, false);
 		}
 		else if(!b_back_inside && num_intersects>0)
 		{
 			if(b_cur_inside)
-				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION);
-			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION);			
+				newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), true, POINT_PRECISION, false);
+			newpoly.add_coor(first_intersect.get_lon(), first_intersect.get_lat(), true, POINT_PRECISION, false);			
 		}
 
 		if(num_intersects==0)
@@ -1466,6 +1512,7 @@ public class PolygonStruct extends ShapeStruct {
 		PolygonStruct newpoly = new PolygonStruct();
 		//iterateEllipse(newpoly, restrict, 0, false, null, null);
 		iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
+		newpoly.finalizeShape();
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;
 		this.m_b_needcoortopix = true;

@@ -129,15 +129,15 @@ public class EllipseStruct extends ShapeStruct {
 		m_p_center = p_center;
 		m_p_corner = p_corner;		
 		recalc_shape(nav);
-		finalize();
+		finalizeShape();
 	}
 	public void set_ellipse_center(Navigation nav, MapPoint p_center) {
 		set_ellipse(nav, p_center, m_p_corner);
-		finalize();
+		finalizeShape();
 	}
 	public void set_ellipse_corner(Navigation nav, MapPoint p_corner) {
 		set_ellipse(nav, m_p_center, p_corner);
-		finalize();
+		finalizeShape();
 	}
 	public void recalc_shape(Navigation nav) {
 		//Ellipse2D.Double height, width, upperleft_x, upperleft_y

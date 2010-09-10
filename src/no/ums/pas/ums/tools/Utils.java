@@ -129,10 +129,11 @@ public final class Utils {
 
             //polygon[curStep, 0] = centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta);
             //polygon[curStep, 1] = centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta);
-            poly.add_coor(centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta), centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta), true, precision);
+            poly.add_coor(centerx + (a * cosalpha * cosbeta - b * sinalpha * sinbeta), centery + (a * cosalpha * sinbeta + b * sinalpha * cosbeta), true, precision, false);
 
             curStep++;
         }
+        poly.finalizeShape();
 
         return true;
     }    

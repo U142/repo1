@@ -131,7 +131,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		}
 	}
 	/** mark as finished to prepare bounds*/
-	protected void finalize()
+	public void finalizeShape()
 	{
 		try
 		{

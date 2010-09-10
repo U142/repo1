@@ -634,7 +634,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			m_dim_cursorpos.height = e.getY();
 			addAction("act_mousemove", p);//new Point(e.getX(), e.getY()));
 			if(!get_isdragging()) {
-				execMouseOver(e);
+				//execMouseOver(e);
 			}
 			//only repaint if
 			switch(get_mappane().get_mode())
@@ -849,6 +849,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				{
 					try {
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
+						addAction("act_set_polygon_ellipse_corner", p);
 						addAction("act_set_polygon_ellipse_center", p);
 						set_isdragging(true);
 					}
