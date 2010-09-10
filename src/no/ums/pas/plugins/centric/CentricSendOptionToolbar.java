@@ -74,6 +74,7 @@ import no.ums.pas.plugins.centric.send.RROComboEditor;
 import no.ums.pas.plugins.centric.send.RROComboRenderer;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
+import no.ums.pas.plugins.centric.tools.CentricPrintCtrl;
 import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.PAS;
@@ -990,6 +991,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					
 				}
 			}
+			String m_headerfooter = "--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---";
+			String m_message = PAS.l("common_message_content") + ":\n" + m_txt_preview.getText();
+			String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
+			
 			
 			image.setIcon(new ImageIcon(img));
 			pnl.add(image,BorderLayout.PAGE_START);
@@ -1017,13 +1022,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			printFrame.pack();
 			container.setBackground(Color.WHITE);
 			printFrame.setSize(printFrame.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height - (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.05));
-			//printFrame.setVisible(true);
+			printFrame.setVisible(true);
 			BufferedImage imidj = new BufferedImage(printFrame.getHeight(), printFrame.getWidth(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = imidj.createGraphics();
 			printFrame.printAll(g);
-			PrintCtrl pctrl = new PrintCtrl(imidj,printFrame);
-			pctrl.print();
-			printFrame.dispose();
+			
+			CentricPrintCtrl pctrl = new CentricPrintCtrl(variables.DRAW.get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
+			pctrl.doPrint();
+			//pctrl.print(g);
+			
 		}
 
 	}

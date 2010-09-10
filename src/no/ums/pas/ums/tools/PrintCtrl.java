@@ -149,6 +149,7 @@ public class PrintCtrl implements Printable {
 	public int print(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         disableDoubleBuffering(componentToBePrinted);
+        print();
 		return 0;
 	}
 
@@ -259,17 +260,12 @@ public class PrintCtrl implements Printable {
 	        	//componentToBePrinted = null;
 	        	//componentToBePrinted.paint(g2d);
 	        }
-	        else if(componentToBePrinted != null){
+	        else {
 	        	g2d.scale(scale, scale);
 	        	componentToBePrinted.paint(g2d);
 	        	g2d.translate(0, PAS.get_pas().get_mapsize().getHeight()+5);
 	        }
-	        else {
-	        	g2d.scale(scale, scale);
-	        	g2d.translate(0, PAS.get_pas().get_mapsize().getHeight()+5);
-	        }
-	        if(componentToBePrinted != null)
-	        	enableDoubleBuffering(componentToBePrinted);
+	        enableDoubleBuffering(componentToBePrinted);
 	        return(PAGE_EXISTS);
 	    }
     }
