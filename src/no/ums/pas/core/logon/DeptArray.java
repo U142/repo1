@@ -171,10 +171,10 @@ public class DeptArray extends ArrayList<Object> {
 					f_prev_moveto_x = coors[0]/int_mod;
 					f_prev_moveto_y = coors[1]/int_mod;
 					System.out.println("SEG_MOVETO ("+n_total_points+")");
-					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true);
+					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true, false);
 				}
 				else
-					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true);
+					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true, false);
 								n_total_points++;
 				point_count++;
 				//System.out.println("Lon " + coors[0]/int_mod + " Lat " + coors[1]/int_mod);
@@ -189,6 +189,7 @@ public class DeptArray extends ArrayList<Object> {
 			it.next();
 		}
 		System.out.println("Combined Pointcount = " + n_total_points);
+		combined_shapestruct.finalizeShape();
 		combined_shapestruct.setCurrentViewMode(DETAILMODE.SHOW_POLYGON_FULL, 0, null);
 
 		m_combined_shapestruct_list.add(combined_shapestruct);

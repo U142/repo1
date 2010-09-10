@@ -42,8 +42,9 @@ public class UShapeToShape
 				List<no.ums.ws.pas.status.UPolypoint> list = upolygon.getPolypoint();
 				for(int i=0; i < list.size(); i++)
 				{
-					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat(), true);
+					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat(), true, false);
 				}
+				polygonstruct.finalizeShape();
 			}
 			return polygonstruct;
 		}
@@ -111,8 +112,9 @@ public class UShapeToShape
 				List<UPolypoint> list = upolygon.getPolypoint();
 				for(int i=0; i < list.size(); i++)
 				{
-					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat(), true);
+					polygonstruct.add_coor(list.get(i).getLon(), list.get(i).getLat(), true, false);
 				}
+				polygonstruct.finalizeShape();
 			}
 			return polygonstruct;
 		}

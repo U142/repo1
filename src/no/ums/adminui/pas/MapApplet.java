@@ -82,6 +82,7 @@ import no.ums.pas.maps.defines.UnknownShape;
 import no.ums.pas.MAPDraw;
 import no.ums.pas.PAS;
 import no.ums.pas.PASActions;
+import no.ums.pas.PASDraw;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
@@ -101,7 +102,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	public MapFrameAdmin m_mappane;
-	public MAPDraw m_drawthread;
+	public AdminDraw m_drawthread;
 	public Navigation m_navigation;
 	public Image m_image;
 	public String coors;
@@ -117,6 +118,10 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		}
 		
+	}
+	
+	public void kickRepaint()
+	{
 	}
 	
 	public void start() {
@@ -161,7 +166,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	private void afterLogon() {
 		
-		m_drawthread = new MAPDraw(this,Thread.NORM_PRIORITY,640,480);
+		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,640,480);
 		variables.DRAW = m_drawthread;
 		Settings m_settings = new Settings();
 		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
@@ -184,7 +189,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	private void afterAfterLogon() {
 		SendController m_sendcontroller = new SendController();
-		m_drawthread.set_sendcontroller(m_sendcontroller);
+		//m_drawthread.set_sendcontroller(m_sendcontroller);
 		variables.SENDCONTROLLER = m_sendcontroller;
 		
 		//m_drawthread.set_mappane(m_mappane);
@@ -277,7 +282,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.addActionListener(this);
 				
 		//m_mappane.SetIsLoading(false, "map");
-		//put("1");
+		put("1");
 	}
 	
 	private void add_controls(){
@@ -693,7 +698,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//variables.MAPPANE.setAllOverlaysDirty();
 		//variables.DRAW.setNeedRepaint();
 		variables.MAPPANE.kickRepaint();
-		variables.MAPPANE.load_map(true);
+		//variables.MAPPANE.load_map(true);
 		
 		
 	}

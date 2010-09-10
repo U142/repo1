@@ -8,7 +8,7 @@ public class PASDraw extends Draw {
 	UpdateThread m_checkforupdates_thread;
 	protected PAS get_pas() { return m_pas; }
 	
-	PASDraw(PAS pas, Component component, int l_pri, int x, int y) {
+	public PASDraw(PAS pas, Component component, int l_pri, int x, int y) {
 		super(component, l_pri, x, y);
 		m_pas = pas;
 		m_checkforupdates_thread = new UpdateThread(1000); //check every one second

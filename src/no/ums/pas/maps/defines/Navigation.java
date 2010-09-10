@@ -133,7 +133,7 @@ public class Navigation {
 	public boolean bboxOverlap(NavStruct test) {
 		if(test==null)
 			return false;
-		if(test._rbo < m_f_nav_lbo || test._lbo > m_f_nav_rbo || test._ubo < m_f_nav_bbo || test._bbo > m_f_nav_ubo)
+		if(test._rbo < m_f_lbo || test._lbo > m_f_rbo || test._ubo < m_f_bbo || test._bbo > m_f_ubo)
 			return false;
 		return true;
 		

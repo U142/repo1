@@ -205,10 +205,10 @@ public class MapFrameAdmin extends MapFrame {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
 		try
 		{
 			//super.paint(g);
+			get_drawthread().set_neednewcoors(true);
 			get_drawthread().create_image();
 			if(get_mode()==MAP_MODE_PAN_BY_DRAG && get_actionhandler().get_isdragging())
 			{

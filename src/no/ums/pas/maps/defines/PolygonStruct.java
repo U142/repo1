@@ -529,11 +529,16 @@ public class PolygonStruct extends ShapeStruct {
 		this.add_coor(lon, lat, b_allow_duplicates, POINT_PRECISION, true);
 	}
 	
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, boolean auto_finalize)
+	{
+		add_coor(lon, lat, b_allow_duplicates, POINT_PRECISION, auto_finalize);
+	}
+	
 	public void add_coor(Double lon, Double lat, double precision) {
 		add_coor(lon, lat, false, precision, true);
 	}
 
-	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision, boolean finalize_after) {
+	public void add_coor(Double lon, Double lat, boolean b_allow_duplicates, double precision, boolean auto_finalize) {
 		if(!isEditable())
 			return;
 		int index = get_size();
@@ -548,7 +553,7 @@ public class PolygonStruct extends ShapeStruct {
 		m_coor_lat.add(dlat);
 		m_b_isadded.add(false);
 		hash_coors_added.put(index, id);
-		if(finalize_after)
+		if(auto_finalize)
 			finalizeShape();
 	}
 	public void set_activepoint(PolySnapStruct at) {
