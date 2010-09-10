@@ -1699,27 +1699,23 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	public void download_houses() {
-		new Thread("Download houses thread")
-		{
-			public void run()
-			{
-				boolean b_width_exceeded = false;
-				if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
-					b_width_exceeded = true;
-				}
-				
-				if(get_mainmenu().get_selectmenu().get_bar().get_show_houses() && !b_width_exceeded) {
-					actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
-					get_housecontroller().start_download(true);
-				} else if(!get_mainmenu().get_selectmenu().get_bar().get_show_houses()) {
-					actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_DISABLED_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
-				} else if(b_width_exceeded) {
-					actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_NO_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
-				}
-				get_drawthread().set_neednewcoors(true);
-				PAS.get_pas().kickRepaint();
-			}
-		}.start();
+		boolean b_width_exceeded = false;
+		if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
+			b_width_exceeded = true;
+		}
+		if(!get_mainmenu().get_selectmenu().get_bar().get_show_houses()) {
+			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_DISABLED_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+		} else if(b_width_exceeded) {
+			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_NO_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+		}
+		if(get_mainmenu().get_selectmenu().get_bar().get_show_houses() && !b_width_exceeded) {
+			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+			pasplugin.onDownloadHouses(get_housecontroller());
+			//get_housecontroller().start_download(true);
+		}
+
+		get_drawthread().set_neednewcoors(true);
+		PAS.get_pas().kickRepaint();
 	}
 	public void printStackTrace(StackTraceElement [] ste) {
 		for(int i=0; i < ste.length; i++) {

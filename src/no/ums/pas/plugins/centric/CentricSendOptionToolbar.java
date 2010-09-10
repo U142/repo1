@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -1006,7 +1007,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			container.setBackground(Color.WHITE);
 			printFrame.setSize(printFrame.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height - (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.05));
 			//printFrame.setVisible(true);
-			PrintCtrl pctrl = new PrintCtrl(printFrame, printFrame);
+			BufferedImage imidj = new BufferedImage(printFrame.getHeight(), printFrame.getWidth(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = imidj.createGraphics();
+			printFrame.printAll(g);
+			PrintCtrl pctrl = new PrintCtrl(imidj,printFrame);
 			pctrl.print();
 			printFrame.dispose();
 		}

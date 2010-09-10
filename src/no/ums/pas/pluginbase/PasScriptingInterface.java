@@ -22,6 +22,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.geotools.data.ows.Layer;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -529,5 +530,7 @@ public abstract class PasScriptingInterface
 	 * @return true if sending was locked successfully
 	 */
 	public abstract boolean onLockSending(SendOptionToolbar toolbar, boolean bLock);
+	
+	public abstract boolean onDownloadHouses(final HouseController controller);
 }
 

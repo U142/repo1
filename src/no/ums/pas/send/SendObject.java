@@ -78,7 +78,8 @@ public class SendObject extends Object {
 				m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
 			else
 				m_toolbar = new SendOptionToolbar(this, callback, n_send_id);
-			PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
+			if(PAS.pasplugin != null) // admin map
+				PAS.pasplugin.onAddSendOptionToolbar(m_toolbar);
 		} catch(Exception e) {
 			//PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);
 			//PAS.get_pas().printStackTrace(e.getStackTrace());

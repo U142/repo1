@@ -20,6 +20,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import no.ums.pas.*;
 import no.ums.pas.core.variables;
+import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
@@ -1045,6 +1046,19 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
 		toolbar.lock_sending(bLock);
+		return true;
+	}
+
+	@Override
+	public boolean onDownloadHouses(final HouseController controller) {
+		new Thread("Download houses thread")
+		{
+			public void run()
+			{
+				PAS.get_pas().actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+				controller.start_download(true);
+			}
+		}.start();
 		return true;
 	}
 

@@ -7,6 +7,7 @@ import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.*;
@@ -239,5 +240,4 @@ public class MapFrameAdmin extends MapFrame {
 		catch(Exception e) { }
 		super.drawOnEvents(gfx);
 	}
-
 }

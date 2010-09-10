@@ -1,6 +1,7 @@
 package no.ums.adminui.pas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -24,15 +25,21 @@ import no.ums.ws.parm.admin.PAOBJECT;
 import no.ums.ws.parm.admin.ParmAdmin;
 import no.ums.ws.parm.admin.ULOGONINFO;
 import no.ums.ws.parm.admin.UPolypoint;
+import no.ums.ws.pas.ArrayOfUDEPARTMENT;
+import no.ums.ws.pas.ArrayOfUShape;
+import no.ums.ws.pas.PASHAPETYPES;
 import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.RESTRICTIONTYPE;
 import no.ums.ws.pas.UDEPARTMENT;
 import no.ums.ws.pas.UNSLOOKUP;
 import no.ums.ws.pas.UPASLOGON;
 import no.ums.ws.pas.UPASUISETTINGS;
+import no.ums.ws.pas.status.UPolygon;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
 
 import org.jvnet.substance.SubstanceLookAndFeel;
 
+import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.pluginbase.PAS_Scripting;
@@ -110,20 +117,44 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		}
 		
+	}
+	
+	public void start() {
 		resize(800,600);
 		vars.init("https://secure.ums2.no/centricws/WS/");
 		PAS.setLocale("en","GB");
-		info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
-		WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
+		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
+		//WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
 		
-		try {
-			PAS.pasplugin = new PAS_Scripting();
-		} catch(Exception e) {
-			System.out.print("fjols");
-		}
+		no.ums.ws.pas.ULOGONINFO logon = new no.ums.ws.pas.ULOGONINFO();
+		
+		String session = "9235035e-f6f8-413c-b921-059f78f8516c";
+		logon.setLDeptpk(1);
+		logon.setLComppk(1);
+		logon.setLUserpk(7);
+		logon.setSzPassword("614b5c970633ec4ac2ee96f98f6fdeb04e4fb0e0b13dc9401b674bb8c4a41ee96b67ce39491a716776ca81a4b58a7b47434aef0195c90241856fe065a476adcb");
+		logon.setSessionid(session);
+		
+	/*
+		logon.setLDeptpk(Integer.parseInt(getParameter("deptid")));
+		logon.setLComppk(Integer.parseInt(getParameter("compid")));
+		logon.setLUserpk(Long.parseLong(getParameter("userid")));
+		logon.setSzPassword(getParameter("password"));
+		logon.setSessionid(getParameter("session"));
+		*/
+		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", session, "");
+		
+		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
 		
 		m_navigation = new Navigation(this,640,480);
 		variables.NAVIGATION = m_navigation;
+		
+		try {
+			ting.run();
+			//PAS.pasplugin = new PAS_Scripting();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 	}
@@ -152,15 +183,6 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	
 	private void afterAfterLogon() {
-		//m_mappane = new MapFrameAdmin(640, 480, m_drawthread, m_navigation, new HTTPReq("http://vb4utv"), true);
-		//http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road
-		//m_mappane.initialize();
-		//m_mappane.SetIsLoading(true, "map");
-		//variables.MAPPANE = m_mappane;
-		//m_drawthread.setMapImage(m_mappane.get_image());
-		//m_drawthread.set_mappane(m_mappane);
-		//m_mappane.initialize();
-		
 		SendController m_sendcontroller = new SendController();
 		m_drawthread.set_sendcontroller(m_sendcontroller);
 		variables.SENDCONTROLLER = m_sendcontroller;
@@ -213,14 +235,40 @@ public class MapApplet extends JApplet implements ActionListener {
 		btn_put.addActionListener( new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				put("59,0347|58,9873|58,958|58,8693|58,8644|58,8489|58,8523|58,8509|58,8428|58,832|58,8212|58,8145|58,8104|58,8185|58,8199|58,8124|58,8063|58,8023|58,8003|58,7827|58,778|58,7895|58,7874|58,7969|58,7982|58,8016|58,7962|58,7874|58,8036|58,7982|58,8036|58,8057|58,8124|58,8131|58,8226|58,828¤5,7844|5,8631|5,9734|6,1102|6,0871|6,07|6,0529|6,0372|6,0136|5,9978|5,9873|5,9913|5,9847|5,9768|5,965|5,9466|5,9427|5,9112|5,8888|5,8442|5,8207|5,7892|5,7629|5,7656|5,7537|5,7497|5,7354|5,7314|5,7196|5,6986|5,6829|5,6645|5,6632|5,6435|5,6369|5,6106");
+				variables.MAPPANE.get_active_shape();
+				no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
+				PolygonStruct polygon = variables.MAPPANE.get_active_shape().typecast_polygon();
+				shape.setColAlpha(polygon.get_fill_color().getAlpha());
+				shape.setColBlue(polygon.get_fill_color().getBlue());
+				shape.setColGreen(polygon.get_fill_color().getGreen());
+				shape.setColRed(polygon.get_fill_color().getRed());
+				no.ums.ws.pas.UPolypoint p;
+				for(int i=0;i<polygon.get_coors_lat().size();++i) {
+					p = new no.ums.ws.pas.UPolypoint();
+					p.setLat(polygon.get_coors_lat().get(i));
+					p.setLon(polygon.get_coors_lon().get(i));
+					shape.getPolypoint().add(p);
+				}
+				ArrayOfUShape arrShape = new ArrayOfUShape();
+				arrShape.getUShape().add(shape);
+				variables.USERINFO.get_current_department().get_restriction_shapes();
+				variables.USERINFO.add_department(variables.USERINFO.get_default_dept().get_deptpk(),
+						variables.USERINFO.get_default_dept().get_deptid(), variables.USERINFO.get_default_dept().get_defaultnumber(),
+						(float)variables.USERINFO.get_default_dept().get_nav_init()._lbo,
+						(float)variables.USERINFO.get_default_dept().get_nav_init()._rbo,
+						(float)variables.USERINFO.get_default_dept().get_nav_init()._ubo, 
+						(float)variables.USERINFO.get_default_dept().get_nav_init()._bbo,
+						false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long)1, "", null, 2, arrShape);
+				
+				
+				variables.USERINFO.get_current_department().CalcCoorRestrictionShapes();
 				//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}});
-		/*
+		
 		Container contentpane = getContentPane();
 		contentpane.setLayout(new FlowLayout());
-		contentpane.add(pnl_buttons, BorderLayout.PAGE_START);
-		contentpane.add(m_mappane, BorderLayout.PAGE_END);*/
+		//contentpane.add(pnl_buttons, BorderLayout.PAGE_START);
+		contentpane.add(m_mappane, BorderLayout.PAGE_END);
 		//add(m_mappane);
 		//m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By");
 		//m_drawthread.setRepaint(m_image);
@@ -228,52 +276,13 @@ public class MapApplet extends JApplet implements ActionListener {
 		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
 		m_mappane.addActionListener(this);
 				
-		m_mappane.SetIsLoading(false, "map");
-		//m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
-		//m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
-		//m_mappane.set_mode(MapFrame.MAP_MODE_PAN);
-		//m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
-		
-		//JPanel jall = new JPanel();
-		//jall.add(new JLabel("jallaballa"));
-		//add(jall);
-		//put("59,0347|58,9873|58,958|58,8693|58,8644|58,8489|58,8523|58,8509|58,8428|58,832|58,8212|58,8145|58,8104|58,8185|58,8199|58,8124|58,8063|58,8023|58,8003|58,7827|58,778|58,7895|58,7874|58,7969|58,7982|58,8016|58,7962|58,7874|58,8036|58,7982|58,8036|58,8057|58,8124|58,8131|58,8226|58,828¤5,7844|5,8631|5,9734|6,1102|6,0871|6,07|6,0529|6,0372|6,0136|5,9978|5,9873|5,9913|5,9847|5,9768|5,965|5,9466|5,9427|5,9112|5,8888|5,8442|5,8207|5,7892|5,7629|5,7656|5,7537|5,7497|5,7354|5,7314|5,7196|5,6986|5,6829|5,6645|5,6632|5,6435|5,6369|5,6106");
+		//m_mappane.SetIsLoading(false, "map");
+		//put("1");
 	}
 	
 	private void add_controls(){
 		
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 * 
-	public MapFrame m_mappane;
-	public Draw m_drawthread;
-	public Navigation m_navigation;
-	public Image m_image;
-	
-	public void init() {
-		resize(800,600);
-		vars.init("https://secure.ums2.no/pasws/WS/");
-		PAS.setLocale("en","GB");
-		m_navigation = new Navigation(this,0,0);
-		//MapPanel mp = new MapPanel("http://vb4utv");
-		Draw m_drawthread = new Draw(m_mappane,Thread.NORM_PRIORITY,640,480);
-		m_mappane = new MapFrame(640, 480, m_drawthread, m_navigation, new HTTPReq("http://vb4utv"), true);
-		m_drawthread.set_mappane(m_mappane);
-		add(m_mappane);
-		m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By", m_navigation, m_mappane);
-		m_drawthread.setMapImage(m_image);
-		m_mappane.addActionListener(this);
-		m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
-		
-		//JPanel jall = new JPanel();
-		//jall.add(new JLabel("jallaballa"));
-		//add(jall);
-		
-		setVisible(true);
-	 */
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
@@ -284,23 +293,11 @@ public class MapApplet extends JApplet implements ActionListener {
 		{
 			
 			boolean b_results_ready;
-			UPASLOGON l = (UPASLOGON)e.getSource();
-			
-			if(!l.isFGranted())
-			{
-				//m_info = new UserInfo("0", 0, l.getSzUserid(),l.getSzCompid(),"", "");
-				m_info = null;
-				b_results_ready = true;
-				
-				return;
-			}
+			ArrayOfUDEPARTMENT wsdept = (ArrayOfUDEPARTMENT)e.getSource();
 			
 			afterLogon();
 			
-			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
-					l.getSzCompid(), l.getSzName(), l.getSzSurname(),"", l.getSzOrganization());
-			UPASUISETTINGS m_pasui_settings = l.getUisettings();
-			List<UDEPARTMENT> depts = l.getDepartments().getUDEPARTMENT();
+			List<UDEPARTMENT> depts = wsdept.getUDEPARTMENT();
 			for(int i=0; i < depts.size(); i++)
 			{
 				UDEPARTMENT d = depts.get(i);
@@ -310,31 +307,8 @@ public class MapApplet extends JApplet implements ActionListener {
 						d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
 						d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
 			}
-			//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
-			//m_info.get_departments().ClearCombinedRestrictionShapelist();			
-			logoninfo = new ULOGONINFO();
-			logoninfo.setSzUserid(l.getSzUserid());
-			logoninfo.setSzCompid(l.getSzCompid());
-			logoninfo.setSzPassword(info.get_passwd());
-			logoninfo.setLComppk(l.getLComppk());
-			logoninfo.setLDeptpk(m_info.get_default_deptpk());
-			logoninfo.setLUserpk(l.getLUserpk());
-			logoninfo.setSessionid(l.getSessionid());
-			
-			
-			/*
-			ParmAdmin pa = new ParmAdmin();
-			
-			List<PAOBJECT> obj = pa.getParmAdminSoap12().getRegions(logoninfo).getPAOBJECT();
-			for(int i = 0; i<obj.size();++i){
-				PAOBJECT o = obj.get(i);
-				PolygonStruct ps = new PolygonStruct(m_navigation.getDimension());
-				//List<UPolypoint> ppl = o.getMShape().getMArrayPolypoints().getUPolypoint();
-				List<UPolypoint> ppl = o.getMShape().getPolypoint();
-				for(int j=0;j<ppl.size();++j)
-					ps.add_coor(ppl.get(j).getLon(), ppl.get(j).getLat());
-				m_info.get_departments().m_combined_shapestruct_list.add(ps);
-			}*/
+
+
 			m_info.get_departments().CreateCombinedRestrictionShape();
 			if(m_info.get_departments().get_combined_restriction_shape() != null) {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
@@ -344,23 +318,13 @@ public class MapApplet extends JApplet implements ActionListener {
 				}
 			}
 			variables.USERINFO = m_info;
-			//variables.NAVIGATION.setNavigation(m_info.get_nav_init());
-			//variables.NAVIGATION.setNavigation(new NavStruct(3.3353,53.55,7.2271,50.2176));
-			//variables.NAVIGATION.setNavigation(new NavStruct(40,53,45,50));
 			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144));
-			//variables.NAVIGATION.setNavigation(new NavStruct(53.55,3.3353,50.2176,7.2271));
 			m_mappane = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 			variables.MAPPANE = m_mappane;
-			m_mappane.load_map();//variables.NAVIGATION.getNavLBO(), variables.NAVIGATION.getNavRBO(), variables.NAVIGATION.getNavUBO(), variables.NAVIGATION.getNavBBO(), this.getSize(), 0, "By");
-			//m_drawthread.setMapImage(m_mappane.get_image());
+			m_mappane.load_map();
 			m_drawthread.set_mappane(m_mappane);
 			
-			//m_drawthread.setRepaint(m_image);
-			//variables.DRAW.set_neednewcoors(true);
-			//variables.DRAW.set_need_imageupdate();
 			m_mappane.initialize();
-			//m_mappane.repaint();
-			//m_mappane.validate();
 			add(m_mappane);
 			b_results_ready = true;
 			afterAfterLogon();
@@ -699,25 +663,18 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		}
 		
-	/*public void paint(Graphics g) {
-		g.drawString(test, 25, 10);
-	}*/
-	//public void put(Double[] lat, Double[] lon) {
-	public void put(String coors) {
-		this.coors = coors;
-		
-		String[] l = coors.split("¤");
-		
-		PolygonStruct s = new PolygonStruct(new Dimension(m_mappane.get_dimension().width,m_mappane.get_dimension().height));
-		//PolygonStruct s = new PolygonStruct(new Dimension(640,480));
-		
-		String[] clat = l[0].split("\\|");
-		String[] clon = l[1].split("\\|");
-		
-		for(int i=0;i<clat.length;++i) {
-			s.add_coor(Double.parseDouble(clon[i].replace(',', '.')),Double.parseDouble(clat[i].replace(',', '.')));
+	public void put(String id) {
+		PolygonStruct s = null; 
+		for(int i=0;i<variables.USERINFO.get_departments().size();++i){
+			DeptInfo deptinfo = (DeptInfo)m_info.get_departments().get(i);
+			if(deptinfo.get_deptpk() == Integer.parseInt(id)) { 
+				List<ShapeStruct> rshapes = deptinfo.get_restriction_shapes();
+				s = rshapes.get(0).typecast_polygon();
+				break;
+			}
+			
 		}
-		m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+		
 		if(variables.SENDCONTROLLER.get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 			variables.SENDCONTROLLER.set_activesending(so);
@@ -728,10 +685,49 @@ public class MapApplet extends JApplet implements ActionListener {
 		else {
 			variables.SENDCONTROLLER.get_activesending().get_sendproperties().set_shapestruct(s);
 		}
-			
-		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-		//test = fjols;
+
+		sp.get_shapestruct().set_fill_color(Color.BLUE);
+		variables.MAPPANE.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+		variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+
+		//variables.MAPPANE.setAllOverlaysDirty();
+		//variables.DRAW.setNeedRepaint();
 		variables.MAPPANE.kickRepaint();
+		variables.MAPPANE.load_map(true);
+		
+		
+	}
+	public void store(String name) {
+		variables.MAPPANE.get_active_shape();
+		no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
+		PolygonStruct polygon = variables.MAPPANE.get_active_shape().typecast_polygon();
+		shape.setColAlpha(polygon.get_fill_color().getAlpha());
+		shape.setColBlue(polygon.get_fill_color().getBlue());
+		shape.setColGreen(polygon.get_fill_color().getGreen());
+		shape.setColRed(polygon.get_fill_color().getRed());
+		no.ums.ws.pas.UPolypoint p;
+		for(int i=0;i<polygon.get_coors_lat().size();++i) {
+			p = new no.ums.ws.pas.UPolypoint();
+			p.setLat(polygon.get_coors_lat().get(i));
+			p.setLon(polygon.get_coors_lon().get(i));
+			shape.getPolypoint().add(p);
+		}
+		ArrayOfUShape arrShape = new ArrayOfUShape();
+		arrShape.getUShape().add(shape);
+		variables.USERINFO.get_current_department().get_restriction_shapes();
+		variables.USERINFO.add_department(variables.USERINFO.get_default_dept().get_deptpk(),
+				name, variables.USERINFO.get_default_dept().get_defaultnumber(),
+				(float)variables.USERINFO.get_default_dept().get_nav_init()._lbo,
+				(float)variables.USERINFO.get_default_dept().get_nav_init()._rbo,
+				(float)variables.USERINFO.get_default_dept().get_nav_init()._ubo, 
+				(float)variables.USERINFO.get_default_dept().get_nav_init()._bbo,
+				false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long)1, "", null, 2, arrShape);
+		
+		
+		variables.USERINFO.get_current_department().CalcCoorRestrictionShapes();
+	}
+	public void generateRestrictionShape(String[] coors) {
+	
 	}
 	private PolygonStruct parseCoors(String coors){
 		String[] l = coors.split("¤");

@@ -34,6 +34,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.core.variables;
+import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
@@ -1518,6 +1519,11 @@ public class plugin_Centric extends PAS_Scripting
 		enableSendButtons(!bLock);
 		PAS.get_pas().kickRepaint();
 		return bLock;
+	}
+
+	@Override
+	public boolean onDownloadHouses(HouseController controller) {
+		return false;
 	}
 	
 	

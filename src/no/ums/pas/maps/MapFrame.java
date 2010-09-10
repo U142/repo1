@@ -177,6 +177,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		{
 			
 		}
+		variables.MAPPANE.kickRepaint();
 		//set_mode(MAP_MODE_SENDING_POLY);
 	}	
 	private PUPolyPoint m_polypoint_popup = null;

@@ -21,8 +21,8 @@ public class vars
 		
 		WSDL_INFOSENTRAL		= sz_base + "Infosentral.asmx?WSDL";
 		
-		//WSDL_PARMADMIN 			= sz_base + "ParmAdmin.asmx?WSDL";
-		WSDL_PARMADMIN 			= "http://localhost/WS/ParmAdmin.asmx?WSDL";
+		WSDL_PARMADMIN 			= sz_base + "ParmAdmin.asmx?WSDL";
+		//WSDL_PARMADMIN 			= "http://localhost/WS/ParmAdmin.asmx?WSDL";
 
 		WSDL_PAS 				= sz_base + "PAS.asmx?WSDL";
 		//WSDL_PAS 				= "http://localhost/WS/PAS.asmx?WSDL";
