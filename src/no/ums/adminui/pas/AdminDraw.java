@@ -1,7 +1,9 @@
 package no.ums.adminui.pas;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
+import java.util.List;
 
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
@@ -9,6 +11,7 @@ import no.ums.pas.PASDraw;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.maps.defines.ShapeStruct;
 
 public class AdminDraw extends PASDraw {
 
@@ -23,7 +26,13 @@ public class AdminDraw extends PASDraw {
 			DeptInfo di = (DeptInfo)da.get(i);
 			di.CalcCoorRestrictionShapes();
 		}
-		variables.SENDCONTROLLER.get_activesending().get_sendproperties().calc_coortopix();
+		if(variables.SENDCONTROLLER.get_activesending() != null)
+			variables.SENDCONTROLLER.get_activesending().get_sendproperties().calc_coortopix();
+		List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+		for(int j=0; j < list.size(); j++)
+		{
+			list.get(j).calc_coortopix(variables.NAVIGATION);
+		}
 	}
 
 	@Override
@@ -33,7 +42,14 @@ public class AdminDraw extends PASDraw {
 			DeptInfo di = (DeptInfo)da.get(i);
 			di.drawRestrictionShapes(get_offscreen(), variables.NAVIGATION);
 		}
-		variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(0,0));
+		List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+		for(int j=0; j < list.size(); j++)
+		{
+			list.get(j).set_fill_color(Color.black);
+			list.get(j).draw(get_offscreen(), variables.NAVIGATION, false, true, false, null, true, true, 1, true);
+		}
+		if(variables.SENDCONTROLLER.get_activesending() != null)
+			variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(0,0));
 	}
 
 	@Override

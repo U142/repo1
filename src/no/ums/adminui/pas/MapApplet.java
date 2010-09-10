@@ -282,7 +282,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.addActionListener(this);
 				
 		//m_mappane.SetIsLoading(false, "map");
-		put("1");
+		//put("1");
 	}
 	
 	private void add_controls(){
