@@ -248,7 +248,7 @@ public partial class systemmessages : System.Web.UI.Page
                 else
                     ddl_deactivate_m.SelectedIndex = 0;
 
-                if (messages.news.l_timestamp_db < messages.news.newslist[i].l_incident_end || messages.news.newslist[i].l_incident_end == 0) //active egentlig f_active
+                if (messages.news.newslist[i].f_active == 1) //active egentlig f_active
                 {
                     txt_message.Attributes.Remove("onFocus");
                     activate_validate.Enabled = true;

@@ -40,7 +40,7 @@ public partial class main : System.Web.UI.Page
              
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
-                if (sysm.news.newslist[i].l_incident_end > sysm.news.l_timestamp_db || sysm.news.newslist[i].l_incident_end == 0)
+                if (sysm.news.newslist[i].f_active==1)
                     lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
                     //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
             }

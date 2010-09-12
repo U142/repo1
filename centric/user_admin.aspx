@@ -41,6 +41,7 @@
             </asp:TableCell>
             <asp:TableCell>
                 <asp:TextBox ID="txt_username" runat="server"></asp:TextBox><asp:RequiredFieldValidator runat="server" id="validate_username" ControlToValidate="txt_username" Text="*" ErrorMessage="User is required"></asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="user_validator" runat="server" ValidationExpression="[a-zA-Z0-9-_]*" Text="*" ErrorMessage="Allowed characters in username are: a-z, A-Z, 0-9, - and _" ControlToValidate="txt_username" ></asp:RegularExpressionValidator>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
                 <asp:CheckBox ID="chk_blocked" runat="server" />

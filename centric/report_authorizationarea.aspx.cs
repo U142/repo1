@@ -97,12 +97,18 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                     lon += "|";
                             }
                         }
-
-                        txt.Text = "<applet name='MapImageDownload" + obj[j].l_deptpk + "' id='MapImageDownload" + obj[j].l_deptpk + "' width='80' height='30'> " +
+                        txt.Text = "<input type=\"button\" onclick=\"javascript:launchApplet('" +
+                                        "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1> " +
+                                            "<param name=lat value=" + lat + " >" +
+                                            "<param name=lon value=" + lon + " >" +
+                                            "<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
+                                       "</applet>" +
+                                    "')\" value=\"Save\" />";
+                        /*txt.Text = "<applet name='MapImageDownload" + obj[j].l_deptpk + "' id='MapImageDownload" + obj[j].l_deptpk + "' width='80' height='30'> " +
                                         "<param name=lat value='" + lat + "' >" +
                                         "<param name=lon value='" + lon + "' >" +
                                         "<param name=jnlp_href value='javaapp/report_authorization_area.jnlp'>" +
-                                   "</applet>";
+                                   "</applet>";*/
                         cell.Controls.Add(txt);
                         row.Cells.Add(cell);
                         if (add)

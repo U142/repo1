@@ -178,7 +178,10 @@
            if (xmlhttp.readyState == 4) {
                if (xmlhttp.status == 200) {
                    try {
-                       document.getElementById("bd").removeAttribute("onunload");
+                       if (document.getElementById("ctl00_bd") != null)
+                           document.getElementById("ctl00_bd").removeAttribute("onbeforeunload");
+                       if(document.getElementById("ctl00_body_bd") != null)
+                           document.getElementById("ctl00_body_bd").removeAttribute("onbeforeunload");
                    }
                    catch (e) {
                        alert('Error: ' + e.getMessage());

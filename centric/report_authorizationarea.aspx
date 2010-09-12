@@ -1,6 +1,11 @@
 ﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true" CodeFile="report_authorizationarea.aspx.cs" Inherits="report_authorizationarea" Theme="sampleTheme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
+<script language="javascript" type="text/javascript">
+    function launchApplet(applet) {
+        document.getElementById("ctl00_body_applet").innerHTML = applet;    
+    }
+</script>
 <div>
 <asp:Table ID="table" runat="server">
     <asp:TableHeaderRow>
@@ -42,6 +47,8 @@
     </asp:TableRow>
 </asp:Table> 
 <table id="tbl_output" runat="server">
-</table>   
+</table>
+
 </div>
+<div id="applet" runat="server"></div>   
 </asp:Content>

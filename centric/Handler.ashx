@@ -2,26 +2,33 @@
 
 using System;
 using System.Web;
+using System.Web.SessionState;
+
 using System.Collections.Specialized;
 using com.ums.ws.pas.admin;
 
-public class Handler : IHttpHandler {
+
+public class Handler : IHttpHandler, IRequiresSessionState {
     
     private NameValueCollection nvc;
     
+    
     public void ProcessRequest (HttpContext context) {
+        
         nvc = context.Request.Params;
         String page = nvc.Get("page");
         context.Response.ContentType = "text/plain";
         context.Response.Write(page);
         PasAdmin pa = new PasAdmin();
-
-        if (page == "area_admin") {
-            CheckAccessResponse res = pa.doSetOccupied((ULOGONINFO)context.Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, false);
+        ULOGONINFO info = (ULOGONINFO)context.Session["logoninfo"];
+        
+        if (page == "area_edit") {
+            CheckAccessResponse res = pa.doSetOccupied(info, ACCESSPAGE.RESTRICTIONAREA, false);
         }
         else if (page == "predefine_text")
         {
-            CheckAccessResponse res = pa.doSetOccupied((ULOGONINFO)context.Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, false);
+            
+            CheckAccessResponse res = pa.doSetOccupied(info, ACCESSPAGE.PREDEFINEDTEXT, false);
         }
         
     }

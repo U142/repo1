@@ -151,6 +151,8 @@ public partial class user_admin : System.Web.UI.Page
             {
                 if (user.l_disabled_reasoncode == com.ums.ws.pas.admin.BBUSER_BLOCK_REASONS.REACHED_RETRY_LIMIT)
                     RequiredFieldValidator2.Enabled = true;
+                else
+                    RequiredFieldValidator2.Enabled = false;
                 txt_blocked.Text = Util.convertDate(user.l_disabled_timestamp).Substring(0, 10);
             }
             else
@@ -243,8 +245,11 @@ public partial class user_admin : System.Web.UI.Page
         int[] regionpk = new int[regions.Length];
 
          StoreUserResponse res;
-
-        if (user.l_profilepk == 3)
+         if (user.l_profilepk == 2) // regional
+         {
+             res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
+         }
+        else if (user.l_profilepk == 3)
         {
             for (int i = 0; i < regions.Length; ++i)
             {
@@ -253,7 +258,7 @@ public partial class user_admin : System.Web.UI.Page
             res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
         }
         else
-            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[int.Parse(lst_regions.Items[0].Value)]);
+            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { int.Parse(lst_regions.Items[0].Value)} );
 
             if (res.successful)
             {
@@ -268,7 +273,8 @@ public partial class user_admin : System.Web.UI.Page
                             users[i] = user;
                     }
                     tbl_users.Rows.Clear();
-                    buildTable(users);
+                    Session["users"] = users;
+                    buildTable(users);                    
                 }
                 else
                 {

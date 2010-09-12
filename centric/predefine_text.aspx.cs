@@ -30,8 +30,8 @@ public partial class predefine_text : System.Web.UI.Page
     {
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
-        
-        //Master.BodyTag.Attributes.Add("onunload", "setUnlock('page=predefine_text')");
+
+        Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=predefine_text')");
 
         if (!IsPostBack)
         {
@@ -40,10 +40,10 @@ public partial class predefine_text : System.Web.UI.Page
                 Server.Transfer("logoff.aspx");
 
             PasAdmin pa = new PasAdmin();
-            //CheckAccessResponse ares = pa.doSetOccupied(l, ACCESSPAGE.PREDEFINEDTEXT, true);
+            CheckAccessResponse ares = pa.doSetOccupied(l, ACCESSPAGE.PREDEFINEDTEXT, true);
             
-            //if (ares.successful && ares.granted)
-            //{
+            if (ares.successful && ares.granted)
+            {
 
                 btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
 
@@ -76,9 +76,9 @@ public partial class predefine_text : System.Web.UI.Page
                     ht.Add(list.list[i].n_messagepk, list.list[i]);
                 }
                 
-            //}
-            //else
-                //Server.Transfer("Currently_busy.aspx");
+            }
+            else
+                Server.Transfer("Currently_busy.aspx");
         }
     }
     

@@ -12,19 +12,21 @@
             
             document.getElementById("ctl00_body_txt_id").value = id;
             document.getElementById("ctl00_body_txt_obsolete_holder").value = obsolete;
-            document.getElementById("ctl00_body_txt_timestamp").value = timestamp;
+            
             document.getElementById("ctl00_body_txt_name").disabled = true;
             document.getElementById("ctl00_body_txt_name").value = deptname;
             
             if (obsolete == 1) {
                 document.getElementById("ctl00_body_chk_obsolete").checked = true;
                 document.getElementById("ctl00_body_chk_obsolete").disabled = true;
-                document.getElementById("ctl00_body_chk_obsolete").parentElement.setAttribute('disabled','true');
+                document.getElementById("ctl00_body_chk_obsolete").parentElement.setAttribute('disabled', 'true');
+                document.getElementById("ctl00_body_txt_timestamp").value = timestamp;
             }
             else {
                 document.getElementById("ctl00_body_chk_obsolete").checked = false;
                 document.getElementById("ctl00_body_chk_obsolete").disabled = false;
                 document.getElementById("ctl00_body_chk_obsolete").parentElement.removeAttribute('disabled');
+                document.getElementById("ctl00_body_txt_timestamp").value = "";
             }
             document.getElementById("ctl00_body_txt_obsolete").value = timestamp;
             try {

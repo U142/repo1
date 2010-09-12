@@ -31,23 +31,23 @@ public partial class area_edit : System.Web.UI.Page
         password.Attributes.Add("value", logoninfo.sz_password);
         session.Attributes.Add("value", logoninfo.sessionid);
 
-        //Master.BodyTag.Attributes.Add("onunload", "setUnlock('page=area_edit')");
+        Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=area_edit')");
 
         lbl_error.ForeColor = System.Drawing.Color.Red;
 
         if (!IsPostBack)
         {
             PasAdmin pa = new PasAdmin();
-            //CheckAccessResponse ares = pa.doSetOccupied(logoninfo, ACCESSPAGE.RESTRICTIONAREA, true);
-            //if (ares.successful && ares.granted)
-            //{
+            CheckAccessResponse ares = pa.doSetOccupied(logoninfo, ACCESSPAGE.RESTRICTIONAREA, true);
+            if (ares.successful && ares.granted)
+            {
                 GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
                 com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
                 Session["restrictions"] = obj;
                 buildTable(obj);
-            //}
-            //else
-                //Server.Transfer("Currently_busy.aspx");
+            }
+            else
+                Server.Transfer("Currently_busy.aspx");
         }
         else
         {
