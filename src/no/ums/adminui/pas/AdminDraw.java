@@ -49,7 +49,7 @@ public class AdminDraw extends PASDraw {
 			list.get(j).draw(get_offscreen(), variables.NAVIGATION, false, true, false, null, true, true, 1, true);
 		}
 		if(variables.SENDCONTROLLER.get_activesending() != null)
-			variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(0,0));
+			variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(variables.MAPPANE.get_current_mousepos().x,variables.MAPPANE.get_current_mousepos().y));
 	}
 
 	@Override

@@ -930,6 +930,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			updatePreviewText();
 		}
 		else if(e.getActionCommand().equals("act_print_summary")) {
+			/*
 			int preferred_resolution = 1920;
 			int actual_screensize = Toolkit.getDefaultToolkit().getScreenSize().width;
 			int width = 800;
@@ -991,11 +992,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					
 				}
 			}
+			*/
+			String timestamp = String.valueOf(Utils.get_current_datetime());
 			String m_headerfooter = "--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---";
 			String m_message = PAS.l("common_message_content") + ":\n" + m_txt_preview.getText();
 			String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
 			
-			
+			/*
+			Image img;
 			image.setIcon(new ImageIcon(img));
 			pnl.add(image,BorderLayout.PAGE_START);
 			JTextArea txt = new JTextArea(10,60);
@@ -1025,7 +1029,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			printFrame.setVisible(true);
 			BufferedImage imidj = new BufferedImage(printFrame.getHeight(), printFrame.getWidth(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = imidj.createGraphics();
-			printFrame.printAll(g);
+			printFrame.printAll(g);*/
 			
 			CentricPrintCtrl pctrl = new CentricPrintCtrl(variables.DRAW.get_buff_image(),m_headerfooter, m_message, m_characters, m_headerfooter);
 			pctrl.doPrint();

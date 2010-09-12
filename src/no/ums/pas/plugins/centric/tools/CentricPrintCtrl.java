@@ -114,15 +114,19 @@ public class CentricPrintCtrl implements Printable {
 	        return(NO_SUCH_PAGE);
 	    } 
 	    else {
+	    	int width = 800;
+			int height = 800;
+			
 	        Graphics2D g2d = (Graphics2D)g;
 	        //double scalex = pageFormat.getImageableX() / get_pas().get_mapsize().getWidth();
 	        //double scaley = pageFormat.getImageableY() / get_pas().get_mapsize().getHeight();
-	        double scale = pageFormat.getImageableWidth() / PAS.get_pas().get_mapsize().getWidth();
+	        double scale = pageFormat.getImageableWidth() / width;
 	        PAS.get_pas().add_event("Scale: " + scale, null);
 	        //Graphics2D g2d = (Graphics2D)g.create();
 	        
 	        //g.copyArea()
 
+	        
 	        g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 	        //g2d.setFont(new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 20));
 	        g2d.setFont(UIManager.getFont("PrintJobTitle.font"));
@@ -145,8 +149,7 @@ public class CentricPrintCtrl implements Printable {
         		        	
         	g2d.drawString(m_header, 0, (1*10));
         	
-        	int width = 800;
-			int height = 800;
+        	
 			
 			int actual_width = m_mapimage.getWidth(null);
 			int actual_height = m_mapimage.getHeight(null);
