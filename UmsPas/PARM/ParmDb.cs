@@ -303,7 +303,7 @@ namespace com.ums.UmsParm
                 {
                     sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) " +
                                         "VALUES({0}, {1}, {2}, '{3}', '{4}')",
-                                        pk, (int)type, 0, md5, sz_xml);
+                                        pk, (int)type, getDbClock(), md5, sz_xml);
                     if (ExecNonQuery(sql))
                     {
                         bShapeChanged = true;
@@ -1803,15 +1803,22 @@ namespace com.ums.UmsParm
         public UShape setPAShapeObsolete(UDEPARTMENT department,UShape shape)
         {
             String szSQL = "";
-
+            OdbcDataReader rs;
             try
             {
                 long l_timestamp = getDbClock();
                 szSQL = String.Format("sp_cb_set_pashape_obsolete {0}, {1}, {2}", department.l_deptpk, l_timestamp, shape.f_disabled);
-                ExecNonQuery(szSQL);
-
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                    if (rs.GetInt16(0) == -1)
+                    {
+                        string error = rs.GetString(1);
+                        rs.Close();
+                        throw new Exception(error);
+                    }
+                rs.Close();
                 shape.l_disabled_timestamp = l_timestamp;
-
+                shape.f_disabled = 1;
                 return shape;
             }
             catch (Exception e)

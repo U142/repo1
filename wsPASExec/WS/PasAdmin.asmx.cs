@@ -82,7 +82,7 @@ namespace com.ums.ws.pas.admin
                 long l_timestamp = db.getDbClock();
                 user.l_disabled_timestamp = l_timestamp;
                 sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', {9}, {10}, '{11}'",
-                user.l_userpk, user.sz_userid.ToUpper().Replace("'", "''"), user.sz_name.Replace("'", "''"), user.sz_paspassword, user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN, user.sz_organization.Replace("'", "''"));
+                user.l_userpk, user.sz_userid.ToUpper().Replace("'", "''"), user.sz_name.Replace("'", "''"), user.sz_paspassword.Replace("'", "''"), user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)user.l_disabled_reasoncode, user.sz_organization.Replace("'", "''"));
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
@@ -152,7 +152,7 @@ namespace com.ums.ws.pas.admin
                         obj.l_disabled_timestamp = (long)rs.GetDecimal(31);
 
                     if (rs.IsDBNull(32))
-                        obj.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN; //doesn't matter
+                        obj.l_disabled_reasoncode = BBUSER_BLOCK_REASONS.NONE; //doesn't matter
                     else
                     {
                         if (rs.GetInt32(32) == 1)
@@ -343,31 +343,33 @@ namespace com.ums.ws.pas.admin
             List<UPASLOG> loglist = new List<UPASLOG>();
 
             List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
-            string sz_sql_part = "";
-            
-            for(int i=0;i<users.Count;++i)
+            string sz_sql = "";
+
+            if (users.Count > 0)
             {
-                if(i==0)
-                    sz_sql_part += "AND (";
-                sz_sql_part += "l_userpk=" + users[i].l_userpk + " ";
-                if (i + 1 < users.Count)
-                    sz_sql_part += "OR ";
-                else
-                    sz_sql_part += ")";
+                for (int i = 0; i < users.Count; ++i)
+                {
+                    sz_sql += String.Format(
+                                 "SELECT l_id, l_userpk, l_operation, l_timestamp, sz_desc " +
+                                   "FROM PASLOG " +
+                                  "WHERE l_timestamp>= {0} AND l_timestamp< {1} AND l_userpk = {2}", period, period + 100000000, users[i].l_userpk);
+                    if (i + 1 < users.Count)
+                        sz_sql += " UNION ";
+                }
             }
-            string sz_sql = String.Format(
-                            "SELECT * " +
-                              "FROM PASLOG " +
-                             "WHERE l_timestamp BETWEEN {0} AND {1} ", period, period + 100000000);
-            sz_sql += sz_sql_part;
+            else
+                sz_sql = String.Format(
+                                 "SELECT l_id, l_userpk, l_operation, l_timestamp, sz_desc " +
+                                   "FROM PASLOG " +
+                                  "WHERE l_timestamp>= {0} AND l_timestamp< {1}", period, period + 100000000);
 
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
                 
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
-                OdbcDataReader refno;
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+
                 UPASLOG log;
                 
                 while (rs.Read())
@@ -515,52 +517,182 @@ namespace com.ums.ws.pas.admin
             return res;
         }
        
+
         [WebMethod]
-        public CheckAccessResponse doCheckAccess(ULOGONINFO logoninfo, ACCESSPAGE accesspage)
+        public CheckAccessResponse doSetOccupied(ULOGONINFO logoninfo, ACCESSPAGE accesspage, bool occupied)
         {
             PASUmsDb db;
-            CheckAccessResponse res;
+            CheckAccessResponse res = new CheckAccessResponse();
 
-            switch (accesspage)
-            {
-                case ACCESSPAGE.PREDEFINEDTEXT:
-                    break;
-                case ACCESSPAGE.RESTRICTIONAREA:
-                    break;
-            }
-            
             string sz_sql = "";
-            
+
+            sz_sql = String.Format("sp_cb_set_occupied {0}, {1}", (int)accesspage, occupied?1:0);            
+
             try
             {
                 db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
                 OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
-                if (rs.HasRows)
+                if (rs.Read())
                 {
-                    rs.Read();
-                    res = new CheckAccessResponse();
-                    res.granted = true;
-                    res.successful = true;
-                }
-                else
-                {
-                    res = new CheckAccessResponse();
-                    res.successful = false;
-                    res.reason = "Function occupied by another user, please try again later";
-                    res.errorCode = -1;
+                    if (rs.GetInt32(0) == 0)
+                    {
+                        res.granted = true;
+                        res.successful = true;
+                    }
+                    else
+                    {
+                        res.successful = false;
+                        res.reason = "Function occupied by another user, please try again later";
+                        res.errorCode = -1;
+                    }
                 }
                 rs.Close();
                 db.close();
             }
             catch (Exception e)
             {
-                res = new CheckAccessResponse();
                 res.successful = false;
                 res.errorCode = -1;
                 res.reason = e.Message;
                 return res;
             }
+
+            return res;
+        }
+
+
+        [WebMethod]
+        public FindPolysWithSharedBorderResponse doFindPolysWithSharedBorder(ULOGONINFO logoninfo, UDEPARTMENT department, List<UDEPARTMENT> possible_neighbours)
+        {
+            PASUmsDb db;
+            FindPolysWithSharedBorderResponse res;
+
+
+            try
+            {
+                UPolygon poly = (UPolygon)department.restrictionShapes[0];
+                List<UPolygon> neighbours = new List<UPolygon>();
+                foreach (UDEPARTMENT dept in possible_neighbours)
+                    neighbours.Add((UPolygon)dept.restrictionShapes[0]);
+                List<UPolygon> retpoly = poly.findPolysWithSharedBorder(ref neighbours);
+
+                List<UDEPARTMENT> regionlist = new List<UDEPARTMENT>();
+                foreach (UPolygon respoly in retpoly)
+                {
+                    foreach (UDEPARTMENT region in possible_neighbours)
+                    {
+                        foreach (UShape sh in region.restrictionShapes)
+                        {
+                            UPolygon upo = (UPolygon)sh;
+                            if (upo.GetHashCode().Equals(respoly.GetHashCode()))
+                                regionlist.Add(region);
+                        }
+                    }
+                }
+
+                res = new FindPolysWithSharedBorderResponse();
+                res.successful = true;
+                res.deptlist = regionlist;
+            }
+            catch (Exception e)
+            {
+                res = new FindPolysWithSharedBorderResponse();
+                res.successful = false;
+                res.errorCode = -1;
+                res.reason = e.Message;
+                return res;
+            }
+
+            return res;
+        }
+
+        [WebMethod]
+        public GetOperatorsResponse doGetOperators(ULOGONINFO logon)
+        {
+            GetOperatorsResponse res = new GetOperatorsResponse();
+            PASUmsDb db;
+            List<LBAOPERATOR> oplist = new List<LBAOPERATOR>();
+            
+            try
+            {
+                ULogon l = new ULogon();
+
+                l.CheckLogon(ref logon, true);
+                string sz_sql = "SELECT l_operator,sz_operatorname FROM LBAOPERATORS";
+                
+                db = new PASUmsDb();
+                OdbcDataReader rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
+                while (rs.Read())
+                {
+                    LBAOPERATOR op = new LBAOPERATOR();
+                    op.l_operator = rs.GetInt32(0);
+                    op.sz_operatorname = rs.GetString(1);
+                    oplist.Add(op);
+                }
+                rs.Close();
+
+                res.errorCode = 0;
+                res.oplist = oplist;
+                res.reason = "";
+                res.successful = true;
+            }
+            catch (Exception e)
+            {
+                res.errorCode = -1;
+                res.oplist = oplist;
+                res.reason = e.Message;
+                res.successful = false;
+                return res;
+            }
+
+            
+            return res;
+        }
+
+        [WebMethod]
+        public IsShapeActiveInPeriodResponse doIsShapeActiveInPeriod(ULOGONINFO logon, int shapepk, long l_period)
+        {
+            IsShapeActiveInPeriodResponse res = new IsShapeActiveInPeriodResponse();
+            PASUmsDb db;
+            List<LBAOPERATOR> oplist = new List<LBAOPERATOR>();
+
+            try
+            {
+                ULogon l = new ULogon();
+
+                l.CheckLogon(ref logon, true);
+                string sz_sql = String.Format("SELECT l_pk FROM PASHAPE where l_pk={0} AND l_timestamp < {1}", shapepk, l_period + 100000000);
+
+                db = new PASUmsDb();
+                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                if (!rs.HasRows)
+                {
+                    res.errorCode = -1;
+                    res.shapepk = -1;
+                    res.reason = "Shape was not active in this period";
+                    res.successful = false;
+                }
+                while (rs.Read())
+                {                    
+                    res.errorCode = 0;
+                    res.shapepk = rs.GetInt32(0);
+                    res.reason = "";
+                    res.successful = true;
+                }
+                rs.Close();
+
+                
+            }
+            catch (Exception e)
+            {
+                res.errorCode = -1;
+                res.shapepk = -1;
+                res.reason = e.Message;
+                res.successful = false;
+                return res;
+            }
+
 
             return res;
         }
@@ -628,6 +760,24 @@ namespace com.ums.ws.pas.admin
         {
             // return value
             public bool granted;
+        }
+
+        public class FindPolysWithSharedBorderResponse : Response
+        {
+            // return value
+            public List<UDEPARTMENT> deptlist;
+        }
+
+        public class GetOperatorsResponse : Response
+        {
+            // return value
+            public List<LBAOPERATOR> oplist;
+        }
+
+        public class IsShapeActiveInPeriodResponse : Response
+        {
+            // return value
+            public int shapepk;
         }
        
     }

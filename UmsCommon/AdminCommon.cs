@@ -28,4 +28,10 @@ namespace com.ums.UmsCommon
         PREDEFINEDTEXT = 2,
     }
 
+    public class LBAOPERATOR
+    {
+        public int l_operator;
+        public String sz_operatorname;
+    }
+
 }
