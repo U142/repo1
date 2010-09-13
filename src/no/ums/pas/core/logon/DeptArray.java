@@ -80,6 +80,7 @@ public class DeptArray extends ArrayList<Object> {
 		for(int j=0; j < this.size(); j++)
 		{
 			PolygonStruct poly = (PolygonStruct)((DeptInfo)this.get(j)).get_restriction_shapes().get(0);
+			
 			if(poly.isHidden() && size()>1)
 				continue;
 			Polygon javapoly = new Polygon();

@@ -282,7 +282,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		m_mappane.addActionListener(this);
 				
 		//m_mappane.SetIsLoading(false, "map");
-		//put("1");
+		//put("38");
 	}
 	
 	private void add_controls(){
@@ -306,11 +306,12 @@ public class MapApplet extends JApplet implements ActionListener {
 			for(int i=0; i < depts.size(); i++)
 			{
 				UDEPARTMENT d = depts.get(i);
+				
 				m_info.add_department(d.getLDeptpk(), d.getSzDeptid(), d.getSzStdcc(), d.getLbo(), d.getRbo(), 
-						d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
-						d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
-						d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
-						d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
+					d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
+					d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
+					d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
+					d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getRestrictionShapes());
 			}
 
 
@@ -688,9 +689,12 @@ public class MapApplet extends JApplet implements ActionListener {
 			so.set_sendproperties(sp);
 		}
 		else {
+			if(variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().isObsolete())
+				variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().setHidden(true);
 			variables.SENDCONTROLLER.get_activesending().get_sendproperties().set_shapestruct(s);
 		}
-
+		if(sp.get_shapestruct().isObsolete())
+			sp.get_shapestruct().setHidden(false);
 		sp.get_shapestruct().set_fill_color(Color.BLUE);
 		variables.MAPPANE.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);

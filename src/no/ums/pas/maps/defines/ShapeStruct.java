@@ -56,6 +56,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	}
 
 	protected boolean m_b_hidden = false;
+	protected boolean m_b_obsolete = false;
 	protected double m_f_area_sqm = 0;
 	protected boolean m_b_editable = true;
 	
@@ -96,6 +97,14 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public boolean isHidden()
 	{
 		return m_b_hidden;
+	}
+	public void setObsolete(boolean b)
+	{
+		m_b_obsolete = b;
+	}
+	public boolean isObsolete()
+	{
+		return m_b_obsolete;
 	}
 	public int numParts = 0;
 	public List<Integer> parts = new ArrayList<Integer>();

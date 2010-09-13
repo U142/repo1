@@ -116,6 +116,11 @@ public class UShapeToShape
 				}
 				polygonstruct.finalizeShape();
 			}
+			//Hide if obsolete
+			if(upolygon.getFDisabled() == 1) {
+				polygonstruct.setHidden(true);
+				polygonstruct.setObsolete(true);
+			}
 			return polygonstruct;
 		}
 		else if(ushape.getClass().equals(UEllipse.class))
@@ -154,6 +159,13 @@ public class UShapeToShape
 			if(upolygon.getLeft()==-180 && upolygon.getRight()==180 &&
 					upolygon.getBottom()==-90 && upolygon.getTop()==90)
 				polygonstruct.setHidden(true);
+			
+			//Hide if obsolete
+			if(upolygon.getFDisabled() == 1) {
+				polygonstruct.setHidden(true);
+				polygonstruct.setObsolete(true);
+			}
+				
 			return polygonstruct;
 		}
 		else if(ushape.getClass().equals(UPLMN.class))

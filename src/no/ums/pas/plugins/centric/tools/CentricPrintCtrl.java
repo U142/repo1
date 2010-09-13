@@ -117,6 +117,42 @@ public class CentricPrintCtrl implements Printable {
 	    	int width = 800;
 			int height = 800;
 			
+			int actual_width = m_mapimage.getWidth(null);
+			int actual_height = m_mapimage.getHeight(null);
+			
+			// Make square image
+			if(actual_width> actual_height) {
+				
+			}
+			else
+			
+			if(actual_height < actual_width) {
+				if(actual_width<width) {
+					width = actual_width;
+					height = actual_height;
+					m_mapimage = variables.DRAW.get_buff_image();
+				}
+				else {
+					double percent_of_actual = ((double)actual_width/(double)width);
+					height = (int)((double)actual_height / percent_of_actual);
+					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+					
+				}
+			}
+			else {
+				if(actual_height<height) {
+					width = actual_width;
+					height = actual_height;
+					m_mapimage = variables.DRAW.get_buff_image();
+				}
+				else {
+					double percent_of_actual = ((double)actual_height/(double)height);
+					width = (int)((double)actual_width / percent_of_actual);
+					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+					
+				}
+			}
+			
 	        Graphics2D g2d = (Graphics2D)g;
 	        //double scalex = pageFormat.getImageableX() / get_pas().get_mapsize().getWidth();
 	        //double scaley = pageFormat.getImageableY() / get_pas().get_mapsize().getHeight();
@@ -151,35 +187,7 @@ public class CentricPrintCtrl implements Printable {
         	
         	
 			
-			int actual_width = m_mapimage.getWidth(null);
-			int actual_height = m_mapimage.getHeight(null);
 			
-			if(actual_height < actual_width) {
-				if(actual_width<width) {
-					width = actual_width;
-					height = actual_height;
-					m_mapimage = variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_width/(double)width);
-					height = (int)((double)actual_height / percent_of_actual);
-					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
-				}
-			}
-			else {
-				if(actual_height<height) {
-					width = actual_width;
-					height = actual_height;
-					m_mapimage = variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_height/(double)height);
-					width = (int)((double)actual_width / percent_of_actual);
-					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
-				}
-			}
         	
 			g2d.drawImage(m_mapimage, 10, (3*10), null);
 			
