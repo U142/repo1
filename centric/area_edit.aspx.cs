@@ -31,23 +31,18 @@ public partial class area_edit : System.Web.UI.Page
         password.Attributes.Add("value", logoninfo.sz_password);
         session.Attributes.Add("value", logoninfo.sessionid);
 
-        Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=area_edit')");
+        //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=area_edit')");
 
         lbl_error.ForeColor = System.Drawing.Color.Red;
 
         if (!IsPostBack)
         {
             PasAdmin pa = new PasAdmin();
-            CheckAccessResponse ares = pa.doSetOccupied(logoninfo, ACCESSPAGE.RESTRICTIONAREA, true);
-            if (ares.successful && ares.granted)
-            {
-                GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
-                com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
-                Session["restrictions"] = obj;
-                buildTable(obj);
-            }
-            else
-                Server.Transfer("Currently_busy.aspx");
+            
+            GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
+            com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
+            Session["restrictions"] = obj;
+            buildTable(obj);
         }
         else
         {
@@ -279,20 +274,32 @@ public partial class area_edit : System.Web.UI.Page
                 lbl_error.ForeColor = System.Drawing.Color.Red;
                 lbl_error.Text = "Error saving shape";
             }
+            CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, false);
+            if (!resa.successful)
+            {
+                lbl_error.Text = "Successfully stored, but could not unlock database, access is still restricted to current user";
+            }
         }
+       
         
     }
     protected void btn_create_click(object sender, EventArgs e)
     {
-        txt_name.Text = "";
-        txt_name.Enabled = true;
-        txt_obsolete.Text = "";
-        txt_obsolete_holder.Text = "";
-        txt_timestamp.Text = "";
-        txt_id.Text = "";
-        chk_obsolete.Checked = false;
-        btn_draw.Disabled = false;
-        chk_obsolete.Enabled = true;
-        //tbl_areas.Rows.Clear();
+        CheckAccessResponse res = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, true);
+        if (res.successful && res.granted)
+        {
+            txt_name.Text = "";
+            txt_name.Enabled = true;
+            txt_obsolete.Text = "";
+            txt_obsolete_holder.Text = "";
+            txt_timestamp.Text = "";
+            txt_id.Text = "";
+            chk_obsolete.Checked = false;
+            btn_draw.Disabled = false;
+            chk_obsolete.Enabled = true;
+            //tbl_areas.Rows.Clear();
+        }
+        else
+            lbl_error.Text = res.reason;
     }
 }

@@ -31,7 +31,7 @@ public partial class predefine_text : System.Web.UI.Page
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
 
-        Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=predefine_text')");
+        //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=predefine_text')");
 
         if (!IsPostBack)
         {
@@ -39,49 +39,72 @@ public partial class predefine_text : System.Web.UI.Page
             if (l == null)
                 Server.Transfer("logoff.aspx");
 
-            PasAdmin pa = new PasAdmin();
-            CheckAccessResponse ares = pa.doSetOccupied(l, ACCESSPAGE.PREDEFINEDTEXT, true);
+
             
-            if (ares.successful && ares.granted)
+            btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
+
+            ht = new Hashtable();
+
+            Session.Add("ht", ht);
+
+
+            UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
+            //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+            f.n_timefilter = 0;
+
+            pws = new pasws();
+
+
+
+            UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
+            //List<PredefinedText> pdt = db.getPredefinedText();
+
+            for (int i = 0; i < list.list.Length; ++i)
             {
-
-                btn_save.Attributes.Add("onclick", "findhead1('ctl00_body_Panel2')");
-
-                ht = new Hashtable();
-
-                Session.Add("ht", ht);
-
-
-                UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
-                //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-                f.n_timefilter = 0;
-
-                pws = new pasws();
-
-
-
-                UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
-                //List<PredefinedText> pdt = db.getPredefinedText();
-
-                for (int i = 0; i < list.list.Length; ++i)
+                if (list.list[i].n_parentpk > 0)
                 {
-                    if (list.list[i].n_parentpk > 0)
-                    {
-                        TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
-                        tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
-                    }
-                    else
-                        TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
-
-                    ht.Add(list.list[i].n_messagepk, list.list[i]);
+                    TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
+                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
                 }
-                
+                else
+                    TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+
+                ht.Add(list.list[i].n_messagepk, list.list[i]);
             }
-            else
-                Server.Transfer("Currently_busy.aspx");
         }
     }
-    
+
+    private void rebuildTree()
+    {
+        com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+        ht.Clear();
+        TreeView1.Nodes.Clear();
+
+        UBBMESSAGELISTFILTER f = new UBBMESSAGELISTFILTER();
+        //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+        f.n_timefilter = 0;
+
+        pws = new pasws();
+
+
+
+        UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
+        //List<PredefinedText> pdt = db.getPredefinedText();
+
+        for (int i = 0; i < list.list.Length; ++i)
+        {
+            if (list.list[i].n_parentpk > 0)
+            {
+                TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
+                tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+            }
+            else
+                TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+
+            ht.Add(list.list[i].n_messagepk, list.list[i]);
+        }
+    }
+
     private char[] validateMessage(String text)
     {
         Regex re = Util.GSM_Alphabet_Regex;
@@ -97,6 +120,8 @@ public partial class predefine_text : System.Web.UI.Page
         string parent = "";
         lbl_error.Text = "";
         UBBMESSAGE pdt = null;
+        
+        
         char[] invalid = validateMessage(txt_message.Text);
         if (invalid.Length > 0)
         {
@@ -210,7 +235,9 @@ public partial class predefine_text : System.Web.UI.Page
             {
                 lbl_error.Text = ex.Message;
             }
+            
         }
+        
        
     }
 
@@ -270,60 +297,78 @@ public partial class predefine_text : System.Web.UI.Page
 
     protected void delete_click(object sender, EventArgs e)
     {
-        if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+        CheckAccessResponse res = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
+        if (res.successful && res.granted)
         {
-            deleteNode(TreeView1.Nodes, txt_id.Text);
-            txt_message.Enabled = false;
-            txt_name.Enabled = false;
-            txt_parent.Text = "";
-            txt_id.Text = "";
-            txt_message.Text = "";
-            txt_name.Text = "";
-            lbl_error.Text = "";
+            if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+            {
+                deleteNode(TreeView1.Nodes, txt_id.Text);
+                txt_message.Enabled = false;
+                txt_name.Enabled = false;
+                txt_parent.Text = "";
+                txt_id.Text = "";
+                txt_message.Text = "";
+                txt_name.Text = "";
+                lbl_error.Text = "";
+            }
+            else
+            {
+                txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                txt_name.Enabled = false;
+                btn_save.Enabled = false;
+                lbl_error.Text = "Node must be selected";
+            }
         }
         else
-        {
-            txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
-            txt_name.Enabled = false;
-            btn_save.Enabled = false;
-            lbl_error.Text = "Node must be selected";
-        }
+            lbl_error.Text = res.reason;
     }
 
     protected void new_click(object sender, EventArgs e)
     {
-        txt_name.Text = "";
-        txt_message.Text = "";
-        txt_message.Attributes.Remove("onFocus");
-        //txt_message.Enabled = true;
-        txt_name.Enabled = true;
-        btn_save.Enabled = true;
-        txt_name.Focus();
-        lbl_error.Text = "";
-        txt_message.Attributes.Remove("onFocus");
+        CheckAccessResponse res = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
+        if (res.successful && res.granted)
+        {
+            txt_name.Text = "";
+            txt_message.Text = "";
+            txt_message.Attributes.Remove("onFocus");
+            txt_message.Enabled = true;
+            txt_name.Enabled = true;
+            btn_save.Enabled = true;
+            txt_name.Focus();
+            lbl_error.Text = "";
+        }
+        else
+            lbl_error.Text = res.reason;
     }
 
     protected void edit_click(object sender, EventArgs e)
     {
-        if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+        CheckAccessResponse res = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
+        if (res.successful && res.granted)
         {
-            txt_parent.Text = "false";
-            UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(txt_id.Text)];
-            txt_name.Text = pdt.sz_name;
-            txt_message.Text = pdt.ccmessage[0].sz_message;
-            //txt_message.Enabled = true;
-            txt_message.Attributes.Remove("onFocus");
-            txt_name.Enabled = true;
-            btn_save.Enabled = true;
-            lbl_error.Text = "";
+            if (txt_id.Text.Length > 0 && !txt_id.Text.Equals("-1"))
+            {
+                txt_parent.Text = "false";
+                UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(txt_id.Text)];
+                txt_name.Text = pdt.sz_name;
+                txt_message.Text = pdt.ccmessage[0].sz_message;
+                //txt_message.Enabled = true;
+                txt_message.Attributes.Remove("onFocus");
+                txt_name.Enabled = true;
+                txt_message.Enabled = true;
+                btn_save.Enabled = true;
+                lbl_error.Text = "";
+            }
+            else
+            {
+                txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                txt_name.Enabled = false;
+                btn_save.Enabled = false;
+                lbl_error.Text = "Node must be selected";
+            }
         }
         else
-        {
-            txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
-            txt_name.Enabled = false;
-            btn_save.Enabled = false;
-            lbl_error.Text = "Node must be selected";
-        }
+            lbl_error.Text = res.reason;
     }
 
     private string addJavaScript(string name, long id)
@@ -338,6 +383,36 @@ public partial class predefine_text : System.Web.UI.Page
         tmp = name.Substring(name.IndexOf("oncontextmenu='return showmenuie5(event)' >"));
         return tmp;
     }
-    
+
+    protected void btn_release_lock_Click(object sender, EventArgs e)
+    {
+        CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, false);
+        if (resa.successful)
+        {
+            TreeView1.Enabled = false;
+            txt_message.Enabled = false;
+            txt_name.Enabled = false;
+            btn_save.Enabled = false;
+            lbl_error.Text = "";
+        }
+        else
+            lbl_error.Text = "Could not release lock, access is still restricted to current user";
+    }
+
+    protected void btn_aquire_lock_Click(object sender, EventArgs e)
+    {
+        CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
+        if (resa.successful)
+        {
+            rebuildTree();
+            TreeView1.Enabled = true;
+            txt_message.Enabled = true;
+            txt_name.Enabled = true;
+            lbl_error.Text = "";
+        }
+        else
+            lbl_error.Text = resa.reason;
+            
+    }
 }
 

@@ -10,7 +10,7 @@
     </asp:TableHeaderRow>
     <asp:TableRow>
         <asp:TableCell RowSpan="2" VerticalAlign="Top">
-            <asp:TreeView ID="TreeView1" runat="server" OnSelectedNodeChanged="TreeView1_changed" style="overflow:auto" Width="200" oncontextmenu="return showmenuie5(event)" BorderColor="AliceBlue" HoverNodeStyle-BackColor="WhiteSmoke" Height="200">
+            <asp:TreeView ID="TreeView1" runat="server" OnSelectedNodeChanged="TreeView1_changed" style="overflow:auto" Width="200" oncontextmenu="return showmenuie5(event)" BorderColor="AliceBlue" HoverNodeStyle-BackColor="WhiteSmoke" Height="200" Enabled="false">
             </asp:TreeView>
         </asp:TableCell>
         <asp:TableCell>
@@ -25,6 +25,8 @@
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell HorizontalAlign="Right" ColumnSpan="2">
+            <asp:Button ID="btn_aquire_lock" runat="server" Text="Aquire lock" OnClick="btn_aquire_lock_Click" CausesValidation="false" />
+            <asp:Button ID="btn_release_lock" runat="server" Text="Release lock" OnClick="btn_release_lock_Click" CausesValidation="false" />
             <asp:Button ID="btn_save" runat="server" Text="Save" OnClick="btn_save_Click" Enabled="false"/>
         </asp:TableCell>
     </asp:TableRow>

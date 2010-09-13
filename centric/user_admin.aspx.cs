@@ -249,17 +249,20 @@ public partial class user_admin : System.Web.UI.Page
          {
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
          }
-        else if (user.l_profilepk == 3)
-        {
-            for (int i = 0; i < regions.Length; ++i)
-            {
-                regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
-            }
-            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
-        }
-        else
-            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { int.Parse(lst_regions.Items[0].Value)} );
-
+         else if (user.l_profilepk == 3 || user.l_profilepk == 5) // super regional and national
+         {
+             for (int i = 0; i < regions.Length; ++i)
+             {
+                 regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
+             }
+             res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
+         }
+         else
+         {
+             user.l_deptpk = 1;
+             //user.l_deptpk = 100000; // dummy department
+             res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
+         }
             if (res.successful)
             {
                 lbl_feedback.Text = "";

@@ -20,6 +20,11 @@ public class Util
 {
     public static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
 
+    public static CheckAccessResponse setOccupied(com.ums.ws.pas.admin.ULOGONINFO l, ACCESSPAGE page, Boolean f_lock) {
+        PasAdmin pa = new PasAdmin();
+        CheckAccessResponse ares = pa.doSetOccupied(l, page, f_lock);
+        return ares;
+    }
     public static String sysMessageType(long type)
     {
         switch (type)
@@ -307,9 +312,16 @@ public class Util
         HttpContext.Current.Response.ContentType = "text/csv";
         HttpContext.Current.Response.AddHeader("Pragma", "public");
         WriteUserActivityMonthlyColumnName();
+        
+        String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
+        HashSet<short> hide = new HashSet<short>();
+        for (int i = 0; i < tmp.Length; ++i)
+            hide.Add(short.Parse(tmp[i]));
+
         foreach (UPASLOG log in loglist)
         {
-            WriteUserActivityMonthly(log, users);
+            if(!hide.Contains(log.l_operation))
+                WriteUserActivityMonthly(log, users);
         }
         HttpContext.Current.Response.End();
     }
@@ -320,7 +332,10 @@ public class Util
         if (log.l_userpk == -1)
             AddComma("\"Administrator\"", stringBuilder);
         else
-            AddComma("\"" + ((com.ums.ws.pas.admin.UBBUSER)users[log.l_userpk]).sz_userid + "\"", stringBuilder);
+            if (log.l_userpk != 0)
+                AddComma("\"" + ((com.ums.ws.pas.admin.UBBUSER)users[log.l_userpk]).sz_userid + "\"", stringBuilder);
+            else
+                AddComma("\"Unknown\"", stringBuilder);
         AddComma("\"" + ConfigurationSettings.AppSettings[log.l_operation.ToString()] + "\"", stringBuilder);
         AddComma(log.l_timestamp.ToString(), stringBuilder);
         AddLast("\"" + log.sz_desc + "\"", stringBuilder);

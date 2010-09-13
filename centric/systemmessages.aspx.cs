@@ -38,11 +38,19 @@ public partial class systemmessages : System.Web.UI.Page
                 Server.Transfer("logon.aspx");
             USYSTEMMESSAGES sysm = pws.GetAllSystemMessages(Util.convertLogonInfoPas(logon));
 
+            IEnumerable<UBBNEWS> sorter = sysm.news.newslist.OrderBy(n => n.l_incident_start);
+
+            foreach (UBBNEWS n in sorter)
+            {
+                lst_messages.Items.Add(new ListItem(Util.padForListBox(n), n.l_newspk.ToString()));
+            }
+            /*
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
                 //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
                 lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
-            }
+            }*/
+
             UBBNEWS news = (UBBNEWS)Session["edit"];
             if (news != null)
             {

@@ -37,13 +37,22 @@ public partial class main : System.Web.UI.Page
             if(logon == null)
                 Server.Transfer("logon.aspx");
             USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0,UBBNEWSLIST_FILTER.ACTIVE);
-             
+
+            IEnumerable<UBBNEWS> sorter = sysm.news.newslist.OrderBy(news => news.l_incident_start);
+
+            foreach (UBBNEWS news in sorter)
+            {
+                if (news.f_active == 1)
+                    lst_messages.Items.Add(new ListItem(Util.padForListBox(news), news.l_newspk.ToString()));
+            }
+
+            /*
             for (int i = 0; i < sysm.news.newslist.Length; ++i)
             {
                 if (sysm.news.newslist[i].f_active==1)
                     lst_messages.Items.Add(new ListItem(Util.padForListBox(sysm.news.newslist[i]), sysm.news.newslist[i].l_newspk.ToString()));
                     //lst_messages.Items.Add(new ListItem(sysm.news.newslist[i].sz_operatorname + " " + sysm.news.newslist[i].newstext.sz_news + " " + Helper.FormatDate(sysm.news.newslist[i].l_incident_start) + (sysm.news.newslist[i].l_incident_end == 0 ? "" : "-" + Helper.FormatDate(sysm.news.newslist[i].l_incident_end)), sysm.news.newslist[i].l_newspk.ToString()));
-            }
+            }*/
 
             PasAdmin padmin = new PasAdmin();
             GetOperatorsResponse res = padmin.doGetOperators(logon);
@@ -121,7 +130,7 @@ public partial class main : System.Web.UI.Page
 
         // Stores the new message and returns it with l_newspk
         sysm.news.newslist[sysm.news.newslist.Length - 1] = ws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), sysm.news.newslist[sysm.news.newslist.Length - 1]);
-        sysm.news.newslist[sysm.news.newslist.Length - 1].l_deptpk = logon.l_deptpk;
+        sysm.news.newslist[sysm.news.newslist.Length - 1].l_deptpk = 0;
 
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)

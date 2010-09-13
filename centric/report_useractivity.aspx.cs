@@ -160,7 +160,10 @@ public partial class report_useractivity : System.Web.UI.Page
                         if (res.log[j].l_userpk == -1)
                             lbldesc.Text = "Administrator";
                         else
-                            lbldesc.Text = ((UBBUSER)users[res.log[j].l_userpk]).sz_userid;
+                            if (res.log[j].l_userpk != 0)
+                                lbldesc.Text = ((UBBUSER)users[res.log[j].l_userpk]).sz_userid;
+                            else
+                                lbldesc.Text = "Unknown";
                         cell.Controls.Add(lbldesc);
                         row.Cells.Add(cell);
 
