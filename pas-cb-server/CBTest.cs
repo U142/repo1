@@ -192,7 +192,7 @@ namespace pas_cb_server.cb_test
 
                         // test time is now, or has passed, send test and generate new time
                         ts_nexttest = Database.GenerateNextTestTime();
-                        Log.WriteLog(String.Format("Random test message sent with refno: {0}, next message scheduled for {1}.", NewAlert(oAlert, 70), ts_nexttest), 0);
+                        Log.WriteLog(String.Format("Random test message sent with refno: {0}, next message scheduled for {1}.", NewAlert(oAlert, Settings.l_testmessagetype), ts_nexttest), 0);
                     }
                 }
                 else
@@ -354,7 +354,7 @@ namespace pas_cb_server.cb_test
                     , oAlert.l_refno
                     , oAlert.l_comppk
                     , oAlert.l_deptpk
-                    , 16 // group
+                    , Settings.l_testmessagegroup // group
                     , l_sendinginfo_type);
 
                 cmd.CommandText = sz_query;

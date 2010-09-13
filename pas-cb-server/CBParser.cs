@@ -201,8 +201,9 @@ namespace pas_cb_server
                     }
                     else
                     {
-                        // insert LBAHISTCELL
-                        Database.InsertHistCell(oAlert.l_refno, op.l_operator);
+                        // insert LBAHISTCELL if sending isn't heartbeat sending (no status for heartbeat messages
+                        if(operation != Operation.NEWPLMN_HEARTBEAT)
+                            Database.InsertHistCell(oAlert.l_refno, op.l_operator);
                         switch (op.l_type)
                         {
                             case 1: // AlertiX (not supported)

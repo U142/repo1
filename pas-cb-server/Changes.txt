@@ -11,6 +11,11 @@ CBServer
 	* Added specific handeling of status code 1029 from one2many api (no cells in area)
 	* Changed database to allow recursive triggers (ALTER DATABASE <database> SET RECURSIVE_TRIGGERS ON)
 	* Added table LBAOPERATOR_CHANNELNAMES to allow easier editing of operator specific channel names
+	* Changed status thread. Now checks after 1 minute, 3 minutes, every x seconds and after expiration. X seconds can be disabled.
+	* Added table LBAHISTCELL_REPORT, the 3 minute status is stored here.
+	* Changed sp_cb_ins_cellhist and sp_cb_upd_cellhist to include LBAHISTCELL_REPORT.
+	* Changed default values for LBAHISTCELL to null, null, null, null, null, null, -1 to be able to differentiate which status check was needed to be run.
+	* Added f_active to LBAOPERATORS, when getting uservalues, only active operators are returned.
 
 1.1.3
 =====

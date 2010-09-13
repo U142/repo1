@@ -365,7 +365,7 @@ namespace pas_cb_server
                 //return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
         }
-        public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op, decimal l_expires_ts)
+        public static int GetAlertStatus(int l_refno, int l_status, byte[] message_number, Operator op, decimal l_expires_ts, bool b_report)
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
@@ -430,7 +430,7 @@ namespace pas_cb_server
                     }
                     cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
 
-                    Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
 
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                         , l_refno

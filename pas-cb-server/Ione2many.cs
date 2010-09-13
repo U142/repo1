@@ -204,6 +204,16 @@ namespace pas_cb_server
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
+                else if (killres.cbccbestatuscode == 1052)
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (message was already finished) (handle={3})"
+                        , oAlert.l_refno
+                        , op.sz_operatorname
+                        , killres.cbccberequesthandle
+                        , killreq.messagehandle), 0);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
+                    return Constant.OK;
+                }
                 else
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (code={3}, msg={4})"
@@ -231,7 +241,7 @@ namespace pas_cb_server
                 cbc_logout(cbc, op, oAlert.l_refno);
             }
         }
-        public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op, decimal l_expires_ts) // expires not in use
+        public static int GetAlertStatus(int l_refno, int l_status, int l_msghandle, Operator op, decimal l_expires_ts, bool b_report) // expires not in use
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
             CB_one2many_defaults def = (CB_one2many_defaults)op.GetDefaultValues(typeof(CB_one2many_defaults));
@@ -247,12 +257,12 @@ namespace pas_cb_server
                 if (op.api_version >= new Version(2, 4)) // use cell count
                 {
                     sz_method = "CellCount";
-                    return cbc_cellcount(cbc, op, l_refno, l_msghandle, l_status, l_expires_ts);
+                    return cbc_cellcount(cbc, op, l_refno, l_msghandle, l_status, l_expires_ts, b_report);
                 }
                 else // use infomsg
                 {
                     sz_method = "InfoMessage";
-                    return cbc_infomsg(cbc, op, l_refno, l_msghandle, l_status);
+                    return cbc_infomsg(cbc, op, l_refno, l_msghandle, l_status, b_report);
                 }
             }
             catch (Exception e)
@@ -456,7 +466,7 @@ namespace pas_cb_server
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 0);
                 // update database
-                Database.UpdateHistCell(oAlert.l_refno, op.l_operator, 100);
+                Database.UpdateHistCell(true, oAlert.l_refno, op.l_operator, 100);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
@@ -525,7 +535,7 @@ namespace pas_cb_server
                     , newmsgres.messagetext
                     , newmsgres.messagehandle), 0);
                 // update database
-                Database.UpdateHistCell(oAlert.l_refno, op.l_operator, 100);
+                Database.UpdateHistCell(true, oAlert.l_refno, op.l_operator, 100);
                 Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED, newmsgres.messagehandle.ToString(), newmsgreq.endtime);
                 return Constant.OK;
             }
@@ -541,7 +551,7 @@ namespace pas_cb_server
                 return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, newmsgres.cbccbestatuscode, op.l_operator, LBATYPE.CB);
             }
         }
-        private static int cbc_cellcount(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, decimal l_expires_ts)
+        private static int cbc_cellcount(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, decimal l_expires_ts, bool b_report)
         {
             CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
             r_cellcount.cbccberequesthandle = Database.GetHandle(op);
@@ -572,7 +582,7 @@ namespace pas_cb_server
 
                 cb_percentage = ((float)l_2gok + (float)l_3gok) / ((float)l_2gtotal + (float)l_3gtotal) * 100;
 
-                Database.UpdateHistCell(l_refno, op.l_operator, cb_percentage, cellcount.cellcount2gtotal, cellcount.cellcount2gsuccess, cellcount.cellcount3gtotal, cellcount.cellcount3gsuccess);
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, cb_percentage, cellcount.cellcount2gtotal, cellcount.cellcount2gsuccess, cellcount.cellcount3gtotal, cellcount.cellcount3gsuccess);
 
                 Log.WriteLog(String.Format("{0} (op={1}) (req={2}) CellCount OK (handle={3}, success={4:0.00}%)"
                     , l_refno
@@ -603,7 +613,7 @@ namespace pas_cb_server
                 return Constant.FAILED;
             }
         }
-        private static int cbc_infomsg(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status)
+        private static int cbc_infomsg(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, bool b_report)
         {
             CBCINFOMSGREQUEST inforeq = new CBCINFOMSGREQUEST();
             inforeq.cbccberequesthandle = Database.GetHandle(op);
@@ -644,23 +654,25 @@ namespace pas_cb_server
                         break;
                     case 20:  // Starting
                     case 30:  // Running
-                        Database.UpdateHistCell(l_refno, op.l_operator, (float)infores.successpercentage, -1, -1, -1, -1, -1, -1);
+                        Database.UpdateHistCell(b_report, l_refno, op.l_operator, (float)infores.successpercentage, -1, -1, -1, -1, -1, -1);
                         if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
                             Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
                         break;
-                    case 40:  // Killing
+                    /*case 40:  // Killing
                         if (l_status != Constant.CANCELLING)
                             Database.SetSendingStatus(op, l_refno, Constant.CANCELLING);
-                        break;
+                        break;*/
                     case 50:  // Recurring (paused)
                         if (l_status != Constant.CBPAUSED)
                             Database.SetSendingStatus(op, l_refno, Constant.CBPAUSED);
                         break;
+                    case 40: // Killing
                     case 100: // Killed
                     case 110: // Expired
                     case 120: // Error
                     case 130: // Disabled
                     case 140: // Deleted (PLNM override)
+                        Database.UpdateHistCell(b_report, l_refno, op.l_operator, (float)infores.successpercentage, -1, -1, -1, -1, -1, -1);
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }

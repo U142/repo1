@@ -135,21 +135,21 @@ namespace pas_cb_server
                 l_operator));
             return Constant.OK;
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage)
+        public static int UpdateHistCell(bool b_report, int l_refno, int l_operator, float l_successpercentage)
         {
-            return UpdateHistCell(l_refno, l_operator, l_successpercentage, 0, 0, 0, 0, 0, 0);
+            return UpdateHistCell(b_report, l_refno, l_operator, l_successpercentage, 0, 0, 0, 0, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok)
+        public static int UpdateHistCell(bool b_report, int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok)
         {
-            return UpdateHistCell(l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, 0, 0, 0, 0);
+            return UpdateHistCell(b_report, l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, 0, 0, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok)
+        public static int UpdateHistCell(bool b_report, int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok)
         {
-            return UpdateHistCell(l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok, 0, 0);
+            return UpdateHistCell(b_report, l_refno, l_operator, l_successpercentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok, 0, 0);
         }
-        public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
+        public static int UpdateHistCell(bool b_report, int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
         {
-            string sz_sql = "exec sp_cb_upd_cellhist ?,?,?,?,?,?,?,?,?";
+            string sz_sql = "exec sp_cb_upd_cellhist ?,?,?,?,?,?,?,?,?,?";
 
             try
             {
@@ -165,6 +165,7 @@ namespace pas_cb_server
                 cmd.Parameters.Add("4gtot", OdbcType.Int).Value = l_4gtotal;
                 cmd.Parameters.Add("4gok", OdbcType.Int).Value = l_4gok;
                 cmd.Parameters.Add("success", OdbcType.Double).Value = (double)l_successpercentage;
+                cmd.Parameters.Add("report", OdbcType.Bit).Value = b_report;
 
                 conn.Open();
                 cmd.ExecuteNonQuery();

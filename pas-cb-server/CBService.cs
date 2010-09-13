@@ -43,9 +43,9 @@ namespace pas_cb_server
                 if (Settings.l_statuspollinterval > 0)
                     Log.WriteLog(String.Format("Status poll interval is {0} seconds", Settings.l_statuspollinterval), 9);
                 else
-                    Log.WriteLog(String.Format("Status poll is disabled"), 9);
+                    Log.WriteLog(String.Format("Status poll is disabled, only 1 and 3 minute statuses + finished status"), 9);
 
-                if (Settings.l_heartbeatinterval > 0)
+                if (Settings.l_heartbeatinterval > 0 && Settings.GetBool("HeartBeatEnabled"))
                     Log.WriteLog(String.Format("Heartbeat interval is {0} minutes", Settings.l_heartbeatinterval), 9);
                 else
                     Log.WriteLog(String.Format("Heartbeat is disabled"), 9);
@@ -59,11 +59,14 @@ namespace pas_cb_server
                 new Thread(new ThreadStart(CBParser.CheckFilesThread)).Start();
                 Interlocked.Increment(ref Settings.threads);
 
-                Log.WriteLog("Starting test thread", 9);
-                new Thread(new ThreadStart(cb_test.CBTest.RandomTestThread)).Start();
-                Interlocked.Increment(ref Settings.threads);
+                if (Settings.GetBool("TestMessageEnabled"))
+                {
+                    Log.WriteLog("Starting test thread", 9);
+                    new Thread(new ThreadStart(cb_test.CBTest.RandomTestThread)).Start();
+                    Interlocked.Increment(ref Settings.threads);
+                }
 
-                if (Settings.l_heartbeatinterval > 0)
+                if (Settings.l_heartbeatinterval > 0 && Settings.GetBool("HeartBeatEnabled"))
                 {
                     Log.WriteLog("Starting heartbeat thread", 9);
                     new Thread(new ThreadStart(cb_test.CBTest.HeartbeatThread)).Start();
@@ -77,12 +80,12 @@ namespace pas_cb_server
                     Interlocked.Increment(ref Settings.threads);
                 }
 
-                if (Settings.l_statuspollinterval > 0)
-                {
+                //if (Settings.l_statuspollinterval > 0)
+                //{
                     Log.WriteLog("Starting status thread", 9);
                     new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
                     Interlocked.Increment(ref Settings.threads);
-                }
+                //}
 
                 // log startup mode
                 if (Environment.UserInteractive)

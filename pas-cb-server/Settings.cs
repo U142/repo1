@@ -28,6 +28,9 @@ namespace pas_cb_server
         public static int l_retries;
         public static int l_messagetype;
 
+        public static int l_testmessagetype;
+        public static int l_testmessagegroup;
+
         // Instanced settings
         public int l_comppk = 0;
         public int l_deptpk = 0;
@@ -166,6 +169,8 @@ namespace pas_cb_server
             Settings.l_retries = Settings.GetValue("Retries", 2);
             Settings.l_messagetype = Settings.GetValue("MessageType", 7);
             Settings.l_cpuaffinity = Settings.GetValue("CPUAffinity", 0);
+            Settings.l_testmessagegroup = Settings.GetValue("TestMessageGroup", 16);
+            Settings.l_testmessagetype = Settings.GetValue("TestMessageType", 70);
 
             // Init log, default is syslog off / logfile on
             Log.InitLog(
@@ -305,6 +310,7 @@ namespace pas_cb_server
                                         LBAOPERATORS_X_DEPT OD 
                                     WHERE
                                         OP.f_cb=1
+                                        AND OP.f_active=1
                                         AND OD.l_operator=OP.l_operator 
                                         AND OD.l_deptpk={0}
                                     ORDER BY
