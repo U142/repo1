@@ -67,14 +67,18 @@ namespace pas_cb_weblistener
         private static IBAG_message_type Cease(int l_operator)
         {
             // disable operator in DB
-
-            return IBAG_message_type.Ack;
+            if (Database.DisableOperator(l_operator) == Constant.OK)
+                return IBAG_message_type.Ack;
+            else
+                return IBAG_message_type.Error;
         }
         private static IBAG_message_type Resume(int l_operator)
         {
             // enable operator in DB
-
-            return IBAG_message_type.Ack;
+            if (Database.EnableOperator(l_operator) == Constant.OK)
+                return IBAG_message_type.Ack;
+            else
+                return IBAG_message_type.Error;
         }
         private static IBAG_message_type Report(int l_operator, IBAG_Alert_Attributes t_alert_response)
         {

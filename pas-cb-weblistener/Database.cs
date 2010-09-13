@@ -59,7 +59,7 @@ namespace pas_cb_weblistener
         }
         public static int UpdateHistCell(int l_refno, int l_operator, float l_successpercentage, int l_2gtotal, int l_2gok, int l_3gtotal, int l_3gok, int l_4gtotal, int l_4gok)
         {
-            string sz_sql = "exec sp_cb_upd_cellhist ?,?,?,?,?,?,?,?,?";
+            string sz_sql = "exec sp_cb_upd_cellhist ?,?,?,?,?,?,?,?,?,?";
 
             try
             {
@@ -75,6 +75,7 @@ namespace pas_cb_weblistener
                 cmd.Parameters.Add("4gtot", OdbcType.Int).Value = l_4gtotal;
                 cmd.Parameters.Add("4gok", OdbcType.Int).Value = l_4gok;
                 cmd.Parameters.Add("success", OdbcType.Double).Value = (double)l_successpercentage;
+                cmd.Parameters.Add("report", OdbcType.Bit).Value = false;
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -88,6 +89,14 @@ namespace pas_cb_weblistener
                     2);
             }
             return Constant.OK;
+        }
+        public static int DisableOperator(int l_operator)
+        {
+            return ExecuteNonQuery(String.Format("UPDATE LBAOPERATORS SET f_active=0 WHERE l_operator={0}", l_operator));
+        }
+        public static int EnableOperator(int l_operator)
+        {
+            return ExecuteNonQuery(String.Format("UPDATE LBAOPERATORS SET f_active=1 WHERE l_operator={0}", l_operator));
         }
 
         private static object ExecuteScalar(string sz_query)
@@ -109,6 +118,31 @@ namespace pas_cb_weblistener
                     String.Format("Database.ExecuteScalar (exception={0}) (sql={1})", e.Message, sz_query),
                     String.Format("Database.ExecuteScalar (exception={0}) (sql={1})", e, sz_query),
                     2);
+            }
+
+            return ret;
+        }
+        private static int ExecuteNonQuery(string sz_sql)
+        {
+            int ret = Constant.OK;
+
+            try
+            {
+                OdbcConnection conn = new OdbcConnection(Settings.sz_dbconn);
+                OdbcCommand cmd = new OdbcCommand(sz_sql, conn);
+
+                conn.Open();
+                if (cmd.ExecuteNonQuery() == -1)
+                    ret = Constant.FAILED;
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("Database.ExecuteNonQuery (exception={0}) (sql={1})", e.Message, sz_sql),
+                    String.Format("Database.ExecuteNonQuery (exception={0}) (sql={1})", e, sz_sql),
+                    2);
+                ret = Constant.FAILED;
             }
 
             return ret;
