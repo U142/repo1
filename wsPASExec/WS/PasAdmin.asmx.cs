@@ -431,17 +431,38 @@ namespace com.ums.ws.pas.admin
                         string msg_text = "";
                         string event_name = "";
                         string desc = paslog.sz_desc;
+                        int l_operatorindex = desc.IndexOf("l_operator");
+                        string m_operator = "";
+
+                        if(l_operatorindex != -1) {
+                            m_operator = desc.Substring(l_operatorindex);
+                            m_operator = m_operator.Substring(0,m_operator.IndexOf(','));
+                        }
                         desc = desc.Substring(desc.IndexOf("l_refno"));
                         desc = desc.Substring(0, desc.IndexOf(','));
                         long l_refno = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
-                        sz_sql = String.Format("SELECT distinct st.l_refno, st.sz_text, p.sz_name " +
-                                                 "FROM LBASEND_TEXT st, BBPROJECT p, BBPROJECT_X_REFNO pxr " +
-                                                "WHERE st.l_refno={0} " + 
-                                                  "AND st.l_refno=pxr.l_refno " +
-                                                  "AND p.l_projectpk = pxr.l_projectpk", l_refno);
+                        if (l_operatorindex != -1)
+                        {
+                            sz_sql = String.Format("SELECT distinct st.l_refno, st.sz_text, p.sz_name, o.sz_operatorname " +
+                                                     "FROM LBASEND_TEXT st, BBPROJECT p, BBPROJECT_X_REFNO pxr, LBAOPERATORS o, LBASEND ls " +
+                                                    "WHERE st.l_refno={0} " +
+                                                      "AND st.l_refno=pxr.l_refno " +
+                                                      "AND p.l_projectpk = pxr.l_projectpk " +
+                                                      "AND ls.l_refno = st.l_refno " +
+                                                      "AND ls.l_operator = o.l_operator " + 
+                                                      "AND o.l_operator = {1}", l_refno, int.Parse(m_operator.Substring(m_operator.IndexOf('=') + 1)));
+                        }
+                        else
+                        {
+                            sz_sql = String.Format("SELECT distinct st.l_refno, st.sz_text, p.sz_name " +
+                                                     "FROM LBASEND_TEXT st, BBPROJECT p, BBPROJECT_X_REFNO pxr " +
+                                                    "WHERE st.l_refno={0} " +
+                                                      "AND st.l_refno=pxr.l_refno " +
+                                                      "AND p.l_projectpk = pxr.l_projectpk", l_refno);
+                        }
                         rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                         while (rs.Read())
-                            paslog.sz_desc = rs.GetString(2) + " - " + rs.GetString(1);
+                            paslog.sz_desc = "E: " + rs.GetString(2) + " - " + "M: " + rs.GetString(1) + (paslog.l_operation == 111 ? " - " + rs.GetString(3) : "");
                         rs.Close();
                     }
                 }
@@ -526,7 +547,7 @@ namespace com.ums.ws.pas.admin
 
             string sz_sql = "";
 
-            sz_sql = String.Format("sp_cb_set_occupied {0}, {1}", (int)accesspage, occupied?1:0);            
+            sz_sql = String.Format("sp_cb_set_occupiedv2 {0}, {1}, {2}", (int)accesspage, occupied?1:0, logoninfo.l_userpk);            
 
             try
             {
@@ -543,7 +564,7 @@ namespace com.ums.ws.pas.admin
                     else
                     {
                         res.successful = false;
-                        res.reason = "Function occupied by another user, please try again later";
+                        res.reason = "Function occupied by " + rs.GetString(1) + ", please try again later";
                         res.errorCode = -1;
                     }
                 }
