@@ -123,15 +123,18 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	public void keyTyped(KeyEvent e)
 	{
 		//key(e.getKeyCode(), true);
+		PAS.pasplugin.onMapKeyTyped(e);
 	}
 	public void keyPressed(KeyEvent e)
 	{
 		//get_pas().add_event("Key");
 		key(e.getKeyCode(), true);
+		PAS.pasplugin.onMapKeyPressed(e);
 	}
 	public void keyReleased(KeyEvent e)
 	{
 		key(e.getKeyCode(), false);
+		PAS.pasplugin.onMapKeyReleased(e);
 	}
 	public synchronized void key(int n_keycode, boolean b_down)
 	{
@@ -234,9 +237,10 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 				}
 				break;
-			/*case KeyEvent.VK_T:
-				PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
-				break;*/
+			case KeyEvent.VK_T:
+				//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+				//variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+				break;
 		}
 	}
 	

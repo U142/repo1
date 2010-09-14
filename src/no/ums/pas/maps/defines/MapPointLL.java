@@ -2,7 +2,7 @@ package no.ums.pas.maps.defines;
 
 import java.awt.Dimension;
 
-public class MapPointLL {
+public class MapPointLL implements Comparable<MapPointLL> {
 	private int m_point_reference;
 	private double m_measurement_reference;
 	private MapPointLL m_degree_distance = null;
@@ -11,6 +11,11 @@ public class MapPointLL {
 	public MapPointLL(double lon, double lat) {
 		m_lon = lon;
 		m_lat = lat;
+	}
+	public MapPointLL(double lon, double lat, int pointref)
+	{
+		this(lon, lat);
+		m_point_reference = pointref;
 	}
 	public MapPointLL(MapPointLL ll) {
 		m_lon = ll.get_lon();
@@ -63,4 +68,11 @@ public class MapPointLL {
 		}
 		return "No Point";
 	}
+	@Override
+	public int compareTo(MapPointLL o) {
+		if(getMeasurementReference()>o.getMeasurementReference())
+			return 1;
+		return -1;
+	}
+	
 }

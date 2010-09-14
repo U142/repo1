@@ -389,7 +389,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		m_txt_previewscroll = new JScrollPane(m_txt_preview);
 		
-		m_lbl_pages = new StdTextLabel(PAS.l("common_page") + " 1/" + MAX_PAGES);
+		m_lbl_pages = new StdTextLabel(PAS.l("common_pages") + " 1/" + MAX_PAGES, 100);
 		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/" + MAX_TOTAL_CHARS, 150);
 		
 		m_btn_send = new JButton(PAS.l("main_sending_send"));
@@ -528,10 +528,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		add_spacing(DIR_VERTICAL, 5);
 		
-		/*
+		
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_lbl_pages, m_gridconst);
-		*/
+		
 		set_gridconst(2, get_panel(), 1, 1);
 		add(m_lbl_characters, m_gridconst);
 				
@@ -579,6 +579,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,100));
 
+		m_lbl_characters.setPreferredSize(new Dimension(150, m_lbl_characters.getPreferredSize().height));
+		updateCharacters();
 		revalidate();
 		repaint();
 	}
@@ -607,6 +609,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_print.addActionListener(this);
 		}
 		add(m_btn_print, m_gridconst);
+		
+		//set_gridconst(1, inc_panels(), 3, 1);
+		//add(m_lbl_pages, m_gridconst);
+		set_gridconst(1, inc_panels(), 3, 1);
+		add(m_lbl_characters, m_gridconst);
 		
 		
 		add_spacing(DIR_VERTICAL, 5);
@@ -645,6 +652,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.setActionCommand("act_send");
 		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,200));
 
+		m_lbl_characters.setPreferredSize(new Dimension(250, m_lbl_characters.getPreferredSize().height));
+		updateCharacters();
 		revalidate();
 		repaint();
 		
@@ -843,7 +852,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			//lock the painting
-			PAS.pasplugin.onLockSending(null, false);			
+			PAS.pasplugin.onLockSending(null, false);
+			current_mode = MODE.MESSAGE_WRITING;
 			add_controls();
 		}
 		if(e.getSource().equals(m_btn_reset)){
@@ -1150,14 +1160,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//int MAX_EVENTNAME_LENGTH = 20;
 		if(e.getSource().equals(m_txt_event_name)) {
-			if(!projectOpen())
+			/*if(!projectOpen())
 			{
 				if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
 					return;
-				if(m_txt_event_name.getText().length() + m_sz_date.length() + 1 > MAX_EVENTNAME_LENGTH)
-					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 1)));
-			}
+				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
+					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));
+			}*/
 		}
 		else if(e.getSource().equals(m_txt_message))
 		{
@@ -1193,6 +1204,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
 					return false;
+			}
+		}
+		else if(e.getSource().equals(m_txt_event_name))
+		{
+			int n_total_len = m_txt_event_name.getText().length();
+			int n_chars_left_for_eventname = MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length()-1 + num_chars_selected;
+			int len_of_event = m_txt_event_name.getText().length();
+			if(m_txt_event_name.getText().length() >= n_chars_left_for_eventname-1) {
+				return false;
 			}
 		}
 
@@ -1233,7 +1253,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_txt_sender_name) || 
 				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
-				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
+				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) 
+		{
 			JTextComponent c = (JTextComponent)e.getSource();
 			int before = m_txt_preview.getText().length();
 			int char_selection = c.getSelectionEnd()-c.getSelectionStart();
@@ -1263,6 +1284,38 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			//System.out.println("Before="+before+" After="+after);
 		}
+		else if(e.getSource().equals(m_txt_event_name)) {
+			if(!projectOpen())
+			{
+				/*if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
+					return;
+				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
+					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));*/
+				JTextComponent c = (JTextComponent)e.getSource();
+				int before = c.getText().length();
+				int char_selection = c.getSelectionEnd()-c.getSelectionStart();
+				//System.out.println("c="+char_selection);
+				boolean b = checkIfInputAllowed(e, char_selection);
+				int after = c.getText().length() + m_txt_date_time.getText().length() + 1;
+				int number_of_chars = after-before;
+				if(!b)
+					e.consume();
+				if(after>=MAX_EVENTNAME_LENGTH)
+				{
+					try
+					{
+						int diff = after-MAX_EVENTNAME_LENGTH;
+						int current_len = c.getText().length();
+						c.setText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
+					}
+					catch(Exception err)
+					{
+						
+					}
+				}
+			}
+		}
+
 	}
 	public void onSendFinished(ActionEvent e) {
 		// Start update timer
@@ -1332,7 +1385,23 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	
 	private void updateCharacters() {
-		m_lbl_characters.setText(PAS.l("common_characters") + " " + m_txt_preview.getText().length() + "/" + MAX_TOTAL_CHARS);
+		int chars = m_txt_preview.getText().length();
+		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
+		switch(current_mode)
+		{
+		case INITIALIZING:
+		case MESSAGE_WRITING:
+			m_lbl_characters.setText(PAS.l("common_characters") + " " + chars + "/" + MAX_TOTAL_CHARS);
+			m_lbl_pages.setText(PAS.l("common_page") + " " + pageno + " (" + MAX_PAGES + ")");
+			break;
+		case SENDING:
+		case SHOWING_SUMMARY:
+			//int chars_left = ((chars / MAX_PAGES) % MAX_MESSAGELENGTH_PR_PAGE);
+			int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
+			
+			m_lbl_characters.setText(pageno + " " + PAS.l("common_pages") + " (" + chars_left + " " + PAS.l("common_characters") + " " + PAS.l("common_remaining") + ")");
+			break;
+		}
 	}
 	
 	public void fromTemplate(CBSTATUS cb)

@@ -1356,6 +1356,31 @@ public class plugin_Centric extends PAS_Scripting
 		return true;
 	}
 
+	
+	
+	@Override
+	public boolean onMapKeyPressed(KeyEvent e) {
+		switch(e.getKeyCode())
+		{
+		case KeyEvent.VK_T:
+			//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+			variables.MAPPANE.get_active_shape().typecast_polygon().ellipseToRestrictionlines(variables.USERINFO.get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+			break;
+		}
+		return true;
+
+	}
+
+	@Override
+	public boolean onMapKeyReleased(KeyEvent e) {
+		return super.onMapKeyReleased(e);
+	}
+
+	@Override
+	public boolean onMapKeyTyped(KeyEvent e) {
+		return super.onMapKeyTyped(e);
+	}
+
 	@Override
 	public String getDefaultLocale(Settings s) {
 		//return "nl_NL";

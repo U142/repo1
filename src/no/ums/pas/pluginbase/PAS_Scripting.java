@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -831,8 +832,20 @@ public class PAS_Scripting extends PasScriptingInterface
 		return true;
 	}
 
+	@Override
+	public boolean onMapKeyPressed(KeyEvent e) {
+		return false;
+	}
 
+	@Override
+	public boolean onMapKeyReleased(KeyEvent e) {
+		return false;
+	}
 
+	@Override
+	public boolean onMapKeyTyped(KeyEvent e) {
+		return false;
+	}
 
 	protected Hashtable<String, ShapeStruct> shapes_to_paint = new Hashtable<String, ShapeStruct>();
 	public void addShapeToPaint(ShapeStruct s)

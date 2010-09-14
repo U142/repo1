@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -464,6 +465,12 @@ public abstract class PasScriptingInterface
 	 */
 	public abstract boolean onMapGotoShapesToPaint();
 	
+	public abstract boolean onMapKeyTyped(KeyEvent e);
+
+	public abstract boolean onMapKeyPressed(KeyEvent e);
+
+	public abstract boolean onMapKeyReleased(KeyEvent e);
+
 	public abstract boolean onMapLoadFailed(MapLoader loader);
 	
 	public abstract void addShapeToPaint(ShapeStruct s);

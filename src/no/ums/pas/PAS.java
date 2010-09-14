@@ -1363,10 +1363,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			else
 			{
-				this.setSize(dim_map.width,dim_map.height); //-50);
+				this.setSize(1024,768); //-50);
+				this.setLocationRelativeTo(null);
 				m_settings.setXpos(0);
 				m_settings.setYpos(0);
+				
+				//this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			}
+			this.setMinimumSize(new Dimension(1024, 768));
 			if(m_settings.isWindowFullscreen())
 				this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			else
