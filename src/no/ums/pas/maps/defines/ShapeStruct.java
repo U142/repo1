@@ -203,7 +203,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	}
 	public Color get_border_color() { return m_border_color; }
 	public void set_border_color(Color col) { m_border_color = col; }
-	public abstract boolean can_lock();
+	public abstract boolean can_lock(List<ShapeStruct> restrictionShapes);
 	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p);
 	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, 
 						Point p, boolean b_border, boolean b_fill, int pensize, boolean bPaintShapeName);

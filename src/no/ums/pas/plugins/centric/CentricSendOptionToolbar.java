@@ -230,11 +230,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		else
 		{
 			m_txt_event_name.setEnabled(false);
-			m_txt_event_name.setText(sz_projectname);
+			//m_txt_event_name.setText(sz_projectname);
+			setEventText(sz_projectname);
 		}
 		m_projectpk = projectpk;
 	}
 	
+	protected void setEventText(String s)
+	{
+		m_txt_event_name.setText(s);
+		m_txt_event_name.setToolTipText(s);
+	}
 	
 	//public CentricStatusController get_statuscontroller() { return m_centricstatuscontroller; }
 	
@@ -620,6 +626,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		if(m_txt_warning == null) {
 			m_txt_warning = new JTextArea("",10,10);
+			m_txt_warning.setText(PAS.l("main_sending_send_warning"));
 			m_txt_warningscroll = new JScrollPane(m_txt_warning);
 			m_txt_warningscroll.setPreferredSize(new Dimension(450,60));
 		}
@@ -688,9 +695,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			if(!projectOpen())
 			{
 				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
-					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));
+					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));
 				m_sz_date = getFormatedDate();
-				m_txt_event_name.setText(m_txt_event_name.getText() + " " + m_sz_date);
+				setEventText(m_txt_event_name.getText() + " " + m_sz_date);
 			}
 			else
 				m_sz_date = getFormatedDate();
@@ -858,7 +865,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getSource().equals(m_btn_reset)){
 			if(!projectOpen())
-				m_txt_event_name.setText(variables.USERINFO.get_organization());
+				setEventText(variables.USERINFO.get_organization());
 			//m_txt_sender_name.setText(variables.USERINFO.get_organization());
 			m_txt_sender_name.setText("NL-Alert");
 			m_txt_message.setText("");
@@ -1060,7 +1067,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			if(!projectOpen())
 			{
 				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
-					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));				
+					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));				
 			}
 		}
 		checkForEnableSendButton();
@@ -1074,7 +1081,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(arg0.getSource().equals(m_txt_event_name)) {
 			if(!projectOpen())
 			{
-				m_txt_event_name.setText(m_txt_event_name.getText() + " " + m_sz_date);
+				setEventText(m_txt_event_name.getText() + " " + m_sz_date);
 			}
 		}
 		//checkInputs();
@@ -1167,7 +1174,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
 					return;
 				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
-					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));
+					setEventText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));
 			}*/
 		}
 		else if(e.getSource().equals(m_txt_message))
@@ -1243,8 +1250,16 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 			}
 		}*/
-		updatePreviewText();
-		checkForEnableSendButton();
+		if(e.getSource().equals(m_txt_event_name))
+		{
+			setEventText(m_txt_event_name.getText());
+		}
+		else
+		{
+			updatePreviewText();
+			checkForEnableSendButton();
+		}
+		
 		//checkInputs();
 	}
 	@Override
@@ -1290,7 +1305,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				/*if(e.getKeyCode()==e.VK_DELETE || e.getKeyCode()==e.VK_BACK_SPACE || (m_txt_event_name.getSelectedText() != null && m_txt_event_name.getSelectedText().length()>0))
 					return;
 				if(m_txt_event_name.getText().length() + m_sz_date.length() + 2 > MAX_EVENTNAME_LENGTH)
-					m_txt_event_name.setText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));*/
+					setEventText(m_txt_event_name.getText().substring(0,Math.max(0, MAX_EVENTNAME_LENGTH - m_sz_date.length() - 2)));*/
 				JTextComponent c = (JTextComponent)e.getSource();
 				int before = c.getText().length();
 				int char_selection = c.getSelectionEnd()-c.getSelectionStart();
@@ -1306,7 +1321,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					{
 						int diff = after-MAX_EVENTNAME_LENGTH;
 						int current_len = c.getText().length();
-						c.setText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
+						setEventText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
 					}
 					catch(Exception err)
 					{
@@ -1374,7 +1389,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//	enable_send = false;
 		//else
 		{
-			if(variables.MAPPANE.get_active_shape()!=null && !variables.MAPPANE.get_active_shape().can_lock())
+			if(variables.MAPPANE.get_active_shape()!=null && 
+					!variables.MAPPANE.get_active_shape().can_lock(variables.USERINFO.get_current_department().get_restriction_shapes()))
 				enable_send = false;
 		}
 		return enable_send;

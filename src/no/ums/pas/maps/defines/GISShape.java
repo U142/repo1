@@ -1,6 +1,7 @@
 package no.ums.pas.maps.defines;
 
 import java.awt.*;
+import java.util.List;
 
 import no.ums.pas.importer.gis.*;
 
@@ -42,7 +43,8 @@ public class GISShape extends ShapeStruct {
 
 	public void calc_coortopix(Navigation n) {
 	}	
-	public boolean can_lock() {
+	@Override
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		return true;
 	}
 

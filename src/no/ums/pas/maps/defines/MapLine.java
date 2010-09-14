@@ -30,7 +30,7 @@ public class MapLine extends ShapeStruct
 		
 	}
 	@Override
-	public boolean can_lock() {
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		return false;
 	}
 	@Override

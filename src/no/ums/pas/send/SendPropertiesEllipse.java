@@ -56,7 +56,7 @@ public class SendPropertiesEllipse extends SendProperties {
 
 	
 	public boolean can_lock() {		
-		return get_shapestruct().can_lock();
+		return get_shapestruct().can_lock(null);
 	}
 	public Color get_color() { 
 		return get_shapestruct().get_fill_color();

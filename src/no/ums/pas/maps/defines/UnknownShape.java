@@ -3,6 +3,7 @@ package no.ums.pas.maps.defines;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.List;
 
 public class UnknownShape extends ShapeStruct {
 	public UnknownShape() {
@@ -22,7 +23,10 @@ public class UnknownShape extends ShapeStruct {
 	}
 
 	public Object clone() { return null; }
-	public boolean can_lock() { return false; }
+	
+	@Override
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) { return false; }
+	
 	public void calc_coortopix(Navigation n) {
 		calc_epicentre_coortopix(n);
 	}

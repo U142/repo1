@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
+import java.util.List;
 
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -71,7 +72,8 @@ public class EllipseStruct extends ShapeStruct {
 			Error.getError().addError("SendPropertiesEllipse","Exception in calc_diameters",e,1);
 		}
 	}
-	public boolean can_lock() {
+	@Override
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		if(m_p_center != null && m_p_corner != null)
 			return true;
 		return false;

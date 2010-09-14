@@ -67,7 +67,7 @@ public class SendPropertiesPolygon extends SendProperties {
 		set_shapestruct((PolygonStruct)poly);
 	}
 	public boolean can_lock() {
-		return get_shapestruct().can_lock();
+		return get_shapestruct().can_lock(null);
 	}
 	public void set_color(Color c) {
 		get_shapestruct().set_fill_color(c);

@@ -63,7 +63,7 @@ public class TasStruct extends ShapeStruct
 	}
 
 	@Override
-	public boolean can_lock() {
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		if(countries.size()>0)
 			return true;
 		return false;

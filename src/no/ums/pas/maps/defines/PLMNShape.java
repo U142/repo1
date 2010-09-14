@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
@@ -42,7 +43,7 @@ public class PLMNShape extends ShapeStruct
 	}
 
 	@Override
-	public boolean can_lock() {
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		return true;
 	}
 

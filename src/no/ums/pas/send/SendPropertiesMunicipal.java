@@ -75,7 +75,7 @@ public class SendPropertiesMunicipal extends SendProperties
 
 	@Override
 	public boolean can_lock() {
-		return get_shapestruct().can_lock();
+		return get_shapestruct().can_lock(null);
 	}
 
 	@Override

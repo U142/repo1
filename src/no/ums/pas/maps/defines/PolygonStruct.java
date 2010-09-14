@@ -471,6 +471,7 @@ public class PolygonStruct extends ShapeStruct {
 			case CommonFunc.COLLINEAR:
 				break;
 			case CommonFunc.DO_INTERSECT:
+				//check end points
 				intersect.setPointReference(real_idx);
 				if(intersect.getPointReference()!=p1.getPointReference())
 					ret.add(intersect);
@@ -1042,7 +1043,7 @@ public class PolygonStruct extends ShapeStruct {
 					g.setFont(f1);
 					for(int i=0; i < use_size; i+=100)
 					{
-						g.drawString(""+i, use_array_x[i], use_array_y[i]);
+						//g.drawString(""+i, use_array_x[i], use_array_y[i]);
 					}
 					g.setFont(fOldFont);
 				}
@@ -1117,15 +1118,37 @@ public class PolygonStruct extends ShapeStruct {
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
 		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 2, false);
 	}
-	public boolean can_lock() {
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		if(isElliptical())
 		{
 			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_x()!=m_p_corner.get_x() && m_p_center.get_y()!=m_p_corner.get_y())
+			{
+				/*if(restrictionShapes.size()>0)
+				{
+					//also check if all points are inside poly and no polyline crosses restriction area
+					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
+					MapPointLL p1 = getLastPoint();
+					MapPointLL p2 = getFirstPoint();
+					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
+					if(intersects.size()>0)
+						return false;
+				}*/
 				return true;
+			}
 		}
 		else
 		{
 			if(get_size() >= 3) {
+				if(restrictionShapes.size()>0)
+				{
+					//also check if all points are inside poly and no polyline crosses restriction area
+					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
+					MapPointLL p1 = getLastPoint();
+					MapPointLL p2 = getFirstPoint();
+					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
+					if(intersects.size()>1)
+						return false;
+				}
 				return true;
 			}
 		}
