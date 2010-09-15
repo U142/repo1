@@ -399,7 +399,7 @@ public partial class predefine_text : System.Web.UI.Page
             lbl_error.Text = "Could not release lock, access is still restricted to current user";
     }
 
-    protected void btn_aquire_lock_Click(object sender, EventArgs e)
+    protected void btn_acquire_lock_Click(object sender, EventArgs e)
     {
         CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
         if (resa.successful)

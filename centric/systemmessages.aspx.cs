@@ -230,31 +230,96 @@ public partial class systemmessages : System.Web.UI.Page
                 txt_message.Text = messages.news.newslist[i].newstext.sz_news;
                 ddl_operator.SelectedValue = messages.news.newslist[i].l_operator.ToString();
                 ddl_type.SelectedValue = messages.news.newslist[i].l_type.ToString();
-
-                if (messages.news.newslist[i].l_incident_start.ToString().Length >= 8)
-                    txt_activate.Text = Util.convertDate(long.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(0, 8)));
-                else
-                     txt_activate.Text = "";
-                if (messages.news.newslist[i].l_incident_start.ToString().Length >= 10)
-                    ddl_activate_h.SelectedValue = messages.news.newslist[i].l_incident_start.ToString().Substring(8, 2);
-                else
-                    ddl_activate_h.SelectedIndex = 0;
+               
+                // Activate minutes
+                int minutes = 0;
+                int hour = 0;
                 if (messages.news.newslist[i].l_incident_start.ToString().Length >= 12)
-                    ddl_activate_m.SelectedValue = messages.news.newslist[i].l_incident_start.ToString().Substring(10, 2);
+                {
+                    minutes = int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(10, 2));
+                    minutes = (int)Math.Round((double)minutes / 5.0) * 5;
+                    if (minutes == 60)
+                        ddl_activate_m.SelectedIndex = 0;
+                    else
+                        ddl_activate_m.SelectedValue = minutes.ToString();
+                }
                 else
                     ddl_activate_m.SelectedIndex = 0;
-                if (messages.news.newslist[i].l_incident_end.ToString().Length >= 8)
-                    txt_deactivate.Text = Util.convertDate(long.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(0, 8)));
+                
+                // Activate hours
+                if (messages.news.newslist[i].l_incident_start.ToString().Length >= 10)
+                {
+                    hour = int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(8, 2));
+                    if (minutes == 60)
+                        hour++;
+                    if (hour == 24)
+                        ddl_activate_h.SelectedIndex = 0;
+                    else
+                        ddl_activate_h.SelectedValue = hour.ToString();
+                }
                 else
-                    txt_deactivate.Text = "";
-                if(messages.news.newslist[i].l_incident_end.ToString().Length >= 10)
-                    ddl_deactivate_h.SelectedValue = messages.news.newslist[i].l_incident_end.ToString().Substring(8, 2);
+                    ddl_activate_h.SelectedIndex = 0;
+
+                // Activate date
+                if (messages.news.newslist[i].l_incident_start.ToString().Length >= 8)
+                {
+                    DateTime date = new DateTime(int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(0, 4)), int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(4, 2)), int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(6, 2)));
+
+                    if (hour == 24)
+                    {
+                        date.AddDays(1);
+                        txt_activate.Text = date.ToString("dd-MM-yyyy");
+                    }
+                    else
+                        txt_activate.Text = date.ToString("dd-MM-yyyy");
+                }
                 else
-                    ddl_deactivate_h.SelectedIndex = 0;
+                    txt_activate.Text = "";
+
+                // Deactivate minutes
+                minutes = 0;
+                hour = 0;
                 if (messages.news.newslist[i].l_incident_end.ToString().Length >= 12)
-                    ddl_deactivate_m.SelectedValue = messages.news.newslist[i].l_incident_end.ToString().Substring(10, 2);
+                {
+                    minutes = int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(10, 2));
+                    minutes = (int)Math.Round((double)minutes / 5.0) * 5;
+                    if (minutes == 60)
+                        ddl_deactivate_m.SelectedIndex = 0;
+                    else
+                        ddl_deactivate_m.SelectedValue = minutes.ToString();
+                }
                 else
                     ddl_deactivate_m.SelectedIndex = 0;
+                
+                // Deactivate hours
+                if (messages.news.newslist[i].l_incident_end.ToString().Length >= 10)
+                {
+                    hour = int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(8, 2));
+                    if (minutes == 60)
+                        hour++;
+                    if (hour == 24)
+                        ddl_deactivate_h.SelectedIndex = 0;
+                    else
+                        ddl_deactivate_h.SelectedValue = hour.ToString();
+                }
+                else
+                    ddl_deactivate_h.SelectedIndex = 0;
+
+                // Deactivate date
+                if (messages.news.newslist[i].l_incident_end.ToString().Length >= 8)
+                {
+                    DateTime date = new DateTime(int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(0, 4)), int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(4, 2)), int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(6, 2)));
+
+                    if (hour == 24)
+                    {
+                        date = date.AddDays(1);
+                        txt_deactivate.Text = date.ToString("dd-MM-yyyy");
+                    }
+                    else
+                        txt_deactivate.Text = date.ToString("dd-MM-yyyy");
+                }
+                else
+                    txt_deactivate.Text = "";
 
                 if (messages.news.newslist[i].f_active == 1) //active egentlig f_active
                 {

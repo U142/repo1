@@ -366,7 +366,8 @@ public class Util
         foreach (CB_USER_REGION_RESPONSE reg in region)
         {
             foreach(PAOBJECT obj in reg.regionlist)
-                WriteAccessPerUser(obj, reg);
+                if (obj.l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                    WriteAccessPerUser(obj, reg);
         }
         HttpContext.Current.Response.End();
     }

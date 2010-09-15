@@ -31,7 +31,7 @@
                         <asp:Label ID="lbl_password" runat="server" Text="Password:"></asp:Label>
                     </asp:TableCell>
                     <asp:TableCell>
-                        <asp:TextBox ID="txt_password" runat="server" TextMode="Password" style="width:150px"></asp:TextBox>
+                        <asp:TextBox ID="txt_password" runat="server" TextMode="Password" style="width:143px"></asp:TextBox>
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>

@@ -11,8 +11,25 @@ public partial class logoff : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        pasws ws = new pasws();
-        ws.PasLogoff(Util.convertLogonInfoPas((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"]));
+        try
+        {
+            
+            PasAdmin pa = new PasAdmin();
+            pa.doSetOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, false);
+            pa.doSetOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, false);
+        }
+        catch (Exception err)
+        {
+        }
+        try
+        {
+            pasws ws = new pasws();
+            bool success = ws.PasLogoff(Util.convertLogonInfoPas((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"]));
+        }
+        catch (Exception err)
+        {
+
+        }
         Session.RemoveAll();
         Server.Transfer("logon.aspx");
     }

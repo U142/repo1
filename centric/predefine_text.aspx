@@ -25,7 +25,7 @@
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell HorizontalAlign="Right" ColumnSpan="2">
-            <asp:Button ID="btn_aquire_lock" runat="server" Text="Aquire lock" OnClick="btn_aquire_lock_Click" CausesValidation="false" />
+            <asp:Button ID="btn_acquire_lock" runat="server" Text="Acquire lock" OnClick="btn_acquire_lock_Click" CausesValidation="false" />
             <asp:Button ID="btn_release_lock" runat="server" Text="Release lock" OnClick="btn_release_lock_Click" CausesValidation="false" />
             <asp:Button ID="btn_save" runat="server" Text="Save" OnClick="btn_save_Click" Enabled="false"/>
         </asp:TableCell>

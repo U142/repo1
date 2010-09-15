@@ -70,28 +70,28 @@
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" value="2" OnCheckedChanged="admin_Checked" AutoPostBack="True" Checked="true" />
+                <asp:RadioButton ID="rad_regional" runat="server" GroupName="users" OnCheckedChanged="admin_Checked" AutoPostBack="True" Checked="true" />
                 <asp:Label ID="Label5" runat="server" Text="Regional"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_sregional" runat="server" GroupName="users" value="3" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
+                <asp:RadioButton ID="rad_sregional" runat="server" GroupName="users" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label6" runat="server" Text="Super Regional"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_national" runat="server" GroupName="users" value="5" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
+                <asp:RadioButton ID="rad_national" runat="server" GroupName="users" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label7" runat="server" Text="National"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell></asp:TableCell>
             <asp:TableCell>
-                <asp:RadioButton ID="rad_administrator" runat="server" GroupName="users" value="7" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
+                <asp:RadioButton ID="rad_administrator" runat="server" GroupName="users" OnCheckedChanged="admin_Checked" AutoPostBack="True" />
                 <asp:Label ID="Label8" runat="server" Text="Administrator"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>

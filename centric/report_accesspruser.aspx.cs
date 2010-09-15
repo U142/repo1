@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -75,18 +76,21 @@ public partial class report_accesspruser : System.Web.UI.Page
 
                 for (int j = 0; j < response[i].regionlist.Length; ++j)
                 {
-                    HtmlTableRow row = new HtmlTableRow();
-                    Label lbldesc = new Label();
-                    lbldesc.Text = "Area:";
-                    HtmlTableCell cell = new HtmlTableCell();
-                    cell.Controls.Add(lbldesc);
-                    row.Cells.Add(cell);
-                    cell = new HtmlTableCell();
-                    Label txt = new Label();
-                    txt.Text = response[i].regionlist[j].sz_name;
-                    cell.Controls.Add(txt);
-                    row.Cells.Add(cell);
-                    tbl_output.Rows.Add(row);
+                    if (response[i].regionlist[j].l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                    {
+                        HtmlTableRow row = new HtmlTableRow();
+                        Label lbldesc = new Label();
+                        lbldesc.Text = "Area:";
+                        HtmlTableCell cell = new HtmlTableCell();
+                        cell.Controls.Add(lbldesc);
+                        row.Cells.Add(cell);
+                        cell = new HtmlTableCell();
+                        Label txt = new Label();
+                        txt.Text = response[i].regionlist[j].sz_name;
+                        cell.Controls.Add(txt);
+                        row.Cells.Add(cell);
+                        tbl_output.Rows.Add(row);
+                    }
                 }
 
                 header = new HtmlTableRow();

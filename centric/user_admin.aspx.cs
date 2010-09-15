@@ -55,6 +55,11 @@ public partial class user_admin : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            rad_regional.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_regional"]);
+            rad_sregional.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_super_regional"]);
+            rad_national.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_national"]);
+            rad_administrator.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_administrator"]);
+
             PasAdmin pasadmin = new PasAdmin();
 
             GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
@@ -245,11 +250,11 @@ public partial class user_admin : System.Web.UI.Page
         int[] regionpk = new int[regions.Length];
 
          StoreUserResponse res;
-         if (user.l_profilepk == 2) // regional
+         if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_regional"])) // regional
          {
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
          }
-         else if (user.l_profilepk == 3 || user.l_profilepk == 5) // super regional and national
+         else if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) || user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_national"])) // super regional and national
          {
              for (int i = 0; i < regions.Length; ++i)
              {
@@ -259,7 +264,7 @@ public partial class user_admin : System.Web.UI.Page
          }
          else
          {
-             user.l_deptpk = 1;
+             user.l_deptpk = int.Parse(ConfigurationSettings.AppSettings["admin_department"]);
              //user.l_deptpk = 100000; // dummy department
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, new int[] { user.l_deptpk });
          }
@@ -446,10 +451,14 @@ public partial class user_admin : System.Web.UI.Page
             List<com.ums.ws.pas.admin.UPolygon> comparepoly = new List<com.ums.ws.pas.admin.UPolygon>();
             com.ums.ws.pas.admin.UDEPARTMENT[] depts = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["regions"];
 
+            foreach (com.ums.ws.pas.admin.UDEPARTMENT d in depts)
+                if (d.l_deptpk == int.Parse(lst_regions.SelectedValue))
+                    dept = d;
+            /*
             foreach (int ind in indices)
             {
                 // Selected restriction area
-                dept = depts[ind];
+                dept = depts[int.Parse(lst_regions.Items[ind].Value)];
                 foreach (com.ums.ws.pas.admin.UShape shape in dept.restrictionShapes)
                 {
                     poly = (com.ums.ws.pas.admin.UPolygon)shape;
@@ -462,7 +471,7 @@ public partial class user_admin : System.Web.UI.Page
                 {
                     comparepoly.Add((com.ums.ws.pas.admin.UPolygon)shape);
                 }
-            }
+            }*/
 
             FindPolysWithSharedBorderResponse res = pa.doFindPolysWithSharedBorder(li, dept, depts);
             if (res.successful)
@@ -473,7 +482,8 @@ public partial class user_admin : System.Web.UI.Page
                     if(region.restrictionShapes[0].f_disabled == 0)
                         lst_regions.Items.Add(new ListItem(region.sz_deptid, region.l_deptpk.ToString()));
                 }
-                lst_regions.SelectedValue = dept.l_deptpk.ToString();
+                if(dept.restrictionShapes[0].f_disabled == 0)
+                    lst_regions.SelectedValue = dept.l_deptpk.ToString();
             }
             Session["sregion"] = "true";
         }

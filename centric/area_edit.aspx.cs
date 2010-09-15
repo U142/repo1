@@ -219,68 +219,78 @@ public partial class area_edit : System.Web.UI.Page
         }
         else
         {
-            String[] l = txt_coor.Text.Split('¤');
-
-            String[] lat = l[0].Split('|');
-            String[] lon = l[1].Split('|');
-
-            com.ums.ws.parm.admin.UPolygon p = new com.ums.ws.parm.admin.UPolygon();
-            com.ums.ws.parm.admin.UPolypoint[] pp = new com.ums.ws.parm.admin.UPolypoint[lat.Length];
-
-            for (int i = 0; i < lat.Length; ++i)
+            if (txt_coor.Text.Length > 0)
             {
-                pp[i] = new com.ums.ws.parm.admin.UPolypoint();
-                lat[i] = lat[i].Replace('.', ',');
-                lon[i] = lon[i].Replace('.', ',');
-                pp[i].lat = double.Parse(lat[i]);
-                pp[i].lon = double.Parse(lon[i]);
-            }
-            p.polypoint = pp;
+                String[] l = txt_coor.Text.Split('¤');
 
-            ParmAdmin pa = new ParmAdmin();
+                String[] lat = l[0].Split('|');
+                String[] lon = l[1].Split('|');
 
-            PAOBJECT obj = new PAOBJECT();
-            obj.sz_name = txt_name.Text;
-            obj.parmop = PARMOPERATION.insert;
-
-            obj.m_shape = p;
-
-
-            obj.l_deptpk = li.l_deptpk;
-
-            UPAOBJECTRESULT res = pa.ExecPAShapeUpdate(Util.convertLogonInfoParmAdmin(li), obj, com.ums.ws.parm.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
-
-            if (res != null)
-            {
-                com.ums.ws.pas.admin.UDEPARTMENT[] deptlist = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
-                //lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
-                PasAdmin pasa = new PasAdmin();
-                GetSingleRestricionResponse response = pasa.doGetSingleRestricion(li, res.pk);
-                if (response.successful)
+                if (lat.Length > 2)
                 {
-                    com.ums.ws.pas.admin.UDEPARTMENT[] tmp = new com.ums.ws.pas.admin.UDEPARTMENT[deptlist.Length + 1];
-                    deptlist.CopyTo(tmp, 0);
-                    tmp[tmp.Length - 1] = response.restriction;
-                    Session["restrictions"] = tmp;
-                    buildTable(tmp);
+                    lbl_error.Text = "";
+                    com.ums.ws.parm.admin.UPolygon p = new com.ums.ws.parm.admin.UPolygon();
+                    com.ums.ws.parm.admin.UPolypoint[] pp = new com.ums.ws.parm.admin.UPolypoint[lat.Length];
 
-                    txt_name.Text = "";
-                    txt_name.Enabled = false;
-                    btn_draw.Disabled = true;
+                    for (int i = 0; i < lat.Length; ++i)
+                    {
+                        pp[i] = new com.ums.ws.parm.admin.UPolypoint();
+                        lat[i] = lat[i].Replace('.', ',');
+                        lon[i] = lon[i].Replace('.', ',');
+                        pp[i].lat = double.Parse(lat[i]);
+                        pp[i].lon = double.Parse(lon[i]);
+                    }
+                    p.polypoint = pp;
+
+                    ParmAdmin pa = new ParmAdmin();
+
+                    PAOBJECT obj = new PAOBJECT();
+                    obj.sz_name = txt_name.Text;
+                    obj.parmop = PARMOPERATION.insert;
+
+                    obj.m_shape = p;
+
+
+                    obj.l_deptpk = li.l_deptpk;
+
+                    UPAOBJECTRESULT res = pa.ExecPAShapeUpdate(Util.convertLogonInfoParmAdmin(li), obj, com.ums.ws.parm.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
+
+                    if (res != null)
+                    {
+                        com.ums.ws.pas.admin.UDEPARTMENT[] deptlist = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
+                        //lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
+                        PasAdmin pasa = new PasAdmin();
+                        GetSingleRestricionResponse response = pasa.doGetSingleRestricion(li, res.pk);
+                        if (response.successful)
+                        {
+                            com.ums.ws.pas.admin.UDEPARTMENT[] tmp = new com.ums.ws.pas.admin.UDEPARTMENT[deptlist.Length + 1];
+                            deptlist.CopyTo(tmp, 0);
+                            tmp[tmp.Length - 1] = response.restriction;
+                            Session["restrictions"] = tmp;
+                            buildTable(tmp);
+
+                            txt_name.Text = "";
+                            txt_name.Enabled = false;
+                            btn_draw.Disabled = true;
+                        }
+                    }
+                    else
+                    {
+                        lbl_error.ForeColor = System.Drawing.Color.Red;
+                        lbl_error.Text = "Error saving shape";
+                    }
+                    CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, false);
+                    if (!resa.successful)
+                    {
+                        lbl_error.Text = "Successfully stored, but could not unlock database, access is still restricted to current user";
+                    }
                 }
+                else
+                    lbl_error.Text = "Polygon requires at least 3 points";
             }
             else
-            {
-                lbl_error.ForeColor = System.Drawing.Color.Red;
-                lbl_error.Text = "Error saving shape";
-            }
-            CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.RESTRICTIONAREA, false);
-            if (!resa.successful)
-            {
-                lbl_error.Text = "Successfully stored, but could not unlock database, access is still restricted to current user";
-            }
+                lbl_error.Text = "Error no shape coordinates found";
         }
-       
         
     }
     protected void btn_create_click(object sender, EventArgs e)
@@ -297,6 +307,7 @@ public partial class area_edit : System.Web.UI.Page
             chk_obsolete.Checked = false;
             btn_draw.Disabled = false;
             chk_obsolete.Enabled = true;
+            lbl_error.Text = "";
             //tbl_areas.Rows.Clear();
         }
         else
