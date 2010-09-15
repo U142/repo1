@@ -25,6 +25,8 @@ namespace com.ums.ws.pas.admin
     public class PasAdmin : System.Web.Services.WebService
     {
         [XmlInclude(typeof(UPolygon))]    
+        [XmlInclude(typeof(UEllipse))]
+        [XmlInclude(typeof(UBoundingRect))]
 
         [WebMethod]
         public DeactivateMessageResponse doDeactivateMessage(ULOGONINFO logon, long l_newspk)
@@ -81,7 +83,7 @@ namespace com.ums.ws.pas.admin
                 rs.Close();
                 long l_timestamp = db.getDbClock();
                 user.l_disabled_timestamp = l_timestamp;
-                sz_sql = String.Format("sp_cb_store_user {0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', {9}, {10}, '{11}'",
+                sz_sql = String.Format("sp_cb_store_user {0}, {1}, '{2}', '{3}', '{4}', {5}, {6}, {7}, {8}, '{9}', {10}, {11}, '{12}'", logoninfo.l_userpk,
                 user.l_userpk, user.sz_userid.ToUpper().Replace("'", "''"), user.sz_name.Replace("'", "''"), user.sz_paspassword.Replace("'", "''"), user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)user.l_disabled_reasoncode, user.sz_organization.Replace("'", "''"));
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
@@ -92,14 +94,14 @@ namespace com.ums.ws.pas.admin
                 rs.Close();
 
                 // Delete existing regions
-                sz_sql = string.Format("sp_cb_del_userregions {0}", user.l_userpk);
+                sz_sql = string.Format("sp_cb_del_userregions {0}, {1}", logoninfo.l_userpk, user.l_userpk);
                 db.ExecNonQuery(sz_sql);
 
                 // Insert new regions
                 user.l_deptpklist = deptk;
                 for (int i = 0; i < deptk.Length; ++i)
                 {
-                    sz_sql = String.Format("sp_cb_ins_userregions {0}, {1}, {2}", user.l_profilepk, user.l_userpk, deptk[i]);
+                    sz_sql = String.Format("sp_cb_ins_userregions {0}, {1}, {2}, {3}", logoninfo.l_userpk, user.l_profilepk, user.l_userpk, deptk[i]);
                     db.ExecNonQuery(sz_sql);
                 }
             }
@@ -232,7 +234,7 @@ namespace com.ums.ws.pas.admin
             {
                 db.CheckLogon(ref logoninfo, true);
                 res = new SetPAShapeObsoleteResponse();
-                res.shape = db.setPAShapeObsolete(department, shape);
+                res.shape = db.setPAShapeObsolete(logoninfo, department, shape);
                 res.successful = true;
                 return res;
             }

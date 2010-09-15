@@ -1800,14 +1800,14 @@ namespace com.ums.UmsParm
             }
             
         }
-        public UShape setPAShapeObsolete(UDEPARTMENT department,UShape shape)
+        public UShape setPAShapeObsolete(ULOGONINFO logon, UDEPARTMENT department,UShape shape)
         {
             String szSQL = "";
             OdbcDataReader rs;
             try
             {
                 long l_timestamp = getDbClock();
-                szSQL = String.Format("sp_cb_set_pashape_obsolete {0}, {1}, {2}", department.l_deptpk, l_timestamp, shape.f_disabled);
+                szSQL = String.Format("sp_cb_set_pashape_obsolete {0}, {1}, {2}, {3}", logon.l_userpk, department.l_deptpk, l_timestamp, shape.f_disabled);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                     if (rs.GetInt16(0) == -1)

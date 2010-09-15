@@ -2368,7 +2368,7 @@ namespace com.ums.ws.parm
                 }
                 if (operation == PARMOPERATION.insert) // I had to put it here or else it wouldn't write the shapefile and couldn't put it in the switch
                 {
-                    sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9}, {10}", logon.l_comppk, obj.l_objectpk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
+                    sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', {7}, {8}, '{9}', {10}, {11}", logon.l_userpk, logon.l_comppk, obj.l_objectpk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
                     db.ExecNonQuery(sz_sql);
                 }
                 return n_ret;

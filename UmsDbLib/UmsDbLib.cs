@@ -399,7 +399,7 @@ namespace com.ums.UmsDbLib
             if (message.l_incident_end > message.l_timestamp_db)
                 message.f_active = 1;
             if(message.l_incident_start == 0)
-                message.l_incident_start = long.Parse(message.l_timestamp_db.ToString().Substring(0,11) + "000");
+                message.l_incident_start = message.l_timestamp_db;
             String sql = String.Format("sp_store_system_message {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},'{11}'",
                                         message.l_newspk, message.l_timestamp_db, message.l_type, message.l_incident_start, 
                                         message.l_incident_end, message.f_active, message.l_deptpk, message.l_severity, 

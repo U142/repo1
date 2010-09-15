@@ -629,7 +629,7 @@ namespace com.ums.ws.pas
         {
             try
             {
-                return new UCBSettings(ref logon).updateLBAParameter(param);
+                return new UCBSettings(ref logon).updateLBAParameter(logon, param);
             }
             catch (Exception e)
             {
