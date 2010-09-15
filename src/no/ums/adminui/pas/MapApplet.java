@@ -280,7 +280,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//m_drawthread.setNeedRepaint();
 		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
 		m_mappane.addActionListener(this);
-				
+		m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
 		//m_mappane.SetIsLoading(false, "map");
 		//put("38");
 	}
@@ -776,6 +776,8 @@ public class MapApplet extends JApplet implements ActionListener {
 		}
 		else
 			sp = variables.SENDCONTROLLER.get_activesending().get_sendproperties().typecast_poly();
+		
+		sp.set_color(Color.BLUE);
 								
 		m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 	}

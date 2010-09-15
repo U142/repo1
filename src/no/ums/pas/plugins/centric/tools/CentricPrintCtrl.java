@@ -120,34 +120,36 @@ public class CentricPrintCtrl implements Printable {
 			int actual_width = m_mapimage.getWidth(null);
 			int actual_height = m_mapimage.getHeight(null);
 			
-			// Make square image
-			if(actual_width> actual_height) {
-				
-			}
-			else
-			
 			if(actual_height < actual_width) {
 				if(actual_width<width) {
-					width = actual_width;
+					double percent_of_actual = ((double)actual_width/(double)width);
+					height = (int)((double)actual_height / percent_of_actual);
 					height = actual_height;
+					height = (height+(width-height));
 					m_mapimage = variables.DRAW.get_buff_image();
 				}
 				else {
 					double percent_of_actual = ((double)actual_width/(double)width);
+					width = (int)((double)actual_width / percent_of_actual);
 					height = (int)((double)actual_height / percent_of_actual);
+					//width = width + height;
+					//width = (int)((double)width / percent_of_actual);
 					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
+					//m_mapimage = variables.DRAW.get_buff_image();
 				}
 			}
 			else {
-				if(actual_height<height) {
+				if(actual_height>actual_width) {
+					double percent_of_actual = ((double)actual_height/(double)height);
 					width = actual_width;
-					height = actual_height;
+					width = (int)((double)actual_width / percent_of_actual);
+					width = (width + (height-width));
 					m_mapimage = variables.DRAW.get_buff_image();
 				}
 				else {
 					double percent_of_actual = ((double)actual_height/(double)height);
 					width = (int)((double)actual_width / percent_of_actual);
+					width = height + (width-height);
 					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 					
 				}
@@ -189,7 +191,7 @@ public class CentricPrintCtrl implements Printable {
 			
 			
         	
-			g2d.drawImage(m_mapimage, 10, (3*10), null);
+			g2d.drawImage(m_mapimage, 0, (3*10), null);
 			
 			Font fontMessageText = UIManager.getFont("PrintJobMedium.font");//new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 12);
 			

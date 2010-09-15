@@ -208,7 +208,7 @@ public class MapFrameAdmin extends MapFrame {
 		try
 		{
 			//super.paint(g);
-			get_drawthread().set_neednewcoors(true);
+			//get_drawthread().set_neednewcoors(true);
 			get_drawthread().create_image();
 			if(get_mode()==MAP_MODE_PAN_BY_DRAG && get_actionhandler().get_isdragging())
 			{
@@ -232,6 +232,7 @@ public class MapFrameAdmin extends MapFrame {
 	//Draw thread har også ansvar for å kjøre calc_coortopix på alle shapes
 	@Override
 	public void drawOnEvents(Graphics gfx) {
+		
 		try
 		{
 			get_active_shape().draw(gfx, variables.NAVIGATION, false, true, false, null, true, true, 1, false);

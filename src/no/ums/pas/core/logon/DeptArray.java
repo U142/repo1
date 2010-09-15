@@ -190,7 +190,7 @@ public class DeptArray extends ArrayList<Object> {
 			it.next();
 		}
 		System.out.println("Combined Pointcount = " + n_total_points);
-		combined_shapestruct.finalizeShape();
+		combined_shapestruct.finalizeShape();		
 		combined_shapestruct.setCurrentViewMode(DETAILMODE.SHOW_POLYGON_FULL, 0, null);
 
 		m_combined_shapestruct_list.add(combined_shapestruct);

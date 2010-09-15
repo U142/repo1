@@ -11,6 +11,7 @@ import no.ums.pas.PASDraw;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.ShapeStruct;
 
 public class AdminDraw extends PASDraw {
@@ -46,10 +47,21 @@ public class AdminDraw extends PASDraw {
 		for(int j=0; j < list.size(); j++)
 		{
 			list.get(j).set_fill_color(Color.black);
-			list.get(j).draw(get_offscreen(), variables.NAVIGATION, false, true, false, null, true, true, 1, true);
+			list.get(j).draw(get_offscreen(), variables.NAVIGATION, false, true, false, null, true, true, 1, false);
 		}
 		if(variables.SENDCONTROLLER.get_activesending() != null)
 			variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(variables.MAPPANE.get_current_mousepos().x,variables.MAPPANE.get_current_mousepos().y));
+		/*
+		if(variables.MAPPANE.get_actionhandler().get_isdragging() && variables.MAPPANE.get_mode()==MapFrame.MAP_MODE_ZOOM)
+		{
+			super.get_mappane().drawOnEvents(variables.MAPPANE.getGraphics());
+		}
+		if(variables.MAPPANE.IsLoading())
+		{
+			super.get_mappane().drawOnEvents(variables.MAPPANE.getGraphics());
+		}*/
+		
+		super.draw_layers();
 	}
 
 	@Override

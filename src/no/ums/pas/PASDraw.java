@@ -19,8 +19,8 @@ public class PASDraw extends Draw {
 		super.calc_new_coors();
 	}
 	protected void draw_layers() {
-		
-		PAS.pasplugin.onMapDrawLayers(PAS.get_pas().get_navigation(), m_gfx_buffer, PAS.get_pas());
+		if(PAS.get_pas()!=null) // Because of MapApplet for admin interface
+			PAS.pasplugin.onMapDrawLayers(PAS.get_pas().get_navigation(), m_gfx_buffer, PAS.get_pas());
 		super.draw_layers();
 	}
 	protected void map_repaint() {

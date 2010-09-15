@@ -120,6 +120,7 @@ public class UShapeToShape
 			if(upolygon.getFDisabled() == 1) {
 				polygonstruct.setHidden(true);
 				polygonstruct.setObsolete(true);
+				polygonstruct.setEditable(false);
 			}
 			return polygonstruct;
 		}
@@ -159,12 +160,6 @@ public class UShapeToShape
 			if(upolygon.getLeft()==-180 && upolygon.getRight()==180 &&
 					upolygon.getBottom()==-90 && upolygon.getTop()==90)
 				polygonstruct.setHidden(true);
-			
-			//Hide if obsolete
-			if(upolygon.getFDisabled() == 1) {
-				polygonstruct.setHidden(true);
-				polygonstruct.setObsolete(true);
-			}
 				
 			return polygonstruct;
 		}
