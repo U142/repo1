@@ -22,7 +22,7 @@ namespace pas_cb_server
                     try
                     {
                         string[] fileEntries = null;
-                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "eat\\", "CB_*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                         foreach (string fileName in fileEntries)
                         {
                             if (!CBServer.running) break;
@@ -44,7 +44,7 @@ namespace pas_cb_server
                             }
                         }
 
-                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
+                        fileEntries = Directory.GetFiles(Settings.sz_parsepath + "retry\\", "CB_*.xml").OrderBy(file => File.GetCreationTime(file)).ToArray();
                         foreach (string fileName in fileEntries)
                         {
                             if (!CBServer.running) break;
