@@ -1163,6 +1163,15 @@ public class PolygonStruct extends ShapeStruct {
 	MapPoint m_p_center;
 	MapPoint m_p_corner;
 	
+	public MapPoint getEllipseCenter()
+	{
+		return m_p_center;
+	}
+	public MapPoint getEllipseCorner()
+	{
+		return m_p_corner;
+	}
+	
 	public void set_ellipse(Navigation nav, MapPoint p_center, MapPoint p_corner) {
 		if(!isEditable())
 			return;

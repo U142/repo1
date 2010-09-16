@@ -30,6 +30,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import java.io.*;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.text.BreakIterator;
 
 public class CentricPrintCtrl implements Printable {
 	Graphics m_graph;
@@ -109,11 +110,14 @@ public class CentricPrintCtrl implements Printable {
 	@Override
 	public int print(Graphics g, PageFormat pageFormat, int pageIndex)
 	{
+		Dimension margins = new Dimension(20, 20);
 		
 		if (pageIndex > 0) {
 	        return(NO_SUCH_PAGE);
+			
 	    } 
-	    else {
+	    else 
+	    {
 	    	int width = 800;
 			int height = 800;
 			
@@ -170,11 +174,17 @@ public class CentricPrintCtrl implements Printable {
 	        g2d.setFont(UIManager.getFont("PrintJobTitle.font"));
 	        int headerHeight = g2d.getFontMetrics(g2d.getFont()).getHeight();
 	        g2d.setColor(Color.black);
-	        g2d.drawString(PAS.l("common_app_title"), 0, 20);
-	        g2d.translate(0, 25);
+	        
+	        g2d.translate(margins.width, margins.height);
+	        
+	        g2d.drawString(PAS.l("common_app_title"), margins.width, margins.height);
+	        
+	        g2d.translate(0, g2d.getFontMetrics().getAscent());
+	        
 	        int pagewidth = (int)pageFormat.getWidth();
-	        g2d.drawLine(0, 0, pagewidth, 0);
-	        g2d.translate(0, 10);
+	        int pageheight = (int)pageFormat.getHeight();
+	        g2d.drawLine(margins.width, 0, pagewidth-margins.width*2, 0);
+	        g2d.translate(margins.width, g2d.getFontMetrics().getAscent());
 	        	        
 	        
 	        
@@ -185,7 +195,7 @@ public class CentricPrintCtrl implements Printable {
         	int lineheight = g2d.getFontMetrics(g2d.getFont()).getHeight();
         	int pagelines = (((int)pageFormat.getHeight()-(headerHeight+80))/lineheight); // +80 is for the two linebreaks during header writing
         		        	
-        	g2d.drawString(m_header, 0, (1*10));
+        	g2d.drawString(m_header, 0, g2d.getFontMetrics().getAscent());
         	
         	
 			
@@ -193,36 +203,68 @@ public class CentricPrintCtrl implements Printable {
         	
 			g2d.drawImage(m_mapimage, 0, (3*10), null);
 			
-			Font fontMessageText = UIManager.getFont("PrintJobMedium.font");//new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 12);
-			
-        	LineBreakMeasurer lineMeasurer;
-            AttributedString string = new AttributedString(m_message);
-            string.addAttribute(TextAttribute.FONT, fontMessageText);
-            AttributedCharacterIterator paragraph = string.getIterator();
-            int paragraphStart = paragraph.getBeginIndex();
-            int paragraphEnd = paragraph.getEndIndex();
-            FontRenderContext frc = g2d.getFontRenderContext();
-            lineMeasurer = new LineBreakMeasurer(paragraph, frc);
-            
-
-            float breakWidth = (float)pagewidth;
+			//MESSAGE HEADER AND CONTENT
             float drawPosY = (float)m_mapimage.getHeight(null) + 40;
             float drawPosX = (float)10;
-            lineMeasurer.setPosition(paragraphStart);
-            while (lineMeasurer.getPosition() < paragraphEnd) {
-            	
-                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
-                drawPosY += layout.getAscent();
-                layout.draw(g2d, drawPosX, drawPosY);
 
-                drawPosY += layout.getDescent() + layout.getLeading();
-            }        
+			Font fontMessageHeader = UIManager.getFont("PrintJobMedium.font");
+			g2d.setFont(fontMessageHeader);
+			g2d.drawString(PAS.l("common_message_content"), drawPosX, drawPosY);
+			drawPosY += g2d.getFontMetrics().getAscent();
+			
+			Font fontMessageText = UIManager.getFont("PrintJobSmall.font");//new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 12);
+			g2d.setFont(fontMessageText);
+			
+			String [] linesplit = m_message.split("\n");
+			for(int i=0; i < linesplit.length; i++)
+			{
+	        	LineBreakMeasurer lineMeasurer;
+	            AttributedString string = new AttributedString(linesplit[i]);
+	            if(string==null)
+	            {
+	            	continue;
+	            }
+	            if(linesplit[i].length()==0)
+	            {
+	            	linesplit[i] = "\n";
+	            	drawPosY += /*g2d.getFontMetrics().getDescent() + g2d.getFontMetrics().getLeading() + */g2d.getFontMetrics().getAscent();
+	            	continue;
+	            }
+	            try
+	            {
+	            	string.addAttribute(TextAttribute.FONT, fontMessageText);
+	            }
+	            catch(Exception err)
+	            {
+	            	
+	            }
+	            AttributedCharacterIterator paragraph = string.getIterator();
+	            int paragraphStart = paragraph.getBeginIndex();
+	            int paragraphEnd = paragraph.getEndIndex();
+	            FontRenderContext frc = g2d.getFontRenderContext();
+	            BreakIterator bi = BreakIterator.getWordInstance();
+	            lineMeasurer = new LineBreakMeasurer(paragraph, bi, frc);
+	
+	            float breakWidth = (float)pagewidth;
+	            lineMeasurer.setPosition(paragraphStart);
+	            while (lineMeasurer.getPosition() < paragraphEnd) {
+	                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+	                drawPosY += layout.getAscent();
+	                layout.draw(g2d, drawPosX, drawPosY);
+	
+	                drawPosY += layout.getDescent() + layout.getLeading();
+	            }    
+			}
+
+			g2d.setFont(fontMessageHeader);
+			g2d.drawString("(" + m_charachers + ")", 10, drawPosY += g2d.getFontMetrics().getAscent());
             
             //g2d.setFont(new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 16));
             g2d.setFont(UIManager.getFont("PrintJobFooter.font"));
             
-        	g2d.drawString(m_charachers, 10, drawPosY += 20);
-        	g2d.drawString(m_footer, 0, drawPosY += 20);
+            int h = g2d.getFontMetrics().getHeight();
+            int footer_ypos = (int)(pageheight + margins.height + h);
+        	g2d.drawString(m_footer, 0, drawPosY + h*2);
         	//g2d.drawImage(m_mapimage, 0, (8*10), null);
 	        
 	        return(PAGE_EXISTS);

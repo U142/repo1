@@ -334,7 +334,7 @@ public class plugin_Centric extends PAS_Scripting
 						UBBNEWS b2 = (UBBNEWS)list[j];
 						//if(b1.getLTimestampDb()<b2.getLTimestampDb())
 						boolean b_doswitch = false;
-						if(b1.getLIncidentStart()>b2.getLIncidentStart())
+						if(b1.getLIncidentStart()<b2.getLIncidentStart())
 							b_doswitch = true;
 						else if(b1.getLIncidentStart()==b2.getLIncidentStart())
 						{

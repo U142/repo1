@@ -41,6 +41,8 @@ public class UIParamLoader extends ClassLoader
 			while(keys.hasMoreElements())
 			{
 				String key = (String)keys.nextElement();
+				if(key.equals("SendingWarningText.foreground"))
+					System.out.println("break");
 				try
 				{
 					//String value = b.getString(key);
@@ -54,7 +56,7 @@ public class UIParamLoader extends ClassLoader
 					}
 					try
 					{
-						obj_value = Boolean.parseBoolean(obj_value.toString());
+						obj_value = Boolean.parseBoolean(value.toString());
 					}
 					catch(Exception e)
 					{
@@ -62,7 +64,15 @@ public class UIParamLoader extends ClassLoader
 					}
 					try
 					{
-						obj_value = Integer.parseInt(obj_value.toString());
+						obj_value = Integer.parseInt(value.toString());
+					}
+					catch(Exception e)
+					{
+						
+					}
+					try
+					{
+						obj_value = Color.decode(value.toString());
 					}
 					catch(Exception e)
 					{
@@ -111,6 +121,14 @@ public class UIParamLoader extends ClassLoader
 					else if(obj_value instanceof String)
 					{
 						UIManager.put(key, obj_value);
+					}
+					else if(wanted_valuetype==null)
+					{
+						//if(key.indexOf("foreground")>0 || key.indexOf("background")>0)
+						{
+							//obj_value = Color.decode(obj_value.toString());
+							UIManager.put(key, obj_value);
+						}
 					}
 
 					/*if(key.indexOf("font")>=0)

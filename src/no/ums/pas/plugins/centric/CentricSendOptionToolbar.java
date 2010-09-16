@@ -50,7 +50,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.text.JTextComponent;
@@ -59,6 +61,8 @@ import com.sun.awt.AWTUtilities;
 
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.logon.DeptArray;
+import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.project.Project;
@@ -66,6 +70,7 @@ import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.PLMNShape;
@@ -211,7 +216,66 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		return n_parent_refno;
 	}
 	
-	private CentricStatus m_centricstatus;
+	//private CentricStatus m_centricstatus;
+	
+	private DeptInfo m_dept_send_on_behalf_of = null;
+	protected void setDeptSendOnBehalfOf(DeptInfo d)
+	{
+		m_dept_send_on_behalf_of = d;
+		System.out.println("Sending owned by " + d.get_deptid());
+	}
+	
+	/**
+	 * Check which dept that should own this sending
+	 */
+	protected void findDeptSendOnBehalfOf()
+	{
+		m_dept_send_on_behalf_of = null;
+		ShapeStruct mapshape = variables.MAPPANE.get_active_shape();
+
+		//determine where the painting started
+		if(mapshape.getClass().equals(PolygonStruct.class))
+		{
+			PolygonStruct mappoly = mapshape.typecast_polygon();
+			
+			DeptArray da = variables.USERINFO.get_departments();
+			for(int i=0; i < da.size(); i++)
+			{
+				DeptInfo di = (DeptInfo)da.get(i);
+				if(di.get_restriction_shapes().size()<=0)
+					continue;
+				ShapeStruct s = di.get_restriction_shapes().get(0);
+				if(!s.getClass().equals(PolygonStruct.class))
+					continue;
+				if(!mappoly.isElliptical())
+				{
+					MapPointLL firstpoint = mappoly.getFirstPoint();
+					if(s.pointInsideShape(firstpoint))
+					{
+						//success
+						setDeptSendOnBehalfOf(di);
+						break;
+					}
+				}
+				else
+				{
+					MapPointLL ll = mappoly.getEllipseCenter().get_mappointll();
+					if(s.pointInsideShape(ll))
+					{
+						//success
+						setDeptSendOnBehalfOf(di);
+						break;
+					}
+				}
+			}
+		}
+		else if(mapshape.getClass().equals(PLMNShape.class))
+		{
+			setDeptSendOnBehalfOf(variables.USERINFO.get_default_dept());
+		}
+		if(m_dept_send_on_behalf_of==null)
+			setDeptSendOnBehalfOf(variables.USERINFO.get_default_dept());
+	}
 	//private CentricStatusController m_centricstatuscontroller;
 	
 	public CentricStatusController getStatusController() { return (CentricStatusController)PAS.get_pas().get_statuscontroller(); }
@@ -413,6 +477,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_send.addFocusListener(this);
 		m_btn_reset.setPreferredSize(new Dimension(input_width/2, btn_height));
 		m_btn_save_message.setPreferredSize(new Dimension(input_width/2, btn_height));
+		
+		m_txt_warning = new JTextArea(PAS.l("main_sending_send_warning"),1,1);
+		m_txt_warning.setWrapStyleWord(true);
+		m_txt_warning.setLineWrap(true);
+		//m_txt_warning.setText();
+		m_txt_warningscroll = new JScrollPane(m_txt_warning);
+		m_txt_warningscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
 		//m_btn_close = new JButton(ImageLoader.load_icon("delete_24.png"));
 		//m_btn_close.addActionListener(this);
 		//m_btn_close.setActionCommand("act_sending_close");
@@ -595,6 +667,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	
 	private void showSummary() {
 		
+		findDeptSendOnBehalfOf();
 		//if(projectOpen())
 			m_txt_event_name.setEnabled(false);
 		removeAll();
@@ -626,15 +699,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		add_spacing(DIR_VERTICAL, 20);
 		
-		if(m_txt_warning == null) {
-			m_txt_warning = new JTextArea("",10,10);
-			m_txt_warning.setText(PAS.l("main_sending_send_warning"));
-			m_txt_warningscroll = new JScrollPane(m_txt_warning);
-		}
 		
 		set_gridconst(0, inc_panels(), 8, 1);
 		add(m_txt_warningscroll, m_gridconst);
 		m_txt_warning.setEnabled(false);
+		Font f = UIManager.getFont("SendingWarningText.font");
+		m_txt_warning.setFont(f);
+		Color c = UIManager.getColor("SendingWarningText.foreground");
+		m_txt_warning.setForeground(c);
+		m_txt_warning.setDisabledTextColor(c);
 		
 		add_spacing(DIR_VERTICAL, 5);
 		
@@ -662,7 +735,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
 		//progress.get_progress().setVisible(false);
 		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
-		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,60));
+		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,70));
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
 
 		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
@@ -797,6 +870,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			messagepart.setLPk(-1);
 			messagepart.setSzName(m_txt_message.getText());
 			operation.setMessagepart(messagepart);
+			if(m_dept_send_on_behalf_of!=null)
+			{
+				operation.setLDeptpk(m_dept_send_on_behalf_of.get_deptpk());
+			}
 			CBSENDER sender = new CBSENDER();
 			sender.setLPk(-1);
 			sender.setSzName(m_txt_sender_name.getText());
@@ -1019,7 +1096,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			*/
 			String timestamp = String.valueOf(Utils.get_current_datetime());
 			String m_headerfooter = "--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---";
-			String m_message = PAS.l("common_message_content") + ":\n" + m_txt_preview.getText();
+			String m_message = m_txt_preview.getText();
 			String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
 			
 			/*
