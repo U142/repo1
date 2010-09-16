@@ -175,7 +175,7 @@ namespace com.ums.PAS.CB
         {
             String path_temp = UCommon.UPATHS.sz_path_temp + "\\";
             String path_release = Path + "\\";
-            String base_file = "CB_" + this.operation.ToString() + "_" + this.l_projectpk + "_" + this.l_refno; 
+            String base_file = "CB_" + this.operation.ToString() + "." + this.l_projectpk + "." + this.l_refno + "." + Guid.NewGuid().ToString(); 
             String tmp_file = path_temp + base_file + ".tmp";
             String xml_file = path_release + base_file + ".xml";
             try
