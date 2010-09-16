@@ -383,7 +383,7 @@ namespace pas_cb_server.cb_test
 
         [XmlAttribute]public int l_comppk;
         [XmlAttribute]public int l_deptpk;
-        [XmlAttribute]public int l_userpk = 0;
+        [XmlAttribute]public int l_userpk = -1;
         [XmlAttribute]public string sz_password = "";
 
         [XmlAttribute]public int l_sched_utc = 0;
