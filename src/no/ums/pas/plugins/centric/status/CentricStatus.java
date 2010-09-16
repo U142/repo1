@@ -18,11 +18,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.ws.WSGetStatusItems;
+import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.converters.UShapeToShape;
 import no.ums.pas.plugins.centric.CentricEastContent;
@@ -166,6 +171,65 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		
 	}
 	
+	//check if the event-tab is selected, or a sending-tab
+	//Event = show all, single sending = hide the rest. 
+	//Ensure visible
+	protected void tabChanged()
+	{
+		NavStruct gotoArea = null;
+		Object o = m_status_tabbed.getSelectedComponent();
+		if(o.equals(m_event))
+		{
+			//show all alerts
+			Enumeration<ShapeStruct> en = PAS.pasplugin.getShapesToPaint().elements();
+			while(en.hasMoreElements())
+			{
+				ShapeStruct s = en.nextElement();
+				s.setHidden(false);
+			}
+			NavStruct bbox = CommonFunc.calc_bounds(PAS.pasplugin.getShapesToPaint().values().toArray());
+			if(!variables.NAVIGATION.bboxEntirelyVisible(bbox))
+			{
+				//goto area
+				gotoArea = bbox;
+			}
+			PAS.get_pas().kickRepaint();
+			if(gotoArea!=null)
+			{
+				System.out.println("goto " + gotoArea);
+				PAS.pasplugin.onMapGotoShapesToPaint();
+			}
+		}
+		else if(o.equals(m_messages))
+		{
+			//notify CentricMessages
+			CentricMessageStatus cms = get_messages().getSelectedTab();
+			Enumeration<ShapeStruct> en = PAS.pasplugin.getShapesToPaint().elements();
+			while(en.hasMoreElements())
+			{
+				ShapeStruct s = en.nextElement();
+				boolean show = (s.shapeID==cms.get_refno());
+				s.setHidden(!show);
+				if(show)
+				{
+					
+					NavStruct bbox = s.getFullBBox();
+					if(!variables.NAVIGATION.bboxEntirelyVisible(bbox))
+					{
+						//goto area
+						gotoArea = bbox;
+					}
+				}
+			}
+			PAS.get_pas().kickRepaint();
+		}
+		if(gotoArea!=null)
+		{
+			System.out.println("goto " + gotoArea);
+			PAS.pasplugin.onMapGotoNavigation(gotoArea);
+		}
+	}
+	
 	public void putMessageStatus(long refno, CentricMessageStatus cms)
 	{
 		hash_messagestatus.put(refno, cms);
@@ -187,7 +251,14 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 	public void add_controls() {
 		//DefaultPanel.ENABLE_GRID_DEBUG = true;
 		m_status_tabbed = new JTabbedPane();
-		
+		m_status_tabbed.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				tabChanged();
+			}
+		});
+
 		
 		m_gridconst.fill = GridBagConstraints.BOTH;
 		
@@ -255,7 +326,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 				for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 					m_status_tabbed.setIconAt(i, null);
-				System.out.println("Status update complete");
+				//System.out.println("Status update complete");
 				
 			}
 			else

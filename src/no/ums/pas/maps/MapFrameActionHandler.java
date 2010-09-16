@@ -572,7 +572,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 											nearest_point_from_last, //last intersection
 											intersects_last.get(intersects_last.size()-1),
 											list.get(i).typecast_polygon(),
-											true,
+											false,
 											true,
 											false);	
 								}

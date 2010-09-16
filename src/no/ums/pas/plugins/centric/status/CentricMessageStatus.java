@@ -96,6 +96,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		m_parent = parent;
 		//m_l_refno = l_refno;
 		lastcbstatus = cbstatus;
+		
 		add_controls();
 		addComponentListener(this);
 	}
@@ -183,9 +184,18 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			if(confirmKill()) {
 				m_btn_kill.setEnabled(false);
 				CBALERTKILL kill = new CBALERTKILL();
+				try
+				{
+					kill.setLProjectpk(new Long(m_parent.get_parent().getResultSet().getProject().getLProjectpk()));
+				}
+				catch(Exception err)
+				{
+					err.printStackTrace();
+				}
 				//kill.setLProjectpk()
 				//kill.setLProjectpk(lastcbstatus.get)
 				kill.setLRefno(get_refno());
+				
 				WSCentricSend send = new WSCentricSend(this,"act_cb_killed", kill); 
 				send.start();
 			}

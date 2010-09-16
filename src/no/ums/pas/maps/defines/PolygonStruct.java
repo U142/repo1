@@ -1146,8 +1146,13 @@ public class PolygonStruct extends ShapeStruct {
 					MapPointLL p1 = getLastPoint();
 					MapPointLL p2 = getFirstPoint();
 					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
-					if(intersects.size()>1)
+					if(intersects.size()>0)
 						return false;
+					MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
+					boolean b_midpoint_inside = restriction.pointInsideShape(midpoint);
+					if(!b_midpoint_inside)
+						return false;
+					
 				}
 				return true;
 			}

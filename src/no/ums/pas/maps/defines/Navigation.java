@@ -139,6 +139,14 @@ public class Navigation {
 		
 	}
 	
+	public boolean bboxEntirelyVisible(NavStruct test) {
+		if(test==null)
+			return false;
+		if(test._lbo > m_f_lbo && test._rbo < m_f_rbo && test._ubo < m_f_ubo && test._bbo > m_f_nav_bbo)
+			return true;
+		return false;
+	}
+	
 	double get_zoom_multiplier() { return m_f_zoom_multiplier.doubleValue(); }
 	
 	public void setNavigation(double lbo, double rbo, double ubo, double bbo)

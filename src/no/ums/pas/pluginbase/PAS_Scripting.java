@@ -2,6 +2,7 @@ package no.ums.pas.pluginbase;
 
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -967,11 +968,35 @@ public class PAS_Scripting extends PasScriptingInterface
 		if(shapes_to_paint.size()==0)
 			return false;
 		NavStruct nav = CommonFunc.calc_bounds(shapes_to_paint.values().toArray());
-		PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		nav = CommonFunc.navPadding(nav, 0.01f);
+		onMapGotoNavigation(nav);
 		return true;
 	}
 
 	
+	@Override
+	public boolean onMapGotoShape(ShapeStruct s) {
+		if(s==null)
+			return false;
+		NavStruct nav = s.calc_bounds();
+		nav = CommonFunc.navPadding(nav, 0.01f);
+		onMapGotoNavigation(nav);
+		return true;
+	}
+
+
+	@Override
+	public boolean onMapGotoNavigation(NavStruct n) {
+		PAS.get_pas().actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		return true;
+	}
+
+
+
+
+
+
+
 	@Override
 	public boolean onMapLoadFailed(MapLoader loader) {
 		variables.DRAW.setFirstMap(false);
@@ -987,6 +1012,17 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onFrameResize(JFrame f, ComponentEvent e) {
 		return true;
+	}
+
+
+	@Override
+	public Dimension getDefaultScreenSize(Settings s) {
+		return new Dimension(1024,700);
+	}
+
+	@Override
+	public Dimension getMinimumScreenSize(Settings s) {
+		return getDefaultScreenSize(s);
 	}
 
 

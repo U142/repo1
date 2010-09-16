@@ -36,6 +36,7 @@ public class Settings {
 	private String sz_wms_format;
 	private String sz_wms_username;
 	private String sz_wms_password;
+	private String sz_wms_epsg;
 	private boolean b_pan_by_drag;
 	private String sz_languageid; //en_EN, no_NO
 	private Rectangle rect_messagelib_dlg;
@@ -115,6 +116,7 @@ public class Settings {
 		this.sz_languageid = sz_language;
 		this.sz_wms_username = sz_wms_username;
 		this.sz_wms_password = sz_wms_password;
+		this.sz_wms_epsg = "4326";
 		rect_messagelib_dlg = new Rectangle(0,0,0,0);
 		messagelib_exploded_nodes = null;
 
@@ -302,6 +304,14 @@ public class Settings {
 	public String getWmsPassword()
 	{
 		return sz_wms_password;
+	}
+	public void setWmsEpsg(String s)
+	{
+		sz_wms_epsg = s;
+	}
+	public String getWmsEpsg()
+	{
+		return sz_wms_epsg;
 	}
 	public String getLanguage()
 	{

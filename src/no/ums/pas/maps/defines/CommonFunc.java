@@ -13,6 +13,14 @@ public class CommonFunc {
 		}
 		return calc_bounds(shapes);
 	}
+	public synchronized static NavStruct navPadding(NavStruct n, float wanted_padding)
+	{
+		n._lbo -= wanted_padding;
+		n._rbo += wanted_padding;
+		n._ubo += wanted_padding;
+		n._bbo -= wanted_padding;
+		return n;
+	}
 	public synchronized static NavStruct calc_bounds(ShapeStruct [] shapes) {
 		if(shapes.length <= 0)
 			return null;

@@ -3,6 +3,7 @@ package no.ums.pas.plugins.centric;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.plugins.centric.send.CentricProjectDlg;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.plugins.centric.status.CentricStatusController;
@@ -331,8 +332,16 @@ public class plugin_Centric extends PAS_Scripting
 					for(int j=i+1; j < list.length; j++)
 					{
 						UBBNEWS b2 = (UBBNEWS)list[j];
-						if(b1.getLTimestampDb()<b2.getLTimestampDb())
-						//if(b1.getLIncidentStart()>b2.getLIncidentStart())
+						//if(b1.getLTimestampDb()<b2.getLTimestampDb())
+						boolean b_doswitch = false;
+						if(b1.getLIncidentStart()>b2.getLIncidentStart())
+							b_doswitch = true;
+						else if(b1.getLIncidentStart()==b2.getLIncidentStart())
+						{
+							if(b1.getLTimestampDb()<b2.getLTimestampDb())
+								b_doswitch = true;
+						}
+						if(b_doswitch)
 						{
 							tmp = b1;
 							list[i] = b2;
@@ -534,6 +543,7 @@ public class plugin_Centric extends PAS_Scripting
 				{
 					UBBNEWS b = (UBBNEWS)list.getDefaultModel().getElementAt(location);
 					String html = "<html><table width=300>";
+					//html += "<tr><td colspan=1><b>" + PAS.l("common_updated") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLTimestampDb()) + "</td></tr>";
 					html += "<tr><td colspan=1><b>" + PAS.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
 					html += "<tr><td colspan=1><b>" + PAS.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
 					html += "<tr><td colspan=2 style=\"word-wrap: break-word\">" + b.getNewstext().getSzNews() + "</td></tr>";
@@ -1359,6 +1369,16 @@ public class plugin_Centric extends PAS_Scripting
 	
 	
 	@Override
+	public boolean onMapGotoShape(ShapeStruct s) {
+		return super.onMapGotoShape(s);
+	}
+
+	@Override
+	public boolean onMapGotoShapesToPaint() {
+		return super.onMapGotoShapesToPaint();
+	}
+
+	@Override
 	public boolean onMapKeyPressed(KeyEvent e) {
 		switch(e.getKeyCode())
 		{
@@ -1382,15 +1402,20 @@ public class plugin_Centric extends PAS_Scripting
 	}
 
 	@Override
+	public Dimension getDefaultScreenSize(Settings s) {
+		return new Dimension(1024,700);
+	}
+
+	@Override
 	public String getDefaultLocale(Settings s) {
-		//return "nl_NL";
-		return "en_GB";
+		return "nl_NL";
+		//return "en_GB";
 	}
 
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
-		//return "nl_NL";
-		return "en_GB";
+		return "nl_NL";
+		//return "en_GB";
 	}
 
 	@Override

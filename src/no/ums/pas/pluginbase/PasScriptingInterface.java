@@ -1,5 +1,6 @@
 package no.ums.pas.pluginbase;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -47,6 +48,7 @@ import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapLoader;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendOptionToolbar;
@@ -465,6 +467,10 @@ public abstract class PasScriptingInterface
 	 */
 	public abstract boolean onMapGotoShapesToPaint();
 	
+	public abstract boolean onMapGotoShape(ShapeStruct s);
+	
+	public abstract boolean onMapGotoNavigation(NavStruct n);
+	
 	public abstract boolean onMapKeyTyped(KeyEvent e);
 
 	public abstract boolean onMapKeyPressed(KeyEvent e);
@@ -482,6 +488,10 @@ public abstract class PasScriptingInterface
 	public abstract Hashtable<String, ShapeStruct> getShapesToPaint(); 
 	
 	public abstract boolean onFrameResize(JFrame f, ComponentEvent e);
+	
+	public abstract Dimension getDefaultScreenSize(Settings s);
+	
+	public abstract Dimension getMinimumScreenSize(Settings s);
 	
 	/**
 	 * Get default Locale for this site(e.g. no_NO)

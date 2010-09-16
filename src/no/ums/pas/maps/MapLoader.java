@@ -10,7 +10,9 @@ import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Timeout;
+import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 import no.ums.ws.pas.*;
 import java.net.URL;
 
@@ -347,6 +349,7 @@ public class MapLoader {
 	}
 
 	public Image load_map_wms(double n_lbo, double n_rbo, double n_ubo, double n_bbo, Dimension dim, String sz_wms_url)
+		throws Exception
 	{
 		try
 		{
@@ -404,8 +407,20 @@ public class MapLoader {
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
-			 request.setTransparent(true);
-			 request.setSRS("EPSG:4326");
+			 request.setTransparent(false);
+			 
+			 //variables.SETTINGS.setWmsEpsg("28992");
+			 //variables.SETTINGS.setWmsEpsg("4326");
+			 
+			 int n_epsg = Integer.parseInt(variables.SETTINGS.getWmsEpsg());
+			 //n_epsg = 28992;
+			 //4326
+			 
+			 String epsg = "EPSG:";
+			 epsg += variables.SETTINGS.getWmsEpsg();
+			 
+			 
+			 request.setSRS(epsg);
 			 //request.setFormat("image/png");
 			 request.setFormat(variables.SETTINGS.getSelectedWmsFormat());
 			 
@@ -417,10 +432,10 @@ public class MapLoader {
 			 }
 			 
 			 for(int i=m_selected_layers.size()-1; i >= 0 ; i--)
+			 //for(int i=13; i <m_selected_layers.size() ; i++)
 			 {
 				 request.addLayer(m_selected_layers.get(i));
 			 }
-			 //request.addLayer(layers[0]);
 			 
 			 NavStruct nav = no.ums.pas.maps.defines.Navigation.preserve_aspect(n_lbo, n_rbo, n_ubo, n_bbo, dim);
 			 n_lbo = nav._lbo;
@@ -428,6 +443,20 @@ public class MapLoader {
 			 n_ubo = nav._ubo;
 			 n_bbo = nav._bbo;
 			 
+			 switch(n_epsg)
+			 {
+			 case 4326: //lon/lat
+				 break;
+			 case 28992: //Amersfoort / RD New
+				 UTMCoor uleft = new CoorConverter().wgs84_to_rd(n_ubo, n_lbo);
+				 UTMCoor lright = new CoorConverter().wgs84_to_rd(n_bbo, n_rbo);
+				 n_lbo = uleft.f_northing;
+				 n_ubo = uleft.f_easting;
+				 n_rbo = lright.f_northing;
+				 n_bbo = lright.f_easting;
+				 break;
+			 }
+
 			 
 			 request.setBBox(n_lbo + ","+n_bbo+","+n_rbo+","+n_ubo);
 
@@ -458,11 +487,11 @@ public class MapLoader {
 					
 				}
 
-				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				variables.NAVIGATION.setHeaderBounds(nav._lbo,nav._rbo,nav._ubo,nav._bbo);
 			 
 			if(m_img_load==null)
 			{
-				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				//variables.NAVIGATION.setHeaderBounds(nav._lbo,nav._rbo,nav._ubo,nav._bbo);
 				m_img_load =  null;
 				if(m_retry==null)
 					m_retry = new AutoLoadRetry(info);
@@ -473,12 +502,16 @@ public class MapLoader {
 		catch(Exception e)
 		{
 			//m_retry = null;
+			
 			setErrorMsg(e.getMessage());
 			variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
 			m_img_load =  null;
 			e.printStackTrace();
 			if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
+			b_loading_mapimage = false;
+			resetWmsAuthenticator();
+			throw e;
 		}
 		b_loading_mapimage = false;
 		resetWmsAuthenticator();

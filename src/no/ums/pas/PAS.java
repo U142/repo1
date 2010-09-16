@@ -371,6 +371,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
 		m_settings.setWmsUsername(ui.getSzWmsUsername());
 		m_settings.setWmsPassword(ui.getSzWmsPassword());
+		m_settings.setWmsEpsg(ui.getSzWmsEpsg());
 		try
 		{
 			m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());
@@ -1107,9 +1108,22 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 									ui.setSzWmsFormat(arr[1]);
 									ui.setSzWmsLayers(arr[2]);
 									if(arr.length>=4)
-										ui.setSzWmsUsername(arr[3]);
+										ui.setSzWmsEpsg(arr[3]);
+									else
+										ui.setSzWmsEpsg("4326"); //default to lon/lat WGS84
 									if(arr.length>=5)
-										ui.setSzWmsPassword(arr[4]);
+										ui.setSzWmsUsername(arr[4]);
+									else
+										ui.setSzWmsUsername("");
+									if(arr.length>=6)
+										ui.setSzWmsPassword(arr[5]);
+									else
+										ui.setSzWmsPassword("");
+									/*m_settings.setWmsSite(ui.getSzWmsSite());
+									m_settings.setWmsUsername(ui.getSzWmsUsername());
+									m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());
+									m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
+									m_settings.setWmsPassword(ui.getSzWmsPassword());*/
 								}
 							}
 						}
@@ -1363,14 +1377,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			else
 			{
-				this.setSize(1024,768); //-50);
+				this.setSize(pasplugin.getDefaultScreenSize(m_settings)); //-50);
 				this.setLocationRelativeTo(null);
 				m_settings.setXpos(0);
 				m_settings.setYpos(0);
 				
 				//this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			}
-			this.setMinimumSize(new Dimension(1024, 768));
+			this.setMinimumSize(pasplugin.getMinimumScreenSize(m_settings));
 			if(m_settings.isWindowFullscreen())
 				this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			else

@@ -7,6 +7,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import no.ums.pas.core.defines.DefaultPanel;
 
@@ -21,13 +23,28 @@ public class CentricMessages extends DefaultPanel implements ComponentListener {
 	public JTabbedPane get_tpane() { return m_tabbed_messages; }
 	private CentricStatus m_parent;
 	public CentricStatus get_parent() { return m_parent; }
+	public CentricMessageStatus getSelectedTab() { 
+		return (CentricMessageStatus)get_tpane().getSelectedComponent(); 
+	}
 	
 	public CentricMessages(CentricStatus parent) { // Sende med status ting
 		super();
+		m_tabbed_messages.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				tabChanged();
+			}
+		});
 		m_parent = parent;
 		add_controls();
 		addComponentListener(this);
 		//m_tabbed_messages.add("Message1", new CentricMessageStatus(this));
+	}
+	
+	protected void tabChanged()
+	{
+		m_parent.tabChanged();
 	}
 
 	@Override

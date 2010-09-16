@@ -92,7 +92,7 @@ public class CentricStatusController extends StatusController {
 				
 				//m_centricstatus.set_cbsendingresponse(res);
 				m_centricstatus.getCBStatus();
-				System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
+				//System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
 			}
 			else
 			{

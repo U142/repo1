@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="sz_wms_format" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="sz_wms_username" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="sz_wms_password" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="sz_wms_epsg" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="l_drag_mode" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="sz_email_name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="sz_email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -85,6 +86,7 @@ import javax.xml.bind.annotation.XmlType;
     "szWmsFormat",
     "szWmsUsername",
     "szWmsPassword",
+    "szWmsEpsg",
     "lDragMode",
     "szEmailName",
     "szEmail",
@@ -145,6 +147,8 @@ public class UPASUISETTINGS {
     protected String szWmsUsername;
     @XmlElement(name = "sz_wms_password")
     protected String szWmsPassword;
+    @XmlElement(name = "sz_wms_epsg")
+    protected String szWmsEpsg;
     @XmlElement(name = "l_drag_mode")
     protected int lDragMode;
     @XmlElement(name = "sz_email_name")
@@ -668,6 +672,30 @@ public class UPASUISETTINGS {
      */
     public void setSzWmsPassword(String value) {
         this.szWmsPassword = value;
+    }
+
+    /**
+     * Gets the value of the szWmsEpsg property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSzWmsEpsg() {
+        return szWmsEpsg;
+    }
+
+    /**
+     * Sets the value of the szWmsEpsg property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSzWmsEpsg(String value) {
+        this.szWmsEpsg = value;
     }
 
     /**

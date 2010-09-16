@@ -56,6 +56,8 @@ public class PLMNShape extends ShapeStruct
 	public void draw(Graphics g, Navigation nav, boolean bDashed,
 			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
 			boolean bFill, int pensize, boolean bPaintShapeName) {
+		if(m_b_hidden)
+			return;
 		Graphics2D g2d = (Graphics2D)g;
 		Font oldFont = g.getFont();
 		Color oldColor = g.getColor();

@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.KeyboardFocusManager;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -396,7 +397,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_previewscroll = new JScrollPane(m_txt_preview);
 		
 		m_lbl_pages = new StdTextLabel(PAS.l("common_pages") + " 1/" + MAX_PAGES, 100);
-		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/" + MAX_TOTAL_CHARS, 150);
+		m_lbl_characters = new StdTextLabel(PAS.l("common_characters") + " 0/" + MAX_TOTAL_CHARS, 200);
 		
 		m_btn_send = new JButton(PAS.l("main_sending_send"));
 		m_btn_send.setPreferredSize(new Dimension(input_width,30));
@@ -538,7 +539,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, inc_panels(), 1, 1);
 		add(m_lbl_pages, m_gridconst);
 		
-		set_gridconst(2, get_panel(), 1, 1);
+		set_gridconst(2, get_panel(), 7, 1);
 		add(m_lbl_characters, m_gridconst);
 				
 		/*
@@ -584,8 +585,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_save_message, m_gridconst);
 		
 		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,100));
+		m_txt_event_name.setPreferredSize(new Dimension(input_width, m_lbl_preview.getPreferredSize().height));
 
-		m_lbl_characters.setPreferredSize(new Dimension(150, m_lbl_characters.getPreferredSize().height));
+		//m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
 		updateCharacters();
 		revalidate();
 		repaint();
@@ -616,19 +618,18 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		add(m_btn_print, m_gridconst);
 		
-		//set_gridconst(1, inc_panels(), 3, 1);
-		//add(m_lbl_pages, m_gridconst);
-		set_gridconst(1, inc_panels(), 3, 1);
+		set_gridconst(1, inc_panels(), 1, 1);
+		add(m_lbl_pages, m_gridconst);
+		set_gridconst(2, get_panel(), 7, 1);
 		add(m_lbl_characters, m_gridconst);
 		
 		
-		add_spacing(DIR_VERTICAL, 5);
+		add_spacing(DIR_VERTICAL, 20);
 		
 		if(m_txt_warning == null) {
 			m_txt_warning = new JTextArea("",10,10);
 			m_txt_warning.setText(PAS.l("main_sending_send_warning"));
 			m_txt_warningscroll = new JScrollPane(m_txt_warning);
-			m_txt_warningscroll.setPreferredSize(new Dimension(450,60));
 		}
 		
 		set_gridconst(0, inc_panels(), 8, 1);
@@ -640,7 +641,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(0, inc_panels(), 8, 1);
 		//progress.get_progress().setSize(new Dimension(450,25));
 		progress.set_totalitems(0, PAS.l("main_statustext_lba_sending"));
-		progress.get_progress().setPreferredSize(new Dimension(450,25));
+		//progress.get_progress().setPreferredSize(new Dimension(450,25));
 		progress.stop_and_hide();
 		add(progress.get_progress(), m_gridconst);
 		
@@ -653,13 +654,19 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_btn_cancel, m_gridconst);
-		set_gridconst(1, get_panel(), 1, 1);
+		set_gridconst(1, get_panel(), 3, 1, GridBagConstraints.EAST);
 		add(m_btn_send, m_gridconst);
 		
 		m_btn_send.setActionCommand("act_send");
-		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,200));
+		int width_left = 550-100;
+		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
+		//progress.get_progress().setVisible(false);
+		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
+		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,60));
+		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
 
-		m_lbl_characters.setPreferredSize(new Dimension(250, m_lbl_characters.getPreferredSize().height));
+		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
+		m_btn_cancel.setPreferredSize(new Dimension(m_btn_cancel.getPreferredSize().width, m_btn_send.getPreferredSize().height));
 		updateCharacters();
 		revalidate();
 		repaint();
@@ -1390,7 +1397,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//else
 		{
 			if(variables.MAPPANE.get_active_shape()!=null && 
-					!variables.MAPPANE.get_active_shape().can_lock(variables.USERINFO.get_current_department().get_restriction_shapes()))
+					!variables.MAPPANE.get_active_shape().can_lock(variables.USERINFO.get_departments().get_combined_restriction_shape()))
 				enable_send = false;
 		}
 		return enable_send;
@@ -1403,7 +1410,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private void updateCharacters() {
 		int chars = m_txt_preview.getText().length();
 		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
-		switch(current_mode)
+		int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
+		/*switch(current_mode)
 		{
 		case INITIALIZING:
 		case MESSAGE_WRITING:
@@ -1417,7 +1425,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			
 			m_lbl_characters.setText(pageno + " " + PAS.l("common_pages") + " (" + chars_left + " " + PAS.l("common_characters") + " " + PAS.l("common_remaining") + ")");
 			break;
-		}
+		}*/
+		m_lbl_pages.setText(PAS.l("common_page") + " " + pageno + "/" + MAX_PAGES);
+		m_lbl_characters.setText(PAS.l("common_characters") + " " + PAS.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE);
 	}
 	
 	public void fromTemplate(CBSTATUS cb)
