@@ -281,13 +281,16 @@ namespace pas_cb_server
             Hashtable ret = new Hashtable();
             AlertInfo oAlert = new AlertInfo();
 
-            //GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
+            // GetAlert(xmlCB, oUser, Operation.KILL, out oAlert);
             int l_getalert = ParseAlertXml(xmlCB, oUser, Operation.KILL, out oAlert);
             if (l_getalert != Constant.OK)
             {
                 ret.Add(0, l_getalert);
                 return ret;
             }
+
+            // got info about user and alert, log to paslog
+            Database.WritePasLog(oUser, oAlert, Operation.KILL);
 
             // kill a given alert at each operator
             foreach (Operator op in oUser.operators)
@@ -346,6 +349,7 @@ namespace pas_cb_server
                 oAlert.l_projectpk = int.Parse(xmlCB.Attributes.GetNamedItem("l_projectpk").Value);
                 oAlert.l_refno = int.Parse(xmlCB.Attributes.GetNamedItem("l_refno").Value);
                 oAlert.l_sched_utc = long.Parse(xmlCB.Attributes.GetNamedItem("l_sched_utc").Value);
+
 
                 if (type == Operation.KILL)
                     return Constant.OK; // return if kill, don't need more information

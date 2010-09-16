@@ -340,6 +340,17 @@ namespace pas_cb_server
 
             return lRetVal;
         }
+        public static void WritePasLog(Settings oUser, AlertInfo oAlert, Operation eOperation)
+        {
+            switch (eOperation)
+            {
+                case Operation.KILL:
+                    ExecuteNonQuery(String.Format("sp_pas_log {0}, 2000, 'l_comppk={1},l_deptpk={2},l_refno={3}'", oUser.l_userpk, oUser.l_comppk, oUser.l_deptpk, oAlert.l_refno));
+                    break;
+                default: // do nothing
+                    break;
+            }
+        }
 
         public static int GetHandle(Operator op)
         {

@@ -34,7 +34,7 @@ namespace pas_cb_server
         // Instanced settings
         public int l_comppk = 0;
         public int l_deptpk = 0;
-        public long l_userpk = 0;
+        public long l_userpk = -1;
 
         public string sz_compid = "";
         public string sz_deptid = "";
@@ -115,7 +115,7 @@ namespace pas_cb_server
 
                 if (attr.GetNamedItem("sz_userid") != null)
                     uv.sz_userid = attr.GetNamedItem("sz_userid").Value;
-                else if (uv.l_userpk != 0)
+                else if (uv.l_userpk != -1)
                     uv.sz_userid = Database.GetUserID(uv.l_userpk);
 
                 uv.operators = Operator.GetOperators(uv);
