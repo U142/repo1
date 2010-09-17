@@ -21,6 +21,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.maps.defines.PLMNShape;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricVariables;
 import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
@@ -37,6 +38,7 @@ import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.CBSTATUS;
 import no.ums.ws.pas.status.ULBASENDING;
+import no.ums.ws.pas.status.UPLMN;
 
 public class CentricMessageStatus extends DefaultPanel implements ComponentListener {
 
@@ -69,6 +71,18 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		return MINIMUM_SIZE;
 	}
 	
+	protected boolean checkResendRights()
+	{
+		Class c = lastcbstatus.getShape().getClass();
+		if(c.equals(UPLMN.class))
+		{
+			if(variables.USERINFO.get_current_department().get_pas_rights()<2)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	protected boolean containsOperator(int pk)
 	{
@@ -202,8 +216,11 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			}
 		}
 		else if(e.getSource().equals(m_btn_new_message)) {
-			PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSEND_);
-			CentricVariables.centric_send.fromTemplate(lastcbstatus);
+			if(checkResendRights())
+			{
+				PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSEND_);
+				CentricVariables.centric_send.fromTemplate(lastcbstatus);
+			}
 		}
 		else if(e.getSource().equals(m_btn_send_to_address_book)) {
 			
@@ -264,6 +281,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	public void add_controls() {
 		m_btn_kill.addActionListener(this);
 		m_btn_new_message.addActionListener(this);
+		m_btn_new_message.setEnabled(checkResendRights());
 		m_btn_resend.addActionListener(this);
 		m_btn_send_to_address_book.addActionListener(this);
 		m_btn_send_to_address_book.setEnabled(false);
