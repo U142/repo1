@@ -26,19 +26,21 @@ namespace pas_cb_server
                 if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
+                int l_reqno = Database.GetHandle(op);
+
                 string sz_channel_category = Database.GetChannelName(op.l_operator, oAlert.alert_message.l_channel);
                 if(sz_channel_category == null && operation != Operation.NEWPLMN_HEARTBEAT)
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAIELD (missing channel category name)"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno), 2);
+                        , l_reqno), 2);
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, -1, op.l_operator, LBATYPE.CB);
                 }
 
                 // Set alert attributes
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_sent_date_time = dtm_cap;
                 t_alert.IBAG_cap_sent_date_time = dtm_cap;
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
@@ -158,7 +160,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno), 2);
+                        , l_reqno), 2);
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
@@ -166,7 +168,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage OK (code={3})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
@@ -177,7 +179,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (code={3}, msg={4})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
@@ -203,8 +205,10 @@ namespace pas_cb_server
                 if (Database.SetSendingStatus(op, oAlert.l_refno, Constant.PARSING) != Constant.OK)
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
 
+                int l_reqno = Database.GetHandle(op);
+
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
                 t_alert.IBAG_sent_date_time = DateTime.Now;
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -251,7 +255,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno), 2);
+                        , l_reqno), 2);
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
@@ -259,7 +263,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage OK (code={3})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
@@ -270,7 +274,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) UpdateMessage FAILED (code={3}, msg={4})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
                     return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, get_IBAG_response_code(t_alert_response.IBAG_response_code), op.l_operator, LBATYPE.CB);
@@ -292,8 +296,10 @@ namespace pas_cb_server
 
             try
             {
+                int l_reqno = Database.GetHandle(op);
+
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
                 t_alert.IBAG_sent_date_time = DateTime.Now;
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -325,7 +331,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno), 2);
+                        , l_reqno), 2);
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
                     return Constant.RETRY;
                     //return Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
@@ -335,7 +341,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage OK (code={3})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
@@ -346,7 +352,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (code={3}, msg={4})"
                         , oAlert.l_refno
                         , op.sz_operatorname
-                        , oAlert.l_refno
+                        , l_reqno
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLING);
@@ -372,8 +378,10 @@ namespace pas_cb_server
 
             try
             {
+                int l_reqno = Database.GetHandle(op);
+
                 DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(op));
+                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = message_number;
                 t_alert.IBAG_sent_date_time = DateTime.Now;
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -404,7 +412,7 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
                         , l_refno
                         , op.sz_operatorname
-                        , l_refno), 2);
+                        , l_reqno), 2);
                     return Constant.FAILED;
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)

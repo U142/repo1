@@ -292,7 +292,7 @@ namespace pas_cb_server
 
             return op;
         }
-        public static Operator[] GetOperators(Settings oUser)
+        public static Operator[] GetOperatorsDept(Settings oUser)
         {
             //string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
             string qryOperators = String.Format(@"SELECT
@@ -314,6 +314,69 @@ namespace pas_cb_server
                                         AND OD.l_operator=OP.l_operator 
                                         AND OD.l_deptpk={0}
                                     ORDER BY
+                                        OP.l_operator"
+                , oUser.l_deptpk.ToString());
+
+            OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);
+            OdbcCommand cmdOperators = new OdbcCommand(qryOperators, dbConn);
+            OdbcDataReader rsOperators;
+
+            List<Operator> Operators = new List<Operator>();
+
+            try
+            {
+                dbConn.Open();
+
+                rsOperators = cmdOperators.ExecuteReader();
+
+                while (rsOperators.Read())
+                {
+                    Operator op = new Operator();
+
+                    op.l_operator = rsOperators.GetInt32(0);
+                    op.sz_operatorname = rsOperators.GetString(1);
+                    op.l_type = rsOperators.GetInt32(2);
+                    op.sz_url = rsOperators.GetString(3);
+                    op.sz_login_id = rsOperators.GetString(4);
+                    op.sz_login_name = rsOperators.GetString(5);
+                    op.sz_login_password = rsOperators.GetString(6);
+                    op.api_version = new Version(rsOperators.GetString(7));
+                    op.coordinate_type = (COORDINATESYSTEM)rsOperators.GetInt32(8);
+
+                    Operators.Add(op);
+                }
+                rsOperators.Close();
+                dbConn.Close();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("GetOperators(Settings s) (exception={0})", e.Message),
+                    String.Format("GetOperators(Settings s) (exception={0})", e),
+                    2);
+            }
+
+            return Operators.ToArray();
+        }
+        public static Operator[] GetOperators(Settings oUser)
+        {
+            //string qryOperators = "SELECT OP.l_operator, OP.sz_operatorname, OP.sz_url, OP.sz_user, OP.sz_password, OP.f_alertapi, OP.f_statusapi, OP.f_internationalapi, OP.f_statisticsapi FROM LBAOPERATORS OP, LBAOPERATORS_X_DEPT OD WHERE OD.l_operator=OP.l_operator AND OD.l_deptpk=" + oUser.l_deptpk.ToString() + " ORDER BY l_operator";
+            string qryOperators = String.Format(@"SELECT
+                                        OP.l_operator,
+                                        OP.sz_operatorname,
+                                        OP.l_type,
+                                        OP.sz_url,
+                                        OP.sz_user sz_login_id,
+                                        OP.sz_name sz_login_name,
+                                        OP.sz_password sz_login_password,
+                                        '1.0' sz_version,
+                                        0 l_coordinatetype
+                                    FROM
+                                        LBAOPERATORS OP
+                                    WHERE
+                                        OP.f_cb=1
+                                        AND OP.f_active=1
+                                   ORDER BY
                                         OP.l_operator"
                 , oUser.l_deptpk.ToString());
 
