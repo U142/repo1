@@ -138,7 +138,7 @@ namespace com.ums.ws.pas
                 ULogon logon = new ULogon();
                 logon.CheckLogon(ref l, false);
 
-                return logon.UpdateSystemMessages(message);
+                return logon.UpdateSystemMessages(l,message);
             }
             catch (Exception e)
             {

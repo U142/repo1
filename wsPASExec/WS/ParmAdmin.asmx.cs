@@ -2323,6 +2323,7 @@ namespace com.ums.ws.parm
         {
             try
             {
+                long n_ret = 0;
                 m_logon = logon;
                 sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
                 String l_timestamp = UCommon.UGetFullDateTimeNow().ToString();
@@ -2333,19 +2334,36 @@ namespace com.ums.ws.parm
                 String sz_postno = obj.sz_postno != null ? obj.sz_postno.Replace("'", "''") : "";
                 String sz_place = obj.sz_place != null ? obj.sz_place.Replace("'", "''") : "";
                 String sz_phone = obj.sz_phone != null ? obj.sz_phone.Replace("'", "''") : "";
-
+                /*
                 sz_sql = String.Format(UCommon.UGlobalizationInfo,
                     "sp_ins_paobject '{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, {8}, '{9}', '{10}', '{11}', '{12}', {13}, {14}",
                        operation.ToString().ToLower(), obj.l_objectpk, logon.l_userpk, logon.l_comppk, logon.l_deptpk, obj.l_importpk, sz_name, obj.l_categorypk,
                        obj.l_parent, sz_address, sz_postno, sz_place, sz_phone, l_timestamp, (obj.b_isobjectfolder ? 1 : 0));
 
                 long n_ret = db_exec(sz_sql, "paobject", operation.ToString().ToLower(), obj.l_temppk.ToString(), obj.sz_description, false);
-                obj.l_objectpk = n_ret;
+                */
+                if (operation == PARMOPERATION.insert) // I had to put it here or else it wouldn't write the shapefile and couldn't put it in the switch
+                {
+                    sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9}, {10}", logon.l_userpk, logon.l_comppk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
+                    OdbcDataReader rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
+                    while (rs.Read())
+                        n_ret = rs.GetInt32(0);
+                    rs.Close();
+                }
+                /*else
+                    obj.l_objectpk = n_ret;
+                */
                 if (n_ret > 0)
                 {
                     switch (operation)
                     {
                         case PARMOPERATION.insert:
+                            String md5 = "";
+                            String xml = "";
+                            obj.m_shape.CreateXml(ref xml, ref md5);
+                            sz_sql = String.Format("INSERT INTO PASHAPE (l_pk, l_type, l_timestamp, sz_md5, sz_xml) values({0}, {1}, {2}, '{3}', '{4}')", n_ret, (int)type, db.getDbClock(), md5, xml);
+                            db.ExecNonQuery(sz_sql);
+                            break;
                         case PARMOPERATION.update:
                             if (obj.m_shape != null)
                             {
@@ -2366,11 +2384,7 @@ namespace com.ums.ws.parm
                     }
                     
                 }
-                if (operation == PARMOPERATION.insert) // I had to put it here or else it wouldn't write the shapefile and couldn't put it in the switch
-                {
-                    sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', {7}, {8}, '{9}', {10}, {11}", logon.l_userpk, logon.l_comppk, obj.l_objectpk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
-                    db.ExecNonQuery(sz_sql);
-                }
+                
                 return n_ret;
 
             }

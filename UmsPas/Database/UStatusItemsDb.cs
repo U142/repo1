@@ -622,7 +622,10 @@ namespace com.ums.PAS.Database
                     CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
                     item.l_operator = (int)rs.GetInt32(0);
                     item.sz_operatorname = rs.GetString(1);
-                    item.l_performance = rs.GetFloat(2);
+                    if (rs.IsDBNull(2))
+                        item.l_performance = 0;
+                    else
+                        item.l_performance = (float)rs.GetDouble(2);
                     ret.Add(item);
                 }
                 rs.Close();

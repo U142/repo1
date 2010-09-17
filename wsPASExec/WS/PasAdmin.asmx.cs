@@ -428,7 +428,7 @@ namespace com.ums.ws.pas.admin
                             paslog.sz_desc = rs.GetString(1);
                         rs.Close();
                     }
-                    else if (paslog.l_operation == 107 || paslog.l_operation == 111 || paslog.l_operation == 200) // info on user createing a sending, sending to operator or kill sending
+                    else if (paslog.l_operation == 107 || paslog.l_operation == 111 || paslog.l_operation == 2000) // info on user createing a sending, sending to operator or kill sending
                     {
                         string msg_text = "";
                         string event_name = "";
@@ -436,13 +436,20 @@ namespace com.ums.ws.pas.admin
                         int l_operatorindex = desc.IndexOf("l_operator");
                         string m_operator = "";
 
+                        if (paslog.l_operation == 2000)
+                        {
+                            m_operator = m_operator;
+                        }
+
                         if(l_operatorindex != -1) {
                             m_operator = desc.Substring(l_operatorindex);
                             m_operator = m_operator.Substring(0,m_operator.IndexOf(','));
                         }
                         desc = desc.Substring(desc.IndexOf("l_refno"));
-                        desc = desc.Substring(0, desc.IndexOf(','));
+                        if(desc.IndexOf(',')>-1)
+                            desc = desc.Substring(0, desc.IndexOf(','));
                         long l_refno = long.Parse(desc.Substring(desc.IndexOf('=') + 1));
+                            
                         if (l_operatorindex != -1)
                         {
                             sz_sql = String.Format("SELECT distinct st.l_refno, st.sz_text, p.sz_name, o.sz_operatorname " +
