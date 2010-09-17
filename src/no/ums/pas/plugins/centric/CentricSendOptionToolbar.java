@@ -370,7 +370,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_update.setPreferredSize(new Dimension(btn_width, btn_height));
 		m_btn_update.addActionListener(this);
 		
-		m_txt_message = new StdTextAreaNoTab(this, "",10,10);
+		m_txt_message = new StdTextAreaNoTab(this, "",1,1);
 		m_txt_message.setWrapStyleWord(true);
 		m_txt_message.setLineWrap(true);
 		m_txt_message.addFocusListener(this);
@@ -453,7 +453,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 		//Preview ting
 		m_lbl_preview = new StdTextLabel(PAS.l("common_preview"),new Dimension(150,20));
-		m_txt_preview = new JTextArea("",10,10);
+		m_txt_preview = new JTextArea("",1,1);
 		m_txt_preview.setWrapStyleWord(true);
 		m_txt_preview.setLineWrap(true);
 		m_txt_preview.setEnabled(false);
@@ -1097,8 +1097,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			String timestamp = String.valueOf(Utils.get_current_datetime());
 			String m_headerfooter = "--- " + PAS.l("main_sending_message_summary") + " " + variables.USERINFO.get_userid() + " - " + this.m_txt_event_name + " - " + timestamp + " ---";
 			String m_message = m_txt_preview.getText();
-			String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
-			
+			//String m_characters = PAS.l("common_pages") + ": " + m_pages + " - " + Character.toUpperCase(PAS.l("common_characters").charAt(0)) + PAS.l("common_characters").substring(1) + ": " + m_txt_preview.getText().length();
+			//String m_characters = PAS.l("common_characters") + " " + PAS.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE;
+			String m_characters = m_lbl_pages.getText() + " - " + m_lbl_characters.getText();
 			/*
 			Image img;
 			image.setIcon(new ImageIcon(img));

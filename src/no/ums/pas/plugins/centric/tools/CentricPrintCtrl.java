@@ -7,6 +7,9 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
 
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttribute;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
 
 //import java.awt.PrintCanvas;
@@ -32,7 +35,7 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.BreakIterator;
 
-public class CentricPrintCtrl implements Printable {
+public class CentricPrintCtrl implements Printable, Pageable {
 	Graphics m_graph;
 	//PAS m_pas;
 	Frame m_frame;
@@ -40,7 +43,15 @@ public class CentricPrintCtrl implements Printable {
 	BufferedImage m_img_offscreen = null;
 	private Component componentToBePrinted;
 	private Image m_image;
+	private int numPages = 0;
 	static int ExtPageIndex = 0;
+	private PageFormat format;
+	
+	private PRINTMODE current_mode = PRINTMODE.PAGECOUNT;
+	private enum PRINTMODE {
+		PAGECOUNT,
+		PRINTING,
+	};
 	
 	String m_header;
 	Image m_mapimage;
@@ -58,6 +69,7 @@ public class CentricPrintCtrl implements Printable {
 		//setVisible(false);
 		componentToBePrinted = c;
 		m_frame = frame;
+		format = new PageFormat();
 	}
 	public CentricPrintCtrl(Image i, Frame f) {
 		m_image = i;
@@ -81,15 +93,59 @@ public class CentricPrintCtrl implements Printable {
 	}
 	
 
+	@Override
+	public int getNumberOfPages() {
+		//test
+		current_mode = PRINTMODE.PAGECOUNT;
+		Graphics g = new BufferedImage(1, 1, Image.SCALE_FAST).getGraphics();
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		format = PrinterJob.getPrinterJob().getPageFormat(pras);
+		int pageno = 0;
+		boolean b = true;
+		while(b)
+		{
+			int ret = print(g, format, pageno);
+			switch(ret)
+			{
+			case PAGE_EXISTS:
+				pageno++;
+				break;
+			default:
+				b = false;
+				break;
+			}
+		}
+		return numPages = pageno;
+	}
+	@Override
+	public PageFormat getPageFormat(int pageNum) throws IndexOutOfBoundsException {
+		//PageFormat pf = new PageFormat();
+		//return PrinterJob.getPrinterJob().defaultPage(pf);
+		Paper paper = new Paper();
+		paper.setSize(594.936, 841.536);// Set to A4 size.
+		paper.setImageableArea(30, 30, 570, 820);// Set the margins.
+		PageFormat pageFormat = new PageFormat();
+		pageFormat.setPaper(paper);
+		pageFormat.setOrientation(PageFormat.PORTRAIT);
+		return format=pageFormat;
+	}
+	@Override
+	public Printable getPrintable(int pageNum) throws IndexOutOfBoundsException {
+		return this;
+	}
 	public void doPrint()
 	{
 		
 		PrinterJob printJob = PrinterJob.getPrinterJob();
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		printJob.setPrintable(this);
+		printJob.setPageable(this);
 		variables.DRAW.set_suspended(true);
 	    if (printJob.printDialog()) {
 	        try {
+	        	//format = printJob.getPageFormat(pras);
 	        	printJob.setCopies(1);
+	    		current_mode = PRINTMODE.PRINTING;
 	        	printJob.print();
 	        } catch(PrinterException pe) {
 	          if(PAS.get_pas() != null)
@@ -106,111 +162,165 @@ public class CentricPrintCtrl implements Printable {
 			{ "PNG", ".png" }, 
 	};
 	
+	private void printInit(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+        g.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+	}
+	
+	private int printTitle(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+		int height = 0;
+        g.setFont(UIManager.getFont("PrintJobTitle.font"));
+        printTranslate(g, 0, g.getFontMetrics().getAscent());
+        g.setColor(Color.black);	           
+        g.drawString(PAS.l("common_app_title"), 0, 0);
+        return g.getFontMetrics().getHeight();
+	}
+	
+	private int printHeader(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+		int height = 0;
+    	g.setFont(UIManager.getFont("PrintJobHeader.font"));        		        	
+    	g.drawString(m_header, 0, 0);
+		return g.getFontMetrics().getAscent();		
+	}
+	
+	private int printImage(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+    	int width = 800;
+		int height = 800;
+		int actual_width = m_mapimage.getWidth(null);
+		int actual_height = m_mapimage.getHeight(null);
+		
+		if(actual_height < actual_width) {
+			if(actual_width<width) {
+				double percent_of_actual = ((double)actual_width/(double)width);
+				height = (int)((double)actual_height / percent_of_actual);
+				height = actual_height;
+				height = (height+(width-height));
+				m_mapimage = variables.DRAW.get_buff_image();
+			}
+			else {
+				double percent_of_actual = ((double)actual_width/(double)width);
+				width = (int)((double)actual_width / percent_of_actual);
+				height = (int)((double)actual_height / percent_of_actual);
+				//width = width + height;
+				//width = (int)((double)width / percent_of_actual);
+				m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+				//m_mapimage = variables.DRAW.get_buff_image();
+			}
+		}
+		else {
+			if(actual_height>actual_width) {
+				double percent_of_actual = ((double)actual_height/(double)height);
+				width = actual_width;
+				width = (int)((double)actual_width / percent_of_actual);
+				width = (width + (height-width));
+				m_mapimage = variables.DRAW.get_buff_image();
+			}
+			else {
+				double percent_of_actual = ((double)actual_height/(double)height);
+				width = (int)((double)actual_width / percent_of_actual);
+				width = height + (width-height);
+				m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+				
+			}
+		}
+		
+		//int maxwh = (int)pageFormat.getImageableWidth();
+		int maxwh = (int)pageFormat.getImageableHeight();
+		int mapw = m_mapimage.getWidth(null)/2;
+		int maph = m_mapimage.getHeight(null);
+		float maxmaph = 300.0f;
+		float factor = maxmaph / maph;
+		
+		float scale = factor;//(float)(mapw*1.0 / maxwh);
+		float scalerev = 1.0f/factor;//(float)(maxwh*1.0 / mapw);
+		g.scale(scale, scale);
+		g.drawImage(m_mapimage, 0, 0, null);
+		g.scale(scalerev, scalerev);
+		return (int)(maph*scale);
+	}
+	
+	private int printText(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+		int height = 0;
+		return height;
+	}
+	
+	private int printFooter(Graphics2D g, PageFormat pageFormat, int pageIndex)
+	{
+        g.setFont(UIManager.getFont("PrintJobFooter.font"));            
+    	g.drawString(m_footer, 0, 0);
+		return g.getFontMetrics().getAscent();
+	}
+	
+	private int printTranslate(Graphics2D g, int x, int y)
+	{
+		g.translate(x, y);
+		return y;
+	}
 
 	@Override
 	public int print(Graphics g, PageFormat pageFormat, int pageIndex)
 	{
-		Dimension margins = new Dimension(20, 20);
+		Dimension margins = new Dimension(3, 3);
 		
-		if (pageIndex > 0) {
+		if (pageIndex>=1) {
 	        return(NO_SUCH_PAGE);
-			
 	    } 
 	    else 
 	    {
-	    	int width = 800;
-			int height = 800;
-			
-			int actual_width = m_mapimage.getWidth(null);
-			int actual_height = m_mapimage.getHeight(null);
-			
-			if(actual_height < actual_width) {
-				if(actual_width<width) {
-					double percent_of_actual = ((double)actual_width/(double)width);
-					height = (int)((double)actual_height / percent_of_actual);
-					height = actual_height;
-					height = (height+(width-height));
-					m_mapimage = variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_width/(double)width);
-					width = (int)((double)actual_width / percent_of_actual);
-					height = (int)((double)actual_height / percent_of_actual);
-					//width = width + height;
-					//width = (int)((double)width / percent_of_actual);
-					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					//m_mapimage = variables.DRAW.get_buff_image();
-				}
-			}
-			else {
-				if(actual_height>actual_width) {
-					double percent_of_actual = ((double)actual_height/(double)height);
-					width = actual_width;
-					width = (int)((double)actual_width / percent_of_actual);
-					width = (width + (height-width));
-					m_mapimage = variables.DRAW.get_buff_image();
-				}
-				else {
-					double percent_of_actual = ((double)actual_height/(double)height);
-					width = (int)((double)actual_width / percent_of_actual);
-					width = height + (width-height);
-					m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-					
-				}
-			}
+	        int pagewidth = (int)pageFormat.getImageableWidth();
+	        int pageheight = (int)pageFormat.getImageableHeight();
+	        int printHeight = 0;
+	    	
+	    	int width = m_mapimage.getWidth(null);
+			int height = m_mapimage.getHeight(null);
+
 			
 	        Graphics2D g2d = (Graphics2D)g;
-	        //double scalex = pageFormat.getImageableX() / get_pas().get_mapsize().getWidth();
-	        //double scaley = pageFormat.getImageableY() / get_pas().get_mapsize().getHeight();
-	        double scale = pageFormat.getImageableWidth() / width;
-	        PAS.get_pas().add_event("Scale: " + scale, null);
-	        //Graphics2D g2d = (Graphics2D)g.create();
+	        double scale = pageFormat.getImageableWidth() / (pageFormat.getWidth());
+	        //PAS.get_pas().add_event("Scale: " + scale, null);
+	    	//printTranslate(g2d, (int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
+	    	g2d.scale(scale, scale);
+        	
 	        
-	        //g.copyArea()
+	        //INIT
+	        printInit(g2d, pageFormat, pageIndex);
+
+	        printTranslate(g2d, margins.width, margins.height);
 
 	        
-	        g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-	        //g2d.setFont(new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 20));
-	        g2d.setFont(UIManager.getFont("PrintJobTitle.font"));
-	        int headerHeight = g2d.getFontMetrics(g2d.getFont()).getHeight();
-	        g2d.setColor(Color.black);
+	        //PRINT TITLE
+	        printHeight = printTitle(g2d, pageFormat, pageIndex);
+	        //g2d.translate(0, printHeight);
+	        //printTranslate(g2d, 0, printHeight);
 	        
-	        g2d.translate(margins.width, margins.height);
-	        
-	        g2d.drawString(PAS.l("common_app_title"), margins.width, margins.height);
-	        
-	        g2d.translate(0, g2d.getFontMetrics().getAscent());
-	        
-	        int pagewidth = (int)pageFormat.getWidth();
-	        int pageheight = (int)pageFormat.getHeight();
-	        g2d.drawLine(margins.width, 0, pagewidth-margins.width*2, 0);
-	        g2d.translate(margins.width, g2d.getFontMetrics().getAscent());
-	        	        
+	        g2d.drawLine(0, 0, (int)(pagewidth), 0);
+	        //g2d.translate(margins.width, printHeight);
+	        //printTranslate(g2d, margins.width, printHeight);
+	        printTranslate(g2d, 0, 20);
 	        
 	        
-        	g2d.scale(scale, scale);
-        	//g2d.setFont(new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 16));
-        	g2d.setFont(UIManager.getFont("PrintJobHeader.font"));
+	        printHeader(g2d, pageFormat, pageIndex);
         	
-        	int lineheight = g2d.getFontMetrics(g2d.getFont()).getHeight();
-        	int pagelines = (((int)pageFormat.getHeight()-(headerHeight+80))/lineheight); // +80 is for the two linebreaks during header writing
-        		        	
-        	g2d.drawString(m_header, 0, g2d.getFontMetrics().getAscent());
-        	
-        	
+	        printTranslate(g2d, 0, 20);
 			
-			
+	        printHeight = printImage(g2d, pageFormat, pageIndex);
         	
-			g2d.drawImage(m_mapimage, 0, (3*10), null);
+	        printTranslate(g2d, 0, printHeight);
 			
 			//MESSAGE HEADER AND CONTENT
-            float drawPosY = (float)m_mapimage.getHeight(null) + 40;
-            float drawPosX = (float)10;
+            //float drawPosY = (float)m_mapimage.getHeight(null) + 40;
+            //float drawPosX = (float)10;
 
 			Font fontMessageHeader = UIManager.getFont("PrintJobMedium.font");
 			g2d.setFont(fontMessageHeader);
-			g2d.drawString(PAS.l("common_message_content"), drawPosX, drawPosY);
-			drawPosY += g2d.getFontMetrics().getAscent();
+	        printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
+			g2d.drawString(PAS.l("common_message_content"), 0, 0);
+			//drawPosY += g2d.getFontMetrics().getAscent();
+			printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
 			
 			Font fontMessageText = UIManager.getFont("PrintJobSmall.font");//new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 12);
 			g2d.setFont(fontMessageText);
@@ -227,7 +337,8 @@ public class CentricPrintCtrl implements Printable {
 	            if(linesplit[i].length()==0)
 	            {
 	            	linesplit[i] = "\n";
-	            	drawPosY += /*g2d.getFontMetrics().getDescent() + g2d.getFontMetrics().getLeading() + */g2d.getFontMetrics().getAscent();
+	            	//drawPosY += g2d.getFontMetrics().getAscent();
+	            	printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
 	            	continue;
 	            }
 	            try
@@ -249,24 +360,22 @@ public class CentricPrintCtrl implements Printable {
 	            lineMeasurer.setPosition(paragraphStart);
 	            while (lineMeasurer.getPosition() < paragraphEnd) {
 	                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
-	                drawPosY += layout.getAscent();
-	                layout.draw(g2d, drawPosX, drawPosY);
+	                //drawPosY += layout.getAscent();
+	                printTranslate(g2d, 0, (int)layout.getAscent());
+	                layout.draw(g2d, 0, 0);
 	
-	                drawPosY += layout.getDescent() + layout.getLeading();
+	                printTranslate(g2d, 0, (int)(layout.getDescent() + layout.getLeading()));
+	                //drawPosY += layout.getDescent() + layout.getLeading();
 	            }    
 			}
 
 			g2d.setFont(fontMessageHeader);
-			g2d.drawString("(" + m_charachers + ")", 10, drawPosY += g2d.getFontMetrics().getAscent());
+			printTranslate(g2d, 0, g2d.getFontMetrics().getAscent()*2);
+			g2d.drawString("(" + m_charachers + ")", 0, 0);
             
-            //g2d.setFont(new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 16));
-            g2d.setFont(UIManager.getFont("PrintJobFooter.font"));
-            
-            int h = g2d.getFontMetrics().getHeight();
-            int footer_ypos = (int)(pageheight + margins.height + h);
-        	g2d.drawString(m_footer, 0, drawPosY + h*2);
-        	//g2d.drawImage(m_mapimage, 0, (8*10), null);
-	        
+	        printTranslate(g2d, 0, (int)g.getFontMetrics().getAscent()*3);
+
+			printFooter(g2d, pageFormat, pageIndex);
 	        return(PAGE_EXISTS);
 	    }
     }

@@ -187,6 +187,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 				try
 				{
 					kill.setLProjectpk(new Long(m_parent.get_parent().getResultSet().getProject().getLProjectpk()));
+					kill.setLDeptpk(variables.USERINFO.get_current_department().get_deptpk());
 				}
 				catch(Exception err)
 				{

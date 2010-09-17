@@ -46,7 +46,8 @@ public class WSCentricSend extends WSThread {
 		
 		ULOGONINFO l = new ULOGONINFO();
 		l.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
-		l.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+		//l.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+		l.setLDeptpk(cbsb.getLDeptpk());
 		l.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 		l.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 		l.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
