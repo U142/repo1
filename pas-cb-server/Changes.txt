@@ -1,4 +1,10 @@
-﻿1.2.0
+﻿1.2.1
+=====
+CBServer
+	* Fixed bug in T-Mobile logging, logged l_refno instead of request pk in most operations.
+	* Changed getoperators to ignore department and just get all active cb operators.
+
+1.2.0
 =====
 CBServer
 	* Changed version to 1.2
