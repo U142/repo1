@@ -76,7 +76,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		Class c = lastcbstatus.getShape().getClass();
 		if(c.equals(UPLMN.class))
 		{
-			if(variables.USERINFO.get_current_department().get_pas_rights()<2)
+			if(variables.USERINFO.get_current_department().get_userprofile().get_send()<2)
 			{
 				return false;
 			}

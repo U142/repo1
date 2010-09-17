@@ -447,6 +447,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		if(n_deptpk<1) //use combined restriction area
 		{
 			list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+			if(list==null)
+				return true;
 		}
 		else //use specified department's restriction area
 		{
