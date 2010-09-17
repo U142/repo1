@@ -181,6 +181,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				m_panel.m_txt_userid.setText(m_logoninfo.get_userid());
 			}
 			if(m_logoninfo.get_compid().length()>0) {
+				System.out.println("Default Compid=" + m_logoninfo.get_compid());
 				m_panel.m_txt_compid.setText(m_logoninfo.get_compid());
 			}
 		} catch(Exception e) {
