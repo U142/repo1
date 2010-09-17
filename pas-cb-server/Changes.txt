@@ -16,6 +16,7 @@ CBServer
 	* Changed sp_cb_ins_cellhist and sp_cb_upd_cellhist to include LBAHISTCELL_REPORT.
 	* Changed default values for LBAHISTCELL to null, null, null, null, null, null, -1 to be able to differentiate which status check was needed to be run.
 	* Added f_active to LBAOPERATORS, when getting uservalues, only active operators are returned.
+	* Added heart beat and test message parameters to application configuration file.
 
 1.1.3
 =====
