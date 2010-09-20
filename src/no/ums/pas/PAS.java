@@ -372,6 +372,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_settings.setWmsUsername(ui.getSzWmsUsername());
 		m_settings.setWmsPassword(ui.getSzWmsPassword());
 		m_settings.setWmsEpsg(ui.getSzWmsEpsg());
+		pasplugin.onSetDefaultPanMode(m_settings);
+
 		try
 		{
 			m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());

@@ -1342,14 +1342,18 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			MapPoint p = (MapPoint)e.getSource();
 			try {
 				get_active_shape().typecast_polygon().set_ellipse_center(variables.NAVIGATION, p);
-			} catch(Exception err) {  }			
+			} catch(Exception err) {
+				err.printStackTrace();
+			}			
 		}
 		else if("act_set_polygon_ellipse_corner".equals(e.getActionCommand()))
 		{
 			MapPoint p = (MapPoint)e.getSource();
 			try {
 				get_active_shape().typecast_polygon().set_ellipse_corner(variables.NAVIGATION, p);
-			} catch(Exception err) { }			
+			} catch(Exception err) { 
+				err.printStackTrace();
+			}			
 		}
 		else if("act_onmouseover_houses".equals(e.getActionCommand())) {
 			ArrayList<HouseItem> arr = (ArrayList<HouseItem>)e.getSource();

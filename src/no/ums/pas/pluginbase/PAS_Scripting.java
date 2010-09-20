@@ -1112,4 +1112,11 @@ public class PAS_Scripting extends PasScriptingInterface
 	}
 
 
+	@Override
+	public boolean onSetDefaultPanMode(Settings s) {
+		
+		return s.getPanByDrag();
+	}
+
+
 }

@@ -1575,6 +1575,12 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onDownloadHouses(HouseController controller) {
 		return false;
 	}
+
+	@Override
+	public boolean onSetDefaultPanMode(Settings s) {
+		s.setPanByDrag(true);
+		return super.onSetDefaultPanMode(s);
+	}
 	
 	
 }

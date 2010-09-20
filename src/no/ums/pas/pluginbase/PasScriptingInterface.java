@@ -549,5 +549,7 @@ public abstract class PasScriptingInterface
 	public abstract boolean onLockSending(SendOptionToolbar toolbar, boolean bLock);
 	
 	public abstract boolean onDownloadHouses(final HouseController controller);
+	
+	public abstract boolean onSetDefaultPanMode(Settings s);
 }
 

@@ -407,7 +407,7 @@ public class MapLoader {
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
-			 request.setTransparent(false);
+			 request.setTransparent(true);
 			 
 			 //variables.SETTINGS.setWmsEpsg("28992");
 			 //variables.SETTINGS.setWmsEpsg("4326");
@@ -425,13 +425,16 @@ public class MapLoader {
 			 request.setFormat(variables.SETTINGS.getSelectedWmsFormat());
 			 
 			 m_selected_layers.clear(); //remove
+			 
 			 for(int i=0; i < layers.length; i++) 
 			 {
+				 System.out.println(layers[i].getName());
 				 if(variables.SETTINGS.getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
 			 }
 			 
-			 for(int i=m_selected_layers.size()-1; i >= 0 ; i--)
+			 //for(int i=m_selected_layers.size()-1; i >= 0 ; i--)
+			 for(int i=0; i < m_selected_layers.size(); i++)
 			 //for(int i=13; i <m_selected_layers.size() ; i++)
 			 {
 				 request.addLayer(m_selected_layers.get(i));
@@ -456,7 +459,7 @@ public class MapLoader {
 				 n_bbo = lright.f_easting;
 				 break;
 			 }
-
+			 
 			 
 			 request.setBBox(n_lbo + ","+n_bbo+","+n_rbo+","+n_ubo);
 

@@ -52,6 +52,7 @@ public class WSLogon extends WSThread
 			l.setSzUserid(sz_username);
 			l.setSzCompid(sz_companyid);
 			l.setSzPassword(sz_password);
+			System.out.println("Sending \"" + l.getSzUserid() + "\" \"" + l.getSzCompid() + "\"");
 			l.setJobid(WSThread.GenJobId());
 			l.setLAltservers(0);
 			l.setLComppk(0);

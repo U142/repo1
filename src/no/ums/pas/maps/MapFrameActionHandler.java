@@ -449,8 +449,12 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			list = variables.USERINFO.get_departments().get_combined_restriction_shape();
 			if(list==null)
 				return true;
-			if(list.size()<=3)
+			if(list.size()<=0)
 				return true;
+			if(list.get(0).typecast_polygon().get_size()<=3)
+				return true;
+			//if(list.size()<=3)
+			//	return true;
 		}
 		else //use specified department's restriction area
 		{

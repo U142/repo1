@@ -73,6 +73,7 @@ public class ExecApp {
 		//JFrame.setDefaultLookAndFeelDecorated(true);
 				
 		System.out.println("Using site: " + sz_sitename);
+		System.out.println("Using WS: " + sz_pasws);
 		
 		try
 		{

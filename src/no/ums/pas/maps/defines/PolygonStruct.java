@@ -1177,6 +1177,8 @@ public class PolygonStruct extends ShapeStruct {
 			return;
 		m_p_center = p_center;
 		m_p_corner = p_corner;
+		if(m_p_center==null || m_p_corner==null)
+			return;
 		recalc_shape(nav);
 		finalizeShape();
 	}
