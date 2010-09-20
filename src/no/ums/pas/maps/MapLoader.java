@@ -12,6 +12,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Timeout;
+import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
 import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 import no.ums.ws.pas.*;
 import java.net.URL;
@@ -428,7 +429,7 @@ public class MapLoader {
 			 
 			 for(int i=0; i < layers.length; i++) 
 			 {
-				 System.out.println(layers[i].getName());
+				 //System.out.println(layers[i].getName());
 				 if(variables.SETTINGS.getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
 			 }
@@ -439,7 +440,7 @@ public class MapLoader {
 			 {
 				 request.addLayer(m_selected_layers.get(i));
 			 }
-			 
+
 			 NavStruct nav = no.ums.pas.maps.defines.Navigation.preserve_aspect(n_lbo, n_rbo, n_ubo, n_bbo, dim);
 			 n_lbo = nav._lbo;
 			 n_rbo = nav._rbo;
@@ -451,12 +452,26 @@ public class MapLoader {
 			 case 4326: //lon/lat
 				 break;
 			 case 28992: //Amersfoort / RD New
-				 UTMCoor uleft = new CoorConverter().wgs84_to_rd(n_ubo, n_lbo);
+				 /*UTMCoor uleft = new CoorConverter().wgs84_to_rd(n_ubo, n_lbo);
 				 UTMCoor lright = new CoorConverter().wgs84_to_rd(n_bbo, n_rbo);
 				 n_lbo = uleft.f_northing;
 				 n_ubo = uleft.f_easting;
 				 n_rbo = lright.f_northing;
-				 n_bbo = lright.f_easting;
+				 n_bbo = lright.f_easting;*/
+				 CoorConverter converter = new CoorConverter();
+				 //RdCoordinate rd1 = converter.wgs842rd_(converter.new WGS84Coordinate(n_ubo, n_lbo));
+				 //RdCoordinate rd2 = converter.wgs842rd_(converter.new WGS84Coordinate(n_bbo, n_rbo));
+				 double mid_lr = (n_rbo + n_lbo) / 2.0;
+				 double mid_ub = (n_ubo + n_bbo) / 2.0;
+				 RdCoordinate left = converter.wgs842rd_(converter.new WGS84Coordinate(n_lbo, mid_ub));
+				 RdCoordinate right = converter.wgs842rd_(converter.new WGS84Coordinate(n_rbo, mid_ub));
+				 RdCoordinate upper = converter.wgs842rd_(converter.new WGS84Coordinate(mid_lr, n_ubo));
+				 RdCoordinate bottom = converter.wgs842rd_(converter.new WGS84Coordinate(mid_lr, n_bbo));
+				 
+				 n_lbo = left.x;
+				 n_rbo = right.x;
+				 n_bbo = bottom.y;
+				 n_ubo = upper.y;
 				 break;
 			 }
 			 

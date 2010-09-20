@@ -371,4 +371,184 @@ public class CoorConverter {
         return corr;
     }
     
+    
+    public class RdCoordinate
+    {
+    	public double x;
+    	public double y;
+    }
+    public class BesselCoordinate
+    {
+    	public double x;
+    	public double y;
+    	public double lambda;
+    	public double phi;
+    }
+    public class WGS84Coordinate
+    {
+    	public WGS84Coordinate()
+    	{
+    		a = 0;
+    		b = 0;
+    	}
+    	public WGS84Coordinate(double lat, double lon)
+    	{
+    		a = lon;
+    		b = lat;
+    	}
+    	public double a;
+    	public double b;
+    }
+	/*private static Double x0 = 1.55e5;
+	private static Double y0 = 4.63e5;
+	private static Double k = .9999079;
+	private static Double bigr = 6382644.571;
+	private static Double m = .003773953832;
+	private static Double n = 1.00047585668;
+	private static Double lambda0 = Math.PI * .029931327161111111;
+	private static Double b0 = Math.PI * .28956165138333334;
+	private static Double e = .08169683122;*/
+    
+    //public class RdWgsConverter {
+
+    	/**
+    	 * converts a RD coordinate into a WGS84 coordinate. Approximate
+    	 * transformation has a 50 cm accuracy.
+    	 * 
+    	 * @param rdCoordinate
+    	 *            RD coordinate.
+    	 * @return WG@84 coordinate.
+    	 */
+    	public WGS84Coordinate rd2wgs84(RdCoordinate rdCoordinate) {
+    		BesselCoordinate besselCoordinate = rd2bessel(rdCoordinate);
+    		return bessel2wgs84(besselCoordinate);
+    	}
+
+    	/**
+    	 * converts a WGS84 coordinate into a RD coordinate.
+    	 * 
+    	 * @param wgsCoordinate
+    	 *            WGS84 coordinate.
+    	 * @return RD coordinate.
+    	 */
+    	public RdCoordinate wgs842rd_(WGS84Coordinate wgsCoordinate) {
+    		BesselCoordinate besselCoordinate = wgs842bessel(wgsCoordinate);
+    		return bessel2rd(besselCoordinate);
+    	}
+
+    	// ------------------------------------------------------------------------
+    	// input is x,y in RD output is phi,lambda on the Bessel ellipsoid
+    	// ------------------------------------------------------------------------
+    	private BesselCoordinate rd2bessel(RdCoordinate rdCoordinate) {
+    		BesselCoordinate besselCoordinate = new BesselCoordinate();
+
+    		Double d__1, d__2;
+    		Double cpsi, spsi, phiprime, b;
+    		Integer i;
+    		Double q, r, w, ca, cb, dl, sa, sb;
+    		Double dq, sdl, psi;
+
+    		d__1 = rdCoordinate.x - x0;
+    		d__2 = rdCoordinate.y - y0;
+    		r = Math.sqrt(d__1 * d__1 + d__2 * d__2);
+    		if (r != 0.) {
+    			sa = (rdCoordinate.x - x0) / r;
+    			ca = (rdCoordinate.y - y0) / r;
+    		} else {
+    			sa = 0.;
+    			ca = 0.;
+    		}
+    		psi = Math.atan2(r, k * 2. * bigr) * 2.;
+    		cpsi = Math.cos(psi);
+    		spsi = Math.sin(psi);
+    		sb = ca * Math.cos(b0) * spsi + Math.sin(b0) * cpsi;
+    		d__1 = sb;
+    		cb = Math.sqrt(1. - d__1 * d__1);
+    		b = Math.acos(cb);
+    		sdl = sa * spsi / cb;
+    		dl = Math.asin(sdl);
+    		besselCoordinate.lambda = dl / n + lambda0;
+    		w = Math.log(Math.tan(b / 2. + Math.PI / 4.));
+    		q = (w - m) / n;
+    		phiprime = Math.atan(Math.exp(q)) * 2. - Math.PI / 2.;
+
+    		for (i = 1; i <= 4; ++i) {
+    			dq = e
+    					/ 2.
+    					* Math.log((e * Math.sin(phiprime) + 1.)
+    							/ (1. - e * Math.sin(phiprime)));
+    			besselCoordinate.phi = Math.atan(Math.exp(q + dq)) * 2. - Math.PI / 2.;
+    			phiprime = besselCoordinate.phi;
+    		}
+
+    		besselCoordinate.lambda = besselCoordinate.lambda / Math.PI * 180.;
+    		besselCoordinate.phi = besselCoordinate.phi / Math.PI * 180.;
+    		return besselCoordinate;
+    	}
+
+    	// ------------------------------------------------------------------------
+    	// input is phi,lambda on the Bessel ellipsoid, output is x,y in RD
+    	// ------------------------------------------------------------------------
+    	private RdCoordinate bessel2rd(BesselCoordinate besselCoordinate) {
+    		RdCoordinate rdCoordinate = new RdCoordinate();
+    		Double d__1, d__2;
+    		Double cpsi, cpsihalf, spsi, spsihalf, tpsihalf, b, s2psihalf, q, r, w, ca, lambda, dl, sa, dq, qprime, phi;
+
+    		phi = besselCoordinate.phi / 180. * Math.PI;
+    		lambda = besselCoordinate.lambda / 180. * Math.PI;
+    		qprime = Math.log(Math.tan(phi / 2. + Math.PI / 4.));
+    		dq = e / 2.
+    				* Math.log((e * Math.sin(phi) + 1.) / (1. - e * Math.sin(phi)));
+    		q = qprime - dq;
+    		w = n * q + m;
+    		b = Math.atan(Math.exp(w)) * 2. - Math.PI / 2.;
+    		dl = n * (lambda - lambda0);
+    		d__1 = Math.sin((b - b0) / 2.);
+    		d__2 = Math.sin(dl / 2.);
+    		s2psihalf = d__1 * d__1 + d__2 * d__2 * Math.cos(b) * Math.cos(b0);
+    		cpsihalf = Math.sqrt(1. - s2psihalf);
+    		spsihalf = Math.sqrt(s2psihalf);
+    		tpsihalf = spsihalf / cpsihalf;
+    		spsi = spsihalf * 2. * cpsihalf;
+    		cpsi = 1. - s2psihalf * 2.;
+    		sa = Math.sin(dl) * Math.cos(b) / spsi;
+    		ca = (Math.sin(b) - Math.sin(b0) * cpsi) / (Math.cos(b0) * spsi);
+    		r = k * 2. * bigr * tpsihalf;
+    		rdCoordinate.x = r * sa + x0;
+    		rdCoordinate.y = r * ca + y0;
+    		return rdCoordinate;
+    	}
+
+    	private WGS84Coordinate bessel2wgs84(BesselCoordinate besselCoordinate) {
+    		Double dlam, dphi, lamcor, phicor;
+    		dphi = besselCoordinate.phi - 52.;
+    		dlam = besselCoordinate.lambda - 5.;
+    		phicor = (-96.862 - dphi * (float) 11.714 - dlam * .125) * 1e-5;
+    		lamcor = (dphi * (float) .329 - 37.902 - dlam * 14.667) * 1e-5;
+
+    		WGS84Coordinate wgsCoordinate = new WGS84Coordinate();
+    		wgsCoordinate.a = besselCoordinate.phi + phicor;
+    		wgsCoordinate.b = besselCoordinate.lambda + lamcor;
+    		return wgsCoordinate;
+    	}
+
+    	/**
+    	 * converts a WGS84 coordinate into a bessel coordinate.
+    	 * 
+    	 * @param wgsCoordinate
+    	 *            A WGS84 coordinate.
+    	 * @return A Bessel coordinate.
+    	 */
+    	private BesselCoordinate wgs842bessel(WGS84Coordinate wgsCoordinate) {
+    		BesselCoordinate besselCoordinate = new BesselCoordinate();
+    		Double dlam, dphi, lamcor, phicor;
+    		dphi = wgsCoordinate.a - 52.;
+    		dlam = wgsCoordinate.b - 5.;
+    		phicor = (-96.862 - dphi * (float) 11.714 - dlam * .125) * 1e-5;
+    		lamcor = (dphi * (float) .329 - 37.902 - dlam * 14.667) * 1e-5;
+    		besselCoordinate.phi = wgsCoordinate.a - phicor;
+    		besselCoordinate.lambda = wgsCoordinate.b - lamcor;
+    		return besselCoordinate;
+    	}
+    //}
 }
