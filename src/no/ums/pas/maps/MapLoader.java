@@ -514,6 +514,9 @@ public class MapLoader {
 				if(m_retry==null)
 					m_retry = new AutoLoadRetry(info);
 			}
+			else
+			{
+			}
 			b_loading_mapimage = false;
 
 		}

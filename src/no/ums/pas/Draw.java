@@ -251,7 +251,19 @@ import no.ums.pas.ums.errorhandling.Error;
 							gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 									RenderingHints.VALUE_ANTIALIAS_ON);				
 */
+							/*int translate_x = m_dimension.width/2;
+							int translate_y = m_dimension.height/2;
+							double rotate = 0;//Math.PI/400.0f;
+							g2d.translate(translate_x, translate_y);
+							g2d.rotate(rotate);
+							g2d.translate(-translate_x, -translate_y);
+							*/
 							m_gfx_buffer.drawImage(m_mapimg, 0, 0, m_dimension.width, m_dimension.height, 0, 0, m_dimension.width, m_dimension.height, this);
+							//g2d.rotate(-rotate, -translate_x, -translate_y);
+							/*g2d.translate(translate_x, translate_y);
+							g2d.rotate(-rotate);
+							g2d.translate(-translate_x, -translate_y);*/
+							
 							//revert
 							if(b_alpha_set)
 								g2d.setComposite(prev_alpha);
