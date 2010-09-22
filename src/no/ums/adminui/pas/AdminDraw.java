@@ -27,7 +27,7 @@ public class AdminDraw extends PASDraw {
 			DeptInfo di = (DeptInfo)da.get(i);
 			di.CalcCoorRestrictionShapes();
 		}
-		if(variables.SENDCONTROLLER.get_activesending() != null)
+		if(variables.SENDCONTROLLER != null && variables.SENDCONTROLLER.get_activesending() != null)
 			variables.SENDCONTROLLER.get_activesending().get_sendproperties().calc_coortopix();
 		List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
 		for(int j=0; j < list.size(); j++)

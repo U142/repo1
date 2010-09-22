@@ -110,6 +110,8 @@ public class MapApplet extends JApplet implements ActionListener {
 	public UserInfo m_info;
 	private ULOGONINFO logoninfo;
 	private LogonInfo info;
+	public static String OVERRIDE_WMS_SITE = null;
+	
 	public void init() {
 		try {
 			System.setSecurityManager(null);
@@ -126,29 +128,69 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	public void start() {
 		resize(800,600);
-		vars.init("https://secure.ums2.no/centricws/WS/");
+		vars.init(getParameter("w"));
 		PAS.setLocale("en","GB");
 		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
 		//WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
 		
 		no.ums.ws.pas.ULOGONINFO logon = new no.ums.ws.pas.ULOGONINFO();
-		
+		/*
 		String session = "9235035e-f6f8-413c-b921-059f78f8516c";
 		logon.setLDeptpk(1);
 		logon.setLComppk(1);
 		logon.setLUserpk(7);
 		logon.setSzPassword("614b5c970633ec4ac2ee96f98f6fdeb04e4fb0e0b13dc9401b674bb8c4a41ee96b67ce39491a716776ca81a4b58a7b47434aef0195c90241856fe065a476adcb");
 		logon.setSessionid(session);
-		
-	/*
+		*/
+
 		logon.setLDeptpk(Integer.parseInt(getParameter("deptid")));
 		logon.setLComppk(Integer.parseInt(getParameter("compid")));
 		logon.setLUserpk(Long.parseLong(getParameter("userid")));
 		logon.setSzPassword(getParameter("password"));
 		logon.setSessionid(getParameter("session"));
-		*/
-		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", session, "");
+		OVERRIDE_WMS_SITE = getParameter("mapinfo");
 		
+		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", logon.getSessionid(), "");
+		Settings m_settings = new Settings();
+		UPASUISETTINGS ui = new UPASUISETTINGS();
+		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
+		{
+			m_settings.setMapServer(MAPSERVER.DEFAULT);
+		}
+		else
+		{
+			String [] arr = OVERRIDE_WMS_SITE.split(";");
+			if(arr!=null && arr.length>=3)
+			{
+				m_settings.setMapServer(MAPSERVER.WMS);
+				//ui.setSzWmsSite(arr[0]);
+				m_settings.setWmsSite(arr[0]);
+				m_settings.setSelectedWmsFormat(arr[1]);
+				m_settings.setSelectedWmsLayers(arr[2]);
+				//ui.setSzWmsFormat(arr[1]);
+				//ui.setSzWmsLayers(arr[2]);
+				if(arr.length>=4)
+					m_settings.setWmsEpsg(arr[3]);
+				else
+					m_settings.setWmsEpsg("4326"); //default to lon/lat WGS84
+				if(arr.length>=5)
+					m_settings.setWmsUsername(arr[4]);
+				else
+					m_settings.setWmsUsername("");
+				if(arr.length>=6)
+					m_settings.setWmsPassword(arr[5]);
+				else
+					m_settings.setWmsPassword("");
+				/*m_settings.setWmsSite(ui.getSzWmsSite());
+				m_settings.setWmsUsername(ui.getSzWmsUsername());
+				m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());
+				m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
+				m_settings.setWmsPassword(ui.getSzWmsPassword());*/
+			}
+		}
+		
+		variables.SETTINGS = m_settings;
+	
 		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
 		
 		m_navigation = new Navigation(this,640,480);
@@ -168,21 +210,6 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,640,480);
 		variables.DRAW = m_drawthread;
-		Settings m_settings = new Settings();
-		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
-		m_settings.setMapServer(MAPSERVER.DEFAULT);
-		String [] arr = "http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road".split(";");
-		if(arr!=null && arr.length>=3)
-		{
-			m_settings.setWmsSite(arr[0]);
-			m_settings.setSelectedWmsFormat(arr[1]);
-			m_settings.setSelectedWmsLayers(arr[2]);
-			if(arr.length>=4)
-				m_settings.setWmsUsername(arr[3]);
-			if(arr.length>=5)
-				m_settings.setWmsPassword(arr[4]);
-		}
-		variables.SETTINGS = m_settings;
 		
 		
 	}
