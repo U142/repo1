@@ -113,9 +113,12 @@ namespace pas_cb_server.cb_test
                 string filename = String.Format(@"{0}eat\CB_KILL_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
                 //Log.WriteLog(String.Format("Initiating self test (Kill Alert). Filename='{0}'", filename), 0);
 
+                //CREATE EMPTY xmlns
+                XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+                xmlnsEmpty.Add("", "");
                 XmlSerializer s = new XmlSerializer(typeof(cb));
                 StreamWriter w = new StreamWriter(filename);
-                s.Serialize(w, alert);
+                s.Serialize(w, alert, xmlnsEmpty);
                 w.Close();
 
                 currentTestRef = 0;
@@ -148,9 +151,12 @@ namespace pas_cb_server.cb_test
                 string filename = String.Format(@"{0}eat\CB_UPDATE_{1}.{2}.{3}.xml", Settings.sz_parsepath, alert.l_projectpk, alert.l_refno, Guid.NewGuid().ToString());
                 //Log.WriteLog(String.Format("Initiating self test (Update Alert). Filename='{0}'", filename), 0);
 
+                //CREATE EMPTY xmlns
+                XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+                xmlnsEmpty.Add("", "");
                 XmlSerializer s = new XmlSerializer(typeof(cb));
                 StreamWriter w = new StreamWriter(filename);
-                s.Serialize(w, alert);
+                s.Serialize(w, alert, xmlnsEmpty);
                 w.Close();
             }
         }
@@ -287,9 +293,12 @@ namespace pas_cb_server.cb_test
                 return -1;
             }
 
+            //CREATE EMPTY xmlns
+            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+            xmlnsEmpty.Add("", "");
             XmlSerializer s = new XmlSerializer(typeof(cb));
             StreamWriter w = new StreamWriter(filename);
-            s.Serialize(w, alert);
+            s.Serialize(w, alert,xmlnsEmpty);
             w.Close();
 
             return l_testref;
