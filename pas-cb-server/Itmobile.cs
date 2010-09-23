@@ -41,8 +41,10 @@ namespace pas_cb_server
                 // Set alert attributes
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
-                t_alert.IBAG_sent_date_time = dtm_cap;
-                t_alert.IBAG_cap_sent_date_time = dtm_cap;
+                t_alert.IBAG_sent_date_time_dt = dtm_cap;
+                t_alert.setSentDateTimeString();
+                t_alert.IBAG_cap_sent_date_time_dt = dtm_cap;
+                t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
                 // from default values
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
@@ -101,7 +103,11 @@ namespace pas_cb_server
                 t_alert_arealist.Add(t_alert_area);
 
                 // Set alert info 
-                t_alert_info.IBAG_expires_date_time = dtm_cap.AddMinutes(oAlert.l_validity);
+                t_alert_info.IBAG_expires_date_time_dt = dtm_cap.AddMinutes(oAlert.l_validity);
+                //set the date time string
+                t_alert_info.setExpiresDateTimeString();
+
+
                 t_alert_info.IBAG_text_language = get_IBAG_text_language(oAlert, op);
                 t_alert_info.IBAG_text_alert_message_length = oAlert.alert_message.sz_text.Length.ToString();
                 t_alert_info.IBAG_text_alert_message = oAlert.alert_message.sz_text;
@@ -147,7 +153,7 @@ namespace pas_cb_server
                 dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
                 if (!Settings.live)
                 {
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
                     return Constant.OK;
                 }
 
@@ -171,7 +177,7 @@ namespace pas_cb_server
                         , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time.ToString("yyyyMMddHHmmss"));
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
                     return Constant.OK;
                 }
                 else
@@ -210,10 +216,12 @@ namespace pas_cb_server
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
-                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_sent_date_time_dt = DateTime.Now;
+                t_alert.setSentDateTimeString();
                 t_alert.IBAG_status = IBAG_status.Actual;
                 t_alert.IBAG_message_type = IBAG_message_type.Update;
-                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
+                t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
                 // based on default values:
@@ -301,10 +309,12 @@ namespace pas_cb_server
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
-                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_sent_date_time_dt = DateTime.Now;
+                t_alert.setSentDateTimeString();
                 t_alert.IBAG_status = IBAG_status.Actual;
                 t_alert.IBAG_message_type = IBAG_message_type.Cancel;
-                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
+                t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
                 // based on default values:
@@ -383,10 +393,12 @@ namespace pas_cb_server
                 DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
                 t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = message_number;
-                t_alert.IBAG_sent_date_time = DateTime.Now;
+                t_alert.IBAG_sent_date_time_dt = DateTime.Now;
+                t_alert.setSentDateTimeString();
                 t_alert.IBAG_status = IBAG_status.Actual;
                 t_alert.IBAG_message_type = IBAG_message_type.EMS;
-                t_alert.IBAG_cap_sent_date_time = DateTime.Now;
+                t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
+                t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
 
                 // based on default values:

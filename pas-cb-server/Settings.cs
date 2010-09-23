@@ -370,7 +370,7 @@ namespace pas_cb_server
                                         OP.sz_name sz_login_name,
                                         OP.sz_password sz_login_password,
                                         '1.0' sz_version,
-                                        0 l_coordinatetype
+                                        isnull(l_coordinatetype,0) l_coordinatetype
                                     FROM
                                         LBAOPERATORS OP
                                     WHERE
@@ -378,6 +378,7 @@ namespace pas_cb_server
                                         AND OP.f_active=1
                                    ORDER BY
                                         OP.l_operator"
+                //CHANGED: 0 l_coordinatetype
                 , oUser.l_deptpk.ToString());
 
             OdbcConnection dbConn = new OdbcConnection(Settings.sz_dbconn);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace pas_cb_server
 {
@@ -429,7 +430,7 @@ namespace pas_cb_server
 
             if (ts.ToString().Length == 14)
             {
-                ret = DateTime.ParseExact(ts.ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                ret = DateTime.ParseExact(ts.ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture); //System.Globalization.CultureInfo.InvariantCulture);
             }
             else
                 throw new Exception("Could not get created timestamp");

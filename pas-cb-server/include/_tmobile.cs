@@ -46,8 +46,20 @@ namespace pas_cb_server.tmobile {
         public string IBAG_sender;
         
         /// <remarks/>
-        public System.DateTime IBAG_sent_date_time;
-        
+        [XmlIgnore]
+        public System.DateTime IBAG_sent_date_time_dt;
+
+        public string IBAG_sent_date_time;
+
+        /**
+         * format it according to spec
+         */
+        public void setSentDateTimeString()
+        {
+            IBAG_sent_date_time = string.Format("{0:yyyy-MM-ddTHH:mm:ss}", IBAG_sent_date_time_dt);
+        }
+
+
         /// <remarks/>
         public IBAG_status IBAG_status;
         
@@ -74,7 +86,19 @@ namespace pas_cb_server.tmobile {
         public string IBAG_cap_identifier;
         
         /// <remarks/>
-        public System.DateTime IBAG_cap_sent_date_time;
+        [XmlIgnore]
+        public System.DateTime IBAG_cap_sent_date_time_dt;
+
+        public string IBAG_cap_sent_date_time;
+
+        /**
+         * format it according to spec
+         */
+        public void setCapSentDateTimeString()
+        {
+            IBAG_cap_sent_date_time = string.Format("{0:yyyy-MM-ddTHH:mm:ss}", IBAG_cap_sent_date_time_dt);
+        }
+
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
@@ -231,7 +255,19 @@ namespace pas_cb_server.tmobile {
         public IBAG_certainty IBAG_certainty;
         
         /// <remarks/>
-        public System.DateTime IBAG_expires_date_time;
+        [XmlIgnore]
+        public System.DateTime IBAG_expires_date_time_dt;
+
+        /**
+         * format it according to spec
+         */
+        public void setExpiresDateTimeString()
+        {
+            IBAG_expires_date_time = string.Format("{0:yyyy-MM-ddTHH:mm:ss}", IBAG_expires_date_time_dt);
+        }
+
+        //Make sure to format the date according to spec. e.g. <IBAG_expires_date_time>2010-09-23T10:28:50</IBAG_expires_date_time>
+        public string IBAG_expires_date_time;
         
         /// <remarks/>
         public string IBAG_sender_name;
