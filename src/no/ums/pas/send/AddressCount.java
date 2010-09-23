@@ -7,6 +7,9 @@ public class AddressCount {
 	private int m_n_companymobile;
 	private int m_n_private_nonumber;
 	private int m_n_company_nonumber;
+		
+	
+
 	private int m_n_private_sms;
 	private int m_n_company_sms;
 	private int m_n_fax;

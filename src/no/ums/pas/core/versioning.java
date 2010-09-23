@@ -1,6 +1,8 @@
 package no.ums.pas.core;
 
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.util.jar.Manifest;
 
 public class versioning
 {
@@ -23,11 +25,31 @@ public class versioning
 	public static String SPECIFICATION_VERSION;
 	public static String SPECIFICATION_VENDOR;
 
+	public static String BUILT_DATE;
+	
+	
 	
 
 	public static void setVersion()
 	{
 		Package p = versioning.class.getPackage();
+		
+		/*InputStream is = versioning.class
+		.getResourceAsStream("MANIFEST.MF");
+		try
+		{
+			Manifest mf = new Manifest(is);
+			mf.toString();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}*/
+		
+		
+		
+		
+		
 		NAME = p.getName();
 		
 		IMPLEMENTATION_TITLE = p.getImplementationTitle();
@@ -44,7 +66,11 @@ public class versioning
 		if(ANNOTATIONS!=null)
 		{
 			for(int i=0; i < ANNOTATIONS.length; i++)
-				System.out.println(ANNOTATIONS[i]);
+			{
+				System.out.println(ANNOTATIONS[i].toString());
+				if(ANNOTATIONS[i].toString().indexOf("Built-Date")>=0)
+					BUILT_DATE = ANNOTATIONS[i].toString();
+			}
 		}
 	}
 }

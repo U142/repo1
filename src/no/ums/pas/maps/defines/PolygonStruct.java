@@ -1041,9 +1041,12 @@ public class PolygonStruct extends ShapeStruct {
 					Font f1 = new Font("Arial", Font.PLAIN, 14);
 					Font fOldFont = g.getFont();
 					g.setFont(f1);
-					for(int i=0; i < use_size; i+=100)
+					for(int i=0; i < use_size; i+=20)
 					{
-						//g.drawString(""+i, use_array_x[i], use_array_y[i]);
+						Color oldCol = g.getColor();
+						g.setColor(Color.red);
+						g.drawString(""+i, use_array_x[i], use_array_y[i]);
+						g.setColor(oldCol);
 					}
 					g.setFont(fOldFont);
 				}

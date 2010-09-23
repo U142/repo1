@@ -744,6 +744,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//});
 		//setVisible(true);
 	}
+		
+	
+		
+	
 	public void checkLoadParm() {
 		/*if(m_settings.parm() && get_rightsmanagement().read_parm()) // og har rettighetene i orden
 			actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"act_start_parm"));*/
@@ -760,11 +764,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	private void powerUp()
 	{
+		
+		
 		try
 		{
+			
 			new Thread("PAS powerUp thread") {
 	    		public void run()
 	    		{
+	    			
 	    			/*try
 	    			{
 	    				if(sz_script_class!=null)

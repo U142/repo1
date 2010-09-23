@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import no.ums.pas.*;
+import no.ums.pas.core.versioning;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.pluginbase.PluginLoader;
 import no.ums.pas.ums.errorhandling.Error;
@@ -71,10 +72,13 @@ public class ExecApp {
 			}
 		}
 		//JFrame.setDefaultLookAndFeelDecorated(true);
-				
+
+		
+	
+	
 		System.out.println("Using site: " + sz_sitename);
 		System.out.println("Using WS: " + sz_pasws);
-		
+	
 		try
 		{
 			BasicService basicService = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
@@ -88,6 +92,9 @@ public class ExecApp {
 			sz_codebase = sz_sitename;
 		}
 		
+		
+		versioning.setVersion();
+		
 		m_pas = new PAS(); //(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_force_wms, f_args);
 		m_pas.setSiteName(sz_sitename);
 		m_pas.setOverrideUserId(sz_userid);
@@ -100,6 +107,7 @@ public class ExecApp {
 		m_pas.setForceWMSSite(sz_force_wms);
 		loadPlugin(sz_codebase, sz_plugin);
 		
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
@@ -108,6 +116,10 @@ public class ExecApp {
 			}
 		});
 	}
+	
+	
+	
+	
 	
 	private static void loadPlugin(String sz_codebase, String sz_plugin)
 	{

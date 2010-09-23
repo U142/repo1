@@ -1,6 +1,7 @@
 package no.ums.pas.plugins.centric;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -36,6 +37,7 @@ class DisclaimerDialog extends JDialog {
 		setModal(true);
 		JTextArea area = new JTextArea(PAS.l("disclaimer_text"));
 		JScrollPane scrollPane = new JScrollPane(area);
+		scrollPane.setPreferredSize(new Dimension(500, 100));
 		area.setEditable(false);
 		area.setLineWrap(true);
 		area.setWrapStyleWord(true);
