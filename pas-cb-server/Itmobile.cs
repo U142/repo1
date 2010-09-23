@@ -502,11 +502,11 @@ namespace pas_cb_server
                 try
                 {
                     //CREATE EMPTY xmlns
-                    XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-                    xmlnsEmpty.Add("", "");
+                    //XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+                    //xmlnsEmpty.Add("", "");
                     XmlSerializer s = new XmlSerializer(cap_request.GetType());
                     TextWriter w = new StringWriter(Encoding.UTF8);
-                    s.Serialize(w, cap_request, xmlnsEmpty);
+                    s.Serialize(w, cap_request); /*, xmlnsEmpty*/
 
                     DebugLog.dump(w.ToString(), op, method, refno);
                 }
@@ -537,12 +537,12 @@ namespace pas_cb_server
         private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters)
         {
             //CREATE EMPTY xmlns
-            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-            xmlnsEmpty.Add("", "");
+            //XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+            //xmlnsEmpty.Add("", "");
             XmlSerializer s = new XmlSerializer(typeof(IBAG_Alert_Attributes));
             TextWriter w = new StringWriter(Encoding.UTF8);
             
-            s.Serialize(w, parameters, xmlnsEmpty);
+            s.Serialize(w, parameters); /*, xmlnsEmpty*/
 
             WebRequest webRequest = WebRequest.Create(op.sz_url);
             webRequest.Method = "POST";

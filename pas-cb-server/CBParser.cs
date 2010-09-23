@@ -355,6 +355,8 @@ namespace pas_cb_server
                     return Constant.OK; // return if kill, don't need more information
 
                 oAlert.l_validity = int.Parse(xmlCB.Attributes.GetNamedItem("l_validity").Value);
+                if (oAlert.l_validity <= 0)
+                    oAlert.l_validity = 11;
 
                 XmlAttributeCollection xml_message = xmlCB.SelectSingleNode("textmessages").SelectSingleNode("message").Attributes;
                 oAlert.alert_message.l_channel = int.Parse(xml_message.GetNamedItem("l_channel").Value);
