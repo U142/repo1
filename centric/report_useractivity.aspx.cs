@@ -14,6 +14,8 @@ public partial class report_useractivity : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        lbl_error.ForeColor = System.Drawing.Color.Red;
+
         ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
@@ -21,6 +23,7 @@ public partial class report_useractivity : System.Web.UI.Page
         {
             fillDropDown();
             PasAdmin pa = new PasAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
 
             GetUsersResponse res = pa.doGetUsers(l);
             Hashtable users = new Hashtable();
@@ -31,7 +34,9 @@ public partial class report_useractivity : System.Web.UI.Page
             users.Add((long)-1, admin);
             if (res.successful)
             {
-                foreach(UBBUSER user in res.user)
+                IEnumerable<UBBUSER> sorter = res.user.OrderBy(user => user.sz_userid);
+
+                foreach(UBBUSER user in sorter)
                 {
                     users.Add(user.l_userpk, user);
                     lst_users.Items.Add(new ListItem(user.sz_userid, user.l_userpk.ToString()));
@@ -82,117 +87,129 @@ public partial class report_useractivity : System.Web.UI.Page
 
     protected void btn_show_click(object sender, EventArgs e)
     {
-        ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
-        PasAdmin pasa = new PasAdmin();
-        Hashtable users = (Hashtable)Session["users"];
-
-        int[] indices = lst_users.GetSelectedIndices();
-        List<UBBUSER> selectedusers = new List<UBBUSER>();
-        foreach (int i in indices)
+        try
         {
-            long ting = long.Parse(lst_users.Items[i].Value);
-            selectedusers.Add((UBBUSER)users[long.Parse(lst_users.Items[i].Value)]);
-        }
+            ULOGONINFO l = (ULOGONINFO)Session["logoninfo"];
+            PasAdmin pasa = new PasAdmin();
+            pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            Hashtable users = (Hashtable)Session["users"];
 
-        GetUserActivityResponse res = pasa.doGetUserActivity(l, createTimestamp(), selectedusers.ToArray());
-        if (res.successful)
-        {
-            if (res.log.Length > 0)
+            int[] indices = lst_users.GetSelectedIndices();
+            List<UBBUSER> selectedusers = new List<UBBUSER>();
+            foreach (int i in indices)
             {
-                Session["loglist"] = res.log;
-                btn_export.Visible = true;
-                // Do lots of parsing
-                HtmlTableRow header = new HtmlTableRow();
-                HtmlTableCell hc = new HtmlTableCell();
-                Label lbl_header = new Label();
-                lbl_header.Text = "Log id";
-                hc.Controls.Add(lbl_header);
-                header.Cells.Add(hc);
+                long ting = long.Parse(lst_users.Items[i].Value);
+                selectedusers.Add((UBBUSER)users[long.Parse(lst_users.Items[i].Value)]);
+            }
 
-                Label htxt = new Label();
-                //TextBox htxt = new TextBox();
-                htxt.Text = "Username";
-                hc = new HtmlTableCell();
-                hc.Controls.Add(htxt);
-                header.Cells.Add(hc);
-
-                htxt = new Label();
-                //TextBox htxt = new TextBox();
-                htxt.Text = "Operation";
-                hc = new HtmlTableCell();
-                hc.Controls.Add(htxt);
-                header.Cells.Add(hc);                
-
-                htxt = new Label();
-                //TextBox htxt = new TextBox();
-                htxt.Text = "Timestamp";
-                hc = new HtmlTableCell();
-                hc.Controls.Add(htxt);
-                header.Cells.Add(hc);
-
-                htxt = new Label();
-                //TextBox htxt = new TextBox();
-                htxt.Text = "Description";
-                hc = new HtmlTableCell();
-                hc.Controls.Add(htxt);
-                header.Cells.Add(hc);
-                
-                tbl_output.Rows.Add(header);
-
-                String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
-                HashSet<short> hide = new HashSet<short>();
-                for (int i = 0; i < tmp.Length; ++i)
-                    hide.Add(short.Parse(tmp[i]));
-
-                for (int j = 0; j < res.log.Length; ++j)
+            GetUserActivityResponse res = pasa.doGetUserActivity(l, createTimestamp(), selectedusers.ToArray());
+            if (res.successful)
+            {
+                if (res.log.Length > 0)
                 {
-                    if (!hide.Contains(res.log[j].l_operation))
+                    Session["loglist"] = res.log;
+                    btn_export.Visible = true;
+                    // Do lots of parsing
+                    HtmlTableRow header = new HtmlTableRow();
+                    HtmlTableCell hc = new HtmlTableCell();
+                    Label lbl_header = new Label();
+                    lbl_header.Text = "Log id";
+                    hc.Controls.Add(lbl_header);
+                    header.Cells.Add(hc);
+
+                    Label htxt = new Label();
+                    //TextBox htxt = new TextBox();
+                    htxt.Text = "Username";
+                    hc = new HtmlTableCell();
+                    hc.Controls.Add(htxt);
+                    header.Cells.Add(hc);
+
+                    htxt = new Label();
+                    //TextBox htxt = new TextBox();
+                    htxt.Text = "Operation";
+                    hc = new HtmlTableCell();
+                    hc.Controls.Add(htxt);
+                    header.Cells.Add(hc);
+
+                    htxt = new Label();
+                    //TextBox htxt = new TextBox();
+                    htxt.Text = "Timestamp";
+                    hc = new HtmlTableCell();
+                    hc.Controls.Add(htxt);
+                    header.Cells.Add(hc);
+
+                    htxt = new Label();
+                    //TextBox htxt = new TextBox();
+                    htxt.Text = "Description";
+                    hc = new HtmlTableCell();
+                    hc.Controls.Add(htxt);
+                    header.Cells.Add(hc);
+
+                    tbl_output.Rows.Add(header);
+
+                    String[] tmp = ConfigurationSettings.AppSettings["hide"].Split(',');
+                    HashSet<short> hide = new HashSet<short>();
+                    for (int i = 0; i < tmp.Length; ++i)
+                        hide.Add(short.Parse(tmp[i]));
+
+                    IEnumerable<UPASLOG> sorter = res.log.OrderBy(log => log.l_timestamp);
+
+                    foreach (UPASLOG log in sorter)
                     {
-                        HtmlTableRow row = new HtmlTableRow();
-                        Label lbldesc = new Label();
-                        lbldesc.Text = res.log[j].l_id.ToString();
-                        HtmlTableCell cell = new HtmlTableCell();
-                        cell.Controls.Add(lbldesc);
+                        if (!hide.Contains(log.l_operation))
+                        {
+                            HtmlTableRow row = new HtmlTableRow();
+                            Label lbldesc = new Label();
+                            lbldesc.Text = log.l_id.ToString();
+                            HtmlTableCell cell = new HtmlTableCell();
+                            cell.Controls.Add(lbldesc);
 
-                        row.Cells.Add(cell);
-                        cell = new HtmlTableCell();
-                        lbldesc = new Label();
-                        if (res.log[j].l_userpk == -1)
-                            lbldesc.Text = "Administrator";
-                        else
-                            if (res.log[j].l_userpk != 0)
-                                lbldesc.Text = ((UBBUSER)users[res.log[j].l_userpk]).sz_userid;
+                            row.Cells.Add(cell);
+                            cell = new HtmlTableCell();
+                            lbldesc = new Label();
+                            if (log.l_userpk == -1)
+                                lbldesc.Text = "Administrator";
                             else
-                                lbldesc.Text = "Unknown";
-                        cell.Controls.Add(lbldesc);
-                        row.Cells.Add(cell);
+                                if (log.l_userpk != 0)
+                                    lbldesc.Text = ((UBBUSER)users[log.l_userpk]).sz_userid;
+                                else
+                                    lbldesc.Text = "Unknown";
+                            cell.Controls.Add(lbldesc);
+                            row.Cells.Add(cell);
 
-                        cell = new HtmlTableCell();
-                        lbldesc = new Label();
-                        lbldesc.Text = ConfigurationSettings.AppSettings[res.log[j].l_operation.ToString()];
-                        cell.Controls.Add(lbldesc);
-                        row.Cells.Add(cell);
+                            cell = new HtmlTableCell();
+                            lbldesc = new Label();
+                            lbldesc.Text = ConfigurationSettings.AppSettings[log.l_operation.ToString()];
+                            cell.Controls.Add(lbldesc);
+                            row.Cells.Add(cell);
 
-                        cell = new HtmlTableCell();
-                        lbldesc = new Label();
-                        lbldesc.Text = res.log[j].l_timestamp.ToString();
-                        cell.Controls.Add(lbldesc);
-                        row.Cells.Add(cell);
+                            cell = new HtmlTableCell();
+                            lbldesc = new Label();
+                            lbldesc.Text = log.l_timestamp.ToString();
+                            cell.Controls.Add(lbldesc);
+                            row.Cells.Add(cell);
 
-                        cell = new HtmlTableCell();
-                        lbldesc = new Label();
-                        lbldesc.Text = res.log[j].sz_desc;
-                        cell.Controls.Add(lbldesc);
-                        row.Cells.Add(cell);
+                            cell = new HtmlTableCell();
+                            lbldesc = new Label();
+                            lbldesc.Text = log.sz_desc;
+                            cell.Controls.Add(lbldesc);
+                            row.Cells.Add(cell);
 
-                        tbl_output.Rows.Add(row);
+                            tbl_output.Rows.Add(row);
+                        }
                     }
                 }
+                else
+                {
+                    btn_export.Visible = false;
+                }
+                lbl_error.Visible = false;
             }
-            else
-            {
-                btn_export.Visible = false;
-            }
+        }
+        catch (Exception ex)
+        {
+            lbl_error.Text = ex.Message;
+            lbl_error.Visible = true;
         }
     }
 

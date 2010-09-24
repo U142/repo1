@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+using System.Configuration;
 using System.Web.UI.HtmlControls;
 
 using com.ums.ws.pas;
@@ -15,17 +16,19 @@ public partial class report_useraccess : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         pasws pasws = new pasws();
+        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
          com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
             ParmAdmin pa = new ParmAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
             com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(l));
-
-            for (int i = 0; i < obj.Length; ++i)
+            IEnumerable<com.ums.ws.parm.admin.UDEPARTMENT> sorter = obj.OrderBy(area => area.sz_deptid);
+            foreach (com.ums.ws.parm.admin.UDEPARTMENT dept in sorter)
             {
-                lst_areas.Items.Add(new ListItem(obj[i].sz_deptid, obj[i].l_deptpk.ToString()));
+                lst_areas.Items.Add(new ListItem(dept.sz_deptid, dept.l_deptpk.ToString()));
             }
         }
     }
@@ -35,6 +38,7 @@ public partial class report_useraccess : System.Web.UI.Page
         int[] selection = lst_areas.GetSelectedIndices();
         UBBUSER[] ulist;
         ParmAdmin pa = new ParmAdmin();
+        pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
 
         tbl_output.Rows.Clear();
         List<UBBUSER[]> total = new List<UBBUSER[]>();

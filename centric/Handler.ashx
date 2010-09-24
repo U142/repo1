@@ -4,6 +4,8 @@ using System;
 using System.Web;
 using System.Web.SessionState;
 
+using System.Configuration;
+
 using System.Collections.Specialized;
 using com.ums.ws.pas.admin;
 
@@ -20,6 +22,7 @@ public class Handler : IHttpHandler, IRequiresSessionState {
         context.Response.ContentType = "text/plain";
         context.Response.Write(page);
         PasAdmin pa = new PasAdmin();
+        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
         ULOGONINFO info = (ULOGONINFO)context.Session["logoninfo"];
         
         if (page == "area_edit") {

@@ -30,7 +30,13 @@ public partial class area_edit : System.Web.UI.Page
         deptid.Attributes.Add("value", logoninfo.l_deptpk.ToString());
         password.Attributes.Add("value", logoninfo.sz_password);
         session.Attributes.Add("value", logoninfo.sessionid);
-
+        mapinfo.Attributes.Add("value", ConfigurationSettings.AppSettings["mapinfo"]);
+        w.Attributes.Add("value", ConfigurationSettings.AppSettings["w"]);
+        c.Attributes.Add("value", ConfigurationSettings.AppSettings["c"]);
+        m.Attributes.Add("value", ConfigurationSettings.AppSettings["m"]);
+        applet_width.Attributes.Add("value", ConfigurationSettings.AppSettings["applet_width"]);
+        applet_height.Attributes.Add("value", ConfigurationSettings.AppSettings["applet_height"]);
+        
         //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=area_edit')");
 
         lbl_error.ForeColor = System.Drawing.Color.Red;
@@ -38,7 +44,7 @@ public partial class area_edit : System.Web.UI.Page
         if (!IsPostBack)
         {
             PasAdmin pa = new PasAdmin();
-            
+            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             GetRestrictionAreasResponse res = pa.doGetRestrictionAreas(logoninfo, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] obj = res.restrictions;
             Session["restrictions"] = obj;
@@ -107,69 +113,75 @@ public partial class area_edit : System.Web.UI.Page
 
         TableRow tr;
         TableCell tc;
-        for (int i = 0; i < obj.Length; ++i)
+        if (obj.Length > 0)
         {
-            string jall = "";
-            com.ums.ws.pas.admin.UShape[] shape = obj[i].restrictionShapes;
+            IEnumerable<com.ums.ws.pas.admin.UDEPARTMENT> sorter = obj.OrderBy(area => area.restrictionShapes[0].f_disabled).ThenBy(area => area.sz_deptid);
 
-            for (int j = 0; j < shape.Length; ++j)
+            foreach (com.ums.ws.pas.admin.UDEPARTMENT dept in sorter)
             {
-                com.ums.ws.pas.admin.UPolygon p = (com.ums.ws.pas.admin.UPolygon)shape[j];
-                for (int k = 0; k < p.polypoint.Length; ++k)
+                string jall = "";
+                com.ums.ws.pas.admin.UShape[] shape = dept.restrictionShapes;
+
+                for (int j = 0; j < shape.Length; ++j)
                 {
-                    jall += p.polypoint[k].lat;
-                    if (k + 1 < p.polypoint.Length)
-                        jall += "|";
+                    com.ums.ws.pas.admin.UPolygon p = (com.ums.ws.pas.admin.UPolygon)shape[j];
+                    for (int k = 0; k < p.polypoint.Length; ++k)
+                    {
+                        jall += p.polypoint[k].lat;
+                        if (k + 1 < p.polypoint.Length)
+                            jall += "|";
+                    }
+
+                    jall += "¤";
+
+                    for (int k = 0; k < p.polypoint.Length; ++k)
+                    {
+                        jall += p.polypoint[k].lon;
+                        if (k + 1 < p.polypoint.Length)
+                            jall += "|";
+
+                    }
+                    //txt_area.Text += "\n";
+                    tr = new TableRow();
+                    tc = new TableCell();
+                    HyperLink lb = new HyperLink();
+                    lb.Text = dept.sz_deptid;
+                    //tc.Text = ulist[i].sz_userid;
+                    //lb.CommandArgument = dept.l_deptpk.ToString();
+                    //lb.OnClientClick = "";
+                    //lb.Attributes.Add("onClick", "javascript:setShape(" + jall + ");return false;");
+                    lb.NavigateUrl = "javascript:setShape('" + "ctl00_tb_" + dept.l_deptpk.ToString() + "'," + dept.l_deptpk.ToString() + ", " + dept.restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(dept.restrictionShapes[0].l_disabled_timestamp)) + "', '" + dept.sz_deptid + "')";
+                    //lb.CausesValidation = false;
+                    lb.ID = "lb_view" + dept.l_deptpk.ToString();
+                    //lb.Click += new EventHandler(this.btn_view_click);
+                    //lb.Attributes.Add("onclick", "javascript:setShape(" + jall + ");");
+                    tc.Controls.Add(lb);
+                    TextBox tb = new TextBox();
+                    //tb.Attributes.Add("runat", "server");
+                    tb.ID = "tb_" + dept.l_deptpk.ToString();
+                    tb.Style.Add("visibility", "hidden");
+                    tb.Text = jall;
+                    Form.Controls.Add(tb);
+                    tr.Cells.Add(tc);
+
+
+                    tc = new TableCell();
+                    tc.Text = dept.restrictionShapes[j].f_disabled == 1 ? "Yes" : "No";
+                    tr.Cells.Add(tc);
+
+                    tbl_areas.Rows.Add(tr);
+                    //lst_areas.Items.Add(new ListItem(dept.sz_deptid, jall));
                 }
 
-                jall += "¤";
 
-                for (int k = 0; k < p.polypoint.Length; ++k)
-                {
-                    jall += p.polypoint[k].lon;
-                    if (k + 1 < p.polypoint.Length)
-                        jall += "|";
-
-                }
-                //txt_area.Text += "\n";
-                tr = new TableRow();
-                tc = new TableCell();
-                HyperLink lb = new HyperLink();
-                lb.Text = obj[i].sz_deptid;
-                //tc.Text = ulist[i].sz_userid;
-                //lb.CommandArgument = obj[i].l_deptpk.ToString();
-                //lb.OnClientClick = "";
-                //lb.Attributes.Add("onClick", "javascript:setShape(" + jall + ");return false;");
-                lb.NavigateUrl = "javascript:setShape('" + "ctl00_tb_" + obj[i].l_deptpk.ToString() + "'," + obj[i].l_deptpk.ToString() + ", " + obj[i].restrictionShapes[0].f_disabled + ", '" + ((Util.convertDate(obj[i].restrictionShapes[0].l_disabled_timestamp)).Length > 10 ? (Util.convertDate(obj[i].restrictionShapes[0].l_disabled_timestamp)).Substring(0, 10) : Util.convertDate(obj[i].restrictionShapes[0].l_disabled_timestamp)) + "', '" + obj[i].sz_deptid + "')";
-                //lb.CausesValidation = false;
-                lb.ID = "lb_view" + obj[i].l_deptpk.ToString();
-                //lb.Click += new EventHandler(this.btn_view_click);
-                //lb.Attributes.Add("onclick", "javascript:setShape(" + jall + ");");
-                tc.Controls.Add(lb);
-                TextBox tb = new TextBox();
-                //tb.Attributes.Add("runat", "server");
-                tb.ID = "tb_" + obj[i].l_deptpk.ToString();
-                tb.Style.Add("visibility", "hidden");
-                tb.Text = jall;
-                Form.Controls.Add(tb);
-                tr.Cells.Add(tc);
-
-
-                tc = new TableCell();
-                tc.Text = obj[i].restrictionShapes[j].f_disabled==1?"Yes":"No";
-                tr.Cells.Add(tc);
-
-                tbl_areas.Rows.Add(tr);
-                //lst_areas.Items.Add(new ListItem(obj[i].sz_deptid, jall));
+                //lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled == 1 ? "yes" : "no"), ulist[i].l_userpk.ToString()));
             }
-
-
-            //lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled == 1 ? "yes" : "no"), ulist[i].l_userpk.ToString()));
         }
     }
 
     protected void btn_save_Click(object sender, EventArgs e)
     {
+        lbl_error.Text = "";
         com.ums.ws.pas.admin.ULOGONINFO li = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
         if (txt_id.Text.Length > 0)
@@ -177,6 +189,7 @@ public partial class area_edit : System.Web.UI.Page
             // Only allow update of obsolete
             com.ums.ws.pas.admin.UDEPARTMENT[] obj = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
             com.ums.ws.pas.admin.PasAdmin pa = new com.ums.ws.pas.admin.PasAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             SetPAShapeObsoleteResponse res;
             for (int i = 0; i < obj.Length; ++i)
             {
@@ -215,7 +228,7 @@ public partial class area_edit : System.Web.UI.Page
             }
             tbl_areas.Rows.Clear();
             buildTable(obj);
-
+            RequiredFieldValidator1.Enabled = false;
         }
         else
         {
@@ -243,6 +256,7 @@ public partial class area_edit : System.Web.UI.Page
                     p.polypoint = pp;
 
                     ParmAdmin pa = new ParmAdmin();
+                    pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
 
                     PAOBJECT obj = new PAOBJECT();
                     obj.sz_name = txt_name.Text;
@@ -260,6 +274,7 @@ public partial class area_edit : System.Web.UI.Page
                         com.ums.ws.pas.admin.UDEPARTMENT[] deptlist = (com.ums.ws.pas.admin.UDEPARTMENT[])Session["restrictions"];
                         //lst_areas.Items.Add(new ListItem(obj.sz_name, txt_coor.Text));
                         PasAdmin pasa = new PasAdmin();
+                        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
                         GetSingleRestricionResponse response = pasa.doGetSingleRestricion(li, res.pk);
                         if (response.successful)
                         {
@@ -272,6 +287,7 @@ public partial class area_edit : System.Web.UI.Page
                             txt_name.Text = "";
                             txt_name.Enabled = false;
                             btn_draw.Disabled = true;
+                            txt_coor.Text = "";
                         }
                     }
                     else
@@ -308,6 +324,7 @@ public partial class area_edit : System.Web.UI.Page
             btn_draw.Disabled = false;
             chk_obsolete.Enabled = true;
             lbl_error.Text = "";
+            txt_coor.Text = "";
             //tbl_areas.Rows.Clear();
         }
         else

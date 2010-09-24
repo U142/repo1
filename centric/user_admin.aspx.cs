@@ -44,12 +44,11 @@ public partial class user_admin : System.Web.UI.Page
             Server.Transfer("logon.aspx");
 
         PasAdmin pa = new PasAdmin();
+        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
         GetUsersResponse res = pa.doGetUsers(Util.convertLogonInfoPasAdmin(li));
         if (res.successful)
         {
             com.ums.ws.pas.admin.UBBUSER[] ulist = res.user;
-            Session["users"] = ulist;
-
             buildTable(ulist);
         }
 
@@ -61,6 +60,7 @@ public partial class user_admin : System.Web.UI.Page
             rad_administrator.Attributes.Add("value", ConfigurationSettings.AppSettings["usertype_administrator"]);
 
             PasAdmin pasadmin = new PasAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
 
             GetRestrictionAreasResponse resp = pasadmin.doGetRestrictionAreas(li, com.ums.ws.pas.admin.PASHAPETYPES.PADEPARTMENTRESTRICTION);
             com.ums.ws.pas.admin.UDEPARTMENT[] departments = resp.restrictions;
@@ -98,36 +98,40 @@ public partial class user_admin : System.Web.UI.Page
 
         TableRow tr;
         TableCell tc;
-        for (int i = 0; i < ulist.Length; ++i)
+
+        IEnumerable<com.ums.ws.pas.admin.UBBUSER> sorter = ulist.OrderBy(user => user.f_disabled).ThenBy(user => user.sz_userid);
+        Session["users"] = ulist;
+
+        foreach (com.ums.ws.pas.admin.UBBUSER user in sorter)
         {
             tr = new TableRow();
             tc = new TableCell();
             LinkButton lb = new LinkButton();
-            lb.Text = ulist[i].sz_userid;
-            //tc.Text = ulist[i].sz_userid;
-            lb.CommandArgument = ulist[i].l_userpk.ToString();
+            lb.Text = user.sz_userid;
+            //tc.Text = user.sz_userid;
+            lb.CommandArgument = user.l_userpk.ToString();
             lb.CausesValidation = false;
-            lb.ID = "lb_view" + ulist[i].l_userpk.ToString();
+            lb.ID = "lb_view" + user.l_userpk.ToString();
             lb.Click += new EventHandler(this.btn_view_click);
             tc.Controls.Add(lb);
             tr.Cells.Add(tc);
 
             tc = new TableCell();
-            tc.Text = ulist[i].sz_name;
+            tc.Text = user.sz_name;
             tr.Cells.Add(tc);
 
             tc = new TableCell();
-            tc.Text = Util.userType(ulist[i].l_profilepk);
+            tc.Text = Util.userType(user.l_profilepk);
             tr.Cells.Add(tc);
 
             tc = new TableCell();
-            tc.Text = (ulist[i].f_disabled == 1 ? "yes" : "no");
+            tc.Text = (user.f_disabled == 1 ? "yes" : "no");
             tr.Cells.Add(tc);
             /*
             tc = new TableCell();
             Button btn_view = new Button();
-            btn_view.CommandArgument = ulist[i].l_userpk.ToString();
-            btn_view.ID = "btn_view" + ulist[i].l_userpk.ToString();
+            btn_view.CommandArgument = user.l_userpk.ToString();
+            btn_view.ID = "btn_view" + user.l_userpk.ToString();
             btn_view.CausesValidation = false;
             btn_view.Text = "View";
             btn_view.Click += new EventHandler(this.btn_view_click);
@@ -136,7 +140,7 @@ public partial class user_admin : System.Web.UI.Page
             */
 
             tbl_users.Rows.Add(tr);
-            //lst_users.Items.Add(new ListItem(ulist[i].sz_userid + "\t" + ulist[i].sz_name + "\t" + ulist[i].l_profilepk + "\t" + (ulist[i].f_disabled == 1 ? "yes" : "no"), ulist[i].l_userpk.ToString()));
+            //lst_users.Items.Add(new ListItem(user.sz_userid + "\t" + user.sz_name + "\t" + user.l_profilepk + "\t" + (user.f_disabled == 1 ? "yes" : "no"), user.l_userpk.ToString()));
         }
     }
     protected void btn_view_click(object sender, EventArgs e)
@@ -213,21 +217,25 @@ public partial class user_admin : System.Web.UI.Page
         {
             // Blocked dato?
             user.f_disabled = 1;
+            if (txt_blocked_changed.Text.Equals("true"))
+                user.l_disabled_reasoncode = com.ums.ws.pas.admin.BBUSER_BLOCK_REASONS.BLOCKED_BY_ADMIN;
+            txt_blocked_changed.Text = "";
         }
         else
         {
+            txt_blocked_changed.Text = "";
             user.f_disabled = 0;
         }
 
         if (rad_administrator.Checked)
         {
             // No regions allowed
-            user.l_profilepk = 7;
+            user.l_profilepk = 1;
         }
         else if (rad_national.Checked)
         {
             // All regions?
-            user.l_profilepk = 5;
+            user.l_profilepk = 4;
         }
         else if (rad_sregional.Checked)
             user.l_profilepk = 3;
@@ -245,6 +253,7 @@ public partial class user_admin : System.Web.UI.Page
         // Send med UBBUSER og restriction area kan bare sette departmentpk på bbuser forresten?
         com.ums.ws.pas.admin.ULOGONINFO li = ( com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         PasAdmin pasadmin = new PasAdmin();
+        pasadmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
 
         int[] regions = lst_regions.GetSelectedIndices();
         int[] regionpk = new int[regions.Length];
@@ -426,11 +435,11 @@ public partial class user_admin : System.Web.UI.Page
                 rad_sregional.Checked = true;                
                 req_regions.Enabled = true;
                 break;
-            case 5:
+            case 4:
                 rad_national.Checked = true;
                 req_regions.Enabled = true;
                 break;
-            case 7:
+            case 1:
                 rad_administrator.Checked = true;
                 break;
         }
@@ -445,6 +454,7 @@ public partial class user_admin : System.Web.UI.Page
             com.ums.ws.pas.admin.ULOGONINFO li = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
             PasAdmin pa = new PasAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             int[] indices = lst_regions.GetSelectedIndices();
             com.ums.ws.pas.admin.UDEPARTMENT dept = null;
             com.ums.ws.pas.admin.UPolygon poly = null;
@@ -538,5 +548,10 @@ public partial class user_admin : System.Web.UI.Page
     {
         Session.Remove("sregion");
         resetRegions();
+    }
+
+    protected void chk_blocked_Change(object sender, EventArgs e)
+    {
+        txt_blocked_changed.Text = "true";
     }
 }

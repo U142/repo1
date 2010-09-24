@@ -25,12 +25,14 @@ public partial class predefine_text : System.Web.UI.Page
     private Hashtable ht;
     private Db db;
     private pasws pws;
+    private System.Drawing.Color disabled_color;
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        disabled_color = System.Drawing.ColorTranslator.FromHtml("#abaaa3");
+
         ht = (Hashtable)Session["ht"];
         Db db = new Db();
-
         //Master.BodyTag.Attributes.Add("onbeforeunload", "setUnlock('page=predefine_text')");
 
         if (!IsPostBack)
@@ -53,6 +55,7 @@ public partial class predefine_text : System.Web.UI.Page
             f.n_timefilter = 0;
 
             pws = new pasws();
+            pws.Url = ConfigurationSettings.AppSettings["Pas"];
 
 
 
@@ -85,6 +88,7 @@ public partial class predefine_text : System.Web.UI.Page
         f.n_timefilter = 0;
 
         pws = new pasws();
+        pws.Url = ConfigurationSettings.AppSettings["Pas"];
 
 
 
@@ -172,8 +176,9 @@ public partial class predefine_text : System.Web.UI.Page
 
                 if (pws == null)
                     pws = new pasws();
+                pws.Url = ConfigurationSettings.AppSettings["Pas"];
                 com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-
+                
                 long id = (long)pdt.n_messagepk;
                 if (id == 0)
                     id = -1;
@@ -201,6 +206,7 @@ public partial class predefine_text : System.Web.UI.Page
                     txt_name.Text = "";
                     txt_message.Text = "";
                     txt_name.Enabled = false;
+                    txt_message.ForeColor = disabled_color;
                     //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
                     btn_save.Enabled = false;
@@ -215,6 +221,7 @@ public partial class predefine_text : System.Web.UI.Page
                     txt_name.Enabled = false;
                     //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    txt_message.ForeColor = disabled_color;
                     btn_save.Enabled = false;
                 }
                 else if (tn != null) //update
@@ -227,6 +234,7 @@ public partial class predefine_text : System.Web.UI.Page
                     txt_parent.Text = "";
                     //txt_message.Enabled = false;
                     txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                    txt_message.ForeColor = disabled_color;
                     txt_name.Enabled = false;
                     btn_save.Enabled = false;
                 }
@@ -267,6 +275,8 @@ public partial class predefine_text : System.Web.UI.Page
 
                 if (pws == null)
                     pws = new pasws();
+
+                pws.Url = ConfigurationSettings.AppSettings["Pas"];
                 com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
                 UBBMESSAGE pdt = (UBBMESSAGE)ht[long.Parse(id)];
 
@@ -290,6 +300,7 @@ public partial class predefine_text : System.Web.UI.Page
         txt_name.Text = pdt.sz_name;
         //txt_message.Enabled = false;
         txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+        txt_message.ForeColor = disabled_color;
         txt_name.Enabled = false;
         btn_save.Enabled = false;
         lbl_error.Text = "";
@@ -316,6 +327,7 @@ public partial class predefine_text : System.Web.UI.Page
                 txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
                 txt_name.Enabled = false;
                 btn_save.Enabled = false;
+                txt_message.ForeColor = disabled_color;
                 lbl_error.Text = "Node must be selected";
             }
         }
@@ -332,6 +344,7 @@ public partial class predefine_text : System.Web.UI.Page
             txt_message.Text = "";
             txt_message.Attributes.Remove("onFocus");
             txt_message.Enabled = true;
+            txt_message.ForeColor = System.Drawing.Color.Black;
             txt_name.Enabled = true;
             btn_save.Enabled = true;
             txt_name.Focus();
@@ -356,12 +369,15 @@ public partial class predefine_text : System.Web.UI.Page
                 txt_message.Attributes.Remove("onFocus");
                 txt_name.Enabled = true;
                 txt_message.Enabled = true;
+                txt_message.ForeColor = System.Drawing.Color.Black;
                 btn_save.Enabled = true;
                 lbl_error.Text = "";
+                
             }
             else
             {
                 txt_message.Attributes.Add("onFocus", "javascript:this.blur();");
+                txt_message.ForeColor = disabled_color;
                 txt_name.Enabled = false;
                 btn_save.Enabled = false;
                 lbl_error.Text = "Node must be selected";
@@ -391,6 +407,7 @@ public partial class predefine_text : System.Web.UI.Page
         {
             TreeView1.Enabled = false;
             txt_message.Enabled = false;
+            txt_message.ForeColor = disabled_color;
             txt_name.Enabled = false;
             btn_save.Enabled = false;
             lbl_error.Text = "";
@@ -408,6 +425,7 @@ public partial class predefine_text : System.Web.UI.Page
             TreeView1.Enabled = true;
             txt_message.Enabled = true;
             txt_name.Enabled = true;
+            txt_message.ForeColor = System.Drawing.Color.Black;
             lbl_error.Text = "";
         }
         else

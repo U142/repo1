@@ -6,6 +6,7 @@
         function getShape() {
             //alert(document.mapapplet.get());
             try {
+                document.getElementById("ctl00_body_lbl_error").innerHTML = "";
                 document.getElementById("ctl00_body_txt_coor").value = document.mapapplet.get();
                 return false;
             } catch (err) { }
@@ -80,13 +81,19 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="4">
-                <applet name="mapapplet" id="mapapplet" runat="server" width="640" height="480">
+                <applet name="mapapplet" id="mapapplet" runat="server" width="924" height="695">
                     <param id="userid" name="userid" runat="server" value="dette er noe tekst" />
                     <param id="compid" name="compid" runat="server" value="dette er noe tekst" />
                     <param id="deptid" name="deptid" runat="server" value="dette er noe tekst" />
                     <param id="password" name="password" runat="server" value="dette er noe tekst" />
                     <param id="session" name="session" runat="server" value="dette er noe tekst" />
-                    <param name="jnlp_href" value="javaapp/jnlptest.jnlp?text=heisann" />
+                    <param id="mapinfo" name="mapinfo" runat="server" />
+                    <param id="m" name="m" runat="server" />
+                    <param id="w" name="w" runat="server" />
+                    <param id="c" name="c" runat="server" />
+                    <param id="applet_height" name="applet_height" runat="server" />
+                    <param id="applet_width" name="applet_width" runat="server" />
+                    <param name="jnlp_href" value="javaapp/mapapplet.jnlp" />
                 </applet>
                 <!--
                 <script type="text/javascript">

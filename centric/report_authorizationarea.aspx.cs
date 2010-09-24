@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
+using System.Configuration;
 
 using com.ums.ws.pas;
 using com.ums.ws.parm.admin;
@@ -15,18 +16,24 @@ public partial class report_authorizationarea : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         pasws pasws = new pasws();
+        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
+
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
         if (!IsPostBack)
         {
             ParmAdmin pa = new ParmAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
+
             com.ums.ws.parm.admin.UDEPARTMENT[] obj = pa.GetRestrictionAreas(Util.convertLogonInfoParmAdmin(l));
             Session["shapes"] = obj;
-            for (int i = 0; i < obj.Length; ++i)
+            IEnumerable<com.ums.ws.parm.admin.UDEPARTMENT> sorter = obj.OrderBy(area => area.sz_deptid);
+
+            foreach (com.ums.ws.parm.admin.UDEPARTMENT dept in sorter)
             {
-                com.ums.ws.parm.admin.UShape[] shape = obj[i].restrictionShapes;
-                lst_areas.Items.Add(new ListItem(obj[i].sz_deptid, obj[i].l_deptpk.ToString()));   
+                com.ums.ws.parm.admin.UShape[] shape = dept.restrictionShapes;
+                lst_areas.Items.Add(new ListItem(dept.sz_deptid, dept.l_deptpk.ToString()));   
             }
             fillDropDown();
         }
@@ -57,6 +64,7 @@ public partial class report_authorizationarea : System.Web.UI.Page
         for (int i = 0; i < lst_areas.GetSelectedIndices().Length; ++i)
         {
             PasAdmin pasadmin = new PasAdmin();
+            pasadmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             IsShapeActiveInPeriodResponse res = pasadmin.doIsShapeActiveInPeriod((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], int.Parse(lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Value), createTimestamp());
             if (res.successful)
             {

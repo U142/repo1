@@ -33,6 +33,7 @@ public partial class systemmessages : System.Web.UI.Page
             //txt_activate.Attributes.Add("readonly","readonly");
             //txt_deactivate.Attributes.Add("readonly", "readonly");
             pasws pws = new pasws();
+            pws.Url = ConfigurationSettings.AppSettings["Pas"];
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (logon == null)
                 Server.Transfer("logon.aspx");
@@ -59,6 +60,7 @@ public partial class systemmessages : System.Web.UI.Page
             }
 
             PasAdmin padmin = new PasAdmin();
+            padmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             GetOperatorsResponse res = padmin.doGetOperators(logon);
             if (res.successful)
             {
@@ -163,6 +165,8 @@ public partial class systemmessages : System.Web.UI.Page
             news.newstext.sz_news = txt_message.Text;
 
             pasws pws = new pasws();
+            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+
             news = pws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), news);
             ddl_operator.SelectedValue = news.l_operator.ToString();
             news.sz_operatorname = ddl_operator.Items[ddl_operator.SelectedIndex].Text;

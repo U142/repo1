@@ -33,6 +33,7 @@ public partial class main : System.Web.UI.Page
             //txt_deactivate.Attributes.Add("readonly", "readonly");
             //txt_activate.Text = DateTime.Now.ToString("dd-MM-yyyy");
             pasws pws = new pasws();
+            pws.Url = ConfigurationSettings.AppSettings["Pas"];
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
@@ -55,6 +56,7 @@ public partial class main : System.Web.UI.Page
             }*/
 
             PasAdmin padmin = new PasAdmin();
+            padmin.Url = ConfigurationSettings.AppSettings["PasAdmin"];
             GetOperatorsResponse res = padmin.doGetOperators(logon);
             if (res.successful)
             {
@@ -126,6 +128,7 @@ public partial class main : System.Web.UI.Page
             }*/
         }
         pasws ws = new pasws();
+        ws.Url = ConfigurationSettings.AppSettings["Pas"];
         com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
 
         // Stores the new message and returns it with l_newspk
@@ -234,6 +237,7 @@ public partial class main : System.Web.UI.Page
     protected void btn_deactivate_Click(object sender, EventArgs e)
     {
         PasAdmin pasa = new PasAdmin();
+        pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
         com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
         if (res.successful)

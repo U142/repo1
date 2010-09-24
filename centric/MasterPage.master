@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="expires" content="0" />
-    <title>NL-Alert Administration</title>
+    <title>NL-Alert Administration <%=System.Configuration.ConfigurationSettings.AppSettings["version"]%></title>
      <style type="text/css">
         .IE8Fix
         {

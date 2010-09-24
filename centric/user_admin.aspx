@@ -44,7 +44,7 @@
                 <asp:RegularExpressionValidator ID="user_validator" runat="server" ValidationExpression="[a-zA-Z0-9-_]*" Text="*" ErrorMessage="Allowed characters in username are: a-z, A-Z, 0-9, - and _" ControlToValidate="txt_username" ></asp:RegularExpressionValidator>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" >
-                <asp:CheckBox ID="chk_blocked" runat="server" />
+                <asp:CheckBox ID="chk_blocked" runat="server" OnCheckedChanged="chk_blocked_Change" AutoPostBack="true"/>
                 <asp:Label ID="Label2" runat="server" Text="Blocked"></asp:Label>
             </asp:TableCell>
         </asp:TableRow>
@@ -124,4 +124,5 @@
     </asp:Table>
     <asp:Label runat="server" ID="lbl_feedback" Text=""></asp:Label>
     <asp:TextBox runat="server" ID="selected" Text="" style="visibility:hidden" onchange="alert('Value');" />
+    <asp:TextBox runat="server" ID="txt_blocked_changed" Text="" style="visibility:hidden" />
 </asp:Content>

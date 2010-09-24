@@ -16,6 +16,8 @@ public partial class report_accesspruser : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         pasws pasws = new pasws();
+        pasws.Url = ConfigurationSettings.AppSettings["Pas"];
+
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (l == null)
             Server.Transfer("logon.aspx");
@@ -24,13 +26,15 @@ public partial class report_accesspruser : System.Web.UI.Page
             //UPASLOGON pl = pasws.PasLogon(logoninfo);
             //UDEPARTMENT[] depts = pl.departments;
             ParmAdmin pa = new ParmAdmin();
+            pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
             com.ums.ws.parm.admin.ULOGONINFO logoninfo = Util.convertLogonInfoParmAdmin(l);
             
             UBBUSER[] ulist = pa.GetUsers(logoninfo);
-
-            for (int i = 0; i < ulist.Length; ++i)
+            IEnumerable<UBBUSER> sorter = ulist.OrderBy(user => user.sz_userid);
+            foreach (UBBUSER user in sorter)
             {
-                lst_users.Items.Add(new ListItem(ulist[i].sz_userid, ulist[i].l_userpk.ToString()));
+                if (user.l_deptpk != int.Parse(ConfigurationSettings.AppSettings["admin_department"]))
+                    lst_users.Items.Add(new ListItem(user.sz_userid, user.l_userpk.ToString()));
             }
         }
     }
@@ -41,6 +45,7 @@ public partial class report_accesspruser : System.Web.UI.Page
         com.ums.ws.parm.admin.ULOGONINFO logoninfo = Util.convertLogonInfoParmAdmin(l);
 
         ParmAdmin pa = new ParmAdmin();
+        pa.Url = ConfigurationSettings.AppSettings["ParmAdmin"];
         
         int[] selection = lst_users.GetSelectedIndices();
         UBBUSER[] ulist = new UBBUSER[selection.Length];

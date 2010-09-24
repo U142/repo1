@@ -49,6 +49,11 @@
             <asp:TableCell ColumnSpan="2">
                 <asp:Button ID="btn_export" runat="server" Text="Export to CSV" OnClick="btn_export_click" Visible="false" /></asp:TableCell>
         </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell ColumnSpan="2">
+                <asp:Label ID="lbl_error" runat="server" Text="" Visible="false"></asp:Label>
+            </asp:TableCell>
+        </asp:TableRow>
     </asp:Table>
     <table id="tbl_output" runat="server" border="1">
     </table>

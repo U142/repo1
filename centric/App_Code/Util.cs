@@ -22,6 +22,7 @@ public class Util
 
     public static CheckAccessResponse setOccupied(com.ums.ws.pas.admin.ULOGONINFO l, ACCESSPAGE page, Boolean f_lock) {
         PasAdmin pa = new PasAdmin();
+        pa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
         CheckAccessResponse ares = pa.doSetOccupied(l, page, f_lock);
         return ares;
     }
@@ -48,9 +49,9 @@ public class Util
                 return "Regional";
             case 3:
                 return "Super Regional";
-            case 5:
+            case 4:
                 return "National";
-            case 7: 
+            case 1: 
                 return "Administrator";
             default:
                 return "Unknown";
@@ -82,6 +83,7 @@ public class Util
     public static com.ums.ws.parm.admin.ULOGONINFO convertLogonInfoParmAdmin(com.ums.ws.pas.admin.ULOGONINFO l)
     {
         com.ums.ws.parm.admin.ULOGONINFO logoninfo = new com.ums.ws.parm.admin.ULOGONINFO();
+        
         logoninfo.l_deptpk = l.l_deptpk;
         logoninfo.l_userpk = l.l_userpk;
         logoninfo.l_comppk = l.l_comppk;
@@ -318,7 +320,9 @@ public class Util
         for (int i = 0; i < tmp.Length; ++i)
             hide.Add(short.Parse(tmp[i]));
 
-        foreach (UPASLOG log in loglist)
+         IEnumerable<UPASLOG> sorter = loglist.OrderBy(log => log.l_timestamp);
+
+        foreach (UPASLOG log in sorter)
         {
             if(!hide.Contains(log.l_operation))
                 WriteUserActivityMonthly(log, users);

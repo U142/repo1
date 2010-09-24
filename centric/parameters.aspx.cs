@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using System.Configuration;
 using com.ums.ws.pas;
 
 public partial class parameters : System.Web.UI.Page
@@ -23,6 +23,8 @@ public partial class parameters : System.Web.UI.Page
         {
             // web service load settings
             pasws pws = new pasws();
+            pws.Url = ConfigurationSettings.AppSettings["Pas"];
+
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if (logon == null)
                 Server.Transfer("logon.aspx");
@@ -53,6 +55,7 @@ public partial class parameters : System.Web.UI.Page
         param.l_repetition = int.Parse(txt_repetitions.Text);
 
         pasws pws = new pasws();
+        pws.Url = ConfigurationSettings.AppSettings["Pas"];
         com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         if (logon == null)
             Server.Transfer("logon.aspx");
