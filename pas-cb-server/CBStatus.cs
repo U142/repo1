@@ -17,7 +17,7 @@ namespace pas_cb_server
 
                 //for (int i = 0; i < Settings.l_statuspollinterval; i++)
                 //{
-                    Thread.Sleep(1000);
+                    Thread.Sleep(60000);
 //                    if (!CBServer.running)
 //                        break;
                 //}
