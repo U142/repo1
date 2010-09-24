@@ -44,7 +44,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-                    AND HC.l_timestamp=-1 
+                    AND HC.l_timestamp=-1 AND LS.l_status<1000
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -67,7 +67,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-	                AND LS.l_started_ts is not null
+	                AND LS.l_started_ts is not null AND LS.l_status<1000
                     AND HC.l_timestamp<>-1"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -90,7 +90,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-                    AND HR.l_timestamp=-1 
+                    AND HR.l_timestamp=-1 AND LS.l_status<1000
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -113,7 +113,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),7,2)
                     )) 
-                    AND LS.l_expires_ts is not null"
+                    AND LS.l_expires_ts is not null AND LS.l_status<1000"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
                , Constant.CBACTIVE
