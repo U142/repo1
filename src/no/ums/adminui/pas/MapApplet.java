@@ -111,6 +111,8 @@ public class MapApplet extends JApplet implements ActionListener {
 	private ULOGONINFO logoninfo;
 	private LogonInfo info;
 	public static String OVERRIDE_WMS_SITE = null;
+	public int applet_width;
+	public int applet_height;
 	
 	public void init() {
 		try {
@@ -127,7 +129,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	
 	public void start() {
-		resize(800,600);
+		
 		vars.init(getParameter("w"));
 		PAS.setLocale("en","GB");
 		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
@@ -142,7 +144,8 @@ public class MapApplet extends JApplet implements ActionListener {
 		logon.setSzPassword("614b5c970633ec4ac2ee96f98f6fdeb04e4fb0e0b13dc9401b674bb8c4a41ee96b67ce39491a716776ca81a4b58a7b47434aef0195c90241856fe065a476adcb");
 		logon.setSessionid(session);
 		*/
-
+		applet_height = Integer.parseInt(getParameter("applet_height"));
+		applet_width = Integer.parseInt(getParameter("applet_width"));
 		logon.setLDeptpk(Integer.parseInt(getParameter("deptid")));
 		logon.setLComppk(Integer.parseInt(getParameter("compid")));
 		logon.setLUserpk(Long.parseLong(getParameter("userid")));
@@ -192,8 +195,8 @@ public class MapApplet extends JApplet implements ActionListener {
 		variables.SETTINGS = m_settings;
 	
 		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
-		
-		m_navigation = new Navigation(this,640,480);
+		resize(applet_width,applet_height);
+		m_navigation = new Navigation(this,applet_width,applet_height);
 		variables.NAVIGATION = m_navigation;
 		
 		try {
@@ -208,7 +211,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	private void afterLogon() {
 		
-		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,640,480);
+		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,applet_width,applet_height);
 		variables.DRAW = m_drawthread;
 		
 		
@@ -254,7 +257,7 @@ public class MapApplet extends JApplet implements ActionListener {
 					SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 					variables.SENDCONTROLLER.set_activesending(so);
 					variables.SENDCONTROLLER.add_sending(so);
-					sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(640,480)),new SendOptionToolbar(so,this,0), new Col());
+					sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 					so.set_sendproperties(sp);
 				}
 				else
@@ -301,6 +304,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		contentpane.setLayout(new FlowLayout());
 		//contentpane.add(pnl_buttons, BorderLayout.PAGE_START);
 		contentpane.add(m_mappane, BorderLayout.PAGE_END);
+		contentpane.setSize(applet_width, applet_height);
 		//add(m_mappane);
 		//m_image = m_mappane.m_maploader.load_map(m_navigation.getNavLBO(), m_navigation.getNavRBO(), m_navigation.getNavUBO(), m_navigation.getNavBBO(), this.getSize(), 0, "By");
 		//m_drawthread.setRepaint(m_image);
@@ -352,7 +356,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			variables.USERINFO = m_info;
 			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144));
-			m_mappane = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+			m_mappane = new MapFrameAdmin(applet_width, applet_height, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 			variables.MAPPANE = m_mappane;
 			m_mappane.load_map();
 			m_drawthread.set_mappane(m_mappane);
@@ -798,7 +802,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 			variables.SENDCONTROLLER.set_activesending(so);
 			variables.SENDCONTROLLER.add_sending(so);
-			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(640,480)),new SendOptionToolbar(so,this,0), new Col());
+			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 			so.set_sendproperties(sp);
 		}
 		else
