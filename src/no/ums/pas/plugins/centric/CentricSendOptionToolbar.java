@@ -774,14 +774,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getSource().equals(m_btn_update)) {
 			if(!projectOpen())
 			{
+				/*
 				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
-					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));
+					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));*/
 				m_sz_date = getFormatedDate();
-				setEventText(m_txt_event_name.getText() + " " + m_sz_date);
+				//setEventText(m_txt_event_name.getText() + " " + m_sz_date);
+				setEventText(m_txt_event_name.getText());
 			}
 			else
 				m_sz_date = getFormatedDate();
 			m_txt_date_time.setText(m_sz_date);
+			updatePreviewText();
 		}
 		else if(e.getSource().equals(m_btn_messagelib))
 		{
@@ -964,6 +967,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			checkForEnableSendButton();
 			current_mode = MODE.MESSAGE_WRITING;
 			autoClickButton(m_btn_update);
+			// complete default name
+			setEventText(m_txt_event_name.getText() + " " + getFormatedDate());
 			updatePreviewText();
 			updateCharacters();
 
@@ -1148,13 +1153,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
+		/*
 		if(arg0.getSource().equals(m_txt_event_name)) {
 			if(!projectOpen())
 			{
 				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
 					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));				
 			}
-		}
+		}*/
 		checkForEnableSendButton();
 		//updateCharacters();
 		updatePreviewText();
@@ -1163,12 +1169,13 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
+		/*
 		if(arg0.getSource().equals(m_txt_event_name)) {
 			if(!projectOpen())
 			{
 				setEventText(m_txt_event_name.getText() + " " + m_sz_date);
 			}
-		}
+		}*/
 		//checkInputs();
 		checkForEnableSendButton();
 		//updateCharacters();
