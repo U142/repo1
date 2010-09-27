@@ -774,12 +774,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(e.getSource().equals(m_btn_update)) {
 			if(!projectOpen())
 			{
-				/*
-				if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
+				/*if(m_txt_event_name.getText().endsWith(" " + m_sz_date))
 					setEventText(m_txt_event_name.getText().substring(0,m_txt_event_name.getText().length()-(m_sz_date.length()+1)));*/
 				m_sz_date = getFormatedDate();
-				//setEventText(m_txt_event_name.getText() + " " + m_sz_date);
-				setEventText(m_txt_event_name.getText());
+				setEventText(PAS.get_pas().get_userinfo().get_organization() + " " + m_sz_date);
+				//setEventText(m_txt_event_name.getText());
 			}
 			else
 				m_sz_date = getFormatedDate();
@@ -948,6 +947,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			//lock the painting
 			PAS.pasplugin.onLockSending(null, false);
 			current_mode = MODE.MESSAGE_WRITING;
+			checkForEnableSendButton();
 			add_controls();
 		}
 		if(e.getSource().equals(m_btn_reset)){
@@ -968,7 +968,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			current_mode = MODE.MESSAGE_WRITING;
 			autoClickButton(m_btn_update);
 			// complete default name
-			setEventText(m_txt_event_name.getText() + " " + getFormatedDate());
+			if(m_txt_event_name.isEnabled())
+				setEventText(m_txt_event_name.getText() + " " + getFormatedDate());
 			updatePreviewText();
 			updateCharacters();
 
@@ -1344,7 +1345,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}*/
 		if(e.getSource().equals(m_txt_event_name))
 		{
-			setEventText(m_txt_event_name.getText());
+			//setEventText(m_txt_event_name.getText());
 		}
 		else
 		{
