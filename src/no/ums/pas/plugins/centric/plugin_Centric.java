@@ -34,8 +34,8 @@ import no.ums.pas.send.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.versioning.versioning;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.versioning;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.*;
@@ -177,10 +177,11 @@ public class plugin_Centric extends PAS_Scripting
 			public void actionPerformed(ActionEvent e)
 			{
 				variables.MAPPANE.set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
-				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 				PAS.get_pas().repaint();
 			}
 		});
+		
 		menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu_btn_draw_polygon, menu.m_gridconst);
 
@@ -1085,7 +1086,7 @@ public class plugin_Centric extends PAS_Scripting
 		content+="\n\n";
 		content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
 		content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
-		content+="\n" + versioning.BUILT_DATE;
+		//content+="\n" + versioning.BUILT_DATE;
 		JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return super.onHelpAbout();
 	}

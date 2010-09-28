@@ -4,11 +4,22 @@ public class Area {
 	private String m_id;
 	private String m_name;
 	
+
 	
+	
+	
+
 	public Area(String id, String name) {
 		m_id = id;
 		m_name = name;
 	}
+	
+	
+
+	
+	
+	
+	
 
 	public String get_id() {
 		return m_id;

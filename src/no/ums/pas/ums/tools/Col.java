@@ -2,6 +2,8 @@ package no.ums.pas.ums.tools;
 
 import java.awt.Color;
 
+
+
 public class Col {
 	private Color m_col_border;
 	private Color m_col_fill;
@@ -10,6 +12,7 @@ public class Col {
 	public Col() {
 		this(new Color((float)0.6, (float)0.6, (float)0.6, (float)0.3), new Color((float)0.6, (float)0.6, (float)0.6, (float)0.6));
 	}
+	
 	public Col(Color border, Color fill) {
 		m_col_border= border;
 		m_col_fill	= fill;

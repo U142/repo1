@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: Morten H. Helvig
+Built-By: Modda
+Implementation-Title: Population Alert System
+Implementation-Version: 1.00-b28
+Implementation-Vendor: Unified Messaging Systems AS
+Sealed: true
+Specification-Title: Population Alert System
+Specification-Version: 1.00
+Specification-Vendor: Unified Messaging Systems AS
+Built-Date: 2010/09/28 12:34 PM
+

@@ -1035,6 +1035,7 @@ public class PolygonStruct extends ShapeStruct {
 				}*/
 				g2d.setStroke(stroke_revert);
 				
+				
 				if(!bEditmode && !bPaintShapeName)
 				{
 					//paint point numbers
@@ -1043,10 +1044,10 @@ public class PolygonStruct extends ShapeStruct {
 					g.setFont(f1);
 					for(int i=0; i < use_size; i+=20)
 					{
-						Color oldCol = g.getColor();
+						/*Color oldCol = g.getColor();
 						g.setColor(Color.red);
 						g.drawString(""+i, use_array_x[i], use_array_y[i]);
-						g.setColor(oldCol);
+						g.setColor(oldCol);*/
 					}
 					g.setFont(fOldFont);
 				}
@@ -1124,6 +1125,8 @@ public class PolygonStruct extends ShapeStruct {
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		if(isElliptical())
 		{
+		
+		
 			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_x()!=m_p_corner.get_x() && m_p_center.get_y()!=m_p_corner.get_y())
 			{
 				/*if(restrictionShapes.size()>0)
@@ -1136,7 +1139,8 @@ public class PolygonStruct extends ShapeStruct {
 					if(intersects.size()>0)
 						return false;
 				}*/
-				return true;
+				if(get_size()>3)
+					return true;
 			}
 		}
 		else

@@ -100,6 +100,7 @@ import contrib.com.jgoodies.looks.common.FontSet;
 
 
 
+
 /*class ThemeLoader
 {
 	class PluginClassLoader extends URLClassLoader {
@@ -764,6 +765,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	private void powerUp()
 	{
+		
+	
 		
 		
 		try

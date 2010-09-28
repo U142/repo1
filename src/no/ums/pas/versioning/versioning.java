@@ -1,17 +1,28 @@
-package no.ums.pas.core;
+package no.ums.pas.versioning;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.jar.Manifest;
 
+
+
 public class versioning
 {
+
+	
 	public static String NAME;
+	
 	//public static String MANIFEST_VERSION;
 	//public static String ANT_VERSION;
 	//public static String CREATED_BY;
 	//public static String BUILT_BY;
 	//public static String BUILT_DATE;
+	
+	
+
+	
+
+	
 	
 	public static Annotation [] ANNOTATIONS;
 	
@@ -24,6 +35,7 @@ public class versioning
 	public static String SPECIFICATION_TITLE;
 	public static String SPECIFICATION_VERSION;
 	public static String SPECIFICATION_VENDOR;
+	
 
 	public static String BUILT_DATE;
 	
