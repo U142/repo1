@@ -43,19 +43,16 @@ public class Util
 
     public static String userType(long type)
     {
-        switch (type)
-        {
-            case 2:
-                return "Regional";
-            case 3:
-                return "Super Regional";
-            case 4:
-                return "National";
-            case 1: 
-                return "Administrator";
-            default:
-                return "Unknown";
-        }
+        if(long.Parse(ConfigurationSettings.AppSettings["usertype_national"]) == type)
+            return "National";
+        else if(long.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) == type)
+            return "Super Regional";
+        else if(long.Parse(ConfigurationSettings.AppSettings["usertype_regional"]) == type)
+            return "Regional";
+        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]) == type)
+            return "Administrator";
+        else
+            return "Unknown";
     }
 
     public static String sendingType(CB_MESSAGE_MONTHLY_REPORT_RESPONSE res)

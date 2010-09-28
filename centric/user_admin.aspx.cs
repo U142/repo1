@@ -230,19 +230,19 @@ public partial class user_admin : System.Web.UI.Page
         if (rad_administrator.Checked)
         {
             // No regions allowed
-            user.l_profilepk = 1;
+            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["admin_department"]);
         }
         else if (rad_national.Checked)
         {
             // All regions?
-            user.l_profilepk = 4;
+            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_national"]);
         }
         else if (rad_sregional.Checked)
-            user.l_profilepk = 3;
+            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]);
         else if (rad_regional.Checked)
         {
             // Only on region
-            user.l_profilepk = 2;
+            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_regional"]);
             user.l_deptpk = int.Parse(lst_regions.SelectedValue);
         }
 
@@ -269,6 +269,7 @@ public partial class user_admin : System.Web.UI.Page
              {
                  regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
              }
+             user.l_deptpk = regionpk[0];
              res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
          }
          else
@@ -425,24 +426,26 @@ public partial class user_admin : System.Web.UI.Page
         rad_national.Checked = false;
         rad_administrator.Checked = false;
 
-        switch (user.l_profilepk)
+        if (long.Parse(ConfigurationSettings.AppSettings["usertype_national"]) == user.l_profilepk)
         {
-            case 2: // regional
-                rad_regional.Checked = true;
-                req_regions.Enabled = true;
-                break;
-            case 3:
-                rad_sregional.Checked = true;                
-                req_regions.Enabled = true;
-                break;
-            case 4:
-                rad_national.Checked = true;
-                req_regions.Enabled = true;
-                break;
-            case 1:
-                rad_administrator.Checked = true;
-                break;
+            rad_national.Checked = true;
+            req_regions.Enabled = true;
         }
+        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) == user.l_profilepk)
+        {
+            rad_sregional.Checked = true;
+            req_regions.Enabled = true;
+        }
+        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_regional"]) == user.l_profilepk)
+        {
+            rad_regional.Checked = true;
+            req_regions.Enabled = true; 
+        }
+        else if (long.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]) == user.l_profilepk)
+        {
+            rad_administrator.Checked = true;
+        }
+
         admin_Checked(this, null);
 
         
