@@ -35,6 +35,7 @@ import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
+import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
@@ -603,7 +604,20 @@ public class PAS_Scripting extends PasScriptingInterface
 		String sz_class = e.getLocalizedMessage().substring(idx1, idx2);
 		if(sz_class.equals("com.ums.UmsCommon.USessionExpiredException"))
 		{
+			info.set_session_active(false);
+			info.set_session_inactive_reason(SESSION_INACTIVE_REASON.EXPIRED);
 			return onSessionTimedOutException(info);
+		}
+		else if(sz_class.equals("com.ums.UmsCommon.USessionDeletedException"))
+		{
+			info.set_session_active(false);
+			info.set_session_inactive_reason(SESSION_INACTIVE_REASON.DELETED);
+			return onSessionTimedOutException(info);
+		}
+		else if(sz_class.equals("com.ums.UmsCommon.UNoAccessOperatorsException"))
+		{
+			JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			return true;
 		}
 		return false;
 	}
@@ -623,12 +637,12 @@ public class PAS_Scripting extends PasScriptingInterface
 					{
 						try
 						{
-							ClassLoader classloader = PAS.get_pas().getClass().getClassLoader();
-							Class cl = classloader.loadClass("no.ums.pas.pluginbase.defaults.DisabledLookAndFeel");
-							LookAndFeel laf = (LookAndFeel)cl.newInstance();
-							UIManager.setLookAndFeel(laf);
-							SwingUtilities.updateComponentTreeUI(PAS.get_pas());
-							onSetAppTitle(PAS.get_pas(), " [SESSION TIMED OUT]", PAS.get_pas().get_userinfo());
+							//ClassLoader classloader = PAS.get_pas().getClass().getClassLoader();
+							//Class cl = classloader.loadClass("no.ums.pas.pluginbase.defaults.DisabledLookAndFeel");
+							//LookAndFeel laf = (LookAndFeel)cl.newInstance();
+							//UIManager.setLookAndFeel(laf);
+							//SwingUtilities.updateComponentTreeUI(PAS.get_pas());
+							onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
 						}
 						catch(Exception err)
 						{
@@ -636,6 +650,15 @@ public class PAS_Scripting extends PasScriptingInterface
 						}
 					}
 				});
+				switch(info.get_session_inactive_reason())
+				{
+				case DELETED:
+					JOptionPane.showMessageDialog(null, PAS.l("logon_error_user_blocked"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+					break;
+				case EXPIRED:
+					JOptionPane.showMessageDialog(null, PAS.l("logon_error_user_session_timeout"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+					break;
+				}
 				Logon logon = new Logon(PAS.get_pas(), new LogonInfo(PAS.get_pas().get_settings().getUsername(),
 						PAS.get_pas().get_settings().getCompany()), 
 						PAS.get_pas().get_settings().getLanguage(),

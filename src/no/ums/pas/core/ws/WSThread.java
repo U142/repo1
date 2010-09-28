@@ -44,8 +44,10 @@ public abstract class WSThread extends Thread
 		catch(SOAPFaultException e)
 		{
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);
-			PAS.pasplugin.onSoapFaultException(PAS.get_pas().get_userinfo(), e);
+			boolean b = PAS.pasplugin.onSoapFaultException(PAS.get_pas().get_userinfo(), e);
+			if(!b)
+				Error.getError().addError(PAS.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);
+
 		}
 		catch(Exception e)
 		{

@@ -12,6 +12,13 @@ import java.util.*;
 
 
 public class UserInfo extends Object {
+	
+	public enum SESSION_INACTIVE_REASON 
+	{
+		NONE,
+		EXPIRED,
+		DELETED,
+	}
 	private String m_sz_name;
 	private String m_sz_surname;
 	private String m_sz_userid;
@@ -19,6 +26,7 @@ public class UserInfo extends Object {
 	private String m_sz_passwd;
 	private String m_sz_sessionid;
 	private boolean m_b_session_active = false;
+	private SESSION_INACTIVE_REASON m_session_inactive_reason = SESSION_INACTIVE_REASON.NONE;
 	private int m_n_comppk;
 	private String m_sz_userpk;
 	private int m_n_default_deptpk;
@@ -27,6 +35,8 @@ public class UserInfo extends Object {
 	NavStruct m_nav_init = null;
 	public void set_session_active(boolean b) { m_b_session_active = b; }
 	public boolean is_session_active() { return m_b_session_active; }
+	public void set_session_inactive_reason(SESSION_INACTIVE_REASON n) { m_session_inactive_reason = n; }
+	public SESSION_INACTIVE_REASON get_session_inactive_reason() { return m_session_inactive_reason; }
 	public String get_userid() { return m_sz_userid; }
 	public String get_compid() { return m_sz_compid; }
 	public String get_userpk() { return m_sz_userpk; }

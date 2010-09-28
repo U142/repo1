@@ -219,13 +219,13 @@ public class Logon implements ActionListener {
 			switch(proc.getReason())
 			{
 			case BLOCKED_BY_ADMIN:
-				dlg.set_errortext("User Blocked By Admin");
+				dlg.set_errortext(PAS.l("logon_error_user_blocked"));
 				break;
 			case NONE:
 				dlg.set_errortext(String.format(PAS.l("error_logon_invalid_userinfo_format"), getLogonTries(), getMaxLogonTries())); //"Invalid user-information (try " + getLogonTries() + " / " + getMaxLogonTries() + ")");
 				break;
 			case REACHED_RETRY_LIMIT:
-				dlg.set_errortext("User Reached retry limit");
+				dlg.set_errortext(PAS.l("logon_error_user_retry_limit"));
 				break;
 			}
 			m_logoninfo = null;
