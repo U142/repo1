@@ -17,6 +17,9 @@ namespace com.ums.wsPASExec
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            DateTime ret = DateTime.ParseExact("20100923121859", "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+            String test = string.Format("{0:yyyy-MM-ddTHH:mm:ss}", ret);
+
             UCommon.UPATHS.sz_path_backbone = ConfigurationSettings.AppSettings["sz_path_backbone"]; //"d:\\ums\\aep\\eat\\";
             UCommon.UPATHS.sz_path_bcp = ConfigurationSettings.AppSettings["sz_path_bcp"]; //"d:\\ums\\bcp\\eat\\";
             UCommon.UPATHS.sz_path_predefined_areas = ConfigurationSettings.AppSettings["sz_path_predefined_areas"]; //"D:\\ums\\wwwroot\\vb4\\predefined-areas\\";
@@ -58,6 +61,25 @@ namespace com.ums.wsPASExec
             UCommon.USETTINGS.b_enable_adrdb = Boolean.Parse(ConfigurationSettings.AppSettings["b_enable_adrdb"]);
             UCommon.USETTINGS.b_enable_nslookup = Boolean.Parse(ConfigurationSettings.AppSettings["b_enable_nslookup"]);
 
+            UCommon.USETTINGS.b_write_messagelib_to_file = Boolean.Parse(ConfigurationSettings.AppSettings["b_write_messagelib_to_file"]);
+
+            bool enablesyslog = true;
+            bool enableeventlog = true;
+            try
+            {
+                enablesyslog = bool.Parse(ConfigurationSettings.AppSettings["b_enable_syslog"]);
+            }
+            catch (Exception err)
+            {
+            }
+            try
+            {
+                enableeventlog = bool.Parse(ConfigurationSettings.AppSettings["b_enable_eventlog"]);
+            }
+            catch (Exception err)
+            {
+            }
+
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
             int syslogport = int.Parse(port);
@@ -65,6 +87,7 @@ namespace com.ums.wsPASExec
             try
             {
                 UCommon.Initialize("soap/pas/1.0", sysloghost, syslogport);
+                ULog.setLogTo((long)(enableeventlog ? ULog.ULOGTO.EVENTLOG : 0) | (long)(enablesyslog ? ULog.ULOGTO.SYSLOG : 0));
             }
             catch (Exception ex)
             {
@@ -78,7 +101,6 @@ namespace com.ums.wsPASExec
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            String s = sender.ToString();
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

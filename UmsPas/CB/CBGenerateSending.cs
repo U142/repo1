@@ -31,6 +31,7 @@ namespace com.ums.PAS.CB
          */
         public CB_SENDING_RESPONSE Send()
         {
+            //link the sending to the department selected by the user
 
             //verify class
             if (operation.GetType().Equals(typeof(CB_ALERT_POLYGON)))
@@ -60,7 +61,7 @@ namespace com.ums.PAS.CB
             //May be changed to be one channel per language
             try
             {
-                int n_cb_channel = db.getLBAChannelByComppk(operation.l_refno, logon.l_deptpk, logon.l_comppk);
+                int n_cb_channel = db.getLBAChannelByComppk(operation.l_refno, alert.l_deptpk, logon.l_comppk);
                 for(int i=0; i < alert.textmessages.list.Count; i++)
                 {
                     alert.textmessages.list[i].l_cbchannel = n_cb_channel;
@@ -69,6 +70,12 @@ namespace com.ums.PAS.CB
             catch (Exception e)
             {
                 throw e;
+            }
+
+            List<int> operators = db.GetCBOperatorsForSendByComp(alert.l_comppk);
+            if (operators.Count <= 0)
+            {
+                throw new UNoAccessOperatorsException();
             }
 
 
@@ -108,10 +115,17 @@ namespace com.ums.PAS.CB
             //message.sz_text = message.sz_text.Replace("'", "''");
             
             //insert records into LBASEND
-            List<Int32> operatorfilter = null;
-            db.InsertLBARecord_2_0(-1, alert.l_refno, 
-                                199, -1, -1, -1, 0, 1, "", "", 0,
-                                ref operatorfilter, logon.l_deptpk, (int)LBA_SENDINGTYPES.CELLBROADCAST);
+            try
+            {
+                List<Int32> operatorfilter = null;
+                db.InsertLBARecordCB(-1, alert.l_refno,
+                                    199, -1, -1, -1, 0, 1, "", "", 0,
+                                    ref operatorfilter, alert.l_deptpk, (int)LBA_SENDINGTYPES.CELLBROADCAST);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
             mdv.sz_messagetext = message.sz_text.Replace("'", "''");
@@ -123,6 +137,7 @@ namespace com.ums.PAS.CB
             mdv.l_createtime = "0";
             mdv.l_group = (long)alert.mdvgroup; //POLYGON
             mdv.l_deptpk = alert.l_deptpk;
+            mdv.l_companypk = logon.l_comppk;
             mdv.l_userpk = logon.l_userpk;
             mdv.l_type = (long)LBA_SENDINGTYPES.CELLBROADCAST;
             PAS_SENDING ps = new PAS_SENDING();

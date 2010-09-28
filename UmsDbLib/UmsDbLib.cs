@@ -262,7 +262,7 @@ namespace com.ums.UmsDbLib
             rs.Close();
             if (last <= 0)
             {
-                throw new SoapException("Session no longer exist", SoapException.ServerFaultCode, new USessionExpiredException(0));
+                throw new SoapException("Session no longer exist", SoapException.ServerFaultCode, new USessionDeletedException(0));
             }
             //throw new USessionDoesNotExsistException();
 

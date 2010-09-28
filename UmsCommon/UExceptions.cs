@@ -36,6 +36,14 @@ namespace com.ums.UmsCommon
 
     }
 
+    public class USessionDeletedException : USessionExpiredException
+    {
+        public USessionDeletedException(long seconds)
+            : base(seconds)
+        {
+        }
+    }
+
     public class USessionDoesNotExsistException : UException
     {
         public USessionDoesNotExsistException()

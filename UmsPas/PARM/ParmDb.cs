@@ -1154,6 +1154,30 @@ namespace com.ums.UmsParm
             
         }
 
+        public List<int> GetCBOperatorsForSendByComp(long l_comppk)
+        {
+            List<int> operators = new List<int>();
+            try
+            {
+                String szSQL = "";
+                int n_operator = 0;
+                szSQL = String.Format("SELECT isnull(OP.l_operator,-1) FROM LBAOPERATORS OP WHERE OP.f_active=1 AND f_cb=1");
+                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
+                {
+                    n_operator = rs.GetInt32(0);
+                    if (n_operator > 0)
+                        operators.Add(n_operator);
+                }
+                rs.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return operators;
+        }
+
         public List<int> GetOperatorsForSend(long l_alertpk, long l_deptpk)
         {
             List<int> operators = new List<int>();
@@ -1177,8 +1201,9 @@ namespace com.ums.UmsParm
                 }
                 rs.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                throw e;
             }
             return operators;
         }
@@ -1191,35 +1216,16 @@ namespace com.ums.UmsParm
             String szSQL = "";
             try
             {
-                /*int n_operator = 0;
-                int n_status = -2;
-                if (l_alertpk < 0) //ad-hoc sending, select all operators
-                    szSQL = "SELECT isnull(l_operator,-1), l_status=0 FROM LBAOPERATORS";
-                else //sending from alert, select only prepared operators
-                    szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator", l_alertpk);
-
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                while (rs.Read())
-                {
-                    n_operator = rs.GetInt32(0);
-                    n_status = rs.GetInt32(1);
-                    if (n_operator > 0 && l_status == 0)
-                    {*/
                 List<int> operators = GetOperatorsForSend(l_alertpk, l_deptpk);
+                if (operators.Count <= 0)
+                {
+                    throw new UNoAccessOperatorsException();
+                }
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    /*szSQL = String.Format("INSERT INTO LBASEND(l_refno, l_status, l_response, l_items, l_proc, l_retries, " +
-                                             "l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator, l_type) VALUES({0}, {1}, {2}, {3}, {4}, {5}, " +
-                                             "{6}, '{7}', '{8}', {9}, {10}, {11})",
-                                             l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype,
-                                             sz_jobid, sz_areaid, n_function, operators[i], l_type);
-                    */
                     szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}", l_refno, operators[i], l_type);
                     ExecNonQuery(szSQL);
                 }
-                    /*}
-                }
-                rs.Close();*/
                 return true;
             }
             catch (Exception e)
@@ -1228,6 +1234,34 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
+
+        public bool InsertLBARecordCB(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
+                                    int l_proc, int l_retries, int l_requesttype,
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter, long l_comppk, long l_type) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
+        {
+            String szSQL = "";
+            try
+            {
+                List<int> operators = GetCBOperatorsForSendByComp(l_comppk);
+                if (operators.Count <= 0)
+                {
+                    throw new UNoAccessOperatorsException();
+                }
+                for (int i = 0; i < operators.Count; i++)
+                {
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}", l_refno, operators[i], l_type);
+                    ExecNonQuery(szSQL);
+                }
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
 
         public bool insertLBATEXTCC(long l_refno, String sz_message, int l_channel)
         {

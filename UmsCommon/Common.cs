@@ -412,6 +412,7 @@ namespace com.ums.UmsCommon
             public static int l_gisimport_chunksize;
             public static int l_gisimport_db_timeout;
             public static int l_max_logontries;
+            public static Boolean b_write_messagelib_to_file;
         }
 
         public struct UPATHS

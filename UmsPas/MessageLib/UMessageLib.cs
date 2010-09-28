@@ -110,15 +110,18 @@ namespace com.ums.PAS.messagelib
 
                 rs.Close();
 
-                if (!Directory.Exists(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\"))
-                    Directory.CreateDirectory(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\");
+                if (UCommon.USETTINGS.b_write_messagelib_to_file)
+                {
+                    if (!Directory.Exists(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\"))
+                        Directory.CreateDirectory(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\");
 
-                UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
-                UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
-                StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("iso-8859-1"));
-                sw.Write(msg.sz_message);
-                sw.Close();
-                file_tmp.MoveOperation(file, true);
+                    UFile file_tmp = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".tmp");
+                    UFile file = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk.ToString() + ".txt");
+                    StreamWriter sw = new StreamWriter(file_tmp.full(), false, Encoding.GetEncoding("iso-8859-1"));
+                    sw.Write(msg.sz_message);
+                    sw.Close();
+                    file_tmp.MoveOperation(file, true);
+                }
                 return msg;
             }
             catch (Exception e)
@@ -197,47 +200,51 @@ namespace com.ums.PAS.messagelib
                     {
                         msg.n_categorypk = 0;
                     }
-                    msg.b_valid = false;
-                    if (msg.f_template == 1 || msg.n_langpk >= 0) //Text template or TTS, there should exist a txt-file
+                    msg.b_valid = true;
+                    if (UCommon.USETTINGS.b_write_messagelib_to_file)
                     {
-                        try
+                        msg.b_valid = false;
+                        if (msg.f_template == 1 || msg.n_langpk >= 0) //Text template or TTS, there should exist a txt-file
                         {
-                            UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".txt");
-                            if (File.Exists(f.full()))
+                            try
                             {
-                                msg.sz_message = File.ReadAllText(f.full(), Encoding.GetEncoding("iso-8859-1"));
-                                msg.b_valid = true;
+                                UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".txt");
+                                if (File.Exists(f.full()))
+                                {
+                                    msg.sz_message = File.ReadAllText(f.full(), Encoding.GetEncoding("iso-8859-1"));
+                                    msg.b_valid = true;
+                                }
+                                else
+                                    msg.sz_message = "";
                             }
-                            else
+                            catch (Exception)
+                            {
                                 msg.sz_message = "";
-                        }
-                        catch (Exception)
-                        {
-                            msg.sz_message = "";
-                            msg.audiostream = null;
-                        }
-                    }
-                    if (msg.f_template <= 0) //WAV message, either TTS or rec/upload
-                    {
-                        try
-                        {
-                            UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".wav");
-                            if (File.Exists(f.full()))
-                            {
-                                msg.audiostream = File.ReadAllBytes(f.full());
-                                msg.b_valid = true;
+                                msg.audiostream = null;
                             }
                         }
-                        catch (Exception)
+                        if (msg.f_template <= 0) //WAV message, either TTS or rec/upload
                         {
-                            msg.sz_message = "";
-                            msg.audiostream = null;
-                            msg.b_valid = false;
+                            try
+                            {
+                                UFile f = new UFile(UCommon.UPATHS.sz_path_predefined_messages + "\\" + msg.n_deptpk + "\\", msg.n_messagepk + ".wav");
+                                if (File.Exists(f.full()))
+                                {
+                                    msg.audiostream = File.ReadAllBytes(f.full());
+                                    msg.b_valid = true;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                msg.sz_message = "";
+                                msg.audiostream = null;
+                                msg.b_valid = false;
+                            }
                         }
-                    }
-                    else
-                    {
-                        //NOT A VALID MESSAGE
+                        else
+                        {
+                            //NOT A VALID MESSAGE
+                        }
                     }
                     // Gets messages for specific country codes
                     UmsDb db = new UmsDb();
