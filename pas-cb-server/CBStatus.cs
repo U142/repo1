@@ -17,7 +17,7 @@ namespace pas_cb_server
 
                 //for (int i = 0; i < Settings.l_statuspollinterval; i++)
                 //{
-                    Thread.Sleep(60000);
+                    Thread.Sleep(1000);
 //                    if (!CBServer.running)
 //                        break;
                 //}
@@ -44,7 +44,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-                    AND HC.l_timestamp=-1 AND LS.l_status<1000
+                    AND HC.l_timestamp=-1
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -67,7 +67,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-	                AND LS.l_started_ts is not null AND LS.l_status<1000
+	                AND LS.l_started_ts is not null
                     AND HC.l_timestamp<>-1"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -90,7 +90,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
-                    AND HR.l_timestamp=-1 AND LS.l_status<1000
+                    AND HR.l_timestamp=-1
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -113,7 +113,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),4,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),7,2)
                     )) 
-                    AND LS.l_expires_ts is not null AND LS.l_status<1000"
+                    AND LS.l_expires_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
                , Constant.CBACTIVE
@@ -164,7 +164,7 @@ namespace pas_cb_server
                             CB_one2many.GetAlertStatus(l_refno, l_status, int.Parse(sz_jobid), op, l_expires_ts, b_report);
                             break;
                         case 3: // tmobile
-                            CB_tmobile.GetAlertStatus(l_refno, l_status, BitConverter.GetBytes(int.Parse(sz_jobid)), op, l_expires_ts, b_report);
+                            CB_tmobile.GetAlertStatus(l_refno, l_status, Tools.GetBytes(int.Parse(sz_jobid)), op, l_expires_ts, b_report);
                             break;
                         default:
                             Log.WriteLog(String.Format("{0} Unkown operator type (op={1}, job={2})", l_refno, op.sz_operatorname, sz_jobid), 2);

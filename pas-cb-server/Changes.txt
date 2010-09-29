@@ -1,4 +1,17 @@
-﻿1.2.1
+﻿1.2.3
+=====
+CBServer
+	* Added GetBytes and ToInt32 to Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian.
+
+1.2.2
+=====
+CBServer
+	* Fixed EMS message for T-Mobile API, if EMS fails, it will insert -1 into histcell instead of just spamming new checks every second.
+	* Fixed repetitioninterval. LBAPARAM l_repetitioninterval is in minutes.
+		- For T-Mobile this is used for GSM, while UMTS is multiplied by 60 to get seconds.
+		- For one2many it is multiplied with 60 to get seconds, and then divided by 1.883 which is the increments.
+
+1.2.1
 =====
 CBServer
 	* Fixed bug in T-Mobile logging, logged l_refno instead of request pk in most operations.

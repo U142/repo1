@@ -262,7 +262,7 @@ namespace pas_cb_server
                 else // use infomsg
                 {
                     sz_method = "InfoMessage";
-                    return cbc_infomsg(cbc, op, l_refno, l_msghandle, l_status, b_report);
+                    return cbc_infomsg(cbc, op, l_refno, l_msghandle, l_status, l_expires_ts, b_report);
                 }
             }
             catch (Exception e)
@@ -271,6 +271,7 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message, sz_method),
                     String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e, sz_method),
                     2);
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
                 return Constant.FAILED;
             }
             finally
@@ -422,8 +423,8 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
-            newmsgreq.repetitioninterval = oAlert.l_repetitioninterval;
-
+            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval * 60 / 1.883); // convert from minutes
+            
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
             newmsgreq.displaymode = def.l_displaymode;
@@ -491,7 +492,7 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
-            newmsgreq.repetitioninterval = oAlert.l_repetitioninterval;
+            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval * 60 / 1.883);
 
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
@@ -553,6 +554,8 @@ namespace pas_cb_server
         }
         private static int cbc_cellcount(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, decimal l_expires_ts, bool b_report)
         {
+            int ret = Constant.OK;
+
             CBCMSGNETWORKCELLCOUNTREQUEST r_cellcount = new CBCMSGNETWORKCELLCOUNTREQUEST();
             r_cellcount.cbccberequesthandle = Database.GetHandle(op);
             r_cellcount.messagehandle = l_msghandle;
@@ -561,7 +564,8 @@ namespace pas_cb_server
             if (!Settings.live)
             {
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                return Constant.OK;
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                return ret;
             }
 
             CBCMSGNETWORKCELLCOUNTREQRESULT cellcount = cbc.CBC_MsgNetworkCellCount(r_cellcount);
@@ -595,11 +599,7 @@ namespace pas_cb_server
                 if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
                     Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
 
-                // set as finished if expiry date has passed
-                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
-                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-
-                return Constant.OK;
+                ret = Constant.OK;
             }
             else
             {
@@ -610,11 +610,20 @@ namespace pas_cb_server
                     , cellcount.cbccbestatuscode
                     , cellcount.messagetext
                     , l_msghandle), 2);
-                return Constant.FAILED;
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                ret = Constant.FAILED;
             }
+
+            // set as finished if expiry date has passed
+            if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+
+            return ret;
         }
-        private static int cbc_infomsg(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, bool b_report)
+        private static int cbc_infomsg(Ione2many cbc, Operator op, int l_refno, int l_msghandle, int l_status, decimal l_expires_ts, bool b_report)
         {
+            int ret = Constant.OK;
+
             CBCINFOMSGREQUEST inforeq = new CBCINFOMSGREQUEST();
             inforeq.cbccberequesthandle = Database.GetHandle(op);
             inforeq.messagehandle = l_msghandle;
@@ -623,7 +632,8 @@ namespace pas_cb_server
             if (!Settings.live)
             {
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                return Constant.OK;
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                return ret;
             }
 
             CBCINFOMSGREQRESULT infores = cbc.CBC_InfoMsg(inforeq);
@@ -676,7 +686,12 @@ namespace pas_cb_server
                         Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
                         break;
                 }
-                return Constant.OK;
+
+                // set as finished if expiry date has passed
+                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+                
+                ret = Constant.OK;
             }
             else
             {
@@ -687,8 +702,10 @@ namespace pas_cb_server
                     , infores.cbccbestatuscode
                     , infores.messagetext
                     , l_msghandle), 2);
-                return Constant.FAILED;
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                ret = Constant.FAILED;
             }
+            return ret;
         }
         private static String get_messagestatus(Int32 messagestatus)
         {

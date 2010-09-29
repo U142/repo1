@@ -40,7 +40,7 @@ namespace pas_cb_server
 
                 // Set alert attributes
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
+                t_alert.IBAG_message_number = Tools.GetBytes(l_reqno);
                 t_alert.IBAG_sent_date_time_dt = dtm_cap;
                 t_alert.setSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_time_dt = dtm_cap;
@@ -59,16 +59,20 @@ namespace pas_cb_server
                     case Operation.NEWPLMN_HEARTBEAT:
                         t_alert.IBAG_status = IBAG_status.NetworkTest;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
-                        t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_gsm_repetition_period = 4;
+                        t_alert_info.IBAG_umts_repetition_period = 240;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
                     case Operation.NEWPLMN_TEST:
                         t_alert.IBAG_status = IBAG_status.Actual;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
-                        t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
+                        t_alert_info.IBAG_gsm_repetition_period = 4;
+                        t_alert_info.IBAG_umts_repetition_period = 240;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
@@ -78,7 +82,7 @@ namespace pas_cb_server
                         t_alert.IBAG_status = IBAG_status.Actual;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         t_alert_info.IBAG_gsm_repetition_period = oAlert.l_repetitioninterval;
-                        t_alert_info.IBAG_umts_repetition_period = oAlert.l_repetitioninterval;
+                        t_alert_info.IBAG_umts_repetition_period = oAlert.l_repetitioninterval * 60; // repetitioninterval in seconds
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
@@ -177,7 +181,7 @@ namespace pas_cb_server
                         , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, Tools.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
                     return Constant.OK;
                 }
                 else
@@ -214,8 +218,8 @@ namespace pas_cb_server
                 int l_reqno = Database.GetHandle(op);
 
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
-                t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
+                t_alert.IBAG_message_number = Tools.GetBytes(l_reqno);
+                t_alert.IBAG_referenced_message_number = Tools.GetBytes(int.Parse(Database.GetJobID(op, oAlert.l_refno)));
                 t_alert.IBAG_sent_date_time_dt = DateTime.Now;
                 t_alert.setSentDateTimeString();
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -307,8 +311,8 @@ namespace pas_cb_server
                 int l_reqno = Database.GetHandle(op);
 
                 DateTime dtm_cap = Database.GetCreateTime(op, oAlert.l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
-                t_alert.IBAG_referenced_message_number = BitConverter.GetBytes(int.Parse(sz_jobid));
+                t_alert.IBAG_message_number = Tools.GetBytes(l_reqno);
+                t_alert.IBAG_referenced_message_number = Tools.GetBytes(int.Parse(sz_jobid));
                 t_alert.IBAG_sent_date_time_dt = DateTime.Now;
                 t_alert.setSentDateTimeString();
                 t_alert.IBAG_status = IBAG_status.Actual;
@@ -386,12 +390,14 @@ namespace pas_cb_server
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
             IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
 
+            int ret = Constant.OK;
+
             try
             {
                 int l_reqno = Database.GetHandle(op);
 
                 DateTime dtm_cap = Database.GetCreateTime(op, l_refno);
-                t_alert.IBAG_message_number = BitConverter.GetBytes(l_reqno);
+                t_alert.IBAG_message_number = Tools.GetBytes(l_reqno);
                 t_alert.IBAG_referenced_message_number = message_number;
                 t_alert.IBAG_sent_date_time_dt = DateTime.Now;
                 t_alert.setSentDateTimeString();
@@ -412,7 +418,8 @@ namespace pas_cb_server
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                    return Constant.OK;
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                    return ret;
                 }
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
@@ -425,7 +432,8 @@ namespace pas_cb_server
                         , l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);
-                    return Constant.FAILED;
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    ret = Constant.FAILED;
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
                 {
@@ -455,35 +463,38 @@ namespace pas_cb_server
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                         , l_refno
                         , op.sz_operatorname
-                        , BitConverter.ToInt32(t_alert.IBAG_message_number, 0)
-                        , BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0)
+                        , Tools.ToInt32(t_alert.IBAG_message_number, 0)
+                        , Tools.ToInt32(t_alert_response.IBAG_referenced_message_number, 0)
                         , cb_percentage), 0);
                     // ok, insert appropriate info in database
                     if (l_status != Constant.CBACTIVE && l_status != Constant.USERCANCELLED)
                         Database.SetSendingStatus(op, l_refno, Constant.CBACTIVE);
 
-                    // set as finished if expiry date has passed
-                    if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
-                        Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-
-                    return Constant.OK;
+                    ret = Constant.OK;
                 }
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[] { "200" })
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                    return Constant.OK;
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    ret = Constant.OK;
                 }
                 else
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
                         , l_refno
                         , op.sz_operatorname
-                        , BitConverter.ToInt32(t_alert.IBAG_message_number, 0)
-                        , BitConverter.ToInt32(t_alert.IBAG_referenced_message_number, 0)
+                        , Tools.ToInt32(t_alert.IBAG_message_number, 0)
+                        , Tools.ToInt32(t_alert.IBAG_referenced_message_number, 0)
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
-                    return Constant.FAILED;
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    ret = Constant.FAILED;
                 }
+
+                // set as finished if expiry date has passed
+                if (l_expires_ts <= decimal.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")))
+                    Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
+
             }
             catch (Exception e)
             {
@@ -491,8 +502,11 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
                     2);
-                return Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                ret = Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
+
+            return ret;
         }
 
         private static void dump_request(object cap_request, Operator op, string method, int refno)
