@@ -5,7 +5,7 @@
   <cap_identifier>Netherlands Govt. Agency</cap_identifier>
   <cap_sender>nl-cas-agency@cas.gov</cap_sender>
   <cap_alert_uri>http://www.alcatel-lucent.com</cap_alert_uri>
-  <priority>High</priority>
+  <priority>High Priority</priority>
   <category>Met</category>
   <severity>Severe</severity>
   <urgency>Expected</urgency>

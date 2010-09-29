@@ -2,7 +2,7 @@
 =====
 CBServer
 	* Added GetBytes and ToInt32 to Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian.
-	* Changed default value to High for T-Mobile priority.
+	* Changed default value to "High Priority" for T-Mobile priority.
 
 1.2.2
 =====
