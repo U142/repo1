@@ -28,7 +28,7 @@ namespace pas_cb_weblistener
                 IBAG_Alert_Attributes req = (IBAG_Alert_Attributes)sr.Deserialize(r);
                 IBAG_Alert_Attributes res = new IBAG_Alert_Attributes();
 
-                res.IBAG_message_number = BitConverter.GetBytes(Database.GetHandle(Settings.l_operator));
+                res.IBAG_message_number = Tools.GetBytes(Database.GetHandle(Settings.l_operator));
                 res.IBAG_sent_date_time = DateTime.Now;
                 res.IBAG_cap_sent_date_time = req.IBAG_cap_sent_date_time;
                 res.IBAG_cap_sent_date_timeSpecified = req.IBAG_cap_sent_date_timeSpecified;
@@ -94,7 +94,7 @@ namespace pas_cb_weblistener
                 int l_4gok = 0;
                 int l_refno = 0;
 
-                l_refno = Database.GetRefno(BitConverter.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), l_operator);
+                l_refno = Database.GetRefno(Tools.ToInt32(t_alert_response.IBAG_referenced_message_number, 0).ToString(), l_operator);
 
                 foreach (IBAG_status_report report in t_alert_response.IBAG_status_report)
                 {

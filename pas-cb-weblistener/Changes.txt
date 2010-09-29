@@ -1,0 +1,3 @@
+﻿1.0.1
+=====
+* Added Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian
