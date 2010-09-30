@@ -109,6 +109,10 @@ public partial class report_authorizationarea : System.Web.UI.Page
                                         "<applet name=MapImageDownload" + obj[j].l_deptpk + " id=MapImageDownload" + obj[j].l_deptpk + " width=1 height=1> " +
                                             "<param name=lat value=" + lat + " >" +
                                             "<param name=lon value=" + lon + " >" +
+                                            "<param name=mapinfo value=" + ConfigurationSettings.AppSettings["mapinfo"] + " >" +
+                                            "<param name=w value=" + ConfigurationSettings.AppSettings["w"] + " >" +
+                                            "<param name=applet_width value=" + ConfigurationSettings.AppSettings["applet_width"] + " >" +
+                                            "<param name=applet_height value=" + ConfigurationSettings.AppSettings["applet_height"] + " >" +
                                             "<param name=jnlp_href value=javaapp/report_authorization_area.jnlp>" +
                                        "</applet>" +
                                     "')\" value=\"Save\" />";

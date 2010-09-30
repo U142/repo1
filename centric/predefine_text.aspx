@@ -10,7 +10,7 @@
     </asp:TableHeaderRow>
     <asp:TableRow>
         <asp:TableCell RowSpan="2" VerticalAlign="Top">
-            <asp:TreeView ID="TreeView1" runat="server" OnSelectedNodeChanged="TreeView1_changed" style="overflow:auto" Width="200" oncontextmenu="return showmenuie5(event)" BorderColor="AliceBlue" HoverNodeStyle-BackColor="WhiteSmoke" Height="200" Enabled="false">
+            <asp:TreeView ID="TreeView1" runat="server" OnSelectedNodeChanged="TreeView1_changed" style="overflow:auto" Width="200" BorderColor="AliceBlue" HoverNodeStyle-BackColor="WhiteSmoke" Height="200">
             </asp:TreeView>
         </asp:TableCell>
         <asp:TableCell>

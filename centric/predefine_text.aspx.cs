@@ -54,12 +54,8 @@ public partial class predefine_text : System.Web.UI.Page
             //f.n_timefilter = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
             f.n_timefilter = 0;
 
-            pws = new pasws();
-            pws.Url = ConfigurationSettings.AppSettings["Pas"];
-
-
-
-            UBBMESSAGELIST list = pws.GetMessageLibrary(Util.convertLogonInfoPas(l), f);
+            /*
+            
             //List<PredefinedText> pdt = db.getPredefinedText();
 
             for (int i = 0; i < list.list.Length; ++i)
@@ -72,12 +68,15 @@ public partial class predefine_text : System.Web.UI.Page
                 else
                     TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
 
-                ht.Add(list.list[i].n_messagepk, list.list[i]);
+                
             }
+            */
+
+            rebuildTree(false);
         }
     }
 
-    private void rebuildTree()
+    private void rebuildTree(bool addjava)
     {
         com.ums.ws.pas.admin.ULOGONINFO l = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
         ht.Clear();
@@ -100,10 +99,18 @@ public partial class predefine_text : System.Web.UI.Page
             if (list.list[i].n_parentpk > 0)
             {
                 TreeNode tn = getNode(TreeView1.Nodes, list.list[i].n_parentpk.ToString());
-                tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                if(addjava)
+                    tn.ChildNodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+                else
+                    tn.ChildNodes.Add(new TreeNode(list.list[i].sz_name, list.list[i].n_messagepk.ToString()));
             }
             else
-                TreeView1.Nodes.Add(new TreeNode(addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk), list.list[i].n_messagepk.ToString()));
+            {
+                if(addjava)
+                    TreeView1.Nodes.Add(new TreeNode((addjava == true ? addJavaScript(list.list[i].sz_name, list.list[i].n_messagepk) : list.list[i].sz_name), list.list[i].n_messagepk.ToString()));
+                else
+                    TreeView1.Nodes.Add(new TreeNode(list.list[i].sz_name, list.list[i].n_messagepk.ToString()));
+            }
 
             ht.Add(list.list[i].n_messagepk, list.list[i]);
         }
@@ -405,7 +412,9 @@ public partial class predefine_text : System.Web.UI.Page
         CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, false);
         if (resa.successful)
         {
-            TreeView1.Enabled = false;
+            rebuildTree(false);
+            TreeView1.Attributes.Remove("oncontextmenu");
+            //TreeView1.Enabled = false;
             txt_message.Enabled = false;
             txt_message.ForeColor = disabled_color;
             txt_name.Enabled = false;
@@ -421,11 +430,12 @@ public partial class predefine_text : System.Web.UI.Page
         CheckAccessResponse resa = Util.setOccupied((com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"], ACCESSPAGE.PREDEFINEDTEXT, true);
         if (resa.successful)
         {
-            rebuildTree();
-            TreeView1.Enabled = true;
-            txt_message.Enabled = true;
-            txt_name.Enabled = true;
-            txt_message.ForeColor = System.Drawing.Color.Black;
+            rebuildTree(true);
+            TreeView1.Attributes.Add("oncontextmenu", "return showmenuie5(event)");
+            //TreeView1.Enabled = true;
+            //txt_message.Enabled = true;
+            //txt_name.Enabled = true;
+            //txt_message.ForeColor = System.Drawing.Color.Black;
             lbl_error.Text = "";
         }
         else
