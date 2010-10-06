@@ -72,6 +72,13 @@ namespace pas_cb_server
                     new Thread(new ThreadStart(cb_test.CBTest.HeartbeatThread)).Start();
                     Interlocked.Increment(ref Settings.threads);
                 }
+                
+                if (Settings.l_linktestinterval > 0 && Settings.GetBool("LinkTestEnabled"))
+                {
+                    Log.WriteLog("Starting linktest thread", 9);
+                    new Thread(new ThreadStart(cb_test.CBTest.LinktestThread)).Start();
+                    Interlocked.Increment(ref Settings.threads);
+                }
 
                 if (Environment.UserInteractive)
                 {
@@ -80,12 +87,9 @@ namespace pas_cb_server
                     Interlocked.Increment(ref Settings.threads);
                 }
 
-                //if (Settings.l_statuspollinterval > 0)
-                //{
-                    Log.WriteLog("Starting status thread", 9);
-                    new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
-                    Interlocked.Increment(ref Settings.threads);
-                //}
+                Log.WriteLog("Starting status thread", 9);
+                new Thread(new ThreadStart(CBStatus.CheckStatusThread)).Start();
+                Interlocked.Increment(ref Settings.threads);
 
                 // log startup mode
                 if (Environment.UserInteractive)

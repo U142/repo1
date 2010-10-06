@@ -12,6 +12,69 @@ namespace pas_cb_server
 {
     public class CB_tmobile
     {
+        public static int LinkTest(Operator op)
+        {
+            int ret = Constant.DELETE;
+
+            CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
+            IBAG_Alert_Attributes t_alert = new IBAG_Alert_Attributes();
+
+            try
+            {
+                int l_reqno = Database.GetHandle(op);
+
+                DateTime dtm_cap = DateTime.Now;
+                t_alert.IBAG_message_number = Tools.GetBytes(l_reqno);
+                t_alert.IBAG_sent_date_time_dt = dtm_cap;
+                t_alert.setSentDateTimeString();
+                t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
+                t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
+                t_alert.IBAG_status = IBAG_status.System;
+                t_alert.IBAG_message_type = IBAG_message_type.LinkTest;
+
+                if (!Settings.live)
+                {
+                    return Constant.DELETE;
+                }
+
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+
+                if (t_alert_response == null)
+                {
+                    Log.WriteLog(String.Format("(op={0}) (req={1}) Link Test FAILED (response is null)"
+                        , op.sz_operatorname
+                        , l_reqno), 2);
+                    ret = Constant.DELETE;
+                }
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
+                {
+                    Log.WriteLog(String.Format("(op={0}) (req={1}) Link Test OK (code={2})"
+                        , op.sz_operatorname
+                        , l_reqno
+                        , t_alert_response.IBAG_message_type), 0);
+                    ret = Constant.DELETE;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("(op={0}) (req={1}) NewMessage FAILED (code={2}, msg={3})"
+                        , op.sz_operatorname
+                        , l_reqno
+                        , t_alert_response.IBAG_message_type
+                        , t_alert_response.IBAG_note.First()), 2);
+                    ret = Constant.DELETE;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog(
+                    String.Format("(op={0}) Link Test EXCEPTION (msg={1})", op.sz_operatorname, e.Message),
+                    String.Format("(op={0}) Link Test EXCEPTION (msg={1})", op.sz_operatorname, e),
+                    2);
+                ret = Constant.DELETE;
+            }
+            return ret;
+        }
+
         public static int CreateAlert(AlertInfo oAlert, Operator op, Operation operation)
         {
             CB_tmobile_defaults def = (CB_tmobile_defaults)op.GetDefaultValues(typeof(CB_tmobile_defaults));
@@ -61,7 +124,7 @@ namespace pas_cb_server
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
                         //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_gsm_repetition_period = 4;
+                        t_alert_info.IBAG_gsm_repetition_period = 240;
                         t_alert_info.IBAG_umts_repetition_period = 240;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
@@ -71,7 +134,7 @@ namespace pas_cb_server
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
                         //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_gsm_repetition_period = 4;
+                        t_alert_info.IBAG_gsm_repetition_period = 240;
                         t_alert_info.IBAG_umts_repetition_period = 240;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
@@ -82,7 +145,7 @@ namespace pas_cb_server
                         t_alert.IBAG_status = IBAG_status.Actual;
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         t_alert_info.IBAG_gsm_repetition_period = oAlert.l_repetitioninterval;
-                        t_alert_info.IBAG_umts_repetition_period = oAlert.l_repetitioninterval * 60; // repetitioninterval in seconds
+                        t_alert_info.IBAG_umts_repetition_period = oAlert.l_repetitioninterval; // repetitioninterval in seconds
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
@@ -342,7 +405,7 @@ namespace pas_cb_server
 
                 if (t_alert_response == null)
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) KillMessage FAILED (response is null)"
                         , oAlert.l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);
@@ -428,7 +491,7 @@ namespace pas_cb_server
 
                 if (t_alert_response == null)
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (response is null)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (response is null)"
                         , l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);
@@ -460,7 +523,7 @@ namespace pas_cb_server
 
                     Database.UpdateHistCell(b_report, l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
 
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={3}, success={4:0.00}%)"
                         , l_refno
                         , op.sz_operatorname
                         , Tools.ToInt32(t_alert.IBAG_message_number, 0)
@@ -480,7 +543,7 @@ namespace pas_cb_server
                 }
                 else
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (handle={3}, code={4}, msg={5})"
                         , l_refno
                         , op.sz_operatorname
                         , Tools.ToInt32(t_alert.IBAG_message_number, 0)
@@ -499,8 +562,8 @@ namespace pas_cb_server
             catch (Exception e)
             {
                 Log.WriteLog(
-                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
+                    String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
                     2);
                 Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
                 ret = Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);

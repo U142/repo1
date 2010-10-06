@@ -3,6 +3,8 @@
 CBServer
 	* Added GetBytes and ToInt32 to Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian.
 	* Changed default value to "High Priority" for T-Mobile priority.
+	* Fixed typo in logging of InfoMessage and KillMessage (were referred to as NewMessage if response was null) for T-Mobile
+	* Added link test for T-Mobile, and config parameters to set interval
 
 1.2.2
 =====

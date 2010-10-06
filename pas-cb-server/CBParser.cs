@@ -37,6 +37,11 @@ namespace pas_cb_server
                                 Thread.Sleep(500);
                                 File.Move(fileName, fileName.Replace("\\eat\\", "\\retry\\"));
                             }
+                            else if (lRetVal == Constant.DELETE)
+                            {
+                                Thread.Sleep(500);
+                                File.Delete(fileName);
+                            }
                             else // lRetVal -2 (Constant.FAILED)
                             {
                                 Thread.Sleep(500);
@@ -63,6 +68,11 @@ namespace pas_cb_server
                                     Log.WriteLog(String.Format("{0} failed, will retry.", fileName), 1);
                                     File.SetLastAccessTime(fileName, DateTime.Now);
                                     //File.Move(fileName, fileName.Replace("\\retry\\", "\\retry\\"));
+                                }
+                                else if (lRetVal == Constant.DELETE)
+                                {
+                                    Thread.Sleep(500);
+                                    File.Delete(fileName);
                                 }
                                 else // lRetVal -2 (Constant.FAILED)
                                 {
@@ -125,6 +135,9 @@ namespace pas_cb_server
                                 case "KillAlert":
                                     hRet = KillAlert(xmlCB, oUser);
                                     break;
+                                case "LinkTest":
+                                    hRet = LinkTest(oUser);
+                                    break;
                                 default:
                                     Log.WriteLog("ERROR: Operation not recognized", 2);
                                     lReturn = Constant.FAILED;
@@ -136,6 +149,8 @@ namespace pas_cb_server
                                 lReturn = Constant.RETRY;
                             else if (hRet.ContainsValue(Constant.FAILED)) // if none has retry, but at least one has FAILED, return FAILED
                                 lReturn = Constant.FAILED;
+                            else if (hRet.ContainsValue(Constant.DELETE)) // if no retry or failed, check for DELETE
+                                lReturn = Constant.DELETE;
 
                             // if neither these, assume OK (default)
                         }
@@ -334,6 +349,31 @@ namespace pas_cb_server
             }
             return ret;
         }
+        private static Hashtable LinkTest(Settings oUser)
+        {
+            Hashtable ret = new Hashtable();
+
+            // kill a given alert at each operator
+            foreach (Operator op in oUser.operators)
+            {
+                switch (op.l_type)
+                {
+                    case 1: // AlertiX (not supported)
+                        ret.Add(op.l_operator, Constant.FAILED);
+                        break;
+                    case 2: // one2many
+                        ret.Add(op.l_operator, CB_one2many.LinkTest(op)); // no linktest implemented
+                        break;
+                    case 3: // tmobile
+                        ret.Add(op.l_operator, CB_tmobile.LinkTest(op));
+                        break;
+                    default:
+                        ret.Add(op.l_operator, Constant.FAILED);
+                        break;
+                }
+            }
+            return ret;
+        }
         private static int ParseAlertXml(XmlNode xmlCB, Settings oUser, Operation type, out AlertInfo oAlert)
         {
             oAlert = new AlertInfo();
@@ -356,7 +396,7 @@ namespace pas_cb_server
 
                 oAlert.l_validity = int.Parse(xmlCB.Attributes.GetNamedItem("l_validity").Value);
                 if (oAlert.l_validity <= 0)
-                    oAlert.l_validity = 11;
+                    oAlert.l_validity = 10;
 
                 XmlAttributeCollection xml_message = xmlCB.SelectSingleNode("textmessages").SelectSingleNode("message").Attributes;
                 oAlert.alert_message.l_channel = int.Parse(xml_message.GetNamedItem("l_channel").Value);
@@ -426,6 +466,7 @@ namespace pas_cb_server
         NEWPLMN_TEST,
         NEWPLMN_HEARTBEAT,
         UPDATE,
-        KILL
+        KILL,
+        LINKTEST
     }
 }

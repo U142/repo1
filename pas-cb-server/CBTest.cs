@@ -264,7 +264,32 @@ namespace pas_cb_server.cb_test
             Log.WriteLog("Stopped heartbeat thread", 9);
             Interlocked.Decrement(ref Settings.threads);
         }
+        public static void LinktestThread()
+        {
+            while (CBServer.running)
+            {
+                LBAParameter oParams = new LBAParameter();
+                Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
 
+                cb oAlert = new cb();
+
+                oAlert.l_comppk = oUser.l_comppk;
+                oAlert.l_deptpk = oUser.l_deptpk;
+                oAlert.operation = "LinkTest";
+
+                NewLinkTest(oAlert);
+
+                // sleep for l_linktestinterval seconds
+                for (int i = 0; i < Settings.l_linktestinterval; i++)
+                {
+                    if (!CBServer.running) break; // exit sleep loop if server is stopped
+
+                    Thread.Sleep(1000);
+                }
+            }
+            Log.WriteLog("Stopped heartbeat thread", 9);
+            Interlocked.Decrement(ref Settings.threads);
+        }
         public static int CreateXML(Settings oUser, cb oAlert)
         {
             int ret = 0;
@@ -302,6 +327,18 @@ namespace pas_cb_server.cb_test
             w.Close();
 
             return l_testref;
+        }
+        public static void NewLinkTest(cb alert)
+        {
+            LBAParameter oParams = new LBAParameter();
+            Settings oUser = Settings.SystemUser(oParams.l_deptpk, oParams.l_comppk);
+
+            string filename = String.Format(@"{0}eat\CB_LINKTEST_{1}.xml", Settings.sz_parsepath, Guid.NewGuid().ToString());
+
+            XmlSerializer s = new XmlSerializer(typeof(cb));
+            StreamWriter w = new StreamWriter(filename);
+            s.Serialize(w, alert);//,xmlnsEmpty);
+            w.Close();
         }
 
         private static int InsertSending(Settings oUser, cb oAlert, int? l_sendinginfo_type)

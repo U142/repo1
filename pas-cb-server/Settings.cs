@@ -27,6 +27,7 @@ namespace pas_cb_server
         public static int l_retryinterval;
         public static int l_retries;
         public static int l_messagetype;
+        public static int l_linktestinterval;
 
         public static int l_testmessagetype;
         public static int l_testmessagegroup;
@@ -171,6 +172,7 @@ namespace pas_cb_server
             Settings.l_cpuaffinity = Settings.GetValue("CPUAffinity", 0);
             Settings.l_testmessagegroup = Settings.GetValue("TestMessageGroup", 16);
             Settings.l_testmessagetype = Settings.GetValue("TestMessageType", 70);
+            Settings.l_linktestinterval = Settings.GetValue("LinkTestInterval", 60); // disabled default
 
             // Init log, default is syslog off / logfile on
             Log.InitLog(
@@ -450,6 +452,7 @@ namespace pas_cb_server
         public const int OK = 0;
         public const int RETRY = -1;
         public const int FAILED = -2;
+        public const int DELETE = -100;
 
         // mainstatuses
         // common

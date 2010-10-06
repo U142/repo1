@@ -48,6 +48,13 @@ namespace pas_cb_server
     // CB Methods
     public class CB_one2many
     {
+        public static int LinkTest(Operator op) // for future use
+        {
+            int ret = Constant.DELETE;
+
+            return ret;
+        }
+
         public static int CreateAlert(AlertInfo oAlert, Operator op, Operation operation)
         {
             Ione2many cbc = (Ione2many)XmlRpcProxyGen.Create(typeof(Ione2many));
@@ -72,7 +79,7 @@ namespace pas_cb_server
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     case Operation.NEWPLMN_TEST:
                     case Operation.NEWPLMN_HEARTBEAT:
-                        oAlert.l_repetitioninterval = (int)(oAlert.l_validity * 60 / 1.883); // set repetition interval so only one message is sent
+                        oAlert.l_repetitioninterval = (int)(oAlert.l_validity / 1.883); // set repetition interval so only one message is sent
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     default:
                         return Constant.FAILED;
@@ -423,7 +430,7 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
-            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval * 60 / 1.883); // convert from minutes
+            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval / 1.883); // convert from minutes
             
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
@@ -492,7 +499,7 @@ namespace pas_cb_server
             newmsgreq.messageid = oAlert.alert_message.l_channel; // channel
             //newmsgreq.starttime = DateTime.Now.ToString("yyyyMMddHHmmss");
             newmsgreq.endtime = DateTime.Now.AddMinutes(oAlert.l_validity).ToString("yyyyMMddHHmmss");
-            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval * 60 / 1.883);
+            newmsgreq.repetitioninterval = (int)(oAlert.l_repetitioninterval / 1.883);
 
             // default values from config
             newmsgreq.datacodingscheme = def.l_datacodingscheme;
