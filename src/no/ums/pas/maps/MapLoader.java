@@ -408,7 +408,7 @@ public class MapLoader {
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
-			 request.setTransparent(true);
+			 request.setTransparent(false);
 			 
 			 //variables.SETTINGS.setWmsEpsg("28992");
 			 //variables.SETTINGS.setWmsEpsg("4326");

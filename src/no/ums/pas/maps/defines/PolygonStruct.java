@@ -265,11 +265,43 @@ public class PolygonStruct extends ShapeStruct {
 			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
 			dist2 += Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
 		}*/
+		int xx = startat;
+		while(1==1)
+		{
+			int n_1 = (xx % restrict.get_size());
+			int n_2 = ((xx+1) % restrict.get_size());
+			MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
+			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
+			dist1 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
+			int num_points = restrict.get_size();
+			xx = ((xx+1) % num_points);
+			if(xx==stopat)
+				break;			
+		}
+		xx = stopat;
+		while(1==1)
+		{
+			int n_1 = (xx % restrict.get_size());
+			int n_2 = ((xx+1) % restrict.get_size());
+			MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
+			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
+			dist2 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
+			xx = Math.abs(((xx+1) % restrict.get_size()));
+			if(xx==startat)
+				break;	
+		}
 		int iterations = 0;
 		int dir = 1+1-1;
 
 		int _start = startat;
 		int _stop = stopat;
+		/*if(dist1>dist2)
+		{
+			int tmp = _stop;
+			_stop=_start;
+			_start = tmp;
+		}*/
+		
 		if(_start>_stop)
 		{
 			iterations = restrict.get_size() - _start + _stop;
@@ -295,7 +327,7 @@ public class PolygonStruct extends ShapeStruct {
 					n_2 = restrict.get_size()-1;
 				MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
 				MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-				dist1 += Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
+				dist1 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
 	
 				/*if(_stop<_start)
 					it--;
@@ -332,7 +364,7 @@ public class PolygonStruct extends ShapeStruct {
 					n_2 = restrict.get_size()+n_2;
 				MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
 				MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-				dist2 += Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
+				dist2 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
 	
 				/*if(_stop<_start)
 					it--;
@@ -359,19 +391,31 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		else
 		{
-			double distp1 = Math.sqrt( Math.pow((Math.abs(p1.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
-			double distp2 = Math.sqrt( Math.pow((Math.abs(p2.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p2.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
+			double distp1 = distanceBetweenPoints(p1, reference_point);//Math.sqrt( Math.pow((Math.abs(p1.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
+			double distp2 = distanceBetweenPoints(p2, reference_point);//Math.sqrt( Math.pow((Math.abs(p2.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p2.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
 			if(distp1<distp2)
 			{
 				startat = p2.getPointReference();
 				stopat  = p1.getPointReference();
 			}
+			if(dist1>dist2)
+			{
+				dir = -1;
+				//_start = stopat;
+				//_stop = startat;
+			}
+			else
+			{
+				dir = 1;
+				//_start = startat;
+				//_stop = stopat;
+			}
 
 			//not force to follow border all over, only where there are restrictions
-			if(startat>stopat)
+			/*if(startat>stopat)
 				dir = -1;
 			else
-				dir = 1;
+				dir = 1;*/
 		}
 		_start = startat;
 		_stop = stopat;
@@ -392,8 +436,8 @@ public class PolygonStruct extends ShapeStruct {
 
 		if(add_first_point)
 		{
-			this.add_coor((_start<_stop ? p1.get_lon() : p2.get_lon()), (_start<_stop ? p1.get_lat() : p2.get_lat()));
-			//this.add_coor(p1.get_lon(), p1.get_lat());
+			//this.add_coor((_start<_stop ? p1.get_lon() : p2.get_lon()), (_start<_stop ? p1.get_lat() : p2.get_lat()));
+			this.add_coor(p1.get_lon(), p1.get_lat());
 		}
 
 		count = 0;
@@ -414,8 +458,8 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		if(add_last_point)
 		{
-			this.add_coor((_start<_stop ? p2.get_lon() : p1.get_lon()), (_start<_stop ? p2.get_lat() : p1.get_lat()));
-			//this.add_coor(p2.get_lon(), p2.get_lat());
+			//this.add_coor((_start<_stop ? p2.get_lon() : p1.get_lon()), (_start<_stop ? p2.get_lat() : p1.get_lat()));
+			this.add_coor(p2.get_lon(), p2.get_lat());
 		}
 		
 		/*if(startat<stopat)
@@ -450,10 +494,15 @@ public class PolygonStruct extends ShapeStruct {
 		return LineIntersect(p1, p2, 0);
 	}
 	
+	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat)
+	{
+		return LineIntersect(p1, p2, startat, null);
+	}
+	
 	/**
 	 * Check if line p1-p2 intersects with any poly-lines
 	 */
-	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat)
+	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat, MapPointLL distance_reference)
 	{
 		List<MapPointLL> ret = new ArrayList<MapPointLL>();
 		for(int i=startat; i < startat+m_coor_lat.size(); i++)
@@ -474,7 +523,13 @@ public class PolygonStruct extends ShapeStruct {
 				//check end points
 				intersect.setPointReference(real_idx);
 				if(intersect.getPointReference()!=p1.getPointReference())
+				{
+					if(distance_reference!=null)
+					{
+						intersect.setMeasurementReference(distanceBetweenPoints(intersect, distance_reference));
+					}
 					ret.add(intersect);
+				}
 				break;
 			case CommonFunc.DONT_INTERSECT:
 				break;
@@ -1042,12 +1097,12 @@ public class PolygonStruct extends ShapeStruct {
 					Font f1 = new Font("Arial", Font.PLAIN, 14);
 					Font fOldFont = g.getFont();
 					g.setFont(f1);
-					for(int i=0; i < use_size; i+=20)
+					for(int i=0; i < use_size; i+=100)
 					{
-						/*Color oldCol = g.getColor();
+						Color oldCol = g.getColor();
 						g.setColor(Color.red);
 						g.drawString(""+i, use_array_x[i], use_array_y[i]);
-						g.setColor(oldCol);*/
+						g.setColor(oldCol);
 					}
 					g.setFont(fOldFont);
 				}

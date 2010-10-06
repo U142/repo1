@@ -837,7 +837,17 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			System.out.println(e.getMessage());
 			Error.getError().addError(PAS.l("common_error"), "Error setting Look and Feel", e, Error.SEVERITY_ERROR);
 		}
-		
+		try
+		{
+			String defaultlang = pasplugin.getDefaultLocale(m_settings);
+			if(defaultlang.length() > 0)
+				setLocale(defaultlang);
+		}
+		catch(Exception e)
+		{
+			
+		}
+
 		try
 		{
 			//Substance 3.3
@@ -856,16 +866,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			
-		}
-		try
-		{
-			String defaultlang = pasplugin.getDefaultLocale(m_settings);
-			if(defaultlang.length() > 0)
-				setLocale(defaultlang);
-		}
-		catch(Exception e)
-		{
 			
 		}
 

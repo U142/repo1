@@ -1,7 +1,15 @@
 package no.ums.pas.versioning;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 
@@ -45,7 +53,7 @@ public class versioning
 	
 
 	
-	public static void setVersion()
+	public void setVersion()
 	{
 		Package p = versioning.class.getPackage();
 		
@@ -87,5 +95,55 @@ public class versioning
 					BUILT_DATE = ANNOTATIONS[i].toString();
 			}
 		}
+		try
+		{
+			/*InputStream is = versioning.class.getResourceAsStream("/META-INF/MANIFEST.MF");
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String s;
+			while((s = br.readLine())!=null)
+			{
+				System.out.println(s);
+			}*/
+			/*Class clazz = versioning.class;
+			String className = clazz.getSimpleName();
+			String classFileName = className + ".class";
+			String pathToClass = clazz.getResource(classFileName).toString();
+			int mark = pathToClass.indexOf("/");
+			String pathToManifest = pathToClass.toString().substring(0,mark+1);*/
+			
+			
+			InputStream manifestStream = this.getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
+			if(manifestStream!=null)
+			{
+				Manifest manifest = new Manifest(manifestStream);
+				Attributes attr = manifest.getMainAttributes();
+				Set<Entry<Object,Object>> set = attr.entrySet();
+				Iterator<Entry<Object,Object>> it = set.iterator();
+				while(it.hasNext())
+				{
+					Entry<Object,Object> a = it.next();
+					System.out.println("Key="+a.getKey() + " value="+a.getValue());
+				}
+			}
+			
+			/*Class clazz = this.getClass();
+			String classContainer = clazz.getProtectionDomain().getCodeSource().getLocation().toString();
+			URL manifestURL = new URL("jar:" + classContainer + "/META-INF/MANIFEST.MF");
+			Manifest manifest = new Manifest(manifestURL.openStream());
+			Attributes attr = manifest.getMainAttributes();
+			Set<Entry<Object,Object>> set = attr.entrySet();
+			Iterator<Entry<Object,Object>> it = set.iterator();
+			while(it.hasNext())
+			{
+				Entry<Object,Object> a = it.next();
+				System.out.println("Key="+a.getKey() + " value="+a.getValue());
+			}*/
+
+		}
+		catch(Exception e)
+		{
+			//e.printStackTrace();
+		}
+		
 	}
 }

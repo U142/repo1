@@ -437,6 +437,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	{
 		if(m_dim_cursorpos==null)
 			return false;
+		intersects.clear();
 		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
 		//System.out.println("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
 		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
@@ -527,7 +528,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					MapPointLL ll2 = p.get_mappointll();
 					if(ll1!=null && ll2!=null)
 					{
-						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2);
+						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1);
 						//the user clicked, we need to configure polygon automatically to obay restriction area
 						if((intersects_last.size()>0 || isKeyHot(HOTKEYS.CTRL)) && b_click) 
 						{
@@ -564,14 +565,34 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 							default:
 								if((intersects_last.size() % 2)==0 && intersects_last.size()>0)
 								{
-									current_polygon.FollowRestrictionLines(
+									Collections.sort(intersects_last);
+									/*current_polygon.FollowRestrictionLines(
 											p.get_mappointll(), 
 											intersects_last.get(0), 
-											intersects_last.get(intersects_last.size()-1), 
+											intersects_last.get(1),//intersects_last.size()-1), 
 											list.get(i).typecast_polygon(),
 											true,
 											true,
-											false);
+											false);*/
+									for(int isect=0; isect < intersects_last.size(); isect++)
+									{
+										if((isect % 2)==0) //going outside
+										{
+											current_polygon.FollowRestrictionLines(
+											p.get_mappointll(), 
+											intersects_last.get(isect), 
+											intersects_last.get(isect+1),//intersects_last.size()-1), 
+											list.get(i).typecast_polygon(),
+											true,
+											true,
+											false);											
+										}
+										else
+										{
+											MapPointLL ll_isect = intersects_last.get(isect);
+											current_polygon.add_coor(ll_isect.get_lon(), ll_isect.get_lat());
+										}
+									}
 								}
 								else if(intersects_last.size()>0)//assume the prev point is on top of another, no intersect
 								{

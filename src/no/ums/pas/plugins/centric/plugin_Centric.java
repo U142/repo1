@@ -38,6 +38,7 @@ import no.ums.pas.versioning.versioning;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -1587,6 +1588,12 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onSetDefaultPanMode(Settings s) {
 		s.setPanByDrag(true);
 		return super.onSetDefaultPanMode(s);
+	}
+
+	@Override
+	public List<String> onSendErrorMessages(String concatErrorlist,
+			MailAccount account, ActionListener callback) {
+		return super.onSendErrorMessages(concatErrorlist, account, callback);
 	}
 	
 	
