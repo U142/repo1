@@ -34,7 +34,8 @@ public class PLMNShape extends ShapeStruct
 
 	@Override
 	public NavStruct calc_bounds() {
-		return new NavStruct(5, 8, 54, 50);
+		return new NavStruct(3.12167, 7.29843, 53.4049, 51.01873);
+		//return new NavStruct(5, 8, 54, 50);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
 import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
+import no.ums.pas.ums.tools.CoorConverter.WGS84Coordinate;
 import no.ums.ws.pas.*;
 import java.net.URL;
 
@@ -405,6 +406,9 @@ public class MapLoader {
 			//System.out.println(wms.getInfo().getDescription());
 			//System.out.println("WMS Version " + capabilities.getVersion());
 			m_sz_wms_url = sz_wms_url;
+			
+
+			
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);

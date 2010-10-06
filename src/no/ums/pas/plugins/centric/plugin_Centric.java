@@ -39,6 +39,7 @@ import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.dataexchange.MailCtrl;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -1593,7 +1594,17 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public List<String> onSendErrorMessages(String concatErrorlist,
 			MailAccount account, ActionListener callback) {
-		return super.onSendErrorMessages(concatErrorlist, account, callback);
+		MailAccount newaccount = new MailAccount();
+		newaccount.set_accountname("NL-Alert");
+		newaccount.set_autodetected(false);
+		newaccount.set_displayname("NL-Alert");
+		newaccount.set_mailaddress("nlalert@ums.no");
+		newaccount.set_mailserver("mail.ums.no");
+		newaccount.set_port(25);
+		List<String> arr_adr = new ArrayList<String>();
+		arr_adr.add("mh@ums.no");
+		MailCtrl mc = new MailCtrl(newaccount.get_helo(),newaccount.get_mailserver(),newaccount.get_port(),newaccount.get_displayname(),newaccount.get_mailaddress(),arr_adr, callback,"PAS error", concatErrorlist);
+		return arr_adr;
 	}
 	
 	

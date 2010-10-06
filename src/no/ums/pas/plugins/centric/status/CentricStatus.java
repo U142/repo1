@@ -393,30 +393,51 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			sendings.put(new Long(currentstatus.getLRefno()), new Long(currentstatus.getLRefno()));
 			OPERATOR_STATE status = currentui.getOperatorStatus();
 			String lbl_pane = "";
+			String tooltip_pane = "";
 			switch(status)
 			{
 			case INITIALIZING:
 			case ACTIVE:
-				lbl_pane = "A ";
+				lbl_pane = PAS.l("main_status_lba_progress_active_abb");
+				tooltip_pane = PAS.l("main_status_lba_progress_active");
 				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
 			case KILLING:
-				lbl_pane = "K ";
+				lbl_pane = PAS.l("main_status_lba_progress_killing_abb");
+				tooltip_pane = PAS.l("main_status_lba_progress_killing");
 				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
 			case FINISHED:
-				lbl_pane = "F ";
+				lbl_pane = PAS.l("main_status_lba_progress_finished_abb");
+				tooltip_pane = PAS.l("main_status_lba_progress_finished");
 				break;
 			case ERROR:
-				lbl_pane = "E ";
+				lbl_pane = PAS.l("main_status_lba_progress_error_abb");
+				tooltip_pane = PAS.l("main_status_lba_progress_error");
 				break;
 			}
+			lbl_pane += " ";
 			lbl_pane += currentstatus.getMdv().getSzSendingname();
 			try
 			{
-				int n = tp.indexOfComponent(currentui);
-				if(n>=0)
-					tp.setTitleAt(n, lbl_pane);
+				final JTabbedPane final_tp = tp;
+				final CentricMessageStatus final_cms = currentui;
+				final String szSendingName = currentstatus.getSzSendingname();
+				final String final_lbl = lbl_pane;
+				final String final_tooltip = tooltip_pane;
+				SwingUtilities.invokeLater(new Runnable() {					
+					@Override
+					public void run() {
+						int n = final_tp.indexOfComponent(final_cms);
+						if(n>=0)
+						{
+							final_tp.setTitleAt(n, final_lbl);
+							final_tp.setToolTipTextAt(n, final_tooltip);
+						}
+						else
+							System.out.println("Component " + final_cms + " not found");						
+					}
+				});
 			}
 			catch(Exception e)
 			{

@@ -184,7 +184,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 			timestamp = cbs.getLLastTs();
 		else
 			timestamp = db_timestamp;
-		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),db_timestamp)) + " " + PAS.l("common_minutes_maybe"));
+		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),timestamp)) + " " + PAS.l("common_minutes_maybe"));
 		
 		/*
 		ULBAHISTCELL histcell = null;
