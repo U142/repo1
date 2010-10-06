@@ -16,20 +16,19 @@ namespace pas_cb_weblistener
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            XmlSerializer sr = new XmlSerializer(typeof(IBAG_Alert_Attributes));
+            TextReader r = new StreamReader(Request.InputStream);
+            IBAG_Alert_Attributes res = new IBAG_Alert_Attributes();
+
             try
             {
                 Settings.init();
-
-                string filename = Request.RawUrl;
-                
-                XmlSerializer sr = new XmlSerializer(typeof(IBAG_Alert_Attributes));
-                TextReader r = new StreamReader(Request.InputStream);
+                res.IBAG_message_number = Tools.GetBytes(Database.GetHandle(Settings.l_operator));
+                res.IBAG_sent_date_time_dt = DateTime.Now;
+                res.setSentDateTimeString();
 
                 IBAG_Alert_Attributes req = (IBAG_Alert_Attributes)sr.Deserialize(r);
-                IBAG_Alert_Attributes res = new IBAG_Alert_Attributes();
 
-                res.IBAG_message_number = Tools.GetBytes(Database.GetHandle(Settings.l_operator));
-                res.IBAG_sent_date_time = DateTime.Now;
                 res.IBAG_cap_sent_date_time = req.IBAG_cap_sent_date_time;
                 res.IBAG_cap_sent_date_timeSpecified = req.IBAG_cap_sent_date_timeSpecified;
                 res.IBAG_referenced_message_number = req.IBAG_message_number;
@@ -37,30 +36,47 @@ namespace pas_cb_weblistener
                 switch (req.IBAG_message_type)
                 {
                     case IBAG_message_type.TransmissionControlCease:
+                        Log.WriteLog(String.Format("Received {0} from {1} message number {2}", req.IBAG_message_type, Request.UserHostAddress, Tools.ToInt32(req.IBAG_message_number,0)), 0);
                         res.IBAG_message_type = Cease(Settings.l_operator);
                         break;
                     case IBAG_message_type.TransmissionControlResume:
+                        Log.WriteLog(String.Format("Received {0} from {1} message number {2}", req.IBAG_message_type, Request.UserHostAddress, Tools.ToInt32(req.IBAG_message_number, 0)), 0);
                         res.IBAG_message_type = Resume(Settings.l_operator);
                         break;
                     case IBAG_message_type.Report:
+                        Log.WriteLog(String.Format("Received {0} from {1} message number {2}", req.IBAG_message_type, Request.UserHostAddress, Tools.ToInt32(req.IBAG_message_number, 0)), 0);
                         res.IBAG_message_type = Report(Settings.l_operator, req);
                         break;
+                    case IBAG_message_type.LinkTest:
+                        Log.WriteLog(String.Format("Received {0} from {1} message number {2}", req.IBAG_message_type, Request.UserHostAddress, Tools.ToInt32(req.IBAG_message_number, 0)), 0);
+                        res.IBAG_message_type = IBAG_message_type.Ack;
+                        break;
+                    default:
+                        Log.WriteLog(String.Format("Received {0} from {1} message number {2}", "Unknown message type", Request.UserHostAddress, Tools.ToInt32(req.IBAG_message_number, 0)), 0);
+                        res.IBAG_message_type = IBAG_message_type.Error;
+                        res.IBAG_note = new string[] { "Unknown message type" };
+                        break;
                 }
+            }
+            catch (Exception ex)
+            {
+                res.IBAG_message_type = IBAG_message_type.Error;
+                res.IBAG_note = new string[] { String.Format("Failed to handle request {0}", ex) };
 
-                TextWriter w = new StringWriter();
+                Log.WriteLog(
+                    String.Format("Failed to parse request from {0} (exception={1})", Request.UserHostAddress, ex.Message),
+                    String.Format("Failed to parse request from {0} (exception={1})", Request.UserHostAddress, ex),
+                    2);
+            }
+            finally
+            {
+                TextWriter w = new StringWriter(Encoding.UTF8);
                 sr.Serialize(w, res);
 
                 byte[] msg = Encoding.ASCII.GetBytes(w.ToString());
 
                 using (Stream s = Response.OutputStream)
                     s.Write(msg, 0, msg.Length);
-            }
-            catch (Exception ex)
-            {
-                Log.WriteLog(
-                    String.Format("Failed to handle request {0}", ex.Message), 
-                    String.Format("Failed to handle request {0}", ex),
-                    2);
             }
         }
 
@@ -120,6 +136,20 @@ namespace pas_cb_weblistener
             {
                 // something went wrong, return error
                 return IBAG_message_type.Error;
+            }
+        }
+        private class StringWriter : System.IO.StringWriter
+        {
+            public StringWriter(Encoding encoding)
+            {
+                _encoding = encoding;
+            }
+
+            Encoding _encoding;
+
+            public override Encoding Encoding
+            {
+                get { return _encoding; }
             }
         }
     }

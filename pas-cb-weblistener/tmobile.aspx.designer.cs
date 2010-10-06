@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CBListener {
+namespace pas_cb_weblistener {
     
     
     public partial class tmobile {
