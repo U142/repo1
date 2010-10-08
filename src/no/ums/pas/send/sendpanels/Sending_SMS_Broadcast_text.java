@@ -149,15 +149,18 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		//m_panel_messages.add(m_combo_templates, m_panel_messages.m_gridconst);
 		
 		//TEST
-		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1);
-		m_panel_messages.add(txt_msglib_search, m_panel_messages.m_gridconst);
-		
-		m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL, 5);
+		if(tree_msglib!=null)
+		{
+			m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1);
+			m_panel_messages.add(txt_msglib_search, m_panel_messages.m_gridconst);
+			
+			m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL, 5);
 
-		tree_msglib.setPreferredSize(new Dimension(100, 100));
-		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 14, 1, GridBagConstraints.WEST);
-		m_panel_messages.add(tree_msglib, m_panel_messages.m_gridconst);
-		downloadMessageLib();
+			tree_msglib.setPreferredSize(new Dimension(100, 100));
+			m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 14, 1, GridBagConstraints.WEST);
+			m_panel_messages.add(tree_msglib, m_panel_messages.m_gridconst);
+			downloadMessageLib();
+		}
 		//TEST
 		
 		m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL, 10);

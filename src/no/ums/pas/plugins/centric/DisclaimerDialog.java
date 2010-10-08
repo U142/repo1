@@ -2,6 +2,9 @@ package no.ums.pas.plugins.centric;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -82,9 +85,21 @@ class DisclaimerDialog extends JDialog {
 		this.getContentPane().add(new JPanel() {
 			public JPanel init()
 			{
-				add(helpdesk, BorderLayout.WEST);
+				GridBagLayout l = new GridBagLayout();
+				setLayout(l);
+				GridBagConstraints c_helpdesk = new GridBagConstraints(0, 0, 2, 1, 1.0, 1.0, GridBagConstraints.WEST, 0, new Insets(5, 5, 5, 5), 0, 0);
+				GridBagConstraints c_ok = new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.EAST, 0, new Insets(0, 0, 0, 0), 0, 0);
+				GridBagConstraints c_cancel = new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, 0, new Insets(0, 0, 0, 0), 0, 0);
+				//l.setConstraints(helpdesk, c_helpdesk);
+				//l.setConstraints(btn_ok, c_ok);
+				//l.setConstraints(btn_cancel, c_cancel);
+				add(helpdesk, c_helpdesk);
+				add(btn_ok, c_ok);
+				add(btn_cancel, c_cancel);
+
+				/*add(helpdesk, BorderLayout.WEST);
 				add(btn_ok, BorderLayout.CENTER);
-				add(btn_cancel, BorderLayout.EAST);
+				add(btn_cancel, BorderLayout.EAST);*/
 				return this;
 			}
 		}.init(), BorderLayout.SOUTH);

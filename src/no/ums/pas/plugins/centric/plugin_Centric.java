@@ -69,6 +69,45 @@ import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 public class plugin_Centric extends PAS_Scripting
 {
 	WMSLayerSelectorPanel wms_layer_selector = new WMSLayerSelectorPanel();
+	
+	MenuTimer m_menutimer = new MenuTimer();
+	class MenuTimer extends Timer implements ActionListener
+	{
+		boolean flip = false;
+		Color c1 = new Color(230, 100, 100, 250);
+		Color c2 = new Color(0, 0, 0, 250);
+		
+		Color col_text = c2;
+		Color col_bg = c1;
+
+		public MenuTimer()
+		{
+			super(500, null);
+			this.addActionListener(this);
+		}
+		public void resetColors()
+		{
+			col_text = c2;
+			col_bg = c1;			
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//flip colors
+			flip = !flip;
+			if(PAS.TRAINING_MODE)
+			{
+				col_text = (flip ? c1: c2);
+				col_bg = (flip ? c2 : c1);
+				PAS.get_pas().get_mainmenu().repaint();
+			}
+			else
+			{
+				col_text = c2;
+				col_bg = c1;
+			}
+		}
+		
+	}
 
 	int CURRENT_TAB = CentricEastContent.PANEL_CENTRICSEND_;
 
@@ -1098,10 +1137,13 @@ public class plugin_Centric extends PAS_Scripting
 		if(b)
 		{
 			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
+			m_menutimer.start();
 		}
 		else
 		{
 			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
+			m_menutimer.stop();
+			m_menutimer.resetColors();
 		}
 		try
 		{
@@ -1224,6 +1266,12 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public boolean onPaintMenuBarExtras(JMenuBar bar, Graphics g) {
 		//MARK LIVE/TRAINING MODE
+		//Color c1 = new Color(230, 100, 100, 250);
+		//Color c2 = new Color(0, 0, 0, 250);
+		
+		Color ctext = m_menutimer.col_text;
+		Color cbg = m_menutimer.col_bg;
+		
 		g.setFont(UIManager.getFont("InternalFrame.titleFont"));
 
 		String str = PAS.l("common_live").toUpperCase();
@@ -1234,9 +1282,9 @@ public class plugin_Centric extends PAS_Scripting
 		int y = bar.getHeight()/2-9;
 		int w = strwidth;
 		int h = bar.getHeight()/2+5;
-		g.setColor(new Color(230, 100, 100, 250));
+		g.setColor(cbg);
 		g.fillRoundRect(x-5, y, w+10, h, 2, 2);
-		g.setColor(Color.black);
+		g.setColor(ctext);
 		g.drawRoundRect(x-5, y, w+10, h, 2, 2);
 		g.drawString(str, x, h);
 		

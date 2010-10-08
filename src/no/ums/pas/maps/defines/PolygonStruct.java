@@ -1201,7 +1201,7 @@ public class PolygonStruct extends ShapeStruct {
 		else
 		{
 			if(get_size() >= 3) {
-				if(restrictionShapes.size()>0)
+				if(restrictionShapes!=null && restrictionShapes.size()>0)
 				{
 					//also check if all points are inside poly and no polyline crosses restriction area
 					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
