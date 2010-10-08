@@ -1001,7 +1001,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				
 			}
 			checkForEnableSendButton();
-			updatePreviewText();
+			updatePreviewText(true);
 		}
 		else if(e.getSource().equals(m_cbx_reaction))
 		{
@@ -1017,7 +1017,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				
 			}
 			checkForEnableSendButton();
-			updatePreviewText();
+			updatePreviewText(true);
 		}
 		else if(e.getSource().equals(m_cbx_risk))
 		{
@@ -1034,7 +1034,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				
 			}
 			checkForEnableSendButton();
-			updatePreviewText();
+			updatePreviewText(true);
 		}
 		else if(e.getActionCommand().equals("act_print_summary")) {
 			/*
@@ -1183,7 +1183,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		updatePreviewText();
 	}
 	
-	public void updatePreviewText()
+	protected void updatePreviewText()
+	{
+		updatePreviewText(false);
+	}
+	
+	protected void updatePreviewText(boolean bRROChanged)
 	{
 		String sz_totalmessage = "";
 		
@@ -1200,6 +1205,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			sz_totalmessage += "\n" + reaction;
 		if(originator.length()>0)
 			sz_totalmessage += "\n" + originator;
+		if(sz_totalmessage.length()>MAX_TOTAL_CHARS)
+			sz_totalmessage = sz_totalmessage.substring(0, MAX_TOTAL_CHARS);
 		m_txt_preview.setText(sz_totalmessage);
 		updateCharacters();
 	}

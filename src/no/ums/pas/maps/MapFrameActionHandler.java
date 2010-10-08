@@ -667,7 +667,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			m_dim_cursorpos.height = e.getY();
 			addAction("act_mousemove", p);//new Point(e.getX(), e.getY()));
 			if(!get_isdragging()) {
-				//execMouseOver(e);
+				switch(get_mappane().get_mode())
+				{
+				case MapFrame.MAP_MODE_PAN:
+				case MapFrame.MAP_MODE_PAN_BY_DRAG:
+				case MapFrame.MAP_MODE_ZOOM:
+					execMouseOver(e);
+					break;
+				}
 			}
 			//only repaint if
 			switch(get_mappane().get_mode())
