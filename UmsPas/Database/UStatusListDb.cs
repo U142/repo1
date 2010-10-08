@@ -143,9 +143,10 @@ namespace com.ums.PAS.Database
                         "SELECT * FROM v_StatusListLBA " +
                         "UNION " +
                         "SELECT * FROM v_StatusListCB " +
-                        "WHERE l_deptpk in ({0}) " +
+                        //"WHERE l_deptpk in ({0}) " +
+                        "WHERE l_deptpk in (SELECT l_deptpk from BBDEPARTMENT WHERE l_comppk={0}) "+
                         "ORDER BY l_refno DESC",
-                        szDeptList);
+                        logon.l_comppk);//szDeptList);
 
                     break;
             }

@@ -1635,8 +1635,8 @@ namespace com.ums.UmsParm
                         strname = strname.Substring(0, 50);
                     if (stroadc.Length > 20)
                         stroadc = stroadc.Substring(0, 20);
-                    if (strtext.Length > 760)
-                        strtext = strtext.Substring(0, 760);
+                    if (strtext.Length > 4096)
+                        strtext = strtext.Substring(0, 4096);
 
                     stroadc = stroadc.Replace("'", "''");
                     strtext = strtext.Replace("'", "''");
@@ -1813,14 +1813,15 @@ namespace com.ums.UmsParm
                 throw e;
             }
         }
-        public int getCBDuration(int l_deptpk, long l_refno)
+        public int getCBDuration(int l_comppk, int l_deptpk, long l_refno)
         {
             String szSQL = "";
             int l_duration = 0;
 
             try
             {
-                szSQL = String.Format("SELECT l_duration FROM LBADURATION WHERE l_deptpk={0}", l_deptpk);
+                //szSQL = String.Format("SELECT l_duration FROM LBADURATION WHERE l_deptpk={0}", l_deptpk);
+                szSQL = String.Format("SELECT isnull(l_duration,30) FROM LBAPARAMETER WHERE l_comppk={0}", l_comppk);
                 OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                     l_duration = rs.GetInt32(0);

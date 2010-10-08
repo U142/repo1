@@ -155,7 +155,7 @@ namespace com.ums.PAS.CB
             lang.AddCCode(message.l_cbchannel.ToString());
             db.InjectLBALanguages(alert.l_refno, ref loc);
 
-            alert.l_validity = db.getCBDuration(alert.l_deptpk, alert.l_refno);
+            alert.l_validity = db.getCBDuration(logon.l_comppk, alert.l_deptpk, alert.l_refno);
 
             //Save shape to PASHAPES for status lookup
             if (alert.GetType().Equals(typeof(CB_ALERT_POLYGON)))
