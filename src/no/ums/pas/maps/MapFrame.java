@@ -46,6 +46,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	
 
 	
+	
 	public class MapOverlay
 	{
 		MapOverlay(String jobid, int layer, JCheckBox ref, String provider)
