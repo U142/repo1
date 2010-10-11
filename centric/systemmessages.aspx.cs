@@ -152,7 +152,7 @@ public partial class systemmessages : System.Web.UI.Page
         if (news != null)
         {
             logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-            news.l_deptpk = logon.l_deptpk;
+            news.l_deptpk = 0;
             news.l_userpk = logon.l_userpk;
             news.l_type = long.Parse(ddl_type.SelectedValue);
             news.l_operator = int.Parse(ddl_operator.SelectedValue);
