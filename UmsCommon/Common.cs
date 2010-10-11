@@ -1319,4 +1319,11 @@ namespace com.ums.UmsCommon
         
     }
 
+    public enum UDATAFILTER
+    {
+        BY_COMPANY = 1,
+        BY_DEPARTMENT = 2,
+        BY_USER = 4,
+    }
+
 }

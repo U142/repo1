@@ -34,7 +34,7 @@ namespace com.ums.PAS.Database
 					"AND info.l_group in (2,3,4,8) ORDER BY info.l_refno DESC",
 					sz_filter1, sz_filter_outerjoin, sz_filter_outerjoin);*/
         
-        public UStatusListResults GetStatusList(ref ULOGONINFO logon)
+        public UStatusListResults GetStatusList(ref ULOGONINFO logon, UDATAFILTER filter_by)
         {
             try
             {
@@ -143,10 +143,11 @@ namespace com.ums.PAS.Database
                         "SELECT * FROM v_StatusListLBA " +
                         "UNION " +
                         "SELECT * FROM v_StatusListCB " +
-                        //"WHERE l_deptpk in ({0}) " +
-                        "WHERE l_deptpk in (SELECT l_deptpk from BBDEPARTMENT WHERE l_comppk={0}) "+
+                        "WHERE l_deptpk in ({0}) " +
+                        //"WHERE l_deptpk in (SELECT l_deptpk from BBDEPARTMENT WHERE l_comppk={0}) "+
                         "ORDER BY l_refno DESC",
-                        logon.l_comppk);//szDeptList);
+                        //logon.l_comppk);
+                        szDeptList);
 
                     break;
             }

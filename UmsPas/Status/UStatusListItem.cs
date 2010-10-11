@@ -38,9 +38,17 @@ namespace com.ums.PAS.Status
     public class UStatusListSearch : IStatusListSearch
     {
         ULOGONINFO m_logon;
+        UDATAFILTER m_filter;
+
         public UStatusListSearch(ref ULOGONINFO logoninfo)
+            : this(ref logoninfo, UDATAFILTER.BY_DEPARTMENT)
+        {
+        }
+
+        public UStatusListSearch(ref ULOGONINFO logoninfo, UDATAFILTER filter_by)
         {
             m_logon = logoninfo;
+            m_filter = filter_by;
         }
         public IStatusListResults Find()
         {
@@ -50,7 +58,7 @@ namespace com.ums.PAS.Status
             conn.sz_pwd = UCommon.UBBDATABASE.sz_pwd;
 
             UStatusListDb db = new UStatusListDb(conn);
-            UStatusListResults list = db.GetStatusList(ref m_logon);
+            UStatusListResults list = db.GetStatusList(ref m_logon, m_filter);
             db.close();
             return list;
         }

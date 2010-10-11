@@ -42,13 +42,28 @@ namespace com.ums.ws.pas.status
             return ret;
         }
 
-
+        /*[WebMethod]
+        public UStatusListResults GetStatusList(ULOGONINFO logoninfo)
+        {
+            try
+            {
+                return GetStatusList(logoninfo, UDATAFILTER.BY_DEPARTMENT);
+            }
+            catch (USessionExpiredException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
 
         /*
          * Retrieve statuslist
          */
         [WebMethod]
-        public UStatusListResults GetStatusList(ULOGONINFO logoninfo)
+        public UStatusListResults GetStatusList(ULOGONINFO logoninfo)//, UDATAFILTER filter)
         {
             try
             {
