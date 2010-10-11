@@ -1093,5 +1093,10 @@ public class StatusController extends Controller implements ActionListener {
 		
 		//m_statuslistframe.get_statuspanel().exportToCSV();
 	}
+	
+	public void trainingModeChanged()
+	{
+		
+	}
 
 }

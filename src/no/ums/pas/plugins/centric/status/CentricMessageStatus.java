@@ -232,7 +232,8 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			case 0: //ok
 				break;
 			case -1: //error writing file / updating status
-				m_btn_kill.setEnabled(true);
+				//m_btn_kill.setEnabled(true);
+				checkEnableKillButton();
 				break;
 			case -2: //already killed
 				break;
@@ -349,6 +350,8 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	
 	public boolean getAtLeastOneOperatorCanBeKilled()
 	{
+		if(PAS.TRAINING_MODE)
+			return false;
 		boolean ret = false;
 		Enumeration<CentricOperatorStatus> en = hash_operators.elements();
 		while(en.hasMoreElements())
@@ -490,8 +493,17 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			m_btn_kill.setEnabled(true);
 			break;
 		}*/
-		m_btn_kill.setEnabled(getAtLeastOneOperatorCanBeKilled());
+		checkEnableKillButton();
 	}
 	
+	public void checkEnableKillButton()
+	{
+		m_btn_kill.setEnabled(getAtLeastOneOperatorCanBeKilled());
+		if(PAS.TRAINING_MODE)
+			m_btn_kill.setToolTipText(PAS.l("mainmenu_trainingmode"));
+		else
+			m_btn_kill.setToolTipText(null);
+		
+	}
 	
 }

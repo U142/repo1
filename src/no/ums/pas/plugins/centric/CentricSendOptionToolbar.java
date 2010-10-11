@@ -527,6 +527,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			break;
 		case SHOWING_SUMMARY: //if training mode is off, we may enable send button
 			m_btn_send.setEnabled(!PAS.TRAINING_MODE);
+			if(PAS.TRAINING_MODE)
+				m_btn_send.setToolTipText(PAS.l("mainmenu_trainingmode"));
+			else
+				m_btn_send.setToolTipText(null);
 			break;
 		case SENDING:
 			m_btn_send.setEnabled(false);

@@ -505,6 +505,19 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 	}
 	
+	public void trainingModeChanged()
+	{
+		if(hash_messagestatus!=null)
+		{
+			Enumeration<CentricMessageStatus> en = hash_messagestatus.elements();
+			while(en.hasMoreElements())
+			{
+				CentricMessageStatus cms = en.nextElement();
+				cms.checkEnableKillButton();
+			}
+		}
+	}
+	
 }
 
 

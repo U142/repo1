@@ -390,6 +390,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_project_activate".equals(e.getActionCommand())) {
 			PAS.get_pas().m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+			variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
 			PAS.get_pas().get_eastcontent().reloadStatusPanel(false);
 			PAS.get_pas().get_sendcontroller().resetActiveProject();
 			PAS.get_pas().set_keep_sendings(false);

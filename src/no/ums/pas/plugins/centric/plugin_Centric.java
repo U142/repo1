@@ -1148,6 +1148,7 @@ public class plugin_Centric extends PAS_Scripting
 		try
 		{
 			CentricVariables.centric_send.trainingModeChanged();
+			variables.STATUSCONTROLLER.trainingModeChanged();
 		}
 		catch(Exception e)
 		{
@@ -1653,6 +1654,11 @@ public class plugin_Centric extends PAS_Scripting
 		arr_adr.add("mh@ums.no");
 		MailCtrl mc = new MailCtrl(newaccount.get_helo(),newaccount.get_mailserver(),newaccount.get_port(),newaccount.get_displayname(),newaccount.get_mailaddress(),arr_adr, callback,"PAS error", concatErrorlist);
 		return arr_adr;
+	}
+
+	@Override
+	public Dimension getMinMapDimensions() {
+		return new Dimension(400, 400);
 	}
 	
 	

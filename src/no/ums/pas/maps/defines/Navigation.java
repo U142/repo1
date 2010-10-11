@@ -194,7 +194,7 @@ public class Navigation {
 	}
 	
 	public boolean too_small(NavStruct nav) {
-		int n_minzoom = 60;
+		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
 
 		MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
 		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
@@ -214,7 +214,9 @@ public class Navigation {
 	
 	public void exec_zoom_in(Dimension dim_start, Dimension dim_stop) {
 		double f_centerpoint_x, f_centerpoint_y;
-		int n_minzoom = 60;
+		//int n_minzoom = 60;
+		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
+
 		//System.out.println("mapwidth = " + m_f_mapwidthmeters + " " + calc_distance(dim_stop.width, dim_stop.height, dim_start.width, dim_stop.height));
 		
 		double d_deltax = Math.abs(dim_stop.width-dim_start.width);

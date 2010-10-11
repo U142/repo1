@@ -1094,7 +1094,7 @@ public class PolygonStruct extends ShapeStruct {
 				if(!bEditmode && !bPaintShapeName)
 				{
 					//paint point numbers
-					Font f1 = new Font("Arial", Font.PLAIN, 14);
+					/*Font f1 = new Font("Arial", Font.PLAIN, 14);
 					Font fOldFont = g.getFont();
 					g.setFont(f1);
 					for(int i=0; i < use_size; i+=100)
@@ -1104,7 +1104,7 @@ public class PolygonStruct extends ShapeStruct {
 						g.drawString(""+i, use_array_x[i], use_array_y[i]);
 						g.setColor(oldCol);
 					}
-					g.setFont(fOldFont);
+					g.setFont(fOldFont);*/
 				}
 				//paint shape name
 				if(bPaintShapeName)

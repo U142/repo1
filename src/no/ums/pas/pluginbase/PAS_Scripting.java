@@ -1142,4 +1142,10 @@ public class PAS_Scripting extends PasScriptingInterface
 	}
 
 
+	@Override
+	public Dimension getMinMapDimensions() {
+		return new Dimension(100,100);
+	}
+
+
 }

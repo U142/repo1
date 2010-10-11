@@ -547,9 +547,12 @@ public abstract class PasScriptingInterface
 	 * @return true if sending was locked successfully
 	 */
 	public abstract boolean onLockSending(SendOptionToolbar toolbar, boolean bLock);
-	
+		
 	public abstract boolean onDownloadHouses(final HouseController controller);
 	
 	public abstract boolean onSetDefaultPanMode(Settings s);
+
+	public abstract Dimension getMinMapDimensions();
+
 }
 

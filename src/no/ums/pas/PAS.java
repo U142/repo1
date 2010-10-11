@@ -1296,6 +1296,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						m_gpscontroller = new GPSController();
 						m_housecontroller = new HouseController();
 						m_statuscontroller = PAS.pasplugin.onCreateStatusController(); //new StatusController();
+						variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
 						m_mainmenu = new MainMenu(PAS.get_pas());
 						m_inhabitantframe = new InhabitantFrame(PAS.get_pas());
 						m_gpsframe = new GPSFrame(get_gpscontroller());
@@ -2007,6 +2008,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 							get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
 							m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+							variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
 							//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
 							PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
 							m_current_project = null;

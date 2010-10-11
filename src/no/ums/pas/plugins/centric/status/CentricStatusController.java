@@ -149,4 +149,14 @@ public class CentricStatusController extends StatusController {
 			forceQuickUpdate();
 		runTimer();
 	}
+	
+	@Override
+	public void trainingModeChanged()
+	{
+		if(m_centricstatus!=null)
+		{
+			m_centricstatus.trainingModeChanged();
+		}
+	}
+	
 }
