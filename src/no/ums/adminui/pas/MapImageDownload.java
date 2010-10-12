@@ -32,6 +32,7 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.ws.pas.UPASUISETTINGS;
 
 public class MapImageDownload extends JApplet implements ActionListener {
 	
@@ -54,24 +55,53 @@ public class MapImageDownload extends JApplet implements ActionListener {
 	public void paint(Graphics g) {
 		super.paint(g);
 		// gets parameters from applet tag
-		variables.NAVIGATION = new Navigation(this,640,480);
-		variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,640,480);
-		variables.MAPPANE = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
-		Settings m_settings = new Settings();
-		vars.init("https://secure.ums2.no/centricadminws/WS/");
+		int applet_width;
+		int applet_height;
+		applet_height = Integer.parseInt(getParameter("applet_height"));
+		applet_width = Integer.parseInt(getParameter("applet_width"));
 		
-		m_settings.setWmsSite("http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi");//
-		m_settings.setMapServer(MAPSERVER.DEFAULT);
-		String [] arr = "http://192.168.3.135/mapguide2010/mapagent/mapagent.fcgi;image/png;Gemeentekaart2009/Layers/MunicipalityBorder_LatLon,Gemeentekaart2009/Layers/Road_LatLon,Gemeentekaart2009/Layers/River_LatLon,Gemeentekaart2009/Layers/CityPoint_LatLon,Gemeentekaart2009/Layers/CityArea_LatLon,Gemeentekaart2009/Layers/CityPoint,Gemeentekaart2009/Layers/River,Gemeentekaart2009/Layers/MunicipalityBorder,Gemeentekaart2009/Layers/Background,Gemeentekaart2009/Layers/CityArea,Gemeentekaart2009/Layers/Road".split(";");
-		if(arr!=null && arr.length>=3)
+		variables.NAVIGATION = new Navigation(this,applet_width,applet_height);
+		variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,applet_width,applet_height);
+		variables.MAPPANE = new MapFrameAdmin(applet_width, applet_height, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+		Settings m_settings = new Settings();
+		vars.init(getParameter("w"));
+		String OVERRIDE_WMS_SITE = getParameter("mapinfo");
+		
+		UPASUISETTINGS ui = new UPASUISETTINGS();
+		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{
-			m_settings.setWmsSite(arr[0]);
-			m_settings.setSelectedWmsFormat(arr[1]);
-			m_settings.setSelectedWmsLayers(arr[2]);
-			if(arr.length>=4)
-				m_settings.setWmsUsername(arr[3]);
-			if(arr.length>=5)
-				m_settings.setWmsPassword(arr[4]);
+			m_settings.setMapServer(MAPSERVER.DEFAULT);
+		}
+		else
+		{
+			String [] arr = OVERRIDE_WMS_SITE.split(";");
+			if(arr!=null && arr.length>=3)
+			{
+				m_settings.setMapServer(MAPSERVER.WMS);
+				//ui.setSzWmsSite(arr[0]);
+				m_settings.setWmsSite(arr[0]);
+				m_settings.setSelectedWmsFormat(arr[1]);
+				m_settings.setSelectedWmsLayers(arr[2]);
+				//ui.setSzWmsFormat(arr[1]);
+				//ui.setSzWmsLayers(arr[2]);
+				if(arr.length>=4)
+					m_settings.setWmsEpsg(arr[3]);
+				else
+					m_settings.setWmsEpsg("4326"); //default to lon/lat WGS84
+				if(arr.length>=5)
+					m_settings.setWmsUsername(arr[4]);
+				else
+					m_settings.setWmsUsername("");
+				if(arr.length>=6)
+					m_settings.setWmsPassword(arr[5]);
+				else
+					m_settings.setWmsPassword("");
+				/*m_settings.setWmsSite(ui.getSzWmsSite());
+				m_settings.setWmsUsername(ui.getSzWmsUsername());
+				m_settings.setSelectedWmsLayers(ui.getSzWmsLayers());
+				m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
+				m_settings.setWmsPassword(ui.getSzWmsPassword());*/
+			}
 		}
 		variables.SETTINGS = m_settings;
 		
@@ -156,7 +186,6 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			variables.SETTINGS = m_settings;
 			
 			//MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
-			
 			
 			//variables.DRAW.get_buff_image();
 			//variables.MAPPANE.initialize();

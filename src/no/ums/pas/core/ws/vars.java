@@ -27,8 +27,8 @@ public class vars
 		WSDL_PAS 				= sz_base + "PAS.asmx?WSDL";
 		//WSDL_PAS 				= "http://localhost/WS/PAS.asmx?WSDL";
 		
-		//WSDL_PASSTATUS			= "http://localhost/WS/PasStatus.asmx?WSDL";
-		WSDL_PASSTATUS			= sz_base + "PasStatus.asmx?WSDL";
+		WSDL_PASSTATUS			= "http://localhost/WS/PasStatus.asmx?WSDL";
+		//WSDL_PASSTATUS			= sz_base + "PasStatus.asmx?WSDL";
 		
 		WSDL_TAS				= sz_base + "TAS.asmx?WSDL";
 		//WSDL_TAS				= "http://localhost/WS/TAS.asmx?WSDL";

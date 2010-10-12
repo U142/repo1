@@ -108,16 +108,19 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_hdr_total, m_gridconst);
+		m_lbl_hdr_total.setToolTipText(PAS.l("main_status_lba_total_number_of_cells"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_total, m_gridconst);
 		
 		set_gridconst(0, inc_panels(), 1, 1);	
 		add(m_lbl_hdr_completed, m_gridconst);
+		m_lbl_hdr_completed.setToolTipText(PAS.l("main_status_lba_cells_sending"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_completed, m_gridconst);
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_hdr_unknown, m_gridconst);
+		m_lbl_hdr_unknown.setToolTipText(PAS.l("main_status_lba_cells_unavailable"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_unknown, m_gridconst);
 		
