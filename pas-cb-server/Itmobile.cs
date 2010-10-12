@@ -477,7 +477,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
                 t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-                dump_request(t_alert, op, "InfoMessage", l_refno);
+                dump_request(t_alert, op, "EMSMessage", l_refno);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
@@ -487,11 +487,11 @@ namespace pas_cb_server
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "InfoMessageResult", l_refno);
+                    dump_request(t_alert_response, op, "EMSMessageResult", l_refno);
 
                 if (t_alert_response == null)
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (response is null)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (response is null)"
                         , l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);
@@ -523,7 +523,7 @@ namespace pas_cb_server
 
                     Database.UpdateHistCell(b_report, l_refno, op.l_operator, cb_percentage, l_2gtotal, l_2gok, l_3gtotal, l_3gok);
 
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage OK (handle={3}, success={4:0.00}%)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage OK (handle={3}, success={4:0.00}%)"
                         , l_refno
                         , op.sz_operatorname
                         , Tools.ToInt32(t_alert.IBAG_message_number, 0)
@@ -543,7 +543,7 @@ namespace pas_cb_server
                 }
                 else
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) InfoMessage FAILED (handle={3}, code={4}, msg={5})"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
                         , l_refno
                         , op.sz_operatorname
                         , Tools.ToInt32(t_alert.IBAG_message_number, 0)
@@ -562,8 +562,8 @@ namespace pas_cb_server
             catch (Exception e)
             {
                 Log.WriteLog(
-                    String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
-                    String.Format("{0} (op={1}) InfoMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
+                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
+                    String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
                     2);
                 Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
                 ret = Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
