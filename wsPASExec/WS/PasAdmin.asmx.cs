@@ -38,7 +38,9 @@ namespace com.ums.ws.pas.admin
                 ULogon l = new ULogon();
 
                 l.CheckLogon(ref logon, true);
-                string sz_sql = String.Format("sp_cb_upd_activate_message {0}, {1}", l_newspk, 0);
+                string sz_sql = String.Format("UPDATE BBNEWS SET l_incident_end={0} WHERE l_newspk={1}", l.getDbClock(), l_newspk);
+                l.ExecNonQuery(sz_sql);
+                sz_sql = String.Format("sp_cb_upd_activate_message {0}, {1}", l_newspk, 0);
                 l.ExecNonQuery(sz_sql);
             }
             catch (Exception e)
