@@ -392,32 +392,40 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
 			sendings.put(new Long(currentstatus.getLRefno()), new Long(currentstatus.getLRefno()));
 			OPERATOR_STATE status = currentui.getOperatorStatus();
-			String lbl_pane = "";
+			String lbl_pane = "<html>";
 			String tooltip_pane = "";
+			lbl_pane += "<font color=" + CentricOperatorStatus.getOperatorStatusColor(status) + ">";
 			switch(status)
 			{
 			case INITIALIZING:
 			case ACTIVE:
-				lbl_pane = PAS.l("main_status_lba_progress_active_abb");
+				//lbl_pane += "<font color=green>";
+				lbl_pane += PAS.l("main_status_lba_progress_active_abb");
 				tooltip_pane = PAS.l("main_status_lba_progress_active");
 				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
 			case KILLING:
-				lbl_pane = PAS.l("main_status_lba_progress_killing_abb");
+				//lbl_pane += "<font color=green>";
+				lbl_pane += PAS.l("main_status_lba_progress_killing_abb");
 				tooltip_pane = PAS.l("main_status_lba_progress_killing");
 				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 				break;
 			case FINISHED:
-				lbl_pane = PAS.l("main_status_lba_progress_finished_abb");
+				//lbl_pane += "<font color=green>";
+				lbl_pane += PAS.l("main_status_lba_progress_finished_abb");
 				tooltip_pane = PAS.l("main_status_lba_progress_finished");
 				break;
 			case ERROR:
-				lbl_pane = PAS.l("main_status_lba_progress_error_abb");
+				//lbl_pane += "<font color=red>";
+				lbl_pane += PAS.l("main_status_lba_progress_error_abb");
 				tooltip_pane = PAS.l("main_status_lba_progress_error");
 				break;
 			}
-			lbl_pane += " ";
-			lbl_pane += currentstatus.getMdv().getSzSendingname();
+			lbl_pane += "</font>";
+			lbl_pane += "<font color=black>";
+			lbl_pane += " " + currentstatus.getMdv().getSzSendingname();
+			lbl_pane += "</font>";
+			lbl_pane += "</html>";
 			try
 			{
 				final JTabbedPane final_tp = tp;

@@ -148,7 +148,33 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			}
 			if(currentoperator!=null)
 				currentoperator.UpdateStatus(cbstatus, operator, project_timestamp);
-					
+			
+			//update label
+			try
+			{
+				final JTabbedPane final_tp = get_tpane();
+				final CentricOperatorStatus final_cms = currentoperator;
+				final String szOperatorName = currentoperator.m_operator.getSzOperator();
+				final String final_lbl = "<html>" + currentoperator.getStatusAbb() + " <font color=black>" + szOperatorName + "</font></html>";
+				final String final_tooltip = currentoperator.getStatusTooltip();
+				SwingUtilities.invokeLater(new Runnable() {					
+					@Override
+					public void run() {
+						int n = final_tp.indexOfComponent(final_cms);
+						if(n>=0)
+						{
+							final_tp.setTitleAt(n, final_lbl);
+							final_tp.setToolTipTextAt(n, final_tooltip);
+						}
+						else
+							System.out.println("Component " + final_cms + " not found");						
+					}
+				});
+			}
+			catch(Exception e)
+			{
+				
+			}	
 			
 			/*if(operator.getLStatus()<1000) // All statuses under 1000 are still active
 				active.put(new Long(cbs.getLRefno()), new Long(cbs.getLRefno()));

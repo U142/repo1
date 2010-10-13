@@ -8,6 +8,7 @@ import java.awt.event.ComponentListener;
 import java.util.List;
 
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -25,10 +26,16 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	 */
 	public enum OPERATOR_STATE
 	{
-		ERROR,
+		/*ERROR,
 		KILLING,
 		INITIALIZING,
 		ACTIVE,
+		FINISHED,
+		DUMMY_OPERATOR,*/
+		INITIALIZING,
+		ACTIVE,
+		KILLING,
+		ERROR,
 		FINISHED,
 		DUMMY_OPERATOR,
 	}
@@ -51,6 +58,11 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	private StdTextLabel m_lbl_duration = new StdTextLabel("6 hours");
 	private StdTextLabel m_lbl_start = new StdTextLabel("23-06-2010 22:00",200);
 	private StdTextLabel m_lbl_unknown = new StdTextLabel("");
+	
+	private String m_sz_status_abb = "";
+	private String m_sz_status_tooltip = "";
+	public String getStatusAbb() { return m_sz_status_abb; }
+	public String getStatusTooltip() { return m_sz_status_tooltip; }
 	
 	//private int m_operator;
 	public ULBASENDING get_operator() { return m_operator; }
@@ -202,6 +214,37 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 			timestamp = db_timestamp;*/
 		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),timestamp)) + " " + PAS.l("common_minutes_maybe"));
 		
+		
+		m_sz_status_abb = "";
+		m_sz_status_tooltip = "";
+		OPERATOR_STATE status = getOperatorStatus();
+		m_sz_status_abb += "<font color=" + CentricOperatorStatus.getOperatorStatusColor(status) + ">";
+		switch(status)
+		{
+		case INITIALIZING:
+		case ACTIVE:
+			m_sz_status_abb += PAS.l("main_status_lba_progress_active_abb");
+			m_sz_status_tooltip = PAS.l("main_status_lba_progress_active");
+			//active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+			break;
+		case KILLING:
+			m_sz_status_abb += PAS.l("main_status_lba_progress_killing_abb");
+			m_sz_status_tooltip = PAS.l("main_status_lba_progress_killing");
+			//active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+			break;
+		case FINISHED:
+			m_sz_status_abb += PAS.l("main_status_lba_progress_finished_abb");
+			m_sz_status_tooltip = PAS.l("main_status_lba_progress_finished");
+			break;
+		case ERROR:
+			m_sz_status_abb += PAS.l("main_status_lba_progress_error_abb");
+			m_sz_status_tooltip = PAS.l("main_status_lba_progress_error");
+			break;
+		}
+		m_sz_status_abb += "</font>";
+		
+
+
 		/*
 		ULBAHISTCELL histcell = null;
 		if(operator.getHistcell().getULBAHISTCELL().size() > 0)
@@ -242,6 +285,22 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		cos.get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),cbp.getLDbTimestamp())) + " " + PAS.l("common_minutes_maybe"));
 
 		 */
+	}
+	
+	public static String getOperatorStatusColor(OPERATOR_STATE state)
+	{
+		switch(state)
+		{
+		case ACTIVE:
+		case DUMMY_OPERATOR:
+		case FINISHED:
+		case INITIALIZING:
+		case KILLING:
+			return "green";
+		case ERROR:
+			return "red";
+		}
+		return "black";
 	}
 	
 	public OPERATOR_STATE getOperatorStatus()
