@@ -198,8 +198,8 @@ public class Navigation {
 
 		MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
 		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
-		
-		if(calc_distance(mp1, mp2) < n_minzoom)
+		double dist = calc_distance(mp1, mp2);
+		if(dist < n_minzoom)
 			return true;
 		else
 			return false;

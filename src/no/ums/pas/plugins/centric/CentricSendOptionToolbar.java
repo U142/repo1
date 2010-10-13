@@ -54,6 +54,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.text.JTextComponent;
 
@@ -1002,7 +1003,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			else if(e.getActionCommand().equals("comboBoxChanged"))
 			{
-				
+				m_cbx_originator.updateEditor();				
 			}
 			checkForEnableSendButton();
 			updatePreviewText(true);
@@ -1018,7 +1019,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			else if(e.getActionCommand().equals("comboBoxChanged"))
 			{
-				
+				m_cbx_reaction.updateEditor();				
 			}
 			checkForEnableSendButton();
 			updatePreviewText(true);
@@ -1035,7 +1036,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			else if(e.getActionCommand().equals("comboBoxChanged"))
 			{
-				
+				m_cbx_risk.updateEditor();				
 			}
 			checkForEnableSendButton();
 			updatePreviewText(true);
@@ -1167,6 +1168,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 		}*/
 		checkForEnableSendButton();
+		
 		//updateCharacters();
 		updatePreviewText();
 			
@@ -1195,6 +1197,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	protected void updatePreviewText(boolean bRROChanged)
 	{
 		String sz_totalmessage = "";
+		int fieldlengths = 0;
 		
 		String risk = m_cbx_risk.getEditor().getItem().toString();
 		String reaction = m_cbx_reaction.getEditor().getItem().toString();
@@ -1202,15 +1205,31 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(m_txt_sender_name.getText().length()>0)
 			sz_totalmessage += m_txt_sender_name.getText() + " ";
 		sz_totalmessage += m_txt_date_time.getText() + "\n";
+		fieldlengths += sz_totalmessage.length();
 		sz_totalmessage += m_txt_message.getText();
+		String szPad = "";
 		if(risk.length()>0)
-			sz_totalmessage += "\n" + risk;
+		{
+			szPad = "\n" + risk;
+			sz_totalmessage += szPad;
+			fieldlengths += szPad.length();
+		}
 		if(reaction.length()>0)
-			sz_totalmessage += "\n" + reaction;
+		{ 
+			szPad = "\n" + reaction;
+			sz_totalmessage += szPad;
+			fieldlengths += szPad.length();
+		}
 		if(originator.length()>0)
-			sz_totalmessage += "\n" + originator;
+		{
+			szPad = "\n" + originator;
+			sz_totalmessage += szPad;
+			fieldlengths += szPad.length();
+		}
 		if(sz_totalmessage.length()>MAX_TOTAL_CHARS)
+		{
 			sz_totalmessage = sz_totalmessage.substring(0, MAX_TOTAL_CHARS);
+		}
 		m_txt_preview.setText(sz_totalmessage);
 		updateCharacters();
 	}
@@ -1288,7 +1307,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		{
 			
 		}
-
 	}
 	
 	protected boolean checkIfInputAllowed(KeyEvent e, int num_chars_selected)
@@ -1300,21 +1318,36 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
 			updatePreviewText();
 			int n_total_len = m_txt_preview.getText().length();
-			if(e.getSource().equals(m_txt_message))
+			if(e.getSource().equals(m_txt_message))// || e.getSource().equals(m_txt_sender_name))
 			{
+				JTextComponent c = (JTextComponent)e.getSource();
 				int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
-				int len_of_message = m_txt_message.getText().length();
+				int len_of_message = c.getText().length();
 				//if(len_of_message<n_chars_left_for_message)
 				{
-					if(m_txt_message.getText().length() >= n_chars_left_for_message-1) {
+					if(c.getText().length() >= n_chars_left_for_message-1) {
+						c.setText(c.getText().substring(0, n_chars_left_for_message-1));
 						return false;
 					}
 				}
 			}
-			else //if(e.getSource().equals(m_txt_sender_name))
+			else if(e.getSource().equals(m_txt_sender_name))
 			{
+				JTextComponent c = (JTextComponent)e.getSource();
 				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
+				{
+					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
+					c.setText(c.getText().substring(0, n_chars_left_for_message-1));
 					return false;
+				}				
+			}
+			else
+			{
+				//combobox
+				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
+				{
+					return false;
+				}								
 			}
 		}
 		else if(e.getSource().equals(m_txt_event_name))
@@ -1363,7 +1396,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			updatePreviewText();
 			checkForEnableSendButton();
 		}
-		
+
 		//checkInputs();
 	}
 	@Override
@@ -1374,20 +1407,24 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) 
 		{
+
 			JTextComponent c = (JTextComponent)e.getSource();
 			int before = m_txt_preview.getText().length();
+			int txt_before = m_txt_message.getText().length();
 			int char_selection = c.getSelectionEnd()-c.getSelectionStart();
 			//System.out.println("c="+char_selection);
 			boolean b = checkIfInputAllowed(e, char_selection);
 			int after = m_txt_preview.getText().length();
+			int txt_after = c.getText().length();
 			int number_of_chars = after-before;
 			if(!b)
 			{
 				e.consume();
+				//return;
 			}
 			{
 				//remove chars if > max
-				if(after>MAX_TOTAL_CHARS)
+				if(txt_after>MAX_TOTAL_CHARS)
 				{
 					try
 					{
@@ -1508,6 +1545,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		int chars = m_txt_preview.getText().length();
 		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
 		int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
+		m_cbx_risk.setCharsAvailable(chars_left + m_cbx_risk.getEditor().getItem().toString().length());
+		m_cbx_reaction.setCharsAvailable(chars_left + m_cbx_reaction.getEditor().getItem().toString().length());
+		m_cbx_originator.setCharsAvailable(chars_left + m_cbx_originator.getEditor().getItem().toString().length());
 		/*switch(current_mode)
 		{
 		case INITIALIZING:

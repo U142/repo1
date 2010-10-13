@@ -361,9 +361,9 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			{
 				case ACTIVE:
 				case INITIALIZING:
-				case ERROR:
 					ret = true;
 					break;
+				case ERROR:
 				case FINISHED:
 				case KILLING:
 				case DUMMY_OPERATOR:

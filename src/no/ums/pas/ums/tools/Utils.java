@@ -1,6 +1,14 @@
 package no.ums.pas.ums.tools;
 import java.util.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
+import javax.swing.text.JTextComponent.KeyBinding;
 
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.NavStruct;
@@ -137,5 +145,56 @@ public final class Utils {
 
         return true;
     }    
+    
+	public static long TEXT_FEATURE_COPY = 1;
+	public static long TEXT_FEATURE_PASTE = 2;
+	public static long TEXT_FEATURE_CUT = 4;
+    public static void disableTextComponentFeature(JTextComponent c, long TextFeatures)
+    {
+    	ArrayList<KeyBinding> arr = new ArrayList<KeyBinding>();
+    	if((TextFeatures & TEXT_FEATURE_COPY) == TEXT_FEATURE_COPY)
+    	{
+    		arr.add(new JTextComponent.KeyBinding(
+	                KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK),
+	                DefaultEditorKit.beepAction));
+    	}
+    	if((TextFeatures & TEXT_FEATURE_CUT) == TEXT_FEATURE_CUT)
+    	{
+    		arr.add(new JTextComponent.KeyBinding(
+	                  KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK),
+	                  DefaultEditorKit.beepAction));
+    	}
+    	if((TextFeatures & TEXT_FEATURE_PASTE) == TEXT_FEATURE_PASTE)
+    	{
+            arr.add(new JTextComponent.KeyBinding(
+	                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK),
+	                DefaultEditorKit.beepAction));
+    	}
+    	JTextComponent.KeyBinding[] newBindings = new JTextComponent.KeyBinding[arr.size()];
+    	for(int i=0; i < arr.size(); i++)
+    	{
+    		newBindings[i] = arr.get(i);
+    	}
+		/*JTextComponent.KeyBinding[] newBindings = {
+	        	new JTextComponent.KeyBinding(
+	                KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK),
+	                DefaultEditorKit.beepAction),
+	            new JTextComponent.KeyBinding(
+	                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK),
+	                DefaultEditorKit.beepAction),
+	            new JTextComponent.KeyBinding(
+	                  KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK),
+	                  DefaultEditorKit.beepAction)
+		};*/
+		Keymap k = c.getKeymap();
+		try
+		{
+			JTextComponent.loadKeymap(k, newBindings, c.getActions());
+		}
+		catch(Exception e)
+		{
+			
+		}
+    }
     
 }

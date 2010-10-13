@@ -120,8 +120,8 @@ public class Installer {
 		try {
 			m_sz_local_lnkfile = StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "PAS.jnlp";
 			m_sz_local_icofile = StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "pas.ico";
-			download_and_save(PAS.get_pas().get_sitename() + "java_pas/PASapp.jnlp", m_sz_local_lnkfile, true);
-			download_and_save(PAS.get_pas().get_sitename() + "java_pas/images/pas.ico", m_sz_local_icofile, false);
+			download_and_save(PAS.get_pas().get_sitename() + "PASapp.jnlp", m_sz_local_lnkfile, true);
+			download_and_save(PAS.get_pas().get_sitename() + "images/pas.ico", m_sz_local_icofile, false);
 			//m_b_fisticon = !dl.file_exists();
 			//if(!dl.file_exists()) {
 			//	ask_shortcut();

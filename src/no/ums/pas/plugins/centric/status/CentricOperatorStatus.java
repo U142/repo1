@@ -183,10 +183,23 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		start = cbs.getLCreatedTs();
 		get_lbl_start().setText(no.ums.pas.plugins.centric.tools.TextFormat.format_datetime(String.valueOf(cbs.getLCreatedTs())));
 		// Duration
-		if(operator.getLStatus()>=1000) // Finished
+		switch(getOperatorStatus())
+		{
+		case DUMMY_OPERATOR:
+		case ERROR:
+		case FINISHED:
+			timestamp = cbs.getLLastTs();
+			break;
+		case ACTIVE:
+		case INITIALIZING:
+		case KILLING:
+			timestamp = db_timestamp;
+			break;
+		}
+		/*if(operator.getLStatus()>=1000) // Finished
 			timestamp = cbs.getLLastTs();
 		else
-			timestamp = db_timestamp;
+			timestamp = db_timestamp;*/
 		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),timestamp)) + " " + PAS.l("common_minutes_maybe"));
 		
 		/*
@@ -266,7 +279,11 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		case LBASEND.LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM:
 			operatorstatus = OPERATOR_STATE.FINISHED;
 			break;
-		case LBASEND.LBASTATUS_GENERAL_ERROR:
+		//case LBASEND.LBASTATUS_GENERAL_ERROR:
+		//case LBASEND.LBASTATUS_PARSING_LBAS_FAILED_TO_SEND:
+		//	operatorstatus = OPERATOR_STATE.ERROR;
+		//	break;
+		case LBASEND.LBASTATUS_GENERAL_ERROR: //cb-server has given up
 			operatorstatus = OPERATOR_STATE.ERROR;
 			break;
 		case LBASEND.LBASTATUS_DUMMY_OPERATOR:

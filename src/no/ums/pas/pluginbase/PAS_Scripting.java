@@ -1010,7 +1010,8 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	@Override
 	public boolean onMapGotoNavigation(NavStruct n) {
-		PAS.get_pas().actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		//PAS.get_pas().actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
+		variables.NAVIGATION.gotoMap(n);
 		return true;
 	}
 

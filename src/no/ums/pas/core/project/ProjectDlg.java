@@ -236,7 +236,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 				ArrayList<Object> projpk = new ArrayList<Object>();
 				for(int i=0; i < arr_slo.size(); i++) {
 					Project p = arr_slo.get(i).get_project();//((StatusListObject)arr_slo.get(i)).get_project();
-					if(!projpk.contains(p.get_projectpk())) {
+					if(!projpk.contains(p.get_projectpk())) { //contains(p.get_projectpk())) {
 						ret.add(p);
 						projpk.add(p.get_projectpk());
 					} else {
