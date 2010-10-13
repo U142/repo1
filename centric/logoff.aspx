@@ -4,7 +4,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <link rel="stylesheet" href="css/default.css" />
+    <title>NL-Alert Administration <%=System.Configuration.ConfigurationSettings.AppSettings["version"]%></title>
 </head>
 <body>
     <form id="form1" runat="server">

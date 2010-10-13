@@ -67,6 +67,7 @@ public partial class main : System.Web.UI.Page
             Session["messages"] = sysm;
         }
     }
+
     protected void btn_activate_message_Click(object sender, EventArgs e)
     {
         USYSTEMMESSAGES sysm = (USYSTEMMESSAGES)Session["messages"];
@@ -134,6 +135,7 @@ public partial class main : System.Web.UI.Page
         // Stores the new message and returns it with l_newspk
         sysm.news.newslist[sysm.news.newslist.Length - 1] = ws.UpdateSystemMessage(Util.convertLogonInfoPas(logon), sysm.news.newslist[sysm.news.newslist.Length - 1]);
         sysm.news.newslist[sysm.news.newslist.Length - 1].l_deptpk = 0;
+        sysm.news.newslist[sysm.news.newslist.Length - 1].f_active = 1;
 
         UBBNEWS tsm = (UBBNEWS)Session["edit"];
         if (tsm != null)

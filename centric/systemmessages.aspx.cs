@@ -242,10 +242,10 @@ public partial class systemmessages : System.Web.UI.Page
                 {
                     minutes = int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(10, 2));
                     minutes = (int)Math.Round((double)minutes / 5.0) * 5;
-                    if (minutes == 60)
+                    if (minutes == 60 || minutes == 0)
                         ddl_activate_m.SelectedIndex = 0;
                     else
-                        ddl_activate_m.SelectedValue = minutes.ToString();
+                        ddl_activate_m.SelectedValue = minutes.ToString().PadLeft(2,'0');
                 }
                 else
                     ddl_activate_m.SelectedIndex = 0;
@@ -256,10 +256,10 @@ public partial class systemmessages : System.Web.UI.Page
                     hour = int.Parse(messages.news.newslist[i].l_incident_start.ToString().Substring(8, 2));
                     if (minutes == 60)
                         hour++;
-                    if (hour == 24)
+                    if (hour == 24 || hour == 0)
                         ddl_activate_h.SelectedIndex = 0;
                     else
-                        ddl_activate_h.SelectedValue = hour.ToString();
+                        ddl_activate_h.SelectedValue = hour.ToString().PadLeft(2, '0');
                 }
                 else
                     ddl_activate_h.SelectedIndex = 0;
@@ -287,10 +287,10 @@ public partial class systemmessages : System.Web.UI.Page
                 {
                     minutes = int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(10, 2));
                     minutes = (int)Math.Round((double)minutes / 5.0) * 5;
-                    if (minutes == 60)
+                    if (minutes == 60 || minutes == 0)
                         ddl_deactivate_m.SelectedIndex = 0;
                     else
-                        ddl_deactivate_m.SelectedValue = minutes.ToString();
+                        ddl_deactivate_m.SelectedValue = minutes.ToString().PadLeft(2, '0');
                 }
                 else
                     ddl_deactivate_m.SelectedIndex = 0;
@@ -301,10 +301,10 @@ public partial class systemmessages : System.Web.UI.Page
                     hour = int.Parse(messages.news.newslist[i].l_incident_end.ToString().Substring(8, 2));
                     if (minutes == 60)
                         hour++;
-                    if (hour == 24)
+                    if (hour == 24 || hour == 0)
                         ddl_deactivate_h.SelectedIndex = 0;
                     else
-                        ddl_deactivate_h.SelectedValue = hour.ToString();
+                        ddl_deactivate_h.SelectedValue = hour.ToString().PadLeft(2, '0');
                 }
                 else
                     ddl_deactivate_h.SelectedIndex = 0;

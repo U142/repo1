@@ -265,12 +265,21 @@ public partial class user_admin : System.Web.UI.Page
          }
          else if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_super_regional"]) || user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_national"])) // super regional and national
          {
-             for (int i = 0; i < regions.Length; ++i)
-             {
-                 regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
-             }
-             user.l_deptpk = regionpk[0];
-             res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
+            for (int i = 0; i < regions.Length; ++i)
+            {
+                regionpk[i] = int.Parse(lst_regions.Items[regions[i]].Value);
+            }
+            if (user.l_profilepk == int.Parse(ConfigurationSettings.AppSettings["usertype_national"]))
+            {
+                int[] regtemp = regionpk;
+                regionpk = new int[regtemp.Length + 1];
+                regtemp.CopyTo(regionpk,0);
+                regionpk[regionpk.Length - 1] = int.Parse(ConfigurationSettings.AppSettings["national_department"]);
+                user.l_deptpk = int.Parse(ConfigurationSettings.AppSettings["national_department"]);
+            }
+            else
+                user.l_deptpk = regionpk[0];
+            res = pasadmin.doStoreUser(Util.convertLogonInfoPasAdmin(li), user, regionpk);
          }
          else
          {

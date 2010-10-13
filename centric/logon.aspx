@@ -4,6 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link rel="stylesheet" href="css/default.css" />
     <title>NL-Alert Administration <%=System.Configuration.ConfigurationSettings.AppSettings["version"]%></title>
 </head>
 <body>
