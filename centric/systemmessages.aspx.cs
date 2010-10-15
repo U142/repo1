@@ -325,7 +325,7 @@ public partial class systemmessages : System.Web.UI.Page
                 else
                     txt_deactivate.Text = "";
 
-                if (messages.news.newslist[i].f_active == 1) //active egentlig f_active
+                if (messages.news.newslist[i].f_active == 1 || messages.news.newslist[i].l_incident_start >= messages.news.newslist[i].l_timestamp_db) //active egentlig f_active
                 {
                     txt_message.Attributes.Remove("onFocus");
                     activate_validate.Enabled = true;

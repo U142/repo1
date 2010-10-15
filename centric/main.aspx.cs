@@ -37,13 +37,13 @@ public partial class main : System.Web.UI.Page
             com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
             if(logon == null)
                 Server.Transfer("logon.aspx");
-            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),0,UBBNEWSLIST_FILTER.ACTIVE);
+            USYSTEMMESSAGES sysm = pws.GetSystemMessages(Util.convertLogonInfoPas(logon),1,UBBNEWSLIST_FILTER.IN_BETWEEN_START_END); // jukser til å hente ut alle meldinger
 
             IEnumerable<UBBNEWS> sorter = sysm.news.newslist.OrderBy(news => news.l_incident_start);
 
             foreach (UBBNEWS news in sorter)
             {
-                if (news.f_active == 1)
+                if (news.f_active == 1 || (news.l_incident_end>sysm.news.l_timestamp_db || news.l_incident_end==0))
                     lst_messages.Items.Add(new ListItem(Util.padForListBox(news), news.l_newspk.ToString()));
             }
 
