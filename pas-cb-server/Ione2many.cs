@@ -194,7 +194,7 @@ namespace pas_cb_server
                 dump_request(killreq, op, "KillMessage", oAlert.l_refno);
                 if (!Settings.live)
                 {
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
 
@@ -278,7 +278,7 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message, sz_method),
                     String.Format("{0} (op={1}) ({3}) EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e, sz_method),
                     2);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                 return Constant.FAILED;
             }
             finally
@@ -571,7 +571,7 @@ namespace pas_cb_server
             if (!Settings.live)
             {
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator);
                 return ret;
             }
 
@@ -617,7 +617,7 @@ namespace pas_cb_server
                     , cellcount.cbccbestatuscode
                     , cellcount.messagetext
                     , l_msghandle), 2);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                 ret = Constant.FAILED;
             }
 
@@ -639,7 +639,7 @@ namespace pas_cb_server
             if (!Settings.live)
             {
                 Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator);
                 return ret;
             }
 
@@ -709,7 +709,7 @@ namespace pas_cb_server
                     , infores.cbccbestatuscode
                     , infores.messagetext
                     , l_msghandle), 2);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                 ret = Constant.FAILED;
             }
             return ret;

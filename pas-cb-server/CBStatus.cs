@@ -84,7 +84,7 @@ namespace pas_cb_server
                     LBASEND LS 
                     INNER JOIN LBAHISTCELL_REPORT HR ON LS.l_refno=HR.l_refno AND LS.l_operator=HR.l_operator
                 where 
-                    LS.l_status >= {0}
+                    LS.l_status in ({0},{1},{2},{3},{4},{5})
                     AND LS.l_started_ts<=CONVERT(NUMERIC,(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),112)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),1,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),4,2)

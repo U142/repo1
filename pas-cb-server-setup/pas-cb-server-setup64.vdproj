@@ -64,6 +64,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_8A9A37CAA5F23919B41B6BEE93D15498"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E9FA6BE69623CDBA22C7E1F8FC3DFB43"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -71,12 +77,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_33D6157A19F349A49B22BBFCAC8F74C7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8A9A37CAA5F23919B41B6BEE93D15498"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -480,14 +480,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cell Broadcast Server"
-        "ProductCode" = "8:{66073A72-42FA-46C7-91D4-F63B548BE3E9}"
-        "PackageCode" = "8:{3E315FBB-0288-4ACA-9070-02E950B7D579}"
+        "ProductCode" = "8:{D74B9343-BBAA-4D30-BE9C-46F8A535E381}"
+        "PackageCode" = "8:{1546A2D3-4465-46CB-90DD-27BF1A7D04BD}"
         "UpgradeCode" = "8:{2ED8E5BA-DDE9-423D-AAB5-342B08A3D7B9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.2.3"
+        "ProductVersion" = "8:1.2.5"
         "Manufacturer" = "8:UMS"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

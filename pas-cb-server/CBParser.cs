@@ -209,6 +209,11 @@ namespace pas_cb_server
                         Log.WriteLog(String.Format("{0} (op={1}) failed checking if broadcast was already submitted, aborting", oAlert.l_refno, op.sz_operatorname, sz_jobid), 0);
                         ret.Add(op.l_operator, Database.UpdateTries(oAlert.l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB));
                     }
+                    else if (sz_jobid == "cancelled")
+                    {
+                        Log.WriteLog(String.Format("{0} (op={1}) broadcast has been cancelled", oAlert.l_refno, op.sz_operatorname), 0);
+                        ret.Add(op.l_operator, Constant.OK);
+                    }
                     else if (sz_jobid != "")
                     {
                         Log.WriteLog(String.Format("{0} (op={1}) broadcast already submitted (ref={2})", oAlert.l_refno, op.sz_operatorname, sz_jobid), 0);
@@ -217,7 +222,7 @@ namespace pas_cb_server
                     else
                     {
                         // insert LBAHISTCELL if sending isn't heartbeat sending (no status for heartbeat messages
-                        if(operation != Operation.NEWPLMN_HEARTBEAT)
+                        if (operation != Operation.NEWPLMN_HEARTBEAT)
                             Database.InsertHistCell(oAlert.l_refno, op.l_operator);
                         switch (op.l_type)
                         {
@@ -325,7 +330,8 @@ namespace pas_cb_server
                 }
                 else if (sz_jobid == "")
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) FAILED (could not find JobID, ignoring)", oAlert.l_refno, op.sz_operatorname), 1);
+                    Log.WriteLog(String.Format("{0} (op={1}) (KillAlert) OK (could not find JobID, setting to CANCELLED)", oAlert.l_refno, op.sz_operatorname), 1);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     ret.Add(op.l_operator, Constant.OK);
                 }
                 else

@@ -1,4 +1,20 @@
-﻿1.2.3
+﻿1.2.5
+=====
+CBServer
+	* Fixed bug in GetAlertStatus where valid data would be overwritten if operator gives error. Now uses existing values (if any) when a call fails, but updates timestamp to prevent spamming the operator with requests.
+	* Changed repetition interval from 240 to 480 on t-mobile heartbeats and tests
+	* Fixed bug in status check, 3-min check (report) would set a killed alert back to active and continue checking status
+	* Fixed bug in retry/kill combination. If a message is retrying and a kill message is send, message is set to cancelled right away instead of running through the retries and getting a final error (or being sent out if one of the later tries are successul)
+	* Fixed bug in status codes for killed messages. Were incorrectly set as finished in the database instead of cancelled
+Database
+	* Added sp_upd_cellhist_ts to enable the CBServer to update cellhist timestamp without overwriting data if info message/ems message fails
+
+1.2.4
+=====
+CBServer
+	* Fixed bug in EMS message response parsing, expected message_type report, but actualy message_type should be ack.
+
+1.2.3
 =====
 CBServer
 	* Added GetBytes and ToInt32 to Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian.

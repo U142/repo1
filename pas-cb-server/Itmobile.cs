@@ -124,8 +124,8 @@ namespace pas_cb_server
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
                         //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_gsm_repetition_period = 240;
-                        t_alert_info.IBAG_umts_repetition_period = 240;
+                        t_alert_info.IBAG_gsm_repetition_period = 480;
+                        t_alert_info.IBAG_umts_repetition_period = 480;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
@@ -134,8 +134,8 @@ namespace pas_cb_server
                         t_alert.IBAG_message_type = IBAG_message_type.Alert;
                         //t_alert_info.IBAG_gsm_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
                         //t_alert_info.IBAG_umts_repetition_period = (int)(oAlert.l_validity * 60 / 1.883);
-                        t_alert_info.IBAG_gsm_repetition_period = 240;
-                        t_alert_info.IBAG_umts_repetition_period = 240;
+                        t_alert_info.IBAG_gsm_repetition_period = 480;
+                        t_alert_info.IBAG_umts_repetition_period = 480;
                         t_alert_info.IBAG_gsm_repetition_periodSpecified = true;
                         t_alert_info.IBAG_umts_repetition_periodSpecified = true;
                         break;
@@ -395,7 +395,7 @@ namespace pas_cb_server
                 dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
                 if (!Settings.live)
                 {
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
 
@@ -421,7 +421,7 @@ namespace pas_cb_server
                         , l_reqno
                         , t_alert_response.IBAG_message_type), 0);
                     // ok, insert appropriate info in database
-                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.FINISHED);
+                    Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
                 else
@@ -481,7 +481,7 @@ namespace pas_cb_server
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1);
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator);
                     return ret;
                 }
 
@@ -495,10 +495,10 @@ namespace pas_cb_server
                         , l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);
-                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                     ret = Constant.FAILED;
                 }
-                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Report)
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Ack)
                 {
                     float cb_percentage = 0;
                     int l_2gtotal = 0;
@@ -538,10 +538,10 @@ namespace pas_cb_server
                 else if (t_alert_response.IBAG_message_type == IBAG_message_type.Error && t_alert_response.IBAG_response_code == new string[] { "200" })
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
-                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                     ret = Constant.OK;
                 }
-                else
+                else if (t_alert_response.IBAG_message_type == IBAG_message_type.Error)
                 {
                     Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4}, msg={5})"
                         , l_refno
@@ -550,7 +550,18 @@ namespace pas_cb_server
                         , Tools.ToInt32(t_alert.IBAG_referenced_message_number, 0)
                         , t_alert_response.IBAG_message_type
                         , t_alert_response.IBAG_note.First()), 2);
-                    Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
+                    ret = Constant.FAILED;
+                }
+                else
+                {
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) EMSMessage FAILED (handle={3}, code={4})"
+                        , l_refno
+                        , op.sz_operatorname
+                        , Tools.ToInt32(t_alert.IBAG_message_number, 0)
+                        , Tools.ToInt32(t_alert.IBAG_referenced_message_number, 0)
+                        , t_alert_response.IBAG_message_type), 2);
+                    Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                     ret = Constant.FAILED;
                 }
 
@@ -565,7 +576,7 @@ namespace pas_cb_server
                     String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e.Message),
                     String.Format("{0} (op={1}) EMSMessage EXCEPTION (msg={2})", l_refno, op.sz_operatorname, e),
                     2);
-                Database.UpdateHistCell(b_report, l_refno, op.l_operator, 0, -1, -1, -1, -1, -1, -1); // update cellhist to avoid infinite polling
+                Database.UpdateHistCell(b_report, l_refno, op.l_operator); // update cellhist to avoid infinite polling
                 ret = Database.UpdateTries(l_refno, Constant.FAILEDRETRY, Constant.FAILED, 0, op.l_operator, LBATYPE.CB);
             }
 

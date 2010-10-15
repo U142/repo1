@@ -136,6 +136,15 @@ namespace pas_cb_server
                 l_operator));
             return Constant.OK;
         }
+        public static int UpdateHistCell(bool b_report, int l_refno, int l_operator)
+        {
+            Database.ExecuteNonQuery(
+                String.Format("sp_cb_upd_cellhist_ts {0},{1},{2}",
+                l_refno,
+                l_operator,
+                b_report));
+            return Constant.OK;
+        }
         public static int UpdateHistCell(bool b_report, int l_refno, int l_operator, float l_successpercentage)
         {
             return UpdateHistCell(b_report, l_refno, l_operator, l_successpercentage, 0, 0, 0, 0, 0, 0);
@@ -209,9 +218,12 @@ namespace pas_cb_server
                     if (!rs.IsDBNull(1))
                         sz_ts = rs.GetDecimal(1).ToString();
 
-                    ts_expires = DateTime.ParseExact(sz_ts, "yyyyMMddHHmmss", System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                    if (DateTime.Compare(ts_expires, DateTime.Now) >= 0) // message has expired
-                        expired = true;
+                    if (sz_ts.Length == 14)
+                    {
+                        ts_expires = DateTime.ParseExact(sz_ts, "yyyyMMddHHmmss", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                        if (DateTime.Compare(ts_expires, DateTime.Now) >= 0) // message has expired
+                            expired = true;
+                    }
                 }
 
                 dbConn.Close();
@@ -365,9 +377,10 @@ namespace pas_cb_server
         public static string GetJobID(Operator op, int l_refno)
         {
             string ret = "";
+            int l_status = 0;
             string szQuery;
 
-            szQuery = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1}"
+            szQuery = String.Format("SELECT sz_jobid, l_status FROM LBASEND WHERE l_refno={0} AND l_operator={1}"
                 , l_refno
                 , op.l_operator);
 
@@ -381,8 +394,19 @@ namespace pas_cb_server
                 rs = cmd.ExecuteReader();
 
                 if (rs.Read())
+                {
                     if (!rs.IsDBNull(0))
+                    {
                         ret = rs.GetString(0);
+                    }
+                    if (!rs.IsDBNull(1))
+                    {
+                        l_status = rs.GetInt32(1);
+                    }
+                }
+
+                if (ret == "" && l_status == Constant.CANCELLED)
+                    ret = "cancelled";
 
                 rs.Close();
                 rs.Dispose();
