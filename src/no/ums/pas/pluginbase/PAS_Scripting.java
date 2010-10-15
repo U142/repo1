@@ -616,7 +616,8 @@ public class PAS_Scripting extends PasScriptingInterface
 		}
 		else if(sz_class.equals("com.ums.UmsCommon.UNoAccessOperatorsException"))
 		{
-			JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			//JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_error_no_operators"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			return true;
 		}
 		return false;
