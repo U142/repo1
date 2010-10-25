@@ -151,6 +151,12 @@ public class Navigation {
 	
 	public void setNavigation(double lbo, double rbo, double ubo, double bbo)
 	{
+		setNavigation(lbo, rbo, ubo, bbo, true);
+	}
+	
+	public void setNavigation(double lbo, double rbo, double ubo, double bbo, boolean b_check_zoom_level)
+	{
+
 		//if(Math.abs(lbo)>=180 || Math.abs(rbo)>=180 || Math.abs(ubo)>
 		if(Math.abs(lbo)>180)
 			lbo = 180 * Math.signum(lbo);
@@ -161,13 +167,26 @@ public class Navigation {
 		if(Math.abs(bbo)>90)
 			bbo = 90 * Math.signum(bbo);
 		m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
+
+		if(b_check_zoom_level)
+		{
+			NavStruct nav = new NavStruct(m_f_nav_lbo, m_f_nav_rbo, m_f_nav_ubo, m_f_nav_bbo);
+			Dimension dim = getDimensionFromBounds(nav);
+			if(too_small(nav))
+				exec_zoom_in(dim, dim);
+		}
+
 	}
 	public String toString() {
 		return "lbo: " + m_f_nav_lbo + " rbo: " + m_f_nav_rbo + " ubo: " + m_f_nav_ubo + " bbo: " + m_f_nav_bbo;
 	}
-	public void setNavigation(NavStruct nav) {
+	public void setNavigation(NavStruct nav, boolean b_check_zoom_level)
+	{
 		if(nav!=null)
-			setNavigation(nav._lbo, nav._rbo, nav._ubo, nav._bbo);
+			setNavigation(nav._lbo, nav._rbo, nav._ubo, nav._bbo, b_check_zoom_level);		
+	}
+	public void setNavigation(NavStruct nav) {
+		setNavigation(nav, true);
 	}
 	public void gotoMap(NavStruct nav) {
 		Dimension dim;

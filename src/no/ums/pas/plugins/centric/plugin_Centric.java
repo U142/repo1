@@ -906,7 +906,7 @@ public class plugin_Centric extends PAS_Scripting
 	@Override
 	public boolean onSetInitialMapBounds(Navigation nav, UserInfo ui)
 	{
-		nav.setNavigation(ui.get_departments().get_combined_restriction_shape().get(0).getFullBBox());
+		nav.setNavigation(ui.get_departments().get_combined_restriction_shape().get(0).getFullBBox(), false);
 		return true;
 	}
 	

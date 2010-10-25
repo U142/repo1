@@ -2,6 +2,8 @@ package no.ums.pas.localization;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.plaf.InsetsUIResource;
 
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
@@ -46,7 +49,7 @@ public class UIParamLoader extends ClassLoader
 			while(keys.hasMoreElements())
 			{
 				String key = (String)keys.nextElement();
-				if(key.equals("SendingWarningText.foreground"))
+				if(key.equals("TabbedPane.tabInsets"))
 					System.out.println("break");
 				try
 				{
@@ -126,6 +129,12 @@ public class UIParamLoader extends ClassLoader
 					else if(obj_value instanceof String)
 					{
 						UIManager.put(key, obj_value);
+					}
+					else if(wanted_valuetype instanceof InsetsUIResource)
+					{
+						Integer val = Integer.parseInt(value);
+						InsetsUIResource i = new InsetsUIResource(val, val, val, val);
+						UIManager.put(key, i);
 					}
 					else if(wanted_valuetype==null)
 					{

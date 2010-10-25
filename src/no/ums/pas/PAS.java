@@ -1102,7 +1102,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
 					m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
 					UPASUISETTINGS ui = logon.get_uisettings();
-					if(ui.isInitialized())
+					if(!ui.isInitialized())
+					{
+						ui.setSzLanguageid(pasplugin.getDefaultLocale(m_settings));
+					}
+					//if(ui.isInitialized())
 					{
 						if(OVERRIDE_WMS_SITE!=null)
 						{
@@ -1663,7 +1667,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	{
 		//if(get_drawthread().m_b_needrepaint)
 		//	return;
-		get_drawthread().setRepaint(get_mappane().get_mapimage());
+		try
+		{
+			if(get_drawthread()!=null)
+				get_drawthread().setRepaint(get_mappane().get_mapimage());
+		}
+		catch(Exception e)
+		{
+			
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{

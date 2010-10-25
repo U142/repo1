@@ -1545,9 +1545,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		int chars = m_txt_preview.getText().length();
 		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
 		int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
-		m_cbx_risk.setCharsAvailable(chars_left + m_cbx_risk.getEditor().getItem().toString().length());
-		m_cbx_reaction.setCharsAvailable(chars_left + m_cbx_reaction.getEditor().getItem().toString().length());
-		m_cbx_originator.setCharsAvailable(chars_left + m_cbx_originator.getEditor().getItem().toString().length());
+		int total_chars_left = (MAX_PAGES*MAX_MESSAGELENGTH_PR_PAGE - chars);
+		m_cbx_risk.setCharsAvailable(total_chars_left + m_cbx_risk.getEditor().getItem().toString().length());
+		m_cbx_reaction.setCharsAvailable(total_chars_left + m_cbx_reaction.getEditor().getItem().toString().length());
+		m_cbx_originator.setCharsAvailable(total_chars_left + m_cbx_originator.getEditor().getItem().toString().length());
 		/*switch(current_mode)
 		{
 		case INITIALIZING:

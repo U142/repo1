@@ -1,7 +1,9 @@
 package no.ums.pas.plugins.centric.status;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
