@@ -345,7 +345,9 @@ namespace pas_cb_server
 
                 ret.Add(retpair);
             }
-            ret.Add(ret.ElementAt(0)); // finnish with first coordinate to close the polygon
+            if (ret.Count >= 1)
+                if (ret.ElementAt(0) != ret.ElementAt(ret.Count - 1))
+                    ret.Add(ret.ElementAt(0)); // finnish with first coordinate to close the polygon (unless it's already identical)
 
             return ret.ToArray();
         }

@@ -56,7 +56,7 @@ namespace pas_cb_server
                 }
                 else
                 {
-                    Log.WriteLog(String.Format("(op={0}) (req={1}) NewMessage FAILED (code={2}, msg={3})"
+                    Log.WriteLog(String.Format("(op={0}) (req={1}) Link Test FAILED (code={2}, msg={3})"
                         , op.sz_operatorname
                         , l_reqno
                         , t_alert_response.IBAG_message_type
@@ -635,7 +635,7 @@ namespace pas_cb_server
             WebRequest webRequest = WebRequest.Create(op.sz_url);
             webRequest.Method = "POST";
 
-            byte[] bytes = Encoding.ASCII.GetBytes(w.ToString());
+            byte[] bytes = Encoding.UTF8.GetBytes(w.ToString());
 
             Stream os = null;
             try
@@ -700,7 +700,10 @@ namespace pas_cb_server
                 Tools.ConvertCoordinate(wgs84pt, out xcoord, out ycoord, op.coordinate_type);
                 ret.Add(String.Format(coorformat, "{0}, {1}", xcoord, ycoord));
             }
-            ret.Add(ret.ElementAt(0)); // finnish with first coordinate to close the polygon
+            
+            if(ret.Count >= 1)
+                if(ret.ElementAt(0) != ret.ElementAt(ret.Count-1))
+                    ret.Add(ret.ElementAt(0)); // finnish with first coordinate to close the polygon (unless it's already identical)
 
             return string.Join(" ", ret.ToArray());
         }

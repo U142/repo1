@@ -1,4 +1,10 @@
-﻿1.2.5
+﻿1.2.6
+=====
+CBServer
+	* Added a check for closing coordinate, won't be added if the polygon is already closed.
+	* Fixed XML not being posted as UTF-8 for T-Mobile.
+
+1.2.5
 =====
 CBServer
 	* Fixed bug in GetAlertStatus where valid data would be overwritten if operator gives error. Now uses existing values (if any) when a call fails, but updates timestamp to prevent spamming the operator with requests.
