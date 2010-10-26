@@ -1,5 +1,5 @@
 ﻿//#define FORCE_AREA
-#define FORCE_SIMULATE
+//#define FORCE_SIMULATE
 //#define WHITELISTS
 //#define WHITELISTS_TELENOR
 //#define WHITELISTS_NETCOM
