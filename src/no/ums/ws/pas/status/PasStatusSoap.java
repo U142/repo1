@@ -43,6 +43,23 @@ public interface PasStatusSoap {
     /**
      * 
      * @param logoninfo
+     * @param filter
+     * @return
+     *     returns no.ums.ws.pas.status.UStatusListResults
+     */
+    @WebMethod(operationName = "GetStatusListFiltered", action = "http://ums.no/ws/pas/status/GetStatusListFiltered")
+    @WebResult(name = "GetStatusListFilteredResult", targetNamespace = "http://ums.no/ws/pas/status")
+    @RequestWrapper(localName = "GetStatusListFiltered", targetNamespace = "http://ums.no/ws/pas/status", className = "no.ums.ws.pas.status.GetStatusListFiltered")
+    @ResponseWrapper(localName = "GetStatusListFilteredResponse", targetNamespace = "http://ums.no/ws/pas/status", className = "no.ums.ws.pas.status.GetStatusListFilteredResponse")
+    public UStatusListResults getStatusListFiltered(
+        @WebParam(name = "logoninfo", targetNamespace = "http://ums.no/ws/pas/status")
+        ULOGONINFO logoninfo,
+        @WebParam(name = "filter", targetNamespace = "http://ums.no/ws/pas/status")
+        UDATAFILTER filter);
+
+    /**
+     * 
+     * @param logoninfo
      * @return
      *     returns no.ums.ws.pas.status.UStatusListResults
      */

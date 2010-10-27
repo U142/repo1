@@ -424,6 +424,8 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			lbl_pane += "</font>";
 			lbl_pane += "<font color=black>";
 			lbl_pane += " " + currentstatus.getMdv().getSzSendingname();
+			if(currentstatus.getFSimulation()==1)
+				lbl_pane += "<br>&nbsp;&nbsp;&nbsp;" + PAS.l("mainmenu_trainingmode") + "";
 			lbl_pane += "</font>";
 			lbl_pane += "</html>";
 			try

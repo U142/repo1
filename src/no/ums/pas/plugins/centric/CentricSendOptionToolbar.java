@@ -388,9 +388,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//m_txt_messagescroll.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		m_txt_messagescroll.setPreferredSize(new Dimension(input_width,100));
 		
-		m_btn_messagelib = new JButton(PAS.l("main_sending_audio_type_library"));
+		//m_btn_messagelib = new JButton(PAS.l("main_sending_audio_type_library"));
+		ImageIcon ico = ImageLoader.load_icon("messagelibrary.png");
+		m_btn_messagelib = new JButton(ico);
 		m_btn_messagelib.setToolTipText(PAS.l("main_sending_audio_type_library"));
-		m_btn_messagelib.setPreferredSize(new Dimension(btn_width, btn_height));
+		m_btn_messagelib.setPreferredSize(new Dimension(ico.getIconWidth(), ico.getIconHeight()));
 		m_btn_messagelib.addActionListener(this);
 		
 		//m_btn_messagelib.setPreferredSize(new Dimension(50, 20));
@@ -527,7 +529,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_send.setEnabled(b);
 			break;
 		case SHOWING_SUMMARY: //if training mode is off, we may enable send button
-			m_btn_send.setEnabled(!PAS.TRAINING_MODE);
+			//m_btn_send.setEnabled(!PAS.TRAINING_MODE);
 			if(PAS.TRAINING_MODE)
 				m_btn_send.setToolTipText(PAS.l("mainmenu_trainingmode"));
 			else
@@ -807,8 +809,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			trainingModeChanged();
 			if(PAS.TRAINING_MODE)
 			{
-				m_btn_send.setEnabled(false);
-				return;
+				//m_btn_send.setEnabled(false);
+				//return;
 			}
 			
 			CBMESSAGE msg = new CBMESSAGE();
@@ -863,6 +865,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			}
 			
 			//commons
+			operation.setFSimulation(PAS.TRAINING_MODE);
 			operation.setLSchedUtc(0);
 			operation.setTextmessages(msglist);
 			//operation.setSzSender(m_txt_sender_name.getText());
@@ -1535,10 +1538,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				enable_send = false;
 		}
 		return enable_send;
-		/*if(enable_send)
-			m_btn_send.setEnabled(true);
-		else
-			m_btn_send.setEnabled(false);*/
 	}
 	
 	private void updateCharacters() {

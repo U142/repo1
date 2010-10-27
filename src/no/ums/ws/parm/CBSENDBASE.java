@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="mdvgroup" use="required" type="{http://ums.no/ws/parm/}MDVSENDINGINFO_GROUP" />
  *       &lt;attribute name="l_validity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="l_parent_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
+ *       &lt;attribute name="f_simulation" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -59,6 +60,8 @@ public abstract class CBSENDBASE
     protected int lValidity;
     @XmlAttribute(name = "l_parent_refno", required = true)
     protected long lParentRefno;
+    @XmlAttribute(name = "f_simulation", required = true)
+    protected boolean fSimulation;
 
     /**
      * Gets the value of the messagepart property.
@@ -202,6 +205,22 @@ public abstract class CBSENDBASE
      */
     public void setLParentRefno(long value) {
         this.lParentRefno = value;
+    }
+
+    /**
+     * Gets the value of the fSimulation property.
+     * 
+     */
+    public boolean isFSimulation() {
+        return fSimulation;
+    }
+
+    /**
+     * Sets the value of the fSimulation property.
+     * 
+     */
+    public void setFSimulation(boolean value) {
+        this.fSimulation = value;
     }
 
 }

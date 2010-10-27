@@ -181,6 +181,9 @@ public class plugin_Centric extends PAS_Scripting
 	private JButton menu_btn_draw_ellipse;
 	private JButton menu_btn_draw_plmn;
 	private JButton menu_btn_import;
+	private JMenu menu_addressbook;
+	private JMenu menu_trainingmode;
+
 	
 	@Override
 	public boolean onAddMainMenuButtons(MainMenu menu)
@@ -306,7 +309,6 @@ public class plugin_Centric extends PAS_Scripting
 		
 		//menu.get_item_address_book().setMaximumSize(new Dimension(menu.get_item_address_book().getPreferredSize().width, menu.get_item_address_book().getMaximumSize().height));
 		//menu.get_item_training_mode().setMaximumSize(new Dimension(menu.get_item_training_mode().getPreferredSize().width, menu.get_item_training_mode().getMaximumSize().height));
-		JMenu menu_addressbook, menu_trainingmode;
 		menu.add((menu_addressbook = new JMenu(PAS.l("common_address_book"))));
 		menu.add((menu_trainingmode= new JMenu(PAS.l("mainmenu_trainingmode"))));
 		
@@ -1509,6 +1511,8 @@ public class plugin_Centric extends PAS_Scripting
 			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
 			onSetInitialMapBounds(variables.NAVIGATION, PAS.get_pas().get_userinfo());
 			PAS.get_pas().get_mappane().load_map(true);
+			menu_trainingmode.setEnabled(true);
+
 			return true;
 		}catch(Exception e) { return false; }
 	}
@@ -1531,6 +1535,8 @@ public class plugin_Centric extends PAS_Scripting
 			else
 				m_centricstatuscontroller.set_cbsendingresponse(res);*/
 			PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
+
+			menu_trainingmode.setEnabled(false);
 			
 			
 			return true;

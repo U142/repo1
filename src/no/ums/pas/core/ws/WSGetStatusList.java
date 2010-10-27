@@ -49,7 +49,12 @@ public class WSGetStatusList extends WSThread
 			//URL wsdl = new URL("http://localhost/WS/PasStatus.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
 			//new ParmAdmin(wsdl, service).getParmAdminSoap12().updateParm(bytes, logon, xmlFilename, polyFileName)
-			UStatusListResults response = new PasStatus(wsdl, service).getPasStatusSoap12().getStatusList(logon);
+			UDATAFILTER filter = UDATAFILTER.NONE;
+			if(PAS.TRAINING_MODE)
+				filter = UDATAFILTER.BY_SIMULATION;
+			else
+				filter = UDATAFILTER.BY_LIVE;
+			UStatusListResults response = new PasStatus(wsdl, service).getPasStatusSoap12().getStatusListFiltered(logon, filter);
 			m_arr_statusobjects = new ArrayList<StatusListObject>();
 			
 			for(int i=0; i < response.getList().getUStatusListItem().size(); i++)
