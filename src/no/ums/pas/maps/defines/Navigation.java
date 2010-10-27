@@ -194,8 +194,8 @@ public class Navigation {
 		dim = getDimensionFromBounds(nav);
 		if(too_small(nav))
 			exec_zoom_in(dim, dim);
-		else
-			load_map();
+		//else
+		load_map();
 		
 	}
 	public void reloadMap()
@@ -302,7 +302,7 @@ public class Navigation {
 		ubo = f_centerpoint_y + f_delta_y;
 		bbo = f_centerpoint_y - f_delta_y;
 		setNavigation(lbo, rbo, ubo, bbo);
-		load_map();
+		//load_map();
 	}
 	public void exec_zoom_out(Dimension dim_start)
 	{
