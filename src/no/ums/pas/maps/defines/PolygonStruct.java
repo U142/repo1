@@ -772,6 +772,10 @@ public class PolygonStruct extends ShapeStruct {
 		remove_at(this.get_size()-1);
 	}
 	public void calc_coortopix(Navigation nav) {
+		if(m_b_recalcing)
+			return;
+		m_b_recalcing = true;
+
 		Dimension screen;
 		try
 		{
@@ -804,15 +808,24 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			
 		}
-		if(ellipse_polygon!=null)
-			ellipse_polygon.calc_coortopix(nav);
-		if(isElliptical())
+		try
 		{
-			if(m_p_center!=null)
-				m_p_center.recalc_pix(nav);
-			if(m_p_corner!=null)
-				m_p_corner.recalc_pix(nav);
+			if(ellipse_polygon!=null)
+				ellipse_polygon.calc_coortopix(nav);
+			if(isElliptical())
+			{
+				if(m_p_center!=null)
+					m_p_center.recalc_pix(nav);
+				if(m_p_corner!=null)
+					m_p_corner.recalc_pix(nav);
+			}
 		}
+		catch(Exception e)
+		{
+			
+		}
+		m_b_recalcing = false;
+
 	}
 	private int m_n_lod = 5;
 	private int m_n_lod_meters = 5;
@@ -842,7 +855,6 @@ public class PolygonStruct extends ShapeStruct {
 	public void calc_show_coortopix(Navigation nav) {
 		if(m_int_x.length <= 0)
 			return;
-		m_b_recalcing = true;
 		try {
 			/*if(m_int_x.length < 10) {
 				m_show_int_x = m_int_x;
@@ -917,7 +929,7 @@ public class PolygonStruct extends ShapeStruct {
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			m_b_recalcing = false;
+			//m_b_recalcing = false;
 		}
 	}
 

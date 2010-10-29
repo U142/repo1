@@ -1150,4 +1150,12 @@ public class PAS_Scripting extends PasScriptingInterface
 	}
 
 
+	@Override
+	public float getMapZoomSpeed() {
+		return 0.25f;
+	}
+
+	
+	
+
 }

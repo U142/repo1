@@ -25,6 +25,15 @@ public class Navigation {
 		}
 		
 	}*/
+	
+	public enum NAVIGATION_GESTURE
+	{
+		UNKNOWN,
+		ZOOM_IN,
+		ZOOM_OUT,
+		GOTO_MAP,
+		PAN,
+	}
 	public enum EARTH_DIRECTION
 	{
 		LONGITUDE,
@@ -149,12 +158,13 @@ public class Navigation {
 	
 	double get_zoom_multiplier() { return m_f_zoom_multiplier.doubleValue(); }
 	
-	public void setNavigation(double lbo, double rbo, double ubo, double bbo)
+	public boolean setNavigation(double lbo, double rbo, double ubo, double bbo)
 	{
-		setNavigation(lbo, rbo, ubo, bbo, true);
+		return setNavigation(lbo, rbo, ubo, bbo, true, NAVIGATION_GESTURE.UNKNOWN);
 	}
 	
-	public void setNavigation(double lbo, double rbo, double ubo, double bbo, boolean b_check_zoom_level)
+	protected boolean setNavigation(double lbo, double rbo, double ubo, double bbo, boolean b_check_zoom_level,
+			NAVIGATION_GESTURE gesture)
 	{
 
 		//if(Math.abs(lbo)>=180 || Math.abs(rbo)>=180 || Math.abs(ubo)>
@@ -166,36 +176,73 @@ public class Navigation {
 			ubo = 90 * Math.signum(ubo);
 		if(Math.abs(bbo)>90)
 			bbo = 90 * Math.signum(bbo);
-		m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
 
 		if(b_check_zoom_level)
 		{
-			NavStruct nav = new NavStruct(m_f_nav_lbo, m_f_nav_rbo, m_f_nav_ubo, m_f_nav_bbo);
-			Dimension dim = getDimensionFromBounds(nav);
-			if(too_small(nav))
-				exec_zoom_in(dim, dim);
+			NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
+			//Dimension dim = getDimensionFromBounds(nav);
+			//if(too_small(nav))
+			
+			{
+				//setNavigation(calcMinBounds(nav));
+				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, variables.MAPPANE.get_dimension());
+				NavStruct newnav = calcMinBounds(nav, gesture);
+				//if(newnav.equals(nav))
+				if(newnav!=null)
+				{
+					m_f_nav_lbo = newnav._lbo; m_f_nav_rbo = newnav._rbo; m_f_nav_ubo = newnav._ubo; m_f_nav_bbo = newnav._bbo;
+					return true;
+				}
+				else
+					return false;
+				//else
+				//	return false;
+			}
+				//exec_zoom_in(dim, dim);
 		}
+		else
+		{
+			m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
+			return true;
+		}
+		//load_map();
 
 	}
 	public String toString() {
 		return "lbo: " + m_f_nav_lbo + " rbo: " + m_f_nav_rbo + " ubo: " + m_f_nav_ubo + " bbo: " + m_f_nav_bbo;
 	}
-	public void setNavigation(NavStruct nav, boolean b_check_zoom_level)
+	
+	public boolean setNavigation(NavStruct nav, boolean b_check_zoom_level)
 	{
 		if(nav!=null)
-			setNavigation(nav._lbo, nav._rbo, nav._ubo, nav._bbo, b_check_zoom_level);		
+			return setNavigation(nav._lbo, nav._rbo, nav._ubo, nav._bbo, b_check_zoom_level, NAVIGATION_GESTURE.UNKNOWN);
+		return false;
 	}
-	public void setNavigation(NavStruct nav) {
-		setNavigation(nav, true);
+
+	protected boolean setNavigation(NavStruct nav, boolean b_check_zoom_level, NAVIGATION_GESTURE gesture)
+	{
+		if(nav!=null)
+			return setNavigation(nav._lbo, nav._rbo, nav._ubo, nav._bbo, b_check_zoom_level, gesture);
+		return false;
+	}
+	public boolean setNavigation(NavStruct nav) {
+		return setNavigation(nav, true);
+	}
+	protected boolean setNavigation(NavStruct nav, NAVIGATION_GESTURE gesture) {
+		return setNavigation(nav, true, gesture);
 	}
 	public void gotoMap(NavStruct nav) {
 		Dimension dim;
-		setNavigation(nav);
-		dim = getDimensionFromBounds(nav);
-		if(too_small(nav))
-			exec_zoom_in(dim, dim);
+		//setNavigation(nav, false);
+		//dim = getDimensionFromBounds(nav);
+		//if(too_small(nav))
+		{
+			//exec_zoom_in(dim, dim);
+			setNavigation(nav, true);
+			load_map();
+		}
 		//else
-		load_map();
+		//	load_map();
 		
 	}
 	public void reloadMap()
@@ -215,13 +262,59 @@ public class Navigation {
 	public boolean too_small(NavStruct nav) {
 		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
 
+		//MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
+		//MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
 		MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
-		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
+		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._ubo));
 		double dist = calc_distance(mp1, mp2);
-		if(dist < n_minzoom)
+		if(dist > n_minzoom)
 			return true;
 		else
 			return false;
+	}
+	
+	protected NavStruct calcMinBounds(NavStruct nav, NAVIGATION_GESTURE gesture) {
+		NavStruct newnav = new NavStruct();
+		int n_minzoom = PAS.pasplugin.getMinMapDimensions().height;
+		double y1r = nav._ubo * Math.PI * 2.0 / 360.0;
+
+		//double minlr = n_minzoom / 3600.0 / 30.92 / Math.cos(y1r);
+		double minul = n_minzoom / 3600.0 / 30.92;
+		double lr = Math.abs(nav._rbo - nav._lbo);
+		double ul = Math.abs(nav._ubo - nav._bbo);
+		if(ul < minul)
+		{
+			//we're zooming in
+			//check if current UpperLower is equal to min UpperLower
+			double current_ul = m_f_ubo-m_f_bbo;
+			double epsilon = 0.01;
+			
+			double delta_minzoom = Math.abs(current_ul-minul);
+			double wanted_lr = Math.abs(m_f_lbo-nav._lbo);
+			double wanted_ul = Math.abs(m_f_ubo-nav._ubo);
+			
+			double percent = minul/ul;
+			
+			if(gesture==NAVIGATION_GESTURE.ZOOM_IN && delta_minzoom < epsilon && 1.0-percent < epsilon) //max zoom is obtained
+			{
+				return null;
+			}
+					
+			
+			lr = lr*percent/2.0;//*Math.cos(y1r);
+			ul = ul*percent/2.0;
+			double lr_center = (nav._lbo + nav._rbo) / 2.0;
+			double ul_center = (nav._ubo + nav._bbo) / 2.0;
+			//lr = minul * Math.cos(y1r);
+			//ul = minul;
+			
+			newnav = new NavStruct(lr_center-lr, lr_center+lr, ul_center+ul, ul_center-ul);
+			return newnav;
+		}
+		else
+		{
+			return nav;
+		}
 	}
 	
 	public boolean pointVisible(UMapPoint p)
@@ -231,7 +324,14 @@ public class Navigation {
 		return false;
 	}
 	
-	public void exec_zoom_in(Dimension dim_start, Dimension dim_stop) {
+	
+	/**
+	 * 
+	 * @param dim_start
+	 * @param dim_stop
+	 * @return true if map is approved and loaded
+	 */
+	public boolean exec_zoom_in(Dimension dim_start, Dimension dim_stop) {
 		double f_centerpoint_x, f_centerpoint_y;
 		//int n_minzoom = 60;
 		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
@@ -239,52 +339,22 @@ public class Navigation {
 		//System.out.println("mapwidth = " + m_f_mapwidthmeters + " " + calc_distance(dim_stop.width, dim_stop.height, dim_start.width, dim_stop.height));
 		
 		double d_deltax = Math.abs(dim_stop.width-dim_start.width);
-//		double d_deltay = Math.abs(dim_stop.height-dim_start.height);
 		double d_dist = calc_distance(0, 0, (int)d_deltax, 0);
 		System.out.println(d_dist);
-		if(d_dist < n_minzoom) { //mapwidth of n_minzoom meters
-			//return Math.round(Math.sqrt( Math.pow((Math.abs(px2 - px1) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth()), 2) + Math.pow((Math.abs(py2 - py1) * get_mapheightmeters().doubleValue() / m_dimension.getHeight()), 2)));
-			//double f_factor = 1;
-/*			Math.round(Math.sqrt( Math.pow((Math.abs(dim_stop.width - dim_start.width) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth()) * d_percent, 2) + Math.pow((Math.abs(dim_stop.height - dim_start.height) * get_mapheightmeters().doubleValue() / m_dimension.getHeight()) * d_percent, 2))) = 100
-			Math.pow((Math.abs(dim_stop.width - dim_start.width) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth()) * d_percent, 2) + Math.pow((Math.abs(dim_stop.height - dim_start.height) * get_mapheightmeters().doubleValue() / m_dimension.getHeight()) * d_percent, 2)) = Math.sqrt(100);
-			Math.abs(dim_stop.width - dim_start.width) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth() * d_percent + Math.abs(dim_stop.height - dim_start.height) * get_mapheightmeters().doubleValue() / m_dimension.getHeight() * d_percent = 100
-			Math.abs(dim_stop.width - dim_start.width) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth() + Math.abs(dim_stop.height - dim_start.height) * get_mapheightmeters().doubleValue() / m_dimension.getHeight() = 100/d_percent*/
-			//float f_factor = (float)(Math.abs(dim_stop.width - dim_start.width) * get_mapwidthmeters().doubleValue() / m_dimension.getWidth() / 100 + Math.abs(dim_stop.height - dim_start.height) * get_mapheightmeters().doubleValue() / m_dimension.getHeight() / 100);
-			//System.out.println("f_percent = " + f_factor + "  width=" + (dim_stop.width-dim_start.width) * f_factor);
-			//Dimension dstart = new Dimension(Math.round(dim_start.width / f_factor), Math.round(dim_start.height / f_factor));
-			//Dimension dstop  = new Dimension(Math.round(dim_stop.width / f_factor), Math.round(dim_stop.height / f_factor));
+		/*if(d_dist < n_minzoom) { //mapwidth of n_minzoom meters
 			int centerx = (dim_start.width);
 			int centery = (dim_start.height);
-			//calc pixels for X meters
-			//int deltax = m_f_widthprpix * Xpix
 			double d_metersprpix_x = m_f_mapwidthmeters.doubleValue() / m_dimension.width;
 			double d_metersprpix_y = m_f_mapheightmeters.doubleValue() / m_dimension.height;
-			/*double n_metersx = n_minzoom * m_f_widthprpix.doubleValue();
-			double n_metersy = (n_minzoom * m_f_heightprpix.doubleValue()) * (m_f_mapwidthmeters.doubleValue() / m_f_mapheightmeters.doubleValue());
-			double n_pixelsx = n_metersx / m_f_widthprpix.doubleValue();
-			double n_pixelsy = n_metersy / m_f_heightprpix.doubleValue();*/
-			
-		
-			//double d_pixelsx = 1 / (m_f_widthprpix.doubleValue() * 40);
-			//double d_pixelsy = 1 / (m_f_heightprpix.doubleValue() * 40);
 			
 			double d_pixelsx = (n_minzoom / d_metersprpix_x) + 5;
 			double d_pixelsy = (n_minzoom / d_metersprpix_y) + 5;
 			
-			//System.out.println(d_pixelsx + " " + d_pixelsy);
 			Dimension dstart = new Dimension((int)(centerx), (int)(centery));
 			Dimension dstop  = new Dimension((int)(centerx + d_pixelsx), (int)(centery + d_pixelsy));
-			//m_f_widthprpix * X = n_minzoom
-			//System.out.println(calc_distance(dstop.width, dstop.height, dstart.width, dstop.height));
-			
-			//System.out.println(dstart.width + " " + dstart.height + " " + dstop.width + " " + dstop.height);
 			exec_zoom_in(dstart, dstop);
-			return;
-			//System.out.println(dstart.width + " " + dstart.height + " " + dstop.width + " " + dstop.height);
-			//use quickzoom
-			//int n_centerx = Math.abs((dim_stop.width + dim_start.width)/2);
-			//int n_centery = Math.abs((dim_stop.height + dim_start.height)/2);
-		}
+			return false;
+		}*/
 		
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
 		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
@@ -296,17 +366,24 @@ public class Navigation {
 		f_delta_x = n_delta_x * m_f_widthprpix.doubleValue();
 		f_delta_y = n_delta_y * m_f_heightprpix.doubleValue();
 		
+		//NEW test
+		f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed();
+		f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed();
+		
 		double lbo, rbo, ubo, bbo;
 		lbo = f_centerpoint_x - f_delta_x;
 		rbo = f_centerpoint_x + f_delta_x;
 		ubo = f_centerpoint_y + f_delta_y;
 		bbo = f_centerpoint_y - f_delta_y;
-		setNavigation(lbo, rbo, ubo, bbo);
-		//load_map();
+		NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
+		//setNavigation(lbo, rbo, ubo, bbo);
+		if(setNavigation(nav, NAVIGATION_GESTURE.ZOOM_IN))
+			load_map();
+		return true;
 	}
-	public void exec_zoom_out(Dimension dim_start)
+	public boolean exec_zoom_out(Dimension dim_start)
 	{
-		double f_centerpoint_x, f_centerpoint_y;
+		/*double f_centerpoint_x, f_centerpoint_y;
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
 		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
 		
@@ -317,9 +394,30 @@ public class Navigation {
 		lbo = f_centerpoint_x - f_delta_x * get_zoom_multiplier();
 		rbo = f_centerpoint_x + f_delta_x * get_zoom_multiplier();
 		ubo = f_centerpoint_y + f_delta_y * get_zoom_multiplier();
-		bbo = f_centerpoint_y - f_delta_y * get_zoom_multiplier();
-		setNavigation(lbo, rbo, ubo, bbo);
-		load_map();
+		bbo = f_centerpoint_y - f_delta_y * get_zoom_multiplier();*/
+		
+		//NEW test
+		double f_delta_x, f_delta_y;
+		f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed()*4;
+		f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed()*4;
+		double lbo, rbo, ubo, bbo;
+		double f_centerpoint_x, f_centerpoint_y;
+		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
+		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
+		lbo = f_centerpoint_x - f_delta_x;
+		rbo = f_centerpoint_x + f_delta_x;
+		ubo = f_centerpoint_y + f_delta_y;
+		bbo = f_centerpoint_y - f_delta_y;
+		NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
+		//setNavigation(lbo, rbo, ubo, bbo);
+		if(setNavigation(nav, NAVIGATION_GESTURE.ZOOM_OUT))
+			load_map();
+		return true;
+
+		
+		//if(setNavigation(lbo, rbo, ubo, bbo))
+		//setNavigation(lbo, rbo, ubo, bbo);
+		//	load_map();
 	}
 	public void exec_quickzoom(int ZOOMDIR) {
 		double zoompercent = 0.50;
@@ -574,7 +672,7 @@ public class Navigation {
 		NavStruct r = new NavStruct();
 		MapPointF distance = distance_xy_M(lbo, rbo, ubo, bbo);
 		MapPointF aspect = new MapPointF(distance.x / d.width, distance.y / d.height);
-		System.out.println("Aspect: " + aspect);
+		//System.out.println("Aspect: " + aspect);
 		if(aspect.x > aspect.y)
 		{
 			/*

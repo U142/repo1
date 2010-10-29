@@ -929,9 +929,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			showSummary();
 			checkForEnableSendButton();
 			//variables.NAVIGATION.setNavigation(variables.MAPPANE.get_active_shape().calc_bounds());
-			PAS.get_pas().actionPerformed(new ActionEvent(variables.MAPPANE.get_active_shape().calc_bounds(),
+			/*PAS.get_pas().actionPerformed(new ActionEvent(variables.MAPPANE.get_active_shape().calc_bounds(),
 										ActionEvent.ACTION_PERFORMED,
-										"act_map_goto_area"));
+										"act_map_goto_area"));*/
+			variables.NAVIGATION.gotoMap(variables.MAPPANE.get_active_shape().calc_bounds());
 		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
 			//JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());

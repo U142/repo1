@@ -149,14 +149,14 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_map_goto_area".equals(e.getActionCommand())) {
 			NavStruct nav = (NavStruct)e.getSource();
-			variables.NAVIGATION.setNavigation(nav);
-			PAS.get_pas().get_mappane().load_map(true);
+			if(variables.NAVIGATION.setNavigation(nav))
+				PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_show_world".equals(e.getActionCommand())) {
 			//NavStruct nav = new NavStruct(-150, 150, 80, -80);
-			variables.NAVIGATION.setNavigation(Navigation.NAV_WORLD);
-			PAS.get_pas().get_mappane().load_map(true);
+			if(variables.NAVIGATION.setNavigation(Navigation.NAV_WORLD))
+				PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_center_all_polygon_sendings".equals(e.getActionCommand())) {

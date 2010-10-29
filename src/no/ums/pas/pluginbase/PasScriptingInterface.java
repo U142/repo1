@@ -553,6 +553,12 @@ public abstract class PasScriptingInterface
 	public abstract boolean onSetDefaultPanMode(Settings s);
 
 	public abstract Dimension getMinMapDimensions();
+	
+	/**
+	 * 
+	 * @return a value >0.0 <0.5
+	 */
+	public abstract float getMapZoomSpeed();
 
 }
 

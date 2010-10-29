@@ -15,8 +15,15 @@ public class PASDraw extends Draw {
 	}
 	
 	protected void calc_new_coors() {
-		PAS.pasplugin.onMapCalcNewCoords(PAS.get_pas().get_navigation(), get_pas());
-		super.calc_new_coors();
+		try
+		{
+			PAS.pasplugin.onMapCalcNewCoords(PAS.get_pas().get_navigation(), get_pas());
+			super.calc_new_coors();
+		}
+		catch(Exception e)
+		{
+			
+		}
 	}
 	protected void draw_layers() {
 		if(PAS.get_pas()!=null) // Because of MapApplet for admin interface

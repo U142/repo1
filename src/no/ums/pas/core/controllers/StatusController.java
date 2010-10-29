@@ -652,9 +652,9 @@ public class StatusController extends Controller implements ActionListener {
 
 	public synchronized void set_nav_init(NavStruct nav) {
 		m_nav_init = nav;
-		variables.NAVIGATION.setNavigation(nav._lbo, nav._rbo,
-				nav._ubo, nav._bbo);
-		PAS.get_pas().get_mappane().load_map(true);
+		if(variables.NAVIGATION.setNavigation(nav._lbo, nav._rbo,
+				nav._ubo, nav._bbo))
+			PAS.get_pas().get_mappane().load_map(true);
 		// PAS.get_pas().kickRepaint();
 	}
 

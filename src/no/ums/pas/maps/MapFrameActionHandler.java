@@ -437,7 +437,10 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	{
 		if(m_dim_cursorpos==null)
 			return false;
-		intersects.clear();
+		if(variables.MAPPANE.get_maploader().IsLoadingMapImage())
+			return false;
+		//intersects.clear();
+		intersects = new ArrayList<MapPointLL>();
 		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
 		//System.out.println("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
 		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
@@ -967,6 +970,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM)
 				{
 					get_mappane().get_navigation().exec_zoom_in(getMousedownPos(), getMouseupPos());
+					PAS.get_pas().kickRepaint();
 					//if(get_mappane().m_overlays!=null)
 						//updateOverlay();
 				}
@@ -1036,8 +1040,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 							nav._ubo += add;
 					}*/
 					
+					//if(variables.NAVIGATION.setNavigation(nav))
 					variables.NAVIGATION.setNavigation(nav);
-					get_mappane().load_map();
+						get_mappane().load_map();
 					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 					//variables.NAVIGATION.gotoMap(nav);
 					resetPanDrag();
