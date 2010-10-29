@@ -1664,7 +1664,7 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public Dimension getMinMapDimensions() {
-		return new Dimension(15000, 15000);
+		return new Dimension(20000, 20000);
 	}
 	
 	

@@ -103,7 +103,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		if(getWidth()<=0||getHeight()<=0) {
 			
 		}
-		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-10,PAS.get_pas().get_eastcontent().getHeight()-20));
+		setPreferredSize(new Dimension(PAS.get_pas().get_eastcontent().getWidth()-10,PAS.get_pas().get_eastcontent().getHeight()-30));
 		m_status_tabbed.setPreferredSize(new Dimension(getPreferredSize().width-10,getPreferredSize().height-10));
 		m_event.componentResized(e);
 		//m_messages.componentResized(e);
