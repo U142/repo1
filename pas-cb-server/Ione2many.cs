@@ -79,7 +79,7 @@ namespace pas_cb_server
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     case Operation.NEWPLMN_TEST:
                     case Operation.NEWPLMN_HEARTBEAT:
-                        oAlert.l_repetitioninterval = (int)(oAlert.l_validity / 1.883); // set repetition interval so only one message is sent
+                        oAlert.l_repetitioninterval = (int)(oAlert.l_validity * 60); // set repetition interval so only one message is sent
                         return cbc_newalert_plmn(cbc, op, oAlert, def);
                     default:
                         return Constant.FAILED;
@@ -298,8 +298,8 @@ namespace pas_cb_server
             foreach (string gsmmsg in gsmmsglist)
             {
                 string tmp = gsmmsg;
-                if (tmp.Length < 93) // pad with CR if < 1 page
-                    tmp = tmp.PadRight(93, '\r');
+                //if (tmp.Length < 93) // pad with CR if < 1 page
+                    //tmp = tmp.PadRight(93, '\r');
 
                 byte[] bytemsg = Tools.encodegsm(tmp);
 

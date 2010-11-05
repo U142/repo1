@@ -11,7 +11,7 @@ namespace pas_cb_server
 {
     class Tools
     {
-        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
         static readonly Regex GSM_Extended_Regex = new Regex("[|^€{}\\[\\]~\\\\]");
 
         // convert a coordinate point
@@ -189,7 +189,8 @@ namespace pas_cb_server
         public static byte[] encodegsm(string decoded)
         {
             List<byte> encoded = new List<byte>();
-            byte[] b_decoded = Encoding.ASCII.GetBytes(decoded);
+            //byte[] b_decoded = Encoding.ASCII.GetBytes(decoded);
+            byte[] b_decoded = GSMChar(decoded);
 
             int i_shift = 0;
             int i_pos = 0;
@@ -221,7 +222,58 @@ namespace pas_cb_server
 
             return encoded.ToArray();
         }
+        private static byte[] GSMChar(string PlainText)
+        {
+            List<byte> GSMOutput = new List<byte>();
+            // ` is not a conversion, just a untranslatable letter
+            string strGSMTable = "";
+            strGSMTable += "@£$¥èéùìòÇ\nØø\rÅå";
+            strGSMTable += "Δ_ΦΓΛΩΠΨΣΘΞ`ÆæßÉ";
+            strGSMTable += " !\"#¤%&'()*=,-./";
+            strGSMTable += "0123456789:;<=>?";
+            strGSMTable += "¡ABCDEFGHIJKLMNO";
+            strGSMTable += "PQRSTUVWXYZÄÖÑÜ§";
+            strGSMTable += "¿abcdefghijklmno";
+            strGSMTable += "pqrstuvwxyzäöñüà";
 
+            string strExtendedTable = "";
+            strExtendedTable += "````````````````";
+            strExtendedTable += "````^```````````";
+            strExtendedTable += "````````{}`````\\";
+            strExtendedTable += "````````````[~]`";
+            strExtendedTable += "|```````````````";
+            strExtendedTable += "````````````````";
+            strExtendedTable += "`````€``````````";
+            strExtendedTable += "````````````````";
+
+            //string strGSMOutput = "";
+            foreach (char cPlainText in PlainText.ToCharArray())
+            {
+                int intGSMTable = strGSMTable.IndexOf(cPlainText);
+                if (intGSMTable != -1)
+                {
+                    GSMOutput.Add((byte)intGSMTable);
+                    //strGSMOutput += intGSMTable.ToString("X2");
+                    continue;
+                }
+                int intExtendedTable = strExtendedTable.IndexOf(cPlainText);
+                if (intExtendedTable != -1)
+                {
+                    GSMOutput.Add(27);
+                    GSMOutput.Add((byte)intExtendedTable);
+                    //strGSMOutput += (27).ToString("X2");
+                    //strGSMOutput += intExtendedTable.ToString("X2");
+                    continue;
+                }
+                // not found, add ?
+                GSMOutput.Add(63);
+            }
+
+            while(GSMOutput.Count<93)
+                GSMOutput.Add(13); // pad with \r
+
+            return GSMOutput.ToArray();
+        }
         // message splitting (for pages)
         public static List<string> SplitMessage(string msgtext, int maxmsglength, int maxsplitoffset)
         {

@@ -94,7 +94,7 @@ namespace pas_cb_server
                 string sz_channel_category = Database.GetChannelName(op.l_operator, oAlert.alert_message.l_channel);
                 if(sz_channel_category == null && operation != Operation.NEWPLMN_HEARTBEAT)
                 {
-                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAIELD (missing channel category name)"
+                    Log.WriteLog(String.Format("{0} (op={1}) (req={2}) NewMessage FAILED (missing channel category name)"
                         , oAlert.l_refno
                         , op.sz_operatorname
                         , l_reqno), 2);

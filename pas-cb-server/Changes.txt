@@ -1,4 +1,13 @@
-﻿1.2.6
+﻿1.2.8
+=====
+	* Fixed bug in GSM encoding for one2many and moved padding to the encoding function
+
+1.2.7
+=====
+	* Fixed typo in log message for T-Mobile if channel category isn't found
+	* Fixed bug in repetition interval calculation for one2many heartbeat messages. Should be <validity> * 60 / 1.883 (for one repetition), was <validity> / 1.883 / 1.883
+
+1.2.6
 =====
 CBServer
 	* Added a check for closing coordinate, won't be added if the polygon is already closed.
