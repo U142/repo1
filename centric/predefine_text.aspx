@@ -2,7 +2,18 @@
 <%@ MasterType TypeName="MasterPage" %>
 
 <asp:Content ContentPlaceHolderID="body" runat="server">
-
+<script type="text/javascript">
+    function ValidateStringLength(source, arguments)   
+    {   
+         var slen = arguments.Value.length;   
+         // alert(arguments.Value + '\n' + slen);   
+         if (slen <= 1302){   
+             arguments.IsValid = true;   
+         } else {   
+             arguments.IsValid = false;   
+         }   
+    }   
+</script> 
 <asp:Table runat="server">
     <asp:TableHeaderRow>
         <asp:TableHeaderCell HorizontalAlign="Left"><asp:Label ID="Label3" runat="server" Text="Overview predefined texts"></asp:Label></asp:TableHeaderCell>
@@ -20,7 +31,7 @@
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell>
-            <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" ></asp:TextBox>
+            <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" MaxLength="14"></asp:TextBox>
         </asp:TableCell>
     </asp:TableRow>
     <asp:TableRow>
@@ -57,5 +68,8 @@
         </asp:LinkButton>
       </div> 
 </div>
+<asp:CustomValidator ID="val_message" runat="server"    
+    ClientValidationFunction="ValidateStringLength" ControlToValidate="txt_message"    
+    ErrorMessage="" Text="Message cannot be longer than 1302 characters" />
 <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
 </asp:Content>
