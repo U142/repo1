@@ -31,6 +31,8 @@ namespace com.ums.PAS.CB
          */
         public CB_SENDING_RESPONSE Send()
         {
+
+
             //link the sending to the department selected by the user
 
             //verify class
@@ -47,6 +49,8 @@ namespace com.ums.PAS.CB
                 //throw new USendingTypeNotSupportedException(alert.GetType().ToString());
             }
             CB_SEND_BASE alert = (CB_SEND_BASE)operation;
+
+            bool SIMULATION = alert.f_simulation;
 
             CB_SENDING_RESPONSE response = new CB_SENDING_RESPONSE();
             PASUmsDb db = new PASUmsDb();
@@ -69,13 +73,16 @@ namespace com.ums.PAS.CB
             }
             catch (Exception e)
             {
+                ULog.error(alert.l_refno, e.Message);
                 throw e;
             }
 
             List<int> operators = db.GetCBOperatorsForSendByComp(alert.l_comppk);
             if (operators.Count <= 0)
             {
-                throw new UNoAccessOperatorsException();
+                UNoAccessOperatorsException ex = new UNoAccessOperatorsException();
+                ULog.error(alert.l_refno, ex.Message);
+                throw ex;
             }
 
 
@@ -105,10 +112,19 @@ namespace com.ums.PAS.CB
             }
             catch (Exception e)
             {
+                ULog.error(alert.l_refno, e.Message);
                 throw e;
             }
             //attach refno to project
-            db.linkRefnoToProject(ref project, alert.l_refno, 0, alert.l_parent_refno);
+            try
+            {
+                db.linkRefnoToProject(ref project, alert.l_refno, 0, alert.l_parent_refno);
+            }
+            catch (Exception e)
+            {
+                ULog.error(alert.l_refno, e.Message);
+                throw e;
+            }
 
             //retrieve message object from send-object
             CB_MESSAGE message = alert.textmessages.list[0];
@@ -119,11 +135,12 @@ namespace com.ums.PAS.CB
             {
                 List<Int32> operatorfilter = null;
                 db.InsertLBARecordCB(-1, alert.l_refno,
-                                    199, -1, -1, -1, 0, 1, "", "", 0,
+                    199, -1, -1, -1, 0, 1, "", "", (alert.f_simulation ? 1 : 0),
                                     ref operatorfilter, alert.l_deptpk, (int)LBA_SENDINGTYPES.CELLBROADCAST);
             }
             catch (Exception e)
             {
+                ULog.error(alert.l_refno, e.Message);
                 throw e;
             }
 
@@ -143,7 +160,14 @@ namespace com.ums.PAS.CB
             PAS_SENDING ps = new PAS_SENDING();
             ps.m_sendinginfo = mdv;
             ps.l_refno = alert.l_refno;
-            db.InsertMDVSENDINGINFO(ref ps);
+            try
+            {
+                db.InsertMDVSENDINGINFO(ref ps);
+            }
+            catch (Exception e)
+            {
+                ULog.error(alert.l_refno, e.Message);
+            }
 
             //Insert record into LBASEND_TEXT_CC
             //removed, will be inserted in loc.addLanguage
@@ -153,9 +177,24 @@ namespace com.ums.PAS.CB
             ULocationBasedAlert loc = new ULocationBasedAlert();
             ULocationBasedAlert.LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sender.sz_name, "0", message.sz_text);
             lang.AddCCode(message.l_cbchannel.ToString());
-            db.InjectLBALanguages(alert.l_refno, ref loc);
 
-            alert.l_validity = db.getCBDuration(logon.l_comppk, alert.l_deptpk, alert.l_refno);
+            try
+            {
+                db.InjectLBALanguages(alert.l_refno, ref loc);
+            }
+            catch (Exception e)
+            {
+                ULog.warning(alert.l_refno, e.Message);
+            }
+
+            try
+            {
+                alert.l_validity = db.getCBDuration(logon.l_comppk, alert.l_deptpk, alert.l_refno);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             //Save shape to PASHAPES for status lookup
             if (alert.GetType().Equals(typeof(CB_ALERT_POLYGON)))
@@ -185,7 +224,52 @@ namespace com.ums.PAS.CB
             //CREATE SEND XML FILE
             // set status 199 and move to eat
             db.updateStatus(alert.l_refno, 199);
-            alert.Serialize(UCommon.UPATHS.sz_path_cb);
+
+            String szLog = "";
+            if(SIMULATION)
+                szLog+="[SIMULATED] ";
+            else
+                szLog+="[LIVE] ";
+            switch (alert.mdvgroup)
+            {
+                case MDVSENDINGINFO_GROUP.MAP_CB_NATIONAL:
+                    szLog += "[NATIONAL]";
+                    break;
+                case MDVSENDINGINFO_GROUP.MAP_POLYGON:
+                    szLog += "[POLYGON]";
+                    break;
+                case MDVSENDINGINFO_GROUP.MAP_POLYGONAL_ELLIPSE:
+                    szLog += "[ELLIPSE]";
+                    break;
+                default:
+                    szLog += "[UNKNOWN SHAPETYPE]";
+                    break;
+            }
+            szLog += " CB-sending sent by userpk=" + alert.l_userpk + " on behalf of deptpk=" + alert.l_deptpk;
+
+            if (!SIMULATION)
+            {
+                try
+                {
+                    alert.Serialize(UCommon.UPATHS.sz_path_cb);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            else
+            {
+                try
+                {
+                    doSimulateCBSending(ref db, ref alert, ref operators);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            ULog.write(alert.l_refno, szLog);
             //alert.Serialize("s:\\temp\\", "CB_test.xml");
 
             response.l_code = 0;
@@ -195,6 +279,56 @@ namespace com.ums.PAS.CB
 
             db.close();
             return response;
+        }
+
+        protected bool doSimulateCBSending(ref PASUmsDb db, ref CB_SEND_BASE s, ref List<int> operators)
+        {
+            try
+            {
+                /*
+                 * 	@l_refno int, 
+	                @l_operator int, 
+	                @l_2gtotal int,
+	                @l_2gok int, 
+	                @l_3gtotal int,
+	                @l_3gok int,
+	                @l_4gtotal int,
+	                @l_4gok int,
+	                @l_successpercentage float
+                 */
+                int maxcells2g = 1000;
+                int maxcells3g = 1000;
+                int maxcells4g = 1000;
+
+
+                for (int i = 0; i < operators.Count; i++)
+                {
+                    Random rand = new Random();
+                    int l_2gtotal = rand.Next(maxcells2g);
+                    int l_2gok = rand.Next(l_2gtotal);
+                    int l_3gtotal = rand.Next(maxcells3g);
+                    int l_3gok = rand.Next(l_3gtotal);
+                    int l_4gtotal = rand.Next(maxcells4g);
+                    int l_4gok = rand.Next(l_4gtotal);
+                    float l_successpercentage = (float)(l_2gok + l_3gok + l_4gok) / (float)(l_2gtotal + l_3gtotal + l_4gtotal);
+
+                    
+                    int n_operator = operators[i];
+                    db.updateCellHist(s.l_refno, n_operator,
+                                        l_2gtotal, l_2gok,
+                                        l_3gtotal, l_3gok,
+                                        l_4gtotal, l_4gok,
+                                        (int)l_successpercentage,
+                                        0);
+                    db.updateStatusForOperator(s.l_refno, 1000, n_operator);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new UCBSimulationException(e);
+            }
         }
 
         protected List<ULBASENDING> _getOperatorsThatCanBeKilled(ref PASUmsDb db)
@@ -243,7 +377,7 @@ namespace com.ums.PAS.CB
                 {
                     case ULBAOPERATORSTATE.ACTIVE:
                     case ULBAOPERATORSTATE.INITIALIZING:
-                    case ULBAOPERATORSTATE.ERROR:
+                    //case ULBAOPERATORSTATE.ERROR:
                         ret.Add(s);
                         break;
                     default:

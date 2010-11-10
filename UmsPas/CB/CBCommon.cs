@@ -190,7 +190,8 @@ namespace com.ums.PAS.CB
             }
             catch (Exception e)
             {
-                throw new Exception("Error serializing CB-file " + tmp_file + "\n\nCause:\n" + e.Message);
+                throw new UFileSerializationException(tmp_file, e);
+                //throw new Exception("Error serializing CB-file " + tmp_file + "\n\nCause:\n" + e.Message);
             }
             try
             {
@@ -199,7 +200,8 @@ namespace com.ums.PAS.CB
             }
             catch (Exception e)
             {
-                throw new Exception("Error publishing CB-file " + xml_file + "\n\nCause:\n" + e.Message);
+                throw new UFilePublishException(tmp_file, xml_file, e);
+                //throw new Exception("Error publishing CB-file " + xml_file + "\n\nCause:\n" + e.Message);
             }
         }
         protected abstract XmlSerializer CreateSerializer();
@@ -300,6 +302,9 @@ namespace com.ums.PAS.CB
 
         [XmlAttribute("l_parent_refno")]
         public long l_parent_refno; //link for resend in BBPROJECT_X_REFNO
+
+        [XmlAttribute("f_simulation")]
+        public bool f_simulation;
 
 
     }

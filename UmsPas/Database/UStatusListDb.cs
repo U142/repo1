@@ -62,7 +62,9 @@ namespace com.ums.PAS.Database
             }
             rsDepts.Close();
             if (szDeptList.Length == 0)
+            {
                 throw new UNoStatusReadRightsException("No Department/Userprofile link provides status read");
+            }
 
             int n_pas_type = 1;
 
@@ -135,6 +137,8 @@ namespace com.ums.PAS.Database
                      "GROUP BY info.l_deptpk, dept.l_deptpk, dept.sz_deptid, proj.l_projectpk, projx.l_projectpk, projx.l_refno, info.l_refno, head.l_status " +
                      "ORDER BY info.l_refno DESC",
                      szDeptList);*/
+                    String sz_filter = "";
+
                     szSQL = String.Format(
                         "SELECT * FROM v_StatusListVoice " +
                         "UNION " +
@@ -143,11 +147,25 @@ namespace com.ums.PAS.Database
                         "SELECT * FROM v_StatusListLBA " +
                         "UNION " +
                         "SELECT * FROM v_StatusListCB " +
-                        "WHERE l_deptpk in ({0}) " +
+                        "WHERE l_deptpk in ({0}) ", szDeptList);
+                    
+                    if((filter_by & UDATAFILTER.BY_LIVE)==UDATAFILTER.BY_LIVE && (filter_by & UDATAFILTER.BY_SIMULATION)==UDATAFILTER.BY_SIMULATION)
+                    {
+                        sz_filter += "";
+                    }
+                    else if((filter_by & UDATAFILTER.BY_LIVE)==UDATAFILTER.BY_LIVE)
+                    {
+                        sz_filter += "AND isnull(f_simulate,0)=0 ";
+                    }
+                    else if((filter_by & UDATAFILTER.BY_SIMULATION)==UDATAFILTER.BY_SIMULATION)
+                    {
+                        sz_filter += "AND isnull(f_simulate,0)=1 ";
+                    }
+                    szSQL += sz_filter;
                         //"WHERE l_deptpk in (SELECT l_deptpk from BBDEPARTMENT WHERE l_comppk={0}) "+
-                        "ORDER BY l_refno DESC",
+                    szSQL += "ORDER BY l_refno DESC";
                         //logon.l_comppk);
-                        szDeptList);
+                        //szDeptList);
 
                     break;
             }

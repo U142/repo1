@@ -315,6 +315,7 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
+                ULog.error(pk, e.Message);
                 return false;
             }
         }
@@ -1237,7 +1238,8 @@ namespace com.ums.UmsParm
 
         public bool InsertLBARecordCB(long l_alertpk, long l_refno, int l_status, int l_response, int l_items,
                                     int l_proc, int l_retries, int l_requesttype,
-                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, ref List<Int32> operatorfilter, long l_comppk, long l_type) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
+                                    String sz_jobid, String sz_areaid, int n_function/*live or simulate*/, 
+                                    ref List<Int32> operatorfilter, long l_comppk, long l_type) //sending.l_refno, 3, -1, -1, -1, 0, 1, '', pa.sz_areaid)
         {
             String szSQL = "";
             try
@@ -1249,7 +1251,7 @@ namespace com.ums.UmsParm
                 }
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}", l_refno, operators[i], l_type);
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}", l_refno, operators[i], l_type, n_function);
                     ExecNonQuery(szSQL);
                 }
                 return true;
@@ -1777,6 +1779,33 @@ namespace com.ums.UmsParm
             }
         }
 
+        public Boolean updateCellHist(long l_refno, int l_operator,
+                                        int l_2gtotal, int l_2gok,
+                                        int l_3gtotal, int l_3gok,
+                                        int l_4gtotal, int l_4gok,
+                                        int l_successpercentage,
+                                        int b_report)
+        {
+            try
+            {
+                String szSQL = "";
+                szSQL = String.Format("sp_cb_ins_cellhist {0}, {1}", l_refno, l_operator);
+                bool b_init = ExecNonQuery(szSQL);
+                if (b_init)
+                {
+                    szSQL = String.Format("sp_cb_upd_cellhist {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}",
+                                    l_refno, l_operator, l_2gtotal, l_2gok, l_3gtotal, l_3gok,
+                                    l_4gtotal, l_4gok, l_successpercentage, b_report);
+                    return ExecNonQuery(szSQL);
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public Boolean updateStatus(long l_refno, int l_status)
         {
             String szSQL = "";
@@ -1786,6 +1815,22 @@ namespace com.ums.UmsParm
                 szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1}", l_status, l_refno);
                 ExecNonQuery(szSQL);
                 return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(l_refno, szSQL, e.Message);
+                throw e;
+            }
+        }
+
+        public Boolean updateStatusForOperator(long l_refno, int l_status, int l_operator)
+        {
+            String szSQL = "";
+            try
+            {
+                szSQL = String.Format("UPDATE LBASEND SET l_status={0} WHERE l_refno={1} AND l_operator={2}",
+                            l_status, l_refno, l_operator);
+                return ExecNonQuery(szSQL);
             }
             catch (Exception e)
             {
@@ -1826,7 +1871,10 @@ namespace com.ums.UmsParm
                 while (rs.Read())
                     l_duration = rs.GetInt32(0);
                 rs.Close();
-                return l_duration;
+                if (l_duration > 0)
+                    return l_duration;
+                else
+                    throw new UCBDurationNotSpecifiedException();
             }
             catch (Exception e)
             {
@@ -1876,7 +1924,9 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-                throw e;
+                ULog.error(l_refno, e.Message);
+                return false;
+                //throw e;
             }
         }
 

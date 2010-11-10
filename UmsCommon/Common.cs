@@ -1321,9 +1321,12 @@ namespace com.ums.UmsCommon
 
     public enum UDATAFILTER
     {
+        NONE = 0,
         BY_COMPANY = 1,
         BY_DEPARTMENT = 2,
         BY_USER = 4,
+        BY_LIVE = 8,
+        BY_SIMULATION = 16,
     }
 
 }

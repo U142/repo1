@@ -24,6 +24,45 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UCBDurationNotSpecifiedException : UException
+    {
+        public UCBDurationNotSpecifiedException()
+            : base("Duration parameter is not specified in LBAPARAMETERS")
+        {
+
+        }
+    }
+
+    public class UFileSerializationException : UException
+    {
+        String filename;
+        public UFileSerializationException(String filename, Exception e)
+            : base("Failed to serialize file " + filename + "\nCAUSE: "+ e.Message)
+        {
+            this.filename = filename;
+        }
+    }
+
+    public class UFilePublishException : UException
+    {
+        String source_filename, dest_filename;
+        public UFilePublishException(String source_filename, String dest_filename, Exception e)
+            : base("Failed to publish file " + dest_filename + " to " + source_filename + "\nCAUSE: " + e.Message)
+        {
+            this.source_filename = source_filename;
+            this.dest_filename = dest_filename;
+        }
+    }
+
+    public class UCBSimulationException : UException
+    {
+        public UCBSimulationException(Exception e)
+            : base("Failed to execute CB simulation sending\nCAUSE: " + e.Message)
+        {
+        }
+            
+    }
+
     public class USessionExpiredException : UException
     {
         public long seconds;
