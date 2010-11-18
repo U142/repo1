@@ -34,6 +34,11 @@ public class MapLine extends ShapeStruct
 		return false;
 	}
 	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
+
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return null;
 	}

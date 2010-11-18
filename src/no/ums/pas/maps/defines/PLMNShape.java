@@ -47,6 +47,10 @@ public class PLMNShape extends ShapeStruct
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		return true;
 	}
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

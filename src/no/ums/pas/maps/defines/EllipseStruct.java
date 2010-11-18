@@ -35,6 +35,12 @@ public class EllipseStruct extends ShapeStruct {
 		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
 	}
 	
+	
+	
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
 	@Override
 	protected void calc_area_sqm() {
 		m_f_area_sqm = Math.PI * get_diameter_height_meters() * get_diameter_width_meters();

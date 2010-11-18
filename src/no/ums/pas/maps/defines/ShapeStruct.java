@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -28,6 +29,10 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public static final int SHAPE_MUNICIPAL = 9;
 	
 	public double POINT_PRECISION = 10000.0;
+	
+	protected boolean b_can_lock = false;
+	protected void setCanLock(boolean b) { b_can_lock = b; }
+	protected abstract void updateCanLock(List<ShapeStruct> restrictionShapes);
 	
 	public void setPrecision(double d) {
 		POINT_PRECISION = d;
@@ -147,6 +152,8 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 			calc_area_sqm();
 			calc_bounds();
 			calc_coortopix(variables.NAVIGATION);
+			//can_lock(variables.USERINFO.get_departments().get_combined_restriction_shape());
+			updateCanLock(variables.USERINFO.get_departments().get_combined_restriction_shape());
 		}
 		catch(Exception e)
 		{

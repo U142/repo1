@@ -48,6 +48,11 @@ public class GISShape extends ShapeStruct {
 		return true;
 	}
 
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
+
 	protected void calc_epicentre_coortopix(Navigation n) {
 		super.calc_epicentre_coortopix(n);
 	}

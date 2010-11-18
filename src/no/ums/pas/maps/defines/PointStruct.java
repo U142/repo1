@@ -32,6 +32,10 @@ public class PointStruct extends ShapeStruct
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
 		return false;
 	}
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

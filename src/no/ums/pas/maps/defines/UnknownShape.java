@@ -26,7 +26,11 @@ public class UnknownShape extends ShapeStruct {
 	
 	@Override
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) { return false; }
-	
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
+
 	public void calc_coortopix(Navigation n) {
 		calc_epicentre_coortopix(n);
 	}

@@ -531,7 +531,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					MapPointLL ll2 = p.get_mappointll();
 					if(ll1!=null && ll2!=null)
 					{
-						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1);
+						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1, false);
 						//the user clicked, we need to configure polygon automatically to obay restriction area
 						if((intersects_last.size()>0 || isKeyHot(HOTKEYS.CTRL)) && b_click) 
 						{
@@ -618,7 +618,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					ll1 = current_polygon.typecast_polygon().getFirstPoint();//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().getFirstPoint();
 					if(ll1!=null && ll2!=null)
 					{
-						intersects_first = list.get(i).typecast_polygon().LineIntersect(ll1, ll2);
+						intersects_first = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, false);
 					}
 					intersects.addAll(intersects_first);
 					intersects.addAll(intersects_last);

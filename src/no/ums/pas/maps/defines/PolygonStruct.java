@@ -49,7 +49,14 @@ import org.jvnet.substance.SubstanceLookAndFeel;
  
 public class PolygonStruct extends ShapeStruct {
 	
+	enum PolyType {
+		NORMAL,
+		ELLIPSE_PARENT,
+		ELLIPSE_RECALCULATED,
+	}
 	
+	public PolyType polytype = PolyType.NORMAL;
+	public PolyType getPolyType() { return polytype; }
 	private ArrayList<Double> m_coor_lon, m_coor_lat, m_coor_show_lon = null, m_coor_show_lat = null;
 	private ArrayList<Integer> m_coor_pointref = null;
 	private ArrayList<Double> m_ellipse_coor_lon = new ArrayList<Double>(), m_ellipse_coor_lat = new ArrayList<Double>();
@@ -60,6 +67,9 @@ public class PolygonStruct extends ShapeStruct {
 	private int [] m_show_int_x, m_show_int_y;
 //	private int [] m_simplified_int_x, m_simplified_int_y;
 	private boolean m_b_needcoortopix = true;
+	
+	private List<MapPointLL> illegal_intersects = new ArrayList<MapPointLL>();
+	private Object b_generating_illegal_intersects = new Object();
 	
 	
 	private Dimension m_dim_mapsize;
@@ -104,6 +114,13 @@ public class PolygonStruct extends ShapeStruct {
 		m_dim_mapsize = dim_mapsize;
 		shapeName = "POLY";
 		
+	}
+	
+	public MapPointLL getPoint(int n)
+	{
+		if(m_coor_lon.size()-1 < n)
+			return null;
+		return new MapPointLL(m_coor_lon.get(n), m_coor_lat.get(n), m_coor_pointref.get(n));		
 	}
 	
 	public MapPointLL getLastPoint()
@@ -177,7 +194,7 @@ public class PolygonStruct extends ShapeStruct {
 		if(m_coor_lon.size()>=2)
 		{
 			MapPointLL lastpoint = new MapPointLL(m_coor_lon.get(m_coor_lon.size()-1), m_coor_lat.get(m_coor_lat.size()-1), m_coor_pointref.size()-1);
-			return LineIntersect(lastpoint, mouse);
+			return LineIntersect(lastpoint, mouse, false);
 		}
 		return ret;
 	}
@@ -450,7 +467,7 @@ public class PolygonStruct extends ShapeStruct {
 			int n_1 = (it % restrict.get_size());
 			if(n_1<0)
 				n_1 = restrict.get_size()+n_1;
-			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));			
+			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1), false, POINT_PRECISION, false);			
 			count++;
 			it+=dir;
 			if(count >= iterations)
@@ -459,8 +476,10 @@ public class PolygonStruct extends ShapeStruct {
 		if(add_last_point)
 		{
 			//this.add_coor((_start<_stop ? p2.get_lon() : p1.get_lon()), (_start<_stop ? p2.get_lat() : p1.get_lat()));
-			this.add_coor(p2.get_lon(), p2.get_lat());
+			this.add_coor(p2.get_lon(), p2.get_lat(), false, POINT_PRECISION, true);
 		}
+		else
+			this.finalizeShape();
 		
 		/*if(startat<stopat)
 		{
@@ -489,20 +508,22 @@ public class PolygonStruct extends ShapeStruct {
 	/**
 	 * Check if line p1-p2 intersects with any poly-lines
 	 */
-	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2)
+	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, boolean b_exclude_tangent_points)
 	{
-		return LineIntersect(p1, p2, 0);
+		return LineIntersect(p1, p2, 0, b_exclude_tangent_points);
 	}
 	
-	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat)
+	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat, 
+			boolean b_exclude_tangent_points)
 	{
-		return LineIntersect(p1, p2, startat, null);
+		return LineIntersect(p1, p2, startat, null, b_exclude_tangent_points);
 	}
 	
 	/**
 	 * Check if line p1-p2 intersects with any poly-lines
 	 */
-	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat, MapPointLL distance_reference)
+	public List<MapPointLL> LineIntersect(MapPointLL p1, MapPointLL p2, int startat, MapPointLL distance_reference, 
+									boolean b_exclude_tangent_points)
 	{
 		List<MapPointLL> ret = new ArrayList<MapPointLL>();
 		for(int i=startat; i < startat+m_coor_lat.size(); i++)
@@ -515,12 +536,30 @@ public class PolygonStruct extends ShapeStruct {
 			Double x2 = m_coor_lon.get(real_next_idx);
 			MapPointLL intersect = new MapPointLL(0, 0);
 			int DOINTERSECT = CommonFunc.intersect(x1, y1, x2, y2, p1.get_lon(), p1.get_lat(), p2.get_lon(), p2.get_lat(), intersect);
+			
+			//check if the line starts or ends where the intersection is
+			if(DOINTERSECT == CommonFunc.DO_INTERSECT && b_exclude_tangent_points)
+			{
+				double epsilon = 1/POINT_PRECISION;
+				if( (Math.abs(intersect.get_lat()-p1.get_lat())<epsilon && Math.abs(intersect.get_lon()-p1.get_lon())<epsilon) || 
+						(Math.abs(intersect.get_lat()-p2.get_lat())<epsilon && Math.abs(intersect.get_lon()-p2.get_lon())<epsilon) )
+				{
+					/*MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
+					boolean b_midpoint_inside = this.pointInsideShape(midpoint);
+					if(!b_midpoint_inside)
+					{
+						DOINTERSECT = CommonFunc.DONT_INTERSECT;
+					}*/
+					DOINTERSECT = CommonFunc.DONT_INTERSECT;
+				}
+			}
 			switch(DOINTERSECT)
 			{
 			case CommonFunc.COLLINEAR:
 				break;
 			case CommonFunc.DO_INTERSECT:
 				//check end points
+					
 				intersect.setPointReference(real_idx);
 				if(intersect.getPointReference()!=p1.getPointReference())
 				{
@@ -1103,21 +1142,21 @@ public class PolygonStruct extends ShapeStruct {
 				g2d.setStroke(stroke_revert);
 				
 				
-				if(!bEditmode && !bPaintShapeName)
+				/*if(bEditmode && !bPaintShapeName)
 				{
 					//paint point numbers
-					/*Font f1 = new Font("Arial", Font.PLAIN, 14);
+					Font f1 = new Font("Arial", Font.PLAIN, 14);
 					Font fOldFont = g.getFont();
 					g.setFont(f1);
-					for(int i=0; i < use_size; i+=100)
+					for(int i=0; i < use_size; i+=5)
 					{
 						Color oldCol = g.getColor();
 						g.setColor(Color.red);
 						g.drawString(""+i, use_array_x[i], use_array_y[i]);
 						g.setColor(oldCol);
 					}
-					g.setFont(fOldFont);*/
-				}
+					g.setFont(fOldFont);
+				}*/
 				//paint shape name
 				if(bPaintShapeName)
 				{					
@@ -1158,6 +1197,32 @@ public class PolygonStruct extends ShapeStruct {
 			draw_last_line(nav, g, p);
 			draw_first_line(nav, g, p);
 		}
+
+		//synchronized (b_generating_illegal_intersects) 
+		{
+			if(bEditmode && !bFinalized && !isElliptical())
+			{
+				Stroke oldStroke = g2d.getStroke();
+				g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));//, 1.0f, new float[]{ 1.0f,1.0f }, 0.0f));
+				Color gOldColor = g2d.getColor();
+				g2d.setColor(Color.red);
+				for(int i=0; i < illegal_intersects.size(); i++)
+				{
+					MapPointLL ll = illegal_intersects.get(i);
+					MapPoint point = new MapPoint(variables.NAVIGATION, ll);
+					int w = 4;
+					g2d.fillOval(point.get_x()-w, point.get_y()-w, w*2, w*2);
+					if(((i+1) % 2) == 0 && i>0)
+					{
+						MapPointLL ll_prev = illegal_intersects.get(i-1);
+						MapPoint point_prev = new MapPoint(variables.NAVIGATION, ll_prev);
+						g2d.drawLine(point.get_x(), point.get_y(), point_prev.get_x(), point_prev.get_y());
+					}
+				}
+				g2d.setStroke(oldStroke);
+				g2d.setColor(gOldColor);
+			}
+		}
 		/*if(isElliptical()) //paint helper-lines
 		{
 			int n_diameter_x = (m_p_corner.get_x() - m_p_center.get_x()) * 2;
@@ -1189,8 +1254,10 @@ public class PolygonStruct extends ShapeStruct {
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
 		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 2, false);
 	}
-	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
-		if(isElliptical())
+	
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes)
+	{
+		if(getPolyType()==PolyType.ELLIPSE_PARENT)
 		{
 		
 		
@@ -1207,10 +1274,13 @@ public class PolygonStruct extends ShapeStruct {
 						return false;
 				}*/
 				if(get_size()>3)
-					return true;
+				{
+					setCanLock(true);
+					return;
+				}
 			}
 		}
-		else
+		else if(getPolyType()==PolyType.NORMAL)
 		{
 			if(get_size() >= 3) {
 				if(restrictionShapes!=null && restrictionShapes.size()>0)
@@ -1219,19 +1289,52 @@ public class PolygonStruct extends ShapeStruct {
 					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
 					MapPointLL p1 = getLastPoint();
 					MapPointLL p2 = getFirstPoint();
-					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
-					if(intersects.size()>0)
-						return false;
+					List<MapPointLL> intersects;
+					//List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
+					//if(intersects.size()>0)
+					//	return false;
+					
+					//p1 = getPoint(getPoint(n))
+					synchronized (b_generating_illegal_intersects) {
+						illegal_intersects.clear();
+						for(int i=1; i <= get_size(); i++)
+						{
+							int np1 = ((i-1) % get_size());
+							int np2 = (i % get_size());
+							p1 = getPoint(np1);
+							p2 = getPoint(np2);
+							intersects = restriction.LineIntersect(p1, p2, 0, true);
+							illegal_intersects.addAll(intersects);
+						}
+						if(illegal_intersects.size()>0)
+						{
+							setCanLock(false);
+							return;
+						}
+					}
+					
 					MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
 					boolean b_midpoint_inside = restriction.pointInsideShape(midpoint);
 					if(!b_midpoint_inside)
-						return false;
-					
+					{
+						setCanLock(false);
+						return;
+					}
+
 				}
-				return true;
+				setCanLock(true);
+				return;
 			}
 		}
-		return false;
+		setCanLock(false);
+		return;
+
+	}
+	
+	@Override
+	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
+		//updateCanLock(restrictionShapes);
+		return b_can_lock;
 	}
 	
 	MapPoint m_p_center;
@@ -1255,24 +1358,34 @@ public class PolygonStruct extends ShapeStruct {
 			return;
 		recalc_shape(nav);
 		finalizeShape();
+		polytype = PolyType.ELLIPSE_PARENT;
 	}
 	public void set_ellipse_center(Navigation nav, MapPoint p_center) {
 		if(!isEditable())
 			return;
 		//ellipse_polygon = null; //reset
 		set_ellipse(nav, p_center, p_center);
+		polytype = PolyType.ELLIPSE_PARENT;
 		//finalize();
 	}
 	public void set_ellipse_corner(Navigation nav, MapPoint p_corner) {
 		if(!isEditable())
 			return;
 		set_ellipse(nav, m_p_center, p_corner);
+		polytype = PolyType.ELLIPSE_PARENT;
 		//recalc_shape(nav);
 		//finalize();
 	}
 	public boolean isElliptical()
 	{
 		return (ellipse_polygon!=null ? true : false);
+		/*switch(getPolyType())
+		{
+		case ELLIPSE_PARENT:
+		case ELLIPSE_RECALCULATED:
+			return true;
+		}
+		return false;*/
 	}
 	PolygonStruct ellipse_polygon = null;
 	public void recalc_shape(Navigation nav)
@@ -1283,7 +1396,10 @@ public class PolygonStruct extends ShapeStruct {
 		
 		
 		if(ellipse_polygon==null)
+		{
 			ellipse_polygon = new PolygonStruct();
+			ellipse_polygon.polytype = PolyType.ELLIPSE_PARENT;
+		}
 		Utils.ConvertEllipseToPolygon(
 				m_p_center.get_lon(), 
 				m_p_center.get_lat(), 
@@ -1308,6 +1424,42 @@ public class PolygonStruct extends ShapeStruct {
 		INCLUDE_END,
 		INCLUDE_BETWEEN,
 	};
+	
+	protected void followRestrictionLines(PolygonStruct poly, PolygonStruct restrict, 
+											int start, int stop)
+	{
+		if(start==stop)
+			return;
+		int cur = start;
+		while(1==1)
+		{
+			int idx = (cur % restrict.get_size());
+			MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
+			poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);
+			if(idx==stop)
+				break;
+			cur++;
+		}
+		/*else if(start<stop)
+		{
+			for(int i=start; i <= stop; i++)
+			{
+				int idx = (i % restrict.get_size());
+				MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
+				poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);
+			}
+		}
+		else
+		{
+			for(int i=start; i >= stop; i--)
+			{
+				int idx = (i % restrict.get_size());
+				MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
+				poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);				
+			}
+		}*/
+		poly.finalizeShape();
+	}
 	protected void followRestrictionLines(PolygonStruct poly, PolygonStruct restrict, POLY_FOLLOW_RESTRICT r,
 											int start, int stop)
 	{
@@ -1346,9 +1498,12 @@ public class PolygonStruct extends ShapeStruct {
 								PolygonStruct restrict,
 								int n_ell_point,
 								MapPointLL current_point,
-								boolean b_iteration_outside)
+								boolean b_iteration_outside,
+								boolean b_marked_as_finalized)
 	{
 		boolean b_cur_inside = false;
+		if(b_marked_as_finalized)
+			return;
 		int n_size = get_ellipse_size();
 		if(n_size==0)
 			return;
@@ -1367,11 +1522,29 @@ public class PolygonStruct extends ShapeStruct {
 			b_cur_inside = restrict.pointInsideShape(current_point);
 		
 		MapPointLL last_added_point = newpoly.getLastPoint();
+		MapPointLL first_added_point = newpoly.getFirstPoint();
+
+		//if(newpoly.get_size()==45)
+		//	System.out.println("break");
+		if(n_ell_point==n_size && !b_cur_inside && first_added_point!=null && last_added_point!=null)
+		{
+			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference()+1, first_added_point.getPointReference());
+			b_marked_as_finalized = true;
+			//newpoly.FollowRestrictionLines(first_added_point, last_added_point, first_added_point, restrict, false, false, true);
+			return;
+		}
+		else if(n_ell_point==n_size && first_added_point==null)
+		{
+			newpoly.followRestrictionLines(newpoly, restrict, 0, restrict.get_size()-1);
+			b_marked_as_finalized = true;
+			return;
+		}
+		
 		
 		int n_next_ell_point = ((n_ell_point+1) % n_size);
 		MapPointLL next_point = new MapPointLL(get_ellipse_coor_lon(n_next_ell_point), get_ellipse_coor_lat(n_next_ell_point));
 		int n_start_intersect = (current_point.getPointReference() > 0 ? current_point.getPointReference() : 0);
-		List<MapPointLL> intersects = restrict.LineIntersect(current_point, next_point, n_start_intersect);
+		List<MapPointLL> intersects = restrict.LineIntersect(current_point, next_point, n_start_intersect, false);
 		for(int i=0; i < intersects.size(); i++)
 		{
 			MapPointLL ll = intersects.get(i);
@@ -1380,21 +1553,28 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		Collections.sort(intersects);
 
-		//add the point
-		if(b_cur_inside)
-		{
-			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
-		}
-
+		
+		boolean b_restrict_used = false;
 		//iterate
 		if(last_added_point!=null && 
 				last_added_point.getPointReference()>0 && 
 				current_point.getPointReference()>0 &&
 				!b_iteration_outside)// && intersects.size()==0)
 		{
-			followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_ENDPOINTS, last_added_point.getPointReference(), current_point.getPointReference());
+			//followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_ENDPOINTS, last_added_point.getPointReference(), current_point.getPointReference());
+			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), current_point.getPointReference());
+			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
+			//newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
+			b_restrict_used = true;
 		}
 
+		//add the point
+		if(b_cur_inside && !b_restrict_used)
+		{
+			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
+		}
+
+		
 		if(intersects.size()>0)
 		{
 			current_point = intersects.get(0);
@@ -1407,7 +1587,7 @@ public class PolygonStruct extends ShapeStruct {
 			n_ell_point++;
 		}
 		
-		iterateEllipse(newpoly, restrict, n_ell_point, current_point, b_iteration_outside);
+		iterateEllipse(newpoly, restrict, n_ell_point, current_point, b_iteration_outside, b_marked_as_finalized);
 	}
 	
 	private void sortIntersectsByDistance()
@@ -1460,8 +1640,6 @@ public class PolygonStruct extends ShapeStruct {
 			n_total_iterations = 0;
 			b_is_inside = b_cur_inside;
 		}
-		//if(b_cur_inside)
-		//	System.out.println("break");
 
 		int n_next_ell_point = ((n_ell_point+1) % n_size);
 		MapPointLL next_point = new MapPointLL(get_ellipse_coor_lon(n_next_ell_point), get_ellipse_coor_lat(n_next_ell_point));
@@ -1471,7 +1649,7 @@ public class PolygonStruct extends ShapeStruct {
 			n_start_intersect = n_left_polygon_at_idx;
 		else if(n_entered_polygon_at_idx>=0)
 			n_start_intersect = n_entered_polygon_at_idx;
-		List<MapPointLL> intersects = restrict.LineIntersect(current_point, next_point, n_start_intersect);
+		List<MapPointLL> intersects = restrict.LineIntersect(current_point, next_point, n_start_intersect, false);
 		//if(intersects.size()>0)
 		//	System.out.println("break");
 		MapPointLL first_intersect = null;
@@ -1614,7 +1792,7 @@ public class PolygonStruct extends ShapeStruct {
 		int n_next_ell_point = ((n_ell_point+1) % n_size);
 		MapPointLL p2 = new MapPointLL(get_ellipse_coor_lon(n_next_ell_point), get_ellipse_coor_lat(n_next_ell_point));
 		boolean b_next_inside = restrict.pointInsideShape(p2);
-		List<MapPointLL> intersects = restrict.LineIntersect(p1, p2);
+		List<MapPointLL> intersects = restrict.LineIntersect(p1, p2, false);
 		
 		//if both are inside, check if there are any line intersections (going outside temporarily)
 		if(b_cur_inside && b_next_inside && intersects.size()==0)
@@ -1724,9 +1902,9 @@ public class PolygonStruct extends ShapeStruct {
 	public void ellipseToRestrictionlines(PolygonStruct restrict)
 	{
 		PolygonStruct newpoly = new PolygonStruct();
-		//iterateEllipse(newpoly, restrict, 0, false, null, null);
-		iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
-		//iterateEllipse(newpoly, restrict, 0, null, false);
+		newpoly.polytype = PolyType.ELLIPSE_RECALCULATED;
+		//iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
+		iterateEllipse(newpoly, restrict, 0, null, false, false);
 		newpoly.finalizeShape();
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;

@@ -67,6 +67,10 @@ public class MunicipalStruct extends ShapeStruct
 			return true;
 		return false;
 	}
+	@Override
+	protected void updateCanLock(List<ShapeStruct> restrictionShapes) {
+		
+	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
