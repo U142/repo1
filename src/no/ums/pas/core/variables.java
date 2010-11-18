@@ -1,5 +1,7 @@
 package no.ums.pas.core;
 
+import java.awt.Dimension;
+
 import no.ums.pas.Draw;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.controllers.StatusController;
@@ -19,5 +21,6 @@ public class variables {
 	public static MapFrame MAPPANE = null;
 	public static Settings SETTINGS = null;
 	public static StatusController STATUSCONTROLLER = null;
-	
+	public static Dimension MINMAPDIMENSIONS = new Dimension(100,100);
+	public static float MAPZOOMSPEED = 0.25f; 
 }

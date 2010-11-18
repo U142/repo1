@@ -355,7 +355,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				}
 			}
 			variables.USERINFO = m_info;
-			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144));
+			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144),false);
 			m_mappane = new MapFrameAdmin(applet_width, applet_height, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
 			variables.MAPPANE = m_mappane;
 			m_mappane.load_map();

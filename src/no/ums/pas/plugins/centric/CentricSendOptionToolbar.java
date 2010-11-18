@@ -188,6 +188,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private JButton m_btn_address_book; // Add image/icon
 	private JButton m_btn_update;
 	private JButton m_btn_messagelib;
+	private JButton m_btn_send_for_auth;
 	
 	private JButton m_btn_save_message;
 	private JButton m_btn_reset;
@@ -478,8 +479,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_reset.addFocusListener(this);
 		m_btn_send.addActionListener(this);
 		m_btn_send.addFocusListener(this);
-		m_btn_reset.setPreferredSize(new Dimension(input_width/2, btn_height));
+		m_btn_reset.setPreferredSize(new Dimension(btn_width, btn_height));
 		m_btn_save_message.setPreferredSize(new Dimension(input_width/2, btn_height));
+		m_btn_send_for_auth = new JButton(PAS.l("main_send_to_address_book_for_authorization"));
+		m_btn_send_for_auth.addActionListener(this);
+		
 		
 		m_txt_warning = new JTextArea(PAS.l("main_sending_send_warning"),1,1);
 		m_txt_warning.setWrapStyleWord(true);
@@ -652,16 +656,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		set_gridconst(1, inc_panels(), 2, 1);
 		add(m_btn_send, m_gridconst);
 		m_btn_send.setActionCommand("act_goto_summary");
+		m_btn_send.setPreferredSize(new Dimension(input_width,30));
 		//set_gridconst(3, get_panel(), 1, 1);
 		//add(m_btn_close, m_gridconst);
 		
 		add_spacing(DIR_VERTICAL, 50);
 		
-		set_gridconst(1, inc_panels(), 1, 1);
+		set_gridconst(8, inc_panels(), 1, 1);
 		add(m_btn_reset, m_gridconst);
 		
-		set_gridconst(2, get_panel(), 1, 1);
-		add(m_btn_save_message, m_gridconst);
+		//set_gridconst(2, get_panel(), 1, 1);
+		//add(m_btn_save_message, m_gridconst);
 		
 		m_txt_previewscroll.setPreferredSize(new Dimension(input_width,100));
 		m_txt_event_name.setPreferredSize(new Dimension(input_width, m_lbl_preview.getPreferredSize().height));
@@ -707,8 +712,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add_spacing(DIR_VERTICAL, 20);
 		
 		
-		set_gridconst(0, inc_panels(), 8, 1);
-		add(m_txt_warningscroll, m_gridconst);
+		//set_gridconst(0, inc_panels(), 8, 1);
+		//add(m_txt_warningscroll, m_gridconst);
 		m_txt_warning.setEnabled(false);
 		Font f = UIManager.getFont("SendingWarningText.font");
 		m_txt_warning.setFont(f);
@@ -732,10 +737,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_btn_cancel.addActionListener(this);
 		}
 		
-		set_gridconst(0, inc_panels(), 1, 1);
-		add(m_btn_cancel, m_gridconst);
-		set_gridconst(1, get_panel(), 3, 1, GridBagConstraints.EAST);
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
 		add(m_btn_send, m_gridconst);
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		add(m_btn_save_message, m_gridconst);
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		add(m_btn_send_for_auth, m_gridconst);
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		add(m_btn_cancel, m_gridconst);
+		
 		
 		m_btn_send.setActionCommand("act_send");
 		int width_left = 550-100;
@@ -746,7 +756,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
 
 		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
-		m_btn_cancel.setPreferredSize(new Dimension(m_btn_cancel.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_send.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_cancel.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_save_message.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_send_for_auth.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
 		updateCharacters();
 		revalidate();
 		repaint();

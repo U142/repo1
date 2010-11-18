@@ -123,18 +123,21 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	public void keyTyped(KeyEvent e)
 	{
 		//key(e.getKeyCode(), true);
-		PAS.pasplugin.onMapKeyTyped(e);
+		if(PAS.pasplugin != null)
+			PAS.pasplugin.onMapKeyTyped(e);
 	}
 	public void keyPressed(KeyEvent e)
 	{
 		//get_pas().add_event("Key");
 		key(e.getKeyCode(), true);
-		PAS.pasplugin.onMapKeyPressed(e);
+		if(PAS.pasplugin!=null)
+			PAS.pasplugin.onMapKeyPressed(e);
 	}
 	public void keyReleased(KeyEvent e)
 	{
 		key(e.getKeyCode(), false);
-		PAS.pasplugin.onMapKeyReleased(e);
+		if(PAS.pasplugin!=null)
+			PAS.pasplugin.onMapKeyReleased(e);
 	}
 	public synchronized void key(int n_keycode, boolean b_down)
 	{
@@ -970,7 +973,21 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM)
 				{
 					get_mappane().get_navigation().exec_zoom_in(getMousedownPos(), getMouseupPos());
-					PAS.get_pas().kickRepaint();
+					if(PAS.get_pas() != null)
+						PAS.get_pas().kickRepaint();
+					else {
+						variables.DRAW.setRepaint(variables.MAPPANE.m_img_onscreen);
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run()
+							{
+								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
+								//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+								get_mappane().repaint();
+								get_mappane().validate();
+							}
+						});
+					}
 					//if(get_mappane().m_overlays!=null)
 						//updateOverlay();
 				}

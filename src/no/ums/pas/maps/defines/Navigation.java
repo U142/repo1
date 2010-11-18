@@ -275,7 +275,13 @@ public class Navigation {
 	
 	protected NavStruct calcMinBounds(NavStruct nav, NAVIGATION_GESTURE gesture) {
 		NavStruct newnav = new NavStruct();
-		int n_minzoom = PAS.pasplugin.getMinMapDimensions().height;
+		int n_minzoom;
+
+		if(PAS.pasplugin != null)
+			n_minzoom = PAS.pasplugin.getMinMapDimensions().height;
+		else
+			n_minzoom = variables.MINMAPDIMENSIONS.height;
+		
 		double y1r = nav._ubo * Math.PI * 2.0 / 360.0;
 
 		//double minlr = n_minzoom / 3600.0 / 30.92 / Math.cos(y1r);
@@ -334,7 +340,13 @@ public class Navigation {
 	public boolean exec_zoom_in(Dimension dim_start, Dimension dim_stop) {
 		double f_centerpoint_x, f_centerpoint_y;
 		//int n_minzoom = 60;
-		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
+		int n_minzoom;
+		
+		if(PAS.pasplugin != null)
+			n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
+		else
+			n_minzoom = variables.MINMAPDIMENSIONS.width;
+		
 
 		//System.out.println("mapwidth = " + m_f_mapwidthmeters + " " + calc_distance(dim_stop.width, dim_stop.height, dim_start.width, dim_stop.height));
 		
@@ -367,8 +379,15 @@ public class Navigation {
 		f_delta_y = n_delta_y * m_f_heightprpix.doubleValue();
 		
 		//NEW test
-		f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed();
-		f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed();
+		if(PAS.pasplugin != null) {
+			f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed();
+			f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed();
+		}
+		else
+		{
+			f_delta_x = (m_f_rbo - m_f_lbo) * variables.MAPZOOMSPEED;
+			f_delta_y = (m_f_ubo - m_f_bbo) * variables.MAPZOOMSPEED;
+		}
 		
 		double lbo, rbo, ubo, bbo;
 		lbo = f_centerpoint_x - f_delta_x;
@@ -398,8 +417,15 @@ public class Navigation {
 		
 		//NEW test
 		double f_delta_x, f_delta_y;
-		f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed()*4;
-		f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed()*4;
+		if(PAS.pasplugin != null) {
+			f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed()*4;
+			f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed()*4;
+		}
+		else {
+			f_delta_x = (m_f_rbo - m_f_lbo) * variables.MAPZOOMSPEED*4;
+			f_delta_y = (m_f_ubo - m_f_bbo) * variables.MAPZOOMSPEED*4;
+		}
+			
 		double lbo, rbo, ubo, bbo;
 		double f_centerpoint_x, f_centerpoint_y;
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
