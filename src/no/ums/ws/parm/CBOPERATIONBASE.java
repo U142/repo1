@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="risk" type="{http://ums.no/ws/parm/}CB_RISK" minOccurs="0"/>
  *         &lt;element name="reaction" type="{http://ums.no/ws/parm/}CB_REACTION" minOccurs="0"/>
  *         &lt;element name="originator" type="{http://ums.no/ws/parm/}CB_ORIGINATOR" minOccurs="0"/>
+ *         &lt;element name="messageconfirmation" type="{http://ums.no/ws/parm/}CB_MESSAGE_CONFIRMATION" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="operation" use="required" type="{http://ums.no/ws/parm/}CB_OPERATION" />
  *       &lt;attribute name="l_refno" use="required" type="{http://www.w3.org/2001/XMLSchema}long" />
@@ -40,7 +41,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "CB_OPERATION_BASE", propOrder = {
     "risk",
     "reaction",
-    "originator"
+    "originator",
+    "messageconfirmation"
 })
 @XmlSeeAlso({
     CBALERTKILL.class,
@@ -51,6 +53,7 @@ public abstract class CBOPERATIONBASE {
     protected CBRISK risk;
     protected CBREACTION reaction;
     protected CBORIGINATOR originator;
+    protected CBMESSAGECONFIRMATION messageconfirmation;
     @XmlAttribute(required = true)
     protected CBOPERATION operation;
     @XmlAttribute(name = "l_refno", required = true)
@@ -136,6 +139,30 @@ public abstract class CBOPERATIONBASE {
      */
     public void setOriginator(CBORIGINATOR value) {
         this.originator = value;
+    }
+
+    /**
+     * Gets the value of the messageconfirmation property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBMESSAGECONFIRMATION }
+     *     
+     */
+    public CBMESSAGECONFIRMATION getMessageconfirmation() {
+        return messageconfirmation;
+    }
+
+    /**
+     * Sets the value of the messageconfirmation property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBMESSAGECONFIRMATION }
+     *     
+     */
+    public void setMessageconfirmation(CBMESSAGECONFIRMATION value) {
+        this.messageconfirmation = value;
     }
 
     /**

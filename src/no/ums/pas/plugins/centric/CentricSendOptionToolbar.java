@@ -102,6 +102,7 @@ import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.parm.CBALERTPLMN;
 import no.ums.ws.parm.CBALERTPOLYGON;
 import no.ums.ws.parm.CBMESSAGE;
+import no.ums.ws.parm.CBMESSAGECONFIRMATION;
 import no.ums.ws.parm.CBMESSAGELIST;
 import no.ums.ws.parm.CBMESSAGEPART;
 import no.ums.ws.parm.CBOPERATIONBASE;
@@ -841,6 +842,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			CBORIGINATOR originator = new CBORIGINATOR();
 			originator.setLPk(-1);
 			originator.setSzName(m_cbx_originator.getSelectedItem().toString());
+			CBMESSAGECONFIRMATION msgconfirm = new CBMESSAGECONFIRMATION();
+			msgconfirm.setLPk(-1);
+			msgconfirm.setSzName("Message confirmation text...");
 
 			CBSENDBASE operation = null;
 			
@@ -888,6 +892,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			operation.setRisk(risk);
 			operation.setReaction(reaction);
 			operation.setOriginator(originator);
+			operation.setMessageconfirmation(msgconfirm);
 			operation.setLParentRefno(n_parent_refno);
 			CBMESSAGEPART messagepart = new CBMESSAGEPART();
 			messagepart.setLPk(-1);

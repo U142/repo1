@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlSeeAlso({
     CBMESSAGEPART.class,
     CBRISK.class,
+    CBMESSAGECONFIRMATION.class,
     CBSENDER.class,
     CBORIGINATOR.class,
     CBREACTION.class

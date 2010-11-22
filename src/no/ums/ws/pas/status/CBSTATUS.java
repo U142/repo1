@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="risk" type="{http://ums.no/ws/pas/status}CB_RISK" minOccurs="0"/>
  *         &lt;element name="reaction" type="{http://ums.no/ws/pas/status}CB_REACTION" minOccurs="0"/>
  *         &lt;element name="originator" type="{http://ums.no/ws/pas/status}CB_ORIGINATOR" minOccurs="0"/>
+ *         &lt;element name="messageconfirmation" type="{http://ums.no/ws/pas/status}CB_MESSAGE_CONFIRMATION" minOccurs="0"/>
  *         &lt;element name="sender" type="{http://ums.no/ws/pas/status}CB_SENDER" minOccurs="0"/>
  *         &lt;element name="shape" type="{http://ums.no/ws/pas/status}UShape" minOccurs="0"/>
  *         &lt;element name="l_refno" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -49,6 +50,7 @@ import javax.xml.bind.annotation.XmlType;
     "risk",
     "reaction",
     "originator",
+    "messageconfirmation",
     "sender",
     "shape",
     "lRefno",
@@ -69,6 +71,7 @@ public class CBSTATUS {
     protected CBRISK risk;
     protected CBREACTION reaction;
     protected CBORIGINATOR originator;
+    protected CBMESSAGECONFIRMATION messageconfirmation;
     protected CBSENDER sender;
     protected UShape shape;
     @XmlElement(name = "l_refno")
@@ -229,6 +232,30 @@ public class CBSTATUS {
      */
     public void setOriginator(CBORIGINATOR value) {
         this.originator = value;
+    }
+
+    /**
+     * Gets the value of the messageconfirmation property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CBMESSAGECONFIRMATION }
+     *     
+     */
+    public CBMESSAGECONFIRMATION getMessageconfirmation() {
+        return messageconfirmation;
+    }
+
+    /**
+     * Sets the value of the messageconfirmation property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CBMESSAGECONFIRMATION }
+     *     
+     */
+    public void setMessageconfirmation(CBMESSAGECONFIRMATION value) {
+        this.messageconfirmation = value;
     }
 
     /**

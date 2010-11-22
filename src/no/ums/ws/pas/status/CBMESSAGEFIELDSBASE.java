@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
     CBMESSAGEPART.class,
     CBORIGINATOR.class,
     CBRISK.class,
+    CBMESSAGECONFIRMATION.class,
     CBREACTION.class
 })
 public class CBMESSAGEFIELDSBASE {
