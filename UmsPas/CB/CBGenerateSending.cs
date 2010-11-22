@@ -219,6 +219,7 @@ namespace com.ums.PAS.CB
             db.insertLBASENDMessageField(alert.l_refno, alert.reaction);
             db.insertLBASENDMessageField(alert.l_refno, alert.originator);
             db.insertLBASENDMessageField(alert.l_refno, alert.sender);
+            db.insertLBASENDMessageField(alert.l_refno, alert.messageconfirmation);
 
 
             //CREATE SEND XML FILE

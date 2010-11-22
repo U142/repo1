@@ -512,6 +512,8 @@ namespace com.ums.PAS.Database
                             cb.messagepart = (CB_MESSAGEPART)value;
                         else if (value.GetType().Equals(typeof(CB_SENDER)))
                             cb.sender = (CB_SENDER)value;
+                        else if (value.GetType().Equals(typeof(CB_MESSAGE_CONFIRMATION)))
+                            cb.messageconfirmation = (CB_MESSAGE_CONFIRMATION)value;
                     }
                     rs_mf.Close();
                 }

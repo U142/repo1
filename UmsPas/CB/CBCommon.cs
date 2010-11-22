@@ -32,6 +32,7 @@ namespace com.ums.PAS.CB
         ORIGINATOR = 3,
         MESSAGEPART = 4,
         SENDER = 5,
+        MESSAGE_CONFIRMATION = 6,
     }
 
     public class CB_MESSAGE_FIELDS_BASE
@@ -60,6 +61,8 @@ namespace com.ums.PAS.CB
                     return new CB_RISK(l_source_pk, sz_text);
                 case ULBAMESSAGEFIELDTYPE.SENDER:
                     return new CB_SENDER(l_source_pk, sz_text);
+                case ULBAMESSAGEFIELDTYPE.MESSAGE_CONFIRMATION:
+                    return new CB_MESSAGE_CONFIRMATION(sz_text);
                 default:
                     return new CB_MESSAGE_FIELDS_BASE();
             }
@@ -78,6 +81,20 @@ namespace com.ums.PAS.CB
             type = ULBAMESSAGEFIELDTYPE.RISK;
         }
 
+    }
+
+    public class CB_MESSAGE_CONFIRMATION : CB_MESSAGE_FIELDS_BASE
+    {
+        public CB_MESSAGE_CONFIRMATION()
+            : this("")
+        {
+        }
+        public CB_MESSAGE_CONFIRMATION(String s)
+        {
+            l_pk = -1;
+            sz_name = s;
+            type = ULBAMESSAGEFIELDTYPE.MESSAGE_CONFIRMATION;
+        }
     }
     public class CB_REACTION : CB_MESSAGE_FIELDS_BASE
     {
@@ -238,6 +255,8 @@ namespace com.ums.PAS.CB
         [XmlElement("originator")]
         public CB_ORIGINATOR originator = new CB_ORIGINATOR();
 
+        [XmlElement("messageconfirmation")]
+        public CB_MESSAGE_CONFIRMATION messageconfirmation = new CB_MESSAGE_CONFIRMATION();
 
         [XmlAttribute("l_comppk")]
         public int l_comppk;
@@ -281,14 +300,14 @@ namespace com.ums.PAS.CB
         [XmlElement("textmessages")]
         public CB_MESSAGELIST textmessages = null;
 
-        [XmlElement("risk")]
+        /*[XmlElement("risk")]
         public CB_RISK risk;
 
         [XmlElement("reaction")]
         public CB_REACTION reaction;
 
         [XmlElement("originator")]
-        public CB_ORIGINATOR originator;
+        public CB_ORIGINATOR originator;*/
 
         [XmlElement("sender")]
         public CB_SENDER sender;
@@ -428,6 +447,7 @@ namespace com.ums.PAS.CB
         public CB_RISK risk;
         public CB_REACTION reaction;
         public CB_ORIGINATOR originator;
+        public CB_MESSAGE_CONFIRMATION messageconfirmation;
         public CB_SENDER sender;
 
         public UShape shape;
