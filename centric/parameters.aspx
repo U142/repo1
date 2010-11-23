@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="parameters.aspx.cs" Inherits="parameters" %>
+<%@ Page MasterPageFile="~/MasterPage.master" Language="C#" AutoEventWireup="true"  CodeFile="parameters.aspx.cs" Inherits="parameters" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="body" runat="server">
     <asp:Table ID="Table2" runat="server">
@@ -79,14 +79,14 @@
         </asp:TableRow>
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="lbl_repetitions" runat="server" Text="Number of repetitions of the broadcast message"></asp:Label>
+                <asp:Label ID="lbl_duration" runat="server" Text="Duration of the broadcast message"></asp:Label>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:TextBox ID="txt_repetitions" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txt_duration" runat="server"></asp:TextBox>
             </asp:TableCell>
             <asp:TableCell>
-                <asp:RequiredFieldValidator ID="req_repetitions" runat="server" Text="*" ErrorMessage="Number of repetitions missing" ControlToValidate="txt_repetitions"></asp:RequiredFieldValidator>
-                <asp:RangeValidator id="rng_repetitions" Type="Integer" runat="server" MinimumValue="0" ControlToValidate="txt_repetitions" Text="*" ErrorMessage="Integer value required for repetition"></asp:RangeValidator>
+                <asp:RequiredFieldValidator ID="req_repetitions" runat="server" Text="*" ErrorMessage="Duration missing" ControlToValidate="txt_duration" />
+                <asp:RangeValidator id="rng_repetitions" Type="Integer" runat="server" MinimumValue="1" MaximumValue="1440" ControlToValidate="txt_duration" Text="*" ErrorMessage="Integer value between 1 and 1440 required for duration" />
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>

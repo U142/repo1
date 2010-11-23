@@ -4,15 +4,42 @@
 <asp:Content ContentPlaceHolderID="body" runat="server">
 <script type="text/javascript">
     function ValidateStringLength(source, arguments)   
-    {   
-         var slen = arguments.Value.length;   
-         // alert(arguments.Value + '\n' + slen);   
-         if (slen <= 1302){   
+    {
+         var slen = document.getElementById("ctl00_body_txt_message").value.length;
+         var text = document.getElementById("ctl00_body_txt_message").value;
+         var num_char = 1302;
+         
+         // alert(arguments.Value + '\n' + slen);
+         if (getLength() <= num_char) {   
              arguments.IsValid = true;   
          } else {   
-             arguments.IsValid = false;   
-         }   
-    }   
+             arguments.IsValid = false;
+         }
+         
+     }
+     function getLength() {
+        var slen = document.getElementById("ctl00_body_txt_message").value.length;
+        var text = document.getElementById("ctl00_body_txt_message").value;
+        var num_char = 1302;
+        var i;
+        var tot = 0;
+        var extended = /[|^€{}\[\]~\\]/;
+
+        var re = new RegExp(extended);
+        var m = null;
+        var subtext = "";
+        
+        for (i = 0; i < slen; i++) {
+            m = re.exec(text.charAt(i))
+            if (m != null)
+                tot++;
+            tot++;
+        }
+        //alert(tot + " of " + num_char);
+        document.getElementById("ctl00_body_lbl_count").innerHTML = tot + " of " + num_char + "&nbsp;&nbsp";
+                
+        return tot;
+     }  
 </script> 
 <asp:Table runat="server">
     <asp:TableHeaderRow>
@@ -31,11 +58,13 @@
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell>
-            <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" MaxLength="14"></asp:TextBox>
+            <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" MaxLength="14" onkeyup="javascript:getLength()" ></asp:TextBox><asp:RegularExpressionValidator
+                ID="RegularExpressionValidator1" ControlToValidate="txt_message" runat="server" text="*" ErrorMessage="Invalid GSM character" ValidationExpression="[a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\[\]&quot;~-]+"></asp:RegularExpressionValidator>
         </asp:TableCell>
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell HorizontalAlign="Right" ColumnSpan="2">
+            <asp:Label ID="lbl_count" runat="server" Text=""></asp:Label>
             <asp:Button ID="btn_acquire_lock" runat="server" Text="Acquire lock" OnClick="btn_acquire_lock_Click" CausesValidation="false" />
             <asp:Button ID="btn_release_lock" runat="server" Text="Release lock" OnClick="btn_release_lock_Click" CausesValidation="false" />
             <asp:Button ID="btn_save" runat="server" Text="Save" OnClick="btn_save_Click" Enabled="false"/>

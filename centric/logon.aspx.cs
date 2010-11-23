@@ -27,9 +27,9 @@ public partial class logon : System.Web.UI.Page
         PasAdmin pws = new PasAdmin();
         pws.Url = ConfigurationSettings.AppSettings["PasAdmin"];
         ULOGONINFO l = new ULOGONINFO();
-        l.sz_compid = txt_company.Text;
-        l.sz_userid = txt_user.Text;
-        l.sz_password = Helper.CreateSHA512Hash(txt_password.Text);
+        l.sz_compid = txt_company.Text.Replace("'","''");
+        l.sz_userid = txt_user.Text.Replace("'", "''");
+        l.sz_password = Helper.CreateSHA512Hash(txt_password.Text.Replace("'", "''"));
         txt_password.Text = "";
         lbl_error.ForeColor = System.Drawing.Color.Red;
 
