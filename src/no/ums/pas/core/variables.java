@@ -21,6 +21,6 @@ public class variables {
 	public static MapFrame MAPPANE = null;
 	public static Settings SETTINGS = null;
 	public static StatusController STATUSCONTROLLER = null;
-	public static Dimension MINMAPDIMENSIONS = new Dimension(100,100);
+	public static Dimension MINMAPDIMENSIONS = new Dimension(20000,20000);
 	public static float MAPZOOMSPEED = 0.25f; 
 }

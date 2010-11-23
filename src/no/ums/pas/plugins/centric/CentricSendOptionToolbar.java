@@ -128,11 +128,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	int MAX_EVENTNAME_LENGTH = 50;
 	int MAX_TOTAL_CHARS = MAX_MESSAGELENGTH_PR_PAGE * MAX_PAGES;
 	
+	int MAX_TOTAL_AUTHORIZATION_CHARS = 255;
+	
 	enum MODE
 	{
 		INITIALIZING,
 		MESSAGE_WRITING,
 		SHOWING_SUMMARY,
+		SHOWING_AUTHORIZATION,
 		SENDING,
 	}
 	
@@ -156,13 +159,16 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	private StdTextLabel m_lbl_originator;
 	private StdTextLabel m_lbl_pages;
 	private StdTextLabel m_lbl_characters;
-	
+	private StdTextLabel m_lbl_warning;
+		
 	private StdTextArea m_txt_event_name;
 	private String m_sz_date;
 	private StdTextArea m_txt_sender_name;
 	private StdTextArea m_txt_date_time;
 	private StdTextAreaNoTab m_txt_message;
 	private JScrollPane m_txt_messagescroll;
+	private JTextArea m_txt_authorization;
+	private JScrollPane m_txt_authorizationscroll;
 	
 	//private JComboBox m_cbx_channel;
 	//private JComboBox m_cbx_duration;
@@ -748,12 +754,115 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		add(m_btn_cancel, m_gridconst);
 		
 		
-		m_btn_send.setActionCommand("act_send");
+		m_btn_send.setActionCommand("act_goto_authorization");
 		int width_left = 550-100;
 		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
 		//progress.get_progress().setVisible(false);
 		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
 		m_txt_warningscroll.setPreferredSize(new Dimension(width_left,70));
+		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
+
+		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
+		m_btn_send.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_cancel.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_save_message.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		m_btn_send_for_auth.setPreferredSize(new Dimension(m_txt_event_name.getPreferredSize().width, m_btn_send.getPreferredSize().height));
+		updateCharacters();
+		revalidate();
+		repaint();
+		
+	}
+	
+	private void showAuthorization() {
+		
+		findDeptSendOnBehalfOf();
+		//if(projectOpen())
+			m_txt_event_name.setEnabled(false);
+		removeAll();
+		reset_panels();
+		set_gridconst(0, get_panel(), 1, 1);
+		add(m_lbl_event_name, m_gridconst);
+		set_gridconst(1, get_panel(), 7, 1);
+		add(m_txt_event_name, m_gridconst);
+		
+		add_spacing(DIR_VERTICAL, 5);
+		
+		set_gridconst(0, inc_panels(), 1, 1);
+		add(m_lbl_preview, m_gridconst);
+		set_gridconst(1, get_panel(), 3, 2);
+		add(m_txt_previewscroll, m_gridconst);
+		set_gridconst(0, inc_panels(), 1, 1);
+		/*if(m_btn_print==null) {
+			m_btn_print = new JButton(PAS.l("common_print_summary"));
+			m_btn_print.setActionCommand("act_print_summary");
+			m_btn_print.addActionListener(this);
+		}
+		add(m_btn_print, m_gridconst);
+		*/
+		set_gridconst(1, inc_panels(), 1, 1);
+		add(m_lbl_pages, m_gridconst);
+		set_gridconst(2, get_panel(), 7, 1);
+		add(m_lbl_characters, m_gridconst);
+		
+		
+		add_spacing(DIR_VERTICAL, 20);
+		
+		set_gridconst(1, inc_panels(), 7, 1);
+		add(m_txt_warningscroll, m_gridconst);
+		m_txt_warning.setEnabled(false);
+		Font f = UIManager.getFont("SendingWarningText.font");
+		m_txt_warning.setFont(f);
+		Color c = UIManager.getColor("SendingWarningText.foreground");
+		m_txt_warning.setForeground(c);
+		m_txt_warning.setDisabledTextColor(c);
+		
+		add_spacing(DIR_VERTICAL, 5);
+		
+		set_gridconst(0, inc_panels(), 1, 1);
+		m_lbl_warning = new StdTextLabel(PAS.get_pas().l("common_show_message_authorization_text"));
+		add(m_lbl_warning, m_gridconst);
+		
+		m_txt_authorization = new JTextArea("",1,1);
+		m_txt_authorization.setWrapStyleWord(true);
+		m_txt_authorization.setLineWrap(true);
+		m_txt_authorization.addKeyListener(this);
+		m_txt_authorizationscroll = new JScrollPane(m_txt_authorization);
+		set_gridconst(1, get_panel(), 7, 1);
+		m_txt_authorizationscroll.setPreferredSize(new Dimension(m_txt_previewscroll.getWidth(),40));
+		add(m_txt_authorizationscroll, m_gridconst);
+		
+		add_spacing(DIR_VERTICAL, 5);
+		
+		set_gridconst(0, inc_panels(), 8, 1);
+		//progress.get_progress().setSize(new Dimension(450,25));
+		progress.set_totalitems(0, PAS.l("main_statustext_lba_sending"));
+		//progress.get_progress().setPreferredSize(new Dimension(450,25));
+		progress.stop_and_hide();
+		add(progress.get_progress(), m_gridconst);
+		
+		add_spacing(DIR_VERTICAL, 5);
+		
+		if(m_btn_cancel == null) {
+			m_btn_cancel = new JButton(PAS.l("common_cancel"));
+			m_btn_cancel.addActionListener(this);
+		}
+		
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		add(m_btn_send, m_gridconst);
+		//set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		//add(m_btn_save_message, m_gridconst);
+		//set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		//add(m_btn_send_for_auth, m_gridconst);
+		set_gridconst(1, inc_panels(), 3, 1, GridBagConstraints.EAST);
+		add(m_btn_cancel, m_gridconst);
+		
+		
+		m_btn_send.setActionCommand("act_send");
+		int width_left = 550-100;
+		progress.get_progress().setPreferredSize(new Dimension(width_left,25));
+		//progress.get_progress().setVisible(false);
+		m_txt_previewscroll.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width,250));
+		m_txt_warningscroll.setPreferredSize(new Dimension(m_txt_previewscroll.getPreferredSize().width,70));
 		m_txt_event_name.setPreferredSize(new Dimension(width_left-m_lbl_preview.getPreferredSize().width, m_lbl_preview.getPreferredSize().height));
 
 		m_lbl_characters.setPreferredSize(new Dimension(200, m_lbl_characters.getPreferredSize().height));
@@ -844,11 +953,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			originator.setSzName(m_cbx_originator.getSelectedItem().toString());
 			CBMESSAGECONFIRMATION msgconfirm = new CBMESSAGECONFIRMATION();
 			msgconfirm.setLPk(-1);
-			msgconfirm.setSzName("Message confirmation text...");
-
+			msgconfirm.setSzName(m_txt_authorization.getText());
 			CBSENDBASE operation = null;
-			
-			
+					
 			
 			
 			ShapeStruct shape = variables.MAPPANE.get_active_shape();
@@ -908,7 +1015,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			operation.setSender(sender);
 
 			try {
-				current_mode = MODE.SENDING;
+				current_mode = MODE.SHOWING_AUTHORIZATION;
 				WSCentricSend send = new WSCentricSend(this, "act_somethingsomething", operation);
 				send.start();
 			}
@@ -918,7 +1025,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				m_btn_cancel.setEnabled(true);
 				//m_btn_send.setEnabled(true);
 				checkForEnableSendButton();
-				current_mode = MODE.SHOWING_SUMMARY;
+				current_mode = MODE.SHOWING_AUTHORIZATION;
 			}
 			
 			//m_btn_send.setEnabled(false);
@@ -952,6 +1059,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 										"act_map_goto_area"));*/
 			variables.NAVIGATION.gotoMap(variables.MAPPANE.get_active_shape().calc_bounds());
 		}
+		else if(e.getActionCommand().equals("act_goto_authorization")) {
+			PAS.pasplugin.onLockSending(null, true);
+			current_mode = MODE.SHOWING_AUTHORIZATION;
+			showAuthorization();
+			checkForEnableSendButton();
+			//variables.NAVIGATION.setNavigation(variables.MAPPANE.get_active_shape().calc_bounds());
+			/*PAS.get_pas().actionPerformed(new ActionEvent(variables.MAPPANE.get_active_shape().calc_bounds(),
+										ActionEvent.ACTION_PERFORMED,
+										"act_map_goto_area"));*/
+			//variables.NAVIGATION.gotoMap(variables.MAPPANE.get_active_shape().calc_bounds());
+		}
 		if(e.getActionCommand().equals("act_somethingsomething")){
 			//JOptionPane.showMessageDialog(this, PAS.l("common_refno") + ": " + ((CBSENDINGRESPONSE)e.getSource()).getLRefno());
 			progress.stop_and_hide();
@@ -972,10 +1090,21 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		if(e.getSource().equals(m_btn_cancel)) {
 			//lock the painting
-			PAS.pasplugin.onLockSending(null, false);
-			current_mode = MODE.MESSAGE_WRITING;
-			checkForEnableSendButton();
-			add_controls();
+			
+			
+			if(current_mode == MODE.SHOWING_SUMMARY) {
+				PAS.pasplugin.onLockSending(null, false);
+				current_mode = MODE.MESSAGE_WRITING;
+				checkForEnableSendButton();
+				add_controls();
+			}
+			else if(current_mode == MODE.SHOWING_AUTHORIZATION){
+				current_mode = MODE.SHOWING_SUMMARY;
+				checkForEnableSendButton();
+				showSummary();
+			}
+			
+			
 		}
 		if(e.getSource().equals(m_btn_reset)){
 			if(!projectOpen())
@@ -1492,6 +1621,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					}
 				}
 			}
+		}
+		else if(e.getSource().equals(m_txt_authorization)) {
+			if((m_txt_authorization.getText().length() + 1) > MAX_TOTAL_AUTHORIZATION_CHARS)
+				e.consume();
 		}
 
 	}
