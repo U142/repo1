@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import javax.swing.BorderFactory;
@@ -374,5 +376,52 @@ public final class TextFormat {
 	            "&#"+chars[i]+";");
 	    }
 	    return text; 
+	}
+	
+	public static int GsmStrLen(String s)
+	{
+		int ret = s.length();
+		String gsmExt = "[|^€{}\\[\\]~\\\\]";
+		Pattern p = Pattern.compile("[" + gsmExt + "]");
+		Matcher m = p.matcher(s);
+		while(m.find())
+		{
+			ret++;
+		}		
+		return ret;
+	}
+	public static RegExpResult RegExpGsm(String s)
+	{
+		RegExpResult result = new TextFormat().new RegExpResult();
+		//\u0394 = delta
+		//\u03A6 = Phi
+		//\u0393 = Gamma
+		//\u039B = Lambda
+		//\u03A9 = Omega
+		//\u03A0 = Pi
+		//\u03A8 = Psi
+		//\u03A3 = Sigma
+		//\u0398 = Theta
+		//\u039E = Xi
+		String greek = "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E";
+		
+		String gsm7 = "[^a-zA-Z0-9 " + greek + "\\.\\_\\@\\£\\$\\¥\\è\\é\\ù\\ì\\ò\\Ç\\Ø\\ø\\Å\\å\\Æ\\æ\\ß\\É\\Ä\\Ö\\Ñ\\Ü\\§\\¿\\ä\\ö\\ñ\\ü\\à\\+\\,\\/\\:\\;\\<\\=\\>\\?\\¡\\|\\^\\€\\{\\}\\*\\!\\#\\¤\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"~-]";
+		Pattern p = Pattern.compile("[" + gsm7 + "]");
+		Matcher m = p.matcher(s);
+		StringBuffer sb = new StringBuffer();
+		result.valid = true;
+		while(m.find())
+		{
+			m.appendReplacement(sb, "");
+			result.valid = false;
+		}
+		m.appendTail(sb);
+		result.resultstr = sb.toString();
+		return result;
+	}
+	public class RegExpResult
+	{
+		public String resultstr = "";
+		public boolean valid = true;
 	}
 }

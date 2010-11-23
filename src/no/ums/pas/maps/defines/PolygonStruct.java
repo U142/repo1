@@ -1295,7 +1295,7 @@ public class PolygonStruct extends ShapeStruct {
 					//	return false;
 					
 					//p1 = getPoint(getPoint(n))
-					synchronized (b_generating_illegal_intersects) {
+					/*synchronized (b_generating_illegal_intersects) {
 						illegal_intersects.clear();
 						for(int i=1; i <= get_size(); i++)
 						{
@@ -1311,7 +1311,7 @@ public class PolygonStruct extends ShapeStruct {
 							setCanLock(false);
 							return;
 						}
-					}
+					}*/
 					
 					MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
 					boolean b_midpoint_inside = restriction.pointInsideShape(midpoint);

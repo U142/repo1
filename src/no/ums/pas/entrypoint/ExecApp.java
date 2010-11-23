@@ -34,6 +34,7 @@ public class ExecApp {
 		String sz_force_wms = null;
 		boolean debug = false;
 		String sz_codebase = null;
+		String sz_addresssearch_url = null;
 		String[] arr_args = args;
 
 		for(int i=0; i < args.length; i++) {
@@ -59,6 +60,9 @@ public class ExecApp {
 						break;
 					case 'm':
 						sz_force_wms = args[i].substring(2);
+						break;
+					case 'a':
+						sz_addresssearch_url = args[i].substring(2);
 						break;
 					case 'f':
 						if(args[i].length()>3)
@@ -105,6 +109,7 @@ public class ExecApp {
 		m_pas.setPlugin(sz_plugin);
 		m_pas.setProgramArguments(args);
 		m_pas.setForceWMSSite(sz_force_wms);
+		m_pas.setAddressSeachUrl(sz_addresssearch_url);
 		loadPlugin(sz_codebase, sz_plugin);
 		
 		

@@ -601,24 +601,27 @@ public class PAS_Scripting extends PasScriptingInterface
 	public boolean onSoapFaultException(UserInfo info, SOAPFaultException e) {
 		int idx1 = e.getLocalizedMessage().indexOf(">")+2;
 		int idx2 = e.getLocalizedMessage().indexOf(":", idx1);
-		String sz_class = e.getLocalizedMessage().substring(idx1, idx2);
-		if(sz_class.equals("com.ums.UmsCommon.USessionExpiredException"))
+		if(idx1>=0 && idx2>idx1)
 		{
-			info.set_session_active(false);
-			info.set_session_inactive_reason(SESSION_INACTIVE_REASON.EXPIRED);
-			return onSessionTimedOutException(info);
-		}
-		else if(sz_class.equals("com.ums.UmsCommon.USessionDeletedException"))
-		{
-			info.set_session_active(false);
-			info.set_session_inactive_reason(SESSION_INACTIVE_REASON.DELETED);
-			return onSessionTimedOutException(info);
-		}
-		else if(sz_class.equals("com.ums.UmsCommon.UNoAccessOperatorsException"))
-		{
-			//JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
-			JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_error_no_operators"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
-			return true;
+			String sz_class = e.getLocalizedMessage().substring(idx1, idx2);
+			if(sz_class.equals("com.ums.UmsCommon.USessionExpiredException"))
+			{
+				info.set_session_active(false);
+				info.set_session_inactive_reason(SESSION_INACTIVE_REASON.EXPIRED);
+				return onSessionTimedOutException(info);
+			}
+			else if(sz_class.equals("com.ums.UmsCommon.USessionDeletedException"))
+			{
+				info.set_session_active(false);
+				info.set_session_inactive_reason(SESSION_INACTIVE_REASON.DELETED);
+				return onSessionTimedOutException(info);
+			}
+			else if(sz_class.equals("com.ums.UmsCommon.UNoAccessOperatorsException"))
+			{
+				//JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_error_no_operators"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+				return true;
+			}
 		}
 		return false;
 	}

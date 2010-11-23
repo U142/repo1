@@ -33,6 +33,8 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -56,6 +58,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
 
 import com.sun.awt.AWTUtilities;
@@ -97,6 +100,7 @@ import no.ums.pas.ums.tools.PrintCtrl;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextAreaNoTab;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Utils;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.parm.CBALERTPLMN;
@@ -379,11 +383,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_update.setPreferredSize(new Dimension(btn_width, btn_height));
 		m_btn_update.addActionListener(this);
 		
-		m_txt_message = new StdTextAreaNoTab(this, "",1,1);
+		m_txt_message = new StdTextAreaNoTab(this, "",1,1,"[^A-Za-z0-9]");
 		m_txt_message.setWrapStyleWord(true);
 		m_txt_message.setLineWrap(true);
 		m_txt_message.addFocusListener(this);
 		m_txt_message.addKeyListener(this);
+		
 		/*m_txt_message.setFocusTraversalKeysEnabled(true);
 		Set<AWTKeyStroke> forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
 		Set<AWTKeyStroke> backwardKeys = getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
@@ -1458,6 +1463,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		{
 			
 		}
+
 	}
 	
 	protected boolean checkIfInputAllowed(KeyEvent e, int num_chars_selected)
@@ -1467,6 +1473,11 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
+			String temp = m_txt_message.getText();
+			//RegExpResult res = RegExpGsm(temp);
+			//if(!res.valid)
+			//	m_txt_message.setText(res.resultstr);
+
 			updatePreviewText();
 			int n_total_len = m_txt_preview.getText().length();
 			if(e.getSource().equals(m_txt_message))// || e.getSource().equals(m_txt_sender_name))
@@ -1558,8 +1569,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) 
 		{
-
+			
 			JTextComponent c = (JTextComponent)e.getSource();
+			String strText = c.getText();
+			TextFormat.RegExpResult res = TextFormat.RegExpGsm(strText + e.getKeyChar());
+			if(!res.valid)
+			{
+				c.setText(res.resultstr);
+				e.consume();
+			}
 			int before = m_txt_preview.getText().length();
 			int txt_before = m_txt_message.getText().length();
 			int char_selection = c.getSelectionEnd()-c.getSelectionStart();
@@ -1693,7 +1711,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	}
 	
 	private void updateCharacters() {
-		int chars = m_txt_preview.getText().length();
+		//int chars = m_txt_preview.getText().length();
+		String str = m_txt_preview.getText();
+		
+		int chars = TextFormat.GsmStrLen(str);
 		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
 		int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
 		int total_chars_left = (MAX_PAGES*MAX_MESSAGELENGTH_PR_PAGE - chars);
@@ -1770,4 +1791,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 
 		
 	}
+	
+
 }
