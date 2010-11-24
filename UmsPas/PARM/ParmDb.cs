@@ -1637,13 +1637,13 @@ namespace com.ums.UmsParm
                         strname = strname.Substring(0, 50);
                     if (stroadc.Length > 20)
                         stroadc = stroadc.Substring(0, 20);
-                    if (strtext.Length > 4096)
-                        strtext = strtext.Substring(0, 4096);
+                    if (strtext.Length > 4000)
+                        strtext = strtext.Substring(0, 4000);
 
                     stroadc = stroadc.Replace("'", "''");
                     strtext = strtext.Replace("'", "''");
 
-                    String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
+                    String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', N'{3}'",
                             n_refno,
                             strname,
                             stroadc,
@@ -1917,7 +1917,7 @@ namespace com.ums.UmsParm
             try
             {
                 msgpart.sz_name = msgpart.sz_name.Replace("'", "''");
-                szSQL = String.Format("sp_pas_ins_lbamessagefield {0}, {1}, {2}, '{3}'",
+                szSQL = String.Format("sp_pas_ins_lbamessagefield {0}, {1}, {2}, N'{3}'",
                             l_refno, (long)msgpart.type, msgpart.l_pk, msgpart.sz_name);
                 ExecNonQuery(szSQL);
                 return true;
