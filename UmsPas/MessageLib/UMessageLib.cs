@@ -97,7 +97,7 @@ namespace com.ums.PAS.messagelib
 
                     for (int i = 0; i < msg.ccmessage.Count; ++i)
                     {
-                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, '{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message.Replace("'", "''"));
+                        szSQL = String.Format("sp_ins_message_smscontent {0}, {1}, N'{2}'", msg.n_messagepk, msg.ccmessage[i].l_cc, msg.ccmessage[i].sz_message.Replace("'", "''"));
                         ExecNonQuery(szSQL);
                     }
 
