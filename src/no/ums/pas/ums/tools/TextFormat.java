@@ -403,6 +403,7 @@ public final class TextFormat {
 		//\u03A3 = Sigma
 		//\u0398 = Theta
 		//\u039E = Xi
+		//http://www.unicode.org/Public/MAPPINGS/ETSI/GSM0338.TXT
 		String greek = "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E";
 		
 		String gsm7 = "[^a-zA-Z0-9 " + greek + "\\.\\_\\@\\£\\$\\¥\\è\\é\\ù\\ì\\ò\\Ç\\Ø\\ø\\Å\\å\\Æ\\æ\\ß\\É\\Ä\\Ö\\Ñ\\Ü\\§\\¿\\ä\\ö\\ñ\\ü\\à\\+\\,\\/\\:\\;\\<\\=\\>\\?\\¡\\|\\^\\€\\{\\}\\*\\!\\#\\¤\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"~-]";

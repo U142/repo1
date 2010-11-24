@@ -2,6 +2,8 @@ package no.ums.pas.plugins.centric.send;
 
 import javax.swing.JComboBox;
 
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.pas.ums.tools.TextFormat.RegExpResult;
 import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
 import no.ums.ws.parm.CBORIGINATOR;
 import no.ums.ws.parm.CBREACTION;
@@ -37,6 +39,12 @@ public class RROComboBox extends JComboBox
 		if(o.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class))
 		{
 			String str = ((CBMESSAGEFIELDSBASE)o).getSzName();
+			RegExpResult res = TextFormat.RegExpGsm(str);
+			if(!res.valid)
+			{
+				str = res.resultstr;
+				this.setSelectedItem(str);
+			}
 			int avail = n_chars_available;// + this.getEditor().getItem().toString().length();
 			if(avail<str.length())
 			{

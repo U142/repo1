@@ -929,6 +929,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		{
 			UBBMESSAGE msg = (UBBMESSAGE)e.getSource();
 			String s = msg.getSzMessage();
+			s = TextFormat.RegExpGsm(s).resultstr;
 			m_txt_message.setText(s);
 			updatePreviewText();
 		}
