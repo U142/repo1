@@ -85,7 +85,7 @@ namespace com.ums.ws.pas.admin
                 rs.Close();
                 long l_timestamp = db.getDbClock();
                 user.l_disabled_timestamp = l_timestamp;
-                sz_sql = String.Format("sp_cb_store_user {0}, {1}, '{2}', '{3}', '{4}', {5}, {6}, {7}, {8}, '{9}', {10}, {11}, '{12}'", logoninfo.l_userpk,
+                sz_sql = String.Format("sp_cb_store_user {0}, {1}, '{2}', '{3}', '{4}', {5}, {6}, {7}, {8}, '{9}', {10}, {11}, N'{12}'", logoninfo.l_userpk,
                 user.l_userpk, user.sz_userid.ToUpper().Replace("'", "''"), user.sz_name.Replace("'", "''"), user.sz_paspassword.Replace("'", "''"), user.l_profilepk, user.f_disabled, user.l_deptpk, logoninfo.l_comppk, user.sz_hash_paspwd, l_timestamp, (int)user.l_disabled_reasoncode, user.sz_organization.Replace("'", "''"));
 
                 rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
