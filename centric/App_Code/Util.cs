@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 /// </summary>
 public class Util
 {
-    public static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+    public static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 ._\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
 
     public static CheckAccessResponse setOccupied(com.ums.ws.pas.admin.ULOGONINFO l, ACCESSPAGE page, Boolean f_lock) {
         PasAdmin pa = new PasAdmin();

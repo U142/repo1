@@ -118,6 +118,7 @@ public partial class predefine_text : System.Web.UI.Page
 
     private char[] validateMessage(String text)
     {
+        //UnicodeEncoding ue = new UnicodeEncoding();
         Regex re = Util.GSM_Alphabet_Regex;
         MatchCollection mc = re.Matches(text);
         char[] ret = new char[mc.Count];

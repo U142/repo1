@@ -58,8 +58,7 @@
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell>
-            <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" MaxLength="14" onkeyup="javascript:getLength()" ></asp:TextBox><asp:RegularExpressionValidator
-                ID="RegularExpressionValidator1" ControlToValidate="txt_message" runat="server" text="*" ErrorMessage="Invalid GSM character" ValidationExpression="[a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\[\]&quot;~-]+"></asp:RegularExpressionValidator>
+                <asp:TextBox ID="txt_message" runat="server" TextMode="MultiLine" Height="170" Width="300" MaxLength="14" onkeyup="javascript:getLength()" ></asp:TextBox>
         </asp:TableCell>
     </asp:TableRow>
     <asp:TableRow>
