@@ -1362,30 +1362,33 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		if(m_txt_sender_name.getText().length()>0)
 			sz_totalmessage += m_txt_sender_name.getText() + " ";
 		sz_totalmessage += m_txt_date_time.getText() + "\n";
-		fieldlengths += sz_totalmessage.length();
+		fieldlengths += TextFormat.GsmStrLen(sz_totalmessage);//sz_totalmessage.length();
 		sz_totalmessage += m_txt_message.getText();
 		String szPad = "";
 		if(risk.length()>0)
 		{
 			szPad = "\n" + risk;
 			sz_totalmessage += szPad;
-			fieldlengths += szPad.length();
+			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
 		}
 		if(reaction.length()>0)
 		{ 
 			szPad = "\n" + reaction;
 			sz_totalmessage += szPad;
-			fieldlengths += szPad.length();
+			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
 		}
 		if(originator.length()>0)
 		{
 			szPad = "\n" + originator;
 			sz_totalmessage += szPad;
-			fieldlengths += szPad.length();
+			fieldlengths += TextFormat.GsmStrLen(szPad);//szPad.length();
 		}
-		if(sz_totalmessage.length()>MAX_TOTAL_CHARS)
+		int total_len = TextFormat.GsmStrLen(sz_totalmessage);
+		if(total_len>MAX_TOTAL_CHARS) //sz_totalmessage.length()
 		{
-			sz_totalmessage = sz_totalmessage.substring(0, MAX_TOTAL_CHARS);
+			//sz_totalmessage = sz_totalmessage.substring(0, MAX_TOTAL_CHARS);
+			sz_totalmessage = TextFormat.GsmStrMaxLen(sz_totalmessage, MAX_TOTAL_CHARS);
+			
 		}
 		m_txt_preview.setText(sz_totalmessage);
 		updateCharacters();
@@ -1393,11 +1396,18 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		
 	protected int getTextLengthOfFields()
 	{
-		int total = m_txt_sender_name.getText().length() + 
+		/*int total = m_txt_sender_name.getText().length() + 
 				m_txt_date_time.getText().length() + 
 				m_cbx_risk.getEditor().getItem().toString().length() + 
 				m_cbx_reaction.getEditor().getItem().toString().length() +
-				m_cbx_originator.getEditor().getItem().toString().length();
+				m_cbx_originator.getEditor().getItem().toString().length();*/
+		
+		int total = TextFormat.GsmStrLen(m_txt_sender_name.getText()) +
+						TextFormat.GsmStrLen(m_txt_date_time.getText()) +
+						TextFormat.GsmStrLen(m_cbx_risk.getEditor().getItem().toString()) +
+						TextFormat.GsmStrLen(m_cbx_reaction.getEditor().getItem().toString()) +
+						TextFormat.GsmStrLen(m_cbx_originator.getEditor().getItem().toString());
+		
 		//add autogen spaces and linebreak
 		String risk = m_cbx_risk.getEditor().getItem().toString();
 		String reaction = m_cbx_reaction.getEditor().getItem().toString();
@@ -1475,42 +1485,73 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
 			String temp = m_txt_message.getText();
+			String ch = Character.toString(e.getKeyChar());
+			int len_ch = TextFormat.GsmStrLen(ch);
+
 			//RegExpResult res = RegExpGsm(temp);
 			//if(!res.valid)
 			//	m_txt_message.setText(res.resultstr);
 
 			updatePreviewText();
-			int n_total_len = m_txt_preview.getText().length();
+			int n_total_len = TextFormat.GsmStrLen(m_txt_preview.getText());//m_txt_preview.getText().length();
 			if(e.getSource().equals(m_txt_message))// || e.getSource().equals(m_txt_sender_name))
 			{
 				JTextComponent c = (JTextComponent)e.getSource();
-				int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
-				int len_of_message = c.getText().length();
+				//int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
+				int len_of_message = TextFormat.GsmStrLen(c.getText()); //c.getText().length();
 				//if(len_of_message<n_chars_left_for_message)
 				{
-					if(c.getText().length() >= n_chars_left_for_message-1) {
+					/*if(c.getText().length() >= n_chars_left_for_message-1) {
 						c.setText(c.getText().substring(0, n_chars_left_for_message-1));
 						return false;
+					}*/
+					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
+					
+					//if(TextFormat.GsmStrLen(c.getText()) >= n_chars_left_for_message-len_ch) {
+					if(n_chars_left_for_message<=len_ch)
+					{
+						//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
+						//c.setText(TextFormat.GsmStrMaxLen(c.getText(), n_chars_left_for_message-len_ch));
+						//c.setText(temp);
+						e.consume();
+						return false;						
 					}
+					return true;
 				}
 			}
 			else if(e.getSource().equals(m_txt_sender_name))
 			{
-				JTextComponent c = (JTextComponent)e.getSource();
-				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
+				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected - len_ch)
 				{
-					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
-					c.setText(c.getText().substring(0, n_chars_left_for_message-1));
-					return false;
+					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
+					//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
+					if(n_chars_left_for_message<=len_ch)
+					{
+						e.consume();
+						return false;
+					}
+					return true;
 				}				
 			}
 			else
 			{
 				//combobox
-				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
+				/*if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected)
 				{
 					return false;
-				}								
+				}*/
+				if(n_total_len>=MAX_TOTAL_CHARS + num_chars_selected - len_ch)
+				{
+					int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected - TextFormat.GsmStrLen(m_txt_message.getText());
+					//c.setText(c.getText().substring(0, n_chars_left_for_message-1));
+					if(n_chars_left_for_message<=len_ch)
+					{
+						e.consume();
+						return false;
+					}
+					return true;
+				}				
+				
 			}
 		}
 		else if(e.getSource().equals(m_txt_event_name))
@@ -1579,13 +1620,14 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				c.setText(res.resultstr);
 				e.consume();
 			}
-			int before = m_txt_preview.getText().length();
-			int txt_before = m_txt_message.getText().length();
-			int char_selection = c.getSelectionEnd()-c.getSelectionStart();
+			int before = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
+			int txt_before = TextFormat.GsmStrLen(m_txt_message.getText()); //m_txt_message.getText().length();
+			int char_selection = TextFormat.GsmStrLen(c.getText().substring(c.getSelectionStart(), c.getSelectionEnd())); //c.getSelectionEnd()-c.getSelectionStart();
 			//System.out.println("c="+char_selection);
 			boolean b = checkIfInputAllowed(e, char_selection);
-			int after = m_txt_preview.getText().length();
-			int txt_after = c.getText().length();
+			int after = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
+			//int txt_after = TextFormat.GsmStrLen(c.getText());//c.getText().length();
+			int txt_after = TextFormat.GsmStrLen(m_txt_message.getText()) + getTextLengthOfFields() + 1;
 			int number_of_chars = after-before;
 			if(!b)
 			{
@@ -1598,13 +1640,15 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				{
 					try
 					{
-						int diff = after-(MAX_TOTAL_CHARS);
+						int diff = txt_after-(MAX_TOTAL_CHARS);
 						int current_len = c.getText().length();
-						c.setText(c.getText().substring(0, current_len-diff));
+						String cut = TextFormat.GsmStrMaxLen(c.getText(), txt_before-diff);
+						c.setText(cut);
+						//c.setText(c.getText().substring(0, current_len-diff));
 					}
 					catch(Exception err)
 					{
-						
+						err.printStackTrace();
 					}
 				}
 			}
@@ -1719,9 +1763,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		int pageno = (int)(chars / (MAX_MESSAGELENGTH_PR_PAGE*1.0001)) + 1;
 		int chars_left = (pageno)*MAX_MESSAGELENGTH_PR_PAGE - chars;//((chars / pageno));
 		int total_chars_left = (MAX_PAGES*MAX_MESSAGELENGTH_PR_PAGE - chars);
-		m_cbx_risk.setCharsAvailable(total_chars_left + m_cbx_risk.getEditor().getItem().toString().length());
-		m_cbx_reaction.setCharsAvailable(total_chars_left + m_cbx_reaction.getEditor().getItem().toString().length());
-		m_cbx_originator.setCharsAvailable(total_chars_left + m_cbx_originator.getEditor().getItem().toString().length());
+		int chars_risk = TextFormat.GsmStrLen(m_cbx_risk.getEditor().getItem().toString());
+		int chars_reaction = TextFormat.GsmStrLen(m_cbx_reaction.getEditor().getItem().toString());
+		int chars_originator = TextFormat.GsmStrLen(m_cbx_originator.getEditor().getItem().toString());
+		m_cbx_risk.setCharsAvailable(total_chars_left + chars_risk); //m_cbx_risk.getEditor().getItem().toString().length());
+		m_cbx_reaction.setCharsAvailable(total_chars_left + chars_reaction); //m_cbx_reaction.getEditor().getItem().toString().length());
+		m_cbx_originator.setCharsAvailable(total_chars_left + chars_originator); //m_cbx_originator.getEditor().getItem().toString().length());
 		/*switch(current_mode)
 		{
 		case INITIALIZING:

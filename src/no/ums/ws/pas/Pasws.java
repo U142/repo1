@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "pasws", targetNamespace = "http://ums.no/ws/pas/", wsdlLocation = "http://localhost/WS/Pas.asmx?WSDL")
+@WebServiceClient(name = "pasws", targetNamespace = "http://ums.no/ws/pas/", wsdlLocation = "http://localhost/WS/PAS.asmx?WSDL")
 public class Pasws
     extends Service
 {
@@ -30,9 +30,9 @@ public class Pasws
         try {
             URL baseUrl;
             baseUrl = no.ums.ws.pas.Pasws.class.getResource(".");
-            url = new URL(baseUrl, "http://localhost/WS/Pas.asmx?WSDL");
+            url = new URL(baseUrl, "http://localhost/WS/PAS.asmx?WSDL");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'http://localhost/WS/Pas.asmx?WSDL', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: 'http://localhost/WS/PAS.asmx?WSDL', retrying as a local file");
             logger.warning(e.getMessage());
         }
         PASWS_WSDL_LOCATION = url;

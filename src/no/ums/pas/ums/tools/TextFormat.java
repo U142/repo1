@@ -390,6 +390,38 @@ public final class TextFormat {
 		}		
 		return ret;
 	}
+	
+	public static synchronized String GsmStrMaxLen(String original, int maxlen)
+	{
+		String ret = "";
+		int original_len = original.length();
+		int gsm_len = GsmStrLen(original);
+		if(maxlen>=gsm_len) //no need to cut
+			return original;
+		int newlen = gsm_len;
+		int totallen = 0;
+		//we need to cut
+		String newstr = "";
+		for(int i=0; i < original_len; i++)
+		{
+			String s = original.substring(i, i+1);
+			int charlen = GsmStrLen(s);
+			if(charlen+totallen > maxlen)
+				break;
+			totallen += charlen;
+			newstr += s;
+			/*String s = original.substring(i, i+1);
+			int charlen = GsmStrLen(s);
+			if(charlen>1)
+				newlen -= (charlen-1);
+			totallen += charlen;
+			if(totallen>=maxlen)
+				break;*/
+		}
+		ret = newstr;//original.substring(0, newlen-1);
+		
+		return ret;
+	}
 	public static RegExpResult RegExpGsm(String s)
 	{
 		RegExpResult result = new TextFormat().new RegExpResult();

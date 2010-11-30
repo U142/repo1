@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="lon" type="{http://www.w3.org/2001/XMLSchema}double"/>
  *         &lt;element name="lat" type="{http://www.w3.org/2001/XMLSchema}double"/>
  *         &lt;element name="type" type="{http://ums.no/ws/pas/}GABTYPE"/>
+ *         &lt;element name="rect" type="{http://ums.no/ws/pas/}UBoundingRect" minOccurs="0"/>
+ *         &lt;element name="scope" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -41,7 +43,9 @@ import javax.xml.bind.annotation.XmlType;
     "postno",
     "lon",
     "lat",
-    "type"
+    "type",
+    "rect",
+    "scope"
 })
 @XmlSeeAlso({
     UGabResultFromPoint.class
@@ -56,6 +60,8 @@ public class UGabResult {
     protected double lat;
     @XmlElement(required = true)
     protected GABTYPE type;
+    protected UBoundingRect rect;
+    protected int scope;
 
     /**
      * Gets the value of the match property.
@@ -199,6 +205,46 @@ public class UGabResult {
      */
     public void setType(GABTYPE value) {
         this.type = value;
+    }
+
+    /**
+     * Gets the value of the rect property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link UBoundingRect }
+     *     
+     */
+    public UBoundingRect getRect() {
+        return rect;
+    }
+
+    /**
+     * Sets the value of the rect property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link UBoundingRect }
+     *     
+     */
+    public void setRect(UBoundingRect value) {
+        this.rect = value;
+    }
+
+    /**
+     * Gets the value of the scope property.
+     * 
+     */
+    public int getScope() {
+        return scope;
+    }
+
+    /**
+     * Sets the value of the scope property.
+     * 
+     */
+    public void setScope(int value) {
+        this.scope = value;
     }
 
 }
