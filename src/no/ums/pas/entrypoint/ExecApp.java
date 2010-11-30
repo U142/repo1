@@ -97,7 +97,6 @@ public class ExecApp {
 		}
 		
 	
-		new versioning().setVersion();
 		
 		m_pas = new PAS(); //(f_sitename, f_userid, f_compid, f_pasws, f_debug, f_codebase, f_plugin, f_force_wms, f_args);
 		m_pas.setSiteName(sz_sitename);
@@ -111,6 +110,7 @@ public class ExecApp {
 		m_pas.setForceWMSSite(sz_force_wms);
 		m_pas.setAddressSeachUrl(sz_addresssearch_url);
 		loadPlugin(sz_codebase, sz_plugin);
+		new versioning().setVersion(PAS.pasplugin);
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {

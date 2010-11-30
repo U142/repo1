@@ -12,6 +12,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import no.ums.pas.pluginbase.PasScriptingInterface;
+
 
 
 public class versioning
@@ -19,6 +21,8 @@ public class versioning
 
 	
 	public static String NAME;
+	
+	public static String PLUGIN_NAME;
 	
 	//public static String MANIFEST_VERSION;
 	//public static String ANT_VERSION;
@@ -48,45 +52,46 @@ public class versioning
 	public static String BUILT_DATE;
 	
 	
+	public static String PLUGIN_IMPLEMENTATION_TITLE;
+	public static String PLUGIN_IMPLEMENTATION_VERSION;
+	public static String PLUGIN_IMPLEMENTATION_VENDOR;
+	
+	public static boolean PLUGIN_SEALED;
+	
+	public static String PLUGIN_SPECIFICATION_TITLE;
+	public static String PLUGIN_SPECIFICATION_VERSION;
+	public static String PLUGIN_SPECIFICATION_VENDOR;
 	
 	
 	
 
 	
-	public void setVersion()
+	public void setVersion(PasScriptingInterface plugin)
 	{
 		Package p = versioning.class.getPackage();
-		
-		/*InputStream is = versioning.class
-		.getResourceAsStream("MANIFEST.MF");
-		try
-		{
-			Manifest mf = new Manifest(is);
-			mf.toString();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}*/
-		
-		
-	
-		
-	
-		NAME = p.getName();
-		 
+		NAME = p.getName();		 
 		IMPLEMENTATION_TITLE = p.getImplementationTitle();
 		IMPLEMENTATION_VERSION = p.getImplementationVersion();
 		IMPLEMENTATION_VENDOR = p.getImplementationVendor();
-		
 		SPECIFICATION_TITLE = p.getSpecificationTitle();
 		SPECIFICATION_VERSION = p.getSpecificationVersion();
 		SPECIFICATION_VENDOR = p.getSpecificationVendor();
-		
 		SEALED = p.isSealed();
-		
 		ANNOTATIONS = p.getAnnotations();
-		if(ANNOTATIONS!=null)
+		
+		if(plugin!=null)
+		{
+			Package pPlugin = plugin.getClass().getPackage();
+			PLUGIN_NAME = pPlugin.getName();
+			PLUGIN_IMPLEMENTATION_TITLE = pPlugin.getImplementationTitle();
+			PLUGIN_IMPLEMENTATION_VERSION = pPlugin.getImplementationVersion();
+			PLUGIN_IMPLEMENTATION_VENDOR = pPlugin.getImplementationVendor();
+			PLUGIN_SPECIFICATION_TITLE = pPlugin.getSpecificationTitle();
+			PLUGIN_SPECIFICATION_VERSION = pPlugin.getSpecificationVersion();
+			PLUGIN_SPECIFICATION_VENDOR = pPlugin.getSpecificationVendor();
+			PLUGIN_SEALED = pPlugin.isSealed();
+		}
+		/*if(ANNOTATIONS!=null)
 		{
 			for(int i=0; i < ANNOTATIONS.length; i++)
 			{
@@ -94,25 +99,10 @@ public class versioning
 				if(ANNOTATIONS[i].toString().indexOf("Built-Date")>=0)
 					BUILT_DATE = ANNOTATIONS[i].toString();
 			}
-		}
+		}*/
 		try
 		{
-			/*InputStream is = versioning.class.getResourceAsStream("/META-INF/MANIFEST.MF");
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			String s;
-			while((s = br.readLine())!=null)
-			{
-				System.out.println(s);
-			}*/
-			/*Class clazz = versioning.class;
-			String className = clazz.getSimpleName();
-			String classFileName = className + ".class";
-			String pathToClass = clazz.getResource(classFileName).toString();
-			int mark = pathToClass.indexOf("/");
-			String pathToManifest = pathToClass.toString().substring(0,mark+1);*/
-			
-			
-			InputStream manifestStream = this.getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
+			/*InputStream manifestStream = versioning.class.getResourceAsStream("/META-INF/MANIFEST.MF");
 			if(manifestStream!=null)
 			{
 				Manifest manifest = new Manifest(manifestStream);
@@ -124,21 +114,7 @@ public class versioning
 					Entry<Object,Object> a = it.next();
 					System.out.println("Key="+a.getKey() + " value="+a.getValue());
 				}
-			}
-			
-			/*Class clazz = this.getClass();
-			String classContainer = clazz.getProtectionDomain().getCodeSource().getLocation().toString();
-			URL manifestURL = new URL("jar:" + classContainer + "/META-INF/MANIFEST.MF");
-			Manifest manifest = new Manifest(manifestURL.openStream());
-			Attributes attr = manifest.getMainAttributes();
-			Set<Entry<Object,Object>> set = attr.entrySet();
-			Iterator<Entry<Object,Object>> it = set.iterator();
-			while(it.hasNext())
-			{
-				Entry<Object,Object> a = it.next();
-				System.out.println("Key="+a.getKey() + " value="+a.getValue());
 			}*/
-
 		}
 		catch(Exception e)
 		{
