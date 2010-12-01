@@ -11,7 +11,7 @@ namespace pas_cb_server
 {
     class Tools
     {
-        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .∆_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
+        static readonly Regex GSM_Alphabet_Regex = new Regex("[^a-zA-Z0-9 .Δ_ΦΓΛΩΠΨΣΘΞ@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^€{}*!#¤%&'()\r\n\\\\\\[\\]\"~-]");
         static readonly Regex GSM_Extended_Regex = new Regex("[|^€{}\\[\\]~\\\\]");
 
         // convert a coordinate point

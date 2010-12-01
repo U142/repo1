@@ -113,6 +113,8 @@
     </Compile>
     <Compile Include="CBTest.cs" />
     <Compile Include="CBStatus.cs" />
+    <Compile Include="include\_opensslkey.cs" />
+    <Compile Include="include\_signxml.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="include\_one2many.cs" />

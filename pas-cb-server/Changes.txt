@@ -1,4 +1,9 @@
-﻿1.2.8
+﻿1.2.9
+=====
+	* Fixed Regexp for GSM Δ was wrong character
+	* Added XML signing for t-mobile API
+
+1.2.8
 =====
 	* Fixed bug in GSM encoding for one2many and moved padding to the encoding function
 

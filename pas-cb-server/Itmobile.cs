@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 using System.Globalization;
 using pas_cb_server.tmobile;
+using pas_cb_server.signxml;
 
 namespace pas_cb_server
 {
@@ -31,13 +33,14 @@ namespace pas_cb_server
                 t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
                 t_alert.IBAG_status = IBAG_status.System;
                 t_alert.IBAG_message_type = IBAG_message_type.LinkTest;
+                t_alert.IBAG_Digital_Signature = new IBAG_Digital_Signature();
 
                 if (!Settings.live)
                 {
                     return Constant.DELETE;
                 }
 
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
 
                 if (t_alert_response == null)
                 {
@@ -109,6 +112,8 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_sent_date_time_dt = dtm_cap;
                 t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
+                t_alert.IBAG_Digital_Signature = new IBAG_Digital_Signature();
+
                 // from default values
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
                 t_alert.IBAG_sending_gateway_id = def.sz_sending_gateway_id;
@@ -217,16 +222,16 @@ namespace pas_cb_server
                         break;
                 }
 
-                dump_request(t_alert, op, "NewMessage", oAlert.l_refno);
+                dump_request(t_alert, op, "NewMessage", oAlert.l_refno, def);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
                     return Constant.OK;
                 }
 
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if(t_alert_response != null)
-                    dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno);
+                    dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno, def);
 
                 if (t_alert_response == null)
                 {
@@ -290,6 +295,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
                 t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
+                t_alert.IBAG_Digital_Signature = new IBAG_Digital_Signature();
 
                 // based on default values:
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
@@ -314,16 +320,16 @@ namespace pas_cb_server
 
                 t_alert.IBAG_alert_info = t_alert_info;
 
-                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno);
+                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno, def);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
                     return Constant.OK;
                 }
 
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno);
+                    dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno, def);
 
                 if (t_alert_response == null)
                 {
@@ -383,6 +389,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
                 t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
+                t_alert.IBAG_Digital_Signature = new IBAG_Digital_Signature();
 
                 // based on default values:
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
@@ -392,16 +399,16 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
                 t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-                dump_request(t_alert, op, "KillMessage", oAlert.l_refno);
+                dump_request(t_alert, op, "KillMessage", oAlert.l_refno, def);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
                     return Constant.OK;
                 }
 
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno);
+                    dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno, def);
 
                 if (t_alert_response == null)
                 {
@@ -469,6 +476,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_sent_date_time_dt = DateTime.Now;
                 t_alert.setCapSentDateTimeString();
                 t_alert.IBAG_cap_sent_date_timeSpecified = true;
+                t_alert.IBAG_Digital_Signature = new IBAG_Digital_Signature();
 
                 // based on default values:
                 t_alert.IBAG_protocol_version = op.api_version.ToString(); //database
@@ -477,7 +485,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
                 t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-                dump_request(t_alert, op, "EMSMessage", l_refno);
+                dump_request(t_alert, op, "EMSMessage", l_refno, def);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
@@ -485,9 +493,9 @@ namespace pas_cb_server
                     return ret;
                 }
 
-                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert);
+                IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "EMSMessageResult", l_refno);
+                    dump_request(t_alert_response, op, "EMSMessageResult", l_refno, def);
 
                 if (t_alert_response == null)
                 {
@@ -583,20 +591,49 @@ namespace pas_cb_server
             return ret;
         }
 
-        private static void dump_request(object cap_request, Operator op, string method, int refno)
+        private static void dump_request(object cap_request, Operator op, string method, int refno, CB_tmobile_defaults def)
         {
             if (Settings.debug)
             {
                 try
                 {
-                    //CREATE EMPTY xmlns
-                    //XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-                    //xmlnsEmpty.Add("", "");
                     XmlSerializer s = new XmlSerializer(cap_request.GetType());
                     TextWriter w = new StringWriter(Encoding.UTF8);
-                    s.Serialize(w, cap_request); /*, xmlnsEmpty*/
 
-                    DebugLog.dump(w.ToString(), op, method, refno);
+                    s.Serialize(w, cap_request);
+
+                    XmlDocument doc = new XmlDocument();
+                    doc.PreserveWhitespace = true;
+                    doc.LoadXml(w.ToString());
+
+                    string rsacert = "";
+                    string rsakey = "";
+
+                    StringReader sr = null;
+                    string line = "";
+
+                    // trim each line in the cert definition
+                    sr = new StringReader(def.certificate.rsacert);
+                    while((line = sr.ReadLine()) != null) rsacert += line.Trim() + "\r\n";
+                    sr.Close();
+                    sr = new StringReader(def.certificate.rsakey);
+                    while ((line = sr.ReadLine()) != null) rsakey += line.Trim() + "\r\n";
+                    sr.Close();
+
+                    // remove any whitespaces before or after the certificate definitions
+                    rsacert = rsacert.Trim();
+                    rsakey = rsakey.Trim();
+                    string certserial = def.certificate.certserial.Trim();
+                    string password = def.certificate.password;
+
+                    // sign XML
+                    if (rsacert != "")
+                        _signxml.SignXml(ref doc, rsacert, rsakey, password);
+                    else if (certserial != "")
+                        _signxml.SignXml(ref doc, certserial);
+
+                    //DebugLog.dump(w.ToString(), op, method, refno);
+                    DebugLog.dump(doc.OuterXml, op, method, refno);
                 }
                 catch (Exception e)
                 {
@@ -622,20 +659,24 @@ namespace pas_cb_server
                 get { return _encoding; }
             }
         }
-        private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters)
+        private static IBAG_Alert_Attributes SendRequest(Operator op, IBAG_Alert_Attributes parameters, CB_tmobile_defaults def)
         {
-            //CREATE EMPTY xmlns
-            //XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
-            //xmlnsEmpty.Add("", "");
             XmlSerializer s = new XmlSerializer(typeof(IBAG_Alert_Attributes));
             TextWriter w = new StringWriter(Encoding.UTF8);
             
-            s.Serialize(w, parameters); /*, xmlnsEmpty*/
+            s.Serialize(w, parameters);
+
+            XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.LoadXml(w.ToString());
+
+            // sign XML
 
             WebRequest webRequest = WebRequest.Create(op.sz_url);
             webRequest.Method = "POST";
 
-            byte[] bytes = Encoding.UTF8.GetBytes(w.ToString());
+            //byte[] bytes = Encoding.UTF8.GetBytes(w.ToString());
+            byte[] bytes = Encoding.UTF8.GetBytes(doc.OuterXml);
 
             Stream os = null;
             try
@@ -748,5 +789,16 @@ namespace pas_cb_server
         public IBAG_event_code event_code = IBAG_event_code.CDW;
         public IBAG_certainty certainty = IBAG_certainty.Likely;
         public IBAG_response_type response_type = IBAG_response_type.Shelter;
+        public CB_tmobile_defaults_certificate certificate = new CB_tmobile_defaults_certificate();
+    }
+
+    public class CB_tmobile_defaults_certificate
+    {
+        public string rsacert = "";
+        public string rsakey = "";
+        [XmlAttribute]
+        public string certserial = "";
+        [XmlAttribute]
+        public string password = "";
     }
 }
