@@ -495,7 +495,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		m_btn_save_message.setPreferredSize(new Dimension(input_width/2, btn_height));
 		m_btn_send_for_auth = new JButton(PAS.l("main_send_to_address_book_for_authorization"));
 		m_btn_send_for_auth.addActionListener(this);
-		
+		m_btn_send_for_auth.setEnabled(false);
 		
 		m_txt_warning = new JTextArea(PAS.l("main_sending_send_warning"),1,1);
 		m_txt_warning.setWrapStyleWord(true);

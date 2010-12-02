@@ -78,7 +78,6 @@ public class versioning
 		SPECIFICATION_VENDOR = p.getSpecificationVendor();
 		SEALED = p.isSealed();
 		ANNOTATIONS = p.getAnnotations();
-		
 		if(plugin!=null)
 		{
 			Package pPlugin = plugin.getClass().getPackage();
@@ -91,15 +90,15 @@ public class versioning
 			PLUGIN_SPECIFICATION_VENDOR = pPlugin.getSpecificationVendor();
 			PLUGIN_SEALED = pPlugin.isSealed();
 		}
-		/*if(ANNOTATIONS!=null)
+		if(ANNOTATIONS!=null)
 		{
 			for(int i=0; i < ANNOTATIONS.length; i++)
 			{
-				System.out.println(ANNOTATIONS[i].toString());
+				System.out.println("Package annotation: " + ANNOTATIONS[i].toString());
 				if(ANNOTATIONS[i].toString().indexOf("Built-Date")>=0)
 					BUILT_DATE = ANNOTATIONS[i].toString();
 			}
-		}*/
+		}
 		try
 		{
 			/*InputStream manifestStream = versioning.class.getResourceAsStream("/META-INF/MANIFEST.MF");
