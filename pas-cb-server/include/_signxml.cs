@@ -23,20 +23,31 @@ namespace pas_cb_server.signxml
             {
                 SignXml(ref doc, certs[0]);
             }
+            else
+            {
+                throw new Exception("Certificate not found.");
+            }
 
             return doc.OuterXml;
         }
 
         public static string SignXml(ref XmlDocument doc, string RSACert, string RSAKey, string Password)
         {
-            X509Certificate2 cert = new X509Certificate2(Encoding.ASCII.GetBytes(RSACert));
+            try
+            {
+                X509Certificate2 cert = new X509Certificate2(Encoding.ASCII.GetBytes(RSACert));
 
-            RSACryptoServiceProvider pkey = new RSACryptoServiceProvider();
-            pkey.FromXmlString(opensslkey.DecodePEMKey(RSAKey, Password));
+                RSACryptoServiceProvider pkey = new RSACryptoServiceProvider();
+                pkey.FromXmlString(opensslkey.DecodePEMKey(RSAKey, Password));
 
-            cert.PrivateKey = pkey;
+                cert.PrivateKey = pkey;
 
-            SignXml(ref doc, cert);
+                SignXml(ref doc, cert);
+            }
+            catch
+            {
+                throw new Exception("Failed to get certificate.");
+            }
 
             return doc.OuterXml;
         }

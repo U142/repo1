@@ -12,41 +12,4 @@
   <certainty>Likely</certainty>
   <event_code>CDW</event_code>
   <response_type>Shelter</response_type>
-  <certificate password="">
-    <rsacert>
-      -----BEGIN CERTIFICATE-----
-      MIICfzCCAegCCQC1JGJQhZS+HzANBgkqhkiG9w0BAQUFADCBgTELMAkGA1UEBhMC
-      UEwxEDAOBgNVBAgTB0tVSi1QT00xEjAQBgNVBAcTCUJ5ZGdvc3pjejEMMAoGA1UE
-      ChMDQUxVMQwwCgYDVQQLEwNBTFUxEDAOBgNVBAMTB0ZpcnN0Q0ExHjAcBgkqhkiG
-      9w0BCQEWD0ZpcnN0Q0FAYWx1LmNvbTAeFw0wOTA3MjcxNDU4MzJaFw0xNDA3MjYx
-      NDU4MzJaMIGFMQswCQYDVQQGEwJQTDEQMA4GA1UECBMHS1VKLVBPTTESMBAGA1UE
-      BxMJQnlkZ29zemN6MQwwCgYDVQQKEwNBTFUxDDAKBgNVBAsTA0FMVTESMBAGA1UE
-      AxMJRmlyc3RDZXJ0MSAwHgYJKoZIhvcNAQkBFhFGaXJzdENlcnRAYWx1LmNvbTCB
-      nzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAyWqpvjFzBMk0RMD0jwdqj5Ua0Dyx
-      CW1D1wlAAI60sfhawYbC4nr8VsDEaPiG155piMPaZTVXE0xF5ZF6a2db+GAEzNyt
-      CLqgOP0iaH0SLrfHvOSearO+CYVYlB4tQyiLslVt4QIxqvC+WXOu/nPTwzlx+tQX
-      N7ONLaBpFengXQUCAwEAATANBgkqhkiG9w0BAQUFAAOBgQCfSszmu+D/g6O+dgLn
-      A+oLX8fwO2QDjxdlMYFBQYD5qxAaaoT6vce6tT1VMPZv+BvsdOf1u/I9RUK3uEoL
-      M9lDP6j7z4rkGDx41YZpXJhJcxx6fNSwXYultRkrXclZWR9ZUrDE4htVk44PPv/5
-      ma5Rbc5L4z9nvGyukr+dyaoS7g==
-      -----END CERTIFICATE-----
-    </rsacert>
-    <rsakey>
-      -----BEGIN RSA PRIVATE KEY-----
-      MIICXgIBAAKBgQDJaqm+MXMEyTREwPSPB2qPlRrQPLEJbUPXCUAAjrSx+FrBhsLi
-      evxWwMRo+IbXnmmIw9plNVcTTEXlkXprZ1v4YATM3K0IuqA4/SJofRIut8e85J5q
-      s74JhViUHi1DKIuyVW3hAjGq8L5Zc67+c9PDOXH61Bc3s40toGkV6eBdBQIDAQAB
-      AoGAZTxDTOE12nX224fQZANqP/jFnVyj7wUIUBDKJn2TvNADbbn6QjNmmYQSNGCW
-      BdINYTxvjOceeQihKR3R1iIBSxS2FdWwmpVpVDtJkxjLor1U+uOPCTkWEtctx9Sn
-      0yiIztylyaPvZkPvzwPxqX/HVL8X9U2Y51IpELrxIeI3KIECQQD0YIFMRgFOVXjd
-      JUBYuITZwDIq9415t1hNLtqBML07sEsIXb5hiDYWu5RiEhnkopHW4RLSDazmPz34
-      BuXqU4PpAkEA0v8Uet8VjUaaaW7al9EKYmY7C6TWYvkTqWBaMFc0caEO6O1kvGIg
-      TPQqyWyKpSIMrwi+LyCKECtQZl8qaF3qvQJBAIH3CQytdmhYoIzMEOqeR1kfFA8x
-      1LXUwktaDa8DYsBpw53RbTylmk6AuCtoAQlNRE6JKN85kqhpHeXYlVIH1HECQQC7
-      7b5MAk6r2mrF5ZqFBgd9xRhqMpNQ7BB7F/q8e6+WVaF2DZtfvvaOFBvX8/k5Q66Q
-      Z/Uc/Jp79FhUFgcrlhrxAkEAypUz2kAaFjtjh1Sr+ZEN5qEL3yWVvRngpeUlCzxW
-      UWxKbumWYX1QYr8Oz/RiBXvJ/FTQ2W43K9Ct/jVFCFuZgQ==
-      -----END RSA PRIVATE KEY-----
-    </rsakey>
-  </certificate>
 </OperatorDefaults>

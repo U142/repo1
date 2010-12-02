@@ -222,7 +222,7 @@ namespace pas_cb_server
                         break;
                 }
 
-                dump_request(t_alert, op, "NewMessage", oAlert.l_refno, def);
+                dump_request(t_alert, op, "NewMessage", oAlert.l_refno, def, true);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE, "-1", t_alert_info.IBAG_expires_date_time_dt.ToString("yyyyMMddHHmmss"));
@@ -231,7 +231,7 @@ namespace pas_cb_server
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if(t_alert_response != null)
-                    dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno, def);
+                    dump_request(t_alert_response, op, "NewMessageResult", oAlert.l_refno, def, false);
 
                 if (t_alert_response == null)
                 {
@@ -320,7 +320,7 @@ namespace pas_cb_server
 
                 t_alert.IBAG_alert_info = t_alert_info;
 
-                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno, def);
+                dump_request(t_alert, op, "UpdMessage", oAlert.l_refno, def, true);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CBACTIVE);
@@ -329,7 +329,7 @@ namespace pas_cb_server
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno, def);
+                    dump_request(t_alert_response, op, "UpdMessageResult", oAlert.l_refno, def, false);
 
                 if (t_alert_response == null)
                 {
@@ -399,7 +399,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_alert_uri = def.sz_cap_alert_uri;
                 t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-                dump_request(t_alert, op, "KillMessage", oAlert.l_refno, def);
+                dump_request(t_alert, op, "KillMessage", oAlert.l_refno, def, true);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, oAlert.l_refno, Constant.CANCELLED);
@@ -408,7 +408,7 @@ namespace pas_cb_server
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno, def);
+                    dump_request(t_alert_response, op, "KillMessageResult", oAlert.l_refno, def, false);
 
                 if (t_alert_response == null)
                 {
@@ -485,7 +485,7 @@ namespace pas_cb_server
                 t_alert.IBAG_cap_identifier = def.sz_cap_identifier + " " + DateTime.Now.ToString();
                 t_alert.IBAG_referenced_message_cap_identifier = def.sz_cap_identifier + " " + dtm_cap.ToString();
 
-                dump_request(t_alert, op, "EMSMessage", l_refno, def);
+                dump_request(t_alert, op, "EMSMessage", l_refno, def, true);
                 if (!Settings.live)
                 {
                     Database.SetSendingStatus(op, l_refno, Constant.FINISHED);
@@ -495,7 +495,7 @@ namespace pas_cb_server
 
                 IBAG_Alert_Attributes t_alert_response = SendRequest(op, t_alert, def);
                 if (t_alert_response != null)
-                    dump_request(t_alert_response, op, "EMSMessageResult", l_refno, def);
+                    dump_request(t_alert_response, op, "EMSMessageResult", l_refno, def, false);
 
                 if (t_alert_response == null)
                 {
@@ -591,7 +591,7 @@ namespace pas_cb_server
             return ret;
         }
 
-        private static void dump_request(object cap_request, Operator op, string method, int refno, CB_tmobile_defaults def)
+        private static void dump_request(object cap_request, Operator op, string method, int refno, CB_tmobile_defaults def, bool sign)
         {
             if (Settings.debug)
             {
@@ -606,32 +606,34 @@ namespace pas_cb_server
                     doc.PreserveWhitespace = true;
                     doc.LoadXml(w.ToString());
 
-                    string rsacert = "";
-                    string rsakey = "";
+                    if (sign)
+                    {
+                        string rsacert = "";
+                        string rsakey = "";
 
-                    StringReader sr = null;
-                    string line = "";
+                        StringReader sr = null;
+                        string line = "";
 
-                    // trim each line in the cert definition
-                    sr = new StringReader(def.certificate.rsacert);
-                    while((line = sr.ReadLine()) != null) rsacert += line.Trim() + "\r\n";
-                    sr.Close();
-                    sr = new StringReader(def.certificate.rsakey);
-                    while ((line = sr.ReadLine()) != null) rsakey += line.Trim() + "\r\n";
-                    sr.Close();
+                        // trim each line in the cert definition
+                        sr = new StringReader(def.certificate.rsacert);
+                        while ((line = sr.ReadLine()) != null) rsacert += line.Trim() + "\r\n";
+                        sr.Close();
+                        sr = new StringReader(def.certificate.rsakey);
+                        while ((line = sr.ReadLine()) != null) rsakey += line.Trim() + "\r\n";
+                        sr.Close();
 
-                    // remove any whitespaces before or after the certificate definitions
-                    rsacert = rsacert.Trim();
-                    rsakey = rsakey.Trim();
-                    string certserial = def.certificate.certserial.Trim();
-                    string password = def.certificate.password;
+                        // remove any whitespaces before or after the certificate definitions
+                        rsacert = rsacert.Trim();
+                        rsakey = rsakey.Trim();
+                        string certserial = def.certificate.certserial.Trim();
+                        string password = def.certificate.password;
 
-                    // sign XML
-                    if (rsacert != "")
-                        _signxml.SignXml(ref doc, rsacert, rsakey, password);
-                    else if (certserial != "")
-                        _signxml.SignXml(ref doc, certserial);
-
+                        // sign XML
+                        if (rsacert != "")
+                            _signxml.SignXml(ref doc, rsacert, rsakey, password);
+                        else if (certserial != "")
+                            _signxml.SignXml(ref doc, certserial);
+                    }
                     //DebugLog.dump(w.ToString(), op, method, refno);
                     DebugLog.dump(doc.OuterXml, op, method, refno);
                 }
@@ -670,7 +672,31 @@ namespace pas_cb_server
             doc.PreserveWhitespace = true;
             doc.LoadXml(w.ToString());
 
+            string rsacert = "";
+            string rsakey = "";
+
+            StringReader sr = null;
+            string line = "";
+
+            // trim each line in the cert definition
+            sr = new StringReader(def.certificate.rsacert);
+            while ((line = sr.ReadLine()) != null) rsacert += line.Trim() + "\r\n";
+            sr.Close();
+            sr = new StringReader(def.certificate.rsakey);
+            while ((line = sr.ReadLine()) != null) rsakey += line.Trim() + "\r\n";
+            sr.Close();
+
+            // remove any whitespaces before or after the certificate definitions
+            rsacert = rsacert.Trim();
+            rsakey = rsakey.Trim();
+            string certserial = def.certificate.certserial.Trim();
+            string password = def.certificate.password;
+
             // sign XML
+            if (rsacert != "")
+                _signxml.SignXml(ref doc, rsacert, rsakey, password);
+            else if (certserial != "")
+                _signxml.SignXml(ref doc, certserial);
 
             WebRequest webRequest = WebRequest.Create(op.sz_url);
             webRequest.Method = "POST";
@@ -702,8 +728,8 @@ namespace pas_cb_server
                 WebResponse webResponse = webRequest.GetResponse();
                 if (webResponse == null)
                 { return null; }
-                StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                return (IBAG_Alert_Attributes)s.Deserialize(sr);
+                StreamReader str = new StreamReader(webResponse.GetResponseStream());
+                return (IBAG_Alert_Attributes)s.Deserialize(str);
             }
             catch (WebException ex)
             {
