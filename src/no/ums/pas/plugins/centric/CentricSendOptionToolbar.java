@@ -551,6 +551,10 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			else
 				m_btn_send.setToolTipText(null);
 			break;
+		case SHOWING_AUTHORIZATION:
+			int n_auth_text = m_txt_authorization.getText().length();
+			m_btn_send.setEnabled(n_auth_text>0);
+			break;
 		case SENDING:
 			m_btn_send.setEnabled(false);
 			break;

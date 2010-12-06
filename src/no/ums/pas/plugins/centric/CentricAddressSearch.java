@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 
 import nl.bzk.services.nl_alert.mapsearch.*;
@@ -114,7 +115,8 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		} 
 		catch(Exception e)
 		{
-			throw e;
+			JOptionPane.showMessageDialog(spr, PAS.l("adrsearch_dlg_general_error"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			return new UGabSearchResultList();
 		}
 		
 	}
@@ -145,6 +147,8 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		if(list!=null) {
 			list.clear();
 		}
+		if(results.getList()==null || results.getList().getUGabResult()!=null)
+			return false;
 		java.util.Iterator it = results.getList().getUGabResult().iterator();
 		while(it.hasNext())
 		{
