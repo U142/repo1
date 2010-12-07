@@ -229,7 +229,7 @@ namespace pas_cb_server
             string strGSMTable = "";
             strGSMTable += "@£$¥èéùìòÇ\nØø\rÅå";
             strGSMTable += "Δ_ΦΓΛΩΠΨΣΘΞ`ÆæßÉ";
-            strGSMTable += " !\"#¤%&'()*=,-./";
+            strGSMTable += " !\"#¤%&'()*+,-./";
             strGSMTable += "0123456789:;<=>?";
             strGSMTable += "¡ABCDEFGHIJKLMNO";
             strGSMTable += "PQRSTUVWXYZÄÖÑÜ§";

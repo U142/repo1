@@ -1,4 +1,9 @@
-﻿1.2.9
+﻿1.2.10
+======
+	* Fixed bug in Status check to prevent deactivated operators from sending infomessage/ems requests (SupportWeb 53)
+	* Fixed bug in GSM encoding, + was listed as = which meant that = got the ascii code for +, and + was replaced with ? since it was missing. (SupportWeb 52)
+
+1.2.9
 =====
 	* Fixed Regexp for GSM Δ was wrong character
 	* Added XML signing for t-mobile API

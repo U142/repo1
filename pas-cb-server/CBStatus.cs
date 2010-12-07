@@ -37,6 +37,7 @@ namespace pas_cb_server
                 FROM 
 	                LBASEND LS 
 	                INNER JOIN LBAHISTCELL HC ON LS.l_refno=HC.l_refno AND LS.l_operator=HC.l_operator
+                    INNER JOIN LBAOPERATORS LO ON LS.l_operator=LO.l_operator
                 where 
 	                LS.l_status in ({0},{1},{2},{3},{4},{5})
 	                AND LS.l_started_ts<=CONVERT(NUMERIC,(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),112)
@@ -45,6 +46,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
                     AND HC.l_timestamp=-1
+                    AND LO.f_active=1
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -60,6 +62,7 @@ namespace pas_cb_server
                 FROM 
 	                LBASEND LS 
 	                INNER JOIN LBAHISTCELL HC ON LS.l_refno=HC.l_refno AND LS.l_operator=HC.l_operator
+                    INNER JOIN LBAOPERATORS LO ON LS.l_operator=LO.l_operator
                 where 
 	                LS.l_status in ({0},{1},{2},{3},{4},{5})
 	                AND HC.l_timestamp<=CONVERT(NUMERIC,(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),112)
@@ -83,6 +86,7 @@ namespace pas_cb_server
                 FROM 
                     LBASEND LS 
                     INNER JOIN LBAHISTCELL_REPORT HR ON LS.l_refno=HR.l_refno AND LS.l_operator=HR.l_operator
+                    INNER JOIN LBAOPERATORS LO ON LS.l_operator=LO.l_operator
                 where 
                     LS.l_status in ({0},{1},{2},{3},{4},{5})
                     AND LS.l_started_ts<=CONVERT(NUMERIC,(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),112)
@@ -91,6 +95,7 @@ namespace pas_cb_server
                         +SUBSTRING(CONVERT(VARCHAR(10),DATEADD(SS, {6}, GETDATE()),108),7,2)
                     )) 
                     AND HR.l_timestamp=-1
+                    AND LO.f_active=1
                     AND LS.l_started_ts is not null"
                , Constant.CBPREPARING
                , Constant.CBQUEUED
@@ -106,8 +111,10 @@ namespace pas_cb_server
                 FROM 
                     LBASEND LS 
 	                INNER JOIN LBAHISTCELL HC ON LS.l_refno=HC.l_refno AND LS.l_operator=HC.l_operator
+                    INNER JOIN LBAOPERATORS LO ON LS.l_operator=LO.l_operator
                 where 
                     LS.l_status in ({0},{1},{2},{3},{4},{5})
+                    AND LO.f_active=1
                     AND LS.l_expires_ts<=CONVERT(NUMERIC,(CONVERT(VARCHAR(10),GETDATE(),112)
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),1,2)
                         +SUBSTRING(CONVERT(VARCHAR(10),GETDATE(),108),4,2)
