@@ -183,7 +183,7 @@ public class InfoPanel extends GeneralPanel {
 			add(m_coorsearch, m_gridconst);
 			
 			
-			if(PAS.get_pas().get_rightsmanagement().weather()) {
+			/*if(PAS.get_pas().get_rightsmanagement().weather()) {
 				//add(Box.createRigidArea(new Dimension(5,20)));
 				add_spacing(DIR_VERTICAL, 20);
 				m_weatherinfo = new WeatherInfoUI();
@@ -191,7 +191,7 @@ public class InfoPanel extends GeneralPanel {
 				set_gridconst(0, inc_panels(), 1, 1);
 				add(m_weatherinfo, m_gridconst);
 				//getWeatherData();
-			}
+			}*/
 
 		}
 
@@ -274,7 +274,8 @@ public class InfoPanel extends GeneralPanel {
 				db+="";
 				//normal address db rights
 				m_lbl_adrdatabase_output.setToolTipText("");
-				m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
+				if(m_weatherinfo!=null)
+					m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
 				break;
 			case 2:
 				//folkereg address
@@ -290,18 +291,21 @@ public class InfoPanel extends GeneralPanel {
 				}
 				municipals += "</html>";
 				m_lbl_adrdatabase_output.setToolTipText(municipals);
-				m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
+				if(m_weatherinfo!=null)
+					m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
 				break;
 			case 4:
 				//TAS
 				db += " [" + PAS.l("main_tas_title") + "]";
-				m_weatherinfo.setVisible(false); // Hide weather info for TAS
+				if(m_weatherinfo!=null)
+					m_weatherinfo.setVisible(false); // Hide weather info for TAS
 				break;
 			default:
 				db += PAS.l("main_infotab_no_db_rights");
 				//db+="</b>";
 				m_lbl_adrdatabase_output.setToolTipText("");
-				m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
+				if(m_weatherinfo!=null)
+					m_weatherinfo.setVisible(true); // Turn back on if it was disabled by TAS
 				break;
 			}
 			db+="</html>";

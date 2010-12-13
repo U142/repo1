@@ -1133,7 +1133,7 @@ public class plugin_Centric extends PAS_Scripting
 		content+="\nSpecification version " + versioning.PLUGIN_SPECIFICATION_VERSION;
 		//content+="\n" + versioning.BUILT_DATE;
 		JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
-		return super.onHelpAbout();
+		return true;
 	}
 
 	@Override

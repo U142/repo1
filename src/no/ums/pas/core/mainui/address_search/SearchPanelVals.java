@@ -47,6 +47,7 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 		m_val_postarea.addKeyListener(this);
 		m_val_region.addKeyListener(this);
 		m_val_country.addKeyListener(this);
+		enableSearchButton(true);
 	}
 	public String get_address() { return m_val_address.getText(); }
 	public String get_number() { return m_val_number.getText(); }
@@ -69,11 +70,27 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 	}
 	public void search_started()
 	{
-		m_btn_search.setEnabled(false);	
+		enableSearchButton(false);
 	}
 	public void search_stopped()
 	{
-		m_btn_search.setEnabled(true);	
+		enableSearchButton(true);
+	}
+	protected boolean canSearch()
+	{
+		return m_btn_search.isEnabled();
+	}
+	
+	protected void enableSearchButton(boolean b)
+	{
+		//check if criterias are met
+		if(get_address().length()<=0 &&
+			get_postno().length()<=0 &&
+			get_postarea().length()<=0 &&
+			get_region().length()<=0)
+			b	= false;
+		
+		m_btn_search.setEnabled(b);
 	}
 	
 	void prepare_controls()
@@ -100,12 +117,14 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
         m_txt_region.setPreferredSize(new Dimension(150, 15));
         m_txt_country.setPreferredSize(new Dimension(100, 15));
 
-        m_val_address.setPreferredSize(new Dimension(100, 15));
+        m_val_number.setPreferredSize(new Dimension(50, 15));
+        m_val_postno.setPreferredSize(new Dimension(50, 15));
+        /*m_val_address.setPreferredSize(new Dimension(100, 15));
         m_val_number.setPreferredSize(new Dimension(30, 15));
         m_val_postno.setPreferredSize(new Dimension(50, 15));
         m_val_postarea.setPreferredSize(new Dimension(80, 15));
         m_val_region.setPreferredSize(new Dimension(134, 15));
-        m_val_country.setPreferredSize(new Dimension(134, 15));
+        m_val_country.setPreferredSize(new Dimension(134, 15));*/
 
         m_btn_search = new JButton(PAS.l("common_search"));
         m_btn_search.setVerticalTextPosition(AbstractButton.CENTER);
@@ -119,29 +138,29 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 	{
 		set_gridconst(0,0,1,1, GridBagConstraints.WEST); //x,y,sizex,sizey
 		add(m_txt_address, m_gridconst);
-		set_gridconst(1,0,1,1, GridBagConstraints.WEST);
+		set_gridconst(1,0,2,1, GridBagConstraints.WEST);
 		add(m_val_address, m_gridconst);
-		set_gridconst(2,0,1,1, GridBagConstraints.WEST);
+		set_gridconst(3,0,1,1, GridBagConstraints.WEST);
 		add(m_val_number, m_gridconst);
 		
 		set_gridconst(0,1,1,1, GridBagConstraints.WEST);
 		add(m_txt_postno, m_gridconst);
-		set_gridconst(1,1,2,1, GridBagConstraints.WEST);
+		set_gridconst(1,1,1,1, GridBagConstraints.WEST);
 		add(m_val_postno, m_gridconst);
-		set_gridconst(1,1,2,1, GridBagConstraints.EAST);
+		set_gridconst(2,1,2,1, GridBagConstraints.WEST);
 		add(m_val_postarea, m_gridconst);
 		
-		set_gridconst(0,2,2,1, GridBagConstraints.WEST);
+		set_gridconst(0,2,1,1, GridBagConstraints.WEST);
 		add(m_txt_region, m_gridconst);
-		set_gridconst(1,2,2,1, GridBagConstraints.WEST);
+		set_gridconst(1,2,3,1, GridBagConstraints.WEST);
 		add(m_val_region, m_gridconst);
 		
 		set_gridconst(0,3,1,1, GridBagConstraints.WEST);
 		add(m_txt_country, m_gridconst);
-		set_gridconst(1,3,2,1, GridBagConstraints.WEST);
+		set_gridconst(1,3,3,1, GridBagConstraints.WEST);
 		add(m_val_country, m_gridconst);		
 			
-		set_gridconst(0,4,3,1, GridBagConstraints.WEST);
+		set_gridconst(0,4,4,1, GridBagConstraints.WEST);
 		add(m_btn_search, m_gridconst);
 	}
 	
@@ -172,10 +191,17 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_ENTER:
-				actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_search"));
+				if(canSearch())
+					actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_search"));
 				break;
 		}
+		enableSearchButton(true);
 	}
-	public void keyReleased(KeyEvent e) { }
-	public void keyTyped(KeyEvent e) { }	
+	public void keyReleased(KeyEvent e) {
+		enableSearchButton(true);
+		
+	}
+	public void keyTyped(KeyEvent e) { 
+
+	}	
 }

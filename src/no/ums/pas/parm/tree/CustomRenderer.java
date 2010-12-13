@@ -1,5 +1,7 @@
 package no.ums.pas.parm.tree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
 import java.awt.*;
 import javax.swing.JTree;
 import javax.swing.ImageIcon;
@@ -23,7 +25,7 @@ import org.jvnet.substance.SubstanceImageCreator;
 //Substance 5.2
 //import org.jvnet.substance.api.renderers.SubstanceDefaultTreeCellRenderer;
 
-public class CustomRenderer extends SubstanceDefaultTreeCellRenderer { //DefaultTreeCellRenderer {
+public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefaultTreeCellRenderer { //DefaultTreeCellRenderer {
 	public static final long serialVersionUID = 1;
 	
 	private ImageIcon icon = null;
@@ -67,7 +69,6 @@ public class CustomRenderer extends SubstanceDefaultTreeCellRenderer { //Default
 			setHighlight((ParmVO)o);
 		}
 		setFont(UIManager.getFont("Tree.font"));		
-
         return this;
 	}
 	
@@ -86,7 +87,7 @@ public class CustomRenderer extends SubstanceDefaultTreeCellRenderer { //Default
 
 	private void initAlertVO(Object o)
 	{
-		setBackground(new Color(0, 0, 0, 0));
+		//setBackground(new Color(0, 0, 0, 0));
 		AlertVO aVO = (AlertVO) o;
 		String path = "default non-working path, object";
 		if(aVO.hasValidPk())
@@ -140,7 +141,7 @@ public class CustomRenderer extends SubstanceDefaultTreeCellRenderer { //Default
 	}
 	
 	private void initObjectVO(Object o){
-		setBackground(new Color(0, 0, 0, 0));
+		//setBackground(new Color(0, 0, 0, 0));
 		ObjectVO oVO = (ObjectVO) o;
 		CategoryVO cVO = oVO.getCategoryVO(); // will work when XmlReader is complete.
 
@@ -169,12 +170,13 @@ public class CustomRenderer extends SubstanceDefaultTreeCellRenderer { //Default
 		} 
 		else {
 		       //System.err.println("Couldn't find file: " + path);
+			setIcon(null);
 		}
 		
 	}
 	
 	public void initEventVO(Object o){
-		setBackground(new Color(0, 0, 0, 0));
+		//setBackground(new Color(0, 0, 0, 0));
 		EventVO eVO = (EventVO) o;
 		CategoryVO cVO = eVO.getCatVO();
 

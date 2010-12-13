@@ -44,6 +44,7 @@ import no.ums.pas.status.LBASEND.LBASEND_TS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.*;
 import no.ums.ws.pas.LBALanguage;
+import no.ums.ws.pas.UMAXALLOC;
 import no.ums.ws.pas.status.USMSINSTATS;
 
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -911,12 +912,12 @@ public class StatusSending extends Object {
 				voicelba_visible++;
 			if(pnl_cell.isVisible())
 				voicelba_visible++;
-			if(pnl_pa.isVisible())
-				voicelba_visible++;
+			//if(pnl_pa.isVisible())
+			//	voicelba_visible++;
 			this.setPreferredSize(new Dimension(getWidth(), getHeight()));
-			int iconPanelSize = 40+40 +20;
+			int iconPanelSize = 40;//40+40 +20;
 			pnl_icon.setPreferredSize(new Dimension(getWidth()-10, iconPanelSize));
-			pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()-iconPanelSize)/2)); //-iconPanelSize/2));
+			pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
 			if(get_type()==5) {
 				//pnl_cell.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/2));
 				pnl_cell.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/2)+40));
@@ -925,10 +926,6 @@ public class StatusSending extends Object {
 			else if(get_type()==6) { // Centric
 				pnl_pa.setPreferredSize(new Dimension(getWidth()-10, (getHeight()-iconPanelSize)));
 			}
-			/*else if(get_type()==2 && get_group()==5)
-			{
-				pnl_resend.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/2));
-			}*/
 			else
 				pnl_cell.setPreferredSize(new Dimension(getWidth()-10, (getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/3));
 			revalidate();
@@ -1872,9 +1869,10 @@ public class StatusSending extends Object {
 				}
 			}
 			else if("act_max_alloc_set".equals(e.getActionCommand())) {
-				WSMaxAlloc.MaxAlloc max = (WSMaxAlloc.MaxAlloc)e.getSource();
-				if(max.has_error()) {
-					JOptionPane.showMessageDialog(null, "Could not set max channels (projectpk: " + max.get_projectpk() + " refno: " + max.get_refno() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+				//WSMaxAlloc.MaxAlloc max = (WSMaxAlloc.MaxAlloc)e.getSource();
+				UMAXALLOC max = (UMAXALLOC)e.getSource();
+				if(max.getNMaxalloc()<0) {
+					JOptionPane.showMessageDialog(null, "Could not set max channels (projectpk: " + max.getNProjectpk() + " refno: " + max.getNRefno() + ")", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else if("act_resend".equals(e.getActionCommand())) {

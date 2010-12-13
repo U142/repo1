@@ -489,9 +489,9 @@ public class SendController implements ActionListener {
 	public void add_sending(final SendObject obj) {
 		try
 		{
-			//SwingUtilities.invokeLater(new Runnable()
-			//{
-			//	public void run()
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				public void run()
 				{
 					try
 					{
@@ -511,7 +511,7 @@ public class SendController implements ActionListener {
 						e.printStackTrace();
 					}
 				}
-			//});
+			});
 		}
 		catch(Exception e)
 		{

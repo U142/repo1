@@ -30,7 +30,7 @@ public class WSSaveUI extends WSThread
 		try
 		{
 			//PAS.get_pas().setSubstanceChanges();
-			PAS.pasplugin.onUserChangedLookAndFeel(PAS.get_pas().get_settings());
+			//PAS.pasplugin.onUserChangedLookAndFeel(PAS.get_pas().get_settings());
 			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
 			no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());

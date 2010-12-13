@@ -413,11 +413,21 @@ public class MapLoader {
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
 			 request.setTransparent(false);
+			 request.setVersion("1.1.1");
 			 
 			 //variables.SETTINGS.setWmsEpsg("28992");
 			 //variables.SETTINGS.setWmsEpsg("4326");
 			 
-			 int n_epsg = Integer.parseInt(variables.SETTINGS.getWmsEpsg());
+			 int n_epsg = 4326;
+			 try
+			 {
+				 n_epsg = Integer.parseInt(variables.SETTINGS.getWmsEpsg());
+			 }
+			 catch(Exception e)
+			 {
+				 n_epsg = 4326;
+				 variables.SETTINGS.setWmsEpsg(new Integer(n_epsg).toString());
+			 }
 			 //n_epsg = 28992;
 			 //4326
 			 

@@ -43,6 +43,7 @@ public class ServerCon {
 				logon.setLComppk(info.get_comppk());
 				logon.setLDeptpk(info.get_current_department().get_deptpk());
 				logon.setLUserpk(new Long(info.get_userpk()));
+				logon.setSessionid(info.get_sessionid());
 				update.setLogoninfo(logon);
 				update.setSzFilename(xmlFilename);
 				update.setSzPolyfilename(polyFileName);

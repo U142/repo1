@@ -653,7 +653,7 @@ public class PASActions implements ActionListener {
 	
 	public void deptChanged() {
 		PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
-		PAS.pasplugin.onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
+		//PAS.pasplugin.onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
 
 		
 		/*if(!PAS.get_pas().get_rightsmanagement().read_parm()) {

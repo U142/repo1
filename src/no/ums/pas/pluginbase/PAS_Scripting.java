@@ -57,6 +57,7 @@ import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.versioning.versioning;
 import no.ums.ws.pas.UBBNEWSLIST;
 import no.ums.ws.pas.UPOWERUPRESPONSE;
 import no.ums.ws.pas.USYSTEMMESSAGES;
@@ -160,6 +161,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		menu.add(menu.get_parm());
 		menu.add(menu.get_dept());
 		menu.add(menu.get_menu_layout());
+		menu.add(menu.get_menu_help());
 		
 		menu.get_menu_layout().add(menu.get_menu_skins());
 		menu.get_menu_layout().add(menu.get_menu_themes());
@@ -249,6 +251,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		//m_item_gps_epsilon.add(m_item_gps_epsilon_slider);
 		
 		menu.get_status().add(menu.get_item_status_updates());
+		
 
 		return true;
 	}
@@ -430,11 +433,41 @@ public class PAS_Scripting extends PasScriptingInterface
 	public LookAndFeel onSetInitialLookAndFeel(ClassLoader classloader) {
 		try
 		{
-			JDialog.setDefaultLookAndFeelDecorated(true);
+			/*JDialog.setDefaultLookAndFeelDecorated(true);
 			JFrame.setDefaultLookAndFeelDecorated(true);	
 			SubstanceOfficeBlue2007LookAndFeel laf = new SubstanceOfficeBlue2007LookAndFeel();
-			UIManager.setLookAndFeel(laf);
-			return laf;
+			UIManager.setLookAndFeel(laf);*/
+			boolean bSystemLafOk = false;
+			try
+			{
+				String laf = UIManager.getSystemLookAndFeelClassName();
+				System.out.println("Using LAF=" + laf);
+				LookAndFeel oLaf = (LookAndFeel)classloader.loadClass(laf).newInstance();
+				UIManager.setLookAndFeel(oLaf);
+				//SwingUtilities.updateComponentTreeUI(this);
+				bSystemLafOk = true;
+				return oLaf;
+			}
+			catch(Exception e)
+			{
+			}
+			if(!bSystemLafOk)
+			{
+				try
+				{
+					String laf = UIManager.getCrossPlatformLookAndFeelClassName();
+					System.out.println("Using LAF=" + laf);
+					LookAndFeel oLaf = (LookAndFeel)classloader.loadClass(laf).newInstance();
+					UIManager.setLookAndFeel(oLaf);
+					//SwingUtilities.updateComponentTreeUI(this);
+					bSystemLafOk = true;
+					return oLaf;
+				}
+				catch(Exception e)
+				{
+					
+				}
+			}					
 		}
 		catch(Exception e)
 		{
@@ -696,7 +729,7 @@ public class PAS_Scripting extends PasScriptingInterface
 				PAS.get_pas().setEnabled(true);
 				//PAS.get_pas().setVisible(true);
 				//onSetInitialLookAndFeel(ui.getClass().getClassLoader());
-				onSetUserLookAndFeel(PAS.get_pas().get_settings(), ui);
+				//onSetUserLookAndFeel(PAS.get_pas().get_settings(), ui);
 				onSetAppTitle(PAS.get_pas(), "", ui);
 				PAS.get_pas().toFront();
 			}
@@ -746,7 +779,15 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	@Override
 	public boolean onHelpAbout() {
-		return false;
+		String content = PAS.l("common_aboutbox_content");
+		content+="\n\n";
+		//content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
+		//content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
+		content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
+		content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
+		//content+="\n" + versioning.BUILT_DATE;
+		JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
+		return true;
 	}
 
 	@Override
@@ -1096,16 +1137,19 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	@Override
 	public boolean onCloseProject() {
-		return false;
+		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
+		return true;
 	}
 
 	@Override
 	public boolean onOpenProject(Project project, long nFromNewRefno) {
-		return false;
+		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
+		PAS.get_pas().actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
+		return true;
 	}
 
 	public int onInvokeProject() {
-		return -1;
+		return JOptionPane.YES_OPTION;
 	}
 
 

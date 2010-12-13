@@ -63,6 +63,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		Dimension ul = Utils.screendlg_upperleft(d);
 		setBounds(ul.width, ul.height, d.width, d.height);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(d.width, d.height));
+		setMinimumSize(d);
 
 	}
 	protected void close_dialog() {
@@ -303,11 +304,18 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	}
 
 	public void componentResized(ComponentEvent e) {
+		if(getWidth()<0 || getHeight()<0)
+			return;
 		m_projectpanel.setPreferredSize(new Dimension(getWidth()-20, getHeight()));
-		m_projectpanel.get_projectlist().setPreferredSize(new Dimension(getWidth()-50, 200));
-		m_projectpanel.get_projectlist().setSize(getWidth()-50, 200);
+		Dimension d = new Dimension(getWidth()-40, 200);
+		m_projectpanel.get_projectlist().setPreferredSize(d);
+		m_projectpanel.get_projectlist().setSize(d);
+		m_projectpanel.get_projectlist().get_table().setPreferredSize(d);
 		m_projectpanel.revalidate();
 		m_projectpanel.get_projectlist().revalidate();
+		m_projectpanel.get_projectlist().get_table().revalidate();
+		validate();
+		repaint();
 	}
 
 	public void componentShown(ComponentEvent e) {

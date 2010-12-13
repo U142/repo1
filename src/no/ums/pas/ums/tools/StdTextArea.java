@@ -9,10 +9,32 @@ import java.awt.*;
 
 public class StdTextArea extends JTextField// JTextArea
 {
+	@Override
+	public void copy() {
+		if(b_enable_copy)
+			super.copy();
+	}
+
+	@Override
+	public void paste() {
+		if(b_enable_paste)
+			super.paste();
+	}
 	public static final long serialVersionUID = 1;
 	int m_n_items = 0;
 	int m_n_itemsize = 17;
 	Dimension m_dim = null;
+	protected boolean b_enable_copy = true;
+	protected boolean b_enable_paste = true;
+	
+	public void setEnableCopy(boolean b)
+	{
+		b_enable_copy = b;
+	}
+	public void setEnablePaste(boolean b)
+	{
+		b_enable_paste = b;
+	}
 	
 	public String toString()
 	{

@@ -322,8 +322,9 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		try {
 			f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + f.getName());
 		} catch(Exception e) {
-			f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
+			//f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
 			Error.getError().addError("PreviewPanel","Exception in create_umsgisfile",e,1);
+			return null;
 		}
 		try {
 			GISWriter writer = new GISWriter(linedata, f_ums);

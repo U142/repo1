@@ -581,6 +581,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 //        };
 		
 		tree = new Tree(treeModel);
+		tree.setRowHeight(0);
 		
 		
 		tree.setCellRenderer(new CustomRenderer(tree));

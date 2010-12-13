@@ -115,6 +115,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		} 
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(spr, PAS.l("adrsearch_dlg_general_error"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			return new UGabSearchResultList();
 		}
@@ -147,7 +148,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		if(list!=null) {
 			list.clear();
 		}
-		if(results.getList()==null || results.getList().getUGabResult()!=null)
+		if(results.getList()==null || results.getList().getUGabResult()==null)
 			return false;
 		java.util.Iterator it = results.getList().getUGabResult().iterator();
 		while(it.hasNext())
@@ -209,21 +210,21 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		{
 			set_gridconst(0,0,1,1, GridBagConstraints.WEST); //x,y,sizex,sizey
 			add(m_txt_address, m_gridconst);
-			set_gridconst(1,0,1,1, GridBagConstraints.WEST);
+			set_gridconst(1,0,2,1, GridBagConstraints.WEST);
 			add(m_val_address, m_gridconst);
-			set_gridconst(2,0,1,1, GridBagConstraints.WEST);
+			set_gridconst(3,0,1,1, GridBagConstraints.WEST);
 			add(m_val_number, m_gridconst);
 			
 			set_gridconst(0,1,1,1, GridBagConstraints.WEST);
 			add(m_txt_postno, m_gridconst);
-			set_gridconst(1,1,2,1, GridBagConstraints.WEST);
+			set_gridconst(1,1,1,1, GridBagConstraints.WEST);
 			add(m_val_postno, m_gridconst);
-			set_gridconst(1,1,2,1, GridBagConstraints.EAST);
+			set_gridconst(2,1,2,1, GridBagConstraints.EAST);
 			add(m_val_postarea, m_gridconst);
 			
-			set_gridconst(0,2,2,1, GridBagConstraints.WEST);
+			set_gridconst(0,2,1,1, GridBagConstraints.WEST);
 			add(m_txt_region, m_gridconst);
-			set_gridconst(1,2,2,1, GridBagConstraints.WEST);
+			set_gridconst(1,2,3,1, GridBagConstraints.WEST);
 			add(m_val_region, m_gridconst);
 			
 			/*set_gridconst(0,3,1,1, GridBagConstraints.WEST);
@@ -231,7 +232,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 			set_gridconst(1,3,2,1, GridBagConstraints.WEST);
 			add(m_val_country, m_gridconst);*/		
 				
-			set_gridconst(0,4,3,1, GridBagConstraints.WEST);
+			set_gridconst(0,4,4,1, GridBagConstraints.WEST);
 			add(m_btn_search, m_gridconst);
 		}
 

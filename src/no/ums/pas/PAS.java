@@ -21,6 +21,7 @@ import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 
@@ -890,10 +891,41 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String sz_storage_gisimport = "gis\\";
 		String sz_storage_usersettings = "";
 		String sz_storage_parm = "PARM\\";
-		if(sz_home==null) {
+			//sz_home = "C:\\Program Files\\UMS Population Alert System\\";
+		boolean bpathok = false;
+		String PASPath = File.separator + "UMS Population Alert System" + File.separator;
+		if(!bpathok)
+		{
 			sz_home = "C:\\Program Files\\UMS Population Alert System\\";
-		} else {
+			bpathok = tryPath(sz_home);
 		}
+		if(!bpathok)
+		{
+			sz_home = "C:\\UMS Population Alert System\\";
+			bpathok = tryPath(sz_home);
+		}
+		if(!bpathok)
+		{
+			sz_home = System.getProperty("user.home") + PASPath;
+			System.out.println("user.home=" + sz_home);
+			bpathok = tryPath(sz_home);			
+		}
+		if(!bpathok)
+		{
+			sz_home = System.getenv("TEMP") + PASPath;
+			System.out.println("temp=" + sz_home);
+			bpathok = tryPath(sz_home);
+		}
+		if(!bpathok)
+		{
+			sz_home = System.getProperty("java.io.tmpdir") + PASPath;
+			System.out.println("java.io.tmpdir=" + sz_home);
+			bpathok = tryPath(sz_home);
+		}
+		if(bpathok)
+			System.out.println("HOMEPATH=" + sz_home);
+		else
+			System.out.println("HOMEPATH: Error, no path found for writing");
 		//vars.init(m_sz_sitename + "/ExecAlert/WS/");
 		vars.init(this.get_pasws());
 		//check home path
@@ -942,21 +974,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 		
 		final UMSSecurity security = new UMSSecurity();
-		security.add_check(UMSPermission.PERMISSION_FILE_, sz_home, "write"); //read,write,delete
+		//security.add_check(UMSPermission.PERMISSION_FILE_, sz_home, "write"); //read,write,delete
 		security.add_check(UMSPermission.PERMISSION_AUDIO_, null, null);
 		security.check_permissions();
-		try
-		{
-			File f = new File(sz_home + "writetest.txt");
-			f.delete();
-			if(f.createNewFile())
-			{
-			}
-		}
-		catch(Exception err)
-		{
-			sz_home = "c:\\UMS Population Alert System\\";
-		}
 		/*try {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
@@ -1225,7 +1245,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		try
 		{
 			//initSubstance();
-			pasplugin.onSetUserLookAndFeel(m_settings, m_userinfo);
+			//pasplugin.onSetUserLookAndFeel(m_settings, m_userinfo);
 		}
 		catch(Exception e)
 		{
@@ -1951,8 +1971,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			get_mappane().resetAllOverlays();
 			WaitForStatusThread thread = null;
 			System.out.println("Close project");
-			PAS.pasplugin.onCloseProject();
 			get_mainmenu().get_selectmenu().enableStatusExport(false);
+			if(b_close_all_gui)
+				PAS.pasplugin.onCloseProject();
+
 			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
 				if(JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					thread = new WaitForStatusThread(b_close_all_gui);
@@ -2205,7 +2227,23 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		public void gradientPainterChanged() {
 			//setSubstanceChanges();		
 		}
-	////
+		public boolean tryPath(String s)
+		{
+			try
+			{
+				File f = new File(s + "writetest.txt");
+				f.delete();
+				if(f.createNewFile())
+				{
+				}
+				return true;
+			}
+			catch(Exception err)
+			{
+
+			}
+			return false;
+		}
 
 }
 
