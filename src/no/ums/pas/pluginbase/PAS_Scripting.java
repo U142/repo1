@@ -160,7 +160,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		//add(m_menu_gps);
 		menu.add(menu.get_parm());
 		menu.add(menu.get_dept());
-		menu.add(menu.get_menu_layout());
+		//menu.add(menu.get_menu_layout());
 		menu.add(menu.get_menu_help());
 		
 		menu.get_menu_layout().add(menu.get_menu_skins());

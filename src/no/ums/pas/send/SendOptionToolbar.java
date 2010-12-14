@@ -1162,8 +1162,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add(m_radio_sendingtype_polygon, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_ellipse, m_gridconst);
-		inc_xpanels2();
-		add(m_radio_sendingtype_polygonal_ellipse, m_gridconst);
+		//inc_xpanels2();
+		//add(m_radio_sendingtype_polygonal_ellipse, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_municipal, m_gridconst);
 		inc_xpanels2();

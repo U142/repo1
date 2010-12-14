@@ -10,6 +10,7 @@ import javax.swing.ListSelectionModel;
 import no.ums.pas.*;
 import no.ums.pas.core.defines.*;
 import no.ums.pas.core.popupmenus.*;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.status.*;
 import no.ums.pas.ums.tools.TextFormat;
 
@@ -44,7 +45,8 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	{
 		//Point mouse = this.getMousePosition();
 		//m_popup.pop(this, mouse, (StatusListObject)rowcontent[2]);
-		openStatus(true, ((StatusListObject)rowcontent[2]).get_project().get_projectpk(), -1);
+		//openStatus(true, ((StatusListObject)rowcontent[2]).get_project().get_projectpk(), -1);
+		openStatus(true, (StatusListObject)rowcontent[2], -1);
 		//get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), new Integer((String)rowcontent[2]).intValue(), true /*init*/);
 			
 		//get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), ((StatusListObject)rowcontent[2]).get_project().get_projectpk(), ((StatusListObject)rowcontent[2]).get_refno(), true /*init*/);
@@ -76,6 +78,26 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	void onDownloadFinished()
 	{
 		
+	}
+	public void openStatus(final boolean b_project, final StatusListObject proj, final int n_refno) {
+		new Thread("Open status list thread")
+		{
+			public void run()
+			{
+				try
+				{
+					m_statusframe.setVisible(false);
+					PAS.pasplugin.onCloseProject();
+					PAS.pasplugin.onOpenProject(proj.get_project(), -1);
+					get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), proj.get_project().get_projectpk(), n_refno, true /*init*/);
+					//PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_STATUS_LIST);
+				}
+				catch(Exception e)
+				{
+					
+				}
+			}
+		}.start();
 	}
 	public void openStatus(final boolean b_project, final String sz_projectpk, final int n_refno) {
 		new Thread("Open status list thread")

@@ -1074,6 +1074,7 @@ public class PolygonStruct extends ShapeStruct {
 		
 		Color col_dot = new Color(get_fill_color().getRed(), get_fill_color().getGreen(), get_fill_color().getBlue());
 		Graphics2D g2d = null;
+		g2d = (Graphics2D)g;
 		Stroke stroke_revert = null;
 		int use_array_x[];
 		int use_array_y[];
@@ -1100,7 +1101,6 @@ public class PolygonStruct extends ShapeStruct {
 				}
 				//System.out.println("Polypoints = " + m_int_x.length + " Visible = " + use_array_x.length);
 
-				g2d = (Graphics2D)g;
 				stroke_revert = g2d.getStroke();
 				//g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 				if(bDashed)

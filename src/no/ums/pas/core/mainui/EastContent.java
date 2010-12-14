@@ -76,7 +76,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public GPSPanel get_gpspanel() { return m_gpspanel; }
 	public StatusPanel get_statuspanel() { return m_statuspanel; }
 	public GPSEventPanel get_gpseventpanel() { return m_gpseventpanel; }
-	public SendingPanel get_sendingpanel() { return m_sendingpanel ;}
+	public SendingPanel get_sendingpanel() { return m_sendingpanel;}
 	public HouseEditorDlg get_houseeditor() { return m_houseeditor; }
 	public TasPanel get_taspanel() { return m_taspanel; }
 	
@@ -357,6 +357,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		//m_status_loadingpanel.revalidate();
 		//m_gps_loadingpanel.revalidate();
 		
+		//m_sendingpanel.getScrollPane().setPreferredSize(new Dimension(getWidth(), getHeight()));
+		
 		m_statuspanel.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		m_statuspanel.revalidate();
 		
@@ -432,7 +434,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					get_tabbedpane().setSelectedComponent(m_gpseventpanel);
 					break;
 				case PANEL_SENDING_:
-					get_tabbedpane().setSelectedComponent(m_sendingpanel);
+					get_tabbedpane().setSelectedComponent(m_sendingpanel.getScrollPane());
 					break;
 				case PANEL_HOUSEEDITOR_:
 					if(m_houseeditor!=null)
@@ -479,8 +481,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						get_tabbedpane().addTab(PAS.l("main_gpseventstab_title"), null, m_gpseventpanel, PAS.l("main_gpseventstab_title_tooltip"));
 					break;
 				case PANEL_SENDING_:
-					if(find_component(m_sendingpanel)==-1)
-						get_tabbedpane().addTab(PAS.l("main_sendingtab_title"), null, m_sendingpanel, PAS.l("main_sendingtab_title_tooltip"));
+					if(find_component(m_sendingpanel.getScrollPane())==-1)
+						get_tabbedpane().addTab(PAS.l("main_sendingtab_title"), null, m_sendingpanel.getScrollPane(), PAS.l("main_sendingtab_title_tooltip"));
 					break;
 				case PANEL_HOUSEEDITOR_:
 					if(find_component(m_houseeditor)==-1)
@@ -530,7 +532,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		int i = -1;
 		switch(ID) {
 			case PANEL_SENDING_:
-				i = get_tabbedpane().indexOfComponent(m_sendingpanel);
+				i = get_tabbedpane().indexOfComponent(m_sendingpanel.getScrollPane());
 				break;
 			case PANEL_TAS_:
 				i = get_tabbedpane().indexOfComponent(m_taspanel);
@@ -554,7 +556,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				tab = m_gpseventpanel;
 				break;
 			case PANEL_SENDING_:
-				tab = m_sendingpanel;
+				tab = m_sendingpanel.getScrollPane();
 				break;
 			case PANEL_HOUSEEDITOR_:
 				tab = m_houseeditor;
@@ -579,7 +581,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				get_tabbedpane().remove(get_parm());
 				break;
 			case PANEL_SENDING_:
-				get_tabbedpane().remove(get_sendingpanel());
+				get_tabbedpane().remove(get_sendingpanel().getScrollPane());
 				break;
 			case PANEL_STATUS_LIST:
 				try

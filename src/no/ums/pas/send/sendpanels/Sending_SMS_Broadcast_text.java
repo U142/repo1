@@ -37,6 +37,7 @@ import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.ws.WSTasResponseNumbers;
 import no.ums.pas.parm.alert.AlertWindow;
 import no.ums.pas.send.SendProperties;
+import no.ums.pas.send.messagelibrary.MessageLibTreePanel;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.sound.SoundlibFileTxt;
 import no.ums.pas.status.StatusListObject;
@@ -145,9 +146,13 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 7, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_template, m_panel_messages.m_gridconst);
-		//m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
-		//m_panel_messages.add(m_combo_templates, m_panel_messages.m_gridconst);
-		
+		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
+		m_panel_messages.add(m_combo_templates, m_panel_messages.m_gridconst);
+		/*tree_msglib = new MessageLibTreePanel(this, UMSTree.TREEMODE.SELECTION_WITH_EDIT,10, false);
+		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
+		m_panel_messages.add(tree_msglib, m_panel_messages.m_gridconst);
+		*/
+
 		//TEST
 		if(tree_msglib!=null)
 		{

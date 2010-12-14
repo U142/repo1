@@ -439,6 +439,8 @@ public class SendController implements ActionListener {
 			//Integer n_mode = new Integer(MapFrame.MAP_MODE_PAN);
 			//actionPerformed(new ActionEvent(n_mode, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			PAS.get_pas().get_mainmenu().set_pan();
+			//PAS.get_pas().get_eastcontent().get_sendingpanel().updateUI();
+			//PAS.get_pas().get_eastcontent().get_sendingpanel().revalidate();
 
 		}
 		else if("act_polygon_imported_eof".equals(e.getActionCommand())) {
