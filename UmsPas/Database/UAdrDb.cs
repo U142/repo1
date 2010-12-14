@@ -423,10 +423,33 @@ namespace com.ums.PAS.Database
                 UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())
                 {
-                    c.bedrift = rs.GetInt32(0);
-                    c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
-                    c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
-                    c.add = rs.GetInt32(3);
+                    c.bedrift = rs.GetInt16(0);
+                    /*if (rs.IsDBNull(1))
+                        c.hasfixed = false;
+                    else
+                        c.hasfixed = (rs.GetInt32(1) == 1 ? true : false);
+                    if (rs.IsDBNull(2))
+                        c.hasmobile = false;
+                    else
+                        c.hasmobile = (rs.GetInt32(2) == 1 ? true : false);
+                    if (rs.IsDBNull(3))
+                        c.add = 0;
+                    else
+                        c.add = rs.GetInt32(3);*/
+                    object o1 = rs.GetValue(1);
+                    object o2 = rs.GetValue(2);
+                    if (rs.IsDBNull(1))
+                        c.hasfixed = false;
+                    else
+                        c.hasfixed = (rs.GetByte(1).Equals(1) ? true : false);
+                    if (rs.IsDBNull(2))
+                        c.hasmobile = false;
+                    else
+                        c.hasmobile = (rs.GetByte(2).Equals(1) ? true : false);
+                    if (rs.IsDBNull(3))
+                        c.add = 0;
+                    else
+                        c.add = rs.GetInt32(3);
                     _AddToAdrcount(ref count, ref c, adrtypes);
                 }
                 rs.Close();

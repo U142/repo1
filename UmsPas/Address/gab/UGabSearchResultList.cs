@@ -6,6 +6,7 @@ using System.Web;
 using System.Collections;
 using System.Xml.Linq;
 using com.ums.PAS.Address;
+using com.ums.UmsParm;
 
 
 namespace com.ums.PAS.Address.gab
@@ -31,8 +32,14 @@ namespace com.ums.PAS.Address.gab
         public string postno;
         public double lon, lat;
         public GABTYPE type;
+        public UBoundingRect rect;
+        public int scope;
         public void finalize()
         {
+        }
+        public String toString()
+        {
+            return name;
         }
     }
 

@@ -13,6 +13,15 @@ using System.Xml.Serialization;
 namespace com.ums.UmsCommon
 {
 
+    public class PASVERSION
+    {
+        public String full;
+        public int major;
+        public int minor;
+        public int build;
+        public int revision;
+    }
+
     public enum MDVSENDINGINFO_GROUP
     {
         ADDRESSLIST = 0,
