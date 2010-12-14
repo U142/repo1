@@ -19,6 +19,8 @@ namespace com.ums.PAS.Project
             REFNO_RESPONSE response = new REFNO_RESPONSE();
             response.n_responsecode = -1;
 
+            OdbcDataReader dr = null;
+
             PASUmsDb db = new PASUmsDb();
             if (!db.CheckLogon(ref logon, true))
             {
@@ -28,7 +30,7 @@ namespace com.ums.PAS.Project
 
             try
             {
-                OdbcDataReader dr = db.ExecReader("sp_refno_out", UmsDb.UREADER_AUTOCLOSE);
+                dr = db.ExecReader("sp_refno_out", UmsDb.UREADER_AUTOCLOSE);
 
                 while (dr.Read())
                 {
@@ -36,14 +38,18 @@ namespace com.ums.PAS.Project
                     response.n_responsecode = 0;
                     response.sz_responsetext = "OK";
                 }
-                dr.Close();
-                db.close();
             }
             catch (Exception e)
             {
                 ULog.error(0, "Error getting refno", e.Message);
                 response.n_responsecode = -1;
                 response.sz_responsetext = e.Message;
+            }
+            finally {
+
+                if (dr != null && !dr.IsClosed)
+                    dr.Close();
+                db.close();
             }
             return response;
         }

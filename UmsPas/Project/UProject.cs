@@ -34,7 +34,7 @@ namespace com.ums.PAS.Project
             {
                 throw e;
             }*/
-
+            OdbcDataReader dr = null;
             try
             {
                 string sz_operation = "insert";
@@ -46,7 +46,7 @@ namespace com.ums.PAS.Project
                 }
 
                 String szSQLProject = String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}, {5}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk, logon.l_userpk);
-                OdbcDataReader dr = ExecReader(szSQLProject, UmsDb.UREADER_AUTOCLOSE);
+                dr = ExecReader(szSQLProject, UmsDb.UREADER_AUTOCLOSE);
 
                 while (dr.Read())
                 {
@@ -57,14 +57,17 @@ namespace com.ums.PAS.Project
                     response.sz_responsetext = "OK";
                     response.n_responsecode = 0;
                 }
-                dr.Close();
-                close();
+                
             }
             catch (Exception e)
             {
                 ULog.error(0, "Could not create project", e.Message);
                 response.sz_responsetext = e.Message;
                 response.n_responsecode = -1;
+            }
+            finally{
+                if(dr!=null && !dr.IsClosed)
+                    dr.Close();
             }
             return response;
         }

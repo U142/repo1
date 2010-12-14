@@ -36,10 +36,12 @@ namespace com.ums.PAS.Database
             ret.n_parsing = 0;
             ret.n_queue = 0;
             ret.n_sending = 0;
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("sp_bbcountforsend {0}, -1", p._l_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     int code = rs.GetInt32(0);
@@ -63,15 +65,21 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public List<UStatusCode> GetStatusCodes(ref UStatusItemSearchParams p)
         {
+            OdbcDataReader rs = null;
             List<UStatusCode> ret = new List<UStatusCode>();
             try
             {
                 String szSQL = String.Format("sp_bbgetstatuscodes {0}", p._l_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     UStatusCode code = new UStatusCode();
@@ -85,6 +93,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             UStatusCode c = new UStatusCode();
             c.n_status = 8000;
@@ -109,14 +122,14 @@ namespace com.ums.PAS.Database
         {
             List<ULBASENDING> ret = new List<ULBASENDING>();
             Hashtable operatorlink = new Hashtable();
+            OdbcDataReader rs = null;
 
-            
             try
             {
                 //String szSQL = String.Format("SELECT LS.l_status, LS.l_response, LS.l_items, LS.l_proc, LS.l_retries, LS.l_requesttype, LS.f_simulate, LS.sz_jobid, LS.sz_areaid, isnull(LS.l_operator, -1), isnull(LOP.sz_operatorname, 'Unknown Operator') " +
                 //                            "FROM LBASEND LS, LBAOPERATORS LOP WHERE LS.l_refno={0} AND LS.l_operator*=LOP.l_operator", n_refno);
                 String szSQL = String.Format("sp_pas_status_lbasend {0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 int n_index = 0;
                 while (rs.Read())
                 {
@@ -196,6 +209,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             return ret;
         }
@@ -204,36 +222,51 @@ namespace com.ums.PAS.Database
         {
             List<USMSINSTATS> ret = new List<USMSINSTATS>();
             String szSQL = String.Format("sp_pas_get_smsinstats {0}", n_refno);
-            OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-            while (rs.Read())
+            OdbcDataReader rs = null;
+            try
             {
-                USMSINSTATS st = new USMSINSTATS();
-                try
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                while (rs.Read())
                 {
-                    st.l_refno = rs.GetInt32(0);
-                    st.l_answercode = rs.GetInt32(1);
-                    st.sz_description = rs.GetString(2);
-                    st.l_count = rs.GetInt32(3);
-                    ret.Add(st);
+                    USMSINSTATS st = new USMSINSTATS();
+                    try
+                    {
+                        st.l_refno = rs.GetInt32(0);
+                        st.l_answercode = rs.GetInt32(1);
+                        st.sz_description = rs.GetString(2);
+                        st.l_count = rs.GetInt32(3);
+                        ret.Add(st);
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
-                catch (Exception)
-                {
-                }
+                rs.Close();
+                return ret;
             }
-            rs.Close();
-            return ret;
+            catch (Exception e2)
+            {
+                return ret;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public List<LBALanguage> GetLBATextContent(long n_refno)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 List<LBALanguage> ret = new List<LBALanguage>();
                 String szSQL = String.Format("sp_pas_get_lbatext {0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 long n_prev_textpk = -1;
                 LBALanguage lang = null;
-                while(rs.Read())
+                while (rs.Read())
                 {
                     long textpk = rs.GetInt64(0);
                     if (n_prev_textpk != textpk)
@@ -255,20 +288,27 @@ namespace com.ums.PAS.Database
                 rs.Close();
                 return ret;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return new List<LBALanguage>();
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
         public ULBASENDING GetLBASending(long n_refno)
         {
+            OdbcDataReader rs = null;
+
             ULBASENDING ret = new ULBASENDING();
             try
             {
                 String szSQL = String.Format("SELECT l_status, l_response, l_items, l_proc, l_retries, l_requesttype, f_simulate, sz_jobid, sz_areaid " +
                                             "FROM LBASEND WHERE l_refno={0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     ret.l_refno = n_refno;
@@ -327,6 +367,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             return ret;
         }
@@ -335,11 +380,16 @@ namespace com.ums.PAS.Database
         {
             CB_PROJECT_STATUS_RESPONSE response = new CB_PROJECT_STATUS_RESPONSE();
             String szSQL = "";
+            OdbcDataReader rs_poly = null;
+            OdbcDataReader rs_mf = null;
+            OdbcDataReader sendts = null;
+            OdbcDataReader histrs = null;
+            OdbcDataReader rs = null;
             try
             {
                 szSQL = String.Format("sp_cb_get_projectinfo {0}", req.l_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
-                    
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
                 BBPROJECT p = new BBPROJECT();
                 while (rs.Read())
                 {
@@ -414,12 +464,12 @@ namespace com.ums.PAS.Database
                     cbs.operators.Add(cb_operator);
 
                     cbs.mdv = sendinginfo; // MDVSENDINGINFO                    
-                    
+
                     //statuslist.Add(cbs);
                 }
                 rs.Close();
 
-                
+
 
                 for (int i = 0; i < statuslist.Count; ++i)
                 {
@@ -428,7 +478,7 @@ namespace com.ums.PAS.Database
                         List<ULBAHISTCELL> histlist = new List<ULBAHISTCELL>();
 
                         szSQL = String.Format("sp_cb_get_histcell {0}, {1}", statuslist[i].l_refno, statuslist[i].operators[j].l_operator);
-                        OdbcDataReader histrs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        histrs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
 
                         ULBAHISTCELL hc;
                         while (histrs.Read())
@@ -461,7 +511,7 @@ namespace com.ums.PAS.Database
                     for (int j = 0; j < statuslist[i].operators.Count; ++j)
                     {
                         szSQL = String.Format("sp_cb_get_lbasend_ts {0}, {1}", statuslist[i].l_refno, statuslist[i].operators[j].l_operator);
-                        OdbcDataReader sendts = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                        sendts = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                         List<ULBASEND_TS> liststs = new List<ULBASEND_TS>();
                         ULBASEND_TS lbasend;
                         while (sendts.Read())
@@ -482,7 +532,7 @@ namespace com.ums.PAS.Database
                     CB_STATUS cb = statuslist[i];
                     szSQL = String.Format("SELECT sz_xml FROM PASHAPE WHERE l_pk={0} AND l_type={1}",
                         cb.l_refno, (long)PASHAPETYPES.PASENDING);
-                    OdbcDataReader rs_poly = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    rs_poly = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     if (rs_poly.Read())
                     {
 
@@ -495,7 +545,7 @@ namespace com.ums.PAS.Database
                 {
                     CB_STATUS cb = statuslist[i];
                     szSQL = String.Format("sp_pas_get_lbamessagefields {0}", cb.l_refno);
-                    OdbcDataReader rs_mf = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    rs_mf = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     while (rs_mf.Read())
                     {
                         int l_fieldtype = Int32.Parse(rs_mf["l_fieldtype"].ToString());
@@ -522,14 +572,31 @@ namespace com.ums.PAS.Database
                 p.n_sendingcount = statuslist.Count;
                 response.project = p;
                 response.statuslist = statuslist;
-                
-               
+
+
 
             }
             catch (Exception e)
             {
-                
+
                 throw e;
+            }
+            finally
+            {
+                if (rs_mf != null && !rs_mf.IsClosed)
+                    rs_mf.Close();
+                
+                if (rs_poly != null && !rs_poly.IsClosed)
+                    rs_poly.Close();
+                
+                if (sendts != null && !sendts.IsClosed)
+                    sendts.Close();
+
+                if (histrs != null && !histrs.IsClosed)
+                    histrs.Close();
+
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return response;
         }
@@ -538,9 +605,10 @@ namespace com.ums.PAS.Database
         public List<UStatusItem> GetStatusItems(ref UStatusItemSearchParams p)
         {
             List<UStatusItem> ret = new List<UStatusItem>();
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(String.Format("sp_bbhistitems {0}, {1}, {2}, {3}", p._l_projectpk, "-1", p._l_date_filter, p._l_time_filter), UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(String.Format("sp_bbhistitems {0}, {1}, {2}, {3}", p._l_projectpk, "-1", p._l_date_filter, p._l_time_filter), UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     UStatusItem item = new UStatusItem();
@@ -570,16 +638,22 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return ret;
         }
 
         public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetMonthlyMessageReport(long month)
         {
             List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> ret = new List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE>();
+            OdbcDataReader rs = null;
             try
             {
                 String sz_sql = String.Format("sp_cb_get_messages_month {0}, {1}", month, month + 100000000);
-                OdbcDataReader rs = ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
@@ -610,15 +684,21 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return ret;
         }
 
         public List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> GetOperatorPerformanceThisMonth(long month)
         {
+            OdbcDataReader rs = null;
             List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE> ret = new List<CB_MESSAGE_MONTHLY_REPORT_RESPONSE>();
             try
             {
-                OdbcDataReader rs = ExecReader(String.Format("sp_cb_get_operator_performance_month {0}, {1}", month, month + 100000000), UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(String.Format("sp_cb_get_operator_performance_month {0}, {1}", month, month + 100000000), UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     CB_MESSAGE_MONTHLY_REPORT_RESPONSE item = new CB_MESSAGE_MONTHLY_REPORT_RESPONSE();
@@ -635,6 +715,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return ret;
         }

@@ -67,11 +67,11 @@ namespace com.ums.ws.pas.admin
             string sz_sql = String.Format("SELECT * FROM BBUSER WHERE sz_userid='{0}'", user.sz_userid.ToUpper().Replace("'", "''"));
             StoreUserResponse res = new StoreUserResponse();
             PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
-
+            OdbcDataReader rs = null;
             try
             {
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 if (rs.HasRows && user.l_userpk == 0)
                 {
@@ -115,7 +115,11 @@ namespace com.ums.ws.pas.admin
                 res.reason = e.Message;
                 return res;
             }
-            finally { db.close(); }
+            finally {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                db.close(); 
+            }
 
             res.successful = true;
             res.user = user;
@@ -130,11 +134,12 @@ namespace com.ums.ws.pas.admin
 
             String sz_sql = "SELECT * FROM BBUSER";
             PASUmsDb db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
+            OdbcDataReader rs = null;
             try
             {
                 
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     UBBUSER obj = new UBBUSER();
@@ -190,7 +195,11 @@ namespace com.ums.ws.pas.admin
                 res.user = ulist;
                 res.reason = e.Message;
             }
-            finally { db.close(); }
+            finally { 
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                db.close();
+            }
 
             res.successful = true;
             res.user = ulist;
@@ -295,11 +304,12 @@ namespace com.ums.ws.pas.admin
                                             "FROM v_BBDEPARTMENT DEP " +
                                             "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                                            "WHERE SH.l_type = {0} AND DEP.l_comppk = {1} ORDER BY DEP.l_deptpk", (int)type, logoninfo.l_comppk);
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 UDEPARTMENT obj = new UDEPARTMENT();
                 obj.l_deptpk = -1;
@@ -332,6 +342,11 @@ namespace com.ums.ws.pas.admin
                 res.errorCode = -1;
                 res.reason = e.Message;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             res = new GetRestrictionAreasResponse();
             res.successful = true;
@@ -348,6 +363,7 @@ namespace com.ums.ws.pas.admin
 
             List<UDEPARTMENT> dlist = new List<UDEPARTMENT>();
             string sz_sql = "";
+            OdbcDataReader rs = null;
 
             if (users.Count > 0)
             {
@@ -372,7 +388,7 @@ namespace com.ums.ws.pas.admin
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
                 
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 UPASLOG log;
                 
@@ -487,7 +503,11 @@ namespace com.ums.ws.pas.admin
                 res.reason = e.Message;
                 throw e;
             }
-
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             res = new GetUserActivityResponse();
             res.successful = true;
             res.log = loglist;
@@ -506,11 +526,12 @@ namespace com.ums.ws.pas.admin
                               "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                              "WHERE SH.l_type = 16 " + 
                              "AND SH.l_pk = {0}", areaid);
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.HasRows)
                 {
                     rs.Read();
@@ -545,7 +566,11 @@ namespace com.ums.ws.pas.admin
                 res.reason = e.Message;
                 return res;
             }
-
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return res;
         }
        
@@ -558,13 +583,13 @@ namespace com.ums.ws.pas.admin
 
             string sz_sql = "";
 
-            sz_sql = String.Format("sp_cb_set_occupiedv2 {0}, {1}, {2}", (int)accesspage, occupied?1:0, logoninfo.l_userpk);            
-
+            sz_sql = String.Format("sp_cb_set_occupiedv2 {0}, {1}, {2}", (int)accesspage, occupied?1:0, logoninfo.l_userpk);
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb();
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     if (rs.GetInt32(0) == 0)
@@ -588,6 +613,11 @@ namespace com.ums.ws.pas.admin
                 res.errorCode = -1;
                 res.reason = e.Message;
                 return res;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
 
             return res;
@@ -645,7 +675,7 @@ namespace com.ums.ws.pas.admin
             GetOperatorsResponse res = new GetOperatorsResponse();
             PASUmsDb db;
             List<LBAOPERATOR> oplist = new List<LBAOPERATOR>();
-            
+            OdbcDataReader rs = null;
             try
             {
                 ULogon l = new ULogon();
@@ -654,7 +684,7 @@ namespace com.ums.ws.pas.admin
                 string sz_sql = "SELECT l_operator,sz_operatorname FROM LBAOPERATORS";
                 
                 db = new PASUmsDb();
-                OdbcDataReader rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     LBAOPERATOR op = new LBAOPERATOR();
@@ -677,6 +707,11 @@ namespace com.ums.ws.pas.admin
                 res.successful = false;
                 return res;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             
             return res;
@@ -688,7 +723,7 @@ namespace com.ums.ws.pas.admin
             IsShapeActiveInPeriodResponse res = new IsShapeActiveInPeriodResponse();
             PASUmsDb db;
             List<LBAOPERATOR> oplist = new List<LBAOPERATOR>();
-
+            OdbcDataReader rs = null;
             try
             {
                 ULogon l = new ULogon();
@@ -697,7 +732,7 @@ namespace com.ums.ws.pas.admin
                 string sz_sql = String.Format("SELECT l_pk FROM PASHAPE where l_pk={0} AND l_timestamp < {1}", shapepk, l_period + 100000000);
 
                 db = new PASUmsDb();
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 if (!rs.HasRows)
                 {
                     res.errorCode = -1;
@@ -723,6 +758,11 @@ namespace com.ums.ws.pas.admin
                 res.reason = e.Message;
                 res.successful = false;
                 return res;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
 
 

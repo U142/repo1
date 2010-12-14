@@ -44,6 +44,8 @@ namespace com.ums.PAS.Settings
 
         public ULBAPARAMETER getLBAParameter(ULOGONINFO logon)
         {
+            OdbcDataReader odr = null;
+
             try
             {
                 ULBAPARAMETER param = new ULBAPARAMETER();
@@ -51,9 +53,10 @@ namespace com.ums.PAS.Settings
                 String szSQL;
                 szSQL = String.Format("sp_cb_get_LBAPARAMETER {0},{1}", logon.l_deptpk, logon.l_comppk);
 
-                OdbcDataReader odr = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                odr = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
 
-                if(odr.HasRows) {
+                if (odr.HasRows)
+                {
                     odr.Read();
                     param.l_incorrect = odr.GetInt32(1);
                     param.l_autologoff = odr.GetInt32(2);
@@ -67,13 +70,18 @@ namespace com.ums.PAS.Settings
                     param.l_deptpk = logon.l_deptpk;
                     param.l_comppk = logon.l_comppk;
                 }
-                odr.Close();
+                //odr.Close();
 
                 return param;
             }
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if(odr!=null && !odr.IsClosed)
+                    odr.Close();
             }
 
         }

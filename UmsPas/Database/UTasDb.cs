@@ -22,21 +22,22 @@ namespace com.ums.PAS.Database
 
         public int insertCountRequest(ref UTasCountShape s, ref ULOGONINFO logon, ref List<int> retoperators)
         {
+            OdbcDataReader rsReq = null;
             try
             {
                 if (s.countries.Count <= 0)
                     throw new UNoCountryCodeSpecifiedException();
 
                 int n_requestpk = -1;
-                OdbcDataReader rsReq = ExecReader("sp_tas_requestpk", UmsDb.UREADER_KEEPOPEN);
+                rsReq = ExecReader("sp_tas_requestpk", UmsDb.UREADER_KEEPOPEN);
                 if (rsReq.Read())
                     n_requestpk = rsReq.GetInt32(0);
                 rsReq.Close();
                 List<int> operators = GetOperatorsForSend(-1, logon.l_deptpk);
                 retoperators = operators;
-                if(operators.Count<=0)
+                if (operators.Count <= 0)
                     throw new UNoAccessOperatorsException();
-                for(int i=0; i < operators.Count; i++)
+                for (int i = 0; i < operators.Count; i++)
                 {
                     String szSQL = String.Format("sp_tas_insert_request {0}, {1}, {2}, {3}",
                                             n_requestpk, operators[i], logon.l_userpk, logon.l_deptpk);
@@ -53,6 +54,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rsReq != null && !rsReq.IsClosed)
+                    rsReq.Close();
             }
         }
 
@@ -75,6 +81,8 @@ namespace com.ums.PAS.Database
 
         public bool GetTasSendings(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter, long dbtime)
         {
+            OdbcDataReader rsCC = null;
+            OdbcDataReader rs = null;
             try
             {
                 timefilter = _getInitTimestamp(timefilter, dbtime);
@@ -90,7 +98,7 @@ namespace com.ums.PAS.Database
                     "AND SI.l_userpk=BU.l_userpk AND TS.l_ts>={1} " +
                     "ORDER BY TS.l_ts, TS.l_refno, TS.l_operator",
                     logon.l_deptpk, timefilter);
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 int n_prev_operator = -1;
                 int n_prev_request = -1;
                 int n_new_operator = -1;
@@ -138,7 +146,7 @@ namespace com.ums.PAS.Database
                         ccs = new List<ULBACOUNTRY>();
 
                         String sqlCC = String.Format("SELECT l_cc_to, isnull(sz_iso_to,'') FROM LBASEND_COUNTRIES WHERE l_refno={0}", tmp.n_refno);
-                        OdbcDataReader rsCC = ExecReader(sqlCC, UmsDb.UREADER_KEEPOPEN);
+                        rsCC = ExecReader(sqlCC, UmsDb.UREADER_KEEPOPEN);
                         while (rsCC.Read())
                         {
                             ULBACOUNTRY country = new ULBACOUNTRY();
@@ -162,6 +170,13 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rsCC != null && !rsCC.IsClosed)
+                    rsCC.Close();
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         /*
@@ -170,6 +185,8 @@ namespace com.ums.PAS.Database
          */
         public bool GetTasRequestResults(ref List<UTASREQUESTRESULTS> res, ref ULOGONINFO logon, long timefilter, long dbtime)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 timefilter = _getInitTimestamp(timefilter, dbtime);
@@ -186,7 +203,7 @@ namespace com.ums.PAS.Database
                     "REQ.l_timestamp>={0} " +
                     "ORDER BY REQ.l_requestpk, REQ.l_operator",
                     timefilter);
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 int n_prev_operator = -1;
                 int n_prev_request = -1;
                 int n_new_operator = -1;
@@ -244,6 +261,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public List<ULBACONTINENT> GetContinentsAndCountries(String from_country, long timefilter)
@@ -251,14 +273,16 @@ namespace com.ums.PAS.Database
             if (from_country==null || from_country.Length <= 0)
                 throw new UNoCountryCodeSpecifiedException();
             List<ULBACONTINENT> list = new List<ULBACONTINENT>();
+            OdbcDataReader rs = null;
+
             try
             {
                 String sql = String.Format("SELECT l_continentpk, sz_short, sz_name, f_weight_lat, f_weight_lon, f_dimension_lat, f_dimension_lon FROM LBACONTINENTS");
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     ULBACONTINENT cont = new ULBACONTINENT();
-                    cont.l_continentpk  = rs.GetInt32(0);
+                    cont.l_continentpk = rs.GetInt32(0);
                     cont.sz_short = rs.GetString(1);
                     cont.sz_name = rs.GetString(2);
                     cont.weightpoint = new UMapPoint();
@@ -271,7 +295,7 @@ namespace com.ums.PAS.Database
                     cont.bounds.b_bo = cont.weightpoint.lat - 45.0;
 
                     cont.countries = GetCountriesByContinent(cont.l_continentpk, from_country, timefilter);
-                    if(cont.countries.Count>0)
+                    if (cont.countries.Count > 0)
                         list.Add(cont);
                 }
                 rs.Close();
@@ -280,12 +304,19 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
                
             return list;
         }
         public List<ULBACOUNTRY> GetCountriesByContinent(int n, String from_country, long timefilter)
         {
             List<ULBACOUNTRY> list = new List<ULBACOUNTRY>();
+            OdbcDataReader rs = null;
+
             try
             {
                 //String sql = String.Format("SELECT LC.l_cc, LC.sz_iso, LC.sz_name, LC.f_weight_lat, LC.f_weight_lon, LC.f_dimension_lat, LC.f_dimension_lon, LC.l_continentpk, LC.l_isonumeric FROM LBACOUNTRIES LC WHERE LC.l_continentpk={0} AND LC.l_isonumeric>0", n);
@@ -312,7 +343,7 @@ namespace com.ums.PAS.Database
                     n, from_country, timefilter, join);
 
 
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 ULBACOUNTRY last = null;
                 String prevcountryname = "";
                 while (rs.Read())
@@ -337,7 +368,7 @@ namespace com.ums.PAS.Database
                     t.l_operator = rs.GetInt32(10);
                     t.sz_operator = rs.GetString(11);
                     t.l_touristcount = rs.GetInt32(12);
-                    if (last!=null && last.sz_iso == c.sz_iso)
+                    if (last != null && last.sz_iso == c.sz_iso)
                     {
                         //no need to add, sum count
                         if (t.l_lastupdate > 0)
@@ -397,16 +428,22 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return list;
         }
         public List<UTASRESPONSENUMBER> GetResponseNumbers(ref ULOGONINFO logon)
         {
             List<UTASRESPONSENUMBER> list = new List<UTASRESPONSENUMBER>();
+            OdbcDataReader rs = null;
             try
             {
                 UTASRESPONSENUMBER responsenumber;
                 string szSQL = String.Format("SELECT sz_replynumber, l_activerefno, l_timestamp FROM LBASMSIN_REPLYNUMBERS WHERE (l_comppk={0} AND l_deptpk={1}) OR (l_comppk={2} AND l_deptpk=0)", logon.l_comppk, logon.l_deptpk, logon.l_comppk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     responsenumber = new UTASRESPONSENUMBER();
@@ -427,11 +464,18 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return list;
         }
 
         public List<ULBACOUNTRYSTATISTICS> GetStatistics_Countries_Per_Timeunit(ref ULBASTATISTICS_FILTER filter)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 List<ULBACOUNTRYSTATISTICS> ret = new List<ULBACOUNTRYSTATISTICS>();
@@ -494,7 +538,7 @@ namespace com.ums.PAS.Database
                     szSQL += String.Format("" +
                              "ORDER BY substring(convert(varchar(18), TCH.l_timestamp),1,{0})",
                              number_of_date);
-                    OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     while (rs.Read())
                     {
                         ULBACOUNTRYSTATISTICS stats = new ULBACOUNTRYSTATISTICS();
@@ -523,7 +567,7 @@ namespace com.ums.PAS.Database
                         tempSQL = String.Format("sp_tas_max_pr_timeunit_cc {0}, {1}, {2}, {3}, {4}",
                                                 cc_to, filter.rowcount, number_of_date, filter.from_date, filter.to_date);
                         szSQL = tempSQL;
-                        OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                        rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                         while (rs.Read())
                         {
                             ULBACOUNTRYSTATISTICS stats = new ULBACOUNTRYSTATISTICS();
@@ -549,6 +593,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
     }

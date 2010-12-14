@@ -28,10 +28,11 @@ namespace com.ums.PAS.Database
         public int setMaxAlloc(ref UMAXALLOC param)
         {
             int ret = -1;
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format("sp_setmaxalloc {0}, {1}, {2}", param.n_projectpk, param.n_refno, param.n_maxalloc);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if(rs.NextResult())
                 {
                     ret = rs.GetInt32(0);
@@ -49,6 +50,8 @@ namespace com.ums.PAS.Database
             }
             finally
             {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
                 this.close();
             }
             return ret;

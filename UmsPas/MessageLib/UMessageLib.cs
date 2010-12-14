@@ -68,6 +68,8 @@ namespace com.ums.PAS.messagelib
 
         public UBBMESSAGE InsertMessage(int comppk, ref UBBMESSAGE msg)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 String langpk = msg.n_langpk.ToString();
@@ -86,7 +88,7 @@ namespace com.ums.PAS.messagelib
                                     msg.n_categorypk,
                                     msg.n_parentpk,
                                     msg.n_messagepk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     msg.n_messagepk = rs.GetInt64(0);
@@ -130,6 +132,11 @@ namespace com.ums.PAS.messagelib
                 msg.b_valid = false;
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         /**
@@ -138,6 +145,8 @@ namespace com.ums.PAS.messagelib
          */
         public UBBMESSAGELIST GetMessageList(ref ULOGONINFO logon, UBBMESSAGELISTFILTER filter)
         {
+            OdbcDataReader rsCC = null;
+            OdbcDataReader rs = null;
             try
             {
                 UBBMESSAGELIST ret = new UBBMESSAGELIST();
@@ -156,7 +165,7 @@ namespace com.ums.PAS.messagelib
                                             "FROM BBMESSAGES " +
                                             "WHERE l_comppk={2} AND l_deptpk=-1 AND isnull(l_timestamp,0)>={1} AND f_template=1",
                                             logon.l_deptpk, filter.n_timefilter, logon.l_comppk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     UBBMESSAGE msg = new UBBMESSAGE();
@@ -254,7 +263,7 @@ namespace com.ums.PAS.messagelib
                                             "WHERE l_messagepk={0} " +
                                             "ORDER BY l_cc",
                                             msg.n_messagepk);
-                    OdbcDataReader rsCC = db.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    rsCC = db.ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     while (rsCC.Read())
                     {
                         UCCMessage ccm = new UCCMessage();
@@ -294,6 +303,14 @@ namespace com.ums.PAS.messagelib
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rsCC != null && !rsCC.IsClosed)
+                    rsCC.Close();
+
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
 
         }

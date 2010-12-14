@@ -248,6 +248,7 @@ namespace wsPASExec.VB
                 OdbcDataReader dr = cmd.ExecuteReader();
                 if (!dr.Read())
                 {
+                    dr.Close();
                     throw raiseException("", "http://ums.no/ws/vb/", "The conference has finished, unable to redial", "Conference.redialParticipant()", FaultCode.Client);
                 }
                 dr.Close();

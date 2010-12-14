@@ -640,6 +640,7 @@ namespace com.ums.ws.pas
         [WebMethod]
         public List<UDEPARTMENT> getRestrictionShapes(ULOGONINFO logon, PASHAPETYPES type)
         {
+            OdbcDataReader rs = null;
             try
             {
                 if (type.Equals(PASHAPETYPES.PAALERT) ||
@@ -658,7 +659,7 @@ namespace com.ums.ws.pas
                                   "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                                  "WHERE SH.l_type = {0} AND DEP.l_comppk = {1} ORDER BY DEP.l_deptpk", (int)type, logon.l_comppk);
 
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 UDEPARTMENT obj = new UDEPARTMENT();
                 obj.l_deptpk = -1;
@@ -689,6 +690,11 @@ namespace com.ums.ws.pas
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 

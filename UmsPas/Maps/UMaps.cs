@@ -169,13 +169,15 @@ namespace com.ums.PAS.Maps
             String sz_wms_url = "";
             String sz_wms_user = "";
             String sz_wms_password = "";
+            OdbcDataReader rs = null;
+
             try
             {
                 UmsDb db = new UmsDb();
                 if (cv.sz_jobid.Equals("-1") || cv.sz_jobid.Trim().Equals(""))
                     throw new ULbaCellCoverageJobNotPreparedException(sz_operator);
                 String sz_sql = String.Format("SELECT isnull(LO.sz_operatorname, ''), isnull(LO.sz_wms_url,''), isnull(LO.sz_wms_user,''), isnull(LO.sz_wms_password,'') FROM LBASEND LS, LBAOPERATORS LO WHERE LS.sz_jobid='{0}' AND LS.l_operator=LO.l_operator", cv.sz_jobid);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     sz_operator = rs.GetString(0).Trim();
@@ -200,6 +202,12 @@ namespace com.ums.PAS.Maps
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+
 
             String sz_request = "";
             try

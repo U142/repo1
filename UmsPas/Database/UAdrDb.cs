@@ -129,9 +129,10 @@ namespace com.ums.PAS.Database
                                         "WHERE KOMMUNENR IN ({0}) AND NOT lon = 0 AND NOT lat = 0 " +
                                         "GROUP BY KOMMUNENR",
                                         szMunicipal);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 /*List<double> list_std_lon = new List<double>();
                 List<double> list_std_lat = new List<double>();
                 List<double> list_avg_lon = new List<double>();
@@ -181,6 +182,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return b;
         }
 
@@ -197,10 +203,10 @@ namespace com.ums.PAS.Database
                 "WHERE " +
                 "DXM.l_deptpk={0}",
                 n_deptpk);
-
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     UMunicipalDef md = new UMunicipalDef();
@@ -216,6 +222,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return list;
         }
@@ -345,6 +356,7 @@ namespace com.ums.PAS.Database
         protected UAdrCount _MunicipalCount(ref List<UMunicipalDef> m, long adrtypes)
         {
             UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL="";
@@ -372,7 +384,7 @@ namespace com.ums.PAS.Database
                     if (!bfirst)
                         szSQL += " GROUP BY BEDRIFT, f_hasfixed, f_hasmobile";
                 }
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 
                 UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())
@@ -389,19 +401,25 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return count;
         }
 
         protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
         {
             UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
                                             e.center.lon, e.center.lat,
                                             e.radius.lon, e.radius.lat,
                                             (m_n_pastype==2 ? String.Format(",{0}", m_n_deptpk) : ""));
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())
                 {
@@ -417,6 +435,11 @@ namespace com.ums.PAS.Database
             {
                 throw err;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return count;
         }
 
@@ -425,6 +448,7 @@ namespace com.ums.PAS.Database
         {
             int n_maxadr_polycount = 50000;
             UAdrCount count = new UAdrCount();
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = "";
@@ -440,7 +464,7 @@ namespace com.ums.PAS.Database
                                             n_maxadr_polycount,
                                             b.l_bo, b.r_bo, b.b_bo, b.u_bo, m_n_deptpk);
                                                                 
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 //List<UAdrcountCandidate> candidates = new List<UAdrcountCandidate>();
                 UMapPoint cpoint = new UMapPoint();
                 UAdrcountCandidate c = new UAdrcountCandidate();
@@ -468,6 +492,11 @@ namespace com.ums.PAS.Database
             {
                 throw err;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return count;
         }
 
@@ -478,6 +507,7 @@ namespace com.ums.PAS.Database
             percent.n_percent = 10;
             percent.n_totalrecords = 0;
             UAddressList list = new UAddressList();
+            OdbcDataReader rs = null;
             try
             {
                 String xycodes = "";
@@ -492,7 +522,7 @@ namespace com.ums.PAS.Database
                     szSQL = String.Format("sp_getadr_byquality '{0}', '{1}'", param.sz_postno, xycodes);
                 else if(m_n_pastype==2)
                     szSQL = String.Format("sp_getadr_byquality '{0}', '{1}', {2}", param.sz_postno, xycodes, logon.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 percent.n_totalrecords = rs.RecordsAffected;
                 int counter = 0;
                 while (rs.Read())
@@ -515,6 +545,8 @@ namespace com.ums.PAS.Database
             }
             finally
             {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
                 percent.n_percent = 100;
                 percentCallback(ref logon, ProgressJobType.HOUSE_DOWNLOAD, percent);
             }
@@ -570,9 +602,9 @@ namespace com.ums.PAS.Database
                 }
                 if (n_validcount > 0)
                 {
+                     OdbcDataReader rs = null;
                     try
                     {
-                        OdbcDataReader rs;
                         //m_cmd = new OdbcCommand(szSQL, conn);
                         //rs = m_cmd.ExecuteReader();
                         rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN, !b_prepared);
@@ -601,7 +633,7 @@ namespace com.ums.PAS.Database
                                     //p[adr.arrayindex].list.finalize();
                                 }
                             }
-                                
+
                         }
                         rs.Close();
                     }
@@ -609,6 +641,11 @@ namespace com.ums.PAS.Database
                     {
                         next = startat;
                         throw err;
+                    }
+                    finally
+                    {
+                        if (rs != null && !rs.IsClosed)
+                            rs.Close();
                     }
                 }
                 /*if (i >= p.Count)
@@ -786,16 +823,10 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                                              "ADR_KONSUM AK, DEPARTMENT_X_MUNICIPAL DX WHERE LON>={0} AND LON<={1} AND LAT>={2} AND LAT<={3} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
                                              param.b_bo, param.u_bo, param.l_bo, param.r_bo, m_n_deptpk);
             }
-            OdbcDataReader rs;
+            OdbcDataReader rs = null;
             try
             {
                 rs = base.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-            }
-            catch(Exception e)
-            {
-                ULog.error(0, "Error in retrieving addresses", e.Message);
-                throw e;
-            }
                 while (rs.Read())
                 {
                     UAddress adr = new UAddress();
@@ -981,15 +1012,27 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                     }*/
 
                 }
-            /*}
-            catch (Exception e)
+                /*}
+                catch (Exception e)
+                {
+
+                }*/
+                list.finalize();
+                rs.Close();
+
+                return list;
+            }
+            catch(Exception e)
             {
-
-            }*/
-            list.finalize();
-            rs.Close();
-
-            return list;
+                ULog.error(0, "Error in retrieving addresses", e.Message);
+                throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+                
         }
         protected bool readAddressFromDbByFieldnames(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
         {
@@ -1490,6 +1533,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
 
         public bool InsertInhabitant(ref UAddress adr, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 
@@ -1518,7 +1562,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 cmd.Parameters.Add("@sz_bedrift", OdbcType.Int).Value = adr.bedrift;
                 cmd.Parameters.Add("@sz_importid", OdbcType.Int).Value = l.l_deptpk;
 
-                OdbcDataReader rs = cmd.ExecuteReader();
+                rs = cmd.ExecuteReader();
 
                 /* Had to use command to accomodate null value in houseno
                 String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_ins_adr '{0}', '{1}', '{2}', '{3}', '{4}', {5}, '{6}', '{7}', " +
@@ -1545,14 +1589,20 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
         public bool UpdateInhabitant(ref UAddress adr, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}",
                                 l.l_deptpk, adr.lat, adr.lon, adr.kondmid);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     //adr.kondmid = rs.GetString(0);
@@ -1572,9 +1622,15 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
         public bool DeleteInhabitant(ref UAddress adr, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = "";
@@ -1590,7 +1646,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 }
                 else
                     throw new UDbNoDataException("No access");
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.RecordsAffected > 0)
                 {
                     rs.Close();
@@ -1603,6 +1659,11 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
     }

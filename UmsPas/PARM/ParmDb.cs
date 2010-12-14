@@ -22,11 +22,13 @@ namespace com.ums.UmsParm
 
         public long getDbTime()
         {
+            OdbcDataReader rsNow = null;
+
             try
             {
                 long n_tmp = 0;
                 String sqlNow = "sp_getdatetime";
-                OdbcDataReader rsNow = ExecReader(sqlNow, UmsDb.UREADER_KEEPOPEN);
+                rsNow = ExecReader(sqlNow, UmsDb.UREADER_KEEPOPEN);
                 if (rsNow.Read())
                 {
                     n_tmp = rsNow.GetInt64(0);
@@ -39,6 +41,11 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rsNow != null && !rsNow.IsClosed)
+                    rsNow.Close();
+            }
         }
 
         public int GetPasType(int n_deptpk)
@@ -46,9 +53,11 @@ namespace com.ums.UmsParm
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
             String szSQL = String.Format("SELECT l_pas FROM BBDEPARTMENTMODS WHERE l_deptpk={0}", n_deptpk);
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     int pastype = rs.GetInt32(0);
@@ -66,6 +75,11 @@ namespace com.ums.UmsParm
                 setLastError(e.Message);
                 throw new UDbQueryException(szSQL);
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         /*
@@ -81,9 +95,10 @@ namespace com.ums.UmsParm
             String szSQL = String.Format("SELECT PA.l_alertpk FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_alertpk={0} AND " +
                                             "PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PO.l_deptpk={1}",
                                             l_alertpk, l.l_deptpk);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     b_ret = true;
@@ -94,6 +109,11 @@ namespace com.ums.UmsParm
             {
                 setLastError(e.Message);
                 throw new UDbQueryException(szSQL);
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {
@@ -107,20 +127,25 @@ namespace com.ums.UmsParm
         {
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT l_profilepk FROM BBACTIONPROFILESOUT WHERE l_profilepk={0}", l_profilepk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (!rs.Read())
                 {
                     rs.Close();
                     throw new UProfileDoesNotExistException(l_profilepk);
                 }
+                rs.Close();
             }
             catch (Exception e)
             {
                 throw e;
             }
+            if (rs != null && !rs.IsClosed)
+                rs.Close();
             int n_num_audiofiles = base.getNumDynfilesInProfile(l_profilepk);
             if (n_num_audiofiles > 0 && b_must_have_no_dynfiles)
             {
@@ -139,9 +164,10 @@ namespace com.ums.UmsParm
         public bool GetAlertsFromEvent(Int64 l_eventpk, int n_function, ref List<PAALERT> alerts)//ref ArrayList alerts)
         {
             String szSQL = String.Format("SELECT l_alertpk FROM PAALERT WHERE l_parent={0}", l_eventpk);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     PAALERT pa = new PAALERT();
@@ -155,6 +181,11 @@ namespace com.ums.UmsParm
             {
                 setLastError(e.Message);
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {
@@ -174,9 +205,11 @@ namespace com.ums.UmsParm
                                         "isnull(PE.l_categorypk,-1), isnull(PE.l_timestamp,-1), isnull(PE.f_epi_lon,0), isnull(PE.f_epi_lat,0) " +
                                         "FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PO.l_deptpk={0}",
                                         l.l_deptpk);
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 //PAEVENT current_event = null;
                 while (rs.Read())
                 {
@@ -220,6 +253,11 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return b_ret;
         }
 
@@ -229,9 +267,11 @@ namespace com.ums.UmsParm
             pe.l_eventpk = l_eventpk;
             String szSQL = String.Format("SELECT l_eventpk, l_parent, sz_name, sz_description, l_categorypk, l_timestamp, f_epi_lon, f_epi_lat " +
                                         "FROM PAEVENT WHERE l_eventpk={0}", l_eventpk);
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     pe.l_parent = rs.GetInt64(1);
@@ -249,6 +289,11 @@ namespace com.ums.UmsParm
             {
                 setLastError(e.Message);
                 pe.l_eventpk = 0;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return b_ret;
 
@@ -270,13 +315,15 @@ namespace com.ums.UmsParm
 
         public bool UpdatePAShape(Int64 pk, String sz_xml, PASHAPETYPES type, ref bool bShapeChanged)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 bool exists = false;
                 String sz_existing_md5 = "";
                 String md5 = UmsCommon.Helpers.CreateMD5Hash(sz_xml);
                 String sql = String.Format("SELECT isnull(sz_md5,'') FROM PASHAPE WHERE l_pk={0} AND l_type={1}", pk, (int)type);
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     exists = true;
@@ -318,6 +365,11 @@ namespace com.ums.UmsParm
                 ULog.error(pk, e.Message);
                 return false;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         /*  in: alertpk, reference to PAALERT struct
@@ -332,9 +384,11 @@ namespace com.ums.UmsParm
                                             "isnull(l_schedpk,-1), sz_oadc, isnull(l_validity,1), isnull(l_addresstypes,0), isnull(l_timestamp,0), isnull(f_locked,0), isnull(sz_areaid,''), "+
                                             "isnull(l_maxchannels, 0), isnull(l_requesttype, 0), isnull(sz_sms_oadc, ''), isnull(sz_sms_message,''), isnull(l_expiry, 60) l_expiry " +
                                             "FROM PAALERT WHERE l_alertpk={0}", l_alertpk);
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     pa.setAlertPk(rs.GetInt64(0));
@@ -367,6 +421,11 @@ namespace com.ums.UmsParm
                 setLastError(e.Message);
                 pa.setAlertPk(0);
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             /*finally
             {
                 CloseRecordSet();
@@ -382,9 +441,11 @@ namespace com.ums.UmsParm
             bool b_ret = false;
             String szSQL = String.Format("SELECT l_reschedpk, l_deptpk, l_retries, l_interval, l_canceltime, l_canceldate, l_pausetime, l_pauseinterval, sz_name " +
                                             "FROM BBRESCHEDPROFILES WHERE l_reschedpk={0}", sz_reschedpk);
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     re.setReschedPk(rs.GetString(0));
@@ -404,6 +465,11 @@ namespace com.ums.UmsParm
             {
                 setLastError(e.Message);
                 re.setReschedPk("-1");
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {
@@ -455,15 +521,17 @@ namespace com.ums.UmsParm
          */
         public bool GetProjectInfo(Int64 l_projectpk, ref BBPROJECT p)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT BP.l_projectpk, BP.sz_name, BP.l_createtimestamp, BP.l_updatetimestamp, " +
                                         "BP.l_deptpk, count(BXR.l_refno) n_count " +
-                                        "FROM BBPROJECT BP, BBPROJECT_X_REFNO BXR WHERE BP.l_projectpk={0} "+
-                                        "AND BP.l_projectpk=BXR.l_projectpk "+
-                                        "GROUP BY BP.l_projectpk, BP.sz_name, BP.l_createtimestamp, "+
+                                        "FROM BBPROJECT BP, BBPROJECT_X_REFNO BXR WHERE BP.l_projectpk={0} " +
+                                        "AND BP.l_projectpk=BXR.l_projectpk " +
+                                        "GROUP BY BP.l_projectpk, BP.sz_name, BP.l_createtimestamp, " +
                                         "BP.l_updatetimestamp, BP.l_deptpk", l_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     p.sz_projectpk = l_projectpk.ToString();
@@ -482,6 +550,11 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         /*
@@ -489,17 +562,18 @@ namespace com.ums.UmsParm
          */
         public bool GetSendingInfosByProject(ref BBPROJECT project)
         {
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format("SELECT l_refno, isnull(l_type, 0), isnull(l_parentrefno,0) FROM BBPROJECT_X_REFNO WHERE l_projectpk={0} AND l_type in (0,2)", project.sz_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     int n_refno = rs.GetInt32(0);
                     int n_linktype = rs.GetInt32(1);
                     int n_parentrefno = rs.GetInt32(2);
                     MDVSENDINGINFO mdv = new MDVSENDINGINFO();
-                    
+
                     try
                     {
                         if (GetSendingInfo(n_refno, ref mdv))
@@ -518,11 +592,16 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return true;
 
-                
+
             }
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -531,9 +610,11 @@ namespace com.ums.UmsParm
          */
         public bool GetSendingInfo(long l_refno, ref MDVSENDINGINFO m)
         {
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(String.Format("sp_sendinginfo {0}", l_refno), UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(String.Format("sp_sendinginfo {0}", l_refno), UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     m.l_refno = rs.GetInt32(0);
@@ -635,6 +716,11 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -769,11 +855,13 @@ namespace com.ums.UmsParm
 
         public bool FillProject(long n_projectpk, ref BBPROJECT p)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT l_projectpk, sz_name, isnull(l_createtimestamp,0), isnull(l_updatetimestamp,0), isnull(l_deptpk,0), isnull(l_userpk,0), isnull(l_finished,0) FROM BBPROJECT WHERE l_projectpk={0}",
                                 n_projectpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     p.sz_projectpk = rs.GetString(0);
@@ -788,9 +876,14 @@ namespace com.ums.UmsParm
 
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
         public bool FinishProject(long n_projectpk)
@@ -1010,11 +1103,12 @@ namespace com.ums.UmsParm
                 if (n_scheddatetime.Equals("-1"))
                     n_scheddatetime = s.m_sendinginfo.l_createdate + s.m_sendinginfo.l_createtime;
                 int n_priserver = 0, n_altserver = 0;
+                OdbcDataReader rs = null;
                 try
                 {
                     sql = String.Format("SELECT l_serverid FROM SMSSERVERS_X_DEPT WHERE l_deptpk={0} ORDER BY l_pri",
                                         s.m_sendinginfo.l_deptpk);
-                    OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
+                    rs = ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
                     if (rs.Read())
                     {
                         n_priserver = rs.GetInt32(0);
@@ -1030,6 +1124,11 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     n_priserver = 2;
+                }
+                finally
+                {
+                    if (rs != null && !rs.IsClosed)
+                        rs.Close();
                 }
  
 
@@ -1158,12 +1257,14 @@ namespace com.ums.UmsParm
         public List<int> GetCBOperatorsForSendByComp(long l_comppk)
         {
             List<int> operators = new List<int>();
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = "";
                 int n_operator = 0;
                 szSQL = String.Format("SELECT isnull(OP.l_operator,-1) FROM LBAOPERATORS OP WHERE OP.f_active=1 AND f_cb=1");
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     n_operator = rs.GetInt32(0);
@@ -1176,12 +1277,18 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return operators;
         }
 
         public List<int> GetOperatorsForSend(long l_alertpk, long l_deptpk)
         {
             List<int> operators = new List<int>();
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = "";
@@ -1192,12 +1299,12 @@ namespace com.ums.UmsParm
                 else //sending from alert, select only prepared operators
                     szSQL = String.Format("select DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-2) from PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE PA.l_alertpk={0} and PA.l_operator=OP.l_operator AND OP.l_operator=XD.l_operator AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
 
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     n_operator = rs.GetInt32(0);
                     n_status = rs.GetInt32(1);
-                    if(n_operator > 0 && n_status == 0)
+                    if (n_operator > 0 && n_status == 0)
                         operators.Add(n_operator);
                 }
                 rs.Close();
@@ -1205,6 +1312,11 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return operators;
         }
@@ -1320,10 +1432,12 @@ namespace com.ums.UmsParm
         public int GetAlertAddresstypes(String l_alertpk)
         {
             int n_ret = 0;
-           String szSQL = String.Format("SELECT l_addresstypes FROM PAALERT WHERE l_alertpk={0}", l_alertpk.Substring(1));
+            String szSQL = String.Format("SELECT l_addresstypes FROM PAALERT WHERE l_alertpk={0}", l_alertpk.Substring(1));
+            OdbcDataReader rs = null;
+
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                     n_ret = rs.GetInt32(0);
                 rs.Close();
@@ -1334,14 +1448,20 @@ namespace com.ums.UmsParm
                 ULog.error(0, szSQL, e.Message);
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
         public String GetAlertAreaID(String l_pk)
         {
             String ret = "";
             String szSQL = String.Format("SELECT isnull(sz_areaid,'-1') FROM PAALERT WHERE l_alertpk={0}", l_pk);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     ret = rs.GetString(0);
@@ -1354,15 +1474,21 @@ namespace com.ums.UmsParm
                 ULog.error(0, szSQL, e.Message);
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public bool GetLbaSendsByRefno(long n_refno, ref List<ULBASENDING> list)
         {
             bool b = false;
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format("SELECT l_refno, l_status, l_response, l_items, l_proc, l_retries, l_requesttype, sz_jobid, sz_areaid, f_simulate, l_operator FROM LBASEND WHERE l_refno={0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     ULBASENDING s = new ULBASENDING();
@@ -1388,15 +1514,22 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public bool VerifyJobIDAndRefno_2_0(int n_refno, String sz_jobid, int l_operator)
         {
             bool b = false;
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0} AND l_operator={1} AND l_status IN (310,311)", n_refno, l_operator);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     String job = rs.GetString(0);
@@ -1409,15 +1542,22 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
         public bool VerifyJobIDAndRefno(int n_refno, String sz_jobid)
         {
             bool b = false;
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT sz_jobid FROM LBASEND WHERE l_refno={0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     String job = rs.GetString(0);
@@ -1430,6 +1570,11 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -1471,18 +1616,20 @@ namespace com.ums.UmsParm
 
         public int getLBAChannelByComppk(long n_refno, int l_deptpk, int l_comppk)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 int n_channel = -1;
                 String szSQL = String.Format("sp_cb_get_LBAPARAMETER {0}, {1}", l_deptpk, l_comppk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     n_channel = Int32.Parse(rs["l_channelno"].ToString());
                 }
 
                 rs.Close();
-                if(n_channel>=0)
+                if (n_channel >= 0)
                     return n_channel;
                 else
                     throw new UNoCellBroadcastChannelAssignedForCompanyException();
@@ -1492,15 +1639,22 @@ namespace com.ums.UmsParm
                 ULog.error(n_refno, "Error occured in getLBAChannelByComppk", e.Message);
                 throw new UGetCellBroadcastChannelException();
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public List<ULBASENDING> GetLBAOperatorsReadyForConfirmCancel(int l_refno)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 List<ULBASENDING> operators = new List<ULBASENDING>();
                 String szSQL = String.Format("SELECT LS.l_operator, LS.sz_jobid, LS.sz_operatorname FROM LBASEND LS, LBAOPERATORS OP WHERE LS.l_status IN (310,311) AND LS.l_refno={0} AND LS.l_operator=OP.l_operator", l_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     int op = rs.GetInt32(0);
@@ -1524,15 +1678,22 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
         }
         public bool GetIsSimulation(int n_refno)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 bool b = true;
                 String szSQL = String.Format("SELECT f_simulate FROM LBASEND WHERE l_refno={0}", n_refno);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     int n = rs.GetInt32(0);
@@ -1548,14 +1709,21 @@ namespace com.ums.UmsParm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
         public bool GetTTSParams(int n_langpk, ref UTTS_DB_PARAMS p)
         {
             bool b_ret = false;
+            OdbcDataReader rs = null;
+
             try
             {
                 String szSQL = String.Format("SELECT sz_speaker, sz_modename, sz_manufacturer FROM BBTTSLANG WHERE l_langpk={0}", n_langpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     p.sz_speaker = rs.GetString(0);
@@ -1567,16 +1735,23 @@ namespace com.ums.UmsParm
                 return b_ret;
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ULog.error(e.Message);
                 return false;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
         /** Inject the message into database for status review */
         public bool InjectTASLanguages(ref UTASSENDING tas)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 String oadc = tas.sz_sms_oadc;
@@ -1585,11 +1760,11 @@ namespace com.ums.UmsParm
                 message = message.Replace("'", "''");
                 String szSQL = String.Format("sp_pas_ins_lbatext {0}, '{1}', '{2}', '{3}'",
                                             tas.n_refno, "Message", tas.sz_sms_oadc, tas.sz_sms_message);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 long textpk = 0;
                 if (rs.Read())
                 {
-                    textpk = rs.GetInt64(0);                        
+                    textpk = rs.GetInt64(0);
                 }
                 rs.Close();
 
@@ -1606,11 +1781,16 @@ namespace com.ums.UmsParm
                 }
 
 
-                return (textpk>0 ? true : false);
+                return (textpk > 0 ? true : false);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
 
         }
@@ -1618,10 +1798,14 @@ namespace com.ums.UmsParm
         /** Inject all languages and CC's into database for status review */
         public bool InjectLBALanguages(long n_refno, ref ULocationBasedAlert a)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 long ret = 0;
                 long textpk = 0;
+                
+
                 for (int i = 0; i < a.getLanguageCount(); i++)
                 {
                     String strname = a.getLanguage(i).getName();
@@ -1648,7 +1832,7 @@ namespace com.ums.UmsParm
                             strname,
                             stroadc,
                             strtext);
-                    OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                    rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                     if (rs.Read())
                     {
                         textpk = rs.GetInt64(0);
@@ -1659,7 +1843,7 @@ namespace com.ums.UmsParm
                         ret = -1;
                     rs.Close();
 
-                    for (int c = 0; c < a.getLanguage(i).getCCodeCount() && textpk>0; c++)
+                    for (int c = 0; c < a.getLanguage(i).getCCodeCount() && textpk > 0; c++)
                     {
                         szSQL = String.Format("sp_pas_ins_lbatext_cc {0}, {1}",
                                             textpk, a.getLanguage(i).getCCode(c).getCCode());
@@ -1680,6 +1864,11 @@ namespace com.ums.UmsParm
             catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -1706,11 +1895,12 @@ namespace com.ums.UmsParm
         {
             UTASSENDING tas = null;
             ULBASENDING lbas = null;
+            OdbcDataReader rs = null;
             try
             {
-                string szSQL = String.Format("select l_projectpk from BBPROJECT_X_REFNO where l_refno={0}",refno);
-                OdbcDataReader rs = ExecReader(szSQL,UmsDb.UREADER_KEEPOPEN);
-                
+                string szSQL = String.Format("select l_projectpk from BBPROJECT_X_REFNO where l_refno={0}", refno);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+
                 if (rs.Read())
                     project.sz_projectpk = rs.GetString(0);
                 rs.Close();
@@ -1720,18 +1910,19 @@ namespace com.ums.UmsParm
                 if (rs.Read())
                 {
                     int l_type = rs.GetInt16(1);
-                    if(l_type == 5) {
+                    if (l_type == 5)
+                    {
                         tas = new UTASSENDING();
                         tas.setFunction(Convert.ToInt16(rs.GetValue(0).ToString()));
                         tas.n_sendingtype = l_type;
                     }
-                    else if(l_type == 4)
+                    else if (l_type == 4)
                     {
                         lbas = new ULBASENDING();
                         lbas.f_simulation = rs.GetInt16(0);
                         //lbas.n_sendingtype = l_type;
                     }
-                        
+
                 }
                 rs.Close();
 
@@ -1776,6 +1967,11 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -1862,12 +2058,13 @@ namespace com.ums.UmsParm
         {
             String szSQL = "";
             int l_duration = 0;
+            OdbcDataReader rs = null;
 
             try
             {
                 //szSQL = String.Format("SELECT l_duration FROM LBADURATION WHERE l_deptpk={0}", l_deptpk);
                 szSQL = String.Format("SELECT isnull(l_duration,30) FROM LBAPARAMETER WHERE l_comppk={0}", l_comppk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                     l_duration = rs.GetInt32(0);
                 rs.Close();
@@ -1881,12 +2078,17 @@ namespace com.ums.UmsParm
                 ULog.error(l_refno, szSQL, e.Message);
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             
         }
         public UShape setPAShapeObsolete(ULOGONINFO logon, UDEPARTMENT department,UShape shape)
         {
             String szSQL = "";
-            OdbcDataReader rs;
+            OdbcDataReader rs = null;
             try
             {
                 long l_timestamp = getDbClock();
@@ -1908,6 +2110,11 @@ namespace com.ums.UmsParm
             {
                 ULog.error(department.l_deptpk, szSQL, e.Message);
                 throw e;
+            }
+            finally
+            {
+                if(rs!=null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -1933,13 +2140,14 @@ namespace com.ums.UmsParm
         public void getTotalNumberOfMessages(long period, ref long total_events, ref long total_regional, ref long total_national, ref long total_test)
         {
             String szSQL = "";
+            OdbcDataReader rs = null;
             try
             {
                 // Events
                 szSQL = String.Format("sp_cb_get_events_month {0}, {1}", period, period + 100000000);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
-                    if(!rs.IsDBNull(0))
+                    if (!rs.IsDBNull(0))
                         total_events = (long)rs.GetInt32(0);
                 rs.Close();
 
@@ -1970,6 +2178,11 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
     }

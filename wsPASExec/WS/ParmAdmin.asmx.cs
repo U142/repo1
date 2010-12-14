@@ -296,10 +296,11 @@ namespace com.ums.ws.parm
             createOutXml();
 
             //sz_newtimestamp = UCommon.UGetFullDateTimeNow().ToString();
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = "select datepart(YY, getdate())*10000000000 + datepart(mm, getdate())*100000000 + datepart(dd, getdate()) * 1000000 + datepart(HH, getdate())*10000 + datepart(MI,getdate())*100 + datepart(SS, getdate())";
-                OdbcDataReader rs = db.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     sz_newtimestamp = rs.GetString(0);
@@ -311,6 +312,11 @@ namespace com.ums.ws.parm
             catch (Exception)
             {
                 sz_newtimestamp = "0";
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             
 
@@ -1472,9 +1478,10 @@ namespace com.ums.ws.parm
             /*String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO, PASHAPE SH WHERE PO.l_timestamp>={0} AND PO.l_deptpk={1} AND PO.l_objectpk*=SH.l_pk AND SH.l_type={2}",
                                            sz_timestamp, m_logon.l_deptpk, (int)PASHAPETYPES.PAOBJECT);*/
             String sz_sql = String.Format("sp_parm_getobjects {0}, {1}", m_logon.l_deptpk, sz_timestamp);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_objectpk, l_deptpk, l_importpk, sz_name, sz_description;
                 String l_categorypk, l_parent, sz_address, sz_postno, sz_place;
                 String sz_phone, sz_metadata, f_isobjectfolder, l_timestamp, sz_shape_xml;
@@ -1556,6 +1563,11 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             return counter;
         }
@@ -1566,6 +1578,7 @@ namespace com.ums.ws.parm
             List<CB_USER_REGION_RESPONSE> response = new List<CB_USER_REGION_RESPONSE>();
             String sz_sql;
             UBBUSER tempuser;
+            OdbcDataReader rs = null;
             try
             {
                 for(int i=0;i<user.Count;++i) {
@@ -1578,7 +1591,7 @@ namespace com.ums.ws.parm
                                               "AND up.l_userpk = {0}", user[i].l_userpk);
                     
                     db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
-                    OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                    rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                     
                     while (rs.Read())
                     {
@@ -1611,6 +1624,11 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
         }
 
@@ -1622,11 +1640,12 @@ namespace com.ums.ws.parm
                               "FROM v_BBDEPARTMENT DEP " +
                               "LEFT OUTER JOIN PASHAPE SH ON DEP.l_deptpk = SH.l_pk " +
                              "WHERE SH.l_type = 16";
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     UDEPARTMENT obj = new UDEPARTMENT();
@@ -1646,8 +1665,11 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
-            finally { db.close(); }
-            
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return dlist;
         }
 
@@ -1657,12 +1679,12 @@ namespace com.ums.ws.parm
             List<UBBUSER> ulist = new List<UBBUSER>();
 
             String sz_sql = "SELECT * FROM BBUSER";
-
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     UBBUSER obj = new UBBUSER();
@@ -1694,7 +1716,12 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
-            finally { db.close(); }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                db.close();
+            }
 
             return ulist;
         }
@@ -1705,11 +1732,12 @@ namespace com.ums.ws.parm
 
             String sz_sql = String.Format("SELECT PO.l_objectpk, isnull(PO.l_deptpk,0), isnull(PO.l_importpk, 0), isnull(PO.sz_name,' '), PO.sz_description, isnull(PO.l_categorypk,-1), isnull(PO.l_parent,-1), isnull(PO.sz_address,' '), isnull(PO.sz_postno,' '), isnull(PO.sz_place,' '), isnull(PO.sz_phone,' '), PO.sz_metadata, isnull(PO.f_isobjectfolder,0), isnull(PO.l_timestamp,0), SH.sz_xml FROM PAOBJECT PO LEFT JOIN PASHAPE SH ON PO.l_objectpk=SH.l_pk WHERE PO.l_deptpk={0} AND (SH.l_type={1} OR SH.l_type={2})",
                                            /*m_logon.l_deptpk*/1, (int)PASHAPETYPES.PADEPARTMENTRESTRICTION, (int)PASHAPETYPES.PAUSERRESTRICTION);
+            OdbcDataReader rs = null;
             try
             {
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
                 db.CheckLogon(ref logoninfo, true);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_objectpk, l_deptpk, l_importpk, sz_name, sz_description;
                 String l_categorypk, l_parent, sz_address, sz_postno, sz_place;
                 String sz_phone, sz_metadata, f_isobjectfolder, l_timestamp, sz_shape_xml;
@@ -1770,7 +1798,12 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
-            finally { db.close(); }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                db.close();
+            }
 
             return objList;
         }
@@ -1782,13 +1815,14 @@ namespace com.ums.ws.parm
                                             "FROM BBUSERPROFILE_X_DEPT up, BBUSER u " +
                                            "WHERE u.l_userpk = up.l_userpk " +
                                              "AND up.l_deptpk = {0}", objectpk);
+            OdbcDataReader rs = null;
             try
             {
                 
                 UBBUSER user;
 
                 db = new PASUmsDb(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120);
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
 
                 while (rs.Read())
                 {
@@ -1803,6 +1837,11 @@ namespace com.ums.ws.parm
                 
             }
             catch (Exception e) { return list; }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
         }
         private int GetAlerts()
@@ -1821,9 +1860,11 @@ namespace com.ums.ws.parm
             //String sz_sql_count = String.Format("SELECT count(*) FROM PAALERT PA, PAEVENT PE, PAOBJECT PO WHERE PA.l_parent=PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PA.l_timestamp>={0} AND PO.l_deptpk={1}",
             //                                sz_timestamp, m_logon.l_deptpk);
             String sz_sql_count = String.Format("sp_parm_getcount {0}, {1}", m_logon.l_deptpk, sz_timestamp);
+            OdbcDataReader rs = null;
+            OdbcDataReader lba = null;
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql_count, UmsDb.UREADER_KEEPOPEN);
+                rs = db.ExecReader(sz_sql_count, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     n_records = rs.GetInt32(0);
@@ -1835,7 +1876,7 @@ namespace com.ums.ws.parm
             }
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_KEEPOPEN);
                 String l_alertpk, l_parent, sz_name, sz_description, l_profilepk;
                 String l_schedpk, sz_oadc, l_validity, l_addresstypes, l_timestamp;
                 String f_locked, sz_areaid, l_maxchannels, l_requesttype;
@@ -1892,6 +1933,11 @@ namespace com.ums.ws.parm
                     {
                         sz_shape_xml = "";
                     }
+                    finally
+                    {
+                        if (rs != null && !rs.IsClosed)
+                            rs.Close();
+                    }
                     if (sz_shape_xml.Length > 0)
                     {
                         try
@@ -1928,7 +1974,7 @@ namespace com.ums.ws.parm
                         //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP WHERE OP.l_operator*=PA.l_operator AND PA.l_alertpk={0}", l_alertpk);
                         //String szLbaSql = String.Format("SELECT DISTINCT isnull(PA.l_operator,-1), isnull(PA.l_status,-3), isnull(PA.l_areaid,0), isnull(OP.sz_operatorname,'Unknown Operator') FROM PAALERT_LBA PA, LBAOPERATORS OP, LBAOPERATORS_X_DEPT XD WHERE OP.l_operator=XD.l_operator AND XD.l_operator=PA.l_operator AND PA.l_alertpk={0} AND XD.l_deptpk={1}", l_alertpk, l_deptpk);
                         String szLbaSql = String.Format("sp_parm_getalert_lbaop {0}, {1}", l_alertpk, l_deptpk);
-                        OdbcDataReader lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
+                        lba = db.ExecReader(szLbaSql, UmsDb.UREADER_AUTOCLOSE);
                         while (lba.Read())
                         {
                             outxml.insertStartElement("operator");
@@ -1969,6 +2015,13 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                if (lba != null && !lba.IsClosed)
+                    lba.Close();
+            }
             return counter;
         }
 
@@ -1979,9 +2032,10 @@ namespace com.ums.ws.parm
             /*String sz_sql = String.Format("SELECT PE.l_eventpk, isnull(PE.l_parent,-1), isnull(PE.sz_name,' '), PE.sz_description, isnull(PE.l_categorypk,0), isnull(PE.l_timestamp,0), isnull(PE.f_epi_lon, 0.0) f_epi_lon, isnull(PE.f_epi_lat, 0.0) f_epi_lat FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PE.l_timestamp>={0} AND PO.l_deptpk={1}",
                                             sz_timestamp, m_logon.l_deptpk);*/
             String sz_sql = String.Format("sp_parm_getevents {0}, {1}", m_logon.l_deptpk, sz_timestamp);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_eventpk, l_parent, sz_name, sz_description, l_categorypk;
                 String l_timestamp, f_epi_lon, f_epi_lat;
                 while (rs.Read())
@@ -2023,6 +2077,11 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return counter;
         }
 
@@ -2032,9 +2091,10 @@ namespace com.ums.ws.parm
             /*String sz_sql = String.Format("SELECT l_categorypk, isnull(sz_name,' '), sz_description, isnull(sz_fileext,' '), isnull(l_timestamp,0) FROM PACATEGORY WHERE l_timestamp>={0}",
                                         sz_timestamp);*/
             String sz_sql = String.Format("sp_parm_getcategories {0}", sz_timestamp);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                 String l_categorypk, sz_name, sz_description, sz_fileext, l_timestamp;
 
                 while (rs.Read())
@@ -2067,6 +2127,11 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             return counter;
         }
@@ -2074,6 +2139,7 @@ namespace com.ums.ws.parm
         private int GetDeleted()
         {
             int counter = 0;
+            
             if (!sz_timestamp.Equals("0"))
             {
                 //String sz_sql = String.Format("SELECT isnull(c_objtype, 'n'), isnull(l_objectpk, 0), isnull(sz_areaid,' ') FROM PADELETE WHERE l_comppk={0} AND l_timestamp>={1}",
@@ -2081,9 +2147,10 @@ namespace com.ums.ws.parm
                 String sz_sql = String.Format("sp_parm_getdeleted {0}, {1}",
                                         m_logon.l_deptpk, sz_timestamp);
                 String l_objectpk, c_objtype, sz_areaid;
+                OdbcDataReader rs = null;
                 try
                 {
-                    OdbcDataReader rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
+                    rs = db.ExecReader(sz_sql, UmsDb.UREADER_AUTOCLOSE);
                     while (rs.Read())
                     {
                         c_objtype = rs.GetString(0);
@@ -2104,6 +2171,11 @@ namespace com.ums.ws.parm
                 catch (Exception e)
                 {
                     throw e;
+                }
+                finally
+                {
+                    if (rs != null && !rs.IsClosed)
+                        rs.Close();
                 }
             }
             return counter;
@@ -2321,6 +2393,7 @@ namespace com.ums.ws.parm
 
         public long HandlePAObjectUpdate(PARMOPERATION operation, ref ULOGONINFO logon, ref PAOBJECT obj, PASHAPETYPES type)
         {
+            OdbcDataReader rs = null;
             try
             {
                 long n_ret = 0;
@@ -2345,7 +2418,7 @@ namespace com.ums.ws.parm
                 if (operation == PARMOPERATION.insert) // I had to put it here or else it wouldn't write the shapefile and couldn't put it in the switch
                 {
                     sz_sql = String.Format("sp_cb_ins_dept_restriction {0}, {1}, {2}, '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9}, {10}", logon.l_userpk, logon.l_comppk, logon.l_deptpri, obj.sz_name, logon.sz_password, obj.sz_name /*what should I put here?*/, 1, 1, logon.sz_stdcc, 1000, 0);
-                    OdbcDataReader rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
+                    rs = db.ExecReader(sz_sql,UmsDb.UREADER_AUTOCLOSE);
                     while (rs.Read())
                         n_ret = rs.GetInt32(0);
                     rs.Close();
@@ -2391,6 +2464,11 @@ namespace com.ums.ws.parm
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
 
         }
@@ -2615,11 +2693,12 @@ namespace com.ums.ws.parm
             bool b_add_to_pkref)
         {
             String realpk = "-1";
+            OdbcDataReader rs = null;
             if (sql.Length > 0)
             {
                 try
                 {
-                    OdbcDataReader rs = db.ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
+                    rs = db.ExecReader(sql, UmsDb.UREADER_AUTOCLOSE);
                     if (rs.Read())
                     {
                         realpk = rs.GetString(0);
@@ -2657,6 +2736,11 @@ namespace com.ums.ws.parm
                 catch (Exception e)
                 {
                     throw new UDbQueryException(e.Message);
+                }
+                finally
+                {
+                    if (rs != null && !rs.IsClosed)
+                        rs.Close();
                 }
             }
             return -2;

@@ -25,6 +25,7 @@ namespace com.ums.PAS.Database
 
         public bool SaveUiSettings(ref ULOGONINFO l, ref UPASUISETTINGS ui)
         {
+            OdbcDataReader rs = null;
             try
             {
                 base.CheckLogon(ref l, true);
@@ -67,7 +68,7 @@ namespace com.ums.PAS.Database
                                             ui.l_lba_update_percent,
                                             ui.sz_wms_username,
                                             ui.sz_wms_password);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     if (rs.GetInt32(0) >= 1)
@@ -81,17 +82,23 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         protected bool SaveNsLookup(long n_userpk, ref UNSLOOKUP ns)
         {
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format("SELECT l_userpk, sz_location FROM BBUSER_NSLOOKUP WHERE l_userpk={0} AND "+
                                             "sz_domain='{1}'",
                                             n_userpk, ns.sz_domain);
 
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     rs.Close();
@@ -114,6 +121,11 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -197,12 +209,13 @@ namespace com.ums.PAS.Database
 
         public UPASUISETTINGS LoadLanguageAndVisualsBeforeLogon(ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 UPASUISETTINGS ret = new UPASUISETTINGS();
                 String szSQL = String.Format("SELECT BU.l_userpk FROM BBUSER BU, BBCOMPANY BC WHERE BU.sz_userid='{0}' AND BU.l_comppk=BC.l_comppk AND BC.sz_compid='{1}'",
                                     l.sz_userid, l.sz_compid);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 long n_userpk = 0;
                 if (rs.Read())
                     n_userpk = rs.GetInt64(0);
@@ -214,17 +227,23 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         protected UPASUISETTINGS LoadLanguageAndVisuals(long l_userpk, bool b_visualsonly)
         {
+            OdbcDataReader rs = null;
             try
             {
                 UPASUISETTINGS ret = new UPASUISETTINGS();
                 ret.initialized = false;
                 String szSQL;
                 szSQL = String.Format("sp_pas_get_ui {0}", l_userpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     ret.initialized = true;
@@ -274,6 +293,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public bool Logoff(ref ULOGONINFO l)
@@ -292,6 +316,7 @@ namespace com.ums.PAS.Database
         {
             UPASLOGON ret = new UPASLOGON();
             String szSQL;
+            OdbcDataReader rs = null;
 
             try
             {
@@ -312,7 +337,7 @@ namespace com.ums.PAS.Database
                 cmdLogon.Parameters.Add("@sz_paspassword", OdbcType.Char, 128).Value = l.sz_password;
                 cmdLogon.Parameters.Add("@sz_compid", OdbcType.VarChar, 50).Value = l.sz_compid;
                 cmdLogon.Parameters.Add("@l_max_tries", OdbcType.Int).Value = 0;//0 will get max from db. UCommon.USETTINGS.l_max_logontries;
-                OdbcDataReader rs = cmdLogon.ExecuteReader();
+                rs = cmdLogon.ExecuteReader();
 
                 if (!rs.HasRows)  //logon failed
                 {
@@ -455,17 +480,17 @@ namespace com.ums.PAS.Database
                         String xml = rs["sz_restriction_shape"].ToString();
                         UShape restrictionshape = UShape.ParseFromXml(xml);
                         dept.AddRestrictionShape(ref restrictionshape);
-                        
+
                         if (l_dept_houseeditor <= 0)
                             dept.l_houseeditor = 0;
                         if (l_dept_pas_send <= 0)
                             dept.l_newsending = 0;
                         if ((l_pas_send & 1) == 1 && (l_dept_pas_send & 1) == 0)
                             l_pas_send &= ~1;
-                            //l_pas_send -= 1;
+                        //l_pas_send -= 1;
                         if ((l_pas_send & 2) == 2 && (l_dept_pas_send & 2) == 0)
                             l_pas_send &= ~2;
-                            //l_pas_send -= 2;
+                        //l_pas_send -= 2;
                         dept.l_newsending = l_pas_send;
 
                         if (l_dept_parm <= 0)
@@ -576,6 +601,11 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
             return ret;
         }
@@ -584,6 +614,7 @@ namespace com.ums.PAS.Database
         {
             UPASLOGON ret = new UPASLOGON();
             String szSQL;
+            OdbcDataReader rs = null;
 
             try
             {
@@ -604,7 +635,7 @@ namespace com.ums.PAS.Database
                     l.sz_userid,
                     l.sz_password,
                     l.sz_compid);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
 
 
                 if (!rs.HasRows)  //logon failed
@@ -856,12 +887,18 @@ namespace com.ums.PAS.Database
                     }*/
 
                 }
-               
+
             }
             catch (Exception e)
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
+
 
             return ret;
         }

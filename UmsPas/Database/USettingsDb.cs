@@ -22,6 +22,7 @@ namespace com.ums.PAS.Database
 
         public bool WriteSoundLibToFile(ref USimpleXmlWriter xml, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 xml.insertStartElement("SOUNDLIB");
@@ -40,7 +41,7 @@ namespace com.ums.PAS.Database
                                             l.l_deptpk);*/
                 String szSQL = String.Format("sp_pas_get_soundlib {0}",
                                             l.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     xml.insertStartElement("SERVERFILE");
@@ -60,11 +61,17 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return true;
         }
 
         public bool WriteTTSLangToFile(ref USimpleXmlWriter xml, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 xml.insertStartElement("TTSLANG");
@@ -72,7 +79,7 @@ namespace com.ums.PAS.Database
                 //                            l.l_deptpk);
                 String szSQL = String.Format("sp_pas_get_ttslanguages {0}",
                     l.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     xml.insertStartElement("TTS");
@@ -87,11 +94,18 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return true;
         }
 
         public bool WriteSchedProfilesToFile(ref USimpleXmlWriter xml, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
+
             try
             {
                 xml.insertStartElement("SCHEDPROFILES");
@@ -105,7 +119,7 @@ namespace com.ums.PAS.Database
                 String szSQL = String.Format("sp_pas_getschedprofiles {0}",
                     l.l_deptpk);
 
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     xml.insertStartElement("SCHEDPROFILE");
@@ -130,11 +144,17 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return true;
         }
 
         public bool WriteFromNumbersToFile(ref USimpleXmlWriter xml, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 xml.insertStartElement("FROMNUMBERS");
@@ -142,7 +162,7 @@ namespace com.ums.PAS.Database
                 //    l.l_deptpk);
                 String szSQL = String.Format("sp_pas_getfromnumbers {0}",
                     l.l_deptpk);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     xml.insertStartElement("OADC");
@@ -158,11 +178,17 @@ namespace com.ums.PAS.Database
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             return true;
         }
 
         public bool WriteBBProfilesToFile(ref USimpleXmlWriter xml, ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 xml.insertStartElement("MSGPROFILES");
@@ -185,7 +211,7 @@ namespace com.ums.PAS.Database
                 //
                 String szSQL = String.Format("sp_pas_getactionprofiles {0}", l.l_deptpk);
 
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 int n_last_profilepk = -1;
                 while (rs.Read())
                 {
@@ -203,7 +229,7 @@ namespace com.ums.PAS.Database
                     }
                     int n_parent = rs.GetInt32(6);
                     //String n_parent = rs.GetString(6);
-                    if(n_parent>0)
+                    if (n_parent > 0)
                     {
                         xml.insertStartElement("FILE");
                         xml.insertAttribute("l_parent", n_parent.ToString());
@@ -220,11 +246,16 @@ namespace com.ums.PAS.Database
                 }
                 xml.insertEndElement(); //MSGPROFILES
                 rs.Close();
-                
+
             }
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return true;
         }

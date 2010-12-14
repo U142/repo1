@@ -115,9 +115,10 @@ namespace com.ums.UmsDbLib
                                             "BC.sz_compid='{1}' AND BD.sz_deptid='{2}' AND BU.l_comppk=BC.l_comppk AND BC.l_comppk=BD.l_comppk AND " +
                                             "BU.sz_hash_paspwd='{3}'",
                                             info.sz_userid, info.sz_compid, info.sz_deptid, info.sz_password);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     Int64 l_fromdb = rs.GetInt64(0);
@@ -152,6 +153,11 @@ namespace com.ums.UmsDbLib
                 setLastError(e.Message);
                 throw new UDbQueryException("CheckLogon");
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             checkSessionIntegrity(ref info, b_update_session);
             /*finally
             {
@@ -176,9 +182,10 @@ namespace com.ums.UmsDbLib
                                             "BU.sz_hash_paspwd='{3}'",
                                             info.l_userpk, info.l_comppk, info.l_deptpk, 
                                             info.sz_password);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     Int64 l_fromdb = rs.GetInt64(0);
@@ -215,6 +222,11 @@ namespace com.ums.UmsDbLib
                 //throw new UDbQueryException("CheckLogon");
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
             /*finally
             {
                 CloseRecordSet();
@@ -238,61 +250,75 @@ namespace com.ums.UmsDbLib
             //check session integrity
             String szSQL = String.Format("sp_pas_getsession {0}, '{1}', '{2}'",
                                info.l_userpk, info.sessionid, info.sz_password);
-            OdbcDataReader rs = ExecReader(szSQL, UREADER_KEEPOPEN);
-            Int64 now = 0;
-            Int64 last = 0;
-            String snow = "0";
-            String slast = "0";
-            Decimal dnow = 0;
-            Decimal dlast = 0;
-            int timeout = 0;
-            if (rs.Read())
+            OdbcDataReader rs = null;
+            try
             {
-                if (!rs.IsDBNull(0))
-                    dnow = rs.GetDecimal(0);
-                if (!rs.IsDBNull(1))
-                    dlast = rs.GetDecimal(1);
-                now = Int64.Parse(dnow.ToString());
-                last = Int64.Parse(dlast.ToString());
-                if (!rs.IsDBNull(2))
-                    timeout = rs.GetInt32(2);
-                else
-                    timeout = 1;
-            }
-            rs.Close();
-            if (last <= 0)
-            {
-                throw new SoapException("Session no longer exist", SoapException.ServerFaultCode, new USessionDeletedException(0));
-            }
-            //throw new USessionDoesNotExsistException();
+                rs = ExecReader(szSQL, UREADER_KEEPOPEN);
+                Int64 now = 0;
+                Int64 last = 0;
+                String snow = "0";
+                String slast = "0";
+                Decimal dnow = 0;
+                Decimal dlast = 0;
+                int timeout = 0;
+                if (rs.Read())
+                {
+                    if (!rs.IsDBNull(0))
+                        dnow = rs.GetDecimal(0);
+                    if (!rs.IsDBNull(1))
+                        dlast = rs.GetDecimal(1);
+                    now = Int64.Parse(dnow.ToString());
+                    last = Int64.Parse(dlast.ToString());
+                    if (!rs.IsDBNull(2))
+                        timeout = rs.GetInt32(2);
+                    else
+                        timeout = 1;
+                }
+                rs.Close();
+                if (last <= 0)
+                {
+                    throw new SoapException("Session no longer exist", SoapException.ServerFaultCode, new USessionDeletedException(0));
+                }
+                //throw new USessionDoesNotExsistException();
 
-            UDATETIME dt_now = new UDATETIME(now);
-            UDATETIME dt_last = new UDATETIME(last);
-            long seconds = dt_now.getTimeDiffSec(dt_last);
-            if (Math.Abs(seconds) > timeout && timeout > 0)
-            {
-                RemoveSession(ref info);
-                throw new SoapException("Session Expired", SoapException.ServerFaultCode, new USessionExpiredException(seconds));
-            }
-            if (b_update_session)
-            {
-                szSQL = String.Format("sp_pas_updatesession {0}, '{1}', '{2}'",
-                        info.l_userpk, info.sessionid, info.sz_password);
-                ExecNonQuery(szSQL);
-            }
+                UDATETIME dt_now = new UDATETIME(now);
+                UDATETIME dt_last = new UDATETIME(last);
+                long seconds = dt_now.getTimeDiffSec(dt_last);
+                if (Math.Abs(seconds) > timeout && timeout > 0)
+                {
+                    RemoveSession(ref info);
+                    throw new SoapException("Session Expired", SoapException.ServerFaultCode, new USessionExpiredException(seconds));
+                }
+                if (b_update_session)
+                {
+                    szSQL = String.Format("sp_pas_updatesession {0}, '{1}', '{2}'",
+                            info.l_userpk, info.sessionid, info.sz_password);
+                    ExecNonQuery(szSQL);
+                }
 
-            //USessionExpiredException(seconds, new Exception("Session expired"));
+                //USessionExpiredException(seconds, new Exception("Session expired"));
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         protected bool RemoveSession(ref ULOGONINFO l)
         {
+            OdbcDataReader rs = null;
             try
             {
                 //delete logon record from DB
                 String szSQL = String.Format("sp_pas_logoff {0}, '{1}', '{2}'", l.l_userpk, l.sessionid, l.sz_password);
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     rs.Close();
@@ -308,16 +334,22 @@ namespace com.ums.UmsDbLib
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
 
         }
 
         public long getDbClock()
         {
             long ret = 0;
+            OdbcDataReader rs = null;
             try
             {
                 String szSQL = String.Format("sp_getdatetime");
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
                     ret = rs.GetInt64(0);
@@ -327,6 +359,11 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             return ret;
 
@@ -356,9 +393,10 @@ namespace com.ums.UmsDbLib
                                         l.l_deptpk, n_timestamp);
                     break;
             }
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     UBBNEWS news = new UBBNEWS();
@@ -391,6 +429,11 @@ namespace com.ums.UmsDbLib
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public UBBNEWS UpdateSystemMessages(ULOGONINFO logon, UBBNEWS message)
@@ -404,9 +447,10 @@ namespace com.ums.UmsDbLib
                                         message.l_newspk, message.l_timestamp_db, message.l_type, message.l_incident_start, 
                                         message.l_incident_end, message.f_active, message.l_deptpk, message.l_severity, 
                                         message.l_operator, message.l_errorcode, logon.l_userpk, message.newstext.sz_news.Replace("'","''"));
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     message.l_newspk = (long)rs.GetDecimal(0);
@@ -418,6 +462,11 @@ namespace com.ums.UmsDbLib
             {
                 throw e;
             }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+            }
         }
 
         public UBBNEWSLIST getAllSystemMessages()
@@ -425,10 +474,10 @@ namespace com.ums.UmsDbLib
             UBBNEWSLIST list = new UBBNEWSLIST();
             list.l_timestamp_db = getDbClock();
             String sql = "sp_get_active_sysmessages";
-
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     UBBNEWS news = new UBBNEWS();
@@ -457,6 +506,11 @@ namespace com.ums.UmsDbLib
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -467,9 +521,11 @@ namespace com.ums.UmsDbLib
 
             String sql = String.Format("sp_get_sysmessages_monthly {0}, {1}",
                                         l_period, l_period + 100000000); // one month, works even for december
+
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+                rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
                 while (rs.Read())
                 {
                     UBBNEWS news = new UBBNEWS();
@@ -498,6 +554,11 @@ namespace com.ums.UmsDbLib
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
         }
 
@@ -553,9 +614,10 @@ namespace com.ums.UmsDbLib
         {
             int n_ret = -1;
             String szSQL = String.Format("sp_refno_out");
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     n_ret = rs.GetInt32(0);
@@ -566,6 +628,11 @@ namespace com.ums.UmsDbLib
             {
                 setLastError(e.Message);
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {
@@ -578,9 +645,10 @@ namespace com.ums.UmsDbLib
             bool b_ret = false;
             String szSQL = String.Format("sp_project '{0}', 0, '{1}', {2}, {3}, {4}", 
                                         "insert", sz_projectname, UCommon.UGetDateNow() + UCommon.UGetTimeNow(), l.l_deptpk, l.l_userpk);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     p.sz_projectpk = rs.GetString(0);
@@ -596,6 +664,11 @@ namespace com.ums.UmsDbLib
             catch (Exception e)
             {
                 ULog.error(0, szSQL, e.Message);
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {
@@ -632,9 +705,10 @@ namespace com.ums.UmsDbLib
         {
             int n_ret = -1;
             String szSQL = String.Format("sp_get_numdynfiles_in_profile {0}", l_profilepk);
+            OdbcDataReader rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     n_ret = rs.GetInt32(0);
@@ -644,6 +718,11 @@ namespace com.ums.UmsDbLib
             catch (Exception e)
             {
                 throw new UDbQueryException(e.Message);
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
             }
             /*finally
             {

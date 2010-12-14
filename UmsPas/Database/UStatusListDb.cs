@@ -36,6 +36,9 @@ namespace com.ums.PAS.Database
         
         public UStatusListResults GetStatusList(ref ULOGONINFO logon, UDATAFILTER filter_by)
         {
+            OdbcDataReader rsType = null;
+            OdbcDataReader rsDepts = null;
+            OdbcDataReader rs = null;
             try
             {
                 if (!CheckLogon(ref logon, true))
@@ -52,7 +55,7 @@ namespace com.ums.PAS.Database
             // WHERE AND dept.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk=logon.l_userpk
             String szDeptList = "";
             String szDeptListSQL = String.Format("SELECT DISTINCT isnull(BD.l_deptpk,0) FROM BBDEPARTMENT BD, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP WHERE BD.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={0} AND BUXD.l_profilepk=BUP.l_profilepk AND BUP.l_status>=1", logon.l_userpk);
-            OdbcDataReader rsDepts = ExecReader(szDeptListSQL, UmsDb.UREADER_KEEPOPEN);
+            rsDepts = ExecReader(szDeptListSQL, UmsDb.UREADER_KEEPOPEN);
             while (rsDepts.Read())
             {
                 String l_deptpk = rsDepts.GetString(0);
@@ -69,7 +72,7 @@ namespace com.ums.PAS.Database
             int n_pas_type = 1;
 
             String szDeptType = String.Format("SELECT DM.l_pas FROM BBDEPARTMENTMODS DM, BBUSERPROFILE_X_DEPT BUXD, BBUSERPROFILE BUP WHERE DM.l_deptpk={0} AND DM.l_deptpk=BUXD.l_deptpk AND BUXD.l_userpk={1} AND BUXD.l_profilepk=BUP.l_profilepk AND BUP.l_status>=1", logon.l_deptpk, logon.l_userpk);
-            OdbcDataReader rsType = ExecReader(szDeptType, UmsDb.UREADER_KEEPOPEN);
+            rsType = ExecReader(szDeptType, UmsDb.UREADER_KEEPOPEN);
             if (rsType.Read())
             {
                 n_pas_type = rsType.GetInt32(0);
@@ -170,9 +173,10 @@ namespace com.ums.PAS.Database
                     break;
             }
             //ORIGINALLY: info.l_group in (2,3,4,8,9)
+            rs = null;
             try
             {
-                OdbcDataReader rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 while (rs.Read())
                 {
                     try
@@ -209,6 +213,15 @@ namespace com.ums.PAS.Database
             catch (Exception e)
             {
                 throw e;
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                    rs.Close();
+                if (rsDepts != null && !rsDepts.IsClosed)
+                    rsDepts.Close();
+                if (rsType != null && !rsType.IsClosed)
+                    rsType.Close();
             }
             res.finalize();
             return res;
