@@ -892,14 +892,26 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String sz_storage_usersettings = "";
 		String sz_storage_parm = "PARM\\";
 			//sz_home = "C:\\Program Files\\UMS Population Alert System\\";
+		String os_name = System.getProperty("os.name");
+		boolean b_windows = false;
+		try
+		{
+			if(os_name.toLowerCase().indexOf("win")>=0)
+				b_windows = true;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
 		boolean bpathok = false;
 		String PASPath = File.separator + "UMS Population Alert System" + File.separator;
-		if(!bpathok)
+		if(!bpathok && b_windows)
 		{
 			sz_home = "C:\\Program Files\\UMS Population Alert System\\";
 			bpathok = tryPath(sz_home);
 		}
-		if(!bpathok)
+		if(!bpathok && b_windows)
 		{
 			sz_home = "C:\\UMS Population Alert System\\";
 			bpathok = tryPath(sz_home);
