@@ -686,6 +686,11 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 					PAS.get_pas().actionPerformed(e);
 				}
 			}
+			//get_selectmenu().get_bar().m_item_departments_checklist.set_default(new CheckItem(PAS.get_pas().get_userinfo().get_current_department().toString(), 
+			//PAS.get_pas().get_userinfo().get_current_department(),true));
+			get_selectmenu().get_bar().updateDeptSelection(true);
+			//System.out.print(get_selectmenu().get_bar().m_item_departments_checklist.toString());
+			
 		}
 		//navigation buttons are linked to the main menu
 		else if("act_show_zoom_btn".equals(e.getActionCommand()))

@@ -37,7 +37,6 @@ import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.*;
 
-import org.opengis.filter.ExcludeFilter;
 
 
 public abstract class SearchPanelResults extends JPanel implements ComponentListener//JPanel 

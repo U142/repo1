@@ -460,6 +460,8 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 
 	private JMenuItem delete;
 
+	private JMenu submenu; // Quicksendmenu
+	
 	private JScrollPane view;
 	
 	private JMenuItem gotomap;
@@ -550,6 +552,10 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 	}
 	public JMenuItem getExportPolygon() {
 		return export_polygon;
+	}
+	
+	public JMenu getQuickSendMenu() {
+		return submenu;
 	}
 	
 	public TreeGUI(MainController main) {
@@ -673,7 +679,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		popup.add(delete);
 		popup.add(gotomap);
 		popup.add(generateSending);
-		JMenu submenu = new JMenu(PAS.l("main_parmtab_popup_quicksend"));
+		submenu = new JMenu(PAS.l("main_parmtab_popup_quicksend"));
 		submenu.add(snapshot_livesending);
 		submenu.add(snapshot_simulation);
 		submenu.add(snapshot_test);

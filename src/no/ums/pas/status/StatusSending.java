@@ -915,7 +915,7 @@ public class StatusSending extends Object {
 			//if(pnl_pa.isVisible())
 			//	voicelba_visible++;
 			this.setPreferredSize(new Dimension(getWidth(), getHeight()));
-			int iconPanelSize = 40;//40+40 +20;
+			int iconPanelSize = 60;//40+40 +20;
 			pnl_icon.setPreferredSize(new Dimension(getWidth()-10, iconPanelSize));
 			pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
 			if(get_type()==5) {
@@ -1467,8 +1467,8 @@ public class StatusSending extends Object {
 			m_channels_plus.setActionCommand("inc_maxchannels");
 			m_channels_minus.setActionCommand("dec_maxchannels");
 			
-			m_channels_plus.setPreferredSize(new Dimension(15,15));
-			m_channels_minus.setPreferredSize(new Dimension(15,15));
+			m_channels_plus.setPreferredSize(new Dimension(46,22));
+			m_channels_minus.setPreferredSize(new Dimension(46,22));
 			m_progress.addMouseListener(new MouseListener() {
 
 				@Override
@@ -1521,8 +1521,8 @@ public class StatusSending extends Object {
 			//initialize static values
 			m_btn_setmaxalloc.setActionCommand("act_set_maxalloc");
 			m_btn_setmaxalloc.addActionListener(this);
-			m_btn_setmaxalloc.setSize(new Dimension(120, 16));
-			m_btn_setmaxalloc.setPreferredSize(new Dimension(120, 16));
+			m_btn_setmaxalloc.setSize(new Dimension(135, 22));
+			m_btn_setmaxalloc.setPreferredSize(new Dimension(135, 22));
 			
 			m_btn_resend.setActionCommand("act_resend");
 			m_btn_resend.addActionListener(this);
@@ -1531,7 +1531,7 @@ public class StatusSending extends Object {
 			
 			
 			
-			m_progress.setPreferredSize(new Dimension(250, 16));
+			m_progress.setPreferredSize(new Dimension(250, 22));
 			
 			m_txt_name.setText(get_sendingname());
 			m_txt_refno.setText(new Integer(get_refno()).toString());

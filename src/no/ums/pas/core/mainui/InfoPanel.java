@@ -341,8 +341,8 @@ public class InfoPanel extends GeneralPanel {
 		m_txt_mapdimpix_y = new StdTextLabel("", true, 125);
 		m_txt_mapdimmeters_x = new StdTextLabel("", true, 125);
 		m_txt_mapdimmeters_y = new StdTextLabel("", true, 125);
-		m_txt_housesdownload = new StdTextLabel("", true, 125);
-		m_txt_housedownload_progress = new StdTextLabel("", true, 150);
+		m_txt_housesdownload = new StdTextLabel("", true, 150);
+		m_txt_housedownload_progress = new StdTextLabel("", true, 155);
 		
 		m_lbl_name 			= new StdTextLabel(PAS.l("common_name"), true, 150);
 		m_lbl_name_output	= new StdTextLabel("", true, 280);

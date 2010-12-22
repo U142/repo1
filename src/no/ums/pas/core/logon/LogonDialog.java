@@ -37,7 +37,6 @@ import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.UPOWERUPRESPONSE;
 
-import org.opengis.coverage.grid.Grid;
 
 
 

@@ -435,7 +435,7 @@ class TTSConverter extends Thread {
 			logon.setSzDeptid(ui.get_current_department().get_deptid());
 			logon.setSzPassword(ui.get_passwd());
 			logon.setSzUserid(ui.get_userid());
-			
+			logon.setSessionid(ui.get_sessionid());
 			ttsreq.setNDynfile(get_dynfile());
 			ttsreq.setNLangpk(get_langpk());
 			ttsreq.setSzText(get_text());

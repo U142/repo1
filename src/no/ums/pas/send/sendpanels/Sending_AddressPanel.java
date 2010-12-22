@@ -259,8 +259,8 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 			m_lbl_adrcount_lba_sms.setVisible(true);
 			m_txt_adrcount_lba_sms.setVisible(true);
 		} else {
-			m_lbl_adrcount_lba_sms.setVisible(true);
-			m_txt_adrcount_lba_sms.setVisible(true);
+			m_lbl_adrcount_lba_sms.setVisible(false);
+			m_txt_adrcount_lba_sms.setVisible(false);
 		}
 		//m_txt_adrcount_total.setText(new Integer(c.get_total()).toString());
 		int n_total = 0;

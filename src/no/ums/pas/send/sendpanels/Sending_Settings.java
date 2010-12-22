@@ -159,7 +159,11 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");
 		m_lbl_sendname = new StdTextLabel(PAS.l("common_sendingname") + ":");
-		m_lbl_sendname.setPreferredSize(new Dimension(150, 20));
+		int common_width = 170;
+		m_lbl_sendname.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_schedprofiles.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_maxchannels.setPreferredSize(new Dimension(common_width, 20));
 		m_txt_sendname = new StdTextArea(get_parent().get_sendobject().get_sendproperties().get_sendingname(), false);
 		m_txt_sendname.setPreferredSize(new Dimension(200, 20));
 		m_txt_sendname.addKeyListener(this);
@@ -240,8 +244,8 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_channels_minus.addActionListener(this);
 		m_channels_plus.setActionCommand("inc_channels");
 		m_channels_minus.setActionCommand("dec_channels");
-		m_channels_minus.setPreferredSize(new Dimension(15,15));
-		m_channels_plus.setPreferredSize(new Dimension(15,15));
+		m_channels_minus.setPreferredSize(new Dimension(46,22));
+		m_channels_plus.setPreferredSize(new Dimension(46,22));
 	}
 	protected void add_common_controls()
 	{

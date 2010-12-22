@@ -54,7 +54,13 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");
 		m_lbl_sendname = new StdTextLabel(PAS.l("main_parm_alert_dlg_name") + ":");
-		m_lbl_sendname.setPreferredSize(new Dimension(150, 20));
+		int common_width = 150;
+		m_lbl_sendname.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_schedprofiles.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_oadc.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_validity.setPreferredSize(new Dimension(common_width, 20));
+		m_lbl_maxchannels.setPreferredSize(new Dimension(common_width, 20));
 		//m_txt_sendname = new StdTextArea(get_parent().get_sendobject().get_sendproperties().get_sendingname(), false);
 		m_txt_sendname = new StdTextArea("", false);
 		m_txt_sendname.setPreferredSize(new Dimension(200, 20));

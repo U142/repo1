@@ -54,7 +54,7 @@ public class Sending_Files extends DefaultPanel {
 	public SoundRecorderPanel get_recorderpanel() { return m_rec; }
 	private JTabbedPane m_tabbedpane;
 	private StdTextLabel m_lbl_soundmodule = new StdTextLabel("", 300, 12, true);
-	private StdTextLabel m_lbl_soundtype = new StdTextLabel("", 300, 12, true);
+	private StdTextLabel m_lbl_soundtype = new StdTextLabel("", 550, 12, true);
 	public SendController get_sendcontroller() { return get_parent().get_sendcontroller(); }
 	protected Oscillator m_oscillator = null;
 	

@@ -1333,7 +1333,7 @@ public class PolygonStruct extends ShapeStruct {
 	
 	@Override
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
-		//updateCanLock(restrictionShapes);
+		updateCanLock(restrictionShapes);
 		return b_can_lock;
 	}
 	

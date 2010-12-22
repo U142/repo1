@@ -51,6 +51,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -318,8 +320,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(n_focuscounter == 0)
+				if(n_focuscounter == 0) {
 					m_txt_messagetext.setText("");
+					keyReleased(new KeyEvent(m_txt_messagetext,KeyEvent.KEY_RELEASED, 10, 0, 0));
+				}
 				++n_focuscounter;
 			}
 

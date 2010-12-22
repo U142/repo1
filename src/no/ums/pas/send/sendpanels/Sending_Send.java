@@ -87,7 +87,7 @@ public class Sending_Send extends DefaultPanel {
 		m_lbl_refno		= new JLabel(m_icon_indicator[INDICATOR_RED_]);
 		m_btn_sendtest.setActionCommand("act_send_test");
 		m_btn_sendtest.addActionListener(this);
-		m_btn_sendtest.setPreferredSize(new Dimension(50, 16));
+		m_btn_sendtest.setPreferredSize(new Dimension(70, 17));
 		m_btn_sendtest.setToolTipText(PAS.l("main_sending_send_test_tooltip"));
 		add_controls();
 	}
@@ -372,7 +372,9 @@ public class Sending_Send extends DefaultPanel {
 			logon.setSzCompid(ui.get_compid());
 			logon.setSzDeptid(ui.get_current_department().get_deptid());
 			logon.setSzUserid(ui.get_userid());
+			logon.setLDeptpri(ui.get_current_department().get_deptpri());
 			logon.setSzPassword(ui.get_passwd());
+			logon.setSessionid(ui.get_sessionid());
 
 			try
 			{

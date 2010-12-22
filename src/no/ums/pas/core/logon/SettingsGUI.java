@@ -199,16 +199,16 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		//m_lbl_start_fleetcontrol = new StdTextLabel("Fleet control",100);
 		//m_chk_start_fleetcontrol = new JCheckBox();
 		
-		m_lbl_mail_displayname = new StdTextLabel("Displayname:",100,12,true);
+		m_lbl_mail_displayname = new StdTextLabel("Displayname:",185,12,true);
 		m_txt_mail_displayname = new StdTextArea("", false, 175);
 		
-		m_lbl_mail_address = new StdTextLabel("Mail address:",100,12,true);
+		m_lbl_mail_address = new StdTextLabel("Mail address:",185,12,true);
 		m_txt_mail_address = new StdTextArea("", false, 175);
 		
-		m_lbl_mail_outgoing = new StdTextLabel("Outgoing mailserver(SMTP):",160,12,true);
+		m_lbl_mail_outgoing = new StdTextLabel("Outgoing mailserver(SMTP):",185,12,true);
 		m_txt_mail_outgoing = new StdTextArea("", false, 175);
 		
-		m_lbl_lba_refresh = new StdTextLabel("LBA map update percentage:", 170,12,true);
+		m_lbl_lba_refresh = new StdTextLabel("LBA map update percentage:", 185,12,true);
 		m_txt_lba_refresh = new StdTextArea("", false, 175);
 		
 		m_btn_cancel = new JButton(PAS.l("common_cancel"));

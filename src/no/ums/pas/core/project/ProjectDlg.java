@@ -97,7 +97,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		public static final long serialVersionUID = 1;
 		protected StdTextLabel m_lbl_errormsg = new StdTextLabel("",false, 200);
 		protected StdTextLabel m_lbl_projectname = new StdTextLabel(PAS.l("projectdlg_projectname") + ":", true, 75);
-		protected StdTextArea m_txt_projectname = new StdTextArea("", false, 200);
+		protected StdTextArea m_txt_projectname = new StdTextArea("", false, new Dimension(200,23));
 		protected JButton m_btn_save = new JButton(PAS.l("common_save"));
 		protected JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
 		protected ProjectList m_project_list;

@@ -339,6 +339,8 @@ public abstract class SendProperties extends Object {
 		logon.setSzCompid(info.get_compid());
 		logon.setSzDeptid(info.get_current_department().get_deptid());
 		logon.setSzPassword(info.get_passwd());
+		logon.setLDeptpri(info.get_current_department().get_deptpri());
+		logon.setSessionid(info.get_sessionid());
 		logon.setSzStdcc(info.get_current_department().get_stdcc());
 		
 		s.setLogoninfo(logon);
@@ -401,7 +403,7 @@ public abstract class SendProperties extends Object {
 				}
 			}
 		}
-		System.out.println("TAS i sendproperties objid: " + System.identityHashCode(this));
+		//System.out.println("TAS i sendproperties objid: " + System.identityHashCode(this));
 		
 		if(resendStatus.getLong().size() == 0)
 			System.out.println("No statuscodes");
@@ -602,6 +604,7 @@ public abstract class SendProperties extends Object {
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
+			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 			m.setLogoninfo(logon);
 			m.setNAddresstypes(get_addresstypes());
 			WSAdrcount ws = new WSAdrcount(l, act, m);

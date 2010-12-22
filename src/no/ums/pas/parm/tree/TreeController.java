@@ -369,6 +369,7 @@ public class TreeController {
 							gui.getSnapSending().setEnabled(false);
 							gui.getSnapSimulation().setEnabled(false);
 							gui.getSnapTest().setEnabled(false);
+							gui.getQuickSendMenu().setEnabled(false);
 							//main.checkRightsManagement();
 						} else {
 							// gui.getGenerateSending().setVisible(true);
@@ -378,6 +379,7 @@ public class TreeController {
 							gui.getObject().setEnabled(false);
 							gui.getObjectfolder().setEnabled(false);
 							gui.getAlert().setEnabled(true);
+							gui.getQuickSendMenu().setEnabled(true);
 							gui.getSnapSending().setEnabled(true);
 							gui.getSnapSimulation().setEnabled(true);
 							gui.getSnapTest().setEnabled(true);
@@ -467,6 +469,7 @@ public class TreeController {
 							//main.checkRightsManagement();
 						}
 						gui.getSnapSending().setEnabled(false);
+						gui.getQuickSendMenu().setEnabled(false);
 						gui.getSnapSimulation().setEnabled(false);
 						gui.getSnapTest().setEnabled(false);
 						gui.getTools().setEnabled(false);
@@ -486,6 +489,7 @@ public class TreeController {
 							gui.getEdit().setEnabled(false);
 							gui.getDelete().setEnabled(false);
 							gui.getGenerateSending().setEnabled(false);
+							gui.getQuickSendMenu().setEnabled(false);
 							gui.getSnapSending().setEnabled(false);
 							gui.getSnapTest().setEnabled(false);
 							gui.getSnapSimulation().setEnabled(false);
@@ -525,6 +529,7 @@ public class TreeController {
 													.hasValidAreaIDFromCellVision()) {
 										benable = false;
 									}
+									gui.getQuickSendMenu().setEnabled(benable);
 									gui.getSnapSending().setEnabled(benable);
 									gui.getSnapSimulation().setEnabled(benable);
 									gui.getSnapTest().setEnabled(benable);
@@ -556,6 +561,7 @@ public class TreeController {
 					gui.getAlert().setEnabled(false);
 					gui.getGotoMap().setEnabled(false);
 					gui.getGenerateSending().setEnabled(false);
+					gui.getQuickSendMenu().setEnabled(false);
 					gui.getSnapSending().setEnabled(false);
 					gui.getSnapSimulation().setEnabled(false);
 					gui.getSnapTest().setEnabled(false);

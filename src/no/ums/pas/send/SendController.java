@@ -615,6 +615,7 @@ public class SendController implements ActionListener {
 		logon.setSzPassword(u.get_passwd());
 		logon.setSzStdcc(u.get_current_department().get_stdcc());
 		logon.setLDeptpk(u.get_current_department().get_deptpk());
+		logon.setSessionid(u.get_sessionid());
 		String sz_job = WSThread.GenJobId();
 		logon.setJobid(sz_job);
 		
@@ -629,6 +630,7 @@ public class SendController implements ActionListener {
 		logon_exec.setSzStdcc(logon.getSzStdcc());
 		logon_exec.setLDeptpk(logon.getLDeptpk());
 		logon_exec.setJobid(sz_job);
+		logon_exec.setSessionid(logon.getSessionid());
 
 		WSProgressPoller progress = new WSProgressPoller(loader, ProgressJobType.PARM_SEND, logon, "", "Finished", true);
 		String cnf;
@@ -728,7 +730,8 @@ public class SendController implements ActionListener {
 				System.out.println("AlertPK: " + a.getAlertpk().substring(1));
 				System.out.println("Logon: " + logon_exec.toString());
 				System.out.println("sz_function: " + sz_function);
-				ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, "0", "0");
+				//ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, "0", "0");
+				ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, no.ums.pas.ums.tools.Utils.get_current_date_formatted(), Long.toString(no.ums.pas.ums.tools.Utils.get_current_datetime()).substring(8,14));
 				res = new SoapExecAlert("0", "0", null).newSnapAlertResult();
 				res.l_execpk = ar.getLExecpk();
 				

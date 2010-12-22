@@ -38,7 +38,7 @@ public class SoundRecorderPanel extends DefaultPanel {
 	StdTextLabel m_txt_seconds = new StdTextLabel("");
 	JSlider m_slider;
 	public JSlider get_slider() { return m_slider; }
-	StdTextLabel m_txt_sampleinfo = new StdTextLabel("", 250, 9, false);
+	StdTextLabel m_txt_sampleinfo = new StdTextLabel("", 320, 9, false);
 	//Sending_Files m_file;
 	//SendController m_controller;
 	SoundPlayer m_player;
@@ -87,7 +87,8 @@ public class SoundRecorderPanel extends DefaultPanel {
 		{
 			System.out.println(e.getMessage());
 		}
-		m_txt_seconds.set_width(50);
+		m_txt_seconds.set_width(90);
+		m_txt_sampleinfo.setPreferredSize(new Dimension(350,20));
 		m_txt_sampleinfo.setText(PAS.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + PAS.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + PAS.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? PAS.l("sound_panel_recorder_mono") : PAS.l("sound_panel_recorder_stereo")));
 		
 		if(b_line_ok) {
@@ -220,7 +221,7 @@ public class SoundRecorderPanel extends DefaultPanel {
 		//add(new JPanel(), m_gridconst);
 		set_gridconst(0, 0, 10, 1, GridBagConstraints.CENTER);
 		add(m_slider, m_gridconst);
-		set_gridconst(0, 1, 11, 1, GridBagConstraints.SOUTHEAST);
+		set_gridconst(0, 0, 13, 1, GridBagConstraints.SOUTHEAST);
 		add(m_txt_sampleinfo, m_gridconst);
 		set_gridconst(10, 0, 1, 1, GridBagConstraints.CENTER);
 		add(m_txt_seconds, m_gridconst);

@@ -93,7 +93,7 @@ public class SoundFile extends Object {
 		logon.setSzCompid(info1.get_compid());
 		logon.setSzDeptid(info1.get_current_department().get_deptid());
 		logon.setSzPassword(info1.get_passwd());
-		
+		logon.setSessionid(info1.get_sessionid());
 		audioreq.setNDeptpk(info1.get_current_department().get_deptpk());
 		audioreq.setNRefno(n_refno);
 		

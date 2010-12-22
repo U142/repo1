@@ -436,23 +436,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 											};
 			
 			
-			m_item_departments_check		= new CheckItem[PAS.get_pas().get_userinfo().get_departments().size()];
-			for(int i=0; i < PAS.get_pas().get_userinfo().get_departments().size(); i++) {
-				try
-				{
-					m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
-																PAS.get_pas().get_userinfo().get_departments().get(i),
-																PAS.get_pas().get_userinfo().get_departments().get(i).equals(PAS.get_pas().get_userinfo().get_default_dept()) ? true : false);//(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).isDefaultDept() ? true : false));
-				}
-				catch(Exception e)
-				{
-					m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
-							PAS.get_pas().get_userinfo().get_departments().get(i),
-							false);			
-				}
-			}
-			m_item_departments_checklist = new RadioItemList(get_pas(), m_item_departments_check, 0, 
-															m_menu_departments, m_actionlistener, "act_change_department");	
+			updateDeptSelection(false);
 			
 
 			m_item_gps_trail_checklist = new RadioItemList(get_pas(), m_item_gps_trail_minutes_check, 0, 
@@ -561,6 +545,38 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			showNavPan(true);
 			showNavSearch(true);
 		}
+		
+		public void updateDeptSelection(boolean current_dept) {
+			if(m_item_departments_checklist != null)
+				m_item_departments_checklist.clear();
+			if(m_menu_departments != null)
+				m_menu_departments.removeAll();
+			m_item_departments_check = new CheckItem[PAS.get_pas().get_userinfo().get_departments().size()];
+			for(int i=0; i < PAS.get_pas().get_userinfo().get_departments().size(); i++) {
+				try
+				{
+					if(current_dept) {
+						m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
+								PAS.get_pas().get_userinfo().get_departments().get(i),
+								PAS.get_pas().get_userinfo().get_departments().get(i).equals(PAS.get_pas().get_userinfo().get_current_department()) ? true : false);//(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).isDefaultDept() ? true : false));
+					}
+					else {
+						m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
+																PAS.get_pas().get_userinfo().get_departments().get(i),
+																PAS.get_pas().get_userinfo().get_departments().get(i).equals(PAS.get_pas().get_userinfo().get_default_dept()) ? true : false);//(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).isDefaultDept() ? true : false));
+					}
+				}
+				catch(Exception e)
+				{
+					m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
+							PAS.get_pas().get_userinfo().get_departments().get(i),
+							false);			
+				}
+			}
+			m_item_departments_checklist = new RadioItemList(get_pas(), m_item_departments_check, 0, 
+															m_menu_departments, m_actionlistener, "act_change_department");	
+		}
+		
 		public void showNewSending(boolean b)
 		{
 			m_item_new_sending.setVisible((Boolean)UIManager.get("m_item_new_sending") && b);

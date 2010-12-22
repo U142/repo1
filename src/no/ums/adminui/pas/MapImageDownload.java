@@ -14,7 +14,6 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.opengis.filter.expression.Add;
 
 import sun.management.snmp.util.JvmContextFactory;
 

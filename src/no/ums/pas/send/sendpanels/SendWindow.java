@@ -404,7 +404,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_btn_next.addActionListener(this);
 		m_btn_back.addActionListener(this);
 		m_btn_simulation.addActionListener(this);
-		m_txt_comstatus.setPreferredSize(new Dimension(200, 16));
+		m_txt_comstatus.setPreferredSize(new Dimension(220, 16));
 		add_controls();
 		m_tabbedpane.addChangeListener(this);
 		addWindowListener(this);
@@ -900,6 +900,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			if(this.m_files!=null){
 				for(int i=0; i < m_files.length; i++)
 				{
+					if(m_files[i] != null)
 						m_files[i].get_recorder().get_recorder().stopRecording();
 				}
 			}
