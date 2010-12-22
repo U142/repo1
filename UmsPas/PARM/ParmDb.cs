@@ -803,8 +803,8 @@ namespace com.ums.UmsParm
             m.sz_sepused = "";
             m.l_createdate = UCommon.UGetDateNow(); //String.Format("{0:yyyy}{0:MM}{0:dd}", DateTime.UtcNow.ToLocalTime());
             m.l_createtime = UCommon.UGetTimeNow(); //String.Format("{0:HH}{0:mm}", DateTime.UtcNow.ToLocalTime());
-            m.l_scheddate = schedule.sz_date;
-            m.l_schedtime = schedule.sz_time;
+            m.l_scheddate = schedule.sz_date; //String.Format("{0:yyyy}{0:MM}{0:dd}"
+            m.l_schedtime = schedule.sz_time.Substring(0,4); //String.Format("{0:HH}{0:mm}"
             m.l_removedup = 1;
             m.l_maxchannels = s.n_maxchannels;
             m.sz_groups = "";
@@ -1099,7 +1099,8 @@ namespace com.ums.UmsParm
                 int n_fromapplication = 13;
                 String sz_tarifclass = "";
                 String sz_stdcc = logon.sz_stdcc;
-                String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString() + "00").ToString();
+                String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString().Length < 6 ? s.m_sendinginfo.l_schedtime.ToString() + "00" : s.m_sendinginfo.l_schedtime.ToString()).ToString();
+                //String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString()).ToString();
                 if (n_scheddatetime.Equals("-1"))
                     n_scheddatetime = s.m_sendinginfo.l_createdate + s.m_sendinginfo.l_createtime;
                 int n_priserver = 0, n_altserver = 0;

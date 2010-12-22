@@ -850,7 +850,14 @@ namespace com.ums.UmsParm
                      * 
                      */
                     smssending.createShape(ref sending);
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                    if (sending.n_scheddate == -1 || sending.n_schedtime == -1)
+                    {
+                        String datetime = db.getDbClock().ToString();
+                        sending.n_scheddate = int.Parse(datetime.Substring(0, 8));
+                        sending.n_schedtime = int.Parse(datetime.Substring(8));
+                    }
+
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadLeft(6, '0')));
                     smssending.setSendingInfo(ref smssendinginfo);
                     db.Send(ref smssending, ref logoninfo);
                     b_publish_sms = true;
@@ -946,9 +953,17 @@ namespace com.ums.UmsParm
                 db.FillValid(sending.n_validity, ref valid);
                 db.FillSendNum(sending.oadc.sz_number, ref sendnum);
                 db.FillActionProfile(sending.n_profilepk, ref profile);
+
+                if (sending.n_scheddate == -1 || sending.n_schedtime == -1)
+                {
+                    String datetime = db.getDbClock().ToString();
+                    sending.n_scheddate = int.Parse(datetime.Substring(0, 8));
+                    sending.n_schedtime = int.Parse(datetime.Substring(8));
+                }
+
                 try
                 {
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadLeft(6,'0')));
                 }
                 catch (Exception e)
                 {
@@ -965,7 +980,7 @@ namespace com.ums.UmsParm
                 
                 lbasending.setSendingInfo(ref sendinginfo);
                 lbasending.setReschedProfile(ref resched_profile, sending.n_scheddate);
-                lbasending.setValid(ref valid);
+                lbasending.setValid(ref valid   );
                 lbasending.setSendNum(ref sendnum);
                 lbasending.setActionProfile(ref profile);
 
@@ -1227,6 +1242,15 @@ namespace com.ums.UmsParm
             bool b_voice_active = false;
             bool b_sms_active = false;
             bool b_lba_active = false;
+
+            // if sched date/time is not set update with db timestamp
+            if (sz_scheddate.Equals("-1") || sz_scheddate.Equals("0") || sz_schedtime.Equals("-1") || sz_schedtime.Equals("0"))
+            {
+                String datetime = db.getDbClock().ToString();
+                sz_scheddate = datetime.Substring(0, 8);
+                sz_schedtime = datetime.Substring(8,4);
+            }
+
             if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
                 (pa.l_addresstypes & (long)ADRTYPES.FIXED_PRIVATE_ALT_SMS) > 0 ||
 
@@ -1359,6 +1383,7 @@ namespace com.ums.UmsParm
                     db.FillValid(ref pa, ref valid);
                     db.FillSendNum(ref pa, ref sendnum);
                     db.FillActionProfile(ref pa, ref profile);
+
                     db.FillSendingInfo(ref logoninfo, ref pa, ref sendinginfo, new UDATETIME(sz_scheddate, sz_schedtime), sz_sendingname);
 
                     long n_scheddate = 0;

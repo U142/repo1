@@ -456,7 +456,7 @@ namespace com.ums.ws.parm
         {
             ExecResponse response = new ExecResponse();
             XmlDocument doc = ExecAlert(l_alertpk, l_comppk, l_deptpk, l_userpk, sz_compid, sz_userid,
-                                        sz_deptid, sz_password, sz_function, sz_scheddate, sz_schedtime, null, "");
+                                        sz_deptid, sz_password, sz_function, sz_scheddate, sz_schedtime, null, "", "");
             response.parseFromXml(ref doc, "l_alertpk");
 
             return response;
@@ -472,7 +472,7 @@ namespace com.ums.ws.parm
 
                 ExecResponse response = new ExecResponse();
                 XmlDocument doc = ExecAlert(l_alertpk, logon.l_comppk, logon.l_deptpk, logon.l_userpk, logon.sz_compid,
-                    logon.sz_userid, logon.sz_deptid, logon.sz_password, sz_function, sz_scheddate, sz_schedtime, percentdelegate, logon.jobid);
+                    logon.sz_userid, logon.sz_deptid, logon.sz_password, sz_function, sz_scheddate, sz_schedtime, percentdelegate, logon.jobid, logon.sessionid);
                 response.parseFromXml(ref doc, "l_alertpk");
                 return response;
             }
@@ -734,7 +734,7 @@ namespace com.ums.ws.parm
         //[WebMethod]
         public XmlDocument ExecAlert(Int64 l_alertpk, int l_comppk, int l_deptpk, Int64 l_userpk, 
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
-                                String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid)
+                                String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid, String sessionid)
         {
             sz_function = sz_function.ToLower();
            
@@ -747,6 +747,7 @@ namespace com.ums.ws.parm
             logoninfo.sz_password = sz_password;
             logoninfo.sz_userid = sz_userid;
             logoninfo.jobid = jobid;
+            logoninfo.sessionid = sessionid;
 
             USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
             ParmGenerateSending parm = new ParmGenerateSending();

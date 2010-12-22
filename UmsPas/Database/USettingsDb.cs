@@ -213,8 +213,10 @@ namespace com.ums.PAS.Database
 
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 int n_last_profilepk = -1;
+                int i = 0;
                 while (rs.Read())
                 {
+                    i++;
                     int n_profilepk = rs.GetInt32(2);
                     if (n_last_profilepk != n_profilepk)
                     {

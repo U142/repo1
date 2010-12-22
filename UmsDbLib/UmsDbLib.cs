@@ -188,7 +188,7 @@ namespace com.ums.UmsDbLib
                 rs = ExecReader(szSQL, UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
-                    Int64 l_fromdb = rs.GetInt64(0);
+                    Int64 l_fromdb = (Int64)rs.GetDecimal(0);
                     if (l_fromdb == info.l_userpk)
                     {
                         info.l_deptpri = rs.GetInt32(1);
@@ -433,6 +433,7 @@ namespace com.ums.UmsDbLib
             {
                 if (rs != null && !rs.IsClosed)
                     rs.Close();
+                this.close();
             }
         }
 
