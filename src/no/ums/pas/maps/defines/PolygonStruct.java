@@ -467,7 +467,7 @@ public class PolygonStruct extends ShapeStruct {
 			int n_1 = (it % restrict.get_size());
 			if(n_1<0)
 				n_1 = restrict.get_size()+n_1;
-			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1), false, POINT_PRECISION, false);			
+			this.add_coor(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1), true, POINT_PRECISION, false);			
 			count++;
 			it+=dir;
 			if(count >= iterations)
@@ -476,7 +476,7 @@ public class PolygonStruct extends ShapeStruct {
 		if(add_last_point)
 		{
 			//this.add_coor((_start<_stop ? p2.get_lon() : p1.get_lon()), (_start<_stop ? p2.get_lat() : p1.get_lat()));
-			this.add_coor(p2.get_lon(), p2.get_lat(), false, POINT_PRECISION, true);
+			this.add_coor(p2.get_lon(), p2.get_lat(), true, POINT_PRECISION, true);
 		}
 		else
 			this.finalizeShape();
@@ -1142,13 +1142,13 @@ public class PolygonStruct extends ShapeStruct {
 				g2d.setStroke(stroke_revert);
 				
 				
-				/*if(bEditmode && !bPaintShapeName)
+				/*if(!bEditmode && !bPaintShapeName)
 				{
 					//paint point numbers
 					Font f1 = new Font("Arial", Font.PLAIN, 14);
 					Font fOldFont = g.getFont();
 					g.setFont(f1);
-					for(int i=0; i < use_size; i+=5)
+					for(int i=0; i < use_size; i+=10)
 					{
 						Color oldCol = g.getColor();
 						g.setColor(Color.red);
@@ -1289,10 +1289,14 @@ public class PolygonStruct extends ShapeStruct {
 					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
 					MapPointLL p1 = getLastPoint();
 					MapPointLL p2 = getFirstPoint();
-					List<MapPointLL> intersects;
-					//List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
-					//if(intersects.size()>0)
-					//	return false;
+					//List<MapPointLL> intersects;
+					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0, true);
+					if(intersects.size()>0)
+					{
+						setCanLock(false);
+						return;
+					}
+						//return false;
 					
 					//p1 = getPoint(getPoint(n))
 					/*synchronized (b_generating_illegal_intersects) {
@@ -1426,6 +1430,31 @@ public class PolygonStruct extends ShapeStruct {
 	};
 	
 	protected void followRestrictionLines(PolygonStruct poly, PolygonStruct restrict, 
+			int start, int stop, int dir)
+	{
+		if(dir>=0)
+			dir = 1;
+		else 
+			dir = -1;
+		if(start==stop)
+			return;
+		int cur = start;
+		while(1==1)
+		{
+			int idx = (cur % restrict.get_size());
+			MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
+			poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);
+			if(idx==stop)
+				break;
+			cur+=dir;
+			if(cur<=0)
+				cur = restrict.get_size();
+		}
+		poly.finalizeShape();
+
+	}
+	
+	protected void followRestrictionLines(PolygonStruct poly, PolygonStruct restrict, 
 											int start, int stop)
 	{
 		if(start==stop)
@@ -1494,6 +1523,7 @@ public class PolygonStruct extends ShapeStruct {
 		poly.finalizeShape();
 	}
 	
+	int RestrictionStage = 0;
 	protected void iterateEllipse(PolygonStruct newpoly,
 								PolygonStruct restrict,
 								int n_ell_point,
@@ -1501,6 +1531,8 @@ public class PolygonStruct extends ShapeStruct {
 								boolean b_iteration_outside,
 								boolean b_marked_as_finalized)
 	{
+		//if(RestrictionStage>5)
+		//	return;
 		boolean b_cur_inside = false;
 		if(b_marked_as_finalized)
 			return;
@@ -1528,7 +1560,9 @@ public class PolygonStruct extends ShapeStruct {
 		//	System.out.println("break");
 		if(n_ell_point==n_size && !b_cur_inside && first_added_point!=null && last_added_point!=null)
 		{
-			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference()+1, first_added_point.getPointReference());
+			//newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference()+1, first_added_point.getPointReference());
+			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), first_added_point.getPointReference(), first_added_point.getPointReference()-last_added_point.getPointReference());
+			RestrictionStage++;
 			b_marked_as_finalized = true;
 			//newpoly.FollowRestrictionLines(first_added_point, last_added_point, first_added_point, restrict, false, false, true);
 			return;
@@ -1536,8 +1570,16 @@ public class PolygonStruct extends ShapeStruct {
 		else if(n_ell_point==n_size && first_added_point==null)
 		{
 			newpoly.followRestrictionLines(newpoly, restrict, 0, restrict.get_size()-1);
+			RestrictionStage++;
 			b_marked_as_finalized = true;
 			return;
+		}
+		else if(n_ell_point==n_size && first_added_point!=null)
+		{
+			//newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), first_added_point.getPointReference(), first_added_point.getPointReference()-last_added_point.getPointReference());
+			RestrictionStage++;
+			b_marked_as_finalized = true;
+			return;	
 		}
 		
 		
@@ -1561,8 +1603,9 @@ public class PolygonStruct extends ShapeStruct {
 				current_point.getPointReference()>0 &&
 				!b_iteration_outside)// && intersects.size()==0)
 		{
-			//followRestrictionLines(newpoly, restrict, POLY_FOLLOW_RESTRICT.INCLUDE_ENDPOINTS, last_added_point.getPointReference(), current_point.getPointReference());
-			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), current_point.getPointReference());
+			newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), current_point.getPointReference(), current_point.getPointReference()-last_added_point.getPointReference());
+			RestrictionStage++;
+			//newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference(), current_point.getPointReference());
 			newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
 			//newpoly.add_coor(current_point.get_lon(), current_point.get_lat(), current_point.getPointReference(), true, POINT_PRECISION, false);
 			b_restrict_used = true;
@@ -1904,6 +1947,7 @@ public class PolygonStruct extends ShapeStruct {
 		PolygonStruct newpoly = new PolygonStruct();
 		newpoly.polytype = PolyType.ELLIPSE_RECALCULATED;
 		//iterateEllipse(newpoly, restrict, 0, false, null, -1, -1, -1,-1,-1);
+		RestrictionStage = 0;
 		iterateEllipse(newpoly, restrict, 0, null, false, false);
 		newpoly.finalizeShape();
 		this.m_coor_lat = newpoly.m_coor_lat;
