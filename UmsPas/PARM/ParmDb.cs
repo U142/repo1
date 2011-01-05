@@ -1103,6 +1103,13 @@ namespace com.ums.UmsParm
                 //String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString()).ToString();
                 if (n_scheddatetime.Equals("-1"))
                     n_scheddatetime = s.m_sendinginfo.l_createdate + s.m_sendinginfo.l_createtime;
+                try
+                {
+                    n_scheddatetime = n_scheddatetime.PadRight(14, '0');
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                }
                 int n_priserver = 0, n_altserver = 0;
                 OdbcDataReader rs = null;
                 try
