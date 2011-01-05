@@ -221,7 +221,7 @@ public class SoundRecorderPanel extends DefaultPanel {
 		//add(new JPanel(), m_gridconst);
 		set_gridconst(0, 0, 10, 1, GridBagConstraints.CENTER);
 		add(m_slider, m_gridconst);
-		set_gridconst(0, 0, 13, 1, GridBagConstraints.SOUTHEAST);
+		set_gridconst(0, 1, 13, 1, GridBagConstraints.SOUTHEAST);
 		add(m_txt_sampleinfo, m_gridconst);
 		set_gridconst(10, 0, 1, 1, GridBagConstraints.CENTER);
 		add(m_txt_seconds, m_gridconst);

@@ -432,7 +432,12 @@ public class SendController implements ActionListener {
 			}
 		}
 		else if("act_sending_close".equals(e.getActionCommand())) {
-			((SendObject)e.getSource()).destroy_all();
+			SendObject so = (SendObject)e.getSource();
+			ShapeStruct ss = so.get_sendproperties().get_shapestruct();
+			if(ss.equals(variables.MAPPANE.get_active_shape()))
+				variables.MAPPANE.set_active_shape(null);
+			//((SendObject)e.getSource()).destroy_all();
+			so.destroy_all();
 			get_sendings().remove(((SendObject)e.getSource()));
 			PAS.get_pas().kickRepaint();
 			//PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
@@ -577,6 +582,8 @@ public class SendController implements ActionListener {
 		try {
 			for(int i=0; i < get_sendings().size(); i++) {
 				SendObject obj = (SendObject)get_sendings().get(i);
+				if(obj.get_sendproperties().get_shapestruct()==PAS.get_pas().get_mappane().get_active_shape())
+					continue;
 				if(obj!=null)
 					obj.draw(g, mousepos);
 			}
