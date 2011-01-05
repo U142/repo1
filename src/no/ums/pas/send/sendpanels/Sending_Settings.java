@@ -318,6 +318,24 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			set_gridconst(8, get_panel(), 1, 1, GridBagConstraints.WEST);
 			add(m_combo_schedtimeminute, m_gridconst);
 		}
+		else if(parent.hasSMS(n_addrtypes)) {
+			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
+			add(m_radio_sendnow, m_gridconst);
+			set_gridconst(5, get_panel(), 5, 1, GridBagConstraints.WEST);
+			add(m_radio_sched, m_gridconst);
+
+			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
+			add(m_lbl_scheddate, m_gridconst);
+			set_gridconst(5, get_panel(), 1, 1, GridBagConstraints.WEST);
+			add(m_combo_scheddate, m_gridconst);
+			set_gridconst(6, get_panel(), 1, 1, GridBagConstraints.WEST);
+			add(m_combo_schedtimehour, m_gridconst);
+			//set_gridconst(7, get_panel(), 1, 1, GridBagConstraints.WEST);
+			//add(new StdTextArea(":"), m_gridconst);
+			set_gridconst(8, get_panel(), 1, 1, GridBagConstraints.WEST);
+			add(m_combo_schedtimeminute, m_gridconst);
+			
+		}
 
 		init();
 	}
@@ -486,6 +504,8 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	}
 	protected void populate_oadc() {
 		ArrayList<OADC> oadcs = get_parent().get_settingsloader().get_oadcnumbers();
+		if(oadcs==null)
+			return;
 		for(int i=0; i < oadcs.size(); i++) {
 			OADC oadc = (OADC)oadcs.get(i);
 			if(i==0)
