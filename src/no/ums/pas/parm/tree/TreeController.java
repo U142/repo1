@@ -412,8 +412,13 @@ public class TreeController {
 						}
 						if (alertHasPolygon) {
 							gui.getGotoMap().setEnabled(true);
-						} else
+							gui.getGenerateSending().setEnabled(true);
+							gui.getQuickSendMenu().setEnabled(true);
+						} else {
 							gui.getGotoMap().setEnabled(false);
+							gui.getGenerateSending().setEnabled(false);
+							gui.getQuickSendMenu().setEnabled(false);
+						}
 						gui.getTools().setEnabled(eventHasPolygons);
 						
 					} else if (o.getClass().equals(ObjectVO.class)) { // if

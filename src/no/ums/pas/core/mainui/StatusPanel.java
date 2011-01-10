@@ -65,6 +65,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	private final int n_mainstatus_width = 200;
 	public DefaultPanel LBAPANEL;
 	public DefaultPanel VOICEPANEL;
+	public DefaultPanel FILTERPANEL;
+	
 	boolean b_enable_lba_panel = false;
 	protected LBASEND m_lbasend_total;
 	
@@ -594,8 +596,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					//	public void run()
 						{
 							b_voice_filter_added = true;
-							VOICEPANEL.set_gridconst(0, n_panel_for_voice_filter, 1, 1);
-							VOICEPANEL.add(m_combo_voice_filter, VOICEPANEL.m_gridconst);
+							FILTERPANEL.set_gridconst(0, n_panel_for_voice_filter, 1, 1);
+							FILTERPANEL.add(m_combo_voice_filter, FILTERPANEL.m_gridconst);
 						}
 					//});
 				}
@@ -617,8 +619,35 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			add(m_icon_panel_main, m_gridconst);
 			add_spacing(DIR_VERTICAL, 10);
 			
-			set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.SOUTHWEST);
+			add((FILTERPANEL = new DefaultPanel() {
+				public static final long serialVersionUID = 1;
+				public void add_controls()
+				{
+					int x_width = 1;
+					super.add_spacing(DIR_VERTICAL, 10);
+					set_gridconst(0, inc_panels(), x_width, 1, GridBagConstraints.NORTHWEST);
+					add(m_combo_voice_filter, m_gridconst);
+					addComponentListener(this);
+					init();
+
+				}
+				public void actionPerformed(ActionEvent e) { }
+				public void init() { }
+				public void componentResized(ComponentEvent e)
+				{
+					int x = this.getWidth()-20;
+					int y = this.getHeight()-10;
+					m_combo_voice_filter.setPreferredSize(new Dimension(x, 26));
+					m_combo_voice_filter.setSize(new Dimension(x,26));
+					
+				}
+			}), m_gridconst);
 			
+			FILTERPANEL.add_controls();
+			
+			
+			set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.SOUTHWEST);
+									
 			add((VOICEPANEL = new DefaultPanel() {
 				public static final long serialVersionUID = 1;
 				public void add_controls()

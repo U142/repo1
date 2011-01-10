@@ -112,6 +112,9 @@ public class SendController implements ActionListener {
 	
 	private PAS m_pas;
 	private int m_n_send_id = 0;
+	public void reset_send_id () {
+		m_n_send_id = 0;
+	}
 	//private Send m_sendsetup;
 	private ArrayList<SendObject> m_sendings;
 	public PAS get_pas() { return m_pas; }
@@ -890,12 +893,15 @@ public class SendController implements ActionListener {
 				}
 				else
 				{
+					int answer= JOptionPane.NO_OPTION;
 					if(PAS.get_pas().get_statuscontroller().get_sendinglist().size() > 0) {
 						JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question),PAS.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
 						openStatus(res);
 					}
-					else if(b_openstatus_question && JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), PAS.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION)
+					else if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), PAS.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
 						openStatus(res);
+					else if(b_openstatus_question && answer==JOptionPane.NO_OPTION)
+						get_activesending().get_sendwindow().dispose();
 					else if(!b_openstatus_question)
 						JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), PAS.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
 				}

@@ -279,7 +279,7 @@ public class ObjectGUI extends JFrame implements WindowListener {
 			this.iptPanel = new JPanel();
 
 			this.lblDescription = new JLabel();
-			this.lblDescription.setPreferredSize(new Dimension(100, 18));
+			this.lblDescription.setPreferredSize(new Dimension(110, 18));
 			this.lblDescription.setText(PAS.l("main_parm_object_dlg_more_description"));
 
 			this.txaDescription = new JTextArea();

@@ -123,10 +123,12 @@ public class EventController implements ActionListener {
 
 	private void addCategoryToCombobox(HashMap<Long, CategoryVO> cList) {
 		Set<Long> keyset = cList.keySet();
-		Iterator it = keyset.iterator();
+		TreeSet<CategoryVO> items = new TreeSet<CategoryVO>(cList.values());
+		//Iterator it = keyset.iterator();
+		Iterator it = items.iterator();
 		
 		while (it.hasNext()) {
-			this.category = cList.get(it.next());
+			this.category = (CategoryVO)it.next();
 			gui.getEventInputPanel().getCbxCategory().addItem(this.category);
 		}
 	}

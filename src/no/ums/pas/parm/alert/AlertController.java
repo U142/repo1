@@ -65,8 +65,7 @@ public class AlertController implements ActionListener {
 		toolbarPanel = sendObj.get_toolbar();
 		toolbarPanel.get_radio_ellipse().addActionListener(this);
 		toolbarPanel.get_radio_polygon().addActionListener(this);
-		//toolbarPanel.show_buttons(SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_, false);
-		//toolbarPanel.show_buttons(SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_, false);
+
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_ACTIVATE_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_CENTER_ON_MAP_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);

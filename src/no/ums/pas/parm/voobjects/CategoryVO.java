@@ -66,14 +66,23 @@ public class CategoryVO implements Comparable<CategoryVO>{
 
 	@Override
 	public int compareTo(CategoryVO o) {
-		long local_PK = Long.parseLong(categoryPK.substring(1));
+		/*long local_PK = Long.parseLong(categoryPK.substring(1));
 		long external_PK = Long.parseLong(o.categoryPK.substring(1));
 		if(local_PK>external_PK)
 			return 1;
 		else if(local_PK<external_PK)
 			return -1;
 		else
-			return 0;
+			return 0;*/
+		String local_name = name.toUpperCase();
+		String external_name = o.name.toUpperCase();
+		int comp = local_name.compareTo(external_name);
+		if(comp > 0)
+			return 1;
+		else if(comp < 0)
+			return -1;
+		else
+			return comp;
 	}
 }
 

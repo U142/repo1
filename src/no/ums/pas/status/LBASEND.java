@@ -147,7 +147,7 @@ public class LBASEND
 	public static String LBASTATUSTEXT(int n_code)
 	{
 		String sz = LBASTATUS.get(new Integer(n_code));
-		if(sz.length()==0)
+		if(sz == null || sz.length()==0)
 			sz = "Unknown status code ["+ n_code + "]";
 		return sz;
 	}

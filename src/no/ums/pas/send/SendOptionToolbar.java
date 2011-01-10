@@ -34,7 +34,7 @@ import java.util.Enumeration;
 public class SendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
 	
 	public static final int SIZE_TXT			= 260;
-	public static final int SIZE_BUTTON_ICON	= 20;
+	public static final int SIZE_BUTTON_ICON	= 21;
 	public static final int SIZE_BUTTON_SMALL	= 25;
 	public static final int SIZE_BUTTON_MEDIUM	= 35;
 	public static final int SIZE_BUTTON_LARGE	= 41;
@@ -1140,6 +1140,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	
 	public void add_controls() {
 		DefaultPanel.ENABLE_GRID_DEBUG = false;
+		JLabel m_place_holder;
 		add_spacing(DIR_VERTICAL, 5);
 		//inc_panels();
 		this.reset_xpanels();
@@ -1179,18 +1180,33 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 	
 		add(m_btn_adrtypes_private_fixed, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		addSeparator(5);
 		inc_xpanels2();
 		add(m_btn_adrtypes_private_mobile, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		addSeparator(15);
 		inc_xpanels2();
 		add(m_btn_adrtypes_company_fixed, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		addSeparator(5);
 		inc_xpanels2();
 		add(m_btn_adrtypes_company_mobile, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		addSeparator(15);
 		inc_xpanels2();
 		add(m_btn_adrtypes_nofax, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		addSeparator(15);
 		/*inc_xpanels2();
 		add(m_btn_adrtypes_nophone_private, m_gridconst);
@@ -1201,7 +1217,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		inc_xpanels2();
 		//inc_xpanels2();
 		add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
-		
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
 		//inc_xpanels2();
 		//inc_xpanels2(2);
 		add_spacing(DIR_HORIZONTAL, 30);

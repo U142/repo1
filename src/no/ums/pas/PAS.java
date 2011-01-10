@@ -2000,6 +2000,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				thread.waitToFinish();
 			}
+			PAS.get_pas().get_sendcontroller().reset_send_id(); // Resets the send id, alerts in a new project should now start from beginning
 		}
 		catch(Exception e)
 		{

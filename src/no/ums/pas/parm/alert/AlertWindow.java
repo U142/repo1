@@ -261,8 +261,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_btn_next.setActionCommand("act_next");
 			m_btn_simulation.setVisible(false);
 		}
-		if(m_tabbedpane.getSelectedIndex() == 0)
+		if(m_tabbedpane.getSelectedIndex() == 0) {
 			m_btn_back.setEnabled(false);
+		}
 		else {
 			m_btn_back.setEnabled(true);
 		}

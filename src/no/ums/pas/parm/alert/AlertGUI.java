@@ -71,13 +71,18 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		
 		
 		JPanel pnlAreabtns = new JPanel();
+		
+		//toolbar.get_colorbutton().getParent().setPreferredSize(new Dimension(25,25));
+		//pnlAreabtns.setPreferredSize(new Dimension(200,200));
+		
 		pnlAreabtns.setLayout(new BoxLayout(pnlAreabtns,BoxLayout.X_AXIS));
 		//pnlAreabtns.setBorder(BorderFactory.createLineBorder(Color.blue));
-		
+				
 		pnlAreabtns.add(toolbar.get_btn_color());
 		pnlAreabtns.add(toolbar.get_radio_polygon());
 		pnlAreabtns.add(toolbar.get_radio_ellipse());
 		pnlAreabtns.add(toolbar.get_btn_open());
+		
 		//lblAHeader.setAlignmentY(Component.LEFT_ALIGNMENT);
 		//pnlTop.set_gridconst(0, pnlTop.inc_panels(), 10, 1);
 		JLabel lblRTHeader = new JLabel(PAS.l("main_parm_alert_dlg_recipient_types"));

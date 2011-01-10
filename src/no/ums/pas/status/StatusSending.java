@@ -875,6 +875,7 @@ public class StatusSending extends Object {
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(pnl_icon, m_gridconst);
 			add_spacing(DIR_VERTICAL, 10);
+			// Add filter panel
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(pnl_voice, m_gridconst);
 			add_spacing(DIR_VERTICAL, 10);
