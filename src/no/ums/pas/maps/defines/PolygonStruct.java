@@ -1569,7 +1569,11 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		else if(n_ell_point==n_size && first_added_point==null)
 		{
-			newpoly.followRestrictionLines(newpoly, restrict, 0, restrict.get_size()-1);
+			//entire ellipse is tested, no points found. 
+			//Either the ellipse is outside the restriction area
+			//or ellipse is covering the entire restriction area (all points are inside)
+			if(restrict.pointInsideShape(newpoly.getFirstPoint()))
+				newpoly.followRestrictionLines(newpoly, restrict, 0, restrict.get_size()-1);
 			RestrictionStage++;
 			b_marked_as_finalized = true;
 			return;
@@ -1637,7 +1641,7 @@ public class PolygonStruct extends ShapeStruct {
 	{
 		
 	}
-								
+	@Deprecated
 	protected void iterateEllipse(PolygonStruct newpoly,
 								PolygonStruct restrict,
 								int n_ell_point,
@@ -1815,7 +1819,7 @@ public class PolygonStruct extends ShapeStruct {
 					n_first_entered_polygon_at_idx,
 					n_first_left_polygon_at_idx);
 	}
-	
+	@Deprecated
 	protected void iterateEllipse(PolygonStruct newpoly, 
 								PolygonStruct restrict, 
 								int n_ell_point, 
