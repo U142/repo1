@@ -233,7 +233,9 @@ public class MapFrameAdmin extends MapFrame {
 			get_active_shape().draw(gfx, Variables.getNavigation(), false, true, false, null, true, true, 1, false);
 			m_gfx = gfx;
 		}
-		catch(Exception e) { }
+		catch(Exception e) {
+            logger.warn("Failed to draw shape", e);
+        }
 		super.drawOnEvents(gfx);
 	}
 }

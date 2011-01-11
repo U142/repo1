@@ -1,5 +1,6 @@
 package no.ums.pas.sound;
 
+import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 
@@ -11,7 +12,10 @@ import java.util.ArrayList;
 
 
 public class SoundMixer implements LineListener {
-	public final int MIXER_TYPE_MIC = 0;
+
+    private static final Log logger = UmsLog.getLogger(SoundMixer.class);
+
+    public final int MIXER_TYPE_MIC = 0;
 	public final int MIXER_TYPE_SPEAKER = 1;
 	public static boolean b_has_reported_error = false;
 	
@@ -401,7 +405,7 @@ public class SoundMixer implements LineListener {
             System.out.println("Selected " + Zrodlo);
             
         } catch (Exception e) {
-            UmsLog.getLogger(SoundMixer.class).warn("Failed to update soundmixer, Zrodlo: %s, volume: %f", Zrodlo, Volume, e);
+            logger.warn("Failed to update soundmixer, Zrodlo: %s, volume: %f", Zrodlo, Volume, e);
         }
     }
     private void setRecControlValue(Port inPort) throws Exception {

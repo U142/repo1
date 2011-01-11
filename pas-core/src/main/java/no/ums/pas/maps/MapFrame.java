@@ -590,7 +590,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			ImageIcon icon_epicentre = ImageLoader.load_icon(sz_url);
 			m_cursor_epicentre = Toolkit.getDefaultToolkit().createCustomCursor(icon_epicentre.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH),
 					new Point(0,0), "Epicentre");
-		} catch(Exception e) { }
+		} catch(Exception e) {
+            logger.warn("Failed to create custom cursor", e);
+        }
 		String sz_pinpointfile = "pinpoint_blue.png";
 		try {
 			m_icon_pinpoint = ImageLoader.load_icon(sz_pinpointfile);
