@@ -9,12 +9,28 @@
     <version>1.5-SNAPSHOT</version>
     <modules>
         <module>pas-core</module>
+        <module>ums-log</module>
     </modules>
     <properties>
         <version.geotools>2.6.5</version.geotools>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
+            <!-- UMS Dependencies -->
+            <dependency>
+                <groupId>no.ums</groupId>
+                <artifactId>ums-log</artifactId>
+                <version>${version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.java.net.substance</groupId>
                 <artifactId>substance</artifactId>
