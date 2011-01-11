@@ -120,7 +120,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 		f.load_file(this, "act_download_finished"); //starts thread, and callback with SoundlibFile as object
 		SoundInfoLibrary info = new SoundInfoLibrary(f.get_deptpk(), f.get_messagepk());
 		get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_LIBRARY_, info);
-		// Her gjøres den ferdig og reloader parent for å enable next knappen
+		// Her gjÃ¸res den ferdig og reloader parent for Ã¥ enable next knappen
 		get_parent().set_next_text();
 		/*try {
 			m_playpanel.initialize_player(f.get_file().getPath(), true);

@@ -53,7 +53,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		//FontSet 
-		m_text.setFont(new Font(null, Font.PLAIN, 11)); //dette hadde noe med substance å gjøre, måtte fjerne den for ikke å få java.lang.NegativeArraySizeException
+		m_text.setFont(new Font(null, Font.PLAIN, 11)); //dette hadde noe med substance Ã¥ gjÃ¸re, mÃ¥tte fjerne den for ikke Ã¥ fÃ¥ java.lang.NegativeArraySizeException
 		m_text.setLineWrap(true);
 		m_text.setWrapStyleWord(true);
 		m_text.addFocusListener(this);
@@ -115,7 +115,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, (String)e.getSource());
 			get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS((String)e.getSource(),-1, null));
 			
-			// Her gjøres den ferdig og reloader parent for å enable next knappen
+			// Her gjÃ¸res den ferdig og reloader parent for Ã¥ enable next knappen
 			get_parent().set_next_text();
 		} else if("act_txtlib_changed".equals(e.getActionCommand())) {
 			//load text from server

@@ -52,7 +52,7 @@ public class FalcomProtocol {
 	private static final String CMD_ASK_ENABLE_SMSRESPONSE_ = "$<CNF.Set>"; //$GSM setting updated
 																			//$GSM.RESPONSE written to flash
 	private static final String CMD_ASK_IMEI_ = "$<GSM.IMEI>"; //$IMEI:352021003719382
-	private static final String CMD_ASK_OWNNUMBER_ = "$<GSM.OwnNumber>"; //$phone number:°2 ?Tù
+	private static final String CMD_ASK_OWNNUMBER_ = "$<GSM.OwnNumber>"; //$phone number:Â°2 ?TÃ¹
 																		 //?? (SIM voice number)
 	private static final String CMD_ASK_SIMID_ = "$<GSM.SIMID>"; //$SIMID:242010102112949 (mobile subscriber ID)
 	private static final String CMD_RET_GPSFIX_ = "$GPSFix:";

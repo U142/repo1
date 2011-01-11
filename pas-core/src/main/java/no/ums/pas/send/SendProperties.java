@@ -271,7 +271,7 @@ public abstract class SendProperties extends Object {
 				//sz_vals[30]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_internationaltext().getText());
 				sz_vals[29]= "";
 				sz_vals[30]= "";
-				sz_vals[31]= String.valueOf(((Area)parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_combo_area().getSelectedItem()).get_id());
+				sz_vals[31]= String.valueOf(((Area) parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_combo_area().getSelectedItem()).get_id());
 				sz_vals[32]= parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_oadc_text().getText();
 			} else {
 				sz_vals[29]= "";
@@ -367,13 +367,9 @@ public abstract class SendProperties extends Object {
 		
 		ArrayOfLong resendStatus = new ArrayOfLong();
 		if(get_isresend()) {
-			for(int i=0; i < m_arr_resend_status.size(); i++) {
-				try {
-					resendStatus.getLong().add(new Long(((StatusCode)m_arr_resend_status.get(i)).get_code()));
-				} catch(Exception e) {
-					System.out.println("Error adding statuscode for resend. " + e.getMessage());
-				}
-			}
+            for (StatusCode statusCode : m_arr_resend_status) {
+                resendStatus.getLong().add((long) statusCode.get_code());
+            }
 		}
 		//System.out.println("TAS i sendproperties objid: " + System.identityHashCode(this));
 		

@@ -261,7 +261,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		
 		// if only cell broadcast is selected then don't show these fields
 		System.out.println("Addresstypes: " + parent.m_sendobject.get_toolbar().get_addresstypes());
-		if(parent.m_sendobject.get_toolbar().get_addresstypes() != 256) { // Her må jeg finne Statiske for BTN_CELLBROADCAST
+		if(parent.m_sendobject.get_toolbar().get_addresstypes() != 256) { // Her mÃ¥ jeg finne Statiske for BTN_CELLBROADCAST
 			if(parent.hasVoice(n_addrtypes)) {
 				set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
 				add(m_lbl_profiles, m_gridconst);

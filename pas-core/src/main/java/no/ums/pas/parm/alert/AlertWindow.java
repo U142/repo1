@@ -168,10 +168,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_tabbedpane.addChangeListener(this);
 		addWindowListener(this);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		// Lurer på om dette går?
+		// Lurer pÃ¥ om dette gÃ¥r?
 		//ac.setParent(this);
 		
-		// Dette er for å aktivere cell broadcast tab'en
+		// Dette er for Ã¥ aktivere cell broadcast tab'en
 			if(m_alert.getAlert() != null && m_alert.getAlert().getArea() != null) {
 				if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
 			//switch(m_alert.getAlert().getAddresstypes()) {
@@ -538,7 +538,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					if(m_alert.getAlert().getCBOadc() != null && m_alert.getAlert().getCBOadc().length()>0)
 						m_cell_broadcast_text_panel.get_txt_oadc_text().setText(m_alert.getAlert().getCBOadc());
 				}
-				// Hvis den ikke har voice, så fjern alle unødvendige ting i settings
+				// Hvis den ikke har voice, sÃ¥ fjern alle unÃ¸dvendige ting i settings
 				int n_adrtypes = m_alert.getPanelToolbar().get_addresstypes();
 				if(((n_adrtypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
 							(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
