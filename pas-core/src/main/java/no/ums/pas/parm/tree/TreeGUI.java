@@ -579,7 +579,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 //            	ImageIcon icon = ImageLoader.load_icon("cat1.gif");
 //            	//  Scale image to size of component
 //                Dimension d = getSize();
-//                // Her må jeg bare ha en gjennomsiktig gif
+//                // Her mÃ¥ jeg bare ha en gjennomsiktig gif
 //                g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
 //                setOpaque( false );
 //                super.paintComponent(g);

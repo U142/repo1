@@ -312,7 +312,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 
 		if(obj.get_sendproperties().get_isresend()) {
 			m_addresscount = new AddressCount();
-			// Her må jeg hente StatusController.get_items
+			// Her mÃ¥ jeg hente StatusController.get_items
 			ArrayList<Object> items = controller.get_pas().get_statuscontroller().get_items(); // denne listen inneholder StatusItemObjects
 			StatusCodeList mainList = controller.get_pas().get_statuscontroller().get_statuscodes();
 			StatusCodeList list = new StatusCodeList();
@@ -883,7 +883,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		{
 			
 		}
-		// her må jeg ta en sjekk på om det er andre sendwindow oppe
+		// her mÃ¥ jeg ta en sjekk pÃ¥ om det er andre sendwindow oppe
 		//PAS.get_pas().get_sendcontroller().get_sendings().
 		boolean close = true;
 		ArrayList<SendObject> sendings = PAS.get_pas().get_sendcontroller().get_sendings();

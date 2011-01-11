@@ -71,12 +71,12 @@ public class SosiFile extends Object {
 	public static final String FIELD_TEGNSETT_	= "..TEGNSETT";
 	public static final String FIELD_KOORDSYS_	= "...KOORDSYS";
 	public static final String FIELD_ENHET_		= "...ENHET";
-	public static final String FIELD_ORIGO_		= "...ORIGO-NØ";
-	public static final String FIELD_OMRAADE_	= "..OMRÅDE";
-	public static final String FIELD_MIN_NE_	= "...MIN-NØ";
-	public static final String FIELD_MAX_NE_	= "...MAX-NØ";
+	public static final String FIELD_ORIGO_		= "...ORIGO-NÃ˜";
+	public static final String FIELD_OMRAADE_	= "..OMRÃ…DE";
+	public static final String FIELD_MIN_NE_	= "...MIN-NÃ˜";
+	public static final String FIELD_MAX_NE_	= "...MAX-NÃ˜";
 	public static final String FIELD_SOSI_VERSJON_	= "..SOSI-VERSJON";
-	public static final String FIELD_SOSI_NIVAA_	= "..SOSI-NIVÅ";
+	public static final String FIELD_SOSI_NIVAA_	= "..SOSI-NIVÃ…";
 	public static final String FIELD_EIER_		= "..EIER";
 	public static final String FIELD_PRODUSENT_	= "..PRODUSENT";
 	public static final String FIELD_KURVE_		= ".KURVE";
@@ -86,7 +86,7 @@ public class SosiFile extends Object {
 	public static final String FIELD_KVALITET_	= "..KVALITET";
 	public static final String FIELD_NAME_		= "..NAVN";
 	public static final String FIELD_INFORMASJON_ = "..INFORMASJON";
-	public static final String FIELD_NE_		= "..NØ";
+	public static final String FIELD_NE_		= "..NÃ˜";
 	public static final String FIELD_FLATE_		= ".FLATE";
 	public static final String FIELD_REF_		= "..REF"; //..REF :1
 	public static final String FIELD_SLUTT_		= ".SLUTT";
@@ -554,11 +554,11 @@ public class SosiFile extends Object {
 						b_kurve = true;
 						n_kurvecount++;
 					}
-					if(obj.id() == 19 && b_kurve) { //NØ
+					if(obj.id() == 19 && b_kurve) { //NÃ˜
 						n_coorstarts++;
 						if(n_coorstarts==1)// && !b_coorsadded)
 						{
-							//check two lines forward is another ..NØ
+							//check two lines forward is another ..NÃ˜
 							b_expectcoor = true;
 							try
 							{
@@ -601,22 +601,22 @@ public class SosiFile extends Object {
 ..KVALITET 82
 ..ID 15241001
 ..NAVN "Norddal"
-..INFORMASJON "Digitalisert på skjerm etter plott"
+..INFORMASJON "Digitalisert pÃ¥ skjerm etter plott"
 ..REF :6
-..NØ
+..NÃ˜
 	 */
 
 	//*** COMMON HEADER ***//
 	private int m_n_coorsys; //...KOORDSYS 22
 	private int m_n_coorsystype; //UTM OR LL
 	private double m_f_units; //...ENHET 0.01
-	private Point m_p_origin; //...ORIGO-NØ 0 0
-	private NavStruct m_bounding; //...MIN-NØ 6883943 388410
-								  //...MAX-NØ 6885939 391058
+	private Point m_p_origin; //...ORIGO-NÃ˜ 0 0
+	private NavStruct m_bounding; //...MIN-NÃ˜ 6883943 388410
+								  //...MAX-NÃ˜ 6885939 391058
 	private double m_f_sosiversion; //..SOSI-VERSJON  3.4
-	private int m_n_sosilevel; //..SOSI-NIVÅ 4
-	private String m_sz_owner; //..EIER "Møre og Romsdal Fylke"
-	private String m_sz_manufacturer; //..PRODUSENT "Møre og Romsdal Fylke"
+	private int m_n_sosilevel; //..SOSI-NIVÃ… 4
+	private String m_sz_owner; //..EIER "MÃ¸re og Romsdal Fylke"
+	private String m_sz_manufacturer; //..PRODUSENT "MÃ¸re og Romsdal Fylke"
 	private int m_n_ellipsoid = 23;
 	private String m_sz_utmzone = "32V";
 	private FlateArray m_arr_flater = new FlateArray();
@@ -668,12 +668,12 @@ public class SosiFile extends Object {
 		private String m_sz_ltema; //..LTEMA 3280
 		private String m_sz_createdate; //..DIGDATO 20060117
 		private int m_n_quality; //..KVALITET 82
-		private String m_sz_information; //..INFORMASJON "Digitalisert på skjerm etter plott"
+		private String m_sz_information; //..INFORMASJON "Digitalisert pÃ¥ skjerm etter plott"
 		private String m_sz_name = "";
 		private int m_n_ref = -1;
-		private Point m_p_northeast; //..NØ
+		private Point m_p_northeast; //..NÃ˜
 									 //688593817 38871428 ...KP 1
-									 //..NØ
+									 //..NÃ˜
 		public void set_flateid(int n) { m_n_flateid = n;}
 		public void set_objecttype(String s) { m_sz_objecttype = s; }
 		public void set_ltema(String s) { m_sz_ltema = s; }

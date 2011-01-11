@@ -138,7 +138,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 	}
 	public void add_controls() {
 		set_gridconst(0, 0, 1, 1);
-		// fjerner nåværende liste
+		// fjerner nÃ¥vÃ¦rende liste
 		try
 		{
 			for(int i=getComponentCount()-1;i>=0;i--)
@@ -214,7 +214,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 				m_panel.setToolTipText("No details available<br>The file lines limit for details is " + n_threshold);
 			}
 			updateStatistics();				
-			// Hvis sz_filter1 og 2 er ikke er "" så skal det sorteres på hitprosent
+			// Hvis sz_filter1 og 2 er ikke er "" sÃ¥ skal det sorteres pÃ¥ hitprosent
 			if(m_parent.get_previewlist()!=null)
 			{
 				if(!(m_parent.get_previewlist().get_column_bytype(ComboField.FIELDID_NAMEFILTER_INCLUSIVE_1) == -1)

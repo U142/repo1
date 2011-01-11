@@ -115,7 +115,7 @@ public class StorageController {
 				Error.getError().addError("StorageController","IOException in set_parm",e,1);
 			}
 		}
-		// Satte denne fra private til public for å kunne brukes ved opprettelse av parm underkataloger
+		// Satte denne fra private til public for Ã¥ kunne brukes ved opprettelse av parm underkataloger
 		//
 		public static boolean create_path(String sz_path) throws IOException {
 			boolean b_ret = false;

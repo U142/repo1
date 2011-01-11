@@ -99,11 +99,11 @@ public class SoapExecEvent extends SoapExecAlert
 	    	
 	    	/*
 	    	 * 
-	    	 * Husk å legge til verifikasjon av passord i SendController før instansiering av SoapExecAlert
+	    	 * Husk Ã¥ legge til verifikasjon av passord i SendController fÃ¸r instansiering av SoapExecAlert
 	    	 * Parse projectpk
 	    	 * Parse for feil
 	    	 * Vise statusrapport i vindu
-	    	 * vinduet skal ha option for å åpne status direkte
+	    	 * vinduet skal ha option for Ã¥ Ã¥pne status direkte
 	    	 */
 	    	sz_confirm = "";
 		}

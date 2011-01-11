@@ -33,7 +33,7 @@ import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 //Substance 5.2
 //import org.jvnet.substance.api.renderers.SubstanceDefaultTreeCellRenderer;
 
-// Se jeg har fått en blå balongi!
+// Se jeg har fÃ¥tt en blÃ¥ balongi!
 
 public class TreeController {
 
@@ -190,7 +190,7 @@ public class TreeController {
 			gui.getTreeModel().insertNodeInto(newRootFolder, parentNode,
 					parentNode.getChildCount());
 
-			// En test for å sjekke om parent er oppdatert uten at child
+			// En test for Ã¥ sjekke om parent er oppdatert uten at child
 			// objektet har endret parentpk
 			/*
 			 * ObjectVO parent = (ObjectVO)parentNode.getUserObject();
@@ -388,11 +388,11 @@ public class TreeController {
 															// rettigheter for
 															// sending
 						}
-						// Her må jeg ha en if setning der jeg går gjennom alle
+						// Her mÃ¥ jeg ha en if setning der jeg gÃ¥r gjennom alle
 						// childs og ser om de har polygon
 						EventVO eVO = (EventVO) o;
 						
-						// Denne er for å unngå dobbel lagring, mulig den kunne vært en bedre plass
+						// Denne er for Ã¥ unngÃ¥ dobbel lagring, mulig den kunne vÃ¦rt en bedre plass
 						if(eVO.hasValidPk())
 							eVO.setTempPk(null);
 						
@@ -432,7 +432,7 @@ public class TreeController {
 						ObjectVO oVO = (ObjectVO) o;
 												
 						if(oVO.hasValidPk()) {
-							// Denne er for å unngå dobbel lagring, mulig den kunne vært en bedre plass
+							// Denne er for Ã¥ unngÃ¥ dobbel lagring, mulig den kunne vÃ¦rt en bedre plass
 							oVO.setTempPk(null);
 							if (!oVO.isObjectFolder()) { // not folder, disable
 															// all but new events.
@@ -486,7 +486,7 @@ public class TreeController {
 						gui.getObject().setEnabled(false);
 						gui.getObjectfolder().setEnabled(false);
 						// gui.getGenerateSending().setVisible(true);
-						// Denne er for å unngå dobbel lagring, mulig den kunne vært en bedre plass
+						// Denne er for Ã¥ unngÃ¥ dobbel lagring, mulig den kunne vÃ¦rt en bedre plass
 						((AlertVO)o).setTempPk(null);
 						
 						

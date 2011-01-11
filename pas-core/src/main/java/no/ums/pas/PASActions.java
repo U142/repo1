@@ -418,7 +418,7 @@ public class PASActions implements ActionListener {
 			PAS.get_pas().setTitle(PAS.get_pas().get_maintitle() + "        " + e.getSource().toString());
 		}
 //		else if("act_set_new_active_project".equals(e.getActionCommand())) {
-//			// Skal sette nytt prosjekt, må 
+//			// Skal sette nytt prosjekt, mÃ¥ 
 //			//Project.this.
 //			Project source = (Project)e.getSource();
 //		}
@@ -603,7 +603,7 @@ public class PASActions implements ActionListener {
 			//	 for(int i=0;i<PAS.get_pas().get_eastcontent().get_tabbedpane().size();++i)
 			//}
 			actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_dept_changed"));
-			// La til denne for å enten ta vare på eller slette sendingene ved department bytte
+			// La til denne for Ã¥ enten ta vare pÃ¥ eller slette sendingene ved department bytte
 			if(PAS.get_pas().get_current_project()!=null) {
 				//PAS.get_pas().close_active_project(true, true);
 				actionPerformed(new ActionEvent(PAS.get_pas().get_current_project(), ActionEvent.ACTION_PERFORMED, "act_project_saved"));

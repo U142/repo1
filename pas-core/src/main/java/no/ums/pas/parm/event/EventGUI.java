@@ -136,7 +136,7 @@ public class EventGUI extends JFrame implements WindowListener {
 				add(Box.createVerticalStrut(4));
 				add(cbxCategory = new JComboBox());
 				cbxCategory.setPreferredSize(d);
-				// MÅ ha en label og en knapp ting
+				// MÃ… ha en label og en knapp ting
 				add(Box.createVerticalStrut(4));
 				ImageIcon icon = ImageLoader.load_icon("epicentre_pinpoint.png");
 				icon.setImage(icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH));

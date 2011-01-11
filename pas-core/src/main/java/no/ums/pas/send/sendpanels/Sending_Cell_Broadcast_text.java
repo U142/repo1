@@ -84,7 +84,7 @@ import java.text.Collator;
 public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionListener, KeyListener, ItemListener, ComponentListener, FocusListener {
 	public static final long serialVersionUID = 1;
 	
-	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^€{}\\[\\]~\\\\]");
+	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^Â€{}\\[\\]~\\\\]");
 	public int m_maxSize = 500;
 	public int m_maxSafe = 160;
 	private final int m_oadc_maxSize = 11;
@@ -269,9 +269,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_combo_area.setPreferredSize(new Dimension(200, 20));
 		m_combo_area.addItem(new Area("5", "Hellesylt (ID 5)"));
 		m_combo_area.addItem(new Area("6", "Geiranger (ID 6)"));
-		m_combo_area.addItem(new Area("7", "Karmøy (ID 7)"));
+		m_combo_area.addItem(new Area("7", "KarmÃ¸y (ID 7)"));
 		m_combo_area.addItem(new Area("4", "Sandnes (ID 4)"));
-		m_combo_area.addItem(new Area("3", "Skøyen (ID 3)"));
+		m_combo_area.addItem(new Area("3", "SkÃ¸yen (ID 3)"));
 		m_combo_area.addItem(new Area("1", "Test 1 (ID 1)"));
 		m_combo_area.addItem(new Area("2", "Test 2 (ID 2)"));
 		
@@ -906,15 +906,15 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 //		if(e.getSource() == m_cbx_messages && e.getStateChange() == ItemEvent.SELECTED && 
 //				parent.get_tabbedpane().getSelectedComponent().equals(this)) {
 		if(e.getSource() == m_cbx_messages && e.getStateChange() == ItemEvent.SELECTED) {
-			// Først må jeg passe på at ingen av ccodes ligger igjen
+			// FÃ¸rst mÃ¥ jeg passe pÃ¥ at ingen av ccodes ligger igjen
 			for(int i=0;i<m_cbx_messages.getItemCount();i++) {
 				removeCCodes((CBMessage)m_cbx_messages.getItemAt(i));
 			}
 			CBMessage cbm = (CBMessage)m_cbx_messages.getItemAt(m_cbx_messages.getSelectedIndex());
 			
-			// Når du velger en melding fra messages skal denne populate'e de andre inputene.
+			// NÃ¥r du velger en melding fra messages skal denne populate'e de andre inputene.
 			addToCCodes(cbm);
-			// inkludert å legge til de tilhørene ccodes og velge dem i listen og forandre add knappen til save
+			// inkludert Ã¥ legge til de tilhÃ¸rene ccodes og velge dem i listen og forandre add knappen til save
 			selectAddedCCodes(cbm);
 			
 			m_txt_messagename.setText(cbm.getMessageName());

@@ -146,7 +146,7 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		//variables.DRAW.set_mappane(variables.MAPPANE);
 		
 		
-		//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)
+		//MÃ¥ alltid kjÃ¸re calc fÃ¸r tegning (hvor navigation er endret pga map)
 		variables.NAVIGATION.setNavigation(nav);
 		variables.MAPPANE.load_map();
 		shape.calc_coortopix(variables.NAVIGATION);
@@ -225,7 +225,7 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			//variables.DRAW.set_mappane(variables.MAPPANE);
 			
 			
-			//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)
+			//MÃ¥ alltid kjÃ¸re calc fÃ¸r tegning (hvor navigation er endret pga map)
 			variables.NAVIGATION.setNavigation(nav);
 			variables.MAPPANE.load_map();
 			shape.calc_coortopix(variables.NAVIGATION);

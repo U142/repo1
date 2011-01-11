@@ -11,9 +11,6 @@
     <artifactId>pas-core</artifactId>
     <name>PAS Core</name>
     <packaging>jar</packaging>
-    <properties>
-        <project.build.sourceEncoding>ISO-8859-15</project.build.sourceEncoding>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.java.net.substance</groupId>

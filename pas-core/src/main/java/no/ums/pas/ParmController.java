@@ -54,7 +54,7 @@ public class ParmController extends MainController {
 			Error.getError().addError("ParmController","IOException in StorageController.create_path",e,1);
 		}
 		new ParmConstants(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
-//		 Kjører denne testen for å se om programmet ble avsluttet riktig, dersom filen eksisterer var det noe feil
+//		 KjÃ¸rer denne testen for Ã¥ se om programmet ble avsluttet riktig, dersom filen eksisterer var det noe feil
 		File cleanExit = new File(ParmConstants.cleanExit);
 		if(cleanExit.exists()) {
 			File dir = new File(ParmConstants.homePath);
@@ -134,7 +134,7 @@ public class ParmController extends MainController {
 			e.printStackTrace();
 			Error.getError().addError("ParmController","Exception in drawLayers",e,1);
 		}
-		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
+		// Bruker updatePolygon for Ã¥ sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
 			get_shape().draw(g, getMapNavigation(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos());
 		}
@@ -162,7 +162,7 @@ public class ParmController extends MainController {
 				//}
 			}
 		}
-		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
+		// Bruker updatePolygon for Ã¥ sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
 			get_shape().calc_coortopix(getMapNavigation());
 		}
@@ -194,7 +194,7 @@ public class ParmController extends MainController {
 	}	
 	
 //	 Hvorfor satte du denne til protected? Jeg forandrer den til public
-	// Fordi du er teh søkk, jeg setter den til private :p
+	// Fordi du er teh sÃ¸kk, jeg setter den til private :p
 	public void addShapeToDrawQueue(ShapeStruct s) {
 		get_shapelist().add(s);
 	}
@@ -234,7 +234,7 @@ public class ParmController extends MainController {
 			//this.event = (EventVO) object;
 			try {
 				if(((EventVO)object).getAlertListe()!=null) {
-					// Jeg må finne ut hvor mange av alertene som ikke er null
+					// Jeg mÃ¥ finne ut hvor mange av alertene som ikke er null
 					int notNullPoly = 0;
 					Iterator it = ((EventVO)object).getAlertListe().iterator();
 					AlertVO a;
@@ -245,7 +245,7 @@ public class ParmController extends MainController {
 					}
 					
 					Object[] shapes = new Object[notNullPoly];
-					// Her må jeg bruke en egen index for arraylisten, siden den kan inneholde mer elementer enn det som skal settes inn
+					// Her mÃ¥ jeg bruke en egen index for arraylisten, siden den kan inneholde mer elementer enn det som skal settes inn
 					int index = 0;
 					for(int i=0;i<((EventVO)object).getAlertListe().size();i++){
 						if(((AlertVO)((EventVO)object).getAlertListe().get(i)).getM_shape() != null){

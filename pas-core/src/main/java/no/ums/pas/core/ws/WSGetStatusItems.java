@@ -452,7 +452,7 @@ public class WSGetStatusItems extends WSThread
 										}
 									}
 								}
-								//if(lbo!=0 && rbo!=0 && ubo!=0 && bbo!=0) // Fjernet denne pga resend fører til -9999.0,-9999.0,-9999.0,-9999.0 og ødelegger statusoversikten
+								//if(lbo!=0 && rbo!=0 && ubo!=0 && bbo!=0) // Fjernet denne pga resend fÃ¸rer til -9999.0,-9999.0,-9999.0,-9999.0 og Ã¸delegger statusoversikten
 									shape.SetBounds(lbo, rbo, ubo, bbo);
 								sending.set_shape(shape);
 

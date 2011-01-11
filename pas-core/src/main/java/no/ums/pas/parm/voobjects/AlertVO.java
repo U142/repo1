@@ -144,7 +144,7 @@ public class AlertVO extends ParmVO {
 	public ArrayLBAOperator getOperators() { return m_operator_status; }
 	
 	public AlertVO() {
-		//fjåått
+		//fjÃ¥Ã¥tt
 	}
 	public SendObject getSendObject(){
 		return sendObj;

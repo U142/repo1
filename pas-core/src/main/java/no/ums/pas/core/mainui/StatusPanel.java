@@ -173,7 +173,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_lba_total_progress.setMinimum(0);
 		m_lba_total_progress.setMaximum(m_lbasend_total.n_items);
 		m_lba_total_progress.setValue(m_lbasend_total.n_proc + m_lbasend_total.getCancelled());
-		if(m_lba_total_progress.getMinimum()==m_lba_total_progress.getMaximum() && m_lba_total_progress.getMaximum() == 0) { // Måtte legge dette til for at den skal vise 100%
+		if(m_lba_total_progress.getMinimum()==m_lba_total_progress.getMaximum() && m_lba_total_progress.getMaximum() == 0) { // MÃ¥tte legge dette til for at den skal vise 100%
 			m_lba_total_progress.setMaximum(m_lba_total_progress.getMaximum()+1);
 			m_lba_total_progress.setValue(m_lba_total_progress.getMaximum());
 		}

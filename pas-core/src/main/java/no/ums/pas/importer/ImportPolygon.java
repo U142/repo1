@@ -29,14 +29,14 @@ import no.ums.pas.ums.tools.FilePicker;
 ..TRANSPAR
 ...KOORDSYS 22  
 ...ENHET 0.01
-...ORIGO-NØ 0 0
-..OMRÅDE
-...MIN-NØ 6883943 388410
-...MAX-NØ 6885939 391058
+...ORIGO-NÃ˜ 0 0
+..OMRÃ…DE
+...MIN-NÃ˜ 6883943 388410
+...MAX-NÃ˜ 6885939 391058
 ..SOSI-VERSJON  3.4
-..SOSI-NIVÅ 4
-..EIER "Møre og Romsdal Fylke"
-..PRODUSENT "Møre og Romsdal Fylke"
+..SOSI-NIVÃ… 4
+..EIER "MÃ¸re og Romsdal Fylke"
+..PRODUSENT "MÃ¸re og Romsdal Fylke"
 !
 !
 .KURVE 1:
@@ -44,10 +44,10 @@ import no.ums.pas.ums.tools.FilePicker;
 ..LTEMA 3280
 ..DIGDATO 20060117
 ..KVALITET 82
-..INFORMASJON "Digitalisert på skjerm etter plott"
-..NØ
+..INFORMASJON "Digitalisert pÃ¥ skjerm etter plott"
+..NÃ˜
 688593817 38871428 ...KP 1
-..NØ
+..NÃ˜
 688587301 38879340
 688533312 38931135
 688500001 38941175
@@ -75,9 +75,9 @@ import no.ums.pas.ums.tools.FilePicker;
 ..FTEMA 3280
 ..DIGDATO 20060117
 ..KVALITET 82
-..INFORMASJON "Digitalisert på skjerm etter plott"
+..INFORMASJON "Digitalisert pÃ¥ skjerm etter plott"
 ..REF :1
-..NØ
+..NÃ˜
 688494117 38918778
 .SLUTT
 

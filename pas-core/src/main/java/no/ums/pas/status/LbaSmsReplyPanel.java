@@ -36,7 +36,7 @@ public class LbaSmsReplyPanel extends DefaultPanel implements ActionListener {
 	private ArrayList<StdTextLabel> count;
 	private StatusSending m_parent;
 	
-	public LbaSmsReplyPanel(StatusSending parent) { // Her kan jeg få inn array av LBASmsInStats
+	public LbaSmsReplyPanel(StatusSending parent) { // Her kan jeg fÃ¥ inn array av LBASmsInStats
 		super();
 		setPreferredSize(new Dimension(300, 200));
 		setBorder(BorderFactory.createRaisedBevelBorder());

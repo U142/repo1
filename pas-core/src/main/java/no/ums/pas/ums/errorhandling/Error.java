@@ -80,7 +80,7 @@ public class Error implements ActionListener {
 		}
 		
 		htErrors = new Hashtable();
-		htErrors.put("1",new String("Polygon har for få punkter, ikke klar til sending."));
+		htErrors.put("1",new String("Polygon har for fÃ¥ punkter, ikke klar til sending."));
 		htErrors.put("2",new String("HTTP Error"));		
 	}
 	
@@ -101,7 +101,7 @@ public class Error implements ActionListener {
 		}
 		
 		htErrors = new Hashtable();
-		htErrors.put("1",new String("Polygon har for få punkter, ikke klar til sending."));
+		htErrors.put("1",new String("Polygon har for fÃ¥ punkter, ikke klar til sending."));
 		htErrors.put("2",new String("HTTP Error"));
 	}
 	

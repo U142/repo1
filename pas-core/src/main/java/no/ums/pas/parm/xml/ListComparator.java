@@ -20,7 +20,7 @@ class ListComparator implements Comparator{
 			long tall1;
 			long tall2;
 			try{
-				//Dersom det er en temporærpk som ikke inneholder bokstav forann
+				//Dersom det er en temporÃ¦rpk som ikke inneholder bokstav forann
 				tall1 = Long.parseLong(o1.getObjectPK());
 			}catch(Exception e){
 				//Dersom pk inneholder en bokstav forann

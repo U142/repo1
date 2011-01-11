@@ -229,7 +229,7 @@ public class MapFrameAdmin extends MapFrame {
 	}
 	
 	//skal egentlig tegnes opp i draw_layers i Draw thread.
-	//Draw thread har også ansvar for å kjøre calc_coortopix på alle shapes
+	//Draw thread har ogsÃ¥ ansvar for Ã¥ kjÃ¸re calc_coortopix pÃ¥ alle shapes
 	@Override
 	public void drawOnEvents(Graphics gfx) {
 		

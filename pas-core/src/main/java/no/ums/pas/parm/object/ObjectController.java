@@ -82,8 +82,8 @@ public class ObjectController {
 		gui.getDescriptionPanel().getTxaDescription().setText(
 				this.object.getDescription());
 			
-		// Dette er for å gå over til edit mode på polygonen
-		// Må vi kanskje ha en service locator for å få kartet inn her? Tror jeg får tak i feil map.
+		// Dette er for Ã¥ gÃ¥ over til edit mode pÃ¥ polygonen
+		// MÃ¥ vi kanskje ha en service locator for Ã¥ fÃ¥ kartet inn her? Tror jeg fÃ¥r tak i feil map.
 		if(object.getM_shape()==null)
 			m_edit_polygon = (new PolygonStruct(main.getMapNavigation().getDimension()));
 		else {
@@ -99,11 +99,11 @@ public class ObjectController {
 		main.mapClear();
 		main.setDrawMode(m_edit_polygon);
 		
-		//NB!, må endres, temp løsning
+		//NB!, mÃ¥ endres, temp lÃ¸sning
 		if(gui.getObjInfoPanel().getTxtPostno().getText().equals(" ")) {
 			gui.getObjInfoPanel().getTxtPostno().setText("");
 		}
-		// Må sjekke om brukeren har rettigheter til å lagre
+		// MÃ¥ sjekke om brukeren har rettigheter til Ã¥ lagre
 		if(PAS.get_pas().get_rightsmanagement().write_parm())
 			gui.getActionPanel().getBtnSave().setEnabled(true);
 		else
@@ -273,8 +273,8 @@ public class ObjectController {
 			this.toObjectList = true;
 		else
 			this.toObjectList = false;
-		// Her må jeg sjekke om det er en ny eller edit event, men i tillegg
-		// så kan det være en edit før den blir satt inn og da skal det fortsatt være insert 
+		// Her mÃ¥ jeg sjekke om det er en ny eller edit event, men i tillegg
+		// sÃ¥ kan det vÃ¦re en edit fÃ¸r den blir satt inn og da skal det fortsatt vÃ¦re insert 
 		if (gui.getObjInfoPanel().getTxtName().getText().length() <= 0) {
 			this.toObjectList = false;
 			store = false;

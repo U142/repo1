@@ -172,14 +172,14 @@ public class AlertPanel extends JPanel implements WindowListener {
 			pnlContainerRigth.add(txtOadc);
 			txtOadc.setPreferredSize(d);
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
-			// Må ha et panel for å få med labelen i samme kolonne
+			// MÃ¥ ha et panel for Ã¥ fÃ¥ med labelen i samme kolonne
 			pnlValidity.setLayout(new BoxLayout(pnlValidity, BoxLayout.X_AXIS));
 			pnlValidity.add(cbxValidity);
 			cbxValidity.setPreferredSize(new Dimension(170, 18));
 			pnlValidity.add(Box.createHorizontalStrut(4));
 			pnlValidity.add(lblValidityDays);
 			pnlContainerRigth.add(pnlValidity);
-			// Dette skulle være hardkodet
+			// Dette skulle vÃ¦re hardkodet
 			for (int i = 1; i <= 7; i++) {
 				cbxValidity.addItem(new Integer(i));
 			}

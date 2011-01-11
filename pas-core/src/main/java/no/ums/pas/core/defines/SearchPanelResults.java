@@ -434,7 +434,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 					if(table.getColumnClass(i).equals(javax.swing.ImageIcon.class))
 						p.print("IMG\t");
 					else if(table.getColumnClass(i).equals(JButton.class))
-						;// Hvis det er knapp skal det ikke gjøres noe
+						;// Hvis det er knapp skal det ikke gjÃ¸res noe
 					else if(table.getColumnClass(i).equals(JCheckBox.class))
 						p.print(table.getColumnName(i) + "\t");
 					else if(table.getColumnClass(i).equals(JRadioButton.class))
@@ -451,7 +451,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 					if(table.getColumnClass(j).equals(javax.swing.ImageIcon.class))
 						p.print("img\t");
 					else if(table.getColumnClass(j).equals(JButton.class))
-						;// Hvis det er knapp skal det ikke gjøres noe
+						;// Hvis det er knapp skal det ikke gjÃ¸res noe
 					else if(table.getColumnClass(j).equals(JCheckBox.class))
 						if(((JCheckBox)table.getValueAt(i,j)).isSelected())
 							p.print("X");

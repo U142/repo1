@@ -770,7 +770,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	
 	}
 	private PolygonStruct parseCoors(String coors){
-		String[] l = coors.split("¤");
+		String[] l = coors.split("â‚¬");
 		
 		PolygonStruct s = new PolygonStruct(new Dimension(m_mappane.get_dimension().width,m_mappane.get_dimension().height));
 		//PolygonStruct s = new PolygonStruct(new Dimension(640,480));
@@ -823,7 +823,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				coors += "|";
 		}
 		if(coors.length()>0)
-			coors+="¤";
+			coors+="â‚¬";
 		for(int i=0;i<lon.size();++i) {
 			coors += lon.get(i).toString();
 			if(i+1<lon.size())

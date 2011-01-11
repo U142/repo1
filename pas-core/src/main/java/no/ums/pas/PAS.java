@@ -1246,7 +1246,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			try
 			{
 				// Her hentes instillingene fra xmlfilen settings.ini
-				// Henter nå innstillinger fra WS i logon
+				// Henter nÃ¥ innstillinger fra WS i logon
 				xmlreader.loadSettings();
 			}
 			catch(Exception e)
@@ -1894,7 +1894,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						get_parmcontroller().endSession(true);
 					}
 					catch(Exception er) { }
-					// Hvis programmet avslutter før dette blir gjort vet det at tempfilene skal slettes
+					// Hvis programmet avslutter fÃ¸r dette blir gjort vet det at tempfilene skal slettes
 					// og henter alt fra databasen igjen.
 					
 					SwingUtilities.invokeLater(new Runnable() {

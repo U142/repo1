@@ -165,7 +165,7 @@ public class SoundRecorderPanel extends DefaultPanel {
 						
 				}
 					//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_RECORD_, new SoundInfoRecord(get_recorder().get_recorder().get_file()));
-				// Dette brukes ved sending, når den har lagret så må det reloades for å kunne gå videre
+				// Dette brukes ved sending, nÃ¥r den har lagret sÃ¥ mÃ¥ det reloades for Ã¥ kunne gÃ¥ videre
 				//if(get_parent() != null)
 				//	get_parent().set_next_text();
 				if(m_callback!=null) {

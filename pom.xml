@@ -12,7 +12,6 @@
     </modules>
     <properties>
         <version.geotools>2.6.5</version.geotools>
-        <project.build.sourceEncoding>ISO-8859-15</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -83,6 +82,8 @@
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
+                        <!--<encoding>ISO-8859-15</encoding>-->
+                        <compilerArgument>-XDignore.symbol.file</compilerArgument>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -53,7 +53,7 @@ public class SoundOpenPanel extends DefaultPanel {
 				m_txt_file.setText(m_file.getPath());
 				SoundInfoLocal info = new SoundInfoLocal(m_file);
 				get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_LOCAL_, info);
-				// Her gjøres den ferdig og reloader parent for å enable next knappen
+				// Her gjÃ¸res den ferdig og reloader parent for Ã¥ enable next knappen
 				if(getParent() != null)
 					get_parent().set_next_text();
 				play_file();

@@ -197,7 +197,7 @@ public class SendController implements ActionListener {
 			n_type = SendProperties.SENDING_TYPE_CIRCLE_;
 		else if(alert.getM_shape().getClass().equals(GISShape.class)) {
 			n_type = SendProperties.SENDING_TYPE_GEMINI_STREETCODE_;
-			// Tror det er her jeg må kjøre på å lage temp fil med alle kodene også hente dem ned
+			// Tror det er her jeg mÃ¥ kjÃ¸re pÃ¥ Ã¥ lage temp fil med alle kodene ogsÃ¥ hente dem ned
 		}
 		else if(alert.getM_shape().getClass().equals(MunicipalStruct.class))
 			n_type = SendProperties.SENDING_TYPE_MUNICIPAL_;
@@ -384,11 +384,11 @@ public class SendController implements ActionListener {
 					tas.setCountryList(ts.getCountryList());
 					tas.setSmsInStats(sending.getSmsInStats());
 					tas.set_sms_broadcast_message(sending.get_sms_message_text());
-					tas.set_sms_broadcast_oadc(sending.getLbaLanguages().get(0).getSzCbOadc()); // Eneste måten jeg fant for å hente ut oadc ved tas resend siden sending.get_oadc() bare gir N/A
+					tas.set_sms_broadcast_oadc(sending.getLbaLanguages().get(0).getSzCbOadc()); // Eneste mÃ¥ten jeg fant for Ã¥ hente ut oadc ved tas resend siden sending.get_oadc() bare gir N/A
 					break;
 			}
 			System.out.println(sending.get_addresstypes());
-			// Få tak i gislist
+			// FÃ¥ tak i gislist
 			//PAS.get_pas().get_statuscontroller().get_houses().get_houses().size();
 			obj.get_toolbar().init_addresstypes(sending.get_addresstypes());
 			obj.get_sendproperties().set_profilepk(sending.get_profilepk());
@@ -597,7 +597,7 @@ public class SendController implements ActionListener {
 		}
 	}
 	
-	//Object o kan være enten alert eller event
+	//Object o kan vÃ¦re enten alert eller event
 	JPasswordField pass = new JPasswordField("");
 	public void execSoapSnapSendings(Object o, String sz_function)
 	{

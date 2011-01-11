@@ -284,7 +284,7 @@ public class Sending_Send extends DefaultPanel {
 						if(parent.get_files()[i].get_recorder() != null)
 							file.set_bytebuffer(parent.get_files()[i].get_recorder().get_bytebuffer());
 						else
-							file.set_bytebuffer(parent.get_files()[i].get_soundfile().get_bytebuffer()); // Kanskje ikke beste fiksen, men det virker ihvertfall nå
+							file.set_bytebuffer(parent.get_files()[i].get_soundfile().get_bytebuffer()); // Kanskje ikke beste fiksen, men det virker ihvertfall nÃ¥
 						
 						//file.set_fileinfo(parent.get_files()[i].get)
 						//PAS.get_pas().add_event("Ready to send wav type " + parent.get_files()[i].get_filetype() + " refno=" + get_refno());

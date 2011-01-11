@@ -378,7 +378,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	// Execute Event Web Service
 	public void executeEventWS(EventVO event) {
 		try {
-			// Kjør ws kall med event vo
+			// KjÃ¸r ws kall med event vo
 			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzUserid(PAS.get_pas().get_userinfo().get_userid());
 			logon.setSzCompid(PAS.get_pas().get_userinfo().get_compid());
@@ -556,7 +556,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	public void executeAlertWS(AlertVO alert) {
 		try
 		{
-			// Kjør ws kall med event vo
+			// KjÃ¸r ws kall med event vo
 			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzUserid(PAS.get_pas().get_userinfo().get_userid());
 			logon.setSzCompid(PAS.get_pas().get_userinfo().get_compid());
@@ -766,7 +766,7 @@ public class MainController implements ActionListener, TreeModelListener,
 //				alertCtrl = new AlertController(this, getMapNavigation());
 //				alertCtrl.insertAlert(this);
 				//while(!isUpdateXMLReady()) {
-					//; // Dette hindrer koden å fortsette før den orginale pk'en er oppdatert
+					//; // Dette hindrer koden Ã¥ fortsette fÃ¸r den orginale pk'en er oppdatert
 				//}
 				new AlertWindow(new SendObject(PAS.get_pas(), this),null);
 //				PAS.get_pas().get_sendcontroller().set_activesending(new ActionEvent(null,ac));
@@ -831,7 +831,7 @@ public class MainController implements ActionListener, TreeModelListener,
 								}
 							}
 							
-	//						Her blir PARM refreshet for at andre klienter skal få meldingen raskest mulig
+	//						Her blir PARM refreshet for at andre klienter skal fÃ¥ meldingen raskest mulig
 							getUpdateXML().saveProject();
 						}
 					}
@@ -855,7 +855,7 @@ public class MainController implements ActionListener, TreeModelListener,
 									executeAlertWS(this.alert); // oppdaterer synkront med webservice 
 								
 								//treeCtrl.getGui().getTreeModel().removeNodeFromParent(remNode);
-	//							 Her blir PARM refreshet for at andre klienter skal få meldingen raskest mulig
+	//							 Her blir PARM refreshet for at andre klienter skal fÃ¥ meldingen raskest mulig
 								getUpdateXML().saveProject();
 							}
 						}
@@ -888,7 +888,7 @@ public class MainController implements ActionListener, TreeModelListener,
 								executeEventWS(this.event); // oppdaterer synkront med webservice
 							}
 							//treeCtrl.getGui().getTreeModel().removeNodeFromParent(remNode);
-	//						Her blir PARM refreshet for at andre klienter skal få meldingen raskest mulig
+	//						Her blir PARM refreshet for at andre klienter skal fÃ¥ meldingen raskest mulig
 							getUpdateXML().saveProject();
 						}
 					}
@@ -974,7 +974,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					if(alert.getOperation().equals("insert"))
 					{
 						DefaultMutableTreeNode selectedNode = this.treeCtrl.addParentToTree(alert, parent);
-						// Må legge alerten til i eventlisten, men kan vente med det til jeg har fikset objekt ting
+						// MÃ¥ legge alerten til i eventlisten, men kan vente med det til jeg har fikset objekt ting
 						// select the new node (leaf).
 						TreePath path = new TreePath(selectedNode.getPath());
 						alert.setPath(selectedNode);
@@ -1016,7 +1016,7 @@ public class MainController implements ActionListener, TreeModelListener,
 							new MapPointLL(event.getEpicentreX(),event.getEpicentreY())));
 					addShapeToDrawQueue(ushape);
 				}
-				setFilled(null); // Bruker denne for å fjerne activeshape
+				setFilled(null); // Bruker denne for Ã¥ fjerne activeshape
 				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 				}
 			else if (e.getSource() == eventCtrl.getGui().getActionPanel().getBtnSave()) {
@@ -1079,7 +1079,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						}
 					
 						eventCtrl.getGui().dispose();
-						setFilled(null); // Bruker denne for å fjerne activeshape
+						setFilled(null); // Bruker denne for Ã¥ fjerne activeshape
 						getUpdateXML().saveProject();
 					}
 				}
@@ -1156,7 +1156,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						}
 						
 						objectCtrl.getGui().dispose();
-						// Her skal den i teorien fjerne drawmode og vise polygonet på vanlig måte
+						// Her skal den i teorien fjerne drawmode og vise polygonet pÃ¥ vanlig mÃ¥te
 						addShapeToDrawQueue(this.object.getM_shape());
 						PAS.get_pas().get_parmcontroller().setFilled(null);
 						PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
@@ -1362,7 +1362,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			System.out.println("Feil i addToXml" + e.getMessage());
 			Error.getError().addError("MainController","Exception in addToXml",e,1);
 		}
-		// Må sende med alle objektene som skal slettes
+		// MÃ¥ sende med alle objektene som skal slettes
 		w.writeXml(w.extractObjects(objectList));
 		w=null;
 		r=null;
@@ -1382,7 +1382,7 @@ public class MainController implements ActionListener, TreeModelListener,
 
 	public HashMap<Long, CategoryVO> getAllCategorys() throws FileNotFoundException,
 			ParmException {
-		// Må kjøre denne for å hente ut kategoriene fra XML filen
+		// MÃ¥ kjÃ¸re denne for Ã¥ hente ut kategoriene fra XML filen
 		/*
 		getAllElementsFromXmlFile();
 		
@@ -1399,7 +1399,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			}
 		}
 		return allCategorys;*/
-		//Her er det jeg må loade inn kategoriene i minnet og ikke kjøre denne på alle alerts
+		//Her er det jeg mÃ¥ loade inn kategoriene i minnet og ikke kjÃ¸re denne pÃ¥ alle alerts
 		if (this.m_categories == null) {
 			this.m_categories = new HashMap<Long, CategoryVO>();
 			m_categories.put((long)-1, new CategoryVO("c-1", "-- Select category --", null, null, null));
@@ -1432,7 +1432,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	}
 
 	public void refreshTree(Collection<Object> c) throws ParmException {
-		// Tar imot en liste med oppdaterte objeter samt nye fra tråden
+		// Tar imot en liste med oppdaterte objeter samt nye fra trÃ¥den
 		try{
 			this.getAllCategorys();
 		}catch(Exception e){
@@ -1465,7 +1465,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					
 					if (o.getClass().equals(ObjectVO.class)) {
 						ObjectVO oVO = (ObjectVO) updatedObjects.get(i);
-						/*Går igjennom treet for å finne node basert på pk*/
+						/*GÃ¥r igjennom treet for Ã¥ finne node basert pÃ¥ pk*/
 						String tempPk = oVO.getTempPk();
 						if(tempPk==null)
 							tempPk = oVO.getObjectPK();
@@ -1583,7 +1583,7 @@ public class MainController implements ActionListener, TreeModelListener,
 								}
 								this.treeCtrl.addParentToTree(eVO, parentNode);
 							}
-							catch(Exception e) { } // Det er ikke noe å gjøre med feilen uansett kan jo prøve å sette inn ved neste runde
+							catch(Exception e) { } // Det er ikke noe Ã¥ gjÃ¸re med feilen uansett kan jo prÃ¸ve Ã¥ sette inn ved neste runde
 						}
 					} else if (o.getClass().equals(AlertVO.class)) {
 						AlertVO aVO = (AlertVO) updatedObjects.get(i);
@@ -1606,7 +1606,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						}
 						if (wantedNode != null) { // update, not new element.
 							wantedNode.setUserObject(o);
-							// Må også oppdatere alertlist til eventen
+							// MÃ¥ ogsÃ¥ oppdatere alertlist til eventen
 							DefaultMutableTreeNode parent = findNodeByPk(((AlertVO)o).getParent());
 							EventVO event = (EventVO)parent.getUserObject();
 							AlertVO alerttmp;
@@ -1786,7 +1786,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	public void valueChanged(TreeSelectionEvent e) { // fires when selecting
 														// new nodes.
 		// clear map
-		mapClear(); // På alert må jeg finne parent og tegne opp alle for så å sette den valgte til filled
+		mapClear(); // PÃ¥ alert mÃ¥ jeg finne parent og tegne opp alle for sÃ¥ Ã¥ sette den valgte til filled
 		updateShape(null);
 		updateShapeFilled(null);
 		
@@ -1809,10 +1809,10 @@ public class MainController implements ActionListener, TreeModelListener,
 			} else if(o.getClass().equals(AlertVO.class)) {
 				setSelectedAlert(o);				
 			} else if (o.getClass().equals(EventVO.class)) {
-				// Av en eller annen merkelig grunn mister event innholdet i alertlisten, dette må jeg sjekke om skjer og fikse det
+				// Av en eller annen merkelig grunn mister event innholdet i alertlisten, dette mÃ¥ jeg sjekke om skjer og fikse det
 				EventVO event = (EventVO)o;
 
-				// Her må jeg nesten sjekke om childcount fra treet stemmer med childcount i selve objektet
+				// Her mÃ¥ jeg nesten sjekke om childcount fra treet stemmer med childcount i selve objektet
 				int count = node.getChildCount();
 				if(count != event.getAlertListe().size()){				
 					event.getAlertListe().clear();
@@ -1831,7 +1831,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					
 				
 				System.out.println("Event = " + event.getName() + " " + event.getAlertListe().size());
-				//System.out.println("Nå skal jeg gjøre noe smart");
+				//System.out.println("NÃ¥ skal jeg gjÃ¸re noe smart");
 				showAlertShape(event);
 			}
 			// register the event invoker with map-panel..
@@ -1928,7 +1928,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		return lockedObjects;
 	}
 	
-	// Hører til checkIfLocked
+	// HÃ¸rer til checkIfLocked
 	private void checkThis(ArrayList<Object> a, Object o) {
 		Iterator<Object> it;
 		if(o.getClass().equals(AlertVO.class)) {
@@ -1956,7 +1956,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			}
 			
 			DefaultMutableTreeNode dmt = findNodeByPk(((AlertVO)o).getParent());
-			if(dmt == null) { // Denne er dersom det har skjedd en refresh mot databasen og parent har fått oppdatert pk
+			if(dmt == null) { // Denne er dersom det har skjedd en refresh mot databasen og parent har fÃ¥tt oppdatert pk
 				dmt = findNodeByPk(((AlertVO)o).getAlertpk());
 				dmt = (DefaultMutableTreeNode)dmt.getParent();
 			}
@@ -1968,8 +1968,8 @@ public class MainController implements ActionListener, TreeModelListener,
 				else
 					addShapeToDrawQueue(p.getM_shape());
 			}
-			// Her må jeg legge til objektet i edit
-			// Dette må gjøres i send option toolbar egentlig
+			// Her mÃ¥ jeg legge til objektet i edit
+			// Dette mÃ¥ gjÃ¸res i send option toolbar egentlig
 		} catch(Exception ex) {
 			Error.getError().addError("MainController","Exception in valueChanged, error finding parentnode",ex,Error.SEVERITY_ERROR);
 		}
@@ -2010,9 +2010,9 @@ public class MainController implements ActionListener, TreeModelListener,
 		new XmlReader().readNodesExpandFromFile(treeCtrl.getGui().getTree(), (ParmController)this);
 	}
 	
-	// Brukes sammen med userprofile for å sette restriksjoner ved lave tilgangsnivåer
+	// Brukes sammen med userprofile for Ã¥ sette restriksjoner ved lave tilgangsnivÃ¥er
 	public void checkRightsManagement() {
-		if(!PAS.get_pas().get_rightsmanagement().read_parm()) { // Da må vi lukke programmet
+		if(!PAS.get_pas().get_rightsmanagement().read_parm()) { // Da mÃ¥ vi lukke programmet
 			PAS.get_pas().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
 		}
 		else { // Skal kun a lese tilgang

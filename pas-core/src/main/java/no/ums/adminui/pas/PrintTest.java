@@ -100,7 +100,7 @@ public class PrintTest extends JFrame implements ActionListener {
 		//variables.DRAW.set_mappane(variables.MAPPANE);
 		
 		
-		//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)		
+		//MÃ¥ alltid kjÃ¸re calc fÃ¸r tegning (hvor navigation er endret pga map)		
 		variables.MAPPANE.load_map();
 		variables.DRAW.create_image();
 		variables.MAPPANE.kickRepaint();

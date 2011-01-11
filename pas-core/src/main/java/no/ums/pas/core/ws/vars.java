@@ -15,7 +15,7 @@ public class vars
 	public static void init(String sz_base)
 	{
 		/**
-		 * ULOVLIG Å ENDRE TIL LOCALHOST
+		 * ULOVLIG Ã… ENDRE TIL LOCALHOST
 		 */
 		WSDL_CONFERENCE 		= sz_base + "Conference.asmx?WSDL";
 		

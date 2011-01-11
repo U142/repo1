@@ -123,7 +123,7 @@ public class SendPropertiesTAS extends SendProperties
 			else {
 				tas.setBResend(true);
 			}
-			System.out.println("TAS objid før populate common: " + System.identityHashCode(this));
+			System.out.println("TAS objid fÃ¸r populate common: " + System.identityHashCode(this));
 			populate_common((no.ums.ws.parm.UMAPSENDING)tas, logon, bounds);
 			
 			/*ArrayOfUMapPoint points;

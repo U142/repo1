@@ -260,7 +260,7 @@ public class AlertController implements ActionListener {
 		gui = new AlertGUI(PAS.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
 		//gui.setTitle("Edit Alert");
 
-		// Dette er for å gå over til edit mode på polygonen
+		// Dette er for Ã¥ gÃ¥ over til edit mode pÃ¥ polygonen
 		//main.mapClear();
 		//if(this.m_polygon != null) {
 			/*try{
@@ -319,8 +319,8 @@ public class AlertController implements ActionListener {
 			this.toObjectList = false;
 		else
 			this.toObjectList = true;
-		// Her må jeg sjekke om det er en ny eller edit event, men i tillegg
-		// så kan det være en edit før den blir satt inn og da skal det fortsatt være insert (dersom den ikke har a i pk)
+		// Her mÃ¥ jeg sjekke om det er en ny eller edit event, men i tillegg
+		// sÃ¥ kan det vÃ¦re en edit fÃ¸r den blir satt inn og da skal det fortsatt vÃ¦re insert (dersom den ikke har a i pk)
 		if (this.alert == null) {
 			this.alert = new AlertVO();
 			this.alert.setOperation("insert");
@@ -348,7 +348,7 @@ public class AlertController implements ActionListener {
 			this.alert.setLocked(0);
 		
 		if(toolbarPanel.get_cell_broadcast_text().isSelected() || toolbarPanel.get_cell_broadcast_voice().isSelected()) {
-			// Her skal jeg gjøre noe kjekt faktisk hente info fra cell broadcast panel
+			// Her skal jeg gjÃ¸re noe kjekt faktisk hente info fra cell broadcast panel
 			alert.setCBMessages(parent.get_cell_broadcast_text().getMessages());
 			alert.setArea((Area)parent.get_cell_broadcast_text().get_combo_area().getSelectedItem());
 			alert.setCBOadc(parent.get_cell_broadcast_text().get_txt_oadc_text().getText());

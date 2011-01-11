@@ -422,7 +422,7 @@ public class LBASEND
 			//progress.setValue(l_delivered + l_expired + l_failed + l_unknown); // Unknown is part of l_failed
 			progress.setValue(l_delivered + l_expired + l_failed);
 			progress.setStringPainted(true);
-			if(progress.getMinimum()==progress.getMaximum() && progress.getMaximum() == 0) { // Måtte legge dette til for at den skal vise 100%
+			if(progress.getMinimum()==progress.getMaximum() && progress.getMaximum() == 0) { // MÃ¥tte legge dette til for at den skal vise 100%
 				progress.setMaximum(progress.getMaximum()+1);
 				progress.setValue(progress.getMaximum());
 			}

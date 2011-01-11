@@ -19,7 +19,7 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 	private StdTextLabel m_lbl_pointcount;
 	
 	public Sending_AddressPanelGIS(PAS pas, SendWindow parentwin) {
-		super(pas, parentwin); // Houses er null, må få tak i husene. Må kjøre set_gislist
+		super(pas, parentwin); // Houses er null, mÃ¥ fÃ¥ tak i husene. MÃ¥ kjÃ¸re set_gislist
 		if(get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses() != null)
 			m_lbl_pointcount = new StdTextLabel(PAS.l("main_sending_adr_housecount") + " - " + get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses().get_houses().size());
 		else

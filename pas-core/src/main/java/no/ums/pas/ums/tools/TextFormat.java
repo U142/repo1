@@ -381,7 +381,7 @@ public final class TextFormat {
 	public static int GsmStrLen(String s)
 	{
 		int ret = s.length();
-		String gsmExt = "[|^€{}\\[\\]~\\\\]";
+		String gsmExt = "[|^Â€{}\\[\\]~\\\\]";
 		Pattern p = Pattern.compile("[" + gsmExt + "]");
 		Matcher m = p.matcher(s);
 		while(m.find())
@@ -438,7 +438,7 @@ public final class TextFormat {
 		//http://www.unicode.org/Public/MAPPINGS/ETSI/GSM0338.TXT
 		String greek = "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E";
 		
-		String gsm7 = "[^a-zA-Z0-9 " + greek + "\\.\\_\\@\\£\\$\\¥\\è\\é\\ù\\ì\\ò\\Ç\\Ø\\ø\\Å\\å\\Æ\\æ\\ß\\É\\Ä\\Ö\\Ñ\\Ü\\§\\¿\\ä\\ö\\ñ\\ü\\à\\+\\,\\/\\:\\;\\<\\=\\>\\?\\¡\\|\\^\\€\\{\\}\\*\\!\\#\\¤\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"~-]";
+		String gsm7 = "[^a-zA-Z0-9 " + greek + "\\.\\_\\@\\Â£\\$\\Â¥\\Ã¨\\Ã©\\Ã¹\\Ã¬\\Ã²\\Ã‡\\Ã˜\\Ã¸\\Ã…\\Ã¥\\Ã†\\Ã¦\\ÃŸ\\Ã‰\\Ã„\\Ã–\\Ã‘\\Ãœ\\Â§\\Â¿\\Ã¤\\Ã¶\\Ã±\\Ã¼\\Ã \\+\\,\\/\\:\\;\\<\\=\\>\\?\\Â¡\\|\\^\\Â€\\{\\}\\*\\!\\#\\â‚¬\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"~-]";
 		Pattern p = Pattern.compile("[" + gsm7 + "]");
 		Matcher m = p.matcher(s);
 		StringBuffer sb = new StringBuffer();

@@ -1367,14 +1367,14 @@ public class StatusSending extends Object {
 		public void updateUi() {
 			//OpenStatuscodes osc = new OpenStatuscodes();
 			ArrayList<Object> objects = PAS.get_pas().get_statuscontroller().get_items();
-			// Må ha noe lignende openstatuscodes
+			// MÃ¥ ha noe lignende openstatuscodes
 			// 
 			// Kanskje bruke USMSINSTATUS her?
 			m_chk_sent_ok.setText("Sent OK (" + (int)(Math.random()*250) + ")");
 			m_chk_failed.setText("Failed (" + (int)(Math.random()*50) + ")");
 			m_chk_unknown.setText("Unknown (" + (int)(Math.random()*20) + ")");
 			
-			// Må vel få inn et array med statuskoder?
+			// MÃ¥ vel fÃ¥ inn et array med statuskoder?
 		}
 		public void componentResized(ComponentEvent e) {
 			int w = getWidth() - 20;
@@ -1768,7 +1768,7 @@ public class StatusSending extends Object {
 				
 			}
 			
-			// Sjekker om brukeren har rettigheter for å sende
+			// Sjekker om brukeren har rettigheter for Ã¥ sende
 			if(!PAS.get_pas().get_rightsmanagement().cansend() && !PAS.get_pas().get_rightsmanagement().cansimulate()) {
 				m_btn_resend.setEnabled(false);
 				m_progress.setEnabled(false);

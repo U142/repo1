@@ -127,7 +127,7 @@ public class XmlReader {
 			NodeList updateList = doc.getElementsByTagName("updates");
 			NodeList deleteList = doc.getElementsByTagName("delete");
 			this.readResponseXml(responseList, updateList);
-			// Går gjennom og fjerner slettede elementer fra XML filen
+			// GÃ¥r gjennom og fjerner slettede elementer fra XML filen
 			for(int i=0;i<deleteList.getLength();i++){
 				Element element = (Element)deleteList.item(i);
 				writer.deleteFromTree(element.getAttribute("l_objectpk"));
@@ -152,7 +152,7 @@ public class XmlReader {
 			writer.setRootTimestamp(timestamp);
 			this.paEvent(false);
 			this.sortListAscending(arrayEvents);
-// Her tror jeg teorien er at alle oppdateringer skal finnes, men i stedet så mister jeg cell broadcast uten if'en her
+// Her tror jeg teorien er at alle oppdateringer skal finnes, men i stedet sÃ¥ mister jeg cell broadcast uten if'en her
 			if(arrayAlerts == null || arrayAlerts.size() < 1)
 				this.paAlert(false);
 			this.sortListAscending(arrayAlerts);
@@ -207,12 +207,12 @@ public class XmlReader {
 			
 			//this.polyReader.readPolyObject(this.arrayObjects);
 			//this.polyReader.readPolyAlert(this.arrayAlerts);
-			// Denne burde vært i denne filen, men det er en praktisk finn alert funksjon i polyreader
+			// Denne burde vÃ¦rt i denne filen, men det er en praktisk finn alert funksjon i polyreader
 			//this.polyReader.readCellBroadcast(this.arrayAlerts);
 			
 			this.ellipseReader.readEllipseObject(this.arrayObjects);
 			this.ellipseReader.readEllipseAlert(this.arrayAlerts);
-			// Denne burde vært i denne filen, men det er en praktisk finn alert funksjon i polyreader
+			// Denne burde vÃ¦rt i denne filen, men det er en praktisk finn alert funksjon i polyreader
 			//this.polyReader.readCellBroadcast(this.arrayAlerts);
 			this.gisReader.readGISAlert(this.arrayAlerts);
 		}
@@ -258,7 +258,7 @@ public class XmlReader {
 						" Error message: " + emsg + " Timestamp: " + timestamp, -1, Error.SEVERITY_WARNING);
 				System.out.println(element.getNodeValue());
 			}
-			// Her må vi ha en annen sjekk, dersom status = "Failed to insert, så må vi bare la inserten stå"
+			// Her mÃ¥ vi ha en annen sjekk, dersom status = "Failed to insert, sÃ¥ mÃ¥ vi bare la inserten stÃ¥"
 		}
 	}
 
@@ -284,7 +284,7 @@ public class XmlReader {
 			this.readResponseCodes();
 		}
 		// Get elements created from other users
-		Node updatesNode = updateList.item(0); // funker så langt
+		Node updatesNode = updateList.item(0); // funker sÃ¥ langt
 		Element updateElement = (Element) updatesNode;
 
 		if (updateElement.hasChildNodes()) {
@@ -319,7 +319,7 @@ public class XmlReader {
 				
 				this.polyReader.readPolyObject(this.arrayObjects);
 				this.polyReader.readPolyAlert(this.arrayAlerts);
-				// Denne burde vært i denne filen, men det er en praktisk finn alert funksjon i polyreader
+				// Denne burde vÃ¦rt i denne filen, men det er en praktisk finn alert funksjon i polyreader
 				this.polyReader.readCellBroadcast(this.arrayAlerts);
 				
 				this.ellipseReader.readEllipseObject(this.arrayObjects);
@@ -335,7 +335,7 @@ public class XmlReader {
 				this.objectList.addAll(this.arrayObjects);
 				this.objectList.addAll(this.arrayAlerts);
 			}
-			else//Legg til alle objektene som har vært i sjekk mot polyon filen
+			else//Legg til alle objektene som har vÃ¦rt i sjekk mot polyon filen
 				this.objectList.addAll(col);
 			
 			this.objectList.addAll(this.arrayEvents);
@@ -347,7 +347,7 @@ public class XmlReader {
 			this.timestamp = updateElement.getAttribute("l_timestamp");
 			writer.setRootTimestamp(this.timestamp);
 			System.out.println("PARM timestamp = " + this.timestamp);
-			//Prøver å tømme polyxml slik at det ikke blir lagret dobbelt.
+			//PrÃ¸ver Ã¥ tÃ¸mme polyxml slik at det ikke blir lagret dobbelt.
 			//writer.writeEmptyPoly(ParmConstants.polyXmlName);
 			this.writer.writeXml(this.objectList); // Her skriver den sikkert inn igjen objektene
 		}
@@ -368,23 +368,23 @@ public class XmlReader {
 		this.paEvent(true);
 		this.sortListAscending(arrayEvents);// False indicates that it is a update xml read
 		this.listOfObjects = null;
-// Denne kan ødelegge ganske bra
+// Denne kan Ã¸delegge ganske bra
 //		this.paAlert(true); // True indeicates that it is a normal xml read
 		this.sortListAscending(arrayAlerts);
 		this.listOfObjects = null;
 		this.paObjects(true);
 		this.sortListAscending(arrayObjects);
 		this.listOfObjects = null;
-		// Går igjennom alle pk og sjekker mot objects, events, alerts
-		// Her må noe gjøres
+		// GÃ¥r igjennom alle pk og sjekker mot objects, events, alerts
+		// Her mÃ¥ noe gjÃ¸res
 		if (!pkListe.isEmpty() && !this.objectList.isEmpty()) {
 			for (int i = 0; i < this.pkListe.size(); i++) {
 				String pk = (String) this.pkListe.get(i);
 				String tempPk = (String) this.tempPkListe.get(i);
-				// Går igjennom objects
+				// GÃ¥r igjennom objects
 				ArrayList <Object>tempListe = (ArrayList<Object>) this.objectList;
 				for (int o = 0; o < tempListe.size(); o++) {
-					// MÅ gå igjennom objecter,events og alerts i denne løkken!
+					// MÃ… gÃ¥ igjennom objecter,events og alerts i denne lÃ¸kken!
 					Object obj = tempListe.get(o);
 					if (obj.getClass().equals(ObjectVO.class)) {
 						ObjectVO oVO = (ObjectVO) obj;
@@ -941,7 +941,7 @@ public class XmlReader {
 	}
 
 	private void sortArrays() {
-		// Denne metoden sorterer alle listene slik at alt blir lagt tilhørende
+		// Denne metoden sorterer alle listene slik at alt blir lagt tilhÃ¸rende
 		// de rette objekter.
 		
 		Iterator it;

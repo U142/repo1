@@ -67,7 +67,7 @@ public class UpdateXML extends Thread{
 		
 		this.con = new ServerCon();
 		this.responseXmlStream = con.update(this.sendXmlStream,tempfile, tempPoly, filename, main.userinfo);
-		this.con = null;// det går bra til her
+		this.con = null;// det gÃ¥r bra til her
 		if(responseXmlStream!=null)
 		{
 			Collection <Object>liste = this.xmlReader.readResponseXml(this.responseXmlStream);

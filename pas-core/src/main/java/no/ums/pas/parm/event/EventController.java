@@ -43,7 +43,7 @@ public class EventController implements ActionListener {
 		gui = new EventGUI(PAS.l("main_parm_event_new_dlg_heading"));
 		gui.getEventInputPanel().getBtnEpicentre().addActionListener(this);
 		this.addCategoryToCombobox(categoryList);
-		// Litt juks for å sette active_shape til null ;)
+		// Litt juks for Ã¥ sette active_shape til null ;)
 		//PAS.get_pas().get_mappane().set_active_shape(null);
 		//PAS.get_pas().get_parmcontroller().setDrawMode(new UnknownShape());
 	}
@@ -148,8 +148,8 @@ public class EventController implements ActionListener {
 				this.toObjectList = true;
 			else
 				this.toObjectList = false;
-			// Her må jeg sjekke om det er en ny eller edit event, men i tillegg
-			// så kan det være en edit før den blir satt inn og da skal det fortsatt være insert 
+			// Her mÃ¥ jeg sjekke om det er en ny eller edit event, men i tillegg
+			// sÃ¥ kan det vÃ¦re en edit fÃ¸r den blir satt inn og da skal det fortsatt vÃ¦re insert 
 			if (this.event == null) {
 				this.event = new EventVO();
 				this.event.setOperation("insert");

@@ -173,7 +173,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 			scroll.setPreferredSize(new Dimension(200, 70));
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
-			// Må ha et panel for å få med labelen i samme kolonne
+			// MÃ¥ ha et panel for Ã¥ fÃ¥ med labelen i samme kolonne
 			pnlValidity.add(Box.createHorizontalStrut(4));
 			pnlContainerRigth.add(pnlValidity);
 			
