@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TreeUpdater
 {
-	public static String LOADING_START = "act_start_loading";
-	public static String LOADING_FINISHED = "act_loading_finished";
+	public static final String LOADING_START = "act_start_loading";
+	public static final String LOADING_FINISHED = "act_loading_finished";
 	
 	ActionListener m_callback;
 	int updateinterval;

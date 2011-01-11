@@ -11,6 +11,8 @@ import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MapFrameAdmin extends MapFrame {
 
@@ -208,18 +210,12 @@ public class MapFrameAdmin extends MapFrame {
 			//super.paint(g);
 			//get_drawthread().set_neednewcoors(true);
 			get_drawthread().create_image();
-			if(get_mode()==MAP_MODE_PAN_BY_DRAG && get_actionhandler().get_isdragging())
-			{
-				{
-				}
-			}
 			g.drawImage(get_drawthread().get_buff_image(), get_actionhandler().getPanDragPoint().get_x(), get_actionhandler().getPanDragPoint().get_y(), getMinimumSize().width, getMinimumSize().height, this);
-		}
-		catch(Exception e)
-		{
-			
+		} catch(Exception e) {
+
 		}
 	}
+
 	@Override
 	public void paint(Graphics g)
 	{

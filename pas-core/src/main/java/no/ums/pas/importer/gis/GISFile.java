@@ -8,7 +8,6 @@ import java.io.File;
 
 public class GISFile implements ActionListener {
 	public static final String [] EXPECTED_SEPARATORS_ = new String [] { "	", ";", ",", "|" };
-	public static final int TRY_SEPARATOR_ON_ = -1;
 	private GISParser m_gisparser = null;
 	public GISParser get_parser() { return m_gisparser; }
 	private PreviewFrame m_preview;
@@ -86,7 +85,7 @@ public class GISFile implements ActionListener {
 			int n_separator_inst = 0;
 			int n_lines_validated = 0;
 			boolean b_possible_match = false;
-			int n_num_lines_to_validate = (lines().size() < TRY_SEPARATOR_ON_ || TRY_SEPARATOR_ON_==-1 ? lines().size() : TRY_SEPARATOR_ON_);
+			int n_num_lines_to_validate = (lines().size());
 			for(int i=0; i < EXPECTED_SEPARATORS_.length; i++) {
 				//evaluate based on X first lines (or max lines)
 				for(int lines = 0; lines < n_num_lines_to_validate; lines++) {

@@ -153,7 +153,7 @@ public class StatusSendingList extends ArrayList<StatusSending> implements Actio
 			max.setNMaxalloc(n_maxalloc);
 			max.setNProjectpk(Long.parseLong(sz_projectpk));
 			max.setNRefno(n_refno);
-			WSMaxAlloc maxalloc = new WSMaxAlloc(max, callback, "act_max_alloc_set");
+			new WSMaxAlloc(max, callback, "act_max_alloc_set").start();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

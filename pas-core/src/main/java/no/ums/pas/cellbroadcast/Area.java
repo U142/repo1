@@ -41,7 +41,18 @@ public class Area {
 		return m_name;
 	}
 
-	public boolean equals(Object obj) {
-		return m_id.equals(((Area)obj).get_id());
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Area area = (Area) o;
+
+        return !(m_id != null ? !m_id.equals(area.m_id) : area.m_id != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return m_id != null ? m_id.hashCode() : 0;
+    }
 }

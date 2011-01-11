@@ -39,7 +39,6 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		String [] cols = new String [] { PAS.l("common_country"), PAS.l("touristscount") };
 		int [] width = new int [] { 150, 50 };
 		boolean [] edit = new boolean [] { false, false };
-		Dimension dim = new Dimension(300, 100);
 		//list = new CountryList(cols, width, edit, dim);
 		list = new CountryList();
 		scroller = new JScrollPane(list);

@@ -239,7 +239,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			if(checkResendRights())
 			{
 				PAS.get_pas().get_eastcontent().flip_to(CentricEastContent.PANEL_CENTRICSEND_);
-				CentricVariables.centric_send.fromTemplate(lastcbstatus);
+				CentricVariables.getCentric_send().fromTemplate(lastcbstatus);
 			}
 		}
 		else if(e.getSource().equals(m_btn_send_to_address_book)) {

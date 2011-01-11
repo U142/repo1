@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 public class CountryCodes implements ActionListener {
 	
-	protected static ArrayList<CCode> g_arr_codes = new ArrayList<CCode>();
+	protected static final ArrayList<CCode> g_arr_codes = new ArrayList<CCode>();
 	protected static boolean g_b_ccloaded = false;
 	protected static CountryCodes g_codes = null;
 	
@@ -27,11 +27,11 @@ public class CountryCodes implements ActionListener {
 		if(g_b_ccloaded) {
 			try {
 				int n_ccode = Integer.parseInt(ccode);
-				for(int i=0; i < g_arr_codes.size(); i++) {
-					if(n_ccode == ((CCode)g_arr_codes.get(i)).getNCCode())
-						return (CCode)g_arr_codes.get(i);
-						//return ((CCode)g_arr_codes.get(i)).getCountry().replace("\"", "");
-				}
+                for (CCode g_arr_code : g_arr_codes) {
+                    if (n_ccode == g_arr_code.getNCCode()) {
+                        return g_arr_code;
+                    }
+                }
 				return new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", "0");
 			} catch(Exception e) {
 				return new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", "0");
@@ -67,12 +67,11 @@ public class CountryCodes implements ActionListener {
 		{
 			File f = load();
 			if(f!=null) {
-				CCParser parser = new CCParser(f, this);
+				new CCParser(f, this);
 			}
 			else {
-				CCParser parser = new CCParser(loadStream(), this);
+				new CCParser(loadStream(), this);
 			}
-			
 			return true;
 		}
 		catch(Exception e)

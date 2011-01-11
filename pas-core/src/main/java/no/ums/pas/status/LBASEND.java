@@ -151,7 +151,7 @@ public class LBASEND
 			sz = "Unknown status code ["+ n_code + "]";
 		return sz;
 	}
-	public static Hashtable<Integer, String> LBASTATUS = new Hashtable<Integer, String>();
+	public final static Hashtable<Integer, String> LBASTATUS = new Hashtable<Integer, String>();
 	public static void CreateLbaStatusHash()
 	{
 		LBASTATUS.put(LBASTATUS_INITED, String.format(PAS.l("main_statustext_lba_inited"), "UMS"));

@@ -17,6 +17,7 @@ public class CentricProjectDlg extends ProjectDlg
 	@Override
 	protected void createPanel() {
 		m_projectpanel = new CentricProjectPanel();
+        m_projectpanel.start();
 	}
 	
 	protected class CentricProjectPanel extends ProjectPanel

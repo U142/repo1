@@ -126,32 +126,36 @@ public class GPSFrame extends JPanel implements ComponentListener { //JFrame
 			setBorder(border);
 			setPreferredSize(new Dimension(PAS.get_pas().get_eastwidth()-20, 200));
 			int i;
-			m_check_type = new UMSCheckBox[MapObjectVars.GPS_UNIT_USERTYPE_[1].length];
-			m_check_dynamic = new UMSCheckBox[MapObjectVars.GPS_UNIT_DYNAMIC_[1].length];
-			m_check_online = new UMSCheckBox[MapObjectVars.GPS_UNIT_ONLINESTATUS_[1].length];
-			m_check_available = new UMSCheckBox[MapObjectVars.GPS_UNIT_CARRIER_STATUS_[1].length];
+			m_check_type = new UMSCheckBox[MapObjectVars.GpsUnitUsertype.values().length];
+			m_check_dynamic = new UMSCheckBox[MapObjectVars.GpsUnitDynamic.values().length];
+			m_check_online = new UMSCheckBox[MapObjectVars.GpsUnitOnlineStatus.values().length];
+			m_check_available = new UMSCheckBox[MapObjectVars.GpsUnitCarrierStatus.values().length];
 			
 			for(i=0; i < m_check_type.length; i++) {
-				m_check_type[i] = new UMSCheckBox(true, new Integer(MapObjectVars.GPS_UNIT_USERTYPE_[2][i]).intValue(), MapObjectVars.FILTER_TYPE_USERTYPE_);
-				m_check_type[i].set_properties(new Integer(MapObjectVars.GPS_UNIT_USERTYPE_[0][i]), MapObjectVars.GPS_UNIT_USERTYPE_[1][i]);
+                MapObjectVars.GpsUnitUsertype usertype = MapObjectVars.GpsUnitUsertype.values()[i];
+				m_check_type[i] = new UMSCheckBox(true, usertype.getFilter(), MapObjectVars.FILTER_TYPE_USERTYPE_);
+				m_check_type[i].set_properties(usertype.getId(), usertype.getName());
 				m_check_type[i].addActionListener(this);
 				m_check_type[i].setActionCommand("act_filter_checkbox");
 			}
 			for(i=0; i < m_check_dynamic.length; i++) {
-				m_check_dynamic[i] = new UMSCheckBox(true, new Integer(MapObjectVars.GPS_UNIT_DYNAMIC_[2][i]).intValue(), MapObjectVars.FILTER_TYPE_DYNAMIC_);
-				m_check_dynamic[i].set_properties(new Boolean((MapObjectVars.GPS_UNIT_DYNAMIC_[0][i].equals("0") ? false : true)), MapObjectVars.GPS_UNIT_DYNAMIC_[1][i]);
+                MapObjectVars.GpsUnitDynamic dynamic = MapObjectVars.GpsUnitDynamic.values()[i];
+				m_check_dynamic[i] = new UMSCheckBox(true, dynamic.getFilter(), MapObjectVars.FILTER_TYPE_DYNAMIC_);
+				m_check_dynamic[i].set_properties(dynamic.getId(), dynamic.getName());
 				m_check_dynamic[i].addActionListener(this);
 				m_check_dynamic[i].setActionCommand("act_filter_checkbox");
 			}
 			for(i=0; i < m_check_online.length; i++) {
-				m_check_online[i] = new UMSCheckBox(true, new Integer(MapObjectVars.GPS_UNIT_ONLINESTATUS_[2][i]).intValue(), MapObjectVars.FILTER_TYPE_ONLINE_STATUS_);
-				m_check_online[i].set_properties(new Boolean((MapObjectVars.GPS_UNIT_ONLINESTATUS_[0][i].equals("0") ? false : true)), MapObjectVars.GPS_UNIT_ONLINESTATUS_[1][i]);
+                MapObjectVars.GpsUnitOnlineStatus status = MapObjectVars.GpsUnitOnlineStatus.values()[i];
+				m_check_online[i] = new UMSCheckBox(true, status.getFilter(), MapObjectVars.FILTER_TYPE_ONLINE_STATUS_);
+				m_check_online[i].set_properties(status.getId(), status.getName());
 				m_check_online[i].addActionListener(this);
 				m_check_online[i].setActionCommand("act_filter_checkbox");
 			}
 			for(i=0; i < m_check_available.length; i++) {
-				m_check_available[i] = new UMSCheckBox(true, new Integer(MapObjectVars.GPS_UNIT_CARRIER_STATUS_[2][i]).intValue(), MapObjectVars.FILTER_TYPE_STATUS_);
-				m_check_available[i].set_properties(new Integer(MapObjectVars.GPS_UNIT_CARRIER_STATUS_[0][i]), MapObjectVars.GPS_UNIT_CARRIER_STATUS_[1][i]);
+                MapObjectVars.GpsUnitCarrierStatus status = MapObjectVars.GpsUnitCarrierStatus.values()[i];
+                m_check_available[i] = new UMSCheckBox(true, status.getFilter(), MapObjectVars.FILTER_TYPE_STATUS_);
+				m_check_available[i].set_properties(status.getId(), status.getName());
 				m_check_available[i].addActionListener(this);
 				m_check_available[i].setActionCommand("act_filter_checkbox");
 			}

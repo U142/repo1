@@ -21,7 +21,7 @@ public class SocketThread extends Thread implements ActionListener {
 	protected boolean m_b_connected = false;
 	private ActionListener m_callback;
 	protected ActionListener get_callback() { return m_callback; }
-	protected SocketThread.WriteThread m_writethread = null;
+	protected final SocketThread.WriteThread m_writethread = new WriteThread();
 	public SocketThread.WriteThread get_writethread() { return m_writethread; }
 	protected boolean m_b_manual_logoff = false;
 	public boolean get_manual_logoff() { return m_b_manual_logoff; }
@@ -68,8 +68,6 @@ public class SocketThread extends Thread implements ActionListener {
 		} catch(IOException e) {
 			System.out.println("Error creating BufferedReader " + e.getMessage());
 		}
-		m_writethread = new WriteThread();		
-		start();
 	}
 	
 	public void add_to_writequeue(GPSCmd cmd) {

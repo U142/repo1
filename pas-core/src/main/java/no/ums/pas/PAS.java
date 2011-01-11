@@ -243,7 +243,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static ResourceBundle defaultLang = null;
 	public static boolean DEBUGMODE = false;
 	public static int g_n_parmversion = 2;
-	public static String sz_mark_language_words = "*";
+	public static final String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
 	public static String OVERRIDE_WMS_SITE = null;
 	
@@ -1267,9 +1267,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		System.out.println("Logged on");
 		pasplugin.onAfterLogon();
 
-		//final HTTPReq httpmap = new HTTPReq(get_sitename(), get_navigation());
-		XmlReader xmlreader = new XmlReader();
-		//this.setTitle(m_sz_maintitle + " (Logged on as " + m_userinfo.get_realname() + ")");
 		this.setTitle(m_sz_maintitle + " (" + String.format(PAS.l("common_logged_on_as_format"), m_userinfo.get_realname()) + ")");
 		
 		m_rightsmanagament = new RightsManagement(m_userinfo.get_default_dept().get_userprofile());
@@ -1445,7 +1442,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			
 		}
 		//start Garbage collector thread
-		new Thread("Garbage collector thread") {
+		new Thread("Memory monitor") {
 			public void run()
 			{
 				while(1==1)
@@ -1453,10 +1450,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					try
 					{
 						Thread.sleep(60000);
-						Runtime runtime = Runtime.getRuntime();
-						runtime.gc();
-						long n = runtime.freeMemory();
-						System.out.println("Garbage collecting finished (free memory=" + n/1024 + "KB)");
+                        long freeMem = Runtime.getRuntime().freeMemory();
+						System.out.println("free memory=" + freeMem/1024 + "KB");
 					}
 					catch(Exception e)
 					{
@@ -2047,6 +2042,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public void init_parmcontroller() {
 		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
+        m_parmcontroller.start();
 		variables.PARMCONTROLLER = m_parmcontroller;
 	}
 	

@@ -358,7 +358,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			//PAS.get_pas().add_event("Opening " + PAS.get_pas().get_sitename());
 		} else if("act_profile_show".equals(e.getActionCommand()) && get_current_profile() != null) {
 			try {
-				OpenBrowser browser = new OpenBrowser(PAS.get_pas().get_sitename() + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
+				OpenBrowser.browse(PAS.get_pas().get_sitename() + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
 				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().get_sitename() + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
 			} catch(Exception err) {
 				javax.swing.JOptionPane.showMessageDialog(this, "Error opening web browser", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);

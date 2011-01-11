@@ -37,8 +37,7 @@ public class SubsetSelect extends JDialog  {
 		m_lbl_info = new StdTextLabel("", new Dimension(dim.width, 300));
 		
 		m_panel = new SubsetSelectPanel(sz_columns, n_width, b_editable, new Dimension(dim.width, dim.height-300), callback, sendings);
-		JLabel lbl_ting = new JLabel(""); // Dette måtte til for å få tilbake bilde, forstår ikke hvorfor
-		
+
 		//m_panel.get_table().setFont(getFont().deriveFont(1));
 		m_panel.setSize(dim.width, dim.height-300);
 		this.add(m_panel, BorderLayout.NORTH);

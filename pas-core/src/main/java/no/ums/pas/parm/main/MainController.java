@@ -114,8 +114,11 @@ public class MainController implements ActionListener, TreeModelListener,
 			Error.getError().addError("MainController","Exception in MainController",e,1);
 		}
 		treeCtrl.SetInitializing(true);
-		this.updXml.start();
 	}
+
+    public void start() {
+        this.updXml.start();
+    }
 	
 	public void initGUI() {
 		treeCtrl = new TreeController(this);
@@ -846,7 +849,6 @@ public class MainController implements ActionListener, TreeModelListener,
 						}
 					}
 					this.eventCtrl = null;
-					System.gc();
 				}
 				
 			} catch (Exception ex) {

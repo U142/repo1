@@ -55,31 +55,31 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 		createHeading(b_html_format); 
 	}
 	public static String getExportHeading() { return EXPORT_HEADING; }
-	public static long ADR_EXPORT_FIELD_REFNO	= 1 << 0;
-	public static long ADR_EXPORT_FIELD_ITEM	= 1 << 1;
-	public static long ADR_EXPORT_FIELD_ADRNAME	= 1 << 2;
-	public static long ADR_EXPORT_FIELD_BDATE	= 1 << 3;
-	public static long ADR_EXPORT_FIELD_POSTADDR= 1 << 4;
-	public static long ADR_EXPORT_FIELD_HOUSE	= 1 << 5;
-	public static long ADR_EXPORT_FIELD_POSTNO	= 1 << 6;
-	public static long ADR_EXPORT_FIELD_AREA	= 1 << 7;
-	public static long ADR_EXPORT_FIELD_PHONE	= 1 << 8;
-	public static long ADR_EXPORT_FIELD_MOBILE	= 1 << 9;
-	public static long ADR_EXPORT_FIELD_DATE	= 1 << 10;
-	public static long ADR_EXPORT_FIELD_TIME	= 1 << 11;
-	public static long ADR_EXPORT_FIELD_LATESTDATE = 1 << 12;
-	public static long ADR_EXPORT_FIELD_LATESTTIME = 1 << 13;
-	public static long ADR_EXPORT_FIELD_TRIES	= 1 << 14;
-	public static long ADR_EXPORT_FIELD_STATUS	= 1 << 15;
-	public static long ADR_EXPORT_FIELD_STATUSNAME = 1 << 16;
-	public static long ADR_EXPORT_FIELD_SECONDS = 1 << 17;
-	public static long ADR_EXPORT_FIELD_LAT 	= 1 << 18;
-	public static long ADR_EXPORT_FIELD_LON		= 1 << 19;
-	public static long ADR_EXPORT_FIELD_PCID	= 1 << 20;
-	public static long ADR_EXPORT_FIELD_CHANNEL = 1 << 21;
-	
-	
-	public String exportString(StatusCodeList list)
+	public static final long ADR_EXPORT_FIELD_REFNO	= 1 << 0;
+	public static final long ADR_EXPORT_FIELD_ITEM	= 1 << 1;
+	public static final long ADR_EXPORT_FIELD_ADRNAME	= 1 << 2;
+	public static final long ADR_EXPORT_FIELD_BDATE	= 1 << 3;
+	public static final long ADR_EXPORT_FIELD_POSTADDR= 1 << 4;
+	public static final long ADR_EXPORT_FIELD_HOUSE	= 1 << 5;
+	public static final long ADR_EXPORT_FIELD_POSTNO	= 1 << 6;
+	public static final long ADR_EXPORT_FIELD_AREA	= 1 << 7;
+	public static final long ADR_EXPORT_FIELD_PHONE	= 1 << 8;
+	public static final long ADR_EXPORT_FIELD_MOBILE	= 1 << 9;
+	public static final long ADR_EXPORT_FIELD_DATE	= 1 << 10;
+	public static final long ADR_EXPORT_FIELD_TIME	= 1 << 11;
+	public static final long ADR_EXPORT_FIELD_LATESTDATE = 1 << 12;
+	public static final long ADR_EXPORT_FIELD_LATESTTIME = 1 << 13;
+	public static final long ADR_EXPORT_FIELD_TRIES	= 1 << 14;
+	public static final long ADR_EXPORT_FIELD_STATUS	= 1 << 15;
+	public static final long ADR_EXPORT_FIELD_STATUSNAME = 1 << 16;
+	public static final long ADR_EXPORT_FIELD_SECONDS = 1 << 17;
+	public static final long ADR_EXPORT_FIELD_LAT 	= 1 << 18;
+	public static final long ADR_EXPORT_FIELD_LON		= 1 << 19;
+	public static final long ADR_EXPORT_FIELD_PCID	= 1 << 20;
+	public static final long ADR_EXPORT_FIELD_CHANNEL = 1 << 21;
+
+
+    public String exportString(StatusCodeList list)
 	{
 		String s_ret = getFields(EXPORT_FIELDS, list, false);
 		/*s_ret = get_refno() + "	" + get_item() + "	" + get_adrname() + "	" + get_birthday_formatted() + 

@@ -88,7 +88,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	List<CountryListItem> arr_countries;
 	List<ContinentListItem> arr_continents;
 	
-	public static Hashtable<Object, CommonTASListItem> treehash = new Hashtable<Object, CommonTASListItem>();
+	public static final Hashtable<Object, CommonTASListItem> treehash = new Hashtable<Object, CommonTASListItem>();
 	public static ULBACOUNTRY getCountryFromHash(String iso)
 	{
 		CommonTASListItem i = (CommonTASListItem)treehash.get(iso);
@@ -141,13 +141,13 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	public static long SERVER_CLOCK = 0;
 	
 	/** mark country's adrcount as expired if the count record is older than this value*/
-	public static int TAS_ADRCOUNT_TIMESTAMP_EXPIRED_SECONDS = 60*60*24; // 60 sec * 60 min * 24 hours 60*60*4; //60 sec * 60 min * 4 hours
+	public static final int TAS_ADRCOUNT_TIMESTAMP_EXPIRED_SECONDS = 60*60*24; // 60 sec * 60 min * 24 hours 60*60*4; //60 sec * 60 min * 4 hours
 	/** mark records as expired if age exceeds this value*/
-	public static int TAS_REQUEST_TIMESTAMP_EXPIRED_SECONDS = 60*15; //60 sec * 15 minutes
+	public static final int TAS_REQUEST_TIMESTAMP_EXPIRED_SECONDS = 60*15; //60 sec * 15 minutes
 	/** delete records from hashtable if age exceeds this value*/
-	public static int TAS_REQUEST_TIMESTAMP_EXPIRED_DELETEAFTER_SECONDS = 60 * 60; //60 sec * 60 minutes
+	public static final int TAS_REQUEST_TIMESTAMP_EXPIRED_DELETEAFTER_SECONDS = 60 * 60; //60 sec * 60 minutes
 	/** Interval to check for updates (in seconds)*/
-	public static int TAS_UPDATE_INTERVAL = 5;
+	public static final int TAS_UPDATE_INTERVAL = 5;
 
 
 	protected void startRepaintTimer()
@@ -929,7 +929,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(list.size()>0)
 				{
 					System.out.println("Request tourist count");
-					new WSTasCount(this, list);
+					new WSTasCount(this, list).start();
 				}
 			}
 			catch(Exception err)

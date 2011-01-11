@@ -123,7 +123,6 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	{
 		
 		PrinterJob printJob = PrinterJob.getPrinterJob();
-		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		printJob.setPrintable(this);
 		printJob.setPageable(this);
 		variables.DRAW.set_suspended(true);

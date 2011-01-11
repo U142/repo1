@@ -81,7 +81,6 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		Dimension d = new Dimension(getWidth(), getHeight());
 		//System.out.println("resize: " + getWidth() + ", " + m_inhablist.getHeight());
 		//m_lbl_houseinfo.setPreferredSize(new Dimension(getWidth(), m_lbl_houseinfo.getHeight()));
 		//m_inhablist.setMinimumSize(new Dimension(getWidth(), 100));
@@ -271,10 +270,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		try {
 			/*String sz_operation = "delete";
 			String sz_kondmid	= i.get_kondmid();*/
-			String sz_deptpk	= new Integer(i.get_deptpk()).toString();
-			
-			WSHouseEditor h = new WSHouseEditor(this, "act_delete_inhabitant_complete", i, HOUSEEDITOROPERATION.DELETE);
-			
+
 			/*HttpPostForm form = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_gab_save.asp");
 			form.setParameter("sz_operation", sz_operation);
 			form.setParameter("sz_kondmid", sz_kondmid);
@@ -315,15 +311,12 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			Double lat = new Double(m_point.get_lat());
 			String sz_birthday = m_txt_birthday.getText();
 			//String sz_bedrift = ((Integer)((IconRadio)m_group_user.getSelection()).get_value()).toString();
-			String sz_bedrift;
-			int n_adrtype = 0;
+            int n_adrtype;
 			if(m_radio_private.isSelected()) {
-				sz_bedrift = "0";
-				n_adrtype = Inhabitant.INHABITANT_COMPANY;//SendController.SENDTO_FIXED_COMPANY;
+                n_adrtype = Inhabitant.INHABITANT_COMPANY;//SendController.SENDTO_FIXED_COMPANY;
 			}
 			else {
-				sz_bedrift = "1";
-				n_adrtype = Inhabitant.INHABITANT_PRIVATE; //SendController.SENDTO_FIXED_PRIVATE;
+                n_adrtype = Inhabitant.INHABITANT_PRIVATE; //SendController.SENDTO_FIXED_PRIVATE;
 			}
 			if(sz_gnr.length()==0)
 				sz_gnr = "0";

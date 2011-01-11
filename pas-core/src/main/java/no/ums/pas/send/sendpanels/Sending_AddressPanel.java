@@ -64,8 +64,6 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		super();
 		parent = parentwin;
 		Font fontSelected = new Font(null, Font.BOLD, 12);
-		Font fontNotselected = new Font(null, Font.PLAIN, 10);
-		int adrtypes = parentwin.get_sendobject().get_sendproperties().get_addresstypes();
 		/*m_lbl_adrcount_private.setFont(get_parent().hasVoicePrivate(adrtypes) ? fontSelected : fontNotselected);
 		m_lbl_adrcount_company.setFont(get_parent().hasVoiceCompany(adrtypes) ? fontSelected : fontNotselected);
 		m_lbl_adrcount_privatemobile.setFont(get_parent().hasMobilePrivate(adrtypes) ? fontSelected : fontNotselected);

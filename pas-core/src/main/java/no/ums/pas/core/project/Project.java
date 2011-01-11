@@ -31,16 +31,25 @@ public class Project extends Object {
 		}
 		return temp.size(); 
 	}
-	public boolean equals(Object o) {
-		try {
-			if(this.get_projectpk().equals(((Project)o).get_projectpk()))
-				return true;
-		} catch(Exception e) {
-			return false;
-		}
-		return false;
-	}
-	public boolean add_status_sending(StatusListObject obj) { 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return !(m_sz_projectpk != null ? !m_sz_projectpk.equals(project.m_sz_projectpk) : project.m_sz_projectpk != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return m_sz_projectpk != null ? m_sz_projectpk.hashCode() : 0;
+    }
+
+    public boolean add_status_sending(StatusListObject obj) {
+
 		//if(!m_status_sendings.contains(obj)) {
 			m_status_sendings.add(obj); 
 		//	return true;

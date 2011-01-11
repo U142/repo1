@@ -43,7 +43,6 @@ public class WSMaxAlloc extends WSThread
 		maxalloc_request = max;
 		m_callback = callback;
 		m_action = action;
-		start();
 	}
 	
 	public void call() throws Exception

@@ -151,7 +151,7 @@ public class AlertVO extends ParmVO {
 	public String getPk() { return strAlertpk; }
 	public void setPk(String s) { strAlertpk = s; }
 	
-	public static DataFlavor TREE_PATH_FLAVOR = new DataFlavor(AlertVO.class, "Alert");
+	public static final DataFlavor TREE_PATH_FLAVOR = new DataFlavor(AlertVO.class, "Alert");
 	DataFlavor flavors[] = { TREE_PATH_FLAVOR };
 	public synchronized DataFlavor[] getTransferDataFlavors() {
 		return flavors;
@@ -304,19 +304,23 @@ public class AlertVO extends ParmVO {
 		
 	}
 
-	public boolean equals(Object o) {
-		if(o.getClass().equals(AlertVO.class)){
-			AlertVO vo = (AlertVO)o;
-			if(strAlertpk==vo.strAlertpk)
-				return true;
-			else
-				return false;
-			}
-		else
-			return false;
-	}
-	
-	public String toString() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AlertVO alertVO = (AlertVO) o;
+
+        return !(strAlertpk != null ? !strAlertpk.equals(alertVO.strAlertpk) : alertVO.strAlertpk != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return strAlertpk != null ? strAlertpk.hashCode() : 0;
+    }
+
+    public String toString() {
 		String ret;
 		if(getLocked() == 1)
 			ret = strName + " [Locked]";

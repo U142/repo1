@@ -46,6 +46,7 @@ public abstract class FileParser extends Thread {
 		set_action_eof(sz_action_eof);
 		set_callback(callback);
 	}
+
 	public boolean read() {
 		return readlines();
 	}
@@ -83,6 +84,7 @@ public abstract class FileParser extends Thread {
 		//PAS.get_pas().add_event("begin_parsing()");
 		start();
 	}
+
 	public void run() {
 		//PAS.get_pas().add_event("FileParser.run()");
 		//m_loadingframe = new LoadingFrame("Opening file", null);

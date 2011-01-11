@@ -44,7 +44,6 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	{
 		//PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch", "ObjectFactory");
 		System.out.println("CentricAddressSearch.onExecSearch");
-		nl.bzk.services.nl_alert.mapsearch.ObjectFactory of = new nl.bzk.services.nl_alert.mapsearch.ObjectFactory();
 		java.net.URL wsdl;
 		try
 		{			
@@ -56,48 +55,42 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 			MapSearchResponse temp_response = myService.
 								getMapSearchServiceSoap().
 								doMapSearch(
-										10, 
-										spr.get_number(), 
-										spr.get_address(), 
-										spr.get_postno(),
-										spr.get_postarea(),
-										spr.get_region());
+                                        10,
+                                        spr.get_number(),
+                                        spr.get_address(),
+                                        spr.get_postno(),
+                                        spr.get_postarea(),
+                                        spr.get_region());
 			List<MapMatches> list = temp_response.getMatches().getMapMatches();
 			UGabSearchResultList response = new UGabSearchResultList();
-			List<UGabResult> results = new ArrayList<UGabResult>();
 			ArrayOfUGabResult arr_res = new ArrayOfUGabResult();
-			for(int i=0; i < list.size(); i++)
-			{
-				MapMatches m = list.get(i);
-				UGabResultListItem ugabresult = new UGabResultListItem();
-				ugabresult.setLat(m.getLat());
-				ugabresult.setLon(m.getLon());
-				ugabresult.setMatch(m.getMatch());
-				ugabresult.setName(m.getName());
-				ugabresult.setPostno(m.getName());
-				ugabresult.setRegion(m.getRegion());
-				UBoundingRect rect = new UBoundingRect();
-				BoundingBox bbox = m.getBb();
-				if(bbox!=null)
-				{
-					rect.setBottom(bbox.getBottom());
-					rect.setLeft(bbox.getLeft());
-					rect.setRight(bbox.getRight());
-					rect.setTop(bbox.getTop());
-					ugabresult.setRect(rect);
-				}
-				else
-					ugabresult.setRect(null);
-				ugabresult.setScope(m.getScope());
-				switch(m.getScope())
-				{
-				default:
-					ugabresult.setType(GABTYPE.HOUSE);
-					break;
-				}
-				arr_res.getUGabResult().add(ugabresult);
-				
-			}
+            for (MapMatches m : list) {
+                UGabResultListItem ugabresult = new UGabResultListItem();
+                ugabresult.setLat(m.getLat());
+                ugabresult.setLon(m.getLon());
+                ugabresult.setMatch(m.getMatch());
+                ugabresult.setName(m.getName());
+                ugabresult.setPostno(m.getName());
+                ugabresult.setRegion(m.getRegion());
+                UBoundingRect rect = new UBoundingRect();
+                BoundingBox bbox = m.getBb();
+                if (bbox != null) {
+                    rect.setBottom(bbox.getBottom());
+                    rect.setLeft(bbox.getLeft());
+                    rect.setRight(bbox.getRight());
+                    rect.setTop(bbox.getTop());
+                    ugabresult.setRect(rect);
+                } else
+                    ugabresult.setRect(null);
+                ugabresult.setScope(m.getScope());
+                switch (m.getScope()) {
+                    default:
+                        ugabresult.setType(GABTYPE.HOUSE);
+                        break;
+                }
+                arr_res.getUGabResult().add(ugabresult);
+
+            }
 			response.setBHaserror(false);
 			response.setList(arr_res);
 			/*Pasws myService = new Pasws(wsdl, service);

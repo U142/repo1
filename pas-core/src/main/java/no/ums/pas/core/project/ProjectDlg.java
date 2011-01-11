@@ -72,6 +72,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	}
 	protected void createPanel() {
 		m_projectpanel = new ProjectPanel(true);
+        m_projectpanel.start();
 	}
 	protected void init() {
 		createPanel();
@@ -86,7 +87,6 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			UPROJECTREQUEST request = new UPROJECTREQUEST();
 			request.setSzName(get_project().get_projectname());
 			request.setNProjectpk(new Long(get_project().get_projectpk()));
-			WSProject ws = new WSProject(request, get_projectpanel(), m_sz_callback_action);
 			//will return download finished to this dialogs panel actionhandler
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -137,15 +137,12 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			{
 				
 			}
-			try
-			{
-				new WSGetStatusList(this).start();
-			}
-			catch(Exception e)
-			{
-				
-			}
 		}
+
+        public void start() {
+            new WSGetStatusList(this).start();
+        }
+
 		public void actionPerformed(ActionEvent e) {
 			if("act_save".equals(e.getActionCommand())) {
 				setSelectedAction(ACT_PROJECTDLG_SAVE);

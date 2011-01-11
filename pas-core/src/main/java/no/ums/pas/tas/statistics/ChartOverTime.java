@@ -219,21 +219,15 @@ public class ChartOverTime extends TasChart implements ActionListener
 		
 		@Override
 		public boolean equals(Object obj) {
-			int ret = 0;
-			if(obj.getClass().equals(String.class))
-			{
-				ret = this.key.compareTo((String)obj);
-			}
-			else
-			{
-				ret = this.key.compareTo(((GroupKey)obj).key);
-			}
-			if(ret==0)
-				return true;
-			else
-				return false;
-		}
-		@Override
+            return obj instanceof GroupKey && key.equals(((GroupKey) obj).key);
+        }
+
+        @Override
+        public int hashCode() {
+            return key.hashCode();
+        }
+
+        @Override
 		public int compareTo(GroupKey o) {
 			return this.key.compareTo(o.key);
 		}
@@ -532,7 +526,7 @@ public class ChartOverTime extends TasChart implements ActionListener
 						else	
 							str_groupkey += " (OP " + count.getLOperator() + ")";
 					GroupKey groupkey = null;
-					if(hash_groupkeys.contains(str_groupkey))
+					if(hash_groupkeys.containsKey(str_groupkey))
 					{
 						groupkey = hash_groupkeys.get(str_groupkey);
 					}

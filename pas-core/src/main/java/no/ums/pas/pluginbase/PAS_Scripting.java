@@ -602,7 +602,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		List<String> arr_adr = new ArrayList<String>();
 		arr_adr.add("mh@ums.no");
 		arr_adr.add("sa@ums.no");		
-		MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
+		new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
 		return arr_adr;
 	}
 

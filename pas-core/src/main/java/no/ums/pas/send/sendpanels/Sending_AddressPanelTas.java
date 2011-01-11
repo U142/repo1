@@ -157,7 +157,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 			update_adrcount(true);
 			List<no.ums.ws.pas.tas.ULBACOUNTRY> list = m_country; //new ArrayList<no.ums.ws.pas.tas.ULBACOUNTRY>();
 			//list.add(m_country);
-			WSTasCount count = new WSTasCount(this, list);
+			new WSTasCount(this, list).start();
 			//PAS.get_pas().get_eastcontent().get_taspanel().actionPerformed(new ActionEvent(list, ActionEvent.ACTION_PERFORMED, "act_request_touristcount"));
 			lbl_runupdate.setText("<html><font color=red>" + PAS.l("main_tas_count_request_sent") + "</font></html>");
 		}

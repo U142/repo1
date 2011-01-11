@@ -194,7 +194,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 					if(check_filter(current)) {
 						//"l_objectpk", "Dynamic", "Name", "Date", "Time", "Trail", "Show", "Alert", "Follow"
 						try {
-							insert_row(new Object[] { new Boolean(current.get_dynamic()), current, MapObjectVars.GPS_UNIT_USERTYPE_[1][current.get_usertype()], TextFormat.format_date(current.get_lastdate()), TextFormat.format_time(current.get_lasttime(),6), (current.get_dynamic() ? new Boolean(false) : new Boolean(false)), new Boolean(current.get_visible()), new Boolean(current.get_alert()), new Boolean(current.get_follow()), current.get_street(), current.get_region() }, -1 );
+							insert_row(new Object[] {current.get_dynamic(), current, MapObjectVars.GpsUnitUsertype.values()[current.get_usertype()].getName(), TextFormat.format_date(current.get_lastdate()), TextFormat.format_time(current.get_lasttime(),6), (current.get_dynamic() ? new Boolean(false) : new Boolean(false)), new Boolean(current.get_visible()), new Boolean(current.get_alert()), new Boolean(current.get_follow()), current.get_street(), current.get_region() }, -1 );
 							n_success ++;
 							current.set_added_to_list();
 						} catch(Exception e) {
@@ -218,13 +218,13 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 			return false;
 		else if(!obj.get_dynamic() && (m_n_filter_dynamic & 1)!=1)
 			return false;
-		int n_usertype = new Integer(MapObjectVars.GPS_UNIT_USERTYPE_[2][obj.get_usertype()]).intValue();
+		int n_usertype = MapObjectVars.GpsUnitUsertype.values()[obj.get_usertype()].getFilter();
 		if((m_n_filter_carrier & n_usertype) != n_usertype)
 			return false;
-		int n_carrierstatus = new Integer(obj.get_carrierstatus()).intValue();
+		int n_carrierstatus = obj.get_carrierstatus();
 		if((m_n_filter_carrier & n_carrierstatus) != n_carrierstatus)
 			return false;
-		int n_onlinestatus = new Integer(obj.get_onlinestatus()).intValue();
+		int n_onlinestatus = obj.get_onlinestatus();
 		if((m_n_filter_active & n_onlinestatus) != n_onlinestatus)
 			return false;
 		if(m_sz_filter_name.length()>0) {
@@ -254,7 +254,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 			return false;
 		//current.get_name(), TextFormat.format_date(current.get_lastdate()), TextFormat.format_time(current.get_lasttime(),6)
 		get_tablelist().setValueAt(obj, n_row, m_col_object);
-		get_tablelist().setValueAt(MapObjectVars.GPS_UNIT_USERTYPE_[1][obj.get_usertype()], n_row, m_col_type);
+		get_tablelist().setValueAt(MapObjectVars.GpsUnitUsertype.values()[obj.get_usertype()].getName(), n_row, m_col_type);
 		get_tablelist().setValueAt(TextFormat.format_date(obj.get_lastdate()), n_row, m_col_date);
 		get_tablelist().setValueAt(TextFormat.format_time(obj.get_lasttime(),6), n_row, m_col_time);
 		get_tablelist().setValueAt(obj.get_street(), n_row, m_col_street);

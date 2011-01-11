@@ -17,7 +17,6 @@ public class WSTasCount extends WSThread
 	{
 		super(callback);
 		m_countries = countries;
-		start();
 	}
 	@Override
 	public void call() throws Exception

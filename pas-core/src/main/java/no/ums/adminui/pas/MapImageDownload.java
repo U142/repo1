@@ -49,7 +49,6 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		vars.init(getParameter("w"));
 		String OVERRIDE_WMS_SITE = getParameter("mapinfo");
 		
-		UPASUISETTINGS ui = new UPASUISETTINGS();
 		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{
 			m_settings.setMapServer(MAPSERVER.DEFAULT);

@@ -32,8 +32,8 @@ public class ObjectVO extends ParmVO {
 	
 	public String getPk() { return objectPK; }
 	
-	public static DataFlavor TREE_PATH_FLAVOR_OBJECT = new DataFlavor(ObjectVO.class, "Tree Path");
-	public static DataFlavor TREE_PATH_FLAVOR_EVENT	 = new DataFlavor(EventVO.class, "Event");
+	public static final DataFlavor TREE_PATH_FLAVOR_OBJECT = new DataFlavor(ObjectVO.class, "Tree Path");
+	public static final DataFlavor TREE_PATH_FLAVOR_EVENT	 = new DataFlavor(EventVO.class, "Event");
 	DataFlavor flavors[] = { TREE_PATH_FLAVOR_OBJECT, TREE_PATH_FLAVOR_EVENT};
 
 	public synchronized DataFlavor[] getTransferDataFlavors() {
@@ -299,22 +299,25 @@ public class ObjectVO extends ParmVO {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
-	
 
 
-	public boolean equals(Object o) {
-		if(o.getClass().equals(ObjectVO.class)){
-			ObjectVO vo = (ObjectVO)o;
-			if(objectPK==vo.objectPK)
-				return true;
-			else
-				return false;
-			}
-		else
-			return false;
-	}
-		
-	public void addObjects(ObjectVO oo){
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ObjectVO objectVO = (ObjectVO) o;
+
+        return !(objectPK != null ? !objectPK.equals(objectVO.objectPK) : objectVO.objectPK != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return objectPK != null ? objectPK.hashCode() : 0;
+    }
+
+    public void addObjects(ObjectVO oo){
 		if(!list.contains(oo))
 			list.add(oo);
 		else

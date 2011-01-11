@@ -1,7 +1,7 @@
 package no.ums.pas.parm.constants;
 
 public class ParmConstants {
-	public ParmConstants(String sz_sitename, String sz_homepath) {
+	public static void init(String sz_sitename, String sz_homepath) {
 		aspUrl = sz_sitename + "PAS_objectreg.asp";
 		xmlLocation = sz_homepath + "parmxml.zip";
 		tempxmlLocation = sz_homepath;

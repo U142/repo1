@@ -326,7 +326,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			return;
 		getTabbedPane().setTitleAt(0, cbp.getProject().getSzProjectname());
 		JTabbedPane tp = get_messages().get_tpane();
-		CentricSendOptionToolbar csend = CentricVariables.centric_send;
+		CentricSendOptionToolbar csend = CentricVariables.getCentric_send();
 		csend.set_projectpk(
 				Long.parseLong(cbp.getProject().getLProjectpk()), 
 				cbp.getProject().getSzProjectname());

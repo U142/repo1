@@ -50,7 +50,7 @@ public class ParmController extends MainController {
 		} catch(IOException e) {
 			Error.getError().addError("ParmController","IOException in StorageController.create_path",e,1);
 		}
-		new ParmConstants(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
+		ParmConstants.init(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
 //		 Kjører denne testen for å se om programmet ble avsluttet riktig, dersom filen eksisterer var det noe feil
 		File cleanExit = new File(ParmConstants.cleanExit);
 		if(cleanExit.exists()) {
@@ -135,7 +135,7 @@ public class ParmController extends MainController {
 		if(get_shape()!=null) {
 			get_shape().draw(g, getMapNavigation(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos());
 		}
-		if(get_shape_filled()!=null & get_shape()==null) {
+		if(get_shape_filled()!=null && get_shape()==null) {
 			get_shape_filled().draw(g, getMapNavigation(), false, false, false, PAS.get_pas().get_mappane().get_current_mousepos());
 		}
 		long n_stop = System.currentTimeMillis();

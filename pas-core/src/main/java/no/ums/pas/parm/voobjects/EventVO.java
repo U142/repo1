@@ -28,7 +28,7 @@ public class EventVO extends ParmVO {
 	}
 	public String getPk() { return eventPk; }
 	
-	public static DataFlavor TREE_PATH_FLAVOR = new DataFlavor(AlertVO.class, "Alert");
+	public static final DataFlavor TREE_PATH_FLAVOR = new DataFlavor(AlertVO.class, "Alert");
 	DataFlavor flavors[] = { TREE_PATH_FLAVOR };
 
 	public synchronized DataFlavor[] getTransferDataFlavors() {
@@ -139,19 +139,24 @@ public class EventVO extends ParmVO {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
-	
-	public boolean equals(Object o){
-		if(o.getClass().equals(EventVO.class)){
-			EventVO vo = (EventVO)o;
-			if(eventPk.compareTo(vo.eventPk)==0)
-				return true;
-			else
-				return false;
-			}
-		else
-			return false;
-	}
-	public void addAlerts(AlertVO ao){
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventVO eventVO = (EventVO) o;
+
+        return !(eventPk != null ? !eventPk.equals(eventVO.eventPk) : eventVO.eventPk != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return eventPk != null ? eventPk.hashCode() : 0;
+    }
+
+    public void addAlerts(AlertVO ao){
 		if(!alertListe.contains(ao))
 			alertListe.add(ao);
 		else

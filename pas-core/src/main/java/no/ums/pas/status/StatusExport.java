@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Iterator;
 
 
@@ -107,8 +108,8 @@ public class StatusExport
 				 StatusItemObject.ADR_EXPORT_FIELD_LON |
 				 StatusItemObject.ADR_EXPORT_FIELD_PHONE,
 				 separator, false);
-	
-		try
+
+        try
 		{
 			Iterator it = m_statusitems.iterator();
 			w.write(StatusItemObject.EXPORT_HEADING);

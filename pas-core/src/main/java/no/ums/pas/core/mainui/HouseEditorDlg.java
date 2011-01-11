@@ -68,7 +68,6 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		Dimension d = new Dimension(getWidth(), getHeight());
 		//System.out.println("resize: " + getWidth() + ", " + m_inhablist.getHeight());
 		//this.setPreferredSize(new );
 		m_panel.setPreferredSize(new Dimension(getWidth(), getHeight()));

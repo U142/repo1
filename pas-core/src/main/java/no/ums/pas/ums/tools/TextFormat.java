@@ -37,7 +37,6 @@ public final class TextFormat {
 		//return bor;
 	}
 	public synchronized static final Border CreateStdBorder(String text, int textalign) {
-		SubstanceBorder bor = new SubstanceBorder();
 		//substance 3.3
 		java.awt.Color col = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
 		

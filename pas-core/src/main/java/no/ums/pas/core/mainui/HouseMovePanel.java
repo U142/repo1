@@ -78,7 +78,6 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 	public void componentShown(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
 		//System.out.println("COMPONENT RESIZED");
-		Dimension d = new Dimension(getWidth(), getHeight());
 		//m_lbl_heading.setPreferredSize(new Dimension(getWidth(), m_lbl_heading.getHeight()));
 		//m_list.setPreferredSize(new Dimension(getWidth(), m_list.getHeight()));
 		//m_lbl_heading.setPreferredSize(new Dimension(getWidth()-100, getHeight()));

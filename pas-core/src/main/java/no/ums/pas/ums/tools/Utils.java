@@ -20,12 +20,12 @@ public final class Utils {
 	public synchronized static Point get_dlg_location_centered(int dlg_width, int dlg_height) {
 		 return new Point(PAS.get_pas().get_mappane().getLocationOnScreen().x + PAS.get_pas().get_mappane().get_dimension().width/2 - dlg_width/2, PAS.get_pas().get_mappane().getLocationOnScreen().y /*+ PAS.get_pas().get_mappane().get_dimension().height/2 - dlg_height*/);
 	}
-	public synchronized static final Calendar create_date(int n_date, int n_time) {
-		String sz_date = new Integer(n_date).toString();
-		String sz_time = new Integer(n_time).toString();
+	public synchronized static Calendar create_date(int n_date, int n_time) {
+		String sz_date = Integer.toString(n_date);
+		String sz_time = Integer.toString(n_time);
 		return create_date(sz_date, sz_time);
 	}
-	public synchronized static final Calendar create_date(String sz_date, String sz_time) {
+	public synchronized static Calendar create_date(String sz_date, String sz_time) {
 		if(sz_date.length()!=8 || sz_time.length()<=0)
 			return null;
 		sz_time = TextFormat.padding(sz_time, '0', 6);
@@ -147,9 +147,9 @@ public final class Utils {
         return true;
     }    
     
-	public static long TEXT_FEATURE_COPY = 1;
-	public static long TEXT_FEATURE_PASTE = 2;
-	public static long TEXT_FEATURE_CUT = 4;
+	public static final long TEXT_FEATURE_COPY = 1;
+	public static final long TEXT_FEATURE_PASTE = 2;
+	public static final long TEXT_FEATURE_CUT = 4;
     public static void disableTextComponentFeature(JTextComponent c, long TextFeatures)
     {
     	ArrayList<KeyBinding> arr = new ArrayList<KeyBinding>();

@@ -593,7 +593,7 @@ public class PolygonStruct extends ShapeStruct {
                 {
                     if (p.get_lon()*modificator <= Math.max(p1x, p2x))
                     {
-                        if (p1y != p2y)
+                        if (Math.abs(p1y - p2y) < 1/POINT_PRECISION)
                         {
                             xinters = (p.get_lat()*modificator - p1y) * (p2x - p1x) / (p2y - p1y) + p1x;
                             if (p1x == p2x || p.get_lon()*modificator <= xinters)
@@ -605,10 +605,8 @@ public class PolygonStruct extends ShapeStruct {
             p1x = p2x;
             p1y = p2y;
         }
-        if (counter % 2 == 0)
-            return false;
-        return true;		
-	}
+        return counter % 2 != 0;
+    }
 
 	@Override
 	public NavStruct getFullBBox()

@@ -40,8 +40,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	protected static Color ACTIVE_COLOR;
 	protected static Color INACTIVE_COLOR;
 	
-	public static int BTN_SIZE_WIDTH = 100;
-	public static int BTN_SIZE_HEIGHT = 20;
+	public static final int BTN_SIZE_WIDTH = 100;
+	public static final int BTN_SIZE_HEIGHT = 20;
 	
 	private JButton 	m_btn_zoom;
 	private JButton 	m_btn_pan;

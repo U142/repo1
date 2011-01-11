@@ -30,9 +30,9 @@ public class MapObjectInfopane extends DefaultPanel {
 	StdTextLabel m_lbl_gsmno2	= new StdTextLabel("GSM No.(comm): ", 150);
 	StdTextArea m_txt_gsmno2	= new StdTextArea("", false, 150);
 	StdTextLabel m_lbl_gpsmanufacturer = new StdTextLabel("GPS Type: ", 150);
-	JComboBox m_combo_gpsmanufacturer = new JComboBox(MapObjectVars.GPS_UNIT_MANUFACTURERS_[1]);
+	JComboBox m_combo_gpsmanufacturer = new JComboBox(MapObjectVars.GpsUnitManufacturers.getNames());
 	StdTextLabel m_lbl_gpsusage = new StdTextLabel("Carrier: ", 150);
-	JComboBox m_combo_gpsusage = new JComboBox(MapObjectVars.GPS_UNIT_USERTYPE_[1]);
+	JComboBox m_combo_gpsusage = new JComboBox(MapObjectVars.GpsUnitUsertype.getNames());
 	StdTextLabel m_lbl_location = new StdTextLabel("Location:", 150);
 	StdTextLabel m_txt_location	= new StdTextLabel("", 300);
 	
@@ -67,8 +67,8 @@ public class MapObjectInfopane extends DefaultPanel {
 				m_reg.get_mapobject().set_gsmno(m_txt_gsmno.getText());
 				m_reg.get_mapobject().set_unitpk(m_txt_unitpk.getText());
 				m_reg.get_mapobject().set_gsmno2(m_txt_gsmno2.getText());
-				m_reg.get_mapobject().set_manufacturer(new Integer(MapObjectVars.GPS_UNIT_MANUFACTURERS_[0][m_combo_gpsmanufacturer.getSelectedIndex()]).intValue());
-				m_reg.get_mapobject().set_usertype(new Integer(MapObjectVars.GPS_UNIT_USERTYPE_[0][m_combo_gpsusage.getSelectedIndex()]).intValue());
+				m_reg.get_mapobject().set_manufacturer(MapObjectVars.GpsUnitManufacturers.values()[m_combo_gpsmanufacturer.getSelectedIndex()].getId());
+				m_reg.get_mapobject().set_usertype(MapObjectVars.GpsUnitUsertype.values()[m_combo_gpsusage.getSelectedIndex()].getId());
 				m_reg.get_mapobject().set_picturepk(m_reg.m_picturepanel.get_selected_icon().get_picturepk());
 			} catch(Exception e) {
 				PAS.get_pas().add_event("update_data(true) failed " + e.getMessage(), e);

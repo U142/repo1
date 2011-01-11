@@ -1132,7 +1132,7 @@ public class plugin_Centric extends PAS_Scripting
 		}
 		try
 		{
-			CentricVariables.centric_send.trainingModeChanged();
+			CentricVariables.getCentric_send().trainingModeChanged();
 			variables.STATUSCONTROLLER.trainingModeChanged();
 		}
 		catch(Exception e)
@@ -1290,7 +1290,7 @@ public class plugin_Centric extends PAS_Scripting
 		boolean ret = true;
 		//ret = super.onAddInfoTab(tab, panel);
 		CentricSendOptionToolbar send = new CentricSendOptionToolbar();
-		CentricVariables.centric_send = send;
+		CentricVariables.setCentric_send(send);
 		//((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(send);
 		tab.addTab(PAS.l("mainmenu_file_newsending"), null, send, PAS.l("main_parmtab_popup_generate_sending"));
 		return ret;
@@ -1504,7 +1504,7 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onOpenProject(Project project, long nFromNewRefno) {
 		try {
 			// Does the same thing as after sending a message
-			CentricSendOptionToolbar csend = CentricVariables.centric_send;
+			CentricSendOptionToolbar csend = CentricVariables.getCentric_send();
 			//csend.set_projectpk(Long.parseLong(project.get_projectpk()), project.get_projectname());
 			
 			//CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
@@ -1608,7 +1608,7 @@ public class plugin_Centric extends PAS_Scripting
 
 	@Override
 	public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
-		CentricVariables.centric_send.lockSending(bLock);
+		CentricVariables.getCentric_send().lockSending(bLock);
 		if(bLock)
 			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
 		else
@@ -1641,7 +1641,7 @@ public class plugin_Centric extends PAS_Scripting
 		newaccount.set_port(25);
 		List<String> arr_adr = new ArrayList<String>();
 		arr_adr.add("mh@ums.no");
-		MailCtrl mc = new MailCtrl(newaccount.get_helo(),newaccount.get_mailserver(),newaccount.get_port(),newaccount.get_displayname(),newaccount.get_mailaddress(),arr_adr, callback,"PAS error", concatErrorlist);
+		new MailCtrl(newaccount.get_helo(),newaccount.get_mailserver(),newaccount.get_port(),newaccount.get_displayname(),newaccount.get_mailaddress(),arr_adr, callback,"PAS error", concatErrorlist);
 		return arr_adr;
 	}
 

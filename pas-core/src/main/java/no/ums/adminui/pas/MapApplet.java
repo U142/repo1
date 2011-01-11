@@ -91,7 +91,6 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", logon.getSessionid(), "");
 		Settings m_settings = new Settings();
-		UPASUISETTINGS ui = new UPASUISETTINGS();
 		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{
 			m_settings.setMapServer(MAPSERVER.DEFAULT);
@@ -285,10 +284,6 @@ public class MapApplet extends JApplet implements ActionListener {
 			m_info.get_departments().CreateCombinedRestrictionShape();
 			if(m_info.get_departments().get_combined_restriction_shape() != null) {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
-				
-				for(int i=0;i<list.size();++i) {
-					
-				}
 			}
 			variables.USERINFO = m_info;
 			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144),false);

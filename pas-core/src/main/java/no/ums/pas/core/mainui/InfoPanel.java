@@ -1334,7 +1334,6 @@ public class InfoPanel extends GeneralPanel {
 					.l("main_infotab_weather_minmax"));
 
 			// lblLocalTime.setPreferredSize(new Dimension(200,25));
-			Font font = new Font("Arial", Font.BOLD, 12);
 			// FontSet time.setFont(font);
 			// FontSet symbols.setFont(font);
 			// FontSet wind_speed.setFont(font);

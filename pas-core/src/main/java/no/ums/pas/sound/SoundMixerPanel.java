@@ -63,7 +63,6 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 		m_slider_headvol.setPaintTrack(true);
 		
 		
-		Font f = new Font("Arial", Font.BOLD, 10);
 		//FontSet m_slider_recvol.setFont(f);
 		//FontSet m_slider_playvol.setFont(f);
 		//FontSet m_slider_headvol.setFont(f);

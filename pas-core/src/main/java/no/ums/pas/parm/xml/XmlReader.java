@@ -44,7 +44,7 @@ import java.util.zip.ZipInputStream;
 public class XmlReader {
 
 	private ZipInputStream zip;
-	private XmlPolyReader polyReader;
+	private final XmlPolyReader polyReader = new XmlPolyReader();
 	private XmlEllipseReader ellipseReader;
 	private XmlGISReader gisReader;
 	private XmlWriter writer;
@@ -703,10 +703,7 @@ public class XmlReader {
 				temp = eAttributes.getAttribute("sz_sms_message");
 				if(temp.length() > 0)
 					ao.set_sms_message(temp);
-			
-				if(polyReader == null)
-					polyReader = new XmlPolyReader(main);
-				
+
 				NodeList anl = eAttributes.getElementsByTagName(ParmConstants.xmlElmAlertPoly);
 
 				if(anl.getLength()>0) {

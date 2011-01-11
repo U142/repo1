@@ -16,6 +16,7 @@ import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -131,12 +132,12 @@ public class SendPropertiesMunicipal extends SendProperties
 			}
 
 			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
-	}
+		} catch (MalformedURLException e) {
+            return false;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
 
 	@Override
 	protected boolean send() {

@@ -142,7 +142,7 @@ public class Error implements ActionListener {
 		error = error.concat("\nDescription: " + sz_description);
 		error = error.concat("\nError ID: " + errorid);
 		error = error.concat("\nError message: " + htErrors.get(Integer.toString(errorid)));
-		if(sz_body!="")
+		if(!sz_body.isEmpty())
 			error = error.concat("\nError body: " + sz_body);
 		error = error.concat("\n***********************\n");
 		writeFile(error);

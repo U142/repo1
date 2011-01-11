@@ -37,6 +37,7 @@ public class MailCtrl extends Object {
 			return;
 		}
 		SendMail sendmail = new SendMail(socket);
+        sendmail.start();
 		send_mail(sendmail, sz_helofrom, sz_displayname, sz_from, sz_to, sz_subject, sz_body);
 		
 	}

@@ -21,17 +21,24 @@ public class ContinentListItem extends CommonTASListItem
 	{
 		return continent.getSzName();
 	}
-	@Override
-	public boolean equals(Object c)
-	{
-		if(c.getClass().equals(ContinentListItem.class))
-		{
-			if(continent.getSzShort().equals(((ContinentListItem)c).getContinent().getSzShort()))
-					return true;
-		}
-		return false;
-	}
-	public boolean hasChanged(ULBACONTINENT c)
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ContinentListItem that = (ContinentListItem) o;
+
+        return !(continent != null ? !continent.getSzShort().equals(that.continent.getSzShort()) : that.continent != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return continent != null ? continent.getSzShort().hashCode() : 0;
+    }
+
+    public boolean hasChanged(ULBACONTINENT c)
 	{
 		if(getContinent().getNLastupdate()!=c.getNLastupdate())
 			return true;

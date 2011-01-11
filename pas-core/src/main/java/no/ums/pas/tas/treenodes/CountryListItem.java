@@ -64,19 +64,24 @@ public class CountryListItem extends CommonTASListItem implements Comparable<UMS
 		super.setAddedToSendList(b);
 		model.nodeChanged(this);
 	}
-	@Override
-	public boolean equals(Object c)
-	{
-		if(c==null)
-			return false;
-		if(c.getClass().equals(CountryListItem.class))
-		{
-			if(country.getSzIso().equals(((CountryListItem)c).getCountry().getSzIso().trim()))
-					return true;
-		}
-		return false;
-	}
-	public boolean hasChanged(ULBACOUNTRY c)
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CountryListItem that = (CountryListItem) o;
+
+        return !(country != null ? !country.getSzIso().equals(that.country.getSzIso()) : that.country != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return country != null ? country.getSzIso().hashCode() : 0;
+    }
+
+    public boolean hasChanged(ULBACOUNTRY c)
 	{
 		if(getCountry().getNTouristcount()!=c.getNTouristcount())
 		{

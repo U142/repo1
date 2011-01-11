@@ -52,15 +52,24 @@ public class CategoryVO implements Comparable<CategoryVO>{
 	public String getCategoryPK() {
 		return categoryPK;
 	}
-	public boolean equals(Object o){
-		CategoryVO co = (CategoryVO)o;
-		if(categoryPK.compareTo(co.getCategoryPK()) == 0){
-			return true;
-		}
-		else
-			return false;
-	}
-	public String toString(){
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CategoryVO that = (CategoryVO) o;
+
+        return !(categoryPK != null ? !categoryPK.equals(that.categoryPK) : that.categoryPK != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return categoryPK != null ? categoryPK.hashCode() : 0;
+    }
+
+    public String toString(){
 		return name;
 	}
 

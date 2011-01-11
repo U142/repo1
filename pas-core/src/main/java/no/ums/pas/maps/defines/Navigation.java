@@ -55,7 +55,7 @@ public class Navigation {
 		public static final int ZOOMIN  = 2;
 	}
 	
-	public static NavStruct NAV_WORLD = new NavStruct(-180, 180, 90, -90);
+	public static final NavStruct NAV_WORLD = new NavStruct(-180, 180, 90, -90);
 
 	/*public class MapPoint {
 		MapPointLL m_ll;

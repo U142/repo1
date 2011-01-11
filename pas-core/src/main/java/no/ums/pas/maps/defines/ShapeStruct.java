@@ -24,11 +24,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	protected boolean b_can_lock = false;
 	protected void setCanLock(boolean b) { b_can_lock = b; }
 	protected abstract void updateCanLock(List<ShapeStruct> restrictionShapes);
-	
-	public void setPrecision(double d) {
-		POINT_PRECISION = d;
-	}
-	
+
 	/*public static final int SHOW_POLYGON_FULL					= 1;
 	public static final int SHOW_POLYGON_SIMPLIFIED_PRPIXELS	= 2;
 	public static final int SHOW_POLYGON_SIMPLIFIED_PRMETERS	= 3;

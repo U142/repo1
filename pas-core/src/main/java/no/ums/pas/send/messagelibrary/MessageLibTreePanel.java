@@ -34,7 +34,7 @@ import java.util.List;
 
 public class MessageLibTreePanel extends DefaultPanel
 {
-	public static int MESSAGELIB_UPDATE_INTERVAL = 10;
+	public static final int MESSAGELIB_UPDATE_INTERVAL = 10;
 	
 	TREEMODE mode;
 	MsgLibLoader loader = new MsgLibLoader();
@@ -308,8 +308,7 @@ public class MessageLibTreePanel extends DefaultPanel
 					int w = totalwidth; //getWidth();
 					this.setPreferredSize(new Dimension(100, 30));
 					UBBMESSAGE msg = (UBBMESSAGE)o;
-					JLabel lbl = new JLabel(msg.getSzName());
-					
+
 					if(!leaf)
 					{
 						this.setIcon(ImageLoader.load_icon("folder2_" + getIconSize() + ".png"));
@@ -341,7 +340,6 @@ public class MessageLibTreePanel extends DefaultPanel
 						if(msgnode.isFoundInSearch())
 						{
 							Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getExtraLightColor();
-							Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 100);
 							this.setForeground(Color.black);
 							this.setText("*" + this.getText() + "*");
 						}
