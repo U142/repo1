@@ -1,5 +1,7 @@
 package no.ums.pas.maps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
@@ -23,7 +25,9 @@ import java.util.List;
 
 
 public class MapFrameActionHandler implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
-	public class ActionHouseSelect extends Object {
+    private static final Log logger = UmsLog.getLogger(MapFrameActionHandler.class);
+
+    public class ActionHouseSelect extends Object {
 		public boolean _b1;
 		public boolean _b2;
 		ActionHouseSelect(boolean b1, boolean b2) {
@@ -307,11 +311,10 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	}
 	public void killMouseOver() {
 		try {
-			//m_mouseoverwait.join(); //ensure it's finished before starting new thread
-		} catch(Exception e) { }
-		try {
 			m_mouseoverwait.interrupt();
-		} catch(Exception e) {	}
+		} catch(Exception e) {
+            logger.warn("Failed to interrupt mouse over", e);
+        }
 	}
 	public void resetMouseOver() {
 		//get_mappane().set_current_snappoint(null);

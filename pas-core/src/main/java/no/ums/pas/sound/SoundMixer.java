@@ -1,5 +1,6 @@
 package no.ums.pas.sound;
 
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 
 import javax.sound.sampled.*;
@@ -399,7 +400,9 @@ public class SoundMixer implements LineListener {
             setRecControlValue(recPort);
             System.out.println("Selected " + Zrodlo);
             
-        }catch (Exception e){}
+        } catch (Exception e) {
+            UmsLog.getLogger(SoundMixer.class).warn("Failed to update soundmixer, Zrodlo: %s, volume: %f", Zrodlo, Volume, e);
+        }
     }
     private void setRecControlValue(Port inPort) throws Exception {
         inPort.open();

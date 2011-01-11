@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.send.SendObject;
@@ -22,7 +24,8 @@ import java.util.Iterator;
  
 public class PreviewFrame extends JDialog implements ComponentListener, ActionListener {
 	public static final long serialVersionUID = 1;
-	PreviewPanel m_panel;
+    private static final Log logger = UmsLog.getLogger(PreviewFrame.class);
+    PreviewPanel m_panel;
 	private JButton m_btn_finish;
 	PreviewOptions m_options = null;
 	public PreviewPanel get_previewpanel() { return m_panel; }
@@ -72,7 +75,9 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			{
 				gistemp.delete();
 			}
-			catch(Exception e) { }
+			catch(Exception e) {
+                logger.warn("Failed to delete from gistemp", e);
+            }
 			FileWriter f = new FileWriter(gistemp);
 			PrintWriter writer = new PrintWriter(f);
 			

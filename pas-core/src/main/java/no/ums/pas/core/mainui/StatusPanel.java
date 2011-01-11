@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
@@ -23,8 +25,9 @@ import java.awt.event.*;
 
 public class StatusPanel extends DefaultPanel implements ComponentListener, ItemListener {
 	public static final long serialVersionUID = 1;
+    private static final Log logger = UmsLog.getLogger(StatusPanel.class);
 
-	StatuscodeFrame get_statuscodeframe() { return PAS.get_pas().get_statuscontroller().get_statuscodeframe(); }
+    StatuscodeFrame get_statuscodeframe() { return PAS.get_pas().get_statuscontroller().get_statuscodeframe(); }
 	InhabitantFrame get_inhabitantframe() { return PAS.get_pas().get_inhabitantframe(); }
 	LBATabbedPane get_lbatab() { return PAS.get_pas().get_statuscontroller().getLBATotalPane(); }
 	private JProgressBar m_lba_total_progress = new JProgressBar();
@@ -551,7 +554,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		{
 			VOICEPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_addressbased_alert") + "     - " + sz + " "));
 		}
-		catch(Exception e) { }
+		catch(Exception e) {
+            logger.warn("Failed to set border text for voice (%s)", sz, e);
+        }
 	}
 	
 	public class MainView extends DefaultPanel {

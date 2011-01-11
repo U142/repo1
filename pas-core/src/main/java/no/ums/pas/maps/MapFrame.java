@@ -1,5 +1,7 @@
 package no.ums.pas.maps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -23,7 +25,9 @@ import java.util.HashMap;
 
 
 public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {
-	/**
+    private static final Log logger = UmsLog.getLogger(MapFrame.class);
+
+    /**
 	 * 
 	 */
 	
@@ -578,7 +582,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 					  new Point(7, 24), "Pin to border");
 			
 			//m_cursor_draw = new Cursor(Cursor.CROSSHAIR_CURSOR);
-		} catch(Exception e) { }
+		} catch(Exception e) {
+            logger.warn("An error occured", e);
+        }
 		sz_url = "epicentre_pinpoint.png";
 		try {
 			ImageIcon icon_epicentre = ImageLoader.load_icon(sz_url);

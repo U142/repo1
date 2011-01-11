@@ -13,6 +13,11 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>ums-log</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.java.net.substance</groupId>
             <artifactId>substance</artifactId>
         </dependency>
