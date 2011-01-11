@@ -12,6 +12,7 @@
     </modules>
     <properties>
         <version.geotools>2.6.5</version.geotools>
+        <project.build.sourceEncoding>ISO-8859-15</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
         <dependencies>
