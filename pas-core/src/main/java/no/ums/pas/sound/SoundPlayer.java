@@ -39,7 +39,7 @@ public class SoundPlayer {
 		progress = slider;
 		m_panel = rec_panel;
 		//this.btn_play = btn_play;
-		File file = new File((b_default_path ? SoundRecorder.VOC_TEMP_PATH_ : "") + m_sz_filename);
+		File file = new File((b_default_path ? SoundRecorder.getVocTempPath() : "") + m_sz_filename);
 		try {
 			player_ctrl = new SoundPlayer(file, null, slider, rec_panel, txt_seconds);
 				

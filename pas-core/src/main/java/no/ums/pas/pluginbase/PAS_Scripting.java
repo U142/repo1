@@ -27,7 +27,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.versioning.versioning;
+import no.ums.pas.versioning.Versioning;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -643,7 +643,7 @@ public class PAS_Scripting extends PasScriptingInterface
 			PAS.get_pas().setEnabled(false);
 			//PAS.get_pas().setVisible(false);
 			info.set_session_active(false);
-			if(!PAS.APP_EXIT)
+			if(!PAS.APP_EXIT.get())
 			{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
@@ -719,7 +719,7 @@ public class PAS_Scripting extends PasScriptingInterface
 		new Thread("PAS System Messages") {
 			public void run()
 			{
-				while(!PAS.APP_EXIT)
+				while(!PAS.APP_EXIT.get())
 				{
 					try
 					{
@@ -757,11 +757,11 @@ public class PAS_Scripting extends PasScriptingInterface
 	public boolean onHelpAbout() {
 		String content = PAS.l("common_aboutbox_content");
 		content+="\n\n";
-		//content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
-		//content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
-		content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
-		content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
-		//content+="\n" + versioning.BUILT_DATE;
+		//content+="\nImplementation version " + Versioning.IMPLEMENTATION_VERSION;
+		//content+="\nSpecification version " + Versioning.SPECIFICATION_VERSION;
+		content+="\nImplementation version " + Versioning.getInstance().IMPLEMENTATION_VERSION;
+		content+="\nSpecification version " + Versioning.getInstance().SPECIFICATION_VERSION;
+		//content+="\n" + Versioning.BUILT_DATE;
 		JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}

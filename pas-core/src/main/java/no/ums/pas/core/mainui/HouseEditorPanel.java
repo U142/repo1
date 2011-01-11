@@ -306,9 +306,6 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			String sz_gnr = m_txt_gnr.getText();
 			String sz_bnr = m_txt_bnr.getText();
 			String sz_municipalid = m_txt_municipal.getText();
-			String sz_streetid = m_txt_streetid.getText();
-			Double lon = new Double(m_point.get_lon());
-			Double lat = new Double(m_point.get_lat());
 			String sz_birthday = m_txt_birthday.getText();
 			//String sz_bedrift = ((Integer)((IconRadio)m_group_user.getSelection()).get_value()).toString();
             int n_adrtype;

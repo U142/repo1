@@ -74,7 +74,7 @@ public class CentricMessages extends DefaultPanel implements ComponentListener {
 		//setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height-70));
 		Rectangle rect = new Rectangle();
 		m_tabbed_messages.computeVisibleRect(rect);
-		Dimension minimumsize = CentricMessageStatus.GETMINIMUMSIZE();
+		Dimension minimumsize = CentricMessageStatus.getCentricMinimumSize();
 		int height = minimumsize.height;
 		int tabheight = 0;
 		m_tabbed_messages.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-15, m_parent.getPreferredSize().height-100+tabheight));

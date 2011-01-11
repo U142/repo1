@@ -35,7 +35,7 @@ public class versioning
 	{
 		Package p = versioning.class.getPackage();
 		
-		/*InputStream is = versioning.class
+		/*InputStream is = Versioning.class
 		.getResourceAsStream("MANIFEST.MF");
 		try
 		{

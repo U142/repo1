@@ -37,8 +37,7 @@ class MapSiteCombo extends JComboBox {
 public class MainMenu extends DefaultPanel implements ComponentListener //implements ActionListener //, EventListener //MenuListener //, EventListener
 {
 	public static final long serialVersionUID = 1;
-	protected static Color ACTIVE_COLOR;
-	protected static Color INACTIVE_COLOR;
+	protected Color INACTIVE_COLOR;
 	
 	public static final int BTN_SIZE_WIDTH = 100;
 	public static final int BTN_SIZE_HEIGHT = 20;

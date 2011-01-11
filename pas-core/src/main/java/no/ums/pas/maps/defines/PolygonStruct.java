@@ -596,7 +596,7 @@ public class PolygonStruct extends ShapeStruct {
                         if (Math.abs(p1y - p2y) < 1/POINT_PRECISION)
                         {
                             xinters = (p.get_lat()*modificator - p1y) * (p2x - p1x) / (p2y - p1y) + p1x;
-                            if (p1x == p2x || p.get_lon()*modificator <= xinters)
+                            if (Math.abs(p1x - p2x) < 1/POINT_PRECISION || p.get_lon()*modificator <= xinters)
                                 counter++;
                         }
                     }

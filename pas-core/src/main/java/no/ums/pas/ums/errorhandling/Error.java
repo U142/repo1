@@ -72,8 +72,7 @@ public class Error implements ActionListener {
 		htErrors.put("2",new String("HTTP Error"));		
 	}
 	
-	public Error() {
-		errorObject = this;
+	private Error() {
 		errorList = new ArrayList<ErrorVO>();
 		gui = new ErrorGUI();
 		gui.getBtnNext().addActionListener(this);

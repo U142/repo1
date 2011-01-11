@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.pluginbase.PluginLoader;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.versioning.versioning;
+import no.ums.pas.versioning.Versioning;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -109,7 +109,7 @@ public class ExecApp {
 		m_pas.setForceWMSSite(sz_force_wms);
 		m_pas.setAddressSeachUrl(sz_addresssearch_url);
 		loadPlugin(sz_codebase, sz_plugin);
-		new versioning().setVersion(PAS.pasplugin);
+		Versioning.initVersioning(PAS.pasplugin);
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {

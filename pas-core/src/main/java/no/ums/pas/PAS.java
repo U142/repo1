@@ -57,6 +57,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //substance 3.3
 
@@ -245,9 +246,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static int g_n_parmversion = 2;
 	public static final String sz_mark_language_words = "*";
 	public static UMSTheme active_theme;
-	public static String OVERRIDE_WMS_SITE = null;
+	public String OVERRIDE_WMS_SITE = null;
 	
-	public static boolean APP_EXIT = false;
+	public static final AtomicBoolean APP_EXIT = new AtomicBoolean(false);
 	
 	/*public void initSubstance()
 	{
@@ -721,7 +722,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 
-	protected static String PASPLUGIN = "PAS_Scripting";
+	protected String PASPLUGIN = "PAS_Scripting";
 	
 	public static PasScriptingInterface pasplugin;
 	
@@ -971,7 +972,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		m_storagecontroller.create_storageelements(sz_home, sz_storage_tempwav, sz_storage_status, sz_storage_fleetcontrol,
 												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + "\\");
-		SoundRecorder.VOC_TEMP_PATH_ = StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_);
+		SoundRecorder.setVocTempPath(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_));
 		
 		//VISUAL SETTINGS MOVED TO WEBSERVICES
 		/*m_settings = new XmlReader().loadVisualsSettings(m_settings);
@@ -2055,7 +2056,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		System.out.println(sz_text);
 	}
 	public void exit_application() {
-		PAS.APP_EXIT = true;
+		PAS.APP_EXIT.set(true);
 		close_parm(true);
 		XmlWriter xmlwriter = new XmlWriter();
 		try

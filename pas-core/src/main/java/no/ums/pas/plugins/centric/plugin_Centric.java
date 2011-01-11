@@ -30,7 +30,7 @@ import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.versioning.versioning;
+import no.ums.pas.versioning.Versioning;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.pas.UBBNEWS;
 import no.ums.ws.pas.USYSTEMMESSAGES;
@@ -1108,11 +1108,11 @@ public class plugin_Centric extends PAS_Scripting
 		
 		String content = PAS.l("common_aboutbox_content");
 		content+="\n\n";
-		//content+="\nImplementation version " + versioning.IMPLEMENTATION_VERSION;
-		//content+="\nSpecification version " + versioning.SPECIFICATION_VERSION;
-		content+="\nImplementation version " + versioning.PLUGIN_IMPLEMENTATION_VERSION;
-		content+="\nSpecification version " + versioning.PLUGIN_SPECIFICATION_VERSION;
-		//content+="\n" + versioning.BUILT_DATE;
+		//content+="\nImplementation version " + Versioning.IMPLEMENTATION_VERSION;
+		//content+="\nSpecification version " + Versioning.SPECIFICATION_VERSION;
+		content+="\nImplementation version " + Versioning.getInstance().PLUGIN_IMPLEMENTATION_VERSION;
+		content+="\nSpecification version " + Versioning.getInstance().PLUGIN_SPECIFICATION_VERSION;
+		//content+="\n" + Versioning.BUILT_DATE;
 		JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}

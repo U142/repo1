@@ -21,8 +21,7 @@ public class CountryCodes implements ActionListener {
 	
 	protected static final ArrayList<CCode> g_arr_codes = new ArrayList<CCode>();
 	protected static boolean g_b_ccloaded = false;
-	protected static CountryCodes g_codes = null;
-	
+
 	public static CCode getCountryByCCode(String ccode) {
 		if(g_b_ccloaded) {
 			try {
@@ -48,11 +47,8 @@ public class CountryCodes implements ActionListener {
 
 	
 	
-	public CountryCodes()
-	{
-		g_codes = this;
+	public CountryCodes() {
 		init();
-		
 	}
 	
 	public void actionPerformed(ActionEvent e){

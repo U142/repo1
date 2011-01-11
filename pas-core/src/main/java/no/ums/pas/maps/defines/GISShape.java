@@ -1,6 +1,7 @@
 package no.ums.pas.maps.defines;
 
 import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.ums.errorhandling.*;
 
 import java.awt.*;
 import java.util.List;
@@ -65,7 +66,7 @@ public class GISShape extends ShapeStruct {
 			s.set_fill_color(this.m_fill_color);
 			return s;
 		} catch(Exception e) {
-			new no.ums.pas.ums.errorhandling.Error().addError("Could not clone GISShape", "Unexpected error", e, 1);
+			no.ums.pas.ums.errorhandling.Error.getError().addError("Could not clone GISShape", "Unexpected error", e, 1);
 			return null;
 		}
 	}

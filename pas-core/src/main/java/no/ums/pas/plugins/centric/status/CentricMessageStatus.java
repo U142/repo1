@@ -52,13 +52,17 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	protected Hashtable<Integer, CentricOperatorStatus> hash_operators = new Hashtable<Integer, CentricOperatorStatus>(); //operatorpk as key
 	protected CentricOperatorStatus total_statuspane = null;
 	
-	protected static Dimension MINIMUM_SIZE = new Dimension(400,400);
-	public static Dimension GETMINIMUMSIZE()
+	protected static Dimension centricMinimumSize = new Dimension(400,400);
+	public static Dimension getCentricMinimumSize()
 	{
-		return MINIMUM_SIZE;
+		return centricMinimumSize;
 	}
-	
-	protected boolean checkResendRights()
+
+    public static void setCentricMinimumSize(Dimension dimension) {
+        CentricMessageStatus.centricMinimumSize = dimension;
+    }
+
+    protected boolean checkResendRights()
 	{
 		Class c = lastcbstatus.getShape().getClass();
 		if(c.equals(UPLMN.class))
@@ -428,7 +432,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		setPreferredSize(new Dimension(getWidth(), getHeight()));
 		m_tabbed_operators.setPreferredSize(new Dimension(getWidth()-30, getHeight()/2));
 		m_txt_previewscroll.setPreferredSize(new Dimension(getWidth()-30-m_lbl_message.getPreferredSize().width, 100));
-		MINIMUM_SIZE = new Dimension(getWidth(), getHeight());
+		setCentricMinimumSize(new Dimension(getWidth(), getHeight()));
 		//m_tabbed_operators.setPreferredSize(new Dimension(m_parent.getPreferredSize().width-30, m_parent.getPreferredSize().height/2));	
 		//setPreferredSize(new Dimension(m_parent.getPreferredSize().width-10, m_parent.getPreferredSize().height));
 	}
