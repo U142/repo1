@@ -1,58 +1,5 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-
-//import sun.awt.AWTCharset.Encoder;
-import sun.misc.Regexp;
-
-
-
-
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -62,23 +9,21 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
-import no.ums.pas.core.defines.tree.UMSTree.TREEICONSIZE;
-import no.ums.pas.parm.alert.AlertWindow;
 import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendOptionDlg;
-import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.send.SendProperties;
 import no.ums.pas.send.messagelibrary.MessageLibTreePanel;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
-import no.ums.pas.sound.SoundlibFileTxt;
-import no.ums.pas.ums.tools.ExpiryMins;
-import no.ums.pas.ums.tools.StdSearchArea;
-import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.UnderlineHighlightPainter;
-import no.ums.pas.ums.tools.calendarutils.SchedCalendar;
+import no.ums.pas.ums.tools.*;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.Collator;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+//import sun.awt.AWTCharset.Encoder;
 
 
 public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionListener, KeyListener, ItemListener, ComponentListener, FocusListener {

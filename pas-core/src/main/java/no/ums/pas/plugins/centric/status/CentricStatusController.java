@@ -1,18 +1,14 @@
 package no.ums.pas.plugins.centric.status;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
-
-import javax.swing.SwingUtilities;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
-import no.ums.pas.plugins.centric.CentricAddressSearch;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
-import no.ums.pas.plugins.centric.ws.WSCentricStatus;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CentricStatusController extends StatusController { 
 	

@@ -1,10 +1,10 @@
 package no.ums.pas.parm.xml;
 
-import java.util.Comparator;
-
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
+
+import java.util.Comparator;
 
 
 public class ListSorter implements Comparator {

@@ -1,10 +1,10 @@
 package no.ums.pas.send.messagelibrary.tree;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.ws.pas.UBBMESSAGE;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class MessageLibNode extends UMSTreeNode //implements Comparable<MessageLibNode>
 {

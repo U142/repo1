@@ -1,44 +1,25 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.WindowEvent;
-
-
-import javax.swing.*;
-
-import java.awt.*;
-import javax.swing.border.*;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.defines.ComboRow;
+import no.ums.pas.core.defines.ComboRowCellRenderer;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.*;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.status.*;
+import no.ums.pas.status.LBASEND;
+import no.ums.pas.status.LBATabbedPane;
+import no.ums.pas.status.StatusSending;
 import no.ums.pas.status.StatusSending.StatusSendingUI;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.LBALanguage;
 
-import org.jvnet.lafwidget.utils.LafConstants.AnimationKind;
-
-
-import com.sun.xml.internal.messaging.saaj.soap.GifDataContentHandler;
-
-import sun.awt.HorizBagLayout;
-import sun.awt.image.GifImageDecoder;
-
-
-import java.awt.event.*;
-import java.awt.peer.PanelPeer;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class StatusPanel extends DefaultPanel implements ComponentListener, ItemListener {
 	public static final long serialVersionUID = 1;

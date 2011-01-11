@@ -1,21 +1,21 @@
 package no.ums.pas.parm.event;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.util.*;
-
-import javax.swing.JOptionPane;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.UnknownShape;
-import no.ums.pas.parm.exception.*;
+import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.main.MainController;
-import no.ums.pas.parm.voobjects.*;
-import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.CategoryVO;
+import no.ums.pas.parm.voobjects.EventVO;
+import no.ums.pas.parm.voobjects.ObjectVO;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 
 public class EventController implements ActionListener {

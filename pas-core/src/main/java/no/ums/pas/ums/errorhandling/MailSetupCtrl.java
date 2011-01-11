@@ -1,10 +1,10 @@
 package no.ums.pas.ums.errorhandling;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.parm.xml.XmlWriter;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 

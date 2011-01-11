@@ -1,19 +1,20 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.ListSelectionModel;
-import javax.swing.table.TableColumn;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUGPSList;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.MapObject;
+import no.ums.pas.maps.defines.MapObjectList;
+import no.ums.pas.maps.defines.MapObjectVars;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
 
+import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 public class OpenGPS extends SearchPanelResults implements ComponentListener {

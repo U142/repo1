@@ -1,34 +1,34 @@
 package no.ums.pas.core.menus;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-
-import no.ums.pas.*;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.menus.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.menus.defines.CheckItem;
+import no.ums.pas.core.menus.defines.RadioItemList;
+import no.ums.pas.core.menus.defines.SubstanceMenuItem;
+import no.ums.pas.core.menus.defines.SubstanceMenuItemList;
 import no.ums.pas.ums.errorhandling.Error;
-
-import org.jvnet.substance.*;
-//import org.jvnet.substance.skin.SkinInfo;
-//import org.jvnet.substance.theme.*;
-//import org.jvnet.substance.skin.*;
+import org.jvnet.substance.SubstanceImageCreator;
+import org.jvnet.substance.SubstanceLookAndFeel;
 import org.jvnet.substance.skin.SkinInfo;
-import org.jvnet.substance.watermark.SubstanceWatermark;
-//import org.jvnet.substance.api.SubstanceSkin;
-
-import java.util.Map;
-import java.util.Iterator;
-
-//Substance 3.3
-import org.jvnet.substance.watermark.WatermarkInfo;
 import org.jvnet.substance.skin.SubstanceSkin;
 import org.jvnet.substance.theme.SubstanceTheme;
 import org.jvnet.substance.theme.ThemeInfo;
+import org.jvnet.substance.watermark.SubstanceWatermark;
+import org.jvnet.substance.watermark.WatermarkInfo;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.Iterator;
+import java.util.Map;
+
+//import org.jvnet.substance.skin.SkinInfo;
+//import org.jvnet.substance.theme.*;
+//import org.jvnet.substance.skin.*;
+//import org.jvnet.substance.api.SubstanceSkin;
+//Substance 3.3
 
 
 //Substance 5.2

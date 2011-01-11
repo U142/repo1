@@ -1,14 +1,5 @@
 package no.ums.pas.send.messagelibrary;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
@@ -17,6 +8,12 @@ import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.UBBMESSAGE;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 

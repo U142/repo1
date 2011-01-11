@@ -1,12 +1,11 @@
 package no.ums.pas.sound;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import javax.sound.sampled.*;
-import javax.swing.JOptionPane;
-
 import no.ums.pas.PAS;
-import no.ums.pas.ums.errorhandling.Error;
+
+import javax.sound.sampled.*;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 
 

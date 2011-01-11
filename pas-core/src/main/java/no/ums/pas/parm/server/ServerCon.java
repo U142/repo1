@@ -1,23 +1,27 @@
 package no.ums.pas.parm.server;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.ByteBuffer;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.HttpPostForm;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSProgressPoller;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.parm.constants.*;
+import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.parm.admin.*;
-//import no.ums.ws.pas.*;
+import no.ums.ws.parm.admin.ObjectFactory;
+import no.ums.ws.parm.admin.ParmAdmin;
+import no.ums.ws.parm.admin.ULOGONINFO;
+import no.ums.ws.parm.admin.UpdateParm;
 import no.ums.ws.pas.ProgressJobType;
+
+import javax.xml.namespace.QName;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+//import no.ums.ws.pas.*;
 
 public class ServerCon {
 	private HttpPostForm server;

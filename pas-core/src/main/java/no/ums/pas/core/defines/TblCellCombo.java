@@ -1,13 +1,9 @@
 package no.ums.pas.core.defines;
 
 import javax.swing.*;
-import javax.swing.table.*;
-
-import no.ums.pas.PAS;
-
-
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 
 public class TblCellCombo extends JComboBox implements TableCellRenderer {
 	public static final long serialVersionUID = 1;

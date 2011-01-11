@@ -1,30 +1,21 @@
 package no.ums.pas.send;
 
+import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.PolySnapStruct;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Col;
+import no.ums.ws.parm.*;
+
+import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.HttpPostForm;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.parm.xml.XmlWriter;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-import no.ums.ws.parm.ArrayOfUMapPoint;
-import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UEllipseDef;
-import no.ums.ws.parm.UMapBounds;
-import no.ums.ws.parm.UMapPoint;
 
 
 

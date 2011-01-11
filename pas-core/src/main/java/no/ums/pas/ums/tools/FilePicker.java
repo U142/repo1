@@ -1,12 +1,8 @@
 package no.ums.pas.ums.tools;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-
-import no.ums.pas.PAS;
-import no.ums.pas.ums.errorhandling.Error;
-
-
-import java.awt.Component;
+import java.awt.*;
 import java.io.File;
 
 public class FilePicker extends JFileChooser {

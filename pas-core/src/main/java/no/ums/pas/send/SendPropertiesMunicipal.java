@@ -1,25 +1,23 @@
 package no.ums.pas.send;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-
-import java.net.URL;
-import java.util.*;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.Municipal;
+import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.ws.parm.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.List;
 
 public class SendPropertiesMunicipal extends SendProperties
 {

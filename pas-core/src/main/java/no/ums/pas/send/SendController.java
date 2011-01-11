@@ -1,25 +1,7 @@
 package no.ums.pas.send;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.LayoutManager;
-import java.awt.Point;
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.soap.MiniSOAP;
+import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
-import no.ums.pas.core.dataexchange.soap.SoapExecEvent;
-import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
@@ -27,34 +9,39 @@ import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSProgressPoller;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.importer.*;
+import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.gis.PreviewFrame;
-import no.ums.pas.maps.*;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.send.sendpanels.*;
+import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.ws.pas.*;
-
-//import Core.DataExchange.SOAP.Service1Client;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.AlertResultLine;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.ULOGONINFO;
-
-import javax.xml.ws.*;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.namespace.*;
-
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.ProgressJobType;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
 
-import com.sun.corba.se.impl.orbutil.closure.Future;
+import javax.swing.*;
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+//import Core.DataExchange.SOAP.Service1Client;
 
 //import javax.swing.plaf.basic.BasicToolBarUI;
 

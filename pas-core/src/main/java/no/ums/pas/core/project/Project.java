@@ -1,8 +1,8 @@
 package no.ums.pas.core.project;
 
-import java.util.*;
-
 import no.ums.pas.status.StatusListObject;
+
+import java.util.ArrayList;
 
 public class Project extends Object {
 	

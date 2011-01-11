@@ -1,13 +1,11 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.maps.defines.MapPoint;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.maps.defines.MapPoint;
 
 
 public abstract class GeneralPanel extends DefaultPanel {

@@ -9,25 +9,20 @@
  */
 
 package no.ums.pas.core.controllers;
- 
+
+import no.ums.pas.PAS;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.send.SendController;
+import no.ums.pas.ums.tools.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.event.*;
-import java.util.*;
-
-import javax.swing.JComponent;
-import javax.swing.JToolTip;
-import javax.swing.ToolTipManager;
-
-import no.ums.pas.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.*;
-import no.ums.pas.ums.tools.*;
+import java.util.Calendar;
 
 
 

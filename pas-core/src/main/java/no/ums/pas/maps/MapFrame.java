@@ -1,41 +1,25 @@
 package no.ums.pas.maps;
 
-import java.awt.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-//import netscape.javascript.JSObject;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.Draw;
+import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.popupmenus.PUPolyPoint;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-
-import org.geotools.data.ows.WMSCapabilities;
-import org.geotools.data.wms.WMS1_0_0;
-import org.geotools.data.wms.WMS1_3_0;
-import org.geotools.data.wms.WebMapServer;
-import org.geotools.data.wms.WMS1_3_0.GetMapRequest;
-import org.geotools.data.wms.response.GetFeatureInfoResponse;
-import org.geotools.data.wms.response.GetMapResponse;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.PrintCtrl;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-//import sun.plugin.liveconnect.JavaScriptPermission;
-
-import java.awt.Robot;
-
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+//import netscape.javascript.JSObject;
+//import sun.plugin.liveconnect.JavaScriptPermission;
 
 
 public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {

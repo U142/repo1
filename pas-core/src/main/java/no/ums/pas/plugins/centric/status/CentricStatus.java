@@ -1,52 +1,32 @@
 package no.ums.pas.plugins.centric.status;
 
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.variables;
+import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.maps.defines.converters.UShapeToShape;
+import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
+import no.ums.pas.plugins.centric.CentricVariables;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
+import no.ums.pas.plugins.centric.ws.WSCentricStatus;
+import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
+import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.pas.status.CBSTATUS;
+import no.ums.ws.pas.status.ULOGONINFO;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.core.ws.WSGetStatusItems;
-import no.ums.pas.maps.defines.CommonFunc;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.converters.UShapeToShape;
-import no.ums.pas.plugins.centric.CentricEastContent;
-import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
-import no.ums.pas.plugins.centric.CentricVariables;
-import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
-import no.ums.pas.plugins.centric.ws.WSCentricStatus;
-import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.parm.CBORIGINATOR;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
-import no.ums.ws.pas.status.CBSTATUS;
-import no.ums.ws.pas.status.ULBAHISTCELL;
-import no.ums.ws.pas.status.ULBASENDING;
-import no.ums.ws.pas.status.ULOGONINFO;
 
 public class CentricStatus extends DefaultPanel implements ComponentListener{
 

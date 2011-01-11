@@ -1,34 +1,29 @@
 package no.ums.pas.parm.xml;
 
-import java.awt.Color;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import no.ums.pas.PAS;
+import no.ums.pas.cellbroadcast.Area;
+import no.ums.pas.cellbroadcast.CBMessage;
+import no.ums.pas.cellbroadcast.CCode;
+import no.ums.pas.core.logon.Settings;
+import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.parm.constants.ParmConstants;
+import no.ums.pas.parm.voobjects.*;
+import no.ums.pas.parm.voobjects.AlertVO.LBAOperator;
+import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
+import no.ums.pas.ums.errorhandling.Error;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -41,31 +36,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import no.ums.pas.PAS;
-import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
-import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.importer.gis.GISList;
-import no.ums.pas.importer.gis.GISRecord;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.GISShape;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.parm.constants.*;
-import no.ums.pas.parm.voobjects.*;
-import no.ums.pas.parm.voobjects.AlertVO.LBAOperator;
-import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
-import no.ums.pas.ums.errorhandling.Error;
-
-import org.jvnet.lafwidget.Resettable;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xerces.internal.xni.parser.XMLDocumentFilter;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
+import java.util.List;
+import java.util.zip.*;
 
 
 
@@ -107,7 +82,7 @@ public class XmlWriter {
 				rootTimestamp = "0";
 		}
 		catch(Exception e){
-			System.out.println("Feilet med Ã¥ lese timestamp fra parmxml: " + e.getMessage());
+			System.out.println("Feilet med å lese timestamp fra parmxml: " + e.getMessage());
 			returnValue = -1;
 		}*/
 		
@@ -126,7 +101,7 @@ public class XmlWriter {
 					writtenPoly = true;
 				}
 			}
-			// Hvis det er et event som er blitt lagt til sÃ¥ mÃ¥ det skrives en tom poly
+			// Hvis det er et event som er blitt lagt til så må det skrives en tom poly
 			if(!writtenPoly)
 				writeEmptyPoly(files[1]);
 		}
@@ -193,7 +168,7 @@ public class XmlWriter {
 		return returnValue;
 	}
 	
-	// Denne skal i fÃ¸lge MainController slette objekter
+	// Denne skal i følge MainController slette objekter
 	public int writeXml(Collection <Object>objects) {//, String timestamp) {
 
 		String[] files = new String[2];
@@ -201,17 +176,17 @@ public class XmlWriter {
 		files[1] = ParmConstants.polyxmlLocation;
 		
 		if(objects != null){
-			// Den gÃ¥r egentlig bare inn og forandrer sz_operation
+			// Den går egentlig bare inn og forandrer sz_operation
 			returnValue = writer(objects, ParmConstants.xmlLocation);
 			
 //			Iterator it = objects.iterator();
 //			while(it.hasNext()){
 //				Object o = it.next();
 //				if(o.getClass().equals(ObjectVO.class) || o.getClass().equals(AlertVO.class)) {
-					// Her mÃ¥ jeg oppdatere temppk'ene for at den ikke skal legge til i stedet for Ã¥ oppdatere polygonene
+					// Her må jeg oppdatere temppk'ene for at den ikke skal legge til i stedet for å oppdatere polygonene
 					/*if(o.getClass().equals(ObjectVO.class) && ((ObjectVO)o).getM_polygon() != null)
 						updatePolyXml(((ObjectVO)o).getObjectPK(),((ObjectVO)o).getTempPk());
-					else if(o.getClass().equals(AlertVO.class) && ((AlertVO)o).getM_polygon() != null)  // det kan jo kun vÃ¦re ObjectVO eller AlertVO
+					else if(o.getClass().equals(AlertVO.class) && ((AlertVO)o).getM_polygon() != null)  // det kan jo kun være ObjectVO eller AlertVO
 						updatePolyXml(((AlertVO)o).getAlertpk(),((AlertVO)o).getTempPk());*/
 					
 //					returnValue = writePolyXml(o, ParmConstants.polyxmlLocation);
@@ -221,7 +196,7 @@ public class XmlWriter {
 			returnValue = zipXmlFile(files);
 		}
 		else{
-			// Sjekker om zipfilen eksisterer, hvis den gjÃ¸r det sÃ¥ mÃ¥ jeg ikke overskrive med tomme filer
+			// Sjekker om zipfilen eksisterer, hvis den gjør det så må jeg ikke overskrive med tomme filer
 			File file = new File(ParmConstants.xmlLocation);
 			if(!file.exists()){
 				returnValue = writeEmptyParm("");
@@ -241,7 +216,7 @@ public class XmlWriter {
 		Element element = null;
 		
 		try {
-			// MÃ¥ sjekke om det har root element
+			// Må sjekke om det har root element
 			Element rootnd = xmlDoc.getDocumentElement();
 			if (rootnd == null) {
 				rootnd = (Element) xmlDoc.createElement("parmroot");
@@ -257,9 +232,9 @@ public class XmlWriter {
 				if (o.getClass().equals(CategoryVO.class)) {
 					CategoryVO category = (CategoryVO)o;
 
-					// MÃ¥ sjekke om et element med samme pk eksisterer
+					// Må sjekke om et element med samme pk eksisterer
 					element = checkXMLElement(xmlDoc,strCategory,strCategoryPK, category);
-					if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 						element = (Element) xmlDoc.createElement(strCategory);
 					
 					rootnd.appendChild(element);
@@ -271,9 +246,9 @@ public class XmlWriter {
 					element = null;
 				} else if (o.getClass().equals(ObjectVO.class)) {
 					ObjectVO object = (ObjectVO)o;
-//					 MÃ¥ sjekke om et element med samme pk eksisterer
+//					 Må sjekke om et element med samme pk eksisterer
 					element = checkXMLElement(xmlDoc,strObject,strObjectPK, object);
-					if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 						element = (Element) xmlDoc.createElement(strObject);
 					
 					rootnd.appendChild(element);
@@ -333,9 +308,9 @@ public class XmlWriter {
 					element = null;
 				} else if (o.getClass().equals(EventVO.class)) {
 					EventVO event = (EventVO)o;
-//					 MÃ¥ sjekke om et element med samme pk eksisterer
+//					 Må sjekke om et element med samme pk eksisterer
 					element = checkXMLElement(xmlDoc,strEvent,strEventPK, event);
-					if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 						element = (Element) xmlDoc.createElement(strEvent);
 					
 					rootnd.appendChild(element);				
@@ -352,13 +327,13 @@ public class XmlWriter {
 					element = null;
 				} else if (o.getClass().equals(AlertVO.class)) {
 					AlertVO alert = (AlertVO)o;
-					// MÃ¥ sjekke om et element med samme pk eksisterer
+					// Må sjekke om et element med samme pk eksisterer
 					element = checkXMLElement(xmlDoc,strAlert,strAlertPK, alert);
-					if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 						element = (Element) xmlDoc.createElement(strAlert);
 					rootnd.appendChild(element);
 					// Legger til elementer
-//					 MÃ¥ sjekke om det er temppk som blir lagt inn eller vanlig (temppk har ikke bokstav foran)
+//					 Må sjekke om det er temppk som blir lagt inn eller vanlig (temppk har ikke bokstav foran)
 					element.setAttribute("l_alertpk", alert.getAlertpk());
 					element.setAttribute("l_parent", alert.getParent());
 					element.setAttribute("sz_name", alert.getName());
@@ -476,7 +451,7 @@ public class XmlWriter {
 		files[0] = ParmConstants.xmlLocation;
 		files[1] = ParmConstants.polyxmlLocation;
 		
-		//Jeg finner ut hvilket objekt det er ogsÃ¥ kan jeg gÃ¥ gjennom hele xmlfilen og bytte ut
+		//Jeg finner ut hvilket objekt det er også kan jeg gå gjennom hele xmlfilen og bytte ut
 		Element element = null;
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd == null) {
@@ -489,12 +464,12 @@ public class XmlWriter {
 		
 		NodeList nl = rootnd.getElementsByTagName("paobject");
 		
-		// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 		for(int i=0;i<nl.getLength() ;i++){
 			
 			element = (Element)nl.item(i);	
 			// Dette kan egentlig ikke skje...
-			if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 				element = (Element) xmlDoc.createElement(strObject);
 			
 			//rootnd.appendChild(element);
@@ -508,7 +483,7 @@ public class XmlWriter {
 			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
 				element.setAttribute("l_parent", pk);
 			
-			// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 			if(element.hasAttribute("sz_operation")){
 				String temp = element.getAttribute("sz_operation");
 				// Hvis den skal slettes
@@ -520,11 +495,11 @@ public class XmlWriter {
 		
 		nl = rootnd.getElementsByTagName("paevent");
 		
-		// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 		for(int i=0;i<nl.getLength() ;i++){
 			element = (Element)nl.item(i);
 			// Dette kan egentlig ikke skje...
-			if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 				element = (Element) xmlDoc.createElement(strEvent);
 			
 			//rootnd.appendChild(element);
@@ -539,7 +514,7 @@ public class XmlWriter {
 			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
 				element.setAttribute("l_parent", pk);
 			
-			// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 			if(element.hasAttribute("sz_operation")){
 				String temp = element.getAttribute("sz_operation");
 				// Hvis den skal slettes
@@ -551,12 +526,12 @@ public class XmlWriter {
 		
 		nl = rootnd.getElementsByTagName("paalert");
 		
-		// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 		for(int i=0;i<nl.getLength() ;i++){
 
 			element = (Element)nl.item(i);
 			// Dette kan egentlig ikke skje...
-			if(element == null) // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+			if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 				element = (Element) xmlDoc.createElement(strAlert);
 
 			// Denne kan ha temppk
@@ -568,7 +543,7 @@ public class XmlWriter {
 			if((element.getAttribute("l_parent")).compareTo(temppk) == 0)
 				element.setAttribute("l_parent", pk);
 				
-			// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 			if(element.hasAttribute("sz_operation")){
 				String temp = element.getAttribute("sz_operation");
 				// Hvis den skal slettes
@@ -585,7 +560,7 @@ public class XmlWriter {
 	public int updatePolyXml(String pk, String temppk) {
 		returnValue = 0;
 		
-		// MÃ¥ pakke ut filene fÃ¸r jeg begynner Ã¥ oppdatere dem ;)
+		// Må pakke ut filene før jeg begynner å oppdatere dem ;)
 		unzipXmlFile(ParmConstants.xmlLocation);
 		
 		Document xmlDoc = getXMLDocument(ParmConstants.polyxmlLocation,ParmConstants.xmlLocation);
@@ -594,7 +569,7 @@ public class XmlWriter {
 		files[0] = ParmConstants.xmlLocation;
 		files[1] = ParmConstants.polyxmlLocation;
 		
-		//Jeg finner ut hvilket objekt det er ogsÃ¥ kan jeg gÃ¥ gjennom hele xmlfilen og bytte ut
+		//Jeg finner ut hvilket objekt det er også kan jeg gå gjennom hele xmlfilen og bytte ut
 		Element element = null;
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd == null) {
@@ -603,7 +578,7 @@ public class XmlWriter {
 		
 		NodeList nl = rootnd.getElementsByTagName("objectpolygon");
 		
-		// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 		for(int i=0;i<nl.getLength() ;i++){
 			
 			element = (Element)nl.item(i);	
@@ -614,7 +589,7 @@ public class XmlWriter {
 				element.setAttribute("l_objectpk", pk);						
 			}
 			
-			// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 			if(element.hasAttribute("sz_operation")){
 				String temp = element.getAttribute("sz_operation");
 				// Hvis den skal slettes
@@ -630,7 +605,7 @@ public class XmlWriter {
 		
 			nl = rootnd.getElementsByTagName(tagName[j]);
 			
-			// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+			// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 			for(int i=0;i<nl.getLength() ;i++){
 	
 				element = (Element)nl.item(i);
@@ -639,7 +614,7 @@ public class XmlWriter {
 				if((element.getAttribute("l_alertpk")).equals(temppk))
 					element.setAttribute("l_alertpk", pk);
 					
-				// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+				// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 				if(element.hasAttribute("sz_operation")){
 					String temp = element.getAttribute("sz_operation");
 					// Hvis den skal slettes
@@ -653,7 +628,7 @@ public class XmlWriter {
 //		// Denne er ny:
 //		nl = rootnd.getElementsByTagName("cellbroadcast");
 //		
-//		// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+//		// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 //		for(int i=0;i<nl.getLength() ;i++){
 //
 //			element = (Element)nl.item(i);
@@ -662,7 +637,7 @@ public class XmlWriter {
 //			if((element.getAttribute("l_alertpk")).equals(temppk))
 //				element.setAttribute("l_alertpk", pk);
 //				
-//			// Hvis denne har vÃ¦rt oppdatert mÃ¥ operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
+//			// Hvis denne har vært oppdatert må operation attributtet fjernes slik at det ikke blir tatt med i neste oppdatering
 //			if(element.hasAttribute("sz_operation")){
 //				String temp = element.getAttribute("sz_operation");
 //				// Hvis den skal slettes
@@ -686,7 +661,7 @@ public class XmlWriter {
 		// Document xmlDoc = getXMLDocument(parm.constants.Constants.polyxmlLocation);
 		Document xmlDoc = null;
 		
-		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÃ…tte fjerne denne fordi den fant en zipfil(katastrofe)
+		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÅtte fjerne denne fordi den fant en zipfil(katastrofe)
 		xmlDoc = getXMLDocument(filepath,filepath);
 		
 		// Henter rootelementet
@@ -716,13 +691,13 @@ public class XmlWriter {
 				if(alert.getM_shape().getType() == ShapeStruct.SHAPE_ELLIPSE) {
 					objectPolygon = ParmConstants.xmlElmAlertEllipse;
 					xmlDoc = writeEllipse(alert,filepath,xmlDoc,objectPolygon,objectPK);
-					// Her mÃ¥ jeg ha writeCellBroadcast
+					// Her må jeg ha writeCellBroadcast
 					if(alert.getArea() != null);
 						//xmlDoc = writeCellBroadcast(alert,filepath,xmlDoc,"cellbroadcast",objectPK);
 				} else if(alert.getM_shape().getType() == ShapeStruct.SHAPE_POLYGON) {
 					objectPolygon = ParmConstants.xmlElmAlertPoly;
 					xmlDoc = writePolygon(alert,filepath,xmlDoc,objectPolygon,objectPK);
-					// Her mÃ¥ jeg ha writeCellBroadcast
+					// Her må jeg ha writeCellBroadcast
 					if(alert.getArea() != null);
 						//xmlDoc = writeCellBroadcast(alert,filepath,xmlDoc,"cellbroadcast",objectPK);
 						
@@ -751,8 +726,8 @@ public class XmlWriter {
 			if(nl.getLength()>0) {
 				element = (Element)nl.item(0);
 			
-				// MÃ¥ sjekke om objektet skal slettes, da mÃ¥ jeg fjerne det fra polyxml
-				// Her mÃ¥ jeg sjekke om det er alert eller object
+				// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
+				// Her må jeg sjekke om det er alert eller object
 				if(alert == null){
 					
 					if(alert.getOperation()!=null && alert.getOperation().equals("delete")){
@@ -766,10 +741,10 @@ public class XmlWriter {
 				}
 			}
 				
-//			 Hvis noden er fjernet er det ikke mye vits Ã¥ gjÃ¸re dette
+//			 Hvis noden er fjernet er det ikke mye vits å gjøre dette
 			if(!remove && alert.getArea() != null){ // Den siste biten la jeg til for at den ikke skulle skrive bare farger i polyxml
 				
-				if(element == null){ // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+				if(element == null){ // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 					element = (Element) xmlDoc.createElement(cellBroadcast);
 					parentnode.appendChild(element);
 				}
@@ -779,13 +754,13 @@ public class XmlWriter {
 				element.setAttribute("sz_area", alert.getArea().get_name());
 				if(alert.getOperation() != null)
 					element.setAttribute("sz_operation", alert.getOperation());
-				// Her mÃ¥ jeg fjerne meldingene fordi jeg gidder ikke oppdatere
+				// Her må jeg fjerne meldingene fordi jeg gidder ikke oppdatere
 				NodeList messages = element.getChildNodes();
 				Element tmpNode;
 				for(int i=messages.getLength()-1;i>=0;i--) {
 					tmpNode = (Element)messages.item(i);
 					if(tmpNode!= null)
-						element.removeChild(tmpNode); // Mulig jeg mÃ¥ ha i-1 her
+						element.removeChild(tmpNode); // Mulig jeg må ha i-1 her
 				} 
 				
 				for(int i=0;i<alert.getCBMessages().size();i++) {
@@ -901,17 +876,17 @@ public class XmlWriter {
 		boolean remove = false;
 		Color color = null;
 		
-		PolygonStruct poly = obj.getM_shape().typecast_polygon(); // Jeg har ikke satt polygon til noe, det mÃ¥ jeg huske Ã¥ gjÃ¸re i morgen
+		PolygonStruct poly = obj.getM_shape().typecast_polygon(); // Jeg har ikke satt polygon til noe, det må jeg huske å gjøre i morgen
 		
-		// MÃ¥ sjekke om det har root element
+		// Må sjekke om det har root element
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd == null) {
 			rootnd = (Element) xmlDoc.createElement("polyroot");
 			xmlDoc.appendChild(rootnd);
 		}
 		
-		// MÃ¥ sjekke om objektet skal slettes, da mÃ¥ jeg fjerne det fra polyxml
-		// Her mÃ¥ jeg sjekke om det er alert eller object
+		// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
+		// Her må jeg sjekke om det er alert eller object
 		if(obj == null){
 			if(obj.getClass() == ObjectVO.class)
 				element = checkXMLElement(xmlDoc,objectPolygon,ParmConstants.xmlElmObjectPk,obj);
@@ -927,15 +902,15 @@ public class XmlWriter {
 				element.setAttribute(objectPK,obj.getPk());
 		}
 		
-		// Hvis noden er fjernet er det ikke mye vits Ã¥ gjÃ¸re dette
+		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
 		if(!remove && poly != null && poly.get_coors_lat().size()>0){ // Den siste biten la jeg til for at den ikke skulle skrive bare farger i polyxml
 
-			if(element == null && poly!=null){ // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+			if(element == null && poly!=null){ // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 				element = (Element) xmlDoc.createElement(objectPolygon);
 				rootnd.appendChild(element);
 			}
 			if(element != null){
-				// Hvis den har childnodes mÃ¥ disse slettes for Ã¥ legge inn koordinatene pÃ¥ nytt
+				// Hvis den har childnodes må disse slettes for å legge inn koordinatene på nytt
 				if(element.hasChildNodes())
 					while(element.getLastChild()!= null)
 						element.removeChild(element.getLastChild());
@@ -962,7 +937,7 @@ public class XmlWriter {
 					element.setAttribute("col_a","51");
 				}
 				if(poly != null){
-					// MÃ¥ hente ut liste med koordinater
+					// Må hente ut liste med koordinater
 					for(int i=0;i<poly.get_coors_lat().size();i++){
 						Element ChildElement = (Element) xmlDoc.createElement("polypoint");
 						element.appendChild(ChildElement);
@@ -995,18 +970,18 @@ public class XmlWriter {
 		
 		Element element = null;
 		
-		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÃ…tte fjerne denne fordi den fant en zipfil(katastrofe)
+		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÅtte fjerne denne fordi den fant en zipfil(katastrofe)
 		xmlDoc = getXMLDocument(filepath,filepath);
 						
-		// MÃ¥ sjekke om det har root element
+		// Må sjekke om det har root element
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd == null) {
 			rootnd = (Element) xmlDoc.createElement("polyroot");
 			xmlDoc.appendChild(rootnd);
 		}
 		
-		// MÃ¥ sjekke om objektet skal slettes, da mÃ¥ jeg fjerne det fra polyxml
-		// Her mÃ¥ jeg sjekke om det er alert eller object
+		// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
+		// Her må jeg sjekke om det er alert eller object
 		if(obj != null){
 			element = checkXMLElement(xmlDoc,objectPolygon,objectPK,alert);
 			try {
@@ -1025,9 +1000,9 @@ public class XmlWriter {
 				element.setAttribute(objectPK,alert.getAlertpk());
 		}
 		
-		// Hvis noden er fjernet er det ikke mye vits Ã¥ gjÃ¸re dette
+		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
 		if(!remove && ellipse != null && ellipse.get_center() != null){ // Den siste biten la jeg til for at den ikke skulle skrive bare farger i polyxml
-			if(element == null && ellipse!=null){ // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+			if(element == null && ellipse!=null){ // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 				element = (Element) xmlDoc.createElement(objectPolygon);
 				rootnd.appendChild(element);
 			}
@@ -1073,7 +1048,7 @@ public class XmlWriter {
 		return xmlDoc;
 	}
 	
-	// Denne gjÃ¸r jobbem som checkXMLFile gjorde
+	// Denne gjør jobbem som checkXMLFile gjorde
 	private Document getXMLDocument(String filepath, String xmlpath) {
 		Document xmlDoc = null;
 		DocumentBuilder db = null;
@@ -1082,21 +1057,21 @@ public class XmlWriter {
 		File xmlfile = null;
 		File unzipedFile = null;
 		String strTemp = null;
-		// Et skikkelig tjuvtrix for Ã¥ fÃ¥ det til Ã¥ funke, for den mÃ¥ ikke finne zip filen nÃ¥r den skal skrive temppolyxml
+		// Et skikkelig tjuvtrix for å få det til å funke, for den må ikke finne zip filen når den skal skrive temppolyxml
 		if(filepath.contains("polyxml"))
-			xmlfile = new File(filepath.substring(0,filepath.indexOf(".zip")) + ".xml"); //Denne mÃ¥ til pga det elendige trixet mitt over
+			xmlfile = new File(filepath.substring(0,filepath.indexOf(".zip")) + ".xml"); //Denne må til pga det elendige trixet mitt over
 		else if(filepath.equals(ParmConstants.polyxmlLocation))
 			xmlfile = new File(ParmConstants.xmlLocation);
 		else
 			xmlfile = new File(filepath);
 				
-		// Bruker dette for Ã¥ gjÃ¸re ha noe Ã¥ hente den riktige xml filen ut fra zip filen
+		// Bruker dette for å gjøre ha noe å hente den riktige xml filen ut fra zip filen
 		if(!filepath.contains(".ini")) {
 			int index = xmlpath.indexOf(".zip");
 			strTemp = xmlpath.substring(xmlpath.lastIndexOf("\\")+1,index) + ".xml";
 			//strTemp = xmlpath.substring(0,index) + ".xml";
 			
-			// Den mÃ¥ ikke pakke ut zipfilen for hver gang, sjekker om xmlfilen eksisterer
+			// Den må ikke pakke ut zipfilen for hver gang, sjekker om xmlfilen eksisterer
 			index = filepath.indexOf(".zip");
 			//String strTemp2 = filepath.substring(filepath.lastIndexOf("\\")+1,index) + ".xml";
 			String strTemp2 = filepath.substring(0,index) + ".xml";
@@ -1166,7 +1141,7 @@ public class XmlWriter {
 	}
 	
 	
-	// Trekker ut objektene og gjÃ¸r klar til lagring
+	// Trekker ut objektene og gjør klar til lagring
 	public Collection<Object> extractObjects(Collection<Object> objectList){
 		Iterator <Object>it = objectList.iterator();
 		ArrayList <Object>list = new ArrayList<Object>();
@@ -1179,8 +1154,8 @@ public class XmlWriter {
 		return list;
 	}
 	
-	// ObjectVO har jo en arraylist med objekter som ogsÃ¥ kan vÃ¦re av typen ObjectVO
-//	 ObjectVO har jo en arraylist med objekter som ogsÃ¥ kan vÃ¦re av typen ObjectVO
+	// ObjectVO har jo en arraylist med objekter som også kan være av typen ObjectVO
+//	 ObjectVO har jo en arraylist med objekter som også kan være av typen ObjectVO
 	private void test(Object o, ArrayList<Object> list){	
 
 		if(o.getClass().equals(ObjectVO.class)){
@@ -1191,9 +1166,9 @@ public class XmlWriter {
 			while(it.hasNext()){
 				Object obj = it.next();
 				if(obj.getClass().equals(ObjectVO.class)){
-					test((ObjectVO)obj, list); // MÃ¥ sende til seg selv for Ã¥ komme til neste objekt
+					test((ObjectVO)obj, list); // Må sende til seg selv for å komme til neste objekt
 				}
-				else if(obj.getClass().equals(EventVO.class)){ // NÃ¥ har jeg kommet til kanten
+				else if(obj.getClass().equals(EventVO.class)){ // Nå har jeg kommet til kanten
 					EventVO event = (EventVO)obj;
 					if(event.getAlertListe() != null){
 						Iterator<Object> eventIt = event.getAlertListe().iterator();
@@ -1222,10 +1197,10 @@ public class XmlWriter {
 			list.add(o);
 	}
 
-	// MÃ¥ ha en metode som sletter objekt fra xmlfilen public int deleteObject(Object o, int pk);
+	// Må ha en metode som sletter objekt fra xmlfilen public int deleteObject(Object o, int pk);
 	public Object deleteObject(Object o){
 		
-		// MÃ¥ fÃ¥ lagt inn
+		// Må få lagt inn
 		ArrayList <Object>list = new ArrayList<Object>();
 		list.add(o);
 		list = (ArrayList<Object>)extractObjects(list);
@@ -1237,7 +1212,7 @@ public class XmlWriter {
 		while(it.hasNext()) {
 			o = it.next();
 			try {
-				// MÃ¥ sjekke om det har root element
+				// Må sjekke om det har root element
 				Element rootnd = xmlDoc.getDocumentElement();
 				if (rootnd == null) {
 					rootnd = (Element) xmlDoc.createElement("parmroot");
@@ -1284,8 +1259,8 @@ public class XmlWriter {
 		
 		try {
 			
-			// Her skriver jeg xmlfilen, mÃ¥ gjÃ¸re det for at jeg skal kunne legge den i zipfilen
-			// Trenger denne for Ã¥ fÃ¥ skrevet ut filen
+			// Her skriver jeg xmlfilen, må gjøre det for at jeg skal kunne legge den i zipfilen
+			// Trenger denne for å få skrevet ut filen
 			TransformerFactory tf = TransformerFactory.newInstance();
 			// set all necessary features for your transformer -> see OutputKeys
 			Transformer t = tf.newTransformer();
@@ -1301,7 +1276,7 @@ public class XmlWriter {
 			}
 			else
 				file = new File(filepath);
-			// MÃ¥ gjÃ¸re det slik for at den skal klare Ã¥ lukke filen etterpÃ¥ (som igjen gjÃ¸r at filen kan slettes)
+			// Må gjøre det slik for at den skal klare å lukke filen etterpå (som igjen gjør at filen kan slettes)
 			OutputStream os = new FileOutputStream(file);
 			
 			//FileOutputStream result = new FileOutputStream(file);
@@ -1346,7 +1321,7 @@ public class XmlWriter {
 	}
 	
 //	private void unzipXmlFile(String filepath){
-//		// Denne pakker ut filene fra zipfilen ogsÃ¥ sletter den etterpÃ¥.
+//		// Denne pakker ut filene fra zipfilen også sletter den etterpå.
 //		try {
 //			ZipFile zipfile = new ZipFile(filepath);
 //			Enumeration en = zipfile.entries();
@@ -1394,7 +1369,7 @@ public class XmlWriter {
 				origin = new BufferedInputStream(in,BUFFER);
 				entry = new ZipEntry(entryName);
 				outzip.putNextEntry(entry);
-				// OverfÃ¸rer data til zipfilen
+				// Overfører data til zipfilen
 	            int count;
 	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
 	                outzip.write(data, 0, count);
@@ -1432,7 +1407,7 @@ public class XmlWriter {
 	private void unzipXmlFile(String filepath){
 		final int BUFFER = 2048;
 		ZipEntry entry = null;
-		int entryCount = 0; // Tar vare pÃ¥ hvor mange filer som ligger i zipfilen
+		int entryCount = 0; // Tar vare på hvor mange filer som ligger i zipfilen
 		
 		try {
 			File zipfile = new File(filepath);
@@ -1483,7 +1458,7 @@ public class XmlWriter {
 			objPk = cat.getCategoryPK();
 			cat = null;
 		}else if (o.getClass().equals(ObjectVO.class)) {
-			// Denne if setningen mÃ¥ til for at polygoner med temppk skal bli oppdatert
+			// Denne if setningen må til for at polygoner med temppk skal bli oppdatert
 			ObjectVO obj = (ObjectVO)o;
 			if(obj.getTempPk() != null)
 				objPk = obj.getTempPk();
@@ -1495,10 +1470,10 @@ public class XmlWriter {
 			objPk = event.getEventPk();
 			event = null;
 		}else if (o.getClass().equals(AlertVO.class)) {
-			// Denne if setningen mÃ¥ til for at polygoner med temppk skal bli oppdatert
+			// Denne if setningen må til for at polygoner med temppk skal bli oppdatert
 			AlertVO alert = (AlertVO)o;
 			//if(!alert.hasValidPk())
-			if(alert.getTempPk() != null && alert.getOperation() != "delete") // NÃ¥ er det ikke lenger mulig Ã¥ slette en med temppk pga update etter hver lagring
+			if(alert.getTempPk() != null && alert.getOperation() != "delete") // Nå er det ikke lenger mulig å slette en med temppk pga update etter hver lagring
 				objPk = alert.getTempPk();
 			else
 				objPk = alert.getAlertpk();
@@ -1512,7 +1487,7 @@ public class XmlWriter {
 				element = (Element)nl.item(i);
 				//System.out.println("if(" + Integer.parseInt(element.getAttribute(pk)) + " != " + objPk + ")");
 				if(element.getAttribute(pk_tag).compareTo(objPk) == 0)
-					break; // Hvis den kommer inn her sÃ¥ eksisterer elementet fra fÃ¸r med samme pk
+					break; // Hvis den kommer inn her så eksisterer elementet fra før med samme pk
 				element = null;
 				i++;
 			}
@@ -1524,18 +1499,18 @@ public class XmlWriter {
 		unzipXmlFile(ParmConstants.xmlLocation);
 		Document xmlDoc = getXMLDocument(ParmConstants.xmlLocation,ParmConstants.xmlLocation);
 		
-//		Jeg finner ut hvilket objekt det er ogsÃ¥ kan jeg gÃ¥ gjennom hele xmlfilen og bytte ut
+//		Jeg finner ut hvilket objekt det er også kan jeg gå gjennom hele xmlfilen og bytte ut
 		Element element = null;
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd != null) {
 			NodeList nl = rootnd.getElementsByTagName("paobject");
-			// Brukes slik at jeg kan gÃ¥ gjennom objektene og sette parent id
+			// Brukes slik at jeg kan gå gjennom objektene og sette parent id
 			String temppk = pk;
 			
-			// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+			// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 			for(int i=0;i<nl.getLength();++i){	
 				element = (Element)nl.item(i);	
-				// Her mÃ¥ jeg finne pÃ¥ noe for Ã¥ kunne slette alle underliggende, nei, alle pk'ene som skal slettes kommer fra databasen
+				// Her må jeg finne på noe for å kunne slette alle underliggende, nei, alle pk'ene som skal slettes kommer fra databasen
 				if(element != null){
 					if((element.getAttribute("l_objectpk")).compareTo(temppk) == 0){
 						Element parent = (Element)element.getParentNode();
@@ -1551,10 +1526,10 @@ public class XmlWriter {
 					}
 				}
 			}
-			// NÃ¥ slettes fÃ¸rste child av objekt med denne pk'en, mÃ¥ finne pÃ¥ et bra trix for Ã¥ 
+			// Nå slettes første child av objekt med denne pk'en, må finne på et bra trix for å 
 			nl = rootnd.getElementsByTagName("paevent");
 			
-			// Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+			// Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 			for(int i=0;i<nl.getLength();++i){	
 				element = (Element)nl.item(i);	
 				if(element != null){
@@ -1574,7 +1549,7 @@ public class XmlWriter {
 			
 			nl = rootnd.getElementsByTagName("paalert");
 			
-			//Jeg mÃ¥ inn i hver type og oppdatere pk'ene, det mÃ¥ jo skiftes ut i parent ogsÃ¥ vet du...
+			//Jeg må inn i hver type og oppdatere pk'ene, det må jo skiftes ut i parent også vet du...
 			for(int i=0;i<nl.getLength();++i){	
 				element = (Element)nl.item(i);	
 				if(element != null){
@@ -1644,7 +1619,7 @@ public class XmlWriter {
 		{
 			
 		}
-		// MÃ¥ hente account
+		// Må hente account
 		MailAccount account = PAS.get_pas().get_userinfo().get_mailaccount();*/
 		Settings settings = PAS.get_pas().get_settings();
 		Document doc = getXMLDocument(StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini",StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini");
@@ -2027,13 +2002,13 @@ public class XmlWriter {
 		}
 	}
 	
-	// Denne er langt fra ferdig, begynnte litt pÃ¥ den, men mÃ¥tte avbryte
+	// Denne er langt fra ferdig, begynnte litt på den, men måtte avbryte
 	public void updateStatusItems(Document updatesDoc, Document localDoc, String xmlTag) {
-		// Lurer pÃ¥ om jeg skal lage den generell eller om jeg mÃ¥ ha en for hver XMLTing?
+		// Lurer på om jeg skal lage den generell eller om jeg må ha en for hver XMLTing?
 		// Jeg kan sikkert bare sende med inn xml-tag'en som skal sjekkes?
-		// Jeg mÃ¥ ha en egen responsekodes ting
+		// Jeg må ha en egen responsekodes ting
 		NodeList nl = updatesDoc.getElementsByTagName(xmlTag);
-		// Denne mÃ¥ jeg sette i PARMConstants
+		// Denne må jeg sette i PARMConstants
 //		if(xmlTag.equals("SENDING")){
 //			Send send = new Send(
 //		}
@@ -2097,7 +2072,7 @@ public class XmlWriter {
 		</alertstreetid>*/
 		
 		AlertVO alert = null;
-		// Henter gislist fra konstruktÃ¸ren
+		// Henter gislist fra konstruktøren
 		boolean remove = false;
 		Color color = null;
 		GISShape gisshape = null;
@@ -2112,18 +2087,18 @@ public class XmlWriter {
 		Element alertnode = null;
 		Element element = null;
 		
-		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÃ…tte fjerne denne fordi den fant en zipfil(katastrofe)
+		//xmlDoc = getXMLDocument(ParmConstants.xmlLocation,filepath); // MÅtte fjerne denne fordi den fant en zipfil(katastrofe)
 		xmlDoc = getXMLDocument(filepath,filepath);
 						
-		// MÃ¥ sjekke om det har root element
+		// Må sjekke om det har root element
 		Element rootnd = xmlDoc.getDocumentElement();
 		if (rootnd == null) {
 			rootnd = (Element) xmlDoc.createElement("polyroot");
 			xmlDoc.appendChild(rootnd);
 		}
 		
-		// MÃ¥ sjekke om objektet skal slettes, da mÃ¥ jeg fjerne det fra polyxml
-		// Her mÃ¥ jeg sjekke om det er alert eller object
+		// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
+		// Her må jeg sjekke om det er alert eller object
 		
 		alertnode = checkXMLElement(xmlDoc,objectPolygon,objectPK,alert);
 		
@@ -2146,7 +2121,7 @@ public class XmlWriter {
 				alertnode.removeAttribute("sz_operation");
 		}
 		
-		// Hvis noden er fjernet er det ikke mye vits Ã¥ gjÃ¸re dette
+		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
 		if(!remove && gislist != null){
 			System.out.println(obj.toString() + " Gislist size: " + gislist.size());
 			//int children = 0;
@@ -2161,7 +2136,7 @@ public class XmlWriter {
 			for(int i=0;i<gislist.size();i++) {
 				GISRecord gis = (GISRecord)gislist.get(i);
 				
-				if(gis!=null){ // Hvis element fortsatt er null nÃ¥ finnes ikke dette elementet fra fÃ¸r
+				if(gis!=null){ // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
 					element = (Element) xmlDoc.createElement("line");
 					alertnode.appendChild(element);
 				}

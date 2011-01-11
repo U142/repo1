@@ -1,11 +1,11 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
+import no.ums.pas.PAS;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 

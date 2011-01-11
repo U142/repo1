@@ -1,19 +1,18 @@
 package no.ums.pas.core.ws;
 
+import no.ums.pas.PAS;
+import no.ums.pas.status.StatusListObject;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.pas.status.PasStatus;
+import no.ums.ws.pas.status.UDATAFILTER;
+import no.ums.ws.pas.status.UStatusListItem;
+import no.ums.ws.pas.status.UStatusListResults;
+
+import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.soap.SOAPFaultException;
-
-
-import no.ums.pas.PAS;
-import no.ums.pas.status.StatusListObject;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.pas.ObjectFactory;
-import no.ums.ws.pas.status.*;
 //import no.ums.ws.pas.*;
 
 public class WSGetStatusList extends WSThread

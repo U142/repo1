@@ -1,10 +1,9 @@
 package no.ums.pas.send;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import javax.swing.JFrame;
+import no.ums.pas.PAS;
 
-import no.ums.pas.*;
+import javax.swing.*;
+import java.awt.*;
 
 
 

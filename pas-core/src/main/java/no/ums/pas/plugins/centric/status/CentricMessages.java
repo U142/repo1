@@ -1,16 +1,14 @@
 package no.ums.pas.plugins.centric.status;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import no.ums.pas.core.defines.DefaultPanel;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import no.ums.pas.core.defines.DefaultPanel;
 
 public class CentricMessages extends DefaultPanel implements ComponentListener {
 

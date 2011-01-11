@@ -1,6 +1,7 @@
 package no.ums.pas.status;
 
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Inhabitant;
 
 public class StatusItemObject extends Inhabitant implements Comparable {
 	private boolean m_b_isinited = false;

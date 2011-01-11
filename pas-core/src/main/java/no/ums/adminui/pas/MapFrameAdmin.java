@@ -1,18 +1,16 @@
 package no.ums.adminui.pas;
 
-import java.awt.Cursor;
-import java.awt.Graphics;
-
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.HTTPReq;
-import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
-import no.ums.pas.maps.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.variables;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.*;
 
 public class MapFrameAdmin extends MapFrame {
 

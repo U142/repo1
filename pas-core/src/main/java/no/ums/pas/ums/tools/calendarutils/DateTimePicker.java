@@ -1,28 +1,17 @@
 package no.ums.pas.ums.tools.calendarutils;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.ums.tools.calendarutils.DateTimePicker.DatePicker.DayPanel.DayButton;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JToggleButton;
-import javax.swing.JTextArea;
-import javax.swing.border.*;
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.ums.tools.calendarutils.DateTimePicker.DatePicker.DayPanel.DayButton;
 
 
 

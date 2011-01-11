@@ -1,20 +1,12 @@
 package no.ums.pas.core.ws;
 
+import no.ums.pas.PAS;
+import no.ums.ws.pas.tas.*;
+
+import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.PAS;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.pas.tas.ArrayOfULBACOUNTRY;
-import no.ums.ws.pas.tas.ArrayOfULBACOUNTRYSTATISTICS;
-import no.ums.ws.pas.tas.ObjectFactory;
-import no.ums.ws.pas.tas.Tasws;
-import no.ums.ws.pas.tas.ULBASTATISTICSFILTER;
-import no.ums.ws.pas.tas.ULOGONINFO;
-import no.ums.ws.pas.tas.UTASREQUEST;
 
 public class WSTasStats_Countries_Timeunit extends WSThread
 {

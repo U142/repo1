@@ -1,61 +1,43 @@
 package no.ums.pas.pluginbase;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.HouseController;
+import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.core.logon.LogonDialog;
+import no.ums.pas.core.logon.LogonDialog.LogonPanel;
+import no.ums.pas.core.logon.LogonInfo;
+import no.ums.pas.core.logon.Settings;
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
+import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
+import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
+import no.ums.pas.core.project.Project;
+import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.maps.MapLoader;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.send.SendOptionToolbar;
+import no.ums.ws.pas.UGabSearchResultList;
+import no.ums.ws.pas.USYSTEMMESSAGES;
+import org.geotools.data.ows.Layer;
+
+import javax.swing.*;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Properties;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JRootPane;
-import javax.swing.JTabbedPane;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.geotools.data.ows.Layer;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.controllers.HouseController;
-import no.ums.pas.core.controllers.StatusController;
-import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.defines.SearchPanelResults.TableList;
-import no.ums.pas.core.logon.LogonDialog;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.logon.LogonDialog.LogonPanel;
-import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
-import no.ums.pas.core.mainui.address_search.SearchFrame;
-import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
-import no.ums.pas.core.mainui.address_search.SearchPanelVals;
-import no.ums.pas.core.menus.MainMenu;
-import no.ums.pas.core.menus.MainSelectMenu;
-import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
-import no.ums.pas.core.project.Project;
-import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.ws.WSPowerup;
-import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
-import no.ums.pas.maps.MapLoader;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.send.SendOptionToolbar;
-import no.ums.ws.pas.UBBNEWSLIST;
-import no.ums.ws.pas.UGabSearchResultList;
-import no.ums.ws.pas.UPOWERUPRESPONSE;
-import no.ums.ws.pas.USYSTEMMESSAGES;
 
 
 /**

@@ -1,37 +1,20 @@
 package no.ums.adminui.pas;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-
-import sun.management.snmp.util.JvmContextFactory;
-
 import no.ums.pas.Draw;
-import no.ums.pas.MAPDraw;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.MapLoader;
-import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.ws.pas.UPASUISETTINGS;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MapImageDownload extends JApplet implements ActionListener {
 	

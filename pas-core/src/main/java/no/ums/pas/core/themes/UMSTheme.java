@@ -1,37 +1,20 @@
 package no.ums.pas.core.themes;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Shape;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
 import no.ums.pas.PAS;
-
-import org.jvnet.substance.SubstanceColorChooserUI;
-import org.jvnet.substance.SubstanceFillBackgroundDelegate;
 import org.jvnet.substance.SubstanceLookAndFeel;
 import org.jvnet.substance.color.ColorScheme;
-import org.jvnet.substance.color.SaturatedColorScheme;
 import org.jvnet.substance.painter.ControlBackgroundComposite;
 import org.jvnet.substance.painter.DefaultControlBackgroundComposite;
-import org.jvnet.substance.painter.GradientPainterInfo;
 import org.jvnet.substance.painter.SubstanceGradientPainter;
 import org.jvnet.substance.skin.SubstanceSkin;
 import org.jvnet.substance.theme.SubstanceTheme;
-import org.jvnet.substance.utils.SubstanceColorUtilities;
-import org.jvnet.substance.utils.SubstanceCoreUtilities;
-import org.jvnet.substance.utils.SubstanceConstants.ImageWatermarkKind;
 import org.jvnet.substance.watermark.SubstanceNoneWatermark;
 import org.jvnet.substance.watermark.SubstanceWatermark;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 class UMSWaterMarkHolder extends SubstanceNoneWatermark

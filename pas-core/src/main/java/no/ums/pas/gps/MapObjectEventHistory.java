@@ -1,9 +1,8 @@
 package no.ums.pas.gps;
 
-import java.awt.event.ActionEvent;
-
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+
+import java.awt.event.ActionEvent;
 
 public class MapObjectEventHistory extends DefaultPanel {
 	public static final long serialVersionUID = 1;

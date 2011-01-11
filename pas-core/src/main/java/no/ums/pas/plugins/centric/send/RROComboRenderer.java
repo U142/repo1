@@ -1,17 +1,9 @@
 package no.ums.pas.plugins.centric.send;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.SystemColor;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicComboBoxEditor;
-
 import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class RROComboRenderer extends DefaultListCellRenderer
 {

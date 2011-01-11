@@ -1,11 +1,5 @@
 package no.ums.pas.send;
 
-import java.io.*;
-import java.net.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-
 public class ExecAlert {
 	public ExecAlert() {
 		

@@ -1,7 +1,8 @@
 package no.ums.pas.ums.tools;
 
-import java.io.*;
-import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class IO
 {

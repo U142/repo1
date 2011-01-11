@@ -1,22 +1,14 @@
 package no.ums.pas.gps;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Image;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.webdata.XMLIcons;
+import no.ums.pas.maps.defines.IconObject;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.maps.defines.*;
 
 /* load all icons from iconlib
  * 1) load xml with icon-information

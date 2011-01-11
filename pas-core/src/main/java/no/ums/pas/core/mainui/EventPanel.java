@@ -1,11 +1,10 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.SearchPanelResults;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-
+import java.awt.*;
 import java.util.Date;
 
 public class EventPanel extends SearchPanelResults {

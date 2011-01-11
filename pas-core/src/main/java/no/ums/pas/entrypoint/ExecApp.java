@@ -1,16 +1,15 @@
 package no.ums.pas.entrypoint;
-import java.net.URL;
 
-import javax.jnlp.BasicService;
-import javax.jnlp.ServiceManager;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.pluginbase.PluginLoader;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.versioning.versioning;
+
+import javax.jnlp.BasicService;
+import javax.jnlp.ServiceManager;
+import javax.swing.*;
+import java.net.URL;
 
 
 

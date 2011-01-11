@@ -1,24 +1,17 @@
 package no.ums.pas.tas.statistics;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.tas.statistics.TasChart.STATS_CHARTTYPE;
 import no.ums.pas.tas.statistics.TasChart.STATS_RESULTS_GROUPBY;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker;
-import no.ums.pas.ums.tools.calendarutils.DateTimePicker.DatePicker;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker.MASK_DATES;
 import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
 import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 

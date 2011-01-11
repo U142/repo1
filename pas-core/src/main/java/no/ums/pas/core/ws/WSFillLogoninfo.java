@@ -1,8 +1,9 @@
 package no.ums.pas.core.ws;
 
 //import no.ums.ws.parm.admin.*;
-import no.ums.pas.core.logon.*;
-import no.ums.ws.pas.status.*;
+
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.ws.pas.status.ULOGONINFO;
 
 public class WSFillLogoninfo
 {

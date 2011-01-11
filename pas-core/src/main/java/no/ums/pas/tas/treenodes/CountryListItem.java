@@ -1,20 +1,17 @@
 package no.ums.pas.tas.treenodes;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.tree.DefaultTreeModel;
-
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.pas.tas.TasHelpers;
 import no.ums.ws.pas.tas.ArrayOfUTOURISTCOUNT;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
 import no.ums.ws.pas.tas.UTOURISTCOUNT;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 public class CountryListItem extends CommonTASListItem implements Comparable<UMSTreeNode>
 {

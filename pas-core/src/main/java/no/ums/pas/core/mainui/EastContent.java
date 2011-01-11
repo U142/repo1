@@ -1,34 +1,30 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.*;
-import javax.swing.*;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
+import no.ums.pas.ParmPanel;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
-
-
 import org.jvnet.substance.SubstanceLookAndFeel;
-//import org.jvnet.substance.api.SubstanceSkin;
-
-//Substance 3.3
 import org.jvnet.substance.theme.SubstanceTheme;
 
-
-
-//Substance 5.2
-//import org.jvnet.substance.api.SubstanceColorSchemeBundle;
-
-//import org.jvnet.substance.theme.SubstanceTheme;
-
-import java.awt.event.*;
-
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.*;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+//import org.jvnet.substance.api.SubstanceSkin;
+//Substance 3.3
+//Substance 5.2
+//import org.jvnet.substance.api.SubstanceColorSchemeBundle;
+//import org.jvnet.substance.theme.SubstanceTheme;
 
 
 public class EastContent extends JPanel implements ActionListener, ComponentListener {

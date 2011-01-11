@@ -1,12 +1,5 @@
 package no.ums.pas.tas.painters;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.tas.TasHelpers;
 import no.ums.pas.tas.TasPanel;
@@ -14,6 +7,11 @@ import no.ums.pas.tas.treenodes.CommonTASListItem;
 import no.ums.pas.tas.treenodes.CountryListItem;
 import no.ums.pas.tas.treenodes.RequestLogItem;
 import no.ums.ws.pas.tas.ENUMTASREQUESTRESULTTYPE;
+
+import java.awt.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class LogPainter
 {

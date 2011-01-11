@@ -1,16 +1,14 @@
 package no.ums.pas.core.popupmenus;
 
 
-import java.awt.Component;
-import java.awt.Point;
+import no.ums.pas.PAS;
+import no.ums.pas.core.mainui.SearchPanelStatusList;
+import no.ums.pas.status.StatusListObject;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JMenuItem;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.status.StatusListObject;
 
 
 public class PUOpenStatus extends PUMenu implements ActionListener {

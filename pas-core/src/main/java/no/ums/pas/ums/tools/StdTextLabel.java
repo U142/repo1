@@ -1,10 +1,7 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.JLabel;
-
-import no.ums.pas.PAS;
+import javax.swing.*;
+import java.awt.*;
 
 
 

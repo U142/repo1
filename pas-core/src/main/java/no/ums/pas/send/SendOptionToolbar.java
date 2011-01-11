@@ -1,32 +1,32 @@
 package no.ums.pas.send;
 
 
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicToolBarUI.DockingListener;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
-import no.ums.pas.core.menus.defines.*;
-import no.ums.pas.importer.*;
-import no.ums.pas.importer.gis.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.parm.alert.AlertWindow;
-import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.core.menus.defines.CheckItem;
+import no.ums.pas.importer.ActionFileLoaded;
+import no.ums.pas.importer.ImportPolygon;
+import no.ums.pas.importer.SosiFile;
+import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.importer.gis.PreviewFrame;
+import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.Municipal;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.ColorButton;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.UMunicipalDef;
-
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators.ParentIterator;
-
-
-import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.rmi.activation.ActivateFailedException;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 

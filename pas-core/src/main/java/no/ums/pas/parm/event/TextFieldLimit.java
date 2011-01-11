@@ -1,6 +1,8 @@
 package no.ums.pas.parm.event;
 
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 public class TextFieldLimit extends PlainDocument{
 	public static final long serialVersionUID = 1;

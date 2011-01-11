@@ -1,8 +1,9 @@
 package no.ums.pas.core.storage;
 
-import java.io.*;
-
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.io.File;
+import java.io.IOException;
 
 
 

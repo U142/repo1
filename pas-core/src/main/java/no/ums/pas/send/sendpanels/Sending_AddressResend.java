@@ -1,16 +1,16 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.*;
-import java.awt.event.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.status.StatusCode;
+import no.ums.pas.status.StatusCodeList;
 
 import javax.swing.*;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.defines.SearchPanelResults.TableList;
-import no.ums.pas.status.*;
-
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
 

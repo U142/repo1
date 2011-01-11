@@ -1,8 +1,9 @@
 package no.ums.pas.sound.soundinfotypes;
 
-import java.io.*;
-
 import no.ums.pas.PAS;
+
+import java.io.File;
+import java.io.OutputStream;
 
 
 public class SoundInfoRecord extends SoundInfo {

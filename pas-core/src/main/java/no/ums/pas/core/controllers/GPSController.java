@@ -9,19 +9,20 @@ package no.ums.pas.core.controllers;
  * 		* GPSCoor (contains lon/lat/date/time/speed/course/sat/asl/batt
  *
  */
-import java.awt.Graphics;
+
+import no.ums.pas.PAS;
+import no.ums.pas.core.webdata.XMLGps;
+import no.ums.pas.gps.*;
+import no.ums.pas.maps.defines.MapObject;
+import no.ums.pas.maps.defines.MapObjectList;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Utils;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.Calendar;
 
-
-import java.awt.event.*;
-
-import no.ums.pas.*;
 //import no.ums.pas.core.dataexchange.HttpGPSChannel;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.gps.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
 
 
 public class GPSController extends Controller{

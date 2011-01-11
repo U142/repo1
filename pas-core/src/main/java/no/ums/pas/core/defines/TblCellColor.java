@@ -1,12 +1,9 @@
 package no.ums.pas.core.defines;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class TblCellColor implements TableCellRenderer {
 	private	boolean		m_isSelected = false;

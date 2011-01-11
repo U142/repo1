@@ -1,8 +1,8 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class MsgBox extends Dialog implements ActionListener {

@@ -1,27 +1,18 @@
 package no.ums.pas.pluginbase.defaults;
 
 
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
-import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
-import no.ums.pas.core.ws.WSFillLogoninfo;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.ws.pas.ObjectFactory;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UGabResult;
-import no.ums.ws.pas.UGabSearchParams;
-import no.ums.ws.pas.UGabSearchResultList;
-import no.ums.ws.pas.ULOGONINFO;
+import no.ums.ws.pas.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class DefaultAddressSearch extends PasScriptingInterface.AddressSearch
 {

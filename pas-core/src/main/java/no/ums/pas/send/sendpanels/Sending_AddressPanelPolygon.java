@@ -1,17 +1,10 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-import java.io.IOException;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.core.ws.WSAdrcount;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendPropertiesPolygon;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.*;
 
 
 /*

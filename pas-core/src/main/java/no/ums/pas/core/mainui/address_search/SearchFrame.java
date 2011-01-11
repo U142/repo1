@@ -1,15 +1,12 @@
 package no.ums.pas.core.mainui.address_search;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import no.ums.pas.PAS;
+import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.ums.errorhandling.Error;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 

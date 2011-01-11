@@ -1,22 +1,22 @@
 package no.ums.pas.sound;
 
-import java.awt.event.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.send.sendpanels.Sending_Files;
+import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
+import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
-
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.send.sendpanels.*;
-import no.ums.pas.sound.soundinfotypes.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
 
 public class SoundLibraryPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;
@@ -120,7 +120,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 		f.load_file(this, "act_download_finished"); //starts thread, and callback with SoundlibFile as object
 		SoundInfoLibrary info = new SoundInfoLibrary(f.get_deptpk(), f.get_messagepk());
 		get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_LIBRARY_, info);
-		// Her gjÃ¸res den ferdig og reloader parent for Ã¥ enable next knappen
+		// Her gjøres den ferdig og reloader parent for å enable next knappen
 		get_parent().set_next_text();
 		/*try {
 			m_playpanel.initialize_player(f.get_file().getPath(), true);

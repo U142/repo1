@@ -1,18 +1,8 @@
 package no.ums.pas.versioning;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-
 import no.ums.pas.pluginbase.PasScriptingInterface;
+
+import java.lang.annotation.Annotation;
 
 
 

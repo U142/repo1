@@ -1,69 +1,50 @@
 package no.ums.pas.plugins.centric;
 
-import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.pas.pluginbase.PAS_Scripting;
-import no.ums.pas.maps.defines.PLMNShape;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.plugins.centric.send.CentricProjectDlg;
-import no.ums.pas.plugins.centric.status.CentricStatus;
-import no.ums.pas.plugins.centric.status.CentricStatusController;
-
-import javax.swing.*;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.geotools.data.ows.Layer;
-import org.jvnet.substance.*;
-
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
-import no.ums.pas.*;
-
-import java.awt.*;
-
-import javax.imageio.*;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.awt.image.BufferedImage;
-import java.awt.event.*;
-
-import no.ums.pas.send.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.versioning.versioning;
-import no.ums.pas.core.variables;
+import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
-import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.core.mainui.GeneralPanel;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
-import no.ums.pas.core.menus.MainSelectMenu.*;
+import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.themes.UMSTheme;
-import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
-import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.pluginbase.PAS_Scripting;
+import no.ums.pas.plugins.centric.send.CentricProjectDlg;
+import no.ums.pas.plugins.centric.status.CentricStatus;
+import no.ums.pas.plugins.centric.status.CentricStatusController;
+import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.versioning.versioning;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.ArrayOfUBBNEWS;
 import no.ums.ws.pas.UBBNEWS;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
+import org.geotools.data.ows.Layer;
+
+import javax.swing.*;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class plugin_Centric extends PAS_Scripting

@@ -1,14 +1,10 @@
 package no.ums.pas.plugins.centric.send;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
-
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.ums.tools.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CentricProjectDlg extends ProjectDlg
 {

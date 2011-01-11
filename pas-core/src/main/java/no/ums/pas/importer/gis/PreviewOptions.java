@@ -1,11 +1,11 @@
 package no.ums.pas.importer.gis;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 class PreviewOptions extends DefaultPanel {

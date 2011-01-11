@@ -1,11 +1,7 @@
 package no.ums.pas.core.defines;
 
 import javax.swing.*;
-import java.awt.Component;
-import java.awt.Dimension;
-
-import javax.swing.table.AbstractTableModel;
-import javax.swing.JTable;
+import java.awt.*;
 
 public class ComboRowCellRenderer extends JTable implements ListCellRenderer {
 

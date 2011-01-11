@@ -3,31 +3,28 @@ package no.ums.pas.core.mainui;
 //import Core.WebData.*;
 //import Core.WebData.XMLSaveGAB.SaveGABResult;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.*;
-import javax.swing.*;
-
-import sun.org.mozilla.javascript.internal.JavaScriptException;
-
-import com.sun.org.apache.bcel.internal.generic.JSR;
-import com.sun.script.javascript.JSAdapter;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.Controller;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.ws.*;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.ws.WSHouseByQuality;
+import no.ums.pas.core.ws.WSHouseEditor;
 import no.ums.pas.core.ws.WSHouseEditor.SaveGABResult;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.*;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.ArrayOfString;
 import no.ums.ws.pas.HOUSEEDITOROPERATION;
 import no.ums.ws.pas.UMapAddressParamsByQuality;
 
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 
 

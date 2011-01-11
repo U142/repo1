@@ -1,22 +1,23 @@
 package no.ums.pas.core.project;
 
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.core.ws.WSProject;
 import no.ums.pas.status.StatusListObject;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.pas.UPROJECTREQUEST;
 
-import java.awt.event.*;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 //import Core.MainUI.*;
-
-import java.util.ArrayList;
 
 public class ProjectDlg extends JDialog implements ComponentListener, WindowListener {
 	public static final long serialVersionUID = 1;

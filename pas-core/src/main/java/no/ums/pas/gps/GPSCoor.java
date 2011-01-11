@@ -1,6 +1,6 @@
 package no.ums.pas.gps;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 public class GPSCoor extends Object {
 	private String m_l_objectpk;

@@ -1,15 +1,6 @@
 package no.ums.pas.parm.tree;
 
 
-import java.awt.Color;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.tree.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -21,13 +12,21 @@ import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
-
+import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.SubstanceTreeUI;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //Substance 3.3
-import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
 
 //Substance 5.2

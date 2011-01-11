@@ -1,21 +1,19 @@
 package no.ums.pas.core.logon;
 
-import java.awt.Color;
-import java.awt.Polygon;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.PathIterator;
-import java.util.*;
-
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.pas.ums.tools.Utils;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.ArrayOfUShape;
+import no.ums.ws.pas.UMunicipalDef;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.PathIterator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeptArray extends ArrayList<Object> {
 	public static final long serialVersionUID = 1;

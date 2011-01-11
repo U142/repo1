@@ -1,16 +1,16 @@
 package no.ums.pas.core.webdata;
 
-import javax.swing.JFrame;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.mainui.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.dataexchange.HttpPostForm;
+import no.ums.pas.core.mainui.LoadingFrame;
+import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.ums.errorhandling.Error;
-
 import org.w3c.dom.Document;
 
-import java.awt.event.*;
-import java.io.*;
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.io.InputStream;
 
 
 public abstract class XMLThread extends Thread

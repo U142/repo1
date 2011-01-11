@@ -1,14 +1,12 @@
 package no.ums.pas.gps;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JButton;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.send.SendOptionToolbar;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 public class MapObjectButtonpane extends DefaultPanel {

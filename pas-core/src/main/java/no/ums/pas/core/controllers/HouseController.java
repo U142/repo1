@@ -1,22 +1,20 @@
 package no.ums.pas.core.controllers;
 
-import java.awt.Graphics;
-import java.awt.Dimension;
+import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.send.SendController;
+import no.ums.ws.pas.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.SendController;
-import no.ums.pas.ums.tools.Timeout;
-import no.ums.ws.pas.*;
-import java.util.*;
-import javax.xml.namespace.*;
+import java.util.Iterator;
 
 
 public class HouseController extends Controller {

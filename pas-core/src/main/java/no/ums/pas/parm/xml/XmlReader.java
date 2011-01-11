@@ -3,46 +3,42 @@ package no.ums.pas.parm.xml;
 //Parm packages
 
 //Packages to work with filestreams
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-//Packages to work with xml
+
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.GISShape;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.parm.constants.*;
+import no.ums.pas.maps.defines.*;
+import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
-import no.ums.pas.parm.main.*;
+import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.*;
 import no.ums.pas.parm.voobjects.AlertVO.LBAOperator;
-import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.errorhandling.Error;
-
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
-import org.xml.sax.*;
-
-import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
+//Packages to work with xml
 
 
 public class XmlReader {

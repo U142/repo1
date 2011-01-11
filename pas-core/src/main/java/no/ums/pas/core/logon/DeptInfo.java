@@ -1,16 +1,20 @@
 package no.ums.pas.core.logon;
 
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.*;
-
-import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.maps.defines.converters.UShapeToShape;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.ArrayOfUShape;
+import no.ums.ws.pas.UMunicipalDef;
+import no.ums.ws.pas.UShape;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /*struct class containing user-info*/
 public class DeptInfo extends Object {

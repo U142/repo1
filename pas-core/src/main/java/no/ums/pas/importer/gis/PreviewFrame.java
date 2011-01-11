@@ -1,6 +1,13 @@
 package no.ums.pas.importer.gis;
 
-import java.awt.BorderLayout;
+import no.ums.pas.PAS;
+import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.send.SendObject;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Utils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -10,13 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.Utils;
 
 
  

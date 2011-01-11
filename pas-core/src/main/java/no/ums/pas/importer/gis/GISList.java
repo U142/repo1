@@ -1,9 +1,15 @@
 package no.ums.pas.importer.gis;
 
-import java.util.*;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.InhabitantBasics;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.ws.pas.UAddress;
+import no.ums.ws.pas.UAddressBasics;
+import no.ums.ws.pas.UGisImportResultLine;
+import no.ums.ws.pas.UGisImportResultsByStreetId;
 
-import no.ums.pas.maps.defines.*;
-import no.ums.ws.pas.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GISList extends ArrayList<GISRecord> {
 	public static final long serialVersionUID = 1;

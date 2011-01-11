@@ -1,10 +1,8 @@
 package no.ums.pas.core.logon;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.geotools.data.ows.Layer;
 
 public class Settings {
 	public enum MAPSERVER

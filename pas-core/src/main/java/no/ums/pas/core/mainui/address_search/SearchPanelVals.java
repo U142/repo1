@@ -1,13 +1,15 @@
 package no.ums.pas.core.mainui.address_search;
 
-import java.awt.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.ums.tools.*;
-
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class SearchPanelVals extends DefaultPanel implements KeyListener {
 	public static final long serialVersionUID = 1;

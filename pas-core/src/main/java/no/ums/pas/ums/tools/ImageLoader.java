@@ -1,14 +1,12 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Image;
+import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.PixelGrabber;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import no.ums.pas.ums.errorhandling.Error;
 
 
 

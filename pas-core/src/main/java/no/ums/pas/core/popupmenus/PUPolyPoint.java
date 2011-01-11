@@ -1,10 +1,9 @@
 package no.ums.pas.core.popupmenus;
 
+import no.ums.pas.PAS;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 
 public class PUPolyPoint extends PUMenu {
 	public static final long serialVersionUID = 1;

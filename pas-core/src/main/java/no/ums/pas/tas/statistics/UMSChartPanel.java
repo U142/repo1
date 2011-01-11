@@ -1,11 +1,10 @@
 package no.ums.pas.tas.statistics;
 
-import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public class UMSChartPanel extends ChartPanel implements ComponentListener
 {

@@ -1,17 +1,12 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-
-
-import java.io.IOException;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.dataexchange.HTTPReq;
-import no.ums.pas.core.dataexchange.HttpPostForm;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.SendPropertiesEllipse;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.*;
 /*
  * Show description of selected area and addresscount
  */

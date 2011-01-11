@@ -1,23 +1,17 @@
 package no.ums.pas.parm.alert;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
+import no.ums.pas.PAS;
+import no.ums.pas.send.sendpanels.Sending_Send;
+import no.ums.pas.sound.SoundFile;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.Timeout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.send.sendpanels.Sending_Send;
-import no.ums.pas.sound.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
 
 /*
  * verify data and execute sending

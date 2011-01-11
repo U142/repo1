@@ -1,25 +1,18 @@
 package no.ums.pas.importer.gis;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.JComponentCellEditor;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 

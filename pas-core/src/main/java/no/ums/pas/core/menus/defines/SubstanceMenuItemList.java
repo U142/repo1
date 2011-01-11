@@ -1,9 +1,10 @@
 package no.ums.pas.core.menus.defines;
 
-import java.awt.event.*;
-import javax.swing.*;
-
 import no.ums.pas.PAS;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SubstanceMenuItemList extends CheckItemList {
 	public static final long serialVersionUID = 1;

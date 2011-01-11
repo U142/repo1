@@ -1,15 +1,5 @@
 package no.ums.pas.send;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
@@ -19,14 +9,15 @@ import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.ums.tools.SmsInReplyNumber;
-import no.ums.ws.parm.ArrayOfULBACOUNTRY;
-import no.ums.ws.parm.ArrayOfUMapPoint;
-import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UMapBounds;
+import no.ums.ws.parm.*;
 import no.ums.ws.pas.status.USMSINSTATS;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.List;
 
 
 public class SendPropertiesTAS extends SendProperties

@@ -1,19 +1,19 @@
 package no.ums.pas.parm.map;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
-//import java.util.logging.ConsoleHandler;
-
-import javax.swing.JPanel;
-
 import no.ums.pas.Draw;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.tools.ImageLoader;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+//import java.util.logging.ConsoleHandler;
 
 public class MapPanel extends JPanel implements ActionListener {
 	public static final long serialVersionUID = 1;

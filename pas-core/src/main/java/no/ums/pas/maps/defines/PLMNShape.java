@@ -1,21 +1,10 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PolySnapStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
+
+import java.awt.*;
+import java.util.List;
 
 public class PLMNShape extends ShapeStruct
 {

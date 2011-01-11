@@ -1,12 +1,17 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.event.*;
-import java.awt.*;
-import javax.swing.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.gps.GPSEvent;
+import no.ums.pas.gps.GPSEventList;
+import no.ums.pas.gps.GpsSetupReturnCode;
 
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.gps.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 
 public class GPSEventPanel extends DefaultPanel implements ComponentListener {

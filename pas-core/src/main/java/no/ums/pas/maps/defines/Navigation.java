@@ -1,13 +1,14 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.*;
-//import PAS.*;
-import java.awt.event.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.ws.pas.tas.UMapPoint;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+//import PAS.*;
 
 
 public class Navigation {

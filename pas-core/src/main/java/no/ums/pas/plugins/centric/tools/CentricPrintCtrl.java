@@ -1,39 +1,25 @@
 package no.ums.pas.plugins.centric.tools;
 
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Image;
+import no.ums.pas.PAS;
+import no.ums.pas.core.variables;
+import no.ums.pas.ums.errorhandling.Error;
 
 import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttribute;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
-
-//import java.awt.PrintCanvas;
 import java.awt.*;
-import java.awt.print.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
-
-import javax.imageio.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.mainui.InhabitantResults;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.ums.errorhandling.Error;
-
-import java.io.*;
+import java.awt.print.*;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.BreakIterator;
+
+//import java.awt.PrintCanvas;
 
 public class CentricPrintCtrl implements Printable, Pageable {
 	Graphics m_graph;

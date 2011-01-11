@@ -1,19 +1,17 @@
 package no.ums.pas.core.webdata;
 
-import java.util.ArrayList;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.maps.defines.IconObject;
 import no.ums.pas.ums.errorhandling.Error;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 
 public class XMLIcons extends XMLThread {

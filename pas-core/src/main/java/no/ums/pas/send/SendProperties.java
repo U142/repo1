@@ -1,47 +1,29 @@
 package no.ums.pas.send;
 
-import java.awt.*;
-import java.awt.List;
-import java.awt.event.ActionListener;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert.SnapAlertResults;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSAdrcount;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.PolySnapStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-import no.ums.ws.parm.AlertResultLine;
-import no.ums.ws.parm.ArrayOfLBACCode;
-import no.ums.ws.parm.ArrayOfLBALanguage;
-import no.ums.ws.parm.ArrayOfLong;
-import no.ums.ws.parm.ArrayOfString;
-import no.ums.ws.parm.BBSENDNUM;
-import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.LBACCode;
-import no.ums.ws.parm.LBALanguage;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UAdrCount;
-import no.ums.ws.parm.ULOGONINFO;
-import no.ums.ws.parm.ULocationBasedAlert;
-import no.ums.ws.parm.UMAPSENDING;
-import no.ums.ws.parm.UMapBounds;
-import no.ums.ws.parm.UTESTSENDING;
+import no.ums.pas.ums.tools.Col;
+import no.ums.ws.parm.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public abstract class SendProperties extends Object {

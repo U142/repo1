@@ -1,25 +1,18 @@
 package no.ums.pas.maps;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.logon.SettingsGUI;
+import no.ums.pas.core.logon.SettingsGUI.WmsLayerTree;
+import org.geotools.data.ows.Layer;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.tree.DefaultTreeModel;
-
-import org.geotools.data.ows.Layer;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.logon.SettingsGUI;
-import no.ums.pas.core.logon.SettingsGUI.WmsLayerTree;
-import no.ums.pas.core.mainui.GeneralPanel;
 
 public class WMSLayerSelectorPanel extends DefaultPanel implements MouseListener
 {

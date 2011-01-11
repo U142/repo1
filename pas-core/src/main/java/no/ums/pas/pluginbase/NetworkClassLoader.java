@@ -1,12 +1,12 @@
 package no.ums.pas.pluginbase;
 
 
+import no.ums.pas.pluginbase.PluginLoader.FILETYPE;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import no.ums.pas.pluginbase.PluginLoader.FILETYPE;
 
 
 public class NetworkClassLoader extends ClassLoader {

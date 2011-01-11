@@ -1,20 +1,16 @@
 package no.ums.pas.core.dataexchange;
 
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.net.URL;
-import java.nio.ByteBuffer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.Map;
-import java.io.File;
-import java.io.InputStream;
-import java.util.Random;
-import java.io.OutputStream;
-import java.io.FileInputStream;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
 
 public class HttpPostForm {
     public static InputStream newInputStream(final ByteBuffer buf) {

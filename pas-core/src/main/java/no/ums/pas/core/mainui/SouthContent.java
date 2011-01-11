@@ -1,14 +1,14 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.*;
-import java.awt.event.ContainerListener;
-import java.awt.event.ContainerEvent;
-import javax.swing.*;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 
 
 public class SouthContent extends JPanel implements ComponentListener {

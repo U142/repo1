@@ -1,14 +1,13 @@
 package no.ums.pas.core.mainui;
-import java.awt.*;
-
-import javax.swing.*;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
-import no.ums.pas.core.controllers.*;
 import no.ums.pas.status.StatusListObject;
 
-import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class OpenStatusFrame extends JFrame implements ActionListener {

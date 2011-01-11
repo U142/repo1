@@ -1,6 +1,5 @@
 package no.ums.pas.core.menus.defines;
 
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.*;
 
 /*class ToolTipMng extends ToolTipManager

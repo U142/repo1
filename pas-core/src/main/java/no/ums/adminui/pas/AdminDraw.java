@@ -1,18 +1,14 @@
 package no.ums.adminui.pas;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Point;
-import java.util.List;
-
-import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.PASDraw;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.maps.MapFrame;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.ShapeStruct;
+
+import java.awt.*;
+import java.util.List;
 
 public class AdminDraw extends PASDraw {
 

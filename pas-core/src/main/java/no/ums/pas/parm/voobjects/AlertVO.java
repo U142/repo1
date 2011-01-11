@@ -1,18 +1,17 @@
 package no.ums.pas.parm.voobjects;
 
-import java.awt.datatransfer.DataFlavor;
-import java.util.ArrayList;
-import java.util.Hashtable;
-
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.map.MapPanel;
-import no.ums.pas.send.*;
+import no.ums.pas.send.SendController;
+import no.ums.pas.send.SendObject;
+import no.ums.pas.send.SendProperties;
 
-import com.sun.corba.se.spi.servicecontext.SendingContextServiceContext;
+import java.awt.datatransfer.DataFlavor;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 public class AlertVO extends ParmVO {

@@ -1,23 +1,11 @@
 package no.ums.pas.localization;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.ListResourceBundle;
 import java.util.Locale;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.sun.jmx.snmp.Enumerated;
-
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import no.ums.pas.PAS;
 
 
 public class LocalizationFinder

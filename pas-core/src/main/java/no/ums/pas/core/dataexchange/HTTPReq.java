@@ -1,21 +1,24 @@
 package no.ums.pas.core.dataexchange;
 
-import java.net.*;
-import java.io.*;
-import java.awt.*;
-
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.core.mainui.LoadingPanel;
+import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
-
-import org.w3c.dom.*; //NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXParseException;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.swing.*;
-import java.util.zip.*;
+import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.util.zip.ZipInputStream;
 
 public class HTTPReq {
 		

@@ -1,20 +1,16 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.pas.send.*;
+import no.ums.pas.send.AddressCount;
+import no.ums.pas.send.SendController;
+import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 /*

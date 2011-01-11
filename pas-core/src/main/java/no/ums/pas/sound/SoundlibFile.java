@@ -1,10 +1,12 @@
 package no.ums.pas.sound;
 
-import java.awt.event.*;
-
-import no.ums.pas.*;
+import no.ums.pas.Installer;
+import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public abstract class SoundlibFile extends Object implements ActionListener{

@@ -1,14 +1,11 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.ArrayList;
-
-import no.ums.pas.core.controllers.*;
-import no.ums.pas.send.*;
+import no.ums.pas.core.controllers.Controller;
+import no.ums.pas.send.SendController;
 import no.ums.pas.status.StatusItemObject;
 
-import com.sun.xml.internal.stream.Entity.ScannedEntity;
+import java.awt.*;
+import java.util.ArrayList;
 
 
 /*

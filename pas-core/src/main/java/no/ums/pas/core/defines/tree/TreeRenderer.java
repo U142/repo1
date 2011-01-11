@@ -1,29 +1,14 @@
 package no.ums.pas.core.defines.tree;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+import no.ums.pas.ums.tools.UnderlineHighlightPainter;
+import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
-
-
-import no.ums.pas.PAS;
-import no.ums.pas.ums.tools.UnderlineHighlightPainter;
-
-import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
-import org.jvnet.substance.SubstanceLookAndFeel;
+import java.awt.*;
 
 //import tas.TasPanel.TASTreeTable;
 

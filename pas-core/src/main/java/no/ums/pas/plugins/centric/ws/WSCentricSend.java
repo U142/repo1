@@ -1,23 +1,17 @@
 package no.ums.pas.plugins.centric.ws;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.ws.parm.CBALERTPOLYGON;
-import no.ums.ws.parm.CBMESSAGELIST;
-import no.ums.ws.parm.CBOPERATION;
 import no.ums.ws.parm.CBOPERATIONBASE;
-import no.ums.ws.parm.CBSENDBASE;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
 import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.ULOGONINFO;
-import no.ums.ws.parm.admin.ParmAdmin;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class WSCentricSend extends WSThread {
 

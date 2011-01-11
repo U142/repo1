@@ -1,11 +1,11 @@
 package no.ums.pas.status;
 
-import java.util.*;
-
-import javax.swing.JProgressBar;
-
 import no.ums.pas.PAS;
 import no.ums.ws.pas.LBALanguage;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 /*
  * contains statistics of LBA sending and lists containing stats pr. CC and stats pr. mobile cell

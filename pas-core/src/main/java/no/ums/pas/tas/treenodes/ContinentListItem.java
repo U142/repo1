@@ -1,9 +1,9 @@
 package no.ums.pas.tas.treenodes;
 
-import javax.swing.tree.DefaultTreeModel;
-
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.ws.pas.tas.ULBACONTINENT;
+
+import javax.swing.tree.DefaultTreeModel;
 
 public class ContinentListItem extends CommonTASListItem
 {

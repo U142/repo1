@@ -1,16 +1,12 @@
 package no.ums.pas.tas.statistics;
 
-import java.awt.BasicStroke;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.swing.UIManager;
-
+import no.ums.pas.PAS;
+import no.ums.pas.core.ws.WSTasStats_Countries_Timeunit;
+import no.ums.pas.importer.csv.csvexporter;
+import no.ums.pas.tas.TasPanel;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.pas.tas.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -24,32 +20,17 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.UnknownKeyException;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.Hour;
-import org.jfree.data.time.Month;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.Year;
+import org.jfree.data.time.*;
 import org.jfree.util.TableOrder;
 
-import com.sun.jmx.snmp.Timestamp;
-
-
-
-
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.ws.WSTasStats_Countries_Timeunit;
-import no.ums.pas.importer.csv.csvexporter;
-import no.ums.pas.tas.TasPanel;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.tas.ArrayOfULBACOUNTRYSTATISTICS;
-import no.ums.ws.pas.tas.ULBACONTINENT;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.ULBACOUNTRYSTATISTICS;
-import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
-import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
-import no.ums.ws.pas.tas.UTOURISTCOUNT;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.List;
 
 public class ChartOverTime extends TasChart implements ActionListener
 {

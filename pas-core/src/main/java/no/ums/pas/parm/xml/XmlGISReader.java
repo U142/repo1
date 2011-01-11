@@ -1,22 +1,20 @@
 package no.ums.pas.parm.xml;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-
+import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.parm.constants.ParmConstants;
-import no.ums.pas.parm.main.*;
+import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class XmlGISReader {

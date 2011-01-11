@@ -1,14 +1,15 @@
 package no.ums.pas.core.logon;
 
-import java.util.ArrayList;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.*;
-import java.util.*;
+import no.ums.ws.pas.ArrayOfUShape;
+import no.ums.ws.pas.UMunicipalDef;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserInfo extends Object {

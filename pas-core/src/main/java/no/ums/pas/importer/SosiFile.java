@@ -1,19 +1,20 @@
 package no.ums.pas.importer;
 
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.TextFormat;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 
 

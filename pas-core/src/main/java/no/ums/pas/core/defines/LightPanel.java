@@ -1,9 +1,8 @@
 package no.ums.pas.core.defines;
 
-import java.awt.event.ActionEvent;
-
-import no.ums.pas.*;
 import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.event.ActionEvent;
 
 public class LightPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;

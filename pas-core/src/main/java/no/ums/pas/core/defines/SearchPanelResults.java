@@ -1,41 +1,21 @@
 package no.ums.pas.core.defines;
 
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Hashtable;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
-import javax.swing.table.*;
-import javax.swing.*;
-
-import java.io.*;
-import javax.swing.JFileChooser;
-
 import no.ums.pas.PAS;
 import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.ColorButton;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.ArrayList;
 
 
 

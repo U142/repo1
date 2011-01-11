@@ -1,26 +1,8 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.event.EventListenerList;
-
-import no.ums.pas.PAS;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 
 /** GUI Class for search. Executes action ACTION_SEARCH_UPDATED if clear icon is pressed or text is modified*/

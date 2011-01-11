@@ -1,11 +1,6 @@
 package no.ums.pas.parm.event;
 
-import java.util.*;
-import java.io.*;
-
 //import no.ums.pas.core.dataexchange.HttpPostForm;
-import no.ums.pas.parm.exception.ParmException;
-import no.ums.pas.ums.errorhandling.Error;
 
 
 

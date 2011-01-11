@@ -1,20 +1,18 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
-import javax.swing.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.GPSController;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.events.EventChangeArrowsize;
+import no.ums.pas.core.events.EventChangeGPSEpsilon;
+import no.ums.pas.core.menus.SliderMenuItem;
+import no.ums.pas.maps.defines.MapObjectVars;
+import no.ums.pas.ums.tools.StdTextArea;
 
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.border.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.controllers.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.events.*;
-import no.ums.pas.core.menus.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.ums.tools.*;
 
 
 public class GPSFrame extends JPanel implements ComponentListener { //JFrame

@@ -1,19 +1,15 @@
 package no.ums.pas.plugins.centric;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.parm.CBSENDINGRESPONSE;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentListener;
 
 public class CentricStatus extends DefaultPanel implements ComponentListener{
 

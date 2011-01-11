@@ -1,100 +1,36 @@
 package no.ums.adminui.pas;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
+import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
+import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.core.logon.LogonInfo;
+import no.ums.pas.core.logon.Settings;
+import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.project.Project;
+import no.ums.pas.core.variables;
+import no.ums.pas.core.ws.WSSaveUI;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.importer.SosiExport;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.*;
+import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.EventVO;
+import no.ums.pas.send.*;
+import no.ums.pas.send.messagelibrary.MessageLibDlg;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Col;
+import no.ums.ws.parm.admin.ULOGONINFO;
+import no.ums.ws.pas.*;
+import no.ums.ws.pas.tas.ULBACOUNTRY;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.parm.admin.ArrayOfPAOBJECT;
-import no.ums.ws.parm.admin.PAOBJECT;
-import no.ums.ws.parm.admin.ParmAdmin;
-import no.ums.ws.parm.admin.ULOGONINFO;
-import no.ums.ws.parm.admin.UPolypoint;
-import no.ums.ws.pas.ArrayOfUDEPARTMENT;
-import no.ums.ws.pas.ArrayOfUShape;
-import no.ums.ws.pas.PASHAPETYPES;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.RESTRICTIONTYPE;
-import no.ums.ws.pas.UDEPARTMENT;
-import no.ums.ws.pas.UNSLOOKUP;
-import no.ums.ws.pas.UPASLOGON;
-import no.ums.ws.pas.UPASUISETTINGS;
-import no.ums.ws.pas.status.UPolygon;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-
-import org.jvnet.substance.SubstanceLookAndFeel;
-
-import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
-import no.ums.pas.parm.voobjects.AlertVO;
-import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.pluginbase.PAS_Scripting;
-import no.ums.pas.pluginbase.PluginLoader;
-import sun.java2d.pipe.SpanClipRenderer;
-
-
-import no.ums.pas.core.variables;
-import no.ums.pas.core.controllers.HouseController;
-import no.ums.pas.core.controllers.StatusController;
-import no.ums.pas.core.dataexchange.HTTPReq;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.Logon;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.RightsManagement;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.logon.SettingsGUI;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.logon.UserInfo.NSLookup;
-import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.core.mainui.StatusPanel;
-import no.ums.pas.core.menus.defines.CheckItem;
-import no.ums.pas.core.menus.defines.SubstanceMenuItem;
-import no.ums.pas.core.project.Project;
-import no.ums.pas.core.ws.WSLogon;
-import no.ums.pas.core.ws.WSSaveUI;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.CommonFunc;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.NavPoint;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.UnknownShape;
-import no.ums.pas.MAPDraw;
-import no.ums.pas.PAS;
-import no.ums.pas.PASActions;
-import no.ums.pas.PASDraw;
-import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.SendPropertiesPolygon;
-import no.ums.pas.send.messagelibrary.MessageLibDlg;
-import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.Col;
-import no.ums.pas.importer.*;
-import no.ums.pas.maps.*;
-import no.ums.pas.maps.defines.*;
 
 public class MapApplet extends JApplet implements ActionListener {
 	/**

@@ -1,12 +1,11 @@
 package no.ums.pas.core.defines.tree;
 
-import java.util.Collections;
-import java.util.Enumeration;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.util.Collections;
+import java.util.Enumeration;
 
 public abstract class UMSTreeNode extends DefaultMutableTreeNode implements Comparable<UMSTreeNode>
 {

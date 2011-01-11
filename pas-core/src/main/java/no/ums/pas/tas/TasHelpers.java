@@ -1,10 +1,10 @@
 package no.ums.pas.tas;
 
-import java.awt.Color;
-
 import no.ums.pas.PAS;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
 import no.ums.ws.pas.tas.UTOURISTCOUNT;
+
+import java.awt.*;
 
 public class TasHelpers
 {

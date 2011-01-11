@@ -1,14 +1,14 @@
 package no.ums.pas.sound;
 
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.core.defines.DefaultPanel;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 	public static final long serialVersionUID = 1;

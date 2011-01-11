@@ -1,8 +1,8 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Dimension;
-
 import no.ums.pas.send.SendController;
+
+import java.awt.*;
 
 
 public class InhabitantBasics

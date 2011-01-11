@@ -1,32 +1,26 @@
 package no.ums.pas.send;
 
-import java.awt.*;
-
-import java.util.*;
-
-import java.io.*;
-import java.net.URL;
-
-import java.awt.event.*;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
+import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.ws.WSThread;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.importer.gis.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
-import no.ums.ws.parm.ArrayOfUGisRecord;
-import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UEllipseDef;
-import no.ums.ws.parm.UGisRecord;
-import no.ums.ws.parm.UMapBounds;
+import no.ums.ws.parm.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class SendPropertiesGIS extends SendProperties {
 	private GISList m_gislist;

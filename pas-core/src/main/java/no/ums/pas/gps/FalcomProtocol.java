@@ -1,6 +1,7 @@
 package no.ums.pas.gps;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class FalcomProtocol {
 	private static final int STATE_WAIT_FOR_LOGON_	= 0;
@@ -51,7 +52,7 @@ public class FalcomProtocol {
 	private static final String CMD_ASK_ENABLE_SMSRESPONSE_ = "$<CNF.Set>"; //$GSM setting updated
 																			//$GSM.RESPONSE written to flash
 	private static final String CMD_ASK_IMEI_ = "$<GSM.IMEI>"; //$IMEI:352021003719382
-	private static final String CMD_ASK_OWNNUMBER_ = "$<GSM.OwnNumber>"; //$phone number:Â°2 ?TÃ¹
+	private static final String CMD_ASK_OWNNUMBER_ = "$<GSM.OwnNumber>"; //$phone number:°2 ?Tù
 																		 //?? (SIM voice number)
 	private static final String CMD_ASK_SIMID_ = "$<GSM.SIMID>"; //$SIMID:242010102112949 (mobile subscriber ID)
 	private static final String CMD_RET_GPSFIX_ = "$GPSFix:";

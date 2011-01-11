@@ -1,18 +1,14 @@
 package no.ums.pas.gps;
 
 
-import java.io.*;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.StdTextLabel;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class MapObjectGpsSetup extends DefaultPanel {
 	public static final long serialVersionUID = 1;

@@ -1,21 +1,20 @@
 package no.ums.pas.cellbroadcast;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-
-
-
-import java.awt.event.*;
-import java.util.*;
-
 import no.ums.pas.Installer;
 import no.ums.pas.PAS;
-import no.ums.pas.cellbroadcast.CCode;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.FileParser;
 import no.ums.pas.importer.gis.LineData;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.File;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class CountryCodes implements ActionListener {

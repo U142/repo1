@@ -1,14 +1,13 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
-import javax.swing.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
-import no.ums.pas.core.controllers.*;
 import no.ums.pas.status.StatusSending;
 
-import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public class StatuscodeFrame extends JPanel implements ComponentListener{ //JFrame
 	public static final long serialVersionUID = 1;

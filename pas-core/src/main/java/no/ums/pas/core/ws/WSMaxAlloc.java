@@ -1,11 +1,12 @@
 package no.ums.pas.core.ws;
 
-import no.ums.pas.*;
-import no.ums.ws.pas.*;
-
-import java.awt.event.*;
+import no.ums.pas.PAS;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UMAXALLOC;
 
 import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class WSMaxAlloc extends WSThread

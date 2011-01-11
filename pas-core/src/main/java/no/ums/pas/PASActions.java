@@ -1,16 +1,5 @@
 package no.ums.pas;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-
-import no.ums.pas.core.variables;
-import no.ums.pas.core.controllers.HouseController;
-import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
@@ -20,32 +9,26 @@ import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.CommonFunc;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.NavPoint;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
-import no.ums.pas.maps.defines.PolySnapStruct;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.UnknownShape;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.SnapMouseEvent;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.UPASUISETTINGS;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
-
 import org.jvnet.substance.SubstanceLookAndFeel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 //Substance 5.2
 //import org.jvnet.substance.api.SubstanceSkin;
 

@@ -1,13 +1,12 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.pas.maps.defines.ShapeStruct;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import no.ums.pas.maps.defines.ShapeStruct;
 
 
 public abstract class ParmVO implements Transferable {

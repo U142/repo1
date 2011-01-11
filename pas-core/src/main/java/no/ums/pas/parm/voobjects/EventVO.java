@@ -1,9 +1,9 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.pas.maps.defines.UnknownShape;
+
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
-
-import no.ums.pas.maps.defines.UnknownShape;
 
 
 public class EventVO extends ParmVO {

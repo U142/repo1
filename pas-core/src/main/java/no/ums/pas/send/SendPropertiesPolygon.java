@@ -1,34 +1,22 @@
 package no.ums.pas.send;
 
-import java.awt.*;
-import java.io.*;
-import java.net.URL;
-
-import java.awt.event.*;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.parm.xml.XmlWriter;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.MapPointPix;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.PolySnapStruct;
+import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
-import no.ums.ws.parm.ArrayOfUMapPoint;
-import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.ULOGONINFO;
-import no.ums.ws.parm.ULocationBasedAlert;
-import no.ums.ws.parm.UMapBounds;
-import no.ums.ws.parm.UMapPoint;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UAddressList;
-import no.ums.ws.pas.UMAPSENDING;
+import no.ums.ws.parm.*;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 
 //import sun.nio.cs.ext.ISCII91;

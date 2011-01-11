@@ -1,19 +1,14 @@
 package no.ums.pas.send.messagelibrary;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import no.ums.pas.PAS;
+import no.ums.ws.pas.UBBMESSAGE;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.PAS;
-import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
-import no.ums.ws.pas.UBBMESSAGE;
 
 
 

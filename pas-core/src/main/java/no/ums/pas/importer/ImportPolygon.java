@@ -1,27 +1,23 @@
 package no.ums.pas.importer;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.HeadlessException;
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
+import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.core.variables;
 import no.ums.pas.importer.esri.ShapeImporter;
-import no.ums.pas.importer.gis.*;
+import no.ums.pas.importer.gis.GISFile;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.FilePicker;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 /*
 .HODE

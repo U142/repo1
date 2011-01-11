@@ -1,49 +1,21 @@
 package no.ums.pas.pluginbase;
 
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
-
-import javax.swing.*;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
+import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.dataexchange.MailCtrl;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.logon.DeptArray;
-import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.Logon;
-import no.ums.pas.core.logon.LogonDialog;
-import no.ums.pas.core.logon.LogonInfo;
-import no.ums.pas.core.logon.Settings;
-import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.MainMenu;
-import no.ums.pas.core.menus.MainSelectMenu.*;
+import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.themes.UMSTheme;
-import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
@@ -53,18 +25,24 @@ import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.versioning.versioning;
-import no.ums.ws.pas.UBBNEWSLIST;
-import no.ums.ws.pas.UPOWERUPRESPONSE;
 import no.ums.ws.pas.USYSTEMMESSAGES;
-
 import org.geotools.data.ows.Layer;
-import org.jvnet.substance.*;
-import org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel;
+import org.jvnet.substance.SubstanceLookAndFeel;
+
+import javax.swing.*;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class PAS_Scripting extends PasScriptingInterface

@@ -1,25 +1,15 @@
 package no.ums.pas.parm.tree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 
-import java.awt.*;
-import javax.swing.JTree;
-import javax.swing.ImageIcon;
-
-
-
-import javax.swing.*;
-import javax.swing.border.*;
-
-
-//Substance 3.3
 import no.ums.pas.parm.voobjects.*;
 import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.ws.pas.tas.ULBACONTINENT;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
 
-import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
-import org.jvnet.substance.SubstanceImageCreator;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.*;
+
+//Substance 3.3
 
 
 //Substance 5.2

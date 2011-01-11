@@ -1,21 +1,17 @@
 package no.ums.pas.status;
 
-import javax.swing.*;
-import java.awt.*;
-
-import java.awt.Frame;
-import javax.swing.filechooser.*;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.project.*;
+import no.ums.pas.core.defines.ComboRow;
+import no.ums.pas.core.mainui.StatusItemList;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.FilePicker;
 
-import java.io.*;
-import java.util.*;
+import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class StatusExport

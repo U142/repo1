@@ -1,16 +1,14 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-
-import javax.swing.ListSelectionModel;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUInhabitantList;
-import no.ums.pas.status.*;
+import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 

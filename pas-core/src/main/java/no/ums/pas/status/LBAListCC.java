@@ -1,17 +1,9 @@
 package no.ums.pas.status;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Point;
+import no.ums.pas.core.defines.SearchPanelResults;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.logon.UserInfo;
-
 import java.awt.*;
 
 

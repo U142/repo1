@@ -1,7 +1,5 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Dimension;
-
 public class MapPointLL implements Comparable<MapPointLL> {
 	private int m_point_reference;
 	private double m_measurement_reference;

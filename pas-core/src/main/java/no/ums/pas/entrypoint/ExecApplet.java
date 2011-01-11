@@ -1,11 +1,8 @@
 package no.ums.pas.entrypoint;
 
-import javax.swing.JApplet;
-import javax.swing.JFrame;
+import no.ums.pas.PAS;
 
-import no.ums.pas.*;
-
-import org.jvnet.substance.utils.SubstanceTitlePane;
+import javax.swing.*;
 
 public class ExecApplet extends JApplet implements Runnable {
 	public static final long serialVersionUID = 1;

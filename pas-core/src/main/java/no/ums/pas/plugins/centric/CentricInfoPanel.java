@@ -1,17 +1,12 @@
 package no.ums.pas.plugins.centric;
 
-import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.SwingUtilities;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.defines.SearchPanelResults;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.mainui.InfoPanel.CoorInfoBox;
+import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
-import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
 
 public class CentricInfoPanel extends InfoPanel
 {

@@ -1,9 +1,7 @@
 package no.ums.pas.core.mainui;
-import java.awt.*;
 
 import javax.swing.*;
-
-import no.ums.pas.ums.errorhandling.Error;
+import java.awt.*;
 
 
 public class LoadingFrame extends JDialog {

@@ -1,8 +1,8 @@
 package no.ums.pas.maps.defines;
 
-import java.util.*;
-
 import no.ums.pas.ums.tools.TextFormat;
+
+import java.util.ArrayList;
 
 
 public class CommonFunc {

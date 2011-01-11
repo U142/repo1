@@ -1,18 +1,19 @@
 package no.ums.pas.ums.tools;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Keymap;
-import javax.swing.text.JTextComponent.KeyBinding;
 
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
+
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.JTextComponent.KeyBinding;
+import javax.swing.text.Keymap;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public final class Utils {

@@ -1,15 +1,14 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.net.URL;
+import no.ums.pas.PAS;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UWeatherReportResults;
+import no.ums.ws.pas.UWeatherResult;
+import no.ums.ws.pas.UWeatherSearch;
 
 import javax.xml.namespace.QName;
-
-
-import no.ums.pas.PAS;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.ums.errorhandling.*;
-import no.ums.ws.pas.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 

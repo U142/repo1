@@ -1,17 +1,15 @@
 package no.ums.pas.core.ws;
 
-import java.awt.Frame;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
-import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UPASUISETTINGS;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class WSSaveUI extends WSThread
 {

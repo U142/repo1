@@ -1,13 +1,5 @@
 package no.ums.pas.parm.exception;
 
-import java.awt.Point;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import no.ums.pas.PAS;
-
-
 public class ParmException extends Exception{
 	public static final long serialVersionUID = 1;
 	public ParmException(){

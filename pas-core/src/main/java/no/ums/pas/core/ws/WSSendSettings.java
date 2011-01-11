@@ -1,15 +1,5 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.io.ByteArrayInputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.zip.ZipInputStream;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import no.ums.pas.PAS;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
@@ -21,12 +11,20 @@ import no.ums.pas.sound.SoundlibFileTxt;
 import no.ums.pas.sound.SoundlibFileWav;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.status.PasStatus;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.zip.ZipInputStream;
 
 
 public class WSSendSettings extends WSThread

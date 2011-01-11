@@ -1,7 +1,5 @@
 package no.ums.pas.core;
 
-import java.awt.Dimension;
-
 import no.ums.pas.Draw;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.controllers.StatusController;
@@ -10,6 +8,8 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendController;
+
+import java.awt.*;
 
 public class variables {
 	

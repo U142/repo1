@@ -1,20 +1,14 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
-
-import com.sun.xml.internal.ws.util.JAXWSUtils;
-
-import no.ums.pas.PAS;
 import no.ums.ws.pas.BBUSERBLOCKREASONS;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.ULOGONINFO;
 import no.ums.ws.pas.UPASLOGON;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 
 

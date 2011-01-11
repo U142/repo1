@@ -1,12 +1,12 @@
 package no.ums.pas.ums.tools;
 
-import java.lang.SecurityManager;
-import java.util.ArrayList;
-import java.security.*;
-import java.io.*;
-import javax.sound.sampled.*;
-
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.sound.sampled.AudioPermission;
+import java.io.FilePermission;
+import java.security.AccessController;
+import java.security.Permission;
+import java.util.ArrayList;
 
 
 

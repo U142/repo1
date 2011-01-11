@@ -1,48 +1,12 @@
 package no.ums.pas.tas.statistics;
 
+import no.ums.pas.importer.csv.csvexporter;
+import no.ums.ws.pas.tas.*;
+import org.jfree.chart.JFreeChart;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import javax.swing.JFrame;
-
-import no.ums.pas.importer.csv.csvexporter;
-import no.ums.ws.pas.tas.ArrayOfULBACOUNTRY;
-import no.ums.ws.pas.tas.ArrayOfULBACOUNTRYSTATISTICS;
-import no.ums.ws.pas.tas.ULBACONTINENT;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
-import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
-import no.ums.ws.pas.tas.ULBASTATISTICSFILTER;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.statistics.HistogramBin;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.Statistics;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.DefaultTableXYDataset;
-import org.jfree.data.xy.TableXYDataset;
-import org.jfree.data.xy.XYDataItem;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.util.TableOrder;
 
 
 

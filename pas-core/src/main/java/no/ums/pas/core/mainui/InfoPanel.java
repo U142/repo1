@@ -1,36 +1,27 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.controllers.*;
-import no.ums.pas.core.dataexchange.HttpPostForm;
+import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSWeatherReport;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.CommonFunc;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.MapPointLL;
+import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.*;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker;
 import no.ums.ws.pas.UWeatherSearch;
 
-import com.sun.corba.se.spi.ior.iiop.JavaCodebaseComponent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.util.regex.Pattern;
 
 //import Core.WebData.XMLWeatherData;
 
@@ -752,14 +743,14 @@ public class InfoPanel extends GeneralPanel {
 			 * Double(Math.floor(new Double((ll.get_lat() - d_deg.doubleValue())
 			 * 60).doubleValue())); d_sec = new Double(((((ll.get_lat() -
 			 * d_deg.doubleValue()) - (d_min.doubleValue()/60)) 60 60) 100) /
-			 * 100); sz_lat = d_deg.intValue() + "Â° " + d_min.intValue() + "' "
+			 * 100); sz_lat = d_deg.intValue() + "° " + d_min.intValue() + "' "
 			 * + d_sec.toString() + "''";
 			 * 
 			 * d_deg = new Double(Math.floor(ll.get_lon())); d_min = new
 			 * Double(Math.floor(new Double((ll.get_lon() - d_deg.doubleValue())
 			 * 60).doubleValue())); d_sec = new Double(((((ll.get_lon() -
 			 * d_deg.doubleValue()) - (d_min.doubleValue()/60)) 60 60) 100) /
-			 * 100); sz_lon = d_deg.intValue() + "Â° " + d_min.intValue() + "' "
+			 * 100); sz_lon = d_deg.intValue() + "° " + d_min.intValue() + "' "
 			 * + d_sec.toString() + "''";
 			 */
 			if (ll != null) {
@@ -784,10 +775,10 @@ public class InfoPanel extends GeneralPanel {
 				// 4));
 				m_txt_coor_dec_x.setText(no.ums.pas.ums.tools.TextFormat.round(
 						ll.get_lon(), 5).toString()
-						+ "Â°");
+						+ "°");
 				m_txt_coor_dec_y.setText(no.ums.pas.ums.tools.TextFormat.round(
 						ll.get_lat(), 5).toString()
-						+ "Â°");
+						+ "°");
 				String sz_zone = "33V";
 				double n_north = 0;
 				double n_east = 0;

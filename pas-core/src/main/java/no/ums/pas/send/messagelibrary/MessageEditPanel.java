@@ -1,49 +1,26 @@
 package no.ums.pas.send.messagelibrary;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ListDataEvent;
-
-import org.jvnet.substance.SubstanceLookAndFeel;
-
-
-
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CCode;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
-import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.WSMessageLibEdit;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
-import no.ums.pas.sound.SoundLibraryPanel;
-import no.ums.pas.sound.SoundOpenPanel;
-import no.ums.pas.sound.SoundRecorder;
 import no.ums.pas.sound.SoundRecorderPanel;
-import no.ums.pas.sound.SoundTTSPanel;
 import no.ums.pas.sound.SoundTextTemplatePanel;
-import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.ArrayOfUCCMessage;
 import no.ums.ws.pas.UBBMESSAGE;
 import no.ums.ws.pas.UCCMessage;
+import org.jvnet.substance.SubstanceLookAndFeel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MessageEditPanel extends DefaultPanel implements ComponentListener, KeyListener, ItemListener

@@ -1,29 +1,16 @@
 package no.ums.pas.core.logon;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.*;
-import no.ums.pas.core.logon.DeptArray.POINT_DIRECTION;
-import no.ums.pas.core.webdata.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-import no.ums.ws.pas.ArrayOfUDEPARTMENT;
+import no.ums.pas.ums.tools.Timeout;
+import no.ums.ws.pas.UDEPARTMENT;
+import no.ums.ws.pas.UNSLOOKUP;
 import no.ums.ws.pas.UPASLOGON;
+import no.ums.ws.pas.UPASUISETTINGS;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import sun.awt.image.PixelConverter.Ushort4444Argb;
-
-import java.net.HttpURLConnection;
-
-import java.awt.event.*;
-import no.ums.ws.pas.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 
 

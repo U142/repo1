@@ -1,20 +1,9 @@
 package no.ums.pas.parm.alert;
 
 
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.Area;
-import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.SubsetSelect;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.*;
@@ -22,13 +11,15 @@ import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.send.ExecAlert;
-import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.SendPropertiesGIS;
+import no.ums.pas.send.*;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 

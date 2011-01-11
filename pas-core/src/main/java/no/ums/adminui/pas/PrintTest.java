@@ -1,30 +1,19 @@
 package no.ums.adminui.pas;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import no.ums.pas.Draw;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.tools.PrintCtrl;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PrintTest extends JFrame implements ActionListener {
 	

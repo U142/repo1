@@ -1,18 +1,15 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-
-import javax.swing.ListSelectionModel;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.popupmenus.*;
-import no.ums.pas.core.project.Project;
-import no.ums.pas.status.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.popupmenus.PUOpenStatus;
+import no.ums.pas.status.LBASEND;
+import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {

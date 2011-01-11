@@ -1,87 +1,43 @@
 package no.ums.pas.tas;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.Paint;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Stroke;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-
-import org.jvnet.substance.SubstanceLookAndFeel;
-
-
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.TreeRenderer;
 import no.ums.pas.core.defines.tree.TreeTable;
 import no.ums.pas.core.defines.tree.TreeUpdater;
 import no.ums.pas.core.defines.tree.UMSTree;
-import no.ums.pas.core.defines.tree.UMSTreeNode;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSTas;
 import no.ums.pas.core.ws.WSTasCount;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.tas.painters.LogPainter;
-import no.ums.pas.tas.statistics.ChartByCountry;
-import no.ums.pas.tas.statistics.ChartOverTime;
-import no.ums.pas.tas.statistics.TasChart;
 import no.ums.pas.tas.statistics.UMSChartFrame;
 import no.ums.pas.tas.treenodes.CommonTASListItem;
 import no.ums.pas.tas.treenodes.ContinentListItem;
 import no.ums.pas.tas.treenodes.CountryListItem;
 import no.ums.pas.tas.treenodes.RequestLogItem;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.UnderlineHighlightPainter;
 import no.ums.ws.pas.tas.*;
+import org.jvnet.substance.SubstanceLookAndFeel;
+
+import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
+import java.util.List;
 
 
 public class TasPanel extends DefaultPanel implements ComponentListener, ItemListener, ActionListener, MouseListener {

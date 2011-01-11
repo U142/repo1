@@ -1,23 +1,20 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.send.SendController;
 import no.ums.pas.sound.*;
-import no.ums.pas.sound.soundinfotypes.*;
+import no.ums.pas.sound.soundinfotypes.SoundInfo;
+import no.ums.pas.sound.soundinfotypes.SoundInfoRecord;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextLabel;
 import org.jvnet.substance.SubstanceLookAndFeel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class Sending_Files extends DefaultPanel {
 	public static final long serialVersionUID = 1;

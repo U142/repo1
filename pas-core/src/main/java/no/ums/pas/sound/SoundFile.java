@@ -1,28 +1,24 @@
 package no.ums.pas.sound;
 
-import java.nio.*;
-
-import java.io.*;
-
-import javax.xml.namespace.QName;
-
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.parm.constants.ParmConstants;
-import no.ums.pas.send.sendpanels.*;
-import no.ums.pas.sound.soundinfotypes.*;
+import no.ums.pas.send.sendpanels.Sending_Files;
+import no.ums.pas.sound.soundinfotypes.SoundInfo;
+import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
+import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
+import no.ums.pas.sound.soundinfotypes.SoundInfoTTS;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.parm.ObjectFactory;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UConfirmJobResponse;
-import no.ums.ws.parm.ULOGONINFO;
 import no.ums.ws.pas.AUDIOREQUEST;
 import no.ums.ws.pas.AUDIORESPONSE;
 import no.ums.ws.pas.Pasws;
+
+import javax.xml.namespace.QName;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 
 public class SoundFile extends Object {
 	

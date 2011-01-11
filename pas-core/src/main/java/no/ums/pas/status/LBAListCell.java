@@ -1,10 +1,6 @@
 package no.ums.pas.status;
 
-import java.awt.Point;
-
-import javax.swing.*;
-
-import no.ums.pas.core.defines.*;
+import no.ums.pas.core.defines.SearchPanelResults;
 
 import java.awt.*;
 

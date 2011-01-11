@@ -1,7 +1,6 @@
 package no.ums.pas.send;
 
-import javax.swing.ImageIcon;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
 public class ToggleAddresstype extends JToggleButton {
 	public static final long serialVersionUID = 1;

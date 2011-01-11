@@ -1,13 +1,10 @@
 package no.ums.pas.send;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
+import no.ums.pas.ums.tools.colorpicker.ColorPicker;
 
 import javax.swing.event.ChangeEvent;
-
-import no.ums.pas.ums.tools.colorpicker.ColorPicker;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 public class SendingColorPicker extends ColorPicker {

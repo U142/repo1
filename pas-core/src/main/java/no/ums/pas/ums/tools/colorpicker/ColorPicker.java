@@ -1,12 +1,12 @@
 package no.ums.pas.ums.tools.colorpicker;
 
 import javax.swing.*;
-import java.awt.*;
-import javax.swing.plaf.basic.BasicColorChooserUI;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import java.awt.event.ActionListener;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicColorChooserUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public abstract class ColorPicker extends JColorChooser

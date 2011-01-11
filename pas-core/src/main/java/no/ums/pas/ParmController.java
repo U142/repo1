@@ -1,28 +1,25 @@
 package no.ums.pas;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.awt.event.*;
-
-import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.storage.*;
+import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.CommonFunc;
-import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.constants.ParmConstants;
-import no.ums.pas.parm.main.*;
-import no.ums.pas.parm.voobjects.*;
+import no.ums.pas.parm.main.MainController;
+import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.EventVO;
+import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class ParmController extends MainController {

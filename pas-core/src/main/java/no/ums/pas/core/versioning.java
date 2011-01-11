@@ -1,8 +1,6 @@
 package no.ums.pas.core;
 
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.util.jar.Manifest;
 
 public class versioning
 {

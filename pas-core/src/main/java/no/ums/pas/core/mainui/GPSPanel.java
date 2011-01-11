@@ -1,16 +1,16 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.event.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
 
-import javax.swing.BorderFactory;
-//import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+//import javax.swing.JScrollPane;
 
 class GPSPanel extends DefaultPanel implements ComponentListener {
 	public static final long serialVersionUID = 1;

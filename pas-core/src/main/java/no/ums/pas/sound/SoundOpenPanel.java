@@ -1,18 +1,18 @@
 package no.ums.pas.sound;
 
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.send.sendpanels.*;
-import no.ums.pas.sound.soundinfotypes.*;
+import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.send.sendpanels.Sending_Files;
+import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.FilePicker;
 
-import java.io.*;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class SoundOpenPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;

@@ -1,12 +1,12 @@
 package no.ums.pas.ums.tools.colorpicker;
 
-import java.awt.*;
-import javax.swing.event.ChangeEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
+import no.ums.pas.PAS;
+import no.ums.pas.status.StatusCode;
 
-import no.ums.pas.*;
-import no.ums.pas.status.*;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 public class ColorPickerTable extends ColorPicker {

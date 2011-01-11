@@ -1,12 +1,10 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
+import no.ums.ws.pas.tas.ULBACOUNTRY;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import no.ums.ws.pas.tas.ULBACOUNTRY;
 
 public class TasStruct extends ShapeStruct
 {

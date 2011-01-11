@@ -1,46 +1,30 @@
 package no.ums.pas.plugins.centric.status;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.SystemColor;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.variables;
+import no.ums.pas.plugins.centric.CentricEastContent;
+import no.ums.pas.plugins.centric.CentricVariables;
+import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
+import no.ums.pas.plugins.centric.ws.WSCentricSend;
+import no.ums.pas.status.LBASEND;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.parm.CBALERTKILL;
+import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.pas.status.CBSTATUS;
+import no.ums.ws.pas.status.ULBASENDING;
+import no.ums.ws.pas.status.UPLMN;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.mainui.EastContent;
-import no.ums.pas.maps.defines.PLMNShape;
-import no.ums.pas.plugins.centric.CentricEastContent;
-import no.ums.pas.plugins.centric.CentricVariables;
-import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
-import no.ums.pas.plugins.centric.ws.WSCentricSend;
-import no.ums.pas.plugins.centric.ws.WSCentricStatus;
-import no.ums.pas.status.LBASEND;
-import no.ums.pas.ums.tools.StdTextArea;
-import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.parm.CBALERTKILL;
-import no.ums.ws.parm.CBSENDBASE;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
-import no.ums.ws.pas.status.CBSTATUS;
-import no.ums.ws.pas.status.ULBASENDING;
-import no.ums.ws.pas.status.UPLMN;
 
 public class CentricMessageStatus extends DefaultPanel implements ComponentListener {
 

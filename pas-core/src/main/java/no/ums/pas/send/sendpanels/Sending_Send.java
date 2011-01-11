@@ -1,32 +1,25 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.send.SendProperties;
+import no.ums.pas.sound.SoundFile;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.Timeout;
+import no.ums.ws.pas.ObjectFactory;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.ULOGONINFO;
+
+import javax.swing.*;
+import javax.xml.namespace.QName;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.xml.namespace.QName;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.webdata.*;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.send.SendController;
-import no.ums.pas.send.SendObject;
-import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.send.SendProperties;
-import no.ums.pas.sound.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-import no.ums.ws.pas.*;
 
 
 /*

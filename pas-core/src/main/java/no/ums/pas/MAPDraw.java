@@ -1,17 +1,16 @@
 package no.ums.pas;
 
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.util.List;
-
-import no.ums.pas.core.variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.*;
+import java.util.List;
 
 public class MAPDraw extends Draw {
 	

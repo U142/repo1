@@ -1,8 +1,9 @@
 package no.ums.pas.importer.gis;
 
-import java.io.*;
-
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.io.File;
+import java.io.FileWriter;
 
 
 public class GISWriter {

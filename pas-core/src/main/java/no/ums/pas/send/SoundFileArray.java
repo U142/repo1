@@ -1,8 +1,8 @@
 package no.ums.pas.send;
 
-import java.util.ArrayList;
-
 import no.ums.pas.sound.SoundFile;
+
+import java.util.ArrayList;
 
 
 public class SoundFileArray extends ArrayList<SoundFile> {

@@ -1,14 +1,12 @@
 package no.ums.pas.core.themes;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.event.ChangeEvent;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ums.tools.colorpicker.ColorPicker;
+
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 class ThemeColorSelect extends ColorPicker

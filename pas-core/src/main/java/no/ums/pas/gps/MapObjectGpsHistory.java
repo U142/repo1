@@ -1,12 +1,5 @@
 package no.ums.pas.gps;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-
-import javax.swing.ListSelectionModel;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -14,8 +7,11 @@ import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.maps.defines.MapObject;
 import no.ums.pas.ums.tools.TextFormat;
-
 import org.w3c.dom.Document;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 public class MapObjectGpsHistory extends DefaultPanel {

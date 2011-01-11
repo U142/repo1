@@ -1,37 +1,15 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipInputStream;
-
-import javax.swing.SwingUtilities;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.project.Project;
-import no.ums.pas.maps.defines.EllipseStruct;
-import no.ums.pas.maps.defines.GISShape;
-import no.ums.pas.maps.defines.MapPoint;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.Municipal;
-import no.ums.pas.maps.defines.MunicipalStruct;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.maps.defines.TasStruct;
+import no.ums.pas.core.variables;
+import no.ums.pas.maps.defines.*;
 import no.ums.pas.status.LBASEND;
-import no.ums.pas.status.StatusCellBroadcast;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
-import no.ums.ws.parm.UTASSENDING;
 import no.ums.ws.pas.ArrayOfLBACCode;
 import no.ums.ws.pas.LBACCode;
 import no.ums.ws.pas.LBALanguage;
@@ -39,14 +17,22 @@ import no.ums.ws.pas.status.ArrayOfLong;
 import no.ums.ws.pas.status.PasStatus;
 import no.ums.ws.pas.status.USMSINSTATS;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
-
-import javax.xml.parsers.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.*;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 
 public class WSGetStatusItems extends WSThread
 {

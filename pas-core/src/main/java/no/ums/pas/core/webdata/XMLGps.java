@@ -1,16 +1,16 @@
 package no.ums.pas.core.webdata;
 
-import javax.swing.JFrame;
-
-import no.ums.pas.*;
-import no.ums.pas.gps.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.gps.GPSCoor;
+import no.ums.pas.gps.GPSEvent;
+import no.ums.pas.maps.defines.MapObject;
 import no.ums.pas.ums.errorhandling.Error;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.swing.*;
 
 public class XMLGps extends XMLThread {
 	public XMLGps(int n_pri, PAS pas, String sz_url, JFrame parent_frame)

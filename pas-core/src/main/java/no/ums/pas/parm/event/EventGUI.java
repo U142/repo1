@@ -1,12 +1,10 @@
 package no.ums.pas.parm.event;
 
-import javax.swing.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.parm.fieldlimit.TextFieldLimit;
 import no.ums.pas.ums.tools.ImageLoader;
 
-
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

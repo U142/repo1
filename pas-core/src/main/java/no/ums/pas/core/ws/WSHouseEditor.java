@@ -1,16 +1,14 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.ums.errorhandling.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.HOUSEEDITOROPERATION;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UAddress;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 

@@ -1,14 +1,13 @@
 package no.ums.pas.core.menus.defines;
 
-import javax.swing.*;
-import org.jvnet.substance.SubstanceLookAndFeel;
-//import org.jvnet.substance.api.SubstanceSkin;
-
-import org.jvnet.substance.watermark.SubstanceWatermark;
-
-//Substance 3.3
 import org.jvnet.substance.skin.SubstanceSkin;
 import org.jvnet.substance.theme.SubstanceTheme;
+import org.jvnet.substance.watermark.SubstanceWatermark;
+
+import javax.swing.*;
+
+//import org.jvnet.substance.api.SubstanceSkin;
+//Substance 3.3
 
 
 //Substance 5.2

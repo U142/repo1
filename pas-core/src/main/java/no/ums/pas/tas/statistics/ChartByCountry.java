@@ -1,20 +1,14 @@
 package no.ums.pas.tas.statistics;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.Day;
-
-
 import no.ums.pas.importer.csv.csvexporter;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ChartByCountry extends TasChart
 {

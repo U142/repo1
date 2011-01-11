@@ -1,12 +1,11 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.util.UUID;
-
-import javax.xml.ws.soap.SOAPFaultException;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.xml.ws.soap.SOAPFaultException;
+import java.awt.event.ActionListener;
+import java.util.UUID;
 
 public abstract class WSThread extends Thread
 {

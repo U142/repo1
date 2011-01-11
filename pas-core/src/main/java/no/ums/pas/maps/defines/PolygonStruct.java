@@ -1,30 +1,16 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.PathIterator;
-
-import javax.swing.UIManager;
-
-import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Utils;
-import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 
 
 

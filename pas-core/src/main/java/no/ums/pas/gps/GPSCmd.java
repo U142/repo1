@@ -1,6 +1,6 @@
 package no.ums.pas.gps;
 
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 
 public class GPSCmd extends Object {
 	//GET

@@ -1,26 +1,23 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.Frame;
-import javax.swing.*;
-
-//import java.awt.PrintCanvas;
-import java.awt.*;
-import java.awt.print.*;
-import java.awt.image.BufferedImage;
-
-import javax.imageio.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.variables;
+import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.io.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.File;
+
+//import java.awt.PrintCanvas;
 
 public class PrintCtrl implements Printable {
 	Graphics m_graph;

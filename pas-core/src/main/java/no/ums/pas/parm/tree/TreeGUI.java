@@ -1,25 +1,26 @@
 package no.ums.pas.parm.tree;
 
-import java.awt.FlowLayout;
-
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
-import javax.swing.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.parm.main.MainController;
-import no.ums.pas.parm.voobjects.*;
+import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.EventVO;
+import no.ums.pas.parm.voobjects.ObjectVO;
+import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-
-import java.awt.dnd.*;
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;

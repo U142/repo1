@@ -1,29 +1,25 @@
 package no.ums.pas.plugins.centric;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.xml.namespace.QName;
-
-import nl.bzk.services.nl_alert.mapsearch.*;
-import no.ums.pas.maps.defines.MapPointLL;
-import no.ums.pas.maps.defines.NavPoint;
-import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.pas.pluginbase.PAS_Scripting;
-import no.ums.pas.pluginbase.PluginLoader;
-import no.ums.pas.core.variables;
+import nl.bzk.services.nl_alert.mapsearch.BoundingBox;
+import nl.bzk.services.nl_alert.mapsearch.MapMatches;
+import nl.bzk.services.nl_alert.mapsearch.MapSearchResponse;
+import nl.bzk.services.nl_alert.mapsearch.MapSearchService;
+import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
-import no.ums.pas.core.mainui.*;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
-import no.ums.pas.core.ws.vars;
+import no.ums.pas.maps.defines.MapPointLL;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.ws.pas.*;
-import no.ums.pas.*;
+
+import javax.swing.*;
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.DefaultAddressSearch

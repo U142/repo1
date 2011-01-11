@@ -1,8 +1,8 @@
 package no.ums.pas.core.mainui;
 
-import java.util.ArrayList;
+import no.ums.pas.status.StatusItemObject;
 
-import no.ums.pas.status.*;
+import java.util.ArrayList;
 
 public class StatusItemList extends ArrayList<Object> {
 	public static final long serialVersionUID = 1;

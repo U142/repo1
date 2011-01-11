@@ -1,22 +1,17 @@
 package no.ums.pas.core.ws;
 
-import java.awt.Component;
-import java.net.URL;
-import java.sql.Time;
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.mainui.*;
+import no.ums.pas.core.mainui.LoadingFrame;
+import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.calendarutils.DateTime;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.PercentResult;
 import no.ums.ws.pas.ProgressJobType;
 import no.ums.ws.pas.ULOGONINFO;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.net.URL;
+import java.util.Calendar;
 
 
 /*

@@ -1,28 +1,11 @@
 package no.ums.pas;
 
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import no.ums.pas.core.defines.*;
-import no.ums.pas.parm.alert.AlertController;
-import no.ums.pas.parm.event.EventController;
-import no.ums.pas.parm.map.MapController;
-import no.ums.pas.parm.map.MapPanel;
-import no.ums.pas.parm.object.ObjectController;
-import no.ums.pas.parm.threads.UpdateXML;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.parm.tree.TreeController;
-import no.ums.pas.parm.voobjects.AlertVO;
-import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.parm.voobjects.ObjectVO;
-import no.ums.pas.parm.xml.XmlReader;
-
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-
 import java.awt.*;
+import java.awt.event.*;
 
 public class ParmPanel extends DefaultPanel implements ComponentListener, MouseListener {
 	public static final long serialVersionUID = 1;

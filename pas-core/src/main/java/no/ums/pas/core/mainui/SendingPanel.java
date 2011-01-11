@@ -1,12 +1,10 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.pas.send.SendOptionToolbar;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.Hashtable;
-
-import javax.swing.JScrollPane;
-
-import no.ums.pas.*;
-import no.ums.pas.send.SendOptionToolbar;
 
 public class SendingPanel extends GeneralPanel {
 	public static final long serialVersionUID = 1;

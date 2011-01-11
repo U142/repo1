@@ -1,18 +1,16 @@
 package no.ums.pas.plugins.centric.ws;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.ws.pas.status.BBPROJECT;
 import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
 import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.PasStatus;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 
 public class WSCentricStatus extends WSThread {

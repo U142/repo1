@@ -1,94 +1,60 @@
 package no.ums.pas;
 
-import java.awt.*;
-
-import javax.print.attribute.standard.JobMessageFromOperator;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.plaf.FontUIResource;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.BorderLayout;
-
-
-import java.awt.event.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel.MapMode;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
-
-
-
 import no.ums.pas.cellbroadcast.CountryCodes;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.controllers.*;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.core.controllers.GPSController;
+import no.ums.pas.core.controllers.HouseController;
+import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.menus.*;
-import no.ums.pas.core.project.*;
-import no.ums.pas.core.storage.*;
-import no.ums.pas.core.themes.ThemeColorComponent;
+import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.project.Project;
+import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
-import no.ums.pas.core.ws.WSGetVisualSettings;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSLogoff;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.localization.UIParamLoader;
-import no.ums.pas.maps.*;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.parm.alert.AlertWindow;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.MapitemProperties;
+import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.xml.XmlReader;
 import no.ums.pas.parm.xml.XmlWriter;
-import no.ums.pas.pluginbase.PAS_Scripting;
 import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.pas.pluginbase.PluginLoader;
-import no.ums.pas.send.*;
+import no.ums.pas.send.SendController;
+import no.ums.pas.send.SendObject;
 import no.ums.pas.sound.SoundRecorder;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.Timeout;
+import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
-import no.ums.pas.ums.tools.colorpicker.ColorPicker;
 import no.ums.ws.pas.UPASUISETTINGS;
-
-import org.jvnet.lafwidget.LafWidget;
-import org.jvnet.lafwidget.utils.LafConstants.AnimationKind;
-import org.jvnet.substance.*;
-import org.jvnet.substance.skin.SkinChangeListener;
-import org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel;
 import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.utils.SubstanceCoreUtilities;
-import org.jvnet.substance.utils.SubstanceTitlePane;
+import org.jvnet.substance.button.ButtonShaperChangeListener;
+import org.jvnet.substance.painter.GradientPainterChangeListener;
+import org.jvnet.substance.skin.SkinChangeListener;
+import org.jvnet.substance.theme.SubstanceComplexTheme;
+import org.jvnet.substance.theme.SubstanceTheme;
+import org.jvnet.substance.theme.ThemeChangeListener;
 import org.jvnet.substance.watermark.SubstanceNullWatermark;
-import org.jvnet.substance.watermark.SubstanceWatermark;
-import org.jvnet.lafwidget.tabbed.*;
+import org.jvnet.substance.watermark.WatermarkChangeListener;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 //substance 3.3
-import org.jvnet.substance.button.ButtonShaperChangeListener;
-import org.jvnet.substance.button.SubstanceButtonShaper;
-import org.jvnet.substance.color.ColorScheme;
-import org.jvnet.substance.painter.GradientPainterChangeListener;
-import org.jvnet.substance.painter.SubstanceGradientPainter;
-import org.jvnet.substance.utils.ComponentState.ColorSchemeKind;
-import org.jvnet.substance.utils.params.PropertiesFileParamReader;
-import org.jvnet.substance.watermark.WatermarkChangeListener;
-import org.jvnet.substance.skin.SubstanceSkin;
-import org.jvnet.substance.theme.*;
-import org.jvnet.substance.theme.SubstanceTheme.ThemeKind;
-import org.jvnet.substance.title.ClassicTitlePainter;
 
 /*import contrib.com.jgoodies.looks.common.FontPolicies;
 import contrib.com.jgoodies.looks.common.FontPolicy;
@@ -1246,7 +1212,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			try
 			{
 				// Her hentes instillingene fra xmlfilen settings.ini
-				// Henter nå innstillinger fra WS i logon
+				// Henter n� innstillinger fra WS i logon
 				xmlreader.loadSettings();
 			}
 			catch(Exception e)
@@ -1894,7 +1860,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						get_parmcontroller().endSession(true);
 					}
 					catch(Exception er) { }
-					// Hvis programmet avslutter før dette blir gjort vet det at tempfilene skal slettes
+					// Hvis programmet avslutter f�r dette blir gjort vet det at tempfilene skal slettes
 					// og henter alt fra databasen igjen.
 					
 					SwingUtilities.invokeLater(new Runnable() {

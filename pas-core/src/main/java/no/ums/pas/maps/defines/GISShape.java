@@ -1,9 +1,9 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.pas.importer.gis.GISList;
+
 import java.awt.*;
 import java.util.List;
-
-import no.ums.pas.importer.gis.*;
 
 
 

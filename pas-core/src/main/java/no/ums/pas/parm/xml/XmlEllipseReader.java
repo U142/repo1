@@ -1,22 +1,21 @@
 package no.ums.pas.parm.xml;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.parm.constants.ParmConstants;
-import no.ums.pas.parm.main.*;
+import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.ums.errorhandling.Error;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class XmlEllipseReader {

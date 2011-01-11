@@ -1,33 +1,28 @@
 package no.ums.pas.core.controllers;
 
-import javax.management.MXBean;
-import javax.swing.JFrame;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.mainui.OpenStatusFrame;
+import no.ums.pas.core.mainui.StatusItemList;
+import no.ums.pas.core.mainui.StatuscodeFrame;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.core.ws.WSGetStatusList;
-import no.ums.pas.importer.csv.csvexporter;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.status.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.pas.ums.tools.calendarutils.*;
+import no.ums.pas.ums.tools.calendarutils.DateTime;
 
-import com.sun.management.GarbageCollectorMXBean;
-
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.*;
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 

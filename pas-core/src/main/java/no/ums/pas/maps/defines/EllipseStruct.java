@@ -1,17 +1,10 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Stroke;
+import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
-
-import no.ums.pas.ums.errorhandling.Error;
 
 public class EllipseStruct extends ShapeStruct {
 	private MapPoint m_p_center = null;

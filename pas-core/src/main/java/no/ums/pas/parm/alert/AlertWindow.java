@@ -1,33 +1,33 @@
 package no.ums.pas.parm.alert;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
+import no.ums.pas.ParmController;
+import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSSendSettings;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.send.*;
 import no.ums.pas.send.sendpanels.SendWindow;
-import no.ums.pas.send.sendpanels.Sending_AddressPanel;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.Utils;
 
-
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 
 
@@ -168,10 +168,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_tabbedpane.addChangeListener(this);
 		addWindowListener(this);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		// Lurer pÃ¥ om dette gÃ¥r?
+		// Lurer på om dette går?
 		//ac.setParent(this);
 		
-		// Dette er for Ã¥ aktivere cell broadcast tab'en
+		// Dette er for å aktivere cell broadcast tab'en
 			if(m_alert.getAlert() != null && m_alert.getAlert().getArea() != null) {
 				if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
 			//switch(m_alert.getAlert().getAddresstypes()) {
@@ -538,7 +538,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					if(m_alert.getAlert().getCBOadc() != null && m_alert.getAlert().getCBOadc().length()>0)
 						m_cell_broadcast_text_panel.get_txt_oadc_text().setText(m_alert.getAlert().getCBOadc());
 				}
-				// Hvis den ikke har voice, sÃ¥ fjern alle unÃ¸dvendige ting i settings
+				// Hvis den ikke har voice, så fjern alle unødvendige ting i settings
 				int n_adrtypes = m_alert.getPanelToolbar().get_addresstypes();
 				if(((n_adrtypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
 							(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||

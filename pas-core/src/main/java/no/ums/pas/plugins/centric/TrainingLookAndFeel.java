@@ -1,20 +1,12 @@
 package no.ums.pas.plugins.centric;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Enumeration;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
-import javax.swing.LookAndFeel;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
-import no.ums.pas.PAS;
+import java.awt.*;
 
 public class TrainingLookAndFeel extends WindowsLookAndFeel
 {

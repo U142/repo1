@@ -1,10 +1,10 @@
 package no.ums.pas.tas.treenodes;
 
-import javax.swing.tree.DefaultTreeModel;
-
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.pas.tas.TasPanel;
 import no.ums.ws.pas.tas.UTASREQUESTRESULTS;
+
+import javax.swing.tree.DefaultTreeModel;
 
 public class RequestLogItem extends CommonTASListItem implements Comparable<UMSTreeNode>
 {

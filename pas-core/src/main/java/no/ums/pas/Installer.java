@@ -3,17 +3,21 @@ package no.ums.pas;
 /*import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;*/
-import java.io.*;
-import java.net.URL;
-
-//import com.roxes.win32.LnkFile;
-//import com.roxes.win32.Win32;
-import javax.swing.*;
 
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.awt.event.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+
+//import com.roxes.win32.LnkFile;
+//import com.roxes.win32.Win32;
 
 
 class JNLP {

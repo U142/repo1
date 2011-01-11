@@ -1,10 +1,10 @@
 package no.ums.pas.core.popupmenus;
 
+import no.ums.pas.PAS;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JMenuItem;
-
-import no.ums.pas.PAS;
 
 public class PUGPSList extends PUMenu {
 	public static final long serialVersionUID = 1;

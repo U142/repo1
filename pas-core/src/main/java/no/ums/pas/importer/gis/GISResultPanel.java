@@ -1,18 +1,16 @@
 package no.ums.pas.importer.gis;
 
-import java.awt.*;
-
-import java.awt.event.*;
-
-
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.variables;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.LetterPairSimilarity;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
 
 class GISPercentColouredCellRenderer extends DefaultTableCellRenderer{
 	public static final long serialVersionUID = 1;

@@ -1,27 +1,28 @@
 package no.ums.pas.importer.gis;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.*;
-import javax.swing.event.*;
-
-
-import java.io.*;
-
-import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSGisImport;
 import no.ums.pas.core.ws.WSGisImport.GisColumnsetStreetid;
 import no.ums.pas.importer.gis.PreviewList.ComboAdrid;
 import no.ums.pas.importer.gis.PreviewList.ComboField;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 public class PreviewPanel extends DefaultPanel implements ComponentListener, ChangeListener {
 	public static final long serialVersionUID = 1;

@@ -1,14 +1,15 @@
 package no.ums.pas.core.dataexchange;
 
 
-import java.awt.event.*;
-import java.io.IOException;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import no.ums.pas.gps.*;
+import no.ums.pas.gps.GPSCmd;
+import no.ums.pas.gps.SocketThread;
 import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
 
 
 public class MailCtrl extends Object {

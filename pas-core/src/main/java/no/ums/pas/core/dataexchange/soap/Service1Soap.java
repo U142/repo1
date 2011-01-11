@@ -1,13 +1,16 @@
 
 package no.ums.pas.core.dataexchange.soap;
 
+import no.ums.pas.core.dataexchange.soap.no.ums.ExecAlert;
+import no.ums.pas.core.dataexchange.soap.no.ums.ExecAlertResponse;
+import no.ums.pas.core.dataexchange.soap.no.ums.ExecEvent;
+import no.ums.pas.core.dataexchange.soap.no.ums.ExecEventResponse;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-
-import no.ums.pas.core.dataexchange.soap.no.ums.*;
 
 @WebService(name = "Service1Soap", targetNamespace = "http://ums.no/")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.BARE)

@@ -1,15 +1,14 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UBBMESSAGE;
 import no.ums.ws.pas.UBBMESSAGELISTFILTER;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class WSMessageLibDelete extends WSMessageLibEdit
 {

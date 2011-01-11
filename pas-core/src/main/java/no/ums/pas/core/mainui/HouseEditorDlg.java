@@ -1,18 +1,22 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.pas.maps.defines.MapPoint;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 //import org.jvnet.substance.SubstanceLookAndFeel;
-
-import java.awt.*;
 //import UMS.Tools.*;
-import java.awt.event.*;
-
-import javax.swing.event.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.maps.defines.*;
 
 
 public class HouseEditorDlg extends DefaultPanel implements ChangeListener, ComponentListener { // implements ActionListener {

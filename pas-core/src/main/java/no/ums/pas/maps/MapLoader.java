@@ -1,37 +1,29 @@
 package no.ums.pas.maps;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 import no.ums.pas.PAS;
+import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.variables;
-import no.ums.pas.core.dataexchange.*;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
-import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
-import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
-import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
-import no.ums.pas.ums.tools.CoorConverter.WGS84Coordinate;
+import no.ums.pas.ums.tools.Timeout;
 import no.ums.ws.pas.*;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.xml.namespace.QName;
-import java.util.*;
-import java.util.List;
-
-
 import org.geotools.data.ows.Layer;
 import org.geotools.data.ows.WMSCapabilities;
 import org.geotools.data.wms.WMSUtils;
 import org.geotools.data.wms.WebMapServer;
 import org.geotools.data.wms.response.GetMapResponse;
 
-import java.awt.color.*;
+import javax.imageio.ImageIO;
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.image.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapLoader {
 	Image m_img_load = null;

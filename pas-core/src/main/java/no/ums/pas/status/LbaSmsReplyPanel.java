@@ -1,21 +1,16 @@
 package no.ums.pas.status;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-
-import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators.ParentIterator;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.status.USMSINSTATS;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -36,7 +31,7 @@ public class LbaSmsReplyPanel extends DefaultPanel implements ActionListener {
 	private ArrayList<StdTextLabel> count;
 	private StatusSending m_parent;
 	
-	public LbaSmsReplyPanel(StatusSending parent) { // Her kan jeg fÃ¥ inn array av LBASmsInStats
+	public LbaSmsReplyPanel(StatusSending parent) { // Her kan jeg få inn array av LBASmsInStats
 		super();
 		setPreferredSize(new Dimension(300, 200));
 		setBorder(BorderFactory.createRaisedBevelBorder());

@@ -1,56 +1,21 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
-
-
-
-import java.awt.event.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.LayeredHighlighter;
-import javax.swing.text.Position;
-import javax.swing.text.View;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import javax.swing.text.JTextComponent;
-
 import no.ums.pas.PAS;
-import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.ws.WSTasResponseNumbers;
-import no.ums.pas.parm.alert.AlertWindow;
 import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.messagelibrary.MessageLibTreePanel;
-import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.sound.SoundlibFileTxt;
-import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.ExpiryMins;
 import no.ums.pas.ums.tools.SmsInReplyNumber;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.UnderlineHighlightPainter;
 import no.ums.ws.pas.tas.UTASRESPONSENUMBER;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
-
-import java.awt.Point;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.text.DefaultHighlighter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
 import java.util.List;
 
 public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text

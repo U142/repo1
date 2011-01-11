@@ -1,18 +1,13 @@
 package no.ums.pas.importer.csv;
 
-import java.awt.Component;
+import no.ums.pas.importer.gis.LineData;
+import no.ums.pas.ums.tools.FilePicker;
+
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
-
-import javax.swing.JFileChooser;
-
-import no.ums.pas.PAS;
-import no.ums.pas.importer.gis.*;
-import no.ums.pas.ums.tools.FilePicker;
 
 
 

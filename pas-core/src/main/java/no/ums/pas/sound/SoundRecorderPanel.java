@@ -1,22 +1,18 @@
 package no.ums.pas.sound;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.sound.soundinfotypes.SoundInfoRecord;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextLabel;
+
+import javax.sound.sampled.AudioFormat;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
-
-import javax.sound.sampled.AudioFormat;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JSlider;
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.sound.soundinfotypes.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
 
 
 

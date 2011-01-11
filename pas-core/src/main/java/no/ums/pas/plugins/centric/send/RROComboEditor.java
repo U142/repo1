@@ -1,21 +1,13 @@
 package no.ums.pas.plugins.centric.send;
 
-import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.plaf.basic.BasicComboBoxEditor;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Keymap;
-
 import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxEditor;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.FocusEvent;
 
 public class RROComboEditor extends BasicComboBoxEditor
 {

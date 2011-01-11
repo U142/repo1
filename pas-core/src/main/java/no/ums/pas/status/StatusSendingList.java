@@ -1,16 +1,12 @@
 package no.ums.pas.status;
 
-import java.util.*;
-import java.awt.event.*;
-
-import javax.swing.SwingUtilities;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.webdata.*;
 import no.ums.pas.core.ws.WSMaxAlloc;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.UMAXALLOC;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 public class StatusSendingList extends ArrayList<StatusSending> implements ActionListener {

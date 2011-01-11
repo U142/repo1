@@ -1,17 +1,4 @@
 package no.ums.pas.tas.statistics;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -23,8 +10,13 @@ import no.ums.ws.pas.tas.ULBACOUNTRY;
 import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
 import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
 
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.List;
 
 
 

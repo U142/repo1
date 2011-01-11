@@ -1,33 +1,26 @@
 package no.ums.pas.core.menus;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-
-import java.awt.event.*;
-
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.mainui.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.address_search.SearchFrame;
-import no.ums.pas.core.menus.defines.*;
+import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.themes.ThemeColorComponent;
-import no.ums.pas.importer.*;
-import no.ums.pas.maps.*;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.importer.ImportPolygon;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.maps.defines.MapSite;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
-
+import org.jvnet.substance.SubstanceImageCreator;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
 //Substance 3.3
-import org.jvnet.substance.SubstanceButtonBorder;
-import org.jvnet.substance.SubstanceImageCreator;
-import org.jvnet.substance.theme.SubstanceTheme;
 
 
 //substance 5.2

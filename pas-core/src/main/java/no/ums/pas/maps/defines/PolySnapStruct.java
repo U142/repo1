@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Point;
+import java.awt.*;
 
 public class PolySnapStruct extends UMSMapObject {
 	private boolean m_b_activesending;

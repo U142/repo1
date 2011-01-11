@@ -1,21 +1,15 @@
 package no.ums.pas.core.dataexchange.soap;
 
-import java.net.URL;
-
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBodyElement;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.ums.errorhandling.Error;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import org.w3c.dom.*;
-
-
-import java.util.*;
+import javax.xml.soap.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 

@@ -1,18 +1,15 @@
 package no.ums.pas.send;
 
-import java.awt.Color;
-import java.awt.Event;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.*;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
-import no.ums.pas.send.SendPropertiesPolygon;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class SendObject extends Object {

@@ -1,42 +1,10 @@
 package no.ums.pas.parm.main;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.cellbroadcast.CCode;
-import no.ums.pas.core.logon.*;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISRecord;
@@ -48,7 +16,7 @@ import no.ums.pas.parm.event.EventController;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.map.MapController;
 import no.ums.pas.parm.map.MapPanel;
-import no.ums.pas.parm.object.*;
+import no.ums.pas.parm.object.ObjectController;
 import no.ums.pas.parm.threads.UpdateXML;
 import no.ums.pas.parm.tree.TreeController;
 import no.ums.pas.parm.tree.TreeGUI;
@@ -59,39 +27,24 @@ import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.UAdrCount;
-import no.ums.ws.parm.UMapPoint;
-import no.ums.ws.parm.admin.ArrayOfLBACCode;
-import no.ums.ws.parm.admin.ArrayOfLBALanguage;
-import no.ums.ws.parm.admin.ArrayOfPAALERT;
-import no.ums.ws.parm.admin.ArrayOfUGisImportResultLine;
-import no.ums.ws.parm.admin.ArrayOfUPolypoint;
-import no.ums.ws.parm.admin.LBACCode;
-import no.ums.ws.parm.admin.LBALanguage;
-import no.ums.ws.parm.admin.PAALERT;
-import no.ums.ws.parm.admin.PAEVENT;
-import no.ums.ws.parm.admin.PAOBJECT;
-import no.ums.ws.parm.admin.PARMOPERATION;
-import no.ums.ws.parm.admin.ParmAdmin;
-import no.ums.ws.parm.admin.UEllipse;
-import no.ums.ws.parm.admin.UGeminiStreet;
-import no.ums.ws.parm.admin.UGisImportResultLine;
-import no.ums.ws.parm.admin.ULOGONINFO;
-import no.ums.ws.parm.admin.ULocationBasedAlert;
-import no.ums.ws.parm.admin.UPAALERTRESTULT;
-import no.ums.ws.parm.admin.UPAEVENTRESULT;
-import no.ums.ws.parm.admin.UPAOBJECTRESULT;
-import no.ums.ws.parm.admin.UPARESULT;
-import no.ums.ws.parm.admin.UPolygon;
-import no.ums.ws.parm.admin.UPolypoint;
-import no.ums.ws.parm.admin.UShape;
+import no.ums.ws.parm.admin.*;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
-
-
-
-import java.awt.Graphics;
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.xml.namespace.QName;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.*;
 
 public class MainController implements ActionListener, TreeModelListener,
 		TreeSelectionListener {

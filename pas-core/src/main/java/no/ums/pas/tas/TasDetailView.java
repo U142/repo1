@@ -1,35 +1,21 @@
 package no.ums.pas.tas;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.ws.WSTasCount;
-import no.ums.pas.send.AddressCount;
-import no.ums.pas.tas.statistics.ChartByCountry;
-import no.ums.pas.tas.statistics.ChartOverTime;
-import no.ums.pas.tas.statistics.TasChart;
 import no.ums.pas.tas.statistics.UMSChartFrame;
 import no.ums.pas.tas.treenodes.CommonTASListItem;
 import no.ums.pas.tas.treenodes.CountryListItem;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.UTASREQUEST;
 import no.ums.ws.pas.tas.UTOURISTCOUNT;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 

@@ -1,12 +1,12 @@
 package no.ums.pas.importer.gis;
 
 
-import java.awt.event.*;
-
-import no.ums.pas.core.defines.*;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.event.ActionEvent;
 
 
 public class StatisticsPanel extends DefaultPanel {

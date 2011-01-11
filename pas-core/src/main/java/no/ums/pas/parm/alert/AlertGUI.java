@@ -1,18 +1,15 @@
 package no.ums.pas.parm.alert;
 
-import javax.swing.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.send.ToggleAddresstype;
 
-
-
-
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 	public static final long serialVersionUID = 1;
@@ -173,7 +170,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 			scroll.setPreferredSize(new Dimension(200, 70));
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
-			// MÃ¥ ha et panel for Ã¥ fÃ¥ med labelen i samme kolonne
+			// Må ha et panel for å få med labelen i samme kolonne
 			pnlValidity.add(Box.createHorizontalStrut(4));
 			pnlContainerRigth.add(pnlValidity);
 			

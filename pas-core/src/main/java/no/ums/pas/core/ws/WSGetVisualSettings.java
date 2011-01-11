@@ -1,14 +1,12 @@
 package no.ums.pas.core.ws;
 
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UPASUISETTINGS;
+
+import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-import no.ums.pas.PAS;
-import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UPASUISETTINGS;
 
 
 public class WSGetVisualSettings extends WSThread

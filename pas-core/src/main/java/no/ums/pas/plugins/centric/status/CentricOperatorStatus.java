@@ -1,15 +1,5 @@
 package no.ums.pas.plugins.centric.status;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
-import java.util.List;
-
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.status.LBASEND;
@@ -18,6 +8,11 @@ import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.pas.status.CBSTATUS;
 import no.ums.ws.pas.status.ULBAHISTCELL;
 import no.ums.ws.pas.status.ULBASENDING;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentListener;
+import java.util.List;
 
 public class CentricOperatorStatus extends DefaultPanel implements ComponentListener {
 

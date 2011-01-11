@@ -1,14 +1,13 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UBBNEWSLISTFILTER;
 import no.ums.ws.pas.USYSTEMMESSAGES;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class WSGetSystemMessages extends WSThread
 {

@@ -1,29 +1,17 @@
 package no.ums.pas.core.mainui.address_search;
 
-import java.awt.Dimension;
-import java.awt.Point;
-
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.swing.ListSelectionModel;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.awt.event.*;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSThread;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.defines.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.parm.Parmws;
-import no.ums.ws.pas.*;
+import no.ums.pas.maps.defines.MapPointLL;
+import no.ums.pas.maps.defines.NavPoint;
+import no.ums.ws.pas.UGabSearchResultList;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class SearchPanelResultsAddrSearch extends SearchPanelResults implements ActionListener {

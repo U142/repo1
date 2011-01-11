@@ -1,41 +1,27 @@
 package no.ums.pas.importer.esri;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.Charset;
-
-
-import java.util.*;
-
+import com.vividsolutions.jts.geom.GeometryFactory;
 import no.ums.pas.importer.ActionFileLoaded;
 import no.ums.pas.importer.FileParser;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.defines.MapLine;
-import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointF;
-import no.ums.pas.maps.defines.MapPointPix;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.CoorConverter.LLCoor;
-
-import org.geotools.data.PrjFileReader;
 import org.geotools.data.shapefile.ShpFiles;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
-import org.geotools.data.shapefile.shp.IndexFile;
 import org.geotools.data.shapefile.shp.ShapefileHeader;
-import org.geotools.data.shapefile.shp.ShapefileReader.Record;
-import org.geotools.geometry.jts.GeometryCoordinateSequenceTransformer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.cs.CoordinateSystem;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShapeImporter extends FileParser
 {

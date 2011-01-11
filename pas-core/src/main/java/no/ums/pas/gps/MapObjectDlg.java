@@ -1,10 +1,9 @@
 package no.ums.pas.gps;
 
+import no.ums.pas.PAS;
+import no.ums.pas.maps.defines.MapObject;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-import no.ums.pas.maps.defines.*;
-
 import java.awt.*;
 
 

@@ -1,27 +1,17 @@
 package no.ums.pas.localization;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import no.ums.pas.PAS;
+import no.ums.pas.ums.errorhandling.Error;
+import org.opengis.parameter.ParameterNotFoundException;
+
+import javax.swing.*;
+import javax.swing.plaf.InsetsUIResource;
+import java.awt.*;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
-
-import javax.swing.BorderFactory;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.swing.plaf.InsetsUIResource;
-
-import no.ums.pas.PAS;
-import no.ums.pas.ums.errorhandling.Error;
-
-import org.opengis.parameter.ParameterNotFoundException;
 
 
 public class UIParamLoader extends ClassLoader

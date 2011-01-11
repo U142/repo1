@@ -1,6 +1,6 @@
 package no.ums.pas;
 
-import java.awt.Component;
+import java.awt.*;
 
 
 public class PASDraw extends Draw {

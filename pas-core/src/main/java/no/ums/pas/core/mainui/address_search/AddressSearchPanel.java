@@ -1,10 +1,10 @@
 package no.ums.pas.core.mainui.address_search;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class AddressSearchPanel extends DefaultPanel
 {

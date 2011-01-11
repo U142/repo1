@@ -1,5 +1,4 @@
 package no.ums.pas.sound.soundinfotypes;
-import no.ums.ws.pas.*; 
 
 public class SoundInfoTTS extends SoundInfo {
 	private String m_sz_serverfilename;

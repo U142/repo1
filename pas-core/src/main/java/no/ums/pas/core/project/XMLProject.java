@@ -1,14 +1,18 @@
 package no.ums.pas.core.project;
 
-import javax.swing.JFrame;
-import java.awt.event.*;
-
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.webdata.*;
+import no.ums.pas.core.dataexchange.HTTPReq;
+import no.ums.pas.core.dataexchange.HttpPostForm;
+import no.ums.pas.core.mainui.LoadingPanel;
+import no.ums.pas.core.webdata.XMLThread;
 import no.ums.pas.ums.errorhandling.Error;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import org.w3c.dom.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class XMLProject extends XMLThread {

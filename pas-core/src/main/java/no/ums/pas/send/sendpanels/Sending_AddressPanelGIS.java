@@ -1,16 +1,16 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-
-import java.awt.event.*;
-
 import no.ums.pas.PAS;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
-import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
-import no.ums.pas.send.*;
+import no.ums.pas.send.AddressCount;
+import no.ums.pas.send.SendController;
+import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.tools.StdTextLabel;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
 /*
  * Show description of selected area and addresscount
  */

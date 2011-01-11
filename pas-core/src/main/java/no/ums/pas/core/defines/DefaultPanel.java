@@ -1,13 +1,13 @@
 package no.ums.pas.core.defines;
 
+import no.ums.pas.ums.tools.StdTextLabel;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-
-import no.ums.pas.ums.tools.StdTextLabel;
-
-import java.awt.event.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public abstract class DefaultPanel extends JPanel implements ActionListener, ComponentListener, IWantedSizing {
 	public static final int DIR_HORIZONTAL	= 0;

@@ -1,8 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.Dimension;
-
-import no.ums.pas.send.*;
+import no.ums.pas.send.SendController;
 
 /*
 String[] sz_itemattr = { "dmid", "name", "adr", "no", "lt", "post", "area", "reg", "bday", "pno", 

@@ -1,26 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.parm.alert.AlertController;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.send.*;
 import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -29,7 +10,14 @@ import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.SchedCalendar;
 
-import sun.security.krb5.internal.ktab.KeyTabConstants;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /*
  * download : profiles, oadc and schedprofiles
@@ -273,7 +261,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		
 		// if only cell broadcast is selected then don't show these fields
 		System.out.println("Addresstypes: " + parent.m_sendobject.get_toolbar().get_addresstypes());
-		if(parent.m_sendobject.get_toolbar().get_addresstypes() != 256) { // Her mÃ¥ jeg finne Statiske for BTN_CELLBROADCAST
+		if(parent.m_sendobject.get_toolbar().get_addresstypes() != 256) { // Her må jeg finne Statiske for BTN_CELLBROADCAST
 			if(parent.hasVoice(n_addrtypes)) {
 				set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
 				add(m_lbl_profiles, m_gridconst);

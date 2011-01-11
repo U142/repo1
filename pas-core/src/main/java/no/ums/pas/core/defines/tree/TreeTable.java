@@ -1,15 +1,9 @@
 package no.ums.pas.core.defines.tree;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-
 import no.ums.pas.core.defines.SearchPanelResults;
-import no.ums.pas.core.defines.SearchPanelResults.TableDateFormatter;
+
+import javax.swing.table.TableColumn;
+import java.awt.*;
 
 
 public abstract class TreeTable extends SearchPanelResults

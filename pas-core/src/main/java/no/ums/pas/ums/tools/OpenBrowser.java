@@ -1,11 +1,11 @@
 package no.ums.pas.ums.tools;
 
-import javax.jnlp.*;
-
 import no.ums.pas.ums.errorhandling.Error;
 
-
-import java.net.*;
+import javax.jnlp.BasicService;
+import javax.jnlp.ServiceManager;
+import javax.jnlp.UnavailableServiceException;
+import java.net.URL;
 
 public class OpenBrowser{ 
 	final String WIN_ID = "Win"; 

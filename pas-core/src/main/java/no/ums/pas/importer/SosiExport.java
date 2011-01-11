@@ -1,22 +1,23 @@
 package no.ums.pas.importer;
 
 
-import java.awt.event.ActionEvent;
-import java.io.*;
-import java.util.ArrayList;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.parm.voobjects.*;
-import no.ums.pas.send.SendObject;
+import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.ums.tools.CoorConverter;
-import no.ums.pas.ums.tools.FilePicker;
 import no.ums.pas.ums.tools.CoorConverter.LLCoor;
 import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
+import no.ums.pas.ums.tools.FilePicker;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class SosiExport
 {

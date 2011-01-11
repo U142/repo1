@@ -1,26 +1,31 @@
 package no.ums.pas.send.sendpanels;
 
-import javax.swing.*;
-import javax.swing.event.*;
-
-import no.ums.pas.*;
+import no.ums.pas.PAS;
 import no.ums.pas.core.defines.LightPanel;
-import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.webdata.*;
+import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
 import no.ums.pas.send.*;
-import no.ums.pas.sound.*;
+import no.ums.pas.sound.SoundFile;
+import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusCodeList;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
-import no.ums.pas.ums.tools.calendarutils.DateTime;
+import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.pas.ums.tools.calendarutils.SchedCalendar.Day;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 
@@ -312,7 +317,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 
 		if(obj.get_sendproperties().get_isresend()) {
 			m_addresscount = new AddressCount();
-			// Her mÃ¥ jeg hente StatusController.get_items
+			// Her må jeg hente StatusController.get_items
 			ArrayList<Object> items = controller.get_pas().get_statuscontroller().get_items(); // denne listen inneholder StatusItemObjects
 			StatusCodeList mainList = controller.get_pas().get_statuscontroller().get_statuscodes();
 			StatusCodeList list = new StatusCodeList();
@@ -883,7 +888,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		{
 			
 		}
-		// her mÃ¥ jeg ta en sjekk pÃ¥ om det er andre sendwindow oppe
+		// her må jeg ta en sjekk på om det er andre sendwindow oppe
 		//PAS.get_pas().get_sendcontroller().get_sendings().
 		boolean close = true;
 		ArrayList<SendObject> sendings = PAS.get_pas().get_sendcontroller().get_sendings();

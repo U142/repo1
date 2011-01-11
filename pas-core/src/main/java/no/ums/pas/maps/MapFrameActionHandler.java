@@ -1,30 +1,23 @@
 package no.ums.pas.maps;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.*;
-
-
-import java.util.*;
-import java.util.List;
-
-import javax.swing.SwingUtilities;
-//import PAS.*;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.MapFrame.MapOverlay;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.CoorConverter;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
+
+//import PAS.*;
 
 
 

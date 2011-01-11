@@ -1,29 +1,30 @@
 package no.ums.pas.sound;
 
-import java.awt.*;
-import java.awt.event.*;
+import no.ums.pas.Installer;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.send.TTSLang;
+import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.send.sendpanels.Sending_Files;
+import no.ums.pas.sound.soundinfotypes.SoundInfoTTS;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.pas.ObjectFactory;
+import no.ums.ws.pas.UCONVERTTTSREQUEST;
+import no.ums.ws.pas.UCONVERTTTSRESPONSE;
+import no.ums.ws.pas.ULOGONINFO;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
 import javax.xml.namespace.QName;
-
-import no.ums.pas.*;
-import no.ums.pas.core.dataexchange.*;
-import no.ums.pas.core.defines.*;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.ws.vars;
-import no.ums.pas.send.*;
-import no.ums.pas.send.sendpanels.*;
-import no.ums.pas.sound.soundinfotypes.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.pas.ULOGONINFO;
-
-import java.io.*;
-
-import java.net.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
-
-import no.ums.ws.pas.*;
 
 
 public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyListener {
@@ -52,7 +53,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		//FontSet 
-		m_text.setFont(new Font(null, Font.PLAIN, 11)); //dette hadde noe med substance Ã¥ gjÃ¸re, mÃ¥tte fjerne den for ikke Ã¥ fÃ¥ java.lang.NegativeArraySizeException
+		m_text.setFont(new Font(null, Font.PLAIN, 11)); //dette hadde noe med substance å gjøre, måtte fjerne den for ikke å få java.lang.NegativeArraySizeException
 		m_text.setLineWrap(true);
 		m_text.setWrapStyleWord(true);
 		m_text.addFocusListener(this);
@@ -114,7 +115,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, (String)e.getSource());
 			get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS((String)e.getSource(),-1, null));
 			
-			// Her gjÃ¸res den ferdig og reloader parent for Ã¥ enable next knappen
+			// Her gjøres den ferdig og reloader parent for å enable next knappen
 			get_parent().set_next_text();
 		} else if("act_txtlib_changed".equals(e.getActionCommand())) {
 			//load text from server

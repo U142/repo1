@@ -1,56 +1,28 @@
 package no.ums.pas.core.logon;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPasswordField;
-import javax.swing.JToolTip;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-
-/*Substance 3.3
-import org.jvnet.substance.utils.params.PropertiesFileParamReader;
-*/
-import no.ums.pas.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSPowerup;
-import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.UPOWERUPRESPONSE;
 
-
-
-
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+/*Substance 3.3
+import org.jvnet.substance.utils.params.PropertiesFileParamReader;
+*/
 
 
 /*dialog box*/

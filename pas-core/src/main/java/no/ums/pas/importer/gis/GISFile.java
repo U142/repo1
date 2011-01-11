@@ -1,9 +1,10 @@
 package no.ums.pas.importer.gis;
 
-import java.io.*;
-import java.awt.event.*;
+import no.ums.pas.importer.FileParser;
 
-import no.ums.pas.importer.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 public class GISFile implements ActionListener {
 	public static final String [] EXPECTED_SEPARATORS_ = new String [] { "	", ";", ",", "|" };

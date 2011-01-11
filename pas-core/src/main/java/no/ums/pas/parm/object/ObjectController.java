@@ -1,13 +1,5 @@
 package no.ums.pas.parm.object;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.swing.JOptionPane;
-
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.maps.defines.Navigation;
@@ -19,6 +11,13 @@ import no.ums.pas.parm.voobjects.CategoryVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.ums.errorhandling.Error;
+
+import javax.swing.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 
 public class ObjectController {
@@ -82,8 +81,8 @@ public class ObjectController {
 		gui.getDescriptionPanel().getTxaDescription().setText(
 				this.object.getDescription());
 			
-		// Dette er for Ã¥ gÃ¥ over til edit mode pÃ¥ polygonen
-		// MÃ¥ vi kanskje ha en service locator for Ã¥ fÃ¥ kartet inn her? Tror jeg fÃ¥r tak i feil map.
+		// Dette er for å gå over til edit mode på polygonen
+		// Må vi kanskje ha en service locator for å få kartet inn her? Tror jeg får tak i feil map.
 		if(object.getM_shape()==null)
 			m_edit_polygon = (new PolygonStruct(main.getMapNavigation().getDimension()));
 		else {
@@ -99,11 +98,11 @@ public class ObjectController {
 		main.mapClear();
 		main.setDrawMode(m_edit_polygon);
 		
-		//NB!, mÃ¥ endres, temp lÃ¸sning
+		//NB!, må endres, temp løsning
 		if(gui.getObjInfoPanel().getTxtPostno().getText().equals(" ")) {
 			gui.getObjInfoPanel().getTxtPostno().setText("");
 		}
-		// MÃ¥ sjekke om brukeren har rettigheter til Ã¥ lagre
+		// Må sjekke om brukeren har rettigheter til å lagre
 		if(PAS.get_pas().get_rightsmanagement().write_parm())
 			gui.getActionPanel().getBtnSave().setEnabled(true);
 		else
@@ -273,8 +272,8 @@ public class ObjectController {
 			this.toObjectList = true;
 		else
 			this.toObjectList = false;
-		// Her mÃ¥ jeg sjekke om det er en ny eller edit event, men i tillegg
-		// sÃ¥ kan det vÃ¦re en edit fÃ¸r den blir satt inn og da skal det fortsatt vÃ¦re insert 
+		// Her må jeg sjekke om det er en ny eller edit event, men i tillegg
+		// så kan det være en edit før den blir satt inn og da skal det fortsatt være insert 
 		if (gui.getObjInfoPanel().getTxtName().getText().length() <= 0) {
 			this.toObjectList = false;
 			store = false;

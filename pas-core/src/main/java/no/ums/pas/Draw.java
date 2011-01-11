@@ -1,21 +1,12 @@
 package no.ums.pas;
 
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.SystemColor;
+import no.ums.pas.maps.MapFrame;
+import no.ums.pas.ums.errorhandling.Error;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.awt.Component;
-import java.awt.RenderingHints;
-
-import no.ums.pas.maps.*;
-import no.ums.pas.ums.errorhandling.Error;
 
 
 	public class Draw /*extends Thread */implements ImageObserver /*, Runnable*/ {

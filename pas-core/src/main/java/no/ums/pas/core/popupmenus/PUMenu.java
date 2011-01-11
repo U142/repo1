@@ -1,12 +1,9 @@
 package no.ums.pas.core.popupmenus;
 
-import java.awt.Component;
+import no.ums.pas.PAS;
+
 import javax.swing.*;
-
-import no.ums.pas.*;
-
-import java.awt.Point;
-import java.awt.Font;
+import java.awt.*;
 
 
 public class PUMenu extends JPopupMenu {

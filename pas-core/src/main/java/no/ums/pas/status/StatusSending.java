@@ -1,57 +1,43 @@
 package no.ums.pas.status;
 
 
-
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.*;
-import java.awt.*;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ProgressBarUI;
-
-import no.ums.pas.*;
-import no.ums.pas.cellbroadcast.CountryCodes;
-import no.ums.pas.core.variables;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.mainui.OpenStatuscodes;
 import no.ums.pas.core.mainui.StatusPanel;
-import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.ws.WSMaxAlloc;
+import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSTasResend;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendProperties;
-import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 import no.ums.pas.sound.SoundPlayer;
-import no.ums.pas.sound.SoundRecorder;
-import no.ums.pas.sound.SoundRecorderPanel;
-import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.sound.SoundlibFileWav;
 import no.ums.pas.status.LBASEND.LBAHISTCC;
 import no.ums.pas.status.LBASEND.LBASEND_TS;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.OpenBrowser;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.pas.LBALanguage;
 import no.ums.ws.pas.UMAXALLOC;
 import no.ums.ws.pas.status.USMSINSTATS;
-
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-
-
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 public class StatusSending extends Object {
 	/*sprintf(sz_xmltemp, "<SENDING sz_sendingname=\"%s\" l_refno=\"%d\" l_group=\"%d\" l_createdate=\"%d\" l_createtime=\"%d\" "

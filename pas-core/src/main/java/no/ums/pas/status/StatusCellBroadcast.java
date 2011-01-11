@@ -1,9 +1,8 @@
 package no.ums.pas.status;
 
-import java.util.ArrayList;
-
-import no.ums.pas.status.StatusCellBroadcastItem;
 import no.ums.pas.ums.tools.TextFormat;
+
+import java.util.ArrayList;
 
 /*
  * contains details for one CB part-refno (one country code)

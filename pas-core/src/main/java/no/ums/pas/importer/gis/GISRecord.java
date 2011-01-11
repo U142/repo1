@@ -1,9 +1,9 @@
 package no.ums.pas.importer.gis;
 
-import java.util.ArrayList;
-
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
+
+import java.util.ArrayList;
 
 
 public class GISRecord extends Object {

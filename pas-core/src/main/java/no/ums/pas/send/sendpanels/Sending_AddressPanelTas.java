@@ -1,27 +1,19 @@
 package no.ums.pas.send.sendpanels;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSTasCount;
 import no.ums.pas.send.AddressCount;
-import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.send.SendPropertiesTAS;
 import no.ums.pas.tas.TasHelpers;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.parm.ULBACOUNTRY;
 import no.ums.ws.pas.tas.UTASREQUEST;
 import no.ums.ws.pas.tas.UTOURISTCOUNT;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 
 public class Sending_AddressPanelTas extends Sending_AddressPanel

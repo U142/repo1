@@ -1,18 +1,16 @@
 package no.ums.adminui.pas.ws;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.ws.pas.ArrayOfUDEPARTMENT;
 import no.ums.ws.pas.PASHAPETYPES;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.RESTRICTIONTYPE;
 import no.ums.ws.pas.ULOGONINFO;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 
 
 public class WSGetRestrictionShapes extends WSThread {

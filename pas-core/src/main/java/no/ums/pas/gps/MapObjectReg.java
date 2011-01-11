@@ -1,16 +1,13 @@
 package no.ums.pas.gps;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JDialog;
-import javax.swing.JTabbedPane;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.MapObject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 public class MapObjectReg extends DefaultPanel {

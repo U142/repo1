@@ -1,7 +1,7 @@
 package no.ums.pas.status;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.project.*;
+import no.ums.pas.core.project.Project;
 
 public class StatusListObject extends Object {
 

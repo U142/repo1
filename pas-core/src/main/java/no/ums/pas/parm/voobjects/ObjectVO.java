@@ -1,9 +1,9 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.pas.maps.defines.PolygonStruct;
+
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
-
-import no.ums.pas.maps.defines.PolygonStruct;
 
 
 public class ObjectVO extends ParmVO {

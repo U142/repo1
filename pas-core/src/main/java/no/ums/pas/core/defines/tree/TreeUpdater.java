@@ -1,10 +1,9 @@
 package no.ums.pas.core.defines.tree;
 
+import no.ums.pas.ums.tools.Timeout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import no.ums.pas.tas.TasPanel;
-import no.ums.pas.ums.tools.Timeout;
 
 
 

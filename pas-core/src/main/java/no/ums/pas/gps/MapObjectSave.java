@@ -1,9 +1,6 @@
 package no.ums.pas.gps;
 
-import no.ums.pas.PAS;
-import no.ums.pas.core.dataexchange.HttpPostForm;
 import no.ums.pas.maps.defines.MapObject;
-import no.ums.pas.ums.errorhandling.Error;
 
 public class MapObjectSave {
 	//HttpPostForm m_form;

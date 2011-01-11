@@ -1,14 +1,10 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.AWTKeyStroke;
-import java.awt.Component;
-import java.awt.KeyboardFocusManager;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 
 public class StdTextAreaNoTab extends JTextArea

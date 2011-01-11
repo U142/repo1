@@ -1,14 +1,5 @@
 package no.ums.pas.core.defines;
 
-import java.awt.Component;
-
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.AbstractTableModel;
-
-
 public class ComboRow
 {
 	private Object id;

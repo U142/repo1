@@ -1,10 +1,6 @@
 package no.ums.pas.core.dataexchange.soap;
 
-import java.io.*;
-import java.net.*;
 import javax.xml.soap.*;
-import java.util.*;
-import org.w3c.dom.*;
 
 public abstract class MiniSOAP {
 	protected SOAPFactory soapFactory;

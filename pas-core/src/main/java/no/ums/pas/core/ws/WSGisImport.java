@@ -1,22 +1,20 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.io.*;
-import java.net.URL;
-import java.util.zip.ZipInputStream;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.importer.gis.GISList;
-import no.ums.ws.pas.*;
-import no.ums.ws.pas.status.PasStatus;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.ProgressJobType;
+import no.ums.ws.pas.UGisImportParamsByStreetId;
+import no.ums.ws.pas.UGisImportResultsByStreetId;
 
-import org.w3c.dom.Document;
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 
 
 

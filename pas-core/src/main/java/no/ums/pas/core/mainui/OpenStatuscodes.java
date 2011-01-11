@@ -1,27 +1,20 @@
 package no.ums.pas.core.mainui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import no.ums.pas.*;
-import no.ums.pas.core.controllers.*;
-import no.ums.pas.core.defines.*;
+import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.defines.TblCellColor;
 import no.ums.pas.core.popupmenus.PUStatusList;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.status.*;
+import no.ums.pas.status.StatusCode;
+import no.ums.pas.status.StatusItemObject;
+import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.colorpicker.ColorPickerTable;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.util.ArrayList;
 
 
 public class OpenStatuscodes extends SearchPanelResults {

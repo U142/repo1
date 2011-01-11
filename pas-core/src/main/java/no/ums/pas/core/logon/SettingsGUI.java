@@ -1,58 +1,26 @@
 package no.ums.pas.core.logon;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Point;
-import java.util.EventObject;
-import java.util.Hashtable;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-
-import javax.swing.AbstractCellEditor;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ListModel;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.maps.defines.MapSite;
+import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
-import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.tree.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class SettingsGUI extends JFrame implements ActionListener {

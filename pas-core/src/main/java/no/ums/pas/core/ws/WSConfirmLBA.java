@@ -1,9 +1,5 @@
 package no.ums.pas.core.ws;
 
-import java.awt.*;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.ums.errorhandling.Error;
@@ -11,6 +7,8 @@ import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.UConfirmJobResponse;
 import no.ums.ws.parm.ULOGONINFO;
+
+import javax.xml.namespace.QName;
 
 public class WSConfirmLBA
 {

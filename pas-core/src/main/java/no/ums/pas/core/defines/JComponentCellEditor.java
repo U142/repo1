@@ -1,13 +1,15 @@
 package no.ums.pas.core.defines;
 
-import java.awt.Component;
-import java.awt.event.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
-import java.util.EventObject;
-import javax.swing.tree.*;
-import java.io.Serializable;
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.EventListenerList;
+import javax.swing.table.TableCellEditor;
+import javax.swing.tree.TreeCellEditor;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.io.Serializable;
+import java.util.EventObject;
 
 
 public class JComponentCellEditor implements TableCellEditor, TreeCellEditor,

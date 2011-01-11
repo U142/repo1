@@ -1,6 +1,6 @@
 package no.ums.pas.gps;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class GPSEventList extends ArrayList<GPSEvent> {
 	public static final long serialVersionUID = 1;

@@ -1,6 +1,6 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Color;
+import java.awt.*;
 
 
 

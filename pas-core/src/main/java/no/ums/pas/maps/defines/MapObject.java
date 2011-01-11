@@ -1,21 +1,14 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Stroke;
+import no.ums.pas.gps.GPSCoor;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Utils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import javax.swing.ImageIcon;
-
-import no.ums.pas.gps.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.Utils;
 
 
 public class MapObject extends Object implements Cloneable {

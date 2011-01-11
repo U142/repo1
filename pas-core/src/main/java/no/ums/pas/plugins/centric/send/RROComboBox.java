@@ -1,13 +1,10 @@
 package no.ums.pas.plugins.centric.send;
 
-import javax.swing.JComboBox;
-
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.TextFormat.RegExpResult;
 import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
-import no.ums.ws.parm.CBORIGINATOR;
-import no.ums.ws.parm.CBREACTION;
-import no.ums.ws.parm.CBRISK;
+
+import javax.swing.*;
 
 public class RROComboBox extends JComboBox
 {

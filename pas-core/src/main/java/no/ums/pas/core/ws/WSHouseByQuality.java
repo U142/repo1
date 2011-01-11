@@ -1,18 +1,14 @@
 package no.ums.pas.core.ws;
 
-import java.awt.event.*;
-import java.net.URL;
-import java.util.*;
+import no.ums.pas.PAS;
+import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.ws.pas.*;
 
 import javax.xml.namespace.QName;
-
-
-import no.ums.pas.PAS;
-import no.ums.pas.core.ws.WSHouseEditor.SaveGABResult;
-import no.ums.pas.maps.defines.Inhabitant;
-import no.ums.pas.ums.errorhandling.*;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.ws.pas.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
