@@ -327,8 +327,8 @@ public class SoundMixer implements LineListener {
 			}
 			break;
 		case MIXER_TYPE_SPEAKER:
-			m_SpeakerVolCtrl = (Control[])arrFloat.toArray();
-			m_SpeakerMuteCtrl = (Control[])arrBool.toArray();
+			m_SpeakerVolCtrl = arrFloat.toArray(new Control[arrFloat.size()]);
+			m_SpeakerMuteCtrl = arrBool.toArray(new Control[arrBool.size()]);
 			break;
 		}
 		inPort.close();

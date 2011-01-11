@@ -958,14 +958,6 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 						else
 						{
 							prepareImage(overlay.img_onscreen, get_drawthread());
-							try
-							{
-								overlay.img_onscreen.flush();
-							}
-							catch(Exception e)
-							{
-								
-							}
 							overlay.img_onscreen = overlay.img_load;
 							overlay.b_needupdate = false;
 							overlay.b_isdownloaded = true;

@@ -727,18 +727,16 @@ public class XmlWriter {
 				element = (Element)nl.item(0);
 			
 				// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
-				// Her må jeg sjekke om det er alert eller object
-				if(alert == null){
-					
-					if(alert.getOperation()!=null && alert.getOperation().equals("delete")){
-						if(alert.getArea()!=null){
-							parentnode.removeChild(element);
-							remove = true;
-						}
-					}
-					else if(element != null)
-						element.setAttribute("l_alertpk", alert.getPk());
-				}
+				// Her må jeg sjekke om det er alert e
+				// ller object
+                if(alert.getOperation()!=null && alert.getOperation().equals("delete")){
+                    if(alert.getArea()!=null){
+                        parentnode.removeChild(element);
+                        remove = true;
+                    }
+                }
+                else if(element != null)
+                    element.setAttribute("l_alertpk", alert.getPk());
 			}
 				
 //			 Hvis noden er fjernet er det ikke mye vits å gjøre dette
@@ -884,24 +882,25 @@ public class XmlWriter {
 			rootnd = (Element) xmlDoc.createElement("polyroot");
 			xmlDoc.appendChild(rootnd);
 		}
-		
+
 		// Må sjekke om objektet skal slettes, da må jeg fjerne det fra polyxml
 		// Her må jeg sjekke om det er alert eller object
-		if(obj == null){
-			if(obj.getClass() == ObjectVO.class)
-				element = checkXMLElement(xmlDoc,objectPolygon,ParmConstants.xmlElmObjectPk,obj);
-			else
-				element = checkXMLElement(xmlDoc,objectPolygon,ParmConstants.xmlElmAlertPk,obj);
-			if(obj.getOperation()!=null && obj.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
-				if(poly!=null){
-					rootnd.removeChild(element);
-					remove = true;
-				}
-			}
-			else if(element != null)
-				element.setAttribute(objectPK,obj.getPk());
-		}
-		
+        if(obj.getClass() == ObjectVO.class) {
+            element = checkXMLElement(xmlDoc,objectPolygon,ParmConstants.xmlElmObjectPk,obj);
+        }
+        else {
+            element = checkXMLElement(xmlDoc,objectPolygon,ParmConstants.xmlElmAlertPk,obj);
+        }
+        if(obj.getOperation()!=null && obj.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
+            if(poly!=null){
+                rootnd.removeChild(element);
+                remove = true;
+            }
+        }
+        else if(element != null) {
+            element.setAttribute(objectPK,obj.getPk());
+        }
+
 		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
 		if(!remove && poly != null && poly.get_coors_lat().size()>0){ // Den siste biten la jeg til for at den ikke skulle skrive bare farger i polyxml
 

@@ -432,25 +432,18 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					return "[NO STRING]";
 				}
 			}
+            String defaultWord = "";
 			if(defaultLang==null)
 			{
 				try
 				{
 					defaultLang = ResourceBundle.getBundle("localization/lang", new Locale("en", "EN"));
+                    defaultWord = defaultLang.getString(s);
 				}
 				catch(Exception err)
 				{
 					defaultLang = null;
 				}
-			}
-			String defaultWord = "";
-			try
-			{
-				defaultWord = defaultLang.getString(s);
-			}
-			catch(Exception err)
-			{
-				
 			}
 			if(langErrors!=null && langErrors.getError(0)!=null)
 				langErrors.getError(0).appendBodyFiltered("\n"+s + " = " + defaultWord + "\n");
@@ -547,11 +540,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_pas = this;
 		g_pas = this;
 	}
-	public PAS(String sz_sitename)
-	{
-		this(sz_sitename, null, null, null, false, null, null, null, null);
-	}
-	
+
 	public void setDebug(boolean b) { DEBUGMODE = b; }
 	public void setPlugin(String s) { PASPLUGIN = s; }
 	public void setForceWMSSite(String s) { OVERRIDE_WMS_SITE = s; }

@@ -442,14 +442,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
 		//List<ShapeStruct> list = PAS.get_pas().get_userinfo().get_current_department().get_restriction_shapes();
 
-		List<ShapeStruct> list = null;
+		List<ShapeStruct> list;
 		DeptArray depts = variables.USERINFO.get_departments();
 		if(n_deptpk<1) //use combined restriction area
 		{
 			list = variables.USERINFO.get_departments().get_combined_restriction_shape();
 			if(list==null)
 				return true;
-			if(list.size()<=0)
+			if(list.isEmpty())
 				return true;
 			if(list.get(0).typecast_polygon().get_size()<=3)
 				return true;
@@ -458,15 +458,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		}
 		else //use specified department's restriction area
 		{
-			for(int d = 0; d < depts.size(); d++)
-			{
-				DeptInfo department = (DeptInfo)depts.get(d);
-				if(n_deptpk==department.get_deptpk())
-				{
-					list.addAll(((DeptInfo)depts.get(d)).get_restriction_shapes());
-					break;
-				}
-			}
+            list = new ArrayList<ShapeStruct>();
+            for (Object dept : depts) {
+                DeptInfo department = (DeptInfo) dept;
+                if (n_deptpk == department.get_deptpk()) {
+                    list.addAll(((DeptInfo) dept).get_restriction_shapes());
+                    break;
+                }
+            }
 		}
 		//for(int n_dept = 0; n_dept < depts.size(); n_dept++)
 		{

@@ -41,37 +41,39 @@ public class XMLProject extends XMLThread {
 		if(current == null) {
 			System.out.println("XMLProject.parseDoc() - current == null");
 		}
-		NamedNodeMap nnm_itemlist = current.getAttributes();
+		NamedNodeMap nnm_itemlist = (current == null) ? null : current.getAttributes();
 		if(nnm_itemlist == null) {
 			System.out.println("XMLProject.parseDoc() - nnm_itemlist == null");
 		}
-		try {
-			Node node_projectpk = nnm_itemlist.getNamedItem("l_projectpk");
-			Node node_name  = nnm_itemlist.getNamedItem("sz_name");
-			Node node_createtimestamp = nnm_itemlist.getNamedItem("l_createtimestamp");
-			Node node_updatetimestamp = nnm_itemlist.getNamedItem("l_updatetimestamp");
-			sz_projectpk	= node_projectpk.getNodeValue();
-			sz_name			= node_name.getNodeValue();
-			sz_createtimestamp = node_createtimestamp.getNodeValue();
-			sz_updatetimestamp = node_updatetimestamp.getNodeValue();
-			
-			System.out.println("Projectpk = " + sz_projectpk);
-			System.out.println("Name = " + sz_name);
-			System.out.println("ctime = " + sz_createtimestamp);
-			System.out.println("utime = " + sz_updatetimestamp);
-			
-			m_project.set_projectpk(sz_projectpk);
-			m_project.set_projectname(sz_name);
-			m_project.set_createtimestamp(sz_createtimestamp);
-			m_project.set_updatetimestamp(sz_updatetimestamp);
-			m_project.set_saved();
-			
-			System.out.println("Project set");
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("XMLProject","Exception in parseDoc",e,1);
-		}		
+        else {
+            try {
+                Node node_projectpk = nnm_itemlist.getNamedItem("l_projectpk");
+                Node node_name  = nnm_itemlist.getNamedItem("sz_name");
+                Node node_createtimestamp = nnm_itemlist.getNamedItem("l_createtimestamp");
+                Node node_updatetimestamp = nnm_itemlist.getNamedItem("l_updatetimestamp");
+                sz_projectpk	= node_projectpk.getNodeValue();
+                sz_name			= node_name.getNodeValue();
+                sz_createtimestamp = node_createtimestamp.getNodeValue();
+                sz_updatetimestamp = node_updatetimestamp.getNodeValue();
+
+                System.out.println("Projectpk = " + sz_projectpk);
+                System.out.println("Name = " + sz_name);
+                System.out.println("ctime = " + sz_createtimestamp);
+                System.out.println("utime = " + sz_updatetimestamp);
+
+                m_project.set_projectpk(sz_projectpk);
+                m_project.set_projectname(sz_name);
+                m_project.set_createtimestamp(sz_createtimestamp);
+                m_project.set_updatetimestamp(sz_updatetimestamp);
+                m_project.set_saved();
+
+                System.out.println("Project set");
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                Error.getError().addError("XMLProject","Exception in parseDoc",e,1);
+            }
+        }
 		onDownloadFinished();
 
 		return;

@@ -1185,7 +1185,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 					countryitem = (CountryListItem)treehash.get(country.getSzIso().trim());
 					if(countryitem.Update(country))
 					{
-						if(this.equals(prevsel))
+						if(countryitem.equals(prevsel))
 							startRepaintTimer();
 					}
 				}

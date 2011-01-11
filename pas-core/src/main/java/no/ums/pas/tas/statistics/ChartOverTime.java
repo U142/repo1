@@ -592,7 +592,7 @@ public class ChartOverTime extends TasChart implements ActionListener
 			}
 		}
 		n_num_categories = categoryno;
-		n_skip_categories = (int)Math.ceil( (n_num_categories / n_max_categories) );
+		n_skip_categories = (int)Math.ceil( (n_num_categories / (double) n_max_categories) );
 		if(n_skip_categories<=0)
 			n_skip_categories = 1;
 		

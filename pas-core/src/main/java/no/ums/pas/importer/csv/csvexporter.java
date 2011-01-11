@@ -101,9 +101,10 @@ public class csvexporter extends Object
 			if(i>0)
 				linedata += lines.getSeparator();
 			Object o = obj[i];
-			if(o==null)
-				linedata += "NULL";
-			if(exclude_classes.containsKey(o.getClass().getName()))
+			if(o==null) {
+                linedata += "NULL";
+            }
+			else if(exclude_classes.containsKey(o.getClass().getName()))
 			{
 				//Remove separator
 				linedata = linedata.substring(0, linedata.length()-1);
@@ -113,8 +114,9 @@ public class csvexporter extends Object
 			{
 				linedata += "\"" + o.toString() + "\"";
 			}
-			else
-				linedata += o.toString();
+			else {
+                linedata += o.toString();
+            }
 		}
 		lines.add_line(linedata);
 	}

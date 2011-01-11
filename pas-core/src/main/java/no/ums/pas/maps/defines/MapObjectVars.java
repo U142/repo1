@@ -35,7 +35,8 @@ public class MapObjectVars {
 																	new String[] { "Entering geofence", "Leaving geofence", "Battery low", "Door open/close", "Ignition on/off" },
 																	new String[] { "1", "2", "4", "8", "16" }
 													   				};
-	public static final String GPS_UNIT_DYNAMIC_ [][] = new String[][] {
+
+    public static final String GPS_UNIT_DYNAMIC_ [][] = new String[][] {
 																	new String[] { "0", "1" },
 																	new String[] { "Static", "Dynamic" },
 																	new String[] { "1", "2" }

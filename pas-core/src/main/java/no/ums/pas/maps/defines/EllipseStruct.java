@@ -85,7 +85,7 @@ public class EllipseStruct extends ShapeStruct {
 		
 	}
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_active, boolean b_islocked) {
-		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true);
+		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true, null);
 	}
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_details, Point mousepos) {
 		Graphics2D g2d = (Graphics2D)g;
