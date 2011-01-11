@@ -277,8 +277,7 @@ public class ObjectController {
 		if (gui.getObjInfoPanel().getTxtName().getText().length() <= 0) {
 			this.toObjectList = false;
 			store = false;
-			new ParmException("Name is mandatory!");
-		}	
+		}
 		
 		if(store) {
 			if (object == null) {
@@ -297,7 +296,7 @@ public class ObjectController {
 						
 			this.object.setName(gui.getObjInfoPanel().getTxtName().getText());
 			
-			if (this.getCategory().getName() == "-- Select category --") {
+			if (this.getCategory().getName().equals("-- Select category --")) {
 				this.object.setCategoryVO(null);
 				this.object.setCategoryPK("c-1");
 			} else {

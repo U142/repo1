@@ -146,28 +146,11 @@ public class CountryCodes implements ActionListener {
 			create_values();
 			String sz_ccode, sz_cname, sz_cshort, sz_cvisible;
 			for(int i=0; i < data.get_lines().size(); i++) {
-				try {
-					//g_arr_codes.add(new CCode(data.get_fields(i).get(0).toString(), data.get_fields(i).get(1).toString(), data.get_fields(i).get(2).toString()));
-					sz_ccode = data.get_fields(i).get(0).toString();
-				} catch(Exception e) {
-					sz_ccode = "-2";
-				}
-				try {
-					sz_cname = data.get_fields(i).get(1).toString();
-					sz_cname.replace("\"", "");
-				} catch(Exception e) {
-					sz_cname = "Unknown";
-				}
-				try {
-					sz_cshort = data.get_fields(i).get(2).toString();
-				} catch(Exception e) {
-					sz_cshort = "Unknown";
-				}
-				try {
-					sz_cvisible = data.get_fields(i).get(3).toString();
-				} catch(Exception e) {
-					sz_cvisible = "0";
-				}
+                ArrayList<String> row = data.get_fields(i);
+                sz_ccode = (!row.isEmpty()) ? row.get(0) : "-2";
+                sz_cname = (row.size() > 1) ? row.get(1).replace("\"", "") : "Unknown";
+                sz_cshort = (row.size() > 2) ? row.get(2) : "Unknown";
+                sz_cvisible = (row.size() > 3) ? row.get(3) : "0";
 				g_arr_codes.add(new CCode(sz_ccode, sz_cname, sz_cshort, sz_cvisible));
 			}
 			Collections.sort(g_arr_codes, g_arr_codes.get(0));

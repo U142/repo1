@@ -4,7 +4,8 @@ import no.ums.pas.ums.tools.Timeout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class TreeUpdater
@@ -22,36 +23,16 @@ public class TreeUpdater
 	
 	public void notifyDownloadDone()
 	{
-		synchronized(download_notify)
-		{
-			//download_notify.notify();
-			download_notify = true;
-		}
+        downloadReady.set(true);
 	}
 		
 	
 	/** Indicates if the TAS app should be running, only uninit() can cause it to stop*/
 	protected boolean b_run = false;
-	/** Indicates when the update thread has stopped*/
-	protected boolean b_running = false;
-	/** Last updated record, use this as filter in Download procedure*/
-	protected long n_last_update = -1;
-	/** Signalling object for notifying download finished*/
-	protected Boolean download_notify = new Boolean(false);
-	
-	protected boolean b_need_to_wait = true;
-	
-	public void setNeedToWait(boolean b)
-	{
-		//b_need_to_wait = b;
-		download_notify = b;
-	}
-	
-	public boolean isRunning()
-	{
-		return b_running;
-	}
-	Timeout timeout = null;
+    /** Signalling object for notifying download finished*/
+    private final AtomicBoolean downloadReady = new AtomicBoolean(true);
+
+    Timeout timeout = null;
 	Thread thread = null;
 	
 	public void startDownloadThread(final boolean only_once)
@@ -63,46 +44,43 @@ public class TreeUpdater
 		{
 			public void run()
 			{
-				b_running = true;
-				while(b_run)
+                while(true)
 				{
 					try
 					{
-						setNeedToWait(false);
-						m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, LOADING_START));
-						timeout = new Timeout(120, 100);
-						while(!download_notify && !timeout.timer_exceeded())
-						{
-							Thread.sleep(timeout.get_msec_interval());
-							timeout.inc_timer();
-						}
-						if(!b_run)
-							break;
-						m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, LOADING_FINISHED));
-						//System.out.println("TreeUpdater Waiting " + m_callback.getClass().getName());
-						if(only_once)
-						{
-							System.out.println("TreeUpdater only_once="+only_once);
-							break;
-						}
-						Thread.sleep(10*1000);
+                        if (downloadReady.compareAndSet(true, false)) {
+                            m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, LOADING_START));
+                            downloadReady.wait(TimeUnit.MINUTES.toMillis(2));
+                            timeout = new Timeout(120, 100);
+                            while(!downloadReady.get() && !timeout.timer_exceeded())
+                            {
+                                Thread.sleep(timeout.get_msec_interval());
+                                timeout.inc_timer();
+                            }
+                            m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, LOADING_FINISHED));
+                        }
 					}
-					catch(InterruptedException interrupt)
-					{
-						if(!b_run)
-						{
-							System.out.println("TreeUpdater Interrupted");
-							break;
-						}
+					catch(InterruptedException interrupt) {
+                        // Stop the download thread.
+                        break;
 					}
-					catch(Exception e)
-					{
-					}
-					if(only_once)
-						b_run = false;
+					catch(Exception e) {
+                        // Ignored exception, download is aborted
+					} finally {
+                        downloadReady.set(true);
+                    }
+					if(only_once) {
+                       break;
+                    } else {
+                        try {
+                            Thread.sleep(10*1000);
+                        } catch (InterruptedException e) {
+                            // Stop the download thread.
+                            break;
+                        }
+                    }
 				}
-				b_running = false;
-				System.out.println("Tree updater exited gracefully");
+                System.out.println("Tree updater exited gracefully");
 			}
 		};
 		thread.start();

@@ -16,15 +16,7 @@ public class CBMessage {
 		this.cboadc = cboadc;
 	}
 	
-	/*public void addCCode(String ccode) {
-		this.ccodes.add(ccodes);
-	}*/
-	
-	public void removeCCode(String ccode) {
-		this.ccodes.remove(ccode);
-	}
-	
-	public ArrayList<CCode> getCcodes() {
+    public ArrayList<CCode> getCcodes() {
 		return ccodes;
 	}
 

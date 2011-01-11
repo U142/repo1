@@ -53,6 +53,10 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 //substance 3.3
 
@@ -1514,14 +1518,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 	private int n_previous_mapwidth = 0;
 	private int n_previous_mapheight = 0;
-	public static Boolean m_b_firstmap = true;
+	private static Boolean m_b_firstmap = Boolean.TRUE;
 	public static Boolean firstMapLoaded() { return !m_b_firstmap; }
-	protected static void signalFirstMapLoaded() { 
-		synchronized(m_b_firstmap) {
-			m_b_firstmap.notifyAll();
-		}
-	}
-	public void waitForFirstMap()
+
+    public void waitForFirstMap()
 	{
 		try
 		{
@@ -1578,10 +1578,27 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String s = "test";
 		b_gui_initialized = true;
 		applyResize(true);
-	}	
+	}
+
+    private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduled;
+
+    public void redrawMap(int delay) {
+        if (scheduled != null) {
+            scheduled.cancel(true);
+        }
+        scheduled = exec.schedule(new Runnable() {
+            @Override
+            public void run() {
+                scheduled = null;
+                // TODO: Update map
+            }
+        }, delay, TimeUnit.MILLISECONDS);
+    }
 
 	public void applyResize(boolean b_from_timer)
 	{
+
 		System.out.println("Resizing " + getWidth() + ", " + getHeight());
 		if(getWidth()<=0 || getHeight()<=0)
 		{
@@ -1648,7 +1665,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				//checkLoadParm();
 				m_b_firstmap = false;
 				m_b_hasinitedsize = true;
-				signalFirstMapLoaded();
 			}
 		}
 		catch(Exception err)

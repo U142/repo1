@@ -39,9 +39,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
 
 
@@ -905,12 +903,13 @@ public class PAS_Scripting extends PasScriptingInterface
 			}
 		}
 	}
-	
+
 	public boolean removeShapeToPaint(long id)
 	{
-		if(shapes_to_paint.containsKey(id))
+        String idString = String.valueOf(id);
+        if(shapes_to_paint.containsKey(idString))
 		{
-			shapes_to_paint.remove(id);
+			shapes_to_paint.remove(idString);
 			return true;
 		}
 		return false;
@@ -937,15 +936,13 @@ public class PAS_Scripting extends PasScriptingInterface
 			//depts.ClearCombinedRestrictionShapelist();
 			//depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 			//depts.test();
-			for(int i=0; i < depts.size(); i++)
-			{
-				((DeptInfo)depts.get(i)).drawRestrictionShapes(g, nav);
-			}
+            for (Object dept : depts) {
+                ((DeptInfo) dept).drawRestrictionShapes(g, nav);
+            }
 			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
-			for(int i=0; i < list.size(); i++)
-			{
-				list.get(i).draw(g, nav, false, true, false, null, true, true, 2, false);
-			}
+            for (ShapeStruct aList : list) {
+                aList.draw(g, nav, false, true, false, null, true, true, 2, false);
+            }
 
 		}
 		catch(Exception e)

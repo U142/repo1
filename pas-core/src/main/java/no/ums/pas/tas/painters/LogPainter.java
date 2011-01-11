@@ -123,6 +123,7 @@ public class LogPainter
 							break;
 						case LBASEND.LBASTATUS_SENDING:
 							s = sz_operation + country + " - Sending (" + rl.getTasResult().getSzOperatorname() + ")";
+                            break;
 						case LBASEND.LBASTATUS_FINISHED:
 							s = sz_operation + country + " - Finished (" + rl.getTasResult().getSzOperatorname() + ")";
 							break;

@@ -479,10 +479,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(it.isSelected())
 				TYPES |= i;
 		}
-		
-		int TYPES_TEMP = TYPES;
-		
-		//disable buttons if certain criterias are met
+
+        //disable buttons if certain criterias are met
 		try
 		{
 			_EnableAddressSelection(0, true, group_smsprivbtn); //enable all
@@ -498,44 +496,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		{
 			e.printStackTrace();
 		}
-		/*en = group_fixedprivbtn.getElements();
-		while(en.hasMoreElements())
-		{
-			CheckItem c = (CheckItem)en.nextElement();
-			if(c.isSelected())
-			{
-				int val = ((Integer)c.get_value2()).intValue();
-				for(int x = 0; x < 32; x++)
-				{
-					if(((1 << x) & val) > 0)
-						TYPES_TEMP &= ~EnableAddressSelection((1 << x), false, group_smsprivbtn);
-				}
-			}
-		}
-		en = group_smsprivbtn.getElements();
-		while(en.hasMoreElements())
-		{
-			CheckItem c = (CheckItem)en.nextElement();
-			if(c.isSelected())
-			{
-				int val = ((Integer)c.get_value2()).intValue();
-				for(int x = 0; x < 32; x++)
-				{
-					if(((1 << x) & val) > 0)
-						TYPES_TEMP &= ~EnableAddressSelection((1 << x), false, group_fixedprivbtn);
-				}
-			}
-		}*/
 
-		if(TYPES_TEMP!=TYPES) //run this function again
-		{
-			TYPES = TYPES_TEMP;
-			m_n_addresstypes = TYPES;
-			set_addresstypes(TYPES);
-			//gen_addresstypes();
-			//TYPES = TYPES_TEMP;
-			//gen_addresstypes();
-		}
 		set_addresstypes(TYPES);
 		System.out.println("Addresstypes = " + TYPES);
 		

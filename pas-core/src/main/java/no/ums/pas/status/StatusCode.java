@@ -29,7 +29,7 @@ public class StatusCode extends Object implements Comparable {
 	public boolean get_reserved() { return m_b_reserved; }
 	public boolean get_addedtolist() { return m_b_addedtolist; }
 	public void set_addedtolist() { m_b_addedtolist = true; }
-	public String toString() { return new Integer(m_n_code).toString(); }
+	public String toString() { return String.valueOf(m_n_code); }
 	public boolean isUserDefined() { return m_b_isuserdefined; }
 	public int compareTo(Object obj) {
 		//return ((StatusCode)obj).toString().compareTo(this.toString());
@@ -92,4 +92,20 @@ public class StatusCode extends Object implements Comparable {
 		m_n_current_count = n_count;
 		m_b_isuserdefined = b_isuserdefined;
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StatusCode that = (StatusCode) o;
+
+        return m_n_code == that.m_n_code;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return m_n_code;
+    }
 }

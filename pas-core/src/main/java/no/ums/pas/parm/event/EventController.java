@@ -140,7 +140,6 @@ public class EventController implements ActionListener {
 		if (gui.getEventInputPanel().getTxtName().getText().length() <= 0) {
 			this.toObjectList = false;
 			store = false;
-			new ParmException("Name is mandatory!");
 		}
 		
 		if(store) {
@@ -161,13 +160,12 @@ public class EventController implements ActionListener {
 			if (gui.getEventInputPanel().getTxtName().getText().length() <= 0) {
 				gui.getEventInputPanel().getTxtName().setText(this.event.getName());
 				this.toObjectList = false;
-				new ParmException("Name is mandatory!");
 			}
 	
 			this.event.setName(gui.getEventInputPanel().getTxtName().getText());
 			this.event.setDescription(gui.getEventInputPanel().getTxaDesc()
 					.getText());
-			if (this.getCategory().getName() == "-- Select category --") {
+			if (this.getCategory().getName().equals("-- Select category --")) {
 				this.event.setCatVO(null);
 				this.event.setCategorypk("c-1");
 			} else {

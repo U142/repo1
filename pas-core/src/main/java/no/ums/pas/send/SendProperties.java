@@ -13,6 +13,7 @@ import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
+import no.ums.pas.sound.SoundFile;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
@@ -24,6 +25,8 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public abstract class SendProperties extends Object {
@@ -60,7 +63,7 @@ public abstract class SendProperties extends Object {
 	private boolean m_b_simulation = false;
 	private boolean m_b_isresend = false;
 	private int m_n_resend_refno = -1;
-	private ArrayList<StatusCode> m_arr_resend_status = new ArrayList<StatusCode>();
+	private Set<StatusCode> m_arr_resend_status = new LinkedHashSet<StatusCode>();
 	private int m_n_maxchannels = 1;
 	private int m_n_requesttype = 0;
 	private int m_n_sendchannels = 0; //0 is both, 1 is voice, 2 is sms
@@ -70,16 +73,7 @@ public abstract class SendProperties extends Object {
 	private int m_n_channel; // centric
 	
 	public void addResendStatus(StatusCode sz_code) {
-		boolean b_found = false;
-		for(int i=0; i < m_arr_resend_status.size(); i++) {
-			if(m_arr_resend_status.get(i).toString().equals(sz_code)) {
-				b_found = true;
-				break;
-			}
-		}
-		if(!b_found) {
-			m_arr_resend_status.add(sz_code);
-		}
+        m_arr_resend_status.add(sz_code);
 	}
 	public void remResendStatus(StatusCode sz_code) {
 		m_arr_resend_status.remove(sz_code);
@@ -252,26 +246,22 @@ public abstract class SendProperties extends Object {
 			//sz_vals[19]= new String(new Integer(PAS.get_pas().get_userinfo().get_default_dept().get_deptpri()).toString());
 			sz_vals[18]= new String(new Integer(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()).toString());
 			sz_vals[19]= new String(new Integer(PAS.get_pas().get_userinfo().get_current_department().get_deptpri()).toString());
-			sz_vals[20]= new String(variables.NAVIGATION.getHeaderLBO().toString());
-			sz_vals[21]= new String(variables.NAVIGATION.getHeaderRBO().toString());
-			sz_vals[22]= new String(variables.NAVIGATION.getHeaderUBO().toString());
-			sz_vals[23]= new String(variables.NAVIGATION.getHeaderBBO().toString());
-			sz_vals[24]= new String(get_projectpk());
-			sz_vals[25]= new String((get_simulation() ? "1" : "0"));
-			sz_vals[26]= new String((get_isresend() ? "1" : "0"));
-			sz_vals[27]= new String(new Integer(get_resend_refno()).toString());
+			sz_vals[20]= String.valueOf(variables.NAVIGATION.getHeaderLBO());
+			sz_vals[21]= String.valueOf(variables.NAVIGATION.getHeaderRBO());
+			sz_vals[22]= String.valueOf(variables.NAVIGATION.getHeaderUBO());
+			sz_vals[23]= String.valueOf(variables.NAVIGATION.getHeaderBBO());
+			sz_vals[24]= get_projectpk();
+			sz_vals[25]= (get_simulation() ? "1" : "0");
+			sz_vals[26]= (get_isresend() ? "1" : "0");
+			sz_vals[27]= String.valueOf(get_resend_refno());
 			
-			String sz_statusstring = "";
+			final String sz_statusstring;
+            final StringBuilder statusstring = new StringBuilder();
 			if(get_isresend()) {
-				for(int i=0; i < m_arr_resend_status.size(); i++) {
-					if(i>0)
-						sz_statusstring += ", ";
-					try {
-						sz_statusstring += new Integer(((StatusCode)m_arr_resend_status.get(i)).get_code()).toString();
-					} catch(Exception e) {
-						System.out.println("Error adding statuscode for resend. " + e.getMessage());
-					}
+                for (StatusCode statusCode : m_arr_resend_status) {
+                    statusstring.append(", ").append(statusCode.get_code());
 				}
+                sz_statusstring = statusstring.substring(2);
 			} else {
 				sz_statusstring = "0";
 			}
@@ -279,17 +269,17 @@ public abstract class SendProperties extends Object {
 			if(parent.get_cell_broadcast_text().isSelected() || parent.get_cell_broadcast_voice().isSelected()) {
 				//sz_vals[29]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_localtext().getText());
 				//sz_vals[30]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_internationaltext().getText());
-				sz_vals[29]= new String("");
-				sz_vals[30]= new String("");
-				sz_vals[31]= new String(new Integer(((Area)parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_combo_area().getSelectedItem()).get_id()).toString());
-				sz_vals[32]= new String(parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_oadc_text().getText());
+				sz_vals[29]= "";
+				sz_vals[30]= "";
+				sz_vals[31]= String.valueOf(((Area)parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_combo_area().getSelectedItem()).get_id());
+				sz_vals[32]= parent.get_parent().get_sendwindow().get_cell_broadcast_text().get_txt_oadc_text().getText();
 			} else {
-				sz_vals[29]= new String("");
-				sz_vals[30]= new String("");
-				sz_vals[31]= new String("");
-				sz_vals[32]= new String("");
+				sz_vals[29]= "";
+				sz_vals[30]= "";
+				sz_vals[31]= "";
+				sz_vals[32]= "";
 			}
-			sz_vals[33] = new String(String.valueOf(get_maxchannels()));
+			sz_vals[33] = String.valueOf(get_maxchannels());
 			
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR create_paramvals() - " + e.getMessage(), e);

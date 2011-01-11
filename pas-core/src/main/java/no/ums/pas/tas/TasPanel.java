@@ -1465,7 +1465,6 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			if(str_paint.length()<=repaint_times)
 			{
 				b_animate_stop_request = true;
-				//if(repaint_timer.isRunning())
 				//	repaint_timer.stop();
 			}
 			else
