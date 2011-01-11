@@ -66,6 +66,11 @@
                 <artifactId>NLMapSearch</artifactId>
                 <version>1.0</version>
             </dependency>
+            <dependency>
+                <groupId>jnlp</groupId>
+                <artifactId>jnlp</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

@@ -59,5 +59,9 @@
             <groupId>nl.bzk</groupId>
             <artifactId>NLMapSearch</artifactId>
         </dependency>
+        <dependency>
+            <groupId>jnlp</groupId>
+            <artifactId>jnlp</artifactId>
+        </dependency>
     </dependencies>
 </project>
