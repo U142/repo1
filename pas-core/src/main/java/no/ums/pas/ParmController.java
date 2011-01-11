@@ -1,8 +1,8 @@
 package no.ums.pas;
 
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
@@ -40,7 +40,7 @@ public class ParmController extends MainController {
 	public ParmController(String sz_sitename, UserInfo userinfo) {
 		super(sz_sitename, userinfo);
 		m_parmpanel = new ParmPanel(this);
-		m_shape   = null;//new PolygonStruct(variables.NAVIGATION, PAS.get_pas().get_mapsize());
+		m_shape   = null;//new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mapsize());
 	}
 	
 	public void createGUI() {
@@ -93,7 +93,7 @@ public class ParmController extends MainController {
 	}
 	public Navigation getMapNavigation() {
 		//return null;
-		return variables.NAVIGATION;
+		return Variables.getNavigation();
 	}
 	public Dimension getMapSize() {
 		//return null;
@@ -169,7 +169,7 @@ public class ParmController extends MainController {
 		PolySnapStruct snap = null, snaptemp = null;
 		//prioritize active polygon
 		if(get_shape()!=null) {
-			snap = get_shape().snap_to_point(p1, d, true, PAS.get_pas().get_mapsize(), variables.NAVIGATION);
+			snap = get_shape().snap_to_point(p1, d, true, PAS.get_pas().get_mapsize(), Variables.getNavigation());
 			if(snap!=null)
 				return snap;
 		}
@@ -178,7 +178,7 @@ public class ParmController extends MainController {
 				ShapeStruct obj = (ShapeStruct)get_shapelist().get(i);
 				long n_distance = 0;
 				if(obj != null) {
-					snaptemp = obj.snap_to_point(p1, d, false, PAS.get_pas().get_mapsize(), variables.NAVIGATION);
+					snaptemp = obj.snap_to_point(p1, d, false, PAS.get_pas().get_mapsize(), Variables.getNavigation());
 					if(snaptemp != null) {
 						snap = snaptemp;
 						if(snap.isActive())//prioritize active polygon

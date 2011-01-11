@@ -2,9 +2,9 @@ package no.ums.adminui.pas;
 
 import no.ums.pas.PAS;
 import no.ums.pas.PASDraw;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.ShapeStruct;
 
 import java.awt.*;
@@ -18,43 +18,43 @@ public class AdminDraw extends PASDraw {
 
 	@Override
 	protected void calc_new_coors() {
-		DeptArray da = variables.USERINFO.get_departments();
+		DeptArray da = Variables.getUserInfo().get_departments();
 		for(int i=0; i < da.size(); i++) {
 			DeptInfo di = (DeptInfo)da.get(i);
 			di.CalcCoorRestrictionShapes();
 		}
-		if(variables.SENDCONTROLLER != null && variables.SENDCONTROLLER.get_activesending() != null)
-			variables.SENDCONTROLLER.get_activesending().get_sendproperties().calc_coortopix();
-		List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+		if(Variables.getSendController() != null && Variables.getSendController().get_activesending() != null)
+			Variables.getSendController().get_activesending().get_sendproperties().calc_coortopix();
+		List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 		for(int j=0; j < list.size(); j++)
 		{
-			list.get(j).calc_coortopix(variables.NAVIGATION);
+			list.get(j).calc_coortopix(Variables.getNavigation());
 		}
 	}
 
 	@Override
 	protected void draw_layers() {
-		DeptArray da = variables.USERINFO.get_departments();
+		DeptArray da = Variables.getUserInfo().get_departments();
 		for(int i=0; i < da.size(); i++) {
 			DeptInfo di = (DeptInfo)da.get(i);
-			di.drawRestrictionShapes(get_offscreen(), variables.NAVIGATION);
+			di.drawRestrictionShapes(get_offscreen(), Variables.getNavigation());
 		}
-		List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+		List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 		for(int j=0; j < list.size(); j++)
 		{
 			list.get(j).set_fill_color(Color.black);
-			list.get(j).draw(get_offscreen(), variables.NAVIGATION, false, true, false, null, true, true, 1, false);
+			list.get(j).draw(get_offscreen(), Variables.getNavigation(), false, true, false, null, true, true, 1, false);
 		}
-		if(variables.SENDCONTROLLER.get_activesending() != null)
-			variables.SENDCONTROLLER.get_activesending().get_sendproperties().draw(get_offscreen(), new Point(variables.MAPPANE.get_current_mousepos().x,variables.MAPPANE.get_current_mousepos().y));
+		if(Variables.getSendController().get_activesending() != null)
+			Variables.getSendController().get_activesending().get_sendproperties().draw(get_offscreen(), new Point(Variables.getMapFrame().get_current_mousepos().x, Variables.getMapFrame().get_current_mousepos().y));
 		/*
-		if(variables.MAPPANE.get_actionhandler().get_isdragging() && variables.MAPPANE.get_mode()==MapFrame.MAP_MODE_ZOOM)
+		if(Variables.MAPPANE.get_actionhandler().get_isdragging() && Variables.MAPPANE.get_mode()==MapFrame.MAP_MODE_ZOOM)
 		{
-			super.get_mappane().drawOnEvents(variables.MAPPANE.getGraphics());
+			super.get_mappane().drawOnEvents(Variables.MAPPANE.getGraphics());
 		}
-		if(variables.MAPPANE.IsLoading())
+		if(Variables.MAPPANE.IsLoading())
 		{
-			super.get_mappane().drawOnEvents(variables.MAPPANE.getGraphics());
+			super.get_mappane().drawOnEvents(Variables.MAPPANE.getGraphics());
 		}*/
 		
 		super.draw_layers();

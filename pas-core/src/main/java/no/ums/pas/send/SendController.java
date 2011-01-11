@@ -1,6 +1,7 @@
 package no.ums.pas.send;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.logon.UserInfo;
@@ -9,7 +10,6 @@ import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSProgressPoller;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
@@ -193,7 +193,7 @@ public class SendController implements ActionListener {
 			//else if(alert.getM_shape().getClass().equals(UnknownShape.class))
 			//n_type = SendProperties.SENDING_TYPE_ADRLIST_;
 		//else if(alert.getM_shape().getClass().equals()) //GIS import
-		SendObject obj = new SendObject(alert.getName(), n_type, m_n_send_id, this, variables.NAVIGATION);
+		SendObject obj = new SendObject(alert.getName(), n_type, m_n_send_id, this, Variables.getNavigation());
 		//obj.set_sendwindow(new SendWindow(this));
 		
 		try {
@@ -264,7 +264,7 @@ public class SendController implements ActionListener {
 			if(!CheckForProject())
 				return null;
 			SendObject obj;
-			obj = new SendObject("New TAS sending", SendProperties.SENDING_TYPE_TAS_COUNTRY_, m_n_send_id, this, variables.NAVIGATION);
+			obj = new SendObject("New TAS sending", SendProperties.SENDING_TYPE_TAS_COUNTRY_, m_n_send_id, this, Variables.getNavigation());
 			obj.set_type(SendProperties.SENDING_TYPE_TAS_COUNTRY_);
 			obj.get_sendproperties().get_toolbar().set_addresstypes(SendController.SENDTO_TAS_SMS);
 			obj.get_sendproperties().typecast_tas().setCountryList(c);
@@ -318,7 +318,7 @@ public class SendController implements ActionListener {
 				if(alert!=null) {
 					obj = createSendingFromAlert(alert);
 				} else {
-					obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, variables.NAVIGATION);
+					obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, Variables.getNavigation());
 				}
 			m_n_send_id++;
 			add_sending(obj);
@@ -335,7 +335,7 @@ public class SendController implements ActionListener {
 	public SendObject create_resend(StatusSending sending) {
 		try {
 			SendObject obj;
-			obj = new SendObject("Resend refno " + sending.get_refno(), sending.get_sendingtype(), m_n_send_id, this, variables.NAVIGATION);
+			obj = new SendObject("Resend refno " + sending.get_refno(), sending.get_sendingtype(), m_n_send_id, this, Variables.getNavigation());
 			switch(sending.get_sendingtype()) {
 				case SendProperties.SENDING_TYPE_POLYGON_:
 					SendPropertiesPolygon poly = new SendPropertiesPolygon((PolygonStruct)sending.get_polygon().clone(), obj.get_toolbar(), new Col(new Color(0, 0, 0), new Color(255, 0, 0)));
@@ -424,8 +424,8 @@ public class SendController implements ActionListener {
 		else if("act_sending_close".equals(e.getActionCommand())) {
 			SendObject so = (SendObject)e.getSource();
 			ShapeStruct ss = so.get_sendproperties().get_shapestruct();
-			if(ss.equals(variables.MAPPANE.get_active_shape()))
-				variables.MAPPANE.set_active_shape(null);
+			if(ss.equals(Variables.getMapFrame().get_active_shape()))
+				Variables.getMapFrame().set_active_shape(null);
 			//((SendObject)e.getSource()).destroy_all();
 			so.destroy_all();
 			get_sendings().remove(((SendObject)e.getSource()));
@@ -440,7 +440,7 @@ public class SendController implements ActionListener {
 		}
 		else if("act_polygon_imported_eof".equals(e.getActionCommand())) {
 			SosiFile f = (SosiFile)e.getSource();
-			variables.NAVIGATION.gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds());
+			Variables.getNavigation().gotoMap(f.get_flater().get_current_flate().get_polygon().calc_bounds());
 		}
 		else if("act_gis_imported_eof".equals(e.getActionCommand())) {
 			PAS.get_pas().add_event("act_gis_imported_eof", null);

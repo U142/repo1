@@ -2,7 +2,7 @@ package no.ums.pas.send;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.HouseItem;
@@ -54,7 +54,7 @@ public class SendPropertiesGIS extends SendProperties {
 		try
 		{
 			get_houses().calcHouseCoords();
-			get_shapestruct().calc_coortopix(variables.NAVIGATION);
+			get_shapestruct().calc_coortopix(Variables.getNavigation());
 		}
 		catch(Exception e)
 		{

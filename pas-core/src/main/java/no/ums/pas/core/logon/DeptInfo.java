@@ -1,7 +1,7 @@
 package no.ums.pas.core.logon;
 
 
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -67,7 +67,7 @@ public class DeptInfo extends Object {
 		{
 			try
 			{
-				get_restriction_shapes().get(i).calc_coortopix(variables.NAVIGATION);
+				get_restriction_shapes().get(i).calc_coortopix(Variables.getNavigation());
 			}
 			catch(Exception e)
 			{

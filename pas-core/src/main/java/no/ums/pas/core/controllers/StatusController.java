@@ -1,11 +1,11 @@
 package no.ums.pas.core.controllers;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.OpenStatusFrame;
 import no.ums.pas.core.mainui.StatusItemList;
 import no.ums.pas.core.mainui.StatuscodeFrame;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.maps.defines.HouseItem;
@@ -647,8 +647,8 @@ public class StatusController extends Controller implements ActionListener {
 
 	public synchronized void set_nav_init(NavStruct nav) {
 		m_nav_init = nav;
-		if(variables.NAVIGATION.setNavigation(nav._lbo, nav._rbo,
-				nav._ubo, nav._bbo))
+		if(Variables.getNavigation().setNavigation(nav._lbo, nav._rbo,
+                nav._ubo, nav._bbo))
 			PAS.get_pas().get_mappane().load_map(true);
 		// PAS.get_pas().kickRepaint();
 	}
@@ -707,7 +707,7 @@ public class StatusController extends Controller implements ActionListener {
 						.get_shape();
 				if (m_b_viewpolygon) {
 					try {
-						shape.draw(gfx, variables.NAVIGATION, false,
+						shape.draw(gfx, Variables.getNavigation(), false,
 								true, false, null);
 					} catch (Exception e) {
 
@@ -761,8 +761,8 @@ public class StatusController extends Controller implements ActionListener {
 			if (current != null) {
 				// PAS.get_pas().add_event("Going to " + current.get_lon() + " "
 				// + current.get_lat(), null);
-				variables.NAVIGATION.exec_adrsearch(
-						current.get_lon(), current.get_lat(), 100);
+				Variables.getNavigation().exec_adrsearch(
+                        current.get_lon(), current.get_lat(), 100);
 			}
 		}
 	}

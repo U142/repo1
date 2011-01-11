@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines.converters;
 
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.ws.pas.*;
@@ -48,11 +48,11 @@ public class UShapeToShape
 							(int)ell.getColAlpha()), 
 							new Color(0,0,0));
 			ellipsestruct.set_ellipse_center(
-					variables.NAVIGATION, 
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getLon(), ell.getLat())));
+                    Variables.getNavigation(),
+					new MapPoint(Variables.getNavigation(), new MapPointLL(ell.getLon(), ell.getLat())));
 			ellipsestruct.set_ellipse_corner(
-					variables.NAVIGATION,
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getX(), ell.getY())));
+                    Variables.getNavigation(),
+					new MapPoint(Variables.getNavigation(), new MapPointLL(ell.getX(), ell.getY())));
 			return ellipsestruct;
 					
 		}
@@ -124,11 +124,11 @@ public class UShapeToShape
 							(int)ell.getColAlpha()), 
 							new Color(0,0,0));
 			ellipsestruct.set_ellipse_center(
-					variables.NAVIGATION, 
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getLon(), ell.getLat())));
+                    Variables.getNavigation(),
+					new MapPoint(Variables.getNavigation(), new MapPointLL(ell.getLon(), ell.getLat())));
 			ellipsestruct.set_ellipse_corner(
-					variables.NAVIGATION,
-					new MapPoint(variables.NAVIGATION, new MapPointLL(ell.getX(), ell.getY())));
+                    Variables.getNavigation(),
+					new MapPoint(Variables.getNavigation(), new MapPointLL(ell.getX(), ell.getY())));
 			return ellipsestruct;
 					
 		}

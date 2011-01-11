@@ -1,8 +1,8 @@
 package no.ums.pas.maps;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
@@ -407,36 +407,36 @@ public class MapLoader {
 			 request.setTransparent(false);
 			 request.setVersion("1.1.1");
 			 
-			 //variables.SETTINGS.setWmsEpsg("28992");
-			 //variables.SETTINGS.setWmsEpsg("4326");
+			 //Variables.SETTINGS.setWmsEpsg("28992");
+			 //Variables.SETTINGS.setWmsEpsg("4326");
 			 
 			 int n_epsg = 4326;
 			 try
 			 {
-				 n_epsg = Integer.parseInt(variables.SETTINGS.getWmsEpsg());
+				 n_epsg = Integer.parseInt(Variables.getSettings().getWmsEpsg());
 			 }
 			 catch(Exception e)
 			 {
 				 n_epsg = 4326;
-				 variables.SETTINGS.setWmsEpsg(new Integer(n_epsg).toString());
+				 Variables.getSettings().setWmsEpsg(new Integer(n_epsg).toString());
 			 }
 			 //n_epsg = 28992;
 			 //4326
 			 
 			 String epsg = "EPSG:";
-			 epsg += variables.SETTINGS.getWmsEpsg();
+			 epsg += Variables.getSettings().getWmsEpsg();
 			 
 			 
 			 request.setSRS(epsg);
 			 //request.setFormat("image/png");
-			 request.setFormat(variables.SETTINGS.getSelectedWmsFormat());
+			 request.setFormat(Variables.getSettings().getSelectedWmsFormat());
 			 
 			 m_selected_layers.clear(); //remove
 			 
 			 for(int i=0; i < layers.length; i++) 
 			 {
 				 //System.out.println(layers[i].getName());
-				 if(variables.SETTINGS.getSelectedWmsLayers().contains(layers[i].getName()))
+				 if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
 			 }
 			 
@@ -489,7 +489,7 @@ public class MapLoader {
 			 GetMapResponse response =  wms.issueRequest(request);
 			 //BufferedReader in = new BufferedReader(new InputStreamReader(response.getInputStream()));
 			 m_img_load = ImageIO.read(response.getInputStream());
-				MediaTracker tracker = new MediaTracker(variables.MAPPANE);
+				MediaTracker tracker = new MediaTracker(Variables.getMapFrame());
 			 	//MediaTracker tracker = m_mtracker;
 				tracker.addImage(m_img_load, 0);
 				try {
@@ -511,11 +511,11 @@ public class MapLoader {
 					
 				}
 
-				variables.NAVIGATION.setHeaderBounds(nav._lbo,nav._rbo,nav._ubo,nav._bbo);
+				Variables.getNavigation().setHeaderBounds(nav._lbo, nav._rbo, nav._ubo, nav._bbo);
 			 
 			if(m_img_load==null)
 			{
-				//variables.NAVIGATION.setHeaderBounds(nav._lbo,nav._rbo,nav._ubo,nav._bbo);
+				//Variables.NAVIGATION.setHeaderBounds(nav._lbo,nav._rbo,nav._ubo,nav._bbo);
 				m_img_load =  null;
 				if(m_retry==null)
 					m_retry = new AutoLoadRetry(info);
@@ -531,7 +531,7 @@ public class MapLoader {
 			//m_retry = null;
 			
 			setErrorMsg(e.getMessage());
-			variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+			Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
 			m_img_load =  null;
 			e.printStackTrace();
 			if(m_retry==null)
@@ -582,13 +582,13 @@ public class MapLoader {
 					UPASMap map = pas.getPaswsSoap12().getMap(info);
 					UMapInfo mapinfo = map.getMapinfo();
 					
-					variables.NAVIGATION.setHeaderBounds((float)mapinfo.getLBo(), (float)mapinfo.getRBo(), (float)mapinfo.getUBo(), (float)mapinfo.getBBo());
+					Variables.getNavigation().setHeaderBounds((float) mapinfo.getLBo(), (float) mapinfo.getRBo(), (float) mapinfo.getUBo(), (float) mapinfo.getBBo());
 					
-					//variables.NAVIGATION.setHeaderBounds(0, 0, 0, 0);
+					//Variables.NAVIGATION.setHeaderBounds(0, 0, 0, 0);
 					
 					m_img_load = Toolkit.getDefaultToolkit().createImage(map.getImage());
 					MediaTracker tracker;
-					tracker = new MediaTracker(variables.MAPPANE);
+					tracker = new MediaTracker(Variables.getMapFrame());
 					//MediaTracker tracker = m_mtracker;
 					tracker.addImage(m_img_load, 0);
 					try {
@@ -647,9 +647,9 @@ public class MapLoader {
 		if(m_img_load==null)
 		{
 			if(PAS.get_pas() == null)
-				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
 			else
-				variables.NAVIGATION.setHeaderBounds(n_lbo,n_rbo,n_ubo,n_bbo);
+				Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
 			if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
 		}

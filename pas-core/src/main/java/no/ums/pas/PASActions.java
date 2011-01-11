@@ -1,5 +1,6 @@
 package no.ums.pas;
 
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
@@ -9,7 +10,6 @@ import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
 import no.ums.pas.core.project.Project;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.*;
@@ -102,7 +102,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_loadmap".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().load_map(true);
-			PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+			PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 			//PAS.get_pas().kickRepaint();
 		}
 		else if("act_download_houses".equals(e.getActionCommand())) {
@@ -128,17 +128,17 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_map_goto_point".equals(e.getActionCommand())) {
 			NavPoint p = (NavPoint)e.getSource();
-			variables.NAVIGATION.exec_adrsearch(p.get_lon(), p.get_lat(), p.get_zoom());
+			Variables.getNavigation().exec_adrsearch(p.get_lon(), p.get_lat(), p.get_zoom());
 		}
 		else if("act_map_goto_area".equals(e.getActionCommand())) {
 			NavStruct nav = (NavStruct)e.getSource();
-			if(variables.NAVIGATION.setNavigation(nav))
+			if(Variables.getNavigation().setNavigation(nav))
 				PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_show_world".equals(e.getActionCommand())) {
 			//NavStruct nav = new NavStruct(-150, 150, 80, -80);
-			if(variables.NAVIGATION.setNavigation(Navigation.NAV_WORLD))
+			if(Variables.getNavigation().setNavigation(Navigation.NAV_WORLD))
 				PAS.get_pas().get_mappane().load_map(true);
 			PAS.get_pas().kickRepaint();
 		}
@@ -373,7 +373,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_project_activate".equals(e.getActionCommand())) {
 			PAS.get_pas().m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-			variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
+			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 			PAS.get_pas().get_eastcontent().reloadStatusPanel(false);
 			PAS.get_pas().get_sendcontroller().resetActiveProject();
 			PAS.get_pas().set_keep_sendings(false);
@@ -603,7 +603,7 @@ public class PASActions implements ActionListener {
 				if(PAS.get_pas().get_userinfo().get_current_department().get_nav_init()!=null)
 					actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			}*/
-			PAS.pasplugin.onSetInitialMapBounds(variables.NAVIGATION, PAS.get_pas().get_userinfo());
+			PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
 			PAS.get_pas().get_mappane().load_map(false);
 			/*
 			// Denne skal oppdatere weatherdata
@@ -616,7 +616,7 @@ public class PASActions implements ActionListener {
 						{
 							if(!parm_open)
 								actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-							PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+							PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 						}
 						catch(Exception err) {}
 					}

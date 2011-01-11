@@ -1,7 +1,7 @@
 package no.ums.pas.maps.defines;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.ws.pas.tas.UMapPoint;
 
 import java.awt.*;
@@ -186,7 +186,7 @@ public class Navigation {
 			
 			{
 				//setNavigation(calcMinBounds(nav));
-				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, variables.MAPPANE.get_dimension());
+				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, Variables.getMapFrame().get_dimension());
 				NavStruct newnav = calcMinBounds(nav, gesture);
 				//if(newnav.equals(nav))
 				if(newnav!=null)
@@ -263,10 +263,10 @@ public class Navigation {
 	public boolean too_small(NavStruct nav) {
 		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
 
-		//MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
-		//MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
-		MapPoint mp1 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
-		MapPoint mp2 = new MapPoint(variables.NAVIGATION, new MapPointLL(nav._lbo, nav._ubo));
+		//MapPoint mp1 = new MapPoint(Variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
+		//MapPoint mp2 = new MapPoint(Variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
+		MapPoint mp1 = new MapPoint(Variables.getNavigation(), new MapPointLL(nav._rbo, nav._ubo));
+		MapPoint mp2 = new MapPoint(Variables.getNavigation(), new MapPointLL(nav._lbo, nav._ubo));
 		double dist = calc_distance(mp1, mp2);
 		if(dist > n_minzoom)
 			return true;
@@ -281,7 +281,7 @@ public class Navigation {
 		if(PAS.pasplugin != null)
 			n_minzoom = PAS.pasplugin.getMinMapDimensions().height;
 		else
-			n_minzoom = variables.MINMAPDIMENSIONS.height;
+			n_minzoom = Variables.MINMAPDIMENSIONS.height;
 		
 		double y1r = nav._ubo * Math.PI * 2.0 / 360.0;
 
@@ -346,7 +346,7 @@ public class Navigation {
 		if(PAS.pasplugin != null)
 			n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
 		else
-			n_minzoom = variables.MINMAPDIMENSIONS.width;
+			n_minzoom = Variables.MINMAPDIMENSIONS.width;
 		
 
 		//System.out.println("mapwidth = " + m_f_mapwidthmeters + " " + calc_distance(dim_stop.width, dim_stop.height, dim_start.width, dim_stop.height));
@@ -386,8 +386,8 @@ public class Navigation {
 		}
 		else
 		{
-			f_delta_x = (m_f_rbo - m_f_lbo) * variables.MAPZOOMSPEED;
-			f_delta_y = (m_f_ubo - m_f_bbo) * variables.MAPZOOMSPEED;
+			f_delta_x = (m_f_rbo - m_f_lbo) * Variables.MAPZOOMSPEED;
+			f_delta_y = (m_f_ubo - m_f_bbo) * Variables.MAPZOOMSPEED;
 		}
 		
 		double lbo, rbo, ubo, bbo;
@@ -423,8 +423,8 @@ public class Navigation {
 			f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed()*4;
 		}
 		else {
-			f_delta_x = (m_f_rbo - m_f_lbo) * variables.MAPZOOMSPEED*4;
-			f_delta_y = (m_f_ubo - m_f_bbo) * variables.MAPZOOMSPEED*4;
+			f_delta_x = (m_f_rbo - m_f_lbo) * Variables.MAPZOOMSPEED*4;
+			f_delta_y = (m_f_ubo - m_f_bbo) * Variables.MAPZOOMSPEED*4;
 		}
 			
 		double lbo, rbo, ubo, bbo;

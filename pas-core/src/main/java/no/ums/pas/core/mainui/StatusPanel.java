@@ -2,10 +2,10 @@ package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.defines.ComboRowCellRenderer;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -763,7 +763,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
-				//variables.NAVIGATION.gotoMap(PAS.get_pas().get_mappane().get_active_shape().calc_bounds());
+				//Variables.NAVIGATION.gotoMap(PAS.get_pas().get_mappane().get_active_shape().calc_bounds());
 				getBoundsTing();
 			}	
 		}
@@ -782,7 +782,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					}
 					try
 					{
-						variables.NAVIGATION.gotoMap(CommonFunc.calc_bounds(shapes));
+						Variables.getNavigation().gotoMap(CommonFunc.calc_bounds(shapes));
 					}
 					catch(Exception e)
 					{

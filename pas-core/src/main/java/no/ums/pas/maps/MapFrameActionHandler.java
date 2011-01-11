@@ -1,10 +1,10 @@
 package no.ums.pas.maps;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.MapFrame.MapOverlay;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
@@ -235,7 +235,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				break;
 			case KeyEvent.VK_T:
 				//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
-				//variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+				//Variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
 				break;
 		}
 	}
@@ -433,7 +433,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	{
 		if(m_dim_cursorpos==null)
 			return false;
-		if(variables.MAPPANE.get_maploader().IsLoadingMapImage())
+		if(Variables.getMapFrame().get_maploader().IsLoadingMapImage())
 			return false;
 		//intersects.clear();
 		intersects = new ArrayList<MapPointLL>();
@@ -443,10 +443,10 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		//List<ShapeStruct> list = PAS.get_pas().get_userinfo().get_current_department().get_restriction_shapes();
 
 		List<ShapeStruct> list;
-		DeptArray depts = variables.USERINFO.get_departments();
+		DeptArray depts = Variables.getUserInfo().get_departments();
 		if(n_deptpk<1) //use combined restriction area
 		{
-			list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+			list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 			if(list==null)
 				return true;
 			if(list.isEmpty())
@@ -486,12 +486,12 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				try
 				{
 					current_polygon = get_mappane().get_active_shape().typecast_polygon();
-					//current_polygon = variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
+					//current_polygon = Variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().typecast_polygon();
 				}
 				catch(Exception e)
 				{
 					return true;
-					//current_polygon = variables.PARMCONTROLLER.get_shape().typecast_polygon();
+					//current_polygon = Variables.PARMCONTROLLER.get_shape().typecast_polygon();
 				}
 				try
 				{
@@ -517,7 +517,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				}
 				//b=true; //to paint outside
 				MapPointLL nearest_point = list.get(i).typecast_polygon().findNearestPolypoint(p.get_mappointll());
-				//variables.NAVIGATION.
+				//Variables.NAVIGATION.
 				if(b)
 				{
 	
@@ -618,7 +618,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					intersects.addAll(intersects_first);
 					intersects.addAll(intersects_last);
 					
-					double pixel_dist = variables.NAVIGATION.calc_pix_distance(nearest_point.getDegreeDistance());
+					double pixel_dist = Variables.getNavigation().calc_pix_distance(nearest_point.getDegreeDistance());
 					//System.out.println(pixel_dist+"");
 					if(nearest_point!=null && pixel_dist < 15)
 					{
@@ -835,7 +835,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {
-						variables.DRAW.setRepaint(get_mappane().get_mapimage());
+						Variables.getDraw().setRepaint(get_mappane().get_mapimage());
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
@@ -857,7 +857,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					if(PAS.get_pas() == null)
 					{
-						variables.DRAW.setRepaint(get_mappane().get_mapimage());
+						Variables.getDraw().setRepaint(get_mappane().get_mapimage());
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
@@ -968,7 +968,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {
-						variables.DRAW.setRepaint(variables.MAPPANE.m_img_onscreen);
+						Variables.getDraw().setRepaint(Variables.getMapFrame().m_img_onscreen);
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
@@ -991,12 +991,12 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAN_BY_DRAG) {
-					MapPointLL ll = variables.NAVIGATION.pix_to_ll(getPanDragPoint().get_x(), getPanDragPoint().get_y());
+					MapPointLL ll = Variables.getNavigation().pix_to_ll(getPanDragPoint().get_x(), getPanDragPoint().get_y());
 					NavStruct nav = new NavStruct();
-					nav._ubo = variables.NAVIGATION.getHeaderUBO() + ll.get_lat();
-					nav._bbo = variables.NAVIGATION.getHeaderBBO() + ll.get_lat();
-					nav._lbo = variables.NAVIGATION.getHeaderLBO() - ll.get_lon();
-					nav._rbo = variables.NAVIGATION.getHeaderRBO() - ll.get_lon();
+					nav._ubo = Variables.getNavigation().getHeaderUBO() + ll.get_lat();
+					nav._bbo = Variables.getNavigation().getHeaderBBO() + ll.get_lat();
+					nav._lbo = Variables.getNavigation().getHeaderLBO() - ll.get_lon();
+					nav._rbo = Variables.getNavigation().getHeaderRBO() - ll.get_lon();
 					
 					/*System.out.println("delta y = " + ll.get_lat());
 					double mod1 = Math.cos(CoorConverter.deg2rad * nav._bbo); //old
@@ -1049,11 +1049,11 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 							nav._ubo += add;
 					}*/
 					
-					//if(variables.NAVIGATION.setNavigation(nav))
-					variables.NAVIGATION.setNavigation(nav);
+					//if(Variables.NAVIGATION.setNavigation(nav))
+					Variables.getNavigation().setNavigation(nav);
 						get_mappane().load_map();
-					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
-					//variables.NAVIGATION.gotoMap(nav);
+					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+					//Variables.NAVIGATION.gotoMap(nav);
 					resetPanDrag();
 					if(get_mappane().m_overlays!=null)
 						updateOverlay();

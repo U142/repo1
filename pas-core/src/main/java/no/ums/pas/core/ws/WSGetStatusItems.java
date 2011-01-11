@@ -2,7 +2,7 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.project.Project;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusCode;
@@ -561,11 +561,11 @@ public class WSGetStatusItems extends WSThread
 											f_radiusy = null;
 										
 										EllipseStruct e = new EllipseStruct();
-										//MapPoint p_center = new MapPoint(variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue(), f_centery.doubleValue()));
-										//MapPoint p_corner = new MapPoint(variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue() + f_radiusx.doubleValue(), f_centery.doubleValue() + f_radiusy.doubleValue()));
-										MapPoint p_center = new MapPoint(variables.NAVIGATION, new MapPointLL(f_centerx==null?0.0:f_centerx.doubleValue(), f_centery==null?0.0:f_centery.doubleValue()));
-										MapPoint p_corner = new MapPoint(variables.NAVIGATION, new MapPointLL((f_centerx==null?0.0:f_centerx.doubleValue()) + (f_radiusx==null?0.0:f_radiusx.doubleValue()), (f_centery==null?0.0:f_centery.doubleValue()) + (f_radiusy==null?0.0:f_radiusy.doubleValue())));
-										e.set_ellipse(variables.NAVIGATION, p_center, p_corner);
+										//MapPoint p_center = new MapPoint(Variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue(), f_centery.doubleValue()));
+										//MapPoint p_corner = new MapPoint(Variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue() + f_radiusx.doubleValue(), f_centery.doubleValue() + f_radiusy.doubleValue()));
+										MapPoint p_center = new MapPoint(Variables.getNavigation(), new MapPointLL(f_centerx==null?0.0:f_centerx.doubleValue(), f_centery==null?0.0:f_centery.doubleValue()));
+										MapPoint p_corner = new MapPoint(Variables.getNavigation(), new MapPointLL((f_centerx==null?0.0:f_centerx.doubleValue()) + (f_radiusx==null?0.0:f_radiusx.doubleValue()), (f_centery==null?0.0:f_centery.doubleValue()) + (f_radiusy==null?0.0:f_radiusy.doubleValue())));
+										e.set_ellipse(Variables.getNavigation(), p_center, p_corner);
 										sending.set_shape(e);
 									} catch(Exception e)  {
 										Error.getError().addError("XMLGetStatusItems", "Exception in parseDoc", e, 1);

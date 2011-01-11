@@ -1,11 +1,11 @@
 package no.ums.pas.core.logon;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -371,7 +371,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				ActionEvent ae = new ActionEvent(settings,ActionEvent.ACTION_PERFORMED,"act_save_settingsobject");
 				PAS.get_pas().actionPerformed(ae);
 				//PAS.get_pas().get_mappane().load_map();
-				variables.NAVIGATION.reloadMap();
+				Variables.getNavigation().reloadMap();
 				this.dispose();
 			} else
 				m_lbl_error.setText(errormsg);

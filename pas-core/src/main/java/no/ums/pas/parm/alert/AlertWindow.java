@@ -3,7 +3,7 @@ package no.ums.pas.parm.alert;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.mainui.LoadingPanel;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.WSSendSettings;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -115,7 +115,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		
 		if(ac == null){
 			this.setTitle(PAS.l("main_parm_alert_dlg_new"));
-			m_alert = new AlertController(PAS.get_pas().get_parmcontroller(),variables.NAVIGATION, this);
+			m_alert = new AlertController(PAS.get_pas().get_parmcontroller(), Variables.getNavigation(), this);
 			createAlert();
 		} else {
 			this.setTitle(PAS.l("main_parm_alert_dlg_edit"));

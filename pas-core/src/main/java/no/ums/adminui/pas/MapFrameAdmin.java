@@ -2,17 +2,15 @@ package no.ums.adminui.pas;
 
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MapFrameAdmin extends MapFrame {
 
@@ -66,13 +64,13 @@ public class MapFrameAdmin extends MapFrame {
 		get_drawthread().set_need_imageupdate();
 		//m_img_onscreen = null;
 		try {
-			switch(variables.SETTINGS.getMapServer())
+			switch(Variables.getSettings().getMapServer())
 			{
 			case DEFAULT:
 				m_img_loading = m_maploader.load_map(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), get_mapsite(), get_mapportrayal());
 				break;
 			case WMS:
-				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), variables.SETTINGS.getWmsSite());
+				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), Variables.getSettings().getWmsSite());
 			}
 			
 			//m_img_loading = wmsimg;
@@ -168,7 +166,7 @@ public class MapFrameAdmin extends MapFrame {
 					//setCursor(PAS.get_pas().get_mainmenu().get_cursor_draw());
 					//setCursor(get_cursor_draw());
 					if(get_active_shape() == null)
-						set_active_shape(new PolygonStruct(variables.NAVIGATION.getDimension()));
+						set_active_shape(new PolygonStruct(Variables.getNavigation().getDimension()));
 					set_cursor(get_cursor_draw());
 				} catch(Exception e) {
 					Error.getError().addError("MapFrame","Exception in set_mode",e,1);
@@ -229,7 +227,7 @@ public class MapFrameAdmin extends MapFrame {
 		
 		try
 		{
-			get_active_shape().draw(gfx, variables.NAVIGATION, false, true, false, null, true, true, 1, false);
+			get_active_shape().draw(gfx, Variables.getNavigation(), false, true, false, null, true, true, 1, false);
 			m_gfx = gfx;
 		}
 		catch(Exception e) { }

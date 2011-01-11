@@ -1,15 +1,14 @@
 package no.ums.adminui.pas;
 
 import no.ums.pas.Draw;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.ws.pas.UPASUISETTINGS;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,9 +41,9 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		applet_height = Integer.parseInt(getParameter("applet_height"));
 		applet_width = Integer.parseInt(getParameter("applet_width"));
 		
-		variables.NAVIGATION = new Navigation(this,applet_width,applet_height);
-		variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,applet_width,applet_height);
-		variables.MAPPANE = new MapFrameAdmin(applet_width, applet_height, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+		Variables.setNavigation(new Navigation(this, applet_width, applet_height));
+		Variables.setDraw(new Draw(this, Thread.NORM_PRIORITY, applet_width, applet_height));
+		Variables.setMapFrame(new MapFrameAdmin(applet_width, applet_height, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true));
 		Settings m_settings = new Settings();
 		vars.init(getParameter("w"));
 		String OVERRIDE_WMS_SITE = getParameter("mapinfo");
@@ -84,24 +83,24 @@ public class MapImageDownload extends JApplet implements ActionListener {
 				m_settings.setWmsPassword(ui.getSzWmsPassword());*/
 			}
 		}
-		variables.SETTINGS = m_settings;
+		Variables.setSettings(m_settings);
 		
 		//MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
 		
 		
-		//variables.DRAW.get_buff_image();
-		//variables.MAPPANE.initialize();
-		//variables.MAPPANE.SetIsLoading(false, "map");
+		//Variables.DRAW.get_buff_image();
+		//Variables.MAPPANE.initialize();
+		//Variables.MAPPANE.SetIsLoading(false, "map");
 		
 		//Container contentpane = getContentPane();
 		//contentpane.setLayout(new FlowLayout());
-		//contentpane.add(variables.MAPPANE);
-		//add(variables.MAPPANE);
-		variables.MAPPANE.setVisible(true);
+		//contentpane.add(Variables.MAPPANE);
+		//add(Variables.MAPPANE);
+		Variables.getMapFrame().setVisible(true);
 		
-		variables.MAPPANE.setAllOverlays();
-		//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-		variables.DRAW.set_mappane(variables.MAPPANE);
+		Variables.getMapFrame().setAllOverlays();
+		//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+		Variables.getDraw().set_mappane(Variables.getMapFrame());
 		
 		lat = getParameter("lat");
 		lon = getParameter("lon");
@@ -111,8 +110,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		String[] clat = lat.split("\\|");
 		String[] clon = lon.split("\\|");
 		
-		shape = new PolygonStruct(variables.NAVIGATION.getDimension());
-		variables.MAPPANE.set_active_shape(shape);
+		shape = new PolygonStruct(Variables.getNavigation().getDimension());
+		Variables.getMapFrame().set_active_shape(shape);
 		
 		for(int i=0;i<clat.length;++i) {
 			shape.add_coor(Double.parseDouble(clon[i].replace(',', '.')),Double.parseDouble(clat[i].replace(',', '.')));
@@ -123,18 +122,18 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		NavStruct nav = shape.typecast_polygon().calc_bounds();
 	     
 		
-		variables.MAPPANE.setAllOverlays();
-		//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-		//variables.DRAW.set_mappane(variables.MAPPANE);
+		Variables.getMapFrame().setAllOverlays();
+		//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+		//Variables.DRAW.set_mappane(Variables.MAPPANE);
 		
 		
 		//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)
-		variables.NAVIGATION.setNavigation(nav);
-		variables.MAPPANE.load_map();
-		shape.calc_coortopix(variables.NAVIGATION);
-		variables.DRAW.create_image();
-		variables.MAPPANE.kickRepaint();
-		variables.MAPPANE.save_map(variables.DRAW.get_buff_image());
+		Variables.getNavigation().setNavigation(nav);
+		Variables.getMapFrame().load_map();
+		shape.calc_coortopix(Variables.getNavigation());
+		Variables.getDraw().create_image();
+		Variables.getMapFrame().kickRepaint();
+		Variables.getMapFrame().save_map(Variables.getDraw().get_buff_image());
 		System.exit(0);
 	}
 
@@ -145,9 +144,9 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			
 		}
 		else if(e.getActionCommand().equals("act_save")) {
-			variables.NAVIGATION = new Navigation(this,640,480);
-			variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,640,480);
-			variables.MAPPANE = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+			Variables.setNavigation(new Navigation(this, 640, 480));
+			Variables.setDraw(new Draw(this, Thread.NORM_PRIORITY, 640, 480));
+			Variables.setMapFrame(new MapFrameAdmin(640, 480, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true));
 			Settings m_settings = new Settings();
 			vars.init("https://secure.ums2.no/centricadminws/WS/");
 			
@@ -164,23 +163,23 @@ public class MapImageDownload extends JApplet implements ActionListener {
 				if(arr.length>=5)
 					m_settings.setWmsPassword(arr[4]);
 			}
-			variables.SETTINGS = m_settings;
+			Variables.setSettings(m_settings);
 			
 			//MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
 			
-			//variables.DRAW.get_buff_image();
-			//variables.MAPPANE.initialize();
-			//variables.MAPPANE.SetIsLoading(false, "map");
+			//Variables.DRAW.get_buff_image();
+			//Variables.MAPPANE.initialize();
+			//Variables.MAPPANE.SetIsLoading(false, "map");
 			
 			//Container contentpane = getContentPane();
 			//contentpane.setLayout(new FlowLayout());
-			//contentpane.add(variables.MAPPANE);
-			//add(variables.MAPPANE);
-			variables.MAPPANE.setVisible(true);
+			//contentpane.add(Variables.MAPPANE);
+			//add(Variables.MAPPANE);
+			Variables.getMapFrame().setVisible(true);
 			
-			variables.MAPPANE.setAllOverlays();
-			//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-			variables.DRAW.set_mappane(variables.MAPPANE);
+			Variables.getMapFrame().setAllOverlays();
+			//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+			Variables.getDraw().set_mappane(Variables.getMapFrame());
 			
 			lat = getParameter("lat");
 			lon = getParameter("lon");
@@ -190,8 +189,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			String[] clat = lat.split("\\|");
 			String[] clon = lon.split("\\|");
 			
-			shape = new PolygonStruct(variables.NAVIGATION.getDimension());
-			variables.MAPPANE.set_active_shape(shape);
+			shape = new PolygonStruct(Variables.getNavigation().getDimension());
+			Variables.getMapFrame().set_active_shape(shape);
 			
 			for(int i=0;i<clat.length;++i) {
 				shape.add_coor(Double.parseDouble(clon[i].replace(',', '.')),Double.parseDouble(clat[i].replace(',', '.')));
@@ -202,18 +201,18 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			NavStruct nav = shape.typecast_polygon().calc_bounds();
 		     
 			
-			variables.MAPPANE.setAllOverlays();
-			//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-			//variables.DRAW.set_mappane(variables.MAPPANE);
+			Variables.getMapFrame().setAllOverlays();
+			//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+			//Variables.DRAW.set_mappane(Variables.MAPPANE);
 			
 			
 			//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)
-			variables.NAVIGATION.setNavigation(nav);
-			variables.MAPPANE.load_map();
-			shape.calc_coortopix(variables.NAVIGATION);
-			variables.DRAW.create_image();
-			variables.MAPPANE.kickRepaint();
-			variables.MAPPANE.save_map(variables.DRAW.get_buff_image());
+			Variables.getNavigation().setNavigation(nav);
+			Variables.getMapFrame().load_map();
+			shape.calc_coortopix(Variables.getNavigation());
+			Variables.getDraw().create_image();
+			Variables.getMapFrame().kickRepaint();
+			Variables.getMapFrame().save_map(Variables.getDraw().get_buff_image());
 		}
 	}
 }

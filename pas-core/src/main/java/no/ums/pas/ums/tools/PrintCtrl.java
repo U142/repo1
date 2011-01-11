@@ -1,10 +1,10 @@
 package no.ums.pas.ums.tools;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.variables;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.imageio.ImageIO;
@@ -98,7 +98,7 @@ public class PrintCtrl implements Printable {
 		
 		PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
-		variables.DRAW.set_suspended(true);
+		Variables.getDraw().set_suspended(true);
 	    if (printJob.printDialog()) {
 	        try {
 	        	printJob.setCopies(1);
@@ -108,7 +108,7 @@ public class PrintCtrl implements Printable {
 	        	PAS.get_pas().add_event("Error printing: " + pe, pe);
 	          Error.getError().addError("PrintCtrl","Exception in print",pe,1);
 	        } finally {
-	        	variables.DRAW.set_suspended(false);
+	        	Variables.getDraw().set_suspended(false);
 	        }
 	    }
 	}

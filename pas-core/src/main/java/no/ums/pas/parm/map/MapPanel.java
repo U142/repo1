@@ -40,7 +40,7 @@ public class MapPanel extends JPanel implements ActionListener {
 	
 	ActionEvent local_event;
 
-	// ToolBar variables
+	// ToolBar Variables
 	private JToolBar jtbToolbar;
 
 	private JButton btn1, btn2, btn3, btn4;

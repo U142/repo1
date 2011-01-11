@@ -2,7 +2,7 @@ package no.ums.pas.plugins.centric.status;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -168,7 +168,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				s.setHidden(false);
 			}
 			NavStruct bbox = CommonFunc.calc_bounds(PAS.pasplugin.getShapesToPaint().values().toArray());
-			if(!variables.NAVIGATION.bboxEntirelyVisible(bbox))
+			if(!Variables.getNavigation().bboxEntirelyVisible(bbox))
 			{
 				//goto area
 				gotoArea = bbox;
@@ -194,7 +194,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				{
 					
 					NavStruct bbox = s.getFullBBox();
-					if(!variables.NAVIGATION.bboxEntirelyVisible(bbox))
+					if(!Variables.getNavigation().bboxEntirelyVisible(bbox))
 					{
 						//goto area
 						gotoArea = bbox;

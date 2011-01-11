@@ -1435,8 +1435,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			//this.m_btn_finalize.doClick();
 			//PAS.get_pas().get_drawthread().set_suspended(false);
 			//PAS.get_pas().kickRepaint();
-			//variables.NAVIGATION.gotoMap(sosi.get_bounding());
-			/*variables.NAVIGATION.gotoMap(sosi.get_polygon().calc_bounds());
+			//Variables.NAVIGATION.gotoMap(sosi.get_bounding());
+			/*Variables.NAVIGATION.gotoMap(sosi.get_polygon().calc_bounds());
 			try {
 				PAS.get_pas().kickRepaint();
 				//Thread.sleep(2000);

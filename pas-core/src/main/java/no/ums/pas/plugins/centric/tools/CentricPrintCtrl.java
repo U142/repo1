@@ -2,7 +2,7 @@ package no.ums.pas.plugins.centric.tools;
 
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -125,7 +125,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
 		printJob.setPageable(this);
-		variables.DRAW.set_suspended(true);
+		Variables.getDraw().set_suspended(true);
 	    if (printJob.printDialog()) {
 	        try {
 	        	//format = printJob.getPageFormat(pras);
@@ -137,7 +137,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	        	PAS.get_pas().add_event("Error printing: " + pe, pe);
 	          Error.getError().addError("PrintCtrl","Exception in print",pe,1);
 	        } finally {
-	        	variables.DRAW.set_suspended(false);
+	        	Variables.getDraw().set_suspended(false);
 	        }
 	    }
 	}
@@ -186,7 +186,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				height = (int)((double)actual_height / percent_of_actual);
 				height = actual_height;
 				height = (height+(width-height));
-				m_mapimage = variables.DRAW.get_buff_image();
+				m_mapimage = Variables.getDraw().get_buff_image();
 			}
 			else {
 				double percent_of_actual = ((double)actual_width/(double)width);
@@ -194,8 +194,8 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				height = (int)((double)actual_height / percent_of_actual);
 				//width = width + height;
 				//width = (int)((double)width / percent_of_actual);
-				m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-				//m_mapimage = variables.DRAW.get_buff_image();
+				m_mapimage = Variables.getDraw().get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+				//m_mapimage = Variables.DRAW.get_buff_image();
 			}
 		}
 		else {
@@ -204,13 +204,13 @@ public class CentricPrintCtrl implements Printable, Pageable {
 				width = actual_width;
 				width = (int)((double)actual_width / percent_of_actual);
 				width = (width + (height-width));
-				m_mapimage = variables.DRAW.get_buff_image();
+				m_mapimage = Variables.getDraw().get_buff_image();
 			}
 			else {
 				double percent_of_actual = ((double)actual_height/(double)height);
 				width = (int)((double)actual_width / percent_of_actual);
 				width = height + (width-height);
-				m_mapimage = variables.DRAW.get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+				m_mapimage = Variables.getDraw().get_buff_image().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 				
 			}
 		}

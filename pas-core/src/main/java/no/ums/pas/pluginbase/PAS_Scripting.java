@@ -2,6 +2,7 @@ package no.ums.pas.pluginbase;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
@@ -15,7 +16,6 @@ import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
@@ -1031,7 +1031,7 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onMapGotoNavigation(NavStruct n) {
 		//PAS.get_pas().actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-		variables.NAVIGATION.gotoMap(n);
+		Variables.getNavigation().gotoMap(n);
 		return true;
 	}
 
@@ -1043,7 +1043,7 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	@Override
 	public boolean onMapLoadFailed(MapLoader loader) {
-		variables.DRAW.setFirstMap(false);
+		Variables.getDraw().setFirstMap(false);
 		return true;
 	}
 

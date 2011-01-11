@@ -2,7 +2,7 @@ package no.ums.pas.send.sendpanels;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
@@ -141,7 +141,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 			get_parent().actionPerformed(e);
 			switch(get_parent().get_sendobject().get_sendproperties().get_sendingtype()) {
 				case SendProperties.SENDING_TYPE_POLYGON_:
-					get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(DETAILMODE.SHOW_POLYGON_SIMPLIFIED_PRPIXELS, 5, variables.NAVIGATION);
+					get_parent().get_sendobject().get_sendproperties().get_shapestruct().typecast_polygon().setCurrentViewMode(DETAILMODE.SHOW_POLYGON_SIMPLIFIED_PRPIXELS, 5, Variables.getNavigation());
 					PAS.get_pas().kickRepaint();
 					break;
 			}

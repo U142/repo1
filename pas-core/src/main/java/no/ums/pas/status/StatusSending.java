@@ -6,7 +6,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.WSTasResend;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MunicipalStruct;
@@ -1106,7 +1106,7 @@ public class StatusSending extends Object {
 		
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
-				variables.NAVIGATION.gotoMap(get_shape().calc_bounds());
+				Variables.getNavigation().gotoMap(get_shape().calc_bounds());
 			} else if(e.getSource().equals(m_btn_cancel_lba_sending))
 			{
 				//CANCEL

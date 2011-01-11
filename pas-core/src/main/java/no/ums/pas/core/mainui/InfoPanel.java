@@ -1,11 +1,11 @@
 package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSWeatherReport;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.MapPoint;
@@ -909,8 +909,8 @@ public class InfoPanel extends GeneralPanel {
 				PAS.get_pas().actionPerformed(
 						new ActionEvent(center, ActionEvent.ACTION_PERFORMED,
 								"act_set_pinpoint"));
-				variables.NAVIGATION.exec_adrsearch(llcoor.get_lon(), llcoor
-						.get_lat(), 500.0f);
+				Variables.getNavigation().exec_adrsearch(llcoor.get_lon(), llcoor
+                        .get_lat(), 500.0f);
 			}
 
 		}
@@ -1417,17 +1417,17 @@ public class InfoPanel extends GeneralPanel {
 		}
 
 		private void updateWeatherData() {
-			// weatherData.set_centerx(variables.NAVIGATION.calc_centerpoint_x(PAS.get_pas().get_mappane().get_current_mousepos().x));
-			// weatherData.set_centery(variables.NAVIGATION.calc_centerpoint_y(PAS.get_pas().get_mappane().get_current_mousepos().y));
+			// weatherData.set_centerx(Variables.NAVIGATION.calc_centerpoint_x(PAS.get_pas().get_mappane().get_current_mousepos().x));
+			// weatherData.set_centery(Variables.NAVIGATION.calc_centerpoint_y(PAS.get_pas().get_mappane().get_current_mousepos().y));
 			// weatherData.set_date(dtp.get_datetime());
 			// weatherData.updateForm();
 			// weatherData.run();
 			weatherData = new WSWeatherReport(this, "act_weatherdata_loaded",
 					params);
-			params.setLat(variables.NAVIGATION.calc_centerpoint_y(PAS.get_pas()
-					.get_mappane().get_current_mousepos().y));
-			params.setLon(variables.NAVIGATION.calc_centerpoint_x(PAS.get_pas()
-					.get_mappane().get_current_mousepos().x));
+			params.setLat(Variables.getNavigation().calc_centerpoint_y(PAS.get_pas()
+                    .get_mappane().get_current_mousepos().y));
+			params.setLon(Variables.getNavigation().calc_centerpoint_x(PAS.get_pas()
+                    .get_mappane().get_current_mousepos().x));
 			params.setDate(0);
 			params.setForecasts(1);
 			params.setInterval(0);

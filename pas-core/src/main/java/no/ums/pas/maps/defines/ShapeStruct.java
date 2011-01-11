@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 
@@ -138,9 +138,9 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		{
 			calc_area_sqm();
 			calc_bounds();
-			calc_coortopix(variables.NAVIGATION);
-			//can_lock(variables.USERINFO.get_departments().get_combined_restriction_shape());
-			updateCanLock(variables.USERINFO.get_departments().get_combined_restriction_shape());
+			calc_coortopix(Variables.getNavigation());
+			//can_lock(Variables.USERINFO.get_departments().get_combined_restriction_shape());
+			updateCanLock(Variables.getUserInfo().get_departments().get_combined_restriction_shape());
 		}
 		catch(Exception e)
 		{

@@ -1,7 +1,7 @@
 package no.ums.pas.maps.defines;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 
 import java.awt.*;
 import java.util.List;
@@ -55,8 +55,8 @@ public class PLMNShape extends ShapeStruct
 		Graphics2D g2d = (Graphics2D)g;
 		Font oldFont = g.getFont();
 		Color oldColor = g.getColor();
-		int x = variables.MAPPANE.getWidth()/2;
-		int y = variables.MAPPANE.getHeight()/2;
+		int x = Variables.getMapFrame().getWidth()/2;
+		int y = Variables.getMapFrame().getHeight()/2;
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		String sOutput = "";
 		sOutput = PAS.l("main_sending_type_national") + "\n" + shapeName;

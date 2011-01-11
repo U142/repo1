@@ -429,7 +429,7 @@ public abstract class PasScriptingInterface
 	/**
 	 * After map navigation we need to recalc coors to pix
 	 * @param nav current Navigation class
-	 * @param p Used for access of variables to recalc
+	 * @param p Used for access of Variables to recalc
 	 * @return
 	 */
 	public abstract boolean onMapCalcNewCoords(Navigation nav, PAS p);
@@ -438,7 +438,7 @@ public abstract class PasScriptingInterface
 	 * When the map needs repaint it calls this function
 	 * @param nav current Navigation class
 	 * @param g Graphics context to paint on
-	 * @param p Used for access of variables to paint
+	 * @param p Used for access of Variables to paint
 	 * @return
 	 */
 	public abstract boolean onMapDrawLayers(Navigation nav, Graphics g, PAS p);

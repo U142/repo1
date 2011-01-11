@@ -2,6 +2,7 @@ package no.ums.adminui.pas;
 
 import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.LogonInfo;
@@ -9,7 +10,6 @@ import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.project.Project;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.SosiExport;
@@ -127,12 +127,12 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 		}
 		
-		variables.SETTINGS = m_settings;
+		Variables.setSettings(m_settings);
 	
 		WSGetRestrictionShapes ting = new WSGetRestrictionShapes(this, "act_logon", logon, PASHAPETYPES.PADEPARTMENTRESTRICTION);
 		resize(applet_width,applet_height);
 		m_navigation = new Navigation(this,applet_width,applet_height);
-		variables.NAVIGATION = m_navigation;
+		Variables.setNavigation(m_navigation);
 		
 		try {
 			ting.run();
@@ -147,7 +147,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	private void afterLogon() {
 		
 		m_drawthread = new AdminDraw(null,Thread.NORM_PRIORITY,applet_width,applet_height);
-		variables.DRAW = m_drawthread;
+		Variables.setDraw(m_drawthread);
 		
 		
 	}
@@ -155,7 +155,7 @@ public class MapApplet extends JApplet implements ActionListener {
 	private void afterAfterLogon() {
 		SendController m_sendcontroller = new SendController();
 		//m_drawthread.set_sendcontroller(m_sendcontroller);
-		variables.SENDCONTROLLER = m_sendcontroller;
+		Variables.setSendController(m_sendcontroller);
 		
 		//m_drawthread.set_mappane(m_mappane);
 		JPanel pnl_buttons = new JPanel();
@@ -188,15 +188,15 @@ public class MapApplet extends JApplet implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 			if(e.getSource().getClass().equals(JButton.class)){
 				m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
-				if(variables.SENDCONTROLLER.get_activesending() == null) {
+				if(Variables.getSendController().get_activesending() == null) {
 					SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-					variables.SENDCONTROLLER.set_activesending(so);
-					variables.SENDCONTROLLER.add_sending(so);
+					Variables.getSendController().set_activesending(so);
+					Variables.getSendController().add_sending(so);
 					sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 					so.set_sendproperties(sp);
 				}
 				else
-					sp = variables.SENDCONTROLLER.get_activesending().get_sendproperties().typecast_poly();
+					sp = Variables.getSendController().get_activesending().get_sendproperties().typecast_poly();
 										
 				m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 			}
@@ -205,9 +205,9 @@ public class MapApplet extends JApplet implements ActionListener {
 		btn_put.addActionListener( new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				variables.MAPPANE.get_active_shape();
+				Variables.getMapFrame().get_active_shape();
 				no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
-				PolygonStruct polygon = variables.MAPPANE.get_active_shape().typecast_polygon();
+				PolygonStruct polygon = Variables.getMapFrame().get_active_shape().typecast_polygon();
 				shape.setColAlpha(polygon.get_fill_color().getAlpha());
 				shape.setColBlue(polygon.get_fill_color().getBlue());
 				shape.setColGreen(polygon.get_fill_color().getGreen());
@@ -221,17 +221,17 @@ public class MapApplet extends JApplet implements ActionListener {
 				}
 				ArrayOfUShape arrShape = new ArrayOfUShape();
 				arrShape.getUShape().add(shape);
-				variables.USERINFO.get_current_department().get_restriction_shapes();
-				variables.USERINFO.add_department(variables.USERINFO.get_default_dept().get_deptpk(),
-						variables.USERINFO.get_default_dept().get_deptid(), variables.USERINFO.get_default_dept().get_defaultnumber(),
-						(float)variables.USERINFO.get_default_dept().get_nav_init()._lbo,
-						(float)variables.USERINFO.get_default_dept().get_nav_init()._rbo,
-						(float)variables.USERINFO.get_default_dept().get_nav_init()._ubo, 
-						(float)variables.USERINFO.get_default_dept().get_nav_init()._bbo,
-						false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long)1, "", null, 2, arrShape);
+				Variables.getUserInfo().get_current_department().get_restriction_shapes();
+				Variables.getUserInfo().add_department(Variables.getUserInfo().get_default_dept().get_deptpk(),
+                        Variables.getUserInfo().get_default_dept().get_deptid(), Variables.getUserInfo().get_default_dept().get_defaultnumber(),
+                        (float) Variables.getUserInfo().get_default_dept().get_nav_init()._lbo,
+                        (float) Variables.getUserInfo().get_default_dept().get_nav_init()._rbo,
+                        (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
+                        (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
+                        false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, arrShape);
 				
 				
-				variables.USERINFO.get_current_department().CalcCoorRestrictionShapes();
+				Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();
 				//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}});
 		
@@ -285,10 +285,10 @@ public class MapApplet extends JApplet implements ActionListener {
 			if(m_info.get_departments().get_combined_restriction_shape() != null) {
 				List<ShapeStruct> list = m_info.get_departments().get_combined_restriction_shape();
 			}
-			variables.USERINFO = m_info;
-			variables.NAVIGATION.setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144),false);
-			m_mappane = new MapFrameAdmin(applet_width, applet_height, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
-			variables.MAPPANE = m_mappane;
+			Variables.setUserInfo(m_info);
+			Variables.getNavigation().setNavigation(new NavStruct(2.042989900708198, 8.180480787158013, 52.76231045722961, 51.548939180374144), false);
+			m_mappane = new MapFrameAdmin(applet_width, applet_height, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true);
+			Variables.setMapFrame(m_mappane);
 			m_mappane.load_map();
 			m_drawthread.set_mappane(m_mappane);
 			
@@ -298,8 +298,8 @@ public class MapApplet extends JApplet implements ActionListener {
 			afterAfterLogon();
 		}
 		else if("act_download_houses".equals(e.getActionCommand())){
-			variables.DRAW.set_neednewcoors(true);
-			variables.DRAW.set_need_imageupdate();
+			Variables.getDraw().set_neednewcoors(true);
+			Variables.getDraw().set_need_imageupdate();
 		}
 		else if("act_repaint".equals(e.getActionCommand())) {
 				PAS.get_pas().kickRepaint();
@@ -311,7 +311,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			else if("act_loadmap".equals(e.getActionCommand())) {
 				m_mappane.load_map(true);
-				//PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+				//PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 				//PAS.get_pas().kickRepaint();
 			}
 			else if("act_setzoom".equals(e.getActionCommand())) {
@@ -633,7 +633,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 	public void put(String id) {
 		PolygonStruct s = null; 
-		for(int i=0;i<variables.USERINFO.get_departments().size();++i){
+		for(int i=0;i< Variables.getUserInfo().get_departments().size();++i){
 			DeptInfo deptinfo = (DeptInfo)m_info.get_departments().get(i);
 			if(deptinfo.get_deptpk() == Integer.parseInt(id)) { 
 				List<ShapeStruct> rshapes = deptinfo.get_restriction_shapes();
@@ -643,35 +643,35 @@ public class MapApplet extends JApplet implements ActionListener {
 			
 		}
 		
-		if(variables.SENDCONTROLLER.get_activesending() == null) {
+		if(Variables.getSendController().get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-			variables.SENDCONTROLLER.set_activesending(so);
-			variables.SENDCONTROLLER.add_sending(so);
+			Variables.getSendController().set_activesending(so);
+			Variables.getSendController().add_sending(so);
 			sp = new SendPropertiesPolygon(s,new SendOptionToolbar(so,this,0), new Col());
 			so.set_sendproperties(sp);
 		}
 		else {
-			if(variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().isObsolete())
-				variables.SENDCONTROLLER.get_activesending().get_sendproperties().get_shapestruct().setHidden(true);
-			variables.SENDCONTROLLER.get_activesending().get_sendproperties().set_shapestruct(s);
+			if(Variables.getSendController().get_activesending().get_sendproperties().get_shapestruct().isObsolete())
+				Variables.getSendController().get_activesending().get_sendproperties().get_shapestruct().setHidden(true);
+			Variables.getSendController().get_activesending().get_sendproperties().set_shapestruct(s);
 		}
 		if(sp.get_shapestruct().isObsolete())
 			sp.get_shapestruct().setHidden(false);
 		sp.get_shapestruct().set_fill_color(Color.BLUE);
-		variables.MAPPANE.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-		variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+		Variables.getMapFrame().actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
+		Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
 
-		//variables.MAPPANE.setAllOverlaysDirty();
-		//variables.DRAW.setNeedRepaint();
-		variables.MAPPANE.kickRepaint();
-		//variables.MAPPANE.load_map(true);
+		//Variables.MAPPANE.setAllOverlaysDirty();
+		//Variables.DRAW.setNeedRepaint();
+		Variables.getMapFrame().kickRepaint();
+		//Variables.MAPPANE.load_map(true);
 		
 		
 	}
 	public void store(String name) {
-		variables.MAPPANE.get_active_shape();
+		Variables.getMapFrame().get_active_shape();
 		no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
-		PolygonStruct polygon = variables.MAPPANE.get_active_shape().typecast_polygon();
+		PolygonStruct polygon = Variables.getMapFrame().get_active_shape().typecast_polygon();
 		shape.setColAlpha(polygon.get_fill_color().getAlpha());
 		shape.setColBlue(polygon.get_fill_color().getBlue());
 		shape.setColGreen(polygon.get_fill_color().getGreen());
@@ -685,17 +685,17 @@ public class MapApplet extends JApplet implements ActionListener {
 		}
 		ArrayOfUShape arrShape = new ArrayOfUShape();
 		arrShape.getUShape().add(shape);
-		variables.USERINFO.get_current_department().get_restriction_shapes();
-		variables.USERINFO.add_department(variables.USERINFO.get_default_dept().get_deptpk(),
-				name, variables.USERINFO.get_default_dept().get_defaultnumber(),
-				(float)variables.USERINFO.get_default_dept().get_nav_init()._lbo,
-				(float)variables.USERINFO.get_default_dept().get_nav_init()._rbo,
-				(float)variables.USERINFO.get_default_dept().get_nav_init()._ubo, 
-				(float)variables.USERINFO.get_default_dept().get_nav_init()._bbo,
-				false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long)1, "", null, 2, arrShape);
+		Variables.getUserInfo().get_current_department().get_restriction_shapes();
+		Variables.getUserInfo().add_department(Variables.getUserInfo().get_default_dept().get_deptpk(),
+                name, Variables.getUserInfo().get_default_dept().get_defaultnumber(),
+                (float) Variables.getUserInfo().get_default_dept().get_nav_init()._lbo,
+                (float) Variables.getUserInfo().get_default_dept().get_nav_init()._rbo,
+                (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
+                (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
+                false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, arrShape);
 		
 		
-		variables.USERINFO.get_current_department().CalcCoorRestrictionShapes();
+		Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();
 	}
 	public void generateRestrictionShape(String[] coors) {
 	
@@ -729,15 +729,15 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	public void draw() {
 		m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
-		if(variables.SENDCONTROLLER.get_activesending() == null) {
+		if(Variables.getSendController().get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
-			variables.SENDCONTROLLER.set_activesending(so);
-			variables.SENDCONTROLLER.add_sending(so);
+			Variables.getSendController().set_activesending(so);
+			Variables.getSendController().add_sending(so);
 			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 			so.set_sendproperties(sp);
 		}
 		else
-			sp = variables.SENDCONTROLLER.get_activesending().get_sendproperties().typecast_poly();
+			sp = Variables.getSendController().get_activesending().get_sendproperties().typecast_poly();
 		
 		sp.set_color(Color.BLUE);
 								

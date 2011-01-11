@@ -1,6 +1,7 @@
 package no.ums.pas;
 
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
@@ -15,7 +16,6 @@ import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.themes.UMSTheme;
 import no.ums.pas.core.themes.UMSTheme.THEMETYPE;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSLogoff;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
@@ -928,12 +928,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				{
 					m_mapproperties = new MapitemProperties();
 					m_sendcontroller = new SendController(PAS.get_pas());
-					variables.SENDCONTROLLER = m_sendcontroller;
+					Variables.setSendController(m_sendcontroller);
 				
 					m_drawthread = new PASDraw(PAS.get_pas(), PAS.get_pas(), Thread.NORM_PRIORITY, dim_map.width, dim_map.height);
-					variables.DRAW = m_drawthread;
+					Variables.setDraw(m_drawthread);
 					m_navigation = new Navigation(PAS.get_pas().get_pasactionlistener(), dim_map.width, dim_map.height);
-					variables.NAVIGATION = m_navigation;
+					Variables.setNavigation(m_navigation);
 					//m_httpreq = new HTTPReq(get_sitename(), get_navigation());
 					
 				}
@@ -1034,7 +1034,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//Kun default logon settings skal lastes her. resten kommer fra Logon WS
 		try {
 			m_settings = xmlreader.loadLogonSettings(m_settings);
-			variables.SETTINGS = m_settings;
+			Variables.setSettings(m_settings);
 		} catch(Exception e) {
 			Error.getError().addError(PAS.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
 		}
@@ -1090,7 +1090,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					}
 
 					m_userinfo = new UserInfo(logon.get_userinfo());
-					variables.USERINFO = m_userinfo;
+					Variables.setUserInfo(m_userinfo);
 					m_userinfo.set_sitename(PAS_SITENAME);
 					m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
 					m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
@@ -1281,7 +1281,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					try
 					{
 						m_mappane = new MapFrame(dim_map.width, dim_map.height, m_drawthread, m_navigation, null, true);
-						variables.MAPPANE = m_mappane;
+						Variables.setMapFrame(m_mappane);
 						m_mappane.addActionListener(get_pasactionlistener());
 						m_drawthread.setMapImage(get_mappane().get_mapimage());
 						//m_drawthread.setMapOverlay(get_mappane().get_mapoverlay());
@@ -1290,7 +1290,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						m_gpscontroller = new GPSController();
 						m_housecontroller = new HouseController();
 						m_statuscontroller = PAS.pasplugin.onCreateStatusController(); //new StatusController();
-						variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
+						Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 						m_mainmenu = new MainMenu(PAS.get_pas());
 						m_inhabitantframe = new InhabitantFrame(PAS.get_pas());
 						m_gpsframe = new GPSFrame(get_gpscontroller());
@@ -1642,7 +1642,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 				get_mappane().load_map(true);//!m_b_firstmap);
 				if(get_eastcontent() != null)
-					get_eastcontent().actionPerformed(new ActionEvent(variables.NAVIGATION, ActionEvent.ACTION_PERFORMED, "act_maploaded"));
+					get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 				//get_navigation().reloadMap();
 			}
 			if(m_b_firstmap && b_from_timer) {
@@ -2023,7 +2023,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 							get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
 							m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-							variables.STATUSCONTROLLER = PAS.get_pas().m_statuscontroller;
+							Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 							//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
 							PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
 							m_current_project = null;
@@ -2043,7 +2043,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void init_parmcontroller() {
 		m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
         m_parmcontroller.start();
-		variables.PARMCONTROLLER = m_parmcontroller;
 	}
 	
 	synchronized public void add_event(String sz_text, Exception err) { 

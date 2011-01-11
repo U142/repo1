@@ -2,7 +2,7 @@ package no.ums.pas.send;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.MunicipalStruct;
@@ -45,7 +45,7 @@ public class SendPropertiesMunicipal extends SendProperties
 	@Override
 	public void calc_coortopix()
 	{
-		get_shapestruct().calc_coortopix(variables.NAVIGATION);
+		get_shapestruct().calc_coortopix(Variables.getNavigation());
 	}
 
 

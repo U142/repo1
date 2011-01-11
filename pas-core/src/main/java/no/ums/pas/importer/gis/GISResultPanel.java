@@ -1,7 +1,7 @@
 package no.ums.pas.importer.gis;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.LetterPairSimilarity;
@@ -239,7 +239,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 			updateStatistics();
 		}
 		else {
-			variables.NAVIGATION.exec_adrsearch(i.get_lon(), i.get_lat(), 200);
+			Variables.getNavigation().exec_adrsearch(i.get_lon(), i.get_lat(), 200);
 		}
 	}
 	

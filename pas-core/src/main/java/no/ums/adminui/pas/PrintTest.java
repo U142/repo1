@@ -1,10 +1,10 @@
 package no.ums.adminui.pas;
 
 import no.ums.pas.Draw;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -30,11 +30,11 @@ public class PrintTest extends JFrame implements ActionListener {
 	
 	public PrintTest() {
 		
-		//variables.DRAW.create_image();
-		//variables.MAPPANE.load_map();
-		//variables.MAPPANE.kickRepaint();
+		//Variables.DRAW.create_image();
+		//Variables.MAPPANE.load_map();
+		//Variables.MAPPANE.kickRepaint();
 		System.out.println("line 93");
-		//add(variables.MAPPANE);
+		//add(Variables.MAPPANE);
 		JButton btn_save = new JButton("Save");
 		btn_save.addActionListener(this);
 		btn_save.setActionCommand("act_save");
@@ -44,9 +44,9 @@ public class PrintTest extends JFrame implements ActionListener {
 		System.out.println("line 99");
 		
 		
-		variables.NAVIGATION = new Navigation(this,640,480);
-		variables.DRAW = new Draw(this,Thread.NORM_PRIORITY,640,480);
-		variables.MAPPANE = new MapFrameAdmin(640, 480, variables.DRAW, variables.NAVIGATION, new HTTPReq("http://vb4utv"), true);
+		Variables.setNavigation(new Navigation(this, 640, 480));
+		Variables.setDraw(new Draw(this, Thread.NORM_PRIORITY, 640, 480));
+		Variables.setMapFrame(new MapFrameAdmin(640, 480, Variables.getDraw(), Variables.getNavigation(), new HTTPReq("http://vb4utv"), true));
 		Settings m_settings = new Settings();
 		vars.init("https://secure.ums2.no/centricadminws/WS/");
 		
@@ -63,38 +63,38 @@ public class PrintTest extends JFrame implements ActionListener {
 			if(arr.length>=5)
 				m_settings.setWmsPassword(arr[4]);
 		}
-		variables.SETTINGS = m_settings;
+		Variables.setSettings(m_settings);
 		
 		//MapLoader maploader = new MapLoader(this, new HTTPReq("http://vb4utv"));
 		
 		
-		//variables.DRAW.get_buff_image();
-		//variables.MAPPANE.initialize();
-		//variables.MAPPANE.SetIsLoading(false, "map");
+		//Variables.DRAW.get_buff_image();
+		//Variables.MAPPANE.initialize();
+		//Variables.MAPPANE.SetIsLoading(false, "map");
 		
 		//Container contentpane = getContentPane();
 		//contentpane.setLayout(new FlowLayout());
-		//contentpane.add(variables.MAPPANE);
-		//add(variables.MAPPANE);
-		variables.MAPPANE.setVisible(true);
+		//contentpane.add(Variables.MAPPANE);
+		//add(Variables.MAPPANE);
+		Variables.getMapFrame().setVisible(true);
 		
 		
-		variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-		variables.DRAW.set_mappane(variables.MAPPANE);
+		Variables.getNavigation().setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+		Variables.getDraw().set_mappane(Variables.getMapFrame());
 		
 			     
 		
-		variables.MAPPANE.setAllOverlays();
-		//variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
-		//variables.DRAW.set_mappane(variables.MAPPANE);
+		Variables.getMapFrame().setAllOverlays();
+		//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+		//Variables.DRAW.set_mappane(Variables.MAPPANE);
 		
 		
 		//Må alltid kjøre calc før tegning (hvor navigation er endret pga map)		
-		variables.MAPPANE.load_map();
-		variables.DRAW.create_image();
-		variables.MAPPANE.kickRepaint();
+		Variables.getMapFrame().load_map();
+		Variables.getDraw().create_image();
+		Variables.getMapFrame().kickRepaint();
 		JLabel img = new JLabel();
-		img.setIcon(new ImageIcon(variables.DRAW.get_buff_image()));
+		img.setIcon(new ImageIcon(Variables.getDraw().get_buff_image()));
 		cont.add(img);
 		setSize(800,600);
 		this.setVisible(true);

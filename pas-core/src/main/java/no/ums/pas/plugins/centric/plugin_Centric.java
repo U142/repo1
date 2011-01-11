@@ -1,6 +1,7 @@
 package no.ums.pas.plugins.centric;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
@@ -14,7 +15,6 @@ import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.variables;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.maps.MapFrame;
@@ -201,8 +201,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_polygon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				variables.MAPPANE.set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
-				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+				Variables.getMapFrame().set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
+				Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 				PAS.get_pas().repaint();
 			}
 		});
@@ -215,8 +215,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_ellipse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				variables.MAPPANE.set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
-				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
+				Variables.getMapFrame().set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
+				Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
 				PAS.get_pas().repaint();
 			}
 		});
@@ -228,8 +228,8 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_plmn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
-				variables.MAPPANE.set_active_shape(new PLMNShape());
+				Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+				Variables.getMapFrame().set_active_shape(new PLMNShape());
 				PAS.get_pas().repaint();
 			}
 		});
@@ -1133,7 +1133,7 @@ public class plugin_Centric extends PAS_Scripting
 		try
 		{
 			CentricVariables.getCentric_send().trainingModeChanged();
-			variables.STATUSCONTROLLER.trainingModeChanged();
+			Variables.getStatusController().trainingModeChanged();
 		}
 		catch(Exception e)
 		{
@@ -1427,7 +1427,7 @@ public class plugin_Centric extends PAS_Scripting
 		{
 		case KeyEvent.VK_T:
 			//PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().typecast_polygon().ellipseToRestrictionlines(PAS.get_pas().get_userinfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
-			variables.MAPPANE.get_active_shape().typecast_polygon().ellipseToRestrictionlines(variables.USERINFO.get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
+			Variables.getMapFrame().get_active_shape().typecast_polygon().ellipseToRestrictionlines(Variables.getUserInfo().get_departments().get_combined_restriction_shape().get(0).typecast_polygon());
 			break;
 		}
 		return true;
@@ -1492,7 +1492,7 @@ public class plugin_Centric extends PAS_Scripting
 			((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
 			PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
 			onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
-			onSetInitialMapBounds(variables.NAVIGATION, PAS.get_pas().get_userinfo());
+			onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
 			PAS.get_pas().get_mappane().load_map(true);
 			menu_trainingmode.setEnabled(true);
 
@@ -1574,15 +1574,15 @@ public class plugin_Centric extends PAS_Scripting
 		switch(CentricEastContent.CURRENT_PANEL)
 		{
 		case CentricEastContent.PANEL_CENTRICSEND_:
-			if(variables.MAPPANE.get_active_shape()!=null)
-				variables.MAPPANE.get_active_shape().setEditable(true);
-			variables.MAPPANE.set_prev_paintmode();
+			if(Variables.getMapFrame().get_active_shape()!=null)
+				Variables.getMapFrame().get_active_shape().setEditable(true);
+			Variables.getMapFrame().set_prev_paintmode();
 			enableSendButtons(true);
 			break;
 		case CentricEastContent.PANEL_CENTRICSTATUS_:
-			if(variables.MAPPANE.get_active_shape()!=null)
-				variables.MAPPANE.get_active_shape().setEditable(false);
-			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+			if(Variables.getMapFrame().get_active_shape()!=null)
+				Variables.getMapFrame().get_active_shape().setEditable(false);
+			Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
 			enableSendButtons(false);
 			break;
 		}
@@ -1595,7 +1595,7 @@ public class plugin_Centric extends PAS_Scripting
 		menu_btn_draw_ellipse.setVisible(b);
 		menu_btn_draw_polygon.setVisible(b);
 		
-		int send = variables.USERINFO.get_current_department().get_userprofile().get_send();
+		int send = Variables.getUserInfo().get_current_department().get_userprofile().get_send();
 		menu_btn_draw_plmn.setVisible(b && send>=2);
 		//menu_btn_import.setVisible(b);
 	}
@@ -1610,9 +1610,9 @@ public class plugin_Centric extends PAS_Scripting
 	public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
 		CentricVariables.getCentric_send().lockSending(bLock);
 		if(bLock)
-			variables.MAPPANE.set_mode(MapFrame.MAP_MODE_PAN);
+			Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
 		else
-			variables.MAPPANE.set_prev_paintmode();
+			Variables.getMapFrame().set_prev_paintmode();
 		enableSendButtons(!bLock);
 		PAS.get_pas().kickRepaint();
 		return bLock;

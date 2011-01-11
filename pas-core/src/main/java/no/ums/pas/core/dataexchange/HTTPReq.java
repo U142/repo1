@@ -100,7 +100,7 @@ public class HTTPReq {
 			m_sz_bbo = new String(sz_bbo);
 			get_navigation().setHeaderBounds(getLBO(), getRBO(), getUBO(), getBBO());
 			//setHeaderBounds(getLBO(), getRBO(), getUBO(), getBBO());
-			//variables.NAVIGATION.set
+			//Variables.NAVIGATION.set
 			
 		}
 		void setStatus(String sz_status) { m_sz_status = new String(sz_status); }
@@ -111,7 +111,7 @@ public class HTTPReq {
 		String getBBO() { return m_sz_bbo; }
 	}	
 	/*public void setHeaderBounds(String l, String r, String u, String b) {
-		variables.NAVIGATION.setHeaderBounds(l, r, u, b);
+		Variables.NAVIGATION.setHeaderBounds(l, r, u, b);
 	}*/
 	public HTTPReq(String sz_sitename)
 	{

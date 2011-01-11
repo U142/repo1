@@ -1,8 +1,8 @@
 package no.ums.pas.gps;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.MapObject;
 
 import javax.swing.*;
@@ -31,8 +31,8 @@ public class MapObjectReg extends DefaultPanel {
 		m_obj = obj;
 		if(m_obj==null) { 
 			m_obj = new MapObject(PAS.get_pas().get_gpscontroller().get_mapobjects()); //parent objectlist
-			m_obj.set_lon(variables.NAVIGATION.calc_centerpoint_x(PAS.get_pas().get_mappane().get_dimension().width / 2));
-			m_obj.set_lat(variables.NAVIGATION.calc_centerpoint_y(PAS.get_pas().get_mappane().get_dimension().height / 2));
+			m_obj.set_lon(Variables.getNavigation().calc_centerpoint_x(PAS.get_pas().get_mappane().get_dimension().width / 2));
+			m_obj.set_lat(Variables.getNavigation().calc_centerpoint_y(PAS.get_pas().get_mappane().get_dimension().height / 2));
 		}
 		else
 		{

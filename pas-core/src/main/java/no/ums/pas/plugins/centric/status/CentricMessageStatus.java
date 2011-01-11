@@ -1,8 +1,8 @@
 package no.ums.pas.plugins.centric.status;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
-import no.ums.pas.core.variables;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricVariables;
 import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
@@ -63,7 +63,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 		Class c = lastcbstatus.getShape().getClass();
 		if(c.equals(UPLMN.class))
 		{
-			if(variables.USERINFO.get_current_department().get_userprofile().get_send()<2)
+			if(Variables.getUserInfo().get_current_department().get_userprofile().get_send()<2)
 			{
 				return false;
 			}
@@ -215,7 +215,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 				try
 				{
 					kill.setLProjectpk(new Long(m_parent.get_parent().getResultSet().getProject().getLProjectpk()));
-					kill.setLDeptpk(variables.USERINFO.get_current_department().get_deptpk());
+					kill.setLDeptpk(Variables.getUserInfo().get_current_department().get_deptpk());
 				}
 				catch(Exception err)
 				{

@@ -2,10 +2,10 @@ package no.ums.pas.maps;
 
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.popupmenus.PUPolyPoint;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -162,7 +162,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		{
 			
 		}
-		variables.MAPPANE.kickRepaint();
+		Variables.getMapFrame().kickRepaint();
 		//set_mode(MAP_MODE_SENDING_POLY);
 	}	
 	private PUPolyPoint m_polypoint_popup = null;
@@ -176,15 +176,15 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		if(PAS.get_pas()!=null)
 			PAS.get_pas().kickRepaint();
 		else {
-			variables.DRAW.setRepaint(variables.MAPPANE.get_mapimage());
+			Variables.getDraw().setRepaint(Variables.getMapFrame().get_mapimage());
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
 				{
 					//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 					//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 					//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
-					variables.MAPPANE.repaint();
-					variables.MAPPANE.validate();
+					Variables.getMapFrame().repaint();
+					Variables.getMapFrame().validate();
 				}
 			});
 		}
@@ -993,7 +993,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 				m_img_loading = m_maploader.load_map(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), get_mapsite(), get_mapportrayal());
 				break;
 			case WMS:
-				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), variables.SETTINGS.getWmsSite());
+				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), Variables.getSettings().getWmsSite());
 			}
 			
 			//m_img_loading = wmsimg;
@@ -1227,15 +1227,15 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	}
 	
 	public void kickRepaint() {
-		get_drawthread().setRepaint(variables.MAPPANE.get_mapimage());
+		get_drawthread().setRepaint(Variables.getMapFrame().get_mapimage());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
 				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 				//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 				//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
-				variables.MAPPANE.repaint();
-				variables.MAPPANE.validate();
+				Variables.getMapFrame().repaint();
+				Variables.getMapFrame().validate();
 			}
 		});
 		/*if(m_n_repaints % 20 == 0) {
@@ -1255,7 +1255,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		else if("act_add_polypoint".equals(e.getActionCommand())) {
 			MapPoint p;
 			
-			p = new MapPoint(variables.NAVIGATION, new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
+			p = new MapPoint(Variables.getNavigation(), new MapPointPix(get_current_mousepos().x, get_current_mousepos().y));
 			
 				
 			//((SendPropertiesPolygon)get_activesending().get_sendproperties()).get_polygon().add_coor(new Double(p.get_lon()), new Double(p.get_lat()));
@@ -1305,20 +1305,20 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		else if("act_set_ellipse_center".equals(e.getActionCommand())) {
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_ellipse().set_ellipse_center(variables.NAVIGATION, p);
+				get_active_shape().typecast_ellipse().set_ellipse_center(Variables.getNavigation(), p);
 			} catch(Exception err) {  }
 		}
 		else if("act_set_ellipse_corner".equals(e.getActionCommand())) {
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_ellipse().set_ellipse_corner(variables.NAVIGATION, p);
+				get_active_shape().typecast_ellipse().set_ellipse_corner(Variables.getNavigation(), p);
 			} catch(Exception err) { }
 		}
 		else if("act_set_polygon_ellipse_center".equals(e.getActionCommand()))
 		{
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_polygon().set_ellipse_center(variables.NAVIGATION, p);
+				get_active_shape().typecast_polygon().set_ellipse_center(Variables.getNavigation(), p);
 			} catch(Exception err) {
 				err.printStackTrace();
 			}			
@@ -1327,7 +1327,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		{
 			MapPoint p = (MapPoint)e.getSource();
 			try {
-				get_active_shape().typecast_polygon().set_ellipse_corner(variables.NAVIGATION, p);
+				get_active_shape().typecast_polygon().set_ellipse_corner(Variables.getNavigation(), p);
 			} catch(Exception err) { 
 				err.printStackTrace();
 			}			

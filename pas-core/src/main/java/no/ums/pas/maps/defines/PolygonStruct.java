@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import no.ums.pas.core.variables;
+import no.ums.pas.core.Variables;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Utils;
@@ -165,8 +165,8 @@ public class PolygonStruct extends ShapeStruct {
 			int next = ((i+1) % get_size());
 			MapPointLL ll1 = new MapPointLL(get_coor_lon(i), get_coor_lat(i));
 			MapPointLL ll2 = new MapPointLL(get_coor_lon(next), get_coor_lat(next));
-			MapPoint mp1 = new MapPoint(PAS.variables.NAVIGATION, ll1);
-			MapPoint mp2 = new MapPoint(PAS.variables.NAVIGATION, ll2);
+			MapPoint mp1 = new MapPoint(PAS.Variables.NAVIGATION, ll1);
+			MapPoint mp2 = new MapPoint(PAS.Variables.NAVIGATION, ll2);
 			//sqm += mp1.get_x()*mp2.get_y() - mp2.get_x()*mp1.get_y();
 			sqm += ll1.get_lon()*ll2.get_lat() - ll2.get_lon()*ll1.get_lat() * 30.92;
 		}
@@ -812,7 +812,7 @@ public class PolygonStruct extends ShapeStruct {
 				m_int_x[i] = screen.width;
 				m_int_y[i] = screen.height;
 			}
-			//variables.DRAW.set_neednewcoors(true);
+			//Variables.DRAW.set_neednewcoors(true);
 			//PAS.get_pas().kickRepaint();
 		}
 		catch(Exception e)
@@ -1177,7 +1177,7 @@ public class PolygonStruct extends ShapeStruct {
 				Error.getError().addError("PolyStruct","Exception in draw",e,1);
 			}
 		}	
-		if(bEditmode && !bFinalized && variables.MAPPANE.getMouseInsideCanvas() && !isElliptical()) {
+		if(bEditmode && !bFinalized && Variables.getMapFrame().getMouseInsideCanvas() && !isElliptical()) {
 			draw_last_line(nav, g, p);
 			draw_first_line(nav, g, p);
 		}
@@ -1193,13 +1193,13 @@ public class PolygonStruct extends ShapeStruct {
 				for(int i=0; i < illegal_intersects.size(); i++)
 				{
 					MapPointLL ll = illegal_intersects.get(i);
-					MapPoint point = new MapPoint(variables.NAVIGATION, ll);
+					MapPoint point = new MapPoint(Variables.getNavigation(), ll);
 					int w = 4;
 					g2d.fillOval(point.get_x()-w, point.get_y()-w, w*2, w*2);
 					if(((i+1) % 2) == 0 && i>0)
 					{
 						MapPointLL ll_prev = illegal_intersects.get(i-1);
-						MapPoint point_prev = new MapPoint(variables.NAVIGATION, ll_prev);
+						MapPoint point_prev = new MapPoint(Variables.getNavigation(), ll_prev);
 						g2d.drawLine(point.get_x(), point.get_y(), point_prev.get_x(), point_prev.get_y());
 					}
 				}
@@ -1942,7 +1942,7 @@ public class PolygonStruct extends ShapeStruct {
 		this.m_coor_lon = newpoly.m_coor_lon;
 		this.m_coor_pointref = newpoly.m_coor_pointref;
 		this.m_b_needcoortopix = true;
-		calc_coortopix(variables.NAVIGATION);
+		calc_coortopix(Variables.getNavigation());
 
 		/*int int_mod = 10000;
 		Polygon javapoly = new Polygon();
@@ -1994,7 +1994,7 @@ public class PolygonStruct extends ShapeStruct {
 			it.next();
 		}
 		this.m_b_needcoortopix = true;
-		calc_coortopix(PAS.variables.NAVIGATION);*/
+		calc_coortopix(PAS.Variables.NAVIGATION);*/
 
 	}
 	

@@ -1,8 +1,8 @@
 package no.ums.pas.importer;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
-import no.ums.pas.core.variables;
 import no.ums.pas.importer.esri.ShapeImporter;
 import no.ums.pas.importer.gis.GISFile;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -292,7 +292,7 @@ public class ImportPolygon implements ActionListener {
 				for(int i=0; i < imp.polylist.size(); i++)
 				{
 					PolygonStruct p = (PolygonStruct)imp.polylist.get(i);
-					//SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), variables.NAVIGATION);
+					//SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.NAVIGATION);
 					//obj.get_sendproperties().set_shapestruct(p);
 					m_shapes_found.add(p);
 					//m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
@@ -305,7 +305,7 @@ public class ImportPolygon implements ActionListener {
 				{
 					for(int i=0; i < m_shapes_found.size(); i++)
 					{
-						SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), variables.NAVIGATION);
+						SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 						obj.get_sendproperties().set_shapestruct(m_shapes_found.get(i));
 						obj.get_sendproperties().set_sendingname("Imported polygon " + i, "");
 						m_sendings_found.add(obj);
@@ -345,7 +345,7 @@ public class ImportPolygon implements ActionListener {
 								}
 								else
 								{
-									SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), variables.NAVIGATION);
+									SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 									obj.get_sendproperties().set_shapestruct(m_shapes_found.get(i));
 									obj.get_sendproperties().set_sendingname("Imported polygon " + i, "");
 									//PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));

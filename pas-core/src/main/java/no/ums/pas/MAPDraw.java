@@ -1,9 +1,9 @@
 package no.ums.pas;
 
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
-import no.ums.pas.core.variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
@@ -74,18 +74,18 @@ public class MAPDraw extends Draw {
 		try
 		{
 			
-			DeptArray depts = variables.USERINFO.get_departments();
+			DeptArray depts = Variables.getUserInfo().get_departments();
 			//depts.ClearCombinedRestrictionShapelist();
 			//depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 			//depts.test();
 			for(int i=0; i < depts.size(); i++)
 			{
-				((DeptInfo)depts.get(i)).drawRestrictionShapes(m_gfx_buffer, variables.NAVIGATION);
+				((DeptInfo)depts.get(i)).drawRestrictionShapes(m_gfx_buffer, Variables.getNavigation());
 			}
-			List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+			List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 			for(int i=0; i < list.size(); i++)
 			{
-				list.get(i).draw(m_gfx_buffer, variables.NAVIGATION, false, true, false, null, true, true, 1, false);
+				list.get(i).draw(m_gfx_buffer, Variables.getNavigation(), false, true, false, null, true, true, 1, false);
 			}
 
 		}
@@ -121,11 +121,11 @@ public class MAPDraw extends Draw {
 				
 		try
 		{
-			for(int i=0; i < variables.SENDCONTROLLER.get_sendings().size(); i++)
+			for(int i=0; i < Variables.getSendController().get_sendings().size(); i++)
 			{
 				try
 				{
-					variables.SENDCONTROLLER.get_sendings().get(i).get_sendproperties().calc_coortopix();
+					Variables.getSendController().get_sendings().get(i).get_sendproperties().calc_coortopix();
 				}
 				catch(Exception e)
 				{
@@ -141,15 +141,15 @@ public class MAPDraw extends Draw {
 		
 		try
 		{
-			DeptArray depts = variables.USERINFO.get_departments();
+			DeptArray depts = Variables.getUserInfo().get_departments();
 			for(int i=0; i < depts.size(); i++)
 			{
 				((DeptInfo)depts.get(i)).CalcCoorRestrictionShapes();
 			}
-			List<ShapeStruct> list = variables.USERINFO.get_departments().get_combined_restriction_shape();
+			List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 			for(int i=0; i < list.size(); i++)
 			{
-				list.get(i).calc_coortopix(variables.NAVIGATION);
+				list.get(i).calc_coortopix(Variables.getNavigation());
 			}
 			//get_pas().get_userinfo().get_current_department().CalcCoorRestrictionShapes();
 		}
