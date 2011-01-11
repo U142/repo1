@@ -41,7 +41,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
-import sun.awt.AWTCharset.Encoder;
+//import sun.awt.AWTCharset.Encoder;
 import sun.misc.Regexp;
 
 

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>no.ums</groupId>
+        <artifactId>pas-parent</artifactId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+    <groupId>no.ums</groupId>
+    <artifactId>pas-core</artifactId>
+    <name>PAS Core</name>
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.java.net.substance</groupId>
+            <artifactId>substance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-main</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-shapefile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-wms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opengis</groupId>
+            <artifactId>geoapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jcommon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nl.bzk</groupId>
+            <artifactId>NLMapSearch</artifactId>
+        </dependency>
+    </dependencies>
+</project>
