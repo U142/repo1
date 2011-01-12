@@ -15,15 +15,10 @@ public class XmlWriterTest
 	@Test
 	public void TestWriteFile() throws IOException, ParserConfigurationException
 	{
-		Document xmlDoc = null;
-		DocumentBuilder db = null;
-		DocumentBuilderFactory dbf = null;
+		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		final DocumentBuilder db = dbf.newDocumentBuilder();
+		final Document xmlDoc = db.newDocument();
 
-		dbf = DocumentBuilderFactory.newInstance();
-		db = dbf.newDocumentBuilder();
-		xmlDoc = db.newDocument();
-		File f = File.createTempFile("test", ".xml");
-		String filepath = f.getAbsolutePath();
-		new XmlWriter().writeXMLFile(xmlDoc, filepath);
+        new XmlWriter().writeXMLFile(xmlDoc, File.createTempFile("test", ".xml").getAbsolutePath());
 	}
 }
