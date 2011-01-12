@@ -9,11 +9,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.logging.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -92,5 +91,27 @@ public class JavaLoggerTest {
         final Log log = UmsLog.getLogger(JavaLoggerTest.class);
         log.error("Test", new Exception());
         assertThat(records.get(0).getThrown(), notNullValue());
+    }
+
+    @Test
+    public void testLogSimpleMessage() {
+        final Log log = UmsLog.getLogger(JavaLoggerTest.class);
+        log.info("Just a simple message");
+        assertThat(records.size(), equalTo(1));
+    }
+
+    @Test
+    public void testRepeatedCallsReturnSameLogger() {
+        assertThat(Logger.getLogger(JavaLoggerTest.class.getName()), is(Logger.getLogger(JavaLoggerTest.class.getName())));
+    }
+
+    @Test
+    public void testLoggingLevelDisabled() throws IOException {
+        // Change the level off the logger
+        Logger.getLogger(JavaLoggerTest.class.getName()).setLevel(Level.SEVERE);
+
+        final Log log = UmsLog.getLogger(JavaLoggerTest.class);
+        log.debug("Just a simple message");
+        assertThat(records.size(), equalTo(0));
     }
 }
