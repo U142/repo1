@@ -582,7 +582,8 @@ public class PolygonStruct extends ShapeStruct {
         double p1x = m_coor_lon.get(0)*modificator;
         double p1y = m_coor_lat.get(0)*modificator;
         double p2x, p2y;
-        
+        //double useprecision = POINT_PRECISION * 10000;
+        double useprecision = 1000000000d;
         for (int i = 1; i <= m_coor_lon.size(); i++)
         {
             p2x = m_coor_lon.get((i % m_coor_lon.size()))*modificator;
@@ -593,10 +594,14 @@ public class PolygonStruct extends ShapeStruct {
                 {
                     if (p.get_lon()*modificator <= Math.max(p1x, p2x))
                     {
-                        if (Math.abs(p1y - p2y) < 1/POINT_PRECISION)
+                    	//System.out.println(Math.abs(p1y - p2y) + " prec = " + 1.0d/useprecision);
+                    	
+                        if (Math.abs(p1y - p2y) > 1.0d/useprecision)
+                    	//if(p1y!=p2y)
                         {
                             xinters = (p.get_lat()*modificator - p1y) * (p2x - p1x) / (p2y - p1y) + p1x;
-                            if (Math.abs(p1x - p2x) < 1/POINT_PRECISION || p.get_lon()*modificator <= xinters)
+                            if (Math.abs(p1x - p2x) < 1.0d/useprecision || p.get_lon()*modificator <= xinters)
+                            //if(p1x==p2x || p.get_lon()*modificator <= xinters)
                                 counter++;
                         }
                     }

@@ -1280,7 +1280,14 @@ public class XmlWriter {
 			
 			//FileOutputStream result = new FileOutputStream(file);
 			StreamResult result = new StreamResult(os);
-			t.transform(new DOMSource(xmlDoc), result);
+			try
+			{
+				t.transform(new DOMSource(xmlDoc), result);
+			}
+			catch(TransformerException e)
+			{
+				e.printStackTrace();
+			}
 
 			t = null;
 			tf = null;
