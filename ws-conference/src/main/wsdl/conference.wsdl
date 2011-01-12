@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://no.ums/ws/vb" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://no.ums/ws/vb" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This is a service for scheduling and starting a telephone conference. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://no.ums/ws/vb">
+      <s:element name="scheduleConference">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="0" maxOccurs="1" name="participants" type="tns:ArrayOfParticipant" />
+            <s:element minOccurs="0" maxOccurs="1" name="conferenceName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="scheduleddatetime" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ACCOUNT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Company" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Department" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfParticipant">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Participant" type="tns:Participant" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Participant">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PinCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="scheduleConferenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="scheduleConferenceResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="startConferenceNow">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="0" maxOccurs="1" name="participant" type="tns:ArrayOfParticipant" />
+            <s:element minOccurs="0" maxOccurs="1" name="conferenceName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="startConferenceNowResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startConferenceNowResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="cancelConference">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="1" maxOccurs="1" name="referenceNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="cancelConferenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cancelConferenceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getConferenceStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="1" maxOccurs="1" name="referenceNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getConferenceStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getConferenceStatusResult" type="tns:ArrayOfStatus" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Status" type="tns:Status" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Status">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ItemNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StatusMessage" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="StatusCode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SendingStatus" type="tns:SendingStatusCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SendingStatusCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="ReadingQueueVoiceBroadcast" />
+          <s:enumeration value="ReadingVoiceBroadcast" />
+          <s:enumeration value="WritingVoiceBroadcast" />
+          <s:enumeration value="ReadingQueueBackbone" />
+          <s:enumeration value="ReadingBackbone" />
+          <s:enumeration value="SendingQueueBackbone" />
+          <s:enumeration value="Finished" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="redialParticipant">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="1" maxOccurs="1" name="referenceNumber" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="itemNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="redialParticipantResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="redialParticipantResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="scheduleConferenceSoapIn">
+    <wsdl:part name="parameters" element="tns:scheduleConference" />
+  </wsdl:message>
+  <wsdl:message name="scheduleConferenceSoapOut">
+    <wsdl:part name="parameters" element="tns:scheduleConferenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="startConferenceNowSoapIn">
+    <wsdl:part name="parameters" element="tns:startConferenceNow" />
+  </wsdl:message>
+  <wsdl:message name="startConferenceNowSoapOut">
+    <wsdl:part name="parameters" element="tns:startConferenceNowResponse" />
+  </wsdl:message>
+  <wsdl:message name="cancelConferenceSoapIn">
+    <wsdl:part name="parameters" element="tns:cancelConference" />
+  </wsdl:message>
+  <wsdl:message name="cancelConferenceSoapOut">
+    <wsdl:part name="parameters" element="tns:cancelConferenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="getConferenceStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:getConferenceStatus" />
+  </wsdl:message>
+  <wsdl:message name="getConferenceStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:getConferenceStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="redialParticipantSoapIn">
+    <wsdl:part name="parameters" element="tns:redialParticipant" />
+  </wsdl:message>
+  <wsdl:message name="redialParticipantSoapOut">
+    <wsdl:part name="parameters" element="tns:redialParticipantResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ConferenceSoap">
+    <wsdl:operation name="scheduleConference">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used for scheduling a conference</wsdl:documentation>
+      <wsdl:input message="tns:scheduleConferenceSoapIn" />
+      <wsdl:output message="tns:scheduleConferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="startConferenceNow">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used for starting a conference imidiately</wsdl:documentation>
+      <wsdl:input message="tns:startConferenceNowSoapIn" />
+      <wsdl:output message="tns:startConferenceNowSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="cancelConference">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is currently not in use</wsdl:documentation>
+      <wsdl:input message="tns:cancelConferenceSoapIn" />
+      <wsdl:output message="tns:cancelConferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getConferenceStatus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns the status of a conference, shows the participants with their statuses</wsdl:documentation>
+      <wsdl:input message="tns:getConferenceStatusSoapIn" />
+      <wsdl:output message="tns:getConferenceStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="redialParticipant">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used for redialing participants, use getConferenceStatus to get itemNumber for a participant</wsdl:documentation>
+      <wsdl:input message="tns:redialParticipantSoapIn" />
+      <wsdl:output message="tns:redialParticipantSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ConferenceSoap" type="tns:ConferenceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="scheduleConference">
+      <soap:operation soapAction="http://no.ums/ws/vb/scheduleConference" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="startConferenceNow">
+      <soap:operation soapAction="http://no.ums/ws/vb/startConferenceNow" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelConference">
+      <soap:operation soapAction="http://no.ums/ws/vb/cancelConference" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConferenceStatus">
+      <soap:operation soapAction="http://no.ums/ws/vb/getConferenceStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="redialParticipant">
+      <soap:operation soapAction="http://no.ums/ws/vb/redialParticipant" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ConferenceSoap12" type="tns:ConferenceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="scheduleConference">
+      <soap12:operation soapAction="http://no.ums/ws/vb/scheduleConference" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="startConferenceNow">
+      <soap12:operation soapAction="http://no.ums/ws/vb/startConferenceNow" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelConference">
+      <soap12:operation soapAction="http://no.ums/ws/vb/cancelConference" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConferenceStatus">
+      <soap12:operation soapAction="http://no.ums/ws/vb/getConferenceStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="redialParticipant">
+      <soap12:operation soapAction="http://no.ums/ws/vb/redialParticipant" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Conference">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This is a service for scheduling and starting a telephone conference. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no</wsdl:documentation>
+    <wsdl:port name="ConferenceSoap" binding="tns:ConferenceSoap">
+      <soap:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/conference.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ConferenceSoap12" binding="tns:ConferenceSoap12">
+      <soap12:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/conference.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

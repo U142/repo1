@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/pas/tas" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/pas/tas" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/pas/tas">
+      <s:element name="GetContinentsAndCountries">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="timefilter_count" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="timefilter_requestlog" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ULOGONINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_priserver" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altservers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetContinentsAndCountriesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetContinentsAndCountriesResult" type="tns:UTASUPDATES" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UTASUPDATES">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="continents" type="tns:ArrayOfULBACONTINENT" />
+          <s:element minOccurs="0" maxOccurs="1" name="request_updates" type="tns:ArrayOfUTASREQUESTRESULTS" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_serverclock" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBACONTINENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBACONTINENT" nillable="true" type="tns:ULBACONTINENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBACONTINENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_continentpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_short" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint" type="tns:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint_screen" type="tns:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="bounds" type="tns:UMapBounds" />
+          <s:element minOccurs="0" maxOccurs="1" name="countries" type="tns:ArrayOfULBACOUNTRY" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_touristcount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_lastupdate" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMapPoint">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMapBounds">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="r_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="u_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_bo" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBACOUNTRY">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBACOUNTRY" nillable="true" type="tns:ULBACOUNTRY" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBACOUNTRY">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_cc" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_iso" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint" type="tns:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint_screen" type="tns:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="bounds" type="tns:UMapBounds" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_continentpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_iso_numeric" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_touristcount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_oldestupdate" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_newestupdate" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="operators" type="tns:ArrayOfUTOURISTCOUNT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUTOURISTCOUNT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UTOURISTCOUNT" nillable="true" type="tns:UTOURISTCOUNT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UTOURISTCOUNT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_lastupdate" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operator" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_touristcount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUTASREQUESTRESULTS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UTASREQUESTRESULTS" nillable="true" type="tns:UTASREQUESTRESULTS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UTASREQUESTRESULTS">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UTASREQUEST">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:ENUM_TASREQUESTRESULTTYPE" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_operator" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_operatorname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_jobid" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_response" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_status" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_userpk" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_deptpk" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_username" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_refno" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_retries" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_simulation" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UTASREQUEST">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="n_requestpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_success" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfULBACOUNTRY" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="operators" type="tns:ArrayOfInt" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ENUM_TASREQUESTRESULTTYPE">
+        <s:restriction base="s:string">
+          <s:enumeration value="COUNTREQUEST" />
+          <s:enumeration value="SENDING" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetAdrCount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="country" type="tns:ArrayOfULBACOUNTRY" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountResult" type="tns:UTASREQUEST" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetResponseNumbers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetResponseNumbersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetResponseNumbersResult" type="tns:ArrayOfUTASRESPONSENUMBER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUTASRESPONSENUMBER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UTASRESPONSENUMBER" nillable="true" type="tns:UTASRESPONSENUMBER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UTASRESPONSENUMBER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_responsenumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_refno" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_timestamp" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatsCountriesPerTimeunit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="filter" type="tns:ULBASTATISTICS_FILTER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ULBASTATISTICS_FILTER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="countries" type="tns:ArrayOfULBACOUNTRY" />
+          <s:element minOccurs="0" maxOccurs="1" name="years_to_compare" type="tns:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="from_date" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="to_date" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="group_timeunit" type="tns:ULBAFILTER_STAT_TIMEUNIT" />
+          <s:element minOccurs="1" maxOccurs="1" name="stat_function" type="tns:ULBAFILTER_STAT_FUNCTION" />
+          <s:element minOccurs="1" maxOccurs="1" name="rowcount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ULBAFILTER_STAT_TIMEUNIT">
+        <s:restriction base="s:string">
+          <s:enumeration value="PER_HOUR" />
+          <s:enumeration value="PER_DAY" />
+          <s:enumeration value="PER_WEEK" />
+          <s:enumeration value="PER_MONTH" />
+          <s:enumeration value="PER_YEAR" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ULBAFILTER_STAT_FUNCTION">
+        <s:restriction base="s:string">
+          <s:enumeration value="STAT_AVERAGE" />
+          <s:enumeration value="STAT_MAX" />
+          <s:enumeration value="STAT_MIN" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetStatsCountriesPerTimeunitResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatsCountriesPerTimeunitResult" type="tns:ArrayOfULBACOUNTRYSTATISTICS" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfULBACOUNTRYSTATISTICS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBACOUNTRYSTATISTICS" nillable="true" type="tns:ULBACOUNTRYSTATISTICS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBACOUNTRYSTATISTICS">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ULBACOUNTRY">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="statistics" type="tns:ArrayOfUTOURISTCOUNT" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetContinentsAndCountriesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetContinentsAndCountries" />
+  </wsdl:message>
+  <wsdl:message name="GetContinentsAndCountriesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetContinentsAndCountriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCount" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetResponseNumbersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetResponseNumbers" />
+  </wsdl:message>
+  <wsdl:message name="GetResponseNumbersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetResponseNumbersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatsCountriesPerTimeunitSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatsCountriesPerTimeunit" />
+  </wsdl:message>
+  <wsdl:message name="GetStatsCountriesPerTimeunitSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatsCountriesPerTimeunitResponse" />
+  </wsdl:message>
+  <wsdl:portType name="taswsSoap">
+    <wsdl:operation name="GetContinentsAndCountries">
+      <wsdl:input message="tns:GetContinentsAndCountriesSoapIn" />
+      <wsdl:output message="tns:GetContinentsAndCountriesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <wsdl:input message="tns:GetAdrCountSoapIn" />
+      <wsdl:output message="tns:GetAdrCountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetResponseNumbers">
+      <wsdl:input message="tns:GetResponseNumbersSoapIn" />
+      <wsdl:output message="tns:GetResponseNumbersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatsCountriesPerTimeunit">
+      <wsdl:input message="tns:GetStatsCountriesPerTimeunitSoapIn" />
+      <wsdl:output message="tns:GetStatsCountriesPerTimeunitSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="taswsSoap" type="tns:taswsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetContinentsAndCountries">
+      <soap:operation soapAction="http://ums.no/ws/pas/tas/GetContinentsAndCountries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <soap:operation soapAction="http://ums.no/ws/pas/tas/GetAdrCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetResponseNumbers">
+      <soap:operation soapAction="http://ums.no/ws/pas/tas/GetResponseNumbers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatsCountriesPerTimeunit">
+      <soap:operation soapAction="http://ums.no/ws/pas/tas/GetStatsCountriesPerTimeunit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="taswsSoap12" type="tns:taswsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetContinentsAndCountries">
+      <soap12:operation soapAction="http://ums.no/ws/pas/tas/GetContinentsAndCountries" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <soap12:operation soapAction="http://ums.no/ws/pas/tas/GetAdrCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetResponseNumbers">
+      <soap12:operation soapAction="http://ums.no/ws/pas/tas/GetResponseNumbers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatsCountriesPerTimeunit">
+      <soap12:operation soapAction="http://ums.no/ws/pas/tas/GetStatsCountriesPerTimeunit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="tasws">
+    <wsdl:port name="taswsSoap" binding="tns:taswsSoap">
+      <soap:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/TAS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="taswsSoap12" binding="tns:taswsSoap12">
+      <soap12:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/TAS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

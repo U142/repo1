@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/vb/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/vb/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This is a service for creating messages, linking them to an inbound number and setting redirect number. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/vb/">
+      <s:element name="getStoredMessageInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ACCOUNT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Company" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Department" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getStoredMessageInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getStoredMessageInfoResult" type="tns:ArrayOfMessageInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMessageInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MessageInfo" type="tns:MessageInfo" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MessageInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="MessagePK" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InboundNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DTMF" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RedirectNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="storeMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="0" maxOccurs="1" name="messageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="message" type="tns:VOCFILE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="VOCFILE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:VOCTYPE" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_tts_string" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_langpk" type="tns:LANGUAGE" />
+          <s:element minOccurs="0" maxOccurs="1" name="audiodata" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="VOCTYPE">
+        <s:restriction base="s:string">
+          <s:enumeration value="TTS" />
+          <s:enumeration value="WAV" />
+          <s:enumeration value="RAW" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="LANGUAGE">
+        <s:restriction base="s:string">
+          <s:enumeration value="NORWEGIAN" />
+          <s:enumeration value="BRITISH" />
+          <s:enumeration value="USENGLISH" />
+          <s:enumeration value="DUTCH" />
+          <s:enumeration value="SWEDISH" />
+          <s:enumeration value="DANISH_POUL" />
+          <s:enumeration value="DANISH_METTE" />
+          <s:enumeration value="GERMAN" />
+          <s:enumeration value="SPANISH" />
+          <s:enumeration value="ITALIAN" />
+          <s:enumeration value="FINNISH" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="storeMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="storeMessageResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="attachMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="0" maxOccurs="1" name="inboundnumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="messagepk" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="attachMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="attachMessageResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setRedirectNumber">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="tns:ACCOUNT" />
+            <s:element minOccurs="0" maxOccurs="1" name="inboundnumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="dtmf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RedirectNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setRedirectNumberResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="setRedirectNumberResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="getStoredMessageInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getStoredMessageInfo" />
+  </wsdl:message>
+  <wsdl:message name="getStoredMessageInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getStoredMessageInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="storeMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:storeMessage" />
+  </wsdl:message>
+  <wsdl:message name="storeMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:storeMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="attachMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:attachMessage" />
+  </wsdl:message>
+  <wsdl:message name="attachMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:attachMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="setRedirectNumberSoapIn">
+    <wsdl:part name="parameters" element="tns:setRedirectNumber" />
+  </wsdl:message>
+  <wsdl:message name="setRedirectNumberSoapOut">
+    <wsdl:part name="parameters" element="tns:setRedirectNumberResponse" />
+  </wsdl:message>
+  <wsdl:portType name="InfosentralSoap">
+    <wsdl:operation name="getStoredMessageInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns information about stored messages</wsdl:documentation>
+      <wsdl:input message="tns:getStoredMessageInfoSoapIn" />
+      <wsdl:output message="tns:getStoredMessageInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="storeMessage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Stores a message and returns the messagepk</wsdl:documentation>
+      <wsdl:input message="tns:storeMessageSoapIn" />
+      <wsdl:output message="tns:storeMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="attachMessage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Attaches a message to a number</wsdl:documentation>
+      <wsdl:input message="tns:attachMessageSoapIn" />
+      <wsdl:output message="tns:attachMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="setRedirectNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets redirect number for an inbound number</wsdl:documentation>
+      <wsdl:input message="tns:setRedirectNumberSoapIn" />
+      <wsdl:output message="tns:setRedirectNumberSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InfosentralSoap" type="tns:InfosentralSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getStoredMessageInfo">
+      <soap:operation soapAction="http://ums.no/ws/vb/getStoredMessageInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="storeMessage">
+      <soap:operation soapAction="http://ums.no/ws/vb/storeMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="attachMessage">
+      <soap:operation soapAction="http://ums.no/ws/vb/attachMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setRedirectNumber">
+      <soap:operation soapAction="http://ums.no/ws/vb/setRedirectNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InfosentralSoap12" type="tns:InfosentralSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getStoredMessageInfo">
+      <soap12:operation soapAction="http://ums.no/ws/vb/getStoredMessageInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="storeMessage">
+      <soap12:operation soapAction="http://ums.no/ws/vb/storeMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="attachMessage">
+      <soap12:operation soapAction="http://ums.no/ws/vb/attachMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setRedirectNumber">
+      <soap12:operation soapAction="http://ums.no/ws/vb/setRedirectNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Infosentral">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This is a service for creating messages, linking them to an inbound number and setting redirect number. To get an account and a password, contact the UMS Sales office on telephone +47 23501600, or email us on info@ums.no</wsdl:documentation>
+    <wsdl:port name="InfosentralSoap" binding="tns:InfosentralSoap">
+      <soap:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/Infosentral.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InfosentralSoap12" binding="tns:InfosentralSoap12">
+      <soap12:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/Infosentral.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
