@@ -1,11 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.ums.ws</groupId>
     <artifactId>ws-java-clients-parent</artifactId>
     <name>UMS WebService Client - Parent</name>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <modules>
         <module>ws-conference</module>
         <module>ws-external-exec</module>
@@ -32,6 +33,13 @@
         <dependencies>
         </dependencies>
     </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>bob</id>
+            <name>bob-releases</name>
+            <url>http://bob.ums2.no:8081/artifactory/hudson-release</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
