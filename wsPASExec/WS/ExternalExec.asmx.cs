@@ -40,8 +40,6 @@ namespace com.ums.ws.parm
         [XmlInclude(typeof(CB_ALERT_UPDATE))]
         [XmlInclude(typeof(ULBAOPERATORSTATE))]
         [XmlInclude(typeof(ULBASTATUSCODES))]
-        [XmlInclude(typeof(ULocationBasedAlert))]
-
 
 
         [WebMethod]

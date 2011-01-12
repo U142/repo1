@@ -61,8 +61,7 @@ namespace com.ums.ws.pas
         [XmlInclude(typeof(UEllipse))]
         [XmlInclude(typeof(UBoundingRect))]
         [XmlInclude(typeof(UPLMN))]
-        [XmlInclude(typeof(LBALanguage))]
-        [XmlInclude(typeof(LBACCode))]
+        [XmlInclude(typeof(com.ums.UmsParm.ULocationBasedAlert))]
 
         [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)
