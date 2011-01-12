@@ -1,7 +1,7 @@
 package no.ums.pas.core.mainui;
 
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
+//import no.ums.log.Log;
+//import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.status.StatusListObject;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class OpenStatusFrame extends JFrame implements ActionListener {
 	public static final long serialVersionUID = 1;
-    private static final Log logger = UmsLog.getLogger(OpenStatusFrame.class);
+    //private static final Log logger = UmsLog.getLogger(OpenStatusFrame.class);
     private SearchPanelStatusList m_statuspanel;
 	
 	public StatusController get_controller() { return PAS.get_pas().get_statuscontroller(); }
@@ -58,7 +58,7 @@ public class OpenStatusFrame extends JFrame implements ActionListener {
 				m_statuspanel.fill(arr_statuslist);
 			}
 			catch(Exception err) {
-                logger.warn("Failed to perform action (%s)", e, e);
+                //logger.warn("Failed to perform action (%s)", e, e);
             }
 			m_statuspanel.setLoading(false);
 			

@@ -1,7 +1,7 @@
 package no.ums.adminui.pas;
 
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
+//import no.ums.log.Log;
+//import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -16,7 +16,7 @@ import java.awt.*;
 
 public class MapFrameAdmin extends MapFrame {
 
-    private static final Log logger = UmsLog.getLogger(MapFrameAdmin.class);
+    //private static final Log logger = UmsLog.getLogger(MapFrameAdmin.class);
     private Graphics m_gfx;
 	public Graphics get_gfx() { return m_gfx; }
 	
@@ -213,7 +213,7 @@ public class MapFrameAdmin extends MapFrame {
 			get_drawthread().create_image();
 			g.drawImage(get_drawthread().get_buff_image(), get_actionhandler().getPanDragPoint().get_x(), get_actionhandler().getPanDragPoint().get_y(), getMinimumSize().width, getMinimumSize().height, this);
 		} catch(Exception e) {
-            logger.warn("Failed to paint component", e);
+            //logger.warn("Failed to paint component", e);
 		}
 	}
 
@@ -234,7 +234,7 @@ public class MapFrameAdmin extends MapFrame {
 			m_gfx = gfx;
 		}
 		catch(Exception e) {
-            logger.warn("Failed to draw shape", e);
+            //logger.warn("Failed to draw shape", e);
         }
 		super.drawOnEvents(gfx);
 	}

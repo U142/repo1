@@ -87,6 +87,8 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			UPROJECTREQUEST request = new UPROJECTREQUEST();
 			request.setSzName(get_project().get_projectname());
 			request.setNProjectpk(new Long(get_project().get_projectpk()));
+			new WSProject(request, get_projectpanel(), m_sz_callback_action).start();
+			
 			//will return download finished to this dialogs panel actionhandler
 		} catch(Exception e) {
 			System.out.println(e.getMessage());

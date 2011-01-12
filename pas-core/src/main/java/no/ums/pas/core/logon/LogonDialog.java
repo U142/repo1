@@ -1,7 +1,7 @@
 package no.ums.pas.core.logon;
 
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
+//import no.ums.log.Log;
+//import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -30,7 +30,7 @@ import org.jvnet.substance.utils.params.PropertiesFileParamReader;
 /*dialog box*/
 public class LogonDialog extends JFrame implements WindowListener, ComponentListener, ActionListener { //JDialog { //implements ComponentListener {
 	public static final long serialVersionUID = 1;
-    private static final Log logger = UmsLog.getLogger(LogonDialog.class);
+    //private static final Log logger = UmsLog.getLogger(LogonDialog.class);
     private LogonInfo m_logoninfo = null;
 	public LogonInfo get_logoninfo() { return m_logoninfo; }
 	private LogonPanel m_panel;
@@ -59,7 +59,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_panel.m_nslist.setLoading(b);
 		}
 		catch(Exception e) {
-            logger.warn("Failed to set loading to %s", b, e);
+            //logger.warn("Failed to set loading to %s", b, e);
         }
 	}
 

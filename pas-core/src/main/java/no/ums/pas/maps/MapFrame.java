@@ -1,7 +1,7 @@
 package no.ums.pas.maps;
 
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
+//import no.ums.log.Log;
+//import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 
 public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {
-    private static final Log logger = UmsLog.getLogger(MapFrame.class);
+    //private static final Log logger = UmsLog.getLogger(MapFrame.class);
 
     /**
 	 * 
@@ -583,7 +583,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			
 			//m_cursor_draw = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		} catch(Exception e) {
-            logger.warn("An error occured", e);
+            //logger.warn("An error occured", e);
         }
 		sz_url = "epicentre_pinpoint.png";
 		try {
@@ -591,7 +591,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			m_cursor_epicentre = Toolkit.getDefaultToolkit().createCustomCursor(icon_epicentre.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH),
 					new Point(0,0), "Epicentre");
 		} catch(Exception e) {
-            logger.warn("Failed to create custom cursor", e);
+            //logger.warn("Failed to create custom cursor", e);
         }
 		String sz_pinpointfile = "pinpoint_blue.png";
 		try {

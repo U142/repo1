@@ -22,7 +22,6 @@ public class WSProject extends WSThread
 		super(callback);
 		this.sz_callback = sz_callback;
 		this.projectrequest = projectrequest;
-		start();
 	}
 	@Override
 	public void OnDownloadFinished() {
@@ -41,6 +40,7 @@ public class WSProject extends WSThread
 				project.set_projectpk(new Long(projectresponse.getNProjectpk()).toString());
 				project.set_updatetimestamp(new Long(projectresponse.getNUpdatedtimestamp()).toString());
 				m_callback.actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, sz_callback));
+				PAS.pasplugin.onOpenProject(project, -1);
 			}
 		}
 		catch(Exception e)

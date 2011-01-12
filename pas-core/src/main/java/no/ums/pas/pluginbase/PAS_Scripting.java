@@ -1119,7 +1119,8 @@ public class PAS_Scripting extends PasScriptingInterface
 	@Override
 	public boolean onOpenProject(Project project, long nFromNewRefno) {
 		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
-		PAS.get_pas().actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
+		if(project.get_num_sendings()>0)
+			PAS.get_pas().actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
 		return true;
 	}
 

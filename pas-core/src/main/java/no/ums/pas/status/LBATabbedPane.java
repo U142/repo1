@@ -2,7 +2,7 @@ package no.ums.pas.status;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
-import org.jvnet.substance.SubstanceTabbedPaneUI;
+//import org.jvnet.substance.SubstanceTabbedPaneUI;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -43,7 +43,7 @@ public class LBATabbedPane extends JTabbedPane implements ComponentListener, Cha
 	{
 		try
 		{
-			this.setUI(new SubstanceTabbedPaneUI());
+			//this.setUI(new SubstanceTabbedPaneUI());
 			m_listcc = new LBAListCC(colscc, widthcc, new Dimension(200,100));
 			m_listcell = new LBAListCell(colscell, widthcell, new Dimension(200, 100));
 			addTab(m_listcc, PAS.l("main_status_lba_nationalities"));
