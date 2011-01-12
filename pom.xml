@@ -18,7 +18,7 @@
         <module>ws-voice</module>
     </modules>
     <scm>
-        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/java-ws-clients/tags/1.0</connection>
+        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients</connection>
     </scm>
     <dependencies>
         <dependency>
