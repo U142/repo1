@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 
 public class plugin_Centric extends PAS_Scripting
@@ -1459,6 +1460,11 @@ public class plugin_Centric extends PAS_Scripting
 	public String getUserLocale(LogonInfo l, Settings s) {
 		return "nl_NL";
 		//return "en_GB";
+	}
+
+	@Override
+	public void onLocaleChanged(Locale from, Locale to) {
+		//do nothing
 	}
 
 	@Override

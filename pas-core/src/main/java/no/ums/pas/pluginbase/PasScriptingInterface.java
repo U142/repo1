@@ -38,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -489,6 +490,8 @@ public abstract class PasScriptingInterface
 	 * @return
 	 */
 	public abstract String getUserLocale(LogonInfo l, Settings s);
+	
+	public abstract void onLocaleChanged(Locale from, Locale to);
 	
 	
 	public abstract EastContent onCreateEastContent();

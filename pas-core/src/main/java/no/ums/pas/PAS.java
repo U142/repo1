@@ -154,6 +154,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String PAS_WS_SITE;;
 	private String PAS_CODEBASE;
 	public String ADDRESSSEARCH_URL = "";
+	public String VB4_URL = "";
 	StatusController m_statuscontroller = null;
 	GPSController m_gpscontroller = null;
 	HouseController m_housecontroller = null;
@@ -471,9 +472,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			str = str.trim();
 			int underscoreat = str.indexOf("_");
 			Locale temp = new Locale(str.substring(0, underscoreat), str.substring(underscoreat+1));
+			boolean b_changed = false;
+			if(temp!=null && locale!=null && !temp.getLanguage().equals(locale.getLanguage()))
+				b_changed = true;
 			locale = temp;
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
 			Locale.setDefault(locale);
+			if(b_changed)
+				PAS.pasplugin.onLocaleChanged(locale, temp);
 		}
 		catch(Exception e)
 		{
@@ -558,6 +564,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
 	public void setAddressSeachUrl(String s) { ADDRESSSEARCH_URL = s; }
+	public void setVB4Url(String s) { VB4_URL = s; }
 	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
 	
 	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 

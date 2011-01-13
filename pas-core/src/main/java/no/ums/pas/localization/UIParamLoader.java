@@ -22,6 +22,7 @@ public class UIParamLoader extends ClassLoader
 		{
 			UIDefaults defaults = UIManager.getDefaults();
 			
+			System.out.println(PAS.l("common_yes"));
 			defaults.put("OptionPane.cancelButtonText", PAS.l("common_cancel"));
 			defaults.put("OptionPane.noButtonText", PAS.l("common_no"));
 			defaults.put("OptionPane.okButtonText", PAS.l("common_ok"));

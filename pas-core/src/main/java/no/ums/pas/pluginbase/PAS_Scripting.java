@@ -19,6 +19,7 @@ import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.CommonFunc;
@@ -39,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
 
@@ -1072,13 +1074,32 @@ public class PAS_Scripting extends PasScriptingInterface
 
 	@Override
 	public String getDefaultLocale(Settings s) {
-		return s.getLanguage();
+		return (s==null || s.getLanguage().isEmpty() ? "en_GB" : s.getLanguage());
 	}
 	
 	@Override
 	public String getUserLocale(LogonInfo l, Settings s) {
 		return l.get_language();
 	}
+
+
+	@Override
+	public void onLocaleChanged(Locale from, Locale to) {
+		try
+		{
+			System.out.println("Language changed from " + from.getLanguage() + " to " + to.getLanguage());
+			UIParamLoader.loadServerUIParams();
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+
 
 
 	@Override

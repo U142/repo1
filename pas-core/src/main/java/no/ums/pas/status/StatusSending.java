@@ -904,7 +904,10 @@ public class StatusSending extends Object {
 			this.setPreferredSize(new Dimension(getWidth(), getHeight()));
 			int iconPanelSize = 60;//40+40 +20;
 			pnl_icon.setPreferredSize(new Dimension(getWidth()-10, iconPanelSize));
-			pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
+			if(pnl_voice.isVisible())
+				pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
+			else
+				pnl_voice.setPreferredSize(new Dimension(getWidth()-10, 1));
 			if(get_type()==5) {
 				//pnl_cell.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/2));
 				pnl_cell.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/2)+40));
@@ -1994,8 +1997,8 @@ public class StatusSending extends Object {
 		protected void openMessageProfile()
 		{
 			try {
-				OpenBrowser.browse(PAS.get_pas().get_sitename() + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+_n_profilepk +"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
-				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().get_sitename() + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
+				OpenBrowser.browse(PAS.get_pas().VB4_URL + "/PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+_n_profilepk +"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
+				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().VB4_URL + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
 			} catch(Exception err) {
 				javax.swing.JOptionPane.showMessageDialog(this, "Error opening web browser", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 				Error.getError().addError("Sending_Settings","Exception in actionPerformed",err,1);
