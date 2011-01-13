@@ -53,6 +53,7 @@
                 </executions>
                 <configuration>
                     <wsdlDirectory>${basedir}/src/main/wsdl</wsdlDirectory>
+                    <extension>true</extension>
                 </configuration>
             </plugin>
         </plugins>
