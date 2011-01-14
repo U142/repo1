@@ -54,6 +54,9 @@ namespace UMSAlertiX
                 if (filename.StartsWith("/"))
                     filename = filename.Remove(0, 1);
 
+                // remove _x from jobid (temporary fix since selection of GSM/UMTS coverage was removed)
+                filename = filename.Replace("layers", "LAYERS").Replace("_1&STYLES", "&STYLES").Replace("_2&STYLES", "&STYLES").Replace("_4&STYLES", "&STYLES");
+
                 byte[] msg;
 
                 msg = GetWebPage(filename);
