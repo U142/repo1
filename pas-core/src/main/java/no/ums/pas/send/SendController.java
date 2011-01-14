@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
 import no.ums.pas.core.defines.LightPanel;
+import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.LoadingFrame;
@@ -25,6 +26,7 @@ import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.ums.tools.StdTextArea;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.Parmws;
@@ -697,6 +699,7 @@ public class SendController implements ActionListener {
 			    	  pass.requestFocusInWindow();
 			      }
 			});
+			
 
 			int dlg_ret = JOptionPane.showConfirmDialog(PAS.get_pas(), panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if(dlg_ret != JOptionPane.YES_OPTION)
@@ -705,6 +708,19 @@ public class SendController implements ActionListener {
 				return;
 			}
 			try {
+				
+				String pwd;
+				try {
+					pwd = Utils.encrypt(new String(pass.getPassword()));
+				}
+				catch (Exception e){
+					pwd="";
+				}
+				if(!pwd.equals(logon.getSzPassword())) {
+					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_alert_dlg_confirm_err"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
 				if(sz_function.equals("live")) {
 					if(!confirm.getText().equals("LIVE")) {
 						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);

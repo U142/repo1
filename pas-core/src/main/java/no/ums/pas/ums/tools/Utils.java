@@ -12,6 +12,7 @@ import javax.swing.text.Keymap;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -197,5 +198,28 @@ public final class Utils {
 			
 		}
     }
-    
+    public static String encrypt(String pw) throws Exception
+    {
+		String sha = "";
+		try
+		{
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			md.update(pw.getBytes());
+			byte[] mb = md.digest();
+	        for (int i = 0; i < mb.length; i++) {
+	            byte temp = mb[i];
+	            String s = Integer.toHexString(new Byte(temp));
+	            while (s.length() < 2) {
+	                s = "0" + s;
+	            }
+	            s = s.substring(s.length() - 2);
+	            sha += s;
+	        }
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+		return sha;
+	}
 }

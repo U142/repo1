@@ -497,57 +497,72 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			listModel.addElement(it.next());
 		sort_cclist();
 	}
-
+	private boolean checkInput(Point p, JFrame frame) {
+		if(m_lst_cc.isSelectionEmpty()) {
+			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
+			frame.setLocation(p);
+			frame.setVisible(true);
+			frame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_country_or_default"));
+			frame.dispose();
+			return false;
+		}
+		else if(m_txt_messagename.getText().length()<1)	{
+			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
+			frame.setLocation(p);
+			frame.setVisible(true);
+			frame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_no_name"));
+			frame.dispose();
+			return false;
+		}
+		else if(m_txt_oadc_text.getText().length()<1) {
+			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
+			frame.setLocation(p);
+			frame.setVisible(true);
+			frame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_content"));
+			frame.dispose();
+			return false;
+		}
+		else if(m_txt_messagetext.getText().length()<1) {
+			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
+			frame.setLocation(p);
+			frame.setVisible(true);
+			frame.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_no_content"));
+			frame.dispose();
+			return false;
+		}
+		return true;
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == m_btn_add && m_btn_add.getText().equals("Save")) {
-			CBMessage cbm = (CBMessage)m_cbx_messages.getItemAt(m_cbx_messages.getSelectedIndex());
-			// Oppdater endringene
-			cbm.setMessage(m_txt_messagetext.getText());
-			cbm.setMessageName(m_txt_messagename.getText());
-			cbm.setCboadc(m_txt_oadc_text.getText());
-			cbm.getCcodes().clear();
-			cbm.setCcodes(getCCodes());
-			resetTextFields();
-			// nullstill messagetext og navn
+			JFrame frame = new JFrame();
+			frame.setUndecorated(true);
+			Point p = no.ums.pas.ums.tools.Utils.get_dlg_location_centered(0,0);
+			
+			if(checkInput(p, frame))
+			{
+				CBMessage cbm = (CBMessage)m_cbx_messages.getItemAt(m_cbx_messages.getSelectedIndex());
+				// Oppdater endringene
+				cbm.setMessage(m_txt_messagetext.getText());
+				cbm.setMessageName(m_txt_messagename.getText());
+				cbm.setCboadc(m_txt_oadc_text.getText());
+				cbm.getCcodes().clear();
+				cbm.setCcodes(getCCodes());
+				resetTextFields();
+				// nullstill messagetext og navn
+			}
 		}
 		else if(e.getSource() == m_btn_add) {
 			JFrame frame = new JFrame();
 			frame.setUndecorated(true);
 			Point p = no.ums.pas.ums.tools.Utils.get_dlg_location_centered(0,0);
 			
-			if(m_lst_cc.isSelectionEmpty()) {
-				p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
-				frame.setLocation(p);
-				frame.setVisible(true);
-				frame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_country_or_default"));
-				frame.dispose();
-			}
-			else if(m_txt_messagename.getText().length()<1)	{
-				p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
-				frame.setLocation(p);
-				frame.setVisible(true);
-				frame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_no_name"));
-				frame.dispose();
-			}
-			else if(m_txt_oadc_text.getText().length()<1) {
-				p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
-				frame.setLocation(p);
-				frame.setVisible(true);
-				frame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_content"));
-				frame.dispose();
-			}
-			else if(m_txt_messagetext.getText().length()<1) {
-				p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
-				frame.setLocation(p);
-				frame.setVisible(true);
-				frame.setAlwaysOnTop(true);
-				JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_no_content"));
-				frame.dispose();
-			}
-			else {
+			if(checkInput(p, frame))
+			{
 				CBMessage cbm = new CBMessage(m_txt_messagename.getText(), getCCodes(), m_txt_messagetext.getText(), m_txt_oadc_text.getText());
 				if(!m_cbx_messages.isVisible())
 					m_cbx_messages.setVisible(true);
