@@ -614,7 +614,7 @@ namespace com.ums.PAS.Database
                                                          p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
 
                         }
-                        if (p[i].letter.Trim().Length > 0)
+                        if (p[i].letter.Trim().Length > 0 && !p[i].letter.Trim().Equals("0"))
                         {
                             szSQL += " AND OPPGANG='" + p[i].letter.Trim() + "'";
                         }

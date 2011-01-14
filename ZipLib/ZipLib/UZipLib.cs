@@ -54,7 +54,10 @@ namespace com.ums.ZipLib
             //sz_filename = zipfilename;
             ufile = new UFile(path, zipfilename);
             java.io.File file = new java.io.File(ufile.full());
-            zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            zos = new ZipOutputStream(bos);
+            //zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
         }
         /*public void ZipTextToFile(String zipfilname, String text, Encoding enc)
         {
