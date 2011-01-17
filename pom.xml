@@ -54,6 +54,9 @@
                 <configuration>
                     <wsdlDirectory>${basedir}/src/main/wsdl</wsdlDirectory>
                     <extension>true</extension>
+                    <bindingFiles>
+                        <bindingFile>${project.basedir}/../src/jaxws/bindings.xml</bindingFile>
+                    </bindingFiles>
                 </configuration>
             </plugin>
         </plugins>
