@@ -621,6 +621,8 @@ namespace com.ums.UmsCommon
         public UDATETIME(Int64 datetime)
         {
             String str = datetime.ToString();
+            if (str.Length == 12)
+                str += "00";
             if (str.Length < 14)
                 throw new UMalformedDateTimeException();
             sz_date = str.Substring(0, 8);

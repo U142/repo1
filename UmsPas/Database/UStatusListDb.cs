@@ -144,10 +144,13 @@ namespace com.ums.PAS.Database
 
                     szSQL = String.Format(
                         "SELECT * FROM v_StatusListVoice " +
+                        "WHERE l_deptpk in ({0}) " +
                         "UNION " +
                         "SELECT * FROM v_StatusListSms " +
+                        "WHERE l_deptpk in ({0}) " +
                         "UNION " +
                         "SELECT * FROM v_StatusListLBA " +
+                        "WHERE l_deptpk in ({0}) " +
                         "UNION " +
                         "SELECT * FROM v_StatusListCB " +
                         "WHERE l_deptpk in ({0}) ", szDeptList);

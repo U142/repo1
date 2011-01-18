@@ -1933,11 +1933,7 @@ namespace com.ums.ws.parm
                     {
                         sz_shape_xml = "";
                     }
-                    finally
-                    {
-                        if (rs != null && !rs.IsClosed)
-                            rs.Close();
-                    }
+                    
                     if (sz_shape_xml.Length > 0)
                     {
                         try
