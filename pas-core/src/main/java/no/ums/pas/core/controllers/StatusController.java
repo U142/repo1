@@ -1084,6 +1084,9 @@ public class StatusController extends Controller implements ActionListener {
 			new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(PAS
 					.get_pas(), PAS.get_pas().get_lookandfeel(),
 					(StatusItemList) m_items, m_statuscodes);
+			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null) {
+				m_lba_total_tabbed.getListCC().exportToCSV();
+			}
 		}
 		
 		//m_statuslistframe.get_statuspanel().exportToCSV();

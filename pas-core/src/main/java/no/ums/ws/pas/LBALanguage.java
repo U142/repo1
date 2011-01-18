@@ -17,7 +17,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="l_textpk" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="sz_name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="sz_cb_oadc" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="sz_otoa" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -33,7 +32,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LBALanguage", propOrder = {
-    "lTextpk",
     "szName",
     "szCbOadc",
     "szOtoa",
@@ -42,8 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class LBALanguage {
 
-    @XmlElement(name = "l_textpk")
-    protected long lTextpk;
     @XmlElement(name = "sz_name")
     protected String szName;
     @XmlElement(name = "sz_cb_oadc")
@@ -54,22 +50,6 @@ public class LBALanguage {
     protected String szText;
     @XmlElement(name = "m_ccodes")
     protected ArrayOfLBACCode mCcodes;
-
-    /**
-     * Gets the value of the lTextpk property.
-     * 
-     */
-    public long getLTextpk() {
-        return lTextpk;
-    }
-
-    /**
-     * Sets the value of the lTextpk property.
-     * 
-     */
-    public void setLTextpk(long value) {
-        this.lTextpk = value;
-    }
 
     /**
      * Gets the value of the szName property.

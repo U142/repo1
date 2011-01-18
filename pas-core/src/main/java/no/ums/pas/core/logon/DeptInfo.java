@@ -27,6 +27,7 @@ public class DeptInfo extends Object {
 	private int m_n_maxalloc;
 	private String m_sz_defaultnumber;
 	private int m_l_pas; //0=no access, 1=norway db, 2=folkereg db
+	private int m_l_langpk; // Default lang (used for default TTS)
 	
 	private UserProfile m_userprofile;
 	private List<UMunicipalDef> m_municipals;
@@ -43,6 +44,7 @@ public class DeptInfo extends Object {
 	public String toString() { return m_sz_deptid + " (" + m_userprofile.get_name() + ")"; }
 	public List<UMunicipalDef> get_municipals() { return m_municipals; }
 	public int get_pas_rights() { return m_l_pas; } //1 = Normal DB, 2 = Folkereg DB, 4 = TAS
+	public int get_default_langpk() { return m_l_langpk; }
 	protected List<ShapeStruct> m_restriction_shapestructs = new ArrayList<ShapeStruct>();
 	public List<ShapeStruct> get_restriction_shapes() { return m_restriction_shapestructs; }
 	
@@ -78,7 +80,7 @@ public class DeptInfo extends Object {
 	
 	public DeptInfo(int n_deptpk, String sz_deptid, String sz_stdcc, NavStruct nav_init, boolean b_default_dept,
 			 int n_deptpri, int n_maxalloc, String sz_defaultnumber, UserProfile userprofile,
-			 List<UMunicipalDef> municipals, int l_pas, ArrayOfUShape restriction_shapes) {
+			 List<UMunicipalDef> municipals, int l_pas, int l_langpk, ArrayOfUShape restriction_shapes) {
 		m_n_deptpk 	= n_deptpk;
 		m_sz_deptid = sz_deptid;
 		m_nav_init = nav_init;
@@ -90,6 +92,7 @@ public class DeptInfo extends Object {
 		m_sz_defaultnumber = sz_defaultnumber;
 		m_municipals = municipals;
 		m_l_pas = l_pas;
+		m_l_langpk = l_langpk;
 		System.out.println("Department=" + m_sz_deptid);
 		m_restriction_shapestructs = ConvertUShapes_to_ShapeStructs(restriction_shapes.getUShape());
 	}

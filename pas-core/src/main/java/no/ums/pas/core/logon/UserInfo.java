@@ -139,7 +139,7 @@ public class UserInfo extends Object {
 					boolean f_default, int l_deptpri, int l_maxalloc, String sz_userprofilename, 
 					String sz_userprofiledesc, int l_status, int l_newsending, int l_parm, int l_fleetcontrol,
 					int l_cellbroadcast, int l_houseeditor, long l_addresstypes, String sz_defaultnumber,
-					List<UMunicipalDef> municipals, int l_pas, ArrayOfUShape restriction_shapes)
+					List<UMunicipalDef> municipals, int l_pas, int l_langpk, ArrayOfUShape restriction_shapes)
 	{
 		try {
 		NavStruct nav_init = new NavStruct(lbo, rbo, ubo, bbo);
@@ -147,7 +147,7 @@ public class UserInfo extends Object {
 									l_parm, l_status, l_newsending, l_cellbroadcast, l_houseeditor,
 									l_addresstypes);
 		DeptInfo dept = get_departments().add(l_deptpk, sz_deptid, sz_stdcc, nav_init, f_default, l_deptpri, 
-										l_maxalloc, sz_defaultnumber, m_userprofile, municipals, l_pas, 
+										l_maxalloc, sz_defaultnumber, m_userprofile, municipals, l_pas, l_langpk,
 										restriction_shapes);
 		
 		if(f_default)

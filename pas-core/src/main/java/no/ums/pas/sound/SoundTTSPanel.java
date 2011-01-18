@@ -102,6 +102,11 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			for(int i=0; i < m_parent.get_tts().size(); i++) {
 				m_combo_tts.addItem(m_parent.get_tts().get(i));
 			}
+			for(int i=0;i<m_combo_tts.getItemCount(); ++i) {
+				TTSLang ttsl = (TTSLang)m_combo_tts.getItemAt(i);
+				if(ttsl.get_langpk() == PAS.get_pas().get_userinfo().get_current_department().get_default_langpk())
+					m_combo_tts.setSelectedIndex(i);
+			}
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR populate_tts() " + e.getMessage(), e);
 			Error.getError().addError(PAS.l("common_error"),"Exception in populate_txtlib",e,1);

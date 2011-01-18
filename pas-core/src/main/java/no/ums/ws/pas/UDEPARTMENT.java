@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="sz_defaultnumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="f_map" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="l_pas" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="l_langpk" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="municipals" type="{http://ums.no/ws/pas/}ArrayOfUMunicipalDef" minOccurs="0"/>
  *         &lt;element name="restrictionShapes" type="{http://ums.no/ws/pas/}ArrayOfUShape" minOccurs="0"/>
  *       &lt;/sequence>
@@ -73,6 +74,7 @@ import javax.xml.bind.annotation.XmlType;
     "szDefaultnumber",
     "fMap",
     "lPas",
+    "lLangpk",
     "municipals",
     "restrictionShapes"
 })
@@ -118,6 +120,8 @@ public class UDEPARTMENT {
     protected int fMap;
     @XmlElement(name = "l_pas")
     protected int lPas;
+    @XmlElement(name = "l_langpk")
+    protected int lLangpk;
     protected ArrayOfUMunicipalDef municipals;
     protected ArrayOfUShape restrictionShapes;
 
@@ -511,6 +515,22 @@ public class UDEPARTMENT {
      */
     public void setLPas(int value) {
         this.lPas = value;
+    }
+
+    /**
+     * Gets the value of the lLangpk property.
+     * 
+     */
+    public int getLLangpk() {
+        return lLangpk;
+    }
+
+    /**
+     * Sets the value of the lLangpk property.
+     * 
+     */
+    public void setLLangpk(int value) {
+        this.lLangpk = value;
     }
 
     /**

@@ -309,7 +309,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_sms_broadcast_text_panel.setSendingType(get_sendobject().get_toolbar().get_addresstypes());
 
 		this.get_sendobject().get_sendproperties().set_cell_broadcast_text(m_cell_broadcast_text_panel);
-		this.get_sendobject().get_sendproperties().set_sms_broadcast_text(m_sms_broadcast_text_panel);
+		//this.get_sendobject().get_sendproperties().set_sms_broadcast_text(m_sms_broadcast_text_panel);
 		
 		m_send = new Sending_Send(controller.get_pas(), this);
 		m_tabbedpane = new JTabbedPane();
@@ -387,6 +387,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			m_tabbedpane.addTab(PAS.l("main_sending_sms_heading"), null,
 								m_sms_broadcast_text_panel,
 								PAS.l("main_sending_sms_heading_tooltip"));
+			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel), false);
 		}
 		m_tabbedpane.addTab(PAS.l("main_sending_finalize_heading"), null,
 							m_send,
@@ -553,6 +554,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_next".equals(e.getActionCommand())) {
+			boolean movenext = true;
 			if(m_tabbedpane.getSelectedComponent().equals(m_settings) && m_settings.m_b_use_scheddatetime){
 				if(schedDatePassed()) {
 					JOptionPane.showMessageDialog(this, PAS.l("main_sending_schedule_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
@@ -584,14 +586,20 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				}
 			}
 			if(m_tabbedpane.getSelectedComponent().equals(m_cell_broadcast_text_panel) && !m_cell_broadcast_text_panel.defaultLanguage()) {
-				if((get_sendobject().get_sendproperties().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT)
+				if((get_sendobject().get_sendproperties().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
 					JOptionPane.showMessageDialog(this, PAS.l("main_sending_lba_default_lang_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					for(int i=m_tabbedpane.indexOfComponent(m_cell_broadcast_text_panel);i<m_tabbedpane.getTabCount();++i){
+							m_tabbedpane.setEnabledAt(i, false);
+					}
+					
+					movenext = false;
+				}
 			}
-			if(m_tabbedpane.getSelectedIndex() < m_tabbedpane.getTabCount()-1) {
+			if(m_tabbedpane.getSelectedIndex() < m_tabbedpane.getTabCount()-1 && movenext) {
 				m_tabbedpane.setSelectedComponent(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()+1));
 				m_tabbedpane.setEnabledAt(m_tabbedpane.getSelectedIndex(), true);
 			}
-			if(m_tabbedpane.getSelectedComponent() == m_cell_broadcast_text_panel) {
+			if(m_tabbedpane.getSelectedComponent() == m_cell_broadcast_text_panel && movenext) {
 				m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_cell_broadcast_text_panel), true);
 			}
 			if(m_tabbedpane.getSelectedComponent().getClass() == Sending_Files.class) {

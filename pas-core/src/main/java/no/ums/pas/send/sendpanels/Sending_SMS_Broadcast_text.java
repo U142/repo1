@@ -24,7 +24,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 
 	
 	public List<UTASRESPONSENUMBER> m_responsenumbers;
-		
+	
 	public Sending_SMS_Broadcast_text(PAS pas, SendWindow parentwin)
 	{
 		super(parentwin);

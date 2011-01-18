@@ -231,7 +231,6 @@ public class SendController implements ActionListener {
 		obj.get_sendproperties().set_sms_broadcast_message(alert.get_sms_message());
 		obj.get_sendproperties().set_sms_broadcast_oadc(alert.get_sms_oadc());
 		
-		
 		//obj.setLocked(true);
 
 		if(alert != null && alert.getArea() != null) {
@@ -247,9 +246,11 @@ public class SendController implements ActionListener {
 				//obj.get_sendproperties().get_cell_broadcast_text().set_size_label(alert.getInternationalLanguage()[1], obj.get_sendproperties().get_cell_broadcast_text().get_lbl_internationalsize());
 			obj.get_sendproperties().get_cell_broadcast_text().get_combo_area().setSelectedItem(alert.getArea());
 			obj.get_sendproperties().get_cell_broadcast_text().set_expiryMinutes(alert.get_LBAExpiry());
+			obj.get_sendproperties().get_cell_broadcast_text().set_requesttype(alert.getRequestType());
 			//obj.get_sendproperties().get_cell_broadcast_text().get_txt_oadc_text().setText(alert.getCBOadc());
 			for(int i=0;i<alert.getCBMessages().size();i++)
 				obj.get_sendproperties().get_cell_broadcast_text().get_cbx_messages().addItem(alert.getCBMessages().get(i));
+		
 		}
 		
 		return obj;
@@ -717,7 +718,7 @@ public class SendController implements ActionListener {
 					pwd="";
 				}
 				if(!pwd.equals(logon.getSzPassword())) {
-					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_alert_dlg_confirm_err"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_error_password"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				
@@ -743,8 +744,8 @@ public class SendController implements ActionListener {
 				System.out.println("AlertPK: " + a.getAlertpk().substring(1));
 				System.out.println("Logon: " + logon_exec.toString());
 				System.out.println("sz_function: " + sz_function);
-				//ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, "0", "0");
-				ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, no.ums.pas.ums.tools.Utils.get_current_date_formatted(), Long.toString(no.ums.pas.ums.tools.Utils.get_current_datetime()).substring(8,14));
+				ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, "0", "0");
+				//ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, no.ums.pas.ums.tools.Utils.get_current_date_formatted(), Long.toString(no.ums.pas.ums.tools.Utils.get_current_datetime()).substring(8,14));
 				res = new SoapExecAlert("0", "0", null).newSnapAlertResult();
 				res.l_execpk = ar.getLExecpk();
 				

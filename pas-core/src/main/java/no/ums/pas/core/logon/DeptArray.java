@@ -19,10 +19,10 @@ public class DeptArray extends ArrayList<Object> {
 	public static final long serialVersionUID = 1;
 	public DeptInfo add(int n_deptpk, String sz_deptid, String sz_stdcc, NavStruct nav_init, boolean b_default_dept, 
 						int n_deptpri, int n_maxalloc, String sz_defaultnumber, UserProfile m_userprofile,
-						List<UMunicipalDef> municipals, int l_pas, ArrayOfUShape restriction_shapes) {
+						List<UMunicipalDef> municipals, int l_pas, int l_langpk, ArrayOfUShape restriction_shapes) {
 		DeptInfo dept = new DeptInfo(n_deptpk, sz_deptid, sz_stdcc, nav_init, 
 								b_default_dept, n_deptpri, n_maxalloc, 
-								sz_defaultnumber, m_userprofile, municipals, l_pas, restriction_shapes);
+								sz_defaultnumber, m_userprofile, municipals, l_pas, l_langpk, restriction_shapes);
 		super.add(dept);
 		return dept;
 	}

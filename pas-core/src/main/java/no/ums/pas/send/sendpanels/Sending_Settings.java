@@ -489,6 +489,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	protected void populate_smstemplates() {
 		ArrayList<SoundlibFile> smstemp = get_parent().get_settingsloader().get_smstemplatelib();
 		this.get_parent().set_smstemplates(smstemp);
+		this.get_parent().get_sms_broadcast_text().addComboTemplatesActionListener();
 	}
 	protected void populate_oadc() {
 		ArrayList<OADC> oadcs = get_parent().get_settingsloader().get_oadcnumbers();

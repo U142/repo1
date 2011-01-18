@@ -239,7 +239,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_txt_oadc_text.setPreferredSize(new Dimension(200, 20));
 		m_txt_oadc_text.addKeyListener(this);
 		m_combo_templates.setPreferredSize(new Dimension(200, 20));
-		m_combo_templates.addActionListener(this);
+		//m_combo_templates.addActionListener(this); Is now added in Sending_Settings populate_smstemplates to avoid action performed when downloading
 		m_combo_templates.setActionCommand("act_smstemplate_changed");
 		
 		//tree_msglib = new MessageLibTreePanel(Sending_Cell_Broadcast_text.this, UMSTree.TREEMODE.SELECTION_ONLY,10, false);
@@ -257,6 +257,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		//setRequestType(m_n_requesttype);
 		
 		add_controls();
+	}
+	
+	public void addComboTemplatesActionListener() {
+		m_combo_templates.addActionListener(this);
 	}
 	
 	public void addCellFocusListener()
