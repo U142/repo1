@@ -799,6 +799,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			{
 				public void run()
 				{
+					PAS.get_pas().close_active_project(true, false);
 					PAS.get_pas().get_statuscontroller().retrieve_statusitems(null, get_sendobject().get_sendproperties().get_projectpk(), get_sendobject().get_sendproperties().get_refno(), true);
 					setVisible(false);
 				}

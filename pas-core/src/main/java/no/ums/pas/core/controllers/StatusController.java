@@ -998,7 +998,7 @@ public class StatusController extends Controller implements ActionListener {
 				public void run() {
 					try {
 						{
-							PAS.get_pas().close_active_project(true, false);
+							//PAS.get_pas().close_active_project(true, false);
 							b_newrefno = true;
 							/*
 							 * ActionEvent e = new ActionEvent(new String(""),
@@ -1053,6 +1053,8 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	public synchronized void start_download(boolean b_auto) {
+		if(isClosed())
+			return;
 		set_updates_in_progress(true);
 		// PAS.get_pas().get_eastcontent().get_statuspanel().setMainStatusText("(updating)");
 		PAS.get_pas().get_eastcontent().get_statuspanel().setStatusUpdating(

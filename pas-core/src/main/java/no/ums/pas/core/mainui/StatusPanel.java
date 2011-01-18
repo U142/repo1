@@ -208,12 +208,12 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_main = new MainView(pas);
 		m_tab = new JTabbedPane();
 		setPreferredSize(size);
-		addComponentListener(this);
 		add_controls();
 		m_combo_voice_filter.addItemListener(this);
 		int height = m_combo_voice_filter.getPreferredSize().height;
 		m_combo_voice_filter.setRenderer(new ComboRowCellRenderer(new Class [] { String.class, ImageIcon.class, JLabel.class, JLabel.class, JLabel.class }, new int [] { 40, 40, 250, 80, 60 }, height));
 		m_combo_voice_filter.addItem(new ComboRow(null, new Object[] {PAS.l("main_status_filter") + ":", new ImageIcon(""), new JLabel(PAS.l("main_status_filter_none")), m_lbl_proc_and_total, new JLabel("")}));
+		addComponentListener(this);
 		
 	}
 	public void add_controls() {
@@ -251,60 +251,71 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) { 
-		if(getWidth()<=0 || getHeight()<=0)
+		try
 		{
-			super.componentResized(e);
-			return;
-		}
-
-		m_tab.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		m_tab.setSize(new Dimension(getWidth(), getHeight()));
-		/*get_statuscodeframe().setPreferredSize(new Dimension(getWidth()-20,  getHeight()/3-70));
-		get_inhabitantframe().setPreferredSize(new Dimension(getWidth()-20,  getHeight()/3-70));*/
-		setStatusUpdating(true);
-		float voice_percent = 1.0f/2.1f;
-		float lba_percent = 1.0f/2.1f;
-		int x = getWidth();
-		int y = getHeight();
-		int n_maxheight = 0;
-		for(int tab=0; tab<m_tab.getTabCount(); tab++)
-		{
-			try
+			if(getWidth()<=0 || getHeight()<=0)
 			{
-				Rectangle rect = m_tab.getBoundsAt(0);
-				if(rect!=null)
+				super.componentResized(e);
+				return;
+			}
+	
+			m_tab.setPreferredSize(new Dimension(getWidth(), getHeight()));
+			m_tab.setSize(new Dimension(getWidth(), getHeight()));
+			/*get_statuscodeframe().setPreferredSize(new Dimension(getWidth()-20,  getHeight()/3-70));
+			get_inhabitantframe().setPreferredSize(new Dimension(getWidth()-20,  getHeight()/3-70));*/
+			setStatusUpdating(true);
+			float voice_percent = 1.0f/2.1f;
+			float lba_percent = 1.0f/2.1f;
+			int x = getWidth();
+			int y = getHeight();
+			int n_maxheight = 0;
+			for(int tab=0; tab<m_tab.getTabCount(); tab++)
+			{
+				try
 				{
-					int n_tabheight = rect.y + rect.height;
-					n_maxheight = Math.max(n_tabheight, n_maxheight);
+					Rectangle rect = m_tab.getBoundsAt(0);
+					if(rect!=null)
+					{
+						int n_tabheight = rect.y + rect.height;
+						n_maxheight = Math.max(n_tabheight, n_maxheight);
+					}
+				}
+				catch(Exception err)
+				{
+					
 				}
 			}
-			catch(Exception err)
+			int voicelba_count = 0;
+			if(VOICEPANEL.isVisible())
+				voicelba_count++;
+			if(LBAPANEL.isVisible())
+				voicelba_count++;
+			float percent = 0.8f / voicelba_count;
+			if(voicelba_count>1)
+				percent = 0.9f / voicelba_count;
+			
+			//Dimension dim_voicepart = new Dimension(x-10, new Float(y*(b_enable_lba_panel ? voice_percent : 1)-n_maxheight-(b_enable_lba_panel ? 20 : 100)).intValue());
+			//Dimension dim_voicepart = new Dimension(x-10, new Float(y*(percent)-n_maxheight-(b_enable_lba_panel ? 20 : 20)).intValue());
+			Dimension dim_voicepart = new Dimension(x-10, new Float(y*(percent)-n_maxheight).intValue());
+			VOICEPANEL.setPreferredSize(dim_voicepart);
+			//VOICEPANEL.setSize(dim_voicepart);
+			VOICEPANEL.validate();
+			
+			if(b_enable_lba_panel)
 			{
-				
+				//Dimension dim_lbapart = new Dimension(new Dimension(x-10, new Float(y*lba_percent).intValue()-n_maxheight-20));
+				//Dimension dim_lbapart = new Dimension(new Dimension(x-10, new Float(y*percent).intValue()-n_maxheight-50));
+				Dimension dim_lbapart = new Dimension(new Dimension(x-10, new Float(y*percent).intValue()-n_maxheight));
+				LBAPANEL.setPreferredSize(dim_lbapart);
+				//LBAPANEL.setSize(dim_lbapart);
+				LBAPANEL.validate();
 			}
+			setStatusUpdating(false);
 		}
-		int voicelba_count = 0;
-		if(VOICEPANEL.isVisible())
-			voicelba_count++;
-		if(LBAPANEL.isVisible())
-			voicelba_count++;
-		float percent = 0.9f / voicelba_count;
-		
-		//Dimension dim_voicepart = new Dimension(x-10, new Float(y*(b_enable_lba_panel ? voice_percent : 1)-n_maxheight-(b_enable_lba_panel ? 20 : 100)).intValue());
-		Dimension dim_voicepart = new Dimension(x-10, new Float(y*(percent)-n_maxheight-(b_enable_lba_panel ? 20 : 20)).intValue());
-		VOICEPANEL.setPreferredSize(dim_voicepart);
-		VOICEPANEL.setSize(dim_voicepart);
-		VOICEPANEL.invalidate();
-
-		if(b_enable_lba_panel)
+		catch(Exception err)
 		{
-			//Dimension dim_lbapart = new Dimension(new Dimension(x-10, new Float(y*lba_percent).intValue()-n_maxheight-20));
-			Dimension dim_lbapart = new Dimension(new Dimension(x-10, new Float(y*percent).intValue()-n_maxheight-50));
-			LBAPANEL.setPreferredSize(dim_lbapart);
-			LBAPANEL.setSize(dim_lbapart);
-			LBAPANEL.invalidate();
+			err.printStackTrace();
 		}
-		setStatusUpdating(false);
 		
 	}
 	
@@ -652,32 +663,48 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					set_gridconst(0, inc_panels(), x_width, 1, GridBagConstraints.NORTHWEST);
 					add(PAS.get_pas().get_inhabitantframe().get_panel(), m_gridconst);
 					addComponentListener(this);
+					addComponentListener(StatusPanel.this);
 					init();
 
 				}
 				public void actionPerformed(ActionEvent e) { }
 				public void init() { }
+				@Override
+				public void setPreferredSize(Dimension d)
+				{
+					super.setPreferredSize(d);
+					doResize();
+				}
+				void doResize()
+				{
+					try
+					{
+						int x = this.getWidth()-20;
+						int y = this.getHeight()-10;
+						m_voice_total_progress.setPreferredSize(new Dimension(x, 20));
+						m_voice_total_progress.setSize(new Dimension(x,20));
+						m_combo_voice_filter.setPreferredSize(new Dimension(x, 26));
+						m_combo_voice_filter.setSize(new Dimension(x,26));
+						m_icon_panel_main.setPreferredSize(new Dimension(x, 40));
+						get_statuscodeframe().setPreferredSize(new Dimension(x, y/2-40));
+						get_inhabitantframe().setPreferredSize(new Dimension(x, y/2-70));
+						m_icon_panel_main.setSize(new Dimension(x, 40));
+						get_statuscodeframe().setSize(new Dimension(x, y/2-40));
+						get_inhabitantframe().setSize(new Dimension(x, y/2-70));
+						
+						m_voice_total_progress.invalidate();
+						m_icon_panel_main.invalidate();
+						get_statuscodeframe().invalidate();
+						get_inhabitantframe().invalidate();
+					}
+					catch(Exception err)
+					{
+						err.printStackTrace();
+					}					
+				}
 				public void componentResized(ComponentEvent e)
 				{
-					int x = this.getWidth()-20;
-					int y = this.getHeight()-10;
-					m_voice_total_progress.setPreferredSize(new Dimension(x, 20));
-					m_voice_total_progress.setSize(new Dimension(x,20));
-					m_combo_voice_filter.setPreferredSize(new Dimension(x, 26));
-					m_combo_voice_filter.setSize(new Dimension(x,26));
-					m_icon_panel_main.setPreferredSize(new Dimension(x, 40));
-					get_statuscodeframe().setPreferredSize(new Dimension(x, y/2-40));
-					get_inhabitantframe().setPreferredSize(new Dimension(x, y/2-70));
-					m_icon_panel_main.setSize(new Dimension(x, 40));
-					get_statuscodeframe().setSize(new Dimension(x, y/2-40));
-					get_inhabitantframe().setSize(new Dimension(x, y/2-70));
-					
-					m_voice_total_progress.invalidate();
-					m_icon_panel_main.invalidate();
-					get_statuscodeframe().invalidate();
-					get_inhabitantframe().invalidate();
-					
-					
+					doResize();
 				}
 			}), m_gridconst);
 			

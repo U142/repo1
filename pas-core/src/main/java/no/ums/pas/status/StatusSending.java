@@ -865,8 +865,8 @@ public class StatusSending extends Object {
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(pnl_voice, m_gridconst);
 			add_spacing(DIR_VERTICAL, 10);
-			//set_gridconst(0,inc_panels(), 1, 1);
-			//add(pnl_cell, m_gridconst);
+			set_gridconst(0,inc_panels(), 1, 1);
+			add(pnl_cell, m_gridconst);
 			set_gridconst(0,inc_panels(), 1, 1);
 			
 			if(get_type()==5) {
@@ -903,21 +903,25 @@ public class StatusSending extends Object {
 			//	voicelba_visible++;
 			this.setPreferredSize(new Dimension(getWidth(), getHeight()));
 			int iconPanelSize = 60;//40+40 +20;
-			pnl_icon.setPreferredSize(new Dimension(getWidth()-10, iconPanelSize));
+			int w = getWidth()-5;
+			pnl_icon.setPreferredSize(new Dimension(w, iconPanelSize));
 			if(pnl_voice.isVisible())
-				pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
+				pnl_voice.setPreferredSize(new Dimension(w, (getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize));
+				//pnl_voice.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/voicelba_visible)-iconPanelSize-50)); //-iconPanelSize/2));
 			else
-				pnl_voice.setPreferredSize(new Dimension(getWidth()-10, 1));
+				pnl_voice.setPreferredSize(new Dimension(w, 1));
 			if(get_type()==5) {
 				//pnl_cell.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/2));
-				pnl_cell.setPreferredSize(new Dimension(getWidth()-10, (getHeight()/2)+40));
-				pnl_lbasmsreply.setPreferredSize(new Dimension(getWidth()-10, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/3));
+				pnl_cell.setPreferredSize(new Dimension(w, (getHeight()/2)+40));
+				pnl_lbasmsreply.setPreferredSize(new Dimension(w, ((getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/2)/3));
 			}
 			else if(get_type()==6) { // Centric
-				pnl_pa.setPreferredSize(new Dimension(getWidth()-10, (getHeight()-iconPanelSize)));
+				pnl_pa.setPreferredSize(new Dimension(w, (getHeight()-iconPanelSize)));
 			}
+			else if(pnl_cell.isVisible())
+				pnl_cell.setPreferredSize(new Dimension(w, (getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize));
 			else
-				pnl_cell.setPreferredSize(new Dimension(getWidth()-10, (getHeight()-iconPanelSize)/voicelba_visible-iconPanelSize/3));
+				pnl_cell.setPreferredSize(new Dimension(w, 1));
 			revalidate();
 		}
 		public void componentShown(ComponentEvent e) { }
@@ -1039,7 +1043,7 @@ public class StatusSending extends Object {
 		}
 		public IconPanel() {
 			//m_btn_goto = new JButton(ImageLoader.load_icon("gnome-searchtool_16x16.jpg"));
-			Dimension btn_size = new Dimension(40,40);
+			Dimension btn_size = new Dimension(80,40);
 			if(PAS.icon_version==2)
 				m_btn_goto = new JButton(ImageLoader.load_icon("find_32.png"));
 			else

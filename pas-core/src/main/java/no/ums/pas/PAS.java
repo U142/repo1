@@ -1928,7 +1928,16 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			if(get_eastcontent().get_taspanel() != null && this.m_current_project != null) {
 				PAS.get_pas().close_active_project(true, true);
 				while(get_current_project() != null)
-					;
+				{
+					try
+					{
+						Thread.sleep(20);
+					}
+					catch(Exception e)
+					{
+						
+					}
+				}
 			}
 				
 		}
@@ -1954,6 +1963,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void close_active_project(boolean b_wait_for_close, boolean b_close_all_gui) {
 		try
 		{
+			Variables.setStatusController(m_statuscontroller);
+			Variables.getStatusController().setClosed();
+
 			get_mappane().resetAllOverlays();
 			WaitForStatusThread thread = null;
 			System.out.println("Close project");
@@ -1978,6 +1990,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			if(b_close_all_gui && b_confirmed_close)
 				PAS.pasplugin.onCloseProject();
 			PAS.get_pas().get_sendcontroller().reset_send_id(); // Resets the send id, alerts in a new project should now start from beginning
+			//Variables.getStatusController().set_autoupdate(false);
+			Variables.setStatusController(null);
+			m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 		}
 		catch(Exception e)
 		{
@@ -1991,6 +2007,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		WaitForStatusThread(boolean close_all) {
 			super("WaitForStatus Thread");
 			b_close_all = close_all;
+			b_running = true;
 		}
 		public void waitToFinish()
 		{
@@ -2035,6 +2052,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
 							m_statuscontroller = PAS.pasplugin.onCreateStatusController();
 							Variables.setStatusController(PAS.get_pas().m_statuscontroller);
+							Variables.getStatusController().set_autoupdate(false);
 							//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
 							PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
 							m_current_project = null;

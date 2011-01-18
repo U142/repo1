@@ -926,6 +926,7 @@ public class SendController implements ActionListener {
 			{
 				public void run()
 				{	
+					PAS.get_pas().close_active_project(true, false);
 					PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true /*init*/);
 				}
 			}.start();

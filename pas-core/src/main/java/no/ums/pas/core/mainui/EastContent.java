@@ -140,7 +140,6 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		//});
 		//setBackground(Color.lightGray);
 		this.addContainerListener(new PanelListener(get_pas(), this));
-		addComponentListener(this);
 		try
 		{
 			if(m_houseeditor!=null)
@@ -164,6 +163,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				tabChanged();
 			}
 		});
+		addComponentListener(this);
 
 	}
 	
@@ -330,11 +330,18 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	}
 	
 	public void componentResized(ComponentEvent e) {
+		if(getWidth()<=1 || getHeight()<=1)
+			return;
 		//SwingUtilities.invokeLater(new Runnable() {
 		//	public void run()
-			{
-				resize(new Dimension(getWidth(), getHeight()));
-			}
+		try
+		{
+			resize(new Dimension(getWidth(), getHeight()));
+		}
+		catch(Exception err)
+		{
+			err.printStackTrace();
+		}
 		//});
 	}
 	public void componentHidden(ComponentEvent e) { }

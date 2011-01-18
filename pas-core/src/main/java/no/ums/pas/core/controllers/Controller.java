@@ -50,6 +50,10 @@ public abstract class Controller implements ActionListener {
 	private int m_n_filter_date = -2;
 	private int m_n_filter_time = -2;
 	private boolean m_b_pause = false;
+	private boolean m_b_closed = false;
+	
+	public boolean isClosed() { return m_b_closed; }
+	public void setClosed() { m_b_closed = true; }
 	
 	private boolean m_b_visibility_change = false;
 
