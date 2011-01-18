@@ -458,6 +458,7 @@ namespace com.ums.ws.parm
                 System.IO.File.Delete(file_zip);
                 return outbytes;*/
                 UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "gzip_" + sz_output_parmzip);
+
                 return zip.getZipped(outxml.getXml());
             }
             catch (Exception e)
@@ -1886,6 +1887,20 @@ namespace com.ums.ws.parm
                 while (rs.Read())
                 {
                     l_alertpk = rs.GetString(0);
+                    /*if (l_alertpk.Equals("1000000000000297"))
+                    {
+                        String dill = "break";
+                        //db.ExecNonQuery("UPDATE PASHAPE set sz_xml='test æøåÆØÅ' WHERE l_pk=1000000000000297");
+                        OdbcDataReader rs2 = db.ExecReader("SELECT sz_xml FROM PASHAPE where l_pk=1000000000000297", UmsDb.UREADER_KEEPOPEN);
+                        if(rs2.Read())
+                        {
+                            //byte [] bytes = new byte[1000000];
+                            //rs2.GetBytes(0, 0, bytes, 0, 1000000);
+                            //dill = Encoding.UTF8.GetString(bytes);
+                            dill = rs2.GetString(0);
+                        }
+
+                    }*/
                     l_parent = rs.GetString(1);
                     try
                     {
@@ -1933,7 +1948,11 @@ namespace com.ums.ws.parm
                     {
                         sz_shape_xml = "";
                     }
-                    
+                    /*finally
+                    {
+                        if (rs != null && !rs.IsClosed)
+                            rs.Close();
+                    }*/
                     if (sz_shape_xml.Length > 0)
                     {
                         try
