@@ -607,26 +607,63 @@ namespace com.ums.UmsCommon
         }
         protected void createDt()
         {
-            if(sz_date.Length==8 && sz_time.Length==6)
+            if (sz_date.Length == 8 && sz_time.Length == 6)
             {
                 int year = int.Parse(sz_date.Substring(0, 4));
-                int month = int.Parse(sz_date.Substring(4,2));
-                int day = int.Parse(sz_date.Substring(6,2));
-                int hour = int.Parse(sz_time.Substring(0,2));
-                int minute = int.Parse(sz_time.Substring(2,2));
-                int second = int.Parse(sz_time.Substring(4,2));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = int.Parse(sz_time.Substring(0, 2));
+                int minute = int.Parse(sz_time.Substring(2, 2));
+                int second = int.Parse(sz_time.Substring(4, 2));
+                dt = new DateTime(year, month, day, hour, minute, second);
+            }
+            else if(sz_date.Length == 8 && sz_time.Length == 4)
+            {
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = int.Parse(sz_time.Substring(0, 2));
+                int minute = int.Parse(sz_time.Substring(2, 2));
+                int second = 0;
+                dt = new DateTime(year, month, day, hour, minute, second);
+            }
+            else if (sz_date.Length == 8 && sz_time.Length>0) //assume we use backbone time-style (time = 0..2359). HHMM
+            {
+                int year = int.Parse(sz_date.Substring(0, 4));
+                int month = int.Parse(sz_date.Substring(4, 2));
+                int day = int.Parse(sz_date.Substring(6, 2));
+                int hour = 0;
+                int minute = 0;
+                if (sz_time.Length == 3) //we have hours. HHMM are found in previous else if, search for HMM, MM and M
+                {
+                    hour = int.Parse(sz_time.Substring(0, 1));
+                    minute = int.Parse(sz_time.Substring(1));
+                }
+                else
+                {
+                    minute = int.Parse(sz_time);
+                }
+                int second = 0;
                 dt = new DateTime(year, month, day, hour, minute, second);
             }
         }
         public UDATETIME(Int64 datetime)
         {
             String str = datetime.ToString();
-            if (str.Length == 12)
-                str += "00";
-            if (str.Length < 14)
+            //if (str.Length < 14 && str.Length < 12)
+            //    throw new UMalformedDateTimeException();
+            if (str.Length < 8)
                 throw new UMalformedDateTimeException();
             sz_date = str.Substring(0, 8);
-            sz_time = str.Substring(8, 6);
+            /*if (str.Length.Equals(14))
+            {
+                sz_time = str.Substring(8, 6);
+            }
+            else
+                sz_time = str.Substring(8, 4);*/
+            sz_time = str.Substring(8);
+            if (sz_time.Length == 0)
+                sz_time = "0";
             createDt();
         }
         public UDATETIME(String date, String time) : this(Int64.Parse(date+time))/*yyyymmdd hhmmss*/

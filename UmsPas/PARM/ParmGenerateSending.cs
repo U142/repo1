@@ -963,7 +963,7 @@ namespace com.ums.UmsParm
 
                 try
                 {
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadLeft(6,'0')));
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                 }
                 catch (Exception e)
                 {

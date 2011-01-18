@@ -804,7 +804,7 @@ namespace com.ums.UmsParm
             m.l_createdate = UCommon.UGetDateNow(); //String.Format("{0:yyyy}{0:MM}{0:dd}", DateTime.UtcNow.ToLocalTime());
             m.l_createtime = UCommon.UGetTimeNow(); //String.Format("{0:HH}{0:mm}", DateTime.UtcNow.ToLocalTime());
             m.l_scheddate = schedule.sz_date; //String.Format("{0:yyyy}{0:MM}{0:dd}"
-            m.l_schedtime = schedule.sz_time.Substring(0,4); //String.Format("{0:HH}{0:mm}"
+            m.l_schedtime = schedule.sz_time.PadLeft(4, '0'); //.Substring(0,4); //String.Format("{0:HH}{0:mm}"
             m.l_removedup = 1;
             m.l_maxchannels = s.n_maxchannels;
             m.sz_groups = "";
@@ -1344,7 +1344,7 @@ namespace com.ums.UmsParm
                 }
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}", l_refno, operators[i], l_type);
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}", l_refno, operators[i], l_type, n_function);
                     ExecNonQuery(szSQL);
                 }
                 return true;
