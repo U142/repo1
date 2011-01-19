@@ -10,4 +10,16 @@
     <artifactId>ws-parm-admin</artifactId>
     <name>UMS WebService Client - Parm Admin</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>ParmAdmin.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

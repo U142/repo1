@@ -10,4 +10,15 @@
     <artifactId>ws-voice</artifactId>
     <name>UMS WebService Client - Voice</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>Voice.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -10,4 +10,16 @@
     <artifactId>ws-external-exec</artifactId>
     <name>UMS WebService Client - External Exec</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>ExternalExec.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

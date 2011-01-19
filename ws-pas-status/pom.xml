@@ -10,4 +10,16 @@
     <artifactId>ws-pas-status</artifactId>
     <name>UMS WebService Client - PAS Status</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>PasStatus.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

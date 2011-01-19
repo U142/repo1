@@ -10,4 +10,16 @@
     <artifactId>ws-pas-admin</artifactId>
     <name>UMS WebService Client - PAS Admin</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>PasAdmin.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

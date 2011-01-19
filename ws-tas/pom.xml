@@ -10,4 +10,16 @@
     <artifactId>ws-tas</artifactId>
     <name>UMS WebService Client - TAS</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>TAS.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

@@ -10,4 +10,16 @@
     <artifactId>ws-infosentral</artifactId>
     <name>UMS WebService Client - Infosentral</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>Infosentral.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

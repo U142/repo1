@@ -10,4 +10,16 @@
     <artifactId>ws-conference</artifactId>
     <name>UMS WebService Client - Conference</name>
     <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>conference.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

@@ -17,6 +17,10 @@
         <module>ws-tas</module>
         <module>ws-voice</module>
     </modules>
+    <properties>
+        <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
+        <wsdl.file>None.wsdl</wsdl.file>
+    </properties>
     <scm>
         <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients</connection>
     </scm>
@@ -40,28 +44,28 @@
         </repository>
     </distributionManagement>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <wsdlDirectory>${basedir}/src/main/wsdl</wsdlDirectory>
-                    <extension>true</extension>
-                    <bindingFiles>
-                        <bindingFile>${project.basedir}/../src/jaxws/bindings.xml</bindingFile>
-                    </bindingFiles>
-                </configuration>
-            </plugin>
-        </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxws-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>wsimport</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <wsdlUrls>
+                            <wsdlUrl>${wsdl.base}/${wsdl.file}</wsdlUrl>
+                        </wsdlUrls>
+                        <extension>true</extension>
+                        <bindingFiles>
+                            <bindingFile>${project.basedir}/../src/jaxws/bindings.xml</bindingFile>
+                        </bindingFiles>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
