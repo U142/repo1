@@ -6,7 +6,7 @@
     <artifactId>pas-parent</artifactId>
     <name>PAS Parent</name>
     <packaging>pom</packaging>
-    <version>${target.version}</version>
+    <version>2.0-SNAPSHOT</version>
     <modules>
         <module>ums-log</module>
         <module>pas-app</module>
@@ -27,9 +27,6 @@
         <url>http://www.ums.no/</url>
     </organization>
     <properties>
-        <target.build>-SNAPSHOT</target.build>
-        <target.version>2.0${target.build}</target.version>
-
         <key.storepass>jotinchOcDoacFor</key.storepass>
         <key.keypass>wruakipUtcyctac+</key.keypass>
 
