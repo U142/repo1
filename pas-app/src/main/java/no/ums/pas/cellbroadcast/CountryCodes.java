@@ -81,7 +81,7 @@ public class CountryCodes implements ActionListener {
 			//return new URL("cellbroadcast/countrycodes.txt"); //"cellbroadcast/countrycodes.csv");
 			//return new File(cl.getSystemResource("countrycodes.txt").getFile());
 			//return new URL(CountryCodes.class.getResource("countrycodes.txt")).;
-			String source = PAS.get_pas().get_sitename() + "/countrycodes.csv";
+			String source = PAS.get_pas().get_codebase() + "/countrycodes.csv";
 			String dest = StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "/countrycodes.txt";
 			if(new Installer().download_and_save(source, dest, true)) {
 				return new File(dest);
@@ -97,7 +97,7 @@ public class CountryCodes implements ActionListener {
 	
 	public static DataInputStream loadStream() {
 		try {
-			URL url = new URL(PAS.get_pas().get_sitename() + "/countrycodes.csv");
+			URL url = new URL(PAS.get_pas().get_codebase() + "/countrycodes.csv");
 			URLConnection urlConn;
 			
 			urlConn = url.openConnection();
