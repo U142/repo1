@@ -12,7 +12,7 @@
     <name>PAS - Release UMS</name>
     <description>PAS</description>
     <properties>
-        <jnlp.filename>PAS-UMS.${version}.jnlp</jnlp.filename>
+        <jnlp.filename>pas.jnlp</jnlp.filename>
     </properties>
     <build>
         <plugins>
