@@ -1350,14 +1350,14 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		
 		
 		//m_drawthread.start();
-		try
+		/*try
 		{
 			new Installer().save_jnlp();
 		}
 		catch(Exception e)
 		{
 			
-		}
+		}*/
 
 		
 
