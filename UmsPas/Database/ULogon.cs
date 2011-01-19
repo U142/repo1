@@ -476,6 +476,7 @@ namespace com.ums.PAS.Database
                         dept.l_addresstypes = long.Parse(rs["l_addresstypes"].ToString());
                         dept.sz_defaultnumber = rs["sz_defaultnumber"].ToString();
                         dept.f_map = Int32.Parse(rs["f_map"].ToString());
+                        dept.f_sms = Int32.Parse(rs["f_sms"].ToString());
                         dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
                         dept.l_langpk = Int32.Parse(rs["l_langpk"].ToString());
                         String xml = rs["sz_restriction_shape"].ToString();

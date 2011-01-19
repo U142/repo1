@@ -120,6 +120,7 @@ namespace com.ums.UmsParm
         public long l_addresstypes;
         public String sz_defaultnumber;
         public int f_map;
+        public int f_sms;
         public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
         public int l_langpk;
         public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
