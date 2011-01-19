@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>pas-parent</artifactId>
+        <groupId>no.ums</groupId>
+        <version>${target.version}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>pas-plugin-centric</artifactId>
+    <name>PAS - Plugin Centric</name>
+    <dependencies>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>core</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>ums</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>status</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>pas</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>maps</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>send</classifier>
+        </dependency>
+    </dependencies>
+</project>

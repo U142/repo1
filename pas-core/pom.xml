@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.ums</groupId>
         <artifactId>pas-parent</artifactId>
-        <version>1.5-SNAPSHOT</version>
+        <version>${target.version}</version>
     </parent>
     <groupId>no.ums</groupId>
     <artifactId>pas-core</artifactId>
@@ -16,6 +16,32 @@
             <groupId>no.ums</groupId>
             <artifactId>ums-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-icons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-pas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-pas-status</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-tas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-parm-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-external-exec</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>org.java.net.substance</groupId>
             <artifactId>substance</artifactId>

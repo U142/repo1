@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://secure.ums2.no/hudson/PAS/">
+  <information>
+    <title>#if($project.Name)$project.Name#end</title>
+    <vendor>#if($project.Organization.Name)$project.Organization.Name#end<vendor/>
+    <homepage>#if($project.Organization.Url)$project.Organization.Url#end<homepage/>
+		<icon href="$jnlp_codebase/centiccLogo64.ico" />
+		<icon href="$jnlp_codebase/PAS_splash.jpg" kind="splash" />
+		<icon kind="shortcut" href="$jnlp_codebase/centiccLogo64.ico" width="64" height="64"/>
+		<shortcut online="true">
+			<desktop/>
+		</shortcut>
+  </information>
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.6+"
+          href="http://java.sun.com/products/autodl/j2se"
+          java-vm-args="-Xms512M -Xmx768M -Dsun.net.client.defaultConnectTimeout=10000 -Dsun.net.client.defaultReadTimeout=600000" />
+    $dependencies
+  </resources>
+  <application-desc main-class="$mainClass">
+    <argument>-x$jnlp_codebase</argument>
+    <argument>-shttps://secure.ums2.no/hudson/PAS/$jnlp_codebase</argument>
+    <argument>-whttps://secure.ums2.no/PAS/ws_pasutv/WS/</argument>
+    <argument>-p</argument>
+  </application-desc>
+</jnlp>
