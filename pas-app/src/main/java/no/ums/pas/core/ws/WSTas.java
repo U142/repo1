@@ -26,7 +26,7 @@ public class WSTas extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(m_callback!=null)
 			m_callback.actionPerformed(new ActionEvent(m_updates, ActionEvent.ACTION_PERFORMED, "act_download_finished"));
 	}
@@ -58,7 +58,7 @@ public class WSTas extends WSThread
 		}
 		finally
 		{
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 	}
 

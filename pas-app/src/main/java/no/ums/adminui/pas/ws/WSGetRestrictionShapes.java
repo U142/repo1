@@ -29,7 +29,7 @@ public class WSGetRestrictionShapes extends WSThread {
 	
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(res==null)
 		{
 			res = new ArrayOfUDEPARTMENT();

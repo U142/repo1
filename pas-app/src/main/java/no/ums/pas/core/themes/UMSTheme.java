@@ -554,12 +554,6 @@ public class UMSTheme extends org.jvnet.substance.theme.SubstanceSteelBlueTheme
 	}
 
 	@Override
-	public boolean isDark() {
-		// return false;
-		return super.isDark();
-	}
-
-	@Override
 	public SubstanceTheme saturate(double saturateFactor,
 			boolean toSaturateEverything) {
 		return super.saturate(saturateFactor, toSaturateEverything);

@@ -150,7 +150,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		setVisible(true);		
 	}
 
-	public void UpdateStatus(CBSTATUS cbs, ULBASENDING operator, long db_timestamp)
+	public void updateStatus(CBSTATUS cbs, ULBASENDING operator, long db_timestamp)
 	{
 		m_operator = operator;
 		List<ULBAHISTCELL> arr_cellstatus = m_operator.getHistcell().getULBAHISTCELL();
@@ -300,7 +300,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	
 	public OPERATOR_STATE getOperatorStatus()
 	{
-		int status = get_operator().getLStatus();
+//		int status = get_operator().getLStatus();
 		/*if(get_operator().getLStatus() == 1000)
 			return OPERATOR_STATUS.FINISHED;
 		else if(get_operator().getLStatus() >= 540)

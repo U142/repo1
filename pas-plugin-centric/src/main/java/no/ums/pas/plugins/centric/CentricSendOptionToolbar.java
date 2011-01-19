@@ -1399,7 +1399,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				e.getSource().equals(m_cbx_risk.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_reaction.getEditor().getEditorComponent()) ||
 				e.getSource().equals(m_cbx_originator.getEditor().getEditorComponent())) {
-			String temp = m_txt_message.getText();
+//			String temp = m_txt_message.getText();
 			String ch = Character.toString(e.getKeyChar());
 			int len_ch = TextFormat.GsmStrLen(ch);
 
@@ -1413,7 +1413,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			{
 				JTextComponent c = (JTextComponent)e.getSource();
 				//int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
-				int len_of_message = TextFormat.GsmStrLen(c.getText()); //c.getText().length();
+//				int len_of_message = TextFormat.GsmStrLen(c.getText()); //c.getText().length();
 				//if(len_of_message<n_chars_left_for_message)
 				{
 					/*if(c.getText().length() >= n_chars_left_for_message-1) {
@@ -1471,9 +1471,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_txt_event_name))
 		{
-			int n_total_len = m_txt_event_name.getText().length();
+//			int n_total_len = m_txt_event_name.getText().length();
 			int n_chars_left_for_eventname = MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length()-1 + num_chars_selected;
-			int len_of_event = m_txt_event_name.getText().length();
+//			int len_of_event = m_txt_event_name.getText().length();
 			if(m_txt_event_name.getText().length() >= n_chars_left_for_eventname-1) {
 				return false;
 			}
@@ -1543,7 +1543,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			int after = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
 			//int txt_after = TextFormat.GsmStrLen(c.getText());//c.getText().length();
 			int txt_after = TextFormat.GsmStrLen(m_txt_message.getText()) + getTextLengthOfFields() + 1;
-			int number_of_chars = after-before;
+//			int number_of_chars = after-before;
 			if(!b)
 			{
 				e.consume();
@@ -1556,7 +1556,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					try
 					{
 						int diff = txt_after-(MAX_TOTAL_CHARS);
-						int current_len = c.getText().length();
+//						int current_len = c.getText().length();
 						String cut = TextFormat.GsmStrMaxLen(c.getText(), txt_before-diff);
 						c.setText(cut);
 						//c.setText(c.getText().substring(0, current_len-diff));
@@ -1582,7 +1582,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				//System.out.println("c="+char_selection);
 				boolean b = checkIfInputAllowed(e, char_selection);
 				int after = c.getText().length() + m_txt_date_time.getText().length() + 1;
-				int number_of_chars = after-before;
+//				int number_of_chars = after-before;
 				if(!b)
 					e.consume();
 				if(after>=MAX_EVENTNAME_LENGTH)
@@ -1590,7 +1590,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					try
 					{
 						int diff = after-MAX_EVENTNAME_LENGTH;
-						int current_len = c.getText().length();
+//						int current_len = c.getText().length();
 						setEventText(c.getText().substring(0, MAX_EVENTNAME_LENGTH - m_txt_date_time.getText().length() - 1));//current_len-diff));
 					}
 					catch(Exception err)
@@ -1615,7 +1615,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		//else {
 		{
 			getStatusController().set_cbsendingresponse(response, true);
-			//getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
+			//getStatusController().openStatus((CBSENDINGRESPONSE)e.getSource(), this);
 			Project p = new Project();
 			p.set_projectpk(Long.toString(response.getLProjectpk()));
 			PAS.pasplugin.onOpenProject(p, response.getLRefno());

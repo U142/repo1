@@ -20,7 +20,7 @@ public class WSTasStats_Countries_Timeunit extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(results!=null)
 			m_callback.actionPerformed(new ActionEvent(results, ActionEvent.ACTION_PERFORMED, "act_download_finished"));
 	}
@@ -52,7 +52,7 @@ public class WSTasStats_Countries_Timeunit extends WSThread
 		}
 		finally
 		{
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 	}
 

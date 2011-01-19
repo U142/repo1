@@ -366,7 +366,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
             }
             //Update data in UI pane
             if (currentui != null) //just to be sure we have an existing or new pointer
-                currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
+                currentui.updateStatus(currentstatus, cbp.getLDbTimestamp());
             sendings.put(currentstatus.getLRefno(), currentstatus.getLRefno());
             OPERATOR_STATE status = currentui.getOperatorStatus();
             String lbl_pane = "<html>";

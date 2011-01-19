@@ -87,4 +87,12 @@
             <artifactId>jnlp</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>no.ums.maven</groupId>
+                <artifactId>maven-ums-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

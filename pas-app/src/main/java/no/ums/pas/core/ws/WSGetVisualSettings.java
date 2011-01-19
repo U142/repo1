@@ -17,7 +17,7 @@ public class WSGetVisualSettings extends WSThread
 		return WSGetVisualSettings.visuals;
 	}
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		m_callback.actionPerformed(new ActionEvent(visuals, ActionEvent.ACTION_PERFORMED, "act_visualsettings_downloaded"));
 	}
 	@Override
@@ -55,7 +55,7 @@ public class WSGetVisualSettings extends WSThread
 		}
 		/*finally
 		{
-			OnDownloadFinished();
+			onDownloadFinished();
 		}*/
 		
 	}

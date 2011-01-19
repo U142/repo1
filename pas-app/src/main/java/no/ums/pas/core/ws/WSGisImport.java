@@ -136,7 +136,7 @@ public class WSGisImport extends WSThread
 		finally
 		{
 			progress.SetFinished();
-			//OnDownloadFinished();
+			//onDownloadFinished();
 			
 		}
 
@@ -148,7 +148,7 @@ public class WSGisImport extends WSThread
 		return "Error fetching GIS import";
 	}
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		m_callback.actionPerformed(new ActionEvent(m_gislist, ActionEvent.ACTION_PERFORMED, sz_cb_cmd));
 	}
 }

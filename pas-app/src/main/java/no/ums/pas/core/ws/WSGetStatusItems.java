@@ -59,7 +59,7 @@ public class WSGetStatusItems extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		try {
 			//((OpenStatusFrame)get_parentframe()).onDownloadFinishedStatusItems();
 			fire_set_datetimefilter(m_n_max_date, m_n_max_time);
@@ -967,7 +967,7 @@ public class WSGetStatusItems extends WSThread
 			}
 			
 		}
-					//OnDownloadFinished();				
+					//onDownloadFinished();
 		/*		}
 			});
 		}

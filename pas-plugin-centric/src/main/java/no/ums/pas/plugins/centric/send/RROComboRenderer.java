@@ -19,7 +19,7 @@ public class RROComboRenderer extends DefaultListCellRenderer
         if(value.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class)) 
         { 
         	RROComboBox rro = (RROComboBox)combo;
-        	String szCurrentText = rro.getEditor().getItem().toString();
+//        	String szCurrentText = rro.getEditor().getItem().toString();
         	CBMESSAGEFIELDSBASE base = (CBMESSAGEFIELDSBASE)value; 
             lbl.setText(base.getSzName());
             String szText = "<html>";

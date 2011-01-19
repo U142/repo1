@@ -111,6 +111,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_EXIT")
     public boolean onBeforeLogon() {
         super.onBeforeLogon();
         boolean b = new DisclaimerDialog().isConfirmed();
@@ -126,11 +127,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onAfterLogon() {
         super.onAfterLogon();
-        try {
-            //SubstanceLookAndFeel.setSkin("org.jvnet.substance.skin.SaharaSkin");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return true;
     }
 
@@ -422,7 +418,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             @Override
             public void add(int arg0, Object arg1) {
-                Long key = ((UBBNEWS) arg1).getLNewspk();
                 /*if(recordset.containsKey(key))
                     {
                         UBBNEWS original = (UBBNEWS)recordset.get(key);
@@ -509,7 +504,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                         UBBNEWS news = (UBBNEWS) value;
                         //lbl_renderer.setText(no.ums.pas.ums.tools.TextFormat.format_datetime(news.getLTimestampDb()) + "    " + news.getNewstext().getSzNews());
                         String text_to_write = news.getNewstext().getSzNews();
-                        int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
+//                        int text_width = lbl_renderer.getFontMetrics(lbl_renderer.getFont()).stringWidth(text_to_write);
                         //if(text_width>=width)
                         //	text_to_write = text_to_write.substring(0, Math.min(text_to_write.length()-1, 70));
                         lbl_renderer.setText(text_to_write);
@@ -627,20 +622,20 @@ public class CentricPasScripting extends DefaultPasScripting {
             int set_height = n_current_height;
             n_min = 22;
             list.setFixedCellHeight(n_min);
-            int w = getWidth();
-            int btn_size = getWantedHeight();
+//            int w = getWidth();
+//            int btn_size = getWantedHeight();
             scrollpane.setPreferredSize(new Dimension(getWidth() - n_min, getHeight()));
             btn_expand.setPreferredSize(new Dimension(n_min, getHeight()));
-            int scroll_width = 0;
-            int scroll_height = 0;
+//            int scroll_width = 0;
+//            int scroll_height = 0;
             if (this.scrollpane.getVerticalScrollBar().isVisible()) {
-                scroll_width = this.scrollpane.getVerticalScrollBar().getWidth();
+//                scroll_width = this.scrollpane.getVerticalScrollBar().getWidth();
             }
             if (this.scrollpane.getHorizontalScrollBar().isVisible()) {
-                scroll_height = this.scrollpane.getHorizontalScrollBar().getHeight();
+//                scroll_height = this.scrollpane.getHorizontalScrollBar().getHeight();
                 //set_height = n_current_height+scroll_height;
             }
-            scroll_width -= 5;
+//            scroll_width -= 5;
             SystemMessagesPanel.this.setPreferredSize(new Dimension(getWidth(), set_height));
             scrollpane.revalidate();
             revalidate();
@@ -717,12 +712,12 @@ public class CentricPasScripting extends DefaultPasScripting {
         @Override
         public void componentResized(ComponentEvent e) {
             int w = getWidth();
-            int h = getHeight();
+//            int h = getHeight();
             //if(w<=0 || h<=0)
             //	return;
             //if(w>5000 || h>5000)
             //	return;
-            int x = w;
+//            int x = w;
             lbl_userinfo.setPreferredSize(new Dimension(w, getWantedHeight()));
             lbl_userinfo.revalidate();
             super.componentResized(e);
@@ -890,7 +885,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onSetAppTitle(PAS pas, String s, UserInfo userinfo) {
-        boolean trainingmode = IsInTrainingMode(userinfo);
+//        boolean trainingmode = IsInTrainingMode(userinfo);
         System.out.println("onSetAppTitle");
         String maintitle = PAS.l("common_app_title");
         CentricStatusController sc = (CentricStatusController) PAS.get_pas().get_statuscontroller();
@@ -1133,6 +1128,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         JButton btn_cancel = new JButton(PAS.l("common_cancel"));
         btn_cancel.addActionListener(new ActionListener() {
             @Override
+            @edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_EXIT")
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -1214,7 +1210,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         str = PAS.l("common_helpdesk_contact");
         strwidth = g.getFontMetrics().stringWidth(str);
         x = bar.getWidth() - strwidth - 20;
-        w = strwidth;
+//        w = strwidth;
         //g.drawRoundRect(x-5, y, w+10, h, 2, 2);
         g.drawString(str, x, h);
         return super.onPaintMenuBarExtras(bar, g);
@@ -1298,7 +1294,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         }
 
         //only paint status shapes if in status tab
-        if (CentricEastContent.CURRENT_PANEL == CentricEastContent.PANEL_CENTRICSTATUS_) {
+        if (CentricEastContent.getCurrentPanel() == CentricEastContent.PANEL_CENTRICSTATUS_) {
             try {
                 Enumeration<ShapeStruct> en = getShapesToPaint().elements();
                 while (en.hasMoreElements()) {
@@ -1310,7 +1306,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         }
 
         //only paint send shapes if in send tab
-        if (CentricEastContent.CURRENT_PANEL == CentricEastContent.PANEL_CENTRICSEND_) {
+        if (CentricEastContent.getCurrentPanel() == CentricEastContent.PANEL_CENTRICSEND_) {
             try {
                 boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
                 boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
@@ -1402,7 +1398,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onCloseProject() {
         try {
-            ((CentricStatusController) PAS.get_pas().get_statuscontroller()).StopUpdates();
+            ((CentricStatusController) PAS.get_pas().get_statuscontroller()).stopUpdates();
             PAS.pasplugin.clearShapesToPaint();
             PAS.get_pas().kickRepaint();
             ((CentricEastContent) PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
@@ -1435,7 +1431,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             CBSENDINGRESPONSE res = new CBSENDINGRESPONSE(); // Just to use the same
             res.setLProjectpk(Long.parseLong(project.get_projectpk()));
 
-            ((CentricStatusController) PAS.get_pas().get_statuscontroller()).OpenStatus(Long.parseLong(project.get_projectpk()), csend, nFromNewRefno);
+            ((CentricStatusController) PAS.get_pas().get_statuscontroller()).openStatus(Long.parseLong(project.get_projectpk()), csend, nFromNewRefno);
             /*if(m_centricstatuscontroller == null)
                    m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
                else
@@ -1496,7 +1492,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
-        switch (CentricEastContent.CURRENT_PANEL) {
+        switch (CentricEastContent.getCurrentPanel()) {
             case CentricEastContent.PANEL_CENTRICSEND_:
                 if (Variables.getMapFrame().get_active_shape() != null)
                     Variables.getMapFrame().get_active_shape().setEditable(true);

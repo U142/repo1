@@ -216,8 +216,8 @@ public class CentricPrintCtrl implements Printable, Pageable {
 		}
 		
 		//int maxwh = (int)pageFormat.getImageableWidth();
-		int maxwh = (int)pageFormat.getImageableHeight();
-		int mapw = m_mapimage.getWidth(null)/2;
+//		int maxwh = (int)pageFormat.getImageableHeight();
+//		int mapw = m_mapimage.getWidth(null)/2;
 		int maph = m_mapimage.getHeight(null);
 		float maxmaph = 300.0f;
 		float factor = maxmaph / maph;
@@ -260,11 +260,11 @@ public class CentricPrintCtrl implements Printable, Pageable {
 	    else 
 	    {
 	        int pagewidth = (int)pageFormat.getImageableWidth();
-	        int pageheight = (int)pageFormat.getImageableHeight();
+//	        int pageheight = (int)pageFormat.getImageableHeight();
 	        int printHeight = 0;
 	    	
-	    	int width = m_mapimage.getWidth(null);
-			int height = m_mapimage.getHeight(null);
+//	    	int width = m_mapimage.getWidth(null);
+//			int height = m_mapimage.getHeight(null);
 
 			
 	        Graphics2D g2d = (Graphics2D)g;

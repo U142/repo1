@@ -31,7 +31,7 @@ public class WSHouseByQuality extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(m_callback!=null && m_items!=null)
 			m_callback.actionPerformed(new ActionEvent(m_items, ActionEvent.ACTION_PERFORMED, action));
 			//m_callback.actionPerformed(new ActionEvent(m_inhab, ActionEvent.ACTION_PERFORMED, action));
@@ -99,7 +99,7 @@ public class WSHouseByQuality extends WSThread
 		}
 		/*finally
 		{
-			OnDownloadFinished();
+			onDownloadFinished();
 		}*/
 		
 	}

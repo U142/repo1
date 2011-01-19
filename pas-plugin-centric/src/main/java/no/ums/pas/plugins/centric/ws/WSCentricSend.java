@@ -26,11 +26,15 @@ public class WSCentricSend extends WSThread {
 	}
 
 	@Override
-	public void OnDownloadFinished() {
-		if(m_callback!=null && cbsr!=null)
-			m_callback.actionPerformed(new ActionEvent(cbsr, ActionEvent.ACTION_PERFORMED, action));
-		else
-			m_callback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_error"));
+	public void onDownloadFinished() {
+        if (m_callback!=null) {
+            if(cbsr!=null) {
+                m_callback.actionPerformed(new ActionEvent(cbsr, ActionEvent.ACTION_PERFORMED, action));
+            }
+            else {
+                m_callback.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_error"));
+            }
+        }
 	}
 
 	@Override

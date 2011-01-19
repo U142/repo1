@@ -21,7 +21,7 @@ public class WSMessageLib extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		m_callback.actionPerformed(new ActionEvent(list, ActionEvent.ACTION_PERFORMED, "act_download_finished"));
 	}
 
@@ -55,7 +55,7 @@ public class WSMessageLib extends WSThread
 		}
 		finally
 		{
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 	}
 

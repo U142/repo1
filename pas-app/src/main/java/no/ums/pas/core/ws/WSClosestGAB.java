@@ -26,7 +26,7 @@ public class WSClosestGAB extends WSThread
 	}
 	
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(m_callback!=null && results!=null)
 			m_callback.actionPerformed(new ActionEvent(results, ActionEvent.ACTION_PERFORMED, action));
 	}

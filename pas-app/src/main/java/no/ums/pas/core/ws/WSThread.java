@@ -54,11 +54,11 @@ public abstract class WSThread extends Thread
 		}
 		finally
 		{
-			OnDownloadFinished();
+			onDownloadFinished();
 		}
 	}
 	protected abstract String getErrorMessage();
-	public abstract void OnDownloadFinished();
+	public abstract void onDownloadFinished();
 	public abstract void call() throws Exception;
 	
 	public void runNonThreaded()

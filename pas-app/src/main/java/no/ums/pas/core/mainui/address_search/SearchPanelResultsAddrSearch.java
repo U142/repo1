@@ -131,7 +131,7 @@ public class SearchPanelResultsAddrSearch extends SearchPanelResults implements 
 			return "Error populating list";
 		}
 		@Override
-		public void OnDownloadFinished() {
+		public void onDownloadFinished() {
 			
 		}
 		@Override

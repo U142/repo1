@@ -40,7 +40,7 @@ public class CentricStatusController extends StatusController {
 		super();
 	}
 	
-	public boolean StopUpdates()
+	public boolean stopUpdates()
 	{
 		setProjectpk(0);
 		if(m_timer!=null)
@@ -52,7 +52,7 @@ public class CentricStatusController extends StatusController {
 		return true;
 	}
 	
-	/*public boolean OpenStatus(CBSENDINGRESPONSE sendresponse, CentricSendOptionToolbar centricsend) {
+	/*public boolean openStatus(CBSENDINGRESPONSE sendresponse, CentricSendOptionToolbar centricsend) {
 		set_cbsendingresponse(sendresponse);
 		m_projectpk = sendresponse.getLProjectpk();	
 		((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricstatus(m_centricstatus);
@@ -63,7 +63,7 @@ public class CentricStatusController extends StatusController {
 		return true;
 	}*/
 	
-	public boolean OpenStatus(long l_projectpk, CentricSendOptionToolbar centricsend, long nFromNewRefno) {
+	public boolean openStatus(long l_projectpk, CentricSendOptionToolbar centricsend, long nFromNewRefno) {
 		CBSENDINGRESPONSE res = new CBSENDINGRESPONSE();
 		res.setLProjectpk(l_projectpk);
 		set_cbsendingresponse(res, (nFromNewRefno>0));

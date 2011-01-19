@@ -23,7 +23,7 @@ public class WSCentricRRO extends WSThread {
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(m_callback != null)
 			m_callback.actionPerformed(new ActionEvent(ret, ActionEvent.ACTION_PERFORMED, action));
 	}
@@ -46,7 +46,7 @@ public class WSCentricRRO extends WSThread {
 			ret = new Parmws(wsdl, service).getParmwsSoap12().getCBSendingFields(logon);
 			
 			
-			OnDownloadFinished();
+			onDownloadFinished();
 		}
 		catch(Exception e)
 		{

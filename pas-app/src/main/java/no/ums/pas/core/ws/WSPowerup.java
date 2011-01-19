@@ -31,7 +31,7 @@ public class WSPowerup extends WSThread
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			resp = new Pasws(wsdl, service).getPaswsSoap12().powerup();
 			setResult(WSRESULTCODE.OK);
-			//OnDownloadFinished();			
+			//onDownloadFinished();
 		}
 		catch(Exception e)
 		{
@@ -49,7 +49,7 @@ public class WSPowerup extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished()
+	public void onDownloadFinished()
 	{
 		if(m_callback!=null)
 			m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_powerup"));

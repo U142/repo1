@@ -19,11 +19,11 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 	
 	public TrainingLookAndFeel() {
 		super();
-		Object newSettings [] = {
-			"TabbedPane.contentOpaque", false,
-			"TabbedPane.tabAreaBackground", new Color(255, 100, 240),
-			"TabbedPane.background", new Color(255, 100, 240)
-		};
+//		Object newSettings [] = {
+//			"TabbedPane.contentOpaque", false,
+//			"TabbedPane.tabAreaBackground", new Color(255, 100, 240),
+//			"TabbedPane.background", new Color(255, 100, 240)
+//		};
 		//setCurrentTheme(new TrainingTheme());
 
 		/*defaults = UIManager.getDefaults();

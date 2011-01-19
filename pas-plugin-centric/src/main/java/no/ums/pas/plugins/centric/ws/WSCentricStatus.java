@@ -27,7 +27,7 @@ public class WSCentricStatus extends WSThread {
 	
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(cbpres==null)
 		{
 			cbpres = new CBPROJECTSTATUSRESPONSE();

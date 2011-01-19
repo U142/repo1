@@ -52,7 +52,7 @@ public class WSTasCount extends WSThread
 		}
 		finally
 		{
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 
 	}
@@ -61,7 +61,7 @@ public class WSTasCount extends WSThread
 		return "Error in TAS Count Request";
 	}
 	@Override
-	public void OnDownloadFinished()
+	public void onDownloadFinished()
 	{
 		m_callback.actionPerformed(new ActionEvent(result, ActionEvent.ACTION_PERFORMED, "act_tascount_finished"));
 	}

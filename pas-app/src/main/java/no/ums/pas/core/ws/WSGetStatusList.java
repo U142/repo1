@@ -25,7 +25,7 @@ public class WSGetStatusList extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		if(m_arr_statusobjects==null)
 		{
 			m_arr_statusobjects = new ArrayList<StatusListObject>();
@@ -66,7 +66,7 @@ public class WSGetStatusList extends WSThread
                         Long.toString(item.getNUpdatetimestamp()));
 				m_arr_statusobjects.add(obj);
 			}
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 		catch(Exception e)
 		{
@@ -84,7 +84,7 @@ public class WSGetStatusList extends WSThread
 		}
 		finally
 		{
-			OnDownloadFinished();
+			onDownloadFinished();
 		}*/
 		
 	}

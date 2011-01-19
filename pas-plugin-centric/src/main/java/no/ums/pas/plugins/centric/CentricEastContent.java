@@ -14,12 +14,20 @@ public class CentricEastContent extends EastContent
 	public static final int PANEL_CENTRICSTATUS_ = 9;
 	public static final int PANEL_CENTRICSEND_ = 10;
 	
-	public static int CURRENT_PANEL = PANEL_CENTRICSEND_;
+	private static int currentPanel = PANEL_CENTRICSEND_;
 	
 	private CentricStatus m_centricstatus = null;
 	private CentricSendOptionToolbar m_centricsend = null;
-	
-	public void set_centricstatus(CentricStatus status) { m_centricstatus = status; }
+
+    public static int getCurrentPanel() {
+        return currentPanel;
+    }
+
+    public static void setCurrentPanel(int currentPanel) {
+        CentricEastContent.currentPanel = currentPanel;
+    }
+
+    public void set_centricstatus(CentricStatus status) { m_centricstatus = status; }
 	public CentricStatus get_centricstatus() { return m_centricstatus; }
 		
 	public void set_centricsend(CentricSendOptionToolbar send) { m_centricsend = send; }
@@ -36,11 +44,11 @@ public class CentricEastContent extends EastContent
 		Class c = m_tabbedpane.getSelectedComponent().getClass();
 		if(c.equals(CentricSendOptionToolbar.class))
 		{
-			CURRENT_PANEL = PANEL_CENTRICSEND_;
+			setCurrentPanel(PANEL_CENTRICSEND_);
 		}
 		else if(c.equals(CentricStatus.class))
 		{
-			CURRENT_PANEL = PANEL_CENTRICSTATUS_;
+			setCurrentPanel(PANEL_CENTRICSTATUS_);
 		}
 		else
 			//check the rest

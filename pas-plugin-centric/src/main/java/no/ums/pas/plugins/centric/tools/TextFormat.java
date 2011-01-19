@@ -55,7 +55,7 @@ public final class TextFormat {
 	
 	public synchronized static final String format_date(String sz_date)
 	{
-		String sz_ret = new String();
+		String sz_ret;
 		if(sz_date.length() == 6) {
 			sz_ret = sz_date.substring(4,6) + "-" + sz_date.substring(0,4);
 		}

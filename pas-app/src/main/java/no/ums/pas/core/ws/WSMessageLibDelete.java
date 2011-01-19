@@ -18,7 +18,7 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		m_callback.actionPerformed(new ActionEvent(m_msg, ActionEvent.ACTION_PERFORMED, "act_messagelib_deleted"));
 
 	}
@@ -55,7 +55,7 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 		}
 		finally
 		{
-			OnDownloadFinished();
+			onDownloadFinished();
 		}		
 	}
 }

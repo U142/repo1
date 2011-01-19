@@ -24,7 +24,7 @@ public class WSProject extends WSThread
 		this.projectrequest = projectrequest;
 	}
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		try
 		{
 			if(projectresponse==null)
@@ -71,7 +71,7 @@ public class WSProject extends WSThread
 		}
 		finally
 		{
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 
 	}

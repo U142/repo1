@@ -19,7 +19,7 @@ public class WSSaveUI extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished() {
+	public void onDownloadFinished() {
 		
 	}
 
@@ -108,7 +108,7 @@ public class WSSaveUI extends WSThread
 			}
 			finally
 			{
-				//OnDownloadFinished();
+				//onDownloadFinished();
 			}
 		}
 		catch(Exception e)

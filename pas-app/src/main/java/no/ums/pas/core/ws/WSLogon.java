@@ -71,7 +71,7 @@ public class WSLogon extends WSThread
 		finally
 		{
 			b_responded = true;
-			//OnDownloadFinished();
+			//onDownloadFinished();
 		}
 	}
 	@Override
@@ -79,7 +79,7 @@ public class WSLogon extends WSThread
 		return "An error occured in logon";
 	}
 	@Override
-	public void OnDownloadFinished()
+	public void onDownloadFinished()
 	{
 		if(m_callback!=null && ret!=null)
 			m_callback.actionPerformed(new ActionEvent(ret, ActionEvent.ACTION_PERFORMED, "act_logon"));

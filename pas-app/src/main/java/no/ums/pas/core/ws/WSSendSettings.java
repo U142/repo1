@@ -90,7 +90,7 @@ public class WSSendSettings extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished()
+	public void onDownloadFinished()
 	{
 		try
 		{
@@ -331,7 +331,7 @@ public class WSSendSettings extends WSThread
 		}
 
 		
-		//OnDownloadFinished();
+		//onDownloadFinished();
 	}
 	
 }

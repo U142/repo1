@@ -78,7 +78,7 @@ public class WSMaxAlloc extends WSThread
 				//return ;
 				throw e;
 			}
-			//OnDownloadFinished();
+			//onDownloadFinished();
 			
 		}
 		catch(Exception e)
@@ -93,7 +93,7 @@ public class WSMaxAlloc extends WSThread
 	}
 
 	@Override
-	public void OnDownloadFinished()
+	public void onDownloadFinished()
 	{
 		if(m_callback!=null)
 			m_callback.actionPerformed(new ActionEvent(maxalloc_return, ActionEvent.ACTION_PERFORMED, m_action));
