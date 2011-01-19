@@ -47,6 +47,50 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo.webstart</groupId>
+                    <artifactId>webstart-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jnlp</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <pack200>false</pack200>
+                        <jnlp>
+                            <mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+                            <outputFile>${jnlp.filename}</outputFile>
+                        </jnlp>
+                        <sign>
+                            <keystore>${project.basedir}/../ums.keystore</keystore>
+                            <keypass>${key.keypass}</keypass>
+                            <storepass>${key.storepass}</storepass>
+                            <alias>${key.alias}</alias>
+
+                            <verify>true</verify>
+                        </sign>
+                        <libPath>${jnlp_codebase}</libPath>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>keytool-maven-plugin</artifactId>
+                    <configuration>
+                        <dname>CN=Morten H. Helvig, OU=Unified Messaging Systems AS, O=Unified Messaging Systems AS, L=Sandnes, ST=Rogaland, C=no</dname>
+                        <keystore>ums.keystore</keystore>
+                        <keypass>${key.keypass}</keypass>
+                        <storepass>${key.storepass}</storepass>
+                        <alias>${key.alias}</alias>
+                        <validity>5500</validity>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 
