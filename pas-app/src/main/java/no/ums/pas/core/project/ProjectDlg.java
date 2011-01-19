@@ -211,7 +211,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			set_gridconst(4, get_panel(), 1, 1, GridBagConstraints.EAST);
 			add(m_btn_cancel, m_gridconst);
 			set_gridconst(0, inc_panels(), 10, 1);
-			add(m_project_list, get_gridconst());
+			add(m_project_list.get_scrollpane(), get_gridconst());
 			set_gridconst(0, inc_panels(), 2, 1);
 			add(m_btn_open, get_gridconst());
 			//set_gridconst(0, 2, 2, 2, GridBagConstraints.SOUTH);
@@ -306,12 +306,12 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		if(getWidth()<0 || getHeight()<0)
 			return;
 		m_projectpanel.setPreferredSize(new Dimension(getWidth()-20, getHeight()));
-		Dimension d = new Dimension(getWidth()-40, 200);
-		m_projectpanel.get_projectlist().setPreferredSize(d);
-		m_projectpanel.get_projectlist().setSize(d);
-		m_projectpanel.get_projectlist().get_table().setPreferredSize(d);
+		Dimension d = new Dimension(getWidth()-40, getHeight()-200);
+		m_projectpanel.get_projectlist().get_scrollpane().setPreferredSize(d);
+		//m_projectpanel.get_projectlist().get_scrollpane().setSize(d);
+		//m_projectpanel.get_projectlist().get_scrollpane().get_table().setPreferredSize(d);
 		m_projectpanel.revalidate();
-		m_projectpanel.get_projectlist().revalidate();
+		m_projectpanel.get_projectlist().get_scrollpane().revalidate();
 		m_projectpanel.get_projectlist().get_table().revalidate();
 		validate();
 		repaint();

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -60,13 +61,15 @@ public class CountryCodes implements ActionListener {
 	public boolean init() {
 		try
 		{
-			File f = load();
+			/*File f = load();
 			if(f!=null) {
 				new CCParser(f, this);
 			}
 			else {
 				new CCParser(loadStream(), this);
-			}
+			}*/
+			DataInputStream is = new DataInputStream(this.getClass().getResourceAsStream("no/ums/pas/cellbroadcast/CountryCodes.csv"));
+			new CCParser(is, this);
 			return true;
 		}
 		catch(Exception e)
