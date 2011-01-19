@@ -29,9 +29,13 @@
     <properties>
         <target.build>-SNAPSHOT</target.build>
         <target.version>2.0${target.build}</target.version>
+
         <key.storepass>jotinchOcDoacFor</key.storepass>
         <key.keypass>wruakipUtcyctac+</key.keypass>
-        <key.storefile>${user.home}/ums.keystore</key.storefile>
+
+        <!--<key.storepass>0xks.1!35jd,,</key.storepass>-->
+        <!--<key.keypass>j32,.01k4mhwsa0!jp</key.keypass>-->
+
         <key.alias>UMS</key.alias>
         <version.geotools>2.6.5</version.geotools>
         <version.ums.ws>1.0.2</version.ums.ws>
@@ -328,54 +332,6 @@
                         <!--<dest>${jnlp.output}</dest>-->
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>keytool-maven-plugin</artifactId>
-                    <configuration>
-                        <dname>cn=www.ums.no, ou=Development, L=Sandnes, ST=Rogaland, o=UMS, c=NO</dname>
-                        <keystore>${key.storefile}</keystore>
-                        <keypass>${key.keypass}</keypass>
-                        <storepass>${key.storepass}</storepass>
-                        <alias>${key.alias}</alias>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>genkey</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo.webstart</groupId>
-                    <artifactId>webstart-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jnlp</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <pack200>false</pack200>
-                        <jnlp>
-                            <mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
-                            <outputFile>${jnlp.filename}</outputFile>
-                        </jnlp>
-                        <sign>
-                            <keystore>${key.storefile}</keystore>
-                            <keypass>${key.keypass}</keypass>
-                            <storepass>${key.storepass}</storepass>
-                            <alias>${key.alias}</alias>
-                            <validity>180</validity>
-
-                            <verify>true</verify>
-                        </sign>
-                        <libPath>${jnlp_codebase}</libPath>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -391,22 +347,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>cobertura-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>keygen</id>
-            <activation>
-                <file>
-                    <missing>${user.home}/ums.keystore</missing>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>keytool-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
