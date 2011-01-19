@@ -312,14 +312,6 @@
                 <plugin>
                     <groupId>no.ums.maven</groupId>
                     <artifactId>maven-ums-plugin</artifactId>
-                    <configuration>
-                        <src>${build.directory}/${project.build.finalName}.zip</src>
-                        <!--<dest>${jnlp.output}</dest>-->
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>no.ums.maven</groupId>
-                    <artifactId>maven-ums-plugin</artifactId>
                     <executions>
                         <execution>
                             <phase>generate-resources</phase>

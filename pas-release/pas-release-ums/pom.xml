@@ -12,13 +12,21 @@
     <name>PAS - Release UMS</name>
     <description>PAS</description>
     <properties>
-        <jnlp.filename>pas.jnlp</jnlp.filename>
+        <jnlp.filename>PAS-UMS.${version}.jnlp</jnlp.filename>
     </properties>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo.webstart</groupId>
                 <artifactId>webstart-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>no.ums.maven</groupId>
+                <artifactId>maven-ums-plugin</artifactId>
+                <configuration>
+                    <src>${build.directory}/${project.build.finalName}.zip</src>
+                    <!--<dest>${jnlp.output}</dest>-->
+                </configuration>
             </plugin>
         </plugins>
     </build>
