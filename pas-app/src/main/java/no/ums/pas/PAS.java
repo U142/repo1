@@ -1407,14 +1407,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		} catch(Exception e) {
 			Error.getError().addError(PAS.l("common_error"), "Error setting GUI size", e, Error.SEVERITY_ERROR);
 		}
-		try
-		{
-			new CountryCodes();
-		}
-		catch(Exception e)
-		{
-			
-		}
 
 		/*UIManager.put(LafWidget.TABBED_PANE_PREVIEW_PAINTER,
 				 org.jvnet.lafwidget.tabbed.TabPreviewPainter.class);*/
