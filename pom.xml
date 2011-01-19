@@ -5,7 +5,7 @@
     <artifactId>ws-java-clients-parent</artifactId>
     <name>UMS WebService Client - Parent</name>
     <packaging>pom</packaging>
-    <version>1.1.TEST</version>
+    <version>1.1-SNAPSHOT</version>
     <modules>
         <module>ws-conference</module>
         <module>ws-external-exec</module>
@@ -22,7 +22,7 @@
         <wsdl.file>None.wsdl</wsdl.file>
     </properties>
     <scm>
-        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients/tags/ws-java-clients-parent-1.1.TEST</connection>
+        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients</connection>
     </scm>
     <dependencies>
         <dependency>
