@@ -1,6 +1,5 @@
 package no.ums.pas.ums.errorhandling;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.storage.StorageController;
@@ -12,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 
@@ -67,7 +67,7 @@ public class Error implements ActionListener {
 			
 		}
 		
-		htErrors = new Hashtable();
+		htErrors = new Hashtable<String, String>();
 		htErrors.put("1",new String("Polygon har for få punkter, ikke klar til sending."));
 		htErrors.put("2",new String("HTTP Error"));		
 	}

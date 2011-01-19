@@ -34,7 +34,7 @@
         <key.storefile>${user.home}/ums.keystore</key.storefile>
         <key.alias>UMS</key.alias>
         <version.geotools>2.6.5</version.geotools>
-        <version.ums.ws>1.0.1</version.ums.ws>
+        <version.ums.ws>1.0.2</version.ums.ws>
         <jnlp.output>${build.directory}/jnlp-output</jnlp.output>
         <jnlp.filename>PAS.${project.version}.jnlp</jnlp.filename>
         <jnlp_codebase>codebase</jnlp_codebase>
