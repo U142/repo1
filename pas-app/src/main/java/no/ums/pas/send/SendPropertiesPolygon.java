@@ -93,14 +93,14 @@ public class SendPropertiesPolygon extends SendProperties {
 			sz_polygon_params	= new String[_get_shapestruct().get_show_size() + 1];
 			sz_polygon_vals		= new String[_get_shapestruct().get_show_size() + 1];
 			sz_polygon_params[0]	= "n_polypoints";
-			sz_polygon_vals[0]		= new Integer(_get_shapestruct().get_show_size()).toString();
+			sz_polygon_vals[0]		= Integer.toString(_get_shapestruct().get_show_size());
 			double lon, lat;
 			int i;
 			for(i=1; i < (_get_shapestruct().get_show_size()) + 1; i++) {
 				sz_polygon_params[i]	= "p" + (i-1);
-				lon = (double)( Math.round(((Double)_get_shapestruct().get_coors_show_lon().get(i-1)).doubleValue() * 1000000.0)) / 1000000.0;
-				lat = (double)( Math.round(((Double)_get_shapestruct().get_coors_show_lat().get(i-1)).doubleValue() * 1000000.0)) / 1000000.0;
-				sz_polygon_vals[i] = new Double(lon).toString() + "," + new Double(lat).toString();
+				lon = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lon().get(i - 1) * 1000000.0)) / 1000000.0;
+				lat = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lat().get(i - 1) * 1000000.0)) / 1000000.0;
+				sz_polygon_vals[i] = Double.toString(lon) + "," + Double.toString(lat);
 				System.out.println(sz_polygon_vals[i]);
 			}
 

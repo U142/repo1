@@ -65,7 +65,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 				sz_statustext = LBASEND.LBASTATUSTEXT(obj.get_sendingstatus());
 			else
 				sz_statustext = TextFormat.get_statustext_from_code(obj.get_sendingstatus(), obj.get_altjmp());
-			Object sz_visible[] = { obj.get_project().get_projectname(), obj.get_deptid(), obj, obj.getChannel(), new Integer(obj.get_totitem()).toString(), obj.get_groupdesc(), 
+			Object sz_visible[] = { obj.get_project().get_projectname(), obj.get_deptid(), obj, obj.getChannel(), Integer.toString(obj.get_totitem()), obj.get_groupdesc(),
 					TextFormat.format_date(obj.get_createdate()), TextFormat.format_time(obj.get_createtime(),4), 
 					obj.get_sendingname(), sz_statustext/*new Integer(obj.get_sendingstatus()).toString()*/ };
 			this.insert_row(sz_visible, -1);

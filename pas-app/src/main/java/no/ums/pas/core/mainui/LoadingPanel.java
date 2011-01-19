@@ -149,7 +149,7 @@ public class LoadingPanel extends JPanel implements ComponentListener {
 	{
 		m_n_currentitem = n_item;
 		m_progress.setValue(m_n_currentitem);
-		m_progress.setString(m_sz_text + " " + new Integer((int)(m_progress.getPercentComplete()*100)).toString() + "%");
+		m_progress.setString(m_sz_text + " " + Integer.toString((int) (m_progress.getPercentComplete() * 100)) + "%");
 		try
 		{
 			if(m_n_currentitem==m_n_items)

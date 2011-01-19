@@ -81,11 +81,11 @@ public class CommonFunc {
 		Double d_deg, d_min, d_sectemp;
 		Integer d_sec, d_msec;
 		String sz_ret;
-		d_deg = new Double((int)degrees);
-		d_min = new Double(Math.abs(Math.floor(new Double((degrees - d_deg.doubleValue()) * 60).doubleValue())));
-		d_sectemp = new Double(Math.abs(((((degrees - d_deg.doubleValue()) - (d_min.doubleValue()/60)) * 60 * 60) * 10000) / 10000));
-		d_sec = new Integer(Math.abs(new Double(((int)(d_sectemp.doubleValue()*10000.0))/10000.0).intValue()));
-		d_msec = new Integer(Math.abs(new Double((d_sectemp.doubleValue() - d_sec.doubleValue())*100).intValue()));
+		d_deg = (double) (int) degrees;
+		d_min = Math.abs(Math.floor((degrees - d_deg) * 60));
+		d_sectemp = Math.abs(((((degrees - d_deg) - (d_min / 60)) * 60 * 60) * 10000) / 10000);
+		d_sec = Math.abs(new Double(((int) (d_sectemp * 10000.0)) / 10000.0).intValue());
+		d_msec = Math.abs(new Double((d_sectemp - d_sec.doubleValue()) * 100).intValue());
 		sz_ret = Math.abs(d_deg.intValue()) + "°  " + TextFormat.padding(d_min.toString(), '0', 2) + "'  " + TextFormat.padding(d_sec.toString(), '0', 2) + "." + TextFormat.padding(d_msec.toString(), '0', 2) + "''";
 		return sz_ret;
 	}

@@ -179,7 +179,7 @@ public class AlertPanel extends JPanel implements WindowListener {
 			pnlContainerRigth.add(pnlValidity);
 			// Dette skulle være hardkodet
 			for (int i = 1; i <= 7; i++) {
-				cbxValidity.addItem(new Integer(i));
+				cbxValidity.addItem(i);
 			}
 			pnlContainerRigth.add(Box.createVerticalStrut(4));
 			pnlMsg.setLayout(new BoxLayout(pnlMsg, BoxLayout.X_AXIS));

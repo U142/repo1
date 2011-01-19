@@ -117,7 +117,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	
 	public String toString()
 	{
-		return new Long(shapeID).toString();
+		return Long.toString(shapeID);
 	}
 	public long shapeID = 0;
 	public void setShapeId(long n) { shapeID = n; }

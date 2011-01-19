@@ -399,40 +399,40 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			String sz_hour = PAS.l("common_hour");
 			String sz_hours = PAS.l("common_hours");
 			m_item_gps_trail_minutes_check = new CheckItem[] { 
-													new CheckItem(String.format("10 %s", sz_minutes), new Integer(10), true),
-													new CheckItem(String.format("20 %s", sz_minutes), new Integer(20), false), 
-													new CheckItem(String.format("30 %s", sz_minutes), new Integer(30), false), 
-													new CheckItem(String.format("1 %s", sz_hour), new Integer(60), false), 
-													new CheckItem(String.format("2 %s", sz_hours), new Integer(120), false), 
-													new CheckItem(String.format("12 %s", sz_hours), new Integer(720), false), 
-													new CheckItem(String.format("24 %s", sz_hours), new Integer(1440), false), 
-													new CheckItem(PAS.l("mainmenu_fleetcontrol_updates_no_time_filter"), new Integer(-1), false)
+													new CheckItem(String.format("10 %s", sz_minutes), 10, true),
+													new CheckItem(String.format("20 %s", sz_minutes), 20, false),
+													new CheckItem(String.format("30 %s", sz_minutes), 30, false),
+													new CheckItem(String.format("1 %s", sz_hour), 60, false),
+													new CheckItem(String.format("2 %s", sz_hours), 120, false),
+													new CheckItem(String.format("12 %s", sz_hours), 720, false),
+													new CheckItem(String.format("24 %s", sz_hours), 1440, false),
+													new CheckItem(PAS.l("mainmenu_fleetcontrol_updates_no_time_filter"), -1, false)
 											 };
 			
 			m_item_gps_updateseconds_check = new CheckItem[] {
-													new CheckItem(String.format("5 %s", sz_seconds), new Integer(5), false),
-													new CheckItem(String.format("10 %s", sz_seconds), new Integer(10), true),
-													new CheckItem(String.format("20 %s", sz_seconds), new Integer(20), false),
-													new CheckItem(String.format("30 %s", sz_seconds), new Integer(30), false),
-													new CheckItem(String.format("1 %s", sz_minute), new Integer(60), false),
-													new CheckItem(String.format("5 %s", sz_minutes), new Integer(60*5), false)
+													new CheckItem(String.format("5 %s", sz_seconds), 5, false),
+													new CheckItem(String.format("10 %s", sz_seconds), 10, true),
+													new CheckItem(String.format("20 %s", sz_seconds), 20, false),
+													new CheckItem(String.format("30 %s", sz_seconds), 30, false),
+													new CheckItem(String.format("1 %s", sz_minute), 60, false),
+													new CheckItem(String.format("5 %s", sz_minutes), 60 * 5, false)
 											 };
 			m_item_status_updateseconds_check = new CheckItem[] {
-												new CheckItem(String.format("5 %s", sz_seconds), new Integer(5), true),
-												new CheckItem(String.format("10 %s", sz_seconds), new Integer(10), false),
-												new CheckItem(String.format("20 %s", sz_seconds), new Integer(20), false),
-												new CheckItem(String.format("30 %s", sz_seconds), new Integer(30), false),
-												new CheckItem(String.format("1 %s", sz_minute), new Integer(60), false),
-												new CheckItem(String.format("5 %s", sz_minutes), new Integer(60*5), false)
+												new CheckItem(String.format("5 %s", sz_seconds), 5, true),
+												new CheckItem(String.format("10 %s", sz_seconds), 10, false),
+												new CheckItem(String.format("20 %s", sz_seconds), 20, false),
+												new CheckItem(String.format("30 %s", sz_seconds), 30, false),
+												new CheckItem(String.format("1 %s", sz_minute), 60, false),
+												new CheckItem(String.format("5 %s", sz_minutes), 60 * 5, false)
 											};
 			
 			m_item_gps_updatemethod_check = new CheckItem[] {
-												new CheckItem(PAS.l("mainmenu_status_updates_manual"), new String("manual"), (get_pas().get_gpscontroller().get_autoupdate() ? false : true)),
-												new CheckItem(PAS.l("mainmenu_status_updates_every"), new String("auto"), (get_pas().get_gpscontroller().get_autoupdate() ? true : false))
+												new CheckItem(PAS.l("mainmenu_status_updates_manual"), "manual", (!get_pas().get_gpscontroller().get_autoupdate())),
+												new CheckItem(PAS.l("mainmenu_status_updates_every"), "auto", (get_pas().get_gpscontroller().get_autoupdate()))
 											};
 			m_item_status_updatemethod_check = new CheckItem[] {
-												new CheckItem(PAS.l("mainmenu_status_updates_manual"), new String("manual"), (get_pas().get_statuscontroller().get_autoupdate() ? false : true)),
-												new CheckItem(PAS.l("mainmenu_status_updates_every"), new String("auto"), (get_pas().get_statuscontroller().get_autoupdate() ? true : false))
+												new CheckItem(PAS.l("mainmenu_status_updates_manual"), "manual", (!get_pas().get_statuscontroller().get_autoupdate())),
+												new CheckItem(PAS.l("mainmenu_status_updates_every"), "auto", (get_pas().get_statuscontroller().get_autoupdate()))
 											};
 			
 			

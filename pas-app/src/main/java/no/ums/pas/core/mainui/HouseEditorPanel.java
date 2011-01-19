@@ -73,8 +73,8 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	private StdTextArea m_txt_birthday = new StdTextArea("", false, 75);
 	private JButton m_btn_save			= new JButton(PAS.l("common_save"));
 	private HouseInhabitantsList m_inhablist = null;
-	private IconRadio m_radio_private	= new IconRadio(PAS.l("common_adr_private"), new Integer(0), true);
-	private IconRadio m_radio_company	= new IconRadio(PAS.l("common_adr_company"), new Integer(1));
+	private IconRadio m_radio_private	= new IconRadio(PAS.l("common_adr_private"), 0, true);
+	private IconRadio m_radio_company	= new IconRadio(PAS.l("common_adr_company"), 1);
 	private ButtonGroup m_group_user	= new ButtonGroup();
 	
 	public void componentHidden(ComponentEvent e) { }
@@ -104,11 +104,11 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				m_txt_letter.setText(inhab.get_letter());
 				m_txt_postno.setText(inhab.get_postno());
 				m_txt_place.setText(inhab.get_postarea());
-				m_txt_gnr.setText(new Integer(inhab.get_gnumber()).toString());
-				m_txt_bnr.setText(new Integer(inhab.get_bnumber()).toString());
+				m_txt_gnr.setText(Integer.toString(inhab.get_gnumber()));
+				m_txt_bnr.setText(Integer.toString(inhab.get_bnumber()));
 				m_txt_municipal.setText(inhab.get_region());
 				m_txt_birthday.setText(inhab.get_birthday_formatted());
-				m_txt_streetid.setText(new Integer(inhab.get_streetid()).toString());
+				m_txt_streetid.setText(Integer.toString(inhab.get_streetid()));
 				//m_txt_streetid.setText(inhab.
 				//if(inhab.get_adrtype()==Controller.ADR_TYPES_COMPANY_)
 				if((inhab.get_adrtype() & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY ||

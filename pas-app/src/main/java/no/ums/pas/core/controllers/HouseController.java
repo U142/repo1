@@ -145,9 +145,9 @@ public class HouseController extends Controller {
 				//int n = new Long(a.getImportid()).intValue();
 				//System.out.println("Customadr = " + n);
 				Inhabitant inhab = new Inhabitant(); //a.getKondmid(), a.getName(), a.getAddress(), a.getHouseno(), );
-				inhab.init(a.getKondmid(), a.getName(), a.getAddress(), new Integer(a.getHouseno()).toString(), a.getLetter(), 
-							a.getPostno(), a.getPostarea(), new Integer(a.getRegion()).toString(), a.getBday(), a.getNumber(), 
-							a.getMobile(), new Double(a.getLat()).doubleValue(), new Double(a.getLon()).doubleValue(), a.getGno(), a.getBno(), a.getBedrift(), 
+				inhab.init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
+							a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
+							a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
 							new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
 				outlist.add(inhab);
 			}
@@ -158,7 +158,7 @@ public class HouseController extends Controller {
 			m_houses.sort_houses(get_items(), false);
 			PAS.get_pas().get_drawthread().set_neednewcoors(true);
 			set_visibility_change(true);
-			PAS.get_pas().actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_FINISHED_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+			PAS.get_pas().actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_FINISHED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 
 		}
 		catch(Exception e)

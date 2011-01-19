@@ -144,14 +144,14 @@ public class OpenStatuscodes extends SearchPanelResults {
 					else
 						col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
 					current.set_color( col );
-					insert_row(new Object[] { current, current.get_status(), new Integer(hits), new Boolean(true), new Boolean(false), col }, -1);
+					insert_row(new Object[] { current, current.get_status(), hits, true, false, col }, -1);
 					current.set_addedtolist();
 				}
 				else { //update text and count
 					int n_row = find(n_col_code, current.get_code());
 					if(n_row>=0) {
 						setValueAt(current.get_status(), n_row, n_col_text);
-						setValueAt(new Integer(hits), n_row, n_col_hits);
+						setValueAt(hits, n_row, n_col_hits);
 						setValueAt(current.get_color(), n_row, n_col_color);
 					}
 				}
@@ -169,7 +169,7 @@ public class OpenStatuscodes extends SearchPanelResults {
     	for(int i=0; i < m_tbl_list.getRowCount(); i++) {
     		int n_temp = -1;
     		try {
-    			n_temp = new Integer(((StatusCode)m_tbl_list.getValueAt(i, n_col)).get_code()).intValue();
+    			n_temp = ((StatusCode) m_tbl_list.getValueAt(i, n_col)).get_code();
     		} catch(Exception e) {
     			Error.getError().addError("SearchPanelResults","Exception in find",e,1);
     		}

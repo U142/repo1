@@ -430,26 +430,18 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			throws Exception
 		{
 			String sha = "";
-			try
-			{
-				MessageDigest md = MessageDigest.getInstance("SHA-512");
-				md.update(pw.getBytes());
-				byte[] mb = md.digest();
-	            for (int i = 0; i < mb.length; i++) {
-	                byte temp = mb[i];
-	                String s = Integer.toHexString(new Byte(temp));
-	                while (s.length() < 2) {
-	                    s = "0" + s;
-	                }
-	                s = s.substring(s.length() - 2);
-	                sha += s;
-	            }
-			}
-			catch(Exception e)
-			{
-				throw e;
-			}
-			return sha;
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(pw.getBytes());
+            byte[] mb = md.digest();
+            for (byte temp : mb) {
+                String s = Integer.toHexString(temp);
+                while (s.length() < 2) {
+                    s = "0" + s;
+                }
+                s = s.substring(s.length() - 2);
+                sha += s;
+            }
+            return sha;
 		}
 		
 		public void keyPressed(KeyEvent e) {

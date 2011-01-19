@@ -21,10 +21,10 @@ public class SchedCalendar extends Object {
 			if(n_day<10)
 				sz_date += "0";
 			sz_date += n_day;
-			m_n_date = new Integer(sz_date).intValue();
+			m_n_date = new Integer(sz_date);
 		}
 		public String toString() { 
-			String sz_ret = new Integer(m_n_date).toString();
+			String sz_ret = Integer.toString(m_n_date);
 			//return sz_ret;
 			return sz_ret.substring(6,8) + "." + sz_ret.substring(4,6) + "." + sz_ret.substring(0, 4);
 		}

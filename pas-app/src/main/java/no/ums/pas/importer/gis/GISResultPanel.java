@@ -179,17 +179,17 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 						Boolean b_include;
 						if(m_b_run_hittest) {
 							hit = namefilter(inhabitant, house.get_name1(), house.get_name2());
-							b_include = new Boolean((hit >= 70 ? true : false));
+							b_include = hit >= 70;
 						} else {
 							hit = new Double(inhabitant.get_hitpercent()).intValue();
-							b_include = new Boolean(inhabitant.get_included());
+							b_include = inhabitant.get_included();
 						}
 						try
 						{
-							Object [] line = new Object[] { new Integer(n_recordcount), house.get_municipal(), house.get_streetid(), house.get_houseno(), 
+							Object [] line = new Object[] {n_recordcount, house.get_municipal(), house.get_streetid(), house.get_houseno(),
 															house.get_letter(), house.get_name1(), house.get_name2(), inhabitant, inhabitant.get_number(), inhabitant.get_mobile(),
-															inhabitant.get_postno(), inhabitant.get_postarea(), b_include, new Integer(hit), new Double(inhabitant.get_lon()), new Double(inhabitant.get_lat())  };
-							inhabitant.set_included(b_include.booleanValue());
+															inhabitant.get_postno(), inhabitant.get_postarea(), b_include, hit, inhabitant.get_lon(), inhabitant.get_lat()};
+							inhabitant.set_included(b_include);
 							m_panel.insert_row(line, 0);
 						}
 						catch(Exception e)

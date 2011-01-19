@@ -116,7 +116,7 @@ public class LoadingFrame extends JDialog {
 		{
 			m_progress.setValue(m_n_currentitem);
 			if(sz_text==null)
-				m_progress.setString(m_sz_text + " " + new Integer((int)(m_progress.getPercentComplete()*100)).toString() + "%");
+				m_progress.setString(m_sz_text + " " + Integer.toString((int) (m_progress.getPercentComplete() * 100)) + "%");
 			else
 				m_progress.setString(m_sz_text + " " + sz_text);
 		}

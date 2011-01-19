@@ -218,29 +218,29 @@ public abstract class SendProperties extends Object {
 	public void create_common_paramvals(int n_sendingtype) {
 		sz_vals = new String[sz_params.length];
 		try {
-			sz_vals[0] = new String(get_sendingname());
-			sz_vals[1] = new String(new Integer(get_bbprofile().get_profilepk()).toString());
+			sz_vals[0] = get_sendingname();
+			sz_vals[1] = Integer.toString(get_bbprofile().get_profilepk());
 			if(n_sendingtype==SENDING_TYPE_ADRLIST_) { //skip resched
-				sz_vals[2] = new String("-1");
-				sz_vals[3] = new String("-1");				
+				sz_vals[2] = "-1";
+				sz_vals[3] = "-1";
 			} else {
-				sz_vals[2] = new String(new Integer(get_sched().get_scheddate()).toString());
-				sz_vals[3] = new String(new Integer(get_sched().get_schedtime()).toString());
+				sz_vals[2] = Integer.toString(get_sched().get_scheddate());
+				sz_vals[3] = Integer.toString(get_sched().get_schedtime());
 			}
-			sz_vals[4] = new String(get_oadc().get_number());
-			sz_vals[5] = new String(new Integer(get_validity()).toString());
-			sz_vals[6] = new String(get_schedprofile().get_reschedpk());
-			sz_vals[7] = new String(new Integer(n_sendingtype).toString());
-			sz_vals[8] = new String(new Integer(get_refno()).toString());
-			sz_vals[9] = new String(new Integer(get_bbprofile().get_soundfiles().size()).toString());
-			sz_vals[10]= new String(new Integer(get_schedprofile().get_retries()).toString());
-			sz_vals[11]= new String(new Integer(get_schedprofile().get_interval()).toString());
-			sz_vals[12]= new String(new Integer(get_schedprofile().get_canceltime()).toString());
-			sz_vals[13]= new String(new Integer(get_schedprofile().get_canceldate()).toString());
-			sz_vals[14]= new String(new Integer(get_schedprofile().get_pausetime()).toString());
-			sz_vals[15]= new String(new Integer(get_schedprofile().get_pauseinterval()).toString());
-			sz_vals[16]= new String(new Integer(get_addresstypes()).toString());
-			sz_vals[17]= new String(new Integer(PAS.get_pas().get_userinfo().get_comppk()).toString());
+			sz_vals[4] = get_oadc().get_number();
+			sz_vals[5] = Integer.toString(get_validity());
+			sz_vals[6] = get_schedprofile().get_reschedpk();
+			sz_vals[7] = Integer.toString(n_sendingtype);
+			sz_vals[8] = Integer.toString(get_refno());
+			sz_vals[9] = Integer.toString(get_bbprofile().get_soundfiles().size());
+			sz_vals[10]= Integer.toString(get_schedprofile().get_retries());
+			sz_vals[11]= Integer.toString(get_schedprofile().get_interval());
+			sz_vals[12]= Integer.toString(get_schedprofile().get_canceltime());
+			sz_vals[13]= Integer.toString(get_schedprofile().get_canceldate());
+			sz_vals[14]= Integer.toString(get_schedprofile().get_pausetime());
+			sz_vals[15]= Integer.toString(get_schedprofile().get_pauseinterval());
+			sz_vals[16]= Integer.toString(get_addresstypes());
+			sz_vals[17]= Integer.toString(PAS.get_pas().get_userinfo().get_comppk());
 			//sz_vals[18]= new String(new Integer(PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()).toString());
 			//sz_vals[19]= new String(new Integer(PAS.get_pas().get_userinfo().get_default_dept().get_deptpri()).toString());
 			sz_vals[18]= new String(new Integer(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()).toString());
@@ -539,7 +539,7 @@ public abstract class SendProperties extends Object {
 					try
 					{
 						AlertResultLine line = (AlertResultLine)it.next();
-						res.addExecAlertResult(new Long(line.getLAlertpk()).toString(), line.getSzName(), new Integer(line.getLRefno()).toString(), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
+						res.addExecAlertResult(Long.toString(line.getLAlertpk()), line.getSzName(), Integer.toString(line.getLRefno()), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
 					}
 					catch(Exception e)
 					{

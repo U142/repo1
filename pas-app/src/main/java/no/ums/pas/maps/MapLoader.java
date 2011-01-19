@@ -91,7 +91,7 @@ public class MapLoader {
 			info.setBBo((float)(n_bbo));
 			info.setHeight(dim.height);
 			info.setWidth(dim.width);
-			info.setLayers(new Integer(n_layer).toString());
+			info.setLayers(Integer.toString(n_layer));
 			info.setSRS("4326");
 			info.setSzJobid(sz_jobid);
 			info.setSzUserid("jone");

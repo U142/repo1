@@ -754,12 +754,9 @@ public class SendController implements ActionListener {
 				res.setProjectPk(ar.getLProjectpk());
 				
 				res.sz_sendfunction = ar.getSzFunction();
-				Iterator it = ar.getArrAlertresults().getAlertResultLine().iterator();
-				while(it.hasNext())
-				{
-					AlertResultLine line = (AlertResultLine)it.next();
-					res.addExecAlertResult(new Long(line.getLAlertpk()).toString(), line.getSzName(), new Integer(line.getLRefno()).toString(), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
-				}
+                for (AlertResultLine line : ar.getArrAlertresults().getAlertResultLine()) {
+                    res.addExecAlertResult(Long.toString(line.getLAlertpk()), line.getSzName(), Integer.toString(line.getLRefno()), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
+                }
 				b = true;
 
 				/*if(!res.hasOneOrMoreSuccess()) {
@@ -849,12 +846,9 @@ public class SendController implements ActionListener {
 				res.setProjectPk(ar.getLProjectpk());
 				
 				res.sz_sendfunction = ar.getSzFunction();
-				Iterator it = ar.getArrAlertresults().getAlertResultLine().iterator();
-				while(it.hasNext())
-				{
-					AlertResultLine line = (AlertResultLine)it.next();
-					res.addExecAlertResult(new Long(line.getLAlertpk()).toString(), line.getSzName(), new Integer(line.getLRefno()).toString(), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
-				}
+                for (AlertResultLine line : ar.getArrAlertresults().getAlertResultLine()) {
+                    res.addExecAlertResult(Long.toString(line.getLAlertpk()), line.getSzName(), Integer.toString(line.getLRefno()), line.getSzResult(), line.getSzText(), line.getSzExtendedInfo());
+                }
 				b = true;				
 			}
 			catch(Exception e)

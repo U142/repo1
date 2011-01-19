@@ -8,7 +8,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 public class SliderMenuItem extends JSlider {//implements MenuElement {
@@ -27,13 +29,13 @@ public class SliderMenuItem extends JSlider {//implements MenuElement {
         setMinorTickSpacing(n_minor);
         this.setPaintLabels(b_showlegend);
         //this.setBackground(Color.lightGray);
-        Dictionary labelTable = new Hashtable();
+        Dictionary labelTable = new Hashtable<Integer, JLabel>();
         this.setPaintTicks(b_showticks);
         this.setPreferredSize(size);
         if(b_showlegend)
         {
-	        labelTable.put( new Integer( n_low ), new JLabel(n_low + sz_legend) );
-	        labelTable.put( new Integer( n_max ), new JLabel(n_max + sz_legend) );
+	        labelTable.put(n_low, new JLabel(n_low + sz_legend) );
+	        labelTable.put(n_max, new JLabel(n_max + sz_legend) );
 	        this.setLabelTable(labelTable);
         }
         m_event = e;
@@ -49,7 +51,7 @@ public class SliderMenuItem extends JSlider {//implements MenuElement {
     		JSlider source = (JSlider)e.getSource();
     		if(source.getValueIsAdjusting())
     		{
-    			m_event.doEvent(new Integer(source.getValue()));
+    			m_event.doEvent(source.getValue());
     		}
     	}
     }

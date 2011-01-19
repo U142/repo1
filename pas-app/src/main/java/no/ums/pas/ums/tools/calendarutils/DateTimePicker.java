@@ -243,9 +243,9 @@ public class DateTimePicker extends DefaultPanel {
 				m_daypanel.m_btn_days[m_n_day].doClick();
 				//callback.actionPerformed(new ActionEvent(DateTimePicker.this, ActionEvent.ACTION_PERFORMED, "act_datetime_changed"));
 			}*/
-			String mask_year = new Long(mask_dates_after).toString().substring(0, 4);
-			String mask_month = new Long(mask_dates_after).toString().substring(4, 6);
-			String mask_day = new Long(mask_dates_after).toString().substring(6, 8);
+			String mask_year = Long.toString(mask_dates_after).substring(0, 4);
+			String mask_month = Long.toString(mask_dates_after).substring(4, 6);
+			String mask_day = Long.toString(mask_dates_after).substring(6, 8);
 			int n_mask_year = new Integer(mask_year);
 			int n_mask_month = new Integer(mask_month);
 			int n_mask_day = new Integer(mask_day);
@@ -462,9 +462,9 @@ public class DateTimePicker extends DefaultPanel {
 		}
 		private void set_datetime(long newdate)
 		{
-			String year = new Long(newdate).toString().substring(0,4);
-			String month = new Long(newdate).toString().substring(4,6);
-			String day = new Long(newdate).toString().substring(6,8);
+			String year = Long.toString(newdate).substring(0, 4);
+			String month = Long.toString(newdate).substring(4, 6);
+			String day = Long.toString(newdate).substring(6, 8);
 			set_year(new Integer(year));
 			set_month(new Integer(month)-1);
 			set_day(new Integer(day));
@@ -567,7 +567,7 @@ public class DateTimePicker extends DefaultPanel {
 			public void actionPerformed(ActionEvent e) {
 				if("act_day_selected".equals(e.getActionCommand())) {
 					m_n_day = ((DayButton)e.getSource()).get_day();
-					ActionEvent send = new ActionEvent(new Integer(m_n_day), ActionEvent.ACTION_PERFORMED, e.getActionCommand());
+					ActionEvent send = new ActionEvent(m_n_day, ActionEvent.ACTION_PERFORMED, e.getActionCommand());
 					m_datepicker.actionPerformed(send);
 				}
 			}
@@ -613,7 +613,7 @@ public class DateTimePicker extends DefaultPanel {
 				public void set_day(int n_day) { 
 					m_n_day = n_day;
 					if(m_n_day > 0) {
-						setText(new Integer(m_n_day).toString());
+						setText(Integer.toString(m_n_day));
 						setEnabled(true);
 					}
 					else {

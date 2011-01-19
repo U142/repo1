@@ -342,110 +342,100 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 		
 		List<CBSTATUS> cbstatuslist = cbp.getStatuslist().getCBSTATUS();
-		for(int j=0; j < cbstatuslist.size(); ++j)
-		{
-			CBSTATUS currentstatus = cbstatuslist.get(j);
-			CentricMessageStatus currentui = null;
-			
-			//get or create a UI pane
-			if(containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
-			{
-				currentui = getHashMessageStatus().get(currentstatus.getLRefno());
-			}
-			else //new status, needs to be added to tabbed pane
-			{
-				currentui = new CentricMessageStatus(get_messages(), currentstatus);
-				putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
-				currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());
-				final JTabbedPane final_tp = tp;
-				final CentricMessageStatus final_cms = currentui;
-				final String szSendingName = currentstatus.getSzSendingname();
-				SwingUtilities.invokeLater(new Runnable() {					
-					@Override
-					public void run() {
-						final_tp.add(szSendingName, final_cms);						
-					}
-				});
-			}
-			//Update data in UI pane
-			if(currentui!=null) //just to be sure we have an existing or new pointer
-				currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
-			sendings.put(new Long(currentstatus.getLRefno()), new Long(currentstatus.getLRefno()));
-			OPERATOR_STATE status = currentui.getOperatorStatus();
-			String lbl_pane = "<html>";
-			String tooltip_pane = "";
-			lbl_pane += "<font color=" + CentricOperatorStatus.getOperatorStatusColor(status) + ">";
-			switch(status)
-			{
-			case INITIALIZING:
-			case ACTIVE:
-				//lbl_pane += "<font color=green>";
-				lbl_pane += PAS.l("main_status_lba_progress_active_abb");
-				tooltip_pane = PAS.l("main_status_lba_progress_active");
-				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
-				break;
-			case KILLING:
-				//lbl_pane += "<font color=green>";
-				lbl_pane += PAS.l("main_status_lba_progress_killing_abb");
-				tooltip_pane = PAS.l("main_status_lba_progress_killing");
-				active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
-				break;
-			case FINISHED:
-				//lbl_pane += "<font color=green>";
-				lbl_pane += PAS.l("main_status_lba_progress_finished_abb");
-				tooltip_pane = PAS.l("main_status_lba_progress_finished");
-				break;
-			case ERROR:
-				//lbl_pane += "<font color=red>";
-				lbl_pane += PAS.l("main_status_lba_progress_error_abb");
-				tooltip_pane = PAS.l("main_status_lba_progress_error");
-				break;
-			}
-			lbl_pane += "</font>";
-			lbl_pane += "<font color=black>";
-			lbl_pane += " " + currentstatus.getMdv().getSzSendingname();
-			if(currentstatus.getFSimulation()==1)
-				lbl_pane += "<br>&nbsp;&nbsp;&nbsp;" + PAS.l("mainmenu_trainingmode") + "";
-			lbl_pane += "</font>";
-			lbl_pane += "</html>";
-			try
-			{
-				final JTabbedPane final_tp = tp;
-				final CentricMessageStatus final_cms = currentui;
-				final String szSendingName = currentstatus.getSzSendingname();
-				final String final_lbl = lbl_pane;
-				final String final_tooltip = tooltip_pane;
-				SwingUtilities.invokeLater(new Runnable() {					
-					@Override
-					public void run() {
-						int n = final_tp.indexOfComponent(final_cms);
-						if(n>=0)
-						{
-							final_tp.setTitleAt(n, final_lbl);
-							final_tp.setToolTipTextAt(n, final_tooltip);
-						}
-						else
-							System.out.println("Component " + final_cms + " not found");						
-					}
-				});
-			}
-			catch(Exception e)
-			{
-				
-			}
-			ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(currentstatus.getShape());
-			if(shape!=null)
-			{
-				shape.setShapeId(currentstatus.getLRefno());
-				shape.shapeName = currentstatus.getSzSendingname();
-				shape.set_fill_color(new Color(255, 50, 50, 100));
-				shape.set_border_color(new Color(255, 50, 50, 200));
-				shape.set_text_color(new Color(255, 255, 255, 255));
-				shape.set_text_bg_color(new Color(50, 0, 0, 100));
-				PAS.pasplugin.addShapeToPaint(shape);
-			}
+        for (CBSTATUS currentstatus : cbstatuslist) {
+            CentricMessageStatus currentui = null;
 
-		}
+            //get or create a UI pane
+            if (containsMessageStatus(currentstatus.getLRefno())) //Already added to tabbed pane, only update data
+            {
+                currentui = getHashMessageStatus().get(currentstatus.getLRefno());
+            } else //new status, needs to be added to tabbed pane
+            {
+                currentui = new CentricMessageStatus(get_messages(), currentstatus);
+                putMessageStatus(currentstatus.getLRefno(), currentui); //add refno and pointer to hash
+                currentui.get_txt_message().setText(currentstatus.getMdv().getSzMessagetext());
+                final JTabbedPane final_tp = tp;
+                final CentricMessageStatus final_cms = currentui;
+                final String szSendingName = currentstatus.getSzSendingname();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        final_tp.add(szSendingName, final_cms);
+                    }
+                });
+            }
+            //Update data in UI pane
+            if (currentui != null) //just to be sure we have an existing or new pointer
+                currentui.UpdateStatus(currentstatus, cbp.getLDbTimestamp());
+            sendings.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+            OPERATOR_STATE status = currentui.getOperatorStatus();
+            String lbl_pane = "<html>";
+            String tooltip_pane = "";
+            lbl_pane += "<font color=" + CentricOperatorStatus.getOperatorStatusColor(status) + ">";
+            switch (status) {
+                case INITIALIZING:
+                case ACTIVE:
+                    //lbl_pane += "<font color=green>";
+                    lbl_pane += PAS.l("main_status_lba_progress_active_abb");
+                    tooltip_pane = PAS.l("main_status_lba_progress_active");
+                    active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+                    break;
+                case KILLING:
+                    //lbl_pane += "<font color=green>";
+                    lbl_pane += PAS.l("main_status_lba_progress_killing_abb");
+                    tooltip_pane = PAS.l("main_status_lba_progress_killing");
+                    active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
+                    break;
+                case FINISHED:
+                    //lbl_pane += "<font color=green>";
+                    lbl_pane += PAS.l("main_status_lba_progress_finished_abb");
+                    tooltip_pane = PAS.l("main_status_lba_progress_finished");
+                    break;
+                case ERROR:
+                    //lbl_pane += "<font color=red>";
+                    lbl_pane += PAS.l("main_status_lba_progress_error_abb");
+                    tooltip_pane = PAS.l("main_status_lba_progress_error");
+                    break;
+            }
+            lbl_pane += "</font>";
+            lbl_pane += "<font color=black>";
+            lbl_pane += " " + currentstatus.getMdv().getSzSendingname();
+            if (currentstatus.getFSimulation() == 1)
+                lbl_pane += "<br>&nbsp;&nbsp;&nbsp;" + PAS.l("mainmenu_trainingmode") + "";
+            lbl_pane += "</font>";
+            lbl_pane += "</html>";
+            try {
+                final JTabbedPane final_tp = tp;
+                final CentricMessageStatus final_cms = currentui;
+                final String szSendingName = currentstatus.getSzSendingname();
+                final String final_lbl = lbl_pane;
+                final String final_tooltip = tooltip_pane;
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        int n = final_tp.indexOfComponent(final_cms);
+                        if (n >= 0) {
+                            final_tp.setTitleAt(n, final_lbl);
+                            final_tp.setToolTipTextAt(n, final_tooltip);
+                        } else
+                            System.out.println("Component " + final_cms + " not found");
+                    }
+                });
+            } catch (Exception e) {
+
+            }
+            ShapeStruct shape = UShapeToShape.ConvertUShape_to_ShapeStruct(currentstatus.getShape());
+            if (shape != null) {
+                shape.setShapeId(currentstatus.getLRefno());
+                shape.shapeName = currentstatus.getSzSendingname();
+                shape.set_fill_color(new Color(255, 50, 50, 100));
+                shape.set_border_color(new Color(255, 50, 50, 200));
+                shape.set_text_color(new Color(255, 255, 255, 255));
+                shape.set_text_bg_color(new Color(50, 0, 0, 100));
+                PAS.pasplugin.addShapeToPaint(shape);
+            }
+
+        }
 
 		//do gui stuff if status was opened due to a new sending. Flip to sending-panels and the new mesage
 		final JTabbedPane final_tp = tp;

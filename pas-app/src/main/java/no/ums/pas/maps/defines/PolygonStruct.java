@@ -897,21 +897,21 @@ public class PolygonStruct extends ShapeStruct {
 			int n_lod = m_n_lod;
 			int n_current_point = 0;
 			ArrayList<Integer> indexbuffer = new ArrayList<Integer>();
-			indexbuffer.add(new Integer(n_current_point));
+			indexbuffer.add(n_current_point);
 			int i=0;
 			for(i=0; i < m_int_x.length-2; i++) {
 				switch(this.m_n_current_show_mode) {
 					case SHOW_POLYGON_FULL:
 						n_current_point = i+1;
-						indexbuffer.add(new Integer(n_current_point));
+						indexbuffer.add(n_current_point);
 						break;
 					case SHOW_POLYGON_SIMPLIFIED_PRPIXELS:
 						n_distance = nav.calc_pix_distance(m_int_x[n_current_point], m_int_y[n_current_point], m_int_x[i+1], m_int_y[i+1]);
 						if(n_distance > n_lod) { //add next point (i+1)
 							n_current_point = i+1;
-							indexbuffer.add(new Integer(n_current_point));
+							indexbuffer.add(n_current_point);
 						} else if(m_int_x.length <= 50) {
-							indexbuffer.add(new Integer(n_current_point));
+							indexbuffer.add(n_current_point);
 						}
 						break;
 					case SHOW_POLYGON_SIMPLIFIED_PRMETERS:
@@ -919,17 +919,17 @@ public class PolygonStruct extends ShapeStruct {
 						
 						if(n_distance > this.m_n_lod_meters) {
 							n_current_point = i+1;
-							indexbuffer.add(new Integer(n_current_point));
+							indexbuffer.add(n_current_point);
 						} else if(m_int_x.length <= 50) {
 							n_current_point = i+1;
-							indexbuffer.add(new Integer(n_current_point));
+							indexbuffer.add(n_current_point);
 						}
 						break;
 				}
 			}
 			//force last point into indexbuffer
 			if(m_int_x.length>1) {
-				indexbuffer.add(new Integer(i+1));
+				indexbuffer.add(i + 1);
 			}
 			m_show_int_x = new int[indexbuffer.size()];
 			m_show_int_y = new int[indexbuffer.size()];
@@ -937,12 +937,12 @@ public class PolygonStruct extends ShapeStruct {
 			m_coor_show_lat = new ArrayList<Double>(indexbuffer.size());
 	
 			for(i=0; i < indexbuffer.size(); i++) {
-				m_show_int_x[i] = m_int_x[((Integer)indexbuffer.get(i)).intValue()];
-				m_show_int_y[i] = m_int_y[((Integer)indexbuffer.get(i)).intValue()];
+				m_show_int_x[i] = m_int_x[indexbuffer.get(i)];
+				m_show_int_y[i] = m_int_y[indexbuffer.get(i)];
 				//if(i < indexbuffer.size() - 1) 
 				{
-					m_coor_show_lon.add(new Double(((Double)this.get_coors_lon().get(((Integer)indexbuffer.get(i)).intValue())).doubleValue()));
-					m_coor_show_lat.add(new Double(((Double)this.get_coors_lat().get(((Integer)indexbuffer.get(i)).intValue())).doubleValue()));
+					m_coor_show_lon.add(this.get_coors_lon().get(indexbuffer.get(i)));
+					m_coor_show_lat.add(this.get_coors_lat().get(indexbuffer.get(i)));
 				}
 			}
 			/*if(m_coor_show_lon.size()>0) {
@@ -1006,8 +1006,8 @@ public class PolygonStruct extends ShapeStruct {
 			try {
 				MapPointPix p1 = new MapPointPix(get_pix_int_x()[0], get_pix_int_y()[0]);
 				MapPointPix p2 = new MapPointPix(p.x, p.y);
-				Long n_dist = new Long(nav.calc_distance(p1, p2));				
-				String sz_distance = n_dist.longValue() + "m";
+				Long n_dist = nav.calc_distance(p1, p2);
+				String sz_distance = n_dist + "m";
 				g.setColor(new Color((float)0.2, (float)0.2, (float)0.2, (float)1.0));
 				Graphics2D g2d = (Graphics2D)g;
 				float [] Dashes = {5.0F, 20.0F, 5.0F, 20.0F};

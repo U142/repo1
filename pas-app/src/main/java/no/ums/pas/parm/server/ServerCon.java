@@ -105,9 +105,9 @@ public class ServerCon {
 			setParameter("xcid", info.get_compid());
 			setParameter("xpwd", info.get_passwd());
 			try {
-				setParameter("xdep", new Integer(info.get_current_department().get_deptpk()).toString());
+				setParameter("xdep", Integer.toString(info.get_current_department().get_deptpk()));
 				setParameter("xupk", info.get_userpk());
-				setParameter("xcpk", new Integer(info.get_comppk()).toString());
+				setParameter("xcpk", Integer.toString(info.get_comppk()));
 			} catch(Exception e) {
 				
 			}

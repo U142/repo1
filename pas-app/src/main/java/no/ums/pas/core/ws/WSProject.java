@@ -35,10 +35,10 @@ public class WSProject extends WSThread
 			else
 			{
 				Project project = new Project();
-				project.set_createtimestamp(new Long(projectresponse.getNCreatedtimestamp()).toString());
+				project.set_createtimestamp(Long.toString(projectresponse.getNCreatedtimestamp()));
 				project.set_projectname(projectresponse.getSzName());
-				project.set_projectpk(new Long(projectresponse.getNProjectpk()).toString());
-				project.set_updatetimestamp(new Long(projectresponse.getNUpdatedtimestamp()).toString());
+				project.set_projectpk(Long.toString(projectresponse.getNProjectpk()));
+				project.set_updatetimestamp(Long.toString(projectresponse.getNUpdatedtimestamp()));
 				m_callback.actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, sz_callback));
 				PAS.pasplugin.onOpenProject(project, -1);
 			}

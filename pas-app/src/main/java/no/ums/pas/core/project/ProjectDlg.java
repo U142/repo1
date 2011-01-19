@@ -261,11 +261,10 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 				}*/
 				ArrayList<Project> project_list = createProjectList(m_arr_sendings);
 				m_arr_projects = project_list;
-				for(int i=0; i < m_arr_projects.size(); i++) {
-					Project item = (Project)m_arr_projects.get(i);
-					Object [] obj = new Object[] { item, item.get_projectname(), TextFormat.format_datetime(item.get_createtimestamp()), new Integer(item.get_num_sendings()).toString() };
-					this.insert_row(obj, -1);
-				}
+                for (Project item : m_arr_projects) {
+                    Object[] obj = new Object[]{item, item.get_projectname(), TextFormat.format_datetime(item.get_createtimestamp()), Integer.toString(item.get_num_sendings())};
+                    this.insert_row(obj, -1);
+                }
 				
 			}
 			protected void onMouseLClick(int n_row, int n_col, Object[] rowcontent, Point p) {

@@ -55,13 +55,13 @@ public class SoapExecEvent extends SoapExecAlert
 	        symbol.addTextNode(this.l_eventpk);
 	        name = soapFactory.createName("l_comppk");
 	        symbol = bodyElement.addChildElement(name);
-	        symbol.addTextNode(new Integer(userinfo.get_comppk()).toString());
+	        symbol.addTextNode(Integer.toString(userinfo.get_comppk()));
 	        name = soapFactory.createName("l_userpk");
 	        symbol = bodyElement.addChildElement(name);
 	        symbol.addTextNode(new Integer(userinfo.get_userpk()).toString());
 	        name = soapFactory.createName("l_deptpk");
 	        symbol = bodyElement.addChildElement(name);
-	        symbol.addTextNode(new Integer(userinfo.get_current_department().get_deptpk()).toString());
+	        symbol.addTextNode(Integer.toString(userinfo.get_current_department().get_deptpk()));
 	        name = soapFactory.createName("sz_compid");
 	        symbol = bodyElement.addChildElement(name);
 	        symbol.addTextNode(userinfo.get_compid());

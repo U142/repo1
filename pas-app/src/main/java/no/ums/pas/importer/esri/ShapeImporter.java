@@ -361,7 +361,7 @@ public class ShapeImporter extends FileParser
 					int partStart = recordContentStart + 44;
 					for(int i=0; i < line.numParts; i++)
 					{
-						Integer part = new Integer(arr2int(b, partStart + i * 4));
+						Integer part = arr2int(b, partStart + i * 4);
 						line.parts.add(part);
 					}
 					int pointStart = recordContentStart + 44 + 4 * line.numParts;
@@ -392,7 +392,7 @@ public class ShapeImporter extends FileParser
 					int partStart = recordContentStart + 44;
 					for(int i=0; i < poly.numParts; i++)
 					{
-						poly.parts.add(new Integer(arr2int(b, partStart + i * 4)));
+						poly.parts.add(arr2int(b, partStart + i * 4));
 					}
 					int pointStart = recordContentStart + 44 + 4 * poly.numParts;
 					for(int i=0; i < numPoints; i++)

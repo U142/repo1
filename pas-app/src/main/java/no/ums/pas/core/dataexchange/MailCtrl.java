@@ -159,9 +159,9 @@ public class MailCtrl extends Object {
 	public void callback() {
 		if(m_callback!=null) {
 			if(get_last_msgcode()==250)
-				m_callback.actionPerformed(new ActionEvent(new Integer(this.get_last_msgcode()), ActionEvent.ACTION_PERFORMED, "act_maildelivery_success"));
+				m_callback.actionPerformed(new ActionEvent(this.get_last_msgcode(), ActionEvent.ACTION_PERFORMED, "act_maildelivery_success"));
 			else
-				m_callback.actionPerformed(new ActionEvent(new Integer(this.get_last_msgcode()), ActionEvent.ACTION_PERFORMED, "act_maildelivery_failed"));
+				m_callback.actionPerformed(new ActionEvent(this.get_last_msgcode(), ActionEvent.ACTION_PERFORMED, "act_maildelivery_failed"));
 		}
 	}
 }

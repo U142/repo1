@@ -161,9 +161,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			m_lba_total_progress.setMaximum(m_lba_total_progress.getMaximum()+1);
 			m_lba_total_progress.setValue(m_lba_total_progress.getMaximum());
 		}
-		m_txt_lba_recipients.setText(new Integer(m_lbasend_total.n_items).toString());
-		m_txt_lba_failed.setText(new Integer(m_lbasend_total.getFailed()).toString());
-		m_txt_lba_delivered.setText(new Integer(m_lbasend_total.getDelivered()).toString());
+		m_txt_lba_recipients.setText(Integer.toString(m_lbasend_total.n_items));
+		m_txt_lba_failed.setText(Integer.toString(m_lbasend_total.getFailed()));
+		m_txt_lba_delivered.setText(Integer.toString(m_lbasend_total.getDelivered()));
 		get_lbatab().UpdateData(m_lbasend_total);
 		if(m_lbasend_total.n_items < 0)
 		{

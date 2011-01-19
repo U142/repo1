@@ -102,8 +102,9 @@ public class WSGetStatusItems extends WSThread
 		search.setLTimeFilter(sz_timefilter);
 		search.setLProjectpk(sz_projectpk);
 		ArrayOfLong arr = of.createArrayOfLong();
-		for(int x = 0; x < m_refno_list.length; x++)
-			arr.getLong().add(new Long(m_refno_list[x]));
+        for (long aM_refno_list : m_refno_list) {
+            arr.getLong().add(aM_refno_list);
+        }
 		search.setLRefnoFilter(arr);
 		
 		WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
@@ -243,7 +244,7 @@ public class WSGetStatusItems extends WSThread
 						sending = new StatusSending(sz_values);
 						if(sending.get_type()==1)
 							b_hasvoice = true;
-						sending.setProjectpk(new Long(sz_projectpk).toString());
+						sending.setProjectpk(Long.toString(sz_projectpk));
 					} catch(Exception e) {
 						System.out.println(e.getMessage());
 						e.printStackTrace();
@@ -909,7 +910,7 @@ public class WSGetStatusItems extends WSThread
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 				}				
 			}
-			fire_set_itemfilter(new Integer(m_n_max_litem));
+			fire_set_itemfilter(m_n_max_litem);
 		//}
 		
 		/*parse the statuscodes*/

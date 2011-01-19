@@ -418,9 +418,9 @@ public class XmlWriter {
 						{
 							LBAOperator lba = alert.getOperators().get(op);
 							Element operator = (Element)lbaoperators.appendChild(xmlDoc.createElement("operator"));
-							operator.setAttribute("l_operator", new Integer(lba.l_operator).toString());
-							operator.setAttribute("l_status", new Integer(lba.l_status).toString());
-							operator.setAttribute("l_areaid", new Long(lba.l_areaid).toString());
+							operator.setAttribute("l_operator", Integer.toString(lba.l_operator));
+							operator.setAttribute("l_status", Integer.toString(lba.l_status));
+							operator.setAttribute("l_areaid", Long.toString(lba.l_areaid));
 							operator.setAttribute("sz_operatorname", lba.sz_operatorname);
 							operator.setAttribute("sz_status", lba.sz_status);
 						}
@@ -1952,10 +1952,10 @@ public class XmlWriter {
 		}
 		else
 			element = (Element)nl.item(0);
-		element.setAttribute("x", new Integer(PAS.get_pas().get_settings().getRectMessageLibDlg().x).toString());
-		element.setAttribute("y", new Integer(PAS.get_pas().get_settings().getRectMessageLibDlg().y).toString());
-		element.setAttribute("w", new Integer(PAS.get_pas().get_settings().getRectMessageLibDlg().width).toString());
-		element.setAttribute("h", new Integer(PAS.get_pas().get_settings().getRectMessageLibDlg().height).toString());
+		element.setAttribute("x", Integer.toString(PAS.get_pas().get_settings().getRectMessageLibDlg().x));
+		element.setAttribute("y", Integer.toString(PAS.get_pas().get_settings().getRectMessageLibDlg().y));
+		element.setAttribute("w", Integer.toString(PAS.get_pas().get_settings().getRectMessageLibDlg().width));
+		element.setAttribute("h", Integer.toString(PAS.get_pas().get_settings().getRectMessageLibDlg().height));
 		
 		
 		nl = rootnd.getElementsByTagName("messagelibdlg_exploded_nodes");

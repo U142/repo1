@@ -1617,7 +1617,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			getStatusController().set_cbsendingresponse(response, true);
 			//getStatusController().OpenStatus((CBSENDINGRESPONSE)e.getSource(), this);
 			Project p = new Project();
-			p.set_projectpk(new Long(response.getLProjectpk()).toString());
+			p.set_projectpk(Long.toString(response.getLProjectpk()));
 			PAS.pasplugin.onOpenProject(p, response.getLRefno());
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);

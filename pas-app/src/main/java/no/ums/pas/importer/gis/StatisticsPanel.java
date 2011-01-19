@@ -126,14 +126,14 @@ public class StatisticsPanel extends DefaultPanel {
 
 	protected void updateStatisticsUI() {
 		//m_txt_houses.setText(new Integer(n_houses_selected).toString() + " / " + new Integer(n_houses).toString());
-		m_txt_filelines.setText(new Integer(n_filelines).toString());
-		m_txt_persons.setText(new Integer(n_persons).toString());
-		m_txt_houses.setText(new Integer(n_houses).toString());
-		m_txt_private.setText(new Integer(n_private_selected).toString() + " / " + new Integer(n_private).toString());
-		m_txt_company.setText(new Integer(n_company_selected).toString() + " / " + new Integer(n_company).toString());
-		m_txt_fixed_phones.setText(new Integer(n_fixed_phones_selected).toString() + " / " + new Integer(n_fixed_phones).toString());
-		m_txt_mobile_phones.setText(new Integer(n_mobile_phones_selected).toString() + " / " + new Integer(n_mobile_phones).toString());
-		m_txt_nonumber.setText(new Integer(n_nonumber_selected).toString() + " / " + new Integer(n_nonumber).toString());
+		m_txt_filelines.setText(Integer.toString(n_filelines));
+		m_txt_persons.setText(Integer.toString(n_persons));
+		m_txt_houses.setText(Integer.toString(n_houses));
+		m_txt_private.setText(Integer.toString(n_private_selected) + " / " + Integer.toString(n_private));
+		m_txt_company.setText(Integer.toString(n_company_selected) + " / " + Integer.toString(n_company));
+		m_txt_fixed_phones.setText(Integer.toString(n_fixed_phones_selected) + " / " + Integer.toString(n_fixed_phones));
+		m_txt_mobile_phones.setText(Integer.toString(n_mobile_phones_selected) + " / " + Integer.toString(n_mobile_phones));
+		m_txt_nonumber.setText(Integer.toString(n_nonumber_selected) + " / " + Integer.toString(n_nonumber));
 	}	
 
 	

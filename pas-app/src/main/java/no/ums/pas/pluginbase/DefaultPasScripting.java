@@ -1183,7 +1183,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		{
 			public void run()
 			{
-				PAS.get_pas().actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+				PAS.get_pas().actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 				controller.start_download(true);
 			}
 		}.start();

@@ -145,12 +145,12 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		        
 		        add(layer);
 		        
-		        layer.add(scrollPane, new Integer(1));//, get_gridconst());
+		        layer.add(scrollPane, 1);//, get_gridconst());
 		        //scrollPane.setBounds(0, 0, 300, 200);
 		        //add(lbl_loading, new Integer(1));
 		        //add(lbl_loading, BorderLayout.WEST);
 		        //lbl_loading.setVisible(false);
-		        layer.add(lbl_loading, new Integer(2));
+		        layer.add(lbl_loading, 2);
 		        m_tbl_list.initialize();
 		        setLoading(false);
 		        

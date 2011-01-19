@@ -673,8 +673,8 @@ public class InfoPanel extends GeneralPanel {
 
 	public void set_mapdimpix(int x, int y) {
 		// m_txt_mapdimpix.setText(x + ", " + y + " (pixels)");
-		m_txt_mapdimpix_x.setText(new Integer(x).toString());
-		m_txt_mapdimpix_y.setText(new Integer(y).toString() + " ("
+		m_txt_mapdimpix_x.setText(Integer.toString(x));
+		m_txt_mapdimpix_y.setText(Integer.toString(y) + " ("
 				+ PAS.l("common_pixels") + ")");
 	}
 
@@ -719,8 +719,8 @@ public class InfoPanel extends GeneralPanel {
 		// Navigation nav = get_pas().get_navigation();
 		try {
 			// m_txt_xy.setText(p.get_x() + " , " + p.get_y());
-			m_txt_xy_x.setText(new Integer(p.get_x()).toString());
-			m_txt_xy_y.setText(new Integer(p.get_y()).toString());
+			m_txt_xy_x.setText(Integer.toString(p.get_x()));
+			m_txt_xy_y.setText(Integer.toString(p.get_y()));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -1439,8 +1439,8 @@ public class InfoPanel extends GeneralPanel {
 		public void set_local_time() {
 			String temp;
 			try {
-				String timetemp = new Long(weatherData.getResult(0)
-						.getLocaltime()).toString();// String.valueOf(weatherData.get_local_time());
+				String timetemp = Long.toString(weatherData.getResult(0)
+                        .getLocaltime());// String.valueOf(weatherData.get_local_time());
 
 				temp = timetemp.substring(6, 8) + ".";
 				temp += timetemp.substring(4, 6) + ".";

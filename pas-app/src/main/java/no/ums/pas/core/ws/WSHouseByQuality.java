@@ -66,32 +66,30 @@ public class WSHouseByQuality extends WSThread
 			m_list = new Pasws(wsdl, service).getPaswsSoap12().getAddressListByQuality(logon, m_params);
 			ArrayOfUAddress tmp = m_list.getList();
 			List<UAddress> adr = tmp.getUAddress();
-			for(int i=0; i < adr.size(); i++)
-			{
-				UAddress u = adr.get(i);
-				Inhabitant inhab = new Inhabitant();
-				inhab.set_adrname(u.getName());
-				inhab.set_adrtype(u.getBedrift());
-				inhab.set_birthday(u.getBday());
-				inhab.set_bnumber(u.getBno());
-				inhab.set_deptpk(new Long(u.getImportid()).intValue());
-				inhab.set_gnumber(u.getGno());
-				inhab.set_kondmid(u.getKondmid());
-				inhab.set_lat(u.getLat());
-				inhab.set_letter(u.getLetter());
-				inhab.set_lon(u.getLon());
-				inhab.set_mobile(u.getMobile());
-				inhab.set_no(new Integer(u.getHouseno()).toString());
-				inhab.set_number(u.getNumber());
-				inhab.set_postaddr(u.getAddress());
-				inhab.set_postarea(u.getPostarea());
-				inhab.set_postno(u.getPostno());
-				inhab.set_quality(u.getXycode().charAt(0));
-				inhab.set_region(new Integer(u.getRegion()).toString());
-				inhab.set_streetid(u.getStreetid());
-				
-				m_items.add(inhab);
-			}
+            for (UAddress u : adr) {
+                Inhabitant inhab = new Inhabitant();
+                inhab.set_adrname(u.getName());
+                inhab.set_adrtype(u.getBedrift());
+                inhab.set_birthday(u.getBday());
+                inhab.set_bnumber(u.getBno());
+                inhab.set_deptpk(new Long(u.getImportid()).intValue());
+                inhab.set_gnumber(u.getGno());
+                inhab.set_kondmid(u.getKondmid());
+                inhab.set_lat(u.getLat());
+                inhab.set_letter(u.getLetter());
+                inhab.set_lon(u.getLon());
+                inhab.set_mobile(u.getMobile());
+                inhab.set_no(Integer.toString(u.getHouseno()));
+                inhab.set_number(u.getNumber());
+                inhab.set_postaddr(u.getAddress());
+                inhab.set_postarea(u.getPostarea());
+                inhab.set_postno(u.getPostno());
+                inhab.set_quality(u.getXycode().charAt(0));
+                inhab.set_region(Integer.toString(u.getRegion()));
+                inhab.set_streetid(u.getStreetid());
+
+                m_items.add(inhab);
+            }
 		}
 		catch(Exception e)
 		{

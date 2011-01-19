@@ -831,7 +831,7 @@ public class StatusController extends Controller implements ActionListener {
 									sz_status = "N/A";
 								try {
 									data = new Object[] {
-											new Integer(obj_inhab.get_item()),
+                                            obj_inhab.get_item(),
 											sz_status,
 											obj_inhab,
 											obj_inhab.get_number(),
@@ -916,7 +916,7 @@ public class StatusController extends Controller implements ActionListener {
 							else
 								sz_status = "N/A";
 							data = new Object[] {
-									new Integer(obj_inhab.get_item()),
+                                    obj_inhab.get_item(),
 									sz_status,
 									obj_inhab,
 									obj_inhab.get_number(),

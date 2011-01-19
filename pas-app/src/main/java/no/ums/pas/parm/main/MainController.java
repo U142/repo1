@@ -392,14 +392,13 @@ public class MainController implements ActionListener, TreeModelListener,
 			
 			if(res.getPk() > 0)
 			{
-				event.setEventPk("e" + new Long(res.getPk()).toString());
+				event.setEventPk("e" + Long.toString(res.getPk()));
 				event.setTempPk("-1");
 			}
 
 		} catch(Exception ex) {
 			Error.getError().addError("MainController","Exception saving Event",ex,Error.SEVERITY_ERROR);
-			return;
-		}
+        }
 	}
 	
 	// Execute Object Web Service
@@ -498,7 +497,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			
 				if(res.getPk() > 0)
 			{
-				this.object.setObjectPK("o" + new Long(res.getPk()).toString());
+				this.object.setObjectPK("o" + Long.toString(res.getPk()));
 				this.object.setTempPk("-1");
 				
 			}
@@ -506,8 +505,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		catch(Exception err)
 		{
 			Error.getError().addError("MainController","Exception saving Object",err,Error.SEVERITY_ERROR);
-			return;
-		}
+        }
 	}
 	// Execute Alert Web Service
 	public void executeAlertWS(AlertVO alert) {
@@ -666,7 +664,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			
 			if(res.getPk() > 0)
 			{
-				alert.setPk("a" + new Long(res.getPk()).toString());
+				alert.setPk("a" + Long.toString(res.getPk()));
 				alert.setTempPk("-1");
 			}
 			

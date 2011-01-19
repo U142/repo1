@@ -1753,12 +1753,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			b_width_exceeded = true;
 		}
 		if(!get_mainmenu().get_selectmenu().get_bar().get_show_houses()) {
-			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_DISABLED_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_DISABLED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		} else if(b_width_exceeded) {
-			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_NO_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_NO_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		}
 		if(get_mainmenu().get_selectmenu().get_bar().get_show_houses() && !b_width_exceeded) {
-			actionPerformed(new ActionEvent(new Integer(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
+			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 			pasplugin.onDownloadHouses(get_housecontroller());
 			//get_housecontroller().start_download(true);
 		}
@@ -1767,9 +1767,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		PAS.get_pas().kickRepaint();
 	}
 	public void printStackTrace(StackTraceElement [] ste) {
-		for(int i=0; i < ste.length; i++) {
-			add_event(ste[i].getFileName() + " " + ste[i].getClassName() + "." + ste[i].getMethodName() + " line:" + ste[i].getLineNumber());
-		}
+        for (StackTraceElement aSte : ste) {
+            add_event(aSte.getFileName() + " " + aSte.getClassName() + "." + aSte.getMethodName() + " line:" + aSte.getLineNumber());
+        }
 	}
 	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource()!=null)

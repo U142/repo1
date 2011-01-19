@@ -20,7 +20,7 @@ public class SendObject extends Object {
 	public String get_name() { return m_sz_name; }
 	public String toString() { 
 		if(get_toolbar()!=null)
-			return new Integer(this.get_toolbar().get_sendingid()).toString();
+			return Integer.toString(this.get_toolbar().get_sendingid());
 		else
 			return "-1";
 	}
@@ -115,7 +115,7 @@ public class SendObject extends Object {
 		case SendProperties.SENDING_TYPE_POLYGON_:
 			//m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mappane().get_dimension()), m_toolbar, new Col(m_default_color));
 			m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
-			get_callback().actionPerformed(new ActionEvent(new Integer(MapFrame.MAP_MODE_SENDING_POLY), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
 			try {
@@ -124,11 +124,11 @@ public class SendObject extends Object {
 				}
 			} catch(Exception e) {
 			}
-			get_callback().actionPerformed(new ActionEvent(new Integer(MapFrame.MAP_MODE_SENDING_POLY), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_CIRCLE_:
 			m_sendproperties = new SendPropertiesEllipse(new EllipseStruct(), m_toolbar, m_default_color);
-			get_callback().actionPerformed(new ActionEvent(new Integer(MapFrame.MAP_MODE_SENDING_ELLIPSE), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_MUNICIPAL_:
 			
@@ -193,7 +193,7 @@ public class SendObject extends Object {
 		//PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ZOOM);
 		//PAS.get_pas().get_mainmenu().set_pan();
 		//PAS.get_pas().kickRepaint();
-		Integer n_mode = new Integer(MapFrame.MAP_MODE_PAN);
+		Integer n_mode = MapFrame.MAP_MODE_PAN;
 		get_callback().actionPerformed(new ActionEvent(n_mode, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 		
 		return true;

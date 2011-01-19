@@ -108,7 +108,7 @@ public class PASActions implements ActionListener {
 		else if("act_download_houses".equals(e.getActionCommand())) {
 			PAS.get_pas().download_houses();
 			if(PAS.get_pas().get_eastcontent()!=null)
-				PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(new Integer(no.ums.pas.core.controllers.HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_), ActionEvent.ACTION_PERFORMED, "act_download_houses"));
+				PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(no.ums.pas.core.controllers.HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses"));
 		}
 		else if("act_download_houses_report".equals(e.getActionCommand())) {
 			//PAS.get_pas().get_eastcontent().actionPerformed(e);
@@ -116,7 +116,7 @@ public class PASActions implements ActionListener {
 			try
 			{
 				if(PAS.get_pas().get_eastcontent().get_infopanel()!=null)
-					PAS.get_pas().get_eastcontent().get_infopanel().set_housesdownload_status(i.intValue());
+					PAS.get_pas().get_eastcontent().get_infopanel().set_housesdownload_status(i);
 			} catch(Exception err)
 			{
 				

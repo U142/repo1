@@ -255,7 +255,7 @@ public class Logon implements ActionListener {
 				return;
 			}
 			
-			m_info = new UserInfo(new Long(l.getLUserpk()).toString(), l.getLComppk(), l.getSzUserid(),  
+			m_info = new UserInfo(Long.toString(l.getLUserpk()), l.getLComppk(), l.getSzUserid(),
 					l.getSzCompid(), l.getSzName(), l.getSzSurname(), l.getSessionid(), l.getSzOrganization());
 			m_info.set_session_active(true);
 			m_pasui_settings = l.getUisettings();

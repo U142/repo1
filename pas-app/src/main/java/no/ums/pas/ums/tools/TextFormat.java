@@ -134,10 +134,10 @@ public final class TextFormat {
 		try
 		{
 			long ret = 0;
-			String old_date = new Long(n1).toString();
+			String old_date = Long.toString(n1);
 			if(old_date.length()!=14)
 				return ret;
-			String new_date = new Long(n2).toString();
+			String new_date = Long.toString(n2);
 			if(new_date.length()!=14)
 				return ret;
 			Calendar c_old = Calendar.getInstance();
@@ -167,9 +167,9 @@ public final class TextFormat {
 			return 0;
 		}
 	}
-	public synchronized static final String format_datetime(long n)
+	public synchronized static String format_datetime(long n)
 	{
-		String sz = new Long(n).toString();
+		String sz = Long.toString(n);
 		switch(sz.length())
 		{
 		case 6: //yyyymm
@@ -192,16 +192,16 @@ public final class TextFormat {
 		}
 		return sz;
 	}
-	public synchronized static final String format_date(int n_date)
+	public synchronized static String format_date(int n_date)
 	{
 		if(n_date>=0)
 		{
-			String sz_date = new String(new Integer(n_date).toString());
+			String sz_date = Integer.toString(n_date);
 			return format_date(sz_date);
 		}
 		return "N/A";
 	}
-	public synchronized static final String format_time(String sz_time, int n_size)
+	public synchronized static String format_time(String sz_time, int n_size)
 	{
 		String sz_ret = new String();
 		if(n_size == 2) //hour only
@@ -221,14 +221,14 @@ public final class TextFormat {
 			return "N/A";
 		return sz_ret;
 	}
-	public synchronized static final String format_seconds_to_hms(int s)
+	public synchronized static String format_seconds_to_hms(int s)
 	{
 		if(s<=0)
 			return "";
 		String ret = "";
 		int hours = (int)Math.floor((s / 3600.0));
-		int minutes = (int)((s / 60) % 60);
-		int seconds  = (int)(s % 60);
+		int minutes = (s / 60) % 60;
+		int seconds  = s % 60;
 		if(hours>0)
 			ret += (hours<10 ? "0" : "") + hours;
 		if(minutes > 0 || hours > 0)
@@ -237,24 +237,24 @@ public final class TextFormat {
 			
 		return ret;
 	}
-	public synchronized static final String format_datetime(String sz_dt /*expect yyyymmddhhmmss*/) {
+	public synchronized static String format_datetime(String sz_dt /*expect yyyymmddhhmmss*/) {
 		if(sz_dt.length()<14)
 			return "N/A";
 		return format_date(sz_dt.substring(0, 8)) + " " + format_time(sz_dt.substring(8, 14), 6);
 	}
-	private synchronized static final String format_time6(String sz_time)
+	private synchronized static String format_time6(String sz_time)
 	{
 		String sz_ret;
 		sz_ret = padding(sz_time, '0', 6);
 		return sz_ret.substring(0,2) + ":" + sz_ret.substring(2,4) + ":" + sz_ret.substring(4,6);
 	}
-	public synchronized static final String format_time(int n_time, int n_size)
+	public synchronized static String format_time(int n_time, int n_size)
 	{
 		if(n_time>=0)
-			return format_time((String)(new Integer(n_time).toString()), n_size);
+			return format_time((String)(Integer.toString(n_time)), n_size);
 		return "N/A";
 	}
-	public synchronized static final String padding(String sz_str, char c_padding, int n_total_length)
+	public synchronized static String padding(String sz_str, char c_padding, int n_total_length)
 	{
 		String sz_ret = sz_str;
 		if(sz_str.length() > n_total_length)
@@ -264,7 +264,7 @@ public final class TextFormat {
 		//PAS.get_pas().add_event(sz_ret);
 		return sz_ret;
 	}
-	public synchronized static final String get_statustext_from_code(int n_status, int n_altjmp)
+	public synchronized static String get_statustext_from_code(int n_status, int n_altjmp)
 	{
 		String sz_ret;
 		if(n_altjmp==1)

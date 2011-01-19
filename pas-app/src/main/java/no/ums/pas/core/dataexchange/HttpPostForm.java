@@ -120,13 +120,13 @@ public class HttpPostForm {
 	  //u.setRequestProperty("SOAPAction", "http://pasutv/ExternalExec.asmx/ExecAlert");
 	  u.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 	  String sParameters = "l_alertpk=string&l_comppk=string&l_userpk=string&sz_compid=string&sz_userid=string&sz_password=string";
-	  u.addRequestProperty("Content-Length", new Integer(sParameters.length() + 2).toString());
+	  u.addRequestProperty("Content-Length", Integer.toString(sParameters.length() + 2));
   }
 
   ActionListener m_callback = null;
   private void postProgress(int n) {
 	  if(m_callback!=null) {
-		  m_callback.actionPerformed(new ActionEvent(new Integer(n), ActionEvent.ACTION_PERFORMED, "act_progress"));
+		  m_callback.actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, "act_progress"));
 	  }
   }
   

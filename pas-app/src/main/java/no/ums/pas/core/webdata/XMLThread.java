@@ -104,9 +104,9 @@ public abstract class XMLThread extends Thread
 					m_form.setParameter("xuid", PAS.get_pas().get_userinfo().get_userid());
 					m_form.setParameter("xcid", PAS.get_pas().get_userinfo().get_compid());
 					m_form.setParameter("xpwd", PAS.get_pas().get_userinfo().get_passwd());
-					m_form.setParameter("xdep", new Integer(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()));
+					m_form.setParameter("xdep", PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 					m_form.setParameter("xupk", PAS.get_pas().get_userinfo().get_userpk());
-					m_form.setParameter("xcpk", new Integer(PAS.get_pas().get_userinfo().get_comppk()).toString());
+					m_form.setParameter("xcpk", Integer.toString(PAS.get_pas().get_userinfo().get_comppk()));
 				}
 				m_is = m_form.post();
 				//System.out.println(new BufferedReader(new InputStreamReader(m_is)).readLine());

@@ -62,8 +62,8 @@ public class WSGetStatusList extends WSThread
 				StatusListObject obj = new StatusListObject(item.getNRefno(), item.getNSendingtype(), item.getNTotitem(), 
 						item.getNAltjmp(), item.getNCreatedate(), item.getNCreatetime(), item.getSzSendingname(),
 						item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
-						item.getSzDeptid(), new Long(item.getNProjectpk()).toString(), item.getSzProjectname(), new Long(item.getNCreatetimestamp()).toString(),
-						new Long(item.getNUpdatetimestamp()).toString());
+						item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
+                        Long.toString(item.getNUpdatetimestamp()));
 				m_arr_statusobjects.add(obj);
 			}
 			//OnDownloadFinished();
