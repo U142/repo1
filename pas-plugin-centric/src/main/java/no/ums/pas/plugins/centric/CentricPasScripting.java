@@ -111,7 +111,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_EXIT")
     public boolean onBeforeLogon() {
         super.onBeforeLogon();
         boolean b = new DisclaimerDialog().isConfirmed();
@@ -1128,7 +1127,6 @@ public class CentricPasScripting extends DefaultPasScripting {
         JButton btn_cancel = new JButton(PAS.l("common_cancel"));
         btn_cancel.addActionListener(new ActionListener() {
             @Override
-            @edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_EXIT")
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
