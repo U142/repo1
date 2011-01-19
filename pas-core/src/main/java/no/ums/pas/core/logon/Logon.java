@@ -269,7 +269,7 @@ public class Logon implements ActionListener {
 							d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
 							d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
 							d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
-							d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), d.getRestrictionShapes());
+							d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), d.getFSms(), d.getRestrictionShapes());
 				}
 				//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 				m_info.get_departments().CreateCombinedRestrictionShape();

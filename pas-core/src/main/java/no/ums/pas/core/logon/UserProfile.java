@@ -13,6 +13,7 @@ public class UserProfile {
 	private RightsManagement m_right_management;
 	private int m_n_houseeditor;
 	private long m_n_addresstypes;
+	private int m_n_sms;
 	
 	public String get_name() { return m_sz_name; }
 	public String get_description() { return m_sz_description; }
@@ -23,11 +24,13 @@ public class UserProfile {
 	public int get_houseeditor() { return m_n_houseeditor; }
 	public long get_addresstypes() { return m_n_addresstypes; }
 	
+	public int get_sms() { return m_n_sms; }
+	
 	public int get_cellbroadcast_rights() { return m_n_cellbroadcast; }
 	public int get_weather() { return m_n_weather; }
 	public RightsManagement get_rights_management() { return m_right_management; }
 	
-	public UserProfile(String name, String description, int fleetcontrol, int parm, int status, int send, int cellbroadcast, int houseeditor, long addresstypes) {
+	public UserProfile(String name, String description, int fleetcontrol, int parm, int status, int send, int cellbroadcast, int houseeditor, long addresstypes, int sms) {
 		m_sz_name = name;
 		m_sz_description = description;
 		m_n_fleetcontrol = fleetcontrol;
@@ -37,6 +40,7 @@ public class UserProfile {
 		m_n_cellbroadcast = cellbroadcast;
 		m_n_houseeditor = houseeditor;
 		m_n_addresstypes = addresstypes;
+		m_n_sms = sms;
 		m_right_management = new RightsManagement(this);
 		m_n_weather = 1; // TODO fiks denne
 		

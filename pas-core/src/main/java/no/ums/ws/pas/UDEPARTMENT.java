@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="l_addresstypes" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="sz_defaultnumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="f_map" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="f_sms" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="l_pas" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="l_langpk" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="municipals" type="{http://ums.no/ws/pas/}ArrayOfUMunicipalDef" minOccurs="0"/>
@@ -73,6 +74,7 @@ import javax.xml.bind.annotation.XmlType;
     "lAddresstypes",
     "szDefaultnumber",
     "fMap",
+    "fSms",
     "lPas",
     "lLangpk",
     "municipals",
@@ -118,6 +120,8 @@ public class UDEPARTMENT {
     protected String szDefaultnumber;
     @XmlElement(name = "f_map")
     protected int fMap;
+    @XmlElement(name = "f_sms")
+    protected int fSms;
     @XmlElement(name = "l_pas")
     protected int lPas;
     @XmlElement(name = "l_langpk")
@@ -499,6 +503,22 @@ public class UDEPARTMENT {
      */
     public void setFMap(int value) {
         this.fMap = value;
+    }
+
+    /**
+     * Gets the value of the fSms property.
+     * 
+     */
+    public int getFSms() {
+        return fSms;
+    }
+
+    /**
+     * Sets the value of the fSms property.
+     * 
+     */
+    public void setFSms(int value) {
+        this.fSms = value;
     }
 
     /**

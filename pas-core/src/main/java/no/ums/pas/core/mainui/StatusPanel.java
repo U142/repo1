@@ -17,7 +17,7 @@ import no.ums.pas.status.StatusSending;
 import no.ums.pas.status.StatusSending.StatusSendingUI;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.LBALanguage;
+import no.ums.ws.pas.status.LBALanguage;
 
 import javax.swing.*;
 import java.awt.*;

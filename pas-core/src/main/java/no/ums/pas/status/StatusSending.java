@@ -23,7 +23,7 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.LBALanguage;
+import no.ums.ws.pas.status.LBALanguage;
 import no.ums.ws.pas.UMAXALLOC;
 import no.ums.ws.pas.status.USMSINSTATS;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -1829,6 +1829,10 @@ public class StatusSending extends Object {
 				break;
 			case 2:
 				tmp = PAS.l("main_status_smssending");
+				if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 0)
+					m_btn_resend.setEnabled(false);
+				else
+					m_btn_resend.setEnabled(true);
 				_ShowMaxAlloc(false);
 				break;
 			}

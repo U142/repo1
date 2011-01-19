@@ -369,6 +369,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		m_btn_adrtypes_cell_broadcast_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
 		m_btn_adrtypes_cell_broadcast_voice.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE);
+		
 	}
 	
 	public void show_buttons(int FLAGS, boolean b_show) {
@@ -914,31 +915,39 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//PRIVATE MOBILE
 		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_none"), new Integer(0), new Integer(0), true, PAS.l("main_sending_adr_sel_private_mobile_none_tooltip"), c));
 		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice"), new Integer(SendController.SENDTO_MOBILE_PRIVATE), new Integer(SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE), true, PAS.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
-		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms"), new Integer(SendController.SENDTO_SMS_PRIVATE), new Integer(SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
-		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms"), new Integer(SendController.SENDTO_MOBILE_PRIVATE|SendController.SENDTO_SMS_PRIVATE), new Integer(SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+			group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms"), new Integer(SendController.SENDTO_SMS_PRIVATE), new Integer(SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
+			group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms"), new Integer(SendController.SENDTO_MOBILE_PRIVATE|SendController.SENDTO_SMS_PRIVATE), new Integer(SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
+		}
 		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), new Integer(SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED), new Integer(SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_fixed_tooltip"), c));
-		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), new Integer(SendController.SENDTO_SMS_PRIVATE_ALT_FIXED), new Integer(SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1)
+			group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), new Integer(SendController.SENDTO_SMS_PRIVATE_ALT_FIXED), new Integer(SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
 		
 		//PRIVATE FIXED
 		group_fixedprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_none"), new Integer(0), new Integer(0), true, PAS.l("main_sending_adr_sel_private_fixed_none_tooltip"), c));
 		group_fixedprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_voice"), new Integer(SendController.SENDTO_FIXED_PRIVATE), new Integer(SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED), true, PAS.l("main_sending_adr_sel_private_fixed_voice_tooltip"), c));
 		group_fixedprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_and_mobile"), new Integer(SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE), new Integer(SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED | SendController.SENDTO_MOBILE_PRIVATE), true, PAS.l("main_sending_adr_sel_private_fixed_and_mobile_tooltip"), c));
-		group_fixedprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_alt_sms"), new Integer(SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), new Integer(SendController.SENDTO_SMS_PRIVATE | SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED | SendController.SENDTO_MOBILE_PRIVATE), false, PAS.l("main_sending_adr_sel_private_fixed_alt_sms_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1)
+			group_fixedprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_alt_sms"), new Integer(SendController.SENDTO_FIXED_PRIVATE_ALT_SMS), new Integer(SendController.SENDTO_SMS_PRIVATE | SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED | SendController.SENDTO_MOBILE_PRIVATE), false, PAS.l("main_sending_adr_sel_private_fixed_alt_sms_tooltip"), c));
 
 		
 		//COMPANY MOBILE
 		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_none"), new Integer(0), new Integer(0), true, PAS.l("main_sending_adr_sel_company_mobile_none_tooltip"), Color.yellow));
 		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice"), new Integer(SendController.SENDTO_MOBILE_COMPANY), new Integer(SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE), true, PAS.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
-		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms"), new Integer(SendController.SENDTO_SMS_COMPANY), new Integer(SendController.SENDTO_FIXED_COMPANY_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
-		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms"), new Integer(SendController.SENDTO_MOBILE_COMPANY|SendController.SENDTO_SMS_COMPANY), new Integer(SendController.SENDTO_FIXED_COMPANY_AND_MOBILE | SendController.SENDTO_FIXED_COMPANY_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+			group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms"), new Integer(SendController.SENDTO_SMS_COMPANY), new Integer(SendController.SENDTO_FIXED_COMPANY_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
+			group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms"), new Integer(SendController.SENDTO_MOBILE_COMPANY|SendController.SENDTO_SMS_COMPANY), new Integer(SendController.SENDTO_FIXED_COMPANY_AND_MOBILE | SendController.SENDTO_FIXED_COMPANY_ALT_SMS), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
+		}
 		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), new Integer(SendController.SENDTO_MOBILE_COMPANY_AND_FIXED), new Integer(SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_voice_and_fixed_tooltip"), c));
-		group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), new Integer(SendController.SENDTO_SMS_COMPANY_ALT_FIXED), new Integer(SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1)
+			group_smscompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), new Integer(SendController.SENDTO_SMS_COMPANY_ALT_FIXED), new Integer(SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
 		
 		//COMPANY FIXED
 		group_fixedcompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_none"), new Integer(0), new Integer(0), true, PAS.l("main_sending_adr_sel_company_fixed_none_tooltip"), c));
 		group_fixedcompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_voice"), new Integer(SendController.SENDTO_FIXED_COMPANY), new Integer(SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED), true, PAS.l("main_sending_adr_sel_private_fixed_voice_tooltip"), c));
 		group_fixedcompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_and_mobile"), new Integer(SendController.SENDTO_FIXED_COMPANY_AND_MOBILE), new Integer(SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY), true, PAS.l("main_sending_adr_sel_private_fixed_and_mobile_tooltip"), c));
-		group_fixedcompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_alt_sms"), new Integer(SendController.SENDTO_FIXED_COMPANY_ALT_SMS), new Integer(SendController.SENDTO_MOBILE_COMPANY | SendController.SENDTO_SMS_COMPANY | SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
+		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1)
+			group_fixedcompbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_fixed_alt_sms"), new Integer(SendController.SENDTO_FIXED_COMPANY_ALT_SMS), new Integer(SendController.SENDTO_MOBILE_COMPANY | SendController.SENDTO_SMS_COMPANY | SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY), false, PAS.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
 	
 		add_adrtypemenus(m_btn_adrtypes_private_mobile, menu_smspriv, group_smsprivbtn, "      Private Mobile Phones");
 		add_adrtypemenus(m_btn_adrtypes_private_fixed, menu_fixedpriv, group_fixedprivbtn, "      Private Fixed Phones");
