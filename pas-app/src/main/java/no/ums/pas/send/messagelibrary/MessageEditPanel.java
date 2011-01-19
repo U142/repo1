@@ -31,7 +31,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	{
 		return b_editor_mode;
 	}
-	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\]");
+	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\");
 	protected ActionListener callback;
 	protected MessageLibNode m_msg = null;
 	public MessageLibNode getActiveMessage() { return m_msg; }

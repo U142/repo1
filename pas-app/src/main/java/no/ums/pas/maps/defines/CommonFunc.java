@@ -86,7 +86,7 @@ public class CommonFunc {
 		d_sectemp = Math.abs(((((degrees - d_deg) - (d_min / 60)) * 60 * 60) * 10000) / 10000);
 		d_sec = Math.abs(new Double(((int) (d_sectemp * 10000.0)) / 10000.0).intValue());
 		d_msec = Math.abs(new Double((d_sectemp - d_sec.doubleValue()) * 100).intValue());
-		sz_ret = Math.abs(d_deg.intValue()) + "°  " + TextFormat.padding(d_min.toString(), '0', 2) + "'  " + TextFormat.padding(d_sec.toString(), '0', 2) + "." + TextFormat.padding(d_msec.toString(), '0', 2) + "''";
+		sz_ret = Math.abs(d_deg.intValue()) + "˚  " + TextFormat.padding(d_min.toString(), '0', 2) + "'  " + TextFormat.padding(d_sec.toString(), '0', 2) + "." + TextFormat.padding(d_msec.toString(), '0', 2) + "''";
 		return sz_ret;
 	}
 	

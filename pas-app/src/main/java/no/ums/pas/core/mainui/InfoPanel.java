@@ -743,14 +743,14 @@ public class InfoPanel extends GeneralPanel {
 			 * Double(Math.floor(new Double((ll.get_lat() - d_deg.doubleValue())
 			 * 60).doubleValue())); d_sec = new Double(((((ll.get_lat() -
 			 * d_deg.doubleValue()) - (d_min.doubleValue()/60)) 60 60) 100) /
-			 * 100); sz_lat = d_deg.intValue() + "° " + d_min.intValue() + "' "
+			 * 100); sz_lat = d_deg.intValue() + "˚ " + d_min.intValue() + "' "
 			 * + d_sec.toString() + "''";
 			 * 
 			 * d_deg = new Double(Math.floor(ll.get_lon())); d_min = new
 			 * Double(Math.floor(new Double((ll.get_lon() - d_deg.doubleValue())
 			 * 60).doubleValue())); d_sec = new Double(((((ll.get_lon() -
 			 * d_deg.doubleValue()) - (d_min.doubleValue()/60)) 60 60) 100) /
-			 * 100); sz_lon = d_deg.intValue() + "° " + d_min.intValue() + "' "
+			 * 100); sz_lon = d_deg.intValue() + "˚ " + d_min.intValue() + "' "
 			 * + d_sec.toString() + "''";
 			 */
 			if (ll != null) {
@@ -775,10 +775,10 @@ public class InfoPanel extends GeneralPanel {
 				// 4));
 				m_txt_coor_dec_x.setText(no.ums.pas.ums.tools.TextFormat.round(
 						ll.get_lon(), 5).toString()
-						+ "°");
+						+ "˚");
 				m_txt_coor_dec_y.setText(no.ums.pas.ums.tools.TextFormat.round(
 						ll.get_lat(), 5).toString()
-						+ "°");
+						+ "˚");
 				String sz_zone = "33V";
 				double n_north = 0;
 				double n_east = 0;
