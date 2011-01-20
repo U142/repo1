@@ -25,6 +25,7 @@ public enum CountryCodes {//implements ActionListener {
                 sz_cshort = (row.length > 2) ? row[2] : "Unknown";
                 sz_cvisible = (row.length > 3) ? row[3] : "0";
                 codesById.put(sz_ccode, new CCode(sz_ccode, sz_cname, sz_cshort, sz_cvisible));
+                //codesById.put("00" + sz_ccode, new CCode(sz_ccode, sz_cname, sz_cshort, sz_cvisible));
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read country codes", e);
@@ -34,6 +35,7 @@ public enum CountryCodes {//implements ActionListener {
 
 
     public static CCode getCountryByCCode(String ccode) {
+    	ccode = ccode.replace("00", "");
         return (INSTANCE.codesById.containsKey(ccode)) ? INSTANCE.codesById.get(ccode) : new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", "0");
     }
 
