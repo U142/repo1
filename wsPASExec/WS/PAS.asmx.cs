@@ -63,6 +63,12 @@ namespace com.ums.ws.pas
         [XmlInclude(typeof(UPLMN))]
         [XmlInclude(typeof(com.ums.UmsParm.ULocationBasedAlert))]
 
+        [WebMethod]
+        public String testHudson()
+        {
+            return "OK";
+        }
+
         [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)
         {
