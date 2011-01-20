@@ -14,7 +14,7 @@ public enum CountryCodes {//implements ActionListener {
 	protected final ArrayList<CCode> g_arr_codes = new ArrayList<CCode>();
 
 	CountryCodes() {
-		InputStream is = getClass().getResourceAsStream("CountryCodes.csv");
+		InputStream is = getClass().getResourceAsStream("countrycodes.csv");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line;
 		try
