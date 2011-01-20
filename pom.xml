@@ -42,6 +42,11 @@
             <name>bob-releases</name>
             <url>http://bob.ums2.no:8081/artifactory/hudson-release</url>
         </repository>
+        <snapshotRepository>
+            <id>bob</id>
+            <name>bob-snapshot</name>
+            <url>http://bob.ums2.no:8081/artifactory/hudson-snapshot</url>
+        </snapshotRepository>
     </distributionManagement>
     <build>
         <pluginManagement>
