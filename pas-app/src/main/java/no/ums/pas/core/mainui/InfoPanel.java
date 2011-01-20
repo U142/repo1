@@ -248,6 +248,7 @@ public class InfoPanel extends GeneralPanel {
 		m_lbl_userprofile_output.setText(dept.get_userprofile().get_name());
 		String db = dept.get_stdcc();
 		String municipals = "";
+		System.out.println("PAS Rights (stdcc=" + dept.get_stdcc() + ") = " + info.get_current_department().get_pas_rights());
 		try {
 			db = "<html>";
 			db += ""
@@ -300,10 +301,15 @@ public class InfoPanel extends GeneralPanel {
 			}
 			db += "</html>";
 		} catch (Exception e) {
+			
+			System.out.println("PAS rights failed");
+			e.printStackTrace();
 		}
 		// m_lbl_adrdatabase_output.setText(db);
 		m_lbl_adrdatabase_output.setText(db);
 		m_lbl_adrdatabase_municipals.setText(municipals);
+		System.out.println(db);
+		System.out.println(municipals);
 	}
 
 	protected void init_controls() {
