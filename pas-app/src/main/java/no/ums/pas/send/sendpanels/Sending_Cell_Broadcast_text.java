@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionListener, KeyListener, ItemListener, ComponentListener, FocusListener {
 	public static final long serialVersionUID = 1;
 	
-	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\");
+	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\]");
 	public int m_maxSize = 500;
 	public int m_maxSafe = 160;
 	private final int m_oadc_maxSize = 11;

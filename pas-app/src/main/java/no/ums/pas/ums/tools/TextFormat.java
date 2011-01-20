@@ -377,7 +377,7 @@ public final class TextFormat {
 	public static int GsmStrLen(String s)
 	{
 		int ret = s.length();
-		String gsmExt = "[|^{}\\[\\]~\\\\";
+		String gsmExt = "|^{}\\[\\]~\\\\";
 		Pattern p = Pattern.compile("[" + gsmExt + "]");
 		Matcher m = p.matcher(s);
 		while(m.find())
