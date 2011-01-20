@@ -449,16 +449,14 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	public void init() {
 		//CountryCodes.load();
-		ArrayList<CCode> ccs = CountryCodes.getCountryCodes();
-		
-		for(int i=0;i<ccs.size();i++) {
-			CCode cc = (CCode)ccs.get(i);
-			//if(cc.isVisible())
-				//m_lst_cc
-				//m_lst_cc.add(cc.getCountry(),i);
-			if(cc.isVisible())
-				listModel.addElement(cc);
-		}
+
+        for (CCode cc : CountryCodes.getCountryCodes()) {
+            //if(cc.isVisible())
+            //m_lst_cc
+            //m_lst_cc.add(cc.getCountry(),i);
+            if (cc.isVisible())
+                listModel.addElement(cc);
+        }
 		m_btn_delete.setEnabled(false);
 		setVisible(true);
 	}

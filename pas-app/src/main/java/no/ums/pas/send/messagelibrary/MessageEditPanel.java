@@ -88,8 +88,9 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 			
 		}
 		
-		for(int i=0; i<CountryCodes.getCountryCodes().size();++i)
-			cbx_lang.addItem(CountryCodes.getCountryCodes().get(i));
+		for(CCode code:  CountryCodes.getCountryCodes()) {
+            cbx_lang.addItem(code);
+        }
 		cbx_lang.addActionListener(this);
 		cbx_lang.addItemListener(this);
 		btn_save.addActionListener(this);
