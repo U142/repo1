@@ -309,7 +309,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_sms_broadcast_text_panel.setSendingType(get_sendobject().get_toolbar().get_addresstypes());
 
 		this.get_sendobject().get_sendproperties().set_cell_broadcast_text(m_cell_broadcast_text_panel);
-		//this.get_sendobject().get_sendproperties().set_sms_broadcast_text(m_sms_broadcast_text_panel);
+		this.get_sendobject().get_sendproperties().set_sms_broadcast_text(m_sms_broadcast_text_panel);
 		
 		m_send = new Sending_Send(controller.get_pas(), this);
 		m_tabbedpane = new JTabbedPane();

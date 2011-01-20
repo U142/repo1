@@ -19,7 +19,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public static final int SHAPE_GISIMPORT = 2;
 	public static final int SHAPE_MUNICIPAL = 9;
 	
-	public double POINT_PRECISION = 10000.0;
+	public double POINT_PRECISION = 100000.0;
 	
 	protected boolean b_can_lock = false;
 	protected void setCanLock(boolean b) { b_can_lock = b; }
