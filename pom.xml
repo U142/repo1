@@ -39,6 +39,7 @@
         <jnlp.output>${build.directory}/jnlp-output</jnlp.output>
         <jnlp.filename>PAS.${project.version}.jnlp</jnlp.filename>
         <jnlp_codebase>codebase</jnlp_codebase>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <distributionManagement>
         <repository>
@@ -282,7 +283,7 @@
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
-                        <!--<encoding>ISO-8859-15</encoding>-->
+                        <encoding>UTF-8</encoding>
                         <compilerArgument>-XDignore.symbol.file</compilerArgument>
                     </configuration>
                 </plugin>

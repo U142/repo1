@@ -17,6 +17,16 @@ public enum VersionInfo {
     public final String buildTimestamp;
 
     private VersionInfo() {
+        Properties props = loadProperties();
+
+        revisionNumber = props.getProperty("revision.number", "");
+        buildNumber = props.getProperty("build.number", "");
+        buildUser = props.getProperty("build.user", "");
+        buildVersion = props.getProperty("build.version", "");
+        buildTimestamp = props.getProperty("build.timestamp", "0");
+    }
+
+    Properties loadProperties() {
         URL resource = Thread.currentThread().getContextClassLoader().getResource("build.properties");
         Properties props = new Properties();
         if (resource != null) {
@@ -28,12 +38,7 @@ public enum VersionInfo {
                 throw new IllegalStateException("Failed to open stream: "+resource);
             }
         }
-
-        revisionNumber = props.getProperty("revision.number", "");
-        buildNumber = props.getProperty("build.number", "");
-        buildUser = props.getProperty("build.user", "");
-        buildVersion = props.getProperty("build.version", "");
-        buildTimestamp = props.getProperty("build.timestamp", "0");
+        return props;
     }
 
 }
