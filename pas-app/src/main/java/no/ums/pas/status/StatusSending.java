@@ -1831,8 +1831,6 @@ public class StatusSending extends Object {
 				tmp = PAS.l("main_status_smssending");
 				if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 0)
 					m_btn_resend.setEnabled(false);
-				else
-					m_btn_resend.setEnabled(true);
 				_ShowMaxAlloc(false);
 				break;
 			}

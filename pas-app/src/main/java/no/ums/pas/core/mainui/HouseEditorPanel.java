@@ -286,10 +286,16 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	
 	protected boolean save() {
 		try {
-			if(m_point == null) {
-				showErrorDialog();
+			if(m_txt_municipal.getText().length() == 0 || m_txt_municipal.getText().matches("[^0-9]"))
+			{
+				showErrorDialog(PAS.l("main_houseeditortab_municipal_required"));
 				return false;
 			}
+			if(m_point == null) {
+				showErrorDialog(PAS.l("main_houseeditortab_point_not_selected"));
+				return false;
+			}
+			
 			m_inhabitant = new Inhabitant(m_point.get_lon(), m_point.get_lat());
 
 			//String sz_deptpk	= new Integer(PAS.get_pas().get_userinfo().get_default_deptpk()).toString();
@@ -469,9 +475,9 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		init();
 	}
 	
-	private void showErrorDialog() {
+	private void showErrorDialog(String errormsg) {
 		JFrame frame = get_frame();
-		JOptionPane.showMessageDialog(frame, PAS.l("main_houseeditortab_point_not_selected"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(frame, errormsg, PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 		frame.dispose();
 	}
 	

@@ -327,7 +327,18 @@ public class AlertController implements ActionListener {
 		this.alert.setProfilepk(aw.get_alert_settings().get_current_profile().get_profilepk());
 		this.alert.setValidity(aw.get_alert_settings().get_current_validity());
 		this.alert.setOadc(aw.get_alert_settings().get_current_oadc().get_number());
-		this.alert.setSchedpk(aw.get_alert_settings().get_current_schedprofile().get_reschedpk());
+		// Må sjekke at sendingen ikke har voice
+		if(aw.get_alert_settings().get_current_schedprofile() == null) {
+			if(!aw.hasVoice(this.getPanelToolbar().get_addresstypes()))
+				this.alert.setSchedpk("0");
+			else {
+				Error.getError().addError("AlertController","Cannot store messages with voice without configuration profile",1,Error.SEVERITY_ERROR);
+				return null;
+			}
+		}
+		else
+			this.alert.setSchedpk(aw.get_alert_settings().get_current_schedprofile().get_reschedpk());
+		
 		this.alert.setMaxChannels(aw.get_alert_settings().getMaxChannels());
 		if(aw.get_cell_broadcast_text() != null)
 			this.alert.setRequestType(aw.get_cell_broadcast_text().getRequestType());

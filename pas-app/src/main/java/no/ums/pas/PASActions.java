@@ -627,6 +627,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_dept_changed".equals(e.getActionCommand())) {
 			deptChanged();
+			String homo="homo";
 		}
 		else if("act_export_alert_polygon".equals(e.getActionCommand())) {
 			//AlertVO [] a = { (AlertVO)e.getSource() };
