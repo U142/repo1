@@ -10,14 +10,13 @@ import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.UMSSecurity;
+import no.ums.pas.ums.tools.Utils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -407,7 +406,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				m_b_logonproc_start = true;
 				try
 				{
-					String sha = new UMSSecurity().encrypt(new String(m_txt_passwd.getPassword()));
+					String sha = Utils.encrypt(new String(m_txt_passwd.getPassword()));
 					char[] s = m_txt_passwd.getPassword();
 					int l = sha.length();
 					set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), sha/*new String(m_txt_passwd.getPassword())*/, selectedlanguage);

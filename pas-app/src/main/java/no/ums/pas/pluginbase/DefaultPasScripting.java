@@ -44,6 +44,7 @@ import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -772,9 +773,22 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
 //        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
         about.printf("Revision: %s\n", VersionInfo.INSTANCE.revisionNumber);
-        about.close();
 
-		JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
+        //timestampformat = yyyymmdd-hhmm
+        String ts = (VersionInfo.INSTANCE.buildTimestamp.length()==13 ? VersionInfo.INSTANCE.buildTimestamp : null);
+        if(ts!=null)
+        {     	
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.set(Integer.parseInt(ts.substring(0, 4)),
+	        			Integer.parseInt(ts.substring(4, 6)), 
+	        			Integer.parseInt(ts.substring(6, 8)), 
+	        			Integer.parseInt(ts.substring(9, 11)),
+	        			Integer.parseInt(ts.substring(11, 13)));
+	        about.printf("Created: %s\n", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
+        }
+	    about.close();
+
+        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}
 
