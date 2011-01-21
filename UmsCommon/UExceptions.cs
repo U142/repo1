@@ -91,6 +91,14 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UOneTimeKeyNotValidException : UException
+    {
+        public UOneTimeKeyNotValidException()
+            : base("One time key is no longer valid")
+        {
+        }
+    }
+
     public class UMalformedDateTimeException : UException
     {
         public UMalformedDateTimeException()

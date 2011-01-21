@@ -22,6 +22,25 @@ namespace com.ums.UmsCommon
         public int revision;
     }
 
+    public class ONETIMEKEY
+    {
+        /*public static ONETIMEKEY newInstance() 
+        {
+            ONETIMEKEY key = new ONETIMEKEY();
+            //register the key on server
+            AppKeyStore.Add(key);
+            return key;
+        }*/
+        public ONETIMEKEY()
+        {
+            expires = DateTime.Now + new TimeSpan(0, 0, 180);
+            guid = Guid.NewGuid().ToString();
+        }
+        public DateTime expires;
+        public String guid;
+
+    }
+
     public enum MDVSENDINGINFO_GROUP
     {
         ADDRESSLIST = 0,
@@ -103,6 +122,17 @@ namespace com.ums.UmsCommon
         PADEPARTMENTRESTRICTION = 16,
     }*/
 
+    public class OneTimeKeyStore
+    {
+        public static SetOneTimeKeyDelegate newDelegate() { return new SetOneTimeKeyDelegate(SetKey); }
+        public delegate void SetOneTimeKeyDelegate();
+
+        public static void SetKey()
+        {
+
+        }
+    }
+
     public class PercentProgress
     {
         
@@ -144,6 +174,49 @@ namespace com.ums.UmsCommon
             }
         }
     }
+
+    public class AppKeyStore
+    {
+        private static int maxCapacity = 100;//UCommon.USETTINGS.l_onetimekey_capacity;
+        //private static List<ONETIMEKEY> _table = new List<ONETIMEKEY>(1);
+        private static LinkedList<ONETIMEKEY> _table = new LinkedList<ONETIMEKEY>();
+
+        public static string getNextKey()
+        {
+            ONETIMEKEY key = new ONETIMEKEY();
+            Add(key);
+            return key.guid;
+        }
+
+        public static bool isKeyValid(string guid)
+        {
+            foreach(ONETIMEKEY key in _table)
+            {
+                if (key.guid.Equals(guid))
+                {
+                    _table.Remove(key);
+                    return (DateTime.Now < (key.expires));
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Called if someone asks for a one time key
+         */
+        private static void Add(ONETIMEKEY key)
+        {
+            lock (_table)
+            {
+                _table.AddLast(key);
+                while (maxCapacity>0 && _table.Count > maxCapacity)
+                {
+                    _table.RemoveFirst();
+                }
+            }
+        }
+    }
+
     /*
      * Session data for progress. Used for polling percentage of completion of different tasks
      */
@@ -422,6 +495,8 @@ namespace com.ums.UmsCommon
             public static int l_gisimport_db_timeout;
             public static int l_max_logontries;
             public static Boolean b_write_messagelib_to_file;
+            public static int l_onetimekey_capacity;
+            public static int l_onetimekey_valid_secs;
         }
 
         public struct UPATHS
@@ -713,7 +788,8 @@ namespace com.ums.UmsCommon
         public bool f_success;
     }
 
-    public struct ULOGONINFO
+
+    public class ULOGONINFO
     {
         public Int64 l_userpk;
         public int l_comppk;
@@ -730,6 +806,7 @@ namespace com.ums.UmsCommon
         public String sz_stdcc;
         public String jobid;
         public String sessionid;
+        public String onetimekey;
     }
 
     public class USYSTEMMESSAGES

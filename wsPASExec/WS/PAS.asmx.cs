@@ -214,6 +214,14 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public String GetOneTimeKey()
+        {
+            String key = AppKeyStore.getNextKey();
+            bool valid = AppKeyStore.isKeyValid(key);
+            return key;
+        }
+
+        [WebMethod]
         public UPASMap GetMap(UMapInfo request) //UMapInfo input)
         {
             ULOGONINFO info = new ULOGONINFO();

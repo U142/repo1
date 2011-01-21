@@ -83,16 +83,28 @@ namespace com.ums.wsPASExec
             String sysloghost = ConfigurationSettings.AppSettings["sysloghost"];
             String port = ConfigurationSettings.AppSettings["syslogport"];
             int syslogport = int.Parse(port);
-
+            String version = "2.0.0";
             try
             {
-                UCommon.Initialize("soap/pas/1.0", sysloghost, syslogport);
-                ULog.setLogTo((long)(enableeventlog ? ULog.ULOGTO.EVENTLOG : 0) | (long)(enablesyslog ? ULog.ULOGTO.SYSLOG : 0));
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                System.Reflection.AssemblyFileVersionAttribute[] att = assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyFileVersionAttribute), false) as System.Reflection.AssemblyFileVersionAttribute[];
+                version = String.Format("{0}", att[0].Version, new Version().MinorRevision);
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                UCommon.Initialize(String.Format("soap/pas/{0}", version), sysloghost, syslogport);
             }
             catch (Exception ex)
             {
                 throw new Exception(String.Format("Could not initialize {0}. {1}", UCommon.appname, ex.Message));
             }
+            ULog.setLogTo((long)(enableeventlog ? ULog.ULOGTO.EVENTLOG : 0) | (long)(enablesyslog ? ULog.ULOGTO.SYSLOG : 0));
+            UCommon.USETTINGS.l_onetimekey_capacity = ConfigurationSettings.AppSettings["l_onetimekey_capacity"] != null ? int.Parse(ConfigurationSettings.AppSettings["l_onetimekey_capacity"]) : 100;
+            UCommon.USETTINGS.l_onetimekey_valid_secs = ConfigurationSettings.AppSettings["l_onetimekey_valid_secs"]!=null ? int.Parse(ConfigurationSettings.AppSettings["l_onetimekey_valid_secs"])  : 120;
+
         }
 
         protected void Session_Start(object sender, EventArgs e)
