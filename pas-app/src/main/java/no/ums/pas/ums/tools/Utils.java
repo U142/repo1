@@ -197,7 +197,7 @@ public final class Utils {
         return getHex(md.digest());
     }
 
-    static final String HEXES = "0123456789ABCDEF";
+    static final String HEXES = "0123456789abcdef";
 
     public static String getHex(byte[] raw) {
         if (raw == null) {
