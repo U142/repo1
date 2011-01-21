@@ -5,6 +5,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import javax.sound.sampled.AudioPermission;
 import java.io.FilePermission;
 import java.security.AccessController;
+import java.security.MessageDigest;
 import java.security.Permission;
 import java.util.ArrayList;
 
@@ -103,4 +104,22 @@ public class UMSSecurity {
 		}
 		
 	}		
+	
+	public String encrypt(String pw)
+		throws Exception
+	{
+		String sha = "";
+	    MessageDigest md = MessageDigest.getInstance("SHA-512");
+	    md.update(pw.getBytes());
+	    byte[] mb = md.digest();
+	    for (byte temp : mb) {
+	        String s = Integer.toHexString(temp);
+	        while (s.length() < 2) {
+	            s = "0" + s;
+	        }
+	        s = s.substring(s.length() - 2);
+	        sha += s;
+	    }
+	    return sha;
+	}
 }

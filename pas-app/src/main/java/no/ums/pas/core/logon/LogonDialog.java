@@ -10,6 +10,7 @@ import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.UMSSecurity;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -406,7 +407,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				m_b_logonproc_start = true;
 				try
 				{
-					String sha = encrypt(new String(m_txt_passwd.getPassword()));
+					String sha = new UMSSecurity().encrypt(new String(m_txt_passwd.getPassword()));
 					char[] s = m_txt_passwd.getPassword();
 					int l = sha.length();
 					set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), sha/*new String(m_txt_passwd.getPassword())*/, selectedlanguage);
@@ -426,23 +427,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			}
 		}
 		
-		public String encrypt(String pw)
-			throws Exception
-		{
-			String sha = "";
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(pw.getBytes());
-            byte[] mb = md.digest();
-            for (byte temp : mb) {
-                String s = Integer.toHexString(temp);
-                while (s.length() < 2) {
-                    s = "0" + s;
-                }
-                s = s.substring(s.length() - 2);
-                sha += s;
-            }
-            return sha;
-		}
+
 		
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()) {
