@@ -160,7 +160,7 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-
+                throw e;
             }
 
             xmlwriter.insertEndElement();
@@ -832,9 +832,9 @@ namespace com.ums.UmsParm
             if(b_sms_active)
             {
                 //This is a sending with possible sms recipients.
-                if (smssending.sz_smsmessage.Length <= 0)
+                if (smssending.sz_smsmessage==null || smssending.sz_smsmessage.Length <= 0)
                     throw new UEmptySMSMessageException();
-                if (smssending.sz_smsoadc.Length <= 0)
+                if (smssending.sz_smsoadc==null || smssending.sz_smsoadc.Length <= 0)
                     throw new UEmptySMSOadcException();
 
                 try
