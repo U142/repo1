@@ -22,8 +22,9 @@
   </resources>
   <application-desc main-class="$mainClass">
     <argument>-x$jnlp_codebase</argument>
-    <argument>-shttps://secure.ums2.no/vb4utv/</argument>
+    <argument>-shttps://secure.ums2.no/PAS/</argument>
     <argument>-whttps://secure.ums2.no/PAS/ws_pasutv/WS/</argument>
+	<argument>-vhttps://secure.ums2.no/vb4utv/</argument>
     <argument>-p</argument>
   </application-desc>
 </jnlp>
