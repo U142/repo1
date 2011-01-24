@@ -14,6 +14,8 @@ import no.ums.pas.ums.tools.Col;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -131,33 +133,7 @@ public class SendPropertiesGIS extends SendProperties {
 		return true;
 	}	
 	protected final boolean send() {
-		/*if(!this.create_paramvals()) {
-			return false;
-		}*/
 		try {
-			/*HttpPostForm http = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_send.asp");
-			populate_common(http);
-			//create addressfile and attach
-			if(!get_isresend()) { //we don't need adrinfo if it's a resend
-				File f = create_addressfile();
-				if(f!=null) {
-					http.setParameter("file", f);
-					//InputStream is = http.post();
-				}
-				else {
-					Error.getError().addError("Error", "Could not create a temporary addressfile", -1, 1);
-					return false;
-				}
-			}
-			try {				
-				//f.delete();
-				InputStream is = http.post();
-				Error.getError().addError(is);
-			} catch(Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-				Error.getError().addError("SendPropertiesGIS","Exception in send",e,1);
-			}*/
 			ObjectFactory factory = new ObjectFactory();
 			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
 			no.ums.ws.parm.UGISSENDING poly = factory.createUGISSENDING();
@@ -196,7 +172,13 @@ public class SendPropertiesGIS extends SendProperties {
 			parse_sendingresults(response, true);
 
 			
-		} catch(Exception e) {
+		} 
+		catch(SOAPFaultException e)
+		{
+			PAS.pasplugin.onSoapFaultException(Variables.getUserInfo(), e);
+			return false;
+		}		
+		catch(Exception e) {
 			set_last_error("ERROR SendPropertiesGIS.send() - " + e.getMessage());
 			Error.getError().addError("SendPropertiesGIS","Exception in send",e,1);
 			return false;

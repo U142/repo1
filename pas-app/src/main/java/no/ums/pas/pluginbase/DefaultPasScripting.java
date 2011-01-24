@@ -637,6 +637,22 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_error_no_operators"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
 				return true;
 			}
+			else if(sz_class.equals("com.ums.UmsCommon.UEmptySMSMessageException"))
+			{
+				JOptionPane.showMessageDialog(null, PAS.l("main_sending_warning_empty_sms"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+			}
+			else if(sz_class.equals("com.ums.UmsCommon.UEmptySMSOadcException"))
+			{
+				JOptionPane.showMessageDialog(null, PAS.l("main_sending_warning_empty_sms_oadc"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+			}
+			else if(sz_class.equals("com.ums.UmsCommon.URefnoException"))
+			{
+				JOptionPane.showMessageDialog(null, PAS.l("main_sending_error_retrieving_refno"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "An unexpected error occured\n\n" + e.getMessage(), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		return false;
 	}

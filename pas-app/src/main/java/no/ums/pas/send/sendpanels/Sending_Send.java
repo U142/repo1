@@ -95,8 +95,8 @@ public class Sending_Send extends DefaultPanel {
 		set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.WEST);
 		add(m_btn_sendtest, m_gridconst);
 
-		set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.CENTER);
-		add(m_lbl_refno, m_gridconst);
+		//set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.CENTER);
+		//add(m_lbl_refno, m_gridconst);
 		set_gridconst(1, get_panel(), 5, 1, GridBagConstraints.CENTER);
 		add(m_txt_refno, m_gridconst);
 		if(parent.get_files()!=null && parent.get_files().length > 0) {

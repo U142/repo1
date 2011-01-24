@@ -12,6 +12,8 @@ import no.ums.pas.ums.tools.Col;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -88,27 +90,6 @@ public class SendPropertiesEllipse extends SendProperties {
 	}	
 
 	public boolean create_paramvals() {
-		/*try {
-			sz_polygon_params	= new String[_get_shapestruct().get_size() + 1];
-			sz_polygon_vals		= new String[_get_shapestruct().get_size() + 1];
-			sz_polygon_params[0]	= "n_polypoints";
-			sz_polygon_vals[0]		= new Integer(get_shapestruct().typecast_polygon().get_size()).toString();
-			double lon, lat;
-			for(int i=1; i < (_get_shapestruct().get_size()) + 1; i++) {
-				sz_polygon_params[i]	= "p" + (i-1);
-				lon = (double)( Math.round(((Double)_get_shapestruct().get_coors_lon().get(i-1)).doubleValue() * 1000000.0)) / 1000000.0;
-				lat = (double)( Math.round(((Double)_get_shapestruct().get_coors_lat().get(i-1)).doubleValue() * 1000000.0)) / 1000000.0;
-				//(double)(Math.round(get_lon() * 10000)) / 10000 + ", " + (double)(Math.round(get_lat() * 10000)) / 10000;
-				//sz_polygon_vals[i]		= ((Double)get_polygon().get_coors_lon().get(i-1)).toString() + "," + ((Double)get_polygon().get_coors_lat().get(i-1)).toString();
-				sz_polygon_vals[i] = new Double(lon).toString() + "," + new Double(lat).toString();
-				System.out.println(sz_polygon_vals[i]);
-			}
-		} catch(Exception e) {
-			set_last_error("ERROR SendPropertiesPolygon.create_paramvals() - " + e.getMessage());
-			PAS.get_pas().add_event(get_last_error(), e);
-			Error.getError().addError("SendPropertiesPolygon","Exception in create_parmvals",e,1);
-			return false;
-		}*/
 		try {
 			sz_ellipse_params	= new String[4];
 			sz_ellipse_vals		= new String[4];
@@ -132,28 +113,6 @@ public class SendPropertiesEllipse extends SendProperties {
 	}
 	public boolean send() {
 		try {
-			/*if(!this.create_paramvals()) {
-				return false;
-			}*/
-			/*HttpPostForm http = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_send.asp");
-			populate_common(http);
-
-			XmlWriter xmlWriter = new XmlWriter();
-			
-			File cb = new File(xmlWriter.generateCBXML(get_cell_broadcast_text())); // Her lager jeg og skriver xmlfilen av cbinfo
-			InputStream fis = new FileInputStream(cb);
-			
-			http.setParameter("cbpoly","cbtemp.xml",fis); // lage xmlwriter som tar inn alert og lager xml av det
-			
-			if(!get_isresend()) { //we don't need adrinfo if it's a resend
-				for(int i=0; i < get_ellipse_params().length; i++) {
-					http.setParameter(get_ellipse_params()[i], get_ellipse_vals()[i]);
-				}
-			}
-			InputStream is = http.post();
-			// Her kan jeg kanskje slette cbtemp.xml?
-			// xmlWriter.deleteZip();
-			return Error.getError().addError(is);*/
 			ObjectFactory factory = new ObjectFactory();
 			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
 			no.ums.ws.parm.UELLIPSESENDING poly = factory.createUELLIPSESENDING();
@@ -162,14 +121,6 @@ public class SendPropertiesEllipse extends SendProperties {
 			
 			 
 			populate_common((no.ums.ws.parm.UMAPSENDING)poly, logon, bounds);
-			/*UMapPoint center = factory.createUMapPoint();
-			UMapPoint radius = factory.createUMapPoint();
-			center.setLon((float)_get_shapestruct().get_center().get_lon());
-			center.setLat((float)_get_shapestruct().get_center().get_lat());
-			radius.setLon(new Float(Math.abs(_get_shapestruct().get_corner().get_lon() - _get_shapestruct().get_center().get_lon())).floatValue());
-			radius.setLat(new Float(Math.abs(_get_shapestruct().get_corner().get_lat() - _get_shapestruct().get_center().get_lat())).floatValue());
-			el.setCenter(center);
-			el.setRadius(radius);*/
 			UEllipseDef el = createWSEllipse();
 			poly.setEllipse(el);
 			
@@ -182,7 +133,13 @@ public class SendPropertiesEllipse extends SendProperties {
 
 
 			return true;
-		} catch(Exception e) {
+		} 
+		catch(SOAPFaultException e)
+		{
+			PAS.pasplugin.onSoapFaultException(Variables.getUserInfo(), e);
+			return false;
+		}		
+		catch(Exception e) {
 			set_last_error("ERROR SendPropertiesPolygon.send() - " + e.getMessage());
 			PAS.get_pas().add_event(get_last_error(), e);
 			Error.getError().addError("SendPropertiesPolygon","Exception in send",e,1);

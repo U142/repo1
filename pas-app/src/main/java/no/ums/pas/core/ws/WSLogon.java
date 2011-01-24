@@ -1,5 +1,6 @@
 package no.ums.pas.core.ws;
 
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.pas.BBUSERBLOCKREASONS;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.ULOGONINFO;
@@ -14,7 +15,8 @@ import java.net.URL;
 
 public class WSLogon extends WSThread
 {
-	protected String sz_username, sz_companyid, sz_password;
+	protected String sz_username, sz_companyid, sz_password, sz_onetimekey;
+	public String getGeneratedPassword() { return sz_password; } 
 	UPASLOGON ret;
 	BBUSERBLOCKREASONS reason = BBUSERBLOCKREASONS.NONE;
 	public BBUSERBLOCKREASONS getReason() { return reason; }
@@ -31,7 +33,7 @@ public class WSLogon extends WSThread
 		this.sz_username = sz_username;
 		this.sz_companyid = sz_companyid;
 		this.sz_password = sz_password;
-		start();
+		//start();
 	}
 	
 	@Override
@@ -42,6 +44,11 @@ public class WSLogon extends WSThread
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
+			
+			String onetimekey = new Pasws(wsdl, service).getPaswsSoap12().getOneTimeKey();
+			//generate new password
+			//sz_password = Utils.encrypt(sz_password + onetimekey);
+			
 			ULOGONINFO l = new ULOGONINFO();
 			l.setSzUserid(sz_username);
 			l.setSzCompid(sz_companyid);
@@ -56,6 +63,7 @@ public class WSLogon extends WSThread
 			l.setSzStdcc("");
 			l.setLDeptpri(3);
 			l.setSzDeptid("");
+			l.setOnetimekey(onetimekey);
 			
 			ret = new Pasws(wsdl, service).getPaswsSoap12().pasLogon(l);
 			reason = ret.getReason();

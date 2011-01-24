@@ -81,8 +81,8 @@ public class EllipseStruct extends ShapeStruct {
 	@Override
 	public void draw(Graphics g, Navigation nav, boolean bDashed,
 			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {
-		
+			boolean bFill, int nPenSize, boolean bPaintShapeName) {		
+		draw(g, nav, !bEditmode, bFinalized, true, null);
 	}
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_active, boolean b_islocked) {
 		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true, null);

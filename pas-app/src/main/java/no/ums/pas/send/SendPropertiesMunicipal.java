@@ -13,6 +13,8 @@ import no.ums.pas.ums.tools.Col;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -178,7 +180,13 @@ public class SendPropertiesMunicipal extends SendProperties
 			Parmws myService = new Parmws(wsdl, service); //wsdlLocation, new QName("https://secure.ums2.no/vb4utv/ExecAlert/ExternalExec.asmx"));
 			ExecResponse response = myService.getParmwsSoap12().execMunicipalSending(sending);
 			parse_sendingresults(response, true);		
-		} catch(Exception e) {
+		} 
+		catch(SOAPFaultException e)
+		{
+			PAS.pasplugin.onSoapFaultException(Variables.getUserInfo(), e);
+			return false;
+		}
+		catch(Exception e) {
 			set_last_error("ERROR SendPropertiesMunicipal.send() - " + e.getMessage());
 			Error.getError().addError("SendPropertiesMunicipal","Exception in send",e,1);
 			return false;

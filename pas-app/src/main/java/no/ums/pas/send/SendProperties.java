@@ -288,19 +288,8 @@ public abstract class SendProperties extends Object {
 			PAS.get_pas().add_event(get_params()[i] + " = " + get_vals()[i], null);
 		}		
 	}
-	/*protected boolean populate_common(HttpPostForm http) {
-		//try {
-			for(int i=0; i < get_params().length; i++) {
-				try {
-					http.setParameter(get_params()[i], get_vals()[i]);
-				} catch(Exception e) {
-					System.out.println("Error populating parameter " + i);
-					Error.getError().addError("SendProperties","Exception in populate_common",e,1);
-					return false;
-				}
-			}
-		return true;
-	}*/
+
+	
 	protected boolean populate_common(UMAPSENDING s, ULOGONINFO logon, UMapBounds bounds)
 	{
 		UserInfo info = PAS.get_pas().get_userinfo();
@@ -424,18 +413,6 @@ public abstract class SendProperties extends Object {
 		
 		return true;
 	}
-	/*protected boolean populate_adrlist(HttpPostForm http, ArrayList<String> arr_numbers) {
-		try {
-			for(int i=0; i < arr_numbers.size(); i++) {
-				http.setParameter("sz_number_" + i, arr_numbers.get(i));
-			}
-			http.setParameter("n_num_numbers", new Integer(arr_numbers.size()).toString());
-		} catch(java.io.IOException e) {
-			Error.getError().addError("SendProperties","Exception in populate_adrlist",e,1);
-			return false;
-		}
-		return true;
-	}*/
 	
 	abstract public void set_adrinfo(Object adr);
 	abstract public void draw(Graphics g, Point mousepos);
@@ -448,37 +425,14 @@ public abstract class SendProperties extends Object {
 	
 	public boolean send(int l_refno) {
 		set_refno(l_refno);
-		//this.create_common_paramvals(this.get_sendingtype());
-		//PAS.get_pas().add_event("Sending " + get_refno(), null);
-		
 		return this.send();
 	}
 	public boolean send_test(int l_refno, ArrayList<String> arr_numberlist) {
 		set_refno(l_refno);
-		//this.create_common_paramvals(SENDING_TYPE_ADRLIST_);
-		//PAS.get_pas().add_event("Sending testmessage " + get_refno(), null);
-		
 		return this.send_test(arr_numberlist);
 	}
 	protected boolean send_test(ArrayList<String> arr_numberlist) {
-		/*HttpPostForm http = null;
-		try {
-			http = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_send.asp");
-		} catch(java.io.IOException e) {
-			Error.getError().addError("SendProperties","Exception in send_test",e,1);
-			return false;
-		}
-		if(!populate_common(http))
-			return false;
-		if(!populate_adrlist(http, arr_numberlist))
-			return false;
-		try {
-			InputStream is = http.post();
-			return Error.getError().addError(is);
-		} catch(java.io.IOException e) {
-			Error.getError().addError("SendProperties","Exception in send_test",e,1);
-			return false;
-		}*/
+
 		try
 		{
 			UTESTSENDING sending = new UTESTSENDING();

@@ -14,6 +14,8 @@ import no.ums.ws.pas.status.USMSINSTATS;
 import no.ums.ws.pas.tas.ULBACOUNTRY;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -147,7 +149,13 @@ public class SendPropertiesTAS extends SendProperties
 			parse_sendingresults(response, true);
 			PAS.get_pas().get_current_project().set_saved();
 			return true;
-		} catch(Exception e) {
+		} 
+		catch(SOAPFaultException e)
+		{
+			PAS.pasplugin.onSoapFaultException(Variables.getUserInfo(), e);
+			return false;
+		}		
+		catch(Exception e) {
 			set_last_error("ERROR SendPropertiesTAS.send() - " + e.getMessage());
 			PAS.get_pas().add_event(get_last_error(), e);
 			Error.getError().addError("SendPropertiesTAS","Exception in send",e,1);

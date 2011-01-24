@@ -3,6 +3,7 @@ package no.ums.pas.core.logon;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
 import no.ums.pas.ums.tools.Timeout;
+import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.pas.UDEPARTMENT;
 import no.ums.ws.pas.UNSLOOKUP;
 import no.ums.ws.pas.UPASLOGON;
@@ -157,7 +158,9 @@ public class Logon implements ActionListener {
 		//proc.start();
 		b_results_ready = false;
 		dlg.setLoading(true);
+		
 		WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
+		proc.start();
 		Timeout timer = new Timeout(60, 50); //10 second timeout, 50 msec wait interval
 		//while(!proc.getResponded() && !timer.timer_exceeded())
 		while(!b_results_ready && !timer.timer_exceeded())
@@ -232,7 +235,10 @@ public class Logon implements ActionListener {
 			//Thread.sleep(5000);
 		} catch(Exception e) { }
 		setLoggedOn();
-		get_userinfo().set_passwd(info.get_passwd());
+		//update the hashed password. It should now be hash(hashedpassword+onetimekey)
+		get_userinfo().set_passwd(proc.getGeneratedPassword());
+
+		//get_userinfo().set_passwd(info.get_passwd());
 		//get_userinfo().set_sessionid(info.get_sessionid());
 		dlg.setVisible(false);
 		//dlg.setTitle(get_last_error());
