@@ -299,6 +299,28 @@ namespace com.ums.PAS.Database
             }
         }
 
+        public bool ShapeFromDb(ref MDVSENDINGINFO mdv, ref UShape shape)
+        {
+            bool ret = false;
+            ExecNonQuery("set textsize 10000000");
+            String szSQL = String.Format("SELECT sz_xml FROM PASHAPE WHERE l_pk={0} AND l_type={1}",
+                mdv.l_refno, (long)PASHAPETYPES.PASENDING);
+            OdbcDataReader rs_poly = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+            if (rs_poly.Read())
+            {
+                shape = UShape.Deserialize(rs_poly.GetString(0));
+                if (shape != null)
+                    ret = true;
+            }
+            else
+            {
+                ret = false;
+            }
+            rs_poly.Close();
+            return ret;
+        }
+
+
         public ULBASENDING GetLBASending(long n_refno)
         {
             OdbcDataReader rs = null;

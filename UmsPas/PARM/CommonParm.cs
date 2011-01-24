@@ -187,6 +187,32 @@ namespace com.ums.UmsParm
         protected abstract bool ParseFromXml(ref XmlDocument d);
         protected abstract String CreateXml(ref USimpleXmlWriter d);
 
+        public void SerializeShapeToDb(long n_refno)
+        {
+            PASUmsDb db = new PASUmsDb();
+            bool bShapeChanged = false;
+            String szShapeToDb = "", md5 = "";
+            //CreateXml(ref szShapeToDb, ref md5);
+            szShapeToDb = Serialize();
+            db.UpdatePAShape(n_refno, szShapeToDb, PASHAPETYPES.PASENDING, ref bShapeChanged);
+            db.close();
+        }
+
+        public String Serialize()
+        {
+            XmlSerializer s = new XmlSerializer(this.GetType());
+            XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
+            xmlnsEmpty.Add("", "");
+            MemoryStream m = new MemoryStream();
+            XmlTextWriter xmlWriter = new XmlTextWriter(m, Encoding.UTF8);
+            s.Serialize(xmlWriter, this, xmlnsEmpty);
+            String xml;
+            xml = Encoding.UTF8.GetString(m.GetBuffer());
+            xml = xml.Substring(xml.IndexOf(Convert.ToChar(60)));
+            xml = xml.Substring(0, (xml.LastIndexOf(Convert.ToChar(62)) + 1));
+            return xml;
+        }
+
         public static UShape Deserialize(String xml)
         {
             if (xml.IndexOf("UPolygon") >= 0)
@@ -194,7 +220,13 @@ namespace com.ums.UmsParm
                 return UPolygon.Deserialize(xml);
             }
             else if (xml.IndexOf("UPLMN") >= 0)
+            {
                 return UPLMN.Deserialize(xml);
+            }
+            else if (xml.IndexOf("UEllipse") >= 0)
+            {
+                return UEllipse.Deserialize(xml);
+            }
             return null;
         }
 
@@ -999,6 +1031,22 @@ namespace com.ums.UmsParm
             {
                 ULog.warning("Error parsing Xml string");
                 return false;
+            }
+        }
+        public static UEllipse Deserialize(String xml)
+        {
+            UEllipse cob = new UEllipse();
+            StringReader read = new StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(cob.GetType());
+            XmlReader reader = new XmlTextReader(read);
+            try
+            {
+                cob = (UEllipse)serializer.Deserialize(reader);
+                return cob;
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }
@@ -1860,6 +1908,7 @@ namespace com.ums.UmsParm
                 {
                     adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend, n_priority);
                     s.WriteAddressFile(ref adrwriter);
+                    s.SerializeShapeToDb(l_refno);
                 }
                 return true;
             }

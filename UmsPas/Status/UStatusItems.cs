@@ -207,7 +207,10 @@ namespace com.ums.PAS.Status
                     UShape shape = null;
                     try
                     {
-                        if (ParseMapFile(ref mdv, ref bounding, ref shape))
+                        if (m_db.ShapeFromDb(ref mdv, ref shape))
+                        {
+                        }
+                        else if (ParseMapFile(ref mdv, ref bounding, ref shape))
                         {
                         }
                     }
@@ -217,46 +220,30 @@ namespace com.ums.PAS.Status
                     if (bounding == null)
                         bounding = new UBoundingRect();
 
-                    switch (mdv.l_group)
+                    if (shape != null)
                     {
-                        case 3: //polygon
-                            {
-                                for (int i = 0; i < shape.poly().getSize(); i++)
+                        switch (mdv.l_group)
+                        {
+                            case 3: //polygon
+                                {
+                                    for (int i = 0; i < shape.poly().getSize(); i++)
+                                    {
+                                        try
+                                        {
+                                            outxml.insertStartElement("POLYPOINT");
+                                            outxml.insertAttribute("lat", shape.poly().getPoint(i).getLat().ToString(UCommon.UGlobalizationInfo));
+                                            outxml.insertAttribute("lon", shape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
+                                            outxml.insertEndElement();
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                    }
+                                }
+                                break;
+                            case 4: //gemini
                                 {
                                     try
-                                    {
-                                        outxml.insertStartElement("POLYPOINT");
-                                        outxml.insertAttribute("lat", shape.poly().getPoint(i).getLat().ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertAttribute("lon", shape.poly().getPoint(i).getLon().ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertEndElement();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                    }
-                                }
-                            }
-                            break;
-                        case 4: //gemini
-                            {
-                                try
-                                {
-                                    outxml.insertStartElement("BOUNDS");
-                                    outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
-                                }
-                                catch (Exception e)
-                                {
-                                }
-                            }
-                            break;
-                        case 5: //TAS country
-                            {
-                                try
-                                {
-                                    if (bounding != null)
                                     {
                                         outxml.insertStartElement("BOUNDS");
                                         outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
@@ -265,85 +252,104 @@ namespace com.ums.PAS.Status
                                         outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
                                         outxml.insertEndElement();
                                     }
-                                    if (shape != null)
+                                    catch (Exception e)
                                     {
-                                        outxml.insertStartElement("TASCOUNTRIES");
-                                        for(int i=0; i < shape.tas().countries.Count; i++)
-                                        {
-                                            outxml.insertStartElement("COUNTRY");
-                                            outxml.insertAttribute("iso", shape.tas().countries[i].sz_iso);
-                                            outxml.insertAttribute("iso-n", shape.tas().countries[i].l_iso_numeric.ToString());
-                                            outxml.insertAttribute("cc", shape.tas().countries[i].l_cc.ToString());
-                                            outxml.insertAttribute("name", shape.tas().countries[i].sz_name);
-                                            outxml.insertEndElement();
-                                        }
-                                        outxml.insertEndElement();
                                     }
                                 }
-                                catch (Exception e)
+                                break;
+                            case 5: //TAS country
                                 {
-                                }
-                            }
-                            break;
-                        case 8: //ellipse
-                            {
-                                try
-                                {
-                                    outxml.insertStartElement("ELLIPSE");
-                                    outxml.insertAttribute("f_centerx", shape.ellipse().lon.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("f_centery", shape.ellipse().lat.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("f_radiusx", shape.ellipse().x.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("f_radiusy", shape.ellipse().y.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement(); //ELLIPSE
-                                }
-                                catch (Exception e)
-                                {
-                                }
-                            }
-                            break;
-                        case 9: //municipal
-                            {
-                                if (bounding != null)
-                                {
-                                    if (shape != null)
+                                    try
                                     {
-                                        outxml.insertStartElement("MUNICIPALLIST");
-                                        for (int i = 0; i < shape.municipal().GetMunicipals().Count; i++)
+                                        if (bounding != null)
                                         {
-                                            outxml.insertStartElement("MUNICIPAL");
-                                            outxml.insertAttribute("id", shape.municipal().GetMunicipals()[i].sz_municipalid);
-                                            outxml.insertAttribute("name", shape.municipal().GetMunicipals()[i].sz_municipalname);
+                                            outxml.insertStartElement("BOUNDS");
+                                            outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                            outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                            outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                            outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
                                             outxml.insertEndElement();
                                         }
-                                        outxml.insertEndElement();
+                                        if (shape != null)
+                                        {
+                                            outxml.insertStartElement("TASCOUNTRIES");
+                                            for (int i = 0; i < shape.tas().countries.Count; i++)
+                                            {
+                                                outxml.insertStartElement("COUNTRY");
+                                                outxml.insertAttribute("iso", shape.tas().countries[i].sz_iso);
+                                                outxml.insertAttribute("iso-n", shape.tas().countries[i].l_iso_numeric.ToString());
+                                                outxml.insertAttribute("cc", shape.tas().countries[i].l_cc.ToString());
+                                                outxml.insertAttribute("name", shape.tas().countries[i].sz_name);
+                                                outxml.insertEndElement();
+                                            }
+                                            outxml.insertEndElement();
+                                        }
                                     }
-                                    
-                                    outxml.insertStartElement("BOUNDS");
-                                    outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
-                                    /*outxml.insertStartElement("POLYPOINT");
-                                    outxml.insertAttribute("lat", bounding._left.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("lon", bounding._top.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
-                                    outxml.insertStartElement("POLYPOINT");
-                                    outxml.insertAttribute("lat", bounding._right.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("lon", bounding._top.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
-                                    outxml.insertStartElement("POLYPOINT");
-                                    outxml.insertAttribute("lat", bounding._right.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("lon", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();
-                                    outxml.insertStartElement("POLYPOINT");
-                                    outxml.insertAttribute("lat", bounding._left.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertAttribute("lon", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
-                                    outxml.insertEndElement();*/
+                                    catch (Exception e)
+                                    {
+                                    }
+                                }
+                                break;
+                            case 8: //ellipse
+                                {
+                                    try
+                                    {
+                                        outxml.insertStartElement("ELLIPSE");
+                                        outxml.insertAttribute("f_centerx", shape.ellipse().lon.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("f_centery", shape.ellipse().lat.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("f_radiusx", shape.ellipse().x.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("f_radiusy", shape.ellipse().y.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement(); //ELLIPSE
+                                    }
+                                    catch (Exception e)
+                                    {
+                                    }
+                                }
+                                break;
+                            case 9: //municipal
+                                {
+                                    if (bounding != null)
+                                    {
+                                        if (shape != null)
+                                        {
+                                            outxml.insertStartElement("MUNICIPALLIST");
+                                            for (int i = 0; i < shape.municipal().GetMunicipals().Count; i++)
+                                            {
+                                                outxml.insertStartElement("MUNICIPAL");
+                                                outxml.insertAttribute("id", shape.municipal().GetMunicipals()[i].sz_municipalid);
+                                                outxml.insertAttribute("name", shape.municipal().GetMunicipals()[i].sz_municipalname);
+                                                outxml.insertEndElement();
+                                            }
+                                            outxml.insertEndElement();
+                                        }
 
+                                        outxml.insertStartElement("BOUNDS");
+                                        outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                        /*outxml.insertStartElement("POLYPOINT");
+                                        outxml.insertAttribute("lat", bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lon", bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                        outxml.insertStartElement("POLYPOINT");
+                                        outxml.insertAttribute("lat", bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lon", bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                        outxml.insertStartElement("POLYPOINT");
+                                        outxml.insertAttribute("lat", bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lon", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();
+                                        outxml.insertStartElement("POLYPOINT");
+                                        outxml.insertAttribute("lat", bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lon", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertEndElement();*/
+
+                                    }
                                 }
-                            }
-                            break;
+                                break;
+                        }
                     }
                 }
 
@@ -628,6 +634,7 @@ namespace com.ums.PAS.Status
             }
             return b_writeshapes;
         }
+
 
         private bool ParseMapFile(ref MDVSENDINGINFO mdv, ref UBoundingRect rect, ref UShape shape)
         {

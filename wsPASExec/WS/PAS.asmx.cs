@@ -70,7 +70,7 @@ namespace com.ums.ws.pas
             try
             {
                 //System.Web.SessionState.HttpSessionState state = this.Session;
-                l.sessionid = Guid.NewGuid().ToString();//state.SessionID.ToString();
+                l.sessionid = l.onetimekey; //Guid.NewGuid().ToString();//state.SessionID.ToString();
                 //String sha = Helpers.CreateSHA512Hash(l.sz_password);
                 ULogon logon = new ULogon();
                 UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
