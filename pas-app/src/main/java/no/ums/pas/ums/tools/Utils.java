@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -191,10 +192,16 @@ public final class Utils {
         }
     }
 
-    public static String encrypt(String pw) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.update(pw.getBytes());
-        return getHex(md.digest());
+    public static String encrypt(String pw) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            if (pw != null) {
+                md.update(pw.getBytes());
+            }
+            return getHex(md.digest());
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Could not find SHA-512 hasher", e);
+        }
     }
 
     static final String HEXES = "0123456789abcdef";
