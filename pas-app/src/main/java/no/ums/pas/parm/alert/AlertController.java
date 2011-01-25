@@ -327,7 +327,7 @@ public class AlertController implements ActionListener {
 		this.alert.setProfilepk(aw.get_alert_settings().get_current_profile().get_profilepk());
 		this.alert.setValidity(aw.get_alert_settings().get_current_validity());
 		this.alert.setOadc(aw.get_alert_settings().get_current_oadc().get_number());
-		// Må sjekke at sendingen ikke har voice
+		// MÃ¥ sjekke at sendingen ikke har voice
 		if(aw.get_alert_settings().get_current_schedprofile() == null) {
 			if(!aw.hasVoice(this.getPanelToolbar().get_addresstypes()))
 				this.alert.setSchedpk("0");
