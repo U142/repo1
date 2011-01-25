@@ -10,6 +10,7 @@ import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.Utils;
 
 import javax.swing.*;
@@ -407,9 +408,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				try
 				{
 					String sha = Utils.encrypt(new String(m_txt_passwd.getPassword()));
-					char[] s = m_txt_passwd.getPassword();
-					int l = sha.length();
-					set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), sha/*new String(m_txt_passwd.getPassword())*/, selectedlanguage);
+                    set_logoninfo(m_txt_userid.getText(), m_txt_compid.getText(), sha, selectedlanguage);
 					m_txt_passwd.setText("");
 					set_response(false);
 				}
