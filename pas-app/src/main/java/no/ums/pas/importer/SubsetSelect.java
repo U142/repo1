@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
 
 
 /*manually select a subset from e.g. a SOSI file (FLATE)*/
@@ -30,7 +29,7 @@ public class SubsetSelect extends JDialog  {
 		this.setVisible(false);
 	}
 	
-	public SubsetSelect(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, ArrayList<SendObject> sendings) {
+	public SubsetSelect(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, java.util.List<SendObject> sendings) {
 		super(PAS.get_pas(), "Select subset", true);
 		this.setModal(true);
 		this.setAlwaysOnTop(true);
@@ -86,7 +85,7 @@ public class SubsetSelect extends JDialog  {
 	public class SubsetSelectPanel extends SearchPanelResults {
 		public static final long serialVersionUID = 1;
 		ActionListener m_callback;
-		ArrayList<SendObject> m_sendings = null;
+		java.util.List<SendObject> m_sendings = null;
 		ShapeStruct [] m_shapes = null;
 		
 		@Override
@@ -95,7 +94,7 @@ public class SubsetSelect extends JDialog  {
 			super.componentResized(e);
 		}
 
-		public SubsetSelectPanel(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, ArrayList<SendObject> sendings) {
+		public SubsetSelectPanel(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, java.util.List<SendObject> sendings) {
 			super(sz_columns, n_width, b_editable, dim, ListSelectionModel.SINGLE_SELECTION);
 			m_callback = callback;
 			m_sendings = sendings;
@@ -158,14 +157,6 @@ public class SubsetSelect extends JDialog  {
 			}
 			else if(m_shapes!=null)
 			{
-				try
-				{
-					 //PAS.get_pas().get_parmcontroller().clearDrawQueue();
-				}
-				catch(Exception e)
-				{
-					
-				}
 				try
 				{
 					ShapeStruct shape = (ShapeStruct)rowcontent[0];

@@ -17,11 +17,10 @@ import no.ums.pas.ums.errorhandling.Error;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-
+import java.util.*;
 
 
 public class AlertController implements ActionListener {
@@ -98,8 +97,9 @@ public class AlertController implements ActionListener {
 			boolean [] b_edit = { false, false };
 			Dimension d = new Dimension(400, 500);
 			//if(e.getSource().getClass().equals(ArrayList.class))
-			{
-				ArrayList<SendObject> sendings = (ArrayList<SendObject>)e.getSource();
+            if (e.getSource() instanceof java.util.List) {
+                @SuppressWarnings("unchecked")
+				java.util.List<SendObject> sendings = (java.util.List<SendObject>)e.getSource();
 				
 				//SELECT SOSI-KURVE FOR IMPORT
 				//if(sendings.size()>1) {
