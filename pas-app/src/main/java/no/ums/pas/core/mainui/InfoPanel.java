@@ -833,12 +833,7 @@ public class InfoPanel extends GeneralPanel {
 		private JRadioButton m_radio_utm;
 		private ButtonGroup m_group_search = new ButtonGroup();
 
-		protected String regexpDouble = "\\b(\\w+)\\s+\\1\\b";
-		protected String regexpInt = "\\1-9";
-		protected Pattern doublePattern = Pattern.compile(regexpDouble);
-		protected Pattern intPattern = Pattern.compile(regexpInt);
-
-		public CoorSearchUI() {
+        public CoorSearchUI() {
 			this.setPreferredSize(new Dimension(500, 100));
 			m_search_ll = new CoorSearchLL(this);
 			m_search_utm = new CoorSearchUTM(this);

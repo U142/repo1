@@ -1,6 +1,5 @@
 package no.ums.pas.pluginbase;
 
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.ws.pas.USYSTEMMESSAGES;
 
 import javax.swing.*;
@@ -97,10 +96,9 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
     /**
      * Function to determine if user has enabled TrainingMode.
      * Default - if PAS.TRAINING_MODE==true
-     * @param userinfo May be used to determine if user is in TrainingMode
      * @return If in training mode or not
      */
-    protected abstract boolean IsInTrainingMode(final UserInfo userinfo);
+    protected abstract boolean IsInTrainingMode();
 
 
     /**
@@ -117,15 +115,6 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
      * @return
      */
     protected abstract boolean onHandleSystemMessages(USYSTEMMESSAGES sysmsg);
-
-
-    /**
-     * Function called when the webservice session has expired.
-     * Called from onSoapFaultException, if details show that server threw
-     * a com.ums.UmsCommon.USessionExpiredException
-     * @return
-     */
-    protected abstract boolean onSessionTimedOutException(UserInfo info);
 
 }
 

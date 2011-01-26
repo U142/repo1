@@ -83,8 +83,7 @@
     <dependencies>
         <dependency>
             <groupId>no.ums</groupId>
-            <artifactId>pas-app</artifactId>
-            <classifier>cellbroadcast</classifier>
+            <artifactId>pas-cellbroadcast</artifactId>
         </dependency>
         <dependency>
             <groupId>no.ums</groupId>

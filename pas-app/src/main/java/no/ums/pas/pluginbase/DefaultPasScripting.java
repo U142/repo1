@@ -658,7 +658,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 
-	@Override
+    /**
+     * Function called when the webservice session has expired.
+     * Called from onSoapFaultException, if details show that server threw
+     * a com.ums.UmsCommon.USessionExpiredException
+     * @return
+     */
 	protected boolean onSessionTimedOutException(UserInfo info) {
 		try
 		{
@@ -816,14 +821,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	
 	/**
 	 * Function to determine if a user has activated training mode
-	 * @param userinfo UserInfo struct may be used to determine if it's training mode
 	 * @return true if user is in training mode
 	 */
 	@Override
-	protected boolean IsInTrainingMode(final UserInfo userinfo)
-	{
-		//boolean cansend = (userinfo.get_current_department().get_userprofile().get_send() >= 1);
-		//return !cansend;
+	protected boolean IsInTrainingMode() {
 		return PAS.TRAINING_MODE;
 	}
 

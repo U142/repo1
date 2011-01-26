@@ -1039,25 +1039,6 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
-    protected boolean onSessionTimedOutException(UserInfo info) {
-        return super.onSessionTimedOutException(info);
-    }
-
-//    @Override
-//    public boolean onHelpAbout() {
-//
-//        String content = PAS.l("common_aboutbox_content");
-//        content += "\n\n";
-//        //content+="\nImplementation version " + VersionInfo.IMPLEMENTATION_VERSION;
-//        //content+="\nSpecification version " + VersionInfo.SPECIFICATION_VERSION;
-//        content += "\nImplementation version " + VersionInfo.getInstance().PLUGIN_IMPLEMENTATION_VERSION;
-//        content += "\nSpecification version " + VersionInfo.getInstance().PLUGIN_SPECIFICATION_VERSION;
-//        //content+="\n" + VersionInfo.BUILT_DATE;
-//        JOptionPane.showMessageDialog(PAS.get_pas(), content, PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
-//        return true;
-//    }
-
-    @Override
     public boolean onTrainingMode(boolean b) {
         if (b) {
             onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
@@ -1190,7 +1171,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         g.setFont(UIManager.getFont("InternalFrame.titleFont"));
 
         String str = PAS.l("common_live").toUpperCase();
-        if (IsInTrainingMode(PAS.get_pas().get_userinfo()))
+        if (IsInTrainingMode())
             str = PAS.l("mainmenu_trainingmode").toUpperCase();
         int strwidth = g.getFontMetrics().stringWidth(str);
         int x = bar.getWidth() / 2 - strwidth / 2;
