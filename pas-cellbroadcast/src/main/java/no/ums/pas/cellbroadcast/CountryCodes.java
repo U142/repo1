@@ -35,7 +35,7 @@ public enum CountryCodes {
 
     public static CCode getCountryByCCode(final String ccode) {
     	final String fixedCode = (ccode.startsWith("00")) ? ccode.substring(2) : ccode;
-        return (INSTANCE.codesById.containsKey(fixedCode)) ? INSTANCE.codesById.get(fixedCode) : new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", "0");
+        return (INSTANCE.codesById.containsKey(fixedCode)) ? INSTANCE.codesById.get(fixedCode) : new CCode(ccode, "CCode Not found [" + ccode + "]", "N/A", false);
     }
 
     public static Iterable<CCode> getCountryCodes() {
