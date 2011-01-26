@@ -4,9 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 
@@ -22,17 +20,14 @@ import java.util.Map;
 public enum CountryCodes {
     INSTANCE;
 
-    private final Map<String, CCode> codesById;
+    private final Map<String, CCode> codesById = new HashMap<String, CCode>();
 
     CountryCodes() {
         try {
             final List<String> lines = Resources.readLines(Resources.getResource(getClass(), "countrycodes.csv"), Charsets.ISO_8859_1);
-            codesById = Maps.uniqueIndex(Lists.transform(lines, CCode.PARSE), new Function<CCode, String>() {
-                @Override
-                public String apply(@Nullable CCode input) {
-                    return input.getCCode();
-                }
-            });
+            for (CCode code : Lists.transform(lines, CCode.PARSE)) {
+                codesById.put(code.getCCode(), code);
+            }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read country codes", e);
         }
