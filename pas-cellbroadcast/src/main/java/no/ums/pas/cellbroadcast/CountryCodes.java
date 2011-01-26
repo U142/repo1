@@ -20,7 +20,7 @@ import java.util.Map;
 public enum CountryCodes {
     INSTANCE;
 
-    private final Map<String, CCode> codesById = new HashMap<String, CCode>();
+    private final Map<String, CCode> codesById = Maps.newHashMap();
 
     CountryCodes() {
         try {

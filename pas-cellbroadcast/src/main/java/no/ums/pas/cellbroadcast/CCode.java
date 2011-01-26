@@ -13,14 +13,14 @@ public class CCode {
         @Override
         public CCode apply(@Nullable String input) {
             Iterator<String> line = Splitter
-                    .on(CharMatcher.is('\t'))
+                    .on('\t')
                     .trimResults(CharMatcher.is('"')) // Remove quotes
                     .split(input).iterator();
-            String sz_ccode = line.hasNext() ? line.next() : "-2";
-            String sz_cname = line.hasNext() ? line.next() : "Unknown";
-            String sz_cshort = line.hasNext() ? line.next() : "Unknown";
-            String sz_cvisible = line.hasNext() ? line.next() : "0";
-            return new CCode(sz_ccode, sz_cname, sz_cshort, sz_cvisible);
+            String cCode = line.hasNext() ? line.next() : "-2";
+            String cName = line.hasNext() ? line.next() : "Unknown";
+            String cShort = line.hasNext() ? line.next() : "Unknown";
+            boolean visible = line.hasNext() && line.next().equals("1");
+            return new CCode(cCode, cName, cShort, visible);
         }
     };
 
@@ -58,12 +58,12 @@ public class CCode {
         return getCCode() + " " + getCountry();
     }
 
-    public CCode(String code, String country, String sh, String visible) {
+    public CCode(String code, String country, String sh, boolean visible) {
         sz_ccode = code;
         sz_country = country;
         sz_short = sh;
         n_ccode = Integer.parseInt(code);
-        b_visible = visible.equals("1");
+        b_visible = visible;
     }
 
 }
