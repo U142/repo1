@@ -957,6 +957,11 @@ namespace com.ums.UmsParm
 
         public bool InsertMDVSENDINGINFO(ref PAS_SENDING s)
         {
+            String sz_schedtime = s.m_sendinginfo.l_schedtime;
+            if (sz_schedtime.Length > 4)
+                sz_schedtime = sz_schedtime.Substring(0, 4);
+
+
             String szSQL = String.Format("INSERT INTO MDVSENDINGINFO(sz_fields, sz_sepused, l_addresspos, l_lastantsep, l_refno, l_createdate, l_createtime, " +
                                   "l_scheddate, l_schedtime, sz_sendingname, l_sendingstatus, l_companypk, l_deptpk, l_nofax, l_group, " +
                                   "l_removedup, l_type, f_dynacall, l_addresstypes, l_userpk, l_maxchannels) " +
@@ -969,8 +974,8 @@ namespace com.ums.UmsParm
                             s.l_refno, 
                             s.m_sendinginfo.l_createdate,
                             s.m_sendinginfo.l_createtime,
-                            s.m_sendinginfo.l_scheddate, 
-                            s.m_sendinginfo.l_schedtime, 
+                            s.m_sendinginfo.l_scheddate,
+                            sz_schedtime, //s.m_sendinginfo.l_schedtime, 
                             s.m_sendinginfo.sz_sendingname.Replace("'", "''"),
                             s.m_sendinginfo.l_sendingstatus, 
                             s.m_sendinginfo.l_companypk,
