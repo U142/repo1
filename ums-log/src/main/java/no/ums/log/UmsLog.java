@@ -1,7 +1,9 @@
 package no.ums.log;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.util.Properties;
+import java.util.logging.*;
 
 /**
  * Factory to create Log instances.
