@@ -2,6 +2,7 @@ package no.ums.pas.cellbroadcast;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ public class CCode {
             Iterator<String> line = Splitter
                     .on('\t')
                     .trimResults(CharMatcher.is('"')) // Remove quotes
-                    .split(input).iterator();
+                    .split(Preconditions.checkNotNull(input, "input is null")).iterator();
             String cCode = line.hasNext() ? line.next() : "-2";
             String cName = line.hasNext() ? line.next() : "Unknown";
             String cShort = line.hasNext() ? line.next() : "Unknown";
