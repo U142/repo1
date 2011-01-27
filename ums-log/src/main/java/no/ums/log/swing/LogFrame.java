@@ -12,19 +12,25 @@ package no.ums.log.swing;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+
+import no.ums.log.Log;
 import no.ums.log.UmsLog;
 
 /**
@@ -32,6 +38,37 @@ import no.ums.log.UmsLog;
  * @author staaleu
  */
 public class LogFrame extends javax.swing.JFrame {
+
+    private static final Log log = UmsLog.getLogger(LogFrame.class);
+    private static final ListDataListener DATA_LISTENER = new ListDataListener() {
+
+        @Override
+        public void intervalAdded(ListDataEvent e) {
+            contentsChanged(e);
+        }
+
+        @Override
+        public void intervalRemoved(ListDataEvent e) {
+            // No need to do anything when items are removed.
+        }
+
+        @Override
+        public void contentsChanged(ListDataEvent e) {
+            for (int i=e.getIndex0(); i<=e.getIndex1(); i++) {
+                // Only show the frame if hidden and we get a severe message.
+                if (!Holder.INSTANCE.isVisible() && LogRecordCollector.LOG_RECORD_MODEL.is(Level.SEVERE, i)) {
+                    EventQueue.invokeLater(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Holder.INSTANCE.setVisible(true);
+                        }
+                    });
+                }
+            }
+        }
+
+    };
 
     private boolean scrollEnabled = true;
 
@@ -54,6 +91,35 @@ public class LogFrame extends javax.swing.JFrame {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 scrollEnabled = (e.getValue() + jScrollPane1.getHeight() - e.getAdjustable().getMaximum()) > -15;
+            }
+        });
+        jList1.setTransferHandler(new TransferHandler() {
+
+            @Override
+            public void exportToClipboard(final JComponent comp, final Clipboard clip, final int action) throws IllegalStateException {
+                if ((action == COPY || action == MOVE)) {
+
+                    Transferable t = createTransferable(comp);
+                    if (t != null) {
+                        try {
+                            clip.setContents(t, null);
+                            exportDone(comp, t, action);
+                            return;
+                        } catch (IllegalStateException ise) {
+                            exportDone(comp, t, NONE);
+                            throw ise;
+                        }
+                    }
+                }
+
+                exportDone(comp, null, NONE);
+            }
+
+            @Override
+            protected Transferable createTransferable(final JComponent c) {
+                final StringWriter sw = new StringWriter();
+                writeSelected(new PrintWriter(sw));
+                return new StringSelection(sw.toString());
             }
         });
     }
@@ -166,8 +232,30 @@ public class LogFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File("UmsLog-"+LogSwingUtil.formatDateTime(System.currentTimeMillis())+".txt"));
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try {
+                final PrintWriter writer = new PrintWriter(fileChooser.getSelectedFile());
+                writeSelected(writer);
+                writer.close();
+            } catch (FileNotFoundException e) {
+                log.error("Failed to save to file %s", fileChooser.getSelectedFile(), e);
+            }
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void writeSelected(final PrintWriter writer) {
+        for (final Object o : jList1.getSelectedValues()) {
+            final LogRecord logRecord = (LogRecord) o;
+            writer.printf("%tF %tT [%-7s] (%s) %s\n", logRecord.getMillis(), logRecord.getMillis(), logRecord.getLevel().getName(), logRecord.getLoggerName(), logRecord.getMessage());
+            //noinspection ThrowableResultOfMethodCallIgnored
+            if (logRecord.getThrown() != null) {
+                //noinspection ThrowableResultOfMethodCallIgnored
+                logRecord.getThrown().printStackTrace(writer);
+            }
+        }
+    }
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
@@ -207,7 +295,7 @@ public class LogFrame extends javax.swing.JFrame {
     /**
      * Static lazy initialization off a single LogFrame.
      *
-     * @see http://blog.crazybob.org/2007/01/lazy-loading-singletons.html
+     * @see <a href="http://blog.crazybob.org/2007/01/lazy-loading-singletons.html">blog.crazybob.org/2007/01/lazy-loading-singletons.html</a>
      * @author staaleu
      */
     static class Holder {
@@ -216,32 +304,14 @@ public class LogFrame extends javax.swing.JFrame {
     }
 
     public static void install() {
-        LogRecordCollector.LOG_RECORD_MODEL.addListDataListener(new ListDataListener() {
-
-            @Override
-            public void intervalAdded(ListDataEvent e) {
-                contentsChanged(e);
-            }
-
-            @Override
-            public void intervalRemoved(ListDataEvent e) {
-                // No need to do anything when items are removed.
-            }
-
-            @Override
-            public void contentsChanged(ListDataEvent e) {
-                if (!Holder.INSTANCE.isVisible()) {
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Holder.INSTANCE.setVisible(true);
-                        }
-                    });
-                }
-            }
-        });
+        LogRecordCollector.LOG_RECORD_MODEL.addListDataListener(DATA_LISTENER);
     }
+
+    public static void remove() {
+        LogRecordCollector.LOG_RECORD_MODEL.removeListDataListener(DATA_LISTENER);
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel filterLabel;

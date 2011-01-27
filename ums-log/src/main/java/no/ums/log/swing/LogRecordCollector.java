@@ -44,4 +44,5 @@ public class LogRecordCollector extends Handler {
     public void close() throws SecurityException {
         // Noop
     }
+
 }

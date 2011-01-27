@@ -35,7 +35,7 @@ public class LogFrameMain {
         log.debug("Test message");
         log.debug("Test message");
         log.debug("Test message");
-        log.debug("Test message");
+        log.error("Test message");
         service.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {

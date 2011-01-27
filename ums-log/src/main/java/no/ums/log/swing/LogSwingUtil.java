@@ -42,13 +42,24 @@ public class LogSwingUtil {
         }
     });
 
-    private static final DateTimeFormatter format = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter timeFormat = new DateTimeFormatterBuilder()
             .appendHourOfDay(2)
             .appendLiteral(':')
             .appendMinuteOfHour(2)
             .appendLiteral(':')
             .appendSecondOfMinute(2)
             .toFormatter();
+
+    private static final DateTimeFormatter dateTimeFormat = new DateTimeFormatterBuilder()
+            .appendYear(4,4)
+            .appendMonthOfYear(2)
+            .appendDayOfMonth(2)
+            .appendLiteral('-')
+            .appendHourOfDay(2)
+            .appendMinuteOfHour(2)
+            .appendSecondOfMinute(2)
+            .toFormatter();
+
 
     static {
         levelColor.put(Level.ALL, Color.GREEN.darker()); // lowest possible level
@@ -62,6 +73,10 @@ public class LogSwingUtil {
     }
 
     static String formatTime(long millis) {
-        return format.print(millis);
+        return timeFormat.print(millis);
+    }
+
+    static String formatDateTime(long millis) {
+        return dateTimeFormat.print(millis);
     }
 }

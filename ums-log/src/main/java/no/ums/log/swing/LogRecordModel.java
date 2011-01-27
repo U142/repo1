@@ -1,5 +1,7 @@
 package no.ums.log.swing;
 
+import com.google.common.collect.Lists;
+
 import java.util.logging.Level;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,10 +45,16 @@ public class LogRecordModel extends AbstractListModel {
             this.level = level;
             int size = filteredList.size();
             filteredList.clear();
-            fireIntervalRemoved(this, 0, size-1);
-            for (LogRecord record : content) {
+            fireIntervalRemoved(this, 0, size - 1);
+            // Copy content to avoid concurrent modification exception.
+            for (LogRecord record : content.toArray(new LogRecord[content.size()])) {
                 internalAdd(record);
             }
         }
     }
+
+    public boolean is(final Level level1, final int index) {
+        return index < filteredList.size() && filteredList.get(index).getLevel().intValue() >= level1.intValue();
+    }
+
 }
