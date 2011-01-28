@@ -566,6 +566,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setAddressSeachUrl(String s) { ADDRESSSEARCH_URL = s; }
 	public void setVB4Url(String s) { VB4_URL = s; }
 	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
+	public String getVB4Url() { return VB4_URL; }
 	
 	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 
 			boolean b_debug, String sz_codebase, String sz_plugin, 

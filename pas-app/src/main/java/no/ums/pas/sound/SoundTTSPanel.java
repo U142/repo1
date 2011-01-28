@@ -202,7 +202,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		
 		m_playpanel.enable_player(false);
 		start_download();
-		new Installer().download_and_save(PAS.get_pas().get_sitename() + "audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
+		new Installer().download_and_save(PAS.get_pas().getVB4Url() + "audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
 		//new Installer().download_and_save("https://secure.ums2.no/vb4utv/audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
 	}
 	public void download_finished() {
@@ -210,7 +210,8 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			stop_progress();
 			//if(m_file.get_soundfile().)
 			//m_playpanel.initialize_player(sz_localfile, true);
-			URL url = new URL(PAS.get_pas().get_sitename() + "audiofiles/" + sz_localfile);
+			String sz_vb4 = PAS.get_pas().getVB4Url();
+			URL url = new URL(sz_vb4 + "/audiofiles/" + sz_localfile);
 			URLConnection urlConn;
 			
 			urlConn = url.openConnection();

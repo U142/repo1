@@ -248,7 +248,8 @@ public class MainController implements ActionListener, TreeModelListener,
 		map.drawLayers();
 	}
 	protected void addShapeToDrawQueue(ShapeStruct s) {
-		map.addShapeToDrawQueue(s);
+		//map.addShapeToDrawQueue(s);
+		PAS.pasplugin.addShapeToPaint(s);
 	}
 	protected void mapRedraw() {
 		map.redraw();
@@ -1918,9 +1919,16 @@ public class MainController implements ActionListener, TreeModelListener,
 			for(int i=0;i<event.getAlertListe().size();i++) {
 				ParmVO p = (ParmVO)event.getAlertListe().get(i);
 				if(alert.getPk().equals(p.getPk()) && shape != null)
-					setFilled(shape);
-				else
+				{
+					p.getM_shape().calc_coortopix(getMapNavigation());
 					addShapeToDrawQueue(p.getM_shape());
+					setFilled(p.getM_shape());
+				}
+				else
+				{
+					p.getM_shape().calc_coortopix(getMapNavigation());
+					addShapeToDrawQueue(p.getM_shape());
+				}
 			}
 			// Her må jeg legge til objektet i edit
 			// Dette må gjøres i send option toolbar egentlig

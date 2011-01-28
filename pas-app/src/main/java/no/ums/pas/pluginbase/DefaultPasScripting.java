@@ -801,7 +801,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         {     	
 	        Calendar calendar = Calendar.getInstance();
 	        calendar.set(Integer.parseInt(ts.substring(0, 4)),
-	        			Integer.parseInt(ts.substring(4, 6)), 
+	        			Integer.parseInt(ts.substring(4, 6))-1, //month is 0-based
 	        			Integer.parseInt(ts.substring(6, 8)), 
 	        			Integer.parseInt(ts.substring(9, 11)),
 	        			Integer.parseInt(ts.substring(11, 13)));
