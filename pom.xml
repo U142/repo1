@@ -285,6 +285,11 @@
                 <artifactId>guava</artifactId>
                 <version>r07</version>
             </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>1.6.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -313,7 +318,6 @@
                         <source>1.6</source>
                         <target>1.6</target>
                         <encoding>UTF-8</encoding>
-                        <compilerArgument>-XDignore.symbol.file</compilerArgument>
                     </configuration>
                 </plugin>
                 <plugin>
