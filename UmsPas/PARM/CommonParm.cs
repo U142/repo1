@@ -227,6 +227,10 @@ namespace com.ums.UmsParm
             {
                 return UEllipse.Deserialize(xml);
             }
+            else if (xml.IndexOf("UGIS") >= 0)
+            {
+                return UGIS.Deserialize(xml);
+            }
             return null;
         }
 
@@ -727,7 +731,7 @@ namespace com.ums.UmsParm
             m_n_linecount = n;
         }
         public List<UGisRecord> m_gis = new List<UGisRecord>();
-        protected UMapBounds m_bounds = null;
+        public UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
         {
             m_bounds = b;
@@ -810,6 +814,22 @@ namespace com.ums.UmsParm
             throw new NotImplementedException();
         }
 
+        public static UGIS Deserialize(String xml)
+        {
+            UGIS cob = new UGIS();
+            StringReader read = new StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(cob.GetType());
+            XmlReader reader = new XmlTextReader(read);
+            try
+            {
+                cob = (UGIS)serializer.Deserialize(reader);
+                return cob;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 
     public class UResend : UShape

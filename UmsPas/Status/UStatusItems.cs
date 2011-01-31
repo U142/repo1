@@ -246,14 +246,15 @@ namespace com.ums.PAS.Status
                                     try
                                     {
                                         outxml.insertStartElement("BOUNDS");
-                                        outxml.insertAttribute("lbo", bounding._left.ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertAttribute("rbo", bounding._right.ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertAttribute("ubo", bounding._top.ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertAttribute("bbo", bounding._bottom.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("lbo", shape.gis().m_bounds.l_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("rbo", shape.gis().m_bounds.r_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("ubo", shape.gis().m_bounds.u_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("bbo", shape.gis().m_bounds.b_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._bottom.ToString(UCommon.UGlobalizationInfo));
                                         outxml.insertEndElement();
                                     }
                                     catch (Exception e)
                                     {
+
                                     }
                                 }
                                 break;
@@ -472,6 +473,7 @@ namespace com.ums.PAS.Status
                                 outxml.insertStartElement("LBASEND");
                                 try
                                 {
+                                    outxml.insertAttribute("l_refno", mdv.l_refno.ToString());
                                     outxml.insertAttribute("l_parentrefno", mdv.l_refno.ToString());
                                     outxml.insertAttribute("l_cbtype", "2");
                                     outxml.insertAttribute("l_status", lbasending.l_status.ToString());
@@ -601,6 +603,7 @@ namespace com.ums.PAS.Status
             UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "statuszip." + Guid.NewGuid() + ".zip");
             try
             {
+                String xml = outxml.getXml();
                 return zip.getZipped(outxml.getXml());
             }
             catch (Exception e)
