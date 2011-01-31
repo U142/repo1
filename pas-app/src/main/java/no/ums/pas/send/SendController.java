@@ -325,6 +325,8 @@ public class SendController implements ActionListener {
 				}
 			m_n_send_id++;
 			add_sending(obj);
+			obj.get_sendproperties().get_shapestruct().finalizeShape();
+
 			System.out.println("New sending created");
 			return obj;
 			

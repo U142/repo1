@@ -2023,6 +2023,7 @@ public class StatusSending extends Object {
 	public class CellPanel extends DefaultPanel implements ComponentListener {
 		
 		public static final long serialVersionUID = 1;
+		private StdTextLabel m_lbl_refno = new StdTextLabel(PAS.l("common_refno") + ":", 150, 11, true);
 		private StdTextLabel m_lbl_operator = new StdTextLabel(PAS.l("common_operator") + ":", 150, 11, true);
 		private StdTextLabel m_lbl_sendingstatus = new StdTextLabel(PAS.l("common_sendingstatus") + ":", 150, 11, true);
 		private StdTextLabel m_lbl_items = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 150, 11, false);
@@ -2031,7 +2032,8 @@ public class StatusSending extends Object {
 		private StdTextLabel m_lbl_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 150, 11, false);
 		private StdTextLabel m_lbl_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 150, 11, false);
 		private StdTextLabel m_lbl_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 150, 11, false);
-		
+
+		private StdTextLabel m_txt_refno = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_sendingstatus = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_items = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_processed = new StdTextLabel("", 150, 11, false);
@@ -2075,6 +2077,7 @@ public class StatusSending extends Object {
 		public void add_controls() {
 			m_gridconst.fill = GridBagConstraints.BOTH;
 		
+			
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(m_lbl_operator, m_gridconst);
 			set_gridconst(1, get_panel(), 2, 1);
@@ -2084,6 +2087,12 @@ public class StatusSending extends Object {
 			add(m_lbl_sendingstatus, m_gridconst);
 			set_gridconst(1, get_panel(), 2, 1);
 			add(m_txt_sendingstatus, m_gridconst);
+
+			set_gridconst(0, inc_panels(), 1, 1);
+			add(m_lbl_refno, m_gridconst);
+			set_gridconst(1, get_panel(), 2, 1);
+			add(m_txt_refno, m_gridconst);
+
 			
 			add_spacing(DefaultPanel.DIR_VERTICAL,12);
 									
@@ -2185,6 +2194,7 @@ public class StatusSending extends Object {
 			}
 				break;
 			}
+			m_txt_refno.setText(String.valueOf(get_refno()));
 			m_txt_sendingstatus.setText(get_lba_sendingstatusS());// + " " + m_lba.send_ts.get(m_lba.send_ts.size()-1).sz_timestamp);
 			m_txt_sendingstatus.setToolTipText(get_lba_sendingstatusS());
 			m_txt_delivered.setText(String.valueOf(get_lba_delivered()));
