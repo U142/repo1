@@ -1349,7 +1349,7 @@ namespace com.ums.UmsParm
                 }
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}", l_refno, operators[i], l_type, n_function);
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}, {4}", l_refno, operators[i], l_type, n_function, l_requesttype);
                     ExecNonQuery(szSQL);
                 }
                 return true;
