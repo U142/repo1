@@ -344,25 +344,25 @@ public class SendController implements ActionListener {
 					SendPropertiesPolygon poly = new SendPropertiesPolygon((PolygonStruct)sending.get_polygon().clone(), obj.get_toolbar(), new Col(new Color(0, 0, 0), new Color(255, 0, 0)));
 					poly.set_resend(sending.get_refno());
 					obj.set_sendproperties(poly);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					break;
 				case SendProperties.SENDING_TYPE_CIRCLE_:
 					SendPropertiesEllipse ell = new SendPropertiesEllipse((EllipseStruct)sending.get_ellipse().clone(), obj.get_toolbar(), new Col(new Color(0, 0, 0), new Color(255, 0, 0)));
 					ell.set_resend(sending.get_refno());
 					obj.set_sendproperties(ell);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					break;
 				case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
 					SendPropertiesGIS gis = new SendPropertiesGIS(obj.get_toolbar());
 					gis.set_resend(sending.get_refno());
 					obj.set_sendproperties(gis);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					break;
 				case SendProperties.SENDING_TYPE_MUNICIPAL_:
 					SendPropertiesMunicipal mun = new SendPropertiesMunicipal((MunicipalStruct)sending.get_municipal().clone(), obj.get_toolbar());
 					mun.set_resend(sending.get_refno());
 					obj.set_sendproperties(mun);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					break;
 				case SendProperties.SENDING_TYPE_TAS_COUNTRY_:
 					SendPropertiesTAS tas = new SendPropertiesTAS(obj.get_toolbar());
@@ -370,7 +370,7 @@ public class SendController implements ActionListener {
 					TasStruct ts = sending.get_shape().typecast_tas();
 					tas.set_resend(sending.get_refno());
 					obj.set_sendproperties(tas);
-					obj.get_toolbar().set_addresstypes(sending.get_addresstypes());
+					obj.get_toolbar().set_addresstypes(sending.get_resend_addresstypes());
 					tas.setCountryList(ts.getCountryList());
 					tas.setSmsInStats(sending.getSmsInStats());
 					tas.set_sms_broadcast_message(sending.get_sms_message_text());
@@ -380,7 +380,7 @@ public class SendController implements ActionListener {
 			System.out.println(sending.get_addresstypes());
 			// Få tak i gislist
 			//PAS.get_pas().get_statuscontroller().get_houses().get_houses().size();
-			obj.get_toolbar().init_addresstypes(sending.get_addresstypes());
+			obj.get_toolbar().init_addresstypes(sending.get_resend_addresstypes());
 			obj.get_sendproperties().set_profilepk(sending.get_profilepk());
 			obj.get_sendproperties().set_oadc_number(sending.get_oadc());
 			obj.get_sendproperties().set_sendchannels(sending.get_type());

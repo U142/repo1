@@ -502,6 +502,7 @@ public class StatusSending extends Object {
 	private int _n_deptpk;
 	private int _n_type;
 	private int _n_addresstypes;
+	private int _n_resend_addresstypes;
 	private int _n_profilepk;
 	private int _n_queuestatus;
 	private int _n_totitem;
@@ -574,6 +575,8 @@ public class StatusSending extends Object {
 	public int get_deptpk() { return _n_deptpk; }
 	public int get_type() { return _n_type; }
 	public int get_addresstypes() { return _n_addresstypes; }
+	public int get_resend_addresstypes() { return _n_resend_addresstypes; }
+	public void set_resend_addresstypes(int addresstypes) { _n_resend_addresstypes = addresstypes; }
 	public int get_profilepk() { return _n_profilepk; }
 	public int get_queuestatus() { return _n_queuestatus; }
 	public int get_totitem() { return _n_totitem; }
@@ -1872,6 +1875,10 @@ public class StatusSending extends Object {
 				}
 			}
 			else if("act_resend".equals(e.getActionCommand())) {
+				if((m_this.get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0)
+					m_this.set_resend_addresstypes(m_this.get_addresstypes() - SendController.SENDTO_CELL_BROADCAST_TEXT);
+				else
+					m_this.set_resend_addresstypes(m_this.get_addresstypes());
 				PAS.get_pas().get_sendcontroller().actionPerformed(new ActionEvent(m_this, ActionEvent.ACTION_PERFORMED, "act_resend"));
 			}
 			else if("inc_maxchannels".equals(e.getActionCommand()))
@@ -2045,7 +2052,7 @@ public class StatusSending extends Object {
 		
 		public CellPanel() {
 			super();
-			setPreferredSize(new Dimension(300, 500));
+			setPreferredSize(new Dimension(300, 850));
 			
 			m_txt_status_cc.setEnabled(false);
 			m_txt_status_cc.setBackground(new Color(255,255,255, Color.TRANSLUCENT));
@@ -2118,10 +2125,11 @@ public class StatusSending extends Object {
 			set_gridconst(0, inc_panels(), 7, 1); //5
 			add(m_lba_progress, m_gridconst);
 			add_spacing(DefaultPanel.DIR_VERTICAL, 10);
-			
 			set_gridconst(0, inc_panels(), 1, 1);
-			m_btn_tas_resend = new JButton("Resend");
+			
+			m_btn_tas_resend = new JButton(PAS.l("main_status_resend"));
 			add(m_btn_tas_resend, m_gridconst);
+			
 			m_btn_tas_resend.setVisible(false);
 			m_btn_tas_resend.addActionListener(this);
 			
@@ -2186,10 +2194,14 @@ public class StatusSending extends Object {
 			m_txt_processed.setText((get_lba_processed() >= 0 ? String.valueOf(get_lba_processed()) : PAS.l("common_na")));
 			m_txt_items.setText((get_lba_items() >= 0 ? String.valueOf(get_lba_items()) : PAS.l("common_na")));
 			
-			if(m_filter_status_by_operator > -1 && m_lba.n_status > 42000)
+			if(m_filter_status_by_operator > -1 && m_lba.n_status > 42000) {
 				m_btn_tas_resend.setVisible(true);
-			else
+				m_btn_tas_resend.setEnabled(true);
+			}
+			else {
 				m_btn_tas_resend.setVisible(false);
+				m_btn_tas_resend.setEnabled(false);
+			}
 			
 			if(m_lba==null) {
 				pnl_cell.setVisible(false);
@@ -2203,6 +2215,9 @@ public class StatusSending extends Object {
 						pnl_cell.setVisible(true);
 				}
 			}
+			
+			if(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT))
+				m_btn_tas_resend.setVisible(true);
 			
 			
 			/*if(get_lba_sendingstatus()==LBASEND.LBASTATUS_PREPARED_CELLVISION)
@@ -2294,7 +2309,12 @@ public class StatusSending extends Object {
 
 		public void actionPerformed(ActionEvent e) {
 			// Resend
-			new WSTasResend(this,get_refno(),m_lba.l_operator);
+			if(_n_type == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
+				new WSTasResend(this,get_refno(),m_lba.l_operator);
+			else {
+				m_this.set_resend_addresstypes(SendController.SENDTO_CELL_BROADCAST_TEXT);
+				PAS.get_pas().get_sendcontroller().actionPerformed(new ActionEvent(m_this, ActionEvent.ACTION_PERFORMED, "act_resend"));
+			}
 
 		}
 		
@@ -2314,7 +2334,7 @@ public class StatusSending extends Object {
 			int h = getHeight();
 			//m_scroll_cc.setPreferredSize(new Dimension(w-10, h/2));
 			//m_scroll_cc.revalidate();
-			m_lba_tabbed.setPreferredSize(new Dimension(w, h-220));
+			m_lba_tabbed.setPreferredSize(new Dimension(w, h-240));
 			m_lba_progress.setPreferredSize(new Dimension(w, 20));
 			m_lba_progress.setSize(new Dimension(w, 20));
 			//m_lba_tabbed.setSize(new Dimension(w, h));

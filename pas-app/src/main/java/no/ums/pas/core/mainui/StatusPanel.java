@@ -31,6 +31,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	InhabitantFrame get_inhabitantframe() { return PAS.get_pas().get_inhabitantframe(); }
 	LBATabbedPane get_lbatab() { return PAS.get_pas().get_statuscontroller().getLBATotalPane(); }
 	private JProgressBar m_lba_total_progress = new JProgressBar();
+	
 	private StdTextLabel m_lbl_lba_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 90, 11, false);
 	private StdTextLabel m_lbl_lba_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 90, 11, false);
 	private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 90, 11, false);

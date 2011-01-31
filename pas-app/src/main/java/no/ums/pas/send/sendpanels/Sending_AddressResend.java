@@ -85,7 +85,7 @@ public class Sending_AddressResend extends Sending_AddressPanel implements Compo
 			for(int i=0; i < m_statuscodes.size(); i++) {
 				StatusCode item = m_statuscodes._get(i);
 				if(!item.get_reserved()) { //don't include sending/pending/parsing
-					Object [] obj = new Object [] { item, new String(item.get_status()), new Integer(item.get_current_count()), new Boolean(false) };
+					Object [] obj = new Object [] { item, new String(item.get_status()==null?"":item.get_status()), new Integer(item.get_current_count()), new Boolean(false) };
 					this.insert_row(obj, -1);
 				}
 			}

@@ -339,6 +339,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			for(int i=0;i<items.size();i++) {
 				StatusItemObject item = (StatusItemObject)items.get(i);
 				int count = 0;
+				
 				if(item.get_refno() == obj.get_sendproperties().get_resend_refno()) {
 					StatusItemObject tempItem;
 					for(int j=0; j<=i; j++) {
