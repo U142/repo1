@@ -25,7 +25,7 @@ import org.joda.time.format.DateTimeFormatterBuilder;
  * @author staaleu
  */
 public class LogSwingUtil {
-    public static ListCellRenderer LOG_RECORD_RENDERER = new ListCellRenderer() {
+    public static final ListCellRenderer LOG_RECORD_RENDERER = new ListCellRenderer() {
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -33,7 +33,7 @@ public class LogSwingUtil {
         }
     };
 
-    public static ComboBoxModel LEVEL_MODEL = new DefaultComboBoxModel(new Level[] {Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE});
+    public static final ComboBoxModel LEVEL_MODEL = new DefaultComboBoxModel(new Level[] {Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE});
 
     private static NavigableMap<Level, Color> levelColor = new TreeMap<Level, Color>(new Comparator<Level>() {
         @Override
