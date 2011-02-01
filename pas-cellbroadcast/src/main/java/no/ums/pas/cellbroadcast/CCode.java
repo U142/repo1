@@ -12,7 +12,7 @@ public class CCode {
 
     public static final Function<String, CCode> PARSE = new Function<String, CCode>() {
         @Override
-        public CCode apply(@Nullable String input) {
+        public CCode apply(String input) { //@Nullable 
             Iterator<String> line = Splitter
                     .on('\t')
                     .trimResults(CharMatcher.is('"')) // Remove quotes
