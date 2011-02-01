@@ -16,7 +16,7 @@ public class CCode {
             Iterator<String> line = Splitter
                     .on('\t')
                     .trimResults(CharMatcher.is('"')) // Remove quotes
-                    .split(Preconditions.checkNotNull(input, "input is null")).iterator();
+                    .split(input).iterator(); //Preconditions.checkNotNull(input, "input is null")
             String cCode = line.hasNext() ? line.next() : "-2";
             String cName = line.hasNext() ? line.next() : "Unknown";
             String cShort = line.hasNext() ? line.next() : "Unknown";
