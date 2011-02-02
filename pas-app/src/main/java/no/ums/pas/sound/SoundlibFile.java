@@ -50,7 +50,7 @@ public abstract class SoundlibFile extends Object implements ActionListener{
 		m_sz_messagepk= sz_messagepk;
 		m_sz_moduledef= sz_moduledef;
 		m_sz_fileext = sz_fileext;
-		m_sz_sourcefile	= PAS.get_pas().get_sitename() + "bbmessages/" + m_n_deptpk + "/" + this.get_messagepk() + "." + sz_fileext;
+		m_sz_sourcefile	= /*PAS.get_pas().get_sitename()*/ PAS.get_pas().getVB4Url() + "/bbmessages/" + m_n_deptpk + "/" + this.get_messagepk() + "." + sz_fileext;
 		m_sz_localfile  = this.get_messagepk() + "." + sz_fileext;
 	}
 	
@@ -63,7 +63,7 @@ public abstract class SoundlibFile extends Object implements ActionListener{
 		m_sz_moduledef= sz_moduledef;
 		m_sz_fileext = sz_fileext;
 		//m_sz_sourcefile	= PAS.get_pas().get_sitename() + "bbmessages/" + m_n_deptpk + "/" + this.get_messagepk() + "." + sz_fileext;
-		m_sz_sourcefile = PAS.get_pas().get_sitename() + sz_urlpath + "/" + sz_refno_fileno + "." + sz_fileext;
+		m_sz_sourcefile = /*PAS.get_pas().get_sitename()*/ PAS.get_pas().getVB4Url() + "/" + sz_urlpath + "/" + sz_refno_fileno + "." + sz_fileext;
 		m_sz_localfile  = this.get_messagepk() + "." + sz_fileext;
 	}
 	
