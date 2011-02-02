@@ -62,7 +62,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 				if(f.m_f.exists())
 					m_playpanel.initialize_player(f.get_file().getPath(), true);
 				else {
-					URL url = new URL(PAS.get_pas().get_sitename() + "bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
+					URL url = new URL(/*PAS.get_pas().get_sitename()*/ PAS.get_pas().getVB4Url() + "/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
 					//URL url = new URL("https://secure.ums.no/vb45/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/1199.wav");
 					URLConnection urlConn;
 					
