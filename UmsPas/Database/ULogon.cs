@@ -78,9 +78,9 @@ namespace com.ums.PAS.Database
 
                 return b_ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -118,9 +118,9 @@ namespace com.ums.PAS.Database
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -201,9 +201,9 @@ namespace com.ums.PAS.Database
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -223,9 +223,9 @@ namespace com.ums.PAS.Database
 
                 return LoadLanguageAndVisuals(n_userpk, true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -289,9 +289,9 @@ namespace com.ums.PAS.Database
 
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -306,9 +306,9 @@ namespace com.ums.PAS.Database
             {
                 return RemoveSession(ref l);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -359,10 +359,10 @@ namespace com.ums.PAS.Database
                             ret.l_userpk = 0;
                         rs.Close();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         ret.l_userpk = 0;
-                        throw e;
+                        throw;
                     }
                 }
                 else //logon ok
@@ -538,9 +538,9 @@ namespace com.ums.PAS.Database
                                                 ret.l_userpk, l.sessionid, l.sz_password);
                         ExecNonQuery(szSessionSql);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        throw e;
+                        throw;
                     }
 
 
@@ -599,9 +599,9 @@ namespace com.ums.PAS.Database
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -659,10 +659,10 @@ namespace com.ums.PAS.Database
                             ret.l_userpk = 0;
                         rs.Close();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         ret.l_userpk = 0;
-                        throw e;
+                        throw;
                     }
                 }
                 else //logon ok
@@ -824,9 +824,9 @@ namespace com.ums.PAS.Database
                                                     ret.l_userpk, l.sessionid, l.sz_password);
                             ExecNonQuery(szSessionSql);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            throw e;
+                            throw;
                         }
 
 
@@ -891,9 +891,9 @@ namespace com.ums.PAS.Database
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

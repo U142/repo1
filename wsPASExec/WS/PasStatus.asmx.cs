@@ -54,9 +54,9 @@ namespace com.ums.ws.pas.status
             {
                 throw e;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -76,9 +76,9 @@ namespace com.ums.ws.pas.status
             {
                 throw e;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -91,9 +91,9 @@ namespace com.ums.ws.pas.status
                 s.CheckLogon(ref req.logon, true);
                 return s.GetStatusItems(ref req);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -114,9 +114,9 @@ namespace com.ums.ws.pas.status
                 }
                 return response;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 

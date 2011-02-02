@@ -46,9 +46,9 @@ namespace com.ums.PAS.Database
                     throw new ULogonFailedException();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             //deptfilter
@@ -213,9 +213,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

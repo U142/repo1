@@ -61,9 +61,9 @@ namespace com.ums.PAS.Database
                 rs.Close();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -90,9 +90,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -205,9 +205,9 @@ namespace com.ums.PAS.Database
                 rs.Close();
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -385,9 +385,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -598,10 +598,10 @@ namespace com.ums.PAS.Database
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
             finally
             {
@@ -656,9 +656,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -702,9 +702,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -734,9 +734,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

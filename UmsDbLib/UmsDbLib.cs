@@ -92,7 +92,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public UmsDb() : this(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
@@ -220,7 +220,7 @@ namespace com.ums.UmsDbLib
             {
                 setLastError(e.Message);
                 //throw new UDbQueryException("CheckLogon");
-                throw e;
+                throw;
             }
             finally
             {
@@ -302,7 +302,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -332,7 +332,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -427,7 +427,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -461,7 +461,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -506,7 +506,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -554,7 +554,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -582,7 +582,7 @@ namespace com.ums.UmsDbLib
                 else
                     constr = sz_constring;
                 setLastError("constr="+ constr + "\n" + e.Message + "\n" + e.StackTrace);
-                throw e;
+                throw;
             }
             return m_b_dbconn;
         }
@@ -608,7 +608,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public long newRefno()
@@ -628,7 +628,7 @@ namespace com.ums.UmsDbLib
             catch (Exception e)
             {
                 setLastError(e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -781,7 +781,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public int ExecCommand()
@@ -792,7 +792,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -839,7 +839,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             OdbcDataReader tempreader;
             tempreader = m_cmd.ExecuteReader();
@@ -889,7 +889,7 @@ namespace com.ums.UmsDbLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
     
             return true;

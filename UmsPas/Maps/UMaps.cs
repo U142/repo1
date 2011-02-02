@@ -198,9 +198,9 @@ namespace com.ums.PAS.Maps
                 rs.Close();
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -253,7 +253,7 @@ namespace com.ums.PAS.Maps
             {
                 ULog.error(0, "Error retrieving WMS layer", e.Message);
                 //throw new UMapLoadFailedException(e, m_mapinfo.l_bo + " | " + m_mapinfo.r_bo + " | " + m_mapinfo.u_bo + " | " + m_mapinfo.b_bo);
-                throw e;
+                throw;
             }
 
         }

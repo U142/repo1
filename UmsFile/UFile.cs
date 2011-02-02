@@ -48,7 +48,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(e.Message);
-                throw e;
+                throw;
             }
             try
             {
@@ -57,7 +57,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -70,7 +70,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -83,7 +83,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -94,9 +94,9 @@ namespace com.ums.UmsFile
                 File.Delete(this.full());
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -138,9 +138,9 @@ namespace com.ums.UmsFile
                     //copy the old GUI adrfile to the new resend
                     from.CopyOperation(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
                 return true;
             }
@@ -163,7 +163,7 @@ namespace com.ums.UmsFile
                 catch (Exception e)
                 {
                     ULog.error(n_refno, "Error publishing GUI addressfile", e.Message);
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -220,7 +220,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
-                throw e;
+                throw;
 
             }
         }
@@ -260,7 +260,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(n_refno, "Error publishing LBA addressfile", e.Message);
-                throw e;
+                throw;
 
             }
         }
@@ -287,7 +287,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             //UFile dest = new UFile(UCommon.UPATHS.sz_path_lba, this.file.file());
             String tempfile = this.file.file().Replace(this.file.ext(), ".tmp");
@@ -303,7 +303,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(n_refno, "Error publishing Confirm LBA file", e.Message);
-                throw e;
+                throw;
             }
         }
     }
@@ -341,7 +341,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(n_refno, "Error publishing addressfile", e.Message);
-                throw e;
+                throw;
             }
         }
     }
@@ -382,7 +382,7 @@ namespace com.ums.UmsFile
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public virtual bool publish()
@@ -408,7 +408,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 ULog.error(n_refno, "Error publishing addressfile", e.Message);
-                throw e;
+                throw;
             }
         }
         protected bool open()
@@ -463,7 +463,7 @@ namespace com.ums.UmsFile
             {
                 //ULog.error(e.Message);
                 //return false;
-                throw e;
+                throw;
             }
         }
         virtual public void close()
@@ -513,7 +513,7 @@ namespace com.ums.UmsFile
             catch (Exception e)
             {
                 setLastError(e.Message);
-                throw e;
+                throw;
             }
         }
     }

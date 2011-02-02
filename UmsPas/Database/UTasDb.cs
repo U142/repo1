@@ -51,9 +51,9 @@ namespace com.ums.PAS.Database
                 }
                 return n_requestpk;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -166,9 +166,9 @@ namespace com.ums.PAS.Database
                 rs.Close();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -257,9 +257,9 @@ namespace com.ums.PAS.Database
                 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -300,9 +300,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -424,9 +424,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -460,9 +460,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -590,9 +590,9 @@ namespace com.ums.PAS.Database
 
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

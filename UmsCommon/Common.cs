@@ -465,7 +465,7 @@ namespace com.ums.UmsCommon
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public static void UnInitialize()
@@ -530,9 +530,9 @@ namespace com.ums.UmsCommon
                     dSecurity.AddAccessRule(new FileSystemAccessRule(Account, Rights, ControlType));
                     dInfo.SetAccessControl(dSecurity);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
 
@@ -567,7 +567,7 @@ namespace com.ums.UmsCommon
                 catch (Exception e)
                 {
                     ULog.error(e.Message);
-                    throw e;
+                    throw;
                 }
             }
 
@@ -770,7 +770,7 @@ namespace com.ums.UmsCommon
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
     }

@@ -360,9 +360,9 @@ namespace com.ums.PAS.CB
                 cob = (CB_ALERT_POLYGON)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }

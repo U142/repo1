@@ -57,9 +57,9 @@ namespace com.ums.PAS.Database
                 xml.insertEndElement(); //SOUNDLIB
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -90,9 +90,9 @@ namespace com.ums.PAS.Database
                 xml.insertEndElement(); //TTSLANG
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -140,9 +140,9 @@ namespace com.ums.PAS.Database
                 xml.insertEndElement(); //SCHEDPROFILES
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -174,9 +174,9 @@ namespace com.ums.PAS.Database
                 xml.insertEndElement(); //FROMNUMBERS
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -250,9 +250,9 @@ namespace com.ums.PAS.Database
                 rs.Close();
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

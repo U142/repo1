@@ -94,9 +94,9 @@ namespace com.ums.PAS.Address.gab
                 r.Close();
                 response.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             Byte[] to_utf8 = Encoding.GetEncoding("utf-8").GetBytes(xmldata);
@@ -109,12 +109,12 @@ namespace com.ums.PAS.Address.gab
                 doc.LoadXml(xmldata_utf8);
                 return parse(ref doc);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //UGabSearchResultList list = new UGabSearchResultList();
                 //list.setError(xmldata, e.Message);
                 //return list;
-                throw e;
+                throw;
             }
         }
 
@@ -168,9 +168,9 @@ namespace com.ums.PAS.Address.gab
             {
                 db.CheckLogon(ref m_logoninfo, true);
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                throw e;
+                throw;
             }
             int n_unique = 0;
             if (m_params.sz_no.Length > 0)
@@ -218,9 +218,9 @@ namespace com.ums.PAS.Address.gab
                 r.Close();
                 response.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             Byte[] to_utf8 = Encoding.GetEncoding("utf-8").GetBytes(xmldata);

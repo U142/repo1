@@ -52,9 +52,9 @@ namespace com.ums.PAS.Settings
             {
                 outxml = new USimpleXmlWriter(sz_encoding);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             outxml.insertStartDocument();
@@ -81,7 +81,7 @@ namespace com.ums.PAS.Settings
             catch (Exception e)
             {
                 ULog.error(0, "Error writing Settings ZIP", e.Message);
-                throw e;
+                throw;
             }
         }
     }

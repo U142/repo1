@@ -37,9 +37,9 @@ namespace com.ums.UmsParm
                 rsNow.Close();
                 return n_tmp;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -140,9 +140,9 @@ namespace com.ums.UmsParm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             if (rs != null && !rs.IsClosed)
                 rs.Close();
@@ -180,7 +180,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 setLastError(e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -249,9 +249,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 b_ret = true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -307,9 +307,9 @@ namespace com.ums.UmsParm
                                     pk, (int)type);
                 return ExecNonQuery(sql);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -546,9 +546,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -594,9 +594,9 @@ namespace com.ums.UmsParm
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -713,9 +713,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -769,9 +769,9 @@ namespace com.ums.UmsParm
                 {
                     GetSendingInfo(s.n_resend_refno, ref m);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
                 /*String resendtype = "";
                 switch (s.n_send_channels)
@@ -846,9 +846,9 @@ namespace com.ums.UmsParm
                 else
                     throw new UEventIsMarkedAsFinishedException();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -876,9 +876,9 @@ namespace com.ums.UmsParm
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -893,9 +893,9 @@ namespace com.ums.UmsParm
                 String szSQL = String.Format("UPDATE BBPROJECT SET l_finished=1 WHERE l_projectpk={0}", n_projectpk);
                 return ExecNonQuery(szSQL);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -915,7 +915,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
         
@@ -935,7 +935,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -950,7 +950,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -996,7 +996,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(s.l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
         
@@ -1012,7 +1012,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1031,9 +1031,9 @@ namespace com.ums.UmsParm
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1043,9 +1043,9 @@ namespace com.ums.UmsParm
             {
                 return InsertBBACTIONPROFILE(ref s.l_refno, ref s.m_profile);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool InsertBBDYNARESCHED(ref long l_refno, ref BBDYNARESCHED dyna)
@@ -1061,7 +1061,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1071,9 +1071,9 @@ namespace com.ums.UmsParm
             {
                 return InsertBBDYNARESCHED(ref s.l_refno, ref s.m_dynaresched);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool InsertLBASMSIN_REPLYNUMBERS(ref ULOGONINFO logon, ref TAS_SENDING s)
@@ -1087,7 +1087,7 @@ namespace com.ums.UmsParm
             catch (Exception e) 
             {
                 ULog.error(s.l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1189,7 +1189,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(s.l_refno, sql, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1205,9 +1205,9 @@ namespace com.ums.UmsParm
                 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1223,10 +1223,10 @@ namespace com.ums.UmsParm
                 InsertBBDYNARESCHED(ref s);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //cleanup
-                throw e;
+                throw;
             }
 
         }
@@ -1244,9 +1244,9 @@ namespace com.ums.UmsParm
                 InsertLBACountries(ref s);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1260,9 +1260,9 @@ namespace com.ums.UmsParm
                 // Write to eat
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             
         }
@@ -1286,9 +1286,9 @@ namespace com.ums.UmsParm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1322,9 +1322,9 @@ namespace com.ums.UmsParm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1357,7 +1357,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1385,7 +1385,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1403,7 +1403,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1424,7 +1424,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
         public bool ResetLBAArea(String l_alertpk)
@@ -1438,7 +1438,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -1459,7 +1459,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, szSQL, e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -1485,7 +1485,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, szSQL, e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -1523,9 +1523,9 @@ namespace com.ums.UmsParm
                     b = true;
                 return b;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1552,9 +1552,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return b;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1580,9 +1580,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return b;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1603,9 +1603,9 @@ namespace com.ums.UmsParm
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -1621,9 +1621,9 @@ namespace com.ums.UmsParm
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1687,9 +1687,9 @@ namespace com.ums.UmsParm
                     throw new ULBANoOperatorsReadyForConfirmCancel();
                 return operators;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1718,9 +1718,9 @@ namespace com.ums.UmsParm
                 rs.Close();
                 return b;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1897,9 +1897,9 @@ namespace com.ums.UmsParm
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1977,9 +1977,9 @@ namespace com.ums.UmsParm
                 // f_simulation,sending_type = select f_simulate, l_type from LBASEND where l_refno=93031
                 // sz_sms_message, sz_oadc = SELECT sz_text, sz_oadc FROM LBASEND_TEXT WHERE l_refno=93031
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2009,9 +2009,9 @@ namespace com.ums.UmsParm
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -2028,7 +2028,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -2044,7 +2044,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -2064,7 +2064,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
         }
         public int getCBDuration(int l_comppk, int l_deptpk, long l_refno)
@@ -2089,7 +2089,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(l_refno, szSQL, e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -2122,7 +2122,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(department.l_deptpk, szSQL, e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -2190,7 +2190,7 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {

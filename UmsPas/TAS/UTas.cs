@@ -78,9 +78,9 @@ namespace com.ums.PAS.TAS
                 if (!db.CheckLogon(ref logon, true))
                     throw new ULogonFailedException();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -112,9 +112,9 @@ namespace com.ums.PAS.TAS
                 db.close();
                 return updates;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -150,9 +150,9 @@ namespace com.ums.PAS.TAS
                     
                 return req;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         
@@ -162,9 +162,9 @@ namespace com.ums.PAS.TAS
             {
                 return db.GetResponseNumbers(ref logon);
             }
-            catch(Exception e) 
+            catch(Exception) 
             {
-                throw e;
+                throw;
             }
         }
 
@@ -174,9 +174,9 @@ namespace com.ums.PAS.TAS
             {
                 return db.GetStatistics_Countries_Per_Timeunit(ref filter);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

@@ -74,7 +74,7 @@ namespace com.ums.PAS.CB
             catch (Exception e)
             {
                 ULog.error(alert.l_refno, e.Message);
-                throw e;
+                throw;
             }
 
             List<int> operators = db.GetCBOperatorsForSendByComp(alert.l_comppk);
@@ -113,7 +113,7 @@ namespace com.ums.PAS.CB
             catch (Exception e)
             {
                 ULog.error(alert.l_refno, e.Message);
-                throw e;
+                throw;
             }
             //attach refno to project
             try
@@ -123,7 +123,7 @@ namespace com.ums.PAS.CB
             catch (Exception e)
             {
                 ULog.error(alert.l_refno, e.Message);
-                throw e;
+                throw;
             }
 
             //retrieve message object from send-object
@@ -141,7 +141,7 @@ namespace com.ums.PAS.CB
             catch (Exception e)
             {
                 ULog.error(alert.l_refno, e.Message);
-                throw e;
+                throw;
             }
 
             MDVSENDINGINFO mdv = new MDVSENDINGINFO();
@@ -191,9 +191,9 @@ namespace com.ums.PAS.CB
             {
                 alert.l_validity = db.getCBDuration(logon.l_comppk, alert.l_deptpk, alert.l_refno);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             //Save shape to PASHAPES for status lookup
@@ -254,9 +254,9 @@ namespace com.ums.PAS.CB
                 {
                     alert.Serialize(UCommon.UPATHS.sz_path_cb);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
             else
@@ -265,9 +265,9 @@ namespace com.ums.PAS.CB
                 {
                     doSimulateCBSending(ref db, ref alert, ref operators);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
             ULog.write(alert.l_refno, szLog);

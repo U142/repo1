@@ -101,9 +101,9 @@ namespace com.ums.ws.parm
                 return ret;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -122,9 +122,9 @@ namespace com.ums.ws.parm
                 db.close();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -147,9 +147,9 @@ namespace com.ums.ws.parm
                 db.close();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -175,9 +175,9 @@ namespace com.ums.ws.parm
                 db.close();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -238,9 +238,9 @@ namespace com.ums.ws.parm
                 fs.Write(zipfile, 0, zipfile.Length);
                 fs.Close();
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                throw err;
+                throw;
             }
 
             //unzip the two files from in-file
@@ -464,7 +464,7 @@ namespace com.ums.ws.parm
             catch (Exception e)
             {
                 ULog.error(0, "Error returning PARM ZIP file", e.Message);
-                throw e;
+                throw;
             }
 
             //temp write out.xml
@@ -591,7 +591,7 @@ namespace com.ums.ws.parm
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             try
             {
@@ -668,9 +668,9 @@ namespace com.ums.ws.parm
                     
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             return counter;
@@ -769,9 +769,9 @@ namespace com.ums.ws.parm
                 StreamWriter w = (fmode.Equals(FileMode.Create) ? t.CreateText() : t.AppendText());
                 return w;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         protected bool _delete_server_shape_file(String nodetype, String l_pk)
@@ -781,9 +781,9 @@ namespace com.ums.ws.parm
                 FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + nodetype + l_pk + ".xml");
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -826,7 +826,7 @@ namespace com.ums.ws.parm
             {
                 //Failed to create/open file
                 ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
-                throw e;
+                throw;
             }
             return true;
         }
@@ -843,7 +843,7 @@ namespace com.ums.ws.parm
             catch (Exception e)
             {
                 ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
-                throw e;
+                throw;
             }
 
             return true;
@@ -909,7 +909,7 @@ namespace com.ums.ws.parm
             catch (Exception e)
             {
                 ULog.error("Failed to Write addressfile " + l_pk + ".xml\n" + e.Message);
-                throw e;
+                throw;
             }
 
             return true;
@@ -938,10 +938,10 @@ namespace com.ums.ws.parm
                 //else
                 //    throw new NotImplementedException("LBA addresstype only available with polygon and ellipse");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 bUseLba = false;
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1000,9 +1000,9 @@ namespace com.ums.ws.parm
                     _create_lba_file_for_server(op, ref a);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1136,9 +1136,9 @@ namespace com.ums.ws.parm
                 szShapeString += tmp;
                 w.WriteLine(tmp);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1221,9 +1221,9 @@ namespace com.ums.ws.parm
             {
                 file.MoveTo(filename.Replace(".tmp", ".xml"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             return true;
@@ -1261,9 +1261,9 @@ namespace com.ums.ws.parm
             {
                 file.MoveTo(filename.Replace(".tmp", ".xml"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1301,9 +1301,9 @@ namespace com.ums.ws.parm
             {
                 file.MoveTo(filename.Replace(".tmp", ".xml"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1354,9 +1354,9 @@ namespace com.ums.ws.parm
                 }
 
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1384,9 +1384,9 @@ namespace com.ums.ws.parm
                 ARGB argb = new ARGB("0", "0", "0", "0");
                 parse_as_polygon(ref node, ref w, "alertpolygon", l_pk, "l_alertpk", ref argb);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1414,9 +1414,9 @@ namespace com.ums.ws.parm
                 ARGB argb = new ARGB("0", "0", "0", "0");
                 parse_as_ellipse(ref node, ref w, "alertellipse", l_pk, "l_alertpk", ref argb);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1435,9 +1435,9 @@ namespace com.ums.ws.parm
                 w.WriteLine(sz);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -1560,9 +1560,9 @@ namespace com.ums.ws.parm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1621,9 +1621,9 @@ namespace com.ums.ws.parm
                 }
                 return response;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1662,9 +1662,9 @@ namespace com.ums.ws.parm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1713,9 +1713,9 @@ namespace com.ums.ws.parm
                     rs.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1795,9 +1795,9 @@ namespace com.ums.ws.parm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2026,9 +2026,9 @@ namespace com.ums.ws.parm
                 int sec = diff.Seconds;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2088,9 +2088,9 @@ namespace com.ums.ws.parm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2138,9 +2138,9 @@ namespace com.ums.ws.parm
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2183,9 +2183,9 @@ namespace com.ums.ws.parm
 
                     rs.Close();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
                 finally
                 {
@@ -2399,9 +2399,9 @@ namespace com.ums.ws.parm
                 return n_ret;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -2476,9 +2476,9 @@ namespace com.ums.ws.parm
                 return n_ret;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -2506,9 +2506,9 @@ namespace com.ums.ws.parm
                 return db_exec(sz_sql, "paevent", operation.ToString().ToLower(), ev.l_temppk.ToString(), sz_description, false);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -2566,9 +2566,9 @@ namespace com.ums.ws.parm
                 }
                 return n_ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 

@@ -31,9 +31,9 @@ namespace com.ums.PAS.Database
             {
                 Connect(sz_stdcc, conn.sz_dsn, conn.sz_uid, conn.sz_pwd, n_deptpk);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         /*public UAdrDb(UmsDbConnParams conn, int timeout, int n_deptpk)
@@ -69,9 +69,9 @@ namespace com.ums.PAS.Database
                 Connect(sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_dsnbase, UCommon.UBBDATABASE.sz_adrdb_uid,
                     UCommon.UBBDATABASE.sz_adrdb_pwd, n_deptpk);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -98,9 +98,9 @@ namespace com.ums.PAS.Database
                 db.close();
                 return init();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -178,9 +178,9 @@ namespace com.ums.PAS.Database
                 mun.mapbounds = b;
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -219,9 +219,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -277,9 +277,9 @@ namespace com.ums.PAS.Database
                 }
                 throw new NotImplementedException();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -397,9 +397,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -454,9 +454,9 @@ namespace com.ums.PAS.Database
                 }
                 rs.Close();
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                throw err;
+                throw;
             }
             finally
             {
@@ -511,9 +511,9 @@ namespace com.ums.PAS.Database
 
                 
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                throw err;
+                throw;
             }
             finally
             {
@@ -562,9 +562,9 @@ namespace com.ums.PAS.Database
                 rs.Close();
                 return list;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -660,10 +660,10 @@ namespace com.ums.PAS.Database
                         }
                         rs.Close();
                     }
-                    catch (Exception err)
+                    catch (Exception)
                     {
                         next = startat;
-                        throw err;
+                        throw;
                     }
                     finally
                     {
@@ -679,9 +679,9 @@ namespace com.ums.PAS.Database
                 next = (i + 1);
                 return i - startat + 1;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1048,7 +1048,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             catch(Exception e)
             {
                 ULog.error(0, "Error in retrieving addresses", e.Message);
-                throw e;
+                throw;
             }
             finally
             {
@@ -1610,7 +1610,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1641,9 +1641,9 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -1679,9 +1679,9 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
 
                 throw new UDbNoDataException("Record not found");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

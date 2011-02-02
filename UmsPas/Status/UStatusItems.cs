@@ -210,8 +210,18 @@ namespace com.ums.PAS.Status
                         if (m_db.ShapeFromDb(ref mdv, ref shape))
                         {
                         }
-                        else if (ParseMapFile(ref mdv, ref bounding, ref shape))
+                        /*else if (ParseMapFile(ref mdv, ref bounding, ref shape))
                         {
+                        }*/
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    try
+                    {
+                        if (shape == null)
+                        {
+                            ParseMapFile(ref mdv, ref bounding, ref shape);
                         }
                     }
                     catch (Exception)
@@ -609,7 +619,7 @@ namespace com.ums.PAS.Status
             catch (Exception e)
             {
                 ULog.error(0, "Error writing Status ZIP", e.Message);
-                throw e;
+                throw;
             }
 
             //return outxml.getXml();
@@ -647,9 +657,9 @@ namespace com.ums.PAS.Status
             {
                 reader = new StreamReader(File.OpenRead(filename.full()));
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                throw e;
+                throw;
             }
             rect = new UBoundingRect();
 
@@ -662,9 +672,9 @@ namespace com.ums.PAS.Status
                 {
                      line = reader.ReadLine();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
                 try
                 {
@@ -748,9 +758,9 @@ namespace com.ums.PAS.Status
                                 shape.poly().addPoint(x, y);
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            throw e;
+                            throw;
                         }
                     }
                     break;
@@ -782,9 +792,9 @@ namespace com.ums.PAS.Status
                                 }
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            throw e;
+                            throw;
                         }
                         break;
                     }
@@ -803,9 +813,9 @@ namespace com.ums.PAS.Status
                             str = reader.ReadLine();
                             shape.ellipse().y = float.Parse(str, UCommon.UGlobalizationInfo);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            throw e;
+                            throw;
                         }
                     }
                     break;
@@ -835,9 +845,9 @@ namespace com.ums.PAS.Status
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        throw e;
+                        throw;
                     }
                     break;
             }

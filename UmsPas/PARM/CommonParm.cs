@@ -244,9 +244,9 @@ namespace com.ums.UmsParm
                 md5 = UmsCommon.Helpers.CreateMD5Hash(outxml);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -579,9 +579,9 @@ namespace com.ums.UmsParm
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -638,9 +638,9 @@ namespace com.ums.UmsParm
                         w.writeline("/MUNICIPALID=" + m_municipals[i].sz_municipalid);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -666,9 +666,9 @@ namespace com.ums.UmsParm
                 }
                 //w.writeline(String.Format(UCommon.UGlobalizationInfo, "{0}", l_bo));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -759,9 +759,9 @@ namespace com.ums.UmsParm
                     w.writeline("/ADRID=");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return true;
         }
@@ -800,9 +800,9 @@ namespace com.ums.UmsParm
                 return true;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         protected override bool ParseFromXml(ref XmlDocument doc)
@@ -825,9 +825,9 @@ namespace com.ums.UmsParm
                 cob = (UGIS)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }
@@ -879,9 +879,9 @@ namespace com.ums.UmsParm
                 w.publish();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public override bool WriteAddressFileLBA(ref ULOGONINFO logoninfo, UDATETIME sched, string sz_type, ref BBPROJECT project, ref PAALERT alert, long n_parentrefno, int n_function, ref AdrfileLBAWriter w)
@@ -1015,9 +1015,9 @@ namespace com.ums.UmsParm
                 w.finalize();
                 return w.getXml2();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1064,9 +1064,9 @@ namespace com.ums.UmsParm
                 cob = (UEllipse)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }
@@ -1184,9 +1184,9 @@ namespace com.ums.UmsParm
                 cob = (UPLMN)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public String Serialize()
@@ -1234,9 +1234,9 @@ namespace com.ums.UmsParm
                 cob = (UPolygon)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1413,9 +1413,9 @@ namespace com.ums.UmsParm
                 w.finalize();
                 return w.getXml2();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -1932,9 +1932,9 @@ namespace com.ums.UmsParm
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public virtual bool setLBAShape(ref ULOGONINFO logoninfo, ref ULocationBasedAlert s, int n_function)
@@ -1954,9 +1954,9 @@ namespace com.ums.UmsParm
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool setLBAShape(ref ULOGONINFO logoninfo,  ref PAALERT alert, ref UShape s, int n_function)
@@ -1974,9 +1974,9 @@ namespace com.ums.UmsParm
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref alert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool publishGUIAdrFile()
@@ -1995,9 +1995,9 @@ namespace com.ums.UmsParm
                 adrguiwriter.publish();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool publishAdrFile()
@@ -2007,9 +2007,9 @@ namespace com.ums.UmsParm
                 adrwriter.publish();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool publishLBAFile()
@@ -2022,9 +2022,9 @@ namespace com.ums.UmsParm
                     lbacleanup();
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
             //try to publish the addressfile to LBA path
@@ -2033,9 +2033,9 @@ namespace com.ums.UmsParm
                 adrlbawriter.publish();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool publishLBAResendFile()
@@ -2048,9 +2048,9 @@ namespace com.ums.UmsParm
                     lbacleanup();
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
             //try to publish the addressfile to LBA path
@@ -2059,9 +2059,9 @@ namespace com.ums.UmsParm
                 adrlbawriter.publishResend();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public bool lbacleanup()
@@ -2078,9 +2078,9 @@ namespace com.ums.UmsParm
                 adrlbawriter.delete();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }

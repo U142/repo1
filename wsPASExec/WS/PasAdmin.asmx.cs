@@ -501,7 +501,7 @@ namespace com.ums.ws.pas.admin
                 res.successful = false;
                 res.errorCode = -1;
                 res.reason = e.Message;
-                throw e;
+                throw;
             }
             finally
             {

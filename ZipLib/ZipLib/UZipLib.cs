@@ -77,7 +77,7 @@ namespace com.ums.ZipLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -89,7 +89,7 @@ namespace com.ums.ZipLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -113,7 +113,7 @@ namespace com.ums.ZipLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -138,7 +138,7 @@ namespace com.ums.ZipLib
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
     }

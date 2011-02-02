@@ -18,7 +18,7 @@ namespace com.ums.PAS.Settings
             {
                 base.CheckLogon(ref logon, true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ULogonFailedException();
             }
@@ -36,9 +36,9 @@ namespace com.ums.PAS.Settings
                 return ExecNonQuery(szSQL);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -74,9 +74,9 @@ namespace com.ums.PAS.Settings
 
                 return param;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

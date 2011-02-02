@@ -68,9 +68,9 @@ namespace com.ums.UmsParm
             {
                 return base.DeleteOperation();                
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -97,9 +97,9 @@ namespace com.ums.UmsParm
             {
                 tw = File.CreateText(dest.full()); //local destination file
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             try
             {
@@ -122,7 +122,7 @@ namespace com.ums.UmsParm
                 ULog.error(0, "l_alertpk=" + l_alertpk, e.Message);
                 tw.Close();
                 dest.DeleteOperation();
-                throw e;
+                throw;
             }
             finally
             {
@@ -140,9 +140,9 @@ namespace com.ums.UmsParm
             {
                 read();
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                throw e;
+                throw;
             }
 
             XmlElement el_sending = doc.DocumentElement; //GetElementById("sending");
@@ -181,7 +181,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, full(), e.Message);
-                throw e;
+                throw;
             }
             return true;
         }
@@ -388,7 +388,7 @@ namespace com.ums.UmsParm
                     catch (Exception e)
                     {
                         ULog.error(0, "parseLBA() Error parsing message nodes", e.Message);
-                        throw e;
+                        throw;
                     }
                     XmlNodeList ccodelist = lba.SelectNodes("ccode");
                     for (int c = 0; c < ccodelist.Count; c++)
@@ -401,7 +401,7 @@ namespace com.ums.UmsParm
                         catch (Exception e)
                         {
                             ULog.error(0, "parseLBA() Error parsing ccode nodes", e.Message);
-                            throw e;
+                            throw;
                         }
                     }
 
@@ -412,7 +412,7 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 ULog.error(0, "parseLBA() Error parsing Location Based Alert " + full(), e.Message);
-                throw e;
+                throw;
             }
             return true;
         }

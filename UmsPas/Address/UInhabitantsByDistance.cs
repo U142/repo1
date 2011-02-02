@@ -38,7 +38,7 @@ namespace com.ums.PAS.Address
             catch (Exception e)
             {
                 ULog.error(e.Message);
-                throw e;
+                throw;
             }
         }
     }

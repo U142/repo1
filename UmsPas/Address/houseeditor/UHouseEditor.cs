@@ -35,9 +35,9 @@ namespace com.ums.PAS.Address
                         break;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

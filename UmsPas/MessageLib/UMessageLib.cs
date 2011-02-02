@@ -19,7 +19,7 @@ namespace com.ums.PAS.messagelib
             {
                 base.CheckLogon(ref logon, true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ULogonFailedException();
             }
@@ -58,11 +58,11 @@ namespace com.ums.PAS.messagelib
                     File.Delete(filewav.full());
                 return msg;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 msg.n_messagepk = -1;
                 msg.b_valid = false;
-                throw e;
+                throw;
             }
         }
 
@@ -126,11 +126,11 @@ namespace com.ums.PAS.messagelib
                 }
                 return msg;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 msg.n_messagepk = -1;
                 msg.b_valid = false;
-                throw e;
+                throw;
             }
             finally
             {
@@ -312,9 +312,9 @@ namespace com.ums.PAS.messagelib
 
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

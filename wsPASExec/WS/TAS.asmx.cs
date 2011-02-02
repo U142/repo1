@@ -29,9 +29,9 @@ namespace com.ums.ws.pas.tas
                 UTas tas = new UTas(ref logon);
                 return tas.GetContinentsAndCountries(timefilter_count, timefilter_requestlog);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -59,9 +59,9 @@ namespace com.ums.ws.pas.tas
                 UTas tas = new UTas(ref logon);
                 return tas.GetStatsCountriesPerTimeunit(ref filter);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }

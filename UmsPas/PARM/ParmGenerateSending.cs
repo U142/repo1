@@ -114,9 +114,9 @@ namespace com.ums.UmsParm
             {
                 db.close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -158,9 +158,9 @@ namespace com.ums.UmsParm
                 else
                     send_adhoc(ref project, ref sending);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             xmlwriter.insertEndElement();
@@ -511,7 +511,7 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                    throw e;
+                    throw;
                 }
 
                 //fill a sending struct
@@ -969,7 +969,7 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not send due to database error. Aborting...", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
-                    throw e;
+                    throw;
                 }
 
                 //fill a sending struct
@@ -1292,9 +1292,9 @@ namespace com.ums.UmsParm
                 if(b_voice_active)
                     db.VerifyProfile(pa.l_profilepk, true);
             }
-            catch (Exception e) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
+            catch (Exception) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
             {
-                throw e;
+                throw;
             }
             BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();
             BBVALID valid = new BBVALID();
@@ -1746,9 +1746,9 @@ namespace com.ums.UmsParm
                 db.VerifyAlert(pa.l_alertpk, ref logoninfo);
                 db.VerifyProfile(pa.l_profilepk, true);
             }
-            catch (Exception e) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
+            catch (Exception) //may catch UVerifyAlertException or UProfileNotSupportedException. rethrow
             {
-                throw e;
+                throw;
             }
 
             BBRESCHEDPROFILE resched_profile = new BBRESCHEDPROFILE();

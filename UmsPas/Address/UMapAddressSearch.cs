@@ -101,7 +101,7 @@ namespace com.ums.PAS.Address
                     catch (Exception e)
                     {
                         ULog.error(e.Message);
-                        throw e;
+                        throw;
                     }
                     //if (!only_coors)
                     {
@@ -147,7 +147,7 @@ namespace com.ums.PAS.Address
             catch (Exception e)
             {
                 ULog.warning(e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -172,7 +172,7 @@ namespace com.ums.PAS.Address
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
     }

@@ -77,9 +77,9 @@ namespace com.ums.ws.pas
                 logon.close();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -91,9 +91,9 @@ namespace com.ums.ws.pas
                 ULogon logon = new ULogon();
                 return logon.Logoff(ref l);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -108,9 +108,9 @@ namespace com.ums.ws.pas
                 ret.news = logon.getSystemMessages_news(ref l, timestamp, selectmode);
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -125,9 +125,9 @@ namespace com.ums.ws.pas
                 ret.news = logon.getAllSystemMessages();
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -141,9 +141,9 @@ namespace com.ums.ws.pas
 
                 return logon.UpdateSystemMessages(l,message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -158,9 +158,9 @@ namespace com.ums.ws.pas
                 ret.news = logon.getSystemMessages_monthly(ref l, period);
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -172,9 +172,9 @@ namespace com.ums.ws.pas
                 //System.Web.SessionState.HttpSessionState state = this.Session;
                 return new ULogon().SaveUiSettings(ref l, ref ui);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -185,9 +185,9 @@ namespace com.ums.ws.pas
             {
                 return new ULogon().LoadLanguageAndVisualsBeforeLogon(ref l);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -233,9 +233,9 @@ namespace com.ums.ws.pas
             {
                 map = fleximap.getMap();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return map;
         }
@@ -252,9 +252,9 @@ namespace com.ums.ws.pas
                 db.close();
                 return list;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -274,9 +274,9 @@ namespace com.ums.ws.pas
                 
                 return res;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -316,9 +316,9 @@ namespace com.ums.ws.pas
                 }
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -330,9 +330,9 @@ namespace com.ums.ws.pas
                 return new USendSettings(ref l).Find();
                 //return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -434,9 +434,9 @@ namespace com.ums.ws.pas
                 UHouseEditor edit = new UHouseEditor(ref logoninfo, ref adr, operation);
                 return adr;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -456,9 +456,9 @@ namespace com.ums.ws.pas
             {
                 return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         /*[WebMethod]
@@ -480,9 +480,9 @@ namespace com.ums.ws.pas
                 UAddressList list = (UAddressList)new UInhabitantsByDistance(ref param, ref logoninfo).Find();
                 return list;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         /*[WebMethod]
@@ -531,9 +531,9 @@ namespace com.ums.ws.pas
             {
                 return new UAudio().UPostAudio(ref logon, ref req);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -546,9 +546,9 @@ namespace com.ums.ws.pas
                 p.CheckLogon(ref logon, true);
                 return p.uproject(ref logon, ref req);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         
@@ -577,9 +577,9 @@ namespace com.ums.ws.pas
                 db.CheckLogon(ref l, true);
                 return report.GetWeatherReport(ref s);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         [WebMethod]
@@ -590,9 +590,9 @@ namespace com.ums.ws.pas
                 UBBMESSAGE ret = new UMessageLib(ref logon).InsertMessage(logon.l_comppk, ref msg);
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         [WebMethod]
@@ -603,9 +603,9 @@ namespace com.ums.ws.pas
                 UBBMESSAGE ret = new UMessageLib(ref logon).DeleteMessage(ref logon, ref msg);
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         [WebMethod]
@@ -616,9 +616,9 @@ namespace com.ums.ws.pas
                 UBBMESSAGELIST ret = new UMessageLib(ref logon).GetMessageList(ref logon, filter);
                 return ret;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         [WebMethod]
@@ -628,9 +628,9 @@ namespace com.ums.ws.pas
             {
                 return new UCBSettings(ref logon).getLBAParameter(logon);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         [WebMethod]
@@ -640,9 +640,9 @@ namespace com.ums.ws.pas
             {
                 return new UCBSettings(ref logon).updateLBAParameter(logon, param);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -696,9 +696,9 @@ namespace com.ums.ws.pas
                 db.close();
                 return dlist;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

@@ -53,9 +53,9 @@ public class GisImportFile
            
             return ret;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw e;
+            throw;
         }
     }
 

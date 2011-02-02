@@ -295,7 +295,7 @@ namespace com.ums.UmsCommon.Audio
                         }
                         catch (Exception e)
                         {
-                            throw e;
+                            throw;
                         }
 
                         break;
@@ -345,9 +345,9 @@ namespace com.ums.UmsCommon.Audio
                             //File.Delete(sz_tempfile);
                             //File.Delete(sz_tempfileraw);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            throw e;
+                            throw;
                         }
                         break;
                     case 4: //SOUNDFILE_TYPE_LIBRARY_
