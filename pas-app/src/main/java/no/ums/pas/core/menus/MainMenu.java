@@ -39,7 +39,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	public static final long serialVersionUID = 1;
 	protected Color INACTIVE_COLOR;
 	
-	public static final int BTN_SIZE_WIDTH = 100;
+	public static final int BTN_SIZE_WIDTH = 120;
 	public static final int BTN_SIZE_HEIGHT = 20;
 	
 	private JButton 	m_btn_zoom;
@@ -393,20 +393,32 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		change_buttoncolor(m_btn_zoom, false);
 		change_buttoncolor(m_btn_houseeditor, false);
 		change_buttoncolor(m_btn_showhousedetails, false);
+		
+		// For native GUI
+		m_btn_pan.setSelected(false);
+		m_btn_zoom.setSelected(false);
+		m_btn_houseeditor.setSelected(false);
+		m_btn_showhousedetails.setSelected(false);
+		
 		switch(PAS.get_pas().get_mappane().get_mode())
 		{
 			case MapFrame.MAP_MODE_PAN:
+				m_btn_pan.setSelected(true);
 			case MapFrame.MAP_MODE_PAN_BY_DRAG:
 				change_buttoncolor(m_btn_pan, true);
+				m_btn_pan.setSelected(true);
 				break;
 			case MapFrame.MAP_MODE_ZOOM:
 				change_buttoncolor(m_btn_zoom, true);
+				m_btn_zoom.setSelected(true);
 				break;
 			case MapFrame.MAP_MODE_HOUSESELECT:
 				change_buttoncolor(m_btn_showhousedetails, true);
+				m_btn_showhousedetails.setSelected(true);
 				break;
 			case MapFrame.MAP_MODE_HOUSEEDITOR_:
 				change_buttoncolor(m_btn_houseeditor, true);
+				m_btn_houseeditor.setSelected(true);
 				break;
 		}
 	}

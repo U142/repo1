@@ -34,7 +34,8 @@ public class InhabitantBasics
 	public double get_lat() { return m_f_lat; }
 	public void set_lon(double d) { m_f_lon = d; }
 	public void set_lat(double d) { m_f_lat = d; }
-	public void set_parenthouse(HouseItem parent) { m_parent_house = parent; } 
+	public void set_parenthouse(HouseItem parent) { m_parent_house = parent; }
+	public HouseItem get_parenthouse() { return m_parent_house; }
 	public int get_inhabitanttype() { return m_n_inhabitant_type; }
 	public boolean bedrift() { return (get_inhabitanttype()==1 ? true : false);  }
 	public int get_adrtype() { return m_n_adrtype; }

@@ -117,6 +117,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 		}
 		else if("act_delete_inhabitant_complete".equals(e.getActionCommand())) {
 			Inhabitant i = (Inhabitant)e.getSource();
+			m_house = i.get_parenthouse();
 			ActionEvent delete = new ActionEvent(i, ActionEvent.ACTION_PERFORMED, "act_delete_inhabitant");
 			PAS.get_pas().get_housecontroller().actionPerformed(delete);	
 			//m_house = null; //list have been edited. pointer has changed

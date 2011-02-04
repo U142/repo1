@@ -6,7 +6,39 @@ import no.ums.pas.send.SendController;
 String[] sz_itemattr = { "dmid", "name", "adr", "no", "lt", "post", "area", "reg", "bday", "pno", 
 						 "lon", "lat", "gno", "bno" };
 **/
-public class Inhabitant extends InhabitantBasics {
+public class Inhabitant extends InhabitantBasics implements Cloneable {
+	
+	@Override
+	public Inhabitant clone()
+	{
+		Inhabitant i = new Inhabitant();
+		i.set_adrname(this.get_adrname());
+		i.set_adrtype(this.get_adrtype());
+		i.set_birthday(this.get_birthday());
+		i.set_birthday_formatted(this.get_birthday_formatted());
+		i.set_bnumber(this.get_bnumber());
+		i.set_deptpk(this.get_deptpk());
+		i.set_dim_screencoor(this.get_dim_screencoor());
+		i.set_gnumber(this.get_gnumber());
+		i.set_hitpercent(this.get_hitpercent());
+		i.set_included(this.get_included());
+		i.set_kondmid(this.get_kondmid());
+		i.set_lat(this.get_lat());
+		i.set_letter(this.get_letter());
+		i.set_lon(this.get_lon());
+		i.set_mobile(this.get_mobile());
+		i.set_namesearch_col(this.get_namesearch_col());
+		i.set_no(this.get_no());
+		i.set_number(this.get_number());
+		i.set_parenthouse(this.get_parenthouse());
+		i.set_postaddr(this.get_postaddr());
+		i.set_postarea(this.get_postarea());
+		i.set_postno(this.get_postno());
+		i.set_quality(this.get_quality());
+		i.set_region(this.get_region());
+		i.set_streetid(this.get_streetid());
+		return i;
+	}
 	
 	public Inhabitant() {
 		super();

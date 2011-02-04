@@ -109,6 +109,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				m_txt_municipal.setText(inhab.get_region());
 				m_txt_birthday.setText(inhab.get_birthday_formatted());
 				m_txt_streetid.setText(Integer.toString(inhab.get_streetid()));
+				m_inhabitant = inhab;
 				//m_txt_streetid.setText(inhab.
 				//if(inhab.get_adrtype()==Controller.ADR_TYPES_COMPANY_)
 				if((inhab.get_adrtype() & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY ||
@@ -136,6 +137,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			m_txt_birthday.setText("");
 			m_txt_streetid.setText("");
 			m_radio_private.doClick();
+			m_inhabitant = null;
 		}
 	}
 	
@@ -174,7 +176,27 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		m_inhabitant = new Inhabitant(point.get_lon(), point.get_lat());
 		m_point = point;
 		m_house = house;
-		gab_lookup();
+		if(m_house==null)
+		{
+			gab_lookup();
+		}
+		else
+		{
+			init_values(m_inhabitant);
+			//fill form using the first inhabitant's credentials
+			if(m_house.get_inhabitantcount()>0)
+			{
+				Inhabitant tmp = m_house.get_itemfromhouse(0).clone();
+				tmp.set_adrname("");
+				tmp.set_deptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+				tmp.set_birthday("");
+				tmp.set_mobile("");
+				tmp.set_number("");
+				tmp.set_kondmid("");
+				fill_form(tmp);
+				
+			}
+		}
 		get_inhablist().start_search();
 	}
 	
@@ -233,8 +255,8 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				try {
 					//PAS.get_pas().get_housecontroller().start_download(false);
 					get_inhabitant().set_kondmid(sz_kondmid);
-					fill_form(null);
 					e.setSource(get_inhabitant());
+					fill_form(null);
 					m_callback.actionPerformed(e);
 				} catch(Exception err) {
 					System.out.println(err.getMessage());
@@ -268,6 +290,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	
 	private void delete_inhabitant(Inhabitant i) {
 		try {
+			new WSHouseEditor(this, "act_delete_inhabitant_complete", m_inhabitant, HOUSEEDITOROPERATION.DELETE);
 			/*String sz_operation = "delete";
 			String sz_kondmid	= i.get_kondmid();*/
 
@@ -295,18 +318,30 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				showErrorDialog(PAS.l("main_houseeditortab_point_not_selected"));
 				return false;
 			}
+			String sz_operation = "insert";
+			String sz_kondmid = "-1";
+			if(m_inhabitant != null) {
+				sz_operation = "update";
+				sz_kondmid = m_inhabitant.get_kondmid();
+			}
+			else {
+				if(m_house != null)
+					m_inhabitant = new Inhabitant(m_house.get_lon(), m_house.get_lat());
+				else
+					m_inhabitant = new Inhabitant(m_point.get_lon(), m_point.get_lat());	
+			}
+				
 			
-			m_inhabitant = new Inhabitant(m_point.get_lon(), m_point.get_lat());
 
 			//String sz_deptpk	= new Integer(PAS.get_pas().get_userinfo().get_default_deptpk()).toString();
-			String sz_operation = "insert";
-			String sz_kondmid = "";
+			
+			
 			String sz_name = m_txt_name.getText();
 			String sz_phone = m_txt_phone.getText();
 			String sz_mobile = m_txt_mobile.getText();
 			String sz_house = m_txt_house.getText();
 			String sz_letter = m_txt_letter.getText();
-			String sz_address = m_txt_address.getText() + " " + sz_house + sz_letter;
+			String sz_address = m_txt_address.getText(); //+ " " + sz_house + sz_letter;
 			String sz_postno= m_txt_postno.getText();
 			String sz_place = m_txt_place.getText();
 			String sz_gnr = m_txt_gnr.getText();
@@ -326,7 +361,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			if(sz_bnr.length()==0)
 				sz_bnr = "0";
 			
-			m_inhabitant.set_kondmid("-1");
+			m_inhabitant.set_kondmid(sz_kondmid);
 			m_inhabitant.set_adrname(sz_name);
 			m_inhabitant.set_number(sz_phone);
 			m_inhabitant.set_mobile(sz_mobile);
@@ -367,7 +402,10 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			
 			new XMLSaveGAB(null, form, PAS.get_pas().get_sitename(), this, "act_save_complete", null).start();
 			*/
-			new WSHouseEditor(this, "act_save_complete", m_inhabitant, HOUSEEDITOROPERATION.INSERT);
+			if(m_inhabitant.get_kondmid().equals(""))
+				new WSHouseEditor(this, "act_save_complete", m_inhabitant, HOUSEEDITOROPERATION.INSERT);
+			else
+				new WSHouseEditor(this, "act_save_complete", m_inhabitant, HOUSEEDITOROPERATION.UPDATE);
 			
 			return true;
 		} catch(Exception e) {
