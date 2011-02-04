@@ -1623,8 +1623,16 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             OdbcDataReader rs = null;
             try
             {
-                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}",
-                                l.l_deptpk, adr.lat, adr.lon, adr.kondmid);
+                String table_name = "";
+                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_sel_from_adr_konsum {0}", adr.kondmid);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    table_name = rs.GetString(0);
+                }
+
+                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}, {4}",
+                                l.l_deptpk, adr.lat, adr.lon, adr.kondmid, table_name);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
@@ -1634,9 +1642,16 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                         throw new UDbQueryException("Recordset error");
                     adr.kondmid = kondmid.ToString();
                     rs.Close();
-                    return true;
+                    
                 }
                 rs.Close();
+
+                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_update_adr {0}, '{1}', '{2}', '{3}', '{4}', {5}, '{6}', '{7}', '{8}', {9}, {10}, {11}, {12}",
+                                int.Parse(adr.kondmid), adr.name, adr.mobile, adr.bday, adr.address, adr.houseno, adr.letter, adr.postno, adr.postarea, int.Parse(adr.municipalid), adr.gno, adr.bno, adr.streetid);
+
+                ExecNonQuery(szSQL);
+
+                return true;
                 //adr.kondmid = "-1";
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");
