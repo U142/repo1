@@ -149,8 +149,10 @@ public class SendPropertiesPolygon extends SendProperties {
 
 		double lon, lat;
 		for(int i=0; i < (_get_shapestruct().get_show_size()); i++) {
-			lon = ( Math.round(((Double)_get_shapestruct().get_coors_show_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
-			lat = ( Math.round(((Double)_get_shapestruct().get_coors_show_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+			//lon = ( Math.round(((Double)_get_shapestruct().get_coors_show_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+			//lat = ( Math.round(((Double)_get_shapestruct().get_coors_show_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+			lon = ( Math.round(((Double)_get_shapestruct().get_coors_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+			lat = ( Math.round(((Double)_get_shapestruct().get_coors_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
 			UMapPoint p = new UMapPoint();
 			p.setLat((float)lat);
 			p.setLon((float)lon);
