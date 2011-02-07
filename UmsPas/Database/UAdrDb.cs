@@ -1057,7 +1057,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             }
                 
         }
-        protected bool readAddressFromDbByFieldnames(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
+        public bool readAddressFromDbByFieldnames(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
         {
             try
             {
@@ -1338,7 +1338,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
 
         }
 
-        protected bool readAddressFromDb(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
+        public bool readAddressFromDb(ref UAddress adr, ref OdbcDataReader rs, bool only_coors)
         {
             try
             {
@@ -1449,6 +1449,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             try
             {
                 adr.region = rs.GetInt32(9);
+                adr.municipalid = adr.region.ToString();
             }
             catch (Exception)
             {

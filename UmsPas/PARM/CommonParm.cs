@@ -1951,6 +1951,7 @@ namespace com.ums.UmsParm
                 adrlbawriter = new AdrfileLBAWriter(m_project.sz_projectpk, l_refno, true, SENDCHANNEL.LBA);
                 PAALERT nullalert = new PANULLALERT();
                 nullalert.n_expiry = (int)s.n_expiry_minutes;
+                nullalert.n_requesttype = s.n_requesttype;
                 s.WriteAddressFileLBA(ref logoninfo, new UDATETIME(m_sendinginfo.l_scheddate, m_sendinginfo.l_schedtime), "sms", ref m_project, ref nullalert, l_refno, n_function, ref adrlbawriter);
                 return true;
             }

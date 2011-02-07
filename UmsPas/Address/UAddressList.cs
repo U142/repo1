@@ -169,6 +169,10 @@ namespace com.ums.PAS.Address
         {
             //list = temp.Cast<UAddress>().ToArray();
         }
+        public IEnumerator GetEnumerator()
+        {
+            return list.GetEnumerator();
+        }
     }
 
     /*address basics*/
@@ -190,6 +194,25 @@ namespace com.ums.PAS.Address
     /*single address*/
     public class UAddress : UAddressBasics
     {
+        public class StreetidComparer : IEqualityComparer<UAddress>
+        {
+            public bool Equals(UAddress a, UAddress b)
+            {
+                if (a.municipalid == b.municipalid &&
+                    a.streetid == b.streetid &&
+                    a.houseno == b.houseno &&
+                    a.letter == b.letter)
+                {
+                    return true;
+                }
+                return false;
+            }
+            public int GetHashCode(UAddress a)
+            {
+                return base.GetHashCode();
+            }
+        }
+
         //public String kondmid;
         public String name;
         public String address;

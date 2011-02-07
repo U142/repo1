@@ -463,7 +463,7 @@ namespace com.ums.UmsCommon
                 USysLog.init(sysloghost, syslogport);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -616,7 +616,7 @@ namespace com.ums.UmsCommon
                 return new DateTime();
 
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return new DateTime();
             }
