@@ -727,7 +727,12 @@ namespace com.ums.UmsCommon
             String str = datetime.ToString();
             //if (str.Length < 14 && str.Length < 12)
             //    throw new UMalformedDateTimeException();
-            if (str.Length < 8)
+            if (datetime == 0)
+            {
+                str = DateTime.Now.ToString("yyyyMMddHHmmss");
+                datetime = Int64.Parse(str);
+            }
+            else if (str.Length < 8)
                 throw new UMalformedDateTimeException();
             sz_date = str.Substring(0, 8);
             /*if (str.Length.Equals(14))

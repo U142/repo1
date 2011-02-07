@@ -500,7 +500,6 @@ namespace com.ums.PAS.Database
                     c.hasmobile = (rs.GetByte(4) == 1 ? true : false);
                     cpoint.lat = c.lat;
                     cpoint.lon = c.lon;
-
                     if (p._point_inside(ref cpoint))
                     {
                         //add this address to count
