@@ -9,16 +9,9 @@ String[] sz_itemattr = { "dmid", "name", "adr", "no", "lt", "post", "area", "reg
 public class Inhabitant extends InhabitantBasics implements Cloneable {
 	
 	@Override
-	public Inhabitant clone()
+	public Inhabitant clone() throws CloneNotSupportedException
 	{
-		try
-		{
-			return (Inhabitant)super.clone();
-		}
-		catch(CloneNotSupportedException e)
-		{
-			return null;
-		}
+		return (Inhabitant)super.clone();
 		/*Inhabitant i = new Inhabitant();
 		i.set_adrname(this.get_adrname());
 		i.set_adrtype(this.get_adrtype());

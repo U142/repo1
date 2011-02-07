@@ -189,14 +189,21 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			//fill form using the first inhabitant's credentials
 			if(m_house.get_inhabitantcount()>0)
 			{
-				Inhabitant tmp = m_house.get_itemfromhouse(0).clone();
-				tmp.set_adrname("");
-				tmp.set_deptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
-				tmp.set_birthday("");
-				tmp.set_mobile("");
-				tmp.set_number("");
-				tmp.set_kondmid("");
-				fill_form(tmp);
+				try
+				{
+					Inhabitant tmp = m_house.get_itemfromhouse(0).clone();
+					tmp.set_adrname("");
+					tmp.set_deptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+					tmp.set_birthday("");
+					tmp.set_mobile("");
+					tmp.set_number("");
+					tmp.set_kondmid("");
+					fill_form(tmp);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				
 			}
 		}
