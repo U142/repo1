@@ -126,11 +126,14 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			m_txt_name.setText("");
 			m_txt_phone.setText("");
 			m_txt_mobile.setText("");
-			m_txt_address.setText(m_gislookup.get_postaddr());
-			m_txt_house.setText(m_gislookup.get_no());
-			m_txt_letter.setText(m_gislookup.get_letter());
+			if(m_gislookup!=null)
+			{
+				m_txt_address.setText(m_gislookup.get_postaddr());
+				m_txt_house.setText(m_gislookup.get_no());
+				m_txt_letter.setText(m_gislookup.get_letter());
+				m_txt_place.setText(m_gislookup.get_postarea());
+			}
 			m_txt_postno.setText("");
-			m_txt_place.setText(m_gislookup.get_postarea());
 			m_txt_gnr.setText("");
 			m_txt_bnr.setText("");
 			m_txt_municipal.setText("");

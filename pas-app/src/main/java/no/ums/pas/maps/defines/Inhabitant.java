@@ -11,7 +11,15 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 	@Override
 	public Inhabitant clone()
 	{
-		Inhabitant i = new Inhabitant();
+		try
+		{
+			return (Inhabitant)super.clone();
+		}
+		catch(CloneNotSupportedException e)
+		{
+			return null;
+		}
+		/*Inhabitant i = new Inhabitant();
 		i.set_adrname(this.get_adrname());
 		i.set_adrtype(this.get_adrtype());
 		i.set_birthday(this.get_birthday());
@@ -37,7 +45,7 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		i.set_quality(this.get_quality());
 		i.set_region(this.get_region());
 		i.set_streetid(this.get_streetid());
-		return i;
+		return i;*/
 	}
 	
 	public Inhabitant() {
