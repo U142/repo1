@@ -148,9 +148,7 @@ public class SendPropertiesPolygon extends SendProperties {
 		ArrayOfUMapPoint points = factory.createArrayOfUMapPoint();
 
 		double lon, lat;
-		for(int i=0; i < (_get_shapestruct().get_show_size()); i++) {
-			//lon = ( Math.round(((Double)_get_shapestruct().get_coors_show_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
-			//lat = ( Math.round(((Double)_get_shapestruct().get_coors_show_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+		for(int i=0; i < (_get_shapestruct().get_size()); i++) {
 			lon = ( Math.round(((Double)_get_shapestruct().get_coors_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
 			lat = ( Math.round(((Double)_get_shapestruct().get_coors_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
 			UMapPoint p = new UMapPoint();
@@ -225,7 +223,7 @@ public class SendPropertiesPolygon extends SendProperties {
 		no.ums.ws.parm.ArrayOfUMapPoint points = createWSPolygon();
 		no.ums.ws.parm.UPOLYGONSENDING ms = factory.createUPOLYGONSENDING();
 		ms.setPolygonpoints(points);
-		
+
 		return super._ExecAdrCount(ms, l, act);
 		
 	}

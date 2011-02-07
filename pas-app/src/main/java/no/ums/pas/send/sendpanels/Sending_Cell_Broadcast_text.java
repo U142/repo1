@@ -123,7 +123,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	}
 	protected int m_n_requesttype = 0;
 	
-	public int getRequestType() { return m_n_requesttype; }
+	public int getRequestType() { 
+		//return m_n_requesttype;
+		return (m_radio_requesttype_1.isSelected() ? 1 : 0); 
+	}
 	
 	private Sending_Cell_Broadcast_text() {
 		this(PAS.get_pas());

@@ -175,7 +175,7 @@ public class SendPropertiesEllipse extends SendProperties {
 		no.ums.ws.parm.UEllipseDef ell = createWSEllipse();
 		no.ums.ws.parm.UELLIPSESENDING ms = factory.createUELLIPSESENDING();
 		ms.setEllipse(ell);
-		
+
 		return super._ExecAdrCount(ms, l, act);
 	
 	}
