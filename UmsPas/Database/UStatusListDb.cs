@@ -84,7 +84,7 @@ namespace com.ums.PAS.Database
             String szSQL = "";
             switch (n_pas_type)
             {
-                case 4:
+                case 5:
                     /*szSQL = String.Format("SELECT distinct l_sendingtype=5, sum(isnull(head.l_items, 0)) l_totitem, " +
                      "l_altjmp=0, isnull(info.l_refno, -1) l_refno, isnull(info.l_createdate, -1) l_createdate, " +
                      "isnull(info.l_createtime, -1) l_createtime, isnull(info.sz_sendingname,' '), isnull(head.l_status,1) l_sendingstatus, " +

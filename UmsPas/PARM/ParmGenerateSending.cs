@@ -860,7 +860,7 @@ namespace com.ums.UmsParm
                     //db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadRight(6, '0')));
                     db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
                     smssending.setSendingInfo(ref smssendinginfo);
-                    db.Send(ref smssending, ref logoninfo);
+                        db.Send(ref smssending, ref logoninfo);
                     b_publish_sms = true;
                 }
                 catch (Exception e)

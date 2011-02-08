@@ -1825,7 +1825,7 @@ namespace com.ums.UmsParm
                     if (strname == null)
                         strname = "Default";
                     String stroadc = a.getLanguage(i).getCBOadc();
-                    if (stroadc == null)
+                    if (stroadc == null || stroadc.Equals(""))
                         stroadc = "Default";
                     String strtext = a.getLanguage(i).getText();
                     if (strtext == null)
