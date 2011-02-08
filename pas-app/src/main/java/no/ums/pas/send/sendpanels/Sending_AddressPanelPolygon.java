@@ -23,7 +23,7 @@ public class Sending_AddressPanelPolygon extends Sending_AddressPanel {
 		add_controls();
 	}
 	
-
+	
     
 	public final void add_controls() {
 		int n_width = 10;

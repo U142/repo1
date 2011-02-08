@@ -521,7 +521,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			frame.dispose();
 			return false;
 		}
-		else if(m_txt_oadc_text.getText().length()<1) {
+		/*else if(m_txt_oadc_text.getText().length()<1) {
 			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
 			frame.setLocation(p);
 			frame.setVisible(true);
@@ -529,7 +529,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			JOptionPane.showMessageDialog(frame, PAS.l("main_sending_lba_error_content"));
 			frame.dispose();
 			return false;
-		}
+		}*/
 		else if(m_txt_messagetext.getText().length()<1) {
 			p.setLocation(p.x,p.y+PAS.get_pas().getHeight()/3);
 			frame.setLocation(p);

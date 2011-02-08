@@ -350,6 +350,15 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		return frame;
 	}
 	
+	private void verify_external_exec() {
+		if(m_alert_settings.get_current_profile().get_soundfiles().size() > 0){
+			m_alert_send.get_chk_execute_remote().setSelected(false);
+			m_alert_send.get_chk_execute_remote().setEnabled(false);
+		}
+		else
+			m_alert_send.get_chk_execute_remote().setEnabled(true);			
+	}
+	
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_next".equals(e.getActionCommand())) {
 			boolean proceed = true;
@@ -664,6 +673,8 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		}
 	}
 	public void stateChanged(ChangeEvent e) {
+		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send))
+				verify_external_exec();
 		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send) &&
 				m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()-1).equals(m_cell_broadcast_text_panel) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {

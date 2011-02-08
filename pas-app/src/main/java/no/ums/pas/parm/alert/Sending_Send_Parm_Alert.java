@@ -31,7 +31,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		//btn_send.setActionCommand("act_send");
 		m_txt_refno = new StdTextLabel(PAS.l("common_refno"), 400, 14, true);
 		m_txt_adrfile = new StdTextLabel(PAS.l("main_sending_address_file"), 400, 14, true);
-		m_txt_activate_ext = new StdTextLabel(PAS.l("main_parm_alert_dlg_activate_for_ext_exec"), true, 150);
+		m_txt_activate_ext = new StdTextLabel(PAS.l("main_parm_alert_dlg_activate_for_ext_exec"), true, 180);
 		if(PAS.icon_version==2)
 		{
 			m_icon_indicator[0] = ImageLoader.load_icon("status_red_16.png");

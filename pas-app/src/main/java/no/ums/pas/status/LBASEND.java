@@ -148,7 +148,7 @@ public class LBASEND
 	{
 		String sz = LBASTATUS.get(new Integer(n_code));
 		if(sz == null || sz.length()==0)
-			sz = "Unknown status code ["+ n_code + "]";
+			sz = "N/A ["+ n_code + "]";
 		return sz;
 	}
 	public final static Hashtable<Integer, String> LBASTATUS = new Hashtable<Integer, String>();

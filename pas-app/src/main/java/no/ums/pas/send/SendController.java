@@ -711,7 +711,6 @@ public class SendController implements ActionListener {
 				return;
 			}
 			try {
-				
 				String pwd;
 				try {
 					pwd = Utils.encrypt(new String(pass.getPassword()));
@@ -821,6 +820,18 @@ public class SendController implements ActionListener {
 				return;
 			}
 			try {
+				String pwd;
+				try {
+					pwd = Utils.encrypt(new String(pass.getPassword()));
+				}
+				catch (Exception e){
+					pwd="";
+				}
+				if(!pwd.equals(logon.getSzPassword())) {
+					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_error_password"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
 				if(sz_function.equals("live")) {
 					if(!confirm.getText().equals("LIVE")) {
 						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
