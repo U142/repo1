@@ -169,42 +169,56 @@ namespace com.ums.UmsParm
 
         public bool SendAlert(Int64 l_alertpk, int n_function, string sz_scheddate, string sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate)
         {
-            this.percentDelegate = percentDelegate;
-            PAALERT pa = new PAALERT();
-            db.FillAlert(l_alertpk, n_function, ref pa);
-            BBPROJECT project = new BBPROJECT();
-            bool b = createProject("SendAlert", l_alertpk, ref project, n_function);
-            xmlwriter.insertStartElement("project");
-            xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
-            b = _sendhandler(ref project, 0, ref pa, n_function, sz_scheddate, sz_schedtime);
-            xmlwriter.insertEndElement(); //project
-            return b;
+            try
+            {
+                this.percentDelegate = percentDelegate;
+                PAALERT pa = new PAALERT();
+                db.FillAlert(l_alertpk, n_function, ref pa);
+                BBPROJECT project = new BBPROJECT();
+                bool b = createProject("SendAlert", l_alertpk, ref project, n_function);
+                xmlwriter.insertStartElement("project");
+                xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
+                b = _sendhandler(ref project, 0, ref pa, n_function, sz_scheddate, sz_schedtime);
+                xmlwriter.insertEndElement(); //project
+                return b;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool SendEvent(Int64 l_eventpk, int n_function, string sz_scheddate, string sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate)
         {
-            this.percentDelegate = percentDelegate;
-            //get all alerts. send all
-
-            //ArrayList alerts = new ArrayList();
-            List<PAALERT> alerts = new List<PAALERT>();
-            db.GetAlertsFromEvent(l_eventpk, n_function, ref alerts);
-
-            BBPROJECT project = new BBPROJECT();
-            createProject("SendEvent", 0, ref project, n_function);
-
-            xmlwriter.insertStartElement("project");
-            xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
-
-            IEnumerator enu = alerts.GetEnumerator();
-            while (enu.MoveNext())
+            try
             {
-                PAALERT pa = (PAALERT)enu.Current;
-                _sendhandler(ref project, l_eventpk, ref pa, n_function, sz_scheddate, sz_schedtime);
-            }
-            xmlwriter.insertEndElement(); //project
+                this.percentDelegate = percentDelegate;
+                //get all alerts. send all
 
-            return true;
+                //ArrayList alerts = new ArrayList();
+                List<PAALERT> alerts = new List<PAALERT>();
+                db.GetAlertsFromEvent(l_eventpk, n_function, ref alerts);
+
+                BBPROJECT project = new BBPROJECT();
+                createProject("SendEvent", 0, ref project, n_function);
+
+                xmlwriter.insertStartElement("project");
+                xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
+
+                IEnumerator enu = alerts.GetEnumerator();
+                while (enu.MoveNext())
+                {
+                    PAALERT pa = (PAALERT)enu.Current;
+                    _sendhandler(ref project, l_eventpk, ref pa, n_function, sz_scheddate, sz_schedtime);
+                }
+                xmlwriter.insertEndElement(); //project
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         protected bool _sendhandler(ref BBPROJECT project, Int64 l_fromeventpk, ref PAALERT pa, int n_function,
@@ -233,6 +247,10 @@ namespace com.ums.UmsParm
             {
                 setAlertInfo(false, project.sz_projectpk, 0, pa.l_alertpk, pa.sz_name, e.Message, "", SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 return false;
+            }
+            catch (Exception)
+            {
+                throw;
             }
             /*catch (Exception e)
             {

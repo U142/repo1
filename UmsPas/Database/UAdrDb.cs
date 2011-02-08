@@ -591,11 +591,11 @@ namespace com.ums.PAS.Database
                         {
                             if (m_n_pastype == 1)
                                 szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                    "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1)",
+                                                                                    "FROM ADR_KONSUM WITH (INDEX (idx_kommunegatenr)) WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT<3", // IN (0,1)",
                                                                                     p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1);
                             else if (m_n_pastype == 2)
                                 szSQL += String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(BEDRIFT,0) BEDRIFT, isnull(f_hasfixed,0) f_hasfixed, isnull(f_hasmobile,0) f_hasmobile, arr_indexnumber={3} " +
-                                                                                    "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT IN (0,1) AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}",
+                                                                                    "FROM ADR_KONSUM_GIS AK, DEPARTMENT_X_MUNICIPAL DX WHERE KOMMUNENR={0} AND GATEKODE={1} AND HUSNR={2} AND BEDRIFT<3 AND AK.KOMMUNENR=DX.l_municipalid AND DX.l_deptpk={4}", //BEDRIFT IN (0,1)
                                                                                     p[i].municipalid, p[i].streetid, p[i].houseno, p[i].n_linenumber - skiplines - 1, m_n_deptpk);
 
                         }
@@ -1623,16 +1623,8 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
             OdbcDataReader rs = null;
             try
             {
-                String table_name = "";
-                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_sel_from_adr_konsum {0}", adr.kondmid);
-                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
-                if (rs.Read())
-                {
-                    table_name = rs.GetString(0);
-                }
-
-                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}, {4}",
-                                l.l_deptpk, adr.lat, adr.lon, adr.kondmid, table_name);
+                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}",
+                                l.l_deptpk, adr.lat, adr.lon, adr.kondmid);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
@@ -1642,16 +1634,9 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                         throw new UDbQueryException("Recordset error");
                     adr.kondmid = kondmid.ToString();
                     rs.Close();
-                    
+                    return true;
                 }
                 rs.Close();
-
-                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_update_adr {0}, '{1}', '{2}', '{3}', '{4}', {5}, '{6}', '{7}', '{8}', {9}, {10}, {11}, {12}",
-                                int.Parse(adr.kondmid), adr.name, adr.mobile, adr.bday, adr.address, adr.houseno, adr.letter, adr.postno, adr.postarea, int.Parse(adr.municipalid), adr.gno, adr.bno, adr.streetid);
-
-                ExecNonQuery(szSQL);
-
-                return true;
                 //adr.kondmid = "-1";
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");

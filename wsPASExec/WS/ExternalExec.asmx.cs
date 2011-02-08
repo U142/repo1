@@ -417,35 +417,42 @@ namespace com.ums.ws.parm
          */
         protected XmlDocument ExecMapSending(UMAPSENDING sending)
         {
-            ExecResponse response = new ExecResponse();
-            USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
-            xml.insertStartDocument();
-            xml.insertComment("Results for ExecEvent");
-            xml.insertStartElement(String.Format("results"));
-            //xml.insertAttribute("l_eventpk", l_eventpk.ToString());
-            //xml.insertAttribute("f_simulation", f_simulation.ToString());
-            xml.insertAttribute("l_projectpk", sending.n_projectpk.ToString());
-            xml.insertAttribute("l_refno", sending.n_refno.ToString());
-            xml.insertAttribute("sz_function", sending.sz_function);
-            ParmGenerateSending parm = new ParmGenerateSending();
-            if (parm.Initialize(ref sending.logoninfo, ref xml))
+            try
             {
-                int function = ValidateFunction(sending.sz_function);
-                if (function == -1)
+                ExecResponse response = new ExecResponse();
+                USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
+                xml.insertStartDocument();
+                xml.insertComment("Results for ExecEvent");
+                xml.insertStartElement(String.Format("results"));
+                //xml.insertAttribute("l_eventpk", l_eventpk.ToString());
+                //xml.insertAttribute("f_simulation", f_simulation.ToString());
+                xml.insertAttribute("l_projectpk", sending.n_projectpk.ToString());
+                xml.insertAttribute("l_refno", sending.n_refno.ToString());
+                xml.insertAttribute("sz_function", sending.sz_function);
+                ParmGenerateSending parm = new ParmGenerateSending();
+                if (parm.Initialize(ref sending.logoninfo, ref xml))
                 {
-                    parm.setAlertInfo(false, "0", 0, sending.n_refno, "", "Invalid function specified [" + sending.sz_function + "]", "ExecMapSending()", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    int function = ValidateFunction(sending.sz_function);
+                    if (function == -1)
+                    {
+                        parm.setAlertInfo(false, "0", 0, sending.n_refno, "", "Invalid function specified [" + sending.sz_function + "]", "ExecMapSending()", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    }
+                    else
+                    {
+                        //parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime);
+                        parm.SendMapsending(ref sending, function);
+                    }
                 }
-                else
-                {
-                    //parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime);
-                    parm.SendMapsending(ref sending, function);
-                }
+                cleanup(ref parm);
+                xml.insertEndElement(); //event
+                xml.insertEndDocument();
+                xml.finalize();
+                return xml.GetXmlDocument();
             }
-            cleanup(ref parm);
-            xml.insertEndElement(); //event
-            xml.insertEndDocument();
-            xml.finalize();
-            return xml.GetXmlDocument();
+            catch (Exception)
+            {
+                throw;
+            }
 
         }
 
@@ -476,9 +483,9 @@ namespace com.ums.ws.parm
                 response.parseFromXml(ref doc, "l_alertpk");
                 return response;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -531,13 +538,20 @@ namespace com.ums.ws.parm
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
                                 String sz_function, String sz_scheddate, String sz_schedtime)
         {
-            ExecResponse response = new ExecResponse();
-            XmlDocument doc = ExecEvent(l_eventpk, l_comppk, l_deptpk, l_userpk,
-                                        sz_compid, sz_userid, sz_deptid, sz_password,
-                                        sz_function, sz_scheddate, sz_schedtime, null, "");
-            response.parseFromXml(ref doc, "l_eventpk");
+            try
+            {
+                ExecResponse response = new ExecResponse();
+                XmlDocument doc = ExecEvent(l_eventpk, l_comppk, l_deptpk, l_userpk,
+                                            sz_compid, sz_userid, sz_deptid, sz_password,
+                                            sz_function, sz_scheddate, sz_schedtime, null, "");
+                response.parseFromXml(ref doc, "l_eventpk");
 
-            return response;
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [WebMethod]
@@ -736,46 +750,53 @@ namespace com.ums.ws.parm
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
                                 String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid, String sessionid)
         {
-            sz_function = sz_function.ToLower();
-           
-            ULOGONINFO logoninfo = new ULOGONINFO();
-            logoninfo.l_comppk = l_comppk;
-            logoninfo.l_deptpk = l_deptpk;
-            logoninfo.l_userpk = l_userpk;
-            logoninfo.sz_compid = sz_compid;
-            logoninfo.sz_deptid = sz_deptid;
-            logoninfo.sz_password = sz_password;
-            logoninfo.sz_userid = sz_userid;
-            logoninfo.jobid = jobid;
-            logoninfo.sessionid = sessionid;
-
-            USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
-            ParmGenerateSending parm = new ParmGenerateSending();
-            xml.insertStartDocument();
-            xml.insertComment("Results for ExecAlert");
-            xml.insertStartElement(String.Format("results"));
-            xml.insertAttribute("l_alertpk", l_alertpk.ToString());
-            //xml.insertAttribute("f_simulation", f_simulation.ToString());
-            xml.insertAttribute("sz_function", sz_function);
-            if (parm.Initialize(ref logoninfo, ref xml))
+            try
             {
-                int function = ValidateFunction(sz_function);
-                if (function==-1)
+                sz_function = sz_function.ToLower();
+
+                ULOGONINFO logoninfo = new ULOGONINFO();
+                logoninfo.l_comppk = l_comppk;
+                logoninfo.l_deptpk = l_deptpk;
+                logoninfo.l_userpk = l_userpk;
+                logoninfo.sz_compid = sz_compid;
+                logoninfo.sz_deptid = sz_deptid;
+                logoninfo.sz_password = sz_password;
+                logoninfo.sz_userid = sz_userid;
+                logoninfo.jobid = jobid;
+                logoninfo.sessionid = sessionid;
+
+                USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
+                ParmGenerateSending parm = new ParmGenerateSending();
+                xml.insertStartDocument();
+                xml.insertComment("Results for ExecAlert");
+                xml.insertStartElement(String.Format("results"));
+                xml.insertAttribute("l_alertpk", l_alertpk.ToString());
+                //xml.insertAttribute("f_simulation", f_simulation.ToString());
+                xml.insertAttribute("sz_function", sz_function);
+                if (parm.Initialize(ref logoninfo, ref xml))
                 {
-                    parm.setAlertInfo(false, "0", 0, l_alertpk, "", "Invalid function specified [" + sz_function + "]", "", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    int function = ValidateFunction(sz_function);
+                    if (function == -1)
+                    {
+                        parm.setAlertInfo(false, "0", 0, l_alertpk, "", "Invalid function specified [" + sz_function + "]", "", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    }
+                    else
+                    {
+                        parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime, percentDelegate);
+                    }
                 }
-                else
-                {
-                    parm.SendAlert(l_alertpk, function, sz_scheddate, sz_schedtime, percentDelegate);
-                }
+                cleanup(ref parm);
+
+
+                xml.insertEndElement(); //alert
+                xml.insertEndDocument();
+                xml.finalize();
+                return xml.GetXmlDocument();
             }
-            cleanup(ref parm);
-
-
-            xml.insertEndElement(); //alert
-            xml.insertEndDocument();
-            xml.finalize();
-            return xml.GetXmlDocument();
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -784,47 +805,54 @@ namespace com.ums.ws.parm
                                 String sz_compid, String sz_userid, String sz_deptid, String sz_password,
                                 String sz_function, String sz_scheddate, String sz_schedtime, PercentProgress.SetPercentDelegate percentDelegate, String jobid)
         {
-            sz_function = sz_function.ToLower();
-            //_init();
-
-
-            ULOGONINFO logoninfo = new ULOGONINFO();
-            logoninfo.l_comppk = l_comppk;
-            logoninfo.l_deptpk = l_deptpk;
-            logoninfo.l_userpk = l_userpk;
-            logoninfo.sz_compid = sz_compid;
-            logoninfo.sz_deptid = sz_deptid;
-            logoninfo.sz_password = sz_password;
-            logoninfo.sz_userid = sz_userid;
-            logoninfo.jobid = jobid;
-
-            USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
-            xml.insertStartDocument();
-            xml.insertComment("Results for ExecEvent");
-            xml.insertStartElement(String.Format("results"));
-            xml.insertAttribute("l_eventpk", l_eventpk.ToString());
-            //xml.insertAttribute("f_simulation", f_simulation.ToString());
-            xml.insertAttribute("sz_function", sz_function);
-
-            
-            ParmGenerateSending parm = new ParmGenerateSending();
-            if (parm.Initialize(ref logoninfo, ref xml))
+            try
             {
-                int function = ValidateFunction(sz_function);
-                if (function == -1)
+                sz_function = sz_function.ToLower();
+                //_init();
+
+
+                ULOGONINFO logoninfo = new ULOGONINFO();
+                logoninfo.l_comppk = l_comppk;
+                logoninfo.l_deptpk = l_deptpk;
+                logoninfo.l_userpk = l_userpk;
+                logoninfo.sz_compid = sz_compid;
+                logoninfo.sz_deptid = sz_deptid;
+                logoninfo.sz_password = sz_password;
+                logoninfo.sz_userid = sz_userid;
+                logoninfo.jobid = jobid;
+
+                USimpleXmlWriter xml = new USimpleXmlWriter("iso-8859-1");
+                xml.insertStartDocument();
+                xml.insertComment("Results for ExecEvent");
+                xml.insertStartElement(String.Format("results"));
+                xml.insertAttribute("l_eventpk", l_eventpk.ToString());
+                //xml.insertAttribute("f_simulation", f_simulation.ToString());
+                xml.insertAttribute("sz_function", sz_function);
+
+
+                ParmGenerateSending parm = new ParmGenerateSending();
+                if (parm.Initialize(ref logoninfo, ref xml))
                 {
-                    parm.setAlertInfo(false, "0", 0, 0, "", "Invalid function specified [" + sz_function + "]", "", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    int function = ValidateFunction(sz_function);
+                    if (function == -1)
+                    {
+                        parm.setAlertInfo(false, "0", 0, 0, "", "Invalid function specified [" + sz_function + "]", "", ParmGenerateSending.SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    }
+                    else
+                    {
+                        parm.SendEvent(l_eventpk, function, sz_scheddate, sz_schedtime, null);
+                    }
                 }
-                else
-                {
-                    parm.SendEvent(l_eventpk, function, sz_scheddate, sz_schedtime, null);
-                }
+                cleanup(ref parm);
+                xml.insertEndElement(); //event
+                xml.insertEndDocument();
+                xml.finalize();
+                return xml.GetXmlDocument();
             }
-            cleanup(ref parm);
-            xml.insertEndElement(); //event
-            xml.insertEndDocument();
-            xml.finalize();
-            return xml.GetXmlDocument();
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void cleanup(ref ParmGenerateSending parm)
