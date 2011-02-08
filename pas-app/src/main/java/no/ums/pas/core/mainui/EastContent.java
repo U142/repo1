@@ -105,7 +105,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_tabbedpane = new EastTabbedPane();
 				try { 
 					if(m_infopanel!=null)
-						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, PAS.get_pas().get_mappane().get_mouseoverhouse());
+						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, null); //PAS.get_pas().get_mappane().get_mouseoverhouse());
 				} catch (Exception e) {
 					// TODO: handle exception
 				}

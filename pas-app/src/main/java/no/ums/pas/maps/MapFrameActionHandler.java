@@ -911,7 +911,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					this.check_snap(e);
 					if(get_mappane().get_mouseoverhouse() != null) {
 						//System.out.println("House found at same location with " + get_mappane().get_mouseoverhouse().get_inhabitantcount() + " inhabitants");
-						p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get_lon(), get_mappane().get_mouseoverhouse().get_lat()));
+						p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get(0).get_lon(), get_mappane().get_mouseoverhouse().get(0).get_lat()));
 					}
 					else 
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));

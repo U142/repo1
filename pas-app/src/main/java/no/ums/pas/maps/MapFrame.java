@@ -366,9 +366,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public MapPointLL get_pinpointll() { return m_pinpointll; }
 	private MapPointLL m_adreditll = null;
 	public MapPointLL get_adreditll() { return m_adreditll; }
-	private HouseItem m_mouseoverhouse = null;
-	public HouseItem get_mouseoverhouse() { return m_mouseoverhouse; }
-	public void set_mouseoverhouse(HouseItem i) { m_mouseoverhouse = i; }
+	private ArrayList<HouseItem> m_mouseoverhouse = null;
+	public ArrayList<HouseItem> get_mouseoverhouse() { return m_mouseoverhouse; }
+	public void set_mouseoverhouse(ArrayList<HouseItem> i) { m_mouseoverhouse = i; }
 	public void set_pinpoint(MapPointLL p) {
 		m_pinpointll = p;
 		set_drawpinpoint(true);
@@ -1343,7 +1343,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		else if("act_onmouseover_houses".equals(e.getActionCommand())) {
 			ArrayList<HouseItem> arr = (ArrayList<HouseItem>)e.getSource();
 			if(arr.size() > 0) {
-				set_mouseoverhouse(arr.get(0));
+				set_mouseoverhouse(arr);
 				if(PAS.get_pas() != null)
 					PAS.get_pas().kickRepaint();
 				else

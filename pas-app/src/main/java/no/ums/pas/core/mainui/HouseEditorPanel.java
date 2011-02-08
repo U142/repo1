@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 
 public class HouseEditorPanel extends DefaultPanel implements ComponentListener {
@@ -146,12 +147,12 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	
 	//HouseItem m_house;
 	//protected HouseItem get_house() { return m_house; 
-	protected HouseItem m_house;
+	protected ArrayList<HouseItem> m_house;
 	protected Inhabitant m_inhabitant;
 	protected Inhabitant m_gislookup;
 	protected Inhabitant get_gislookup() { return m_gislookup; }
 	protected Inhabitant get_inhabitant() { return m_inhabitant; }
-	protected HouseItem get_house() { return m_house; }
+	protected ArrayList<HouseItem> get_house() { return m_house; }
 	protected MapPoint m_point;
 	protected ActionListener m_callback;
 	protected HouseInhabitantsList get_inhablist() { return m_inhablist; }
@@ -160,7 +161,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		super();
 		m_point = point;
 		m_callback = callback;
-		m_house = house;
+		m_house = new ArrayList<HouseItem>();//house;
 		
 		m_inhablist = new HouseInhabitantsList(new String [] { "", PAS.l("common_adr_name"), PAS.l("common_adr_address"), PAS.l("common_adr_postno"), PAS.l("common_adr_postplace"), PAS.l("common_adr_phone"), PAS.l("common_adr_mobile"), "" }, new int [] { 16, 100, 100, 50, 100, 75, 75, 16 } );
 		
@@ -175,7 +176,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		addComponentListener(this);
 		get_inhablist().start_search();		
 	}
-	public void reinit(MapPoint point, HouseItem house) {
+	public void reinit(MapPoint point, ArrayList<HouseItem> house) {
 		m_inhabitant = new Inhabitant(point.get_lon(), point.get_lat());
 		m_point = point;
 		m_house = house;
@@ -187,11 +188,11 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		{
 			init_values(m_inhabitant);
 			//fill form using the first inhabitant's credentials
-			if(m_house.get_inhabitantcount()>0)
+			if(m_house.size()>=1 && m_house.get(0).get_inhabitantcount()>0)
 			{
 				try
 				{
-					Inhabitant tmp = m_house.get_itemfromhouse(0).clone();
+					Inhabitant tmp = m_house.get(0).get_itemfromhouse(0).clone();
 					tmp.set_adrname("");
 					tmp.set_deptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 					tmp.set_birthday("");
@@ -211,8 +212,12 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	}
 	
 	public void refresh(HouseItem house) {
-		m_house = house;
-		get_inhablist().start_search();
+		if(m_house!=null && m_house.size()>=1)
+		{
+			m_house = new ArrayList<HouseItem>();
+			m_house.add(house);
+			get_inhablist().start_search();
+		}
 		//m_house = null;
 		//housepointer is still valid
 	}
@@ -242,8 +247,15 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		m_txt_letter.setText(get_inhabitant().get_letter());
 		m_txt_place.setText(get_inhabitant().get_postarea());
 		String sz_houseinfo = PAS.l("main_houseeditortab_newhouse");
-		if(get_house()!=null)
-			sz_houseinfo = PAS.l("main_houseeditortab_house_with") + " " + get_house().get_inhabitantcount() + " " + PAS.l("common_adr_inhabitants");
+		if(get_house()!=null && get_house().size()>=1)
+		{
+			int total_inhab = 0;
+			for(HouseItem h : get_house())
+			{
+				total_inhab += h.get_inhabitantcount();
+			}
+			sz_houseinfo = PAS.l("main_houseeditortab_house_with") + " " + total_inhab + " " + PAS.l("common_adr_inhabitants");
+		}
 		m_lbl_houseinfo.setText(sz_houseinfo);
 	}
 	
@@ -335,8 +347,8 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				sz_kondmid = m_inhabitant.get_kondmid();
 			}
 			else {
-				if(m_house != null)
-					m_inhabitant = new Inhabitant(m_house.get_lon(), m_house.get_lat());
+				if(m_house != null && m_house.size()>=1)
+					m_inhabitant = new Inhabitant(m_house.get(0).get_lon(), m_house.get(0).get_lat());
 				else
 					m_inhabitant = new Inhabitant(m_point.get_lon(), m_point.get_lat());	
 			}
@@ -612,18 +624,23 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		}
 		public void start_search() {
 			super.clear();
-			HouseItem h = get_house();
-			try {
-				if(h!=null) {
-					Inhabitant inhab;
-					for(int i=0; i < h.get_inhabitants().size(); i++) {
-						insert_row(h.get_itemfromhouse(i));
+			//HouseItem h = get_house();
+			if(get_house()==null)
+				return;
+			for(HouseItem h : get_house())
+			{
+				try {
+					if(h!=null) {
+						Inhabitant inhab;
+						for(int i=0; i < h.get_inhabitants().size(); i++) {
+							insert_row(h.get_itemfromhouse(i));
+						}
 					}
+				} catch(Exception e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+					Error.getError().addError("HouseEditorPanel","Exception in start_search",e,1);
 				}
-			} catch(Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-				Error.getError().addError("HouseEditorPanel","Exception in start_search",e,1);
 			}
 		}
 		public void valuesChanged() {

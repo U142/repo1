@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 //import org.jvnet.substance.SubstanceLookAndFeel;
 //import UMS.Tools.*;
@@ -93,7 +94,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 		//this.pack();
 		setVisible(true);
 	}
-	public void reinit(MapPoint point, HouseItem item) {
+	public void reinit(MapPoint point, ArrayList<HouseItem> item) {
 		//setVisible(true);
 		//if(m_tab.getSelectedIndex()==0)
 		if(m_tab.getSelectedComponent()==m_panel)
