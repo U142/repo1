@@ -131,6 +131,7 @@ public class WSGisImport extends WSThread
 		catch(Exception e)
 		{
 			//no.ums.pas.ums.errorhandling.Error.getError().addError("Error fetching GIS import", "WSGisImport::run()", e, 1);
+			e.printStackTrace();
 			throw e;
 		}
 		finally

@@ -1169,7 +1169,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onShowContactinformation() {
-		return false;
+		JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_helpdesk_contact"), PAS.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
+		return true;
 	}
 
 	@Override
