@@ -175,7 +175,7 @@ public class HouseItem extends Object {
 	ArrayList<InhabitantBasics> m_subitems;
 	public ArrayList<InhabitantBasics> get_inhabitants() { return m_subitems; }
 	public int get_inhabitantcount() {
-		return m_n_private_adr + m_n_company_adr + m_n_private_mobile_adr + m_n_company_mobile_adr; //+ m_n_private_nophone_adr + m_n_company_nophone_adr; //m_subitems.size();
+		return get_inhabitants().size(); //m_n_private_adr + m_n_company_adr + m_n_private_mobile_adr + m_n_company_mobile_adr; //+ m_n_private_nophone_adr + m_n_company_nophone_adr; //m_subitems.size();
 	}
 	
 	public boolean find_inhabitant(Inhabitant inhab) {

@@ -616,7 +616,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			try {
 				if(h!=null) {
 					Inhabitant inhab;
-					for(int i=0; i < h.get_inhabitantcount(); i++) {
+					for(int i=0; i < h.get_inhabitants().size(); i++) {
 						insert_row(h.get_itemfromhouse(i));
 					}
 				}
