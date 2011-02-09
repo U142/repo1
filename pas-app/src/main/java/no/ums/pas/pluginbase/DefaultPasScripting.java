@@ -1176,6 +1176,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onCloseProject() {
 		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
+		//PAS.get_pas().get_mappane().set_active_shape(null);
+		PAS.get_pas().get_sendcontroller().remove_all_sendings();
 		return true;
 	}
 

@@ -128,6 +128,8 @@ public class SendController implements ActionListener {
 			}
 		}
 		get_sendings().clear();
+		PAS.get_pas().get_mappane().set_active_shape(null);
+		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 	}
 	
 	public String m_sz_projectpk = "-1";
