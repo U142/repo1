@@ -694,7 +694,14 @@ public class WSGetStatusItems extends WSThread
 									};
 									String cclist = nnm_lang.getNamedItem("ccodelist").getNodeValue();
 									LBALanguage lbalang = new LBALanguage();
-									//lbalang.setLTextpk(Long.parseLong(langvals[0]));
+									try
+									{
+										lbalang.setLTextpk(Long.parseLong(langvals[0]));
+									}
+									catch(Exception e)
+									{
+										lbalang.setLTextpk(la);
+									}
 									lbalang.setSzName(langvals[1]);
 									lbalang.setSzCbOadc(langvals[2]);
 									lbalang.setSzText(langvals[3]);
