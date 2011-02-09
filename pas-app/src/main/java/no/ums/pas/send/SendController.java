@@ -912,7 +912,16 @@ public class SendController implements ActionListener {
 					else if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), PAS.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
 						openStatus(res);
 					else if(b_openstatus_question && answer==JOptionPane.NO_OPTION)
-						get_activesending().get_sendwindow().dispose();
+					{
+						try
+						{
+							get_activesending().get_sendwindow().dispose();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
 					else if(!b_openstatus_question)
 						JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), PAS.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -934,6 +943,9 @@ public class SendController implements ActionListener {
 				public void run()
 				{	
 					PAS.get_pas().close_active_project(true, false);
+					Project p = new Project();
+					p.set_projectpk(res.getProjectpk());
+					PAS.pasplugin.onOpenProject(p, -1);
 					PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true /*init*/);
 				}
 			}.start();

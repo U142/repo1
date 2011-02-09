@@ -392,6 +392,7 @@ public class PASActions implements ActionListener {
 						public void run()
 						{
 							PAS.get_pas().close_active_project(true, false);
+							PAS.pasplugin.onOpenProject(PAS.get_pas().get_current_project(), -1);
 							PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas(), PAS.get_pas().get_current_project().get_projectpk(), -1, true);
 						}
 					}.start();
