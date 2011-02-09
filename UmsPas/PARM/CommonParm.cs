@@ -421,6 +421,8 @@ namespace com.ums.UmsParm
                     xmlwriter.insertAttribute("operation", "SendPolygon");
                 else if (typeof(UEllipse).Equals(sourceshape.GetType()))
                     xmlwriter.insertAttribute("operation", "SendEllipse");
+                else if (typeof(UTestSending).Equals(sourceshape.GetType()))
+                    throw new UTestSendingUnavailableException("Test sending for Location Based Alert is not supported");
                 else
                     throw new USendingTypeNotSupportedException("Sending type " + sourceshape.GetType().ToString() + " not supported for Location Based Alert");
                 b_adhoc = true;

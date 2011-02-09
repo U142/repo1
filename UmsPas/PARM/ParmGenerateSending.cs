@@ -1059,10 +1059,16 @@ namespace com.ums.UmsParm
                     }
                 }
             }
+            catch (UTestSendingUnavailableException e)
+            {
+                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                b_publish_lba = false;
+            }
             catch (Exception e)
             {
                 setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 lbasending.lbacleanup();
+                b_publish_lba = false;
             }
 
             //send it
@@ -1541,10 +1547,16 @@ namespace com.ums.UmsParm
                         }
                     }
                 }
+                catch (UTestSendingUnavailableException e)
+                {
+                    setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    b_publish_lba = false;
+                }
                 catch (Exception e)
                 {
                     setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Error creating shape file for Location Based Alert", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                     lbasending.lbacleanup();
+                    b_publish_lba = false;
                 }
             }
             

@@ -315,6 +315,13 @@ namespace com.ums.UmsCommon
 
         }
     }
+    public class UTestSendingUnavailableException : UException
+    {
+        public UTestSendingUnavailableException(String s)
+            : base(s)
+        {
+        }
+    }
     public class UParsePolygonException : UException
     {
         public UParsePolygonException(String s)
