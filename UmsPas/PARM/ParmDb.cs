@@ -1104,7 +1104,8 @@ namespace com.ums.UmsParm
                 int n_fromapplication = 13;
                 String sz_tarifclass = "";
                 String sz_stdcc = logon.sz_stdcc;
-                String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString().Length < 6 ? s.m_sendinginfo.l_schedtime.ToString() + "00" : s.m_sendinginfo.l_schedtime.ToString()).ToString();
+                //String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString().Length < 6 ? s.m_sendinginfo.l_schedtime.ToString() + "00" : s.m_sendinginfo.l_schedtime.ToString()).ToString();
+                String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString()).ToString();
                 //String n_scheddatetime = new UDATETIME(s.m_sendinginfo.l_scheddate.ToString(), s.m_sendinginfo.l_schedtime.ToString()).ToString();
                 if (n_scheddatetime.Equals("-1"))
                     n_scheddatetime = s.m_sendinginfo.l_createdate + s.m_sendinginfo.l_createtime;

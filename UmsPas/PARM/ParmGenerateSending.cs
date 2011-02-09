@@ -1267,7 +1267,7 @@ namespace com.ums.UmsParm
             {
                 String datetime = db.getDbClock().ToString();
                 sz_scheddate = datetime.Substring(0, 8);
-                sz_schedtime = datetime.Substring(8,4);
+                sz_schedtime = datetime.Substring(8,6);
             }
 
             if ((pa.l_addresstypes & (long)ADRTYPES.FIXED_COMPANY_ALT_SMS) > 0 ||
