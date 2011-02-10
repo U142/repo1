@@ -14,6 +14,7 @@ public class BBSchedProfile extends Object {
 	private int m_n_pausetime = -1;
 	private int m_n_pauseinterval = -1;
 	private boolean m_b_sharing;
+	
 	public String get_reschedpk() { return m_sz_reschedpk; }
 	public String get_name() { return m_sz_name; }
 	public int get_retries() { return m_n_retries; }

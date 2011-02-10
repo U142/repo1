@@ -32,6 +32,8 @@ public class SoundFile extends Object {
 	private String m_sz_name;
 	private int m_n_sound_filetype;
 	private ByteBuffer m_bytebuffer = null;
+	private int m_n_template;
+	private int m_n_messagepk;
 	public int get_filenumber() { return m_n_filenumber; }
 	public int get_param() { return m_n_param; }
 	public String get_modulename() { return m_sz_modulename; }
@@ -39,11 +41,13 @@ public class SoundFile extends Object {
 	public int get_item() { return m_n_item; }
 	public int get_action() { return m_n_action; }
 	public int get_seq() { return m_n_seq; }
+	public int get_template() { return m_n_template; }
+	public int get_messagepk() { return m_n_messagepk; }
 	public ByteBuffer get_bytebuffer() { return m_bytebuffer; }
 	
 	
 	public SoundFile(int n_parent, int n_item, int n_param, int n_action, int n_seq, 
-			  String sz_modulename, String sz_name) {
+			  String sz_modulename, String sz_name, int n_template, int n_messagepk) {
 		m_n_parent	= n_parent;
 		m_n_item	= n_item;
 		m_n_param	= n_param;
@@ -55,12 +59,14 @@ public class SoundFile extends Object {
 			m_n_filenumber = get_seq();
 		else
 			m_n_filenumber = get_param();
+		m_n_template = n_template;
+		m_n_messagepk = n_messagepk;
 	
 	}
 	public SoundFile(String [] sz_values) {
 		//"l_parent", "l_item", "l_param", "l_action", "l_seq", "sz_name", "sz_defname"
 		this(new Integer(sz_values[0]).intValue(), new Integer(sz_values[1]).intValue(), new Integer(sz_values[2]).intValue(),
-			 new Integer(sz_values[3]).intValue(), new Integer(sz_values[4]).intValue(), sz_values[5], sz_values[6]);
+			 new Integer(sz_values[3]).intValue(), new Integer(sz_values[4]).intValue(), sz_values[5], sz_values[6], new Integer(sz_values[7]).intValue(), new Integer(sz_values[8]).intValue());
 	}
 	public void set_bytebuffer(ByteBuffer buf) {
 		m_bytebuffer = buf;

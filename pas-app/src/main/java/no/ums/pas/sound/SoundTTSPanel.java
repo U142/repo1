@@ -36,6 +36,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	private SendWindow m_parent;
 	private JComboBox m_combo_tts;
 	private JComboBox m_combo_txtlib;
+	public JComboBox get_txtlib() { return m_combo_txtlib; }
 	private Sending_Files m_file;
 	public Sending_Files get_soundpanel() { return m_file; }
 	public SendWindow get_parent() { return m_parent; }

@@ -114,6 +114,13 @@ public class Sending_Files extends DefaultPanel {
 		else
 			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_icon("open.gif"), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
 		m_lbl_soundmodule.setText(PAS.l("main_sending_info_soundfile_for_module") + " " + get_soundfile().get_modulename());
+		
+		if(file.get_template() == 1) {
+			m_tabbedpane.setSelectedComponent(m_tts);
+			for(int i=0;i<m_tts.get_txtlib().getItemCount();++i)
+				if(Integer.parseInt(((SoundlibFileTxt)m_tts.get_txtlib().getItemAt(i)).get_messagepk()) == file.get_messagepk())
+					m_tts.get_txtlib().setSelectedIndex(i);
+		}
 		add_controls();
 	} 
 	public void add_controls() {
@@ -136,7 +143,6 @@ public class Sending_Files extends DefaultPanel {
 		 // SubstanceLookAndFeel.TABBED_PANE_VERTICAL_ORIENTATION_ROTATE_ICONS,
 		//  Boolean.TRUE);
 		//m_tabbedpane.addTab("tab1", SubstanceImageCreator.getThemeIcon(null));		
-
 		setVisible(true);
 	}
 	public void actionPerformed(ActionEvent e) {

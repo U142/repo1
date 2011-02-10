@@ -160,7 +160,7 @@ public class WSSendSettings extends WSThread
 			if(list_files.getLength()==0)
 				continue;
 			for(int n_files=0; n_files < list_files.getLength(); n_files++) {
-				sz_itemattr = new String [] { "l_parent", "l_item", "l_param", "l_action", "l_seq", "sz_name", "sz_defname" };
+				sz_itemattr = new String [] { "l_parent", "l_item", "l_param", "l_action", "l_seq", "sz_name", "sz_defname", "f_template", "l_messagepk" };
 				node_item = list_files.item(n_files);
 				nnm_items = node_item.getAttributes();
 				if(nnm_items==null) {
