@@ -224,6 +224,7 @@ namespace com.ums.ws.pas
         [WebMethod]
         public UPASMap GetMap(UMapInfo request) //UMapInfo input)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             ULOGONINFO info = new ULOGONINFO();
             info.sz_compid = "UMS";
             info.sz_deptid = "TEST";

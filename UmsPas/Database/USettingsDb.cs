@@ -241,6 +241,8 @@ namespace com.ums.PAS.Database
                         xml.insertAttribute("l_seq", rs.GetInt32(10).ToString());
                         xml.insertAttribute("sz_name", rs.GetString(11).ToString());
                         xml.insertAttribute("sz_defname", rs.GetString(12).ToString());
+                        xml.insertAttribute("f_template", rs.GetInt16(14).ToString());
+                        xml.insertAttribute("l_messagepk", rs.GetInt32(15).ToString());
                         xml.insertEndElement(); //FILE
                     }
                     n_last_profilepk = n_profilepk;
