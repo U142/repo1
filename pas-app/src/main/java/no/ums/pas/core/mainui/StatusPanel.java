@@ -8,6 +8,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.defines.ComboRowCellRenderer;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -20,6 +21,10 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.status.LBALanguage;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -178,6 +183,91 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		}
 	}
 	
+	
+
+	/*
+	class UTabbedPaneUIAttention extends BasicTabbedPaneUI implements ActionListener
+	{
+		int ATTENTION = 0;
+		int INCREMENT = 1;
+		int MAX = 200;
+		Timer timer;
+		
+		UTabbedPaneUIAttention()
+		{
+			this(50, 7, 200);
+		}
+		
+		UTabbedPaneUIAttention(int timer_msec, int increment, int max)
+		{
+			timer = new Timer(timer_msec, this);
+			INCREMENT = increment;
+			MAX = max;
+			timer.start();
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource().equals(timer))
+			{
+				ATTENTION = (ATTENTION + INCREMENT) % MAX;
+				repaint();
+			}
+		}
+
+
+		@Override
+		protected void paintTabBackground(Graphics g, int tabPlacement,
+				int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+			super.paintTabBackground(g, tabPlacement, tabIndex, x, y, w, h, isSelected);
+			
+			JComponent comp = (JComponent)m_tab.getTabComponentAt(tabIndex);
+			if(comp==null)
+				return;
+			Object o = comp.getClientProperty(ULookAndFeel.WINDOW_MODIFIED);
+			if(o!=null && Boolean.parseBoolean(o.toString()))
+			{
+				Graphics2D g2d = (Graphics2D) g;
+				Color colorSet;
+	
+				Rectangle rect = rects[tabIndex];
+	
+				if (isSelected) {
+					colorSet = Color.white;
+				} else if (getRolloverTab() == tabIndex) {
+					colorSet = Color.red;
+				} else {
+					colorSet = Color.red;
+				}
+	
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+	
+				int width = rect.width;
+				int xpos = rect.x;
+				if (tabIndex > 0) {
+					width--;
+					xpos++;
+				}
+				int c = (int)Math.abs(MAX/2.0 - ATTENTION);
+				g2d.setPaint(new GradientPaint(xpos, 0, new Color(200, 
+																	0, 
+																	0, 
+																	c), 
+												xpos,
+						h, new Color(SystemColor.control.getRed(), 
+								SystemColor.control.getGreen(), 
+								SystemColor.control.getBlue(), 
+								ATTENTION)));
+				g2d.fillRoundRect(x+2, y, w-2, h, 5, 5);
+				
+			}
+
+		}
+		
+	}
+	*/
+	
 	JTabbedPane m_tab;
 	MainView m_main;
 	public IconPanelMain m_icon_panel_main;
@@ -208,6 +298,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		
 		m_main = new MainView(pas);
 		m_tab = new JTabbedPane();
+		m_tab.setUI(ULookAndFeel.newUTabbedPaneUIAttention(m_tab));
 		setPreferredSize(size);
 		add_controls();
 		m_combo_voice_filter.addItemListener(this);

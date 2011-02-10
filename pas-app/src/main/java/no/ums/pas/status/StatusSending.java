@@ -4,6 +4,8 @@ package no.ums.pas.status;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.core.laf.ULookAndFeel;
+import no.ums.pas.core.laf.ULookAndFeel.UAttentionController;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.Variables;
@@ -60,6 +62,7 @@ public class StatusSending extends Object {
 	//public StatusCellBroadcast getStatusCellBroadcast() { return m_cellbroadcast; }
 	private LBASEND m_lba = null; 
 	private ArrayList<LBASEND> m_lba_by_operator = new ArrayList<LBASEND>();
+	
 	public void ResetLbaByOperator() {
 		m_lba_by_operator.clear();
 	}
@@ -215,6 +218,7 @@ public class StatusSending extends Object {
 					//m_voice_progress = new JProgressBar();
 					//m_lba_tabbed = new LBATabbedPane();				
 					m_uipanel = new StatusSendingUI();
+					pnl_icon.init_ui();
 					get_uipanel().init_ui();
 				/*}
 			});*/
@@ -791,6 +795,9 @@ public class StatusSending extends Object {
 	public class StatusSendingUI extends DefaultPanel implements ComponentListener {	
 		public static final long serialVersionUID = 1;
 
+		private boolean b_need_attention = false;
+		public boolean GetNeedAttention() { return b_need_attention; }
+
 		public StatusSendingUI() {
 			super();
 			pnl_voice = new VoicePanel();
@@ -1044,9 +1051,32 @@ public class StatusSending extends Object {
 				m_chk_layers_umts.setToolTipText(String.format(PAS.l("main_status_click_to_show_coverage"),"UMTS"));			
 			}
 		}
+		public void init_ui()
+		{
+			if(PAS.icon_version==2)
+				m_btn_confirm_lba_sending = ULookAndFeel.newUButtonAttention(ImageLoader.load_icon("connect_32.png"));
+			else
+				m_btn_confirm_lba_sending = new JButton(ImageLoader.load_icon("go_32.png"));
+			m_btn_confirm_lba_sending.addActionListener(this);
+			m_btn_confirm_lba_sending.setPreferredSize(btn_size);
+			m_btn_confirm_lba_sending.setVisible(false);
+
+			//m_btn_confirm_lba_sending.setUI(ULookAndFeel.newUButtonUIAttention(m_btn_confirm_lba_sending));
+			
+			if(PAS.icon_version==2)
+				m_btn_cancel_lba_sending = ULookAndFeel.newUButtonAttention(ImageLoader.load_icon("disconnect_32.png"));
+			else
+				m_btn_cancel_lba_sending = new JButton(ImageLoader.load_icon("cancel_32.png"));
+			m_btn_cancel_lba_sending.addActionListener(this);
+			m_btn_cancel_lba_sending.setPreferredSize(btn_size);
+			m_btn_cancel_lba_sending.setVisible(false);
+			m_btn_cancel_lba_sending.setToolTipText(PAS.l("main_status_cancel_lba_sending"));
+			add_controls();
+
+		}
+		Dimension btn_size = new Dimension(80,40);
 		public IconPanel() {
 			//m_btn_goto = new JButton(ImageLoader.load_icon("gnome-searchtool_16x16.jpg"));
-			Dimension btn_size = new Dimension(80,40);
 			if(PAS.icon_version==2)
 				m_btn_goto = new JButton(ImageLoader.load_icon("find_32.png"));
 			else
@@ -1055,22 +1085,7 @@ public class StatusSending extends Object {
 			m_btn_goto.setPreferredSize(btn_size);
 			m_btn_goto.setToolTipText(PAS.l("main_status_show_map_of_sending"));
 			
-			if(PAS.icon_version==2)
-				m_btn_confirm_lba_sending = new JButton(ImageLoader.load_icon("connect_32.png"));
-			else
-				m_btn_confirm_lba_sending = new JButton(ImageLoader.load_icon("go_32.png"));
-			m_btn_confirm_lba_sending.addActionListener(this);
-			m_btn_confirm_lba_sending.setPreferredSize(btn_size);
-			m_btn_confirm_lba_sending.setVisible(false);
 			
-			if(PAS.icon_version==2)
-				m_btn_cancel_lba_sending = new JButton(ImageLoader.load_icon("disconnect_32.png"));
-			else
-				m_btn_cancel_lba_sending = new JButton(ImageLoader.load_icon("cancel_32.png"));
-			m_btn_cancel_lba_sending.addActionListener(this);
-			m_btn_cancel_lba_sending.setPreferredSize(btn_size);
-			m_btn_cancel_lba_sending.setVisible(false);
-			m_btn_cancel_lba_sending.setToolTipText(PAS.l("main_status_cancel_lba_sending"));
 			m_chk_layers_gsm.addActionListener(this);
 			m_chk_layers_umts.addActionListener(this);
 			m_chk_layers_gsm.setActionCommand("act_show_layers_gsm");
@@ -1087,7 +1102,6 @@ public class StatusSending extends Object {
 				}
 			});
 
-			add_controls();
 		}
 		
 		public void _SetToolTipText_Confirm(String sz)
@@ -1111,7 +1125,8 @@ public class StatusSending extends Object {
 			//m_btn_cancel_lba_sending.getRootPane().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, Boolean.TRUE);
 			//m_btn_confirm_lba_sending.putClientProperty(SubstanceLookAndFeel.BORDER_ANIMATION_KIND, b);
 			//m_btn_confirm_lba_sending.putClientProperty(SubstanceLookAndFeel.BUTTON_OPEN_SIDE_PROPERTY, SubstanceLookAndFeel.Side.LEFT);
-			//m_btn_cancel_lba_sending.putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, new Boolean(b));
+			m_btn_cancel_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, new Boolean(b));
+			m_btn_confirm_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, new Boolean(b));
 		}
 		
 		public void actionPerformed(ActionEvent e) {
@@ -2297,13 +2312,18 @@ public class StatusSending extends Object {
 		
 		public void setNeedAttention(final boolean b)
 		{
+			get_uipanel().b_need_attention = b;
 			try
 			{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
-						PAS.get_pas().get_eastcontent().get_statuspanel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
-						get_uipanel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
+						//get_uipanel().setBackground(b ? Color.red : Color.black);
+						//PAS.get_pas().get_eastcontent().get_statuspanel().setBackground(b ? Color.red : Color.black);
+						//PAS.get_pas().get_eastcontent().get_statuspanel().putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
+						//PAS.get_pas().get_eastcontent().get_statuspanel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
+						get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
+						get_uipanel().get_status_sending().getTotalSendingnameLabel().putClientProperty(SubstanceLookAndFeel.WINDOW_MODIFIED, b);
 					}
 				});
 			}
