@@ -141,9 +141,14 @@ public class LBASEND
 	public static final int TASSTATUS_FAILED_EXECUTE_INT_ALERT = 42017;
 	public static final int TASSTATUS_FAILED_PREPARE_INT_ALERT = 42018;
 	
+	public static final int LBASTATUS_MISSING_TAG_TEXTMESSAGES = 42101;
+	public static final int LBASTATUS_MISSING_ATTRIBUTE_AREANAME = 42102;
+	public static final int LBASTATUS_MISSING_TAG_POLYGON_ELLIPSE = 42103;
+	public static final int LBASTATUS_GET_ALERT_MESSAGE_EXCEPTION = 42104;
+	public static final int LBASTATUS_GET_ALERT_MESSAGE_FAILED_MISSING_CC_TAG = 42105;
+	
 	public static final int CELLVISION_JOB_STATUS_ERROR = 42201;
-	
-	
+		
 	public static String LBASTATUSTEXT(int n_code)
 	{
 		String sz = LBASTATUS.get(new Integer(n_code));
@@ -202,6 +207,12 @@ public class LBASEND
 		LBASTATUS.put(LBASTATUS_FAILED_PREPARE_CUSTOMALERT, PAS.l("main_statustext_fail_customalert_prepare"));
 		LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_PREPARED_ALERT, PAS.l("main_statustext_fail_preparedalert_execute"));
 		LBASTATUS.put(LBASTATUS_FAILED_CANCEL_PREPARED_ALERT, PAS.l("main_statustext_fail_preparedalert_cancel"));
+		
+		LBASTATUS.put(LBASTATUS_MISSING_TAG_TEXTMESSAGES, PAS.l("main_statustext_missing_tag_textmessages"));
+		LBASTATUS.put(LBASTATUS_MISSING_ATTRIBUTE_AREANAME, PAS.l("main_statustext_missing_attribute_areaname"));
+		LBASTATUS.put(LBASTATUS_MISSING_TAG_POLYGON_ELLIPSE, PAS.l("main_statustext_missing_tag_polygon_ellipse"));
+		LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_EXCEPTION, PAS.l("main_statustext_ex_get_alert_message"));
+		LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_FAILED_MISSING_CC_TAG, PAS.l("main_statustext_fail_get_alert_msg_m_cc"));
 		
 		LBASTATUS.put(CELLVISION_JOB_STATUS_ERROR, PAS.l("main_statustext_fail_cellvision_job_error"));
 	

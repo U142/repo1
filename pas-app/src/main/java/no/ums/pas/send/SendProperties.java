@@ -212,6 +212,7 @@ public abstract class SendProperties extends Object {
 		m_n_sendingtype = n_sendingtype;
 		m_soundfiles = new SoundFileArray();
 		m_sched = new SchedDateTime();
+		m_sz_sms_oadc = PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber();
 		if(PAS.get_pas() != null)
 			m_n_maxchannels = PAS.get_pas().get_userinfo().get_current_department().get_maxalloc();
 	}

@@ -40,6 +40,9 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			m_txt_messagetext.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_message());
 			m_txt_oadc_text.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc());
 		}
+		else {
+			m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
+		}
 		addComponentListener(this);
 	}
 	protected void init_for_sms()
