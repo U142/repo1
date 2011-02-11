@@ -254,7 +254,8 @@ public class StatusSending extends Object {
 			lba.n_requesttype = m_lba_by_operator.get(i).n_requesttype;
 			lba.n_response = m_lba_by_operator.get(i).n_response;
 			lba.n_retries = m_lba_by_operator.get(i).n_retries;
-			lba.n_status = m_lba_by_operator.get(i).n_status;
+			if(lba.n_status>m_lba_by_operator.get(i).n_status || lba.n_status<0)
+				lba.n_status = m_lba_by_operator.get(i).n_status;
 			lba.sz_areaid = m_lba_by_operator.get(i).sz_areaid;
 			lba.sz_jobid = m_lba_by_operator.get(i).sz_jobid;
 
@@ -362,10 +363,18 @@ public class StatusSending extends Object {
 				m_lba_progress.setIndeterminate(true);
 				m_lba_progress.setStringPainted(false);
 			}
-			else if(m_lba.n_items==0)
+			else if(m_lba.n_status<LBASEND.LBASTATUS_PREPARED_CELLVISION &&
+					!m_lba.HasFailedStatus() && !m_lba.HasFinalStatus())
 			{
 				m_lba_progress.setMaximum(1);
 				m_lba_progress.setValue(1);
+				m_lba_progress.setIndeterminate(true);
+				m_lba_progress.setStringPainted(false);			
+			}
+			else if(m_lba.n_items==0)
+			{
+				m_lba_progress.setMaximum(1);
+				m_lba_progress.setValue(0);
 				m_lba_progress.setIndeterminate(false);
 				m_lba_progress.setStringPainted(false);				
 			}

@@ -1962,8 +1962,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			get_mainmenu().get_selectmenu().enableStatusExport(false);
 			boolean b_confirmed_close = true;
 
-			String curproject = m_sendcontroller.get_activesending().get_sendproperties().get_projectpk();
-			String pasproject = PAS.get_pas().get_current_project().get_projectpk();
 			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
 				if(JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					thread = new WaitForStatusThread(b_close_all_gui);
