@@ -1634,9 +1634,12 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                         throw new UDbQueryException("Recordset error");
                     adr.kondmid = kondmid.ToString();
                     rs.Close();
-                    return true;
                 }
                 rs.Close();
+                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_update_adr {0}, '{1}', '{2}', '{3}', '{4}', '{5}', {6}, '{7}', '{8}', '{9}', {10}, {11}, {12}, {13}",
+                               adr.kondmid, adr.name, adr.mobile, adr.number, adr.bday, adr.address, adr.houseno, adr.letter, adr.postno, adr.postarea, adr.municipalid, adr.gno, adr.bno, adr.streetid);
+                ExecNonQuery(szSQL);
+                return true;
                 //adr.kondmid = "-1";
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");
