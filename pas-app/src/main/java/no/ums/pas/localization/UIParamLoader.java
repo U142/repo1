@@ -40,7 +40,7 @@ public class UIParamLoader extends ClassLoader
 			while(keys.hasMoreElements())
 			{
 				String key = (String)keys.nextElement();
-				if(key.equals("TabbedPane.tabInsets"))
+				if(key.equals("ULookAndFeel.UAttentionController.INCREMENT"))
 					System.out.println("break");
 				try
 				{
@@ -132,7 +132,8 @@ public class UIParamLoader extends ClassLoader
 						//if(key.indexOf("foreground")>0 || key.indexOf("background")>0)
 						{
 							//obj_value = Color.decode(obj_value.toString());
-							UIManager.put(key, obj_value);
+							Object o = b.getProperty(key);
+							UIManager.put(key, o);
 						}
 					}
 

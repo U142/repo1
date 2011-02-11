@@ -19,6 +19,7 @@ import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
@@ -30,6 +31,8 @@ public class ULookAndFeel
 	public static enum UAttentionController implements ActionListener
 	{
 		INSTANCE;
+		
+		
 		int INCREMENT = 7;
 		int ATTENTION = 0;
 		int MAX = 255;
@@ -39,6 +42,9 @@ public class ULookAndFeel
 		
 		UAttentionController()
 		{
+			INCREMENT 	= Math.max(1, Integer.parseInt(UIManager.getString("ULookAndFeel.UAttentionController.INCREMENT")));
+			MAX 		= Math.max(1, Integer.parseInt(UIManager.getString("ULookAndFeel.UAttentionController.MAX")));
+			TIMER_MSEC 	= Math.max(10, Integer.parseInt(UIManager.getString("ULookAndFeel.UAttentionController.TIMER_MSEC")));
 			timer = new Timer(TIMER_MSEC, this);
 			timer.start();
 		}
