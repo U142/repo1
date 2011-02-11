@@ -2,7 +2,13 @@ package no.ums.pas.cellbroadcast;
 
 import java.util.ArrayList;
 
-public class CBMessage {
+public class CBMessage implements Cloneable {
+
+	@Override
+	public CBMessage clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (CBMessage)super.clone();
+	}
 
 	private ArrayList<CCode> ccodes;
 	private String messageName;

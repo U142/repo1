@@ -309,10 +309,14 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_send_scenario".equals(e.getActionCommand())) {
 			if(e.getSource().getClass().equals(AlertVO.class)) {
-				PAS.get_pas().get_sendcontroller().insert_alert_sending((AlertVO)e.getSource());
+				try {
+					PAS.get_pas().get_sendcontroller().insert_alert_sending(((AlertVO)e.getSource()).clone());
+				} catch(Exception ex) { Error.getError().addError("PASActions", "Generate sending from Alert failed", ex, Error.SEVERITY_ERROR); }
 			}
 			else if(e.getSource().getClass().equals(EventVO.class)) {
-				PAS.get_pas().get_sendcontroller().insert_event_sending((EventVO)e.getSource());
+				try {
+					PAS.get_pas().get_sendcontroller().insert_event_sending(((EventVO)e.getSource()).clone());
+				} catch(Exception ex) { Error.getError().addError("PASActions", "Generate sending from Event failed", ex, Error.SEVERITY_ERROR); }
 			}
 		}
 		else if("act_send_tas".equals(e.getActionCommand())) {

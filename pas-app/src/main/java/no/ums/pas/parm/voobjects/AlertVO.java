@@ -2,19 +2,21 @@ package no.ums.pas.parm.voobjects;
 
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
+import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.map.MapPanel;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
+import no.ums.ws.parm.CBMESSAGELIST;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 
-public class AlertVO extends ParmVO {
+public class AlertVO extends ParmVO implements Cloneable {
 	
 	public static String LBAStatusToString(int status)
 	{
@@ -139,6 +141,16 @@ public class AlertVO extends ParmVO {
 	public void UpdateLbaOperator(LBAOperator l)
 	{
 		m_operator_status.add(l);
+	}
+	@Override
+	public AlertVO clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		AlertVO a = (AlertVO)super.clone();
+		a.CBMessages = (ArrayList<Object>)CBMessages.clone();
+		a.CBMessages.clear();
+		for(int i=0;i<this.CBMessages.size();++i)
+			a.CBMessages.add(((CBMessage)this.CBMessages.get(i)).clone());
+		return a;
 	}
 	public ArrayLBAOperator getOperators() { return m_operator_status; }
 	

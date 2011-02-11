@@ -6,8 +6,14 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 
 
-public class EventVO extends ParmVO {
+public class EventVO extends ParmVO implements Cloneable {
 	
+	@Override
+	public EventVO clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (EventVO)super.clone();
+	}
+
 	private String eventPk;
 	private String name;
 	private String description;

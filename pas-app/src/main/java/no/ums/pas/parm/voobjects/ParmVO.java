@@ -9,7 +9,12 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 
-public abstract class ParmVO implements Transferable {
+public abstract class ParmVO implements Transferable, Cloneable {
+	@Override
+	protected ParmVO clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (ParmVO)super.clone();
+	}
 	protected ShapeStruct m_shape = null;
 
 	public ShapeStruct getM_shape() {
