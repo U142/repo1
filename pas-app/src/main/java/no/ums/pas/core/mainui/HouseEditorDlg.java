@@ -124,6 +124,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 			//m_house = null; //list have been edited. pointer has changed
 			//m_house = PAS.get_pas().get_housecontroller().get_houses().find_inhabitants_house(i);
 			m_panel.refresh(m_house);
+			PAS.get_pas().download_houses();
 		}
 		else if("act_ready_for_coor_assignment".equals(e.getActionCommand())) {
 			int n_adrtype = ((Inhabitant)e.getSource()).get_inhabitanttype();

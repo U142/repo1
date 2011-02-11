@@ -7,6 +7,30 @@ import java.awt.*;
 
 public class InhabitantBasics
 {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((m_sz_kondmid == null) ? 0 : m_sz_kondmid.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		InhabitantBasics other = (InhabitantBasics) obj;
+		if (m_sz_kondmid == null) {
+			if (other.m_sz_kondmid != null)
+				return false;
+		} else if (!m_sz_kondmid.equals(other.m_sz_kondmid))
+			return false;
+		return true;
+	}
 	public static final int INHABITANT_PRIVATE = 0;
 	public static final int INHABITANT_COMPANY = 1;
 

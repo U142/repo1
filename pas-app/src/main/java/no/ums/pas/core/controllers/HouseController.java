@@ -187,7 +187,13 @@ public class HouseController extends Controller {
 	}
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_insert_inhabitant".equals(e.getActionCommand())) {
-			m_items.add((Inhabitant)e.getSource());
+			if(!m_items.contains((Inhabitant)e.getSource())) {
+				m_items.add((Inhabitant)e.getSource());
+			}
+			else {
+				m_items.set(m_items.indexOf((Inhabitant)e.getSource()),(Inhabitant)e.getSource());
+			}
+			
 			m_houses.sort_houses(get_items(), false);
 			m_houses.set_visible(true);
 			m_houses.calcHouseCoords();
