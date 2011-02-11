@@ -605,21 +605,30 @@ public class StatusController extends Controller implements ActionListener {
 		int n_totitem = 0;
 		int n_processed = 0;
 
+		int n_addressbased_pending = 0;
+		int n_addressbased_sending = 0;
+		int n_addressbased_finished = 0;
+		
 		for (int i = 0; i < get_sendinglist().size(); i++) {
 			// main properties
+			
 			StatusSending ss = get_sendinglist().get_sending(i);
-			switch (ss.get_sendingstatus()) {
-			case 6:
-				n_sending++;
-				break;
-			case 7:
-				n_finished++;
-				break;
-			default:
-				n_pending++;
-				break;
+
+			if(SendController.IsAddressBased(ss.get_addresstypes()))
+			{
+				switch (ss.get_sendingstatus()) {
+				case 6:
+					n_sending++;
+					break;
+				case 7:
+					n_finished++;
+					break;
+				default:
+					n_pending++;
+					break;
+				}
+				n_sendingcount++;
 			}
-			n_sendingcount++;
 
 			// detailed properties
 			n_totitem += ss.get_totitem();
@@ -638,7 +647,7 @@ public class StatusController extends Controller implements ActionListener {
 			PAS.get_pas().get_eastcontent().get_statuspanel()
 					.setBorderTextVoice(sz_text);
 			PAS.get_pas().get_eastcontent().get_statuspanel()
-					.updateVoiceStatistics(n_processed, n_totitem);
+					.updateVoiceStatistics((n_processed<=0 ? -1 : n_processed), (n_totitem<=0 ? -1 : n_totitem));
 		} catch (Exception e) {
 
 		}

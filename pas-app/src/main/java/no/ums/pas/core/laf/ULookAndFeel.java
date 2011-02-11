@@ -53,12 +53,12 @@ public class ULookAndFeel
 		{				
 			COLORFACTOR = (int)Math.abs(MAX/2.0 - ATTENTION);
 
-			return new GradientPaint(0, 0, new Color(200, 
+			return new GradientPaint(0, c.getY(), new Color(200, 
 					0, 
 					0, 
 					COLORFACTOR),
 					0,
-					20, new Color(SystemColor.control.getRed(), 
+					(float)(c.getY()+c.getHeight()*0.6), new Color(SystemColor.control.getRed(), 
 							SystemColor.control.getGreen(), 
 							SystemColor.control.getBlue(), 
 							50));			
@@ -104,6 +104,7 @@ public class ULookAndFeel
 						RenderingHints.VALUE_ANTIALIAS_ON);
 				GradientPaint p = UAttentionController.INSTANCE.getGradientPaint(component);
 				g.setPaint(p);
+				//g.setColor(new Color(0, 0, 128, 128));
 				g.fillRoundRect(x+2, y+2, w-4, h-4, 5, 5);			
 			}
 		}
@@ -168,6 +169,7 @@ public class ULookAndFeel
 			super.paintTabBackground(g, tabPlacement, tabIndex, x, y, w, h, isSelected);
 			JComponent comp = (JComponent)((JTabbedPane)ui.component_to_repaint).getTabComponentAt(tabIndex);
 			//UAttentionController.INSTANCE.addComponent(comp);
+
 			ui.paintBackground(comp, (Graphics2D)g, x, y, w, h);
 		}
 	}

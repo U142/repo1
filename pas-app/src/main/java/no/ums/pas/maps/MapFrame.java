@@ -389,11 +389,13 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public JToolTip createToolTip() {
         JToolTip tip = super.createToolTip();
         //Substance 3.3
-		Color _c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
+		//Color _c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
 		
         //Substance 5.2
         //Color _c1 = SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getDarkColor();
 		
+		//Color c1 = new Color(_c1.getRed(), _c1.getGreen(), _c1.getBlue(), 220);
+        Color _c1 = SystemColor.controlShadow;
 		Color c1 = new Color(_c1.getRed(), _c1.getGreen(), _c1.getBlue(), 220);
 		
         tip.setBackground(c1);

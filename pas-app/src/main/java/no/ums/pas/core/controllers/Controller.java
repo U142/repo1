@@ -158,10 +158,12 @@ public abstract class Controller implements ActionListener {
 							if(obj_inhab!=null)  {
 								//if((ADR_TYPES_SHOW_ & obj_inhab.get_adrtype()) == obj_inhab.get_adrtype()) {
 								//if((obj_inhab.get_adrtype() & ADR_TYPES_SHOW_) != 0) {
-									if(!obj_inhab.get_number().equals("") || !obj_inhab.get_mobile().equals("")) {
+									/*if(!obj_inhab.get_number().equals("") || !obj_inhab.get_mobile().equals("")) {
 										arr_temp.add(obj_inhab);
 										n_count++;
-									}
+									}*/
+								arr_temp.add(obj_inhab);
+								n_count++;
 								//}
 							}
 						}

@@ -55,14 +55,17 @@ import java.util.List;
 public class SendController implements ActionListener {
 	public static final int SENDTO_NOPHONE_PRIVATE	= 1 << 0;
 	public static final int SENDTO_NOPHONE_COMPANY	= 1 << 1;
+	
 	public static final int SENDTO_FIXED_PRIVATE	= 1 << 2;
 	public static final int SENDTO_FIXED_COMPANY	= 1 << 3;
 	public static final int SENDTO_MOBILE_PRIVATE	= 1 << 4;
 	public static final int SENDTO_MOBILE_COMPANY	= 1 << 5;
 	public static final int SENDTO_MOVED_RECIPIENT_PRIVATE  = 1 << 6;
 	public static final int SENDTO_MOVED_RECIPIENT_COMPANY  = 1 << 7;
+	
 	public static final int SENDTO_CELL_BROADCAST_TEXT = 1 << 8;
 	public static final int SENDTO_CELL_BROADCAST_VOICE = 1 << 9;
+	
 	public static final int SENDTO_SMS_PRIVATE = 1 << 10;
 	public static final int SENDTO_SMS_COMPANY = 1 << 11;
 	public static final int SENDTO_SMS_PRIVATE_ALT_FIXED = 1 << 12;
@@ -73,6 +76,7 @@ public class SendController implements ActionListener {
 	public static final int SENDTO_MOBILE_COMPANY_AND_FIXED = 1 << 17;
 	public static final int SENDTO_FIXED_PRIVATE_AND_MOBILE = 1 << 18;
 	public static final int SENDTO_FIXED_COMPANY_AND_MOBILE = 1 << 19;
+	
 	public static final int SENDTO_TAS_SMS = 1 << 20;
 	public static final int SENDTO_USE_NOFAX_COMPANY = 1 << 27;
 	public static final int SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28; //reserved for future use
@@ -95,6 +99,42 @@ public class SendController implements ActionListener {
 	
 	public static final boolean HasType(int TYPES, int TYPE) {
 		if((TYPES & TYPE) == TYPE)
+			return true;
+		return false;
+	}
+	public static final boolean IsLBA(int TYPE)
+	{
+		if(HasType(TYPE, SENDTO_CELL_BROADCAST_TEXT) ||
+			HasType(TYPE, SENDTO_CELL_BROADCAST_VOICE))
+			return true;
+		return false;
+	}
+	public static final boolean IsAddressBased(int TYPE)
+	{
+		if(HasType(TYPE, SENDTO_NOPHONE_PRIVATE) ||
+			HasType(TYPE, SENDTO_NOPHONE_COMPANY) ||
+			HasType(TYPE, SENDTO_FIXED_PRIVATE) ||
+			HasType(TYPE, SENDTO_FIXED_COMPANY) ||
+			HasType(TYPE, SENDTO_MOBILE_PRIVATE) ||
+			HasType(TYPE, SENDTO_MOBILE_COMPANY) ||
+			HasType(TYPE, SENDTO_MOVED_RECIPIENT_PRIVATE) ||
+			HasType(TYPE, SENDTO_MOVED_RECIPIENT_COMPANY) ||
+			HasType(TYPE, SENDTO_SMS_PRIVATE) ||
+			HasType(TYPE, SENDTO_SMS_COMPANY) ||
+			HasType(TYPE, SENDTO_SMS_PRIVATE_ALT_FIXED) ||
+			HasType(TYPE, SENDTO_SMS_COMPANY_ALT_FIXED) ||
+			HasType(TYPE, SENDTO_FIXED_PRIVATE_ALT_SMS) ||
+			HasType(TYPE, SENDTO_FIXED_COMPANY_ALT_SMS) ||
+			HasType(TYPE, SENDTO_MOBILE_PRIVATE_AND_FIXED) ||
+			HasType(TYPE, SENDTO_MOBILE_COMPANY_AND_FIXED) ||
+			HasType(TYPE, SENDTO_FIXED_PRIVATE_AND_MOBILE) ||
+			HasType(TYPE, SENDTO_FIXED_COMPANY_AND_MOBILE))
+			return true;
+		return false;
+	}
+	public static final boolean IsTas(int TYPE)
+	{
+		if(HasType(TYPE, SENDTO_TAS_SMS))
 			return true;
 		return false;
 	}

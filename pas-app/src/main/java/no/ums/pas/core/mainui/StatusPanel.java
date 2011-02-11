@@ -38,9 +38,11 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	private JProgressBar m_lba_total_progress = new JProgressBar();
 	
 	private StdTextLabel m_lbl_lba_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 90, 11, false);
+	private StdTextLabel m_lbl_lba_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 90, 11, false);
 	private StdTextLabel m_lbl_lba_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 90, 11, false);
 	private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 90, 11, false);
 	private StdTextLabel m_txt_lba_delivered = new StdTextLabel("", 100, 11, false);
+	private StdTextLabel m_txt_lba_expired = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_failed = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_recipients = new StdTextLabel("", 100, 11, false);
 	
@@ -170,8 +172,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_txt_lba_recipients.setText(Integer.toString(m_lbasend_total.n_items));
 		m_txt_lba_failed.setText(Integer.toString(m_lbasend_total.getFailed()));
 		m_txt_lba_delivered.setText(Integer.toString(m_lbasend_total.getDelivered()));
+		m_txt_lba_expired.setText(Integer.toString(m_lbasend_total.getExpired()));
 		get_lbatab().UpdateData(m_lbasend_total);
-		if(m_lbasend_total.n_items < 0)
+		//if(m_lbasend_total.n_items < 0)
+		if(m_lbasend_total.n_status<LBASEND.LBASTATUS_SENDING && !m_lbasend_total.HasFailedStatus() && !m_lbasend_total.HasFinalStatus())
 		{
 			m_lba_total_progress.setIndeterminate(true);
 			m_lba_total_progress.setStringPainted(false);
@@ -330,6 +334,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	
 	public void setMainStatusText(String sz)
 	{
+		if(m_n_completion_percent<0)
+			sz = PAS.l("common_na");
 		lbl_mainstatus.setText(PAS.l("main_status") + "   "+m_n_completion_percent+"% " + PAS.l("common_completed") + "   " + sz);
 		//lbl_mainstatus.setHorizontalTextPosition(StdTextLabel.CENTER);
 		lbl_mainstatus.setHorizontalAlignment(StdTextLabel.CENTER);		
@@ -738,6 +744,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					add(m_lbl_lba_failed, m_gridconst);
 					set_gridconst(1, get_panel(), 1, 1);
 					add(m_txt_lba_failed, m_gridconst);
+					set_gridconst(0, inc_panels(), 1, 1);
+					add(m_lbl_lba_expired, m_gridconst);
+					set_gridconst(1, get_panel(), 1, 1);
+					add(m_txt_lba_expired, m_gridconst);
 					set_gridconst(0, inc_panels(), 1, 1);
 					add(m_lbl_lba_recipients, m_gridconst);
 					set_gridconst(1, get_panel(), 1, 1);
