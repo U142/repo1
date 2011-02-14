@@ -13,7 +13,7 @@ import java.util.logging.LogRecord;
  * @author Ståle Undheim <su@ums.no>
  */
 public class LogRecordCollector extends Handler {
-    public static final LogRecordModel LOG_RECORD_MODEL = new LogRecordModel();
+    public static final LogRecordModel MODEL = new LogRecordModel();
 
     public static void install() {
         try {
@@ -31,7 +31,7 @@ public class LogRecordCollector extends Handler {
     @Override
     public void publish(LogRecord record) {
         if (record.getLoggerName().startsWith("no")) {
-            LOG_RECORD_MODEL.add(record);
+            MODEL.add(record);
         }
     }
 

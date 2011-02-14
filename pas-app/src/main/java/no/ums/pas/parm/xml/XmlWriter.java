@@ -226,209 +226,202 @@ public class XmlWriter {
 			else
 				rootnd.setAttribute("l_timestamp",rootTimestamp);
 
-			Iterator <Object>it = objects.iterator();
-			while (it.hasNext()) {
-				Object o = it.next();
-				if (o.getClass().equals(CategoryVO.class)) {
-					CategoryVO category = (CategoryVO)o;
+            for (Object o : objects) {
+                if (o.getClass().equals(CategoryVO.class)) {
+                    CategoryVO category = (CategoryVO) o;
 
-					// Må sjekke om et element med samme pk eksisterer
-					element = checkXMLElement(xmlDoc,strCategory,strCategoryPK, category);
-					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
-						element = (Element) xmlDoc.createElement(strCategory);
-					
-					rootnd.appendChild(element);
-					element.setAttribute("l_categorypk", category.getCategoryPK());
-					element.setAttribute("sz_name", category.getName());
-					element.setAttribute("sz_description", category.getDescription());
-					element.setAttribute("sz_fileext", category.getFileext());
-					element.setAttribute("l_timestamp", category.getTimestamp());
-					element = null;
-				} else if (o.getClass().equals(ObjectVO.class)) {
-					ObjectVO object = (ObjectVO)o;
+                    // Må sjekke om et element med samme pk eksisterer
+                    element = checkXMLElement(xmlDoc, strCategory, strCategoryPK, category);
+                    if (element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+                        element = (Element) xmlDoc.createElement(strCategory);
+
+                    rootnd.appendChild(element);
+                    element.setAttribute("l_categorypk", category.getCategoryPK());
+                    element.setAttribute("sz_name", category.getName());
+                    element.setAttribute("sz_description", category.getDescription());
+                    element.setAttribute("sz_fileext", category.getFileext());
+                    element.setAttribute("l_timestamp", category.getTimestamp());
+                    element = null;
+                } else if (o.getClass().equals(ObjectVO.class)) {
+                    ObjectVO object = (ObjectVO) o;
 //					 Må sjekke om et element med samme pk eksisterer
-					element = checkXMLElement(xmlDoc,strObject,strObjectPK, object);
-					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
-						element = (Element) xmlDoc.createElement(strObject);
-					
-					rootnd.appendChild(element);
-					
-					element.setAttribute("l_objectpk", object.getObjectPK());
-					element.setAttribute("l_deptpk", object.getDeptPK());
-					element.setAttribute("l_importpk", object.getImportPK());
-					element.setAttribute("sz_name", object.getName());
-					element.setAttribute("sz_description", object.getDescription());
-					element.setAttribute("l_categorypk", object.getCategoryPK());
-					element.setAttribute("l_parent", object.getParent());
-					element.setAttribute("sz_address", object.getAddress());
-					element.setAttribute("sz_postno", object.getPostno());
-					element.setAttribute("sz_place", object.getPlace());
-					element.setAttribute("sz_phone", object.getPhone());
-					element.setAttribute("sz_metadata", object.getMetadata());
-					element.setAttribute("l_timestamp", object.getTimestamp());
-					String isObjectFolder = "0";
-					if(object.isObjectFolder())
-						isObjectFolder = "1";
-					element.setAttribute("f_isobjectfolder", isObjectFolder);
-					if(object.getM_shape() != null) {
-						
-						if(object.getM_shape().getClass().equals(PolygonStruct.class)) {
-							Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmObjectPoly));
-							
-							Element el_shape = (Element)shape; 
-							
-							el_shape.setAttribute("col_r", String.valueOf(object.getM_shape().get_fill_color().getRed()));
-							el_shape.setAttribute("col_g", String.valueOf(object.getM_shape().get_fill_color().getGreen()));
-							el_shape.setAttribute("col_b", String.valueOf(object.getM_shape().get_fill_color().getBlue()));
-							el_shape.setAttribute("col_a", String.valueOf(object.getM_shape().get_fill_color().getAlpha()));
-							
-							PolygonStruct alertShape = object.getM_shape().typecast_polygon();
-							Element polypoint;
-							for(int i=0;i<alertShape.get_size();++i) {
-								polypoint = (Element)el_shape.appendChild(xmlDoc.createElement("polypoint"));
-								polypoint.setAttribute("xcord", String.valueOf(alertShape.get_coor_lon(i)));
-								polypoint.setAttribute("ycord", String.valueOf(alertShape.get_coor_lat(i)));
-							}								
-						}
-						else if(object.getM_shape().getClass().equals(EllipseStruct.class)) {
-							EllipseStruct alertShape = object.getM_shape().typecast_ellipse();
-							Element ellipse = (Element)element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmObjectEllipse));
-							ellipse.setAttribute("centerx", String.valueOf(alertShape.get_center().get_lon()));
-							ellipse.setAttribute("centery", String.valueOf(alertShape.get_center().get_lat()));
-							ellipse.setAttribute("cornerx", String.valueOf(alertShape.get_corner().get_lon()));
-							ellipse.setAttribute("cornery", String.valueOf(alertShape.get_corner().get_lat()));
-							ellipse.setAttribute("col_r", String.valueOf(object.getM_shape().get_fill_color().getRed()));
-							ellipse.setAttribute("col_g", String.valueOf(object.getM_shape().get_fill_color().getGreen()));
-							ellipse.setAttribute("col_b", String.valueOf(object.getM_shape().get_fill_color().getBlue()));
-							ellipse.setAttribute("col_a", String.valueOf(object.getM_shape().get_fill_color().getAlpha()));
-						}
-					}
-					if(object.getOperation() != null)
-						element.setAttribute("sz_operation", object.getOperation());
-					element = null;
-				} else if (o.getClass().equals(EventVO.class)) {
-					EventVO event = (EventVO)o;
+                    element = checkXMLElement(xmlDoc, strObject, strObjectPK, object);
+                    if (element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+                        element = (Element) xmlDoc.createElement(strObject);
+
+                    rootnd.appendChild(element);
+
+                    element.setAttribute("l_objectpk", object.getObjectPK());
+                    element.setAttribute("l_deptpk", object.getDeptPK());
+                    element.setAttribute("l_importpk", object.getImportPK());
+                    element.setAttribute("sz_name", object.getName());
+                    element.setAttribute("sz_description", object.getDescription());
+                    element.setAttribute("l_categorypk", object.getCategoryPK());
+                    element.setAttribute("l_parent", object.getParent());
+                    element.setAttribute("sz_address", object.getAddress());
+                    element.setAttribute("sz_postno", object.getPostno());
+                    element.setAttribute("sz_place", object.getPlace());
+                    element.setAttribute("sz_phone", object.getPhone());
+                    element.setAttribute("sz_metadata", object.getMetadata());
+                    element.setAttribute("l_timestamp", object.getTimestamp());
+                    String isObjectFolder = "0";
+                    if (object.isObjectFolder())
+                        isObjectFolder = "1";
+                    element.setAttribute("f_isobjectfolder", isObjectFolder);
+                    if (object.getM_shape() != null) {
+
+                        if (object.getM_shape().getClass().equals(PolygonStruct.class)) {
+                            Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmObjectPoly));
+
+                            Element el_shape = (Element) shape;
+
+                            el_shape.setAttribute("col_r", String.valueOf(object.getM_shape().get_fill_color().getRed()));
+                            el_shape.setAttribute("col_g", String.valueOf(object.getM_shape().get_fill_color().getGreen()));
+                            el_shape.setAttribute("col_b", String.valueOf(object.getM_shape().get_fill_color().getBlue()));
+                            el_shape.setAttribute("col_a", String.valueOf(object.getM_shape().get_fill_color().getAlpha()));
+
+                            PolygonStruct alertShape = object.getM_shape().typecast_polygon();
+                            Element polypoint;
+                            for (int i = 0; i < alertShape.get_size(); ++i) {
+                                polypoint = (Element) el_shape.appendChild(xmlDoc.createElement("polypoint"));
+                                polypoint.setAttribute("xcord", String.valueOf(alertShape.get_coor_lon(i)));
+                                polypoint.setAttribute("ycord", String.valueOf(alertShape.get_coor_lat(i)));
+                            }
+                        } else if (object.getM_shape().getClass().equals(EllipseStruct.class)) {
+                            EllipseStruct alertShape = object.getM_shape().typecast_ellipse();
+                            Element ellipse = (Element) element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmObjectEllipse));
+                            ellipse.setAttribute("centerx", String.valueOf(alertShape.get_center().get_lon()));
+                            ellipse.setAttribute("centery", String.valueOf(alertShape.get_center().get_lat()));
+                            ellipse.setAttribute("cornerx", String.valueOf(alertShape.get_corner().get_lon()));
+                            ellipse.setAttribute("cornery", String.valueOf(alertShape.get_corner().get_lat()));
+                            ellipse.setAttribute("col_r", String.valueOf(object.getM_shape().get_fill_color().getRed()));
+                            ellipse.setAttribute("col_g", String.valueOf(object.getM_shape().get_fill_color().getGreen()));
+                            ellipse.setAttribute("col_b", String.valueOf(object.getM_shape().get_fill_color().getBlue()));
+                            ellipse.setAttribute("col_a", String.valueOf(object.getM_shape().get_fill_color().getAlpha()));
+                        }
+                    }
+                    if (object.getOperation() != null)
+                        element.setAttribute("sz_operation", object.getOperation());
+                    element = null;
+                } else if (o.getClass().equals(EventVO.class)) {
+                    EventVO event = (EventVO) o;
 //					 Må sjekke om et element med samme pk eksisterer
-					element = checkXMLElement(xmlDoc,strEvent,strEventPK, event);
-					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
-						element = (Element) xmlDoc.createElement(strEvent);
-					
-					rootnd.appendChild(element);				
-					element.setAttribute("l_eventpk", event.getEventPk());
-					element.setAttribute("l_parent", event.getParentpk());
-					element.setAttribute("sz_name", event.getName());
-					element.setAttribute("sz_description", event.getDescription());
-					element.setAttribute("l_categorypk", event.getCategorypk());
-					element.setAttribute("l_timestamp", event.getTimestamp());
-					element.setAttribute("f_epi_lon", String.valueOf(event.getEpicentreX()));
-					element.setAttribute("f_epi_lat", String.valueOf(event.getEpicentreY()));
-					if(event.getOperation() != null)
-						element.setAttribute("sz_operation", event.getOperation());
-					element = null;
-				} else if (o.getClass().equals(AlertVO.class)) {
-					AlertVO alert = (AlertVO)o;
-					// Må sjekke om et element med samme pk eksisterer
-					element = checkXMLElement(xmlDoc,strAlert,strAlertPK, alert);
-					if(element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
-						element = (Element) xmlDoc.createElement(strAlert);
-					rootnd.appendChild(element);
-					// Legger til elementer
+                    element = checkXMLElement(xmlDoc, strEvent, strEventPK, event);
+                    if (element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+                        element = (Element) xmlDoc.createElement(strEvent);
+
+                    rootnd.appendChild(element);
+                    element.setAttribute("l_eventpk", event.getEventPk());
+                    element.setAttribute("l_parent", event.getParentpk());
+                    element.setAttribute("sz_name", event.getName());
+                    element.setAttribute("sz_description", event.getDescription());
+                    element.setAttribute("l_categorypk", event.getCategorypk());
+                    element.setAttribute("l_timestamp", event.getTimestamp());
+                    element.setAttribute("f_epi_lon", String.valueOf(event.getEpicentreX()));
+                    element.setAttribute("f_epi_lat", String.valueOf(event.getEpicentreY()));
+                    if (event.getOperation() != null)
+                        element.setAttribute("sz_operation", event.getOperation());
+                    element = null;
+                } else if (o.getClass().equals(AlertVO.class)) {
+                    AlertVO alert = (AlertVO) o;
+                    // Må sjekke om et element med samme pk eksisterer
+                    element = checkXMLElement(xmlDoc, strAlert, strAlertPK, alert);
+                    if (element == null) // Hvis element fortsatt er null nå finnes ikke dette elementet fra før
+                        element = (Element) xmlDoc.createElement(strAlert);
+                    rootnd.appendChild(element);
+                    // Legger til elementer
 //					 Må sjekke om det er temppk som blir lagt inn eller vanlig (temppk har ikke bokstav foran)
-					element.setAttribute("l_alertpk", alert.getAlertpk());
-					element.setAttribute("l_parent", alert.getParent());
-					element.setAttribute("sz_name", alert.getName());
-					element.setAttribute("sz_description", alert.getDescription());
-					element.setAttribute("l_profilepk", String.valueOf(alert.getProfilepk()));
-					element.setAttribute("l_schedpk", String.valueOf(alert.getSchedpk()));
-					element.setAttribute("sz_oadc", alert.getOadc());
-					element.setAttribute("l_addresstypes", String.valueOf(alert.getAddresstypes()));
-					element.setAttribute("l_timestamp", alert.getTimestamp());
-					element.setAttribute("l_validity", String.valueOf(alert.getValidity()));
-					element.setAttribute("sz_areaid", alert.getLBAAreaID());
-					element.setAttribute("l_maxchannels", String.valueOf(alert.getMaxChannels()));
-					element.setAttribute("l_requesttype", String.valueOf(alert.getRequestType()));
-					if(alert.getOperation() != null)
-						element.setAttribute("sz_operation", alert.getOperation());
-					element.setAttribute("f_locked",String.valueOf(alert.getLocked()));
-					element.setAttribute("l_expiry", String.valueOf(alert.get_LBAExpiry()));
-					element.setAttribute("sz_sms_oadc", alert.get_sms_oadc());
-					element.setAttribute("sz_sms_message", alert.get_sms_message());
-					if(alert.getShape() != null) {
-						
-						if(alert.getShape().getClass().equals(PolygonStruct.class)) {
-							Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertPoly));
-							
-							Element el_shape = (Element)shape; 
-							
-							el_shape.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
-							el_shape.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
-							el_shape.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
-							el_shape.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
-							
-							PolygonStruct alertShape = alert.getShape().typecast_polygon();
-							Element polypoint;
-							for(int i=0;i<alertShape.get_size();++i) {
-								polypoint = (Element)el_shape.appendChild(xmlDoc.createElement("polypoint"));
-								polypoint.setAttribute("xcord", String.valueOf(alertShape.get_coor_lon(i)));
-								polypoint.setAttribute("ycord", String.valueOf(alertShape.get_coor_lat(i)));
-							}								
-						}
-						else if(alert.getShape().getClass().equals(GISShape.class)) {
-							GISShape alertShape = alert.getShape().typecast_gis();
-							Element streetid = (Element)element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertstreetid));
-							
-							for(int i=0;i<alertShape.get_gislist().size();++i) {
-								GISRecord gisrecord = alertShape.get_gislist().get(i);
-								
-								Element el_shape = (Element)streetid.appendChild(xmlDoc.createElement("line"));
-								el_shape.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
-								el_shape.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
-								el_shape.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
-								el_shape.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
-								el_shape.setAttribute("houseno", gisrecord.get_houseno());
-								el_shape.setAttribute("letter", gisrecord.get_letter());
-								el_shape.setAttribute("municipal", gisrecord.get_municipal());
-								el_shape.setAttribute("namefilter1", gisrecord.get_name1());
-								el_shape.setAttribute("namefilter2", gisrecord.get_name2());
-								el_shape.setAttribute("streetid", gisrecord.get_streetid());
-							}								
-						}
-						else if(alert.getShape().getClass().equals(EllipseStruct.class)) {
-							EllipseStruct alertShape = alert.getShape().typecast_ellipse();
-							Element ellipse = (Element)element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertEllipse));
-							ellipse.setAttribute("centerx", String.valueOf(alertShape.get_center().get_lon()));
-							ellipse.setAttribute("centery", String.valueOf(alertShape.get_center().get_lat()));
-							ellipse.setAttribute("cornerx", String.valueOf(alertShape.get_corner().get_lon()));
-							ellipse.setAttribute("cornery", String.valueOf(alertShape.get_corner().get_lat()));
-							ellipse.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
-							ellipse.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
-							ellipse.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
-							ellipse.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
-						}
-					}
-					
-					if(alert.getArea() != null)
-						writeCellBroadcast(alert, element, xmlDoc, "cellbroadcast");
-					
-					//add lba operator tags
-					if(alert.getOperators().size()>0)
-					{
-						Node lbaoperators = element.appendChild(xmlDoc.createElement("lbaoperators"));
-						for(int op = 0; op < alert.getOperators().size(); op++)
-						{
-							LBAOperator lba = alert.getOperators().get(op);
-							Element operator = (Element)lbaoperators.appendChild(xmlDoc.createElement("operator"));
-							operator.setAttribute("l_operator", Integer.toString(lba.l_operator));
-							operator.setAttribute("l_status", Integer.toString(lba.l_status));
-							operator.setAttribute("l_areaid", Long.toString(lba.l_areaid));
-							operator.setAttribute("sz_operatorname", lba.sz_operatorname);
-							operator.setAttribute("sz_status", lba.sz_status);
-						}
-						
-					}
-					//element = null;
-				}
-			}
+                    element.setAttribute("l_alertpk", alert.getAlertpk());
+                    element.setAttribute("l_parent", alert.getParent());
+                    element.setAttribute("sz_name", alert.getName());
+                    element.setAttribute("sz_description", alert.getDescription());
+                    element.setAttribute("l_profilepk", String.valueOf(alert.getProfilepk()));
+                    element.setAttribute("l_schedpk", String.valueOf(alert.getSchedpk()));
+                    element.setAttribute("sz_oadc", alert.getOadc());
+                    element.setAttribute("l_addresstypes", String.valueOf(alert.getAddresstypes()));
+                    element.setAttribute("l_timestamp", alert.getTimestamp());
+                    element.setAttribute("l_validity", String.valueOf(alert.getValidity()));
+                    element.setAttribute("sz_areaid", alert.getLBAAreaID());
+                    element.setAttribute("l_maxchannels", String.valueOf(alert.getMaxChannels()));
+                    element.setAttribute("l_requesttype", String.valueOf(alert.getRequestType()));
+                    if (alert.getOperation() != null)
+                        element.setAttribute("sz_operation", alert.getOperation());
+                    element.setAttribute("f_locked", String.valueOf(alert.getLocked()));
+                    element.setAttribute("l_expiry", String.valueOf(alert.get_LBAExpiry()));
+                    element.setAttribute("sz_sms_oadc", alert.get_sms_oadc());
+                    element.setAttribute("sz_sms_message", alert.get_sms_message());
+                    if (alert.getShape() != null) {
+
+                        if (alert.getShape().getClass().equals(PolygonStruct.class)) {
+                            Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertPoly));
+
+                            Element el_shape = (Element) shape;
+
+                            el_shape.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
+                            el_shape.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
+                            el_shape.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
+                            el_shape.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
+
+                            PolygonStruct alertShape = alert.getShape().typecast_polygon();
+                            Element polypoint;
+                            for (int i = 0; i < alertShape.get_size(); ++i) {
+                                polypoint = (Element) el_shape.appendChild(xmlDoc.createElement("polypoint"));
+                                polypoint.setAttribute("xcord", String.valueOf(alertShape.get_coor_lon(i)));
+                                polypoint.setAttribute("ycord", String.valueOf(alertShape.get_coor_lat(i)));
+                            }
+                        } else if (alert.getShape().getClass().equals(GISShape.class)) {
+                            GISShape alertShape = alert.getShape().typecast_gis();
+                            Element streetid = (Element) element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertstreetid));
+
+                            for (int i = 0; i < alertShape.get_gislist().size(); ++i) {
+                                GISRecord gisrecord = alertShape.get_gislist().get(i);
+
+                                Element el_shape = (Element) streetid.appendChild(xmlDoc.createElement("line"));
+                                el_shape.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
+                                el_shape.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
+                                el_shape.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
+                                el_shape.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
+                                el_shape.setAttribute("houseno", gisrecord.get_houseno());
+                                el_shape.setAttribute("letter", gisrecord.get_letter());
+                                el_shape.setAttribute("municipal", gisrecord.get_municipal());
+                                el_shape.setAttribute("namefilter1", gisrecord.get_name1());
+                                el_shape.setAttribute("namefilter2", gisrecord.get_name2());
+                                el_shape.setAttribute("streetid", gisrecord.get_streetid());
+                            }
+                        } else if (alert.getShape().getClass().equals(EllipseStruct.class)) {
+                            EllipseStruct alertShape = alert.getShape().typecast_ellipse();
+                            Element ellipse = (Element) element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertEllipse));
+                            ellipse.setAttribute("centerx", String.valueOf(alertShape.get_center().get_lon()));
+                            ellipse.setAttribute("centery", String.valueOf(alertShape.get_center().get_lat()));
+                            ellipse.setAttribute("cornerx", String.valueOf(alertShape.get_corner().get_lon()));
+                            ellipse.setAttribute("cornery", String.valueOf(alertShape.get_corner().get_lat()));
+                            ellipse.setAttribute("col_r", String.valueOf(alert.getM_shape().get_fill_color().getRed()));
+                            ellipse.setAttribute("col_g", String.valueOf(alert.getM_shape().get_fill_color().getGreen()));
+                            ellipse.setAttribute("col_b", String.valueOf(alert.getM_shape().get_fill_color().getBlue()));
+                            ellipse.setAttribute("col_a", String.valueOf(alert.getM_shape().get_fill_color().getAlpha()));
+                        }
+                    }
+
+                    if (alert.getArea() != null)
+                        writeCellBroadcast(alert, element, xmlDoc, "cellbroadcast");
+
+                    //add lba operator tags
+                    if (alert.getOperators().size() > 0) {
+                        Node lbaoperators = element.appendChild(xmlDoc.createElement("lbaoperators"));
+                        for (int op = 0; op < alert.getOperators().size(); op++) {
+                            LBAOperator lba = alert.getOperators().get(op);
+                            Element operator = (Element) lbaoperators.appendChild(xmlDoc.createElement("operator"));
+                            operator.setAttribute("l_operator", Integer.toString(lba.l_operator));
+                            operator.setAttribute("l_status", Integer.toString(lba.l_status));
+                            operator.setAttribute("l_areaid", Long.toString(lba.l_areaid));
+                            operator.setAttribute("sz_operatorname", lba.sz_operatorname);
+                            operator.setAttribute("sz_status", lba.sz_status);
+                        }
+
+                    }
+                    //element = null;
+                }
+            }
 			unzipXmlFile(filepath);
 			writeXMLFile(xmlDoc,filepath);
 			
@@ -1160,25 +1153,22 @@ public class XmlWriter {
 		if(o.getClass().equals(ObjectVO.class)){
 			ObjectVO oo = (ObjectVO)o;
 			list.add(oo);
-			Iterator<Object> it = oo.getList().iterator();
-			
-			while(it.hasNext()){
-				Object obj = it.next();
-				if(obj.getClass().equals(ObjectVO.class)){
-					test((ObjectVO)obj, list); // Må sende til seg selv for å komme til neste objekt
-				}
-				else if(obj.getClass().equals(EventVO.class)){ // Nå har jeg kommet til kanten
-					EventVO event = (EventVO)obj;
-					if(event.getAlertListe() != null){
-						Iterator<Object> eventIt = event.getAlertListe().iterator();
-						while(eventIt.hasNext()){
-							AlertVO alert = (AlertVO)eventIt.next();
-							list.add(alert);
-						}
-					}
-					list.add(event);
-				}
-			}
+
+            for (Object obj : oo.getList()) {
+                if (obj.getClass().equals(ObjectVO.class)) {
+                    test((ObjectVO) obj, list); // Må sende til seg selv for å komme til neste objekt
+                } else if (obj.getClass().equals(EventVO.class)) { // Nå har jeg kommet til kanten
+                    EventVO event = (EventVO) obj;
+                    if (event.getAlertListe() != null) {
+                        Iterator<Object> eventIt = event.getAlertListe().iterator();
+                        while (eventIt.hasNext()) {
+                            AlertVO alert = (AlertVO) eventIt.next();
+                            list.add(alert);
+                        }
+                    }
+                    list.add(event);
+                }
+            }
 		}
 		else if(o.getClass().equals(EventVO.class)){
 			EventVO event = (EventVO)o;

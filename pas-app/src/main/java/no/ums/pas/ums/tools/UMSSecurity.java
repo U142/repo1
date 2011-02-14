@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.sound.sampled.AudioPermission;
@@ -15,7 +17,10 @@ import java.util.ArrayList;
 
 
 public class UMSSecurity {
-	private SecurityManager m_sec;
+
+    private static final Log log = UmsLog.getLogger(UMSSecurity.class);
+
+    private SecurityManager m_sec;
 	private UMSPermissionList m_list;
 	public UMSPermissionList get_list() { return m_list; }
 	public SecurityManager get_sec() { return m_sec; }
@@ -49,7 +54,8 @@ public class UMSSecurity {
 				} catch(SecurityException e) {
 					//securitycheck failed
 					String sz_msg = "Security check failed for " + p.getName();
-					Error.getError().addError("Security failed", sz_msg, e, 1);
+                    log.error("Security failed: %s", sz_msg, e);
+//					Error.getError().addError("Security failed", sz_msg, e, 1);
 				} catch(Exception e) {
 					Error.getError().addError("Unknown security error", "Unknown security error", e, 1);
 				}

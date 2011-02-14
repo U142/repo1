@@ -4,6 +4,8 @@ package no.ums.pas.parm.xml;
 
 //Packages to work with filestreams
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.dataexchange.MailAccount;
@@ -43,7 +45,9 @@ import java.util.zip.ZipInputStream;
 
 public class XmlReader {
 
-	private ZipInputStream zip;
+    private static final Log log = UmsLog.getLogger(XmlReader.class);
+
+    private ZipInputStream zip;
 	private final XmlPolyReader polyReader = new XmlPolyReader();
 	private XmlEllipseReader ellipseReader;
 	private XmlGISReader gisReader;
@@ -249,10 +253,9 @@ public class XmlReader {
 				}
 			} else {
 				emsg = element.getNodeName();
-				Error.getError().addError("Failure in responsecodes", "Error in responsecodes",
-						"Object PK: " + objectpk + " Temp PK: " + tempPk + " Status: " + status +
-						" Error message: " + emsg + " Timestamp: " + timestamp, -1, Error.SEVERITY_WARNING);
-				System.out.println(element.getNodeValue());
+                log.error("Error in responsecodes, Object PK: %s, Temp PK: %s, Status: %s, " +
+                        "Error message: %s, Timestamp: %s", objectpk, tempPk, status, emsg, timestamp);
+				log.debug(element.getNodeValue());
 			}
 			// Her må vi ha en annen sjekk, dersom status = "Failed to insert, så må vi bare la inserten stå"
 		}

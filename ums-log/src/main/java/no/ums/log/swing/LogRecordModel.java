@@ -1,11 +1,9 @@
 package no.ums.log.swing;
 
-import com.google.common.collect.Lists;
-
-import java.util.logging.Level;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
@@ -51,6 +49,10 @@ public class LogRecordModel extends AbstractListModel {
                 internalAdd(record);
             }
         }
+    }
+
+    public Level getLevel() {
+        return level;
     }
 
     public boolean is(final Level level1, final int index) {

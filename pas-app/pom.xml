@@ -51,6 +51,10 @@
         </dependency>
         <dependency>
             <groupId>no.ums.ws</groupId>
+            <artifactId>ws-parm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
             <artifactId>ws-external-exec</artifactId>
         </dependency>
 
@@ -129,7 +133,6 @@
                             <includes>
                                 <include>no/ums/pas/core/**</include>
                                 <include>no/ums/pas/entrypoint/**</include>
-                                <include>no/ums/pas/versioning/**</include>
                                 <include>no/ums/pas/localization/**</include>
                                 <include>no/ums/pas/pluginbase/**</include>
                                 <include>*.num</include>

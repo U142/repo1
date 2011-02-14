@@ -233,7 +233,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		//m_item_gps_epsilon.add(m_item_gps_epsilon_slider);
 		
 		menu.get_status().add(menu.get_item_status_updates());
-		
+
+        JMenu parm2 = new JMenu("Parm2");
+        parm2.add(new AbstractAction("Start parm 2") {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                System.out.println("Starting parm 2");
+            }
+        });
+        menu.add(parm2);
 
 		return true;
 	}

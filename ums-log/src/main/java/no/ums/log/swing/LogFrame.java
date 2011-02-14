@@ -17,13 +17,10 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import javax.swing.*;
@@ -56,7 +53,7 @@ public class LogFrame extends javax.swing.JFrame {
         public void contentsChanged(ListDataEvent e) {
             for (int i=e.getIndex0(); i<=e.getIndex1(); i++) {
                 // Only show the frame if hidden and we get a severe message.
-                if (!Holder.INSTANCE.isVisible() && LogRecordCollector.LOG_RECORD_MODEL.is(Level.SEVERE, i)) {
+                if (!Holder.INSTANCE.isVisible() && LogRecordCollector.MODEL.is(Level.SEVERE, i)) {
                     EventQueue.invokeLater(new Runnable() {
 
                         @Override
@@ -85,6 +82,7 @@ public class LogFrame extends javax.swing.JFrame {
                 return label;
             }
         });
+        jComboBox1.setSelectedItem(LogRecordCollector.MODEL.getLevel());
         jList1.setCellRenderer(LogSwingUtil.LOG_RECORD_RENDERER);
         jScrollPane1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
@@ -149,7 +147,7 @@ public class LogFrame extends javax.swing.JFrame {
         jSplitPane1.setDividerLocation(400);
         jSplitPane1.setResizeWeight(1.0);
 
-        jList1.setModel(LogRecordCollector.LOG_RECORD_MODEL);
+        jList1.setModel(LogRecordCollector.MODEL);
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
@@ -272,7 +270,7 @@ public class LogFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1ComponentResized
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        LogRecordCollector.LOG_RECORD_MODEL.setLevel((Level) jComboBox1.getSelectedItem());
+        LogRecordCollector.MODEL.setLevel((Level) jComboBox1.getSelectedItem());
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
@@ -299,16 +297,21 @@ public class LogFrame extends javax.swing.JFrame {
      * @author staaleu
      */
     static class Holder {
-
         static LogFrame INSTANCE = new LogFrame();
     }
 
     public static void install() {
-        LogRecordCollector.LOG_RECORD_MODEL.addListDataListener(DATA_LISTENER);
+        LogRecordCollector.MODEL.addListDataListener(DATA_LISTENER);
     }
 
     public static void remove() {
-        LogRecordCollector.LOG_RECORD_MODEL.removeListDataListener(DATA_LISTENER);
+        LogRecordCollector.MODEL.removeListDataListener(DATA_LISTENER);
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Holder.INSTANCE.setVisible(false);
+            }
+        });
     }
 
 

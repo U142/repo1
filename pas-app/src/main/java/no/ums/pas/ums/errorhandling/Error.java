@@ -1,5 +1,7 @@
 package no.ums.pas.ums.errorhandling;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.storage.StorageController;
@@ -16,8 +18,10 @@ import java.util.Iterator;
 
 
 public class Error implements ActionListener {
-	
-	public static final int SEVERITY_ERROR = 1;
+
+    private static final Log log = UmsLog.getLogger(Error.class);
+
+    public static final int SEVERITY_ERROR = 1;
 	public static final int SEVERITY_WARNING = 2;
 	public static final int SEVERITY_INFORMATION = 3;
 	
@@ -68,8 +72,8 @@ public class Error implements ActionListener {
 		}
 		
 		htErrors = new Hashtable<String, String>();
-		htErrors.put("1",new String("Polygon har for få punkter, ikke klar til sending."));
-		htErrors.put("2",new String("HTTP Error"));		
+		htErrors.put("1", "Polygon har for få punkter, ikke klar til sending.");
+		htErrors.put("2", "HTTP Error");
 	}
 	
 	private Error() {
@@ -166,7 +170,8 @@ public class Error implements ActionListener {
 		    	String header = "Server error";
 		    	String description = sTotal.substring(sTotal.indexOf("E_FAILED")+8,sTotal.indexOf("Err.description:"));
 		    	String body = sTotal.substring(sTotal.indexOf("Err.description:")+17);
-		    	Error.getError().addError(header, description, body, -1,Error.SEVERITY_ERROR);
+
+                log.error("Error: %s - desc: %s, content: %s", header, description, body);
 		    }
 	    } catch(IOException ioe) {
 	    	addError("IOException in Error", ioe.getMessage(), ioe, Error.SEVERITY_ERROR);

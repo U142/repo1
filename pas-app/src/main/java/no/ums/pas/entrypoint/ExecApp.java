@@ -1,5 +1,7 @@
 package no.ums.pas.entrypoint;
 
+import no.ums.log.swing.LogFrame;
+import no.ums.log.swing.LogRecordCollector;
 import no.ums.pas.PAS;
 import no.ums.pas.pluginbase.DefaultPasScripting;
 import no.ums.pas.pluginbase.PasScriptingInterface;
@@ -114,6 +116,10 @@ public class
 		m_pas.setAddressSeachUrl(sz_addresssearch_url);
 		m_pas.setVB4Url(sz_vb4_url);
 		PAS.pasplugin = loadPlugin();
+
+        // Install logging handler and frame
+        LogRecordCollector.install();
+        LogFrame.install();
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()

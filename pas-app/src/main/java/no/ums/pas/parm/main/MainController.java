@@ -1319,8 +1319,6 @@ public class MainController implements ActionListener, TreeModelListener,
 		}
 		// Må sende med alle objektene som skal slettes
 		w.writeXml(w.extractObjects(objectList));
-		w=null;
-		r=null;
 	}
 
 	private ArrayList<Object> getAllElementsFromXmlFile() throws FileNotFoundException,

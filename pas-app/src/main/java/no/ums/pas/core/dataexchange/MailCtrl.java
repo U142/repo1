@@ -1,6 +1,8 @@
 package no.ums.pas.core.dataexchange;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.gps.GPSCmd;
 import no.ums.pas.gps.SocketThread;
 import no.ums.pas.ums.errorhandling.Error;
@@ -13,7 +15,10 @@ import java.util.List;
 
 
 public class MailCtrl extends Object {
-	ActionListener m_callback;
+
+    private static final Log log = UmsLog.getLogger(MailCtrl.class);
+
+    ActionListener m_callback;
 	private boolean m_b_sentok = false;
 	public boolean isSentOk() { return m_b_sentok; }
 	private int m_n_lasterrorcode;
@@ -90,7 +95,7 @@ public class MailCtrl extends Object {
 												break;
 											default: //some error
 												set_last_msg(n_returncode, "Error");
-												Error.getError().addError("Error", "Error sending mail", "Return code = " + n_returncode, 0, 1);
+                                                log.error("Error sending mail, return code = %d", n_returncode);
 												break;
 										}
 										get_writethread().set_cmd_success(true);

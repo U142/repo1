@@ -51,9 +51,11 @@ public class PASDraw extends Draw {
 	}
 	
 	class UpdateThread extends Thread implements Runnable {
+
 		int m_n_msec;
 		UpdateThread(int ms) {
 			super("PASDraw.Update Thread");
+            setDaemon(true);
 			m_n_msec = ms;
 			start();
 		}

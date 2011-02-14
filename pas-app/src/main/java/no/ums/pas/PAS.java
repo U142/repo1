@@ -1,5 +1,8 @@
 package no.ums.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.log.swing.LogFrame;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
@@ -124,6 +127,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 											GradientPainterChangeListener, ButtonShaperChangeListener {
 
 	public static final long serialVersionUID = 1;
+
+    private static final Log log = UmsLog.getLogger(PAS.class);
+
 	private String m_sz_maintitle;
 	public String getMainTitle()
 	{
@@ -421,20 +427,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			//e.printStackTrace();
-			//Error.getError().addError("Error in language file", "Glossary for " + locale.getDisplayCountry() + " / " + locale.getDisplayLanguage() + " is missing (key="+s+")", e, Error.SEVERITY_WARNING);
-			if(langErrors==null) //init once
-			{
-				try
-				{
-					langErrors = new Error(false);
-					langErrors.addError("Error in language file", "Glossary for " + locale.getDisplayCountry() + " / " + locale.getDisplayLanguage() + " is missing", "", 0, Error.SEVERITY_WARNING);
-				}
-				catch(Exception err)
-				{
-					return "[NO STRING]";
-				}
-			}
+            log.error("Glossary for %s / %s is missing", locale.getDisplayCountry(), locale.getDisplayLanguage());
             String defaultWord = "";
 			if(defaultLang==null)
 			{
@@ -450,6 +443,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			if(langErrors!=null && langErrors.getError(0)!=null)
 				langErrors.getError(0).appendBodyFiltered("\n"+s + " = " + defaultWord + "\n");
+                log.info("Default for %s is %s", s, defaultWord);
 			return "[NO STRING]";
 		}
 	}
@@ -655,65 +649,17 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 
-	public void init()
-	{
-		
+	public void init() 	{
 		ToolTipManager.sharedInstance().setInitialDelay(10);
 		ToolTipManager.sharedInstance().setReshowDelay(10);
 		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	    try {
-	    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	    		public void run()
-	    		{
-	    			try
-	    			{
-		    			//m_lookandfeel = new SubstanceOfficeBlue2007LookAndFeel();
-		    			//UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
-		    			
-		    			
-		    			//SubstanceLookAndFeel.permanentlyHideHeapStatusPanel(getRootPane());
-
-
-	    			}
-	    			catch(Exception e)
-	    			{
-	    				
-	    			}
-	    			/*System.out.println(m_lookandfeel.getClass().getName());
-	    			try
-	    			{
-	    				//UIManager.setLookAndFeel(m_lookandfeel);
-	    				//SubstanceOfficeBlue2007LookAndFeel.installColorsAndFont(this.get_eastcontent(), "Black", "Red", "Arial");
-	    				String szname = UIManager.getLookAndFeel().getClass().getName();
-	    				//SubstanceTheme theme = new SubstanceTheme(new cScheme(), "UMS", null);
-	    				//SubstanceLookAndFeel.setCurrentTheme(theme);
-	    			}
-	    			catch(Exception e)
-	    			{
-	    			}*/
-	    			powerUp();
-	    		}
-	    	});
-	    
-	    } catch (Exception e) {
-	        System.err.println("createGUI didn't successfully complete");
-	        JOptionPane.showMessageDialog(this, "ERROR: createGUI didn't successfully complete\r\n" + e.getMessage());
-	        Error.getError().addError("PAS", "Error creating GUI", e, Error.SEVERITY_ERROR);
-	        System.exit(0);
-	    }
-		try {
-		} catch(Exception e) {
-			JOptionPane.showMessageDialog(this, "m_mainmenu.init() failed\r\n" + e.getMessage());
-			Error.getError().addError("PAS", "Error initializing MainMenu", e, Error.SEVERITY_ERROR);
-		}
-		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			// Sjekker mot settings om delprogrammer skal starte automatisk
-			public void run() {*/
-			//}
-		//});
-		//setVisible(true);
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                powerUp();
+            }
+        });
 	}
 		
 	
@@ -1088,11 +1034,16 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						m_settings.setUsername(PAS_OVERRIDE_USERID);
 					}
 					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany()), m_settings.getLanguage(), false);
-					if(!logon.isLoggedOn())
-						System.exit(0);
- 
-					if(logon.get_userinfo()==null) {
-						System.exit(0);
+					if(!logon.isLoggedOn() || logon.get_userinfo()==null) {
+                        LogFrame.remove();
+                        for (Frame frame : Frame.getFrames()) {
+                            System.out.println(frame);
+                            System.out.println(frame.isValid());
+                            System.out.println(frame.isVisible());
+                            frame.dispose();
+                            System.out.println(frame.isValid());
+                        }
+						return; //System.exit(0);
 					}
 
 					m_userinfo = new UserInfo(logon.get_userinfo());

@@ -199,6 +199,11 @@
             </dependency>
             <dependency>
                 <groupId>no.ums.ws</groupId>
+                <artifactId>ws-parm</artifactId>
+                <version>${version.ums.ws}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.ums.ws</groupId>
                 <artifactId>ws-external-exec</artifactId>
                 <version>${version.ums.ws}</version>
             </dependency>
