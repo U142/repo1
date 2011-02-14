@@ -342,7 +342,13 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			get_parent().initialize_file_panes();
 			//get_pas().add_event("selected profile: " + m_current_profile.get_profilename());
 			String n_default_sched = m_current_profile.get_reschedpk();
-			BBSchedProfile sched = find_schedprofile(m_current_schedprofile.get_reschedpk());
+			BBSchedProfile sched = null;
+			try
+			{
+				sched = find_schedprofile(m_current_schedprofile.get_reschedpk());
+			}
+			catch(Exception err) {	Error.getError().addError("Sending_Settings","Exception trying to set Schedule Profile",err,1);	}
+			
 			if(sched!=null)
 				m_combo_schedprofiles.setSelectedItem(sched);
 			parent.actionPerformed(e);

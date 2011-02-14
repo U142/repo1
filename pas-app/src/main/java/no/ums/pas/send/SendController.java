@@ -423,8 +423,14 @@ public class SendController implements ActionListener {
 			}
 			System.out.println(sending.get_addresstypes());
 			// Få tak i gislist
-			//PAS.get_pas().get_statuscontroller().get_houses().get_houses().size();
+			//PAS.get_pas().get_statuscontroller().get_houses().get_houses().size();			
 			obj.get_toolbar().init_addresstypes(sending.get_resend_addresstypes());
+			
+			if(sending.get_sms_message_text() != null) 
+				obj.get_sendproperties().set_sms_broadcast_message(sending.get_sms_message_text());
+			if(sending.get_oadc() != null)
+				obj.get_sendproperties().set_sms_broadcast_oadc(sending.get_oadc());
+			
 			obj.get_sendproperties().set_profilepk(sending.get_profilepk());
 			obj.get_sendproperties().set_oadc_number(sending.get_oadc());
 			obj.get_sendproperties().set_sendchannels(sending.get_type());
