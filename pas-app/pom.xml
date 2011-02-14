@@ -51,10 +51,6 @@
         </dependency>
         <dependency>
             <groupId>no.ums.ws</groupId>
-            <artifactId>ws-parm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.ums.ws</groupId>
             <artifactId>ws-external-exec</artifactId>
         </dependency>
 
