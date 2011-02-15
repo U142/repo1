@@ -639,6 +639,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	{
 		public static final long serialVersionUID = 1;
 		int m_n_columns;
+		public JTable getJTable() { return m_tbl; }
 		
 		public TableList(String [] sz_columns, int [] n_width)
 		{

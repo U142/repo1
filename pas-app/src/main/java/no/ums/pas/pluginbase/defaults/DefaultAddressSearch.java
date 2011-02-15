@@ -10,6 +10,10 @@ import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
 import no.ums.ws.pas.*;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -105,6 +109,30 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		while(it.hasNext())
 		{
 			UGabResult result = (UGabResult)it.next();
+			System.out.println("Resulttype="+result.getType().toString());
+			TableColumnModel tcm = list.getJTable().getColumnModel();
+			if(result.getType().equals(GABTYPE.HOUSE))
+			{
+				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_address"));
+				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));
+			}
+			else if(result.getType().equals(GABTYPE.STREET))
+			{
+				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_streetname"));
+				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));
+			}
+			else if(result.getType().equals(GABTYPE.POST))
+			{
+				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_postno"));
+				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));				
+			}
+			else if(result.getType().equals(GABTYPE.REGION))
+			{
+				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_region"));
+				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));								
+			}
+			list.getJTable().getTableHeader().repaint();
+			
 			Object[] obj_insert = { result.getMatch(), result.getName(), result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
 			list.insert_row(obj_insert, -1);
 		}
