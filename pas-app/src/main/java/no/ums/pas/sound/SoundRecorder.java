@@ -139,7 +139,11 @@ public class SoundRecorder extends Thread {
             e.printStackTrace();
             return;
         }
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
+        //DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, AudioSystem.getTargetFormats(
+                AudioFormat.Encoding.PCM_SIGNED, audioFormat ),
+                audioFormat.getFrameSize(),
+                audioFormat.getFrameSize() * 2 );
 
         targetDataLine = null;
         if (RECTYPE == RECTYPE_FILE) {
