@@ -4,9 +4,10 @@
     <title>#if($project.Name)$project.Name#end</title>
     <vendor>#if($project.Organization.Name)$project.Organization.Name#end<vendor/>
     <homepage>#if($project.Organization.Url)$project.Organization.Url#end<homepage/>
-		<icon href="$jnlp_codebase/centiccLogo64.ico" />
+		<icon href="$jnlp_codebase/pas.ico" />
 		<icon href="$jnlp_codebase/PAS_splash.jpg" kind="splash" />
-		<icon kind="shortcut" href="$jnlp_codebase/centiccLogo64.ico" width="64" height="64"/>
+		<icon kind="shortcut" href="$jnlp_codebase/pas.ico" width="64" height="64"/>
+		<offline-allowed/>
 		<shortcut online="true">
 			<desktop/>
 		</shortcut>
