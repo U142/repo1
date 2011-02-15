@@ -121,6 +121,7 @@ public class PASActions implements ActionListener {
 			{
 				
 			}
+			PAS.get_pas().kickRepaint();
 
 		}
 		else if("act_setzoom".equals(e.getActionCommand())) {

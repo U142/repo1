@@ -416,7 +416,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public static UMSFontSet f() { return fontdelegate; }
 */
 	
-	public static Error langErrors = null;
+	public static Error langErrors = new Error(false);
 	public static String l(String s) {
 		try
 		{
