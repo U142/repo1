@@ -223,10 +223,10 @@ public abstract class Controller implements ActionListener {
 					sz_showname = cur.get_adrname();
 				else
 					sz_showname = cur.get_adrname().substring(0, 25) + "..";
-				if(cur.get_postaddr().length() < 20)
+				if(cur.get_postaddr().length() < 25)
 					sz_showaddr = cur.get_postaddr();
 				else
-					sz_showaddr = cur.get_postaddr().substring(0, 20) + "..";
+					sz_showaddr = cur.get_postaddr().substring(0, 25) + "..";
 				
 				//g.drawString(sz_showname + " " + cur.get_number(), p.x + n_xpad - n_compensate_left, p.y + (n_linedist - 2) + (n_lineno++ * n_linedist) - n_compensate_up);
 				//n_x = p.x + n_xpad - n_compensate_left;
@@ -240,7 +240,7 @@ public abstract class Controller implements ActionListener {
 				//tt.setBounds(p.x - n_compensate_left, p.y - n_compensate_up, quad.width, quad.height);
 				//tt.setVisible(true);
 				sz += "<tr style=\"font-size:9px; font-face:Arial;\">";
-				sz += "<td><b>" + sz_showname + "</td><td style=\"width:90px;\">" + sz_showaddr + "</td><td align=center style=\"width:60px;\">" + cur.get_number() + "</td><td align=center style=\"width:60px;\">" + cur.get_mobile() + "</b></td>";
+				sz += "<td><b>" + sz_showname + "</td><td style=\"width:150px;\">" + sz_showaddr + "</td><td align=center style=\"width:60px;\">" + cur.get_number() + "</td><td align=center style=\"width:60px;\">" + cur.get_mobile() + "</b></td>";
 				sz += "</tr>";
 			//}
 		}
