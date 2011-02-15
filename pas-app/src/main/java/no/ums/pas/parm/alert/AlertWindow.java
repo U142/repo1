@@ -22,6 +22,7 @@ import no.ums.pas.ums.tools.Utils;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.TabExpander;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -576,8 +577,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 						PAS.l("main_sending_sms_heading_tooltip"),
 						m_tabbedpane.getTabCount()-1); //m_tabbedpane.indexOfComponent(m_tabbedpane.getTabComponentAt(m_tabbedpane.getTabCount()-1)));//m_alert.getGui())+1);
 
-				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel)+1;i<m_tabbedpane.getTabCount();i++)
-					m_tabbedpane.setEnabledAt(i, false);				
+				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel);i<m_tabbedpane.getTabCount();i++) {
+					m_tabbedpane.setEnabledAt(i, false);
+					System.out.println("sms skal være disabled");
+				}
 			}
 			else
 			{
@@ -672,14 +675,20 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			Error.getError().addError(PAS.l("common_error"),"SendWindow Exception in set_values",e,1);
 		}
 	}
+	public int componentIndex(Component c) {
+		for(int i=0;i<m_tabbedpane.getComponentCount();++i) {
+			if(m_tabbedpane.getComponent(i).equals(c))
+				return i;
+		}
+		return -1;
+	}
 	public void stateChanged(ChangeEvent e) {
 		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send))
 				verify_external_exec();
-		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send) &&
-				m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()-1).equals(m_cell_broadcast_text_panel) &&
+		if(((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
 			showSpecifyLanguage();
-			m_tabbedpane.setSelectedIndex(m_tabbedpane.getSelectedIndex()-1);
+			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 		}
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
