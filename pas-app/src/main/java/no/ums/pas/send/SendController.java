@@ -109,6 +109,39 @@ public class SendController implements ActionListener {
 			return true;
 		return false;
 	}
+	public static final boolean IsVoice(int TYPE)
+	{
+		if(HasType(TYPE, SENDTO_NOPHONE_PRIVATE) ||
+				HasType(TYPE, SENDTO_NOPHONE_COMPANY) ||
+				HasType(TYPE, SENDTO_FIXED_PRIVATE) ||
+				HasType(TYPE, SENDTO_FIXED_COMPANY) ||
+				HasType(TYPE, SENDTO_MOBILE_PRIVATE) ||
+				HasType(TYPE, SENDTO_MOBILE_COMPANY) ||
+				HasType(TYPE, SENDTO_MOVED_RECIPIENT_PRIVATE) ||
+				HasType(TYPE, SENDTO_MOVED_RECIPIENT_COMPANY) ||
+				HasType(TYPE, SENDTO_SMS_PRIVATE_ALT_FIXED) ||
+				HasType(TYPE, SENDTO_SMS_COMPANY_ALT_FIXED) ||
+				HasType(TYPE, SENDTO_FIXED_PRIVATE_ALT_SMS) ||
+				HasType(TYPE, SENDTO_FIXED_COMPANY_ALT_SMS) ||
+				HasType(TYPE, SENDTO_MOBILE_PRIVATE_AND_FIXED) ||
+				HasType(TYPE, SENDTO_MOBILE_COMPANY_AND_FIXED) ||
+				HasType(TYPE, SENDTO_FIXED_PRIVATE_AND_MOBILE) ||
+				HasType(TYPE, SENDTO_FIXED_COMPANY_AND_MOBILE))
+				return true;
+			return false;
+	}
+	public static final boolean IsSMS(int TYPE)
+	{
+		if(
+				HasType(TYPE, SENDTO_SMS_PRIVATE) ||
+				HasType(TYPE, SENDTO_SMS_COMPANY) ||
+				HasType(TYPE, SENDTO_SMS_PRIVATE_ALT_FIXED) ||
+				HasType(TYPE, SENDTO_SMS_COMPANY_ALT_FIXED) ||
+				HasType(TYPE, SENDTO_FIXED_PRIVATE_ALT_SMS) ||
+				HasType(TYPE, SENDTO_FIXED_COMPANY_ALT_SMS))
+				return true;
+			return false;
+	}
 	public static final boolean IsAddressBased(int TYPE)
 	{
 		if(HasType(TYPE, SENDTO_NOPHONE_PRIVATE) ||

@@ -1563,38 +1563,48 @@ public class StatusSending extends Object {
 			m_txt_oadc.setText(get_oadc());
 			m_progress.setValue(get_maxalloc()); 
 			m_txt_nofax.setText(get_nofax()==1 ? PAS.l("common_yes") : PAS.l("common_no"));
-			
-			m_txt_actionprofile.setText(get_actionprofilename());
-			m_txt_actionprofile.setForeground(Color.blue);
-			Font use = m_txt_actionprofile.getFont();
-			use = use.deriveFont(Font.ROMAN_BASELINE);
-			m_txt_actionprofile.addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent e)
-				{
-					setCursor(new Cursor(Cursor.HAND_CURSOR));
-					//if(get_num_dynfiles()>0)
+			switch(get_type())
+			{
+			case 1:
+				m_txt_actionprofile.setText(get_actionprofilename());
+				m_txt_actionprofile.setForeground(Color.blue);
+				Font use = m_txt_actionprofile.getFont();
+				use = use.deriveFont(Font.ROMAN_BASELINE);
+				m_txt_actionprofile.addMouseListener(new MouseAdapter() {
+					public void mousePressed(MouseEvent e)
 					{
-						if(!b_is_dynfiles_showing){
-							m_menu_dynfiles.setVisible(true);
-			        		m_menu_dynfiles.show(e.getComponent(), 0, m_txt_actionprofile.getHeight());
-			        		b_is_dynfiles_showing = true;
-						}
-						else
+						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						//if(get_num_dynfiles()>0)
 						{
-							m_menu_dynfiles.setVisible(false);
-							b_is_dynfiles_showing = false;
+							if(!b_is_dynfiles_showing){
+								m_menu_dynfiles.setVisible(true);
+				        		m_menu_dynfiles.show(e.getComponent(), 0, m_txt_actionprofile.getHeight());
+				        		b_is_dynfiles_showing = true;
+							}
+							else
+							{
+								m_menu_dynfiles.setVisible(false);
+								b_is_dynfiles_showing = false;
+							}
 						}
 					}
-				}
-				public void mouseEntered(MouseEvent e)
-				{
-					setCursor(new Cursor(Cursor.HAND_CURSOR));
-				}
-				public void mouseExited(MouseEvent e)
-				{
-					//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
-			});
+					public void mouseEntered(MouseEvent e)
+					{
+						setCursor(new Cursor(Cursor.HAND_CURSOR));
+					}
+					public void mouseExited(MouseEvent e)
+					{
+						//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					}
+				});
+				break;
+			case 2:
+				remove(m_txt_actionprofile);
+				remove(m_lbl_actionprofile);
+				//m_txt_actionprofile.setText("");
+				//m_lbl_actionprofile.setText("");
+				break;
+			}
 
 			/*String sz_label = PAS.l("main_sending_settings_show_msg_profile");
 			final StdTextLabel lbl = new StdTextLabel(sz_label, 16, true);
