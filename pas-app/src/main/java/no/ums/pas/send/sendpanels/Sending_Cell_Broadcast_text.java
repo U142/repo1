@@ -298,9 +298,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		//if(get_txt_messagetext().getText().length() < 1)
 		//	return "Cell Broadcast requires a message";
-		if(get_txt_oadc_text().getText().length() < 1)
-			return PAS.l("main_sending_lba_error_need_sender_text");
-		else if(validateSenderText())
+		if(validateSenderText())
 			return PAS.l("main_sending_lba_error_content");
 
 		return null;
