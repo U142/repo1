@@ -382,19 +382,27 @@ namespace com.ums.PAS.Database
                             break;
                     }
                 }
-                if (ret.l_userpk > 0 && UCommon.USETTINGS.b_enable_nslookup)
+                UNSLOOKUP nsl = new UNSLOOKUP();
+                nsl.l_lastdatetime = UCommon.UGetFullDateTimeNow().getDateTime();
+                nsl.sz_ip = HttpContext.Current.Request.UserHostAddress;
+                nsl.sz_domain = HttpContext.Current.Request.UserHostName;
+                nsl.sz_location = "Unknown";
+                nsl.f_success = ret.f_granted;
+
+                if (ret.l_userpk > 0)
                 {
-                    UNSLOOKUP ns = new UNSLOOKUP();
-                    NsLookup(ref ns);
-                    ns.f_success = ret.f_granted;
-                    SaveNsLookup(ret.l_userpk, ref ns);
+                    if (UCommon.USETTINGS.b_enable_nslookup)
+                    {
+                        NsLookup(ref nsl);
+                        SaveNsLookup(ret.l_userpk, ref nsl);
+                    }
+                    ULog.error(String.Format("{5} - Error in logon credentials (wrong password): {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4}\nUsing password: {6}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), nsl.sz_domain, nsl.sz_ip, nsl.sz_location, DateTime.Now.ToLocalTime(), (l.sz_password.Length < 128 ? l.sz_password : "[Hashed]")));
                 }
-                else if (ret.l_userpk <= 0 && UCommon.USETTINGS.b_enable_nslookup)
+                else if (ret.l_userpk <= 0)
                 {
-                    UNSLOOKUP ns = new UNSLOOKUP();
-                    NsLookup(ref ns);
-                    ns.f_success = ret.f_granted;
-                    ULog.error(String.Format("{5} - Error in logon credentials (user/comp combination not found): {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), ns.sz_domain, ns.sz_ip, ns.sz_location, DateTime.Now.ToLocalTime()));
+                    if (UCommon.USETTINGS.b_enable_nslookup)
+                        NsLookup(ref nsl);
+                    ULog.error(String.Format("{5} - Error in logon credentials (user/comp combination not found): {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4} \nUsing password: {6}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), nsl.sz_domain, nsl.sz_ip, nsl.sz_location, DateTime.Now.ToLocalTime(), (l.sz_password.Length < 128 ? l.sz_password : "[Hashed]")));
                 }
 
                 if (!ret.f_granted)
