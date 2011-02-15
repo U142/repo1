@@ -389,6 +389,13 @@ namespace com.ums.PAS.Database
                     ns.f_success = ret.f_granted;
                     SaveNsLookup(ret.l_userpk, ref ns);
                 }
+                else if (ret.l_userpk <= 0 && UCommon.USETTINGS.b_enable_nslookup)
+                {
+                    UNSLOOKUP ns = new UNSLOOKUP();
+                    NsLookup(ref ns);
+                    ns.f_success = ret.f_granted;
+                    ULog.error(String.Format("{5} - Error in logon credentials (user/comp combination not found): {0}/{1} \nRequest from (domain/ip/location): {2}/{3}/{4}", l.sz_userid.ToUpper(), l.sz_compid.ToUpper(), ns.sz_domain, ns.sz_ip, ns.sz_location, DateTime.Now.ToLocalTime()));
+                }
 
                 if (!ret.f_granted)
                 {
