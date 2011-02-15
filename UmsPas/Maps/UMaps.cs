@@ -295,9 +295,20 @@ namespace com.ums.PAS.Maps
                                 m_mapinfo.portrayal);
 
 
-                                
-            HttpWebRequest web = (HttpWebRequest)HttpWebRequest.Create(sz_request);
-            HttpWebResponse response = (HttpWebResponse)web.GetResponse();
+            HttpWebRequest web = null;
+            HttpWebResponse response = null;
+
+            try
+            {
+                web = (HttpWebRequest)HttpWebRequest.Create(sz_request);
+            }
+            catch (Exception e) { throw new Exception("Error creating http request in UMaps", e); }
+            try
+            {
+                response = (HttpWebResponse)web.GetResponse();
+            }
+            catch (Exception e) { throw new Exception("Error getting http response in UMaps\n sz_request=" + sz_request, e); }
+            
             UPASMap map = new UPASMap();
             try
             {

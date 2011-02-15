@@ -180,6 +180,7 @@ namespace com.ums.ws.parm
             ExecResponse response = new ExecResponse();
             XmlDocument doc = ExecMapSending(send);
             response.parseFromXml(ref doc, "l_alertpk");
+            response.sz_function = "test";
             return response;
         }
 
