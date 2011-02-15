@@ -278,6 +278,7 @@ public class StatusController extends Controller implements ActionListener {
 		 */
 
 		LBASEND lbasend_total = new LBASEND();
+		lbasend_total.n_status = -1;
 		int n_pending = 0;
 		int n_sending = 0;
 		int n_finished = 0;
@@ -303,6 +304,9 @@ public class StatusController extends Controller implements ActionListener {
 			if((ss.get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == 0 && (ss.get_addresstypes() & SendController.SENDTO_TAS_SMS) == 0)
 				ref = null;
 			if (ref != null) {
+				//if first status, then set ref.status. if not first status, set total.status if ref.status is worse than current total.status
+				lbasend_total.n_status = (lbasend_total.n_status<0 ? ref.n_status : (ref.n_status<lbasend_total.n_status ? ref.n_status : lbasend_total.n_status));
+				
 				lbasend_total.n_proc += (ref.n_proc >= 0 ? ref.n_proc : 0)
 						+ (ref.getCancelled()); // total processed items for all
 												// LBA sendings
