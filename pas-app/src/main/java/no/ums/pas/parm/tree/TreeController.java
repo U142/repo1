@@ -413,10 +413,12 @@ public class TreeController {
 							gui.getGotoMap().setEnabled(true);
 							gui.getGenerateSending().setEnabled(true);
 							gui.getQuickSendMenu().setEnabled(true);
+							gui.getExportPolygon().setEnabled(true);
 						} else {
 							gui.getGotoMap().setEnabled(false);
 							gui.getGenerateSending().setEnabled(false);
 							gui.getQuickSendMenu().setEnabled(false);
+							gui.getExportPolygon().setEnabled(false);
 						}
 						gui.getTools().setEnabled(eventHasPolygons);
 						
@@ -501,6 +503,7 @@ public class TreeController {
 							if(((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_GISIMPORT) {
 								gui.getGotoMap().setToolTipText(PAS.l("main_parmtab_popup_goto_unavailable_for_gis"));
 								gui.getGotoMap().setEnabled(false);
+								gui.getExportPolygon().setEnabled(false);
 							}
 						} 
 						else {
@@ -520,10 +523,14 @@ public class TreeController {
 								if (((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_ELLIPSE
 										|| ((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_POLYGON) {
 									boolean benable = true;
-									if(((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_POLYGON)
+									if(((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_POLYGON) {
 										gui.getTools().setEnabled(true);
-									else
+										gui.getExportPolygon().setEnabled(true);
+									}
+									else {
 										gui.getTools().setEnabled(false);
+										gui.getExportPolygon().setEnabled(false);
+									}
 									// if this alert has LBA activated, check if it
 									// also has got a valid sz_areaid from
 									// CellVision
@@ -540,8 +547,13 @@ public class TreeController {
 								}
 							} else {
 								gui.getGotoMap().setEnabled(false);
-								if( ((AlertVO)o).getM_shape()!=null && ((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_GISIMPORT)
+								if( ((AlertVO)o).getM_shape()!=null && ((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_GISIMPORT) {
 									gui.getGotoMap().setToolTipText(PAS.l("main_parmtab_popup_goto_unavailable_for_gis"));
+								}
+								if(((AlertVO)o).getM_shape()!=null && ((AlertVO) o).getM_shape().getType() != ShapeStruct.SHAPE_POLYGON)
+									gui.getExportPolygon().setEnabled(false);
+								else
+									gui.getExportPolygon().setEnabled(true);
 							}
 						
 						main.checkRightsManagement(); // disable snap og
