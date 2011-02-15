@@ -129,6 +129,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			LogonInfo logoninfo, String wantedlanguage,
 			boolean b_request_newsession) {
 		super(PAS.l("logon_heading"));
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setIconImage(PAS.get_pas().getIconImage());
 		this.addWindowListener(this);
