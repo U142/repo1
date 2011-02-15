@@ -15,6 +15,7 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
 
 public class Sending_Files extends DefaultPanel {
 	public static final long serialVersionUID = 1;
@@ -23,6 +24,16 @@ public class Sending_Files extends DefaultPanel {
 	public static final int SOUNDFILE_TYPE_LIBRARY_	= 4;
 	public static final int SOUNDFILE_TYPE_LOCAL_	= 8;
 
+	@Override
+	public void componentShown(ComponentEvent e) {
+		m_rec.get_recorder().get_recorder().startRecording();
+		super.componentShown(e);
+	}
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		m_rec.get_recorder().get_recorder().pauseRecording();
+		super.componentHidden(e);
+	}
 	private int m_n_filetype = -1;
 	public int get_filetype() { return m_n_filetype; }
 	//private File m_localfile;
@@ -122,6 +133,7 @@ public class Sending_Files extends DefaultPanel {
 					m_tts.get_txtlib().setSelectedIndex(i);
 		}
 		add_controls();
+		this.addComponentListener(this);
 	} 
 	public void add_controls() {
 		int x_width = 10;

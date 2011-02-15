@@ -204,7 +204,7 @@ public class SoundRecorder extends Thread {
                     } catch (Exception e) {
                     }
                 }
-
+                m_recorder_thread = null;
             } else {
                 this.stop_saving_to_stream();
 
@@ -242,24 +242,36 @@ public class SoundRecorder extends Thread {
     public void startRecording() {
         try {
             out("Recording...");
+            if(m_line!=null)
+            	m_line.start();
             //m_linereader = new LineReader();
             //m_line.addLineListener(m_linereader);
-            m_line.start();
+            //m_line.start();
             recording = true;
         } catch (Exception e) {
             //PAS.get_pas().add_event("startRecording: " + e.getMessage(), e);
             //Error.getError().addError("SoundRecorder","Exception in startRecording",e,1);
             e.printStackTrace();
             m_b_haserror = true;
+            recording = false;
         }
+    }
+    public void pauseRecording() {
+    	recording = false;
+    	if(m_line!=null)
+    		m_line.stop();
+        out("Recording pause...");
     }
 
     public void stopRecording() {
         out("Stopping...");
+        recording = false;
         m_f_stoprecording = true;
         m_b_finalized = true;
         if (m_recorder_thread != null)
             m_recorder_thread.stopRecording();
+        if(m_line!=null)
+        	m_line.stop();
         //m_line.removeLineListener(m_linereader);
     }
 
@@ -299,14 +311,16 @@ public class SoundRecorder extends Thread {
                            {
                                e.printStackTrace();
                            }*/
-
-                    int nFramesRead = m_line.read(abBuffer, 0, size); //65536);
-                    if (this._isSaving())
-                        m_outputstream.write(abBuffer, 0, nFramesRead);
-                    if (m_osc_callback != null) {
-                        //byte [] a = new byte [] { abBuffer };
-                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
-                    }
+                	if(recording)
+                	{
+	                    int nFramesRead = m_line.read(abBuffer, 0, size); //65536);
+	                    if (this._isSaving())
+	                        m_outputstream.write(abBuffer, 0, nFramesRead);
+	                    if (m_osc_callback != null) {
+	                        //byte [] a = new byte [] { abBuffer };
+	                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
+	                    }
+                	}
                 }
                 m_line.stop();
                 //m_line.drain();
