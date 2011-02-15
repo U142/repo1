@@ -16,6 +16,7 @@
         <module>ws-pas-status</module>
         <module>ws-tas</module>
         <module>ws-voice</module>
+        <!--<module>ws-parm</module>-->
     </modules>
     <properties>
         <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
@@ -118,4 +119,24 @@
             </plugins>
         </pluginManagement>
     </build>
+        <profiles>
+        <profile>
+            <id>beta</id>
+            <properties>
+                <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
+            </properties>
+        </profile>
+        <profile>
+            <id>qa</id>
+            <properties>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pasqa/WS</wsdl.base>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pas/WS</wsdl.base>
+            </properties>
+        </profile>
+    </profiles>
 </project>
