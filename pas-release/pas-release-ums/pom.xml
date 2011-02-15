@@ -9,8 +9,8 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     <artifactId>pas-release-ums</artifactId>
-    <name>PAS - Release UMS</name>
-    <description>PAS</description>
+    <name>PAS - BETA</name>
+    <description>PAS Beta</description>
     <properties>
         <jnlp.filename>pas.jnlp</jnlp.filename>
     </properties>
