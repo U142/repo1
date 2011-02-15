@@ -234,7 +234,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		
 		menu.get_status().add(menu.get_item_status_updates());
 
-        menu.add(parm2);
 
 		return true;
 	}
