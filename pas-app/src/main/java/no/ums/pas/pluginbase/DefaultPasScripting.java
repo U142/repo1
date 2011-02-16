@@ -792,9 +792,9 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 //        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
 //        about.printf("Specification version: %s\n", VersionInfo.getInstance().SPECIFICATION_VERSION);
         about.printf("Version: %s\n", VersionInfo.INSTANCE.buildVersion);
-        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
+//        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
 //        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
-        about.printf("Revision: %s\n", VersionInfo.INSTANCE.revisionNumber);
+        about.printf("Revision: %s (b%s)\n", VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
 
         //timestampformat = yyyymmdd-hhmm
         String ts = (VersionInfo.INSTANCE.buildTimestamp.length()==13 ? VersionInfo.INSTANCE.buildTimestamp : null);
