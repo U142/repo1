@@ -282,9 +282,9 @@ namespace com.ums.PAS.Address.gab
                 node = (XmlNode)en.Current;
                 item = new UGabResult();
                 item.match = float.Parse(node.Attributes["Match"].Value, UCommon.UGlobalizationInfo);
-                item.name = node.Attributes["Name"].Value;
+                item.name = node.Attributes["PostNo"].Value;
                 item.postno = node.Attributes["PostNo"].Value;
-                item.region = node.Attributes["PostNo"].Value;
+                item.region = node.Attributes["Name"].Value;
                 item.lon = float.Parse(node.Attributes["Lon"].Value, UCommon.UGlobalizationInfo);
                 item.lat = float.Parse(node.Attributes["Lat"].Value, UCommon.UGlobalizationInfo);
                 item.type = GABTYPE.Post;

@@ -389,7 +389,7 @@ namespace com.ums.PAS.Database
                 nsl.sz_location = "Unknown";
                 nsl.f_success = ret.f_granted;
 
-                if (ret.l_userpk > 0)
+                if (ret.l_userpk > 0 && !ret.f_granted)
                 {
                     if (UCommon.USETTINGS.b_enable_nslookup)
                     {
