@@ -31,7 +31,6 @@ public class SoundRecorder extends Thread {
 	        try
 	        {
 	        	AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);
-	        	AUDIOLINE.open();
 	        	return (LINE_AVAILABLE = true);
 	        }
 	        catch(Exception e)
@@ -303,12 +302,21 @@ public class SoundRecorder extends Thread {
     					System.out.println("Audioline started");
     				}
                     AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
-                    if(m_recorder_thread==null || !m_recorder_thread.isAlive())
+                    //if(m_recorder_thread==null || !m_recorder_thread.isAlive())
                     {
+                    	if(m_recorder_thread!=null && m_recorder_thread.isAlive())
+                    	{
+                    		m_recorder_thread.interrupt();
+                    		while(m_recorder_thread.isAlive())
+                    		{
+                    			Thread.sleep(100);
+                    		}
+                    	}
                         m_recorder_thread = new SoundRecorder(audioFormat, null, targetType, m_outputstream, m_outputFile, 0, 3000, RECTYPE, m_osc_callback);
                         m_recorder_thread.audioFormat = audioFormat;
-                        m_recorder_thread.setDaemon(true);
-                        m_recorder_thread.start();                    	
+                        //m_recorder_thread.setDaemon(true);
+                        m_recorder_thread.start();        
+                        System.out.println("Audio recorder thread started");
                     }
                     if(m_recorder_thread!=null)
                     	m_recorder_thread.m_osc_callback = m_osc_callback;
@@ -343,25 +351,34 @@ public class SoundRecorder extends Thread {
     }
 
     public void stopRecording() {
-        out("Stopping...");
+        //out("Stopping...");
         recording = false;
         m_f_stoprecording = true;
         m_b_finalized = true;
         if (m_recorder_thread != null)
         {
+        	m_recorder_thread.m_b_finalized = true;
+        	m_recorder_thread.m_f_stoprecording = true;
     		m_recorder_thread.interrupt();
         }
         if(AUDIOLINE!=null)
         {
-        	AUDIOLINE.close();
-        	AUDIOLINE.stop();
-        	System.out.println("Audioline closed and stopped");
+        	if(AUDIOLINE.isActive())
+        	{
+        		AUDIOLINE.stop();
+            	System.out.println("Audioline stopped");
+        	}
+        	if(AUDIOLINE.isOpen())
+        	{
+        		AUDIOLINE.close();
+            	System.out.println("Audioline closed");
+        	}
         }
         //m_line.removeLineListener(m_linereader);
     }
 
     public void run() {
-        int size = 128;//AUDIOLINE.getBufferSize();
+        int size = 1024;//AUDIOLINE.getBufferSize();
         byte[] abBuffer = new byte[size];
         AudioFormat format = AUDIOLINE.getFormat();
         int nFrameSize = format.getFrameSize();
@@ -374,6 +391,17 @@ public class SoundRecorder extends Thread {
                 //m_line.start();
 
                 int offset = 0;
+                int curtime = 0;
+                int timeout = 5000;
+                int inc = 200;
+                while((AUDIOLINE==null || !AUDIOLINE.isActive()) && curtime<timeout)
+                {
+                	Thread.sleep(inc);
+                	curtime+=inc;
+                	System.out.println("Waiting for Audioline");
+                }
+                if(AUDIOLINE.isActive())
+                	System.out.println("Audioline active");
                 while (!this.isFinalized())//m_f_stoprecording)
                 {
                 	if(recording)
@@ -393,6 +421,11 @@ public class SoundRecorder extends Thread {
 			                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
 			                    }
                 			}
+                			else
+                			{
+                				System.out.println("Error - AUDIOLINE="+AUDIOLINE);
+                				Thread.sleep(1000);
+                			}
                 			Thread.sleep(1);
                 		}
                 		catch(InterruptedException e)
@@ -406,8 +439,8 @@ public class SoundRecorder extends Thread {
                 		}
                 	}
                 }
-                AUDIOLINE.stop();
-                AUDIOLINE.close();
+                //AUDIOLINE.stop();
+                //AUDIOLINE.close();
                 System.out.println("Recording thread quit");
 
 

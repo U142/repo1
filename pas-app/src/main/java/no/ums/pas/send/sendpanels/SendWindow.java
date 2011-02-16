@@ -902,7 +902,17 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		if(sel instanceof Sending_Files) //start new instance of recorder
 		{
 			Sending_Files sf = (Sending_Files)sel;
-			sf.get_recorder().get_recorder().restartRecording();
+			sf.get_recorder().get_recorder().startRecording();
+		}
+		else //stop recording threads if running
+		{
+			if(m_files!=null)
+			{
+				for(Sending_Files sf : m_files)
+				{
+					sf.get_recorder().get_recorder().stopRecording();
+				}
+			}
 		}
 		
 		set_next_text();
