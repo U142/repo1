@@ -871,12 +871,32 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			Error.getError().addError("SendWindow","Exception in set_values",e,1);
 		}
 	}
+	
+	public int componentIndex(Component c) {
+		for(int i=0;i<m_tabbedpane.getComponentCount();++i) {
+			if(m_tabbedpane.getComponent(i).equals(c))
+				return i;
+		}
+		return -1;
+	}
+	
+	public void showSpecifyLanguage() {
+		JFrame frame = get_frame();
+		JOptionPane.showMessageDialog(frame, PAS.l("main_parm_alert_dlg_specify_default_lang"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+		frame.dispose();
+	}
+	
 	public void stateChanged(ChangeEvent e) {
 		// Check if scheddatetime has passed				
 		if(!m_tabbedpane.getSelectedComponent().equals(m_settings) && schedDatePassed()) {
 			m_tabbedpane.setSelectedComponent(m_settings);
 			JOptionPane.showMessageDialog(this, PAS.l("main_sending_schedule_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			return;
+		}
+		if(((m_sendobject.get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_send)) &&
+				!m_cell_broadcast_text_panel.defaultLanguage()) {
+			showSpecifyLanguage();
+			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 		}
 		
 		set_next_text();

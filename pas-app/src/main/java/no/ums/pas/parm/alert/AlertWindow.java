@@ -334,11 +334,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		//m_btn_next.setEnabled(true);
 	}
 	
-	private void showSpecifyLanguage() {
-		JFrame frame = get_frame();
-		JOptionPane.showMessageDialog(frame, PAS.l("main_parm_alert_dlg_specify_default_lang"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-		frame.dispose();
-	}
+	
 	
 	private JFrame get_frame() {
 		JFrame frame = new JFrame();
@@ -675,17 +671,11 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			Error.getError().addError(PAS.l("common_error"),"SendWindow Exception in set_values",e,1);
 		}
 	}
-	public int componentIndex(Component c) {
-		for(int i=0;i<m_tabbedpane.getComponentCount();++i) {
-			if(m_tabbedpane.getComponent(i).equals(c))
-				return i;
-		}
-		return -1;
-	}
+	
 	public void stateChanged(ChangeEvent e) {
 		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send))
 				verify_external_exec();
-		if(((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
+		if(((m_alert.getSendObj().get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
 			showSpecifyLanguage();
 			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
