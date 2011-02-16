@@ -13,6 +13,11 @@
     <description>PAS Beta</description>
     <properties>
         <jnlp.filename>pas.jnlp</jnlp.filename>
+        <jnlp_title>PAS - DEVEL</jnlp_title>
+        <jnlp_codebase>https://secure.ums2.no/PAS/pasbeta/</jnlp_codebase>
+        <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
+        <jnlp_w>https://secure.ums2.no/PAS/ws_pasutv/WS/</jnlp_w>
+        <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
     </properties>
     <build>
         <plugins>
@@ -22,4 +27,36 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>beta</id>
+            <properties>
+                <jnlp_title>PAS - BETA</jnlp_title>
+                <jnlp_codebase>https://secure.ums2.no/PAS/pasbeta/</jnlp_codebase>
+                <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums2.no/PAS/ws_pasutv/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
+            </properties>
+        </profile>
+        <profile>
+            <id>qa</id>
+            <properties>
+                <jnlp_title>PAS - QA</jnlp_title>
+                <jnlp_codebase>https://secure.ums.no/PAS/pasqa/</jnlp_codebase>
+                <jnlp_s>https://secure.ums.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums.no/PAS/ws_pasqa/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums.no/vb4/</jnlp_v>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <jnlp_title>PAS - PROD</jnlp_title>
+                <jnlp_codebase>https://secure.ums.no/PAS/pas/</jnlp_codebase>
+                <jnlp_s>https://secure.ums.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums.no/PAS/ws_pas/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums.no/vb4/</jnlp_v>
+            </properties>
+        </profile>
+    </profiles>
 </project>

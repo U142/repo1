@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="https://secure.ums2.no/PAS/pasbeta/">
+<jnlp spec="1.0+" codebase="$jnlp_codebase">
   <information>
-    <title>#if($project.Name)$project.Name#end</title>
+    <title>$jnlp_title</title>
     <vendor>#if($project.Organization.Name)$project.Organization.Name#end<vendor/>
     <homepage>#if($project.Organization.Url)$project.Organization.Url#end<homepage/>
 		<icon href="$jnlp_codebase/pas.ico" />
@@ -23,9 +23,9 @@
   </resources>
   <application-desc main-class="$mainClass">
     <argument>-x$jnlp_codebase</argument>
-    <argument>-shttps://secure.ums2.no/PAS/</argument>
-    <argument>-whttps://secure.ums2.no/PAS/ws_pasutv/WS/</argument>
-	<argument>-vhttps://secure.ums2.no/vb4utv/</argument>
+    <argument>-s$jnlp_s</argument>
+    <argument>-w$jnlp_w</argument>
+	<argument>-v$jnlp_v</argument>
     <argument>-p</argument>
   </application-desc>
 </jnlp>
