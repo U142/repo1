@@ -2,6 +2,7 @@ package no.ums.pas.core.controllers;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.OpenStatusFrame;
 import no.ums.pas.core.mainui.StatusItemList;
@@ -1096,10 +1097,14 @@ public class StatusController extends Controller implements ActionListener {
 		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
 			m_lba_total_tabbed.getListCC().exportToCSV();
 		else {
-			new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(PAS
+			if(m_items.size()>0 && m_statuscodes.get_total()>0)
+				new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(PAS
 					.get_pas(), PAS.get_pas().get_lookandfeel(),
 					(StatusItemList) m_items, m_statuscodes);
-			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null) {
+			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null && 
+					(PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() == 0 ||
+					((StatusSending)((ComboRow)PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedItem()).getId()).get_type() == 4)){ // Villt tungvint måte å finne ut om statusfilteret er LBA
+				
 				m_lba_total_tabbed.getListCC().exportToCSV();
 			}
 		}

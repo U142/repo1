@@ -2260,8 +2260,8 @@ public class StatusSending extends Object {
 				}
 			}
 			
-			if(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT))
-				m_btn_tas_resend.setVisible(true);
+			/*if(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT))
+				m_btn_tas_resend.setVisible(true);*/
 			
 			
 			/*if(get_lba_sendingstatus()==LBASEND.LBASTATUS_PREPARED_CELLVISION)

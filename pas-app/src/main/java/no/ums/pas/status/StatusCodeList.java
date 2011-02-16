@@ -42,4 +42,13 @@ public class StatusCodeList extends ArrayList<StatusCode> {
 		}
 		return null;
 	}
+	
+	public int get_total() {
+		int count = 0;
+		
+		for(int i=0;i<this.size();++i) {
+			count += this.get(i).get_current_count();
+		}
+		return count;
+	}
 }
