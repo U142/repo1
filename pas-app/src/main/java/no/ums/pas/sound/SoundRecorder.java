@@ -1,6 +1,11 @@
 package no.ums.pas.sound;
 
 import javax.sound.sampled.*;
+import javax.sound.sampled.DataLine.Info;
+import javax.swing.JOptionPane;
+
+import no.ums.pas.PAS;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -12,7 +17,35 @@ public class SoundRecorder extends Thread {
     private static String vocTempPath;
 
 
-    private TargetDataLine m_line;
+    protected static TargetDataLine AUDIOLINE = null;
+    protected static AudioFormat AUDIOFORMAT = null;
+    protected static boolean LINE_AVAILABLE = true;
+    
+    public static boolean InitTargetDataLine(AudioFormat audioFormat)
+    	throws Exception
+    {
+    	if(AUDIOLINE==null && LINE_AVAILABLE)
+    	{
+    		AUDIOFORMAT = audioFormat;
+	        DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
+	        try
+	        {
+	        	AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);
+	        	return (LINE_AVAILABLE = true);
+	        }
+	        catch(Exception e)
+	        {
+	        	LINE_AVAILABLE = false;
+	        	throw e;
+	        }
+	        finally
+	        {
+	        	
+	        }
+    	}
+    	return true;
+    }
+    
     private AudioFileFormat.Type m_targetType;
     private AudioInputStream m_audioInputStream;
 
@@ -59,7 +92,7 @@ public class SoundRecorder extends Thread {
         m_f_stoprecording = true;
     }
 
-    SoundRecorder m_recorder_thread = null;
+    static SoundRecorder m_recorder_thread = null;
 
     SoundRecorder get_recorder_thread() {
         return m_recorder_thread;
@@ -74,13 +107,15 @@ public class SoundRecorder extends Thread {
     }
 
     LineReader m_linereader = null;
-    TargetDataLine targetDataLine;
+    //TargetDataLine targetDataLine;
     boolean m_b_haserror = false;
     ActionListener m_osc_callback = null;
     //SoundMixer m_mixer;
 
     public boolean isSaving() {
-        return m_recorder_thread.m_b_savetostream;
+    	if(m_recorder_thread!=null)
+    		return m_recorder_thread.m_b_savetostream;
+    	return false;
     }
 
     private boolean _isSaving() {
@@ -90,9 +125,12 @@ public class SoundRecorder extends Thread {
     boolean m_b_savetostream = false; //indicates if recording and saving is currently in progress
 
     public void start_saving_to_stream() { //reset current stream and start saving to a new one (old one is discarded)
-        if (m_recorder_thread != null) {
+        if(m_recorder_thread!=null)
+        	m_recorder_thread.m_osc_callback = m_osc_callback;
+
+    	if (m_recorder_thread != null) {
             if (m_recorder_thread.m_outputstream != null)
-                m_recorder_thread.m_outputstream.reset();// = new ByteArrayOutputStream
+                m_recorder_thread.m_outputstream  = new ByteArrayOutputStream();
             else
                 m_recorder_thread.m_outputstream = new ByteArrayOutputStream();
             m_recorder_thread.m_b_savetostream = true;
@@ -112,7 +150,7 @@ public class SoundRecorder extends Thread {
         return m_b_finalized;
     }
 
-    public void finalize() { //set this flag when streamrecorder-thread should quit recording (no more preview or saving)
+    public void finalizeRecording() { //set this flag when streamrecorder-thread should quit recording (no more preview or saving)
         if (m_recorder_thread != null)
             m_b_finalized = true;
         m_recorder_thread.m_b_finalized = true;
@@ -129,23 +167,19 @@ public class SoundRecorder extends Thread {
 
         m_f_stoprecording = false;
         try {
-            //audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
-            //audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, f_samplerate, n_bits, n_channels, n_channels*2, f_samplerate, false);//22050.0F, 16, 1, 2, 22050.0F, false);
             audioFormat = format;
         } catch (Exception e) {
-            //PAS.get_pas().add_event("SoundRecorder.audioFormat: " + e.getMessage(), e);
-            //Error.getError().addError("SoundRecorder","Exception in SoundRecorder",e,1);
             m_b_haserror = true;
             e.printStackTrace();
             return;
         }
         //DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, AudioSystem.getTargetFormats(
+        /*DataLine.Info info = new DataLine.Info(TargetDataLine.class, AudioSystem.getTargetFormats(
                 AudioFormat.Encoding.PCM_SIGNED, audioFormat ),
                 audioFormat.getFrameSize(),
-                audioFormat.getFrameSize() * 2 );
+                audioFormat.getFrameSize() * 2 );*/
 
-        targetDataLine = null;
+        //targetDataLine = null;
         if (RECTYPE == RECTYPE_FILE) {
             try {
                 System.out.println(getVocTempPath());
@@ -160,14 +194,9 @@ public class SoundRecorder extends Thread {
         }
         //PAS.get_pas().add_event("recording to " + m_sz_filename, null);
 
-        try {
-            targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-            targetDataLine.open(audioFormat);
-            /*try {
-                   FloatControl recVolume = (FloatControl)targetDataLine.getControl(FloatControl.Type.VOLUME);
-               } catch(Exception e) {
-                   e.printStackTrace();
-               }*/
+        /*try {
+            //targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
+            //targetDataLine.open(audioFormat);
 
         } catch (LineUnavailableException e) {
             e.printStackTrace();
@@ -175,15 +204,18 @@ public class SoundRecorder extends Thread {
             return;
             //PAS.get_pas().add_event("SoundRecorder.targetDataLine: " + e.getMessage(), e);
             //Error.getError().addError("SoundRecorder","Exception in SoundRecorder",e,1);
-        }
+        }*/
 
         AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
         //m_mixer = new SoundMixer();
-        m_recorder_thread = new SoundRecorder(/*controller, */audioFormat, targetDataLine, targetType, m_outputstream, m_outputFile, 0, 3000, RECTYPE, osc_callback);
-        m_recorder_thread.audioFormat = audioFormat;
-        //m_recorder_thread.setPriority(Thread.MAX_PRIORITY);
-        m_recorder_thread.setDaemon(true);
-        m_recorder_thread.start();
+        /*try
+        {
+        	InitTargetDataLine(audioFormat);
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }*/
     }
 
     public void init_oscilliator() {
@@ -208,7 +240,7 @@ public class SoundRecorder extends Thread {
                     } catch (Exception e) {
                     }
                 }
-                m_recorder_thread = null;
+                //m_recorder_thread = null;
             } else {
                 this.stop_saving_to_stream();
 
@@ -228,8 +260,8 @@ public class SoundRecorder extends Thread {
 
         this.RECTYPE = RECTYPE;
         //m_sendcontroller = controller;
-        m_line = line;
-        m_audioInputStream = new AudioInputStream(line);
+        //m_line = line;
+        m_audioInputStream = new AudioInputStream(AUDIOLINE);
         m_targetType = targetType;
         //m_outputFile = file;
         this.recStartTimeMS = recStartTimeMS;
@@ -238,23 +270,43 @@ public class SoundRecorder extends Thread {
     }
 
     public void start() {
-        startRecording();
-        super.start();
+        //startRecording();
+        if(!super.isAlive())
+        	super.start();
     }
 
 
     public void startRecording() {
         try {
-            out("Recording...");
-            if(m_line!=null)
-            	m_line.start();
-            //m_linereader = new LineReader();
-            //m_line.addLineListener(m_linereader);
-            //m_line.start();
-            recording = true;
+            if(AUDIOLINE!=null && !AUDIOLINE.isOpen())
+            {
+        		//AUDIOLINE = null;
+        		//Mixer.Info[] lines = AudioSystem.getMixerInfo();
+    			//AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false);
+    			try
+    			{
+    				//InitTargetDataLine(audioFormat);
+                	AUDIOLINE.open(AUDIOFORMAT);
+                	AUDIOLINE.start();
+                	System.out.println("Audioline opened and started");
+                    AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
+                    if(m_recorder_thread==null || !m_recorder_thread.isAlive())
+                    {
+                        m_recorder_thread = new SoundRecorder(audioFormat, null, targetType, m_outputstream, m_outputFile, 0, 3000, RECTYPE, m_osc_callback);
+                        m_recorder_thread.audioFormat = audioFormat;
+                        m_recorder_thread.setDaemon(true);
+                        m_recorder_thread.start();                    	
+                    }
+                    if(m_recorder_thread!=null)
+                    	m_recorder_thread.m_osc_callback = m_osc_callback;
+                	recording = true;
+    			}
+    			catch(Exception e)
+    			{
+    				e.printStackTrace();
+    			}
+            }
         } catch (Exception e) {
-            //PAS.get_pas().add_event("startRecording: " + e.getMessage(), e);
-            //Error.getError().addError("SoundRecorder","Exception in startRecording",e,1);
             e.printStackTrace();
             m_b_haserror = true;
             recording = false;
@@ -262,9 +314,19 @@ public class SoundRecorder extends Thread {
     }
     public void pauseRecording() {
     	recording = false;
-    	if(m_line!=null)
-    		m_line.stop();
-        out("Recording pause...");
+    	if(AUDIOLINE!=null && AUDIOLINE.isActive())
+    	{
+    		AUDIOLINE.close();
+    		AUDIOLINE.stop();
+        	if(m_recorder_thread!=null)
+        	{
+            	System.out.println("Audioline closed and stopped");
+                m_recorder_thread.stopRecording();
+        		m_recorder_thread.interrupt();
+        		//m_recorder_thread.interrupt();
+        	}
+    	}
+        //out("Recording pause...");
     }
 
     public void stopRecording() {
@@ -273,21 +335,22 @@ public class SoundRecorder extends Thread {
         m_f_stoprecording = true;
         m_b_finalized = true;
         if (m_recorder_thread != null)
-            m_recorder_thread.stopRecording();
-        if(m_line!=null)
-        	m_line.stop();
+        {
+    		m_recorder_thread.interrupt();
+        }
+        if(AUDIOLINE!=null)
+        {
+        	AUDIOLINE.close();
+        	AUDIOLINE.stop();
+        	System.out.println("Audioline closed and stopped");
+        }
         //m_line.removeLineListener(m_linereader);
     }
 
     public void run() {
-        //byte[] data = new byte[m_line.getBufferSize() / 5];
-        //int numBytesRead;
-        //ByteArrayOutputStream out  = new ByteArrayOutputStream();
-        //m_outputstream = new ByteArrayOutputStream(1000000);
-
-        int size = 32;
+        int size = 128;//AUDIOLINE.getBufferSize();
         byte[] abBuffer = new byte[size];
-        AudioFormat format = m_line.getFormat();
+        AudioFormat format = AUDIOLINE.getFormat();
         int nFrameSize = format.getFrameSize();
         int nBufferFrames = abBuffer.length / nFrameSize;
         recording = true;
@@ -295,134 +358,64 @@ public class SoundRecorder extends Thread {
             if (RECTYPE == RECTYPE_FILE)
                 AudioSystem.write(m_audioInputStream, m_targetType, m_outputFile);// out / m_outputstream
             else {
-                //AudioSystem.write(m_audioInputStream, m_targetType, m_outputstream);
                 //m_line.start();
-                ByteArrayOutputStream tempstream = new ByteArrayOutputStream();
-                //OutputStream		outputStream = tempstream;
-                m_outputstream = tempstream;
 
+                int offset = 0;
                 while (!this.isFinalized())//m_f_stoprecording)
                 {
-                    //if (sm_bDebug) { out("BufferingRecorder.run(): trying to read: " + nBufferFrames); }
-                    /*int	nFramesRead = m_line.read(abBuffer, 0, nBufferFrames);
-                           //if (sm_bDebug) { out("BufferingRecorder.run(): read: " + nFramesRead); }
-                           int	nBytesToWrite = nFramesRead * nFrameSize;
-                           try
-                           {
-                               outputStream.write(abBuffer, 0, nBytesToWrite);
-                           }
-                           catch (IOException e)
-                           {
-                               e.printStackTrace();
-                           }*/
                 	if(recording)
                 	{
-	                    int nFramesRead = m_line.read(abBuffer, 0, size); //65536);
-	                    if (this._isSaving())
-	                        m_outputstream.write(abBuffer, 0, nFramesRead);
-	                    if (m_osc_callback != null) {
-	                        //byte [] a = new byte [] { abBuffer };
-	                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
-	                    }
+                		//System.out.println(this.toString());
+                		try
+                		{
+                			if(AUDIOLINE!=null && AUDIOLINE.isActive())
+                			{
+			                    int nFramesRead = AUDIOLINE.read(abBuffer, 0, abBuffer.length); //65536);
+			                    if (this._isSaving() && nFramesRead>0)
+			                    {
+			                        m_outputstream.write(abBuffer, 0, nFramesRead);
+			                    }
+			                    if (m_osc_callback != null) {
+			                        //byte [] a = new byte [] { abBuffer };
+			                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
+			                    }
+                			}
+                			Thread.sleep(1);
+                		}
+                		catch(InterruptedException e)
+                		{
+                			System.out.println("Interrupted");
+                			break;
+                		}
+                		catch(Exception e)
+                		{
+                			e.printStackTrace();
+                		}
                 	}
                 }
-                m_line.stop();
-                //m_line.drain();
-                m_line.close();
+                AUDIOLINE.stop();
+                AUDIOLINE.close();
                 System.out.println("Recording thread quit");
 
-                /* We close the ByteArrayOutputStream.
-                       */
-                /*try
-                      {
-                          tempstream.close();
-                      }
-                      catch (IOException e)
-                      {
-                          e.printStackTrace();
-                      }
-                      byte[]	abData = tempstream.toByteArray();
-                      System.out.println(abData.length + " bytes written");
-                    ByteArrayInputStream	byteArrayInputStream = new ByteArrayInputStream(abData);
-                    AudioInputStream	audioInputStream = new AudioInputStream(byteArrayInputStream, format, abData.length / format.getFrameSize());
-                    try
-                    {
-                          m_outputstream = new ByteArrayOutputStream();
-                          System.out.println("Writing");
-                        AudioSystem.write(audioInputStream,  m_targetType, m_outputstream);
-                          System.out.println("End writing");
-                        m_outputstream.close();
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }*/
 
                 recording = false;
 
 
-                //ByteArrayOutputStream temp = new ByteArrayOutputStream();
-                /*numBytesRead=0;
-                      while(recording==true)
-                      {
-                          numBytesRead = m_line.read(data,0,data.length);
-                          m_outputstream.write(data,0,numBytesRead);
-                          //System.out.print(new String(data));
-                      }*/
-                //File f = new File()
-                //BufferedOutputStream file = new BufferedOutputStream(m_outputstream);
-                //AudioSystem.write(m_audioInputStream, m_targetType, m_outputstream);
-                /*FileInputStream fileinputstream = new FileInputStream(new File("C:\\tempwav\\test.wav"));
 
-                      try {
-                          int n = 0;
-                          while(1==1) {
-                              byte [] c = new byte[1024];
-                              int n_read = fileinputstream.read(c);
-                              if(n_read==-1)
-                                  break;
-                              System.out.println(n_read + " written");
-                              m_outputstream.write(c, 0, n_read);
-                              n += n_read;
-                          }
-                      } catch(Exception e) {
-                          e.printStackTrace();
-                      }*/
-                /*ByteArrayInputStream buffer = new ByteArrayInputStream(temp.toByteArray());
-                      AudioInputStream recorded = AudioSystem.getAudioInputStream(buffer);
-                      //BufferedOutputStream file = new BufferedOutputStream(m_outputstream);
-                      AudioSystem.write(recorded, AudioFileFormat.Type.WAVE, new File("C:\\tempwav\\test.wav"));
-                      //m_outputstream = (ByteArrayOutputStream)file;*/
             }
-            //AudioInputStream towav = FormatConversionProvider.getAudioInputStream();
-            /*while (recording) {
-                    // Read the next chunk of data from the TargetDataLine.
-                    numBytesRead =  m_line.read(data, 0, data.length);
-                    // Save this chunk of data.
-                    out.write(data, 0, numBytesRead);
-                 }   */
-            //PAS.get_pas().add_event("-- AudioSystem.write finished ", null);
+
         } catch (Exception e) {
-            //PAS.get_pas().add_event("SoundRecorder.run(): " + e.getMessage(), e);
-            //Error.getError().addError("SoundRecorder","Exception in run",e,1);
             e.printStackTrace();
             m_b_haserror = true;
         }
-        /*try {
-                FileOutputStream fos = new FileOutputStream(m_outputFile);
-                fos.write(out.toByteArray());
-                fos.close();
-            } catch(IOException e) {
-                get_sendcontroller().get_pas().add_event("SoundRecorder.run(): Error writing to file");
-            }*/
-
     }
 
     private void _wrapSavedData() {
         /* We close the ByteArrayOutputStream.
                */
         try {
-            m_outputstream.close();
+        	m_outputstream.flush();
+        	m_outputstream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

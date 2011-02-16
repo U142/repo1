@@ -935,7 +935,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			if(this.m_files!=null){
 				for(int i=0; i < m_files.length; i++)
 				{
-					if(m_files[i] != null)
+					if(m_files[i] != null && m_files[i].get_recorder()!=null && m_files[i].get_recorder().get_recorder()!=null)
 						m_files[i].get_recorder().get_recorder().stop_thread();//stopRecording();
 				}
 			}

@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.*;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,8 +23,19 @@ public class Record {
 	private ActionListener m_osc_callback = null;
 	AudioFormat m_audioformat;
 	
-	public Record(String sz_path, int RECTYPE, ActionListener osc_callback, AudioFormat format) {
+	public Record(String sz_path, int RECTYPE, ActionListener osc_callback, AudioFormat format) 
+			throws Exception {
 		//m_controller = controller;
+		try
+		{
+			SoundRecorder.InitTargetDataLine(format);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+        	JOptionPane.showMessageDialog(null, "Unable to get AudioLine", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+        	throw e;
+		}
 		m_sz_path = sz_path;
 		m_audioformat = format;
 		this.RECTYPE = RECTYPE;
@@ -33,7 +45,7 @@ public class Record {
 	}
 	
 	void cleanUp() {
-		get_recorder().finalize();
+		get_recorder().finalizeRecording();
 	}
 	
 	boolean start_recording() {

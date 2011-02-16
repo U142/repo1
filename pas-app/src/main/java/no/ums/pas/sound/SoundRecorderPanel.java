@@ -12,11 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.nio.ByteBuffer;
 
 
 
-public class SoundRecorderPanel extends DefaultPanel {
+public class SoundRecorderPanel extends DefaultPanel  {
 	public static final long serialVersionUID = 1;
 	public static final int MODE_INIT_ = 0;
     public static final int MODE_PLAY_ = 1;
@@ -24,6 +25,14 @@ public class SoundRecorderPanel extends DefaultPanel {
     public static final int MODE_RECORD_ = 3;
     public static final int MODE_RECSTOP_ = 4;
 	
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		super.componentHidden(e);
+	}
+	@Override
+	public void componentShown(ComponentEvent e) {
+		super.componentShown(e);
+	}
 	public static boolean b_line_ok = false;
 	
 	private Record m_rec = null;
@@ -76,13 +85,19 @@ public class SoundRecorderPanel extends DefaultPanel {
 		//m_controller = controller;
 		init();
 		setVisible(true);
+		SoundRecorder.LINE_AVAILABLE = true;
 		try {
 			m_rec = new Record(sz_storagepath/*controller*/, RECTYPE, f, format);
 		}
 		catch(Exception e)
 		{
+			//unable to get recording line
+			this.setEnabled(false);
 			System.out.println(e.getMessage());
 		}
+		b_line_ok = SoundRecorder.LINE_AVAILABLE;
+			
+		
 		m_txt_seconds.set_width(90);
 		m_txt_sampleinfo.setPreferredSize(new Dimension(350,20));
 		m_txt_sampleinfo.setText(PAS.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + PAS.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + PAS.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? PAS.l("sound_panel_recorder_mono") : PAS.l("sound_panel_recorder_stereo")));
@@ -95,6 +110,7 @@ public class SoundRecorderPanel extends DefaultPanel {
 			m_btn_play.setEnabled(false);
 			m_btn_record.setEnabled(false);
 		}
+		this.addComponentListener(this);
 	}
 /*	public SoundRecorderPanel(ActionListener f, SendWindow parent) {
 		this(f);

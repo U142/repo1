@@ -26,12 +26,14 @@ public class Sending_Files extends DefaultPanel {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-		m_rec.get_recorder().get_recorder().startRecording();
+		if(m_rec!=null && m_rec.get_recorder()!=null && m_rec.get_recorder().get_recorder()!=null)
+			m_rec.get_recorder().get_recorder().startRecording();
 		super.componentShown(e);
 	}
 	@Override
 	public void componentHidden(ComponentEvent e) {
-		m_rec.get_recorder().get_recorder().pauseRecording();
+		if(m_rec!=null && m_rec.get_recorder()!=null && m_rec.get_recorder().get_recorder()!=null)
+			m_rec.get_recorder().get_recorder().pauseRecording();
 		super.componentHidden(e);
 	}
 	private int m_n_filetype = -1;
@@ -84,9 +86,16 @@ public class Sending_Files extends DefaultPanel {
 		try {
 			int x = 500; //450
 			int y = 400; //300
-			m_rec = new SoundRecorderPanel(this, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_OUTPUTSTREAM); //, parent); //get_parent().get_sendcontroller());
-			m_rec.setPreferredSize(new Dimension(x, y));
-			m_rec.showMixer();
+			try
+			{
+				m_rec = new SoundRecorderPanel(this, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_OUTPUTSTREAM); //, parent); //get_parent().get_sendcontroller());
+				m_rec.setPreferredSize(new Dimension(x, y));
+				m_rec.showMixer();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			try {
 				m_rec.get_recorder().get_recorder().init_oscilliator();
 			}
