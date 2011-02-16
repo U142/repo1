@@ -2,6 +2,8 @@ package no.ums.adminui.pas;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -15,6 +17,8 @@ import no.ums.pas.ums.errorhandling.Error;
 import java.awt.*;
 
 public class MapFrameAdmin extends MapFrame {
+
+    private static final Log log = UmsLog.getLogger(MapFrameAdmin.class);
 
     //private static final Log logger = UmsLog.getLogger(MapFrameAdmin.class);
     private Graphics m_gfx;
@@ -172,7 +176,7 @@ public class MapFrameAdmin extends MapFrame {
 						set_active_shape(new PolygonStruct(Variables.getNavigation().getDimension()));
 					set_cursor(get_cursor_draw());
 				} catch(Exception e) {
-					Error.getError().addError("MapFrame","Exception in set_mode",e,1);
+					log.error("MapFrame", "Exception in set_mode", e);
 				}
 				break;
 			case MAP_MODE_OBJECT_MOVE:

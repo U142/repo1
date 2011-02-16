@@ -1,6 +1,8 @@
 package no.ums.adminui.pas;
 
 import no.ums.adminui.pas.ws.WSGetRestrictionShapes;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
@@ -33,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapApplet extends JApplet implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(MapApplet.class);
+
 	/**
 	 * 
 	 */
@@ -353,7 +358,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				} catch(Exception err) {
 					System.out.println(err.getMessage());
 					err.printStackTrace();
-					Error.getError().addError("PAS", "Error centering all polygon sendings", err, Error.SEVERITY_ERROR);
+					log.error("Error centering all polygon sendings", err);
 				}
 				PAS.get_pas().get_drawthread().set_suspended(false);
 			}
@@ -453,7 +458,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				} catch(Exception err) {
 					System.out.println(err.getMessage());
 					err.printStackTrace();
-					Error.getError().addError("PAS", "Error activating drawmode", err, Error.SEVERITY_ERROR);
+					log.error("Error activating drawmode", err);
 				}
 			}
 			else if("act_set_active_shape".equals(e.getActionCommand())) {

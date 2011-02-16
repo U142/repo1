@@ -7,7 +7,6 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.storage.StorageController;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -24,7 +23,7 @@ public class Error implements ActionListener {
     public static final int SEVERITY_ERROR = 1;
 	public static final int SEVERITY_WARNING = 2;
 	public static final int SEVERITY_INFORMATION = 3;
-	
+
 	private String error = "";
 	private ArrayList<ErrorVO> errorList;
 	private static Error errorObject = null;
@@ -32,8 +31,8 @@ public class Error implements ActionListener {
 	private int index;
 	private boolean append = false;
 	private boolean b_write_to_logfile = true;
-	
-	public ErrorVO getError(int n) 
+
+	public ErrorVO getError(int n)
 	{
 		try
 		{
@@ -44,17 +43,17 @@ public class Error implements ActionListener {
 			return null;
 		}
 	}
-	
+
 	private MailAccount account = null;
-	
+
 	private Hashtable htErrors;
-	
+
 	public static Error getError(){
 		if(errorObject == null)
 			errorObject = new Error();
 		return errorObject;
 	}
-	
+
 	public Error(boolean lang) {
 		b_write_to_logfile = lang;
 		errorList = new ArrayList<ErrorVO>();
@@ -68,14 +67,14 @@ public class Error implements ActionListener {
 		}
 		catch(Exception e)
 		{
-			
+
 		}
-		
+
 		htErrors = new Hashtable<String, String>();
 		htErrors.put("1", "Polygon har for få punkter, ikke klar til sending.");
 		htErrors.put("2", "HTTP Error");
 	}
-	
+
 	private Error() {
 		errorList = new ArrayList<ErrorVO>();
 		gui = new ErrorGUI();
@@ -88,14 +87,14 @@ public class Error implements ActionListener {
 		}
 		catch(Exception e)
 		{
-			
+
 		}
-		
+
 		htErrors = new Hashtable();
 		htErrors.put("1",new String("Polygon har for få punkter, ikke klar til sending."));
 		htErrors.put("2",new String("HTTP Error"));
 	}
-	
+
 	public void addError(String sz_dlgheading, String sz_description, Exception e, int severity){
 		error = error.concat(new GregorianCalendar().getTime().toString());
 		error = error.concat("\nHeading: " + sz_dlgheading);
@@ -108,15 +107,15 @@ public class Error implements ActionListener {
 
 		try
 		{
-			gui.setVisible(true);
-			
-			fillGUI(gui,(ErrorVO)errorList.get(index));
+
+
+            fillGUI(gui,(ErrorVO)errorList.get(index));
 		}
 		catch(Exception err)
 		{
-			
+
 		}
-		
+
 		/*if(e.getClass().equals(IOException.class) || e.getClass().equals(SAXException.class)
 				|| e.getClass().equals(ZipException.class) || e.getClass().equals(SAXParseException.class)) {
 			JOptionPane.showMessageDialog(PAS.get_pas(),"Critical system error, application will exit");
@@ -124,7 +123,7 @@ public class Error implements ActionListener {
 			//System.exit(0);
 		}*/
 	}
-	
+
 	public void addError(String sz_dlgheading, String sz_description, int errorid, int severity){
 		error = error.concat(new GregorianCalendar().getTime().toString());
 		error = error.concat("\nHeading: " + sz_dlgheading);
@@ -138,7 +137,7 @@ public class Error implements ActionListener {
 		gui.setVisible(true);
 		fillGUI(gui,(ErrorVO)errorList.get(index));
 	}
-	
+
 	public void addError(String sz_dlgheading, String sz_description, String sz_body, int errorid, int severity){
 		error = error.concat(new GregorianCalendar().getTime().toString());
 		error = error.concat("\nHeading: " + sz_dlgheading);
@@ -154,7 +153,7 @@ public class Error implements ActionListener {
 		gui.setVisible(true);
 		fillGUI(gui,(ErrorVO)errorList.get(index));
 	}
-	
+
 	public boolean addError(InputStream http_reply) {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(http_reply));
 	    try {
@@ -178,7 +177,7 @@ public class Error implements ActionListener {
 	    }
 	    return false;
 	}
-	
+
 	private void writeFile(String error){
 		if(b_write_to_logfile)
 		{
@@ -197,16 +196,16 @@ public class Error implements ActionListener {
 			}
 		}
 	}
-	
+
 	private String stackTraceToString(Exception e){
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
-		
+
 		return sw.toString();
 	}
-	
-	private void sendMail(MailAccount account){		
+
+	private void sendMail(MailAccount account){
 		//MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),"mh@ums.no",this,"PAS error",concatErrorList(errorList));
 		PAS.pasplugin.onSendErrorMessages(concatErrorList(errorList), account, this);
 	}
@@ -216,23 +215,17 @@ public class Error implements ActionListener {
 	private void fillGUI(ErrorGUI gui, ErrorVO e, boolean bodyappend){
 		gui.setTitle(e.getHeading());
 		gui.getLblDescription().setText(e.getDescription());
-		
+
 		if(e.getSeverity()==SEVERITY_ERROR){
-			gui.getLblDescription().setForeground(Color.RED);
-			gui.getLblIcon().setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-			gui.getBtnSend().setEnabled(true);
+            UmsLog.getLogger("no.ums."+e.getHeading()).error(e.getDescription(), e.getException());
 		}
 		else if(e.getSeverity()==SEVERITY_WARNING){
-			gui.getLblDescription().setForeground(Color.BLUE);
-			gui.getLblIcon().setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-			gui.getBtnSend().setEnabled(true);
+            UmsLog.getLogger("no.ums." + e.getHeading()).warn(e.getDescription(), e.getException());
 		}
 		else if(e.getSeverity()==SEVERITY_INFORMATION){
-			gui.getLblDescription().setForeground(Color.GREEN);
-			gui.getLblIcon().setIcon(UIManager.getIcon("OptionPane.informationIcon"));
-			gui.getBtnSend().setEnabled(false);
+            UmsLog.getLogger("no.ums." + e.getHeading()).info(e.getDescription(), e.getException());
 		}
-		
+
 		if(e.getException() != null)
 		{
 			try
@@ -248,7 +241,7 @@ public class Error implements ActionListener {
 				gui.getTxaStackTrace().setText(new GregorianCalendar().getTime().toString() + "\n" + htErrors.get(Integer.toString(e.getErrorid())).toString());
 			}
 			catch(Exception err) { }
-		}		
+		}
 		if(!e.getBody().equals(""))
 		{
 			try
@@ -257,14 +250,14 @@ public class Error implements ActionListener {
 					gui.getTxaStackTrace().append(e.getBody());
 				else
 					gui.getTxaStackTrace().setText(e.getBody());
-					
+
 			}
 			catch(Exception err) { }
 		}
-		
+
 		gui.getLblCounter().setText(index+1 + " of " + errorList.size());
 	}
-	
+
 	private void clearGUI(){
 		gui.setTitle("");
 		gui.getLblIcon().setIcon(null);
@@ -272,10 +265,10 @@ public class Error implements ActionListener {
 		gui.getTxaStackTrace().setText("");
 		gui.getLblCounter().setText("0 of 0");
 	}
-	
+
 	private String concatErrorList(ArrayList<ErrorVO> errorList){
 		String msg = "";
-		
+
 		Iterator<ErrorVO> it = errorList.iterator();
 		while(it.hasNext()){
 			try
@@ -286,16 +279,16 @@ public class Error implements ActionListener {
 			}
 			catch(Exception e)
 			{
-				
+
 			}
 		}
 		return msg;
 	}
-	
+
 	private ErrorVO nextPrevError(ArrayList<ErrorVO> errorList, int index) {
-		return (ErrorVO)errorList.get(index);		
+		return (ErrorVO)errorList.get(index);
 	}
-	
+
 	public class ErrorVO {
 		private String heading;
 		private String description;
@@ -303,21 +296,21 @@ public class Error implements ActionListener {
 		private Exception exception;
 		private int errorid = -1;
 		private int severity;
-		
+
 		public ErrorVO(String heading, String description, Exception exception, int severity){
 			this.heading = heading;
 			this.description = description;
 			this.exception = exception;
 			this.severity = severity;
 		}
-		
+
 		public ErrorVO(String heading, String description, int errorid, int severity){
 			this.heading = heading;
 			this.description = description;
 			this.errorid = errorid;
 			this.severity = severity;
 		}
-		
+
 		public ErrorVO(String heading, String description, String body, int errorid, int severity){
 			this.heading = heading;
 			this.description = description;
@@ -325,7 +318,7 @@ public class Error implements ActionListener {
 			this.errorid = errorid;
 			this.severity = severity;
 		}
-		
+
 		public String getDescription() {
 			return description;
 		}
@@ -419,6 +412,6 @@ public class Error implements ActionListener {
 			if(msc.editAccount(account))
 				sendMail(account);
 		}
-		
+
 	}
 }

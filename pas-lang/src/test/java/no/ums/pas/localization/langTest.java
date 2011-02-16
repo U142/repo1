@@ -26,7 +26,7 @@ public class langTest {
     public void testUnkonwn() throws Exception {
         final lang.LangError langError = context.mock(lang.LangError.class);
         context.checking(new Expectations() {{
-            one(langError).appendBodyFiltered(with(Expectations.<String>anything()));
+            one(langError).logMissing(with(Expectations.<Locale>anything()), with(Expectations.<String>anything()), with(Expectations.<String>anything()));
         }});
 
         assertThat(new lang(new Locale("no", "NO"), false, langError).l("test_key_that_will_always_be_missing_in_no"), notNullValue());

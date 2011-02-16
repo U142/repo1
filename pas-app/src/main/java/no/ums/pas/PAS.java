@@ -13,6 +13,7 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.mainui.*;
+import no.ums.pas.core.menus.FileMenuActions;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
@@ -37,6 +38,7 @@ import no.ums.pas.send.SendObject;
 import no.ums.pas.sound.SoundRecorder;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.errorhandling.ErrorGUI;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
@@ -1439,9 +1441,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void windowActivated(WindowEvent e) { }
 	public void windowClosed(WindowEvent e) {
 	}
-	public void windowClosing(WindowEvent e) { 
-		ActionEvent close = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_exit_application");
-		actionPerformed(close);				
+	public void windowClosing(WindowEvent e) {
+        exit_application();
 	}
 	public void windowDeactivated(WindowEvent e) { }
 	public void windowDeiconified(WindowEvent e) { }

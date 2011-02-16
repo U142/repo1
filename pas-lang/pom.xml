@@ -11,4 +11,10 @@
     <artifactId>pas-lang</artifactId>
     <name>PAS Language</name>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>ums-log</artifactId>
+        </dependency>
+    </dependencies>
 </project>

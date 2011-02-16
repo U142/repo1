@@ -531,8 +531,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		else if("act_togglepolygon".equals(e.getActionCommand())) { toggle_viewpolygon(); }
 		else if("act_view_statuscodes".equals(e.getActionCommand())) { toggle_viewstatuscodes(); }
 		else if("act_houseselect".equals(e.getActionCommand())) { toggle_houseselect(true, false); }
-		else if("act_print_map".equals(e.getActionCommand())) { PAS.get_pas().print_map(); }
-		else if("act_save_map".equals(e.getActionCommand())) { PAS.get_pas().save_map(); }
 		else if("act_toggle_showhouses".equals(e.getActionCommand())) {
 			get_selectmenu().get_bar().set_show_houses();
 		}
@@ -616,13 +614,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 				Error.getError().addError("MainMenu","Exception in actionPerformed",err,1);
 			}
 		}
-		else if("act_new_project".equals(e.getActionCommand())) {
-			// 
-			PAS.get_pas().invoke_project(false);
-		}
-		else if("act_close_project".equals(e.getActionCommand())) {
-			PAS.get_pas().close_active_project(true, true);
-		}
 		else if("act_draw".equals(e.getActionCommand())) {
 			set_draw(e.getActionCommand());
 		}
@@ -635,13 +626,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		}
 		else if("act_set_watermark".equals(e.getActionCommand())) {
 			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_exit_application".equals(e.getActionCommand())) {
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_fileimport".equals(e.getActionCommand())) {
-			SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
-			new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", false, PAS.get_pas());
 		}
 		else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
 			e.setSource(new Boolean(((JCheckBoxMenuItem)e.getSource()).isSelected()));

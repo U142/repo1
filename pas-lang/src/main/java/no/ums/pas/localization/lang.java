@@ -10,7 +10,7 @@ public class lang {
 
     interface LangError {
 
-        void appendBodyFiltered(String s);
+        void logMissing(Locale locale, String key, String valueInDefault);
 
     }
 
@@ -26,12 +26,16 @@ public class lang {
         bundle = ResourceBundle.getBundle(getClass().getName(), locale);
     }
 
-    public String l(String s) {
-        if (bundle.containsKey(s)) {
-            return (DEBUGMODE) ? "*" + bundle.getString(s) + "*" : bundle.getString(s);
+    public Locale getLocale() {
+        return bundle.getLocale();
+    }
+
+    public String l(String key) {
+        if (bundle.containsKey(key)) {
+            return (DEBUGMODE) ? "*" + bundle.getString(key) + "*" : bundle.getString(key);
         }
-        if (langError != null && DEFAULT.containsKey(s)) {
-            langError.appendBodyFiltered("\n" + s + " = " + DEFAULT.getString(s) + "\n");
+        if (langError != null && DEFAULT.containsKey(key)) {
+            langError.logMissing(bundle.getLocale(), key, DEFAULT.getString(key));
         }
         return "[NO STRING]";
     }

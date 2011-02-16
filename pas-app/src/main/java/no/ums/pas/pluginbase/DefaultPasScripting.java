@@ -12,6 +12,7 @@ import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.menus.FileMenuActions;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
@@ -1175,7 +1176,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onCloseProject() {
-		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
+		FileMenuActions.CLOSE_PROJECT.setEnabled(false);
 		//PAS.get_pas().get_mappane().set_active_shape(null);
 		PAS.get_pas().get_sendcontroller().remove_all_sendings();
 		return true;
@@ -1183,7 +1184,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onOpenProject(Project project, long nFromNewRefno) {
-		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
+		FileMenuActions.CLOSE_PROJECT.setEnabled(true);
 		if(project.get_num_sendings()>0)
 			PAS.get_pas().actionPerformed(new ActionEvent(project, ActionEvent.ACTION_PERFORMED, "act_project_activate"));
 		return true;

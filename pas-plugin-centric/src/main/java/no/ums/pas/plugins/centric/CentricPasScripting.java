@@ -11,6 +11,7 @@ import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.menus.FileMenuActions;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
@@ -1386,7 +1387,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             ((CentricSendOptionToolbar) ((CentricEastContent) PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_projectpk(0, "");
             //((CentricSendOptionToolbar)((CentricEastContent)PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).set_centricController(null);
             ((CentricSendOptionToolbar) ((CentricEastContent) PAS.get_pas().get_eastcontent()).get_tab(CentricEastContent.PANEL_CENTRICSEND_)).get_reset().doClick();
-            PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(false);
+            FileMenuActions.CLOSE_PROJECT.setEnabled(false);
             onSetAppTitle(PAS.get_pas(), "", PAS.get_pas().get_userinfo());
             onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
             PAS.get_pas().get_mappane().load_map(true);
@@ -1415,7 +1416,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                    m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
                else
                    m_centricstatuscontroller.set_cbsendingresponse(res);*/
-            PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_item_close_project().setEnabled(true);
+            FileMenuActions.CLOSE_PROJECT.setEnabled(true);
 
             menu_trainingmode.setEnabled(false);
 

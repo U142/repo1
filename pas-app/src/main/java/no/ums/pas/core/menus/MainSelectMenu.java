@@ -208,26 +208,27 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		}
 		//public JMenuItem get_search() { return m_item_navigate_search; }
 		
-		protected JMenuItem m_item_new_sending;
+		private final JMenuItem m_item_new_sending = new JMenuItem(FileMenuActions.NEW_SENDING);
+
 		public JMenuItem get_item_new_sending()
 		{
 			return m_item_new_sending;
 		}
-		protected JMenuItem m_item_new_project;
+		private final JMenuItem m_item_new_project = new JMenuItem(FileMenuActions.OPEN_PROJECT);
 		public JMenuItem get_item_new_project()
 		{
 			return m_item_new_project;
 		}
-		protected JMenuItem m_item_close_project;
+		private final JMenuItem m_item_close_project = new JMenuItem(FileMenuActions.CLOSE_PROJECT);
 		public JMenuItem get_item_close_project()
 		{
 			return m_item_close_project;
 		}
 		
-		protected JMenuItem m_item_file_print_map;
-		protected JMenuItem m_item_file_save_map;
-		protected JMenuItem m_item_fileimport;
-		protected JMenuItem m_item_exit;
+		private final JMenuItem m_item_file_print_map = new JMenuItem(FileMenuActions.PRINT_MAP);
+		private final JMenuItem m_item_file_save_map = new JMenuItem(FileMenuActions.SAVE_MAP);
+		private final JMenuItem m_item_fileimport = new JMenuItem(FileMenuActions.FILE_IMPORT);
+		private final JMenuItem m_item_exit = new JMenuItem(FileMenuActions.EXIT);
 		
 		protected JMenuItem m_item_navigate_pan;
 		protected JMenuItem m_item_navigate_zoom;
@@ -347,15 +348,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_menu_themes	= new JMenu(PAS.l("mainmenu_layout_themes"));
 			m_menu_watermarks = new JMenu(PAS.l("mainmenu_layout_watermarks"));
 			m_menu_skins = new JMenu(PAS.l("mainmenu_layout_skins"));
-			
-			m_item_new_sending = new JMenuItem(PAS.l("mainmenu_file_newsending"));
-			m_item_new_project = new JMenuItem(PAS.l("mainmenu_file_project"));
-			m_item_close_project = new JMenuItem(PAS.l("mainmenu_file_project_close"));
-			m_item_close_project.setEnabled(false);
-			m_item_fileimport = new JMenuItem(PAS.l("mainmenu_file_import"));
-			m_item_file_print_map = new JMenuItem(PAS.l("mainmenu_file_printmap"));
-			m_item_file_save_map = new JMenuItem(PAS.l("mainmenu_file_savemap"));
-			m_item_exit = new JMenuItem(PAS.l("mainmenu_file_quit"));
 			
 			m_item_navigate_pan = new JMenuItem(PAS.l("mainmenu_navigation_pan"));
 			m_item_navigate_zoom = new JMenuItem(PAS.l("mainmenu_navigation_zoom"));
@@ -738,14 +730,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		void init()
 		{
 			PAS.pasplugin.onAddMainSelectMenu(this);
-			m_item_new_sending.setActionCommand("act_new_sending");
-			m_item_new_project.setActionCommand("act_new_project");
-			m_item_close_project.setActionCommand("act_close_project");
-			m_item_fileimport.setActionCommand("act_fileimport");
-			m_item_file_print_map.setActionCommand("act_print_map");
-			m_item_file_save_map.setActionCommand("act_save_map");
-			m_item_exit.setActionCommand("act_exit_application");
-			
+
 			m_item_navigate_pan.setActionCommand("act_pan");
 			m_item_navigate_zoom.setActionCommand("act_zoom");
 			m_item_navigate_search.setActionCommand("act_search");

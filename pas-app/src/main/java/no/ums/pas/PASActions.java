@@ -95,9 +95,6 @@ public class PASActions implements ActionListener {
 		else if("act_repaint".equals(e.getActionCommand())) {
 			PAS.get_pas().kickRepaint();
 		}
-		else if("act_exit_application".equals(e.getActionCommand())) {
-			PAS.get_pas().exit_application();
-		}
 		else if("act_initialize_default_values".equals(e.getActionCommand())) {
 		}
 		else if("act_loadmap".equals(e.getActionCommand())) {
