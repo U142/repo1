@@ -293,7 +293,7 @@ public class SoundRecorder extends Thread {
     			try
     			{
     				//InitTargetDataLine(audioFormat);
-    				//if(!AUDIOLINE.isOpen())
+    				if(!AUDIOLINE.isOpen())
     				{
     					//AUDIOLINE.open();
                     	AUDIOLINE.open(AUDIOFORMAT);
@@ -346,7 +346,7 @@ public class SoundRecorder extends Thread {
     }
     public void pauseRecording() {
     	recording = false;
-    	if(AUDIOLINE!=null && AUDIOLINE.isActive())
+    	if(AUDIOLINE!=null && AUDIOLINE.isOpen())
     	{
     		AUDIOLINE.close();
     		AUDIOLINE.stop();
@@ -374,7 +374,7 @@ public class SoundRecorder extends Thread {
         }
         if(AUDIOLINE!=null)
         {
-        	if(AUDIOLINE.isActive())
+        	//if(AUDIOLINE.isActive())
         	{
         		AUDIOLINE.stop();
             	System.out.println("Audioline stopped");
@@ -405,7 +405,7 @@ public class SoundRecorder extends Thread {
                 int curtime = 0;
                 int timeout = 5000;
                 int inc = 200;
-                while((AUDIOLINE==null || !AUDIOLINE.isActive()) && curtime<timeout)
+                while((AUDIOLINE==null || !AUDIOLINE.isOpen()) && curtime<timeout)
                 {
                 	Thread.sleep(inc);
                 	curtime+=inc;
@@ -421,6 +421,7 @@ public class SoundRecorder extends Thread {
                 		try
                 		{
                 			//if(AUDIOLINE!=null && AUDIOLINE.isActive())
+                			if(AUDIOLINE!=null && AUDIOLINE.isOpen())
                 			{
 			                    int nFramesRead = AUDIOLINE.read(abBuffer, 0, abBuffer.length); //65536);
 			                    if (this._isSaving() && nFramesRead>0)
