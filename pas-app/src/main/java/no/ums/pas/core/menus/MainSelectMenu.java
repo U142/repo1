@@ -230,9 +230,9 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		private final JMenuItem m_item_fileimport = new JMenuItem(FileMenuActions.FILE_IMPORT);
 		private final JMenuItem m_item_exit = new JMenuItem(FileMenuActions.EXIT);
 		
-		protected JMenuItem m_item_navigate_pan;
-		protected JMenuItem m_item_navigate_zoom;
-		protected JMenuItem m_item_navigate_search;
+		private final JMenuItem m_item_navigate_pan = new JMenuItem(NavigateActions.PAN);
+		private final JMenuItem m_item_navigate_zoom = new JMenuItem(NavigateActions.ZOOM);
+		private final JMenuItem m_item_navigate_search = new JMenuItem(NavigateActions.SEARCH);
 		
 		protected JCheckBoxMenuItem m_item_view_showpolygon;
 		//private JCheckBoxMenuItem m_item_view_showstatushouses;
@@ -348,11 +348,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_menu_themes	= new JMenu(PAS.l("mainmenu_layout_themes"));
 			m_menu_watermarks = new JMenu(PAS.l("mainmenu_layout_watermarks"));
 			m_menu_skins = new JMenu(PAS.l("mainmenu_layout_skins"));
-			
-			m_item_navigate_pan = new JMenuItem(PAS.l("mainmenu_navigation_pan"));
-			m_item_navigate_zoom = new JMenuItem(PAS.l("mainmenu_navigation_zoom"));
-			m_item_navigate_search = new JMenuItem(PAS.l("mainmenu_navigation_search"));
-			
+
 			m_item_view_showpolygon = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_statusshape"), true);
 			//m_item_view_showstatushouses = new JCheckBoxMenuItem("Show status houses", true);
 			m_item_view_showhouses = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_houses"), true);
@@ -731,10 +727,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			PAS.pasplugin.onAddMainSelectMenu(this);
 
-			m_item_navigate_pan.setActionCommand("act_pan");
-			m_item_navigate_zoom.setActionCommand("act_zoom");
-			m_item_navigate_search.setActionCommand("act_search");
-			
 			m_item_view_showpolygon.setActionCommand("act_togglepolygon");
 			m_item_view_showhouses.setActionCommand("act_toggle_showhouses");
 			m_item_view_statuscodes.setActionCommand("act_view_statuscodes");

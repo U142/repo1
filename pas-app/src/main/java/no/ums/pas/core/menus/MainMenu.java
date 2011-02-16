@@ -6,10 +6,8 @@ import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.themes.ThemeColorComponent;
-import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapSite;
-import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
 import org.jvnet.substance.SubstanceImageCreator;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -170,16 +168,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 									  new MapSite("Denmark 2", 0, "Mow22") };
 									  //new MapSite("Denmark 3", 0, "Mow32"),
 									  //new MapSite("Denmark 4", 0, "Mow42") };
-	
-	String m_sz_current_action;
-	String m_sz_prev_action = "act_pan";
-	
-	public MainMenu(PAS pas)
+
+    public MainMenu(PAS pas)
 	{
 		super();
 		m_searchframe = new SearchFrame();
-		m_sz_current_action = "";
-		
+
 		//setSize(get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth(), 40);
 		int w = getWidth();
 		setBounds(0,0,/*get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth()*/w, 41);
@@ -220,14 +214,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }		
 	
-	public String get_current_action() { return m_sz_current_action; }
-	public String get_prev_action() { return m_sz_prev_action; }
 	public SearchFrame get_searchframe() { return m_searchframe; }
 	
 	void prepare_controls()
 	{
 		m_group_navigation = new ButtonGroup();
-	        m_btn_pan = new JButton(PAS.l("mainmenu_navigation_pan"));
+	        m_btn_pan = new JButton(NavigateActions.PAN);
 	        m_btn_pan.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_pan.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_pan.setMnemonic('p');
@@ -236,7 +228,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        //m_btn_pan.setFont(PAS.f().getMenuFont());
 
 	        
-	        m_btn_zoom = new JButton(PAS.l("mainmenu_navigation_zoom"));
+	        m_btn_zoom = new JButton(NavigateActions.ZOOM);
 	        m_btn_zoom.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_zoom.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_zoom.setMnemonic('z');
@@ -246,7 +238,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_group_navigation.add(m_btn_zoom);
 	        //m_btn_zoom.setFont(PAS.f().getMenuFont());
 
-	        m_btn_search = new JButton(PAS.l("mainmenu_navigation_search"));
+	        m_btn_search = new JButton(NavigateActions.SEARCH);
 	        m_btn_search.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_search.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_search.setMnemonic('s');
@@ -312,12 +304,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	
 	public void init()
 	{
-		m_btn_pan.setActionCommand("act_pan");
-		m_btn_pan.addActionListener(this);
-		m_btn_zoom.setActionCommand("act_zoom");
-		m_btn_zoom.addActionListener(this);
-		m_btn_search.setActionCommand("act_search");
-		m_btn_search.addActionListener(this);
 		m_btn_houseeditor.setActionCommand("act_houseeditor");
 		m_btn_houseeditor.addActionListener(this);
 		m_btn_showhousedetails.setActionCommand("act_houseselect");
@@ -360,20 +346,10 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		}
 		
 	}
-	void set_prevaction(String sz_act) { m_sz_prev_action = sz_act; }
-	void set_action(String sz_act) { m_sz_current_action = sz_act; }
-	void revoke_action() { 
-		if(m_sz_prev_action!=null)
-			set_action(m_sz_prev_action);
-	}
-	
-	public void set_pan() {
-		set_pan("act_pan");
-	}
-	private void set_pan(String sz_command)
+
+	public void set_pan()
 	{
 		PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.HAND_CURSOR)); //setCursor(new Cursor(Cursor.HAND_CURSOR));
-		m_sz_current_action = sz_command;		
 		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN_BY_DRAG);
 		reset_buttons_foreground();
 		//change_buttoncolor(m_btn_pan, true);
@@ -422,14 +398,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 				break;
 		}
 	}
-	private void set_zoom(String sz_command)
-	{
-		PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-		m_sz_current_action = sz_command;		
-		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ZOOM);
-		reset_buttons_foreground();
-		//change_buttoncolor(m_btn_zoom, true);
-	}
 	private void set_houseeditor(String sz_command) {
 		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
 		PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_enable_houseeditor"));
@@ -443,20 +411,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		//PAS.get_pas().get_mappane().load_map();
 		PAS.get_pas().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 	}
-	private void set_search()
-	{
-		//if(m_searchframe==null)
-		//	m_searchframe = new SearchFrame(get_pas());
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				//get_searchframe().initUI();
-				get_searchframe().activate();		
-				get_searchframe().toFront();
-			}
-		});
-	}
+
 	private void set_statusopen()
 	{
 		PAS.get_pas().load_status();
@@ -518,14 +473,10 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
-		set_prevaction(m_sz_current_action);
-		if ("act_pan".equals(e.getActionCommand())) { set_pan(e.getActionCommand()); }
-		else if ("act_zoom".equals(e.getActionCommand())) { set_zoom(e.getActionCommand()); }
-		else if ("act_mapsite".equals(e.getActionCommand())) { set_mapsite(); }
+		if ("act_mapsite".equals(e.getActionCommand())) { set_mapsite(); }
 		else if ("act_houseeditor".equals(e.getActionCommand())) {
 			set_houseeditor(e.getActionCommand()); 
 		}
-		else if("act_search".equals(e.getActionCommand())) { set_search(); }
 		else if("act_statusopen".equals(e.getActionCommand())) { set_statusopen(); }
 		else if("act_statusexport".equals(e.getActionCommand())) { export_status(); }
 		else if("act_togglepolygon".equals(e.getActionCommand())) { toggle_viewpolygon(); }
@@ -542,7 +493,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		else if("act_gps_trail_minutes".equals(e.getActionCommand())) { 
 			int n_value = new Integer(((CheckItem)e.getSource()).get_value().toString()).intValue();
 			PAS.get_pas().get_gpscontroller().set_trail_minutes(n_value);
-			PAS.get_pas().add_event("GPS trail set to " + ((CheckItem)e.getSource()).getText() + " (" + ((CheckItem)e.getSource()).get_value() + " minutes)", null);
+			PAS.get_pas().add_event("GPS trail set to " + ((CheckItem) e.getSource()).getText() + " (" + ((CheckItem) e.getSource()).get_value() + " minutes)", null);
 		}
 		else if("act_gps_updatemethod".equals(e.getActionCommand())) {
 			CheckItem item = (CheckItem)e.getSource();
@@ -632,7 +583,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			PAS.get_pas().actionPerformed(e);
 		}
 		else if("act_force_searchpinpoint".equals(e.getActionCommand())) {
-			get_selectmenu().get_bar().set_searchpinpoint(((Boolean)e.getSource()).booleanValue());
+			get_selectmenu().get_bar().set_searchpinpoint(((Boolean) e.getSource()).booleanValue());
 		}
 		else if("act_refresh_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().actionPerformed(e);
@@ -764,23 +715,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		{
 			PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.DEFAULT_CURSOR));	
 		}
-	} 	
-	/*class MenubarListener implements MenuListener
-	{
-		MenubarListener()
-		{
-		}
-		public void menuSelected(javax.swing.event.MenuEvent e)
-		{
-			//if("act_pan".equals(e.getActionCommand())) { set_pan("act_pan"); }
-		}
-		public void menuDeselected(javax.swing.event.MenuEvent e)
-		{
-		}
-		public void menuCanceled(javax.swing.event.MenuEvent e)
-		{
-		}
-		
-	}*/
+	}
 
 }

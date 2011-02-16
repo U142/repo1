@@ -259,74 +259,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public String OVERRIDE_WMS_SITE = null;
 	
 	public static final AtomicBoolean APP_EXIT = new AtomicBoolean(false);
-	
-	/*public void initSubstance()
-	{
-		try
-		{
-			//SubstanceLookAndFeel.setCurrentTheme(SubstanceTheme.getTheme(m_settings.getThemeClassName()));
-			//ClassLoader loader = new ClassLoader(); //getSystemResource(m_settings.getThemeClassName());
-			//SubstanceTheme activeTheme = new SubstanceMixTheme(m_settings.getThemeClassName());
-			        //new SubstancePurpleTheme(),
-			        //new SubstanceBarbyPinkTheme()).saturate(0.1);
-			//SubstanceLookAndFeel.setCurrentTheme(activeTheme);
 
-			//Substance 3.3
-			////
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
-						//UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
-						boolean b;
-						//b = SubstanceLookAndFeel.setSkin(m_settings.getSkinClassName());
-						b = SubstanceLookAndFeel.setCurrentTheme(m_settings.getThemeClassName());
-					
-						//themeChanged();
-						
-						//active_theme = (UMSTheme)SubstanceLookAndFeel.getTheme();
-						//active_theme = new UMSTheme(THEMETYPE.SIMPLE);
-						//theme = theme.saturate(0.1, true);
-						//theme = theme.tint(0.15);
-						//theme = theme.hueShift(0.2);
-						//theme = theme.shade(0.1);
-						
-						
-						//b = SubstanceLookAndFeel.setCurrentTheme(active_theme);
-						
-						
-						
-						b = SubstanceLookAndFeel.setCurrentButtonShaper(m_settings.getButtonShaperClassname());
-						if(m_settings.getGradientClassname()!=null && m_settings.getGradientClassname().length() > 0)
-							b = SubstanceLookAndFeel.setCurrentGradientPainter(m_settings.getGradientClassname());
-						else
-							b = SubstanceLookAndFeel.setCurrentGradientPainter("org.jvnet.substance.painter.GlassGradientPainter");
-						if(m_settings.getTitlePainterClassname()!=null && m_settings.getTitlePainterClassname().length() > 0)
-							b = SubstanceLookAndFeel.setCurrentTitlePainter(m_settings.getTitlePainterClassname());
-						else
-							b = SubstanceLookAndFeel.setCurrentTitlePainter("org.jvnet.substance.title.Glass3DTitlePainter");
-						b = SubstanceLookAndFeel.setCurrentWatermark(m_settings.getWatermarkClassName());
-						
-					}
-					catch(Exception e)
-					{
-						
-					}
-
-				}
-			});
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-	}*/
-	
-	String sz_current_user = "";
-	String sz_current_comp = "";
 	public void LoadVisualSettings(ActionListener a, String user, String comp, boolean threaded)
 	{
 		//no need to load same userinfo
@@ -378,45 +311,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//m_settings.setYpos(ui.getLWinposY());
 		
 	}
-	
-	/*public class UMSFontSet implements FontSet
-	{
 
-		@Override
-		public FontUIResource getControlFont() {
-			return null;
-		}
-
-		@Override
-		public FontUIResource getMenuFont() {
-			return null;
-		}
-
-		@Override
-		public FontUIResource getMessageFont() {
-			return null;
-		}
-
-		@Override
-		public FontUIResource getSmallFont() {
-			return null;
-		}
-
-		@Override
-		public FontUIResource getTitleFont() {
-			return null;
-		}
-
-		@Override
-		public FontUIResource getWindowTitleFont() {
-			return null;
-		}
-
-		
-	}
-	public static UMSFontSet fontdelegate;
-	public static UMSFontSet f() { return fontdelegate; }
-*/
 	
 	public static final Error langErrors = new Error(false);
 	public static String l(String s) {

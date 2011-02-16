@@ -16,12 +16,12 @@ import java.awt.event.ActionEvent;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-public class FileMenuActions {
+public interface FileMenuActions {
 
-    private static final Log log = UmsLog.getLogger(FileMenuActions.class);
+    Log log = UmsLog.getLogger(FileMenuActions.class);
 
     // act_new_sending
-    public static Action NEW_SENDING = new UmsAction("mainmenu_file_newsending") {
+    Action NEW_SENDING = new UmsAction("mainmenu_file_newsending") {
         @Override
         public void actionPerformed(ActionEvent e) {
 			try {
@@ -38,7 +38,7 @@ public class FileMenuActions {
     };
 
     // act_new_project
-    public static Action OPEN_PROJECT = new UmsAction("mainmenu_file_project") {
+    Action OPEN_PROJECT = new UmsAction("mainmenu_file_project") {
         @Override
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().invoke_project(false);
@@ -46,7 +46,7 @@ public class FileMenuActions {
     };
 
     // act_close_project
-    public static Action CLOSE_PROJECT = new UmsAction("mainmenu_file_project_close") {
+    Action CLOSE_PROJECT = new UmsAction("mainmenu_file_project_close") {
         {
             setEnabled(false);
         }
@@ -58,7 +58,7 @@ public class FileMenuActions {
     };
 
     // act_fileimport
-    public static Action FILE_IMPORT = new UmsAction("mainmenu_file_import") {
+    Action FILE_IMPORT = new UmsAction("mainmenu_file_import") {
         @Override
         public void actionPerformed(ActionEvent e) {
             SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
@@ -69,7 +69,7 @@ public class FileMenuActions {
     };
 
     // act_print_map
-    public static Action PRINT_MAP = new UmsAction("mainmenu_file_printmap") {
+    Action PRINT_MAP = new UmsAction("mainmenu_file_printmap") {
         @Override
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().print_map();
@@ -77,7 +77,7 @@ public class FileMenuActions {
     };
 
     // act_save_map
-    public static Action SAVE_MAP = new UmsAction("mainmenu_file_savemap") {
+    Action SAVE_MAP = new UmsAction("mainmenu_file_savemap") {
         @Override
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().save_map();
@@ -85,7 +85,7 @@ public class FileMenuActions {
     };
 
     // act_exit_application
-    public static Action EXIT = new UmsAction("mainmenu_file_quit") {
+    Action EXIT = new UmsAction("mainmenu_file_quit") {
         @Override
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().exit_application();

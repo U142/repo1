@@ -617,11 +617,13 @@ public class SendController implements ActionListener {
 			Error.getError().addError(PAS.l("common_error"),"SendController Exception in set_activesending",e,1);
 		}
 		if(!m_active_sending.isLocked()) {
-			if(get_pas() != null)
-				get_pas().get_mainmenu().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_draw"));
+			if(get_pas() != null) {
+                get_pas().get_mainmenu().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_draw"));
+            }
 		}
-		else
-			get_pas().get_mainmenu().set_pan();
+		else {
+            get_pas().get_mainmenu().set_pan();
+        }
 		if(get_pas() != null)
 			PAS.get_pas().kickRepaint();
 	}
