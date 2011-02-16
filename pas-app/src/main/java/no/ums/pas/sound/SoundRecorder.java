@@ -24,7 +24,7 @@ public class SoundRecorder extends Thread {
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
     	throws Exception
     {
-    	//if(AUDIOLINE==null && LINE_AVAILABLE)
+    	if(AUDIOLINE==null && LINE_AVAILABLE)
     	{
     		AUDIOFORMAT = audioFormat;
 	        DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
@@ -43,7 +43,7 @@ public class SoundRecorder extends Thread {
 	        	
 	        }
     	}
-    	//return true;
+    	return true;
     }
     
     private AudioFileFormat.Type m_targetType;
@@ -283,7 +283,7 @@ public class SoundRecorder extends Thread {
     public void startRecording() {
         try {
         	//if(AUDIOLINE==null)
-        	System.out.println("reinit TargetDataLine");
+        	System.out.println("startRecording");
         	SoundRecorder.InitTargetDataLine(audioFormat);
             if(AUDIOLINE!=null)
             {
@@ -312,6 +312,7 @@ public class SoundRecorder extends Thread {
                     		m_recorder_thread.interrupt();
                     		while(m_recorder_thread.isAlive())
                     		{
+                    			m_recorder_thread.m_b_finalized = true;
                     			Thread.sleep(100);
                     		}
                     	}
@@ -374,7 +375,7 @@ public class SoundRecorder extends Thread {
         }
         if(AUDIOLINE!=null)
         {
-        	//if(AUDIOLINE.isActive())
+        	if(AUDIOLINE.isActive())
         	{
         		AUDIOLINE.stop();
             	System.out.println("Audioline stopped");
