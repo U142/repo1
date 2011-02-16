@@ -898,6 +898,12 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			showSpecifyLanguage();
 			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 		}
+		Component sel = ((JTabbedPane)e.getSource()).getSelectedComponent();
+		if(sel instanceof Sending_Files) //start new instance of recorder
+		{
+			Sending_Files sf = (Sending_Files)sel;
+			sf.get_recorder().get_recorder().restartRecording();
+		}
 		
 		set_next_text();
 	}

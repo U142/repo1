@@ -276,6 +276,10 @@ public class SoundRecorder extends Thread {
         	super.start();
     }
 
+    public void restartRecording() {
+    	stopRecording();
+    	startRecording();
+    }
 
     public void startRecording() {
         try {
@@ -289,11 +293,15 @@ public class SoundRecorder extends Thread {
     				//InitTargetDataLine(audioFormat);
     				if(!AUDIOLINE.isOpen())
     				{
-    					AUDIOLINE.open();
+    					//AUDIOLINE.open();
+                    	AUDIOLINE.open(AUDIOFORMAT);
+                    	System.out.println("Audioline opened");
     				}
-                	AUDIOLINE.open(AUDIOFORMAT);
-                	AUDIOLINE.start();
-                	System.out.println("Audioline opened and started");
+    				if(!AUDIOLINE.isActive())
+    				{
+    					AUDIOLINE.start();
+    					System.out.println("Audioline started");
+    				}
                     AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
                     if(m_recorder_thread==null || !m_recorder_thread.isAlive())
                     {
