@@ -31,6 +31,7 @@ public class SoundRecorder extends Thread {
 	        try
 	        {
 	        	AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);
+	        	AUDIOLINE.open();
 	        	return (LINE_AVAILABLE = true);
 	        }
 	        catch(Exception e)
@@ -278,7 +279,7 @@ public class SoundRecorder extends Thread {
 
     public void startRecording() {
         try {
-            if(AUDIOLINE!=null && !AUDIOLINE.isOpen())
+            if(AUDIOLINE!=null)
             {
         		//AUDIOLINE = null;
         		//Mixer.Info[] lines = AudioSystem.getMixerInfo();
@@ -286,6 +287,10 @@ public class SoundRecorder extends Thread {
     			try
     			{
     				//InitTargetDataLine(audioFormat);
+    				if(!AUDIOLINE.isOpen())
+    				{
+    					AUDIOLINE.open();
+    				}
                 	AUDIOLINE.open(AUDIOFORMAT);
                 	AUDIOLINE.start();
                 	System.out.println("Audioline opened and started");

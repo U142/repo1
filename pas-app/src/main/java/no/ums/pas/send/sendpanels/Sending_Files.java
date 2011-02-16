@@ -28,6 +28,10 @@ public class Sending_Files extends DefaultPanel {
 	public void componentShown(ComponentEvent e) {
 		if(m_rec!=null && m_rec.get_recorder()!=null && m_rec.get_recorder().get_recorder()!=null)
 			m_rec.get_recorder().get_recorder().startRecording();
+		else
+		{
+			System.out.println("rec is null, cannot start recording");
+		}
 		super.componentShown(e);
 	}
 	@Override
