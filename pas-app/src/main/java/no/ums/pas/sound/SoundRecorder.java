@@ -420,7 +420,7 @@ public class SoundRecorder extends Thread {
                 		//System.out.println(this.toString());
                 		try
                 		{
-                			if(AUDIOLINE!=null && AUDIOLINE.isActive())
+                			//if(AUDIOLINE!=null && AUDIOLINE.isActive())
                 			{
 			                    int nFramesRead = AUDIOLINE.read(abBuffer, 0, abBuffer.length); //65536);
 			                    if (this._isSaving() && nFramesRead>0)
@@ -432,10 +432,10 @@ public class SoundRecorder extends Thread {
 			                        m_osc_callback.actionPerformed(new ActionEvent(abBuffer, ActionEvent.ACTION_PERFORMED, "act_oscillate"));
 			                    }
                 			}
-                			else
+                			//else
                 			{
-                				System.out.println("Error - AUDIOLINE="+AUDIOLINE);
-                				Thread.sleep(1000);
+                				//System.out.println("Error - AUDIOLINE="+AUDIOLINE);
+                				//Thread.sleep(1000);
                 			}
                 			Thread.sleep(1);
                 		}
