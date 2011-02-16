@@ -363,10 +363,18 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			
 		m_btn_adrtypes_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
 		m_btn_adrtypes_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
-
+		if(m_btn_adrtypes_private_fixed.isVisible() || m_btn_adrtypes_private_mobile.isVisible())
+			m_lbl_addresstypes_private.setVisible(true);
+		else
+			m_lbl_addresstypes_private.setVisible(false);
+		
 		m_btn_adrtypes_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
 		m_btn_adrtypes_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);
-
+		if(m_btn_adrtypes_company_fixed.isVisible() || m_btn_adrtypes_company_mobile.isVisible())
+			m_lbl_addresstypes_company.setVisible(true);
+		else
+			m_lbl_addresstypes_company.setVisible(false);
+		
 		m_btn_adrtypes_cell_broadcast_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
 		m_btn_adrtypes_cell_broadcast_voice.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE);
 		
