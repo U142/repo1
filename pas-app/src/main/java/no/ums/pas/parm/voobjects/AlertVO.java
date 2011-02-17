@@ -146,10 +146,12 @@ public class AlertVO extends ParmVO implements Cloneable {
 	public AlertVO clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 		AlertVO a = (AlertVO)super.clone();
-		a.CBMessages = (ArrayList<Object>)CBMessages.clone();
-		a.CBMessages.clear();
-		for(int i=0;i<this.CBMessages.size();++i)
-			a.CBMessages.add(((CBMessage)this.CBMessages.get(i)).clone());
+		if(CBMessages != null) {
+			a.CBMessages = (ArrayList<Object>)CBMessages.clone();
+			a.CBMessages.clear();
+			for(int i=0;i<this.CBMessages.size();++i)
+				a.CBMessages.add(((CBMessage)this.CBMessages.get(i)).clone());
+		}
 		return a;
 	}
 	public ArrayLBAOperator getOperators() { return m_operator_status; }
