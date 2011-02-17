@@ -219,7 +219,17 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		
 		m_main = new MainView(pas);
 		m_tab = new JTabbedPane();
-		m_tab.setUI(ULookAndFeel.newUTabbedPaneUI(m_tab));
+		m_tab.setUI(ULookAndFeel.newUTabbedPaneUI(m_tab, new ULookAndFeel.TabCallback() {
+			@Override
+			public void CloseButtonClicked(JComponent c) {
+				
+			}
+
+			@Override
+			public void CloseButtonHot(JComponent c) {
+				
+			}
+		}));
 		setPreferredSize(size);
 		add_controls();
 		m_combo_voice_filter.addItemListener(this);

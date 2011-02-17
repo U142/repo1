@@ -3,8 +3,10 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmPanel;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -89,6 +91,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			return null;
 	}
 	
+	
 	public EastContent(PAS pas)
 	{
 		final int n_infopanel_height = 850; // Hardkodet pga layout og at scrollbaren skal fungere 
@@ -108,7 +111,32 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_sendingpanel  = new SendingPanel(dim_panelsize);
 				m_sendingpanel.doInit();
 				m_tabbedpane = new EastTabbedPane();
-				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUI(m_tabbedpane));
+				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUI(m_tabbedpane, new ULookAndFeel.TabCallback() {					
+					@Override
+					public void CloseButtonClicked(JComponent c) {
+						if(c instanceof HouseEditorDlg)
+						{
+							Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+							PAS.get_pas().get_mainmenu().reset_buttons_foreground();
+						}
+						else if(c instanceof StatusPanel)
+						{
+							PAS.get_pas().close_active_project(true, true);
+						}
+						else if(c instanceof ParmPanel)
+						{
+							PAS.pasplugin.onCloseParm();
+						}
+						else if(c.equals(m_sendingpanel.sp))
+						{
+							PAS.get_pas().close_active_project(true, true);							
+						}
+					}
+
+					@Override
+					public void CloseButtonHot(JComponent c) {
+					}
+				}));
 				try { 
 					if(m_infopanel!=null)
 						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, null); //PAS.get_pas().get_mappane().get_mouseoverhouse());
@@ -154,6 +182,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_gpspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			if(m_gpseventpanel!=null)
 				m_gpseventpanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
+			if(m_sendingpanel!=null)
+				m_sendingpanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			if(get_parm()!=null)
 			{
 				get_parm().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
@@ -514,7 +544,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					if(find_component(m_statuspanel)==-1)
 					{
 						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_statuspanel, PAS.l("main_statustab_title_tooltip"));
-						m_statuspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
+						//m_statuspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
 				case PANEL_GPS_LIST_:
@@ -528,7 +558,10 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					break;
 				case PANEL_SENDING_:
 					if(find_component(m_sendingpanel.getScrollPane())==-1)
+					{
 						get_tabbedpane().addTab(PAS.l("main_sendingtab_title"), null, m_sendingpanel.getScrollPane(), PAS.l("main_sendingtab_title_tooltip"));
+						m_sendingpanel.getScrollPane().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
+					}
 					break;
 				case PANEL_HOUSEEDITOR_:
 					if(find_component(m_houseeditor)==-1)

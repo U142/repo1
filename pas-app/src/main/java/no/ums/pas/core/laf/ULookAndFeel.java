@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -133,8 +134,8 @@ public class ULookAndFeel
 		
 	}
 	
-	public static UTabbedPaneUI newUTabbedPaneUI(JComponent c) {
-		return new UTabbedPaneUI(c);
+	public static UTabbedPaneUI newUTabbedPaneUI(JComponent c, TabCallback callback) {
+		return new UTabbedPaneUI(c, callback);
 	}
 	public static UButtonAttention newUButtonAttention(String text) {
 		return new UButtonAttention(text);
@@ -170,76 +171,29 @@ public class ULookAndFeel
 	}
 
 	
+	public interface TabCallback
+	{
+		public void CloseButtonClicked(JComponent c);
+		public void CloseButtonHot(JComponent c);
+	}
+
+	
 	public static class UTabbedPaneUI extends BasicTabbedPaneUI
 	{
-		class MouseListener extends MouseAdapter {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				int index = isCursorOverCloseIcon(e);
-				if(index>=0)
-				{
-					UpdateFlag(index, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
-					UpdateFlag(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.FALSE);
-					UTabbedPaneUI.this.tabPane.removeTabAt(index);
-				}
-				super.mouseReleased(e);
-			}
 
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				//int index = UTabbedPaneUIAttention.this.tabPane.indexAtLocation(e.getX(), e.getY());
-				int index = isCursorOverCloseIcon(e);
-				if(index>=0)
-				{
-					UpdateFlag(index, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.TRUE);
-					UpdateFlag(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.TRUE); //notify tabbedpane that one is hot
-					return;
-				}
-				//if one used to be hot, reset all
-				if(checkForFlags(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT))
-					UpdateFlagsForAllTabs(ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
-
-				super.mouseMoved(e);
-			}
-		}
-		
-		private int isCursorOverCloseIcon(MouseEvent e)
-		{
-			int index = UTabbedPaneUI.this.tabPane.indexAtLocation(e.getX(), e.getY());
-			return (index>=0 && calcIconRect(index).contains(e.getX(), e.getY()) ? index : -1);
-			
-		}
-		
-		private void UpdateFlag(int n_componentindex, String flag, Object value)
-		{
-			if(n_componentindex>=0)
-			{
-				JComponent c = (JComponent)this.tabPane.getComponentAt(n_componentindex);
-				if(c!=null)
-				{
-					c.putClientProperty(flag, value);
-				}
-			}
-			else //put the value on the tabbed pane itself
-			{
-				this.tabPane.putClientProperty(flag, value);
-			}
-		}
-		private void UpdateFlagsForAllTabs(String flag, Object value)
-		{
-			for(int i=0; i < this.tabPane.getComponentCount(); i++)
-			{
-				((JComponent)this.tabPane.getComponentAt(i)).putClientProperty(flag, value);
-			}
-		}
-		
 		UAttentionUI ui;		
 		private static ImageIcon m_icon_close = null;
 		private static ImageIcon m_icon_close_grayscale = null;
-		UTabbedPaneUI(JComponent c)
+		protected static int CLOSE_ICONSIZE = 10;
+		protected static int CLOSE_RIGHT_PADDING = 5;
+		protected static String CLOSE_ICON_FILE = "delete_16.png";
+		
+		private TabCallback callback;
+		UTabbedPaneUI(JComponent c, TabCallback callback)
 		{
 			ui = new UAttentionUI(c);
-			m_icon_close = new ImageIcon(ImageLoader.load_icon("delete_16.png").getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH));
+			this.callback = callback;
+			m_icon_close = new ImageIcon(ImageLoader.load_icon(CLOSE_ICON_FILE).getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
 			BufferedImage bufferedImage = new BufferedImage(m_icon_close.getIconWidth(), m_icon_close.getIconHeight(), BufferedImage.TYPE_BYTE_GRAY);
 			m_icon_close_grayscale = new ImageIcon();
 			Graphics gi = bufferedImage.getGraphics();
@@ -270,20 +224,107 @@ public class ULookAndFeel
 			if(c!=null && b_icon)
 			{
 				Rectangle tabRect = c;
-				int BUTTONSIZE = 12;
-				int WIDTHDELTA = 5;
 	
-				int dx = tabRect.x + tabRect.width - BUTTONSIZE - WIDTHDELTA;
-				int dy = (tabRect.y) + 5;// + tabRect.height) / 2;// - tabRect.height/4;
+				int dx = tabRect.x + tabRect.width - CLOSE_ICONSIZE - CLOSE_RIGHT_PADDING;
+				int dy = (tabRect.y) + ((tabRect.height-CLOSE_ICONSIZE)/2);// + tabRect.height) / 2;// - tabRect.height/4;
 				iconRect.x = dx;
 				iconRect.y = dy;
-				iconRect.width = BUTTONSIZE;
-				iconRect.height = BUTTONSIZE;
+				iconRect.width = CLOSE_ICONSIZE;
+				iconRect.height = CLOSE_ICONSIZE;
 			}
 			else
 				iconRect = new Rectangle(0, 0);
 			return iconRect;
 		}
+		
+		class MouseListener extends MouseAdapter {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int index = isCursorOverCloseIcon(e);
+				if(index>=0)
+				{
+					JComponent c = (JComponent)tabPane.getComponentAt(index);
+					UpdateFlag(c, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
+					UpdateFlag(null, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.FALSE);
+					UTabbedPaneUI.this.tabPane.removeTabAt(index);
+					callback.CloseButtonClicked(c);
+				}
+				super.mouseReleased(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				//int index = UTabbedPaneUIAttention.this.tabPane.indexAtLocation(e.getX(), e.getY());
+				int index = isCursorOverCloseIcon(e);
+				if(index>=0)
+				{
+					JComponent c = (JComponent)tabPane.getComponentAt(index);
+					callback.CloseButtonHot(c);
+					UpdateFlag(c, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.TRUE);
+					UpdateFlag(null, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.TRUE); //notify tabbedpane that one is hot
+					return;
+				}
+				//if one used to be hot, reset all
+				if(checkForFlags(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT))
+					UpdateFlagsForAllTabs(ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
+
+				super.mouseMoved(e);
+			}
+		}
+		
+		private int isCursorOverCloseIcon(MouseEvent e)
+		{
+			int index = UTabbedPaneUI.this.tabPane.indexAtLocation(e.getX(), e.getY());
+			return (index>=0 && calcIconRect(index).contains(e.getX(), e.getY()) ? index : -1);
+			
+		}
+		
+		protected void UpdateFlag(JComponent c, String flag, Object value)
+		{
+			if(c!=null)
+			{
+				try
+				{
+					c.putClientProperty(flag, value);
+				}
+				finally {
+					
+				}
+			}
+			else
+			{
+				tabPane.putClientProperty(flag, value);
+			}
+		}
+		
+		protected void UpdateFlag(int n_componentindex, String flag, Object value)
+		{
+			if(n_componentindex>=0)
+			{
+				try
+				{
+					if(this.tabPane.getComponentCount() <= n_componentindex)
+						return;
+					JComponent c = (JComponent)this.tabPane.getComponentAt(n_componentindex);
+					UpdateFlag(c, flag, value);
+				}
+				finally
+				{	
+				}
+			}
+			else //put the value on the tabbed pane itself
+			{
+				UpdateFlag(this.tabPane, flag, value);
+			}
+		}
+		private void UpdateFlagsForAllTabs(String flag, Object value)
+		{
+			for(int i=0; i < this.tabPane.getComponentCount(); i++)
+			{
+				((JComponent)this.tabPane.getComponentAt(i)).putClientProperty(flag, value);
+			}
+		}
+		
 		
 		@Override
 		protected void paintTab(Graphics g, int tabPlacement,
@@ -298,19 +339,8 @@ public class ULookAndFeel
 
 				iconRect = calcIconRect(tabIndex);
 				
-				//temp
-				BufferedImage bufferedImage = new BufferedImage(m_icon_close.getIconWidth(), m_icon_close.getIconHeight(), BufferedImage.TYPE_BYTE_GRAY);
-				m_icon_close_grayscale = new ImageIcon();
-				Graphics gi = bufferedImage.getGraphics();
-				gi.drawImage(m_icon_close.getImage(), 0, 0, SystemColor.control, null);
-				gi.dispose();
-				m_icon_close_grayscale = new ImageIcon(bufferedImage);
+				paintIcon(g, tabPlacement, tabIndex, (checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT) && checkForFlags(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT) ? m_icon_close : m_icon_close_grayscale), iconRect, isSelected);
 
-				//temp
-				
-				paintIcon(g, tabPlacement, tabIndex, (checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT) ? m_icon_close : m_icon_close_grayscale), iconRect, isSelected);
-
-				//paintCloseIcon(g, dx, dy, isOver);
 			}
 		}
 		@Override
@@ -326,11 +356,12 @@ public class ULookAndFeel
 				Rectangle textRect, boolean isSelected) {
 			if(checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON))
 			{
-				textRect.x -= 10;
+				textRect.x -= CLOSE_RIGHT_PADDING*2;
 			}
 			super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect,
 					isSelected);
 		}
+		
 		protected boolean checkForFlags(int tabIndex, String flag)
 		{
 			Object o = null;

@@ -653,7 +653,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 				}
 				break;
 			case MAP_MODE_HOUSEEDITOR_:
-				//setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+				setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 				//set_submode(m_n_current_submode);
 				//new Core.MainUI.HouseEditorDlg(null);
 				m_n_prev_mode = m_n_current_mode;
