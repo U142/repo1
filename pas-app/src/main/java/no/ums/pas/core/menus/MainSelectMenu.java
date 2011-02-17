@@ -1,19 +1,10 @@
 package no.ums.pas.core.menus;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.RadioItemList;
-import no.ums.pas.core.menus.defines.SubstanceMenuItem;
-import no.ums.pas.core.menus.defines.SubstanceMenuItemList;
-import no.ums.pas.ums.errorhandling.Error;
-import org.jvnet.substance.SubstanceImageCreator;
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.skin.SkinInfo;
-import org.jvnet.substance.skin.SubstanceSkin;
-import org.jvnet.substance.theme.SubstanceTheme;
-import org.jvnet.substance.theme.ThemeInfo;
-import org.jvnet.substance.watermark.SubstanceWatermark;
-import org.jvnet.substance.watermark.WatermarkInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.Iterator;
-import java.util.Map;
 
 //import org.jvnet.substance.skin.SkinInfo;
 //import org.jvnet.substance.theme.*;
@@ -37,6 +26,9 @@ import java.util.Map;
 
 public class MainSelectMenu extends JPanel implements ActionListener, ComponentListener
 {
+
+    private static final Log log = UmsLog.getLogger(MainSelectMenu.class);
+
 	public static final long serialVersionUID = 1;
 	protected static final String DISABLE = "disable";
 	protected static final String ENABLE = "enable";
@@ -45,17 +37,8 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 
 	PAS get_pas() { return m_pas; }
 	public MainMenuBar get_bar() { return m_menubar; }
-	public boolean get_view_polygon() { return get_bar().m_item_view_showpolygon.getState(); }
-	public boolean get_view_houses() { return get_bar().m_item_view_showhouses.getState(); }
-	public boolean get_view_statuscodes() { return get_bar().m_item_view_statuscodes.getState(); }
-	public boolean get_view_searchpinpoint() { return get_bar().m_item_view_searchpinpoint.getState(); }
-	public void enable_viewstatuscodes(boolean b_enable) { get_bar().m_item_view_statuscodes.setEnabled(b_enable); }
-	public void enableStatusExport(boolean b)
-	{
-		get_bar().m_item_status_export.setEnabled(b);
-	}
 
-	private ActionListener m_actionlistener;
+    private ActionListener m_actionlistener;
 	
 	public class MainMenuBar extends JMenuBar 
 	{
@@ -101,46 +84,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		public JMenuItem get_view() { return m_menu_view; }
 		
 		
-		public JMenuItem get_item_fileimport()
-		{
-			return m_item_fileimport;
-		}
-		public JMenuItem get_item_file_print_map()
-		{
-			return m_item_file_print_map;
-		}
-		public JMenuItem get_item_file_save_map()
-		{
-			return m_item_file_save_map;
-		}
-		public JMenuItem get_item_exit()
-		{
-			return m_item_exit;
-		}
-		public JMenuItem get_item_navigate_pan()
-		{
-			return m_item_navigate_pan;
-		}
-		public JMenuItem get_item_navigate_zoom()
-		{
-			return m_item_navigate_zoom;
-		}
-		public JMenuItem get_item_navigate_search()
-		{
-			return m_item_navigate_search;
-		}
-		public JMenuItem get_item_view_showpolygon()
-		{
-			return m_item_view_showpolygon;
-		}
-		public JMenuItem get_item_view_showhouses()
-		{
-			return m_item_view_showhouses;
-		}
-		public JMenuItem get_item_view_searchpinpoint()
-		{
-			return m_item_view_searchpinpoint;
-		}
 		public JMenuItem get_item_show_settings()
 		{
 			return m_item_show_settings;
@@ -152,14 +95,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		public JMenuItem get_item_training_mode()
 		{
 			return m_item_training_mode;
-		}
-		public JMenuItem get_item_status_open()
-		{
-			return m_item_status_open;
-		}
-		public JMenuItem get_item_status_export()
-		{
-			return m_item_status_export;
 		}
 		public JMenuItem get_item_gps_new()
 		{
@@ -206,47 +141,17 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			return m_item_address_book;
 		}
-		//public JMenuItem get_search() { return m_item_navigate_search; }
-		
-		private final JMenuItem m_item_new_sending = new JMenuItem(FileMenuActions.NEW_SENDING);
 
-		public JMenuItem get_item_new_sending()
-		{
-			return m_item_new_sending;
-		}
-		private final JMenuItem m_item_new_project = new JMenuItem(FileMenuActions.OPEN_PROJECT);
-		public JMenuItem get_item_new_project()
-		{
-			return m_item_new_project;
-		}
-		private final JMenuItem m_item_close_project = new JMenuItem(FileMenuActions.CLOSE_PROJECT);
-		public JMenuItem get_item_close_project()
-		{
-			return m_item_close_project;
-		}
-		
-		private final JMenuItem m_item_file_print_map = new JMenuItem(FileMenuActions.PRINT_MAP);
-		private final JMenuItem m_item_file_save_map = new JMenuItem(FileMenuActions.SAVE_MAP);
-		private final JMenuItem m_item_fileimport = new JMenuItem(FileMenuActions.FILE_IMPORT);
-		private final JMenuItem m_item_exit = new JMenuItem(FileMenuActions.EXIT);
-		
-		private final JMenuItem m_item_navigate_pan = new JMenuItem(NavigateActions.PAN);
-		private final JMenuItem m_item_navigate_zoom = new JMenuItem(NavigateActions.ZOOM);
-		private final JMenuItem m_item_navigate_search = new JMenuItem(NavigateActions.SEARCH);
-		
-		protected JCheckBoxMenuItem m_item_view_showpolygon;
+//		protected JCheckBoxMenuItem m_item_view_showpolygon;
 		//private JCheckBoxMenuItem m_item_view_showstatushouses;
-		protected JCheckBoxMenuItem m_item_view_showhouses;
-		protected JCheckBoxMenuItem m_item_view_statuscodes;
-		protected JCheckBoxMenuItem m_item_view_searchpinpoint;
+//		protected JCheckBoxMenuItem m_item_view_showhouses;
+//		protected JCheckBoxMenuItem m_item_view_statuscodes;
+//		protected JCheckBoxMenuItem m_item_view_searchpinpoint;
 		
 		protected JMenuItem m_item_show_settings;
 		protected JMenuItem m_item_messagelib;
 		protected JCheckBoxMenuItem m_item_training_mode;
 		//private JMenuItem m_item_save_settings;
-		
-		protected JMenuItem m_item_status_open;
-		protected JMenuItem m_item_status_export;
 		
 		protected JMenuItem m_item_gps_new;
 		protected JMenuItem m_item_gps_open;
@@ -270,12 +175,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		
 		protected RadioItemList m_item_departments_checklist;
 		protected CheckItem [] m_item_departments_check;
-		
-		//private SubstanceMenuItem m_themes[];
-		protected SubstanceMenuItemList m_themes;
-		protected SubstanceMenuItemList m_watermarks;
-		protected SubstanceMenuItemList m_skins;
-		
+
 		protected RadioItemList m_item_gps_updateseconds_checklist;
 		protected CheckItem [] m_item_gps_updateseconds_check;
 		protected RadioItemList m_item_gps_updatemethod_checklist;
@@ -291,16 +191,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		public RadioItemList get_gps_updatemethod() { return m_item_gps_updatemethod_checklist; }
 		public RadioItemList get_statusupdateseconds_checklist() { return m_item_status_updateseconds_checklist; }
 		public RadioItemList get_status_updatemethod() { return m_item_status_updatemethod_checklist; }
-		public SubstanceMenuItemList get_theme_menu() { return m_themes; }
-		public SubstanceMenuItemList get_watermarks_menu() { return m_watermarks; }
-		public SubstanceMenuItemList get_skin_menu() { return m_skins; }
-		
-		
-		
-		public void set_searchpinpoint(boolean b) {
-			m_item_view_searchpinpoint.setSelected(b);
-		}
-		
+
 		public void set_status_autoupdate_invoke(boolean b) {
 			if(!b) {
 				m_item_status_updatemethod_check[0].doClick();
@@ -315,23 +206,7 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 				m_item_gps_updatemethod_check[1].doClick();
 			}
 		}
-		public void set_show_houses_invoke(boolean b) {
-			m_item_view_showhouses.setState(b);
-			set_show_houses();
-			/*if(b) {
-				PAS.get_pas().download_houses();
-			}
-			PAS.get_pas().kickRepaint();*/
-		}
-		public void set_show_houses() {
-			if(get_show_houses())
-				PAS.get_pas().download_houses();
-			PAS.get_pas().kickRepaint();
-		}
-		public boolean get_show_houses() {
-			return m_item_view_showhouses.isSelected();
-		}
-		
+
 		public MainMenuBar()
 		{
 			super();
@@ -349,18 +224,9 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_menu_watermarks = new JMenu(PAS.l("mainmenu_layout_watermarks"));
 			m_menu_skins = new JMenu(PAS.l("mainmenu_layout_skins"));
 
-			m_item_view_showpolygon = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_statusshape"), true);
-			//m_item_view_showstatushouses = new JCheckBoxMenuItem("Show status houses", true);
-			m_item_view_showhouses = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_houses"), true);
-			m_item_view_statuscodes = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_statuscodes"), true);
-			m_item_view_searchpinpoint = new JCheckBoxMenuItem(PAS.l("mainmenu_view_show_search_pinpoint"), true);
-			
 			m_item_show_settings = new JMenuItem(PAS.l("mainmenu_settings_show"));
 			m_item_messagelib = new JMenuItem(PAS.l("main_sending_audio_type_library"));
 			//m_item_save_settings = new JMenuItem("Save settings");
-			
-			m_item_status_open = new JMenuItem(PAS.l("mainmenu_status_open"));
-			m_item_status_export = new JMenuItem(PAS.l("mainmenu_status_export"));
 			
 			m_item_gps_new = new JMenuItem(PAS.l("mainmenu_fleetcontrol_newobject"));
 			m_item_gps_open = new JMenuItem(PAS.l("mainmenu_fleetcontrol_download_mapobjects"));
@@ -444,94 +310,11 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 				m_item_gps_updateseconds_checklist.enable_all(false);
 			if(!get_pas().get_statuscontroller().get_autoupdate())
 				m_item_status_updateseconds_checklist.enable_all(false);
-
-						
-			int i=0;
-
-			try
-			{
-				//Substance 3.3
-				Map<String,ThemeInfo> themes = SubstanceLookAndFeel.getAllThemes();
-	            SubstanceImageCreator ic = new SubstanceImageCreator();
-				SubstanceMenuItem theme_items [] = new SubstanceMenuItem[themes.size()];
-				for (Iterator iterator = themes.entrySet().iterator(); iterator.hasNext();) { 
-				    Map.Entry entry = (Map.Entry) iterator.next(); 
-				    ThemeInfo info = (ThemeInfo)entry.getValue();
-				    try {
-				    	Class themeClass = Class.forName(info.getClassName());
-			            SubstanceTheme themeInstance = (SubstanceTheme) themeClass.newInstance();
-	
-			            theme_items[i] = new SubstanceMenuItem(info.getDisplayName(), themeInstance, SubstanceImageCreator.getThemeIcon(themeInstance));
-			            
-				    } catch(Exception e) {
-				    	Error.getError().addError("MainSelectMenu","Exception in MainMenuBar",e,1);
-				    	continue;
-				    }
-				    i++;
-				}
-				m_themes = new SubstanceMenuItemList(get_pas(), theme_items, 0, m_menu_themes, m_actionlistener, "act_set_theme", 14);
-
-				i=0;
-				Map<String, WatermarkInfo> wm = SubstanceLookAndFeel.getAllWatermarks();
-				SubstanceMenuItem wm_items [] = new SubstanceMenuItem[wm.size()];
-				for(Iterator iterator = wm.entrySet().iterator(); iterator.hasNext();) {
-					Map.Entry<String, WatermarkInfo> entry = (Map.Entry<String, WatermarkInfo>)iterator.next();
-					WatermarkInfo info = (WatermarkInfo)entry.getValue();
-					try
-					{
-						Class themeClass = Class.forName(info.getClassName());
-						SubstanceWatermark wmInstance = (SubstanceWatermark)themeClass.newInstance();
-						wm_items[i] = new SubstanceMenuItem(info.getDisplayName(), wmInstance, SubstanceImageCreator.getWatermarkIcon(wmInstance));
-					}
-					catch(Exception e)
-					{
-						
-					}
-					i++;
-				}
-				m_watermarks = new SubstanceMenuItemList(get_pas(), wm_items, 0, m_menu_watermarks, m_actionlistener, "act_set_watermark", 0);
-				
-				i=0;
-				Map<String,SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
-				SubstanceMenuItem sk_items [] = new SubstanceMenuItem[skins.size()];
-				for(Iterator iterator = skins.entrySet().iterator(); iterator.hasNext();) {
-					Map.Entry<String, SkinInfo> entry = (Map.Entry<String, SkinInfo>)iterator.next();
-					SkinInfo info = entry.getValue();
-					try
-					{
-						Class skinClass = Class.forName(info.getClassName());
-						SubstanceSkin skInstance = (SubstanceSkin)skinClass.newInstance();
-						sk_items[i] = new SubstanceMenuItem(info.getDisplayName(), skInstance, null);
-					}
-					catch(Exception e)
-					{
-						
-					}
-					i++;
-				}
-				m_skins = new SubstanceMenuItemList(get_pas(), sk_items, 0, m_menu_skins, m_actionlistener, "act_set_skin", 0);
-
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-
 			
 			init();
-			showNewSending(true);
-			showNewProject(true);
-			showCloseProject(true);
-			showFileImport(true);
-			showPrintMap(true);
-			showSaveMap(true);
-			showExit(true);
 			showFileMenu(true);
 			
 			showNavigationMenu(true);
-			showNavZoom(true);
-			showNavPan(true);
-			showNavSearch(true);
 		}
 		
 		public void updateDeptSelection(boolean current_dept) {
@@ -564,62 +347,15 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			m_item_departments_checklist = new RadioItemList(get_pas(), m_item_departments_check, 0, 
 															m_menu_departments, m_actionlistener, "act_change_department");	
 		}
-		
-		public void showNewSending(boolean b)
-		{
-			m_item_new_sending.setVisible((Boolean)UIManager.get("m_item_new_sending") && b);
-		}
-		public void showNewProject(boolean b)
-		{
-			m_item_new_project.setVisible((Boolean)UIManager.get("m_item_new_project") && b);
-		}
-		public void showCloseProject(boolean b)
-		{
-			m_item_close_project.setVisible((Boolean)UIManager.get("m_item_close_project") && b);
-			
-		}
-		public void showFileImport(boolean b)
-		{
-			m_item_fileimport.setVisible((Boolean)UIManager.get("m_item_fileimport") && b);			
-		}
-		public void showPrintMap(boolean b)
-		{
-			m_item_file_print_map.setVisible((Boolean)UIManager.get("m_item_file_print_map") && b);			
-		}
-		public void showSaveMap(boolean b)
-		{
-			m_item_file_save_map.setVisible((Boolean)UIManager.get("m_item_file_save_map") && b);			
-		}
-		public void showExit(boolean b)
-		{
-			m_item_exit.setVisible((Boolean)UIManager.get("m_item_exit") && b);						
-		}
-		public void showFileMenu(boolean b)
+
+        public void showFileMenu(boolean b)
 		{
 			m_menu_file.setVisible((Boolean)UIManager.get("m_menu_file") && b);
 		}
 		
 		public void showNavigationMenu(boolean b)
 		{
-			m_menu_navigate.setVisible((Boolean)UIManager.get("m_menu_navigate") && b);
-		}
-		public void showNavZoom(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_navigate_zoom") && b;
-			m_item_navigate_zoom.setVisible(show);
-			m_actionlistener.actionPerformed(new ActionEvent(show, ActionEvent.ACTION_PERFORMED, "act_show_zoom_btn"));
-		}
-		public void showNavPan(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_navigate_pan") && b;
-			m_item_navigate_pan.setVisible(show);
-			m_actionlistener.actionPerformed(new ActionEvent(new Boolean(show), ActionEvent.ACTION_PERFORMED, "act_show_pan_btn"));
-		}
-		public void showNavSearch(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_navigate_search") && b;
-			m_item_navigate_search.setVisible(show);
-			m_actionlistener.actionPerformed(new ActionEvent(new Boolean(show), ActionEvent.ACTION_PERFORMED, "act_show_search_btn"));
+			m_menu_navigate.setVisible((Boolean) UIManager.get("m_menu_navigate") && b);
 		}
 		public void showHouseEditor(boolean b)
 		{
@@ -641,21 +377,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			Boolean show = (Boolean)UIManager.get("m_menu_view") && b;
 			m_menu_view.setVisible(show);
 		}
-		public void showViewStatusShape(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_view_showpolygon") && b;
-			m_item_view_showpolygon.setVisible(show);			
-		}
-		public void showViewHouses(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_view_showhouses") && b;
-			m_item_view_showhouses.setVisible(show);
-		}
-		public void showViewSearchPinpoint(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_view_searchpinpoint") && b;
-			m_item_view_searchpinpoint.setVisible(show);
-		}
 		public void showSettingsMenu(boolean b)
 		{			
 			Boolean show = (Boolean)UIManager.get("m_menu_config") && b;
@@ -671,22 +392,8 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			Boolean show = (Boolean)UIManager.get("m_item_messagelib") && b;
 			m_item_messagelib.setVisible(show);
 		}
-		public void showStatusMenu(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_menu_status") && b;
-			m_menu_status.setVisible(show);
-		}
-		public void showStatusOpenStatus(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_status_open") && b;
-			m_item_status_open.setVisible(show);
-		}
-		public void showStatusExportStatus(boolean b)
-		{
-			Boolean show = (Boolean)UIManager.get("m_item_status_export") && b;
-			m_item_status_export.setVisible(show);
-		}
-		public void showStatusUpdates(boolean b)
+
+        public void showStatusUpdates(boolean b)
 		{
 			Boolean show = (Boolean)UIManager.get("m_item_status_updates") && b;
 			m_item_status_updates.setVisible(show);
@@ -727,17 +434,10 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			PAS.pasplugin.onAddMainSelectMenu(this);
 
-			m_item_view_showpolygon.setActionCommand("act_togglepolygon");
-			m_item_view_showhouses.setActionCommand("act_toggle_showhouses");
-			m_item_view_statuscodes.setActionCommand("act_view_statuscodes");
-			m_item_view_searchpinpoint.setActionCommand("act_show_searchpinpoint");
-			
 			m_item_show_settings.setActionCommand("act_show_settings");
 			m_item_messagelib.setActionCommand("act_messagelib");
 			//m_item_save_settings.setActionCommand("act_save_settings");
 			
-			m_item_status_open.setActionCommand("act_statusopen");
-			m_item_status_export.setActionCommand("act_statusexport");
 			m_item_gps_open.setActionCommand("act_gps_open");
 			m_item_gps_new.setActionCommand("act_gps_new");
 			
@@ -758,23 +458,12 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 	{
 		super();
 		m_pas = pas;
-		//setSize(get_pas().get_eastwidth() + get_pas().get_mappane().getWidth(), 40);//get_pas().get_eastwidth() + 
-		try {
-			//setBounds(0, 0, getWidth(), 40);
-			//setPreferredSize(new Dimension(get_pas().get_eastwidth() + get_pas().get_mappane().get_dimension().width, 40));
-			//setMinimumSize(new Dimension(Integer.MIN_VALUE, Integer.MIN_VALUE));
-			//setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		} catch(Exception e) {
-			PAS.get_pas().add_event("MainSelectMenu setBounds() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in MainSelectMenu",e,1);
-		}
-		
+
 		m_actionlistener = actionlistener;
 		prepare_controls();
 		//setBackground(Color.white);
-		enable_viewstatuscodes(false);
-		enableStatusExport(false);
-		revalidate();
+        StatusActions.EXPORT.setEnabled(false);
+        revalidate();
 		doLayout();
 		addComponentListener(this);
 		
@@ -782,8 +471,6 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 	void prepare_controls()
 	{
 	        m_menubar = new MainMenuBar();
-	        //m_menubar.setPreferredSize(new Dimension(m_pas.get_mappane().getWidth() + m_pas.get_eastwidth(), 20)); //+ m_pas.get_eastwidth()
-	        //m_menubar.init();
 	        init();
 	}
 	void init()
@@ -798,21 +485,11 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		{
 			return;
 		}
-		//System.out.println(getWidth() + " , " + getHeight());
-
 		setBounds(0,0,getWidth(),getHeight());
 		m_menubar.setPreferredSize(new Dimension(getWidth(), 25));
 		m_menubar.setMinimumSize(new Dimension(500, 25));
 		m_menubar.revalidate();
-		//m_menubar.doLayout();
-		//setBounds(0, 0, getWidth()-20, 20);
-		//setPreferredSize(new Dimension(getWidth()-20, 20));
-		//m_menubar.setBounds(0, 0, getWidth(), getHeight());
-		//m_menubar.setPreferredSize(new Dimension(getWidth(), getHeight()));
-		//revalidate();
-		//m_menubar.revalidate();
-		//m_menubar.doLayout();
-		//System.out.println("Resized menu " + getWidth());
+
 	}
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }

@@ -7,6 +7,7 @@ import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.SettingsGUI;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.StatusPanel;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
 import no.ums.pas.core.project.Project;
@@ -293,12 +294,12 @@ public class PASActions implements ActionListener {
 		else if("act_set_pinpoint".equals(e.getActionCommand())) {
 			MapPointLL ll = (MapPointLL)e.getSource();
 			PAS.get_pas().get_mappane().set_pinpoint(ll);
-			PAS.get_pas().get_mappane().set_drawpinpoint(true);
-			PAS.get_pas().get_mainmenu().actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_force_searchpinpoint"));
+            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
+            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
 		}
 		else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
-			PAS.get_pas().get_mappane().set_drawpinpoint(((Boolean)e.getSource()).booleanValue());
-			PAS.get_pas().kickRepaint();
+            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(((Boolean)e.getSource()).booleanValue());
+            PAS.get_pas().kickRepaint();
 		}
 		else if("act_invoke_project".equals(e.getActionCommand())) {
 			if(PAS.get_pas().get_current_project()==null) {
@@ -389,16 +390,9 @@ public class PASActions implements ActionListener {
 			if(e.getSource().getClass().equals(StatusPanel.class)) {
 				if(!PAS.get_pas().get_current_project().get_projectpk().equals(PAS.get_pas().get_statuscontroller().get_current_projectpk()))
 				{
-					new Thread("Get statusitems thread")
-					{
-						public void run()
-						{
-							
-							//PAS.get_pas().close_active_project(true, false);
-							PAS.pasplugin.onOpenProject(PAS.get_pas().get_current_project(), -1);
-							PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas(), PAS.get_pas().get_current_project().get_projectpk(), -1, true);
-						}
-					}.start();
+                    //PAS.get_pas().close_active_project(true, false);
+                    PAS.pasplugin.onOpenProject(PAS.get_pas().get_current_project(), -1);
+                    PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas(), PAS.get_pas().get_current_project().get_projectpk(), -1, true);
 				}
 			}
 		}

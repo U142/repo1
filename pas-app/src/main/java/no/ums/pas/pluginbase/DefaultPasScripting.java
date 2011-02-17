@@ -12,8 +12,7 @@ import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.menus.FileMenuActions;
-import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
@@ -69,6 +68,41 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
     public AddressSearch getAddressSearch() {
         return addressSearch;
+    }
+
+    @Override
+    public MenuBuilder getMenuBuilder() {
+        return new MenuBuilder() {
+            @Override
+            public void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode) {
+                menu.removeAll();
+                if (showSending) {
+                    if (!tasMode) {
+                        menu.add(FileMenuActions.NEW_SENDING);
+                    }
+                    menu.add(FileMenuActions.OPEN_PROJECT);
+                    menu.add(FileMenuActions.CLOSE_PROJECT);
+                    menu.addSeparator();
+                }
+                if (!tasMode) {
+                    menu.add(FileMenuActions.FILE_IMPORT);
+                }
+                menu.add(FileMenuActions.PRINT_MAP);
+                menu.add(FileMenuActions.SAVE_MAP);
+                menu.add(FileMenuActions.EXIT);
+
+            }
+
+            @Override
+            public void updateNavigateMenu(JMenu menu, boolean showSearch) {
+                menu.removeAll();
+                menu.add(NavigateActions.PAN);
+                menu.add(NavigateActions.ZOOM);
+                if (showSearch) {
+                    menu.add(NavigateActions.SEARCH);
+                }
+            }
+        };
     }
 
     @Override
@@ -190,24 +224,14 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		menu_colors.add(item_color);
 		
 		//m_menu_layout.setFont(PAS.f().getMenuFont());
-		
-		menu.get_menu_file().add(menu.get_item_new_sending());
-		menu.get_menu_file().add(menu.get_item_new_project());
-		menu.get_menu_file().add(menu.get_item_close_project());
-		menu.get_menu_file().addSeparator();
-		menu.get_menu_file().add(menu.get_item_fileimport());
-		menu.get_menu_file().add(menu.get_item_file_print_map());
-		menu.get_menu_file().add(menu.get_item_file_save_map());
-		menu.get_menu_file().add(menu.get_item_exit());
 
-		menu.get_menu_navigate().add(menu.get_item_navigate_pan());
-		menu.get_menu_navigate().add(menu.get_item_navigate_zoom());
-		menu.get_menu_navigate().add(menu.get_item_navigate_search());
-		
-		menu.get_view().add(menu.get_item_view_showpolygon());
-		menu.get_view().add(menu.get_item_view_showhouses());
+        PAS.pasplugin.getMenuBuilder().updateFileMenu(menu.get_menu_file(), true, false);
+        PAS.pasplugin.getMenuBuilder().updateNavigateMenu(menu.get_menu_navigate(), true);
+
+        menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_POLYGON));
+		menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_HOUSES));
 		//m_menu_view.add(m_item_view_statuscodes);
-		menu.get_view().add(menu.get_item_view_searchpinpoint());
+		menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_SEARCHPOINTS));
 		
 		menu.get_menu_config().add(menu.get_item_show_settings());
 		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4)
@@ -215,8 +239,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			//m_menu_config.add(m_item_messagelib); 
 		//m_menu_config.add(m_item_save_settings);
 		
-		menu.get_status().add(menu.get_item_status_open());
-		menu.get_status().add(menu.get_item_status_export());
+		menu.get_status().add(StatusActions.OPEN);
+		menu.get_status().add(StatusActions.EXPORT);
 		
 		menu.get_fleetcontrol().add(menu.get_item_gps_new());
 		menu.get_fleetcontrol().add(menu.get_item_gps_open());
@@ -345,15 +369,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			pas.get_mainmenu().get_selectmenu().get_bar().get_fleetcontrol().setEnabled(true);
 		
 		if(pas.get_rightsmanagement().cansend() || pas.get_rightsmanagement().cansimulate()) {
-			pas.get_mainmenu().get_selectmenu().get_bar().showNewProject(true); //get_file_new_project().setEnabled(true);
-			pas.get_mainmenu().get_selectmenu().get_bar().showNewSending(true);//get_file_new_sending().setEnabled(true);
-			pas.get_mainmenu().get_selectmenu().get_bar().showFileImport(true);//get_file_import().setEnabled(true);
-		}
+            PAS.pasplugin.getMenuBuilder().updateFileMenu(pas.get_mainmenu().get_selectmenu().get_bar().get_menu_file(), true, false);
+        }
 		else {
-			pas.get_mainmenu().get_selectmenu().get_bar().showNewProject(false); //get_file_new_project().setEnabled(false);
-			pas.get_mainmenu().get_selectmenu().get_bar().showNewSending(false); //.setEnabled(false);
-			pas.get_mainmenu().get_selectmenu().get_bar().showFileImport(false);//get_file_import().setEnabled(false);
-			pas.close_active_project(true, true);
+            PAS.pasplugin.getMenuBuilder().updateFileMenu(pas.get_mainmenu().get_selectmenu().get_bar().get_menu_file(), false, false);
+            pas.close_active_project(true, true);
 		}
 		switch(pas.get_userinfo().get_current_department().get_pas_rights())
 		{
@@ -1008,7 +1028,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			en.nextElement().draw(g, nav, true, true, false, null, true, true, 1, false);
 		}			
 
-		if(p.get_mainmenu().get_selectmenu().get_bar().get_show_houses())
+		if(ViewOptions.TOGGLE_HOUSES.isSelected())
 			p.get_housecontroller().drawItems(g);
 		try {
 			p.get_mappane().draw_pinpoint(g);

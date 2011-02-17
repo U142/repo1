@@ -1,5 +1,6 @@
 package no.ums.pas.core.menus;
 
+import com.google.common.base.Predicate;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
@@ -8,6 +9,7 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.swing.UmsAction;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 

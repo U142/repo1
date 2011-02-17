@@ -74,7 +74,7 @@ public class SosiExport
 				origo_ll.set_lat((nav._ubo + nav._bbo) / 2);
 				origo_ll.set_lon((nav._rbo + nav._lbo) / 2);
 				String sone = "32V";
-				ORIGO = coor.LL2UTM(23, origo_ll.get_lat(), origo_ll.get_lon(), 0, 0, sone, 0);
+				ORIGO = coor.LL2UTM(23, origo_ll.get_lat(), origo_ll.get_lon());
 				sone = ORIGO.sz_zone;
 				String temp = sone.substring(0, 2);
 				utmzone = Integer.parseInt(temp);
@@ -83,8 +83,8 @@ public class SosiExport
 				maxne_ll.set_lon(nav._lbo);
 				minne_ll.set_lat(nav._bbo);
 				minne_ll.set_lon(nav._rbo);
-				MAXNE = coor.LL2UTM(23, maxne_ll.get_lat(), maxne_ll.get_lon(), 0, 0, ORIGO.sz_zone, utmzone);
-				MINNE = coor.LL2UTM(23, minne_ll.get_lat(), minne_ll.get_lon(), 0, 0, ORIGO.sz_zone, utmzone);
+				MAXNE = coor.LL2UTM(23, maxne_ll.get_lat(), maxne_ll.get_lon());
+				MINNE = coor.LL2UTM(23, minne_ll.get_lat(), minne_ll.get_lon());
 			} catch(Exception err) {
 				err.printStackTrace();
 			}
@@ -145,7 +145,7 @@ public class SosiExport
 				w.println(SosiFile.FIELD_INFORMASJON_ + " \"Exported from UMS PAS\"");
 				w.println(SosiFile.FIELD_REF_ + " :" + (i+1));
 				w.println(SosiFile.FIELD_NE_);
-				utm = coor.LL2UTM(23, poly.calc_bounds()._ubo, poly.calc_bounds()._lbo, 0, 0, "", 0);
+				utm = coor.LL2UTM(23, poly.calc_bounds()._ubo, poly.calc_bounds()._lbo);
 				w.println((long)(utm.f_northing) + " " + (long)(utm.f_northing));
 			}
 			w.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -160,13 +160,13 @@ public class SosiExport
 				//w.println("..KOMM");
 				w.println(SosiFile.FIELD_INFORMASJON_ + " \"Exported from UMS PAS\"");
 				w.println(SosiFile.FIELD_NE_);
-				utm = coor.LL2UTM(23, poly.calc_bounds()._ubo, poly.calc_bounds()._lbo, 0, 0, "", 0);
+				utm = coor.LL2UTM(23, poly.calc_bounds()._ubo, poly.calc_bounds()._lbo);
 				w.println((long)(utm.f_northing/unit) + " " + (long)(utm.f_easting/unit));
 				w.println(SosiFile.FIELD_NE_);
 				for(int p = 0; p < poly.get_size(); p++)
 				{
 					//w.println((long)(poly.get_coor_lon(p)) + " " + (long)(poly.get_coor_lat(p)) + " " + (p+1==poly.get_size() ? "...KP 1" : ""));
-					utm = coor.LL2UTM(23, poly.get_coor_lat(p), poly.get_coor_lon(p), 0, 0, ORIGO.sz_zone, utmzone);
+					utm = coor.LL2UTM(23, poly.get_coor_lat(p), poly.get_coor_lon(p));
 					w.println((long)(utm.f_northing/unit) + " " + (long)(utm.f_easting/unit));
 					
 				}

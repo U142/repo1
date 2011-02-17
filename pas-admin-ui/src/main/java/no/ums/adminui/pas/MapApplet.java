@@ -11,6 +11,7 @@ import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
@@ -21,7 +22,6 @@ import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.*;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
-import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.ws.parm.admin.ULOGONINFO;
 import no.ums.ws.pas.*;
@@ -487,12 +487,12 @@ public class MapApplet extends JApplet implements ActionListener {
 			else if("act_set_pinpoint".equals(e.getActionCommand())) {
 				MapPointLL ll = (MapPointLL)e.getSource();
 				m_mappane.set_pinpoint(ll);
-				m_mappane.set_drawpinpoint(true);
-				PAS.get_pas().get_mainmenu().actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_force_searchpinpoint"));
+            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
+            PAS.get_pas().get_mainmenu().actionPerformed(new ActionEvent(new Boolean(true), ActionEvent.ACTION_PERFORMED, "act_force_searchpinpoint"));
 			}
 			else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
-				m_mappane.set_drawpinpoint(((Boolean)e.getSource()).booleanValue());
-				PAS.get_pas().kickRepaint();
+            ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(((Boolean)e.getSource()).booleanValue());
+            PAS.get_pas().kickRepaint();
 			}
 			else if("act_invoke_project".equals(e.getActionCommand())) {
 				if(PAS.get_pas().get_current_project()==null) {

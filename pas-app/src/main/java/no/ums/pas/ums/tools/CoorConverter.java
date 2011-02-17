@@ -51,10 +51,8 @@ class Ellipsoid {
 
 
 public class CoorConverter {
-	public static final double PI = 3.14159265;
-	public static final double FOURTHPI = PI / 4;
-	public static final double deg2rad = PI / 180;
-	public static final double rad2deg = 180.0 / PI;
+    public static final double deg2rad = Math.PI / 180;
+	public static final double rad2deg = 180.0 / Math.PI;
 
 	public LLCoor newLLCoor(double lon, double lat) { return new LLCoor(lon, lat); }
 	public UTMCoor newUTMCoor(double n, double e, String z) { return new UTMCoor(n, e, z); }
@@ -128,14 +126,15 @@ public class CoorConverter {
 	}
 	
 	
-	public UTMCoor LL2UTM(int ReferenceEllipsoid, double Lat, double Long, 
-			 double UTMNorthing, double UTMEasting, String UTMZone, int wanted_zone)
+	public UTMCoor LL2UTM(int ReferenceEllipsoid, double Lat, double Long)
 	{
 	//converts lat/long to UTM coords.  Equations from USGS Bulletin 1532 
 	//East Longitudes are positive, West longitudes are negative. 
 	//North latitudes are positive, South latitudes are negative
 	//Lat and Long are in decimal degrees
-	
+	    double UTMNorthing;
+        double UTMEasting;
+        String UTMZone;
 		double a = CoorConst.ellipsoid[ReferenceEllipsoid].EquatorialRadius;
 		double eccSquared = CoorConst.ellipsoid[ReferenceEllipsoid].eccentricitySquared;
 		double k0 = 0.9996;
@@ -165,14 +164,12 @@ public class CoorConverter {
 		  else if( LongTemp >= 21.0 && LongTemp < 33.0 ) ZoneNumber = 35;
 		  else if( LongTemp >= 33.0 && LongTemp < 42.0 ) ZoneNumber = 37;
 		 }
-		if(wanted_zone!=0)
-			ZoneNumber = wanted_zone;
 		LongOrigin = (ZoneNumber - 1)*6 - 180 + 3;  //+3 puts origin in middle of zone
 		LongOriginRad = LongOrigin * CoorConverter.deg2rad;
 	
 		//compute the UTM Zone from the latitude and longitude
 		//sprintf(UTMZone, "%d%c", ZoneNumber, UTMLetterDesignator(Lat));
-		UTMZone = new Integer(ZoneNumber).toString() + UTMLetterDesignator(Lat);
+		UTMZone = Integer.toString(ZoneNumber) + UTMLetterDesignator(Lat);
 	
 		eccPrimeSquared = (eccSquared)/(1-eccSquared);
 	
@@ -199,14 +196,6 @@ public class CoorConverter {
 
 	public LLCoor UTM2LL(int ReferenceEllipsoid, double UTMNorthing, double UTMEasting, String UTMZone)
 	{
-		return UTM2LL(ReferenceEllipsoid, UTMNorthing, UTMEasting, UTMZone, 500000.0,
-					0.0, -123.0, 0.9996, 0.0, 1.0);
-	}
-
-	public LLCoor UTM2LL(int ReferenceEllipsoid, double UTMNorthing, double UTMEasting, String UTMZone,
-						double falseEasting, double falseNorthing, double centralMeridian,
-						double scaleFactor, double latOfOrigin, double unitMeter)
-	{
 		//converts UTM coords to lat/long.  Equations from USGS Bulletin 1532 
 		//East Longitudes are positive, West longitudes are negative. 
 		//North latitudes are positive, South latitudes are negative
@@ -224,20 +213,19 @@ public class CoorConverter {
 		double x, y;
 		int ZoneNumber;
 		char ZoneLetter;
-		int NorthernHemisphere; //1 for northern hemispher, 0 for southern
-		
-		x = UTMEasting - 500000.0; //remove 500,000 meter offset for longitude
+
+        x = UTMEasting - 500000.0; //remove 500,000 meter offset for longitude
 		y = UTMNorthing;
 		
 		//ZoneNumber = strtoul(UTMZone, ZoneLetter, 10);
-		ZoneNumber = new Integer(UTMZone.substring(0, 2)).intValue();//strtoul(UTMZone, ZoneLetter, 10);
+		ZoneNumber = Integer.parseInt(UTMZone.substring(0, 2));//strtoul(UTMZone, ZoneLetter, 10);
 		ZoneLetter = UTMZone.charAt(2);
-		if((ZoneLetter - 'N') >= 0)
-			NorthernHemisphere = 1;//point is in northern hemisphere
-		else
+		if((ZoneLetter - 'N') >= 0) {
+
+        }
+        else
 		{
-			NorthernHemisphere = 0;//point is in southern hemisphere
-			y -= 10000000.0;//remove 10,000,000 meter offset used for southern hemisphere
+            y -= 10000000.0;//remove 10,000,000 meter offset used for southern hemisphere
 		}
 		
 		LongOrigin = (ZoneNumber - 1)*6 - 180 + 3;  //+3 puts origin in middle of zone
@@ -250,8 +238,7 @@ public class CoorConverter {
 		phi1Rad = mu	+ (3*e1/2-27*e1*e1*e1/32)*Math.sin(2*mu) 
 					+ (21*e1*e1/16-55*e1*e1*e1*e1/32)*Math.sin(4*mu)
 					+(151*e1*e1*e1/96)*Math.sin(6*mu);
-		phi1 = phi1Rad*CoorConverter.rad2deg;
-		
+
 		N1 = a/Math.sqrt(1-eccSquared*Math.sin(phi1Rad)*Math.sin(phi1Rad));
 		T1 = Math.tan(phi1Rad)*Math.tan(phi1Rad);
 		C1 = eccPrimeSquared*Math.cos(phi1Rad)*Math.cos(phi1Rad);

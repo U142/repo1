@@ -3,7 +3,6 @@ package no.ums.pas;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.log.swing.LogFrame;
-import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.GPSController;
 import no.ums.pas.core.controllers.HouseController;
@@ -13,8 +12,9 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.mainui.*;
-import no.ums.pas.core.menus.FileMenuActions;
 import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.StatusActions;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.storage.StorageController;
@@ -24,6 +24,7 @@ import no.ums.pas.core.ws.WSLogoff;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.ImportPolygon;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapitemProperties;
@@ -31,14 +32,12 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.xml.XmlReader;
 import no.ums.pas.parm.xml.XmlWriter;
-import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.sound.SoundRecorder;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.errorhandling.ErrorGUI;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
@@ -315,6 +314,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public static final Error langErrors = new Error(false);
 	public static String l(String s) {
+        if (true) {
+            return Localization.l(s);
+        }
 		try
 		{
 			if(DEBUGMODE)
@@ -346,6 +348,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public static void setLocale(String country, String language)
 	{
+        Localization.INSTANCE.setLocale(new Locale(country, language));
 		try
 		{
 			locale = new Locale(country, language);
@@ -370,6 +373,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			locale = temp;
 			lang = ResourceBundle.getBundle("no/ums/pas/localization/lang", locale);
 			Locale.setDefault(locale);
+            Localization.INSTANCE.setLocale(locale);
 			if(b_changed)
 				PAS.pasplugin.onLocaleChanged(locale, temp);
 		}
@@ -1484,7 +1488,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			get_mainmenu().revalidate();
 			if(b_from_timer) {
 				System.out.println("New mapsize = " + dim_map.toString());
-				//actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 				get_mappane().load_map(true);//!m_b_firstmap);
 				if(get_eastcontent() != null)
 					get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
@@ -1592,12 +1595,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
 			b_width_exceeded = true;
 		}
-		if(!get_mainmenu().get_selectmenu().get_bar().get_show_houses()) {
+		if(!ViewOptions.TOGGLE_HOUSES.isSelected()) {
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_DISABLED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		} else if(b_width_exceeded) {
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_NO_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		}
-		if(get_mainmenu().get_selectmenu().get_bar().get_show_houses() && !b_width_exceeded) {
+		if(ViewOptions.TOGGLE_HOUSES.isSelected() && !b_width_exceeded) {
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 			pasplugin.onDownloadHouses(get_housecontroller());
 			//get_housecontroller().start_download(true);
@@ -1806,8 +1809,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			get_mappane().resetAllOverlays();
 			WaitForStatusThread thread = null;
 			System.out.println("Close project");
-			get_mainmenu().get_selectmenu().enableStatusExport(false);
-			boolean b_confirmed_close = true;
+            StatusActions.EXPORT.setEnabled(false);
+            boolean b_confirmed_close = true;
 
 			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
 				if(JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {

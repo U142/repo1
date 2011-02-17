@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_22" class="java.beans.XMLDecoder"> 
+ <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundlePackage</string> 
+   <string>no.ums.pas.localization</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>lang</string> 
+  </void> 
+  <void property="contentType"> 
+   <string>form/swing</string> 
+  </void> 
+  <void property="root"> 
+   <object class="com.jformdesigner.model.FormRoot"> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormContainer"> 
+      <string>javax.swing.JPanel</string> 
+      <object class="com.jformdesigner.model.FormLayoutManager"> 
+       <class>org.jdesktop.layout.GroupLayout</class> 
+       <void method="setProperty"> 
+        <string>$horizontalGroup</string> 
+        <string>par l {seq {par l:::p {comp mapDimHeading1::l::125:x:1, comp mapDimHeading2::l:::x:1, comp downloadHeading::l:::x:1, comp utmHeading::l:::x:1, comp headingLonLat::l:::x:1, comp headingXY::l:::x:1}, space :p:12:p, par l {seq {comp pixelX:::p:75:p, space :p:5:p, comp pixelY:::p:114:p}, seq {comp lonTime:::p:75:p, space :p:5:p, comp latTime:::p:114:p}, seq {comp lonDegree:::p:75:p, space :p:5:p, comp latDegree:::p:114:p}, seq {comp utmNorthing:::p:75:p, space :p:5:p, comp utmEasting:::p:114:p, space :5:5:5, comp utmZone:::p:60:p}, seq {comp mapDimPixelX:::p:75:p, space :p:5:p, comp mapDimPixelY:::p:114:p}, seq {comp mapDimMeterX:::p:75:p, space :p:5:p, comp mapDimMeterY:::p:114:p}, comp downloadStatus::l:p:75:p}, space :p:4:p}}</string> 
+       </void> 
+       <void method="setProperty"> 
+        <string>$verticalGroup</string> 
+        <string>par l {seq {par l {comp pixelY:::p::p, comp pixelX:::p::p, comp headingXY:::p::p}, space :::p, par l {seq {par l {comp latTime:::p::p, comp lonTime:::p::p}, space :::p, par l {comp latDegree:::p::p, comp lonDegree:::p::p}}, comp headingLonLat:::p::p}, space :::p, par l {comp utmEasting:::p::p, comp utmZone:::p::p, comp utmNorthing:::p::p, comp utmHeading:::p::p}, space :::p, par l {comp mapDimPixelY:::p::p, comp mapDimPixelX:::p::p, comp mapDimHeading1:::p::p}, space :::p, par l {comp mapDimMeterY:::p::p, comp mapDimMeterX:::p::p, comp mapDimHeading2:::p::p}, space :::p, par l {comp downloadHeading:::p::p, comp downloadStatus::l:p::p}}}</string> 
+       </void> 
+      </object> 
+      <void method="setProperty"> 
+       <string>border</string> 
+       <object class="javax.swing.border.TitledBorder"> 
+        <null/> 
+        <string>i18nKey=main_infotab_map_information</string> 
+        <int>4</int> 
+        <int>2</int> 
+        <object class="com.jformdesigner.model.SwingDerivedFont"> 
+         <null/> 
+         <int>1</int> 
+         <int>1</int> 
+         <boolean>false</boolean> 
+        </object> 
+        <null/> 
+       </object> 
+      </void> 
+      <void property="name"> 
+       <string>this</string> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_xy_coors</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>headingXY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>pixelX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>pixelY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>common_lon</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>headingLonLat</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>lonTime</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>latTime</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>lonDegree</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>latDegree</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>common_utm</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>utmHeading</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmNorthing</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmEasting</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmZone</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_mapdimensions</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>mapDimHeading1</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimPixelX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimPixelY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_mapdimensions</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>mapDimHeading2</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimMeterX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimMeterY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_housedownload</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>downloadHeading</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>downloadStatus</string> 
+        </void> 
+       </object> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>0</int> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>size</string> 
+       <object class="java.awt.Dimension"> 
+        <int>400</int> 
+        <int>155</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_22" class="java.beans.XMLDecoder"> 
+ <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundlePackage</string> 
+   <string>no.ums.pas.localization</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>lang</string> 
+  </void> 
+  <void property="contentType"> 
+   <string>form/swing</string> 
+  </void> 
+  <void property="root"> 
+   <object class="com.jformdesigner.model.FormRoot"> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormContainer"> 
+      <string>javax.swing.JPanel</string> 
+      <object class="com.jformdesigner.model.FormLayoutManager"> 
+       <class>org.jdesktop.layout.GroupLayout</class> 
+       <void method="setProperty"> 
+        <string>$horizontalGroup</string> 
+        <string>par l {seq {par l:::p {comp mapDimHeading1::l::125:x:1, comp mapDimHeading2::l:::x:1, comp downloadHeading::l:::x:1, comp utmHeading::l:::x:1, comp headingLonLat::l:::x:1, comp headingXY::l:::x:1}, space :p:12:p, par l {seq {comp pixelX:::p:75:p, space :p:5:p, comp pixelY:::p:114:p}, seq {comp lonTime:::p:75:p, space :p:5:p, comp latTime:::p:114:p}, seq {comp lonDegree:::p:75:p, space :p:5:p, comp latDegree:::p:114:p}, seq {comp utmNorthing:::p:75:p, space :p:5:p, comp utmEasting:::p:114:p, space :5:5:5, comp utmZone:::p:60:p}, seq {comp mapDimPixelX:::p:75:p, space :p:5:p, comp mapDimPixelY:::p:114:p}, seq {comp mapDimMeterX:::p:75:p, space :p:5:p, comp mapDimMeterY:::p:114:p}, comp downloadStatus::l:p:75:p}, space :p:4:p}}</string> 
+       </void> 
+       <void method="setProperty"> 
+        <string>$verticalGroup</string> 
+        <string>par l {seq {par l {comp pixelY:::p::p, comp pixelX:::p::p, comp headingXY:::p::p}, space :::p, par l {seq {par l {comp latTime:::p::p, comp lonTime:::p::p}, space :::p, par l {comp latDegree:::p::p, comp lonDegree:::p::p}}, comp headingLonLat:::p::p}, space :::p, par l {comp utmEasting:::p::p, comp utmZone:::p::p, comp utmNorthing:::p::p, comp utmHeading:::p::p}, space :::p, par l {comp mapDimPixelY:::p::p, comp mapDimPixelX:::p::p, comp mapDimHeading1:::p::p}, space :::p, par l {comp mapDimMeterY:::p::p, comp mapDimMeterX:::p::p, comp mapDimHeading2:::p::p}, space :::p, par l {comp downloadHeading:::p::p, comp downloadStatus::l:p::p}}}</string> 
+       </void> 
+      </object> 
+      <void method="setProperty"> 
+       <string>border</string> 
+       <object class="javax.swing.border.TitledBorder"> 
+        <null/> 
+        <string>i18nKey=main_infotab_map_information</string> 
+        <int>4</int> 
+        <int>2</int> 
+        <object class="com.jformdesigner.model.SwingDerivedFont"> 
+         <null/> 
+         <int>1</int> 
+         <int>1</int> 
+         <boolean>false</boolean> 
+        </object> 
+        <null/> 
+       </object> 
+      </void> 
+      <void property="name"> 
+       <string>this</string> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_xy_coors</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>headingXY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>pixelX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>pixelY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>common_lon</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>headingLonLat</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>lonTime</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>latTime</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>lonDegree</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>latDegree</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>common_utm</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>utmHeading</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmNorthing</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmEasting</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>utmZone</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_mapdimensions</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>mapDimHeading1</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimPixelX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimPixelY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_mapdimensions</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>mapDimHeading2</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimMeterX</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>mapDimMeterY</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>main_infotab_housedownload</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>downloadHeading</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void property="name"> 
+         <string>downloadStatus</string> 
+        </void> 
+       </object> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>0</int> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>size</string> 
+       <object class="java.awt.Dimension"> 
+        <int>400</int> 
+        <int>155</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

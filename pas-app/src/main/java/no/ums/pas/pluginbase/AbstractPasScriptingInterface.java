@@ -59,7 +59,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 		System.out.println("***Using Plugins***");
 		System.out.println((this.plugin_AddressSearch = "no.ums.pas.pluginbase.defaults.DefaultAddressSearch"));
 	}
-	
+
 	private void _OSLookup() {
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.indexOf("win")>=0)

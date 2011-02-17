@@ -25,7 +25,12 @@ public abstract class UmsAction implements Action {
     private final String localizedName;
 
     public UmsAction(@Nonnull String localizedName) {
+        this(localizedName, false);
+    }
+
+    public UmsAction(@Nonnull String localizedName, boolean selected) {
         this.localizedName = Preconditions.checkNotNull(localizedName, "localizedName cannot be null");
+        setSelected(selected);
     }
 
     @Override
@@ -57,6 +62,14 @@ public abstract class UmsAction implements Action {
     @Override
     public final boolean isEnabled() {
         return enabled;
+    }
+
+    public final boolean isSelected() {
+        return getValue(SELECTED_KEY) == Boolean.TRUE;
+    }
+
+    public final void setSelected(boolean selected) {
+        putValue(SELECTED_KEY, selected);
     }
 
     @Override

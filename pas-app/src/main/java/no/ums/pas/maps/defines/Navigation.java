@@ -2,6 +2,7 @@ package no.ums.pas.maps.defines;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.ws.pas.tas.UMapPoint;
 
 import java.awt.*;
@@ -540,8 +541,9 @@ public class Navigation {
 		lbo = f_lon - f_dx / 2;
 		rbo = f_lon + f_dx / 2;
 		setNavigation(lbo, rbo, ubo, bbo);
-		if(PAS.get_pas().get_mainmenu().get_selectmenu().get_view_searchpinpoint())
-			PAS.get_pas().get_mappane().set_pinpoint(new MapPointLL(f_lon, f_lat));
+		if(ViewOptions.TOGGLE_SEARCHPOINTS.isSelected()) {
+            PAS.get_pas().get_mappane().set_pinpoint(new MapPointLL(f_lon, f_lat));
+        }
 		load_map();
 		
 	}

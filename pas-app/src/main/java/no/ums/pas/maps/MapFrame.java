@@ -2,11 +2,14 @@ package no.ums.pas.maps;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.popupmenus.PUPolyPoint;
 import no.ums.pas.maps.defines.*;
 import no.ums.pas.ums.errorhandling.Error;
@@ -25,16 +28,8 @@ import java.util.HashMap;
 
 
 public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {
-    //private static final Log logger = UmsLog.getLogger(MapFrame.class);
+    private static final Log log = UmsLog.getLogger(MapFrame.class);
 
-    /**
-	 * 
-	 */
-	
-	
-
-	
-	
 	public class MapOverlay
 	{
 		MapOverlay(String jobid, int layer, JCheckBox ref, String provider)
@@ -342,18 +337,12 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	private ImageIcon m_icon_sethousecoor_company = null;
 	public ImageIcon get_icon_pinpoint() { return m_icon_pinpoint; }
 	public ImageIcon get_icon_adredit() { return m_icon_adredit; }
-	private boolean m_b_drawpinpoint = false;
-	public boolean get_drawpinpoint() { return m_b_drawpinpoint; }
-	public void set_drawpinpoint(boolean b) { m_b_drawpinpoint = b; }
-	
-	private Image img_loader_snake = null;
+
+    private Image img_loader_snake = null;
 	private String m_sz_what_is_loading = "";
 	
 	public boolean get_draw_adredit() {
-		if(get_mode()==MAP_MODE_HOUSEEDITOR_)
-			return true;
-		else
-			return false;
+        return get_mode() == MAP_MODE_HOUSEEDITOR_;
 		
 	}
 	public void setCurrentInhabitant(Inhabitant i) {
@@ -371,8 +360,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void set_mouseoverhouse(ArrayList<HouseItem> i) { m_mouseoverhouse = i; }
 	public void set_pinpoint(MapPointLL p) {
 		m_pinpointll = p;
-		set_drawpinpoint(true);
-	}
+        ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
+    }
 	public void set_adredit(MapPointLL p) {
 		m_adreditll = p;
 	}
@@ -439,94 +428,6 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		//m_tooltip.repaint();
 		
 	}
-	/*public MapFrame(int n_width, int n_height, Navigation nav, HTTPReq http, boolean b_enable_snap)
-	{
-		super();
-		
-		
-		try
-		{
-			//img_loader_snake = ImageLoader.load_icon("ajax-loader.gif").getImage();
-			img_loader_snake = ImageLoader.load_icon("convert_32.png").getImage();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		m_navigation = nav;
-		m_n_mapsite = 0;
-		//this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-		this.setBackground(Color.WHITE);
-		m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
-		m_dimension = new Dimension(n_width, n_height);
-		setSize(m_dimension.width, m_dimension.height);	
-		m_maploader = new MapLoader(this, http);
-		m_current_cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-		this.setPreferredSize(m_dimension);
-		m_polypoint_popup = new PUPolyPoint(PAS.get_pas(), "Menu", this);
-		m_current_mousepos = new Point();
-
-
-		String sz_url = "edit.gif";
-		if(PAS.icon_version==2)
-			sz_url = "brush_16_paint.png";
-		try {
-			Dimension best_size = Toolkit.getDefaultToolkit().getBestCursorSize(16, 16);
-			ImageIcon icon = ImageLoader.load_icon(sz_url);
-			//m_cursor_draw = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH), 
-			//		  new Point(15, 22), "Draw");
-			m_cursor_draw = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH), 
-					  new Point(7, 24), "Draw");
-			//m_cursor_draw = new Cursor(Cursor.CROSSHAIR_CURSOR);
-		} catch(Exception e) { }
-		sz_url = "epicentre_pinpoint.png";
-		try {
-			ImageIcon icon_epicentre = ImageLoader.load_icon(sz_url);
-			m_cursor_epicentre = Toolkit.getDefaultToolkit().createCustomCursor(icon_epicentre.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH),
-					new Point(0,0), "Epicentre");
-		} catch(Exception e) { }
-		String sz_pinpointfile = "pinpoint_blue.png";
-		try {
-			m_icon_pinpoint = ImageLoader.load_icon(sz_pinpointfile);
-		} catch(Exception e) {
-			m_icon_pinpoint = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"Exception in MapFrame",e,1);
-		}
-		try {
-			m_icon_adredit = ImageLoader.load_icon("pinpoint.png");
-		} catch(Exception e) {
-			m_icon_adredit = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
-		}
-		Dimension dim = Toolkit.getDefaultToolkit().getBestCursorSize(10, 10);
-		//System.out.println("Best cursor size " + dim.width + ", " + dim.height);
-		try {
-			m_icon_sethousecoor_private = ImageLoader.load_icon("cursor_private.png");
-			m_cursor_houseeditor_private_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_private.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH), 
-					  							new Point(16, 16), "Private");
-		} catch(Exception e) {
-			m_icon_sethousecoor_private = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
-		}
-		try {
-			m_icon_sethousecoor_company = ImageLoader.load_icon("cursor_company.png");
-			m_cursor_houseeditor_company_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_company.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH),  
-						new Point(16, 16), "Company");
-		} catch(Exception e) {
-			m_icon_sethousecoor_company = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
-		}
-		addComponentListener(this);
-		addMouseWheelListener(this);
-	}*/
 
 	public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap)
 	{
@@ -617,22 +518,18 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		try {
 			m_icon_sethousecoor_private = ImageLoader.load_icon("cursor_private.png");
 			m_cursor_houseeditor_private_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_private.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH), 
-					  							new Point(16, 16), "Private");
+					  							new Point(Math.min(dim.width-1, 16), Math.min(dim.height-1, 16)), "Private");
 		} catch(Exception e) {
+            log.warn("Failed to set custom cursor", e);
 			m_icon_sethousecoor_private = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
 		}
 		try {
 			m_icon_sethousecoor_company = ImageLoader.load_icon("cursor_company.png");
-			m_cursor_houseeditor_company_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_company.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH),  
-						new Point(16, 16), "Company");
+			m_cursor_houseeditor_company_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_company.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH),
+						new Point(Math.min(dim.width-1, 16), Math.min(dim.height-1, 16)), "Company");
 		} catch(Exception e) {
 			m_icon_sethousecoor_company = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
+            log.warn("Failed to set custom cursor", e);
 		}
 		addComponentListener(this);
 		addMouseWheelListener(this);
@@ -649,16 +546,13 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		//setSize(m_dimension.width, m_dimension.height);
 		setPreferredSize(m_dimension);
 	}
-	public void draw_pinpoint(Graphics g) { 
-		if(get_drawpinpoint()) {
-			try
-			{
+	public void draw_pinpoint(Graphics g) {
+        if(ViewOptions.TOGGLE_SEARCHPOINTS.isSelected() && get_pinpointll() != null) {
+			try {
 				MapPoint p = new MapPoint(get_navigation(), get_pinpointll());
 				g.drawImage(get_icon_pinpoint().getImage(), p.get_x() - get_icon_pinpoint().getIconWidth()/2, p.get_y() - get_icon_pinpoint().getIconHeight()/2, get_icon_pinpoint().getIconWidth(), get_icon_pinpoint().getIconHeight(), this);
-			}
-			catch(Exception e)
-			{
-				m_b_drawpinpoint = false;
+			} catch(Exception e) {
+                log.warn("Failed to draw pinpoint", e);
 			}
 		}
 	}

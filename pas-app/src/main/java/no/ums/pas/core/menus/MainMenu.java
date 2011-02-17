@@ -113,31 +113,22 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	{
 		try
 		{
-			//m_btn_search.setVisible(!b);
-			m_selectmenu.get_bar().showNavSearch(!b);
-			//m_btn_houseeditor.setVisible(!b);
-			m_selectmenu.get_bar().showHouseEditor(!b);
+            PAS.pasplugin.getMenuBuilder().updateFileMenu(m_selectmenu.get_bar().get_menu_file(), true, b);
+            boolean showSearch = !b;
+            PAS.pasplugin.getMenuBuilder().updateNavigateMenu(m_selectmenu.get_bar().get_menu_navigate(), showSearch);
+
+            m_selectmenu.get_bar().showHouseEditor(!b);
 			m_selectmenu.get_bar().showHouseSelect(!b);
 			m_selectmenu.get_bar().showMapSelection(true);
-			//m_btn_showhousedetails.setVisible(!b);
+
 			m_btn_zoom_to_world.setVisible(b);
-			//m_selectmenu.get_bar().get_parm().setVisible(!b);
-			m_selectmenu.get_bar().showFileImport(!b);//get_file_import().setVisible(!b);
+
 			m_selectmenu.get_bar().get_fleetcontrol().setVisible(!b);
-			//m_selectmenu.get_bar().get_view().setVisible(!b);
-			m_selectmenu.get_bar().showNewSending(!b);//get_file_new_sending().setVisible(!b);
-			m_selectmenu.get_bar().showNavSearch(!b);//get_search().setVisible(!b);
 			m_selectmenu.get_bar().showViewMenu(!b);
-			m_selectmenu.get_bar().showViewStatusShape(!b);
-			m_selectmenu.get_bar().showViewSearchPinpoint(!b);
-			m_selectmenu.get_bar().showViewHouses(!b);
-			
+
 			m_selectmenu.get_bar().showSettingsMenu(true);
 			m_selectmenu.get_bar().showSettingsShowSettings(true);
 			m_selectmenu.get_bar().showSettingsMessageLib(true);
-			m_selectmenu.get_bar().showStatusMenu(true);
-			m_selectmenu.get_bar().showStatusOpenStatus(true);
-			m_selectmenu.get_bar().showStatusExportStatus(true);
 			m_selectmenu.get_bar().showStatusUpdates(true);
 			m_selectmenu.get_bar().showParmMenu(true);
 			m_selectmenu.get_bar().showParmStart(true);
@@ -422,16 +413,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		PAS.get_pas().get_statuscontroller().export_status();
 	}
 	
-	private void toggle_viewpolygon()
-	{
-		PAS.get_pas().get_statuscontroller().toggle_viewpolygon(m_selectmenu.get_view_polygon());
-	}
-	
-	private void toggle_viewstatuscodes()
-	{
-		PAS.get_pas().get_statuscontroller().get_statuscodeframe().setVisible(m_selectmenu.get_view_statuscodes());
-	}
-	
 	public synchronized void toggle_houseselect(boolean b_activate, boolean b_foreign_source)
 	{
 		//get_pas().add_event("Houseselect activate=" + b_activate);
@@ -479,13 +460,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		}
 		else if("act_statusopen".equals(e.getActionCommand())) { set_statusopen(); }
 		else if("act_statusexport".equals(e.getActionCommand())) { export_status(); }
-		else if("act_togglepolygon".equals(e.getActionCommand())) { toggle_viewpolygon(); }
-		else if("act_view_statuscodes".equals(e.getActionCommand())) { toggle_viewstatuscodes(); }
 		else if("act_houseselect".equals(e.getActionCommand())) { toggle_houseselect(true, false); }
-		else if("act_toggle_showhouses".equals(e.getActionCommand())) {
-			get_selectmenu().get_bar().set_show_houses();
-		}
-		else if("act_gps_open".equals(e.getActionCommand())) { 
+		else if("act_gps_open".equals(e.getActionCommand())) {
 			PAS.get_pas().get_gpscontroller().start_download(false);
 			PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_GPS_LIST_);		
 			get_selectmenu().get_bar().set_gps_autoupdate_invoke(true);
@@ -581,9 +557,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
 			e.setSource(new Boolean(((JCheckBoxMenuItem)e.getSource()).isSelected()));
 			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_force_searchpinpoint".equals(e.getActionCommand())) {
-			get_selectmenu().get_bar().set_searchpinpoint(((Boolean) e.getSource()).booleanValue());
 		}
 		else if("act_refresh_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().actionPerformed(e);

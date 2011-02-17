@@ -14,6 +14,8 @@ import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.FileMenuActions;
 import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
+import no.ums.pas.core.menus.NavigateActions;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
@@ -88,6 +90,32 @@ public class CentricPasScripting extends DefaultPasScripting {
     int CURRENT_TAB = CentricEastContent.PANEL_CENTRICSEND_;
 
     private final AddressSearch addressSearch = new CentricAddressSearch();
+
+    @Override
+    public MenuBuilder getMenuBuilder() {
+        return new MenuBuilder() {
+            @Override
+            public void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode) {
+                menu.removeAll();
+                if (showSending) {
+                    menu.add(FileMenuActions.OPEN_PROJECT);
+                    menu.add(FileMenuActions.CLOSE_PROJECT);
+                    menu.addSeparator();
+                }
+                menu.add(FileMenuActions.EXIT);
+            }
+
+            @Override
+            public void updateNavigateMenu(JMenu menu, boolean showSearch) {
+                menu.removeAll();
+                menu.add(NavigateActions.PAN);
+                menu.add(NavigateActions.ZOOM);
+                if (showSearch) {
+                    menu.add(NavigateActions.SEARCH);
+                }
+            }
+        };
+    }
 
     @Override
     public void startPlugin() {
@@ -268,13 +296,15 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.remove(menu.get_status());
         menu.remove(menu.get_menu_config());
         menu.remove(menu.get_view());
-        menu.get_menu_file().remove(menu.get_item_new_sending());
-        menu.get_menu_file().remove(menu.get_item_file_print_map());
-        menu.get_menu_file().remove(menu.get_item_file_save_map());
-        menu.get_menu_file().remove(menu.get_item_fileimport());
+
         menu.get_status().remove(menu.get_item_status_export());
         menu.get_status().remove(menu.get_item_status_updates());
-        menu.get_view().remove(menu.get_item_view_showhouses());
+
+        // TODO: Better menu init.
+        ViewOptions.TOGGLE_HOUSES.setEnabled(false);
+        ViewOptions.TOGGLE_HOUSES.setSelected(false);
+//        menu.get_view().remove(menu.get_item_view_showhouses());
+//        menu.get_item_view_showhouses().setSelected(false);
 
         //menu.get_item_view_showhouses().setSelected(false);
 
@@ -285,7 +315,6 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         menu_addressbook.add(menu.get_item_address_book());
         menu.get_item_address_book().setEnabled(false);
-        menu.get_item_view_showhouses().setSelected(false);
         menu_trainingmode.add(menu.get_item_training_mode());
 
 

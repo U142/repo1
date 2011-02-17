@@ -53,7 +53,13 @@ public interface PasScriptingInterface {
         MAC,
         UNIX,
     }
-		
+
+    interface MenuBuilder {
+        void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode);
+        void updateNavigateMenu(JMenu menu, boolean showSearch);
+    }
+
+
     /**
      * @author Morten H. Helvig
      * Abstract class for searching addresses
@@ -99,7 +105,7 @@ public interface PasScriptingInterface {
      * Returns the priority for this plugin. Higher priority plugins will be selected over lower priority plugins.
      *
      * Standard plugin will have value {@link Integer#MIN_VALUE}
-     * @return plugin priority in loading.
+     * @return plugin priority in loading.B
      */
     int getPriority();
 
@@ -109,6 +115,8 @@ public interface PasScriptingInterface {
     void startPlugin();
 
     AddressSearch getAddressSearch();
+
+    MenuBuilder getMenuBuilder();
 
     boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
 

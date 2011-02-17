@@ -788,8 +788,7 @@ public class InfoPanel extends GeneralPanel {
 				String sz_zone = "33V";
 				double n_north = 0;
 				double n_east = 0;
-				CoorConverter.UTMCoor c = new CoorConverter().LL2UTM(23, ll
-						.get_lat(), ll.get_lon(), n_north, n_east, sz_zone, 0);
+				CoorConverter.UTMCoor c = new CoorConverter().LL2UTM(23, ll.get_lat(), ll.get_lon());
 				// m_txt_utm.setText(Math.round(c.getEasting()) + "   " +
 				// Math.round(c.getNorthing()) + " " + c.getZone());
 				m_txt_utm_x.setText(no.ums.pas.ums.tools.TextFormat.round(

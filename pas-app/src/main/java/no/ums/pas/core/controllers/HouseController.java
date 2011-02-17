@@ -2,6 +2,7 @@ package no.ums.pas.core.controllers;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.Houses;
 import no.ums.pas.maps.defines.Inhabitant;
@@ -235,7 +236,7 @@ public class HouseController extends Controller {
 		}
 	}
 	public void check_mouseover(int x, int y) {
-		if(PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_show_houses())
+		if(ViewOptions.TOGGLE_HOUSES.isSelected())
 			find_houses_bypix(new Dimension(x, y));
 	}
 	

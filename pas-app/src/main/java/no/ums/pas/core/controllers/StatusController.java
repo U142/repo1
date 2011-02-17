@@ -1,5 +1,7 @@
 package no.ums.pas.core.controllers;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.ComboRow;
@@ -7,6 +9,8 @@ import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.OpenStatusFrame;
 import no.ums.pas.core.mainui.StatusItemList;
 import no.ums.pas.core.mainui.StatuscodeFrame;
+import no.ums.pas.core.menus.StatusActions;
+import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.maps.defines.HouseItem;
@@ -42,18 +46,12 @@ import java.util.List;
 
 public class StatusController extends Controller implements ActionListener {
 
+    private static final Log log = UmsLog.getLogger(StatusController.class);
+
 	public StatusController() {
 		super();
 		m_statuscodeframe = new StatuscodeFrame();
 		m_n_autoupdate_seconds = 5;
-
-		try {
-			m_b_viewpolygon = PAS.get_pas().get_mainmenu().get_selectmenu()
-					.get_view_polygon();
-		} catch (Exception e) {
-			// Just ignore, this just happens when pas is loading
-		}
-
 	}
 
 	public static final String STATUS_1 = PAS
@@ -156,14 +154,8 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	/* STATUS DATA */
-	// private ArrayList m_statusitems = null;
 	private StatusCodeList m_statuscodes = null;
 	private NavStruct m_nav_init = null;
-	// private PolygonStruct m_polygon = null;
-	// private ArrayList m_arr_polygons = null;
-
-	/* VIEW PROPERTIES */
-	private boolean m_b_viewpolygon = true;
 
 	public OpenStatusFrame get_statusframe() {
 		return m_statuslistframe;
@@ -594,10 +586,9 @@ public class StatusController extends Controller implements ActionListener {
 												 */) {
 		get_statuscodeframe().fill();
 		get_houses().sort_houses(get_items(), true);
-		PAS.get_pas().get_mainmenu().get_selectmenu().enable_viewstatuscodes(
-				true);
-		PAS.get_pas().get_mainmenu().get_selectmenu().enableStatusExport(true);
-		PAS.get_pas().get_drawthread().set_neednewcoors(true);
+        ViewOptions.TOGGLE_STATUSCODES.putValue(Action.SELECTED_KEY, true);
+        StatusActions.EXPORT.setEnabled(true);
+        PAS.get_pas().get_drawthread().set_neednewcoors(true);
 		set_visibility();
 		PAS.get_pas().kickRepaint();
 
@@ -610,10 +601,6 @@ public class StatusController extends Controller implements ActionListener {
 		int n_totitem = 0;
 		int n_processed = 0;
 
-		int n_addressbased_pending = 0;
-		int n_addressbased_sending = 0;
-		int n_addressbased_finished = 0;
-		
 		for (int i = 0; i < get_sendinglist().size(); i++) {
 			// main properties
 			
@@ -669,62 +656,52 @@ public class StatusController extends Controller implements ActionListener {
 
 	public synchronized void set_visibility() {
 		boolean b_found;
-		int n_inhabcount = 0;
-		int n_visible = 0;
-		int n_total = 0;
 		if (get_houses() == null)
 			return;
 		if (get_houses().get_houses() == null)
 			return;
 
 		for (int j = 0; j < get_houses().get_houses().size(); j++) {
-			((HouseItem) get_houses().get_houses().get(j))
+			get_houses().get_houses().get(j)
 					.reset_current_visible_inhab();
 			b_found = false;
 			int n_occurances = 0;
 			boolean b_alert = false;
 			for (int i = 0; i < get_statuscodes().size(); i++) {
-				n_occurances = ((HouseItem) get_houses().get_houses().get(j))
-						.find_statuscode(((StatusCode) get_statuscodes().get(i))
-								.get_code());
+				n_occurances = get_houses().get_houses().get(j)
+						.find_statuscode(get_statuscodes().get(i)
+                                .get_code());
 				if (n_occurances > 0) {
-					// ((HouseItem)get_houses().get_houses().get(j)).set_visible(
-					// ((StatusCode)get_statuscodes().get(i)).get_visible() );
-					if (((StatusCode) get_statuscodes().get(i)).get_visible()) {
+					if (get_statuscodes().get(i).get_visible()) {
 						if (!b_found) // active color of the highest rang
-							((HouseItem) get_houses().get_houses().get(j))
-									.set_active_color(((StatusCode) get_statuscodes()
-											.get(i)).get_color());
+							get_houses().get_houses().get(j)
+									.set_active_color(get_statuscodes()
+                                            .get(i).get_color());
 						b_found = true;
-						((HouseItem) get_houses().get_houses().get(j))
+						get_houses().get_houses().get(j)
 								.inc_current_visible_inhab(n_occurances);
-						n_visible += n_occurances;
-						if (((StatusCode) get_statuscodes().get(i)).get_alert())
+						if (get_statuscodes().get(i).get_alert())
 							b_alert = true;
 					}
 				}
 			}
-			((HouseItem) get_houses().get_houses().get(j)).set_alert(b_alert);
-			n_inhabcount += ((HouseItem) get_houses().get_houses().get(j))
-					.get_inhabitantcount();
-			((HouseItem) get_houses().get_houses().get(j)).set_visible(b_found);
+			get_houses().get_houses().get(j).set_alert(b_alert);
+			get_houses().get_houses().get(j).set_visible(b_found);
 		}
 		set_visibility_change(false);
 	}
 
 	public void drawItems(Graphics gfx) {
-		int n_totalvisiblehouses = 0;
-		int n_totalvisiblestatusitems = 0;
 		if (get_sendinglist() != null) {
 			for (int i = 0; i < get_sendinglist().size(); i++) {
 				ShapeStruct shape = get_sendinglist().get_sending(i)
 						.get_shape();
-				if (m_b_viewpolygon) {
+				if (ViewOptions.TOGGLE_POLYGON.isSelected()) {
 					try {
 						shape.draw(gfx, Variables.getNavigation(), false,
 								true, false, null);
 					} catch (Exception e) {
-
+                        log.warn("Failed to update drawing", e);
 					}
 				}
 			}
@@ -967,11 +944,6 @@ public class StatusController extends Controller implements ActionListener {
 		get_houses().calcHouseCoords();
 	}
 
-	public void toggle_viewpolygon(boolean b_view) {
-		m_b_viewpolygon = b_view;
-		PAS.get_pas().kickRepaint();
-	}
-
 	public void drawItem(StatusItemObject cur, Graphics gfx) {
 		gfx.setColor(Color.red); // new Color((float)1.0, (float)0.0,
 									// (float)0.0, (float)0.5));
@@ -1070,30 +1042,11 @@ public class StatusController extends Controller implements ActionListener {
 		if(isClosed())
 			return;
 		set_updates_in_progress(true);
-		// PAS.get_pas().get_eastcontent().get_statuspanel().setMainStatusText("(updating)");
-		PAS.get_pas().get_eastcontent().get_statuspanel().setStatusUpdating(
-				true);
+		PAS.get_pas().get_eastcontent().get_statuspanel().setStatusUpdating(true);
 		exec_statusitems(get_statusframe(), b_auto);
-		// if(!b_auto)
-		// PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().set_status_autoupdate_invoke(true);
 	}
 
 	public void export_status() {
-		/*new Status.StatusExport(PAS.get_pas().get_current_project()).show(PAS
-				.get_pas(), PAS.get_pas().get_lookandfeel(),
-				(StatusItemList) m_items, m_statuscodes);*/
-		/*try{
-			csvexporter csve = new csvexporter(get_statuscodeframe(),"");
-			
-			for(int i=0;i<m_lba_total_tabbed..get_panel().get_statusframe().get_controller().get_items().size();++i){
-				csve.addLine(new Object[] { m_statuscodes.get(i).get_code(), m_statuscodes.get(i).get_status(), m_statuscodes.get(i).get_current_count() });
-			}
-			csve.Save();
-		}
-		catch(Exception e){
-			return;
-		}*/
-		// m_lba_total_tabbed.getListCC().m_tbl.
 		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
 			m_lba_total_tabbed.getListCC().exportToCSV();
 		else {
@@ -1108,8 +1061,6 @@ public class StatusController extends Controller implements ActionListener {
 				m_lba_total_tabbed.getListCC().exportToCSV();
 			}
 		}
-		
-		//m_statuslistframe.get_statuspanel().exportToCSV();
 	}
 	
 	public void trainingModeChanged()

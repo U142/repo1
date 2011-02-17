@@ -95,8 +95,7 @@ public class MapPanel extends JPanel implements ActionListener {
 		add(m_mapframe, BorderLayout.CENTER);
 		add(jtbToolbar, BorderLayout.NORTH);
 
-		actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
-				"act_loadmap"));
+		actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 		// m_mapframe.set_mode(MapFrame.MAP_MODE_ZOOM);
 		m_mapframe.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 	}
