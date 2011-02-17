@@ -6,6 +6,7 @@ import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.cellbroadcast.CCode;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
+import no.ums.pas.core.menus.OtherActions;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISRecord;
 import no.ums.pas.maps.MapFrame;
@@ -1973,7 +1974,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	// Brukes sammen med userprofile for å sette restriksjoner ved lave tilgangsnivåer
 	public void checkRightsManagement() {
 		if(!PAS.get_pas().get_rightsmanagement().read_parm()) { // Da må vi lukke programmet
-			PAS.get_pas().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
+			OtherActions.PARM_CLOSE.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
 		}
 		else { // Skal kun a lese tilgang
 			treeCtrl.get_treegui().getMenuNew().setEnabled(false);

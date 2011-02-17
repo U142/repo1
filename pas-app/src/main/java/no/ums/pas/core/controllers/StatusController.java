@@ -4,7 +4,6 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
-import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.OpenStatusFrame;
 import no.ums.pas.core.mainui.StatusItemList;
@@ -427,53 +426,17 @@ public class StatusController extends Controller implements ActionListener {
 
 	public synchronized void status_update() {
 		if (b_newrefno) {
-			// set_nav_init(get_xmlstatusitems().get_statusitemsthread().get_nav_init());
-			// set_polygon(get_xmlstatusitems().get_statusitemsthread().get_polygon());
-			// set_polygonlist(get_xmlstatusitems().get_statusitemsthread().get_polygonlist());
-			// get_sendinglist().clear();
-
 			PAS.get_pas().get_eastcontent().flip_to(
 					EastContent.PANEL_STATUS_LIST);
 			b_newrefno = false;
-			{
-				//PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().set_show_houses_invoke(false);
-				PAS.get_pas().get_mainmenu().get_selectmenu().get_bar()
-						.set_status_autoupdate_invoke(true);
-			}
 			PAS.get_pas().get_inhabitantframe().clear();
-		} else {
-			// if(get_polygons()!=null) {
-			// if(get_xmlstatusitems().get_statusitemsthread().get_polygonlist()!=null)
-			// {
-			// if(get_polygons().size() <
-			// get_xmlstatusitems().get_statusitemsthread().get_polygonlist().size())
-			// {
-			// set_polygonlist(get_xmlstatusitems().get_statusitemsthread().get_polygonlist());
-			// if(JOptionPane.showConfirmDialog(null, "A new sending has been
-			// added to the project. Zoom to view all?", "View full area?",
-			// JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
-			// set_nav_init(get_xmlstatusitems().get_statusitemsthread().get_nav_init());
-			// }
-			// }
-			// }
-			// }
 		}
-		// set_statusitems(get_xmlstatusitems().get_statusitemsthread().get_statusitems(),
-		// get_xmlstatusitems().get_statusitemsthread().get_statuscodes());
-		try {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						set_statusitems();
-						onDownloadFinished();
-					} catch (Exception e) {
-
-					}
-				}
-			});
-		} catch (Exception e) {
-
-		}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                set_statusitems();
+                onDownloadFinished();
+            }
+        });
 	}
 
 	private void inc_alertborder() {
@@ -1050,14 +1013,9 @@ public class StatusController extends Controller implements ActionListener {
 		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
 			m_lba_total_tabbed.getListCC().exportToCSV();
 		else {
-			if(m_items.size()>0 && m_statuscodes.get_total()>0)
-				new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(PAS
-					.get_pas(), PAS.get_pas().get_lookandfeel(),
-					(StatusItemList) m_items, m_statuscodes);
-			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null && 
-					(PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() == 0 ||
-					((StatusSending)((ComboRow)PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedItem()).getId()).get_type() == 4)){ // Villt tungvint måte å finne ut om statusfilteret er LBA
-				
+			new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(
+                    PAS .get_pas(), PAS.get_pas().get_lookandfeel(), (StatusItemList) m_items, m_statuscodes);
+			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null) {
 				m_lba_total_tabbed.getListCC().exportToCSV();
 			}
 		}

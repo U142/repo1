@@ -7,6 +7,7 @@ import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.SettingsGUI;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.StatusPanel;
+import no.ums.pas.core.menus.OtherActions;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.SubstanceMenuItem;
@@ -460,85 +461,16 @@ public class PASActions implements ActionListener {
 		else if("set_houseeditor_coor".equals(e.getActionCommand())) {
 			PAS.get_pas().get_eastcontent().get_houseeditor().reinit((MapPoint)e.getSource(), PAS.get_pas().get_mappane().get_mouseoverhouse());			
 		}
-		else if("act_start_parm".equals(e.getActionCommand())) {
-			if(PAS.get_pas().get_parmcontroller()==null && PAS.isParmOpen() == false) {
-				//parm_open = true;
-				//PAS.get_pas().m_parmcontroller = new ParmController(get_sitename(), get_userinfo());
-				PAS.setParmOpen(PAS.pasplugin.onStartParm());
-			}
-		}
 		else if("act_restart_parm".equals(e.getActionCommand())) {
 			PAS.get_pas().close_parm(false);
 			PAS.setParmOpen(false);//parm_open = false;
-			actionPerformed(new ActionEvent(new String(""), ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-		}
-		else if("act_refresh_parm".equals(e.getActionCommand())) {
-			PAS.pasplugin.onRefreshParm();
-			//PAS.get_pas().get_parmcontroller().getUpdateXML().saveProject();
-		}
-		else if("act_close_parm".equals(e.getActionCommand())) {
-			PAS.pasplugin.onCloseParm();
-			//PAS.get_pas().close_parm(false);
+            OtherActions.PARM_START.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_start_parm"));
 		}
 		else if("act_maildelivery_success".equals(e.getActionCommand())) {
 			System.out.println("MailCtrl reported success (Code: " + (Integer)e.getSource() + ")");
 		}
 		else if("act_maildelivery_failed".equals(e.getActionCommand())) {
 			System.out.println("MailCtrl reported failure (Error: " + (Integer)e.getSource() + ")");
-		}
-		else if("act_messagelib".equals(e.getActionCommand()))
-		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					new MessageLibDlg(PAS.get_pas());
-					
-				}
-			});
-		}
-		else if("act_show_settings".equals(e.getActionCommand())) {
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					SettingsGUI sGui = new SettingsGUI(PAS.get_pas());
-					if(PAS.get_pas().get_settings()!= null) {
-						if(PAS.get_pas().get_settings().getUsername().length()<1)
-							sGui.getM_txt_username().setText(PAS.get_pas().get_userinfo().get_userid());
-						else
-							sGui.getM_txt_username().setText(PAS.get_pas().get_settings().getUsername());
-						if(PAS.get_pas().get_settings().getCompany().length()<1)
-							sGui.getM_txt_company().setText(PAS.get_pas().get_userinfo().get_compid());
-						else
-							sGui.getM_txt_company().setText(PAS.get_pas().get_settings().getCompany());
-						if(PAS.get_pas().get_settings().parm())
-							sGui.getM_chk_start_parm().setSelected(true);
-						else
-							sGui.getM_chk_start_parm().setSelected(false);
-						/*if(PAS.get_pas().get_settings().fleetcontrol())
-							sGui.getM_chk_start_fleetcontrol().setSelected(true);
-						else
-							sGui.getM_chk_start_fleetcontrol().setSelected(false);*/
-						sGui.getM_txt_lba_refresh().setText(String.valueOf(PAS.get_pas().get_settings().getLbaRefresh()));
-						//if(PAS.get_pas().get_settings().getMapServer())
-						sGui.setMapServer(PAS.get_pas().get_settings().getMapServer());
-						sGui.setWmsUser(PAS.get_pas().get_settings().getWmsUsername());
-						sGui.setWmsPassword(PAS.get_pas().get_settings().getWmsPassword());
-						sGui.setWmsSite(PAS.get_pas().get_settings().getWmsSite());
-						if(PAS.get_pas().get_settings().getPanByDrag())
-							sGui.getM_btn_pan_by_drag().doClick();
-						else
-							sGui.getM_btn_pan_by_click().doClick();
-					}
-					if(PAS.get_pas().get_userinfo().get_mailaccount() != null) {
-						sGui.getM_txt_mail_displayname().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_displayname());
-						sGui.getM_txt_mail_address().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_mailaddress());
-						sGui.getM_txt_mail_outgoing().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_mailserver());
-					}
-				}
-			});
-				
 		}
 		else if("act_visualsettings_downloaded".equals(e.getActionCommand())) {
 			UPASUISETTINGS ui = (UPASUISETTINGS)e.getSource();
@@ -636,69 +568,7 @@ public class PASActions implements ActionListener {
 	
 	public void deptChanged() {
 		PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
-		//PAS.pasplugin.onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
-
-		
-		/*if(!PAS.get_pas().get_rightsmanagement().read_parm()) {
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_parm().setEnabled(false);
-			if(PAS.isParmOpen())//if(PAS.get_pas().get_parmcontroller() != null)
-				PAS.get_pas().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
-		}
-		else if(PAS.get_pas().get_rightsmanagement().read_parm() && PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() != 4) {
-			if(PAS.get_pas().get_parmcontroller()==null && PAS.get_pas().get_settings().parm()) {
-				actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-			}	
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_parm().setEnabled(true);
-		}
-		if(!PAS.get_pas().get_rightsmanagement().read_fleetcontrol()) {
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_fleetcontrol().setEnabled(false);
-		}
-		else
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_fleetcontrol().setEnabled(true);
-		
-		if(PAS.get_pas().get_rightsmanagement().cansend() || PAS.get_pas().get_rightsmanagement().cansimulate()) {
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showNewProject(true); //get_file_new_project().setEnabled(true);
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showNewSending(true);//get_file_new_sending().setEnabled(true);
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showFileImport(true);//get_file_import().setEnabled(true);
-		}
-		else {
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showNewProject(false); //get_file_new_project().setEnabled(false);
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showNewSending(false); //.setEnabled(false);
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().showFileImport(false);//get_file_import().setEnabled(false);
-			PAS.get_pas().close_active_project(true, true);
-		}
-		switch(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights())
-		{
-		case 0:
-			//none
-			System.exit(0);
-			break;
-		case 1:
-		case 2:
-			PAS.get_pas().get_mainmenu().setTASMode(false);
-			PAS.get_pas().setAppTitle("");
-			PAS.get_pas().get_eastcontent().remove_tab(EastContent.PANEL_TAS_);
-			PAS.get_pas().m_mainmenu.enable_mapsite(true);
-			break;
-		case 4: //TAS
-			PAS.get_pas().get_mainmenu().setTASMode(true);
-			PAS.get_pas().setAppTitle("UMS - " + PAS.l("main_tas_appname"));
-			PAS.get_pas().get_eastcontent().InitTAS();
-			PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_TAS_);
-			PAS.get_pas().m_mainmenu.enable_mapsite(false);
-			break;
-		}
-	
-		
-		if(PAS.get_pas().get_rightsmanagement().status())
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_status().setEnabled(true);
-		else
-			PAS.get_pas().m_mainmenu.get_selectmenu().get_bar().get_status().setEnabled(false);	
-		
-		//if(PAS.get_pas().get_rightsmanagement().houseeditor()>=1)
-		PAS.get_pas().m_mainmenu.setHouseeditorEnabled((PAS.get_pas().get_rightsmanagement().houseeditor()>=1 ? true : false));
-		*/
-	}	
+	}
 }
 
 

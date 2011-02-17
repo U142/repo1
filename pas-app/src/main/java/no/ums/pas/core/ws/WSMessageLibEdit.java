@@ -36,27 +36,17 @@ public class WSMessageLibEdit extends WSThread
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
 		logon.setSessionid(ui.get_sessionid());
-		UBBMESSAGELISTFILTER filter = of.createUBBMESSAGELISTFILTER();
-		//filter.setNTimefilter(n_servertimestamp);
 		java.net.URL wsdl;
 		try
 		{			
 			wsdl = new java.net.URL(vars.WSDL_PAS);
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			m_msg = new Pasws(wsdl, service).getPaswsSoap12().insertMessageLibrary(logon, m_msg);
-			//list = new Pasws(wsdl, service).getPaswsSoap12().getMessageLibrary(logon, filter);
 		}
 		catch(Exception e)
 		{
-			//Error.getError().addError(PAS.l("common_error"), "Error saving message library", e, Error.SEVERITY_ERROR);
 			m_msg.setBValid(false);
-			//list = new UBBMESSAGELIST();
-			//list.setNServertimestamp(-1);
 		}
-		finally
-		{
-			//onDownloadFinished();
-		}		
 	}
 
 	@Override

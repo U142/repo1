@@ -11,15 +11,13 @@ import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
-import no.ums.pas.core.menus.FileMenuActions;
-import no.ums.pas.core.menus.MainMenu;
+import no.ums.pas.core.menus.*;
 import no.ums.pas.core.menus.MainSelectMenu.MainMenuBar;
-import no.ums.pas.core.menus.NavigateActions;
-import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.WMSLayerSelectorPanel;
 import no.ums.pas.maps.defines.Navigation;
@@ -46,6 +44,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class CentricPasScripting extends DefaultPasScripting {
@@ -87,35 +86,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     }
 
-    int CURRENT_TAB = CentricEastContent.PANEL_CENTRICSEND_;
-
     private final AddressSearch addressSearch = new CentricAddressSearch();
-
-    @Override
-    public MenuBuilder getMenuBuilder() {
-        return new MenuBuilder() {
-            @Override
-            public void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode) {
-                menu.removeAll();
-                if (showSending) {
-                    menu.add(FileMenuActions.OPEN_PROJECT);
-                    menu.add(FileMenuActions.CLOSE_PROJECT);
-                    menu.addSeparator();
-                }
-                menu.add(FileMenuActions.EXIT);
-            }
-
-            @Override
-            public void updateNavigateMenu(JMenu menu, boolean showSearch) {
-                menu.removeAll();
-                menu.add(NavigateActions.PAN);
-                menu.add(NavigateActions.ZOOM);
-                if (showSearch) {
-                    menu.add(NavigateActions.SEARCH);
-                }
-            }
-        };
-    }
 
     @Override
     public void startPlugin() {
@@ -288,39 +259,27 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onAddMainSelectMenu(MainMenuBar menu) {
-        super.onAddMainSelectMenu(menu);
-        menu.remove(menu.get_menu_navigate());
-        menu.remove(menu.get_dept());
-        menu.remove(menu.get_menu_layout());
-        menu.remove(menu.get_parm());
-        menu.remove(menu.get_status());
-        menu.remove(menu.get_menu_config());
-        menu.remove(menu.get_view());
-
-        menu.get_status().remove(menu.get_item_status_updates());
-
-        // TODO: Better menu init.
-        ViewOptions.TOGGLE_HOUSES.setEnabled(false);
+        StatusActions.EXPORT.setEnabled(false);
         ViewOptions.TOGGLE_HOUSES.setSelected(false);
-//        menu.get_view().remove(menu.get_item_view_showhouses());
-//        menu.get_item_view_showhouses().setSelected(false);
 
-        //menu.get_item_view_showhouses().setSelected(false);
+        final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
+        file.add(FileMenuActions.NEW_SENDING);
+        file.add(FileMenuActions.OPEN_PROJECT);
+        file.add(FileMenuActions.CLOSE_PROJECT);
+        file.addSeparator();
+        file.add(FileMenuActions.FILE_IMPORT);
+        file.add(FileMenuActions.PRINT_MAP);
+        file.add(FileMenuActions.SAVE_MAP);
+        file.add(FileMenuActions.EXIT);
 
-        //menu.get_item_address_book().setMaximumSize(new Dimension(menu.get_item_address_book().getPreferredSize().width, menu.get_item_address_book().getMaximumSize().height));
-        //menu.get_item_training_mode().setMaximumSize(new Dimension(menu.get_item_training_mode().getPreferredSize().width, menu.get_item_training_mode().getMaximumSize().height));
-        menu.add((menu_addressbook = new JMenu(PAS.l("common_address_book"))));
-        menu.add((menu_trainingmode = new JMenu(PAS.l("mainmenu_trainingmode"))));
-
-        menu_addressbook.add(menu.get_item_address_book());
+        JMenu addressBook = menu.add(new JMenu(Localization.l("common_address_book")));
+        addressBook.add(menu.get_item_address_book());
         menu.get_item_address_book().setEnabled(false);
         menu_trainingmode.add(menu.get_item_training_mode());
 
-
-        menu.add(menu.get_menu_help());
-
-
-        //menu.set_show_houses_invoke(false);
+        final JMenu help = menu.add(new JMenu(Localization.l("mainmenu_help")));
+        help.add(OtherActions.HELP_ABOUT);
+        help.add(OtherActions.SHOW_CONTACT_INFO);
         return true;
     }
 

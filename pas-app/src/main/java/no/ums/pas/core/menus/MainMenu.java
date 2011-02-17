@@ -13,6 +13,7 @@ import org.jvnet.substance.SubstanceImageCreator;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
@@ -111,38 +112,18 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	
 	public void setTASMode(boolean b)
 	{
-		try
-		{
-            PAS.pasplugin.getMenuBuilder().updateFileMenu(m_selectmenu.get_bar().get_menu_file(), true, b);
-            boolean showSearch = !b;
-            PAS.pasplugin.getMenuBuilder().updateNavigateMenu(m_selectmenu.get_bar().get_menu_navigate(), showSearch);
+        NavigateActions.SEARCH.setEnabled(!b);
 
-            m_selectmenu.get_bar().showHouseEditor(!b);
-			m_selectmenu.get_bar().showHouseSelect(!b);
-			m_selectmenu.get_bar().showMapSelection(true);
+        m_selectmenu.get_bar().showHouseEditor(!b);
+        m_selectmenu.get_bar().showHouseSelect(!b);
+        m_selectmenu.get_bar().showMapSelection(true);
 
-			m_btn_zoom_to_world.setVisible(b);
+        m_btn_zoom_to_world.setVisible(b);
 
-			m_selectmenu.get_bar().get_fleetcontrol().setVisible(!b);
-			m_selectmenu.get_bar().showViewMenu(!b);
-
-			m_selectmenu.get_bar().showSettingsMenu(true);
-			m_selectmenu.get_bar().showSettingsShowSettings(true);
-			m_selectmenu.get_bar().showSettingsMessageLib(true);
-			m_selectmenu.get_bar().showStatusUpdates(true);
-			m_selectmenu.get_bar().showParmMenu(true);
-			m_selectmenu.get_bar().showParmStart(true);
-			m_selectmenu.get_bar().showParmRefresh(true);
-			m_selectmenu.get_bar().showParmClose(true);
-			m_selectmenu.get_bar().showDepartmentMenu(true);
-			m_selectmenu.get_bar().showLayoutMenu(true);
-		}
-		catch(Exception e)
-		{
-			
-		}
-		
-		
+        ViewOptions.TOGGLE_HOUSES.setEnabled(!b);
+        ViewOptions.TOGGLE_POLYGON.setEnabled(!b);
+        ViewOptions.TOGGLE_SEARCHPOINTS.setEnabled(!b);
+        ViewOptions.TOGGLE_STATUSCODES.setEnabled(!b);
 	}
 	
 	//private String[] m_mapsites = { "Scandinavia", "Germany", "Norway", "Oslo" };
@@ -461,58 +442,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		else if("act_statusopen".equals(e.getActionCommand())) { set_statusopen(); }
 		else if("act_statusexport".equals(e.getActionCommand())) { export_status(); }
 		else if("act_houseselect".equals(e.getActionCommand())) { toggle_houseselect(true, false); }
-		else if("act_gps_open".equals(e.getActionCommand())) {
-			PAS.get_pas().get_gpscontroller().start_download(false);
-			PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_GPS_LIST_);		
-			get_selectmenu().get_bar().set_gps_autoupdate_invoke(true);
-		}
-		else if("act_gps_trail_minutes".equals(e.getActionCommand())) { 
-			int n_value = new Integer(((CheckItem)e.getSource()).get_value().toString()).intValue();
-			PAS.get_pas().get_gpscontroller().set_trail_minutes(n_value);
-			PAS.get_pas().add_event("GPS trail set to " + ((CheckItem) e.getSource()).getText() + " (" + ((CheckItem) e.getSource()).get_value() + " minutes)", null);
-		}
-		else if("act_gps_updatemethod".equals(e.getActionCommand())) {
-			CheckItem item = (CheckItem)e.getSource();
-			if(item.get_value().toString().equals("manual")) {
-				get_selectmenu().get_bar().get_gpsupdateseconds_checklist().enable_all(false);
-				PAS.get_pas().get_gpscontroller().set_autoupdate(false);
-				PAS.get_pas().add_event("GPS: Manual updates activated", null);
-			} else if(item.get_value().toString().equals("auto")) {
-				get_selectmenu().get_bar().get_gpsupdateseconds_checklist().enable_all(true);
-				PAS.get_pas().get_gpscontroller().set_autoupdate(true);
-				PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_GPS_LIST_);
-				PAS.get_pas().add_event("GPS: Automatic updates activated", null);
-			}
-		}
 		else if("act_gps_new".equals(e.getActionCommand())) {
 			PAS.get_pas().get_gpscontroller().reg_mapobj(null);
-		}
-		else if("act_gps_updateseconds".equals(e.getActionCommand())) {
-			CheckItem item = ((CheckItem)e.getSource());
-			PAS.get_pas().get_gpscontroller().set_autoupdate_seconds(((Integer)item.get_value()).intValue());
-			PAS.get_pas().add_event("GPS: Automatic updates set to every " + item.getText(), null);
-		}
-		else if("act_status_updatemethod".equals(e.getActionCommand())) {
-			CheckItem item = (CheckItem)e.getSource();
-			if(item.get_value().toString().equals("manual")) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-						get_selectmenu().get_bar().get_statusupdateseconds_checklist().enable_all(false);
-						PAS.get_pas().get_statuscontroller().set_autoupdate(false);
-						PAS.get_pas().add_event("Status: Manual updates activated", null);
-					}
-				});
-			} else if(item.get_value().toString().equals("auto")) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-						get_selectmenu().get_bar().get_statusupdateseconds_checklist().enable_all(true);
-						PAS.get_pas().get_statuscontroller().set_autoupdate(true);
-						PAS.get_pas().add_event("Status: Automatic updates activated", null);
-					}
-				});
-			}
 		}
 		else if("act_status_updateseconds".equals(e.getActionCommand())) {
 			CheckItem item = ((CheckItem)e.getSource());
@@ -556,21 +487,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		}
 		else if("act_show_searchpinpoint".equals(e.getActionCommand())) {
 			e.setSource(new Boolean(((JCheckBoxMenuItem)e.getSource()).isSelected()));
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_refresh_parm".equals(e.getActionCommand())) {
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_start_parm".equals(e.getActionCommand())) {
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_close_parm".equals(e.getActionCommand())) {
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_show_settings".equals(e.getActionCommand())) {
-			PAS.get_pas().actionPerformed(e);
-		}
-		else if("act_messagelib".equals(e.getActionCommand())) {
 			PAS.get_pas().actionPerformed(e);
 		}
 		else if("act_save_settings".equals(e.getActionCommand())) {
@@ -665,20 +581,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		{
 			PAS.active_theme.editColor(ThemeColorComponent.COL_ULTRA_LIGHT);						
 		}
-		else if("act_help_about".equals(e.getActionCommand()))
-		{
-			PAS.pasplugin.onHelpAbout();
-		}
 		else if("act_trainingmode".equals(e.getActionCommand()))
 		{
 			AbstractButton a = (AbstractButton)e.getSource();
 			boolean b = a.getModel().isSelected();
 			PAS.TRAINING_MODE = b;
 			PAS.pasplugin.onTrainingMode(b);
-		}
-		else if("act_show_contact_information".equals(e.getActionCommand()))
-		{
-			PAS.pasplugin.onShowContactinformation();
 		}
 		else if("act_address_book".equals(e.getActionCommand()))
 		{

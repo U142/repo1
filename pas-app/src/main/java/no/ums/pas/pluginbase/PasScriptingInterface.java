@@ -54,12 +54,6 @@ public interface PasScriptingInterface {
         UNIX,
     }
 
-    interface MenuBuilder {
-        void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode);
-        void updateNavigateMenu(JMenu menu, boolean showSearch);
-    }
-
-
     /**
      * @author Morten H. Helvig
      * Abstract class for searching addresses
@@ -115,8 +109,6 @@ public interface PasScriptingInterface {
     void startPlugin();
 
     AddressSearch getAddressSearch();
-
-    MenuBuilder getMenuBuilder();
 
     boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws);
 

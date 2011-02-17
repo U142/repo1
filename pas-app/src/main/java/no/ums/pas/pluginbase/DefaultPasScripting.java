@@ -1,6 +1,8 @@
 package no.ums.pas.pluginbase;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
@@ -19,6 +21,7 @@ import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.UIParamLoader;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
@@ -28,6 +31,7 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.swing.UmsTimeAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.pas.USYSTEMMESSAGES;
@@ -37,6 +41,7 @@ import org.jvnet.substance.SubstanceLookAndFeel;
 import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.*;
+import java.awt.datatransfer.FlavorMap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -47,10 +52,12 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class DefaultPasScripting extends AbstractPasScriptingInterface
 {
+    private static final Log log = UmsLog.getLogger(DefaultPasScripting.class);
 
     private final DefaultAddressSearch addressSearch = new DefaultAddressSearch();
 
@@ -71,58 +78,21 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     }
 
     @Override
-    public MenuBuilder getMenuBuilder() {
-        return new MenuBuilder() {
-            @Override
-            public void updateFileMenu(JMenu menu, boolean showSending, boolean tasMode) {
-                menu.removeAll();
-                if (showSending) {
-                    if (!tasMode) {
-                        menu.add(FileMenuActions.NEW_SENDING);
-                    }
-                    menu.add(FileMenuActions.OPEN_PROJECT);
-                    menu.add(FileMenuActions.CLOSE_PROJECT);
-                    menu.addSeparator();
-                }
-                if (!tasMode) {
-                    menu.add(FileMenuActions.FILE_IMPORT);
-                }
-                menu.add(FileMenuActions.PRINT_MAP);
-                menu.add(FileMenuActions.SAVE_MAP);
-                menu.add(FileMenuActions.EXIT);
-
-            }
-
-            @Override
-            public void updateNavigateMenu(JMenu menu, boolean showSearch) {
-                menu.removeAll();
-                menu.add(NavigateActions.PAN);
-                menu.add(NavigateActions.ZOOM);
-                if (showSearch) {
-                    menu.add(NavigateActions.SEARCH);
-                }
-            }
-        };
-    }
-
-    @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
 		if(ws.getResult()==WSRESULTCODE.OK)
 			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
 		else
 			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
-		try
-		{
+		try {
 			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
-		}
-		catch(Exception e)
-		{}
+		} catch(Exception e) {
+            log.warn("Failed to set max logon tries", e);
+        }
 		return true;
 	}
 
 	@Override
-	public boolean onBeforeLogon()
-	{
+	public boolean onBeforeLogon() {
 		return true;
 	}
 	
@@ -165,101 +135,63 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		menu.add(menu.get_combo_mapsite(), menu.m_gridconst);
 		return true;
 	}
-	
+
 	@Override
-	public boolean onAddMainSelectMenu(MainMenuBar menu)
-	{
-		menu.add(menu.get_menu_file());
-		menu.add(menu.get_menu_navigate());
-		menu.add(menu.get_view());
-		menu.add(menu.get_menu_config());
-		menu.add(menu.get_status());
-		//add(m_menu_gps);
-		menu.add(menu.get_parm());
+	public boolean onAddMainSelectMenu(MainMenuBar menu) {
+        final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
+        file.add(FileMenuActions.NEW_SENDING);
+        file.add(FileMenuActions.OPEN_PROJECT);
+        file.add(FileMenuActions.CLOSE_PROJECT);
+        file.addSeparator();
+        file.add(FileMenuActions.FILE_IMPORT);
+        file.add(FileMenuActions.PRINT_MAP);
+        file.add(FileMenuActions.SAVE_MAP);
+        file.add(FileMenuActions.EXIT);
+
+        final JMenu navigate = menu.add(new JMenu(Localization.l("mainmenu_navigation")));
+        navigate.add(NavigateActions.PAN);
+        navigate.add(NavigateActions.ZOOM);
+        navigate.add(NavigateActions.SEARCH);
+
+        final JMenu view = menu.add(new JMenu(Localization.l("mainmenu_view")));
+        view.add(ViewOptions.TOGGLE_POLYGON.asChecked());
+        view.add(ViewOptions.TOGGLE_HOUSES.asChecked());
+        view.add(ViewOptions.TOGGLE_SEARCHPOINTS.asChecked());
+
+        final JMenu settings = menu.add(new JMenu(Localization.l("mainmenu_settings")));
+        settings.add(OtherActions.SHOW_SETTINGS);
+        if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
+            settings.add(OtherActions.SHOW_MESSAGELIB);
+        }
+
+        final JMenu status = menu.add(new JMenu(Localization.l("mainmenu_status")));
+        status.add(StatusActions.OPEN);
+        status.add(StatusActions.EXPORT);
+
+        final JMenu statusUpdates = (JMenu) status.add(new JMenu(Localization.l("mainmenu_status_updates")));
+        ButtonGroup group = new ButtonGroup();
+        group.add(statusUpdates.add(StatusActions.MANUAL_UPDATE.asRadio()));
+        group.add(statusUpdates.add(StatusActions.AUTOMATIC_UPDATE.asRadio()));
+
+        group = new ButtonGroup();
+        statusUpdates.addSeparator();
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.SECONDS, 5).asRadio()));
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.SECONDS, 10).asRadio()));
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.SECONDS, 20).asRadio()));
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.SECONDS, 30).asRadio()));
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 1).asRadio()));
+        group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 5).asRadio()));
+
+        final JMenu parm = menu.add(new JMenu(Localization.l("mainmenu_parm")));
+        parm.add(OtherActions.PARM_START);
+        parm.add(OtherActions.PARM_REFRESH);
+        parm.add(OtherActions.PARM_CLOSE);
+
 		menu.add(menu.get_dept());
-		//menu.add(menu.get_menu_layout());
-		menu.add(menu.get_menu_help());
-		
-		menu.get_menu_layout().add(menu.get_menu_skins());
-		menu.get_menu_layout().add(menu.get_menu_themes());
-		menu.get_menu_layout().add(menu.get_menu_watermarks());
-		JMenu menu_colors = new JMenu("Colors");
-		menu.get_menu_layout().add(menu_colors);
-		JMenuItem item_color;
-		item_color = new JMenuItem("Foreground");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_foreground");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Background");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_background");
-		menu_colors.add(item_color);			
-		item_color = new JMenuItem("Watermark");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_watermark");
-		menu_colors.add(item_color);			
-		item_color = new JMenuItem("Mid");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_mid");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Dark");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_dark");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Extra Light");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_extra_light");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Light");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_light");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Ultra Dark");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_ultra_dark");
-		menu_colors.add(item_color);
-		item_color = new JMenuItem("Ultra Light");
-		item_color.addActionListener(menu.get_actionlistener());
-		item_color.setActionCommand("act_change_color_ultra_light");
-		menu_colors.add(item_color);
-		
-		//m_menu_layout.setFont(PAS.f().getMenuFont());
 
-        PAS.pasplugin.getMenuBuilder().updateFileMenu(menu.get_menu_file(), true, false);
-        PAS.pasplugin.getMenuBuilder().updateNavigateMenu(menu.get_menu_navigate(), true);
-
-        menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_POLYGON));
-		menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_HOUSES));
-		//m_menu_view.add(m_item_view_statuscodes);
-		menu.get_view().add(new JCheckBoxMenuItem(ViewOptions.TOGGLE_SEARCHPOINTS));
-		
-		menu.get_menu_config().add(menu.get_item_show_settings());
-		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4)
-			menu.get_menu_config().add(menu.get_item_messagelib());
-			//m_menu_config.add(m_item_messagelib); 
-		//m_menu_config.add(m_item_save_settings);
-		
-		menu.get_status().add(StatusActions.OPEN);
-		menu.get_status().add(StatusActions.EXPORT);
-		
-		menu.get_fleetcontrol().add(menu.get_item_gps_new());
-		menu.get_fleetcontrol().add(menu.get_item_gps_open());
-		menu.get_fleetcontrol().add(menu.get_item_gps_updates());
-		menu.get_fleetcontrol().add(menu.get_item_gps_trail_minutes());
-		
-		menu.get_parm().add(menu.get_item_parm_start());
-		menu.get_parm().add(menu.get_item_parm_refresh());
-		menu.get_parm().add(menu.get_item_parm_close());
-		
-		menu.get_menu_help().add(menu.get_item_help_about());
-		menu.get_menu_help().add(menu.get_item_contact_information());
-
-		//m_menu_gps.add(m_item_gps_epsilon);
-		//m_item_gps_epsilon.add(m_item_gps_epsilon_slider);
-		
-		menu.get_status().add(menu.get_item_status_updates());
-
-
+        final JMenu help = menu.add(new JMenu(Localization.l("mainmenu_help")));
+        help.add(OtherActions.HELP_ABOUT);
+        help.add(OtherActions.SHOW_CONTACT_INFO);
 		return true;
 	}
 	
@@ -267,7 +199,6 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onAddPASComponents(PAS p)
 	{
 		p.add(p.get_mappane(), BorderLayout.CENTER);
-		//p.add(p.get_maplayeredpane(), BorderLayout.CENTER);
 		p.add(p.get_mainmenu(), BorderLayout.NORTH);
 		p.add(p.get_southcontent(), BorderLayout.SOUTH);
 		p.add(p.get_eastcontent(), BorderLayout.EAST);	
@@ -289,42 +220,34 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 	
-	@Override 
-	public boolean onStartParm()
-	{
+	@Override
+    public boolean onStartParm() {
+        new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                try {
+                    long start = System.currentTimeMillis();
+                    PAS.get_pas().waitForFirstMap();
 
-		new Thread("PARM Start thread")
-		{
-			public void run()
-			{
-				try
-				{
-					long start = System.currentTimeMillis();
-					PAS.get_pas().waitForFirstMap();
+                    log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
+                    if (PAS.get_pas().get_parmcontroller() != null) {
+                        return null;
+                    }
+                } catch (Exception err) {
+                    log.warn("Failed to start parm", err);
+                }
+                return null;
+            }
 
-					System.out.println("Waited " + (System.currentTimeMillis() - start) / 1000 + " seconds for map to load");
-					if(PAS.get_pas().get_parmcontroller()!=null)
-						return;
-				}
-				catch(Exception err)
-				{
-					err.printStackTrace();
-				}
-
-				SwingUtilities.invokeLater(new Runnable()
-				//new Thread()
-				{
-					public void run()
-					{
-						PAS.get_pas().init_parmcontroller();
-						PAS.get_pas().get_parmcontroller().setExpandedNodes();
-						PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
-					}
-				});
-			}
-		}.start();
-		return true;
-	}
+            @Override
+            protected void done() {
+                PAS.get_pas().init_parmcontroller();
+                PAS.get_pas().get_parmcontroller().setExpandedNodes();
+                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
+            }
+        }.execute();
+        return true;
+    }
 	
 	@Override
 	public boolean onCloseParm()
@@ -352,27 +275,22 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onDepartmentChanged(PAS pas)
 	{
 		if(!pas.get_rightsmanagement().read_parm()) {
-			pas.get_mainmenu().get_selectmenu().get_bar().get_parm().setEnabled(false);
-			if(PAS.isParmOpen())//if(PAS.get_pas().get_parmcontroller() != null)
-				pas.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
+			if(PAS.isParmOpen()) {
+                OtherActions.PARM_CLOSE.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
+            }
 		}
 		else if(pas.get_rightsmanagement().read_parm() && pas.get_userinfo().get_current_department().get_pas_rights() != 4) {
 			if(pas.get_parmcontroller()==null && pas.get_settings().parm()) {
 				pas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
 			}	
-			pas.get_mainmenu().get_selectmenu().get_bar().get_parm().setEnabled(true);
 		}
-		if(!pas.get_rightsmanagement().read_fleetcontrol()) {
-			pas.get_mainmenu().get_selectmenu().get_bar().get_fleetcontrol().setEnabled(false);
-		}
-		else
-			pas.get_mainmenu().get_selectmenu().get_bar().get_fleetcontrol().setEnabled(true);
-		
-		if(pas.get_rightsmanagement().cansend() || pas.get_rightsmanagement().cansimulate()) {
-            PAS.pasplugin.getMenuBuilder().updateFileMenu(pas.get_mainmenu().get_selectmenu().get_bar().get_menu_file(), true, false);
-        }
-		else {
-            PAS.pasplugin.getMenuBuilder().updateFileMenu(pas.get_mainmenu().get_selectmenu().get_bar().get_menu_file(), false, false);
+
+        final boolean enableSending = pas.get_rightsmanagement().cansend() || pas.get_rightsmanagement().cansimulate();
+        FileMenuActions.NEW_SENDING.setEnabled(enableSending);
+        FileMenuActions.OPEN_PROJECT.setEnabled(enableSending);
+        FileMenuActions.CLOSE_PROJECT.setEnabled(enableSending);
+        
+		if(!enableSending) {
             pas.close_active_project(true, true);
 		}
 		switch(pas.get_userinfo().get_current_department().get_pas_rights())
@@ -398,15 +316,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			pas.get_mainmenu().enable_mapsite(false);
 			break;
 		}
-	
-		
-		if(pas.get_rightsmanagement().status())
-			pas.get_mainmenu().get_selectmenu().get_bar().get_status().setEnabled(true);
-		else
-			pas.get_mainmenu().get_selectmenu().get_bar().get_status().setEnabled(false);	
-		
-		//if(pas.get_rightsmanagement().houseeditor()>=1)
-		pas.get_mainmenu().setHouseeditorEnabled((pas.get_rightsmanagement().houseeditor()>=1 ? true : false));
+
+
+		StatusActions.OPEN.setEnabled(pas.get_rightsmanagement().status());
+
+		pas.get_mainmenu().setHouseeditorEnabled(pas.get_rightsmanagement().houseeditor() >= 1);
 		return true;
 	}
 
@@ -494,55 +408,32 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onSetUserLookAndFeel(final Settings settings, final UserInfo userinfo) {
 		try
 		{
-			//SubstanceLookAndFeel.setCurrentTheme(SubstanceTheme.getTheme(m_settings.getThemeClassName()));
-			//ClassLoader loader = new ClassLoader(); //getSystemResource(m_settings.getThemeClassName());
-			//SubstanceTheme activeTheme = new SubstanceMixTheme(m_settings.getThemeClassName());
-			        //new SubstancePurpleTheme(),
-			        //new SubstanceBarbyPinkTheme()).saturate(0.1);
-			//SubstanceLookAndFeel.setCurrentTheme(activeTheme);
-
-			//Substance 3.3
-			////
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				public void run()
 				{
 					try
 					{
-						//UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceOfficeBlue2007LookAndFeel");
-						boolean b;
-						//b = SubstanceLookAndFeel.setSkin(m_settings.getSkinClassName());
-						b = SubstanceLookAndFeel.setCurrentTheme(settings.getThemeClassName());
-					
-						//themeChanged();
-						
-						//active_theme = (UMSTheme)SubstanceLookAndFeel.getTheme();
-						//active_theme = new UMSTheme(THEMETYPE.SIMPLE);
-						//theme = theme.saturate(0.1, true);
-						//theme = theme.tint(0.15);
-						//theme = theme.hueShift(0.2);
-						//theme = theme.shade(0.1);
-						
-						
-						//b = SubstanceLookAndFeel.setCurrentTheme(active_theme);
-						
-						
-						
-						b = SubstanceLookAndFeel.setCurrentButtonShaper(settings.getButtonShaperClassname());
-						if(settings.getGradientClassname()!=null && settings.getGradientClassname().length() > 0)
-							b = SubstanceLookAndFeel.setCurrentGradientPainter(settings.getGradientClassname());
-						else
-							b = SubstanceLookAndFeel.setCurrentGradientPainter("org.jvnet.substance.painter.GlassGradientPainter");
-						if(settings.getTitlePainterClassname()!=null && settings.getTitlePainterClassname().length() > 0)
-							b = SubstanceLookAndFeel.setCurrentTitlePainter(settings.getTitlePainterClassname());
-						else
-							b = SubstanceLookAndFeel.setCurrentTitlePainter("org.jvnet.substance.title.Glass3DTitlePainter");
-						b = SubstanceLookAndFeel.setCurrentWatermark(settings.getWatermarkClassName());
+						SubstanceLookAndFeel.setCurrentTheme(settings.getThemeClassName());
+						SubstanceLookAndFeel.setCurrentButtonShaper(settings.getButtonShaperClassname());
+						if(settings.getGradientClassname()!=null && settings.getGradientClassname().length() > 0) {
+                            SubstanceLookAndFeel.setCurrentGradientPainter(settings.getGradientClassname());
+                        }
+						else {
+                            SubstanceLookAndFeel.setCurrentGradientPainter("org.jvnet.substance.painter.GlassGradientPainter");
+                        }
+						if(settings.getTitlePainterClassname()!=null && settings.getTitlePainterClassname().length() > 0) {
+                            SubstanceLookAndFeel.setCurrentTitlePainter(settings.getTitlePainterClassname());
+                        }
+						else {
+                            SubstanceLookAndFeel.setCurrentTitlePainter("org.jvnet.substance.title.Glass3DTitlePainter");
+                        }
+						SubstanceLookAndFeel.setCurrentWatermark(settings.getWatermarkClassName());
 						
 					}
 					catch(Exception e)
 					{
-						
+						log.warn("Failed to start substance look and feel", e);
 					}
 
 				}
