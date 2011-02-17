@@ -16,6 +16,7 @@ import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.LBATabbedPane;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.status.StatusSending.StatusSendingUI;
+import no.ums.pas.status.StatusSendingList;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.pas.status.LBALanguage;
@@ -46,6 +47,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	private StdTextLabel m_txt_lba_failed = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_recipients = new StdTextLabel("", 100, 11, false);
 	
+	private StatusSendingList ssl;
+	public void set_ssl(StatusSendingList ssl) { this.ssl = ssl; }
+	public StatusSendingList get_ssl() { return ssl; }
 	
 	private JComboBox m_combo_voice_filter = new JComboBox();
 	public JComboBox get_combo_filter() { return m_combo_voice_filter; }
@@ -128,7 +132,12 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			else if(n_voice_percent>0)
 				n = (int)n_voice_percent;
 		}
-		setMainStatusCompletionPercent(n);
+		float total_percent = 0.0f; 
+		for(int i=0;i<ssl.size();++i) {
+			total_percent += ssl.get(i).get_percentage();
+		}
+		int final_perc = Math.round(total_percent * 100.0f / (100*ssl.size()));
+		setMainStatusCompletionPercent(final_perc);
 		// Reloads map to get updated GSM coverage
 		if(n_lba_percent <= 100 && n_lba_prev_perc < 100) {
 			if(n_lba_prev_perc+PAS.get_pas().get_settings().getLbaRefresh() < n_lba_percent || n_lba_percent == 100) {

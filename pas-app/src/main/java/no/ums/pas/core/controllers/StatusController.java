@@ -372,6 +372,7 @@ public class StatusController extends Controller implements ActionListener {
 		 * sz_lba_bordertext += " (of " + n_lbacount + " sendings)";
 		 */
 
+		PAS.get_pas().get_eastcontent().get_statuspanel().set_ssl(get_sendinglist());
 		PAS.get_pas().get_eastcontent().get_statuspanel().setBorderTextLBA(
 				sz_lba_bordertext);
 		PAS.get_pas().get_eastcontent().get_statuspanel().enableLBAPanel(

@@ -2,6 +2,7 @@ package no.ums.pas.status;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.laf.ULookAndFeel;
@@ -71,7 +72,33 @@ public class StatusSending extends Object {
 		m_lba_by_operator.add(lba);
 	}
 	
-	
+	public float get_percentage() {
+		float percent = 0;
+		switch(_n_type) {
+		case 1:	// VOICE
+			if(this.get_proc()>0)
+				percent = this.get_proc() * 100.0f / this.get_totitem();
+			//else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus > 1 ) // gone past parsequeue
+			//	percent = 100;
+			else 
+				percent = 0;
+			break;
+		case 2: // SMS
+			if(this.get_proc()>0)
+				percent = this.get_proc() * 100.0f / this.get_totitem();
+		//	else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus >  ) // gone past parsequeue
+		//		percent = 100;
+			else 
+				percent = 0;
+			break;
+		case 4: // LBA
+			percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			break;
+		case 5: // TAS
+			break;
+		}
+		return percent;
+	}
 	public LBASEND getLBA() { return m_lba; }
 	public boolean hasLBA() { return (m_lba==null ? false : true); }
 	
