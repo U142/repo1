@@ -1619,8 +1619,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void activateProject(final Project p) {
 		try
 		{
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run()
+			//SwingUtilities.invokeLater(new Runnable() {
+			//	public void run()
 				{
 					if(m_current_project!=null) {
 						if(m_current_project.equals(p))
@@ -1640,7 +1640,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					}
 					get_sendcontroller().setActiveProject(p);
 				}
-			});
+			//});
 		}
 		catch(Exception e)
 		{

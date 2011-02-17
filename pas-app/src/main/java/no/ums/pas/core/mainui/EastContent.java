@@ -121,7 +121,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						}
 						else if(c instanceof StatusPanel)
 						{
-							PAS.get_pas().close_active_project(true, true);
+							//PAS.get_pas().close_active_project(true, true);
 						}
 						else if(c instanceof ParmPanel)
 						{
@@ -129,7 +129,9 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						}
 						else if(c.equals(m_sendingpanel.sp))
 						{
-							PAS.get_pas().close_active_project(true, true);							
+							PAS.pasplugin.onCloseProject();
+							PAS.get_pas().close_active_project(false, true);	
+							//m_statuspanel = null;
 						}
 					}
 
