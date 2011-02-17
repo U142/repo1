@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.ParmPanel;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.laf.ULookAndFeel;
-import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUIAttention;
+import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -108,7 +108,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_sendingpanel  = new SendingPanel(dim_panelsize);
 				m_sendingpanel.doInit();
 				m_tabbedpane = new EastTabbedPane();
-				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUIAttention(m_tabbedpane));
+				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUI(m_tabbedpane));
 				try { 
 					if(m_infopanel!=null)
 						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, null); //PAS.get_pas().get_mappane().get_mouseoverhouse());
@@ -324,9 +324,9 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			if(selectedTabIndex>=0)
 			{
 				TabbedPaneUI ui = get_tabbedpane().getUI();
-				if(ui instanceof ULookAndFeel.UTabbedPaneUIAttention)
+				if(ui instanceof ULookAndFeel.UTabbedPaneUI)
 				{
-					UTabbedPaneUIAttention tpa = (UTabbedPaneUIAttention)ui;
+					UTabbedPaneUI tpa = (UTabbedPaneUI)ui;
 					Rectangle rect = tpa.calcIconRect(selectedTabIndex);
 					if(rect.contains(mouseEvent.getX(), mouseEvent.getY())) {
 						System.out.println("mouseover");

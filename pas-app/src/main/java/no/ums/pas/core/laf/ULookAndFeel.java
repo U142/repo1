@@ -133,8 +133,8 @@ public class ULookAndFeel
 		
 	}
 	
-	public static UTabbedPaneUIAttention newUTabbedPaneUIAttention(JComponent c) {
-		return new UTabbedPaneUIAttention(c);
+	public static UTabbedPaneUI newUTabbedPaneUI(JComponent c) {
+		return new UTabbedPaneUI(c);
 	}
 	public static UButtonAttention newUButtonAttention(String text) {
 		return new UButtonAttention(text);
@@ -170,7 +170,7 @@ public class ULookAndFeel
 	}
 
 	
-	public static class UTabbedPaneUIAttention extends BasicTabbedPaneUI
+	public static class UTabbedPaneUI extends BasicTabbedPaneUI
 	{
 		class MouseListener extends MouseAdapter {
 			@Override
@@ -178,7 +178,9 @@ public class ULookAndFeel
 				int index = isCursorOverCloseIcon(e);
 				if(index>=0)
 				{
-					UTabbedPaneUIAttention.this.tabPane.removeTabAt(index);
+					UpdateFlag(index, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
+					UpdateFlag(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.FALSE);
+					UTabbedPaneUI.this.tabPane.removeTabAt(index);
 				}
 				super.mouseReleased(e);
 			}
@@ -203,7 +205,7 @@ public class ULookAndFeel
 		
 		private int isCursorOverCloseIcon(MouseEvent e)
 		{
-			int index = UTabbedPaneUIAttention.this.tabPane.indexAtLocation(e.getX(), e.getY());
+			int index = UTabbedPaneUI.this.tabPane.indexAtLocation(e.getX(), e.getY());
 			return (index>=0 && calcIconRect(index).contains(e.getX(), e.getY()) ? index : -1);
 			
 		}
@@ -234,7 +236,7 @@ public class ULookAndFeel
 		UAttentionUI ui;		
 		private static ImageIcon m_icon_close = null;
 		private static ImageIcon m_icon_close_grayscale = null;
-		UTabbedPaneUIAttention(JComponent c)
+		UTabbedPaneUI(JComponent c)
 		{
 			ui = new UAttentionUI(c);
 			m_icon_close = new ImageIcon(ImageLoader.load_icon("delete_16.png").getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH));
