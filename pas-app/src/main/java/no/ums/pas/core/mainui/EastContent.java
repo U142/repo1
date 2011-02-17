@@ -3,6 +3,8 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmPanel;
 import no.ums.pas.cellbroadcast.CountryCodes;
+import no.ums.pas.core.laf.ULookAndFeel;
+import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUIAttention;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -13,12 +15,15 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 //import org.jvnet.substance.api.SubstanceSkin;
 //Substance 3.3
@@ -103,6 +108,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_sendingpanel  = new SendingPanel(dim_panelsize);
 				m_sendingpanel.doInit();
 				m_tabbedpane = new EastTabbedPane();
+				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUIAttention(m_tabbedpane));
 				try { 
 					if(m_infopanel!=null)
 						m_houseeditor	= new HouseEditorDlg(m_infopanel, get_pas(), get_pas().get_pasactionlistener(), null, null); //PAS.get_pas().get_mappane().get_mouseoverhouse());
@@ -143,14 +149,14 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		try
 		{
 			if(m_houseeditor!=null)
-				m_houseeditor.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+				m_houseeditor.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			if(m_gpspanel!=null)
-				m_gpspanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+				m_gpspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			if(m_gpseventpanel!=null)
-				m_gpseventpanel.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+				m_gpseventpanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			if(get_parm()!=null)
 			{
-				get_parm().putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+				get_parm().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 			}
 		}
 		catch(Exception e)
@@ -286,6 +292,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	
 	protected class EastTabbedPane extends JTabbedPane implements ComponentListener, ChangeListener {
 		public static final long serialVersionUID = 1;
+		private Integer selectedTabIndex;
+		
 		EastTabbedPane() {
 			super();
 			//super.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -293,7 +301,42 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			//setUI((CloseTpUI) CloseTpUI.createUI(this));
 			addComponentListener(this);
 			addChangeListener(this);
+			/*addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					EastTabbedPane.this.mouseReleased(e);
+					super.mouseReleased(e);
+				}
+
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					EastTabbedPane.this.mouseMoved(e);
+					super.mouseMoved(e);
+				}
+				
+			});*/
 		}
+		
+		private void mouseReleased(MouseEvent mouseEvent)
+		{
+			selectedTabIndex = indexAtLocation(mouseEvent.getX(), mouseEvent.getY());
+			if(selectedTabIndex>=0)
+			{
+				TabbedPaneUI ui = get_tabbedpane().getUI();
+				if(ui instanceof ULookAndFeel.UTabbedPaneUIAttention)
+				{
+					UTabbedPaneUIAttention tpa = (UTabbedPaneUIAttention)ui;
+					Rectangle rect = tpa.calcIconRect(selectedTabIndex);
+					if(rect.contains(mouseEvent.getX(), mouseEvent.getY())) {
+						System.out.println("mouseover");
+						this.removeTabAt(selectedTabIndex);
+					}
+				}
+			}
+		}
+		
+		
 		public void componentResized(ComponentEvent e) {
 			if(getWidth()<=0 || getHeight()<=0)
 			{
@@ -465,13 +508,13 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		{
 			switch(n_leaf) {
 				case PANEL_INFO_:
-					if(find_component(m_infopanel)==-1)
-						get_tabbedpane().addTab(PAS.l("main_infotab_title"), null, m_infopanel, PAS.l("main_infotab_title_tooltip"));
+					get_tabbedpane().addTab(PAS.l("main_infotab_title"), null, m_infopanel, PAS.l("main_infotab_title_tooltip"));
 					break;
 				case PANEL_STATUS_LIST:
 					if(find_component(m_statuspanel)==-1)
 					{
 						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_statuspanel, PAS.l("main_statustab_title_tooltip"));
+						m_statuspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
 				case PANEL_GPS_LIST_:
@@ -489,11 +532,14 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					break;
 				case PANEL_HOUSEEDITOR_:
 					if(find_component(m_houseeditor)==-1)
+					{
 						get_tabbedpane().addTab(PAS.l("main_houseeditortab_title"), null, m_houseeditor, PAS.l("main_houseeditortab_title_tooltip"));
+					}
 					break;
 				case PANEL_PARM_:
 					if(find_component(get_parm())==-1) {
 						get_tabbedpane().addTab(PAS.l("main_parmtab_title"), null, get_parm(), PAS.l("main_parmtab_title_tooltip"));
+						get_parm().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
 				case PANEL_TAS_:

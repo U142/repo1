@@ -297,7 +297,6 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.remove(menu.get_menu_config());
         menu.remove(menu.get_view());
 
-        menu.get_status().remove(menu.get_item_status_export());
         menu.get_status().remove(menu.get_item_status_updates());
 
         // TODO: Better menu init.
