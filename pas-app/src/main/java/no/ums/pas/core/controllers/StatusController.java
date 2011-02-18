@@ -27,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 
@@ -47,10 +49,14 @@ public class StatusController extends Controller implements ActionListener {
 
     private static final Log log = UmsLog.getLogger(StatusController.class);
 
+    
+    
 	public StatusController() {
 		super();
 		m_statuscodeframe = new StatuscodeFrame();
 		m_n_autoupdate_seconds = 5;
+		set_autoupdate(StatusActions.AUTOMATIC_UPDATE.isSelected());
+		setClosed(); //initialize as closed
 	}
 
 	public static final String STATUS_1 = PAS
@@ -943,6 +949,7 @@ public class StatusController extends Controller implements ActionListener {
 
 	public boolean retrieve_statusitems(JFrame parent_frame,
 			final String sz_projectpk, final int n_refno, boolean b_init) {
+		setOpen();
 		if (b_init) {
 			new Thread("StatusController thread") {
 				public void run() {
@@ -1003,6 +1010,7 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	public synchronized void start_download(boolean b_auto) {
+		
 		if(isClosed())
 			return;
 		set_updates_in_progress(true);

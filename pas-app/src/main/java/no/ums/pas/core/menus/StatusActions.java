@@ -74,6 +74,7 @@ public interface StatusActions {
         public UpdateInterval(TimeUnit timeUnit, int count) {
             super(timeUnit, count);
             setEnabled(Boolean.TRUE.equals(AUTOMATIC_UPDATE.getValue(SELECTED_KEY)));
+            setSelected(PAS.get_pas().get_statuscontroller().get_autoupdate_seconds()==timeUnit.toSeconds(count));
             AUTOMATIC_UPDATE.addPropertyChangeListener(new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {

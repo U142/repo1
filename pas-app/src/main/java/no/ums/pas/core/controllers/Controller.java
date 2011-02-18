@@ -53,7 +53,10 @@ public abstract class Controller implements ActionListener {
 	private boolean m_b_closed = false;
 	
 	public boolean isClosed() { return m_b_closed; }
+	public boolean isOpen() { return !m_b_closed; }
 	public void setClosed() { m_b_closed = true; }
+	public void setOpen() { m_b_closed = false; }
+	
 	
 	private boolean m_b_visibility_change = false;
 
@@ -97,7 +100,7 @@ public abstract class Controller implements ActionListener {
 			long n_since_last = Utils.get_now().getTimeInMillis() - get_lastupdate();
 			if(n_since_last > get_autoupdate_millisecs()) // && !m_b_pause)
 			{
-				if(!get_updates_in_progress()) {
+				if(!get_updates_in_progress() && isOpen()) {
 					set_lastupdate();
 					//get_pas().add_event("GPS: Autoupdate in progress");
 					start_download(true);

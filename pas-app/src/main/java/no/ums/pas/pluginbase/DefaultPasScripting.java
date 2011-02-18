@@ -182,6 +182,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 1).asRadio()));
         group.add(statusUpdates.add(new StatusActions.UpdateInterval(TimeUnit.MINUTES, 5).asRadio()));
 
+        
         final JMenu parm = menu.add(new JMenu(Localization.l("mainmenu_parm")));
         parm.add(OtherActions.PARM_START);
         parm.add(OtherActions.PARM_REFRESH);
