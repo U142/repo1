@@ -39,7 +39,10 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 			PAS.pasplugin.onPaintMenuBarExtras(this, g);
 		}
 
-		public JMenu get_dept() { return m_menu_departments; }
+		public JMenu get_dept() 
+		{ 
+			return m_menu_departments; 
+		}
 
 		
 		public JMenuItem get_item_training_mode()
