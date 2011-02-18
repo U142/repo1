@@ -33,15 +33,20 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		}
 		else
 			m_maxSize = 760;
+		String sz_default_oadc = PAS.get_pas().get_userinfo().get_default_oadc();
 		init_for_sms();
 		UpdateTextFields();
 		FillSMSTemplates();
 		if(parentwin.get_sendobject().get_sendproperties() != null) {
 			m_txt_messagetext.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_message());
-			m_txt_oadc_text.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc());
+			if(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc().trim().length()>0)
+				m_txt_oadc_text.setText(parentwin.get_sendobject().get_sendproperties().get_sms_broadcast_oadc());
+			else
+				m_txt_oadc_text.setText(sz_default_oadc);				
 		}
 		else {
-			m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
+			//m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
+			m_txt_oadc_text.setText(sz_default_oadc);
 		}
 		addComponentListener(this);
 	}

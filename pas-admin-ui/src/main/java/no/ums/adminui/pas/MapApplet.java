@@ -94,7 +94,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		logon.setSessionid(getParameter("session"));
 		OVERRIDE_WMS_SITE = getParameter("mapinfo");
 		
-		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", logon.getSessionid(), "");
+		m_info = new UserInfo(logon.getSzUserid(), logon.getLComppk(),logon.getSzUserid(), logon.getSzCompid(), "", "", logon.getSessionid(), "", -1, "");
 		Settings m_settings = new Settings();
 		if(OVERRIDE_WMS_SITE.toLowerCase().equals("default"))
 		{

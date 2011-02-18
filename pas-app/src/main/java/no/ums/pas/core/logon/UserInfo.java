@@ -33,6 +33,8 @@ public class UserInfo extends Object {
 	private int m_n_default_deptpk;
 	private String m_sz_sitename;
 	private String m_sz_organization;
+	private int m_n_stdoadctype;
+	private String m_sz_stdoadc;
 	NavStruct m_nav_init = null;
 	public void set_session_active(boolean b) { m_b_session_active = b; }
 	public boolean is_session_active() { return m_b_session_active; }
@@ -57,6 +59,8 @@ public class UserInfo extends Object {
 	public String get_sitename() { return m_sz_sitename; }
 	public void set_sitename(String sz_site) { m_sz_sitename = sz_site; }
 	public String get_organization() { return m_sz_organization; }
+	public String get_default_oadc() { return m_sz_stdoadc; }
+	public int get_default_oadc_type() { return m_n_stdoadctype; }
 	private MailAccount m_account;
 	public MailAccount get_mailaccount() {
 		if(m_account==null)
@@ -74,7 +78,8 @@ public class UserInfo extends Object {
 	public void set_current_department(DeptInfo dept) { m_current_dept = dept; }
 	
 	public UserInfo(String n_userpk, int n_comppk, String sz_userid, String sz_compid,
-			String sz_name, String sz_surname, String sessionid, String sz_organization) {
+			String sz_name, String sz_surname, String sessionid, String sz_organization,
+			int stdoadc_type, String stdoadc) {
 		m_sz_userid = sz_userid;
 		m_sz_compid = sz_compid;
 		m_n_comppk  = n_comppk;
@@ -83,6 +88,9 @@ public class UserInfo extends Object {
 		m_sz_surname = sz_surname;
 		m_sz_sessionid = sessionid;
 		m_sz_organization = sz_organization;
+		m_n_stdoadctype = stdoadc_type;
+		m_sz_stdoadc = (m_n_stdoadctype>=0 ? stdoadc : m_sz_compid);
+		
 		m_departments = new DeptArray();
 	}
 	/*public UserInfo(String [] s) {
@@ -106,6 +114,8 @@ public class UserInfo extends Object {
 		m_sz_surname= info.m_sz_surname;
 		m_sz_sessionid = info.m_sz_sessionid;
 		m_sz_organization = info.m_sz_organization;
+		m_sz_stdoadc = info.m_sz_stdoadc;
+		m_n_stdoadctype = info.m_n_stdoadctype;
 		m_departments = new DeptArray();
 		m_departments.m_combined_shapestruct_list = info.get_departments().get_combined_restriction_shape();
 		/*m_departments = (DeptArray)info.m_departments.clone();*/

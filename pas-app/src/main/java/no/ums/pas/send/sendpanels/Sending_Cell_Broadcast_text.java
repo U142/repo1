@@ -86,6 +86,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	protected MessageLibTreePanel tree_msglib;
 	protected StdSearchArea txt_msglib_search;
 
+	protected JButton btn_set_default_oadc = new JButton("Set as default");
+	
 	// Expiry date
 	protected JComboBox m_combo_expdate;
 	
@@ -238,7 +240,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_txt_messagename.setPreferredSize(new Dimension(200,20));
 		m_txt_messagename.addKeyListener(this);
 		
-		m_txt_oadc_text = new StdTextArea(comp_name, false);
+		m_txt_oadc_text = new StdTextArea(PAS.get_pas().get_userinfo().get_default_oadc(), false);
 		m_txt_oadc_text.setPreferredSize(new Dimension(200, 20));
 		m_txt_oadc_text.addKeyListener(this);
 		m_combo_templates.setPreferredSize(new Dimension(200, 20));
