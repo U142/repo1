@@ -9,12 +9,15 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
+import no.ums.pas.core.ws.WSSetDefaultOadc;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.messagelibrary.MessageLibTreePanel;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
+import no.ums.pas.swing.UmsAction;
 import no.ums.pas.ums.tools.*;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.Collator;
@@ -27,6 +30,36 @@ import java.util.regex.Pattern;
 
 
 public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionListener, KeyListener, ItemListener, ComponentListener, FocusListener {
+
+    // act_new_project
+    Action SET_DEFAULT_OADC = new UmsAction("main_sending_set_default_oadc") {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	System.out.println("Set default OADC");
+        	String oadc = get_txt_oadc_text().getText().trim();
+        	//if(oadc.length()>0)
+        	{
+	        	this.setEnabled(false);
+	        	//do WS update
+	        	try
+	        	{
+		        	WSSetDefaultOadc ws = new WSSetDefaultOadc(oadc);
+		        	ws.start();
+		        	ws.join();
+	        	}
+	        	catch(Exception err)
+	        	{
+	        		err.printStackTrace();
+	        	}
+	        	finally
+	        	{
+	        		this.setEnabled(true);
+	        	}
+        	}
+        }
+    };
+
+	
 	public static final long serialVersionUID = 1;
 	
 	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\]");
@@ -86,7 +119,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	protected MessageLibTreePanel tree_msglib;
 	protected StdSearchArea txt_msglib_search;
 
-	protected JButton btn_set_default_oadc = new JButton("Set as default");
+	protected JButton btn_set_default_oadc = new JButton(SET_DEFAULT_OADC);
 	
 	// Expiry date
 	protected JComboBox m_combo_expdate;
@@ -351,7 +384,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		//m_panel_area.setOpaque(false);
 		m_panel_messages.setBackground(new Color(255,255,255,1));
 		//m_panel_area.setBackground(new Color(255,255,255,1));
-		m_panel_messages.setPreferredSize(new Dimension(550, 340));
+		m_panel_messages.setPreferredSize(new Dimension(650, 340));
 		//m_panel_area.setPreferredSize(new Dimension(500, 100));
 		
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
@@ -376,8 +409,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_oadc_text, m_panel_messages.m_gridconst);
-		m_panel_messages.set_gridconst(n_width/2, m_panel_messages.get_panel(), n_width/2, 1, GridBagConstraints.WEST);
+		m_panel_messages.set_gridconst(n_width/2, m_panel_messages.get_panel(), n_width/2-2, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_txt_oadc_text, m_panel_messages.m_gridconst);
+		m_panel_messages.set_gridconst(n_width-2, m_panel_messages.get_panel(), 1, 1);
+		m_panel_messages.add(btn_set_default_oadc, m_panel_messages.m_gridconst);
 		
 		m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL,20);
 		

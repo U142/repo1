@@ -61,6 +61,8 @@ public class UserInfo extends Object {
 	public String get_organization() { return m_sz_organization; }
 	public String get_default_oadc() { return m_sz_stdoadc; }
 	public int get_default_oadc_type() { return m_n_stdoadctype; }
+	public void set_default_oadc(String s) { m_sz_stdoadc = s;}
+	public void set_default_oadc_type(int n) { m_n_stdoadctype = n;}
 	private MailAccount m_account;
 	public MailAccount get_mailaccount() {
 		if(m_account==null)

@@ -113,6 +113,8 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		m_panel_messages.add(m_lbl_oadc_text, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_txt_oadc_text, m_panel_messages.m_gridconst);
+		m_panel_messages.set_gridconst(14, m_panel_messages.get_panel(), 1, 1);
+		m_panel_messages.add(btn_set_default_oadc, m_panel_messages.m_gridconst);
 		
 		m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL,20);
 		
@@ -142,11 +144,11 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		
 		m_panel_messages.add_spacing(DefaultPanel.DIR_VERTICAL, 10);
 		
-		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 10, 1, GridBagConstraints.WEST);
+		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 15, 1, GridBagConstraints.WEST);
 		JScrollPane scroll = new JScrollPane(m_txt_messagetext,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setPreferredSize(new Dimension(250, 100));
+		scroll.setPreferredSize(new Dimension(350, 100));
 		m_panel_messages.add(scroll, m_panel_messages.m_gridconst);
 		//m_panel_messages.add(m_txt_messagetext, m_panel_messages.m_gridconst);
 		
@@ -166,7 +168,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		add(m_panel_messages, m_gridconst);
 		init();
 		
-		m_txt_messagetext.setPreferredSize(new Dimension(250, 600));
+		//m_txt_messagetext.setPreferredSize(new Dimension(350, 600));
 		m_txt_messagetext.addFocusListener(this);
 		m_txt_messagetext.setSelectedTextColor(Color.black);
 		m_txt_messagetext.setFocusTraversalKeysEnabled(false);
