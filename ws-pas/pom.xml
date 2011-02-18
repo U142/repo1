@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>no.ums.ws</groupId>
+        <artifactId>ws-java-clients-parent</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <groupId>no.ums.ws</groupId>
+    <artifactId>ws-pas</artifactId>
+    <name>UMS WebService Client - PAS</name>
+    <packaging>jar</packaging>
+    <properties>
+        <wsdl.file>PAS.asmx?WSDL</wsdl.file>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
