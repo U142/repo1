@@ -15,6 +15,15 @@ namespace com.ums.UmsCommon
         }
     }
 
+    public class UCouldNotSetDefaultOadc : UException
+    {
+        public UCouldNotSetDefaultOadc(Exception e)
+            : base(e.Message)
+        {
+            
+        }
+    }
+
     public class UServerDeniedAddressDatabaseException : UException
     {
         public UServerDeniedAddressDatabaseException()

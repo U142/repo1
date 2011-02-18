@@ -709,6 +709,28 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public MDSOADC_DEFAULT setDefaultOadc(ULOGONINFO logon, String oadc)
+        {
+            try
+            {
+
+                MDSOADC_DEFAULT ret = new MDSOADC_DEFAULT();
+                ret.l_type = 0;
+                PASUmsDb db = new PASUmsDb();
+                db.CheckLogon(ref logon, true);
+                db.ExecNonQuery(String.Format("UPDATE MDSOADC_DEFAULT SET l_type={0}, sz_value='{1}' WHERE l_userpk={2}",
+                                    ret.l_type, oadc, logon.l_userpk));
+                db.close();
+                ret.sz_value = oadc;
+                return ret;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [WebMethod]
         public PASVERSION getVersionNumber()
         {
             /*Type type = Type.GetType("pasws");
