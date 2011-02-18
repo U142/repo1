@@ -130,9 +130,23 @@ public class UpdateXML extends Thread{
 						loadingframe.setVisible(true);
 					} catch(Exception e) { }*/
 					m_b_inprogress = true;
-					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(false);
+					try
+					{
+						PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(false);
+					}
+					finally
+					{
+						
+					}
 					readXML();
-					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(true);
+					try
+					{
+						PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(true);
+					}
+					finally
+					{
+						
+					}
 					/*try {
 						loadingpanel.set_currentitem(1);
 						loadingframe.setVisible(false);
@@ -141,9 +155,24 @@ public class UpdateXML extends Thread{
 					break;
 				}
 				else{
-					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(false);
+					try
+					{
+						PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(false);
+					}
+					finally
+					{
+						
+					}
 					readXML();
-					PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(true);
+					try
+					{
+						PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(true);
+					}
+					finally
+					{
+						
+					}
+
 					if(waitObject!=null)
 						synchronized(waitObject) {
 							waitObject.notify();
