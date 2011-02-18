@@ -2,28 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.ums.ws</groupId>
-    <artifactId>ws-java-clients-parent</artifactId>
-    <name>UMS WebService Client - Parent</name>
-    <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
-    <modules>
-        <module>ws-conference</module>
-        <module>ws-external-exec</module>
-        <module>ws-infosentral</module>
-        <module>ws-parm-admin</module>
-        <module>ws-pas</module>
-        <module>ws-pas-admin</module>
-        <module>ws-pas-status</module>
-        <module>ws-tas</module>
-        <module>ws-voice</module>
-        <!--<module>ws-parm</module>-->
-    </modules>
+    <artifactId>ws-java-clients</artifactId>
+    <name>UMS WebService Client</name>
+    <version>1.2-SNAPSHOT</version>
     <properties>
         <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
         <wsdl.file>None.wsdl</wsdl.file>
     </properties>
     <scm>
-        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients/tags/ws-java-clients-parent-1.1-SNAPSHOT</connection>
+        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients/trunk</connection>
     </scm>
     <dependencies>
         <dependency>
@@ -50,8 +37,7 @@
         </snapshotRepository>
     </distributionManagement>
     <build>
-        <pluginManagement>
-            <plugins>
+        <plugins>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jaxws-maven-plugin</artifactId>
@@ -64,14 +50,26 @@
                     </executions>
                     <configuration>
                         <wsdlUrls>
-                            <wsdlUrl>${wsdl.base}/${wsdl.file}</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/PasAdmin.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/Pas.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/conference.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/ExternalExec.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/Infosentral.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/ParmAdmin.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/PasStatus.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/TAS.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/Voice.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/Parm.asmx?WSDL</wsdlUrl>
                         </wsdlUrls>
                         <extension>true</extension>
                         <bindingFiles>
-                            <bindingFile>${project.basedir}/../src/jaxws/bindings.xml</bindingFile>
+                            <bindingFile>${project.basedir}/src/jaxws/bindings.xml</bindingFile>
                         </bindingFiles>
                     </configuration>
                 </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -88,33 +86,6 @@
                         <downloadJavadocs>true</downloadJavadocs>
                         <downloadSources>true</downloadSources>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <configuration>
-                        <threshold>High</threshold>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>cobertura</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
