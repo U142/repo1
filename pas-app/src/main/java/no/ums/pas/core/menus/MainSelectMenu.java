@@ -155,10 +155,12 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		doLayout();
 		addComponentListener(this);
 		
+		
 	}
 	void prepare_controls()
 	{
 	        m_menubar = new MainMenuBar();
+	        m_menubar.get_dept();
 	        init();
 	}
 	void init()
