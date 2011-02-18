@@ -285,13 +285,10 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		}
 			
 	}
+	public void enableInput(boolean val) {
+		m_combo_expdate.setEnabled(val);
+		m_txt_oadc_text.setEnabled(val);
+		m_combo_templates.setEnabled(val);
+		m_txt_messagetext.setEnabled(val);
+	}
 }
-
-
-
-
-
-
-
-
-

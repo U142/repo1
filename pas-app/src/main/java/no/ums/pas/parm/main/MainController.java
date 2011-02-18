@@ -884,11 +884,11 @@ public class MainController implements ActionListener, TreeModelListener,
 					}
 					alertCtrl.setAlert(alert);
 					
-					if(this.alert.getLocked() == 1)
-						JOptionPane.showMessageDialog(gui,"This alert is locked and can't be edited.");
-					else {
+					//if(this.alert.getLocked() == 1)
+						//JOptionPane.showMessageDialog(gui,"This alert is locked and can't be edited.");
+					//else {
 						new AlertWindow(new SendObject(PAS.get_pas(), this), alertCtrl);
-					}
+					//}
 				}
 				if (object.getClass().equals(EventVO.class)) {
 					this.event = (EventVO) object;

@@ -56,6 +56,8 @@ public class AlertController implements ActionListener {
 		toolbarPanel.get_radio_ellipse().addActionListener(this);
 		toolbarPanel.get_radio_polygon().addActionListener(this);
 
+		
+		
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_ACTIVATE_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_CENTER_ON_MAP_, false);
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
@@ -447,6 +449,30 @@ public class AlertController implements ActionListener {
 
 	public SendOptionToolbar getPanelToolbar() {
 		return this.toolbarPanel;
+	}
+	
+	public void enableInput(boolean val) {
+		toolbarPanel.get_radio_ellipse().setEnabled(val);
+		toolbarPanel.get_radio_municipal().setEnabled(val);
+		toolbarPanel.get_radio_polygon().setEnabled(val);
+		toolbarPanel.get_radio_polygonal_ellipse().setEnabled(val);
+		toolbarPanel.get_btn_open().setEnabled(val);
+		toolbarPanel.get_btn_color().setEnabled(val);
+		toolbarPanel.get_adrtype_cell_broadcast_text().setEnabled(val);
+		toolbarPanel.get_adrtype_company_fixed().setEnabled(val);
+		toolbarPanel.get_adrtype_company_mobile().setEnabled(val);
+		toolbarPanel.get_adrtype_private_fixed().setEnabled(val);
+		toolbarPanel.get_adrtype_private_mobile().setEnabled(val);
+		toolbarPanel.get_adrtype_nofax().setEnabled(val);
+		getGui().getTxtDescription().setEnabled(val);
+		/*
+		if(!val) {
+			toolbarPanel.get_adrtype_company_fixed().removeMouseListener(toolbarPanel.getMouseListeners()[toolbarPanel.getMouseListeners().length]);
+			toolbarPanel.get_adrtype_company_mobile().removeMouseListener(toolbarPanel.getMouseListeners()[toolbarPanel.getMouseListeners().length]);
+			toolbarPanel.get_adrtype_private_fixed().removeMouseListener(toolbarPanel.getMouseListeners()[toolbarPanel.getMouseListeners().length]);
+			toolbarPanel.get_adrtype_private_mobile().removeMouseListener(toolbarPanel.getMouseListeners()[toolbarPanel.getMouseListeners().length]);
+		}*/
+
 	}
 
 }

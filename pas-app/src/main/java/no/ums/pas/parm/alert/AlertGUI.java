@@ -135,6 +135,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 //		new AlertGUI("Create Alert");
 //	}
 
+	
 	public class TopPanel extends DefaultPanel {
 		public static final long serialVersionUID = 1;
 

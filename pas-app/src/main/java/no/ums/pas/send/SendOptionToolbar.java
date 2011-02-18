@@ -1102,7 +1102,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	        public void mousePressed(MouseEvent evt) {
 	            //if (evt.isPopupTrigger()) {
 	        	actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
-	        	if(!get_parent().isLocked())
+	        	if(!get_parent().isLocked() && btn.isEnabled())
 	        		pop.show(evt.getComponent(), 0, btn.getHeight());
 	            //}
 	        }

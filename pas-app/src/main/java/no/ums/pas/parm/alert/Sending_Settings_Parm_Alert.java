@@ -271,4 +271,18 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		ArrayList<TTSLang> ttslang = get_parent().get_settingsloader().get_ttslang();
 		this.get_parent().set_tts(ttslang);
 	}
+	public void enableInput(boolean val) {
+		m_txt_sendname.setEnabled(val);
+		m_combo_profiles.setEnabled(val);
+		m_combo_oadc.setEnabled(val);
+		//m_combo_scheddate.setEnabled(val);
+		m_combo_schedprofiles.setEnabled(val);
+		//m_combo_schedtimehour.setEnabled(val);
+		//m_combo_schedtimeminute.setEnabled(val);
+		m_combo_validity.setEnabled(val);
+		m_channels_plus.setEnabled(val);
+		m_channels_minus.setEnabled(val);
+		m_slider_maxchannels.setEnabled(val);
+		
+	}
 }

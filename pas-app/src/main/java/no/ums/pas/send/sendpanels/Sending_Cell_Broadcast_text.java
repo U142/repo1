@@ -969,5 +969,16 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public void focusLost(FocusEvent e) {
 		
 	}
+	
+	public void enableInput(boolean val) {
+		m_btn_add.setEnabled(val);
+		m_btn_delete.setEnabled(val);
+		m_btn_new.setEnabled(val);
+		m_combo_expdate.setEnabled(val);
+		m_txt_messagename.setEnabled(val);
+		m_txt_oadc_text.setEnabled(val);
+		m_radio_requesttype_0.setEnabled(val);
+		m_radio_requesttype_1.setEnabled(val);
+	}
 
 }

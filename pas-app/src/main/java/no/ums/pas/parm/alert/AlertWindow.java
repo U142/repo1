@@ -202,6 +202,13 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_alert.getPanelToolbar().get_radio_ellipse().addActionListener(this);
 		m_alert.getPanelToolbar().get_radio_polygon().addActionListener(this);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(n_width, n_height));
+		if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 1) {
+			m_alert.enableInput(false);
+			m_alert_settings.enableInput(false);
+			m_cell_broadcast_text_panel.enableInput(false);
+			m_sms_broadcast_text_panel.enableInput(false);
+			m_alert_send.enableInput(false);
+		}
 	}
 	protected void add_controls() {
 		init();
@@ -257,9 +264,12 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			
 			m_btn_next.setActionCommand("act_save");
 			m_btn_simulation.setVisible(true);
+			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 1)
+				m_btn_next.setEnabled(false);
 		} else {
 			m_btn_next.setText(PAS.l("common_wizard_next"));
 			m_btn_next.setActionCommand("act_next");
+			m_btn_next.setEnabled(true);
 			m_btn_simulation.setVisible(false);
 		}
 		if(m_tabbedpane.getSelectedIndex() == 0) {
@@ -353,7 +363,8 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_alert_send.get_chk_execute_remote().setEnabled(false);
 		}
 		else
-			m_alert_send.get_chk_execute_remote().setEnabled(true);			
+			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 0)
+				m_alert_send.get_chk_execute_remote().setEnabled(true);			
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
@@ -520,9 +531,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			}
 		} else if("act_schedprofile_changed".equals(e.getActionCommand()) || "act_profile_changed".equals(e.getActionCommand())) {
 			if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
-				m_alert_send.get_chk_execute_remote().setEnabled(true);
-			else
 				m_alert_send.get_chk_execute_remote().setEnabled(false);
+			else
+				m_alert_send.get_chk_execute_remote().setEnabled(true);
 		} else if("act_set_addresstypes".equals(e.getActionCommand())) { //callback from toolbar
 			if((m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT ||
 					(m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {

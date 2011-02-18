@@ -267,4 +267,8 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 	public JCheckBox get_chk_execute_remote() {
 		return m_chk_execute_remote;
 	}
+	
+	public void enableInput(boolean val) {
+		m_chk_execute_remote.setEnabled(val);
+	}
 }
