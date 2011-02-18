@@ -822,7 +822,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_nofax.setToolTipText(PAS.l("main_sending_adr_btn_company_blocklist_tooltip"));
 		m_btn_finalize.setToolTipText(PAS.l("main_sending_adr_btn_lock_tooltip"));
 		m_btn_color.setToolTipText(PAS.l("common_color"));
-		m_btn_send.setToolTipText(PAS.l("main_sending_send"));
+		m_btn_send.setToolTipText(PAS.l("main_sending_prepare"));
 		m_btn_close.setToolTipText(PAS.l("main_sending_adr_btn_close_sending"));
 		m_btn_open.setToolTipText(PAS.l("mainmenu_file_import"));
 		
