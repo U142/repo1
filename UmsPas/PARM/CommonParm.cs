@@ -60,6 +60,13 @@ namespace com.ums.UmsParm
         public String sessionid;
         public BBUSER_BLOCK_REASONS reason = BBUSER_BLOCK_REASONS.NONE;
         public String sz_organization;
+        public MDSOADC_DEFAULT default_oadc = new MDSOADC_DEFAULT();
+    }
+
+    public class MDSOADC_DEFAULT
+    {
+        public int l_type;
+        public String sz_value;
     }
 
     public class UPASUISETTINGS

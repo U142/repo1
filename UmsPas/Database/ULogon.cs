@@ -424,6 +424,8 @@ namespace com.ums.PAS.Database
                     ret.l_language = Int32.Parse(rs["l_language"].ToString());
                     ret.sessionid = l.sessionid;
                     ret.sz_organization = rs["sz_organization"].ToString();
+                    ret.default_oadc.l_type = int.Parse(rs["l_oadc_type"].ToString());
+                    ret.default_oadc.sz_value = rs["sz_oadc_value"].ToString();
                     do //parse departments
                     {
                         UDEPARTMENT dept = new UDEPARTMENT(); //CREATE NEW DEPARTMENT
