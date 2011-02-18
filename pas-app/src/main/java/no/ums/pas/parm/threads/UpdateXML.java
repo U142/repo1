@@ -158,6 +158,7 @@ public class UpdateXML extends Thread{
 					try
 					{
 						PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().get_dept().setEnabled(false);
+						
 					}
 					finally
 					{
