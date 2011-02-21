@@ -231,7 +231,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 		}
 	}
 	public void add_controls() {
-		m_btn_search.setPreferredSize(new Dimension(60, 16));
+		m_btn_search.setPreferredSize(new Dimension(80, 16));
 		m_btn_search.setActionCommand("act_search_postno");
 		m_btn_search.addActionListener(this);
 		
