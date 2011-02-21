@@ -307,7 +307,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(n_focuscounter == 0) {
+				if(n_focuscounter == 0 && m_cbx_messages.getSelectedIndex() == -1) {
 					m_txt_messagetext.setText("");
 					keyReleased(new KeyEvent(m_txt_messagetext,KeyEvent.KEY_RELEASED, 10, 0, 0));
 				}
