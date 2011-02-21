@@ -4,6 +4,7 @@ import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.OpenStatusFrame;
 import no.ums.pas.core.mainui.StatusItemList;
@@ -19,11 +20,13 @@ import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.status.*;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.PopupDialog;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1019,14 +1022,30 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	public void export_status() {
-		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
+		boolean exported = false;
+		if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4 && m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null && m_lba_total_tabbed.getListCC().get_tablelist().getRowCount()>0) {
 			m_lba_total_tabbed.getListCC().exportToCSV();
+			exported=true;
+		}
 		else {
+			if(m_statuscodes.get_total() > 0) {
 			new no.ums.pas.status.StatusExport(PAS.get_pas().get_current_project()).show(
                     PAS .get_pas(), PAS.get_pas().get_lookandfeel(), (StatusItemList) m_items, m_statuscodes);
-			if(m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null) {
-				m_lba_total_tabbed.getListCC().exportToCSV();
+			exported=true;
 			}
+			// Denne har en viss sammenheng med StatusExport()._export_separator
+			if((PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() == 0 || 
+					((StatusSending)((ComboRow)PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedItem()).getId()).get_type() == 4) 
+					&& m_lba_total_tabbed != null && m_lba_total_tabbed.getListCC() != null && m_lba_total_tabbed.getListCC().get_tablelist().getRowCount()>0) {
+				m_lba_total_tabbed.getListCC().exportToCSV();
+				exported=true;
+			}
+			
+		}
+		if(!exported) {
+			JFrame frame = PopupDialog.get_frame();
+			JOptionPane.showMessageDialog(frame,PAS.l("main_status_export_no_records"));
+			frame.dispose();
 		}
 	}
 	

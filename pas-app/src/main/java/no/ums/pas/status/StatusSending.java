@@ -92,7 +92,10 @@ public class StatusSending extends Object {
 				percent = 0;
 			break;
 		case 4: // LBA
-			percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			if(m_lba != null)
+				percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
+			else
+				percent = 0;
 			break;
 		case 5: // TAS
 			break;
