@@ -52,16 +52,13 @@ public class RightsManagement {
 
 	public boolean cansend() {
 		//if(m_userprofile.get_send() >= 2)
-		if((m_userprofile.get_send() & 2) ==2)
-			return true;
-		else
-			return false;
+		return ((m_userprofile.get_send() & 2) ==2);
 	}
 	public boolean cansimulate() {
-		if((m_userprofile.get_send() & 1) == 1)
-			return true;
-		else
-			return false;
+		return ((m_userprofile.get_send() & 1) == 1);
+	}
+	public boolean canlbasilent() {
+		return ((m_userprofile.get_send() & 4) == 4);
 	}
 	
 

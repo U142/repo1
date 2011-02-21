@@ -443,8 +443,15 @@ public class StatusController extends Controller implements ActionListener {
 		}
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                set_statusitems();
-                onDownloadFinished();
+            	try
+            	{
+	                set_statusitems();
+	                onDownloadFinished();
+            	}
+            	finally
+            	{
+            		
+            	}
             }
         });
 	}

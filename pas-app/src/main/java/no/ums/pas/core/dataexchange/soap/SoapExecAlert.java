@@ -114,6 +114,8 @@ public class SoapExecAlert extends MiniSOAP
 				sz_showfunc = PAS.l("main_sending_live");
 			else if(sz_sendfunction.equals("simulate"))
 				sz_showfunc = PAS.l("main_sending_simulated");
+			else if(sz_sendfunction.equals("silent"))
+				sz_showfunc = PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live");
 			else if(sz_sendfunction.equals("test"))
 				sz_showfunc = PAS.l("main_sending_test");
 			else

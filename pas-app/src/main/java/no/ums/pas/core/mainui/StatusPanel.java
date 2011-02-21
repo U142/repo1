@@ -208,10 +208,16 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		//SwingUtilities.invokeLater(new Runnable() {
 		//	public void run()
 			{
-				if(b)
+				/*if(b)
 					lbl_mainstatus.setIcon(ico_updating);
 				else
-					lbl_mainstatus.setIcon(null);
+					lbl_mainstatus.setIcon(null);*/
+				lbl_mainstatus.setIcon(null);
+				if(b)
+				{
+					lbl_mainstatus.putClientProperty(ULookAndFeel.WINDOW_LOADING_GRADIENTVALUE, ULookAndFeel.WINDOW_LOADING_INITIAL_GRADIENTVALUE);
+				}
+				lbl_mainstatus.putClientProperty(ULookAndFeel.WINDOW_LOADING, b);
 			}
 		//});
 	}

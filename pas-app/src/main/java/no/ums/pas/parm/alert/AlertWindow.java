@@ -433,7 +433,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			else
 				m_alert_send.get_chk_execute_remote().setEnabled(true);
 		} else if("act_send".equals(e.getActionCommand())) {
-			get_sendobject().get_sendproperties().set_simulation(false);
+			get_sendobject().get_sendproperties().set_simulation(0);
 			if(JOptionPane.showConfirmDialog(PAS.get_pas(), "Confirm live sending to " + get_addresscount().get_total() + " recipients", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				m_send.actionPerformed(e);
 			}

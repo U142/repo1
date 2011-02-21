@@ -206,7 +206,35 @@ public class Sending_Send extends DefaultPanel {
 				//parent.get_sendobject().get_sendproperties().set_simulation(true);
 				retrieve_refno(true, "act_set_refno");
 			}
-		} else if("act_set_refno".equals(e.getActionCommand())) { //wait for refno, then send
+		} 
+		else if("act_send_silent".equals(e.getActionCommand())) {
+			boolean b_continue = true;
+			if(parent.hasSMS(parent.m_sendobject.get_toolbar().get_addresstypes())) {
+				b_continue = checkSMSInput();
+			}
+			if(parent.m_resendpanel != null && parent.m_resendpanel.get_statuscodes().m_tbl_list.getRowCount()>0) {
+				boolean selected = false;
+				for(int i=0;i<parent.m_resendpanel.get_statuscodes().m_tbl_list.getRowCount();++i)
+					if(Boolean.valueOf(parent.m_resendpanel.get_statuscodes().m_tbl_list.getValueAt(i, 3).toString()))
+						selected = true;
+				if(!selected) {
+					b_continue = false;
+					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
+						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					else
+						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
+					return;
+				}
+						
+			}
+			if(b_continue) {	
+				parent.get_btn_next().setEnabled(false);
+				//parent.get_sendobject().get_sendproperties().set_simulation(true);
+				retrieve_refno(true, "act_set_refno");
+			}			
+		}
+		else if("act_set_refno".equals(e.getActionCommand())) { //wait for refno, then send
 			m_n_refno = ((Integer)e.getSource()).intValue();
 			m_txt_refno.setText(PAS.l("common_refno") + " - " + m_n_refno);
 			parent.set_comstatus(PAS.l("main_sending_refno_retrieved") + " - " + m_n_refno);

@@ -59,7 +59,7 @@ public abstract class SendProperties extends Object {
 	private BBSchedProfile m_schedprofile = null;
 	private int m_n_sendingtype;
 	private String m_sz_projectpk = "";
-	private boolean m_b_simulation = false;
+	private int m_n_simulation = 0;
 	private boolean m_b_isresend = false;
 	private int m_n_resend_refno = -1;
 	private Set<StatusCode> m_arr_resend_status = new LinkedHashSet<StatusCode>();
@@ -91,8 +91,8 @@ public abstract class SendProperties extends Object {
 	public int get_sendingtype() { return m_n_sendingtype; }
 	protected SendOptionToolbar parent;
 	protected SendObject get_sendobject() { return parent.get_parent(); }
-	public void set_simulation(boolean b) { m_b_simulation = b; }
-	public boolean get_simulation() { return m_b_simulation; }
+	public void set_simulation(int n) { m_n_simulation = n; }
+	public int get_simulation() { return m_n_simulation; }
 	public int get_profilepk() { return m_n_profilepk; }
 	public void set_profilepk(int n_profilepk) { m_n_profilepk = n_profilepk; }
 	public String get_oadc_number() { return m_sz_oadc; }
@@ -251,7 +251,7 @@ public abstract class SendProperties extends Object {
 			sz_vals[22]= String.valueOf(Variables.getNavigation().getHeaderUBO());
 			sz_vals[23]= String.valueOf(Variables.getNavigation().getHeaderBBO());
 			sz_vals[24]= get_projectpk();
-			sz_vals[25]= (get_simulation() ? "1" : "0");
+			sz_vals[25]=  new Integer(get_simulation()).toString();//(get_simulation() ? "1" : "0");
 			sz_vals[26]= (get_isresend() ? "1" : "0");
 			sz_vals[27]= String.valueOf(get_resend_refno());
 			
@@ -346,7 +346,20 @@ public abstract class SendProperties extends Object {
 		s.setNSchedtime(get_sched().get_schedtime());
 		s.setNValidity(get_validity());
 		s.setNSendingtype(get_sendingtype());
-		s.setSzFunction((get_simulation() ? "simulate" : "live"));
+		String szFunction = "simulate";
+		switch(get_simulation())
+		{
+		case 0:
+			szFunction = "live";
+			break;
+		case 1:
+			szFunction = "simulate";
+			break;
+		case 2:
+			szFunction = "silent";
+			break;
+		}
+		s.setSzFunction(szFunction);//(get_simulation() ? "simulate" : "live"));
 		s.setNProjectpk(new Long(get_projectpk()).longValue());
 		s.setNRefno(get_refno());
 		s.setSzLbaOadc("");

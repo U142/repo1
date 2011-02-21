@@ -51,6 +51,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	protected JButton m_btn_next;
 	protected JButton m_btn_back;
 	protected JButton m_btn_simulation;
+	protected JButton m_btn_silent;
 	protected StdTextLabel m_txt_comstatus = new StdTextLabel("");
 	protected LoadingPanel m_loader = null;
 	public LoadingPanel get_loader() { return m_loader; }
@@ -401,6 +402,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_btn_back = new JButton(PAS.l("common_wizard_back"));
 		m_btn_simulation = new JButton(PAS.l("main_sending_simulate"));
 		m_btn_simulation.setVisible(PAS.get_pas().get_rightsmanagement().cansimulate());
+		m_btn_silent = new JButton(PAS.l("common_silent"));
+		m_btn_silent.setVisible(PAS.get_pas().get_rightsmanagement().canlbasilent());
 		m_btn_next.setPreferredSize(new Dimension(100, 20));
 		m_btn_back.setPreferredSize(new Dimension(100, 20));
 		m_btn_next.setActionCommand("act_next");
@@ -408,9 +411,14 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_btn_simulation.setPreferredSize(new Dimension(100, 20));
 		m_btn_simulation.setActionCommand("act_send_simulation");
 		m_btn_simulation.setVisible(false);
+		m_btn_silent.setPreferredSize(new Dimension(100, 20));
+		m_btn_silent.setActionCommand("act_send_silent");
+		m_btn_silent.setVisible(false);
+		
 		m_btn_next.addActionListener(this);
 		m_btn_back.addActionListener(this);
 		m_btn_simulation.addActionListener(this);
+		m_btn_silent.addActionListener(this);
 		m_txt_comstatus.setPreferredSize(new Dimension(220, 16));
 		add_controls();
 		m_tabbedpane.addChangeListener(this);
@@ -449,6 +457,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_btnpane.add_button(m_btn_back);
 		m_btnpane.add_button(m_btn_next);
 		m_btnpane.add_button(m_btn_simulation);
+		m_btnpane.add_button(m_btn_silent);
 		add(m_btnpane, BorderLayout.SOUTH);
 		setVisible(true);
 		set_next_text();
@@ -505,12 +514,14 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			m_btn_next.setText(PAS.l("main_sending_send"));
 			m_btn_next.setActionCommand("act_send");
 			m_btn_simulation.setVisible(PAS.get_pas().get_rightsmanagement().cansimulate());
+			m_btn_silent.setVisible(PAS.get_pas().get_rightsmanagement().canlbasilent());
 			m_tabbedpane.setEnabledAt(m_tabbedpane.getSelectedIndex(), true);
 		} else {
 			m_btn_next.setEnabled(true);
 			m_btn_next.setText(PAS.l("common_wizard_next"));
 			m_btn_next.setActionCommand("act_next");
 			m_btn_simulation.setVisible(false);
+			m_btn_silent.setVisible(false);
 			if(m_tabbedpane.getSelectedComponent().getClass().equals(Sending_Files.class)) {
 				if(((Sending_Files)m_tabbedpane.getSelectedComponent()).get_current_fileinfo() == null) {
 					m_btn_next.setEnabled(false);
@@ -645,7 +656,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			
 			if(ready) {
 				
-				get_sendobject().get_sendproperties().set_simulation(false);
+				get_sendobject().get_sendproperties().set_simulation(0);
 				
 				String message = "";
 				
@@ -714,7 +725,6 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		} else if("act_send_simulation".equals(e.getActionCommand())) {
 			try
 			{
-
 				boolean ready = true;
 				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
 					JOptionPane.showMessageDialog(this,m_cell_broadcast_text_panel.validateFields());
@@ -731,7 +741,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				} 
 				
 				if(ready) {
-					get_sendobject().get_sendproperties().set_simulation(true);
+					get_sendobject().get_sendproperties().set_simulation(1);
 					String message = "";
 					
 					if(m_sendobject.get_sendproperties().get_isresend()) {
@@ -742,16 +752,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						//ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
 						for(int j=0;j<statuslist.size();j++) {
 							Object[] obj = (Object[])statuslist.get(j);
-							//StatusCode statuscode = (StatusCode)obj[0];
 							count +=  Integer.parseInt(obj[2].toString());
-							/*for(int i=0;i<ting.size();i++) {
-								StatusItemObject item = (StatusItemObject)ting.get(i);
-								if(item.get_refno() == m_sendobject.get_sendproperties().get_resend_refno() &&
-										item.get_status() == statuscode.get_code()) {
-									//count++;
-									count+=1;//item.get_adrtype(); //kanskje denne i stedet?
-								}
-							}*/
 						}
 						message = String.format(PAS.l("main_sending_confirm_simulated_sending"), count);//"Confirm simulated sending to " + count + " recipients";
 					}
@@ -767,7 +768,6 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 							else
 								message = String.format(PAS.l("main_sending_confirm_simulated_sending_voice_and_sms"), n_voice, n_sms);//"Confirm simulated sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
 					}
-						//message = "Confirm simulated sending to " + get_addresscount().get_total_by_types() + " recipients";
 					LightPanel panel = new LightPanel();
 					panel.add(new JLabel("<html>" + message + "</html>"),panel.m_gridconst);
 					panel.set_gridconst(0, panel.inc_panels(), 1, 1);
@@ -795,7 +795,82 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			{
 				Error.getError().addError(PAS.l("common_error"), "Error while executing simulation", err, Error.SEVERITY_ERROR);
 			}
-		} else if("act_finish".equals(e.getActionCommand())) {
+		} 
+		else if("act_send_silent".equals(e.getActionCommand())) {
+			try
+			{
+				boolean ready = true;
+				if(m_sendobject.get_toolbar().get_cell_broadcast_text().isSelected() && m_cell_broadcast_text_panel.validateFields() != null) {
+					JOptionPane.showMessageDialog(this,m_cell_broadcast_text_panel.validateFields());
+					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
+					ready = false;
+				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_profile() == null) {
+					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_msg_profile"));
+					m_tabbedpane.setSelectedComponent(m_settings);
+					ready = false;
+				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_schedprofile() == null) {
+					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_cfg_profile"));
+					m_tabbedpane.setSelectedComponent(m_settings);
+					ready = false;
+				} 
+				
+				if(ready) {
+					get_sendobject().get_sendproperties().set_simulation(2);
+					String message = "";
+					
+					if(m_sendobject.get_sendproperties().get_isresend()) {
+						int count = 0;
+						ArrayList<Object> statuslist = m_resendpanel.get_checked();
+						if(statuslist.size() == 0)
+							System.out.println("Statuslisten er 0");
+						//ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
+						for(int j=0;j<statuslist.size();j++) {
+							Object[] obj = (Object[])statuslist.get(j);
+							count +=  Integer.parseInt(obj[2].toString());
+						}
+						message = String.format(PAS.l("main_sending_confirm_silent_sending"), count);//"Confirm silent sending to " + count + " recipients";
+					}
+					else
+					{
+						int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
+						int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
+						if(n_voice + n_sms == 0)
+							message = PAS.l("main_sending_confirm_silent_sending_no_recipients");
+						else
+							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
+								message = String.format(PAS.l("main_sending_confirm_silent_sending"), n_sms);
+							else
+								message = String.format(PAS.l("main_sending_confirm_silent_sending_voice_and_sms"), n_voice, n_sms);//"Confirm silent sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+					}
+					LightPanel panel = new LightPanel();
+					panel.add(new JLabel("<html>" + message + "</html>"),panel.m_gridconst);
+					panel.set_gridconst(0, panel.inc_panels(), 1, 1);
+					StdTextArea confirm = new StdTextArea("",false);
+					confirm.setPreferredSize(new Dimension(150,16));
+					panel.add(confirm, panel.m_gridconst);
+					JFrame frame = get_frame();
+					
+					int cr = JOptionPane.showConfirmDialog(frame, panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION);
+					if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("SILENT")) {
+						frame.dispose();
+						m_send.actionPerformed(e);
+						//this.close();
+					}
+					else {
+						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SILENT"))
+							JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SILENT"));
+							
+						frame.dispose();
+						System.out.println("Sending aborted");
+					}
+				}
+			}
+			catch(Exception err)
+			{
+				Error.getError().addError(PAS.l("common_error"), "Error while executing silent sending", err, Error.SEVERITY_ERROR);
+			}			
+		}
+		else if("act_finish".equals(e.getActionCommand())) {
 			new Thread("Open status thread")
 			{
 				public void run()

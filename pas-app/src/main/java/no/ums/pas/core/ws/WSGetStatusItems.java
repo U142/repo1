@@ -242,7 +242,7 @@ public class WSGetStatusItems extends WSThread
 					}
 					try {
 						sending = new StatusSending(sz_values);
-						if(sending.get_type()==1)
+						if(sending.get_type()==1 || sending.get_type()==2)
 							b_hasvoice = true;
 						sending.setProjectpk(Long.toString(sz_projectpk));
 					} catch(Exception e) {

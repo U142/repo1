@@ -34,11 +34,15 @@ import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdTextLabel;
 
 
 public class ULookAndFeel
 {
 	public static final String WINDOW_MODIFIED = "ULookAndFeel.windowModified";
+	public static final String WINDOW_LOADING = "ULookAndFeel.windowLoading";
+	public static final String WINDOW_LOADING_GRADIENTVALUE = "ULookAndFeel.windowLoadingGradientValue";
+	public static final Integer WINDOW_LOADING_INITIAL_GRADIENTVALUE = 255;
 	public static final String TABBEDPANE_CLOSEBUTTON = "ULookAndFeel.tabbedPaneCloseButton";
 	private static final String TABBEDPANE_CLOSEBUTTON_HOT = "ULookAndFeel.tabbedPaneCloseButtonHot";
 	private static final String TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT = "ULookAndFeel.tabbedPaneOneClosebuttonIsHot";
@@ -47,7 +51,7 @@ public class ULookAndFeel
 	{
 		INSTANCE;
 		
-		
+		public int GetAttentionFactor() { return ATTENTION; }
 		int INCREMENT = 7;
 		int ATTENTION = 0;
 		int MAX = 255;
@@ -64,16 +68,16 @@ public class ULookAndFeel
 			timer.start();
 		}
 		
-		public GradientPaint getGradientPaint(JComponent c)
+		public GradientPaint getGradientPaint(int USE_ATTENTION, JComponent c, Color base, float posfactor /*0.6*/, int X1, int Y1, int X2, int Y2)
 		{				
-			COLORFACTOR = (int)Math.abs(MAX/2.0 - ATTENTION);
+			COLORFACTOR = (int)Math.abs(USE_ATTENTION);
 
-			return new GradientPaint(0, c.getY(), new Color(200, 
-					0, 
-					0, 
+			return new GradientPaint(X1, Y1, new Color(base.getRed(), 
+					base.getGreen(), 
+					base.getBlue(), 
 					COLORFACTOR),
-					0,
-					(float)(c.getY()+c.getHeight()*0.6), new Color(SystemColor.control.getRed(), 
+					X2, 
+					(float)(Y2), new Color(SystemColor.control.getRed(),//c.getY()+c.getHeight()*posfactor 
 							SystemColor.control.getGreen(), 
 							SystemColor.control.getBlue(), 
 							50));			
@@ -117,10 +121,40 @@ public class ULookAndFeel
 			{
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
-				GradientPaint p = UAttentionController.INSTANCE.getGradientPaint(component);
+				GradientPaint p = UAttentionController.INSTANCE.getGradientPaint(UAttentionController.INSTANCE.MAX - UAttentionController.INSTANCE.ATTENTION,
+						component, new Color(220, 20, 20), 0.6f,
+						0, component.getY(), 0, (int)(component.getY()+component.getHeight()*0.8f));
 				g.setPaint(p);
 				//g.setColor(new Color(0, 0, 128, 128));
 				g.fillRoundRect(x+2, y+2, w-4, h-4, 5, 5);			
+			}
+			o = component.getClientProperty(ULookAndFeel.WINDOW_LOADING);
+			if(o!=null)
+			{
+				int gradientfactor = Integer.parseInt(component.getClientProperty(ULookAndFeel.WINDOW_LOADING_GRADIENTVALUE).toString());
+				if(gradientfactor>0)
+				{
+					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+							RenderingHints.VALUE_ANTIALIAS_ON);
+					/*GradientPaint p = UAttentionController.INSTANCE.getGradientPaint(gradientfactor, 
+							component, SystemColor.controlDkShadow, 1.0f,
+							1, component.getY()+component.getHeight(), 1, component.getY()+component.getHeight()-5);*/
+					int pos = gradientfactor/10;
+					GradientPaint p = UAttentionController.INSTANCE.getGradientPaint(gradientfactor, 
+							component, SystemColor.controlDkShadow, 1.0f,
+							1, y, 1, y+10);/*(int)(component.getY()+component.getHeight()*2.0f));*/
+					g.setPaint(p);
+					//g.setColor(new Color(0, 0, 128, 128));
+					g.fillRoundRect(x+2, y, w-4, h-4, 5, 5);
+					//g.drawString("Updating", x+gradientfactor/10, y+15);
+					if(!Boolean.parseBoolean(o.toString()))
+					{
+						component.putClientProperty(ULookAndFeel.WINDOW_LOADING_GRADIENTVALUE, gradientfactor-10);
+					}
+					else
+					{
+					}
+				}
 			}
 		}
 

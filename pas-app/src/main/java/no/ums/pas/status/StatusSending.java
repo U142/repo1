@@ -486,12 +486,12 @@ public class StatusSending extends Object {
 				sz_type = PAS.l("main_status_locationbased_alert");
 				break;
 			}
-			if(m_lba.f_simulation==1)
-				
+			if(m_lba.f_simulation==2)
+				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live") + "]" + sz_time_used));
+			else if(m_lba.f_simulation==1)
 				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_simulated") + "]" + sz_time_used)); //JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Simulated) -- JobID " + m_lba.sz_jobid));
 			else
 				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_live") + "]" + sz_time_used));// JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Live sending) -- JobID " + m_lba.sz_jobid));
-		
 		}
 		catch(Exception e)
 		{
@@ -2338,7 +2338,20 @@ public class StatusSending extends Object {
 						sz_operators += m_lba_by_operator.get(i).sz_operator + " - (" + LBASEND.LBASTATUSTEXT(m_lba_by_operator.get(i).n_status)+ ")<br>";
 					sz_operators += "</b>";
 				}
-				pnl_icon._SetToolTipText_Confirm(PAS.l("main_status_locationbased_alert_short") + "&nbsp;" + (getLBA().f_simulation==1 ? PAS.l("main_sending_simulated").toUpperCase() : PAS.l("main_sending_live").toUpperCase()) + "&nbsp;" + PAS.l("common_to") + "&nbsp;" + getLBA().n_items + "&nbsp;" + PAS.l("main_sending_recipients") + "<br><br>" + sz_operators);
+				String sz_sendtext = "Unknown";
+				switch(getLBA().f_simulation)
+				{
+				case 1:
+					sz_sendtext = PAS.l("main_sending_simulated").toUpperCase();
+					break;
+				case 0:
+					sz_sendtext = PAS.l("main_sending_live").toUpperCase();
+					break;
+				case 2:
+					sz_sendtext = PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live").toUpperCase();
+					break;
+				}
+				pnl_icon._SetToolTipText_Confirm(PAS.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + PAS.l("common_to") + "&nbsp;" + getLBA().n_items + "&nbsp;" + PAS.l("main_sending_recipients") + "<br><br>" + sz_operators);
 			}
 
 			String tooltip = "";
