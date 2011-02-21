@@ -145,7 +145,10 @@ public class ULookAndFeel
 							1, y, 1, y+10);/*(int)(component.getY()+component.getHeight()*2.0f));*/
 					g.setPaint(p);
 					//g.setColor(new Color(0, 0, 128, 128));
-					g.fillRoundRect(x+2, y, w-4, h-4, 5, 5);
+					//g.fillRoundRect(x+2, y, w-4, h-4, 5, 5);
+					//g.fillRoundRect(x+2, y, x+w-2, y+h, 5, 5);
+					//int dim = 10;
+					//g.fillPolygon(new int [] { x+4, x+4, x+dim*2 }, new int [] { y+(h/2)-dim, y+(h/2)+dim, y+(h/2) }, 3);
 					//g.drawString("Updating", x+gradientfactor/10, y+15);
 					if(!Boolean.parseBoolean(o.toString()))
 					{
@@ -153,6 +156,7 @@ public class ULookAndFeel
 					}
 					else
 					{
+						g.drawImage(ImageLoader.load_icon("remembermilk_orange.gif").getImage(), 12, (y+h/2)-10, null);
 					}
 				}
 			}
