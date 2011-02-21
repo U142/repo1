@@ -446,7 +446,22 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("l_userpk", logoninfo.l_userpk.ToString());
             xmlwriter.insertAttribute("l_deptpri", logoninfo.l_deptpri.ToString());
             xmlwriter.insertAttribute("sz_password", logoninfo.sz_password.ToString());
-            xmlwriter.insertAttribute("f_simulation", (n_function == UCommon.USENDING_LIVE ? "0" : "1"));
+
+            int FUNCTION = 1; //default to simulate
+            switch (n_function)
+            {
+                case UCommon.USENDING_LIVE:
+                    FUNCTION = 0;
+                    break;
+                case UCommon.USENDING_SIMULATION:
+                    FUNCTION = 1;
+                    break;
+                case UCommon.USENDING_LIVE_SILENT:
+                    FUNCTION = 2;
+                    break;
+            }
+            xmlwriter.insertAttribute("f_simulation", FUNCTION.ToString());//(n_function == UCommon.USENDING_LIVE ? "0" : "1"));
+            
             xmlwriter.insertAttribute("l_version", "3");
             xmlwriter.insertAttribute("l_validity", alert.n_expiry.ToString()); //If TAS then jalla jalla ((UTASSENDING)sourceshape).n_sms_expirytime_minutes;
             xmlwriter.insertAttribute("l_requesttype", alert.n_requesttype.ToString());
@@ -1747,8 +1762,11 @@ namespace com.ums.UmsParm
         public AdrfileGUIWriter adrguiwriter;
         public BBPROJECT m_project;
         protected bool b_simulation;
+        protected bool b_silent;
         public bool getSimulation() { return b_simulation; }
         public void setSimulation(bool b) { b_simulation = b; }
+        public bool getSilent() { return b_silent; }
+        public void setSilent(bool b) { b_silent = b; }
     //public 
 
         public bool createShape(ref UMAPSENDING s)

@@ -423,6 +423,7 @@ namespace com.ums.UmsCommon
         public const int USENDING_LIVE         = 0;
         public const int USENDING_SIMULATION = 1;
         public const int USENDING_TEST = 2;
+        public const int USENDING_LIVE_SILENT = 4;
         public static String USENDINGTYPE(int n)
         {
             switch (n)
@@ -433,6 +434,8 @@ namespace com.ums.UmsCommon
                     return "simulation";
                 case UCommon.USENDING_TEST:
                     return "test";
+                case UCommon.USENDING_LIVE_SILENT:
+                    return "silent";
             }
             return "Unknown Send Function";
         }
@@ -446,6 +449,8 @@ namespace com.ums.UmsCommon
                     return "Simulated";
                 case UCommon.USENDING_TEST:
                     return "Tested";
+                case UCommon.USENDING_LIVE_SILENT:
+                    return "Silent";
             }
             return USENDINGTYPE(n);
         }

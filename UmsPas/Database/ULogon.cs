@@ -510,6 +510,8 @@ namespace com.ums.PAS.Database
                         //l_pas_send -= 1;
                         if ((l_pas_send & 2) == 2 && (l_dept_pas_send & 2) == 0)
                             l_pas_send &= ~2;
+                        if ((l_pas_send & 4) == 4 && (l_dept_pas_send & 4) == 0)
+                            l_pas_send &= ~4;
                         //l_pas_send -= 2;
                         dept.l_newsending = l_pas_send;
 

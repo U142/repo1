@@ -1350,7 +1350,21 @@ namespace com.ums.UmsParm
                 }
                 for (int i = 0; i < operators.Count; i++)
                 {
-                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}, {4}", l_refno, operators[i], l_type, n_function, l_requesttype);
+                    int n_simulation = 1;
+                    switch (n_function)
+                    {
+                        case UCommon.USENDING_LIVE:
+                            n_simulation = 0;
+                            break;
+                        case UCommon.USENDING_SIMULATION:
+                        case UCommon.USENDING_TEST:
+                            n_simulation = 1;
+                            break;
+                        case UCommon.USENDING_LIVE_SILENT:
+                            n_simulation = 2;
+                            break;
+                    }
+                    szSQL = String.Format("sp_cb_ins_lbasend {0}, {1}, {2}, {3}, {4}", l_refno, operators[i], l_type, /*n_function*/n_simulation, l_requesttype);
                     ExecNonQuery(szSQL);
                 }
                 return true;
@@ -1699,22 +1713,27 @@ namespace com.ums.UmsParm
             }
 
         }
-        public bool GetIsSimulation(int n_refno)
+
+        /*
+         * May be: live, simulation or silent
+         */
+        public int GetIsSimulation(int n_refno)
         {
             OdbcDataReader rs = null;
 
             try
             {
-                bool b = true;
+                int b = 1; //default to simulation
                 String szSQL = String.Format("SELECT f_simulate FROM LBASEND WHERE l_refno={0}", n_refno);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
                 {
                     int n = rs.GetInt32(0);
-                    if (n == 0)
+                    /*if (n == 0)
                         b = false;
                     else
-                        b = true;
+                        b = true;*/
+                    b = n;
                 }
                 rs.Close();
                 return b;

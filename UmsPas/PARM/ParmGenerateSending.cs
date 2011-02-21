@@ -763,6 +763,20 @@ namespace com.ums.UmsParm
             smssending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
             tassending.setSimulation((sending.getFunction() == UCommon.USENDING_SIMULATION ? true : false));
 
+            //if live and silent, ABAS-parts will be simulated, LBA-parts will be sent silent
+            if (sending.getFunction() == UCommon.USENDING_LIVE_SILENT)
+            {
+                passending.setSilent(true);
+                lbasending.setSilent(true);
+                smssending.setSilent(true);
+                tassending.setSilent(true);
+                passending.setSimulation(true);
+                lbasending.setSimulation(true);
+                smssending.setSimulation(true);
+                tassending.setSimulation(true);
+            }
+
+
             smssending.setSmsMessage(sending.sz_sms_message);
             smssending.setSmsOadc(sending.sz_sms_oadc);
             smssending.setExpiryTimeMinutes(sending.n_sms_expirytime_minutes);

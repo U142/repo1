@@ -127,6 +127,8 @@ namespace com.ums.ws.parm
                 return UCommon.USENDING_SIMULATION;
             else if (s.Equals("test"))
                 return UCommon.USENDING_TEST;
+            else if (s.Equals("silent"))
+                return UCommon.USENDING_LIVE_SILENT;
             return -1;
         }
 
@@ -589,14 +591,14 @@ namespace com.ums.ws.parm
                             }
                             else
                             {
-                                bool b_simulation = db.GetIsSimulation(l_refno);
+                                int n_simulation = db.GetIsSimulation(l_refno);
                                 USimpleXmlWriter xmlwriter = new USimpleXmlWriter("iso-8859-1");
                                 xmlwriter.insertStartDocument();
                                 xmlwriter.insertStartElement("LBA");
                                 xmlwriter.insertAttribute("operation", (b_confirm ? "ConfirmJob" : "CancelJob"));
                                 xmlwriter.insertAttribute("l_refno", l_refno.ToString());
                                 xmlwriter.insertAttribute("sz_jobid", sz_jobid);
-                                xmlwriter.insertAttribute("f_simulation", (b_simulation ? "1" : "0"));
+                                xmlwriter.insertAttribute("f_simulation", n_simulation.ToString());
                                 xmlwriter.insertAttribute("l_operator", sendings[i].l_operator.ToString());
                                 xmlwriter.insertAttribute("l_deptpk", logon.l_deptpk.ToString());
                                 xmlwriter.insertAttribute("l_comppk", logon.l_comppk.ToString());
@@ -667,14 +669,14 @@ namespace com.ums.ws.parm
                     }
                     else
                     {
-                        bool b_simulation = db.GetIsSimulation(l_refno);
+                        int n_simulation = db.GetIsSimulation(l_refno);
                         USimpleXmlWriter xmlwriter = new USimpleXmlWriter("iso-8859-1");
                         xmlwriter.insertStartDocument();
                         xmlwriter.insertStartElement("LBA");
                         xmlwriter.insertAttribute("operation", (b_confirm ? "ConfirmJob" : "CancelJob"));
                         xmlwriter.insertAttribute("l_refno", l_refno.ToString());
                         xmlwriter.insertAttribute("sz_jobid", sz_jobid);
-                        xmlwriter.insertAttribute("f_simulation", (b_simulation ? "1" : "0"));
+                        xmlwriter.insertAttribute("f_simulation", n_simulation.ToString());//(b_simulation ? "1" : "0"));
                         xmlwriter.insertAttribute("l_deptpk", logon.l_deptpk.ToString());
                         xmlwriter.insertAttribute("l_comppk", logon.l_comppk.ToString());
                         xmlwriter.insertAttribute("l_userpk", logon.l_userpk.ToString());
