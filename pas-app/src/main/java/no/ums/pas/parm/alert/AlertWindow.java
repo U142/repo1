@@ -105,7 +105,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		//this.setTitle("New Alert - \"" + m_sendobject.get_sendproperties().get_sendingname() + "\"");
 		
 		setLayout(new BorderLayout());
-		int n_width = 670, n_height = 480;
+		int n_width = 710, n_height = 500;
 		//int n_width = 570, n_height = 450;
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		
@@ -166,8 +166,6 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_btn_simulation.addActionListener(this);
 		m_txt_comstatus.setPreferredSize(new Dimension(200, 16));
 		add_controls();
-		m_tabbedpane.addChangeListener(this);
-		addWindowListener(this);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		// Lurer på om dette går?
 		//ac.setParent(this);
@@ -209,6 +207,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_sms_broadcast_text_panel.enableInput(false);
 			m_alert_send.enableInput(false);
 		}
+		m_tabbedpane.addChangeListener(this);
+		addWindowListener(this);
+
 	}
 	protected void add_controls() {
 		init();
