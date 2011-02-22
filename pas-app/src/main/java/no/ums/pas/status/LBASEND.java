@@ -218,6 +218,16 @@ public class LBASEND
 	
 	}
 	
+	public boolean NotYetPrepared() {
+		return (!HasFailedStatus() &&
+			!HasFinalStatus() &&
+			n_status<LBASTATUS_PREPARED_CELLVISION);
+	}
+	
+	public boolean IsPrepared() {
+		return n_status==LBASTATUS_PREPARED_CELLVISION;
+	}
+	
 	public boolean HasFinalStatus(){
 		if(n_status==LBASTATUS_FINISHED)
 			return true;

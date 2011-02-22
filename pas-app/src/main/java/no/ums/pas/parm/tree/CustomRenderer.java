@@ -111,7 +111,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 		}
 		if(aVO.getLocked()>=1)
 		{
-			path = "lock" + "." + "gif";
+			path = "lock_16" + "." + "png";
 			icon = ImageLoader.load_icon(path);
 	        Image test = icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH);
 	        icon.setImage(test);
@@ -120,7 +120,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 		}
 		//SubstanceImageCreator ic = new SubstanceImageCreator();
 		//Icon ic = new ImageIcon(SubstanceImageCreator.getTreeIcon(tree, SubstanceLookAndFeel.getTheme(), false));
-		Icon ic =  this.getDisabledIcon();
+		Icon ic =  this.getLeafIcon();
 		setIcon(ic);
 		//render default icon
 		/*path = "lock" + "." + "gif";

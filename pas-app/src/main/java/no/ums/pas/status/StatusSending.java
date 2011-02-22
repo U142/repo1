@@ -1169,22 +1169,82 @@ public class StatusSending extends Object {
 			m_btn_confirm_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, new Boolean(b));
 		}
 		
+		private boolean beforeConfirmOrCancelLba(boolean confirm)
+		{
+			boolean ret = false;
+			List<LBASEND> notprepared = new ArrayList<LBASEND>();
+			List<LBASEND> prepared = new ArrayList<LBASEND>();
+			StringBuilder sbnot = new StringBuilder();
+			StringBuilder sbprepared = new StringBuilder();
+			StringBuilder sbtotal = new StringBuilder();
+			
+			sbnot.append("<b>The following operator(s) are not yet ready</b><br>");
+			sbprepared.append("<b>");
+			sbprepared.append((confirm ? PAS.l("common_confirm").toUpperCase() : PAS.l("common_cancel").toUpperCase()));
+			sbprepared.append("-operation will only affect</b><br>");
+			if(m_lba_by_operator!=null)
+			{
+				for(LBASEND lbasend : m_lba_by_operator)
+				{
+					if(lbasend.NotYetPrepared())
+					{
+						notprepared.add(lbasend);
+						sbnot.append("-" + lbasend.sz_operator);
+						sbnot.append("<br>");
+					}
+					else if(lbasend.IsPrepared())
+					{
+						prepared.add(lbasend);
+						sbprepared.append("-" + lbasend.sz_operator);
+						sbprepared.append("<br>");
+					}
+				}
+				sbnot.append("<br>");
+				sbprepared.append("<br>");
+				
+				sbtotal.append("<html>");
+				sbtotal.append(sbprepared.toString());
+				sbtotal.append(sbnot.toString());
+				sbtotal.append("<b>");
+				sbtotal.append(PAS.l("common_are_you_sure"));
+				sbtotal.append("<br><br></b>");
+				sbtotal.append("</html>");
+				if(notprepared.size()>0)
+				{
+					if(JOptionPane.showConfirmDialog(this, sbtotal.toString(), PAS.l("common_are_you_sure"), 
+												JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION)
+					{
+						ret = true;
+					}
+					else
+					{
+						ret = false;
+					}
+				}
+				else
+					ret = true;
+			}
+			return ret;
+		}
+		
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
 				Variables.getNavigation().gotoMap(get_shape().calc_bounds());
 			} else if(e.getSource().equals(m_btn_cancel_lba_sending))
 			{
 				//CANCEL
-				if(getLBA()!=null)
+				if(getLBA()!=null)// && beforeConfirmOrCancelLba(false))
 				{
+					System.out.println("Cancel LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, false);
 				}
 				
 			} else if(e.getSource().equals(m_btn_confirm_lba_sending))
 			{
 				//CONFIRM
-				if(getLBA()!=null)
+				if(getLBA()!=null)// && beforeConfirmOrCancelLba(true))
 				{
+					System.out.println("Confirm LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, true);
 				}
 				
@@ -2311,16 +2371,16 @@ public class StatusSending extends Object {
 				if(m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION ||
 					m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
 				{
-					pnl_icon.ShowConfirmAndCancel(true);
-					setNeedAttention(true);
 					++n_one_or_more_operators_ready;
 				}
 			}
-			if(n_one_or_more_operators_ready<=0)
+			pnl_icon.ShowConfirmAndCancel(m_lba.IsPrepared());
+			setNeedAttention(m_lba.IsPrepared());
+			/*if(n_one_or_more_operators_ready<=0)
 			{
 				pnl_icon.ShowConfirmAndCancel(false);
 				setNeedAttention(false);				
-			}
+			}*/
 			
 			if(getLBA()!=null)
 			{

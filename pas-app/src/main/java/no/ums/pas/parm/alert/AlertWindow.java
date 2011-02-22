@@ -714,7 +714,11 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(((m_alert.getSendObj().get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
 			showSpecifyLanguage();
-			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
+			try
+			{
+				m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
+			}
+			finally { }
 		}
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
