@@ -882,15 +882,21 @@ namespace com.ums.UmsParm
                      * 
                      */
                     smssending.createShape(ref sending);
+                    String schedtime_minutes = sending.n_schedtime.ToString();
                     if (sending.n_scheddate == -1 || sending.n_schedtime == -1)
                     {
                         String datetime = db.getDbClock().ToString();
                         sending.n_scheddate = int.Parse(datetime.Substring(0, 8));
                         sending.n_schedtime = int.Parse(datetime.Substring(8));
+                        schedtime_minutes = sending.n_schedtime.ToString();
+                    }
+                    else
+                    {
+                        schedtime_minutes = sending.n_schedtime.ToString() + "00"; //add seconds
                     }
 
                     //db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadRight(6, '0')));
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), schedtime_minutes));
                     smssending.setSendingInfo(ref smssendinginfo);
                         db.Send(ref smssending, ref logoninfo);
                     b_publish_sms = true;
@@ -987,16 +993,22 @@ namespace com.ums.UmsParm
                 db.FillSendNum(sending.oadc.sz_number, ref sendnum);
                 db.FillActionProfile(sending.n_profilepk, ref profile);
 
+                String schedtime_minutes = sending.n_schedtime.ToString();
                 if (sending.n_scheddate == -1 || sending.n_schedtime == -1)
                 {
                     String datetime = db.getDbClock().ToString();
                     sending.n_scheddate = int.Parse(datetime.Substring(0, 8));
                     sending.n_schedtime = int.Parse(datetime.Substring(8));
+                    schedtime_minutes = sending.n_schedtime.ToString();
+                }
+                else
+                {
+                    schedtime_minutes = sending.n_schedtime.ToString() + "00"; //add seconds
                 }
 
                 try
                 {
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref sendinginfo, new UDATETIME(sending.n_scheddate.ToString(), schedtime_minutes));
                 }
                 catch (Exception e)
                 {
