@@ -57,7 +57,7 @@ public class Settings {
 		sz_wms_site = "http://";
 		sz_wms_format = "";
 		b_pan_by_drag = false;
-		sz_languageid = "no_NO";
+		sz_languageid = "en_GB";
 		sz_wms_username = "";
 		sz_wms_password = "";
 		rect_messagelib_dlg = new Rectangle(0,0,0,0);
