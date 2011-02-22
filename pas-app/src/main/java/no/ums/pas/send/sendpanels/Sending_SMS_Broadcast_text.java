@@ -153,7 +153,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		//m_panel_messages.add(m_txt_messagetext, m_panel_messages.m_gridconst);
 		
 		
-		m_panel_messages.set_gridconst(10, m_panel_messages.get_panel(), 4, 1, GridBagConstraints.WEST);
+		m_panel_messages.set_gridconst(14, m_panel_messages.get_panel(), 1, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_messagesize, m_panel_messages.m_gridconst);
 		
 		JPanel pnl = new JPanel();
