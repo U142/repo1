@@ -718,8 +718,10 @@ namespace com.ums.ws.pas
                 ret.l_type = 0;
                 PASUmsDb db = new PASUmsDb();
                 db.CheckLogon(ref logon, true);
-                db.ExecNonQuery(String.Format("UPDATE MDSOADC_DEFAULT SET l_type={0}, sz_value='{1}' WHERE l_userpk={2}",
-                                    ret.l_type, oadc, logon.l_userpk));
+                //db.ExecNonQuery(String.Format("UPDATE MDSOADC_DEFAULT SET l_type={0}, sz_value='{1}' WHERE l_userpk={2}",
+                //                    ret.l_type, oadc, logon.l_userpk));
+                db.ExecNonQuery(String.Format("sp_sms_ins_oadc_default {0}, {1}, '{2}'",
+                                    logon.l_userpk, 0, oadc));
                 db.close();
                 ret.sz_value = oadc;
                 return ret;
