@@ -684,7 +684,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_txt_messagename.setText("");
 		m_txt_messagetext.setText(PAS.l("main_sending_lba_message"));
 		n_focuscounter=0;
-		m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
+		//m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());
+		m_txt_oadc_text.setText(PAS.get_pas().get_userinfo().get_default_oadc());
 		UpdateTextFields();
 		m_cbx_messages.setSelectedIndex(-1);
 		m_btn_delete.setEnabled(false);
