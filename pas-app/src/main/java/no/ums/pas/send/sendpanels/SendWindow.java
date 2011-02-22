@@ -133,7 +133,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	}
 	public boolean hasVoice(int n_adrtypes)
 	{
-		if(doSendVoice() && 
+		if(/*doSendVoice() &&*/ 
 				((n_adrtypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
 				(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
 				(n_adrtypes & SendController.SENDTO_FIXED_COMPANY) > 0 ||
@@ -371,25 +371,19 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_tabbedpane.addTab(PAS.l("main_sending_settings"), null,
 							m_settings,
 							PAS.l("main_sending_settings_tooltip"));
-		if(obj.get_toolbar().get_cell_broadcast_text().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
-			m_tabbedpane.addTab(PAS.l("main_status_locationbased_alert"), null, 
-							m_cell_broadcast_text_panel,
-							PAS.l("main_sending_lba_tooltip"));
-		}
 		int tmp = obj.get_sendproperties().get_addresstypes();
-		/*if((tmp & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
-			(tmp & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
-			(tmp & SendController.SENDTO_SMS_COMPANY) > 0 ||
-			(tmp & SendController.SENDTO_SMS_COMPANY_ALT_FIXED) > 0 ||
-			(tmp & SendController.SENDTO_SMS_PRIVATE) > 0 ||
-			(tmp & SendController.SENDTO_SMS_PRIVATE_ALT_FIXED) > 0)*/
-		//if(hasSMS(tmp) && !(obj.get_sendproperties().get_isresend() && obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_))
 		if(hasSMS(tmp))
 		{
 			m_tabbedpane.addTab(PAS.l("main_sending_sms_heading"), null,
 								m_sms_broadcast_text_panel,
 								PAS.l("main_sending_sms_heading_tooltip"));
-			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel), false);
+			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel), true);
+		}
+
+		if(obj.get_toolbar().get_cell_broadcast_text().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
+			m_tabbedpane.addTab(PAS.l("main_status_locationbased_alert"), null, 
+							m_cell_broadcast_text_panel,
+							PAS.l("main_sending_lba_tooltip"));
 		}
 		m_tabbedpane.addTab(PAS.l("main_sending_finalize_heading"), null,
 							m_send,

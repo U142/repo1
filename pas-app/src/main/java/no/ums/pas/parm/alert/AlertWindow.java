@@ -264,7 +264,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				m_btn_next.setEnabled(false);
 			
 			m_btn_next.setActionCommand("act_save");
-			m_btn_simulation.setVisible(true);
+			m_btn_simulation.setVisible(false);
 			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 1)
 				m_btn_next.setEnabled(false);
 		} else {
@@ -358,14 +358,32 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		return frame;
 	}
 	
+	/**
+	 * 
+	 * @return if voice is disabled, return true. if voice is enabled, if soundfiles in profile<=0 return true
+	 */
+	private boolean can_external_exec() {
+		if(m_alert.getAlert()==null)
+			return false;
+		boolean hasVoice = hasVoice(m_alert.getPanelToolbar().get_addresstypes());
+		boolean soundfiles = (m_alert_settings.get_current_profile().get_soundfiles().size()<=0);
+		return (hasVoice && soundfiles) || !hasVoice;
+		//return (!hasVoice(m_alert.getPanelToolbar().get_addresstypes()) || m_alert_settings.get_current_profile().get_soundfiles().size()>1);
+		
+	}
+	
 	private void verify_external_exec() {
-		if(m_alert_settings.get_current_profile().get_soundfiles().size() > 0){
+		/*if(m_alert_settings.get_current_profile().get_soundfiles().size() > 0){
 			m_alert_send.get_chk_execute_remote().setSelected(false);
 			m_alert_send.get_chk_execute_remote().setEnabled(false);
 		}
 		else
 			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 0)
-				m_alert_send.get_chk_execute_remote().setEnabled(true);			
+				m_alert_send.get_chk_execute_remote().setEnabled(true);*/
+		m_alert_send.get_chk_execute_remote().setSelected(m_alert.getAlert().getLocked()>0);
+		boolean b = can_external_exec() && (m_alert.getAlert().getLocked() == 0);
+		m_alert_send.get_chk_execute_remote().setEnabled(b);
+			
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
@@ -418,21 +436,25 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			get_loader().get_progress().setIndeterminate(false);
 			get_loader().set_starttext(PAS.l("common_finished"));
 			m_btn_next.setEnabled(true);
-			m_btn_simulation.setEnabled(true);
+			m_btn_simulation.setEnabled(false);
 			//m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_alert_settings), true);
 			if(edit)
 				set_alert_values();
 			
-			if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
-				m_alert_send.get_chk_execute_remote().setEnabled(true);
-			else
-				m_alert_send.get_chk_execute_remote().setEnabled(false);
+			verify_external_exec();
+			//m_alert_send.get_chk_execute_remote().setEnabled(hasVoice(m_alert.getPanelToolbar().get_addresstypes()) && m_alert_settings.get_current_profile().get_soundfiles().size()>1);
+			//if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
+			//	m_alert_send.get_chk_execute_remote().setEnabled(true);
+			//else
+			//	m_alert_send.get_chk_execute_remote().setEnabled(false);
 				
 		} else if("act_settings_changed".equals(e.getActionCommand())) {
-			if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
-				m_alert_send.get_chk_execute_remote().setEnabled(true);
-			else
-				m_alert_send.get_chk_execute_remote().setEnabled(true);
+			verify_external_exec();
+			//m_alert_send.get_chk_execute_remote().setEnabled(hasVoice(m_alert.getPanelToolbar().get_addresstypes()) && m_alert_settings.get_current_profile().get_soundfiles().size()>1);
+			//if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
+			//	m_alert_send.get_chk_execute_remote().setEnabled(true);
+			//else
+			//	m_alert_send.get_chk_execute_remote().setEnabled(true);
 		} else if("act_send".equals(e.getActionCommand())) {
 			get_sendobject().get_sendproperties().set_simulation(0);
 			if(JOptionPane.showConfirmDialog(PAS.get_pas(), "Confirm live sending to " + get_addresscount().get_total() + " recipients", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -531,11 +553,31 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				//}
 			}
 		} else if("act_schedprofile_changed".equals(e.getActionCommand()) || "act_profile_changed".equals(e.getActionCommand())) {
-			if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
+			/*if(m_alert_settings.get_current_profile().get_soundfiles().size()>1)
 				m_alert_send.get_chk_execute_remote().setEnabled(false);
 			else
-				m_alert_send.get_chk_execute_remote().setEnabled(true);
+				m_alert_send.get_chk_execute_remote().setEnabled(true);*/
+			verify_external_exec();
 		} else if("act_set_addresstypes".equals(e.getActionCommand())) { //callback from toolbar
+			int tmp = m_alert.getPanelToolbar().get_addresstypes();
+			if(hasSMS(tmp))
+			{
+				m_tabbedpane.insertTab(PAS.l("main_sending_sms_heading"), null, 
+						m_sms_broadcast_text_panel,
+						PAS.l("main_sending_sms_heading_tooltip"),
+						m_tabbedpane.getTabCount()-1); //m_tabbedpane.indexOfComponent(m_tabbedpane.getTabComponentAt(m_tabbedpane.getTabCount()-1)));//m_alert.getGui())+1);
+
+				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel);i<m_tabbedpane.getTabCount();i++) {
+					m_tabbedpane.setEnabledAt(i, false);
+					System.out.println("sms skal være disabled");
+				}
+			}
+			else
+			{
+				if(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel) >= 0)
+					m_tabbedpane.removeTabAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel));
+			}
+
 			if((m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT ||
 					(m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {
 				m_tabbedpane.insertTab(PAS.l("main_status_locationbased_alert"), null, 
@@ -576,24 +618,6 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			} else {
 				m_tabbedpane.remove(m_cell_broadcast_text_panel);
 				m_alert_settings.toggleVoiceSettings(true);
-			}
-			int tmp = m_alert.getPanelToolbar().get_addresstypes();
-			if(hasSMS(tmp))
-			{
-				m_tabbedpane.insertTab(PAS.l("main_sending_sms_heading"), null, 
-						m_sms_broadcast_text_panel,
-						PAS.l("main_sending_sms_heading_tooltip"),
-						m_tabbedpane.getTabCount()-1); //m_tabbedpane.indexOfComponent(m_tabbedpane.getTabComponentAt(m_tabbedpane.getTabCount()-1)));//m_alert.getGui())+1);
-
-				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel);i<m_tabbedpane.getTabCount();i++) {
-					m_tabbedpane.setEnabledAt(i, false);
-					System.out.println("sms skal være disabled");
-				}
-			}
-			else
-			{
-				if(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel) >= 0)
-					m_tabbedpane.removeTabAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel));
 			}
 		}
 		if("act_add_polypoint".equals(e.getActionCommand()) || "act_rem_polypoint".equals(e.getActionCommand()))
