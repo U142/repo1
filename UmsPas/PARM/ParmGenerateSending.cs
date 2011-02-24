@@ -1001,10 +1001,6 @@ namespace com.ums.UmsParm
                     sending.n_schedtime = int.Parse(datetime.Substring(8));
                     schedtime_minutes = sending.n_schedtime.ToString();
                 }
-                else
-                {
-                    schedtime_minutes = sending.n_schedtime.ToString() + "00"; //add seconds
-                }
 
                 try
                 {

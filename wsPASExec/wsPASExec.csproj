@@ -79,7 +79,9 @@
     <Content Include="WS\Infosentral.asmx" />
     <Content Include="WS\ParmAdmin.asmx" />
     <Content Include="WS\PAS.asmx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="WS\PasAdmin.asmx" />
     <Content Include="WS\PasStatus.asmx" />
     <Content Include="WS\TAS.asmx" />
