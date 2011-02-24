@@ -890,11 +890,7 @@ namespace com.ums.UmsParm
                         sending.n_schedtime = int.Parse(datetime.Substring(8));
                         schedtime_minutes = sending.n_schedtime.ToString();
                     }
-                    else
-                    {
-                        schedtime_minutes = sending.n_schedtime.ToString() + "00"; //add seconds
-                    }
-
+                    
                     //db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString().PadRight(6, '0')));
                     db.FillSendingInfo(ref logoninfo, ref sending, ref smssendinginfo, new UDATETIME(sending.n_scheddate.ToString(), schedtime_minutes));
                     smssending.setSendingInfo(ref smssendinginfo);
