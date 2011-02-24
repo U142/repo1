@@ -14,7 +14,7 @@
         <module>pas-lang</module>
         <module>pas-icons</module>
         <module>pas-plugin-centric</module>
-        <module>pas-release</module>
+        <!--<module>pas-release</module>-->
         <module>pas-ui</module>
         <module>pas-admin-ui</module>
         <module>pas-cellbroadcast</module>
