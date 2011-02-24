@@ -225,7 +225,7 @@ public class LBASEND
 	}
 	
 	public boolean IsPrepared() {
-		return n_status==LBASTATUS_PREPARED_CELLVISION;
+		return (n_status==LBASTATUS_PREPARED_CELLVISION || n_status==LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE);
 	}
 	
 	public boolean HasFinalStatus(){
