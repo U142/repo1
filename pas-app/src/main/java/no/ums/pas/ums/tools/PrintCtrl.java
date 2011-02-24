@@ -200,8 +200,9 @@ public class PrintCtrl implements Printable {
 	        	
 	        	int lineheight = g2d.getFontMetrics(g2d.getFont()).getHeight();
 	        	int pagelines = (((int)pageFormat.getHeight()-(headerHeight+80))/lineheight); // +80 is for the two linebreaks during header writing
-	        	
-	        	if((is.get_table().getRowCount()/pagelines) < pageIndex+1) {
+	        	//System.out.println("if(" + is.get_table().getRowCount() + "/" + pagelines + " < " + (pageIndex + 1) + ")");
+	        	//System.out.println("if(" + is.get_table().getRowCount()/pagelines + " < " + (pageIndex + 1) + ")");
+	        	if((is.get_table().getRowCount()/pagelines) < pageIndex) {
 	        		enableDoubleBuffering(componentToBePrinted);
 	        		return NO_SUCH_PAGE;
 	        	}
