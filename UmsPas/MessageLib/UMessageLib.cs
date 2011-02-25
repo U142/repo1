@@ -75,7 +75,7 @@ namespace com.ums.PAS.messagelib
                 String langpk = msg.n_langpk.ToString();
                 if (msg.n_langpk < 0)
                     langpk = "NULL";
-                String szSQL = String.Format("sp_ins_messages_tree {0}, {1}, {2}, '{3}', '{4}', {5}, {6}, '{7}', {8}, {9}, {10}, {11}",
+                String szSQL = String.Format("sp_ins_messages_tree_v2 {0}, {1}, {2}, '{3}', '{4}', {5}, {6}, '{7}', {8}, {9}, {10}, {11}",
                                     comppk,
                                     msg.n_deptpk,
                                     (int)Enum.Parse(typeof(UBBMODULEDEF), msg.n_type.ToString()),
@@ -163,7 +163,7 @@ namespace com.ums.PAS.messagelib
                                             "UNION " +
                                             "SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
                                             "FROM BBMESSAGES " +
-                                            "WHERE l_comppk={2} AND l_deptpk=-1 AND isnull(l_timestamp,0)>={1} AND f_template=1",
+                                            "WHERE l_comppk={2} AND l_deptpk=-1 AND isnull(l_timestamp,0)>={1} AND f_template=1 ORDER BY isnull(l_depth,0)",
                                             logon.l_deptpk, filter.n_timefilter, logon.l_comppk);
                 /*String szSQL = String.Format("SELECT l_deptpk, isnull(l_type,0), sz_name, sz_description, l_messagepk, isnull(l_langpk,-1), isnull(sz_number,''), isnull(f_template,0), isnull(sz_filename,''), isnull(l_ivrcode,-1), isnull(l_parentpk,-1), isnull(l_depth,0), isnull(l_timestamp,0), isnull(l_categorypk,-1) " +
                                             "FROM BBMESSAGES " +
