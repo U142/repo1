@@ -51,7 +51,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <jnlp_title>PAS</jnlp_title>
+                <jnlp_title>UMS Population Alert System</jnlp_title>
                 <jnlp_codebase_url>https://secure.ums.no/PAS/pasprod/</jnlp_codebase_url>
                 <jnlp_s>https://secure.ums.no/PAS/</jnlp_s>
                 <jnlp_w>https://secure.ums.no/PAS/ws_pasprod/WS/</jnlp_w>
