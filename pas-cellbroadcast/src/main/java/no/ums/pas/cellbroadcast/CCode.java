@@ -8,9 +8,15 @@ import com.google.common.base.Splitter;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 
-public class CCode {
+public class CCode implements Cloneable {
 
-    public static final Function<String, CCode> PARSE = new Function<String, CCode>() {
+    @Override
+	protected CCode clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (CCode)super.clone();
+	}
+
+	public static final Function<String, CCode> PARSE = new Function<String, CCode>() {
         @Override
         public CCode apply(String input) { //@Nullable 
             Iterator<String> line = Splitter

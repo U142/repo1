@@ -380,9 +380,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		else
 			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 0)
 				m_alert_send.get_chk_execute_remote().setEnabled(true);*/
-		m_alert_send.get_chk_execute_remote().setSelected(m_alert.getAlert().getLocked()>0);
-		boolean b = can_external_exec() && (m_alert.getAlert().getLocked() == 0);
-		m_alert_send.get_chk_execute_remote().setEnabled(b);
+		if(m_alert.getAlert() != null) {
+			m_alert_send.get_chk_execute_remote().setSelected(m_alert.getAlert().getLocked()>0);
+			boolean b = can_external_exec() && (m_alert.getAlert().getLocked() == 0);
+			m_alert_send.get_chk_execute_remote().setEnabled(b);
+		}
+		else
+			m_alert_send.get_chk_execute_remote().setEnabled(true);
+				
 			
 	}
 	
@@ -600,7 +605,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				}
 				// Hvis den ikke har voice, så fjern alle unødvendige ting i settings
 				int n_adrtypes = m_alert.getPanelToolbar().get_addresstypes();
-				if(((n_adrtypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
+				/*if(((n_adrtypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0 ||
 							(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
 							(n_adrtypes & SendController.SENDTO_FIXED_COMPANY) > 0 ||
 							(n_adrtypes & SendController.SENDTO_SMS_COMPANY_ALT_FIXED) > 0 ||
@@ -611,7 +616,8 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 							(n_adrtypes & SendController.SENDTO_MOBILE_COMPANY_AND_FIXED) > 0 ||
 							(n_adrtypes & SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) > 0 ||
 							(n_adrtypes & SendController.SENDTO_FIXED_COMPANY_AND_MOBILE) > 0 ||
-							(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) > 0))	
+							(n_adrtypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) > 0))*/
+				if(hasVoice(n_adrtypes))
 					m_alert_settings.toggleVoiceSettings(true);
 				else
 					m_alert_settings.toggleVoiceSettings(false);
@@ -711,7 +717,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	public void stateChanged(ChangeEvent e) {
 		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert_send))
 				verify_external_exec();
-		if(((m_alert.getSendObj().get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
+		if(((m_alert.getSendObj().get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && 
+				((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) 
+						|| m_tabbedpane.getSelectedComponent().equals(m_alert_send)) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
 			showSpecifyLanguage();
 			try
@@ -720,6 +728,13 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			}
 			finally { }
 		}
+		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
+			m_cell_broadcast_text_panel.m_popup.hide();
+		
+		if(hasVoice(m_alert.getPanelToolbar().get_addresstypes()))
+			m_alert_settings.toggleVoiceSettings(true);
+		else
+			m_alert_settings.toggleVoiceSettings(false);
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
 			ShapeStruct m_edit_shape = null;

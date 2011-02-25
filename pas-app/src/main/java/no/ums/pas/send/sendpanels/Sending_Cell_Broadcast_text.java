@@ -143,6 +143,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	protected UnderlineHighlightPainter painter = new UnderlineHighlightPainter(Color.red);
 
+	private JToolTip m_tooltip;
+	public Popup m_popup;
+	private PopupFactory popupFactory;
 	
 	public int get_requesttype() {
 		if(m_radio_requesttype_0.isSelected())
@@ -503,6 +506,11 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		set_gridconst(0, 1, 1, 1);
 		add(m_panel_messages, m_gridconst);
 		
+		m_tooltip = m_lbl_messagesize.createToolTip();
+		m_tooltip.setTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
+		//activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
+		popupFactory = PopupFactory.getSharedInstance();
+		
 		init();
 	}
 	
@@ -798,12 +806,16 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		if(text.length() > m_maxSafe) {
 			activeLabel.setForeground(Color.RED);
 			//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
-			activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
+			m_popup = popupFactory.getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
+			m_popup.show();
+			
 		}
 		else {
 			activeLabel.setForeground(PAS.get_pas().getForeground());
 			//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
 			activeLabel.setToolTipText(null);
+			if(m_popup!=null)
+				m_popup.hide();
 		}
 			
 	}

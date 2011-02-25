@@ -155,6 +155,10 @@ public class OpenStatuscodes extends SearchPanelResults {
 						setValueAt(current.get_color(), n_row, n_col_color);
 					}
 				}
+				if(current.get_current_count() < 1 /*&& get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() != 0*/) {
+					remove_row(current);
+					current.set_removedfromlist();
+				}
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();

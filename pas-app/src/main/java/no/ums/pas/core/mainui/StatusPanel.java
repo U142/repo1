@@ -92,6 +92,11 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		revalidate(); //resize		
 	}
 	
+	public int get_filter_type() {
+		try {
+			return ((StatusSending)((ComboRow)m_combo_voice_filter.getSelectedItem()).getId()).get_type();
+		} catch(Exception e) { return -1; }
+	}
 	
 	public void updateMainStatusStatistics()
 	{
@@ -132,12 +137,16 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			else if(n_voice_percent>0)
 				n = (int)n_voice_percent;
 		}
-		float total_percent = 0.0f; 
-		for(int i=0;i<ssl.size();++i) {
-			total_percent += ssl.get(i).get_percentage();
+		if(ssl != null) {
+			float total_percent = 0.0f; 
+			for(int i=0;i<ssl.size();++i) {
+				total_percent += ssl.get(i).get_percentage();
+			}
+			int final_perc = Math.round(total_percent * 100.0f / (100*ssl.size()));
+			setMainStatusCompletionPercent(final_perc);
 		}
-		int final_perc = Math.round(total_percent * 100.0f / (100*ssl.size()));
-		setMainStatusCompletionPercent(final_perc);
+		else
+			setMainStatusCompletionPercent(n);
 		// Reloads map to get updated GSM coverage
 		if(n_lba_percent <= 100 && n_lba_prev_perc < 100) {
 			if(n_lba_prev_perc+PAS.get_pas().get_settings().getLbaRefresh() < n_lba_percent || n_lba_percent == 100) {

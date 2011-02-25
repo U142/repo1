@@ -246,8 +246,10 @@ public class ParmController extends MainController {
 					int index = 0;
 					for(int i=0;i<((EventVO)object).getAlertListe().size();i++){
 						if(((AlertVO)((EventVO)object).getAlertListe().get(i)).getM_shape() != null){
-							shapes[index] = ((AlertVO)((EventVO)object).getAlertListe().get(i)).getM_shape();
-							index++;
+							if(((AlertVO)((EventVO)object).getAlertListe().get(i)).getM_shape().getType() != ShapeStruct.SHAPE_GISIMPORT) {
+								shapes[index] = ((AlertVO)((EventVO)object).getAlertListe().get(i)).getM_shape();
+								index++;
+							}
 						}		
 					}
 					no.ums.pas.maps.defines.NavStruct nav = CommonFunc.calc_bounds(shapes);

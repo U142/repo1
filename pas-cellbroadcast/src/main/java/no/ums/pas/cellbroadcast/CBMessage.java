@@ -7,7 +7,13 @@ public class CBMessage implements Cloneable {
 	@Override
 	public CBMessage clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
-		return (CBMessage)super.clone();
+		ArrayList<CCode> cc = new ArrayList<CCode>();
+		for(int i=0;i<ccodes.size();++i) {
+			cc.add(ccodes.get(i).clone());
+		}
+		CBMessage cbm = (CBMessage)super.clone();
+		cbm.ccodes = cc;
+		return cbm;
 	}
 
 	private ArrayList<CCode> ccodes;

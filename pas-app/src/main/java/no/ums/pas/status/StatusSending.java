@@ -76,7 +76,9 @@ public class StatusSending extends Object {
 		float percent = 0;
 		switch(_n_type) {
 		case 1:	// VOICE
-			if(this.get_proc()>0)
+			if(this._n_sendingstatus == 7 || this._n_sendingstatus == 1000)
+				percent = 100.0f;
+			else if(this.get_proc()>0)
 				percent = this.get_proc() * 100.0f / this.get_totitem();
 			//else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus > 1 ) // gone past parsequeue
 			//	percent = 100;
@@ -84,7 +86,9 @@ public class StatusSending extends Object {
 				percent = 0;
 			break;
 		case 2: // SMS
-			if(this.get_proc()>0)
+			if(this._n_sendingstatus == 7 || this._n_sendingstatus == 1000)
+				percent = 100.0f;
+			else if(this.get_proc()>0)
 				percent = this.get_proc() * 100.0f / this.get_totitem();
 		//	else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus >  ) // gone past parsequeue
 		//		percent = 100;
@@ -92,7 +96,9 @@ public class StatusSending extends Object {
 				percent = 0;
 			break;
 		case 4: // LBA
-			if(m_lba != null)
+			if(m_lba != null && (this.m_lba.n_status == LBASEND.LBASTATUS_CANCELLED || this.m_lba.n_status == LBASEND.LBASTATUS_FINISHED || this.m_lba.n_status > 42000 || this.m_lba.n_status == -1))
+				percent = 100.0f;
+			else if(m_lba != null)
 				percent = (this.m_lba.n_cancelled + this.m_lba.n_proc) * 100.0f / m_lba.n_items;
 			else
 				percent = 0;

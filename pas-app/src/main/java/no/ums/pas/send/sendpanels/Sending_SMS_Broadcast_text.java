@@ -216,10 +216,10 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 				}
 				else //null selected
 				{
-					if(m_combo_templates.getSelectedIndex() == 0) {
+					/*if(m_combo_templates.getSelectedIndex() == 0) {
 						m_txt_messagetext.setText("");
 						m_txt_messagetext.setToolTipText(null);
-					}
+					}*/
 					UpdateTextFields();
 				}
 			}

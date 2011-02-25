@@ -985,6 +985,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 		}
 		
+		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
+			m_cell_broadcast_text_panel.m_popup.hide();
+		
 		set_next_text();
 	}
 	public void windowActivated(WindowEvent e) {

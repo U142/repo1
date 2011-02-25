@@ -225,6 +225,9 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	public void insert_component_row(Object [] data, int n_index) {
 		get_tablelist().insert_component_row(data, n_index);
 	}
+	public void remove_row(Object data) {
+		get_tablelist().remove_row(data);
+	}
 	public void edit_row(Object [] data, int n_index, boolean [] update_cols) {
 		int x = m_tbl.getSelectedRow();
 		for(int i=0; i < data.length; i++)
@@ -695,6 +698,16 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
         	fireTableDataChanged();
         }
         
+        public void remove_row(Object data) {
+        	for(int i=0;i<m_data[0].size();++i) {
+        		if(m_data[0].get(i).toString().equals(data.toString())){
+        			for(int j=0;j<m_data.length;++j) {
+        				m_data[j].remove(i);
+        			}
+        		}
+        	}
+        	fireTableDataChanged();
+        }
         public void clear()
         {
         	int n_rows = this.getRowCount();

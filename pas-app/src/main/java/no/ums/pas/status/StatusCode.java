@@ -29,6 +29,7 @@ public class StatusCode extends Object implements Comparable {
 	public boolean get_reserved() { return m_b_reserved; }
 	public boolean get_addedtolist() { return m_b_addedtolist; }
 	public void set_addedtolist() { m_b_addedtolist = true; }
+	public void set_removedfromlist() { m_b_addedtolist = false; }
 	public String toString() { return String.valueOf(m_n_code); }
 	public boolean isUserDefined() { return m_b_isuserdefined; }
 	public int compareTo(Object obj) {
