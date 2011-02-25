@@ -636,7 +636,7 @@ namespace com.ums.UmsParm
     {
         public List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
         public List<UMunicipalDef> GetMunicipals() { return m_municipals; }
-        protected UMapBounds m_bounds = null;
+        public UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
         {
             m_bounds = b;
