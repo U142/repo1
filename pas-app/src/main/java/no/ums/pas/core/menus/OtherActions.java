@@ -64,7 +64,7 @@ public interface OtherActions {
         public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    new MessageLibDlg(PAS.get_pas());
+                    new MessageLibDlg(PAS.get_pas(), true, false);
                 }
             });
         }

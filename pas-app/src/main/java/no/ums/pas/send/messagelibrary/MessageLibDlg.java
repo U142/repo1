@@ -87,7 +87,7 @@ public class MessageLibDlg extends JDialog implements ComponentListener, ActionL
 	@Override
 	public void componentShown(ComponentEvent e) {
 		panel.setVisible(true);
-		panel.Start();
+		panel.Start(false);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

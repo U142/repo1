@@ -50,7 +50,7 @@ public class TreeUpdater
 					{
                         if (downloadReady.compareAndSet(true, false)) {
                             m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, LOADING_START));
-                            downloadReady.wait(TimeUnit.MINUTES.toMillis(2));
+                            //downloadReady.wait(TimeUnit.MINUTES.toMillis(2));
                             timeout = new Timeout(120, 100);
                             while(!downloadReady.get() && !timeout.timer_exceeded())
                             {
@@ -66,6 +66,7 @@ public class TreeUpdater
 					}
 					catch(Exception e) {
                         // Ignored exception, download is aborted
+						e.printStackTrace();
 					} finally {
                         downloadReady.set(true);
                     }

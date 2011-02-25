@@ -40,9 +40,9 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 		//treepanel.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		setPreferredSize(new Dimension(getWidth(), getHeight()));
 	}
-	public void Start()
+	public void Start(boolean b_only_once)
 	{
-		treepanel.tree.startUpdater();
+		treepanel.tree.startUpdater(b_only_once);
 	}
 	public void Stop()
 	{

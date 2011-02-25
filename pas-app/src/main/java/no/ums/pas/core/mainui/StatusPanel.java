@@ -218,6 +218,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					lbl_mainstatus.putClientProperty(ULookAndFeel.WINDOW_LOADING_GRADIENTVALUE, ULookAndFeel.WINDOW_LOADING_INITIAL_GRADIENTVALUE);
 				}
 				lbl_mainstatus.putClientProperty(ULookAndFeel.WINDOW_LOADING, b);
+				m_main.putClientProperty(ULookAndFeel.WINDOW_LOADING, true);
+				//m_main.putClientProperty(ULookAndFeel.WINDOW_LOADING, b);
+				//this.putClientProperty(ULookAndFeel.WINDOW_LOADING, b);
 			}
 		//});
 	}

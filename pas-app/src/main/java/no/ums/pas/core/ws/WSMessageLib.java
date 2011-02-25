@@ -52,6 +52,7 @@ public class WSMessageLib extends WSThread
 			//Error.getError().addError(PAS.l("common_error"), "Error opening Message Library", e, Error.SEVERITY_ERROR);
 			list = new UBBMESSAGELIST();
 			list.setNServertimestamp(-1);
+			e.printStackTrace();
 		}
 		finally
 		{

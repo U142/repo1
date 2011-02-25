@@ -160,6 +160,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
         final JMenu settings = menu.add(new JMenu(Localization.l("mainmenu_settings")));
         settings.add(OtherActions.SHOW_SETTINGS);
+        settings.add(OtherActions.SHOW_MESSAGELIB);
         if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
             settings.add(OtherActions.SHOW_MESSAGELIB);
         }
@@ -510,6 +511,13 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return true;
 	}
 
+	@Override
+	public boolean onAfterLoadMap(Settings settings, Navigation nav,
+			MapFrame frame) {
+		if(Variables.getStatusController()!=null)
+			Variables.getStatusController().refresh_search_houses();
+		return true;
+	}
 
 	@Override
 	public boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check) {

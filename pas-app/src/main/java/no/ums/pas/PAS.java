@@ -524,8 +524,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				val = str.substring(3);
 				if(str.startsWith("-f"))
 				{
+					
 					SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
-					new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", new File(val));
+					if(obj!=null)
+					{
+						new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", new File(val));
+					}
 				}
 			}
 		}

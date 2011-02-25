@@ -378,30 +378,67 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	}
 	
 	public void add_controls() {
-		int n_width = 21;
+		final int n_width = 21;
+		
+		DefaultPanel pnl_settings = new DefaultPanel() {
+			
+			@Override
+			public void init() {
+				add_controls();
+			}
+			
+			@Override
+			public void add_controls() {
+				ExpiryMins[] mins = new ExpiryMins[]{ new ExpiryMins(""), new ExpiryMins("30"), new ExpiryMins("60"), new ExpiryMins("120"), new ExpiryMins("360"), new ExpiryMins("720"), new ExpiryMins("1440") };
+				m_combo_expdate = new JComboBox(mins);
+				m_combo_expdate.addItemListener(Sending_Cell_Broadcast_text.this);
+				JPanel pnl_lba = new JPanel();
+				pnl_lba.setOpaque(false);
+
+				this.set_gridconst(0, this.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
+				this.add(m_lbl_expirydate, this.m_gridconst);
+				this.set_gridconst(n_width/3, this.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
+				this.add(m_combo_expdate, this.m_gridconst);
+				this.set_gridconst(n_width/3 + n_width/3, this.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
+
+				this.set_gridconst(0, this.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
+				add(m_lbl_requesttype, this.m_gridconst);
+				this.set_gridconst(n_width/3, this.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
+				pnl_lba.add(m_radio_requesttype_0);
+				pnl_lba.add(m_radio_requesttype_1);
+				this.add(pnl_lba, this.m_gridconst);
+
+
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		};
+		pnl_settings.init();
+		
+		
 		
 		m_panel_messages.setOpaque(false);
 		//m_panel_area.setOpaque(false);
 		m_panel_messages.setBackground(new Color(255,255,255,1));
 		//m_panel_area.setBackground(new Color(255,255,255,1));
-		m_panel_messages.setPreferredSize(new Dimension(650, 340));
+		m_panel_messages.setPreferredSize(new Dimension(650, 300));
+		pnl_settings.setPreferredSize(new Dimension(650, 100));
+		pnl_settings.setOpaque(false);
+		pnl_settings.setBackground(new Color(255,255,255,1));
+		
 		//m_panel_area.setPreferredSize(new Dimension(500, 100));
 		
-		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
+		/*m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_expirydate, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		//SchedCalendar exp_cal = new SchedCalendar(14);
-		//String[] mins = new String[]{ new String(""), new String("30"), new String("60"), new String("120"), new String("360"), new String("720"), new String("1440") };
-		ExpiryMins[] mins = new ExpiryMins[]{ new ExpiryMins(""), new ExpiryMins("30"), new ExpiryMins("60"), new ExpiryMins("120"), new ExpiryMins("360"), new ExpiryMins("720"), new ExpiryMins("1440") };
-		
+		ExpiryMins[] mins = new ExpiryMins[]{ new ExpiryMins(""), new ExpiryMins("30"), new ExpiryMins("60"), new ExpiryMins("120"), new ExpiryMins("360"), new ExpiryMins("720"), new ExpiryMins("1440") };		
 		m_combo_expdate = new JComboBox(mins);
 		m_combo_expdate.addItemListener(this);
-		//m_combo_exptimehour = new JComboBox(exp_cal.get_hours());
-		//m_combo_exptimeminute = new JComboBox(exp_cal.get_minutes());
 		m_panel_messages.add(m_combo_expdate, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(n_width/3 + n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		//m_panel_messages.add(new JLabel("Minutes"), m_panel_messages.m_gridconst);
-		
+		*/
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_messagename, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(n_width/2, m_panel_messages.get_panel(), n_width/2, 1, GridBagConstraints.WEST);
@@ -425,6 +462,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_cbx_messages, m_panel_messages.m_gridconst);
+
+		/*
 		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
 		
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
@@ -435,14 +474,14 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		pnl_lba.add(m_radio_requesttype_0);
 		pnl_lba.add(m_radio_requesttype_1);
 		m_panel_messages.add(pnl_lba, m_panel_messages.m_gridconst);
-		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
-		
+		*/
 		JPanel pnl = new JPanel();
 		pnl.setOpaque(false);
 		pnl.add(m_btn_new);
 		pnl.add(m_btn_add);
 		pnl.add(m_btn_delete);
 		
+		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(pnl, m_panel_messages.m_gridconst);
 		//m_panel_messages.add(lba_conf, m_panel_messages.m_gridconst);
 //		set_gridconst(n_width/3 + n_width/3, get_panel(), n_width/3, 1, GridBagConstraints.WEST);
@@ -456,12 +495,13 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		
 		m_panel_messages.setBorder(BorderFactory.createTitledBorder(PAS.l("main_sending_lba_heading_messages")));
+		pnl_settings.setBorder(BorderFactory.createTitledBorder(PAS.l("main_sending_lba_heading_setup")));
 		//m_panel_area.setBorder(BorderFactory.createTitledBorder("Area"));
 		
 		set_gridconst(0, 0, 1, 1);
+		add(pnl_settings, m_gridconst);
+		set_gridconst(0, 1, 1, 1);
 		add(m_panel_messages, m_gridconst);
-		//set_gridconst(0, 1, 1, 1);
-		//add(m_panel_area, m_gridconst);
 		
 		init();
 	}

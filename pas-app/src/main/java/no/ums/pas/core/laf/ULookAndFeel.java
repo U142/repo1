@@ -254,11 +254,14 @@ public class ULookAndFeel
 			ui.paintBackground(comp, (Graphics2D)g, x, y, w, h);
 		}
 		
+
 		public Rectangle calcIconRect(int tabIndex)
 		{
 			Rectangle iconRect = new Rectangle();
 			Rectangle c = tabPane.getBoundsAt(tabIndex);
 			boolean b_icon = checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON);
+			if(!b_icon)
+				b_icon = checkForFlags(tabIndex, ULookAndFeel.WINDOW_LOADING);
 			if(c!=null && b_icon)
 			{
 				Rectangle tabRect = c;
@@ -359,7 +362,14 @@ public class ULookAndFeel
 		{
 			for(int i=0; i < this.tabPane.getComponentCount(); i++)
 			{
-				((JComponent)this.tabPane.getComponentAt(i)).putClientProperty(flag, value);
+				try
+				{
+					((JComponent)this.tabPane.getComponentAt(i)).putClientProperty(flag, value);
+				}
+				catch(Exception e)
+				{
+					
+				}
 			}
 		}
 		
@@ -369,12 +379,12 @@ public class ULookAndFeel
 				Rectangle[] rects, int tabIndex, Rectangle iconRect,
 				Rectangle textRect) {
 			super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
-			if(checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON))
+			if(checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON) || checkForFlags(tabIndex, ULookAndFeel.WINDOW_LOADING))
 			{
 				Rectangle tabRect = rects[tabIndex]; //the black rectangle
 				int selectedIndex = tabPane.getSelectedIndex();
 				boolean isSelected = selectedIndex == tabIndex;
-
+				String s = tabPane.getTitleAt(tabIndex);
 				iconRect = calcIconRect(tabIndex);
 				
 				paintIcon(g, tabPlacement, tabIndex, (checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT) && checkForFlags(-1, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT) ? m_icon_close : m_icon_close_grayscale), iconRect, isSelected);

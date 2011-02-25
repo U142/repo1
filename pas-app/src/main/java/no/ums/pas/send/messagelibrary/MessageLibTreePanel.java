@@ -350,8 +350,11 @@ public class MessageLibTreePanel extends DefaultPanel
 					}
 
 					setPreferredSize(new Dimension(800, 40));
-					if(msg.getSzMessage().trim().length() == 0)
-						this.setForeground(Color.red);
+					if(msg!=null && msg.getSzMessage()!=null)
+					{
+						if(msg.getSzMessage().trim().length() == 0)
+							this.setForeground(Color.red);
+					}
 					//return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 					return this;
 				}
@@ -686,7 +689,7 @@ public class MessageLibTreePanel extends DefaultPanel
 				}
 				catch(Exception err)
 				{
-					
+					err.printStackTrace();
 				}
 				tree.signalDownloadFinished();
 				System.out.println("Messagelib timestamp=" + n_server_timestamp);				

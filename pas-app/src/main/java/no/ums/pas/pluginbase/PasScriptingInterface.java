@@ -19,6 +19,7 @@ import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
@@ -250,6 +251,8 @@ public interface PasScriptingInterface {
     ImageIcon onLoadAppIcon();
 	
     boolean onBeforeLoadMap(Settings settings);
+    
+    boolean onAfterLoadMap(Settings settings, Navigation nav, MapFrame frame);
 	
     boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check);
 	

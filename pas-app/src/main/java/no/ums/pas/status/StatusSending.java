@@ -295,6 +295,7 @@ public class StatusSending extends Object {
 			lba.hist_cell = m_lba_by_operator.get(i).hist_cell;
 
 		}
+		//System.out.println("Worst operator status for refno="+lba.n_parentrefno+": "+lba.n_status);
 		lba.hist_cc = CalcTotalsByCC();
 		lba.send_ts = MergeLbaTimestamps();
 		//CalcTotalsByCells();

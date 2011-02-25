@@ -2,9 +2,12 @@ package no.ums.pas.core.popupmenus;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.tools.PrintCtrl;
 
 import javax.swing.*;
+
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,13 +39,13 @@ public class PUStatusList extends PUMenu {
 		{
 			if("act_status_showall".equals(e.getActionCommand())) {
 				if(get_id()!=null)
-					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), true); /*l_status, all*/
+					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), true, new MapPointLL()); /*l_status, all*/
 			} else if("act_status_showvisible".equals(e.getActionCommand())) {
 				if(get_id()!=null)
-					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), false); /*l_status, visible*/
+					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), false, new MapPointLL()); /*l_status, visible*/
 			} else if("act_status_print".equals(e.getActionCommand())) {
 				if(get_id()!=null) {
-					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), true); /*l_status, all*/
+					get_pas().get_statuscontroller().search_houses(((Integer)get_id()).intValue(), true, new MapPointLL()); /*l_status, all*/
 					System.out.print(PAS.get_pas().get_inhabitantframe().get_panel().get_inhabitantframe());
 					PrintCtrl.printComponent(PAS.get_pas().get_inhabitantframe().get_panel(), null);
 					//PrinterJob job = prin

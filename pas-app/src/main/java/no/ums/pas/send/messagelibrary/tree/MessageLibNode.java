@@ -18,9 +18,9 @@ public class MessageLibNode extends UMSTreeNode //implements Comparable<MessageL
 	@Override
 	public boolean Search(String s)
 	{
-		if(getMessage().getSzName().toUpperCase().indexOf(s.toUpperCase())>=0)
+		if(getMessage()!=null && getMessage().getSzName()!=null && getMessage().getSzName().toUpperCase().indexOf(s.toUpperCase())>=0)
 				return true;
-		if(getMessage().getSzMessage().toUpperCase().indexOf(s.toUpperCase())>=0)
+		if(getMessage()!=null && getMessage().getSzMessage()!=null && getMessage().getSzMessage().toUpperCase().indexOf(s.toUpperCase())>=0)
 			return true;
 		return false;
 	}

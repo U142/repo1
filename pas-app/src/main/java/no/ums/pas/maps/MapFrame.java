@@ -883,6 +883,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		//m_img_loading.flush();
 
 		System.out.println("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
+		PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
 		PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer()==MAPSERVER.DEFAULT ? true : false));
 		if(m_maploader.IsLoadingMapImage())
 			return;
@@ -953,6 +954,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
 		}
 		//System.out.println("KICKREPAINT");
+		PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), Variables.getNavigation(), this);
 		PAS.get_pas().kickRepaint();
 		
 	}
@@ -1006,6 +1008,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 							}
 							catch(Exception e) { }
 						}*/
+						PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), Variables.getNavigation(), MapFrame.this);
 						PAS.get_pas().kickRepaint();
 					}
 				};

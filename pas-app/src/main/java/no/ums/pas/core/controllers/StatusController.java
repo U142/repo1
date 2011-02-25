@@ -15,6 +15,7 @@ import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
+import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
@@ -740,17 +741,21 @@ public class StatusController extends Controller implements ActionListener {
 
 	public void refresh_search_houses() {
 		if (PAS.get_pas().get_inhabitantframe().isVisible()) {
-			search_houses(n_search_status, b_search_all);
+			search_houses(n_search_status, b_search_all, dim_screen_coor_search);
 		}
 	}
 
-	private int n_search_status = -1;
+	private int n_search_status = -99999;
 	private boolean b_search_all = false;
+	private MapPointLL dim_screen_coor_search = new MapPointLL(-99999,-99999);
 
-	public void search_houses(int n_status, boolean b_all) {
+	public void search_houses(int n_status, boolean b_all, MapPointLL ll_search) {
 		PAS.get_pas().get_inhabitantframe().m_inhabitantpanel.pushSelection();
 		n_search_status = n_status;
 		b_search_all = b_all;
+		dim_screen_coor_search = ll_search;
+		boolean b_search_by_coor = ll_search.isSet();
+		
 		PAS.get_pas().get_inhabitantframe().set_visible(true);
 		if (get_houses() != null) {
 			Timeout time = new Timeout(1, 100);
@@ -776,9 +781,28 @@ public class StatusController extends Controller implements ActionListener {
 			for (int i = 0; i < get_houses().size(); i++) {
 				current = (HouseItem) get_houses().get_houses().get(i);
 				current.set_selected(false);
-				if ((current.get_screencoords() != null && current
-						.get_visible())
-						|| b_all) {
+				//if ((current.get_screencoords() != null && current
+				//		.get_visible())
+				//		|| b_all) {
+				
+				//if b_all or
+				//if n_status
+				//if(current.isVisible(Variables.getNavigation()) || b_all)
+				//int n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
+				double f_radius = 0.0002;
+				Rectangle.Double rect = new Rectangle.Double(current.get_lon() - f_radius,
+											current.get_lat() - f_radius,
+											f_radius*2,
+											f_radius*2);
+				/*boolean test = (current.get_lon() >= ll_search.get_lon()-f_radius &&
+						current.get_lat() >= ll_search.get_lat()-f_radius &&
+						current.get_lon() < ll_search.get_lon() + f_radius*2 &&
+						current.get_lat() < ll_search.get_lat() + f_radius*2);*/
+				boolean test = rect.contains(new Point.Double(ll_search.get_lon(), ll_search.get_lat()));
+				if(b_all ||
+					(!b_search_by_coor && current.isVisible(Variables.getNavigation())) ||
+					(b_search_by_coor && test))
+				{
 					StatusItemObject obj_inhab;
 					String sz_status;
 					StatusCode obj_statuscode;
@@ -793,7 +817,7 @@ public class StatusController extends Controller implements ActionListener {
 									continue;
 							}
 
-							if (n_status == obj_inhab.get_status()) {
+							if (n_status == obj_inhab.get_status() || b_search_by_coor) {
 								obj_statuscode = find_status(obj_inhab
 										.get_status());
 								if (obj_statuscode != null)

@@ -78,6 +78,14 @@ public class HouseItem extends Object {
 	}
 	public void set_visible(boolean b_visible) { m_b_visible = b_visible; }
 	public boolean get_visible() { return m_b_visible; }
+	public boolean isVisible(Navigation n)
+	{
+		if(get_lon() >= n.get_lbo() && get_lon() <= n.get_rbo() &&
+			get_lat() >= n.get_bbo() && get_lat() <= n.get_ubo())
+			return true;
+		return false;
+	}
+	
 	public void set_active_color(Color col) { m_active_color = col; }
 	Color get_active_color() { return m_active_color; }
 	public void reset_current_visible_inhab() { m_n_current_visible_inhab = 0; }

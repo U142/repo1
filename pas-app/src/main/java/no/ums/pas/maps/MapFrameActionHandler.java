@@ -827,7 +827,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					set_isdragging(true); //m_b_isdragging = true;
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_HOUSESELECT)
-					addAction("act_search_houses", new Dimension(e.getX(), e.getY()));
+					addAction("act_search_houses", new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY())).get_mappointll());//new Dimension(e.getX(), e.getY()));
 					//PAS.get_pas().get_statuscontroller().search_houses(new Dimension(e.getX(), e.getY()));
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_POLY) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));

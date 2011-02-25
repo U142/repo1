@@ -6,9 +6,17 @@ public class MapPointLL implements Comparable<MapPointLL> {
 	private MapPointLL m_degree_distance = null;
 	private double m_lon;
 	private double m_lat;
+	private boolean b_isset = false;
+	public boolean isSet() { return b_isset; }
+	public MapPointLL()
+	{
+		m_lon = 0.0;
+		m_lat = 0.0;
+	}
 	public MapPointLL(double lon, double lat) {
 		m_lon = lon;
 		m_lat = lat;
+		b_isset = true;
 	}
 	public MapPointLL(double lon, double lat, int pointref)
 	{
@@ -18,6 +26,7 @@ public class MapPointLL implements Comparable<MapPointLL> {
 	public MapPointLL(MapPointLL ll) {
 		m_lon = ll.get_lon();
 		m_lat = ll.get_lat();
+		b_isset = true;
 	}
 	public void setPointReference(int ref)
 	{

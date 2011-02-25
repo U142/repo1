@@ -105,7 +105,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		//this.setTitle("New Alert - \"" + m_sendobject.get_sendproperties().get_sendingname() + "\"");
 		
 		setLayout(new BorderLayout());
-		int n_width = 710, n_height = 500;
+		int n_width = 770, n_height = 550;
 		//int n_width = 570, n_height = 450;
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		
