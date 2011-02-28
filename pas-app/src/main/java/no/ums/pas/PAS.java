@@ -1732,7 +1732,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public int invoke_project(boolean bNewSending) {
 		System.out.println(PAS.l("project_ask_new_project"));
-		
+
 		int answer = PAS.pasplugin.onInvokeProject();
 		if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
 			return ProjectDlg.ACT_PROJECTDLG_CANCEL;
@@ -1792,24 +1792,31 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
-	public void close_active_project(boolean b_wait_for_close, boolean b_close_all_gui) {
+	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui) {
 		try
 		{
-			Variables.setStatusController(m_statuscontroller);
-			Variables.getStatusController().setClosed();
-
-			get_mappane().resetAllOverlays();
+			int ret_answer = 0;
 			WaitForStatusThread thread = null;
-			System.out.println("Close project");
-            StatusActions.EXPORT.setEnabled(false);
             boolean b_confirmed_close = true;
 
+
 			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
-				if(JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION);
+				if(ret_answer == JOptionPane.YES_OPTION)
+				{
+					Variables.setStatusController(m_statuscontroller);
+					Variables.getStatusController().setClosed();
+
+					get_mappane().resetAllOverlays();
+					System.out.println("Close project");
+		            StatusActions.EXPORT.setEnabled(false);
 					thread = new WaitForStatusThread(b_close_all_gui);
 				}
 				else
+				{
 					b_confirmed_close = false;
+					return ret_answer;
+				}
 			}
 			else
 				thread = new WaitForStatusThread(b_close_all_gui);
@@ -1826,10 +1833,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			Variables.setStatusController(null);
 			m_statuscontroller = PAS.pasplugin.onCreateStatusController();
 			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
+			return ret_answer;
 		}
 		catch(Exception e)
 		{
-			
+			return JOptionPane.CANCEL_OPTION;
 		}
 	}
 	

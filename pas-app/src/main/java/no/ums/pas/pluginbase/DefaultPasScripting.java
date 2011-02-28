@@ -1111,7 +1111,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	public int onInvokeProject() {
-		return JOptionPane.YES_OPTION;
+		return PAS.get_pas().close_active_project(true, true);
+		//return JOptionPane.YES_OPTION;
 	}
 
 
