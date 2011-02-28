@@ -111,26 +111,38 @@ public class SendObject extends Object {
 		m_callback = callback;
 	}
 	public void set_type(int n_type) {
+		SendProperties tmp = null;
 		switch(n_type) {
 		case SendProperties.SENDING_TYPE_POLYGON_:
 			System.out.println("SendingType=Polygon");
-			//m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(Variables.NAVIGATION, PAS.get_pas().get_mappane().get_dimension()), m_toolbar, new Col(m_default_color));
+			if(m_sendproperties!=null)
+				tmp = m_sendproperties;
 			m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
+			if(tmp!=null)
+				m_sendproperties.CopyCommons(tmp);
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
 			System.out.println("SendingType=Gemini streetcode");
 			try {
+				if(m_sendproperties!=null)
+					tmp = m_sendproperties;
 				if(m_sendproperties==null || !m_sendproperties.getClass().equals(SendPropertiesGIS.class)) { //get_shapestruct().getClass().equals(GISShape.class)) {
 					m_sendproperties = new SendPropertiesGIS(m_toolbar);
 				}
+				if(tmp!=null)
+					m_sendproperties.CopyCommons(tmp);
 			} catch(Exception e) {
 			}
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_CIRCLE_:
 			System.out.println("SendingType=Ellipse");
+			if(m_sendproperties!=null)
+				tmp = m_sendproperties;
 			m_sendproperties = new SendPropertiesEllipse(new EllipseStruct(), m_toolbar, m_default_color);
+			if(tmp!=null)
+				m_sendproperties.CopyCommons(tmp);
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_MUNICIPAL_:
@@ -141,7 +153,13 @@ public class SendObject extends Object {
 				
 			}
 			else
+			{
+				if(m_sendproperties!=null)
+					tmp = m_sendproperties;
 				m_sendproperties = new SendPropertiesMunicipal(new MunicipalStruct(), m_toolbar);
+				if(tmp!=null)
+					m_sendproperties.CopyCommons(tmp);
+			}
 			//get_callback().actionPerformed(new ActionEvent(new Integer(MapFrame.MAP_MODE_SENDING_POLY), ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_TAS_COUNTRY_:

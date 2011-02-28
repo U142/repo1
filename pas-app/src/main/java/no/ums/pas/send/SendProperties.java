@@ -217,6 +217,43 @@ public abstract class SendProperties extends Object {
 		if(PAS.get_pas() != null)
 			m_n_maxchannels = PAS.get_pas().get_userinfo().get_current_department().get_maxalloc();
 	}
+	
+	public void CopyCommons(SendProperties sp)
+	{
+		m_arr_resend_status = sp.m_arr_resend_status;
+		m_b_isresend = sp.m_b_isresend;
+		m_b_usesched = sp.m_b_usesched;
+		m_bbprofile = sp.m_bbprofile;
+		m_cell_broadcast_text = sp.m_cell_broadcast_text;
+		m_col_default = sp.m_col_default;
+		m_n_channel = sp.m_n_channel;
+		m_n_duration = sp.m_n_duration;
+		m_n_maxchannels = sp.m_n_maxchannels;
+		m_n_profilepk = sp.m_n_profilepk;
+		m_n_refno = sp.m_n_refno;
+		m_n_requesttype = sp.m_n_requesttype;
+		m_n_resend_refno = sp.m_n_resend_refno;
+		m_n_sendchannels = sp.m_n_sendchannels;
+		//m_n_sendingtype = sp.m_n_sendingtype;
+		m_n_simulation = sp.m_n_simulation;
+		m_n_validity = sp.m_n_validity;
+		m_oadc = sp.m_oadc;
+		m_sched = sp.m_sched;
+		m_schedprofile = sp.m_schedprofile;
+		m_sms_broadcast_text = sp.m_sms_broadcast_text;
+		m_soundfiles = sp.m_soundfiles;
+		m_sz_description = sp.m_sz_description;
+		m_sz_last_error = sp.m_sz_last_error;
+		m_sz_oadc = sp.m_sz_oadc;
+		m_sz_projectpk = sp.m_sz_projectpk;
+		m_sz_schedprofilepk = sp.m_sz_schedprofilepk;
+		m_sz_sendingname = sp.m_sz_sendingname;
+		m_sz_sms_message = sp.m_sz_sms_message;
+		m_sz_sms_oadc = sp.m_sz_sms_oadc;
+		parent = sp.parent;
+		sz_params = sp.sz_params;
+		sz_vals = sp.sz_vals;
+	}
 	public void create_common_paramvals(int n_sendingtype) {
 		sz_vals = new String[sz_params.length];
 		try {
