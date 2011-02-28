@@ -2389,6 +2389,7 @@ public class StatusSending extends Object {
 				setNeedAttention(false);				
 			}*/
 			
+			int n_total_items = 0;
 			if(getLBA()!=null)
 			{
 				int n_operators_ready_for_confirmation = 0;
@@ -2398,7 +2399,10 @@ public class StatusSending extends Object {
 					//list up all operators ready for confirmation
 					sz_operators += "<b>";
 					if(m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION || m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
+					{
 						sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + PAS.l("common_ready") + "<br>";
+						n_total_items += (m_lba_by_operator.get(i).n_items > 0 ? m_lba_by_operator.get(i).n_items : 0);
+					}
 					else if(m_lba_by_operator.get(i).n_status < LBASEND.LBASTATUS_PREPARED_CELLVISION)
 						sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + PAS.l("common_not_ready") + "<br>";
 					else if(m_lba_by_operator.get(i).n_status > LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
@@ -2418,7 +2422,7 @@ public class StatusSending extends Object {
 					sz_sendtext = PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live").toUpperCase();
 					break;
 				}
-				pnl_icon._SetToolTipText_Confirm(PAS.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + PAS.l("common_to") + "&nbsp;" + getLBA().n_items + "&nbsp;" + PAS.l("main_sending_recipients") + "<br><br>" + sz_operators);
+				pnl_icon._SetToolTipText_Confirm(PAS.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + PAS.l("common_to") + "&nbsp;" + n_total_items + "&nbsp;" + PAS.l("main_sending_recipients") + "<br><br>" + sz_operators);
 			}
 
 			String tooltip = "";
