@@ -13,6 +13,8 @@ public class SendingColorPicker extends ColorPicker {
 		super(sz_title, p, col_init, parent);
 	}
 	public void onOk(ActionEvent e) {
+		if(get_selected_color() == null)
+			return;
 		SendOptionToolbar tb = (SendOptionToolbar)get_parent();
 		ActionEvent col_event = new ActionEvent(get_selected_color(), ActionEvent.ACTION_PERFORMED, "act_set_color");
 		tb.actionPerformed(col_event);

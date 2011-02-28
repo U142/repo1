@@ -65,8 +65,8 @@ public abstract class ColorPicker extends JColorChooser
 	
 	public void onCancel(ActionEvent e)
 	{
-		m_selected_color = m_col_init;
-		//stateEvent(null);
+		m_selected_color = new Color(m_col_init.getRGB(), false);
+		stateEvent(new ChangeEvent(this));
 		setVisible(false);
 	}
 	abstract public void onOk(ActionEvent e);
