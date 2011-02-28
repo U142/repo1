@@ -379,7 +379,7 @@ public class ULookAndFeel
 				Rectangle[] rects, int tabIndex, Rectangle iconRect,
 				Rectangle textRect) {
 			super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
-			if(checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON) || checkForFlags(tabIndex, ULookAndFeel.WINDOW_LOADING))
+			if(checkForFlags(tabIndex, ULookAndFeel.TABBEDPANE_CLOSEBUTTON))
 			{
 				Rectangle tabRect = rects[tabIndex]; //the black rectangle
 				int selectedIndex = tabPane.getSelectedIndex();
