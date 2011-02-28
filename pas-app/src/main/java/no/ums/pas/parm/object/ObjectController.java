@@ -15,8 +15,11 @@ import no.ums.pas.ums.errorhandling.Error;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 
@@ -248,10 +251,23 @@ public class ObjectController {
 		try {
 			Set<Long> keyset = cList.keySet();
 			Iterator it = keyset.iterator();
+			List<CategoryVO> sorted = new ArrayList<CategoryVO>();
 			
 			while (it.hasNext()) {
 				this.category = cList.get(it.next());
-				gui.getObjInfoPanel().getCbxCategory().addItem(this.category);
+				//gui.getObjInfoPanel().getCbxCategory().addItem(this.category);
+				sorted.add(this.category);
+			}
+			Collections.sort(sorted, new Comparator<CategoryVO>() {
+				@Override
+				public int compare(CategoryVO o1, CategoryVO o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+				
+			});
+			for(CategoryVO c : sorted)
+			{
+				gui.getObjInfoPanel().getCbxCategory().addItem(c);
 			}
 		} catch (RuntimeException e) {
 			e.printStackTrace();

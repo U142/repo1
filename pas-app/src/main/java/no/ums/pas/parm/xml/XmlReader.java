@@ -58,6 +58,7 @@ public class XmlReader {
 	private Document doc;
 	//private MapPanel map;
 	private MainController main;
+	public ArrayList<Object> getArrayCategories() { return arrayCategories; }
 	private ArrayList <Object>arrayCategories;
 	private ArrayList <Object>arrayEvents;
 	private ArrayList <Object>arrayObjects;
@@ -924,6 +925,7 @@ public class XmlReader {
 			else
 				categoryPk = "-1";
 			name = eAttributes.getAttribute("sz_name");
+			name = PAS.l("main_parm_category_" + categoryPk.substring(1));
 			description = eAttributes.getAttribute("sz_description");
 			fileext = eAttributes.getAttribute("sz_fileext");
 			timestamp = eAttributes.getAttribute("l_timestamp");
@@ -933,7 +935,14 @@ public class XmlReader {
 			arrayCategories.add(new CategoryVO(categoryPk, name, description,
 					fileext, timestamp));
 		}
-
+		/*Collections.sort(arrayCategories, new Comparator<Object>() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				CategoryVO v1 = (CategoryVO)o1;
+				CategoryVO v2 = (CategoryVO)o2;
+				return v1.getName().compareTo(v2.getName());
+			}			
+		});*/
 	}
 
 	private void sortArrays() {

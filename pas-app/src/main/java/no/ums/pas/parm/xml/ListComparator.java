@@ -1,6 +1,7 @@
 package no.ums.pas.parm.xml;
 
 import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.CategoryVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 
@@ -66,7 +67,12 @@ class ListComparator implements Comparator{
 				return 0;
 			else
 				return 1;
-		}else{
+		} else if(a instanceof CategoryVO) {
+				CategoryVO c1 = (CategoryVO)a;
+				CategoryVO c2 = (CategoryVO)b;
+				return c1.getName().compareTo(c2.getName());
+		}
+		else{
 			AlertVO a1 = (AlertVO)a;
 			AlertVO a2 = (AlertVO)b;
 			long tall1;

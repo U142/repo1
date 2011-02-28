@@ -1337,26 +1337,10 @@ public class MainController implements ActionListener, TreeModelListener,
 	public HashMap<Long, CategoryVO> getAllCategorys() throws FileNotFoundException,
 			ParmException {
 		// Må kjøre denne for å hente ut kategoriene fra XML filen
-		/*
-		getAllElementsFromXmlFile();
-		
-		if (this.allCategorys == null) {
-			this.allCategorys = new ArrayList<CategoryVO>();
-			allCategorys.add(0, new CategoryVO("c-1", "-- Select category --",
-					null, null, null));
-			if (this.allElements == null) {
-				this.getAllElementsFromXmlFile();
-			}
-			for (int i = 0; i < allElements.size(); i++) {
-				if (allElements.get(i).getClass().equals(CategoryVO.class))
-					allCategorys.add((CategoryVO)allElements.get(i));
-			}
-		}
-		return allCategorys;*/
 		//Her er det jeg må loade inn kategoriene i minnet og ikke kjøre denne på alle alerts
 		if (this.m_categories == null) {
 			this.m_categories = new HashMap<Long, CategoryVO>();
-			m_categories.put((long)-1, new CategoryVO("c-1", "-- Select category --", null, null, null));
+			m_categories.put((long)-1, new CategoryVO("c-1", PAS.l("main_parm_category_select"), null, null, null));
 			if (this.allElements == null) {
 				this.getAllElementsFromXmlFile();
 			}
@@ -1364,9 +1348,6 @@ public class MainController implements ActionListener, TreeModelListener,
 				if (allElements.get(i).getClass().equals(CategoryVO.class))
 					m_categories.put(Long.parseLong(((CategoryVO)allElements.get(i)).getCategoryPK().substring(1)),(CategoryVO)allElements.get(i));
 			}
-			//Collection value = m_categories.values();
-			//Collections.sort((List<CategoryVO>) value);
-			//Collections.sort(m_categories);
 			
 		}
 		return m_categories;
