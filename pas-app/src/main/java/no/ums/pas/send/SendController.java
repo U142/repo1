@@ -144,7 +144,16 @@ public class SendController implements ActionListener {
 	}
 	public static final boolean IsAddressBased(int TYPE)
 	{
-		if(HasType(TYPE, SENDTO_NOPHONE_PRIVATE) ||
+		/*
+	        VOICE = 1,
+	        SMS = 2,
+	        EMAIL = 3,
+	        LBA = 4,
+	        TAS = 5,
+		 */
+		return (TYPE==1 || TYPE==2 || TYPE==3);
+			
+		/*if(HasType(TYPE, SENDTO_NOPHONE_PRIVATE) ||
 			HasType(TYPE, SENDTO_NOPHONE_COMPANY) ||
 			HasType(TYPE, SENDTO_FIXED_PRIVATE) ||
 			HasType(TYPE, SENDTO_FIXED_COMPANY) ||
@@ -163,7 +172,7 @@ public class SendController implements ActionListener {
 			HasType(TYPE, SENDTO_FIXED_PRIVATE_AND_MOBILE) ||
 			HasType(TYPE, SENDTO_FIXED_COMPANY_AND_MOBILE))
 			return true;
-		return false;
+		return false;*/
 	}
 	public static final boolean IsTas(int TYPE)
 	{

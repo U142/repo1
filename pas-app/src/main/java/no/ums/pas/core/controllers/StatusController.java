@@ -587,7 +587,7 @@ public class StatusController extends Controller implements ActionListener {
 			
 			StatusSending ss = get_sendinglist().get_sending(i);
 
-			if(SendController.IsAddressBased(ss.get_addresstypes()))
+			if(SendController.IsAddressBased(ss.get_sendchannel()))
 			{
 				switch (ss.get_sendingstatus()) {
 				case 6:

@@ -625,6 +625,14 @@ public class StatusSending extends Object {
 	public int get_comppk() { return _n_comppk; }
 	public int get_deptpk() { return _n_deptpk; }
 	public int get_type() { return _n_type; }
+	/*
+  	    VOICE = 1,
+        SMS = 2,
+        EMAIL = 3,
+        LBA = 4,
+        TAS = 5,
+	 */
+	public int get_sendchannel() { return _n_type; }
 	public int get_addresstypes() { return _n_addresstypes; }
 	public int get_resend_addresstypes() { return _n_resend_addresstypes; }
 	public void set_resend_addresstypes(int addresstypes) { _n_resend_addresstypes = addresstypes; }
