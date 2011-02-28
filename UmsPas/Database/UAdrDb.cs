@@ -75,6 +75,19 @@ namespace com.ums.PAS.Database
             }
         }
 
+        public UAdrDb(String sz_stdcc, int timeout)
+        {
+            try
+            {
+                Connect(sz_stdcc, UCommon.UBBDATABASE.sz_adrdb_dsnbase, UCommon.UBBDATABASE.sz_adrdb_uid,
+                    UCommon.UBBDATABASE.sz_adrdb_pwd, -1);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         /*used for address databases only*/
         public bool Connect(string sz_stdcc, string sz_dsn, string sz_uid, string sz_password, int n_deptpk)
         {

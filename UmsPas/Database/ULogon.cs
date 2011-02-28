@@ -525,11 +525,11 @@ namespace com.ums.PAS.Database
                         {
                             try
                             {
-                                UmsDbConnParams p = new UmsDbConnParams();
-                                p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc; // +"_reg";
+                                /*UmsDbConnParams p = new UmsDbConnParams();
+                                p.sz_dsn = UCommon.UBBDATABASE.sz_adrdb_dsnbase + dept.sz_stdcc +"_reg";
                                 p.sz_uid = UCommon.UBBDATABASE.sz_adrdb_uid;
-                                p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;
-                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60, dept.l_deptpk);
+                                p.sz_pwd = UCommon.UBBDATABASE.sz_adrdb_pwd;*/
+                                UAdrDb adr = new UAdrDb(dept.sz_stdcc, 60);
                                 dept.municipals = adr.GetMunicipalsByDept(dept.l_deptpk);
                                 adr.close();
                             }

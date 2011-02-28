@@ -50,6 +50,8 @@ namespace com.ums.UmsParm
 
         public int GetPasType(int n_deptpk)
         {
+            if (n_deptpk < 0)
+                return 2;
             if (!m_b_dbconn)
                 throw new UDbConnectionException();
             String szSQL = String.Format("SELECT l_pas FROM BBDEPARTMENTMODS WHERE l_deptpk={0}", n_deptpk);
