@@ -326,7 +326,8 @@ public class AlertController implements ActionListener {
 		this.alert.setDescription(gui.getTxtDescription().getText());
 		this.alert.setAddresstypes(this.getPanelToolbar().get_addresstypes());
 		this.alert.setName(aw.get_alert_settings().get_sendingname());
-		this.alert.setProfilepk(aw.get_alert_settings().get_current_profile().get_profilepk());
+		if(aw.get_alert_settings().get_current_profile() != null)
+			this.alert.setProfilepk(aw.get_alert_settings().get_current_profile().get_profilepk());
 		this.alert.setValidity(aw.get_alert_settings().get_current_validity());
 		this.alert.setOadc(aw.get_alert_settings().get_current_oadc().get_number());
 		// Må sjekke at sendingen ikke har voice
