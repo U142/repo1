@@ -759,6 +759,24 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_tabbedpane.setSelectedComponent(m_alert.getGui());
 			return;
 		}
+		
+		int alert_name_index = -1;
+		for(int i=0;i<m_tabbedpane.getTabCount();++i) {
+			if(m_alert_settings == m_tabbedpane.getComponentAt(i)) {
+				alert_name_index = i;
+			}
+		}
+		
+		if(alert_name_index < m_tabbedpane.getSelectedIndex()) {
+			if(m_alert_settings.get_sending_name().getText().length() < 1) {
+				JFrame frame = get_frame();
+				JOptionPane.showMessageDialog(frame,PAS.l("main_sending_sendingname_mandatory"));
+				frame.dispose();
+				m_tabbedpane.setSelectedComponent(m_alert_settings);
+				return;
+			}
+		}
+		
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
 			ShapeStruct m_edit_shape = null;
