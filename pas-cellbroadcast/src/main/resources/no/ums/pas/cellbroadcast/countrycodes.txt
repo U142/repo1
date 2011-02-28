@@ -121,7 +121,6 @@
 387	"Bosnia and Herzegovina"	"BH"
 389	"Macedonia"	"MB"
 39	"Italy"	"IT"	1
-39	"Vatican City"	"VA"	1
 40	"Romania"	"RR"
 423	"Liechtenstein"	"CH"
 41	"Switzerland"	"CH"	1
