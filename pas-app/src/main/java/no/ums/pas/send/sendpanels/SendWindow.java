@@ -985,6 +985,22 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 		}
 		
+		if(hasSMS(m_sendobject.get_toolbar().get_addresstypes()))
+		{
+			int sms_index = -1;
+			for(int i=0;i<m_tabbedpane.getTabCount();++i) {
+				if(m_sms_broadcast_text_panel == m_tabbedpane.getComponentAt(i)) {
+					sms_index = i;
+				}
+			}
+			
+			if(sms_index < m_tabbedpane.getSelectedIndex()) {
+				if(!m_send.checkSMSInput()) {
+					return;
+				}
+			}
+		}
+		
 		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
 			m_cell_broadcast_text_panel.m_popup.hide();
 		

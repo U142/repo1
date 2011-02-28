@@ -802,20 +802,21 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		//System.out.println("Extended chars = " + ext);
 		
 		activeLabel.setText("(" + get_gsmsize(text) + " " + PAS.l("common_x_of_y") + " " + m_maxSize + ")");
-		
-		if(text.length() > m_maxSafe) {
-			activeLabel.setForeground(Color.RED);
-			//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
-			m_popup = popupFactory.getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
-			m_popup.show();
-			
-		}
-		else {
-			activeLabel.setForeground(PAS.get_pas().getForeground());
-			//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
-			activeLabel.setToolTipText(null);
-			if(m_popup!=null)
-				m_popup.hide();
+		if(this.getClass().equals(Sending_Cell_Broadcast_text.class)) {
+			if(text.length() > m_maxSafe) {
+				activeLabel.setForeground(Color.RED);
+				//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
+				m_popup = popupFactory.getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
+				m_popup.show();
+				
+			}
+			else {
+				activeLabel.setForeground(PAS.get_pas().getForeground());
+				//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
+				activeLabel.setToolTipText(null);
+				if(m_popup!=null)
+					m_popup.hide();
+			}
 		}
 			
 	}

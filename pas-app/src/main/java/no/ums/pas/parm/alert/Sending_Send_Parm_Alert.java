@@ -1,6 +1,7 @@
 package no.ums.pas.parm.alert;
 
 import no.ums.pas.PAS;
+import no.ums.pas.send.SendProperties;
 import no.ums.pas.send.sendpanels.Sending_Send;
 import no.ums.pas.sound.SoundFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -9,6 +10,7 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Timeout;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -271,4 +273,5 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 	public void enableInput(boolean val) {
 		m_chk_execute_remote.setEnabled(val);
 	}
+	
 }

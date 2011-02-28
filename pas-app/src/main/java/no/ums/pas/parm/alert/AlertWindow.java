@@ -735,6 +735,22 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_alert_settings.toggleVoiceSettings(true);
 		else
 			m_alert_settings.toggleVoiceSettings(false);
+		
+		if(hasSMS(m_alert.getPanelToolbar().get_addresstypes()))
+		{
+			int sms_index = -1;
+			for(int i=0;i<m_tabbedpane.getTabCount();++i) {
+				if(m_sms_broadcast_text_panel == m_tabbedpane.getComponentAt(i)) {
+					sms_index = i;
+				}
+			}
+			
+			if(sms_index < m_tabbedpane.getSelectedIndex()) {
+				if(!m_alert_send.checkSMSInput()) {
+					return;
+				}
+			}
+		}
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
 			ShapeStruct m_edit_shape = null;

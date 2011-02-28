@@ -138,11 +138,15 @@ public class Sending_Send extends DefaultPanel {
 		}
 	}
 	public boolean checkSMSInput() {
+		boolean istas = false;
+		if(parent.get_sendobject().get_sendproperties() != null && parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+			istas=true;
+		}
 		if(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1) {
 			JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms"));
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
-		} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && parent.get_sendobject().get_sendproperties().get_sendingtype() != SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+		} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && !istas) {
 			JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms_oadc"));
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
