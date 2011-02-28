@@ -14,19 +14,23 @@ public class ColorButton extends JButton {
 		//setBackground(override);
 		
 	}
-	public Color getBackground() {
-		return m_override;
-	}
+	//public Color getBackground() {
+	//	return m_override;
+	//}
 	public void paint(java.awt.Graphics g) {
-		super.paint(g);
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+
+		super.paint(g2d);
 		if(m_override!=null && m_dim!=null) {
-			g.setColor(m_override);
-			g.fillOval(4, 4, m_dim.width-8,m_dim.height-8);
+			g2d.setColor(m_override);
+			g2d.fillOval(4, 4, getWidth()-8,getHeight()-8);
 		}
 	}
 	public void setBg(Color col) {
-		super.setBackground(col);
-		super.setForeground(col);
+		//super.setBackground(col);
+		//super.setForeground(col);
 		m_override = col;
 		repaint();
 	}

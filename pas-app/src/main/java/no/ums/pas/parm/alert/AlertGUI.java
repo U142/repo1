@@ -75,7 +75,10 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		pnlAreabtns.setLayout(new BoxLayout(pnlAreabtns,BoxLayout.X_AXIS));
 		//pnlAreabtns.setBorder(BorderFactory.createLineBorder(Color.blue));
 				
+		toolbar.set_size(toolbar.get_btn_color(), SendOptionToolbar.SIZE_BUTTON_ICON, SendOptionToolbar.SIZE_BUTTON_ICON);
+		toolbar.get_btn_color().setMaximumSize(new Dimension(SendOptionToolbar.SIZE_BUTTON_ICON,SendOptionToolbar.SIZE_BUTTON_ICON));
 		pnlAreabtns.add(toolbar.get_btn_color());
+		//toolbar.get_btn_color().setPreferredSize(new Dimension(SendOptionToolbar.SIZE_BUTTON_LARGE,SendOptionToolbar.SIZE_BUTTON_LARGE));
 		pnlAreabtns.add(toolbar.get_radio_polygon());
 		pnlAreabtns.add(toolbar.get_radio_ellipse());
 		pnlAreabtns.add(toolbar.get_btn_open());
@@ -113,6 +116,8 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		pnlTop.add(pnlRtypesbtns, pnlTop.m_gridconst);		
 		pnlTop.add_spacing(DefaultPanel.DIR_VERTICAL, 20);
 		lblRTHeader.setAlignmentY(Component.LEFT_ALIGNMENT);
+
+
 	}
 	
 	public JTextArea getTxtDescription() {

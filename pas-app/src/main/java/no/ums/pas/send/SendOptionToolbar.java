@@ -1245,7 +1245,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//actionPerformed(e);
 		if(!get_parent().get_sendproperties().getClass().equals(SendPropertiesGIS.class)) {
 			System.out.println(m_radio_activate.getActionCommand());
-			m_radio_activate.doClick();
+			//m_radio_activate.doClick();
 		}
 	}
 	
