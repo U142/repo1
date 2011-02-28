@@ -751,6 +751,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				}
 			}
 		}
+		if(((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
+				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass()) {
+			JFrame frame = get_frame();
+			JOptionPane.showMessageDialog(frame,PAS.l("main_parm_alert_dlg_specify_recipient_type"));
+			frame.dispose();
+			m_tabbedpane.setSelectedComponent(m_alert.getGui());
+			return;
+		}
 		/*
 		if(m_tabbedpane.getSelectedComponent().equals(m_alert.getGui())) {
 			ShapeStruct m_edit_shape = null;
