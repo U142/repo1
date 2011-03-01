@@ -194,14 +194,21 @@ namespace com.ums.UmsParm
         protected abstract bool ParseFromXml(ref XmlDocument d);
         protected abstract String CreateXml(ref USimpleXmlWriter d);
 
-        public void SerializeShapeToDb(long n_refno)
+        public void SerializeShapeToDb(long n_refno, long n_resend_from)
         {
             PASUmsDb db = new PASUmsDb();
             bool bShapeChanged = false;
             String szShapeToDb = "", md5 = "";
             //CreateXml(ref szShapeToDb, ref md5);
-            szShapeToDb = Serialize();
-            db.UpdatePAShape(n_refno, szShapeToDb, PASHAPETYPES.PASENDING, ref bShapeChanged);
+            if (n_resend_from <= 0)
+            {
+                szShapeToDb = Serialize();
+                db.UpdatePAShape(n_refno, szShapeToDb, PASHAPETYPES.PASENDING, ref bShapeChanged);
+            }
+            else
+            {
+                db.CopyPAShape(n_refno, n_resend_from);
+            }
             db.close();
         }
 
@@ -1955,7 +1962,7 @@ namespace com.ums.UmsParm
                 {
                     adrwriter = new AdrfileWriter(l_refno, getSendingType(), b_resend, n_priority);
                     s.WriteAddressFile(ref adrwriter);
-                    s.SerializeShapeToDb(l_refno);
+                    s.SerializeShapeToDb(l_refno, l_resend_refno);
                 }
                 return true;
             }

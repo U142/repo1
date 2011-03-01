@@ -315,6 +315,35 @@ namespace com.ums.UmsParm
             }
         }
 
+        public bool CopyPAShape(Int64 n_refno, Int64 n_resend_from)
+        {
+            OdbcDataReader rs = null;
+            try
+            {
+                String szXml;
+                ExecNonQuery("set textsize 10000000");
+                rs = ExecReader(String.Format("SELECT sz_xml FROM PASHAPE WHERE l_pk={0} AND l_type={1}",
+                                n_resend_from, (int)PASHAPETYPES.PASENDING), UmsDb.UREADER_KEEPOPEN);
+                if (rs.Read())
+                {
+                    szXml = rs.GetString(0);
+                    bool changed = false;
+                    UpdatePAShape(n_refno, szXml, PASHAPETYPES.PASENDING, ref changed);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                ULog.error(n_refno, e.Message);
+                throw;
+            }
+            finally
+            {
+                if(!rs.IsClosed)
+                    rs.Close();
+            }
+        }
+
         public bool UpdatePAShape(Int64 pk, String sz_xml, PASHAPETYPES type, ref bool bShapeChanged)
         {
             OdbcDataReader rs = null;
@@ -770,6 +799,7 @@ namespace com.ums.UmsParm
                 try
                 {
                     GetSendingInfo(s.n_resend_refno, ref m);
+                    m.sz_sendingname = s.sz_sendingname;
                 }
                 catch (Exception)
                 {
