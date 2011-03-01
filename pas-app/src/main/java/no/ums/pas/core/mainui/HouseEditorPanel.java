@@ -390,7 +390,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			m_inhabitant.set_mobile(sz_mobile);
 			m_inhabitant.set_no(sz_house);
 			m_inhabitant.set_letter(sz_letter);
-			m_inhabitant.set_postaddr(sz_address);
+			m_inhabitant.set_postaddr(sz_address + " " + sz_house + (sz_letter.length()>0 ? sz_letter : ""));
 			m_inhabitant.set_postno(sz_postno);
 			m_inhabitant.set_postarea(sz_place);
 			m_inhabitant.set_gnumber(new Integer(sz_gnr).intValue());
