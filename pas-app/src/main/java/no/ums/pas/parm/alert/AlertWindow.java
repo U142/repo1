@@ -132,6 +132,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_sms_broadcast_text_panel = new Sending_SMS_Broadcast_text(PAS.get_pas(), this);
 		m_tabbedpane = new JTabbedPane();
 		m_tabbedpane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		//m_tabbedpane.removeChangeListener(this);
 		m_tabbedpane.addTab(PAS.l("main_parm_alert_dlg_area_and_recipients"), null,
 							m_alert.getGui(),
 							PAS.l("main_parm_alert_dlg_area_and_recipients_tooltip"));
@@ -576,6 +577,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					m_tabbedpane.setEnabledAt(i, false);
 					System.out.println("sms skal være disabled");
 				}
+				
 			}
 			else
 			{
@@ -585,6 +587,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 
 			if((m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT ||
 					(m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {
+				
 				m_tabbedpane.insertTab(PAS.l("main_status_locationbased_alert"), null, 
 						m_cell_broadcast_text_panel,
 						PAS.l("main_sending_lba_tooltip"),
@@ -726,6 +729,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			{
 				m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 			}
+			catch(Exception ex) {}
 			finally { }
 		}
 		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
@@ -834,16 +838,26 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	}
 	public void windowClosed(WindowEvent e) {
 		//send activation event to toolbar
-		PAS.get_pas().add_event("windowClosed", null);
-		send_activationevent(false);
-		//PAS.get_pas().get_parmcontroller().clearDrawQueue();
-		PAS.get_pas().get_parmcontroller().updateShape(null);
-		//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(m_alert.getAlert().getM_shape());
-		if(m_alert.getAlert() != null) {
-			PAS.get_pas().get_parmcontroller().setFilled(m_alert.getAlert().getM_shape());
+		if(m_alert != null) {
+			PAS.get_pas().add_event("windowClosed", null);
+			send_activationevent(false);
+			//PAS.get_pas().get_parmcontroller().clearDrawQueue();
+			PAS.get_pas().get_parmcontroller().updateShape(null);
+			//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(m_alert.getAlert().getM_shape());
+			if(m_alert.getAlert() != null) {
+				PAS.get_pas().get_parmcontroller().setFilled(m_alert.getAlert().getM_shape());
+			}
+			
+			m_tabbedpane = null;
+			m_cell_broadcast_text_panel = null;
+			m_addresspanel = null;
+			m_addresscount = null;
+			m_alert = null;
+			m_alert_send = null;
+			m_alert_settings = null;
+			//PAS.get_pas().get_mappane().set_prev_mode();
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 		}
-		//PAS.get_pas().get_mappane().set_prev_mode();
-		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 	}
 	public void windowClosing(WindowEvent e) { }
 	public void windowDeactivated(WindowEvent e) {

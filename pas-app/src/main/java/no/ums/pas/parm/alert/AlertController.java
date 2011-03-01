@@ -246,11 +246,12 @@ public class AlertController implements ActionListener {
 
 		//if (this.toolbarPanel.get_addresstypes() != 0)
 		//toolbarPanel.gen_addresstypes();
+		gui = new AlertGUI(PAS.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
 		toolbarPanel.set_addresstypes(alert.getAddresstypes());
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
 
-		gui = new AlertGUI(PAS.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
+		
 		//gui.setTitle("Edit Alert");
 
 		// Dette er for å gå over til edit mode på polygonen
