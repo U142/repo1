@@ -231,7 +231,15 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 	public void set_mobile(String s) { m_sz_mobile = s; }
 	public void set_gnumber(int n) { m_n_gnumber = n; }
 	public void set_bnumber(int n) { m_n_bnumber = n; }
-	public void set_adrtype(int n) { m_n_adrtype = n; }
+	public void set_adrtype(int n) { 
+		m_n_adrtype = n; 
+		if(m_n_adrtype==10 || m_n_adrtype==12) //manual address (private/mobile)
+			m_n_inhabitant_type = INHABITANT_PRIVATE;
+		else if(m_n_adrtype==11) //manual address (company)
+			m_n_inhabitant_type = INHABITANT_COMPANY;
+		else
+			m_n_inhabitant_type = m_n_adrtype;
+	}
 	public void set_deptpk(int n) { m_n_deptpk = n; }
 	public void set_streetid(int n) { m_n_streetid = n; }
 	public void set_quality(char c) { m_c_quality = c; }
