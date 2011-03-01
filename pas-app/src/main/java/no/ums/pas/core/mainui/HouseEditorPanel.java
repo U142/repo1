@@ -2,6 +2,7 @@ package no.ums.pas.core.mainui;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSClosestGAB;
@@ -373,10 +374,10 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			//String sz_bedrift = ((Integer)((IconRadio)m_group_user.getSelection()).get_value()).toString();
             int n_adrtype;
 			if(m_radio_private.isSelected()) {
-                n_adrtype = Inhabitant.INHABITANT_COMPANY;//SendController.SENDTO_FIXED_COMPANY;
+                n_adrtype = Inhabitant.INHABITANT_PRIVATE;//SendController.SENDTO_FIXED_COMPANY;
 			}
 			else {
-                n_adrtype = Inhabitant.INHABITANT_PRIVATE; //SendController.SENDTO_FIXED_PRIVATE;
+                n_adrtype = Inhabitant.INHABITANT_COMPANY; //SendController.SENDTO_FIXED_PRIVATE;
 			}
 			if(sz_gnr.length()==0)
 				sz_gnr = "0";
@@ -563,18 +564,22 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		
 		public HouseInhabitantsList(String [] sz_columns, int [] n_width)  {
 			super(sz_columns, n_width, null, new Dimension(400, 500), ListSelectionModel.SINGLE_SELECTION);
-			m_icon_delete = ImageLoader.load_icon("no.gif");
-			m_icon_blank = ImageLoader.load_icon("lock.gif");
+			m_icon_delete = ImageLoader.load_icon("delete_16.png");
+			m_icon_blank = ImageLoader.load_icon("lock_16.png");
 			m_icon_private= ImageLoader.load_icon("inhab_private.png");
 			m_icon_company= ImageLoader.load_icon("inhab_company.png");
 		}
 		public void insert_row(Inhabitant inhab) {
+			this.m_tbl.setRowHeight(24);
 			Object icon = null;
 			Object inhabtype = null;
 			if(inhab==null)
 				return;
 			try {
-				if(inhab.get_deptpk() > 0) icon = m_icon_delete; else icon = m_icon_blank;
+				if(inhab.get_deptpk() > 0 && inhab.get_deptpk()==Variables.getUserInfo().get_current_department().get_deptpk()) 
+					icon = m_icon_delete; 
+				else 
+					icon = m_icon_blank;
 				//if((inhab.get_adrtype() & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY ||
 				//	(inhab.get_adrtype() & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY)
 				if((inhab.get_inhabitanttype() & Inhabitant.INHABITANT_COMPANY) == Inhabitant.INHABITANT_COMPANY)
