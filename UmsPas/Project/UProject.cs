@@ -45,6 +45,7 @@ namespace com.ums.PAS.Project
                         break;
                 }
 
+                req.sz_name = req.sz_name.Replace("'", "''");
                 String szSQLProject = String.Format("sp_project '{0}', {1}, '{2}', {3}, {4}, {5}", sz_operation, req.n_projectpk, req.sz_name, 0, logon.l_deptpk, logon.l_userpk);
                 dr = ExecReader(szSQLProject, UmsDb.UREADER_AUTOCLOSE);
 
