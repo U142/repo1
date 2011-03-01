@@ -9,6 +9,7 @@ import no.ums.pas.core.dataexchange.MailCtrl;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
+import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.*;
@@ -1517,7 +1518,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public List<String> onSendErrorMessages(String concatErrorlist,
-                                            MailAccount account, ActionListener callback) {
+                                            MailAccount account, Smtp.smtp_callback callback) {
         MailAccount newaccount = new MailAccount();
         newaccount.set_accountname("NL-Alert");
         newaccount.set_autodetected(false);
@@ -1527,7 +1528,8 @@ public class CentricPasScripting extends DefaultPasScripting {
         newaccount.set_port(25);
         List<String> arr_adr = new ArrayList<String>();
         arr_adr.add("mh@ums.no");
-        new MailCtrl(newaccount.get_helo(), newaccount.get_mailserver(), newaccount.get_port(), newaccount.get_displayname(), newaccount.get_mailaddress(), arr_adr, callback, "PAS error", concatErrorlist);
+        new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concatErrorlist, callback).start();
+        //new MailCtrl(newaccount.get_helo(), newaccount.get_mailserver(), newaccount.get_port(), newaccount.get_displayname(), newaccount.get_mailaddress(), arr_adr, callback, "PAS error", concatErrorlist);
         return arr_adr;
     }
 

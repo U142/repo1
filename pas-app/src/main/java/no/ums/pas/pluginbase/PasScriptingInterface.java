@@ -9,6 +9,7 @@ import no.ums.pas.core.logon.LogonDialog;
 import no.ums.pas.core.logon.LogonInfo;
 import no.ums.pas.core.logon.Settings;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
@@ -265,7 +266,7 @@ public interface PasScriptingInterface {
      * @param callback where to callback after error reporting is done. Defaults to Error object
      * @return list of recipient addresses that received the message
      */
-    List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback);
+    List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, Smtp.smtp_callback callback);
 	
     /**
      * Function for parsing and handling Soap Exceptions (e.g. Session timeout)

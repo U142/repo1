@@ -12,6 +12,7 @@ import no.ums.pas.core.dataexchange.MailCtrl;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
 import no.ums.pas.core.logon.UserInfo.SESSION_INACTIVE_REASON;
+import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.menus.*;
@@ -525,11 +526,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	@Override
-	public List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, ActionListener callback) {
+	public List<String> onSendErrorMessages(String concat_errorlist, MailAccount account, Smtp.smtp_callback callback) {
 		List<String> arr_adr = new ArrayList<String>();
 		arr_adr.add("mh@ums.no");
-		arr_adr.add("sa@ums.no");		
-		new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
+		//arr_adr.add("sa@ums.no");		
+		//new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
+		new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concat_errorlist, callback).start();
 		return arr_adr;
 	}
 

@@ -748,8 +748,8 @@ public class StatusSending extends Object {
 		
 		// Disable goto button on resend, there is no navigation
 		//if(_n_resendrefno>0 && _n_type == 2 && PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4)
-		if(_n_resendrefno>0)
-			pnl_icon.m_btn_goto.setVisible(false);
+		//if(_n_resendrefno>0)
+		//	pnl_icon.m_btn_goto.setVisible(false);
 		
 		m_lba_tabbed.setCallback(new ActionListener()
 		{

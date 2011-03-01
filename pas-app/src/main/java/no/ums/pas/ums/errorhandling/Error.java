@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Iterator;
+import no.ums.pas.core.mail.*;
 
 
 public class Error implements ActionListener {
@@ -207,7 +208,18 @@ public class Error implements ActionListener {
 
 	private void sendMail(MailAccount account){
 		//MailCtrl mc = new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),"mh@ums.no",this,"PAS error",concatErrorList(errorList));
-		PAS.pasplugin.onSendErrorMessages(concatErrorList(errorList), account, this);
+		PAS.pasplugin.onSendErrorMessages(concatErrorList(errorList), account, new Smtp.smtp_callback() {
+			
+			@Override
+			public void finished() {
+				
+			}
+			
+			@Override
+			public void failed(String e) {
+				JOptionPane.showMessageDialog(gui,"Error sending mail, please check your settings");
+			}
+		});
 	}
 	private void fillGUI(ErrorGUI gui, ErrorVO e) {
 		fillGUI(gui, e, true);
