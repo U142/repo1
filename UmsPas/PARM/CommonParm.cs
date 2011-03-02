@@ -19,7 +19,8 @@ namespace com.ums.UmsParm
 
     /*public static class USENDINGTYPES
     {
-        public enum types
+        [XmlType(Namespace="http://ums.no/ws/common/parm")]
+    public enum types
         {
             SENDINGTYPE_POLYGON = 3,
             SENDINGTYPE_ELLIPSE = 8,
@@ -37,6 +38,7 @@ namespace com.ums.UmsParm
         }
     }*/
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public enum PARMOPERATION
     {
         insert,
@@ -44,6 +46,7 @@ namespace com.ums.UmsParm
         delete,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPASLOGON
     {
         public bool f_granted;
@@ -63,12 +66,14 @@ namespace com.ums.UmsParm
         public MDSOADC_DEFAULT default_oadc = new MDSOADC_DEFAULT();
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class MDSOADC_DEFAULT
     {
         public int l_type;
         public String sz_value;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPASUISETTINGS
     {
         public bool initialized = false;
@@ -107,6 +112,7 @@ namespace com.ums.UmsParm
         public int l_lba_update_percent;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UDEPARTMENT
     {
         public int l_deptpk;
@@ -146,10 +152,12 @@ namespace com.ums.UmsParm
     }
 
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public abstract class UShape
     {
         //public static USENDINGTYPES operator !=(USENDINGTYPES s, long n) { return new USENDINGTYPES(); }
-        /*public enum USENDINGTYPES : int
+        /*[XmlType(Namespace="http://ums.no/ws/common/parm")]
+    public enum USENDINGTYPES : int
         {
             
             SENDINGTYPE_POLYGON = 3,
@@ -319,6 +327,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class ULocationBasedAlert : UShape
     {
         public ULocationBasedAlert()
@@ -326,45 +335,7 @@ namespace com.ums.UmsParm
         {
             m_b_isvalid = false;
         }
-        public class LBALanguage
-        {
-            public String sz_name;
-            public String sz_cb_oadc;
-            public String sz_otoa;
-            public String sz_text;
-            public List<LBACCode> m_ccodes = new List<LBACCode>();
-            public LBALanguage()
-            {
-            }
-            public LBALanguage(String sz_name, String sz_cb_oadc, String sz_otoa, String sz_text)
-            {
-                this.sz_name = sz_name;
-                this.sz_text = sz_text;
-                this.sz_cb_oadc = sz_cb_oadc;
-                this.sz_otoa = sz_otoa;
-            }
-            public void AddCCode(String ccode) { m_ccodes.Add(new LBACCode(ccode)); }
-
-            public String getName() { return sz_name; }
-            public String getCBOadc() { return sz_cb_oadc; }
-            public String getOtoa() { return sz_otoa; }
-            public String getText() { return sz_text; }
-            public int getCCodeCount() { return m_ccodes.Count; }
-            public LBACCode getCCode(int i) { return (LBACCode)m_ccodes[i]; }
-
-        }
-        public class LBACCode
-        {
-            public String ccode;
-            public LBACCode(String s)
-            {
-                ccode = s;
-            }
-            public LBACCode()
-            {
-            }
-            public String getCCode() { return ccode; }
-        }
+       
         protected bool m_b_isvalid;
         //public String sz_area;
         //public String sz_id;
@@ -554,6 +525,7 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UBoundingRect : UShape
     {
         public Double _left, _right, _top, _bottom;
@@ -587,6 +559,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UTestSending : UShape
     {
         protected List<string> m_numbers = new List<string>();
@@ -639,6 +612,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UMunicipalShape : UShape
     {
         public List<UMunicipalDef> m_municipals = new List<UMunicipalDef>();
@@ -718,6 +692,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UGeminiStreet : UShape
     {
         public List<com.ums.PAS.Address.UGisImportResultLine> linelist;
@@ -744,6 +719,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UGIS : UShape
     {
         public int GetInabitantCount()
@@ -863,6 +839,7 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UResend : UShape
     {
         public String sz_header;
@@ -930,6 +907,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UResendVoice : UResend
     {
         public UResendVoice()
@@ -938,6 +916,7 @@ namespace com.ums.UmsParm
             sz_header = "MS";
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UResendSMS : UResend
     {
         public UResendSMS()
@@ -947,6 +926,7 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UResendTAS : UResend
     {
         public UResendTAS()
@@ -957,6 +937,7 @@ namespace com.ums.UmsParm
             
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UEllipse : UShape
     {
         public double lon, lat;
@@ -1102,10 +1083,12 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UTasCountShape : UTasShape
     {
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UTasShape : UShape
     {
         public List<ULBACOUNTRY> countries;
@@ -1164,8 +1147,8 @@ namespace com.ums.UmsParm
             UShape _this = this;
             loc.setSourceShape(ref _this);
             loc.l_alertpk = "-1";
-            loc.m_languages = new List<ULocationBasedAlert.LBALanguage>();
-            ULocationBasedAlert.LBALanguage lbalang = new ULocationBasedAlert.LBALanguage();
+            loc.m_languages = new List<LBALanguage>();
+            LBALanguage lbalang = new LBALanguage();
             if (alert.n_requesttype == 2) //only a count request, we don't have any details
             {
                 lbalang.sz_cb_oadc = "NULL";
@@ -1180,10 +1163,10 @@ namespace com.ums.UmsParm
                 lbalang.sz_otoa = "0";
                 lbalang.sz_text = sending.sz_sms_message;
             }
-            lbalang.m_ccodes = new List<ULocationBasedAlert.LBACCode>();
+            lbalang.m_ccodes = new List<LBACCode>();
             for(int i=0; i < countries.Count; i++)
             {
-                ULocationBasedAlert.LBACCode ccode = new ULocationBasedAlert.LBACCode();
+                LBACCode ccode = new LBACCode();
                 ccode.ccode = countries[i].l_cc.ToString();
                 lbalang.m_ccodes.Add(ccode);
             }
@@ -1202,6 +1185,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPLMN : UShape
     {
         public static UPLMN Deserialize(String xml)
@@ -1252,6 +1236,7 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPolygon : UShape
     {
         public static UPolygon Deserialize(String xml)
@@ -1485,6 +1470,7 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPolypoint
     {
         [XmlAttribute("lon")] public double lon;
@@ -1504,6 +1490,7 @@ namespace com.ums.UmsParm
             this.lon = 0.0;
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class URGBA
     {
         public int a, r, g, b;
@@ -1517,6 +1504,7 @@ namespace com.ums.UmsParm
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class PAOBJECT
     {
         public PARMOPERATION parmop;
@@ -1538,6 +1526,7 @@ namespace com.ums.UmsParm
         public com.ums.UmsParm.UPolygon m_shape; //must be of type: polygon
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class PAEVENT
     {
         public PARMOPERATION parmop;
@@ -1557,10 +1546,12 @@ namespace com.ums.UmsParm
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class PANULLALERT : PAALERT
     {
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class PAALERT
     {
         public static String getSendingTypeText(int n_sendingtype)
@@ -1668,6 +1659,7 @@ namespace com.ums.UmsParm
 
 
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class TAS_SENDING : SMS_SENDING
     {
         private bool m_b_allow_response;
@@ -1702,6 +1694,7 @@ namespace com.ums.UmsParm
         }
     }
      
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class SMS_SENDING : PAS_SENDING 
     {
         //new override public char sendingtype = 's'; //sms
@@ -1732,6 +1725,7 @@ namespace com.ums.UmsParm
         }
     }
     
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class TAS_RESEND : SMS_SENDING
     {
         public long[] l_resend_status;
@@ -1749,6 +1743,7 @@ namespace com.ums.UmsParm
 
 
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class PAS_SENDING
     {
         public char getSendingType() { return sendingtype; }
@@ -2121,6 +2116,7 @@ namespace com.ums.UmsParm
     }
 
 
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UMAPSENDING
     {
         public String sz_sendingname;
@@ -2189,6 +2185,7 @@ namespace com.ums.UmsParm
             return false;
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPOLYGONSENDING : UMAPSENDING
     {
         public UMapBounds _calcbounds()
@@ -2260,22 +2257,27 @@ namespace com.ums.UmsParm
 
         public UMapPoint[] polygonpoints;
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UELLIPSESENDING : UMAPSENDING
     {
         public UEllipseDef ellipse;
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UGISSENDING : UMAPSENDING
     {
         public UGisRecord[] gis;
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UTESTSENDING : UMAPSENDING
     {
         public List<string> numbers;
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UMUNICIPALSENDING : UMAPSENDING
     {
         public List<UMunicipalDef> municipals;
     }
+    [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UTASSENDING : UMAPSENDING
     {
         public List<ULBACOUNTRY> countrylist;

@@ -175,7 +175,7 @@ namespace com.ums.PAS.CB
 
             //Insert language into database. Defaults to one language pr sending
             ULocationBasedAlert loc = new ULocationBasedAlert();
-            ULocationBasedAlert.LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sender.sz_name, "0", message.sz_text);
+            LBALanguage lang = loc.addLanguage("Channel " + message.l_cbchannel, alert.sender.sz_name, "0", message.sz_text);
             lang.AddCCode(message.l_cbchannel.ToString());
 
             try

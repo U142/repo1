@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 namespace com.ums.UmsCommon
 {
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class PASVERSION
     {
         public String full;
@@ -22,6 +23,7 @@ namespace com.ums.UmsCommon
         public int revision;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ONETIMEKEY
     {
         /*public static ONETIMEKEY newInstance() 
@@ -41,6 +43,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum MDVSENDINGINFO_GROUP
     {
         ADDRESSLIST = 0,
@@ -55,12 +58,14 @@ namespace com.ums.UmsCommon
         MAP_POLYGONAL_ELLIPSE = 32,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum MDVSENDINGINFO_TYPE
     {
         CB_SENDING = 7,
         CB_TESTSENDING = 70,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum BBUSER_BLOCK_REASONS
     {
         NONE = 0,
@@ -77,12 +82,14 @@ namespace com.ums.UmsCommon
     /**
      * Value used in Backbone log procedures/tables (e.g sp_log_BBMESSAGES => log_BBMESSAGES)
      */
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum UDbOperation
     {
         INSERT = 0,
         UPDATE = 1,
         DELETE = 2,
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ProgressJobType
     {
         GEMINI_IMPORT_STREETID = 1,
@@ -97,6 +104,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class PercentResult
     {
         public int n_percent;
@@ -104,11 +112,13 @@ namespace com.ums.UmsCommon
         public int n_currentrecord;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class SessionStore
     {
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum LBA_SENDINGTYPES
     {
         TAS = 5,
@@ -116,12 +126,14 @@ namespace com.ums.UmsCommon
         CELLBROADCAST = 7,
     }
 
-    /*public enum RESTRICTION_TYPE
+    /*[XmlType(Namespace="http://ums.no/ws/common")]
+    public enum RESTRICTION_TYPE
     {
         PAUSERRESTRICTION = 8,
         PADEPARTMENTRESTRICTION = 16,
     }*/
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class OneTimeKeyStore
     {
         public static SetOneTimeKeyDelegate newDelegate() { return new SetOneTimeKeyDelegate(SetKey); }
@@ -133,6 +145,7 @@ namespace com.ums.UmsCommon
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class PercentProgress
     {
         
@@ -175,6 +188,7 @@ namespace com.ums.UmsCommon
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class AppKeyStore
     {
         private static int maxCapacity = 100;//UCommon.USETTINGS.l_onetimekey_capacity;
@@ -220,6 +234,7 @@ namespace com.ums.UmsCommon
     /*
      * Session data for progress. Used for polling percentage of completion of different tasks
      */
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class TempDataStore
     {
         private static Hashtable _table = new Hashtable();
@@ -279,6 +294,7 @@ namespace com.ums.UmsCommon
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum PASHAPETYPES : int
     {
         PAALERT = 1,
@@ -329,6 +345,7 @@ namespace com.ums.UmsCommon
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UMapBounds
     {
         public double l_bo = 10.3f;
@@ -344,26 +361,31 @@ namespace com.ums.UmsCommon
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UMapPoint
     {
         public double lon;
         public double lat;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UEllipseDef
     {
         public UMapPoint center;
         public UMapPoint radius;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UMunicipalDef
     {
         public String sz_municipalid;
         public String sz_municipalname;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UGisRecord
     {
         public long id; //kon_dmid from adr-db
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ADRTYPES
     {
         NOPHONE_PRIVATE             = 1 << 0,
@@ -393,6 +415,7 @@ namespace com.ums.UmsCommon
         ONLY_HEAD_OF_HOUSEHOLD      = 1 << 30,
 
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum SENDCHANNEL
     {
         VOICE = 1,
@@ -401,6 +424,7 @@ namespace com.ums.UmsCommon
         LBA = 4,
         TAS = 5,
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ARGB
     {
         public String _a, _r, _g, _b;
@@ -674,6 +698,7 @@ namespace com.ums.UmsCommon
         }    
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UDATETIME
     {
         public String sz_date, sz_time;
@@ -814,6 +839,7 @@ namespace com.ums.UmsCommon
 
 
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UNSLOOKUP
     {
         public String sz_domain;
@@ -824,6 +850,7 @@ namespace com.ums.UmsCommon
     }
 
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULOGONINFO
     {
         public Int64 l_userpk;
@@ -844,6 +871,7 @@ namespace com.ums.UmsCommon
         public String onetimekey;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class USYSTEMMESSAGES
     {
         public long l_timestamp;
@@ -851,17 +879,20 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum UBBNEWSLIST_FILTER
     {
         ACTIVE = 1,
         IN_BETWEEN_START_END = 2,
 
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBNEWSLIST
     {
         public long l_timestamp_db;
         public List<UBBNEWS> newslist = new List<UBBNEWS>();
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBNEWS
     {
         public long l_newspk;
@@ -881,12 +912,14 @@ namespace com.ums.UmsCommon
         public UBBNEWSTEXT newstext;
         public String sz_operatorname;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBNEWSTEXT
     {
         public long l_langpk;
         public String sz_news;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBUSER
     {
         public long l_userpk;
@@ -926,6 +959,7 @@ namespace com.ums.UmsCommon
         public BBUSER_BLOCK_REASONS l_disabled_reasoncode;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class BBPROJECT
     {
         [XmlAttribute("l_projectpk")] public String sz_projectpk;
@@ -980,6 +1014,7 @@ namespace com.ums.UmsCommon
     /*
      * Values to be used in a sending
      */
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class MDVSENDINGINFO
     {
         public long l_refno;
@@ -1037,6 +1072,7 @@ namespace com.ums.UmsCommon
     }
 
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ULBAFILTER_STAT_TIMEUNIT
     {
         PER_HOUR,
@@ -1045,12 +1081,14 @@ namespace com.ums.UmsCommon
         PER_MONTH,
         PER_YEAR,
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ULBAFILTER_STAT_FUNCTION
     {
         STAT_AVERAGE,
         STAT_MAX,
         STAT_MIN,
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBASTATISTICS_FILTER
     {
         public List<ULBACOUNTRY> countries;
@@ -1064,6 +1102,7 @@ namespace com.ums.UmsCommon
         public int rowcount;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBACOUNTRYSTATISTICS : ULBACOUNTRY
     {
         public List<UTOURISTCOUNT> statistics;
@@ -1078,6 +1117,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBACOUNTRY:IComparable
     {
         public int l_cc;
@@ -1105,6 +1145,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UTOURISTCOUNT:IComparable
     {
         public long l_lastupdate;
@@ -1121,6 +1162,7 @@ namespace com.ums.UmsCommon
         } 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBACONTINENT
     {
         public int l_continentpk;
@@ -1192,6 +1234,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class USMSINSTATS
     {
         public int l_refno;
@@ -1200,6 +1243,7 @@ namespace com.ums.UmsCommon
         public int l_count;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBAHISTCC
     {
         public int l_cc;
@@ -1213,6 +1257,7 @@ namespace com.ums.UmsCommon
         public int l_operator;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBAHISTCELL
     {
         public int l_operator;
@@ -1226,6 +1271,7 @@ namespace com.ums.UmsCommon
         public long l_timestamp;
         public float l_successpercentage;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBASEND_TS
     {
         public int l_status;
@@ -1233,6 +1279,7 @@ namespace com.ums.UmsCommon
         public int l_operator;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ULBAOPERATORSTATE : long
     {
         ERROR = 0,
@@ -1242,6 +1289,7 @@ namespace com.ums.UmsCommon
         FINISHED = 4,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ULBASTATUSCODES : long
     {
         LBASTATUS_GENERAL_ERROR = -2,
@@ -1303,6 +1351,7 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBASENDING
     {
         public long l_refno;
@@ -1323,6 +1372,7 @@ namespace com.ums.UmsCommon
         public List<ULBASEND_TS> send_ts = new List<ULBASEND_TS>(); //list of status timestamps
         public List<LBALanguage> languages = new List<LBALanguage>(); //list of languages and countrycodes
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class LBALanguage
     {
         public long l_textpk;
@@ -1355,6 +1405,7 @@ namespace com.ums.UmsCommon
         public LBACCode getCCode(int i) { return (LBACCode)m_ccodes[i]; }
 
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class LBACCode
     {
         public String ccode;
@@ -1368,6 +1419,7 @@ namespace com.ums.UmsCommon
         public String getCCode() { return ccode; }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UTTS_DB_PARAMS
     {
         public String sz_speaker;
@@ -1375,6 +1427,7 @@ namespace com.ums.UmsCommon
         public String sz_manufacturer;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum UBBMODULEDEF
     {
         CALL = 11,
@@ -1390,6 +1443,7 @@ namespace com.ums.UmsCommon
         EXECUTE = 22,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBMESSAGE
     {
         public long n_messagepk;
@@ -1412,23 +1466,27 @@ namespace com.ums.UmsCommon
         public List<UCCMessage> ccmessage;
     }
     
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UCCMessage
     {
         public String sz_message;
         public int l_cc;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBMESSAGELIST
     {
         public List<UBBMESSAGE> list;
         public List<UBBMESSAGE> deleted;
         public long n_servertimestamp;
     }
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UBBMESSAGELISTFILTER
     {
         public long n_timefilter;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBAMESSAGE // Used for NLALERT
     {
         public long n_messagepk;
@@ -1442,6 +1500,7 @@ namespace com.ums.UmsCommon
         public String sz_message;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBAMESSAGELIST // Used for NLALERT
     {
         public List<ULBAMESSAGE> list;
@@ -1449,6 +1508,7 @@ namespace com.ums.UmsCommon
         public long n_servertimestamp;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBADURATION // Used for NLALERT
     {
         public long n_durationpk;
@@ -1458,27 +1518,30 @@ namespace com.ums.UmsCommon
         public int n_deptpk;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class ULBAPARAMETER // Used for NLALERT
     {
         public long l_parameterspk;
-	    public int l_incorrect;
-	    public int l_autologoff;
-	    public String sz_adminemail;
-	    public int l_channelno;
-	    public int l_test_channelno;
-	    public int l_heartbeat;
-	    public int l_duration;
-	    public int l_interval;
-	    public int l_repetition;
-	    public int l_deptpk;
+        public int l_incorrect;
+        public int l_autologoff;
+        public String sz_adminemail;
+        public int l_channelno;
+        public int l_test_channelno;
+        public int l_heartbeat;
+        public int l_duration;
+        public int l_interval;
+        public int l_repetition;
+        public int l_deptpk;
         public int l_comppk;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public class UPROJECT_FINISHED_RESPONSE : BBPROJECT
     {
         
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common")]
     public enum UDATAFILTER
     {
         NONE = 0,

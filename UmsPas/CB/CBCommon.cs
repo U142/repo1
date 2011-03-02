@@ -9,6 +9,7 @@ using System.Text;
 
 namespace com.ums.PAS.CB
 {
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public enum CB_OPERATION
     {
         NewAlertPolygon,
@@ -17,6 +18,7 @@ namespace com.ums.PAS.CB
         KillAlert,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGE_FIELDS
     {
         public long l_db_timestamp;
@@ -25,6 +27,7 @@ namespace com.ums.PAS.CB
         public List<CB_ORIGINATOR> originator_list = new List<CB_ORIGINATOR>();
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public enum ULBAMESSAGEFIELDTYPE : int
     {
         RISK = 1,
@@ -35,6 +38,7 @@ namespace com.ums.PAS.CB
         MESSAGE_CONFIRMATION = 6,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGE_FIELDS_BASE
     {
         [XmlAttribute("l_pk")]
@@ -69,6 +73,7 @@ namespace com.ums.PAS.CB
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_RISK : CB_MESSAGE_FIELDS_BASE
     {
         public CB_RISK() : this(-1, "Not set")
@@ -83,6 +88,7 @@ namespace com.ums.PAS.CB
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGE_CONFIRMATION : CB_MESSAGE_FIELDS_BASE
     {
         public CB_MESSAGE_CONFIRMATION()
@@ -96,6 +102,7 @@ namespace com.ums.PAS.CB
             type = ULBAMESSAGEFIELDTYPE.MESSAGE_CONFIRMATION;
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_REACTION : CB_MESSAGE_FIELDS_BASE
     {
         public CB_REACTION() : this(-1, "Not set")
@@ -108,6 +115,7 @@ namespace com.ums.PAS.CB
             type = ULBAMESSAGEFIELDTYPE.REACTION;
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_ORIGINATOR : CB_MESSAGE_FIELDS_BASE
     {
         public CB_ORIGINATOR() : this(-1, "Not set")
@@ -120,6 +128,7 @@ namespace com.ums.PAS.CB
             type = ULBAMESSAGEFIELDTYPE.ORIGINATOR;
         }
     }
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_SENDER : CB_MESSAGE_FIELDS_BASE
     {
         public CB_SENDER()
@@ -134,6 +143,7 @@ namespace com.ums.PAS.CB
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGEPART : CB_MESSAGE_FIELDS_BASE
     {
         public CB_MESSAGEPART() : this(-1, "")
@@ -147,6 +157,7 @@ namespace com.ums.PAS.CB
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGE
     {
         [XmlAttribute("l_channel")]
@@ -155,6 +166,7 @@ namespace com.ums.PAS.CB
         public String sz_text;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_MESSAGELIST
     {
         [XmlElement("message")]
@@ -184,6 +196,7 @@ namespace com.ums.PAS.CB
 
 
     [XmlRoot("cb")]
+    [XmlType(Namespace = "http://ums.no/ws/common/cb")]
     public abstract class CB_OPERATION_BASE
     {
 
@@ -281,6 +294,7 @@ namespace com.ums.PAS.CB
     }
 
     [XmlRoot("cb")]
+    [XmlType(Namespace = "http://ums.no/ws/common/cb")]
     public abstract class CB_SEND_BASE : CB_OPERATION_BASE
     {
         public CB_SEND_BASE()
@@ -330,6 +344,7 @@ namespace com.ums.PAS.CB
 
 
     [XmlRoot("cb")]
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_ALERT_POLYGON : CB_SEND_BASE // Used for new Polyalert or update Polyalert
     {
         public CB_ALERT_POLYGON()
@@ -368,6 +383,7 @@ namespace com.ums.PAS.CB
     }
 
     [XmlRoot("cb")]
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_ALERT_PLMN : CB_SEND_BASE //Used for Nation wide CB
     {
         public CB_ALERT_PLMN()
@@ -387,6 +403,7 @@ namespace com.ums.PAS.CB
     }
 
     [XmlRoot("cb")]
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_ALERT_UPDATE : CB_SEND_BASE //Update an existing CB-alert
     {
         public CB_ALERT_UPDATE()
@@ -401,6 +418,7 @@ namespace com.ums.PAS.CB
     }
 
     [XmlRoot("cb")]
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_ALERT_KILL : CB_OPERATION_BASE //Kill a CB-alert
     {
         public CB_ALERT_KILL()
@@ -415,6 +433,7 @@ namespace com.ums.PAS.CB
         }
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_SENDING_RESPONSE
     {
         public CB_OPERATION operation;
@@ -425,6 +444,7 @@ namespace com.ums.PAS.CB
 
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_PROJECT_STATUS_REQUEST
     {
         public ULOGONINFO logon;
@@ -432,6 +452,7 @@ namespace com.ums.PAS.CB
         public long l_timefilter;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_PROJECT_STATUS_RESPONSE
     {
         public long l_db_timestamp;
@@ -439,6 +460,7 @@ namespace com.ums.PAS.CB
         public List<CB_STATUS> statuslist;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/cb")]
     public class CB_STATUS
     {
         public String sz_sendingname;

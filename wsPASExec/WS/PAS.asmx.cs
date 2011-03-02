@@ -56,11 +56,7 @@ namespace com.ums.ws.pas
         {
             return new imports();
         }*/
-
-        [XmlInclude(typeof(UPolygon))]
-        [XmlInclude(typeof(UEllipse))]
-        [XmlInclude(typeof(UBoundingRect))]
-        [XmlInclude(typeof(UPLMN))]
+        
         [XmlInclude(typeof(com.ums.UmsParm.ULocationBasedAlert))]
 
 
@@ -647,6 +643,10 @@ namespace com.ums.ws.pas
             }
         }
 
+        [XmlInclude(typeof(UPolygon))]
+        [XmlInclude(typeof(UEllipse))]
+        [XmlInclude(typeof(UBoundingRect))]
+        [XmlInclude(typeof(UPLMN))]
         [WebMethod]
         public List<UDEPARTMENT> getRestrictionShapes(ULOGONINFO logon, PASHAPETYPES type)
         {

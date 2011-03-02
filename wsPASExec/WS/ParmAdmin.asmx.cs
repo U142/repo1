@@ -1116,14 +1116,14 @@ namespace com.ums.ws.parm
 
                 for (int i = 0; i < lba.getLanguageCount(); i++)
                 {
-                    ULocationBasedAlert.LBALanguage lang = lba.getLanguage(i);
+                    LBALanguage lang = lba.getLanguage(i);
                     tmp = String.Format("<message sz_lang=\"{0}\" sz_text=\"{1}\" sz_cb_oadc=\"{2}\">",
                                         lang.sz_name, lang.sz_text, lang.sz_cb_oadc);
                     szShapeString += tmp;
                     w.WriteLine(tmp);
                     for (int j = 0; j < lang.getCCodeCount(); j++)
                     {
-                        ULocationBasedAlert.LBACCode ccode = lang.getCCode(j);
+                        LBACCode ccode = lang.getCCode(j);
                         tmp = String.Format("<ccode>{0}</ccode>", ccode.getCCode());
                         szShapeString += tmp;
                         w.WriteLine(tmp);

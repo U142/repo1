@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace com.ums.UmsCommon 
 {
+    
+    [XmlType(Namespace="http://ums.no/ws/common/admin")]
     public class UPASLOG
     {
         public Int64 l_id;
@@ -14,6 +17,7 @@ namespace com.ums.UmsCommon
         public String sz_desc;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/admin")]
     public class Response
     {
         // status
@@ -22,12 +26,14 @@ namespace com.ums.UmsCommon
         public string reason;
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/admin")]
     public enum ACCESSPAGE
     {
         RESTRICTIONAREA = 1,
         PREDEFINEDTEXT = 2,
     }
 
+    [XmlType(Namespace="http://ums.no/ws/common/admin")]
     public class LBAOPERATOR
     {
         public int l_operator;

@@ -34,14 +34,6 @@ namespace com.ums.ws.parm
     public class parmws : System.Web.Services.WebService
     {
 
-        [XmlInclude(typeof(CB_ALERT_KILL))]
-        [XmlInclude(typeof(CB_ALERT_PLMN))]
-        [XmlInclude(typeof(CB_ALERT_POLYGON))]
-        [XmlInclude(typeof(CB_ALERT_UPDATE))]
-        [XmlInclude(typeof(ULBAOPERATORSTATE))]
-        [XmlInclude(typeof(ULBASTATUSCODES))]
-
-
         [WebMethod]
         public PAEVENT[] GetEventListTest()
         {
@@ -387,6 +379,16 @@ namespace com.ums.ws.parm
          * Insert into DB
          * Serialize CB_OPERATION
          */
+        [XmlInclude(typeof(CB_OPERATION_BASE))]
+        [XmlInclude(typeof(CB_ALERT_KILL))]
+        [XmlInclude(typeof(CB_MESSAGE))]
+        [XmlInclude(typeof(CB_SEND_BASE))]
+        [XmlInclude(typeof(CB_MESSAGELIST))]
+        [XmlInclude(typeof(CB_ALERT_PLMN))]
+        [XmlInclude(typeof(CB_ALERT_POLYGON))]
+        [XmlInclude(typeof(CB_ALERT_UPDATE))]
+        [XmlInclude(typeof(ULBAOPERATORSTATE))]
+        [XmlInclude(typeof(ULBASTATUSCODES))]
         [WebMethod]
         public CB_SENDING_RESPONSE ExecCBOperation(ULOGONINFO logon, CB_OPERATION_BASE cb)
         {
