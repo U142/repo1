@@ -2,8 +2,8 @@ package no.ums.pas.ui;
 
 import no.ums.pas.app.PasApplication;
 import no.ums.pas.ums.tools.Utils;
-import no.ums.ws.pas.ULOGONINFO;
-import no.ums.ws.pas.UPASLOGON;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UPASLOGON;
 import org.jdesktop.application.Task;
 
 /**

@@ -5,9 +5,9 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.status.CBSTATUS;
-import no.ums.ws.pas.status.ULBAHISTCELL;
-import no.ums.ws.pas.status.ULBASENDING;
+import no.ums.ws.common.ULBAHISTCELL;
+import no.ums.ws.common.ULBASENDING;
+import no.ums.ws.common.cb.CBSTATUS;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

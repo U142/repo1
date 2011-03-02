@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import no.ums.ws.pas.tas.ULBACOUNTRY;
+import no.ums.ws.common.ULBACOUNTRY;
 
 import java.awt.*;
 import java.util.ArrayList;

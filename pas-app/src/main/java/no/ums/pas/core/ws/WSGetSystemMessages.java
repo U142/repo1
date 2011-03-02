@@ -1,9 +1,10 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.ws.common.UBBNEWSLISTFILTER;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.USYSTEMMESSAGES;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UBBNEWSLISTFILTER;
-import no.ums.ws.pas.USYSTEMMESSAGES;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionListener;
@@ -23,8 +24,7 @@ public class WSGetSystemMessages extends WSThread
 	public void call() throws Exception {
 		try
 		{
-			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-			no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzCompid(PAS.get_pas().get_userinfo().get_compid());
 			logon.setSzUserid(PAS.get_pas().get_userinfo().get_userid());
 			logon.setJobid("0");

@@ -3,7 +3,7 @@ package no.ums.pas.status;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.status.USMSINSTATS;
+import no.ums.ws.common.USMSINSTATS;
 
 import javax.swing.*;
 import java.awt.*;

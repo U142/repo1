@@ -1,7 +1,8 @@
 package no.ums.pas.core.ws;
 
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UPASUISETTINGS;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
@@ -24,8 +25,7 @@ public class WSGetVisualSettings extends WSThread
 	public void call() throws Exception {
 		try
 		{
-			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-			no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setSzCompid(sz_compid.toUpperCase());
 			logon.setSzUserid(sz_userid.toUpperCase());
 			logon.setJobid("0");

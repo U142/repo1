@@ -32,17 +32,15 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendOptionToolbar;
-import no.ums.pas.swing.UmsTimeAction;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.versioning.VersionInfo;
-import no.ums.ws.pas.USYSTEMMESSAGES;
+import no.ums.ws.common.USYSTEMMESSAGES;
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.*;
-import java.awt.datatransfer.FlavorMap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

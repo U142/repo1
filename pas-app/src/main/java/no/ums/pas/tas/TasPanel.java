@@ -21,6 +21,9 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.UnderlineHighlightPainter;
+import no.ums.ws.common.ULBACONTINENT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.UMapPoint;
 import no.ums.ws.pas.tas.*;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
@@ -857,7 +860,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			if(prevsel!=null)
 			{
 				if(prevsel.getClass().equals(ContinentListItem.class))
-					zoomToContinent(((ContinentListItem)prevsel).getContinent());
+					zoomToContinent(((ContinentListItem) prevsel).getContinent());
 				else if(prevsel.getClass().equals(CountryListItem.class))
 					zoomToCountry(((CountryListItem)prevsel).getCountry());
 			}

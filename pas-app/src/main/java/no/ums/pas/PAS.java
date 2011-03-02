@@ -41,7 +41,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
-import no.ums.ws.pas.UPASUISETTINGS;
+import no.ums.ws.common.parm.UPASUISETTINGS;
 import org.jvnet.substance.SubstanceLookAndFeel;
 import org.jvnet.substance.button.ButtonShaperChangeListener;
 import org.jvnet.substance.painter.GradientPainterChangeListener;

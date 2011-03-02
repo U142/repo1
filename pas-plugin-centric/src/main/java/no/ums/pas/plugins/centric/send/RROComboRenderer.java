@@ -1,6 +1,7 @@
 package no.ums.pas.plugins.centric.send;
 
-import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
+
+import no.ums.ws.common.cb.CBMESSAGEFIELDSBASE;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class RROComboRenderer extends DefaultListCellRenderer
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) { 
         super.getListCellRendererComponent(list, value, index, isSelected, 
                 cellHasFocus); 
-        if(value.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class)) 
+        if(value.getClass().getSuperclass().equals(CBMESSAGEFIELDSBASE.class))
         { 
         	RROComboBox rro = (RROComboBox)combo;
 //        	String szCurrentText = rro.getEditor().getItem().toString();

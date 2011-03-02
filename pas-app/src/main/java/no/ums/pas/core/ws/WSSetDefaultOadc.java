@@ -1,12 +1,12 @@
 package no.ums.pas.core.ws;
 
-import java.awt.Component;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
 import no.ums.pas.PAS;
-import no.ums.ws.pas.MDSOADCDEFAULT;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.MDSOADCDEFAULT;
 import no.ums.ws.pas.Pasws;
 
 public class WSSetDefaultOadc extends WSThread
@@ -32,8 +32,7 @@ public class WSSetDefaultOadc extends WSThread
 
 	@Override
 	public void call() throws Exception {
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 		logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));

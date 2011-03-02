@@ -34,7 +34,7 @@
         <key.keypass>wruakipUtcyctac+</key.keypass>
         <key.alias>UMS</key.alias>
         <version.geotools>2.6.5</version.geotools>
-        <version.ums.ws>1.1-SNAPSHOT</version.ums.ws>
+        <version.ums.ws>1.2-SNAPSHOT</version.ums.ws>
         <jnlp.output>${build.directory}/jnlp-output</jnlp.output>
         <jnlp.filename>PAS.${project.version}.jnlp</jnlp.filename>
         <jnlp_codebase>codebase</jnlp_codebase>
@@ -179,27 +179,7 @@
             <!-- UMS WebServices -->
             <dependency>
                 <groupId>no.ums.ws</groupId>
-                <artifactId>ws-pas</artifactId>
-                <version>${version.ums.ws}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.ums.ws</groupId>
-                <artifactId>ws-pas-status</artifactId>
-                <version>${version.ums.ws}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.ums.ws</groupId>
-                <artifactId>ws-tas</artifactId>
-                <version>${version.ums.ws}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.ums.ws</groupId>
-                <artifactId>ws-parm-admin</artifactId>
-                <version>${version.ums.ws}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.ums.ws</groupId>
-                <artifactId>ws-external-exec</artifactId>
+                <artifactId>ws-java-clients</artifactId>
                 <version>${version.ums.ws}</version>
             </dependency>
 
@@ -304,6 +284,9 @@
                         <goals>
                             <goal>create</goal>
                         </goals>
+                        <configuration>
+                            <revisionOnScmFailure>FAILURE</revisionOnScmFailure>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

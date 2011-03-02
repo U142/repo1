@@ -2,10 +2,10 @@ package no.ums.adminui.pas.ws;
 
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
+import no.ums.ws.common.PASHAPETYPES;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.ArrayOfUDEPARTMENT;
-import no.ums.ws.pas.PASHAPETYPES;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

@@ -5,8 +5,8 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.ws.pas.ArrayOfUShape;
-import no.ums.ws.pas.UMunicipalDef;
+import no.ums.ws.common.UMunicipalDef;
+import no.ums.ws.common.parm.ArrayOfUShape;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

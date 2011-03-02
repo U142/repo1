@@ -10,6 +10,11 @@ import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.UMapPoint;
+import no.ums.ws.common.parm.ArrayOfUMapPoint;
+import no.ums.ws.common.parm.UPOLYGONSENDING;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
@@ -105,11 +110,11 @@ public class SendPropertiesPolygon extends SendProperties {
 
 		try {
 			ObjectFactory factory = new ObjectFactory();
-			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
-			no.ums.ws.parm.UPOLYGONSENDING poly = factory.createUPOLYGONSENDING();
-			UMapBounds bounds = factory.createUMapBounds();
+			ULOGONINFO logon = new ULOGONINFO();
+			UPOLYGONSENDING poly = new UPOLYGONSENDING();
+			UMapBounds bounds = new UMapBounds();
 			 
-			populate_common((no.ums.ws.parm.UMAPSENDING)poly, logon, bounds);
+			populate_common(poly, logon, bounds);
 			
 			ArrayOfUMapPoint points;
 			if(!get_isresend())
@@ -145,7 +150,7 @@ public class SendPropertiesPolygon extends SendProperties {
 	protected ArrayOfUMapPoint createWSPolygon()
 	{
 		ObjectFactory factory = new ObjectFactory();
-		ArrayOfUMapPoint points = factory.createArrayOfUMapPoint();
+		ArrayOfUMapPoint points = new ArrayOfUMapPoint();
 
 		double lon, lat;
 		for(int i=0; i < (_get_shapestruct().get_size()); i++) {
@@ -219,9 +224,8 @@ public class SendPropertiesPolygon extends SendProperties {
 	
 	@Override
 	public boolean PerformAdrCount(ActionListener l, String act) {
-		no.ums.ws.parm.ObjectFactory factory = new no.ums.ws.parm.ObjectFactory();
-		no.ums.ws.parm.ArrayOfUMapPoint points = createWSPolygon();
-		no.ums.ws.parm.UPOLYGONSENDING ms = factory.createUPOLYGONSENDING();
+		ArrayOfUMapPoint points = createWSPolygon();
+		UPOLYGONSENDING ms = new UPOLYGONSENDING();
 		ms.setPolygonpoints(points);
 
 		return super._ExecAdrCount(ms, l, act);

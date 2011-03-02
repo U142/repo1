@@ -1,6 +1,8 @@
 package no.ums.pas.tas.statistics;
 
 import no.ums.pas.importer.csv.csvexporter;
+import no.ums.ws.common.*;
+import no.ums.ws.common.ArrayOfULBACOUNTRY;
 import no.ums.ws.pas.tas.*;
 import org.jfree.chart.JFreeChart;
 

@@ -8,9 +8,9 @@ import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.maps.defines.converters.UShapeToShape;
-import no.ums.ws.pas.ArrayOfUShape;
-import no.ums.ws.pas.UMunicipalDef;
-import no.ums.ws.pas.UShape;
+import no.ums.ws.common.UMunicipalDef;
+import no.ums.ws.common.parm.ArrayOfUShape;
+import no.ums.ws.common.parm.UShape;
 
 import java.awt.*;
 import java.util.ArrayList;

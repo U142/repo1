@@ -3,8 +3,9 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UPASUISETTINGS;
 
 import javax.xml.namespace.QName;
 import java.awt.*;
@@ -29,14 +30,13 @@ public class WSSaveUI extends WSThread
 		{
 			//PAS.get_pas().setSubstanceChanges();
 			//PAS.pasplugin.onUserChangedLookAndFeel(PAS.get_pas().get_settings());
-			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-			no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 			logon.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());
 			logon.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
-			UPASUISETTINGS ui = of.createUPASUISETTINGS();
+			UPASUISETTINGS ui = new UPASUISETTINGS();
 			MailAccount account = PAS.get_pas().get_userinfo().get_mailaccount();
 			Settings settings = PAS.get_pas().get_settings();
 			String layerlist = "";

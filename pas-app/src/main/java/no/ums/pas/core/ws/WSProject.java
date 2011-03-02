@@ -2,6 +2,7 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.project.Project;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UPROJECTREQUEST;
 import no.ums.ws.pas.UPROJECTRESPONSE;
@@ -50,8 +51,7 @@ public class WSProject extends WSThread
 	}
 	public void call() throws Exception
 	{	
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 		logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));

@@ -5,10 +5,10 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.tas.statistics.TasChart.STATS_CHARTTYPE;
 import no.ums.pas.tas.statistics.TasChart.STATS_RESULTS_GROUPBY;
 import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.ws.pas.tas.ULBACONTINENT;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
-import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
+import no.ums.ws.common.ULBACONTINENT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULBAFILTERSTATFUNCTION;
+import no.ums.ws.common.ULBAFILTERSTATTIMEUNIT;
 
 import javax.swing.*;
 import java.awt.*;

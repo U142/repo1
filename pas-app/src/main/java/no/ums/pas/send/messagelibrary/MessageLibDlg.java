@@ -1,7 +1,7 @@
 package no.ums.pas.send.messagelibrary;
 
 import no.ums.pas.PAS;
-import no.ums.ws.pas.UBBMESSAGE;
+import no.ums.ws.common.UBBMESSAGE;
 
 import javax.swing.*;
 import java.awt.*;

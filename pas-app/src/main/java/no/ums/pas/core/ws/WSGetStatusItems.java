@@ -10,13 +10,10 @@ import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
-import no.ums.ws.pas.status.ArrayOfLBACCode;
-import no.ums.ws.pas.status.LBACCode;
-import no.ums.ws.pas.status.LBALanguage;
+import no.ums.ws.common.*;
 import no.ums.ws.pas.status.ArrayOfLong;
 import no.ums.ws.pas.status.PasStatus;
-import no.ums.ws.pas.status.USMSINSTATS;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
+import no.ums.ws.pas.status.UStatusItemSearchParams;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -95,13 +92,12 @@ public class WSGetStatusItems extends WSThread
 		else
 			b_use_loading_image = false;
 
-		no.ums.ws.pas.status.ObjectFactory of = new no.ums.ws.pas.status.ObjectFactory();
-		no.ums.ws.pas.status.ULOGONINFO logon = of.createULOGONINFO();
-		no.ums.ws.pas.status.UStatusItemSearchParams search = of.createUStatusItemSearchParams();
+		ULOGONINFO logon = new ULOGONINFO();
+		UStatusItemSearchParams search = new UStatusItemSearchParams();
 		search.setLDateFilter(sz_datefilter);
 		search.setLTimeFilter(sz_timefilter);
 		search.setLProjectpk(sz_projectpk);
-		ArrayOfLong arr = of.createArrayOfLong();
+		ArrayOfLong arr = new ArrayOfLong();
         for (long aM_refno_list : m_refno_list) {
             arr.getLong().add(aM_refno_list);
         }

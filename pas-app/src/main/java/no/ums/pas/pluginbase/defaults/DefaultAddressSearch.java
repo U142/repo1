@@ -8,6 +8,7 @@ import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.*;
 
 import javax.swing.JLabel;
@@ -72,7 +73,7 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		params.setSzPwd("MSG");
 		params.setSzRegion(sz_region);
 		params.setSzUid("UMS");
-		ULOGONINFO logoninfo = factory.createULOGONINFO();
+		ULOGONINFO logoninfo = new ULOGONINFO();
 		logoninfo.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
 		logoninfo.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
 		logoninfo.setSzPassword(PAS.get_pas().get_userinfo().get_passwd());

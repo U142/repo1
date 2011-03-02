@@ -1,7 +1,7 @@
 package no.ums.pas.send.messagelibrary.tree;
 
 import no.ums.pas.core.defines.tree.UMSTreeNode;
-import no.ums.ws.pas.UBBMESSAGE;
+import no.ums.ws.common.UBBMESSAGE;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

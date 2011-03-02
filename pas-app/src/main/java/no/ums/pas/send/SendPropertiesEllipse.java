@@ -9,6 +9,11 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+import no.ums.ws.common.UEllipseDef;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.UMapPoint;
+import no.ums.ws.common.parm.UELLIPSESENDING;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
@@ -114,13 +119,13 @@ public class SendPropertiesEllipse extends SendProperties {
 	public boolean send() {
 		try {
 			ObjectFactory factory = new ObjectFactory();
-			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
-			no.ums.ws.parm.UELLIPSESENDING poly = factory.createUELLIPSESENDING();
+			ULOGONINFO logon = new ULOGONINFO();
+			UELLIPSESENDING poly = new UELLIPSESENDING();
 			//UEllipseDef el = factory.createUEllipseDef();
-			UMapBounds bounds = factory.createUMapBounds();
+			UMapBounds bounds = new UMapBounds();
 			
 			 
-			populate_common((no.ums.ws.parm.UMAPSENDING)poly, logon, bounds);
+			populate_common(poly, logon, bounds);
 			UEllipseDef el = createWSEllipse();
 			poly.setEllipse(el);
 			
@@ -149,14 +154,13 @@ public class SendPropertiesEllipse extends SendProperties {
 	}
 	protected UEllipseDef createWSEllipse()
 	{
-		ObjectFactory factory = new ObjectFactory();
-		UEllipseDef el = factory.createUEllipseDef();
-		UMapPoint center = factory.createUMapPoint();
-		UMapPoint radius = factory.createUMapPoint();
+		UEllipseDef el = new UEllipseDef();
+		UMapPoint center = new UMapPoint();
+		UMapPoint radius = new UMapPoint();
 		center.setLon((float)_get_shapestruct().get_center().get_lon());
 		center.setLat((float)_get_shapestruct().get_center().get_lat());
-		radius.setLon(new Float(Math.abs(_get_shapestruct().get_corner().get_lon() - _get_shapestruct().get_center().get_lon())).floatValue());
-		radius.setLat(new Float(Math.abs(_get_shapestruct().get_corner().get_lat() - _get_shapestruct().get_center().get_lat())).floatValue());
+		radius.setLon(Math.abs(_get_shapestruct().get_corner().get_lon() - _get_shapestruct().get_center().get_lon()));
+		radius.setLat(Math.abs(_get_shapestruct().get_corner().get_lat() - _get_shapestruct().get_center().get_lat()));
 		el.setCenter(center);
 		el.setRadius(radius);
 		return el;
@@ -171,9 +175,8 @@ public class SendPropertiesEllipse extends SendProperties {
 	}
 	@Override
 	public boolean PerformAdrCount(ActionListener l, String act) {
-		no.ums.ws.parm.ObjectFactory factory = new no.ums.ws.parm.ObjectFactory();
-		no.ums.ws.parm.UEllipseDef ell = createWSEllipse();
-		no.ums.ws.parm.UELLIPSESENDING ms = factory.createUELLIPSESENDING();
+		UEllipseDef ell = createWSEllipse();
+		UELLIPSESENDING ms = new UELLIPSESENDING();
 		ms.setEllipse(ell);
 
 		return super._ExecAdrCount(ms, l, act);

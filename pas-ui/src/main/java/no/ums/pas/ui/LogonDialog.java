@@ -13,6 +13,7 @@ package no.ums.pas.ui;
 
 import no.ums.pas.beans.PropertyUtil;
 import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.ws.common.ULOGONINFO;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.jdesktop.beansbinding.BeanProperty;
@@ -65,7 +66,7 @@ public class LogonDialog extends javax.swing.JDialog {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        logonInfo = new no.ums.ws.pas.ULOGONINFO();
+        logonInfo = new ULOGONINFO();
         logonBean = new no.ums.pas.ui.LogonBean();
         languageLabel = new javax.swing.JLabel();
         usernameInput = new javax.swing.JTextField();
@@ -232,7 +233,7 @@ public class LogonDialog extends javax.swing.JDialog {
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginErrorLabel;
     private no.ums.pas.ui.LogonBean logonBean;
-    private no.ums.ws.pas.ULOGONINFO logonInfo;
+    private ULOGONINFO logonInfo;
     private javax.swing.JPasswordField passwordInput;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JTextField usernameInput;

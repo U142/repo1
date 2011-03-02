@@ -35,23 +35,7 @@
 
         <dependency>
             <groupId>no.ums.ws</groupId>
-            <artifactId>ws-pas</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.ums.ws</groupId>
-            <artifactId>ws-pas-status</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.ums.ws</groupId>
-            <artifactId>ws-tas</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.ums.ws</groupId>
-            <artifactId>ws-parm-admin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.ums.ws</groupId>
-            <artifactId>ws-external-exec</artifactId>
+            <artifactId>ws-java-clients</artifactId>
         </dependency>
 
         <dependency>

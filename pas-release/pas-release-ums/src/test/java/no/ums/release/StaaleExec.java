@@ -13,7 +13,7 @@ public class StaaleExec {
         ExecApp.main(new String[]{
                 "-x$jnlp_codebase",
                 "-shttps://secure.ums2.no/vb4utv/",
-                "-whttp://localhost:8080/WS/",
+                "-whttp://192.168.3.183:8080/WS/",
                 "-p"
         });
     }

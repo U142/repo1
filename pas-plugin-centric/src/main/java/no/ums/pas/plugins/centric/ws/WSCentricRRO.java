@@ -4,9 +4,9 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.ws.parm.CBMESSAGEFIELDS;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.cb.CBMESSAGEFIELDS;
 import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

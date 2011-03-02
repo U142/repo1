@@ -2,9 +2,9 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UPASLOGON;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.ULOGONINFO;
-import no.ums.ws.pas.UPASLOGON;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

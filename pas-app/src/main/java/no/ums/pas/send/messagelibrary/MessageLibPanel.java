@@ -7,7 +7,7 @@ import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.UBBMESSAGE;
+import no.ums.ws.common.UBBMESSAGE;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -2,7 +2,7 @@ package no.ums.pas.plugins.centric.send;
 
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.TextFormat.RegExpResult;
-import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
+import no.ums.ws.common.cb.CBMESSAGEFIELDSBASE;
 
 import javax.swing.*;
 

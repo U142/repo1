@@ -28,6 +28,11 @@ import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ArrayOfLBACCode;
+import no.ums.ws.common.LBACCode;
+import no.ums.ws.common.LBALanguage;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.*;
 import no.ums.ws.parm.admin.*;
 
 import javax.swing.*;

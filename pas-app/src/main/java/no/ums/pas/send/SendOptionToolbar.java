@@ -20,7 +20,7 @@ import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.UMunicipalDef;
+import no.ums.ws.common.UMunicipalDef;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;

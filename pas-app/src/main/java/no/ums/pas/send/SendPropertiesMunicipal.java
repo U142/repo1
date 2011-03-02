@@ -10,6 +10,12 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.UMunicipalDef;
+import no.ums.ws.common.parm.ArrayOfUMunicipalDef;
+import no.ums.ws.common.parm.UMAPSENDING;
+import no.ums.ws.common.parm.UMUNICIPALSENDING;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
@@ -53,22 +59,21 @@ public class SendPropertiesMunicipal extends SendProperties
 
 	@Override
 	public boolean PerformAdrCount(ActionListener l, String act) {
-		ObjectFactory factory = new ObjectFactory();
 		//no.ums.ws.parm.UEllipseDef ell = createWSEllipse();
 		//List<UMunicipalDef> mun = new List<UMunicipalDef>();
 		//UELLIPSESENDING ms = factory.createUELLIPSESENDING();
 		//ms.setEllipse(ell);
-		ArrayOfUMunicipalDef arr = factory.createArrayOfUMunicipalDef();
+		ArrayOfUMunicipalDef arr  = new ArrayOfUMunicipalDef();
 		//List<UMunicipalDef> list = arr.getUMunicipalDef();
 		for(int i = 0; i < get_shapestruct().typecast_municipal().getMunicipals().size(); i++)
 		{
-			UMunicipalDef def = factory.createUMunicipalDef();
+			UMunicipalDef def = new UMunicipalDef();
 			Municipal m = get_shapestruct().typecast_municipal().getMunicipals().get(i);
 			def.setSzMunicipalid(m.get_id());
 			def.setSzMunicipalname(m.get_name());
 			arr.getUMunicipalDef().add(def);
 		}
-		UMUNICIPALSENDING ms = factory.createUMUNICIPALSENDING();
+		UMUNICIPALSENDING ms = new UMUNICIPALSENDING();
 		ms.setMunicipals(arr);
 		
 		return super._ExecAdrCount(ms, l, act);
@@ -93,11 +98,9 @@ public class SendPropertiesMunicipal extends SendProperties
 	public boolean goto_area() {
 		try
 		{
-			ObjectFactory factory = new ObjectFactory();
-			ULOGONINFO logon = factory.createULOGONINFO();
-			UMUNICIPALSENDING sending = factory.createUMUNICIPALSENDING();
-			UMapBounds bounds = factory.createUMapBounds();
-			//populate_common((UMAPSENDING)sending, logon, bounds);
+			ULOGONINFO logon = new ULOGONINFO();
+			UMUNICIPALSENDING sending = new UMUNICIPALSENDING();
+			UMapBounds bounds = new UMapBounds();
 			UserInfo info = PAS.get_pas().get_userinfo();
 			logon.setLComppk(info.get_comppk());
 			logon.setLDeptpk(info.get_current_department().get_deptpk());
@@ -109,12 +112,12 @@ public class SendPropertiesMunicipal extends SendProperties
 			
 			sending.setLogoninfo(logon);
 			sending.setMapbounds(bounds);
-			ArrayOfUMunicipalDef mun = factory.createArrayOfUMunicipalDef();
+			ArrayOfUMunicipalDef mun = new ArrayOfUMunicipalDef();
 			if(get_municipals()!=null && !get_isresend())
 			{
 				for(int i=0; i < get_municipals().size(); i++)
 				{
-					UMunicipalDef def = factory.createUMunicipalDef();
+					UMunicipalDef def = new UMunicipalDef();
 					def.setSzMunicipalid(get_municipals().get(i).get_id());
 					def.setSzMunicipalname(get_municipals().get(i).get_name());
 					mun.getUMunicipalDef().add(def);
@@ -145,26 +148,18 @@ public class SendPropertiesMunicipal extends SendProperties
 	protected boolean send() {
 		try
 		{
-			ObjectFactory factory = new ObjectFactory();
-			ULOGONINFO logon = factory.createULOGONINFO();
-			UMUNICIPALSENDING sending = factory.createUMUNICIPALSENDING();
-			UMapBounds bounds = factory.createUMapBounds();
-			populate_common((UMAPSENDING)sending, logon, bounds);
+			ULOGONINFO logon = new ULOGONINFO();
+			UMUNICIPALSENDING sending = new UMUNICIPALSENDING();
+			UMapBounds bounds = new UMapBounds();
+			populate_common(sending, logon, bounds);
 	
 			//ArrayOfUGisRecord gis = factory.createArrayOfUGisRecord();
-			ArrayOfUMunicipalDef mun = factory.createArrayOfUMunicipalDef();
+			ArrayOfUMunicipalDef mun = new ArrayOfUMunicipalDef();
 			if(get_municipals()!=null && !get_isresend())
 			{
 				for(int i=0; i < get_municipals().size(); i++)
 				{
-					/*for(int j=0; j < get_gislist().get_gisrecord(i).get_inhabitantcount(); j++)
-					{
-						long l = new Long(get_gislist().get_gisrecord(i).get_inhabitant(j).get_kondmid());
-						UGisRecord r = factory.createUGisRecord();
-						r.setId(l);
-						gis.getUGisRecord().add(r);
-					}*/
-					UMunicipalDef def = factory.createUMunicipalDef();
+					UMunicipalDef def = new UMunicipalDef();
 					def.setSzMunicipalid(get_municipals().get(i).get_id());
 					def.setSzMunicipalname(get_municipals().get(i).get_name());
 					//sending.getMunicipals().getUMunicipalDef().add(def);

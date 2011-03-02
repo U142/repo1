@@ -3,24 +3,22 @@ package no.ums.pas.core.ws;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.ws.common.PercentResult;
+import no.ums.ws.common.ProgressJobType;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.PercentResult;
-import no.ums.ws.pas.ProgressJobType;
-import no.ums.ws.pas.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 import java.awt.*;
 import java.net.URL;
 import java.util.Calendar;
 
-
-/*
- * 
+/**
  * This class will contact PAS WebService continuously until it's defined as finished.
  */
 public class WSProgressPoller extends Thread
 {
-	protected no.ums.ws.pas.ULOGONINFO logon;
+	protected ULOGONINFO logon;
 	protected Component loader;
 	protected ProgressJobType jobType;
 	protected boolean b_run = true;

@@ -1,7 +1,7 @@
 package no.ums.pas.tas.treenodes;
 
 import no.ums.pas.core.defines.tree.UMSTreeNode;
-import no.ums.ws.pas.tas.ULBACONTINENT;
+import no.ums.ws.common.ULBACONTINENT;
 
 import javax.swing.tree.DefaultTreeModel;
 

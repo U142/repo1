@@ -7,8 +7,9 @@ import no.ums.pas.send.SendPropertiesTAS;
 import no.ums.pas.tas.TasHelpers;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.UTOURISTCOUNT;
 import no.ums.ws.pas.tas.UTASREQUEST;
-import no.ums.ws.pas.tas.UTOURISTCOUNT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 	StdTextLabel lbl_runupdate = new StdTextLabel("", true, 350);
 	JScrollPane scroll_statistics;
 	
-	protected List<no.ums.ws.pas.tas.ULBACOUNTRY> m_country = null;
+	protected List<ULBACOUNTRY> m_country = null;
 	public Sending_AddressPanelTas(PAS pas, SendWindow parentwin)
 	{
 		super(pas, parentwin);
@@ -95,7 +96,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 			str_operators += "<table>";
 			for(int country=0; country < tas.getCountry().size(); country++)
 			{
-				no.ums.ws.pas.tas.ULBACOUNTRY countryitem = tas.getCountry().get(country); 
+				ULBACOUNTRY countryitem = tas.getCountry().get(country);
 				for(int i=0; i < tas.getCountry().get(country).getOperators().getUTOURISTCOUNT().size(); i++)
 				{
 					UTOURISTCOUNT c = tas.getCountry().get(country).getOperators().getUTOURISTCOUNT().get(i);
@@ -155,7 +156,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 		try
 		{
 			update_adrcount(true);
-			List<no.ums.ws.pas.tas.ULBACOUNTRY> list = m_country; //new ArrayList<no.ums.ws.pas.tas.ULBACOUNTRY>();
+			List<ULBACOUNTRY> list = m_country; //new ArrayList<no.ums.ws.pas.tas.ULBACOUNTRY>();
 			//list.add(m_country);
 			new WSTasCount(this, list).start();
 			//PAS.get_pas().get_eastcontent().get_taspanel().actionPerformed(new ActionEvent(list, ActionEvent.ACTION_PERFORMED, "act_request_touristcount"));

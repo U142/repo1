@@ -1,8 +1,8 @@
 package no.ums.pas.tas;
 
 import no.ums.pas.PAS;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.UTOURISTCOUNT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.UTOURISTCOUNT;
 
 import java.awt.*;
 

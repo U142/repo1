@@ -1,6 +1,7 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UMAXALLOC;
 
@@ -49,8 +50,7 @@ public class WSMaxAlloc extends WSThread
 	{
 		try
 		{
-			no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-			no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			//WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
 			no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
 			logon.setLComppk(ui.get_comppk());

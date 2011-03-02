@@ -6,8 +6,8 @@ import no.ums.pas.tas.statistics.TasChart.STATS_CHARTTYPE;
 import no.ums.pas.tas.statistics.TasChart.STATS_RESULTS_GROUPBY;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker.MASK_DATES;
-import no.ums.ws.pas.tas.ULBAFILTERSTATFUNCTION;
-import no.ums.ws.pas.tas.ULBAFILTERSTATTIMEUNIT;
+import no.ums.ws.common.ULBAFILTERSTATFUNCTION;
+import no.ums.ws.common.ULBAFILTERSTATTIMEUNIT;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

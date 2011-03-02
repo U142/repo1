@@ -15,8 +15,8 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.ws.common.UMapPoint;
 import no.ums.ws.pas.HOUSEEDITOROPERATION;
-import no.ums.ws.pas.UMapPoint;
 
 import javax.swing.*;
 import java.awt.*;

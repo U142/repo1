@@ -1,7 +1,7 @@
 package no.ums.pas.tas.statistics;
 
 import no.ums.pas.importer.csv.csvexporter;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
+import no.ums.ws.common.ULBACOUNTRY;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;

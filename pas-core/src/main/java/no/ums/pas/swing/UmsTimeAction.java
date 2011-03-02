@@ -2,13 +2,12 @@ package no.ums.pas.swing;
 
 import no.ums.pas.localization.Localization;
 
-import java.awt.event.ActionEvent;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public abstract     class UmsTimeAction extends BaseAction {
+public abstract class UmsTimeAction extends BaseAction {
 
     private final TimeUnit timeUnit;
     private final int count;

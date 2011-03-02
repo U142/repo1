@@ -3,8 +3,9 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.UDATAFILTER;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.status.PasStatus;
-import no.ums.ws.pas.status.UDATAFILTER;
 import no.ums.ws.pas.status.UStatusListItem;
 import no.ums.ws.pas.status.UStatusListResults;
 
@@ -39,8 +40,7 @@ public class WSGetStatusList extends WSThread
 
 	@Override
 	public void call() throws Exception {
-		no.ums.ws.pas.status.ObjectFactory of = new no.ums.ws.pas.status.ObjectFactory();
-		no.ums.ws.pas.status.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
 		try
 		{

@@ -2,6 +2,7 @@ package no.ums.pas.core.mainui;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
@@ -19,13 +20,9 @@ import no.ums.pas.status.StatusSending.StatusSendingUI;
 import no.ums.pas.status.StatusSendingList;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.status.LBALanguage;
+import no.ums.ws.common.LBALanguage;
 
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
-
 import java.awt.*;
 import java.awt.event.*;
 

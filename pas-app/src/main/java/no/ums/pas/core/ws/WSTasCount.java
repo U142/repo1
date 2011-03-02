@@ -1,6 +1,8 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.tas.*;
 
 import javax.xml.namespace.QName;
@@ -23,8 +25,7 @@ public class WSTasCount extends WSThread
 	{
 		try
 		{
-			ObjectFactory of = new ObjectFactory();
-			ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));
@@ -36,7 +37,7 @@ public class WSTasCount extends WSThread
 			URL wsdl = new URL(vars.WSDL_TAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Tas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Tas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/tas", "tasws");
-			ArrayOfULBACOUNTRY arr = of.createArrayOfULBACOUNTRY();
+			ArrayOfULBACOUNTRY arr = new ArrayOfULBACOUNTRY();
 			for(int i=0; i < m_countries.size(); i++)
 			{
 				arr.getULBACOUNTRY().add(m_countries.get(i));

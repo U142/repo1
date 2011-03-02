@@ -11,6 +11,11 @@ import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+import no.ums.ws.common.UGisRecord;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.parm.ArrayOfUGisRecord;
+import no.ums.ws.common.parm.UGISSENDING;
 import no.ums.ws.parm.*;
 
 import javax.xml.namespace.QName;
@@ -134,11 +139,10 @@ public class SendPropertiesGIS extends SendProperties {
 	}	
 	protected final boolean send() {
 		try {
-			ObjectFactory factory = new ObjectFactory();
-			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
-			no.ums.ws.parm.UGISSENDING poly = factory.createUGISSENDING();
+			ULOGONINFO logon = new ULOGONINFO();
+			UGISSENDING poly = new UGISSENDING();
 			//UEllipseDef el = factory.createUEllipseDef();
-			UMapBounds bounds = factory.createUMapBounds();
+			UMapBounds bounds = new UMapBounds();
 			if(!get_isresend()) {
 				bounds.setLBo(m_gislist.GetBounds()._lbo);
 				bounds.setRBo(m_gislist.GetBounds()._rbo);
@@ -146,9 +150,9 @@ public class SendPropertiesGIS extends SendProperties {
 				bounds.setBBo(m_gislist.GetBounds()._bbo);
 			}
 		
-			populate_common((no.ums.ws.parm.UMAPSENDING)poly, logon, bounds);
+			populate_common(poly, logon, bounds);
 
-			ArrayOfUGisRecord gis = factory.createArrayOfUGisRecord();
+			ArrayOfUGisRecord gis = new ArrayOfUGisRecord();
 			if(get_gislist()!=null && !get_isresend())
 			{
 				for(int i=0; i < get_gislist().size(); i++)
@@ -156,7 +160,7 @@ public class SendPropertiesGIS extends SendProperties {
 					for(int j=0; j < get_gislist().get_gisrecord(i).get_inhabitantcount(); j++)
 					{
 						long l = new Long(get_gislist().get_gisrecord(i).get_inhabitant(j).get_kondmid());
-						UGisRecord r = factory.createUGisRecord();
+						UGisRecord r = new UGisRecord();
 						r.setId(l);
 						gis.getUGisRecord().add(r);
 					}

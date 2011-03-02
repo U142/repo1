@@ -9,9 +9,13 @@ import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.ums.tools.SmsInReplyNumber;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.common.USMSINSTATS;
+import no.ums.ws.common.parm.ArrayOfULBACOUNTRY;
+import no.ums.ws.common.parm.UTASSENDING;
 import no.ums.ws.parm.*;
-import no.ums.ws.pas.status.USMSINSTATS;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -19,6 +23,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,10 +95,9 @@ public class SendPropertiesTAS extends SendProperties
 	@Override
 	protected boolean send() {
 		try {
-			ObjectFactory factory = new ObjectFactory();
-			no.ums.ws.parm.ULOGONINFO logon = factory.createULOGONINFO();
-			no.ums.ws.parm.UTASSENDING tas = factory.createUTASSENDING();
-			UMapBounds bounds = factory.createUMapBounds();
+			ULOGONINFO logon = new ULOGONINFO();
+			UTASSENDING tas = new UTASSENDING();
+			UMapBounds bounds = new UMapBounds();
 			if(!super.get_isresend()) {
 				
 				//bounds.setLBo(m_country.get(0).getBounds().getLBo());
@@ -104,7 +108,7 @@ public class SendPropertiesTAS extends SendProperties
 				NavStruct [] nav_list = new NavStruct[m_country.size()];
 				for(int i=0; i < m_country.size(); i++)
 				{
-					no.ums.ws.pas.tas.UMapBounds b = m_country.get(i).getBounds();
+					UMapBounds b = m_country.get(i).getBounds();
 					nav_list[i] = new NavStruct(b.getLBo(),b.getRBo(), b.getUBo(), b.getBBo());
 				}
 				NavStruct nav_final = CommonFunc.calc_bounds_from_navstructs(nav_list);
@@ -117,7 +121,7 @@ public class SendPropertiesTAS extends SendProperties
 				tas.setBResend(true);
 			}
 			System.out.println("TAS objid før populate common: " + System.identityHashCode(this));
-			populate_common((no.ums.ws.parm.UMAPSENDING)tas, logon, bounds);
+			populate_common(tas, logon, bounds);
 			
 			/*ArrayOfUMapPoint points;
 			if(!get_isresend())
@@ -125,18 +129,19 @@ public class SendPropertiesTAS extends SendProperties
 			else
 				points = null;
 			poly.setPolygonpoints(points);*/
-			ArrayOfULBACOUNTRY arr = factory.createArrayOfULBACOUNTRY();
+			List<ULBACOUNTRY>  arr = new ArrayList<ULBACOUNTRY>();
 			for(int i=0; i < m_country.size(); i++)
 			{
-				no.ums.ws.parm.ULBACOUNTRY c = factory.createULBACOUNTRY();
+				ULBACOUNTRY c = new ULBACOUNTRY();;
 				c.setSzName(m_country.get(i).getSzName());
 				c.setLCc(m_country.get(i).getLCc());
 				c.setLContinentpk(m_country.get(i).getLContinentpk());
 				c.setLIsoNumeric(m_country.get(i).getLIsoNumeric());
 				c.setSzIso(m_country.get(i).getSzIso());
-				arr.getULBACOUNTRY().add(c);
+				arr.add(c);
 			}
-			tas.setCountrylist(arr);
+			tas.setCountrylist(new ArrayOfULBACOUNTRY());
+            tas.getCountrylist().getULBACOUNTRY().addAll(arr);
 			tas.setBAllowResponse(super.get_sms_broadcast_text().get_allow_response().isSelected());
 			m_b_allow_resonse = super.get_sms_broadcast_text().get_allow_response().isSelected();
 			if(m_b_allow_resonse)

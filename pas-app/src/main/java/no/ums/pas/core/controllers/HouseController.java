@@ -8,6 +8,7 @@ import no.ums.pas.maps.defines.Houses;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.send.SendController;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.*;
 
 import javax.xml.namespace.QName;
@@ -121,9 +122,8 @@ public class HouseController extends Controller {
 		//String sz_url = "PAS_gethouses_zipped.asp?l_companypk=" + PAS.get_pas().get_userinfo().get_comppk() + "&lbo=" + get_nav()._lbo + "&rbo=" + get_nav()._rbo + "&ubo=" + get_nav()._ubo + "&bbo=" + get_nav()._bbo;
 		//m_xml = new XMLHouses(Thread.MAX_PRIORITY, PAS.get_pas(), sz_url, null, new HTTPReq(PAS.get_pas().get_sitename())/*m_http_req*/, this);
 		//get_xml().start();
-		ObjectFactory of = new ObjectFactory();
-		UMapAddressParams searchparams = of.createUMapAddressParams();
-		ULOGONINFO logoninfo = of.createULOGONINFO();
+		UMapAddressParams searchparams = new UMapAddressParams();
+		ULOGONINFO logoninfo = new ULOGONINFO();
 		searchparams.setLBo((float)get_nav()._lbo);
 		searchparams.setRBo((float)get_nav()._rbo);
 		searchparams.setUBo((float)get_nav()._ubo);

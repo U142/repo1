@@ -3,10 +3,10 @@ package no.ums.pas.plugins.centric.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.ws.parm.CBOPERATIONBASE;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.cb.CBOPERATIONBASE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
 import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

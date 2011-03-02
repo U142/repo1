@@ -10,9 +10,9 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.Timeout;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.ObjectFactory;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.ULOGONINFO;
 
 import javax.swing.*;
 import javax.xml.namespace.QName;
@@ -385,11 +385,10 @@ public class Sending_Send extends DefaultPanel {
 			XMLRefno refno = new XMLRefno(form, Thread.NORM_PRIORITY, "PAS_get_refno.asp", this, sz_callback);
 			refno.start();
 			b = wait_for_refno();*/
-			ObjectFactory factory = new ObjectFactory();
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/PAS.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			ULOGONINFO logon = factory.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
 			logon.setLComppk(ui.get_comppk());
 			logon.setLDeptpk(ui.get_current_department().get_deptpk());

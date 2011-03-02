@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
 
 import javax.swing.*;
 import java.awt.*;

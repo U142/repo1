@@ -1,7 +1,7 @@
 package no.ums.pas.plugins.centric.send;
 
 import no.ums.pas.ums.tools.Utils;
-import no.ums.ws.parm.CBMESSAGEFIELDSBASE;
+import no.ums.ws.common.cb.CBMESSAGEFIELDSBASE;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;

@@ -3,10 +3,10 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.UConfirmJobResponse;
-import no.ums.ws.parm.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 
@@ -42,8 +42,7 @@ public class WSConfirmLBA
 				return ;
 			}
 			QName service = new QName("http://ums.no/ws/parm/", "parmws");
-			ObjectFactory factory = new no.ums.ws.parm.ObjectFactory();
-			ULOGONINFO logon = factory.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			UserInfo info = PAS.get_pas().get_userinfo();
 			logon.setLComppk(info.get_comppk());
 			logon.setLDeptpk(info.get_current_department().get_deptpk());

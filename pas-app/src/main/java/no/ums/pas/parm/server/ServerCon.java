@@ -9,11 +9,11 @@ import no.ums.pas.core.ws.vars;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ProgressJobType;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.admin.ObjectFactory;
 import no.ums.ws.parm.admin.ParmAdmin;
-import no.ums.ws.parm.admin.ULOGONINFO;
 import no.ums.ws.parm.admin.UpdateParm;
-import no.ums.ws.pas.ProgressJobType;
 
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
@@ -39,7 +39,7 @@ public class ServerCon {
 			{
 				ObjectFactory factory = new ObjectFactory();
 				UpdateParm update = factory.createUpdateParm();
-				ULOGONINFO logon = factory.createULOGONINFO();
+				ULOGONINFO logon = new ULOGONINFO();
 				logon.setSzCompid(info.get_compid());
 				logon.setSzUserid(info.get_userid());
 				logon.setSzDeptid(info.get_current_department().get_deptid());
@@ -54,7 +54,7 @@ public class ServerCon {
 	
 				byte [] bytes = no.ums.pas.ums.tools.IO.ConvertInputStreamtoByteArray(in);
 				update.setZipfile(bytes);
-				no.ums.ws.pas.ULOGONINFO tmp = new no.ums.ws.pas.ULOGONINFO();
+				ULOGONINFO tmp = new ULOGONINFO();
 				tmp.setLComppk(logon.getLComppk());
 				tmp.setLDeptpk(logon.getLDeptpk());
 				tmp.setLUserpk(logon.getLUserpk());

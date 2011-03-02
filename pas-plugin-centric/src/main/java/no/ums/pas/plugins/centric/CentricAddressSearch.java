@@ -11,6 +11,7 @@ import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
+import no.ums.ws.common.parm.UBoundingRect;
 import no.ums.ws.pas.*;
 
 import javax.swing.*;

@@ -11,9 +11,9 @@ import no.ums.pas.sound.SoundRecorderPanel;
 import no.ums.pas.sound.SoundTextTemplatePanel;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.ArrayOfUCCMessage;
-import no.ums.ws.pas.UBBMESSAGE;
-import no.ums.ws.pas.UCCMessage;
+import no.ums.ws.common.ArrayOfUCCMessage;
+import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.UCCMessage;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;

@@ -27,12 +27,12 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.Utils;
+import no.ums.ws.common.ProgressJobType;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.ULOGONINFO;
-import no.ums.ws.pas.ProgressJobType;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
 
 import javax.swing.*;
 import javax.xml.namespace.QName;
@@ -42,14 +42,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-//import Core.DataExchange.SOAP.Service1Client;
-
-//import javax.swing.plaf.basic.BasicToolBarUI;
-
-
-
-
 
 
 public class SendController implements ActionListener {
@@ -698,7 +690,7 @@ public class SendController implements ActionListener {
 		loader.setAlwaysOnTop(true);
 		//loader.set_totalitems(0, "Sending");
 		
-		no.ums.ws.pas.ULOGONINFO logon = new no.ums.ws.pas.ULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		UserInfo u = PAS.get_pas().get_userinfo();
 		logon.setLComppk(u.get_comppk());
 		logon.setLDeptpk(u.get_current_department().get_deptpk());
@@ -713,7 +705,7 @@ public class SendController implements ActionListener {
 		String sz_job = WSThread.GenJobId();
 		logon.setJobid(sz_job);
 		
-		no.ums.ws.parm.ULOGONINFO logon_exec = new ULOGONINFO();
+		ULOGONINFO logon_exec = new ULOGONINFO();
 		logon_exec.setLComppk(logon.getLComppk());
 		logon_exec.setLDeptpk(logon.getLDeptpk());
 		logon_exec.setLUserpk(logon.getLUserpk());

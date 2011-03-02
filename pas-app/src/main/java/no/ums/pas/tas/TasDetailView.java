@@ -7,8 +7,8 @@ import no.ums.pas.tas.treenodes.CommonTASListItem;
 import no.ums.pas.tas.treenodes.CountryListItem;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.UTOURISTCOUNT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.UTOURISTCOUNT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,7 +119,7 @@ public class TasDetailView extends DefaultPanel
 			if(m_selected_item!=null && m_selected_item.getClass().equals(CountryListItem.class))
 			{
 				System.out.println("Send TAS message");
-				PAS.get_pas().actionPerformed(new ActionEvent(((CountryListItem)m_selected_item).getCountry(), ActionEvent.ACTION_PERFORMED, e.getActionCommand()));	
+				PAS.get_pas().actionPerformed(new ActionEvent(((CountryListItem)m_selected_item).getCountry(), ActionEvent.ACTION_PERFORMED, e.getActionCommand()));
 				sent_to_sendwindow = m_selected_item;
 			}
 		}

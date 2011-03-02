@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.plugins.centric.CentricEastContent;
 import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

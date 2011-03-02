@@ -2,14 +2,12 @@ package no.ums.pas.status;
 
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.laf.ULookAndFeel;
-import no.ums.pas.core.laf.ULookAndFeel.UAttentionController;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
-import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.WSTasResend;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MunicipalStruct;
@@ -26,9 +24,9 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.status.LBALanguage;
+import no.ums.ws.common.LBALanguage;
+import no.ums.ws.common.USMSINSTATS;
 import no.ums.ws.pas.UMAXALLOC;
-import no.ums.ws.pas.status.USMSINSTATS;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;

@@ -2,9 +2,9 @@ package no.ums.pas.plugins.centric.ws;
 
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
-import no.ums.ws.pas.status.BBPROJECT;
-import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.common.BBPROJECT;
+import no.ums.ws.common.cb.CBPROJECTSTATUSREQUEST;
+import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
 import no.ums.ws.pas.status.PasStatus;
 
 import javax.xml.namespace.QName;

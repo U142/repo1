@@ -2,9 +2,9 @@ package no.ums.pas.tas.treenodes;
 
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.pas.tas.TasHelpers;
-import no.ums.ws.pas.tas.ArrayOfUTOURISTCOUNT;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
-import no.ums.ws.pas.tas.UTOURISTCOUNT;
+import no.ums.ws.common.ArrayOfUTOURISTCOUNT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.UTOURISTCOUNT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;

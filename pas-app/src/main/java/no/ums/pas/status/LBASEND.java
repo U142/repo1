@@ -1,7 +1,7 @@
 package no.ums.pas.status;
 
 import no.ums.pas.PAS;
-import no.ums.ws.pas.status.LBALanguage;
+import no.ums.ws.common.LBALanguage;
 
 import javax.swing.*;
 import java.util.ArrayList;

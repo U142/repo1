@@ -3,7 +3,7 @@ package no.ums.pas.core.ws;
 //import no.ums.ws.parm.admin.*;
 
 import no.ums.pas.core.logon.UserInfo;
-import no.ums.ws.pas.status.ULOGONINFO;
+import no.ums.ws.common.ULOGONINFO;
 
 public class WSFillLogoninfo
 {

@@ -1,10 +1,11 @@
 package no.ums.pas.core.ws;
 
-import no.ums.pas.ums.tools.Utils;
-import no.ums.ws.pas.BBUSERBLOCKREASONS;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.ws.common.BBUSERBLOCKREASONS;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UPASLOGON;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.ULOGONINFO;
-import no.ums.ws.pas.UPASLOGON;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,8 @@ import java.net.URL;
 
 public class WSLogon extends WSThread
 {
+    private static final Log log = UmsLog.getLogger(WSLogon.class);
+
 	protected String sz_username, sz_companyid, sz_password, sz_onetimekey;
 	public String getGeneratedPassword() { return sz_password; } 
 	UPASLOGON ret;
@@ -53,7 +56,6 @@ public class WSLogon extends WSThread
 			l.setSzUserid(sz_username);
 			l.setSzCompid(sz_companyid);
 			l.setSzPassword(sz_password);
-			System.out.println("Sending \"" + l.getSzUserid() + "\" \"" + l.getSzCompid() + "\"");
 			l.setJobid(WSThread.GenJobId());
 			l.setLAltservers(0);
 			l.setLComppk(0);
@@ -65,6 +67,7 @@ public class WSLogon extends WSThread
 			l.setSzDeptid("");
 			l.setOnetimekey(onetimekey);
 			
+            log.info("Sending \"" + l.getSzUserid() + "\" \"" + l.getSzCompid() + "\"");
 			ret = new Pasws(wsdl, service).getPaswsSoap12().pasLogon(l);
 			reason = ret.getReason();
 		}

@@ -10,6 +10,7 @@ import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.sound.SoundlibFileTxt;
 import no.ums.pas.sound.SoundlibFileWav;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -51,8 +52,7 @@ public class WSSendSettings extends WSThread
 	@Override
 	public void call() throws Exception
 	{
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		//WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
 		logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 		logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());

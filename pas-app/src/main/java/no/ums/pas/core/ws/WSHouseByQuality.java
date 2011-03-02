@@ -2,6 +2,7 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.Inhabitant;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.*;
 
 import javax.xml.namespace.QName;
@@ -42,8 +43,7 @@ public class WSHouseByQuality extends WSThread
 	public void call() throws Exception
 	{
 		m_items = new ArrayList<Inhabitant>();
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
 		logon.setLComppk(ui.get_comppk());
 		logon.setLDeptpk(ui.get_current_department().get_deptpk());

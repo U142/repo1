@@ -10,12 +10,12 @@ import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.parm.CBALERTKILL;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
-import no.ums.ws.pas.status.CBSTATUS;
-import no.ums.ws.pas.status.ULBASENDING;
-import no.ums.ws.pas.status.UPLMN;
+import no.ums.ws.common.ULBASENDING;
+import no.ums.ws.common.cb.CBALERTKILL;
+import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
+import no.ums.ws.common.cb.CBSTATUS;
+import no.ums.ws.common.parm.UPLMN;
 
 import javax.swing.*;
 import java.awt.*;

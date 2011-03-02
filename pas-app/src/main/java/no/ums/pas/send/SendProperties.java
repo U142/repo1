@@ -16,7 +16,11 @@ import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
+import no.ums.ws.common.*;
+import no.ums.ws.common.parm.*;
+import no.ums.ws.common.parm.ArrayOfLBALanguage;
 import no.ums.ws.parm.*;
+import no.ums.ws.parm.ObjectFactory;
 
 import javax.xml.namespace.QName;
 import java.awt.*;
@@ -571,8 +575,8 @@ public abstract class SendProperties extends Object {
 		try
 		{
 			ObjectFactory f = new ObjectFactory();
-			UAdrCount c = f.createUAdrCount();
-			no.ums.ws.parm.ULOGONINFO logon = f.createULOGONINFO();
+			UAdrCount c = new UAdrCount();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));

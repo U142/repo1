@@ -10,6 +10,7 @@ import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
 import no.ums.pas.sound.soundinfotypes.SoundInfoTTS;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.AUDIOREQUEST;
 import no.ums.ws.pas.AUDIORESPONSE;
 import no.ums.ws.pas.Pasws;
@@ -83,11 +84,10 @@ public class SoundFile extends Object {
 			return false;
 		}
 		QName service = new QName("http://ums.no/ws/pas/", "pasws");
-		no.ums.ws.pas.ObjectFactory factory = new no.ums.ws.pas.ObjectFactory();
 
 		
-		AUDIOREQUEST audioreq = factory.createAUDIOREQUEST();
-		no.ums.ws.pas.ULOGONINFO logon = factory.createULOGONINFO();
+		AUDIOREQUEST audioreq = new AUDIOREQUEST();
+		ULOGONINFO logon = new ULOGONINFO();
 		UserInfo info1 = PAS.get_pas().get_userinfo();
 		logon.setLComppk(info1.get_comppk());
 		logon.setLDeptpk(info1.get_current_department().get_deptpk());

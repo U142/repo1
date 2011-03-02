@@ -11,11 +11,11 @@ import no.ums.pas.plugins.centric.CentricSendOptionToolbar;
 import no.ums.pas.plugins.centric.CentricVariables;
 import no.ums.pas.plugins.centric.status.CentricOperatorStatus.OPERATOR_STATE;
 import no.ums.pas.plugins.centric.ws.WSCentricStatus;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.status.CBPROJECTSTATUSREQUEST;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
-import no.ums.ws.pas.status.CBSTATUS;
-import no.ums.ws.pas.status.ULOGONINFO;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.cb.CBPROJECTSTATUSREQUEST;
+import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
+import no.ums.ws.common.cb.CBSTATUS;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -91,7 +91,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 
 	private CBSENDINGRESPONSE last_sendingresult;
 	
-	public boolean set_cbsendingresponse(CBSENDINGRESPONSE res) { 
+	public boolean set_cbsendingresponse(CBSENDINGRESPONSE res) {
 		if(this.last_sendingresult==null || 
 			this.last_sendingresult.getLProjectpk()!=res.getLProjectpk() ||
 			(res.getLRefno()>0 && res.getLRefno()!=last_sendingresult.getLRefno()))

@@ -3,7 +3,7 @@ package no.ums.pas.maps.defines;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
-import no.ums.ws.pas.tas.UMapPoint;
+import no.ums.ws.common.UMapPoint;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

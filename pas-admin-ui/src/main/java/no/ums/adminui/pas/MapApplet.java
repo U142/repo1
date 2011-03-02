@@ -23,9 +23,12 @@ import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.*;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.Col;
-import no.ums.ws.parm.admin.ULOGONINFO;
+import no.ums.ws.common.PASHAPETYPES;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.*;
 import no.ums.ws.pas.*;
-import no.ums.ws.pas.tas.ULBACOUNTRY;
+import no.ums.ws.pas.ArrayOfUDEPARTMENT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +79,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
 		//WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
 		
-		no.ums.ws.pas.ULOGONINFO logon = new no.ums.ws.pas.ULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		/*
 		String session = "9235035e-f6f8-413c-b921-059f78f8516c";
 		logon.setLDeptpk(1);
@@ -211,15 +214,15 @@ public class MapApplet extends JApplet implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				Variables.getMapFrame().get_active_shape();
-				no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
+				UPolygon shape = new UPolygon();
 				PolygonStruct polygon = Variables.getMapFrame().get_active_shape().typecast_polygon();
 				shape.setColAlpha(polygon.get_fill_color().getAlpha());
 				shape.setColBlue(polygon.get_fill_color().getBlue());
 				shape.setColGreen(polygon.get_fill_color().getGreen());
 				shape.setColRed(polygon.get_fill_color().getRed());
-				no.ums.ws.pas.UPolypoint p;
+				UPolypoint p;
 				for(int i=0;i<polygon.get_coors_lat().size();++i) {
-					p = new no.ums.ws.pas.UPolypoint();
+					p = new UPolypoint();
 					p.setLat(polygon.get_coors_lat().get(i));
 					p.setLon(polygon.get_coors_lon().get(i));
 					shape.getPolypoint().add(p);
@@ -675,15 +678,15 @@ public class MapApplet extends JApplet implements ActionListener {
 	}
 	public void store(String name) {
 		Variables.getMapFrame().get_active_shape();
-		no.ums.ws.pas.UPolygon shape = new no.ums.ws.pas.UPolygon();
+		UPolygon shape = new UPolygon();
 		PolygonStruct polygon = Variables.getMapFrame().get_active_shape().typecast_polygon();
 		shape.setColAlpha(polygon.get_fill_color().getAlpha());
 		shape.setColBlue(polygon.get_fill_color().getBlue());
 		shape.setColGreen(polygon.get_fill_color().getGreen());
 		shape.setColRed(polygon.get_fill_color().getRed());
-		no.ums.ws.pas.UPolypoint p;
+		UPolypoint p;
 		for(int i=0;i<polygon.get_coors_lat().size();++i) {
-			p = new no.ums.ws.pas.UPolypoint();
+			p = new UPolypoint();
 			p.setLat(polygon.get_coors_lat().get(i));
 			p.setLon(polygon.get_coors_lon().get(i));
 			shape.getPolypoint().add(p);

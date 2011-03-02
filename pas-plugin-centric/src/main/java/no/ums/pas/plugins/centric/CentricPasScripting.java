@@ -32,10 +32,10 @@ import no.ums.pas.plugins.centric.status.CentricStatusController;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.ws.parm.CBSENDINGRESPONSE;
-import no.ums.ws.pas.UBBNEWS;
-import no.ums.ws.pas.USYSTEMMESSAGES;
-import no.ums.ws.pas.status.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.common.UBBNEWS;
+import no.ums.ws.common.USYSTEMMESSAGES;
+import no.ums.ws.common.cb.CBPROJECTSTATUSRESPONSE;
+import no.ums.ws.common.cb.CBSENDINGRESPONSE;
 import org.geotools.data.ows.Layer;
 
 import javax.swing.*;
@@ -45,7 +45,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class CentricPasScripting extends DefaultPasScripting {
@@ -1392,18 +1391,11 @@ public class CentricPasScripting extends DefaultPasScripting {
         try {
             // Does the same thing as after sending a message
             CentricSendOptionToolbar csend = CentricVariables.getCentric_send();
-            //csend.set_projectpk(Long.parseLong(project.get_projectpk()), project.get_projectname());
-
-            //CentricStatusController m_centricstatuscontroller = csend.get_statuscontroller();
 
             CBSENDINGRESPONSE res = new CBSENDINGRESPONSE(); // Just to use the same
             res.setLProjectpk(Long.parseLong(project.get_projectpk()));
 
             ((CentricStatusController) PAS.get_pas().get_statuscontroller()).openStatus(Long.parseLong(project.get_projectpk()), csend, nFromNewRefno);
-            /*if(m_centricstatuscontroller == null)
-                   m_centricstatuscontroller = new CentricStatusController(Long.parseLong(project.get_projectpk()),csend);
-               else
-                   m_centricstatuscontroller.set_cbsendingresponse(res);*/
             FileMenuActions.CLOSE_PROJECT.setEnabled(true);
 
             menu_trainingmode.setEnabled(false);

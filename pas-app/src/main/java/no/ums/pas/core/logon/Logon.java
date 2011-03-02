@@ -3,21 +3,14 @@ package no.ums.pas.core.logon;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.pas.ums.tools.Utils;
-import no.ums.ws.pas.UDEPARTMENT;
-import no.ums.ws.pas.UNSLOOKUP;
-import no.ums.ws.pas.UPASLOGON;
-import no.ums.ws.pas.UPASUISETTINGS;
+import no.ums.ws.common.UNSLOOKUP;
+import no.ums.ws.common.parm.UDEPARTMENT;
+import no.ums.ws.common.parm.UPASLOGON;
+import no.ums.ws.common.parm.UPASUISETTINGS;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-
-
-
-
-
 
 /*executes dialog*/
 public class Logon implements ActionListener {

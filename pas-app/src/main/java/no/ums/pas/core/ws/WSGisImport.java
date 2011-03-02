@@ -4,8 +4,9 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.importer.gis.GISList;
+import no.ums.ws.common.ProgressJobType;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.ProgressJobType;
 import no.ums.ws.pas.UGisImportParamsByStreetId;
 import no.ums.ws.pas.UGisImportResultsByStreetId;
 
@@ -88,8 +89,7 @@ public class WSGisImport extends WSThread
 	
 	@Override
 	public void call() throws Exception {
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		UserInfo u = PAS.get_pas().get_userinfo();
 		logon.setLComppk(u.get_comppk());
 		logon.setLDeptpk(u.get_current_department().get_deptpk());
@@ -109,7 +109,7 @@ public class WSGisImport extends WSThread
 
 			
 			//URL wsdl = new URL(PAS.get_pas().get_sitename() + "/ExecAlert/WS/PasStatus.asmx?WSDL");
-			UGisImportParamsByStreetId search = of.createUGisImportParamsByStreetId();
+			UGisImportParamsByStreetId search = new UGisImportParamsByStreetId();
 			search.setCOLHOUSENO(m_colset.COL_HOUSENO);
 			search.setCOLLETTER(m_colset.COL_LETTER);
 			search.setCOLMUNICIPAL(m_colset.COL_MUNICIPAL);

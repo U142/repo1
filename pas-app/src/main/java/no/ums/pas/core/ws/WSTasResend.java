@@ -1,10 +1,10 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
-import no.ums.ws.parm.ULOGONINFO;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionListener;
@@ -36,8 +36,7 @@ public class WSTasResend extends WSThread {
 	public void call() throws Exception{
 		try
 		{
-			ObjectFactory of = new ObjectFactory();
-			ULOGONINFO logon = of.createULOGONINFO();
+			ULOGONINFO logon = new ULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			logon.setLUserpk(new Long(PAS.get_pas().get_userinfo().get_userpk()));

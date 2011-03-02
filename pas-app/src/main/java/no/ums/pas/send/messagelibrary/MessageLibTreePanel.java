@@ -10,9 +10,9 @@ import no.ums.pas.core.ws.WSMessageLibDelete;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdSearchArea;
-import no.ums.ws.pas.UBBMESSAGE;
-import no.ums.ws.pas.UBBMESSAGELIST;
-import no.ums.ws.pas.UBBMODULEDEF;
+import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.UBBMESSAGELIST;
+import no.ums.ws.common.UBBMODULEDEF;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;

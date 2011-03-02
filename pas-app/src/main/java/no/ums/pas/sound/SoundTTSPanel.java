@@ -10,10 +10,10 @@ import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfoTTS;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.ObjectFactory;
 import no.ums.ws.pas.UCONVERTTTSREQUEST;
 import no.ums.ws.pas.UCONVERTTTSRESPONSE;
-import no.ums.ws.pas.ULOGONINFO;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -433,9 +433,8 @@ class TTSConverter extends Thread {
 			sz_filename = parse(form.post());*/
 			
 			no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
-			ObjectFactory of = new ObjectFactory();
-			ULOGONINFO logon = of.createULOGONINFO();
-			UCONVERTTTSREQUEST ttsreq = of.createUCONVERTTTSREQUEST();
+			ULOGONINFO logon = new ULOGONINFO();
+			UCONVERTTTSREQUEST ttsreq = new UCONVERTTTSREQUEST();
 			
 			logon.setLComppk(ui.get_comppk());
 			logon.setLDeptpk(ui.get_current_department().get_deptpk());

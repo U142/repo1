@@ -22,9 +22,12 @@ import no.ums.pas.plugins.centric.ws.WSCentricRRO;
 import no.ums.pas.plugins.centric.ws.WSCentricSend;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.ums.tools.*;
-import no.ums.ws.parm.*;
-import no.ums.ws.pas.UBBMESSAGE;
-import no.ums.ws.pas.status.CBSTATUS;
+import no.ums.ws.common.MDVSENDINGINFOGROUP;
+import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.cb.*;
+import no.ums.ws.common.parm.UPLMN;
+import no.ums.ws.common.parm.UPolygon;
+import no.ums.ws.common.parm.UPolypoint;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

@@ -1,6 +1,6 @@
 package no.ums.pas.pluginbase;
 
-import no.ums.ws.pas.USYSTEMMESSAGES;
+import no.ums.ws.common.USYSTEMMESSAGES;
 
 import javax.swing.*;
 

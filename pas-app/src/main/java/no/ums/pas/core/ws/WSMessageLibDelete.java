@@ -2,9 +2,10 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.UBBMESSAGELISTFILTER;
+import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
-import no.ums.ws.pas.UBBMESSAGE;
-import no.ums.ws.pas.UBBMESSAGELISTFILTER;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
@@ -25,8 +26,7 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 
 	@Override
 	public void run() {
-		no.ums.ws.pas.ObjectFactory of = new no.ums.ws.pas.ObjectFactory();
-		no.ums.ws.pas.ULOGONINFO logon = of.createULOGONINFO();
+		ULOGONINFO logon = new ULOGONINFO();
 		no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
 		logon.setLComppk(ui.get_comppk());
 		logon.setLDeptpk(ui.get_current_department().get_deptpk());
@@ -36,8 +36,6 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 		logon.setSzUserid(ui.get_userid());
 		logon.setSzPassword(ui.get_passwd());
 		logon.setSessionid(ui.get_sessionid());
-		UBBMESSAGELISTFILTER filter = of.createUBBMESSAGELISTFILTER();
-		//filter.setNTimefilter(n_servertimestamp);
 		java.net.URL wsdl;
 		try
 		{			

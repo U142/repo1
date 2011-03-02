@@ -5,8 +5,8 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.pas.ArrayOfUShape;
-import no.ums.ws.pas.UMunicipalDef;
+import no.ums.ws.common.UMunicipalDef;
+import no.ums.ws.common.parm.ArrayOfUShape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,25 +128,7 @@ public class UserInfo extends Object {
 			m_n_default_deptpk = info.get_default_deptpk();
 		}
 	}
-	/*void add_department(int n_deptpk, String sz_deptid, String sz_stdcc, double l_bo, double r_bo, double u_bo, double b_bo, boolean b_default_dept,
-							int n_deptpri, int n_maxalloc) {
-		NavStruct nav_init = null;
-		if(l_bo!=0 && r_bo!=0 && u_bo!=0 && b_bo!=0)
-			nav_init = new NavStruct(l_bo, r_bo, u_bo, b_bo);
-		DeptInfo dept = get_departments().add(n_deptpk, sz_deptid, sz_stdcc, nav_init, b_default_dept, n_deptpri, n_maxalloc);
-		if(b_default_dept)
-		{
-			m_n_default_deptpk = n_deptpk;
-			m_nav_init = nav_init;
-			m_default_dept = dept;
-		}
-	}*/
-	/*
-	 "l_deptpk", "sz_deptid", "sz_stdcc", "lbo", "rbo", "ubo", "bbo", "f_default", "l_deptpri", "l_maxalloc", 
-	 "sz_userprofilename", "sz_userprofiledesc", "l_status", "l_newsending", "l_parm", "l_fleetcontrol", "l_cellbroadcast",
-	 "l_houseeditor", "l_addresstypes", "sz_defaultnumber"
-	 */
-	
+
 	public void add_department(int l_deptpk, String sz_deptid, String sz_stdcc, float lbo, float rbo, float ubo, float bbo,
 					boolean f_default, int l_deptpri, int l_maxalloc, String sz_userprofilename, 
 					String sz_userprofiledesc, int l_status, int l_newsending, int l_parm, int l_fleetcontrol,
@@ -175,48 +157,6 @@ public class UserInfo extends Object {
 		} catch(Exception e) { System.out.println("ninja"); }
 	}
 			
-	/*void add_department(String [] s) {
-		NavStruct nav_init = null;
-		try {
-			double l_bo = new Double(s[3]).doubleValue();
-			double r_bo = new Double(s[4]).doubleValue();
-			double u_bo = new Double(s[5]).doubleValue();
-			double b_bo = new Double(s[6]).doubleValue();
-			if(l_bo!=0 && r_bo!=0 && u_bo!=0 && b_bo!=0)
-				nav_init = new NavStruct(l_bo, r_bo, u_bo, b_bo);
-		} catch(Exception e) {
-			
-		}
-		int n_deptpk = new Integer(s[0]).intValue();
-		String sz_deptid = s[1];
-		String sz_stdcc = s[2];
-		boolean b_default_dept = (s[7].equals("1") ? true : false);
-		int n_deptpri = new Integer(s[8]).intValue();
-		int n_maxalloc = new Integer(s[9]).intValue();
-//		userprofile
-		String sz_profilename = s[10];
-		String sz_profiledesc = s[11];
-		int n_status = new Integer(s[12]).intValue();
-		int n_newsending = new Integer(s[13]).intValue();
-		int n_parm = new Integer(s[14]).intValue();
-		int n_fleetcontrol = new Integer(s[15]).intValue();
-		int n_cellbroadcast = new Integer(s[16]).intValue();
-		int n_houseeditor = new Integer(s[17]).intValue();
-		int n_addresstypes = new Integer(s[18]).intValue();
-		String sz_defaultnumber = s[19];
-		
-		UserProfile m_userprofile = new UserProfile(sz_profilename, sz_profiledesc, n_fleetcontrol, n_parm, n_status, n_newsending, n_cellbroadcast, n_houseeditor, n_addresstypes);
-		
-		DeptInfo dept = get_departments().add(n_deptpk, sz_deptid, sz_stdcc, nav_init, b_default_dept, n_deptpri, n_maxalloc, sz_defaultnumber, m_userprofile);
-		if(b_default_dept)
-		{
-			m_n_default_deptpk = n_deptpk;
-			m_nav_init = nav_init;
-			m_default_dept = dept;
-			this.set_current_department(dept);
-		}		
-	}*/
-	
 	public class NSLookup extends Object {
 		private String m_sz_domain;
 		private String m_sz_ip;

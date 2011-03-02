@@ -9,7 +9,6 @@ import no.ums.pas.parm.map.MapPanel;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendProperties;
-import no.ums.ws.parm.CBMESSAGELIST;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;

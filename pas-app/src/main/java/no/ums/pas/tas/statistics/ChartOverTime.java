@@ -6,6 +6,7 @@ import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.common.*;
 import no.ums.ws.pas.tas.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.axis.CategoryAxis;

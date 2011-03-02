@@ -2,10 +2,10 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.send.AddressCount;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.parm.UMAPSENDING;
 import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.UAdrCount;
-import no.ums.ws.parm.ULOGONINFO;
-import no.ums.ws.parm.UMAPSENDING;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
