@@ -1,8 +1,11 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.Controller;
+import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.send.SendController;
 import no.ums.pas.status.StatusItemObject;
+import no.ums.pas.status.StatusSending;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -77,7 +80,28 @@ public class HouseItem extends Object {
 		set_active_color(Color.WHITE);
 	}
 	public void set_visible(boolean b_visible) { m_b_visible = b_visible; }
-	public boolean get_visible() { return m_b_visible; }
+	public boolean get_visible() { 
+		int filter_refno = -1;
+		
+		try {
+			filter_refno = ((StatusSending)((ComboRow)PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedItem()).getId()).get_refno(); 
+		} catch (Exception e) { return m_b_visible; } 
+		boolean exists = false;
+		for(int i=0;i<m_subitems.size();++i)  {
+			if(m_subitems.get(i).getClass() == StatusItemObject.class) {
+				if(filter_refno == ((StatusItemObject)m_subitems.get(i)).get_refno())
+					exists = true;
+			}
+			else
+				return m_b_visible;
+		}
+		if(exists) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	public boolean isVisible(Navigation n)
 	{
 		if(get_lon() >= n.get_lbo() && get_lon() <= n.get_rbo() &&

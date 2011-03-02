@@ -156,6 +156,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 					}
 				}
 				if(current.get_current_count() < 1 /*&& get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() != 0*/) {
+					current.set_color(Color.WHITE);
 					remove_row(current);
 					current.set_removedfromlist();
 				}
