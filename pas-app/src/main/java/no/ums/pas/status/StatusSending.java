@@ -1947,7 +1947,10 @@ public class StatusSending extends Object {
 			m_txt_items.setText(new Integer(get_totitem()).toString());
 			m_txt_proc.setText(new Integer(get_proc()).toString());
 			m_txt_alloc.setText(new Integer(get_alloc()).toString());
-			m_txt_oadc.setText(get_oadc());
+			if(get_oadc().trim().length() < 1)
+				m_txt_oadc.setText(PAS.l("main_status_oadc_hidden"));
+			else
+				m_txt_oadc.setText(get_oadc());
 			m_txt_name.setText(get_sendingname());
 			m_txt_created.setText(TextFormat.format_date(get_createdate()) + " " + TextFormat.format_time(get_createtime(), 4));
 			m_txt_sched.setText(TextFormat.format_date(get_scheddate()) + " " + TextFormat.format_time(get_schedtime(), 4));
