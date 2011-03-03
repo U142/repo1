@@ -2,8 +2,9 @@ package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 

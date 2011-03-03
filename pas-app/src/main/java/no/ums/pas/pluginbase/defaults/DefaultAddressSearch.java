@@ -9,14 +9,16 @@ import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.GABTYPE;
+import no.ums.ws.pas.ObjectFactory;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UGabResult;
+import no.ums.ws.pas.UGabSearchParams;
+import no.ums.ws.pas.UGabSearchResultList;
 
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 public class DefaultAddressSearch implements AbstractPasScriptingInterface.AddressSearch

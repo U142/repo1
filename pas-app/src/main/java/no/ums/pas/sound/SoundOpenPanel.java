@@ -9,8 +9,10 @@ import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.FilePicker;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.io.File;
 

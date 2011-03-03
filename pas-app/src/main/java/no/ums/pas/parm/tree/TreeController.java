@@ -15,11 +15,12 @@ import no.ums.pas.ums.errorhandling.Error;
 import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

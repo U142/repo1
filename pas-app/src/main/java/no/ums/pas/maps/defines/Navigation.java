@@ -5,7 +5,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.ws.common.UMapPoint;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

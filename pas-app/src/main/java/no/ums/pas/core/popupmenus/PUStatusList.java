@@ -5,9 +5,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.tools.PrintCtrl;
 
-import javax.swing.*;
-
-import java.awt.Dimension;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

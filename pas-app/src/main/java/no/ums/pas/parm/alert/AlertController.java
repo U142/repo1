@@ -6,21 +6,27 @@ import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.importer.SubsetSelect;
 import no.ums.pas.importer.gis.GISList;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.GISShape;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
-import no.ums.pas.send.*;
+import no.ums.pas.send.SendController;
+import no.ums.pas.send.SendObject;
+import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.send.SendProperties;
+import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
-import java.awt.List;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 
 
 public class AlertController implements ActionListener {

@@ -11,9 +11,14 @@ import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.colorpicker.ColorPickerTable;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 
 

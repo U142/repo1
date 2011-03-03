@@ -1,7 +1,7 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import java.awt.Dimension;
 
 
 

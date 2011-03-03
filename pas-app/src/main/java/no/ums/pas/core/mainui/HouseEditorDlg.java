@@ -6,10 +6,12 @@ import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

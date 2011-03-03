@@ -1,6 +1,6 @@
 package no.ums.pas.status;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class StatusCode extends Object implements Comparable {
 	private int m_n_code;

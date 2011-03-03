@@ -3,8 +3,8 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.maps.defines.MapPoint;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 

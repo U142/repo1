@@ -9,7 +9,7 @@ import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 /*
  * Show description of selected area and addresscount

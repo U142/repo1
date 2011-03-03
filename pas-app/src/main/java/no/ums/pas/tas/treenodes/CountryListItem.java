@@ -6,9 +6,11 @@ import no.ums.ws.common.ArrayOfUTOURISTCOUNT;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 
-import javax.swing.*;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;

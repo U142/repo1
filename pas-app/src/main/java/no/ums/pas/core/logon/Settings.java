@@ -1,6 +1,6 @@
 package no.ums.pas.core.logon;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 

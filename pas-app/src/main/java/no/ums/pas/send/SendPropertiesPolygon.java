@@ -15,12 +15,15 @@ import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.UMapPoint;
 import no.ums.ws.common.parm.ArrayOfUMapPoint;
 import no.ums.ws.common.parm.UPOLYGONSENDING;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.ObjectFactory;
+import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -149,13 +152,12 @@ public class SendPropertiesPolygon extends SendProperties {
 	
 	protected ArrayOfUMapPoint createWSPolygon()
 	{
-		ObjectFactory factory = new ObjectFactory();
 		ArrayOfUMapPoint points = new ArrayOfUMapPoint();
 
 		double lon, lat;
 		for(int i=0; i < (_get_shapestruct().get_size()); i++) {
-			lon = ( Math.round(((Double)_get_shapestruct().get_coors_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
-			lat = ( Math.round(((Double)_get_shapestruct().get_coors_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
+			lon = ( Math.round(_get_shapestruct().get_coors_lon().get(i).floatValue() * 1000000.0)) / 1000000.0;
+			lat = ( Math.round(_get_shapestruct().get_coors_lat().get(i).floatValue() * 1000000.0)) / 1000000.0;
 			UMapPoint p = new UMapPoint();
 			p.setLat((float)lat);
 			p.setLon((float)lon);

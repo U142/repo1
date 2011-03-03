@@ -1,7 +1,11 @@
 package no.ums.pas.parm.alert;
 
 import no.ums.pas.PAS;
-import no.ums.pas.send.*;
+import no.ums.pas.send.BBProfile;
+import no.ums.pas.send.BBSchedProfile;
+import no.ums.pas.send.OADC;
+import no.ums.pas.send.SchedDateTime;
+import no.ums.pas.send.TTSLang;
 import no.ums.pas.send.sendpanels.Sending_Settings;
 import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -9,8 +13,12 @@ import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 

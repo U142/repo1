@@ -2,9 +2,10 @@ package no.ums.pas.pluginbase.defaults;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
-import javax.swing.*;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
-import java.awt.*;
+import java.awt.Color;
 import java.util.Enumeration;
 
 public class DisabledLookAndFeel extends WindowsLookAndFeel

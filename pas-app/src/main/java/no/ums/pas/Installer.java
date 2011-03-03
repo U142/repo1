@@ -7,7 +7,7 @@ import java.io.InputStream;*/
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;

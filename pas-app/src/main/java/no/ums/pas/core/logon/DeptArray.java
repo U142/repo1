@@ -8,7 +8,8 @@ import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.ws.common.UMunicipalDef;
 import no.ums.ws.common.parm.ArrayOfUShape;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.PathIterator;

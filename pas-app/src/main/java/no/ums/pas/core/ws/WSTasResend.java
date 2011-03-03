@@ -3,7 +3,6 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;

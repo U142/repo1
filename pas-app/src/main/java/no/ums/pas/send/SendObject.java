@@ -2,12 +2,19 @@ package no.ums.pas.send;
 
 import no.ums.pas.PAS;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolySnapStruct;
+import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Event;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

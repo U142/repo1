@@ -1,7 +1,7 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextField;
+import java.awt.Dimension;
 
 public class StdTextArea extends JTextField// JTextArea
 {

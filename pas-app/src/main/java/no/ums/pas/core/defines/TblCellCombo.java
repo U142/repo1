@@ -1,8 +1,12 @@
 package no.ums.pas.core.defines;
 
-import javax.swing.*;
+import javax.swing.ComboBoxEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 public class TblCellCombo extends JComboBox implements TableCellRenderer {

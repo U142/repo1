@@ -4,7 +4,6 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 import no.ums.ws.parm.UConfirmJobResponse;
 

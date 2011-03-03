@@ -2,7 +2,9 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.pas.tas.*;
+import no.ums.ws.pas.tas.ArrayOfUTASRESPONSENUMBER;
+import no.ums.ws.pas.tas.Tasws;
+import no.ums.ws.pas.tas.UTASRESPONSENUMBER;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

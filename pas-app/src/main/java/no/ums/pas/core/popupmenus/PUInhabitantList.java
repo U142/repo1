@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.status.StatusItemObject;
 
-import javax.swing.*;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -2,18 +2,33 @@ package no.ums.pas.maps;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
 import no.ums.pas.maps.MapFrame.MapOverlay;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.HouseItem;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.MapPointLL;
+import no.ums.pas.maps.defines.MapPointPix;
+import no.ums.pas.maps.defines.NavStruct;
+import no.ums.pas.maps.defines.Navigation;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;

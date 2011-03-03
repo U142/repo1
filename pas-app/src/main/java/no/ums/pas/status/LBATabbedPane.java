@@ -2,12 +2,13 @@ package no.ums.pas.status;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
-//import org.jvnet.substance.SubstanceTabbedPaneUI;
 
-import javax.swing.*;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -15,6 +16,8 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+//import org.jvnet.substance.SubstanceTabbedPaneUI;
 
 
 public class LBATabbedPane extends JTabbedPane implements ComponentListener, ChangeListener

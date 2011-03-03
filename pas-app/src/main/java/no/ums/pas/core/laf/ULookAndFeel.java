@@ -1,8 +1,16 @@
 package no.ums.pas.core.laf;
 
+import no.ums.pas.ums.tools.ImageLoader;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JTabbedPane;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
@@ -16,25 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.UIManager;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
-
-import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.StdTextLabel;
 
 
 public class ULookAndFeel
@@ -222,9 +212,9 @@ public class ULookAndFeel
 		UAttentionUI ui;		
 		private static ImageIcon m_icon_close = null;
 		private static ImageIcon m_icon_close_grayscale = null;
-		protected static int CLOSE_ICONSIZE = 10;
-		protected static int CLOSE_RIGHT_PADDING = 5;
-		protected static String CLOSE_ICON_FILE = "delete_16.png";
+		protected final static int CLOSE_ICONSIZE = 10;
+		protected final static int CLOSE_RIGHT_PADDING = 5;
+		protected final static String CLOSE_ICON_FILE = "delete_16.png";
 		
 		private TabCallback callback;
 		UTabbedPaneUI(JComponent c, TabCallback callback)

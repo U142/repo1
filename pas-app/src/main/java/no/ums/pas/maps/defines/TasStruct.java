@@ -2,7 +2,9 @@ package no.ums.pas.maps.defines;
 
 import no.ums.ws.common.ULBACOUNTRY;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 

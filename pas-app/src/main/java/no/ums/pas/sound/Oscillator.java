@@ -1,7 +1,7 @@
 package no.ums.pas.sound;
 
 import javax.sound.sampled.AudioFormat;
-import javax.swing.*;
+import javax.swing.JProgressBar;
 
 
 public class Oscillator

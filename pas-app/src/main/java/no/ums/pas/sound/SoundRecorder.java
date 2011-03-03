@@ -1,14 +1,20 @@
 package no.ums.pas.sound;
 
-import javax.sound.sampled.*;
-import javax.sound.sampled.DataLine.Info;
-import javax.swing.JOptionPane;
-
-import no.ums.pas.PAS;
-
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.TargetDataLine;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 public class SoundRecorder extends Thread {

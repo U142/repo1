@@ -6,7 +6,7 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import java.awt.*;
+import java.awt.Dimension;
 /*
  * Show description of selected area and addresscount
  */

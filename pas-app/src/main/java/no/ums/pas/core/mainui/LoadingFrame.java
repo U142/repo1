@@ -1,7 +1,13 @@
 package no.ums.pas.core.mainui;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JProgressBar;
+import javax.swing.JRootPane;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 
 public class LoadingFrame extends JDialog {

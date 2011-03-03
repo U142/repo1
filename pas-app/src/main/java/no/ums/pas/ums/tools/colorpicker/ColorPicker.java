@@ -1,10 +1,13 @@
 package no.ums.pas.ums.tools.colorpicker;
 
-import javax.swing.*;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicColorChooserUI;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

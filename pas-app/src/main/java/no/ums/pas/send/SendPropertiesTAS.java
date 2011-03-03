@@ -15,12 +15,14 @@ import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.USMSINSTATS;
 import no.ums.ws.common.parm.ArrayOfULBACOUNTRY;
 import no.ums.ws.common.parm.UTASSENDING;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;

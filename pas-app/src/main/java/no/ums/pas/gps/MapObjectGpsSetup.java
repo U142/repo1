@@ -6,8 +6,11 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 public class MapObjectGpsSetup extends DefaultPanel {

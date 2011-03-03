@@ -1,7 +1,10 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 public class ColorButton extends JButton {
 	public static final long serialVersionUID = 1;

@@ -16,14 +16,28 @@ import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Col;
-import no.ums.ws.common.*;
-import no.ums.ws.common.parm.*;
+import no.ums.ws.common.ArrayOfLBACCode;
+import no.ums.ws.common.LBACCode;
+import no.ums.ws.common.LBALanguage;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.parm.ArrayOfLBALanguage;
-import no.ums.ws.parm.*;
+import no.ums.ws.common.parm.ArrayOfLong;
+import no.ums.ws.common.parm.ArrayOfString;
+import no.ums.ws.common.parm.BBSENDNUM;
+import no.ums.ws.common.parm.ULocationBasedAlert;
+import no.ums.ws.common.parm.UMAPSENDING;
+import no.ums.ws.common.parm.UTESTSENDING;
+import no.ums.ws.parm.AlertResultLine;
+import no.ums.ws.parm.ExecResponse;
 import no.ums.ws.parm.ObjectFactory;
+import no.ums.ws.parm.Parmws;
+import no.ums.ws.parm.UAdrCount;
 
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
@@ -574,8 +588,6 @@ public abstract class SendProperties extends Object {
 	{
 		try
 		{
-			ObjectFactory f = new ObjectFactory();
-			UAdrCount c = new UAdrCount();
 			ULOGONINFO logon = new ULOGONINFO();
 			logon.setLComppk(PAS.get_pas().get_userinfo().get_comppk());
 			logon.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());

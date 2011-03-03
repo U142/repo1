@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.*;
+import java.awt.Point;
 
 public abstract class UMSMapObject extends Object {
 	private Point m_p;

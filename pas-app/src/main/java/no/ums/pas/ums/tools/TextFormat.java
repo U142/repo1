@@ -3,14 +3,13 @@ package no.ums.pas.ums.tools;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.send.SendProperties;
-import org.jvnet.substance.SubstanceBorder;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.Font;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;

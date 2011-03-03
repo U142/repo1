@@ -4,8 +4,14 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.parm.tree.TreeController;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class ParmPanel extends DefaultPanel implements ComponentListener, MouseListener {
 	public static final long serialVersionUID = 1;

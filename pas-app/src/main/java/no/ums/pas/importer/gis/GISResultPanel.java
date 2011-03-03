@@ -6,9 +6,12 @@ import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.LetterPairSimilarity;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 

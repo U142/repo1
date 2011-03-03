@@ -1,7 +1,8 @@
 package no.ums.pas.send.messagelibrary;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import java.awt.Dimension;
 
 
 public class MsgTree extends JDialog

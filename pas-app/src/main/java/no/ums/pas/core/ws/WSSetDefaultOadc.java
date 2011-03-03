@@ -1,13 +1,12 @@
 package no.ums.pas.core.ws;
 
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
 import no.ums.pas.PAS;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.MDSOADCDEFAULT;
 import no.ums.ws.pas.Pasws;
+
+import javax.xml.namespace.QName;
+import java.net.URL;
 
 public class WSSetDefaultOadc extends WSThread
 {

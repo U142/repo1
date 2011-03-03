@@ -1,7 +1,15 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.text.*;
-import java.awt.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.LayeredHighlighter;
+import javax.swing.text.Position;
+import javax.swing.text.View;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Shape;
 
 // Painter for underlined highlights
 public class BackgroundHighlightPainter extends

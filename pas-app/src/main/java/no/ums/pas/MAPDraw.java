@@ -9,7 +9,7 @@ import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.awt.*;
+import java.awt.Component;
 import java.util.List;
 
 public class MAPDraw extends Draw {

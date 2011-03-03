@@ -9,10 +9,14 @@ import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.send.SendController;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UAddress;
+import no.ums.ws.pas.UAddressList;
+import no.ums.ws.pas.UMapAddressParams;
 
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;

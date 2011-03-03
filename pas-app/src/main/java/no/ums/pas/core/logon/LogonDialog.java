@@ -2,6 +2,7 @@ package no.ums.pas.core.logon;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -10,17 +11,37 @@ import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPasswordField;
+import javax.swing.JToolTip;
+import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 
 /*Substance 3.3
@@ -321,7 +342,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			
 			try
 			{
-				ArrayList<Locale> loc = LocalizationFinder.getAvailableLangfiles();
+				List<Locale> loc = LocalizationFinder.getAvailableLangfiles();
 				Hashtable<String, String> l = new Hashtable<String, String>();
 				if(loc!=null)
 				{

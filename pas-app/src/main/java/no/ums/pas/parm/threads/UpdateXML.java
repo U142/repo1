@@ -9,7 +9,11 @@ import no.ums.pas.parm.xml.XmlReader;
 import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 

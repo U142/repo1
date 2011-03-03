@@ -9,7 +9,9 @@ import no.ums.pas.ums.tools.calendarutils.DateTimePicker.MASK_DATES;
 import no.ums.ws.common.ULBAFILTERSTATFUNCTION;
 import no.ums.ws.common.ULBAFILTERSTATTIMEUNIT;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

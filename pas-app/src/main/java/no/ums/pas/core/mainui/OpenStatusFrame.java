@@ -2,12 +2,15 @@ package no.ums.pas.core.mainui;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.status.StatusListObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

@@ -18,8 +18,15 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UMapPoint;
 import no.ums.ws.pas.HOUSEEDITOROPERATION;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

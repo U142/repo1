@@ -1,14 +1,13 @@
 package no.ums.pas.parm.xml;
 
-import java.io.File;
-import java.io.IOException;
+import org.junit.Test;
+import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.junit.Test;
-import org.w3c.dom.Document;
+import java.io.File;
+import java.io.IOException;
 
 public class XmlWriterTest {
 	

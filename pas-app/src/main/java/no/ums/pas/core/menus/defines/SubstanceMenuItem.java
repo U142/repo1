@@ -4,7 +4,7 @@ import org.jvnet.substance.skin.SubstanceSkin;
 import org.jvnet.substance.theme.SubstanceTheme;
 import org.jvnet.substance.watermark.SubstanceWatermark;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 //import org.jvnet.substance.api.SubstanceSkin;
 //Substance 3.3

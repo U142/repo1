@@ -2,7 +2,7 @@ package no.ums.pas.maps.defines;
 
 import no.ums.pas.send.SendController;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 
 public class InhabitantBasics

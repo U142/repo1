@@ -1,8 +1,9 @@
 package no.ums.pas.localization;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,26 +12,9 @@ import java.util.regex.Pattern;
 public class LocalizationFinder
 {
 	static Pattern localePattern = Pattern.compile("(^[a-z]{2})(_([A-Z]{2})){0,1}$");
-	public static ArrayList<Locale> getAvailableLangfiles()
+	public static List<Locale> getAvailableLangfiles()
 	{
-		try
-		{
-			ClassLoader cl = LocalizationFinder.class.getClassLoader();//PAS.get_pas().getClass().getClassLoader();//LocalizationFinder.class.getClassLoader();
-			URL url = LocalizationFinder.class.getResource("/no/ums/pas/localization/");
-			File langs = new File(cl.getResource("no/ums/pas/localization/").getFile());
-			//System.out.println("Searching for localization files in " + langs.getAbsolutePath());
-			ArrayList<Locale> defaults = new ArrayList<Locale>();
-			defaults.add(new Locale("en", "GB"));
-			return defaults;
-			//return getAvailableLocales("lang", langs);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			ArrayList<Locale> defaults = new ArrayList<Locale>();
-			defaults.add(new Locale("en", "GB"));
-			return defaults;
-		}
+			return Arrays.asList(new Locale("en", "GB"));
 	}
 	protected static ArrayList<Locale> getAvailableLocales(String bundleName, File dir) {
 		try

@@ -11,8 +11,12 @@ import org.jvnet.substance.theme.SubstanceTheme;
 import org.jvnet.substance.watermark.SubstanceNoneWatermark;
 import org.jvnet.substance.watermark.SubstanceWatermark;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Composite;
+import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

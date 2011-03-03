@@ -12,7 +12,8 @@ import no.ums.ws.common.UMunicipalDef;
 import no.ums.ws.common.parm.ArrayOfUShape;
 import no.ums.ws.common.parm.UShape;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 

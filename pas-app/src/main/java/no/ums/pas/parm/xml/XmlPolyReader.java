@@ -4,19 +4,12 @@ import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.cellbroadcast.CCode;
 import no.ums.pas.cellbroadcast.CountryCodes;
-import no.ums.pas.maps.defines.PolygonStruct;
-import no.ums.pas.parm.constants.ParmConstants;
-import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
-import no.ums.pas.parm.voobjects.ObjectVO;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 

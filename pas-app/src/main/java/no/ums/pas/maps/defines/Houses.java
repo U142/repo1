@@ -4,7 +4,13 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.tools.Timeout;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

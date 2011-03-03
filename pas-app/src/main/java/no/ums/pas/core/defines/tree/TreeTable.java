@@ -3,7 +3,8 @@ package no.ums.pas.core.defines.tree;
 import no.ums.pas.core.defines.SearchPanelResults;
 
 import javax.swing.table.TableColumn;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
 
 
 public abstract class TreeTable extends SearchPanelResults

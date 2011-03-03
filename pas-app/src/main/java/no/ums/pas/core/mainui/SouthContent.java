@@ -3,8 +3,11 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerEvent;

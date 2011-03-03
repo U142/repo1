@@ -1,7 +1,7 @@
 package no.ums.pas.maps;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLayeredPane;
+import java.awt.BorderLayout;
 
 public class MapLayeredPane extends JLayeredPane
 {

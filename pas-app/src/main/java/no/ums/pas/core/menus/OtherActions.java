@@ -6,7 +6,8 @@ import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.swing.UmsAction;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 
 /**

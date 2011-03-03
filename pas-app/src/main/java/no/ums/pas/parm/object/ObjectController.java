@@ -12,7 +12,7 @@ import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;

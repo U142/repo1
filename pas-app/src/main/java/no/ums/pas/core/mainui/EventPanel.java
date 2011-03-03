@@ -3,8 +3,12 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
 import java.util.Date;
 
 public class EventPanel extends SearchPanelResults {

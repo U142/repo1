@@ -2,7 +2,8 @@ package no.ums.pas.entrypoint;
 
 import no.ums.pas.PAS;
 
-import javax.swing.*;
+import javax.swing.JApplet;
+import javax.swing.JFrame;
 
 public class ExecApplet extends JApplet implements Runnable {
 	public static final long serialVersionUID = 1;

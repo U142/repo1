@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class TasHelpers
 {

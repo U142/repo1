@@ -3,7 +3,9 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.pas.tas.*;
+import no.ums.ws.pas.tas.ArrayOfULBACOUNTRY;
+import no.ums.ws.pas.tas.Tasws;
+import no.ums.ws.pas.tas.UTASREQUEST;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

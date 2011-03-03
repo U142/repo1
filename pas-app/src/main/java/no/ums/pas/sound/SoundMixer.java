@@ -2,11 +2,20 @@ package no.ums.pas.sound;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 
-import javax.sound.sampled.*;
-import javax.swing.*;
-import java.awt.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
+import javax.sound.sampled.CompoundControl;
+import javax.sound.sampled.Control;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
+import javax.swing.JOptionPane;
+import java.awt.Component;
 import java.util.ArrayList;
 
 

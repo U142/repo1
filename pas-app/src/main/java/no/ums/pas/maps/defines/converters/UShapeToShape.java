@@ -1,11 +1,21 @@
 package no.ums.pas.maps.defines.converters;
 
 import no.ums.pas.core.Variables;
-import no.ums.pas.maps.defines.*;
+import no.ums.pas.maps.defines.EllipseStruct;
+import no.ums.pas.maps.defines.MapPoint;
+import no.ums.pas.maps.defines.MapPointLL;
+import no.ums.pas.maps.defines.PLMNShape;
+import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
-import no.ums.ws.common.parm.*;
+import no.ums.ws.common.parm.UBoundingRect;
+import no.ums.ws.common.parm.UEllipse;
+import no.ums.ws.common.parm.UPLMN;
+import no.ums.ws.common.parm.UPolygon;
+import no.ums.ws.common.parm.UPolypoint;
+import no.ums.ws.common.parm.UShape;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 
 

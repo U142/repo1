@@ -3,9 +3,11 @@ package no.ums.pas.ums.tools.colorpicker;
 import no.ums.pas.PAS;
 import no.ums.pas.status.StatusCode;
 
-import javax.swing.*;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 

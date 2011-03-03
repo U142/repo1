@@ -3,9 +3,11 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;

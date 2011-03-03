@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 public class IconObject extends Object {
 	//l_picturepk, l_comppk, l_deptpk, sz_name, l_opacity, l_sizetype, sz_fileext

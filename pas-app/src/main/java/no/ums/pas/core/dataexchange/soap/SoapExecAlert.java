@@ -6,7 +6,11 @@ import no.ums.pas.ums.errorhandling.Error;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.soap.*;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;

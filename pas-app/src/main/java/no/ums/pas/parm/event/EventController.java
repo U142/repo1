@@ -4,18 +4,21 @@ package no.ums.pas.parm.event;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.UnknownShape;
-import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.CategoryVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class EventController implements ActionListener {

@@ -2,7 +2,7 @@ package no.ums.pas.core.popupmenus;
 
 import no.ums.pas.PAS;
 
-import javax.swing.*;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

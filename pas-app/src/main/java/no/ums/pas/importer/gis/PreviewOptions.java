@@ -3,8 +3,9 @@ package no.ums.pas.importer.gis;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 

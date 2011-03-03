@@ -2,9 +2,10 @@ package no.ums.pas.status;
 
 import no.ums.pas.core.defines.SearchPanelResults;
 
-import javax.swing.*;
+import javax.swing.JProgressBar;
 import javax.swing.table.TableColumn;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
 
 
 public class LBAListCC extends SearchPanelResults

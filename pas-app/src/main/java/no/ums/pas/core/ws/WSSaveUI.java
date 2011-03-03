@@ -8,7 +8,7 @@ import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
 
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.net.URL;
 

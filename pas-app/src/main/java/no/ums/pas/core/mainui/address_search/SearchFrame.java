@@ -3,8 +3,10 @@ package no.ums.pas.core.mainui.address_search;
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 

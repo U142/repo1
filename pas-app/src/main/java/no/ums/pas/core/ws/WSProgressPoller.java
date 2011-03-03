@@ -9,7 +9,7 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.Component;
 import java.net.URL;
 import java.util.Calendar;
 

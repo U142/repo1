@@ -4,7 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 
 /*

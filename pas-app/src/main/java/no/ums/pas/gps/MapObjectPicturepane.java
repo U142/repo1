@@ -5,8 +5,15 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.webdata.XMLIcons;
 import no.ums.pas.maps.defines.IconObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 

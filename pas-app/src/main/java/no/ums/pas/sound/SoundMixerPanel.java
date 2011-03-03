@@ -4,10 +4,16 @@ package no.ums.pas.sound;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 
 public class SoundMixerPanel extends DefaultPanel implements ChangeListener {

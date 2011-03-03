@@ -3,8 +3,8 @@ package no.ums.pas.gps;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.MapObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import java.awt.BorderLayout;
 
 
 public class MapObjectDlg extends JDialog {

@@ -1,8 +1,9 @@
 package no.ums.pas.ums.tools;
 
-import java.awt.Point;
-import javax.swing.JFrame;
 import no.ums.pas.PAS;
+
+import javax.swing.JFrame;
+import java.awt.Point;
 
 public final class PopupDialog {
 	public synchronized static JFrame get_frame() {

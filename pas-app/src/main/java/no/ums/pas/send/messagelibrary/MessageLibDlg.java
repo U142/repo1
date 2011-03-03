@@ -3,8 +3,11 @@ package no.ums.pas.send.messagelibrary;
 import no.ums.pas.PAS;
 import no.ums.ws.common.UBBMESSAGE;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

@@ -3,8 +3,8 @@ package no.ums.pas.sound;
 import no.ums.pas.PAS;
 
 import javax.sound.sampled.AudioFormat;
-import javax.swing.*;
-
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;

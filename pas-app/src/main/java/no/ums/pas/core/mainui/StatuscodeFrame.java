@@ -4,8 +4,10 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.status.StatusSending;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 

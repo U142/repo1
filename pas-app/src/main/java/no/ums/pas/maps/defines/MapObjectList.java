@@ -4,7 +4,10 @@ import no.ums.pas.PAS;
 import no.ums.pas.gps.GPSCoor;
 import no.ums.pas.ums.tools.TextFormat;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
 

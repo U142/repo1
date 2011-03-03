@@ -9,8 +9,11 @@ import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

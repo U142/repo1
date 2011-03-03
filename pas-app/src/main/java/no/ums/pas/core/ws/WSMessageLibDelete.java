@@ -3,7 +3,6 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.UBBMESSAGE;
-import no.ums.ws.common.UBBMESSAGELISTFILTER;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 

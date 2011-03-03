@@ -2,8 +2,9 @@ package no.ums.pas.ums.tools;
 
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.awt.image.PixelGrabber;
 import java.net.MalformedURLException;
 import java.net.URL;

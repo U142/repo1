@@ -1,7 +1,17 @@
 package no.ums.pas.core.defines;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import java.awt.Component;
+import java.awt.Dimension;
 
 public class ComboRowCellRenderer extends JTable implements ListCellRenderer {
 

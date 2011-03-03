@@ -1,9 +1,13 @@
 package no.ums.pas.tas.statistics;
 
 import no.ums.pas.importer.csv.csvexporter;
-import no.ums.ws.common.*;
 import no.ums.ws.common.ArrayOfULBACOUNTRY;
-import no.ums.ws.pas.tas.*;
+import no.ums.ws.common.ULBACONTINENT;
+import no.ums.ws.common.ULBACOUNTRY;
+import no.ums.ws.common.ULBAFILTERSTATFUNCTION;
+import no.ums.ws.common.ULBAFILTERSTATTIMEUNIT;
+import no.ums.ws.common.ULBASTATISTICSFILTER;
+import no.ums.ws.pas.tas.ArrayOfULBACOUNTRYSTATISTICS;
 import org.jfree.chart.JFreeChart;
 
 import java.awt.event.ActionEvent;

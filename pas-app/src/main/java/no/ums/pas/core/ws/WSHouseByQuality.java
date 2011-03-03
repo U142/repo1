@@ -3,7 +3,11 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.ws.common.ULOGONINFO;
-import no.ums.ws.pas.*;
+import no.ums.ws.pas.ArrayOfUAddress;
+import no.ums.ws.pas.Pasws;
+import no.ums.ws.pas.UAddress;
+import no.ums.ws.pas.UAddressList;
+import no.ums.ws.pas.UMapAddressParamsByQuality;
 
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;

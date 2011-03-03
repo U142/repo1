@@ -2,7 +2,7 @@ package no.ums.pas.pluginbase;
 
 import no.ums.ws.common.USYSTEMMESSAGES;
 
-import javax.swing.*;
+import javax.swing.UIDefaults;
 
 
 /**

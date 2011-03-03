@@ -7,7 +7,8 @@ import no.ums.pas.send.SendController;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.status.StatusSending;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 

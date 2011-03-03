@@ -3,7 +3,7 @@ package no.ums.pas.status;
 import no.ums.pas.PAS;
 import no.ums.ws.common.LBALanguage;
 
-import javax.swing.*;
+import javax.swing.JProgressBar;
 import java.util.ArrayList;
 import java.util.Hashtable;
 

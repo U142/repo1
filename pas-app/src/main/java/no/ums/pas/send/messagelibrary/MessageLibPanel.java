@@ -9,7 +9,7 @@ import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.UBBMESSAGE;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

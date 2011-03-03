@@ -4,7 +4,16 @@ package no.ums.pas;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.ums.errorhandling.Error;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.RenderingHints;
+import java.awt.SystemColor;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 

@@ -2,14 +2,17 @@ package no.ums.pas.importer.gis;
 
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
+
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;

@@ -1,8 +1,8 @@
 package no.ums.pas.send;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.maps.defines.HouseItem;
@@ -16,12 +16,14 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.parm.ArrayOfUGisRecord;
 import no.ums.ws.common.parm.UGISSENDING;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

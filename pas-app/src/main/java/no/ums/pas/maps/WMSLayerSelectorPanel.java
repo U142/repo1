@@ -5,9 +5,10 @@ import no.ums.pas.core.logon.SettingsGUI;
 import no.ums.pas.core.logon.SettingsGUI.WmsLayerTree;
 import org.geotools.data.ows.Layer;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

@@ -12,8 +12,12 @@ import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.FilePicker;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

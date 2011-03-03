@@ -3,7 +3,8 @@ package no.ums.pas.tas.treenodes;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Rectangle;
 
 
 public class CommonTASListItem extends UMSTreeNode

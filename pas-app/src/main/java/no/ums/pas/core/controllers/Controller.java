@@ -17,8 +17,9 @@ import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.send.SendController;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ToolTipManager;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

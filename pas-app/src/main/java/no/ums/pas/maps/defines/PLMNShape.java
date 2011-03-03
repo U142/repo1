@@ -3,7 +3,12 @@ package no.ums.pas.maps.defines;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.List;
 
 public class PLMNShape extends ShapeStruct

@@ -4,9 +4,11 @@ import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 import org.opengis.parameter.ParameterNotFoundException;
 
-import javax.swing.*;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.plaf.InsetsUIResource;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.URL;

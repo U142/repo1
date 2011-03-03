@@ -8,7 +8,7 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.send.SendController;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 public class Variables {
 	

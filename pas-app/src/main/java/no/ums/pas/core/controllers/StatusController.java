@@ -19,20 +19,30 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
-import no.ums.pas.status.*;
+import no.ums.pas.status.LBASEND;
+import no.ums.pas.status.LBATabbedPane;
+import no.ums.pas.status.StatusCode;
+import no.ums.pas.status.StatusCodeList;
+import no.ums.pas.status.StatusItemObject;
+import no.ums.pas.status.StatusSending;
+import no.ums.pas.status.StatusSendingList;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.PopupDialog;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.calendarutils.DateTime;
 
-import javax.swing.*;
-
-import java.awt.*;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 

@@ -6,8 +6,9 @@ import no.ums.pas.core.popupmenus.PUInhabitantList;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.ums.errorhandling.Error;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 

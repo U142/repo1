@@ -2,7 +2,8 @@ package no.ums.pas.status;
 
 import no.ums.pas.core.defines.SearchPanelResults;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
 
 
 public class LBAListCell extends SearchPanelResults

@@ -3,12 +3,17 @@ package no.ums.pas.core.defines.tree;
 import no.ums.pas.ums.tools.UnderlineHighlightPainter;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 
 //import tas.TasPanel.TASTreeTable;
 

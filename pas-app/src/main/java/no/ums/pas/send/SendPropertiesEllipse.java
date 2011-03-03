@@ -14,12 +14,15 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.UMapPoint;
 import no.ums.ws.common.parm.UELLIPSESENDING;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.ObjectFactory;
+import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;

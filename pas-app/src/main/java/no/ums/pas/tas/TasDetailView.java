@@ -10,8 +10,11 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

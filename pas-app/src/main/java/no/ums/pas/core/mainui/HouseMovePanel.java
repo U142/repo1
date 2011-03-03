@@ -21,9 +21,18 @@ import no.ums.ws.pas.ArrayOfString;
 import no.ums.ws.pas.HOUSEEDITOROPERATION;
 import no.ums.ws.pas.UMapAddressParamsByQuality;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 

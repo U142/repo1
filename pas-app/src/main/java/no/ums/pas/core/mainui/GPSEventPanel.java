@@ -7,8 +7,9 @@ import no.ums.pas.gps.GPSEvent;
 import no.ums.pas.gps.GPSEventList;
 import no.ums.pas.gps.GpsSetupReturnCode;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;

@@ -1,7 +1,13 @@
 package no.ums.pas.ums.errorhandling;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.BorderLayout;
+import java.awt.Container;
 
 public class ErrorGUI extends JFrame {
 	public static final long serialVersionUID = 1;

@@ -1,6 +1,8 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.List;
 
 public class UnknownShape extends ShapeStruct {

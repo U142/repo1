@@ -1,11 +1,11 @@
 package no.ums.pas.core.menus;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.swing.UmsAction;
 import no.ums.pas.swing.UmsTimeAction;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

@@ -11,8 +11,10 @@ import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 import no.ums.ws.pas.tas.UTASREQUEST;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.List;
 

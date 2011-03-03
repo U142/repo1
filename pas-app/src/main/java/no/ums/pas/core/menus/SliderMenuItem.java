@@ -3,14 +3,13 @@ package no.ums.pas.core.menus;
 import no.ums.pas.PAS;
 import no.ums.pas.core.events.EventClass;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.Dimension;
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 
 public class SliderMenuItem extends JSlider {//implements MenuElement {

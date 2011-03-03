@@ -4,8 +4,8 @@ import no.ums.pas.PAS;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.swing.UmsAction;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Action;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
 /**

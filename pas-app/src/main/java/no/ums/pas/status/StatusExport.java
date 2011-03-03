@@ -7,11 +7,11 @@ import no.ums.pas.core.project.Project;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.ums.tools.FilePicker;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Iterator;
 
 

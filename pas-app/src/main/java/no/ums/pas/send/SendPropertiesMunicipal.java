@@ -1,8 +1,8 @@
 package no.ums.pas.send;
 
 import no.ums.pas.PAS;
-import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.Variables;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.MunicipalStruct;
@@ -14,14 +14,15 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UMapBounds;
 import no.ums.ws.common.UMunicipalDef;
 import no.ums.ws.common.parm.ArrayOfUMunicipalDef;
-import no.ums.ws.common.parm.UMAPSENDING;
 import no.ums.ws.common.parm.UMUNICIPALSENDING;
-import no.ums.ws.parm.*;
+import no.ums.ws.parm.ExecResponse;
+import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;

@@ -5,8 +5,10 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.USMSINSTATS;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

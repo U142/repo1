@@ -3,7 +3,7 @@ package no.ums.pas.importer.csv;
 import no.ums.pas.importer.gis.LineData;
 import no.ums.pas.ums.tools.FilePicker;
 
-import java.awt.*;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;

@@ -12,13 +12,17 @@ package no.ums.pas.core.controllers;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.webdata.XMLGps;
-import no.ums.pas.gps.*;
+import no.ums.pas.gps.GPSCmd;
+import no.ums.pas.gps.GPSCoor;
+import no.ums.pas.gps.GPSEventList;
+import no.ums.pas.gps.GpsSetupReturnCode;
+import no.ums.pas.gps.MapObjectDlg;
 import no.ums.pas.maps.defines.MapObject;
 import no.ums.pas.maps.defines.MapObjectList;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Utils;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 

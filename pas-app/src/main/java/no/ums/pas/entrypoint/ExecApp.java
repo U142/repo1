@@ -5,11 +5,10 @@ import no.ums.log.swing.LogRecordCollector;
 import no.ums.pas.PAS;
 import no.ums.pas.pluginbase.DefaultPasScripting;
 import no.ums.pas.pluginbase.PasScriptingInterface;
-import no.ums.pas.versioning.VersionInfo;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.net.URL;
 import java.util.ServiceLoader;
 import java.util.SortedSet;

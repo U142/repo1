@@ -1,13 +1,22 @@
 package no.ums.pas.parm.tree;
 
-import no.ums.pas.parm.voobjects.*;
+import no.ums.pas.parm.voobjects.AlertVO;
+import no.ums.pas.parm.voobjects.CategoryVO;
+import no.ums.pas.parm.voobjects.EventVO;
+import no.ums.pas.parm.voobjects.ObjectVO;
+import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.ums.tools.ImageLoader;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Image;
 
 //Substance 3.3
 

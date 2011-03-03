@@ -5,8 +5,9 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.SearchPanelStatusList;
 import no.ums.pas.status.StatusListObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JMenuItem;
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -8,7 +8,7 @@ import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import org.w3c.dom.Document;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
 

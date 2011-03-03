@@ -1,6 +1,8 @@
 package no.ums.pas.core.menus.defines;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JToolTip;
 
 /*class ToolTipMng extends ToolTipManager
 {

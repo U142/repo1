@@ -8,7 +8,9 @@ import no.ums.pas.tas.treenodes.CountryListItem;
 import no.ums.pas.tas.treenodes.RequestLogItem;
 import no.ums.ws.pas.tas.ENUMTASREQUESTRESULTTYPE;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;

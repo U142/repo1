@@ -29,14 +29,22 @@ import no.ums.pas.send.SendOptionToolbar;
 import no.ums.ws.pas.UGabSearchResultList;
 import org.geotools.data.ows.Layer;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Ståle Undheim <su@ums.no>

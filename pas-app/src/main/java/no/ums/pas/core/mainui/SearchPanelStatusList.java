@@ -7,8 +7,9 @@ import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 
 

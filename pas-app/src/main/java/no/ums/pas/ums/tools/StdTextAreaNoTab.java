@@ -1,7 +1,9 @@
 package no.ums.pas.ums.tools;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextArea;
+import java.awt.AWTKeyStroke;
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

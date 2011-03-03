@@ -12,16 +12,31 @@ import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.*;
+import no.ums.pas.ums.tools.CoorConverter;
+import no.ums.pas.ums.tools.ImageLoader;
+import no.ums.pas.ums.tools.StdIntegerArea;
+import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.StdTextUTMZone;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker;
 import no.ums.ws.pas.UWeatherSearch;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.util.regex.Pattern;
 
 //import Core.WebData.XMLWeatherData;
 

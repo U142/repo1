@@ -1,6 +1,6 @@
 package no.ums.pas.maps.defines;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 public class MapPointPix {
 	private Dimension m_dim;
