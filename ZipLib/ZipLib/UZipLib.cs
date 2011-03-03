@@ -67,18 +67,11 @@ namespace com.ums.ZipLib
 
         public void AddTextAsZipFileEntry(String zipEntryName, String text, Encoding enc)
         {
-            try
-            {
-                Byte[] str_encoded = enc.GetBytes(text);
-                int l1 = (int)str_encoded.Length;
-                sbyte[] sb1 = new sbyte[l1];
-                Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
-                writeZipFileEntry(zos, zipEntryName, sb1);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            Byte[] str_encoded = enc.GetBytes(text);
+            int l1 = (int)str_encoded.Length;
+            sbyte[] sb1 = new sbyte[l1];
+            Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
+            writeZipFileEntry(zos, zipEntryName, sb1);
         }
 
         public void finalize()

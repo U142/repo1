@@ -86,15 +86,9 @@ namespace com.ums.UmsDbLib
         {
             sz_constring = String.Format("DSN={0}; UID={1}; PWD={2}", sz_dsn, sz_uid, sz_password);
             this.timeout = timeout;
-            try
-            {
-                init();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            init();
         }
+
         public UmsDb() : this(UCommon.UBBDATABASE.sz_dsn, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd, 120)
         {
             
