@@ -28,7 +28,7 @@ public class SliderMenuItem extends JSlider {//implements MenuElement {
         setMinorTickSpacing(n_minor);
         this.setPaintLabels(b_showlegend);
         //this.setBackground(Color.lightGray);
-        Dictionary labelTable = new Hashtable<Integer, JLabel>();
+        Dictionary<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         this.setPaintTicks(b_showticks);
         this.setPreferredSize(size);
         if(b_showlegend)

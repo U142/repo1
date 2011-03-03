@@ -51,6 +51,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 
 public class SendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
@@ -1413,9 +1414,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			import_polygon();
 		}
 		else if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
-			ArrayList sendings_found = (ArrayList)e.getSource();
+			@SuppressWarnings("unchecked")
+			List<SendObject> sendings_found = (List<SendObject>)e.getSource();
 			for(int i=0; i < sendings_found.size(); i++) {
-				SendObject obj = (SendObject)sendings_found.get(i);
+				SendObject obj = sendings_found.get(i);
 				if(obj==null)
 					continue;
 				if(obj.get_sendproperties()==null)

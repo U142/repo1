@@ -408,64 +408,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			e.printStackTrace();
 		}
 	}
-	
-	//Substance 3.3
-	/*public void setSubstanceTheme(SubstanceTheme substance) {
-		//SubstanceLookAndFeel.setCurrentSkin(substance);
-		try {
-			SubstanceLookAndFeel.setCurrentTheme(substance);
-			UIManager.setLookAndFeel(get_lookandfeel());//new SubstanceBusinessBlackSteelLookAndFeel()); //get_lookandfeel());
-		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Exception in setSubstanceTheme", e, Error.SEVERITY_WARNING);
-		}
-		updateUI();
-	}*/
-	
-	//Substance 5.2
-	/*public void setSubstanceTheme(SubstanceColorSchemeBundle cols) {
-		
-	}*/
-	
-	/*public void setSubstanceTheme(String sz_name) {
-		//Substance 3.3
-		SubstanceLookAndFeel.setCurrentTheme(sz_name);
-		
-		//Substance 5.2
-		//SubstanceLookAndFeel.setSkin(sz_name);
-		
-		try {
-			UIManager.setLookAndFeel(get_lookandfeel());
-		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Exception in setSubstanceTheme", e, Error.SEVERITY_WARNING);
-		}
-		updateUI(); 
-	}
-	public void setSubstanceSkin(final String sz_skinname)
-	{
-		SwingUtilities.invokeLater(new Runnable() { 
-			public void run()
-			{
-				try
-				{
-					UIManager.setLookAndFeel(sz_skinname);
-				}
-				catch(Exception e)
-				{
-					
-				}
-				updateUI();
-			}
-		});
-	}*/
-	private void updateUI() {
-		SwingUtilities.updateComponentTreeUI(getRootPane());
-		repaint();
-	}
-	
+
 	public PAS() {
-		super();
-		//this("https://secure.ums.no/vb4/", "", "", "", false, null, null, null, null);
-		//init();
 		m_pas = this;
 		g_pas = this;
 	}
@@ -598,34 +542,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	private void powerUp()
 	{
-		
-	
-		
-		
+
 		try
 		{
-			
 			new Thread("PAS powerUp thread") {
 	    		public void run()
 	    		{
-	    			
-	    			/*try
-	    			{
-	    				if(sz_script_class!=null)
-	    				{
-	    					pasplugin = PluginLoader.loadPlugin(get_codebase(), sz_script_class, no.ums.pas.pluginbase.PluginLoader.FILETYPE.JAR);
-	    				}
-	    			}
-	    			catch(Exception e)
-	    			{
-	    				pasplugin = null;
-	    				Error.getError().addError("Failed to load plugin", "Could not load the plugin \"" + sz_script_class + "\"", e, Error.SEVERITY_ERROR);
-	    				e.printStackTrace();
-	    			}
-	    			if(pasplugin==null)
-	    			{
-	    				pasplugin = new PAS_Scripting(); //go default
-	    			}	*/
 	    			pasplugin.onLoadSecurityManager();
 	    			createGUI();
 	    			
@@ -770,45 +692,19 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			System.out.println("HOMEPATH: Error, no path found for writing");
 		//vars.init(m_sz_sitename + "/ExecAlert/WS/");
 		vars.init(this.get_pasws());
-		//check home path
-		
-		
-		//m_sz_maintitle = PAS.l("common_app_title") + " - " + m_sz_sitename;
-		//this.setTitle(m_sz_maintitle); //+ m_sz_sitename);
-		String sz_screenX, sz_screenY;
-		int scr_x = 1280; int scr_y = 1024;
-		Dimension dim_screen;
-		sz_screenX = null;//this.getParameter("screenX");
-		sz_screenY = null;//this.getParameter("screenY");
-		if(sz_screenX==null || sz_screenY==null) {
-			dim_screen = new Dimension(scr_x, scr_y);
-		} else {
-			scr_x = new Integer(sz_screenX).intValue();
-			scr_y = new Integer(sz_screenY).intValue();
-			dim_screen = new Dimension(scr_x, scr_y);
-		}		
+
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		dim_screen = screenSize;
-		scr_x = screenSize.width-10;
-		scr_y = screenSize.height-100;
-		dim_map = new Dimension(scr_x, scr_y);
+		dim_map = new Dimension(screenSize.width-10, screenSize.height-100);
 		try
 		{
-			//SwingUtilities.invokeLater(new Runnable() {
-			//	public void run()
-				{
-					m_mapproperties = new MapitemProperties();
-					m_sendcontroller = new SendController(PAS.get_pas());
-					Variables.setSendController(m_sendcontroller);
-				
-					m_drawthread = new PASDraw(PAS.get_pas(), PAS.get_pas(), Thread.NORM_PRIORITY, dim_map.width, dim_map.height);
-					Variables.setDraw(m_drawthread);
-					m_navigation = new Navigation(PAS.get_pas().get_pasactionlistener(), dim_map.width, dim_map.height);
-					Variables.setNavigation(m_navigation);
-					//m_httpreq = new HTTPReq(get_sitename(), get_navigation());
-					
-				}
-			//});
+            m_mapproperties = new MapitemProperties();
+            m_sendcontroller = new SendController(PAS.get_pas());
+            Variables.setSendController(m_sendcontroller);
+
+            m_drawthread = new PASDraw(PAS.get_pas(), PAS.get_pas(), Thread.NORM_PRIORITY, dim_map.width, dim_map.height);
+            Variables.setDraw(m_drawthread);
+            m_navigation = new Navigation(PAS.get_pas().get_pasactionlistener(), dim_map.width, dim_map.height);
+            Variables.setNavigation(m_navigation);
 		} catch(Exception e)
 		{
 			

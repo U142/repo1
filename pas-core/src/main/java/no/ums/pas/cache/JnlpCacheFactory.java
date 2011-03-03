@@ -37,10 +37,10 @@ public class JnlpCacheFactory implements CacheFactory {
         }
     }
 
-    private final Map<CacheHandlerKey, Cache> caches = new MapMaker().makeComputingMap(new Function<CacheHandlerKey, Cache>() {
+    private final Map<CacheHandlerKey<?, ?>, Cache<?, ?>> caches = new MapMaker().makeComputingMap(new Function<CacheHandlerKey<?, ?>, Cache<?, ?>>() {
         @Override
         @SuppressWarnings("unchecked")
-        public Cache apply(@Nullable final CacheHandlerKey input) {
+        public Cache<?, ?> apply(@Nullable final CacheHandlerKey<?, ?> input) {
             return new JnlpCache(input.cacheHandler);
         }
     });

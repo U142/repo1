@@ -41,18 +41,18 @@ public class CentricEastContent extends EastContent
 	@Override
 	protected void tabChanged()
 	{
-		Class c = m_tabbedpane.getSelectedComponent().getClass();
-		if(c.equals(CentricSendOptionToolbar.class))
+		if(m_tabbedpane.getSelectedComponent() instanceof CentricSendOptionToolbar)
 		{
 			setCurrentPanel(PANEL_CENTRICSEND_);
 		}
-		else if(c.equals(CentricStatus.class))
+		else if(m_tabbedpane.getSelectedComponent() instanceof CentricStatus)
 		{
 			setCurrentPanel(PANEL_CENTRICSTATUS_);
 		}
-		else
+		else {
 			//check the rest
 			super.tabChanged();
+		}
 		PAS.pasplugin.onEastContentTabClicked(CentricEastContent.this, m_tabbedpane);
 	}
 	

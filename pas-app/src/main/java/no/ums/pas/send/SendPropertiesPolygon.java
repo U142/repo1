@@ -74,14 +74,8 @@ public class SendPropertiesPolygon extends SendProperties {
 		return get_shapestruct().get_fill_color();
 	}
 	public PolySnapStruct snap_to_point(Point p1, int n_max_distance) {
-		Point p2 = null;
-		PolySnapStruct snapat = null;
-		long n_distance = 0;
-		boolean b_current = false;
-		if(get_sendobject().isActive())
-			b_current = true;
-		snapat = get_shapestruct().snap_to_point(p1, n_max_distance, b_current, get_pas().get_mapsize(), get_pas().get_navigation());
-		return snapat;
+		boolean b_current = get_sendobject().isActive();
+		return get_shapestruct().snap_to_point(p1, n_max_distance, b_current, get_pas().get_mapsize(), get_pas().get_navigation());
 	}
 	public boolean create_paramvals() {
 		try {			
@@ -90,8 +84,7 @@ public class SendPropertiesPolygon extends SendProperties {
 			sz_polygon_params[0]	= "n_polypoints";
 			sz_polygon_vals[0]		= Integer.toString(_get_shapestruct().get_show_size());
 			double lon, lat;
-			int i;
-			for(i=1; i < (_get_shapestruct().get_show_size()) + 1; i++) {
+			for(int i=1; i <= (_get_shapestruct().get_show_size()); i++) {
 				sz_polygon_params[i]	= "p" + (i-1);
 				lon = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lon().get(i - 1) * 1000000.0)) / 1000000.0;
 				lat = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lat().get(i - 1) * 1000000.0)) / 1000000.0;
@@ -112,7 +105,6 @@ public class SendPropertiesPolygon extends SendProperties {
 	protected final boolean send() {
 
 		try {
-			ObjectFactory factory = new ObjectFactory();
 			ULOGONINFO logon = new ULOGONINFO();
 			UPOLYGONSENDING poly = new UPOLYGONSENDING();
 			UMapBounds bounds = new UMapBounds();
@@ -194,8 +186,8 @@ public class SendPropertiesPolygon extends SendProperties {
 			try {
 				MapPointPix p1 = new MapPointPix(get_shapestruct().typecast_polygon().get_pix_int_x()[_get_shapestruct().get_size()-1], _get_shapestruct().get_pix_int_y()[_get_shapestruct().get_size()-1]);
 				MapPointPix p2 = new MapPointPix(lastpoint.x, lastpoint.y);
-				Long n_dist = new Long(get_pas().get_navigation().calc_distance(p1, p2));				
-				String sz_distance = n_dist.longValue() + "m";
+				long n_dist = get_pas().get_navigation().calc_distance(p1, p2);
+				String sz_distance = n_dist + "m";
 				g.setColor(new Color((float)0.2, (float)0.2, (float)0.2, (float)1.0));
 				g.drawLine(_get_shapestruct().get_pix_int_x()[_get_shapestruct().get_size()-1], _get_shapestruct().get_pix_int_y()[_get_shapestruct().get_size()-1], lastpoint.x, lastpoint.y);
 				g.drawString(sz_distance, lastpoint.x + 10, lastpoint.y);

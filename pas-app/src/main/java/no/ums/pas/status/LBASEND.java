@@ -13,16 +13,6 @@ import java.util.Hashtable;
 public class LBASEND
 {
 	
-	public class LBASEND_TS_LIST extends ArrayList implements Comparable<LBASEND_TS>
-	{
-
-		@Override
-		public int compareTo(LBASEND_TS o) {
-			return 0;
-		}
-		
-	}
-	
 	//timestamp class for statuscodes
 	public class LBASEND_TS implements Comparable<LBASEND_TS>
 	{

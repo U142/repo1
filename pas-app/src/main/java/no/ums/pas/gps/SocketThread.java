@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -95,8 +96,8 @@ public class SocketThread extends Thread implements ActionListener {
 
 
 	public class WriteThread extends Thread {
-		ArrayList m_msgqueue;
-		private synchronized ArrayList get_msgqueue() { return m_msgqueue; }
+		private final List<GPSCmd> m_msgqueue = new ArrayList<GPSCmd>();
+		private synchronized List<GPSCmd> get_msgqueue() { return m_msgqueue; }
 		//public void add_to_msgqueue(String sz_cmd) { get_msgqueue().add(sz_cmd); }
 		public void add_to_msgqueue(GPSCmd cmd) { get_msgqueue().add(cmd); }
 		private GPSCmd m_current_cmd = null;
@@ -109,9 +110,6 @@ public class SocketThread extends Thread implements ActionListener {
 			get_current_cmd().set_isanswered();
 		}
 		
-		public WriteThread() {
-			m_msgqueue = new ArrayList();
-		}
 		public void run() {
 			System.out.println("Write thread started");
 			int n_timer = 0;

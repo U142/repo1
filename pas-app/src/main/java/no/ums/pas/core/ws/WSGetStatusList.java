@@ -42,51 +42,27 @@ public class WSGetStatusList extends WSThread
 	public void call() throws Exception {
 		ULOGONINFO logon = new ULOGONINFO();
 		WSFillLogoninfo.fill(logon, PAS.get_pas().get_userinfo());
-		try
-		{
-			URL wsdl = new URL(vars.WSDL_PASSTATUS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PasStatus.asmx?WSDL");
-			//URL wsdl = new URL("http://localhost/WS/PasStatus.asmx?WSDL");
-			QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
-			//new ParmAdmin(wsdl, service).getParmAdminSoap12().updateParm(bytes, logon, xmlFilename, polyFileName)
-			UDATAFILTER filter = UDATAFILTER.NONE;
-			if(PAS.TRAINING_MODE)
-				filter = UDATAFILTER.BY_SIMULATION;
-			else
-				filter = UDATAFILTER.BY_LIVE;
-			UStatusListResults response = new PasStatus(wsdl, service).getPasStatusSoap12().getStatusListFiltered(logon, filter);
-			m_arr_statusobjects = new ArrayList<StatusListObject>();
-			
-			for(int i=0; i < response.getList().getUStatusListItem().size(); i++)
-			{
-				UStatusListItem item = response.getList().getUStatusListItem().get(i);
-				StatusListObject obj = new StatusListObject(item.getNRefno(), item.getNSendingtype(), item.getNTotitem(), 
-						item.getNAltjmp(), item.getNCreatedate(), item.getNCreatetime(), item.getSzSendingname(),
-						item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
-						item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
-                        Long.toString(item.getNUpdatetimestamp()));
-				m_arr_statusobjects.add(obj);
-			}
-			//onDownloadFinished();
-		}
-		catch(Exception e)
-		{
-			throw e;
-		}
-		/*catch(SOAPFaultException e)
-		{
-			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"), "Unable to open statuslist", e, Error.SEVERITY_ERROR);
-			PAS.pasplugin.onSoapFaultException(e);
-		}
-		catch(Exception e)
-		{
-			Error.getError().addError(PAS.l("common_error"), "Unable to open statuslist", e, Error.SEVERITY_ERROR);			
-		}
-		finally
-		{
-			onDownloadFinished();
-		}*/
-		
+        URL wsdl = new URL(vars.WSDL_PASSTATUS);
+        QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
+
+        final UDATAFILTER filter;
+        if(PAS.TRAINING_MODE)
+            filter = UDATAFILTER.BY_SIMULATION;
+        else
+            filter = UDATAFILTER.BY_LIVE;
+        UStatusListResults response = new PasStatus(wsdl, service).getPasStatusSoap12().getStatusListFiltered(logon, filter);
+        m_arr_statusobjects = new ArrayList<StatusListObject>();
+
+        for(int i=0; i < response.getList().getUStatusListItem().size(); i++)
+        {
+            UStatusListItem item = response.getList().getUStatusListItem().get(i);
+            StatusListObject obj = new StatusListObject(item.getNRefno(), item.getNSendingtype(), item.getNTotitem(),
+                    item.getNAltjmp(), item.getNCreatedate(), item.getNCreatetime(), item.getSzSendingname(),
+                    item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
+                    item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
+                    Long.toString(item.getNUpdatetimestamp()));
+            m_arr_statusobjects.add(obj);
+        }
 	}
 
 	@Override

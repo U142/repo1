@@ -149,10 +149,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		}
 		if(results.getList()==null || results.getList().getUGabResult()==null)
 			return false;
-		java.util.Iterator it = results.getList().getUGabResult().iterator();
-		while(it.hasNext())
-		{
-			UGabResult result = (UGabResult)it.next();
+		for (UGabResult result : results.getList().getUGabResult()) {
 			Object[] obj_insert = { result, result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
 			list.insert_row(obj_insert, -1);
 		}

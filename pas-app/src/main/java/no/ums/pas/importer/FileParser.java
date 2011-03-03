@@ -66,7 +66,7 @@ public abstract class FileParser extends Thread {
 			else
 				br = new BufferedReader(new InputStreamReader(m_dis));
 			
-			while(1==1) {
+			for(;;) {
 				sz_line = br.readLine();
 				if(sz_line==null)
 					break;
