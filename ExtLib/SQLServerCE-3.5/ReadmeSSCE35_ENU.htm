@@ -1,0 +1,1127 @@
+﻿<html DIR="LTR" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8" />
+    <META NAME="save" CONTENT="history" />
+    <title>Readme for Microsoft SQL Server Compact 3.5</title>
+    
+    
+    
+    <style TYPE="text/css">
+body
+{
+background: #FFFFFF;
+color: #000000;
+font-family:    Verdana;
+font-size: medium;
+font-style: normal;
+font-weight: normal;
+margin-top: 0;
+margin-bottom:  0;
+margin-left:    0;
+margin-right:   0;
+width:  100%;
+}
+
+div.#mainSection
+{
+font-size: 70%;
+width: 100%;
+padding-left:    10;
+margin-right: 10;
+}
+
+div.#mainBody
+{
+font-size: 90%;
+margin-top: 10;
+padding-bottom: 20;
+}
+
+div.#header
+{
+background-color: #D2D2D2;
+padding-top:    0;
+padding-bottom: 0;
+padding-left:   10;
+padding-right:  0;
+width:          100%;
+}
+
+div.#header table
+{
+border-bottom-color: #C8CDDE;
+border-bottom-style: solid;
+border-bottom-width: 1;
+width:  100%;
+}
+
+span.#runningHeaderText
+{
+color: #003399;
+font-size: 90%;
+}
+
+span.#nsrTitle
+{
+/*    color: #003399;*/
+font-size: 120%;
+font-weight: 600;
+}
+
+div.#header table td
+{
+color: #000000;
+font-size: 70%;
+margin-top: 0;
+margin-bottom:  0;
+padding-right: 20;
+}
+
+div.#header table tr.#headerTableRow3 td
+{
+padding-bottom: 2;
+padding-top: 5;
+}
+
+div.#header table.#bottomTable
+{
+border-top-color: #FFFFFF;
+border-top-style: solid;
+border-top-width: 1;
+text-align: left;
+}
+
+div.#footer
+{
+font-size: 90%;
+margin-top: 0;
+margin-bottom:  0;
+margin-left:    -5;
+margin-right:   0;
+padding-top:    2;
+padding-bottom: 2;
+padding-left:   0;
+padding-right:  0;
+width:  100%;
+}
+
+hr.#footerHR
+{
+border-bottom-color: #EEEEFF;
+border-bottom-style: solid;
+border-bottom-width: 1;
+border-top-color: C8CDDE;
+border-top-style: solid;
+border-top-width: 1;
+height: 3;
+color: #D2D2D2;
+}
+
+div.section
+{
+padding-top:    2;
+padding-bottom: 2;
+padding-right:  15;
+width:  100%;
+}
+
+.heading
+{
+color:          #000000;
+font-weight:    bold;
+margin-top:     18;
+margin-bottom:  8;
+}
+
+h1.heading
+{
+color: #000000;
+font-size:  150%;
+}
+
+.subHeading
+{
+color:          #000000;
+font-weight:    bold;
+font-size:      150%;
+margin-bottom:  4;
+}
+
+h2.subHeading
+{
+color:          #000000;
+font-weight:    bold;
+font-size:      130%;
+}
+h3.subHeading
+{
+color:  #000000;
+font-size: 125%;
+font-weight: bold;
+}
+
+h4.subHeading
+{
+color: #000000;
+font-size: 110%;
+font-weight: bold;
+}
+
+h4.procedureHeading
+{
+color: #000080;
+font-size: 110%;
+font-weight: bold;
+}
+
+h5.subHeading
+{
+color: #000000;
+font-size: 100%;
+font-weight: bold;
+}
+
+img
+{
+padding-bottom: 10;
+}
+
+img.toggle
+{
+border: 0;
+margin-right: 5;
+padding-bottom: 10;
+}
+
+img.copyCodeImage
+{
+border: 0;
+margin: 1;
+margin-right: 3;
+padding-bottom: 10;
+}
+
+img.downloadCodeImage
+{
+border: 0;
+margin-right: 3;
+padding-bottom: 10;
+}
+
+img.viewCodeImage
+{
+border: 0;
+margin-right: 3;
+padding-bottom: 10;
+}
+
+img.note
+{
+border: 0;
+margin-right: 3;
+padding-bottom: 10;
+}
+
+img.#membersOptionsFilterImage
+{
+border: 0;
+margin-left: 10;
+vertical-align: middle;
+padding-bottom: 10;
+}
+
+img.#toggleAllImage
+{
+margin-left: 4;
+vertical-align: middle;
+padding-bottom: 10;
+}
+
+div.#mainSection table
+{
+border: 0;
+font-size: 100%;
+width:  100%;
+margin-top: 5px;
+margin-bottom: 15px;
+}
+
+div.#mainSection table tr
+{
+vertical-align: top;
+}
+
+div.#mainSection table th
+{
+text-align: left;
+background: #D8D8D8;
+border-bottom-color: #D8D8D8;
+border-bottom-style: solid;
+border-bottom-width: 1;
+color: #000000;
+padding-left: 5;
+padding-right: 5;
+}
+
+div.#mainSection table td
+{
+background: #F2F2F2;
+border-top-color: #D8D8D8;
+border-top-style: solid;
+border-top-width: 1;
+padding-left: 5;
+padding-right: 5;
+}
+
+div.#mainSection table td.imageCell
+{
+white-space: nowrap;
+}
+
+div.code
+{
+width: 98%;
+}
+
+div.code table
+{
+border: 0;
+font-size: 95%;
+margin-bottom: 5;
+width: 100%
+}
+
+div.code table th
+{
+text-align: left;
+background: #D8D8D8;
+border-bottom-color: #D8D8D8;
+border-bottom-style: solid;
+border-bottom-width: 1;
+color: #000000;
+font-weight: bold;
+padding-left: 5;
+padding-right: 5;
+}
+
+div.code table td
+{
+background: #CCCCCC;
+border-top-color: #D8D8D8;
+border-top-style: solid;
+border-top-width: 1;
+padding-left: 5;
+padding-right: 5;
+padding-top: 5;
+}
+
+div.alert
+{
+margin-left: 10;
+width: 98%;
+}
+
+div.alert table
+{
+border: 1;
+font-size: 100%;
+width:  100%;
+border: solid 1 #DEDFEF;
+}
+
+div.alert table th
+{
+text-align: left;
+background: #D8D8D8;
+border-bottom-width: 0;
+color: #000000;
+padding-left: 5;
+padding-right: 5;
+border: solid 1 #DEDFEF;
+}
+
+div.alert table td
+{
+background: #FFFFFF;
+border-top-color: #D8D8D8;
+border-top-style: solid;
+border-top-width: 1;
+padding-left: 5;
+padding-right: 5;
+border: solid 1 #DEDFEF;
+}
+
+span.copyCode
+{
+color: #0000ff;
+font-size: 90%;
+font-weight: normal;
+cursor: hand;
+float: right;
+display: inline;
+text-align: right;
+}
+
+.downloadCode
+{
+color: #0000ff;
+font-size: 90%;
+font-weight: normal;
+cursor: hand;
+}
+
+.viewCode
+{
+color: #0000ff;
+font-size: 90%;
+font-weight: normal;
+cursor: hand;
+}
+
+div.code pre
+{
+font-family:    Monospace, Courier New, Courier;
+font-size: 105%;
+color:  #000000;
+}
+
+code
+{
+font-family:    Monospace, Courier New, Courier;
+font-size: 105%;
+color:  #000000;
+}
+
+dl
+{
+margin-top: 0;
+padding-left:   1;
+}
+
+dd
+{
+margin-bottom:  0;
+margin-left:    0;
+padding-left:   20;
+}
+
+dd p
+{
+margin-top: 5;
+}
+
+ul
+{
+margin-left: 17;
+list-style-type: disc;
+}
+
+ul ul
+{
+margin-bottom: 4;
+margin-left: 17;
+margin-top: 3;
+list-style-type: disc;
+}
+
+ol
+{
+margin-left: 24;
+list-style-type: decimal;
+}
+
+ol ol
+{
+margin-left: 24;
+margin-top: 3;
+list-style-type: lower-alpha;
+}
+
+li
+{
+margin-top: 0;
+margin-bottom: 0;
+padding-bottom: 0;
+padding-top: 0;
+margin-left: 5;
+}
+
+p
+{
+margin-bottom: 15;
+}
+
+.tip
+{
+color:  #0000FF;
+font-style: italic;
+cursor:hand;
+text-decoration:underline;
+}
+
+.math
+{
+font-family: Times New Roman;
+font-size: 125%
+}
+.sourceCodeList
+{
+font-family: Verdana;
+font-size: 90%;
+}
+
+pre.viewCode
+{
+width: 100%;
+overflow: auto;
+}
+
+li:hover table, li.over table
+{
+background-color: #C0C0C0;
+}
+
+li:hover ul, li.over ul
+{
+background-color: #d2d2d2;
+border: 1px solid #000;
+display: block;
+}
+            </style>
+  </head>
+  <body>
+    <!--Topic built:08/17/2007 15:21:03-->
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div id="header">
+      <table width="100%" id="topTable"><tr>
+          <td align="left">
+            <span id="nsrTitle">Readme for Microsoft SQL Server Compact 3.5</span>
+          </td>
+          <td align="right">
+            <span id="headfb" class="feedbackhead">
+            </span>
+          </td>
+        </tr></table>
+      
+      
+      
+    </div>
+    <div id="mainSection">
+      <div id="mainBody"><p> 8/17/2007 3:21:03 PM</p>
+        
+        <font color="DarkGray"></font><p /> 
+        <span id="changeHistory">
+        </span>
+    <p>The most up-to-date version of this file is available online at the <a href="http://go.microsoft.com/fwlink/?LinkId=79942" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>.</p>
+    <table width="100%" cellspacing="0" cellpadding="0" border="1" style="background-color: #CCCCCC;"><tr>
+        <td>
+          <p>The SQL Server documentation team welcomes your <a href="mailto:sqldocfb@microsoft.com?subject=SQL%20Server%20Compact%20Edition%203.5%20readme%20file(\1:SQL\2:09.01.0000.00\3:SQLEv_CTP\4:readme_mobile\5:ReadmeSQLEW2005.htm\6:\7:h\8:en-us\9:2006)&amp;body=---Please%20type%20comments%20here,%20leaving%20the%20subject%20line%20in%20place.---" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">documentation feedback</linkText></a>. We view and investigate all documentation issues but do not answer technical support questions here. For help with technical issues not related to documentation, see <a href="http://go.microsoft.com/fwlink/?LinkId=77373" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Getting Assistance with SQL Server Compact </linkText></a>. If it is possible, submit feedback to us in English.</p>
+        </td>
+      </tr></table>
+  <a name="_contents_ar5q" /><h1 class="heading">Contents</h1><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">
+        <a href="#_1460_introduction_d3jb">1.0 Introduction</a>
+      </p>
+      <p xmlns="">    <a href="#newfeatures">1.1 New Features in SQL Server Compact 3.5</a></p>
+      <p xmlns="">    <a href="#devtools">1.2 Obtaining SQL Server Compact 3.5 </a></p>
+      <p xmlns="">    <a href="#_1462_additional_information_about_sql_mo_ar5q">1.3 SQL Server Compact 3.5 Books Online</a></p>
+      <p xmlns="">    <a href="#adonet">1.4 Microsoft Synchronization Services for ADO.NET</a></p>
+      <p xmlns="">
+        <a href="#install">2.0 Installing and Uninstalling SQL Server Compact 3.5 </a>
+      </p>
+      <p xmlns="">
+        <a href="#_supported_platforms_2y0t">3.0 Supported Operating Systems and Platforms for SQL Server Compact 3.5 </a>
+      </p>
+      <p xmlns="">
+        <a href="#_sql_mobile_desktop_development_support_i_0a8g">4.0 Deploying SQL Server Compact 3.5 Applications</a>
+      </p>
+      <p xmlns="">
+        <a href="#knownissues">5.0 Known Issues</a>
+      </p>
+      <p xmlns="">
+        <a href="#_4460_documentation_notes_2y0t">6.0 Additional Information</a>
+      </p>
+      <p xmlns="">    <a href="#gettingassistance">6.1 Getting SQL Server Compact 3.5 Assistance</a></p>
+      <p xmlns="">    <a href="#provfedback">6.2 Providing Feedback on SQL Server Compact 3.5</a></p>
+      <p xmlns="">
+        <a href="#_contents_ar5q">[Top]</a>
+      </p>
+    </content></div><a name="_1460_introduction_d3jb" /><h1 class="heading">1.0 Introduction</h1><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">
+        Microsoft® SQL Server™ Compact 3.5 is the next version of SQL Server Compact Edition (version 3.1). This product includes the following versions.</p>
+      <ol xmlns=""><li>
+          Version 3.5: Microsoft SQL Server Compact 3.5<br />
+        </li><li>
+          Version 3.1: Microsoft SQL Server 2005 Compact Edition (SQL Server Compact Edition)<br />
+        </li><li>
+          Version 3.0: Microsoft SQL Server 2005 Mobile Edition (SQL Server Mobile)<br />
+        </li><li>
+          Version 2.0: Microsoft SQL Server 2000 Windows CE Edition 2.0 (SQL Server CE)<br />
+        </li></ol>
+      <p xmlns="">
+        SQL Server Compact 3.5 can be deployed on Windows desktop computers, and on Windows Mobile devices. The development support for SQL Server Compact 3.5 is provided by Visual Studio 2008. Database administration support will be provided by SQL Server 2008. SQL Server Compact 3.5 components are available in Microsoft Windows Installer (.msi) files as follows:</p>
+      <ul xmlns=""><li>
+          
+            SQL Server Compact 3.5 Design Tools (SSCEVSTools-ENU.msi): This file installs the SQL Server Compact 3.5 design-time components with Visual Studio 2008. The design-time components are the user interface, dialog boxes, and design-time environment, which are used to write applications for SQL Server Compact 3.5. The SQL Server Compact 3.5 design-time components include design-time environment dialogs under the Server Explorer to design applications that use SQL Server Compact 3.5. SQL Server Compact 3.5 header files (for native development) are installed under %Program Files%\Microsoft SQL Server Compact Edition\v3.5\Include. <br />
+        </li><li>
+          
+            SQL Server Compact 3.5 (SSCERuntime-ENU.msi): This file installs the SQL Server Compact 3.5 runtime components for desktop computers in a central folder: %Program Files%\Microsoft SQL Server Compact Edition\v3.5. The SQL Server Compact 3.5 desktop runtime components are required for developing applications in Visual Studio and for running SQL Server Compact 3.5-based applications on the desktop. This .msi file also installs Microsoft Synchronization Services for ADO.NET components for x86. The Synchronization Services for ADO.NET components are installed at %Program Files%\Microsoft Synchronization Services\ADO.NET\v1.0. <br />
+        </li><li>
+          
+            SQL Server Compact 3.5 for Devices (SSCEDeviceRuntime-ENU.msi): This file installs the SQL Server Compact 3.5 devices runtime components in %Program Files%\Microsoft SQL Server Compact Edition\v3.5\Devices. The runtime components are required for developing Windows Mobile and Windows CE device-based applications in Visual Studio and for deploying the applications on Windows Mobile devices. SQL Server Compact 3.5 and SQL Server Compact 3.5 for Devices msi files install with Visual Studio 2008 and also available as a Web download. SQL Server Compact 3.5 Design Tools MSI installs only with Visual Studio 2008. SQL Server Compact 3.5 for Devices MSI is installed if the Smart Device Programmability option is selected when you run Visual Studio 2008 setup. The following .msi files will also be available as a Web download:<br />
+          <ul><li>
+              
+                SQL Server Compact 3.5 Server Tools (SSCEServerTools-ENU.msi): SQL Server Compact 3.5 Server Tools MSI is installed on the server that is running IIS. Installation of this .msi file is required to replicate data between SQL Server Compact 3.5 and SQL Server, by using Merge replication or remote data access (RDA). SQL Server Compact 3.5 Server Tools also supports data replication between SQL Server 2005 Compact Edition or SQL Server 2005 Mobile Edition and SQL Server.<br />
+            </li><li>
+              
+                SQL Server Compact 3.5 Books Online (SSCEBOL-ENU.msi): The Books Online MSI installs the SQL Server Compact 3.5 documentation locally on the computer. <br />
+            </li></ul>
+        </li></ul>
+      <p xmlns="">
+        <a href="#_contents_ar5q">[Top]</a>
+      </p>
+    </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <a name="newfeatures" xmlns="" /><h3 class="subHeading" xmlns="">1.1 New Features in SQL Server Compact 3.5</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            SQL Server Compact 3.5 introduces the following features for software developers. </p>
+        </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <h4 class="subHeading" xmlns="">Installation and Database File Upgrade</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  Support for side-by-side installation together with the previous version (3.1) on desktop computers. If you try to open database files created by using earlier versions, SQL Server Compact 3.5 will give you a message that the file cannot be opened. To open it, the database file first must be upgraded by using the <b>Upgrade to SQL Server Compact 3.5 Database </b>dialog box in Visual Studio 2008. To access the <b>Upgrade to SQL Server Compact 3.5 Database </b>dialog box, click<b> Data</b>, click<b> Add New Data Source,</b> and then click <b>Add Connection</b>. When you try to open an earlier version of the database file, you receive a message. By selecting <b>OK</b>, the <b>Upgrade to SQL Server Compact 3.5 Database</b> dialog box appears. The file name extension of SQL Server Compact 3.5 is *.sdf, which is the same as that of the earlier versions (SQL Server Compact Edition, v. 3.1, and SQL Server 2005 Mobile Edition, v. 3.0). After a database file is upgraded to SQL Server Compact 3.5, you will no longer be able to open the database file by using earlier versions of SQL Server Compact. Database files created by the earlier versions of SQL Server Compact 3.5 can be programmatically upgraded by using the SqlCeEngine.Upgrade API. Refer to the documentation for more information.<br />
+                </li><li>
+                  To support older operating systems, with older encryption algorithms, and newer, more secure encryption, SQL Server Compact 3.5 supports backward-compatible encryption modes. The encryption modes available in the <b>Upgrade to SQL Server Compact 3.5 Database</b> dialog box are as described in the following list.<br />
+                  <dl><dt>
+                      <b>Platform Default</b>: When you create or upgrade SQL Server Compact databases, Encryption mode will select the default encryption for the operating system. By creating a database on one of the newer platforms shown here, older platforms (such as Windows CE 4.2 or Windows Mobile 2003) will be unable to open encrypted SQL Server Compact files. The older platforms do not support the newer encryption algorithms. </dt><dd>
+                      <ul><li>
+                          Windows CE 5.0<br />
+                        </li><li>
+                          Windows CE 6.0 <br />
+                        </li><li>
+                          
+                            Windows Mobile 5.0<br />
+                        </li><li>
+                          
+                            Windows Mobile 6.0<br />
+                        </li><li>
+                          Windows XP<br />
+                        </li><li>
+                          
+                            Windows Server 2003
+                          <br />
+                        </li><li>
+                          
+                            Windows Vista
+                          <br />
+                        </li></ul>
+                      <p>For example, if the database is created on Windows XP, it will select encryption for Windows XP. The encrypted database created on Windows XP with the Platform Default option cannot be opened on Windows CE 4.2 or Windows Mobile 2003 for Pocket PC. </p>
+                    </dd></dl>
+                  <dl><dt>
+                      <b>Engine Default</b>: By default, the encryption mode for the SQL Server Compact 3.5 database file will not work on Windows CE 4.2 or Windows Mobile 2003 Software for Pocket PC. This encryption mode will work on all newer SQL Server Compact 3.5 supported platforms.</dt><dd>
+                      <ul><li>
+                          Windows CE 5.0<br />
+                        </li><li>
+                          Windows CE 6.0<br />
+                        </li><li>
+                          
+                            Windows Mobile 5.0<br />
+                        </li><li>
+                          
+                            Windows Mobile 6.0<br />
+                        </li><li>
+                          Windows XP<br />
+                        </li><li>
+                          
+                            Windows Server 2003
+                          <br />
+                        </li><li>
+                          
+                            Windows Vista
+                          <br />
+                        </li></ul>
+                    </dd></dl>
+                  <dl><dt>
+                      <b>PPC2003 Compatibility</b>: While less secure, this option can be used to support older and newer operating systems including: </dt><dd>
+                      <ul><li>
+                          Windows CE 4.2<br />
+                        </li><li>
+                          Windows Mobile 2003 Software for Pocket PC<br />
+                        </li><li>
+                          Windows CE 5.0<br />
+                        </li><li>
+                          Windows CE 6.0<br />
+                        </li><li>
+                          
+                            Windows Mobile 5.0<br />
+                        </li><li>
+                          
+                            Windows Mobile 6.0<br />
+                        </li><li>
+                          Windows XP<br />
+                        </li><li>
+                          
+                            Windows Server 2003 <br />
+                        </li><li>
+                          
+                            Windows Vista
+                          <br />
+                        </li></ul>
+                    </dd></dl>
+                </li></ol>
+            </content></div>
+          <h4 class="subHeading" xmlns="">Tools Support</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  The Visual Basic Express Edition and Visual C# Express Edition of Visual Studio 2008 now fully support SQL Server Compact 3.5-based applications for desktop computers. <br />
+                </li><li>
+                  Enhanced SQL Server Compact 3.5 Table Designer in Visual Studio 2008 provides a user interface for creating primary key and foreign key relationships between tables.<br />
+                </li></ol>
+            </content></div>
+          <h4 class="subHeading" xmlns="">Core Database Functionality</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  Implements the timestamp (rowversion) data type. <br />
+                </li><li>
+                  Support for Transact-SQL statements has been extended as follows: <br />
+                  <ul><li>
+                      Nested query in <b>SELECT FROM</b> clause <br />
+                    </li><li>
+                      
+                        <b>CROSS APPLY</b> and <b>OUTER APPLY</b><br />
+                    </li><li>
+                      
+                        <b>CAST</b> and <b>DECIMAL</b><br />
+                    </li><li>
+                      
+                        <b>TOP</b>
+                      <br />
+                    </li><li>
+                      
+                        <b>SET IDENTITY INSERT</b>
+                      <br />
+                    </li></ul>
+                </li></ol>
+            </content></div>
+          <h4 class="subHeading" xmlns="">Data Synchronization</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  
+                    SQL Server Compact 3.5 now includes a new developer oriented, componentized synchronization model by using Synchronization Services for ADO.NET, available for desktop computers only.<br />
+                </li><li>
+                  Server Tools for configuring Merge Replication and RDA by using SQL Server Compact 3.5 can be downloaded from the <a href="http://go.microsoft.com/fwlink/?LinkId=80578" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. Note that SQL Server Compact 3.5 Server Tools cannot be installed side-by-side with earlier versions of Server Tools on the computer that is acting as the IIS server. SQL Server Compact 3.5 Server Tools can replicate data between SQL Server Compact 3.5 and SQL Server 2005 and later versions. The Server tools can also support synchronization between SQL Server 2005 and SQL Server Compact 3.1. SQL Server Compact 3.5 Server Tools also supports data replication between SQL Server 2005 Compact Edition or SQL Server 2005 Mobile Edition and SQL Server 2005 and later versions. <br />
+                </li></ol>
+            </content></div>
+          <h4 class="subHeading" xmlns="">Programmability</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  Supports local TransactionScope on desktop computers.<br />
+                </li><li>
+                  
+                    SQL Server Compact 3.5 supports LINQ to SQL. LINQ to SQL is a component of the LINQ project. It provides a run-time infrastructure for managing relational data as objects, without giving up the ability to query. It translates language-integrated queries into Transact-SQL for execution by SQL Server Compact 3.5, and then translates the tabular results back into the objects as defined by the application developer. There is no designer support for SQL Server Compact 3.5 in LINQ to SQL. The SqlMetal.exe utility must be used for SQL Server Compact 3.5. For more information, see the documentation.<br />
+                </li></ol>
+              <p xmlns="">
+                <a href="#_contents_ar5q">[Top]</a>
+              </p>
+            </content></div>
+        </sections></div>
+      <a name="devtools" xmlns="" /><h3 class="subHeading" xmlns="">1.2 Obtaining SQL Server Compact 3.5</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            SQL Server Compact 3.5 installs with Visual Studio 2008. The SQL Server Compact 3.5 Device runtime .cab files are installed when you select the Smart Device Programmability option during the installation of Visual Studio. </p>
+          <ul xmlns=""><li>
+              
+                Visual Studio is available at the <a href="http://go.microsoft.com/fwlink/?LinkId=80618" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. <br />
+            </li><li>
+              
+                SQL Server Compact 3.5 is available at the <a href="http://go.microsoft.com/fwlink/?LinkId=78166" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. <br />
+            </li><li>
+              
+                SQL Server Compact 3.5 for Devices is available at the <a href="http://go.microsoft.com/fwlink/?LinkId=86960" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>.<br />
+            </li></ul>
+        </content></div>
+      <a name="_1462_additional_information_about_sql_mo_ar5q" xmlns="" /><h3 class="subHeading" xmlns="">1.3 SQL Server Compact 3.5 Books Online</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            SQL Server Compact 3.5 Books Online provides detailed information about the development, administration, and deployment of SQL Server Compact 3.5 on Windows desktop computers, and on Windows Mobile devices. SQL Server Compact 3.5 Books Online is available for download at the <a href="http://go.microsoft.com/fwlink/?LinkId=80743" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. </p>
+          <p xmlns="">After you install SQL Server Compact Books Online, it is available on the <b>Start</b> menu as a stand-alone Help collection. To access this collection from the Visual Studio 2008 documentation and to access F1 Help from Visual Studio 2008, you must add the collection to the Visual Studio Combined Help Collection.</p>
+          <p xmlns="">
+            <b>To add SQL Server Compact Books Online to the Visual Studio Combined Help Collection</b>
+          </p>
+          <p xmlns="">1. Click <b>Start</b>, point to <b>All Programs</b>, <b>Microsoft Visual Studio 2008</b>, and then click <b>Microsoft Visual Studio 2008 Documentation</b>.</p>
+          <p xmlns="">2. In the Visual Studio Combined Help Collection, click <b>Help</b> and then click <b>Index</b>.</p>
+          <p xmlns="">3. In the <b>Look for</b> box, enter <b>collection manager</b>, and then click the Help entry under collection manager in the Index.</p>
+          <p xmlns="">4. In the <b>Combined Help Collection Manager</b> topic, select <b>SQL Server Compact</b> <b>3.5</b>, and then click <b>Update VSCC</b>.</p>
+          <p xmlns="">5. In the two dialog boxes that open, read the requirements, and then click <b>OK</b>.</p>
+          <p xmlns="">6. Close and reopen the Visual Studio Combined Help Collection. SQL Server Compact Books Online is now available in the <b>Table of Contents</b>, <b>Index</b>, <b>Search</b>, and <b>F1 Help</b> for code and the user interface.</p>
+        </content></div>
+      <a name="adonet" xmlns="" /><h3 class="subHeading" xmlns="">1.4 Microsoft Synchronization Services for ADO.NET</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            Microsoft Synchronization Services for ADO.NET provides the ability to synchronize data from disparate sources over two-tier, <i>n</i>-tier, and service-based architectures. Rather than just replicating a database and its schema, the Synchronization Services API provides a set of components to synchronize data between Data Services and a local store. Applications are increasingly used on mobile clients, such as portable computers and devices that do not have a consistent or reliable network connection to a central server. It is important for these applications to work against a local copy of data on the client. Equally important is the requirement to synchronize the local copy of the data with a central server when a network connection is available. The Synchronization Services API, which is modeled after the ADO.NET data access APIs, gives you an intuitive way to synchronize data. It makes building applications for occasionally connected environments a logical extension of building applications where you can depend on a consistent network connection. </p>
+          <p xmlns="">
+            Synchronization Services is available only for 32-bit computers and requires ADO.NET 2.0.</p>
+          <p xmlns="">To learn more about this technology, see the product documentation available online at the <a href="http://go.microsoft.com/fwlink/?LinkId=80742" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. The Synchronization Services components are available with SQL Server Compact 3.5 at the <a href="http://go.microsoft.com/fwlink/?LinkId=78166" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>.</p>
+          <p xmlns="">
+            <a href="#_contents_ar5q"> [Top]</a>
+          </p>
+        </content></div>
+    </sections></div><a name="install" /><h1 class="heading">2.0 Installing and Uninstalling SQL Server Compact 3.5</h1><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">This section contains installation-related information. </p>
+    </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <h3 class="subHeading" xmlns="">2.1 Installing and Uninstalling SQL Server Compact 3.5 Runtime on Mobile Devices</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            SQL Server Compact 3.5 can be deployed on Windows Mobile devices either by manually copying and installing the CAB files, or through Visual Studio. The SSCEDeviceRuntime-ENU.msi file puts the SQL Server Compact 3.5 CAB files for deploying SQL Server Compact 3.5 on the Windows Mobile devices. The CAB files are put into the folder: %Program Files%\Microsoft SQL Server Compact Edition\v3.5\Devices\platform\processor. The cab files description is as follows:</p>
+          <ul xmlns=""><li>
+              
+                SQL Server Compact 3.5 Core (<b>sqlce.platform.processor.cab</b>):<br />
+              The sqlce.<i>platform.processor</i>.cab file contains sqlcese35.dll, sqlceqp35.dll, sqlceme35.dll, and System.Data.SqlServerCe.dll.<br />
+            </li><li>
+              
+                SQL Server Compact 3.5 Replication (<b>sqlce.repl.platform.processor.cab</b>):<br />
+              The sqlce.repl.<i>platform.processor</i>.cab file contains sqlceca35.dll, sqlceoledb35.dll, and sqlcecompact35.dll.<br />
+            </li><li>
+              
+                SQL Server Compact 3.5 Tools EN (<b>sqlce.dev.lang.platform.processor.cab</b>): <br />
+              The sqlce.dev.lang.platform.processor.cab file contains isqlw35.exe, a program that implements SQL Server Compact 3.5 Query Analyzer. It also contains sqlceerr35lang.dll, which provides error descriptions for use during development. To use SQL Server Compact 3.5 Query Analyzer, install sqlce.repl.<i>platform.processor</i>.cab.<br />
+            </li></ul>
+        </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <h4 class="subHeading" xmlns="">To uninstall SQL Server Compact 3.5 from a mobile device</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  Click <b>Start</b>, click <b>Settings</b>, click <b>System</b>, and then click <b>Remove Programs</b>. <br />
+                </li><li>
+                  To uninstall SQL Server Compact 3.5 components, from the list of installed programs, select the components to uninstall. <br />
+                  <ul><li>
+                      
+                        <b>SQL Server Compact 3.5 Core</b>
+                      <br />
+                    </li><li>
+                      
+                        <b>SQL Server Compact 3.5 Tools</b>
+                      <br />
+                    </li><li>
+                      
+                        <b>SQL Server Compact 3.5 Repl</b>
+                      <br />
+                    </li></ul>
+                </li><li>
+                  Click <b>Remove</b>.<br />
+                </li></ol>
+            </content></div>
+        </sections></div>
+      <h3 class="subHeading" xmlns="">2.2 Installing and Uninstalling SQL Server Compact 3.5 Runtime on Windows Desktop Computers</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">
+            SQL Server Compact 3.5 has a separate installer (SSCERuntime-ENU.msi) for Windows desktop computers. SQL Server Compact 3.5 installs with Visual Studio 2008 or it can be downloaded from <a href="http://go.microsoft.com/fwlink/?LinkId=78166" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Site</linkText></a>.</p>
+          <div class="alert" xmlns=""><table width="100%" cellspacing="0" cellpadding="0"><tr><th align="left">Note: </th></tr><tr><td>
+            SQL Server Compact 3.5 should be installed on desktop computers by the SSCERuntime-ENU.msi only to reduce serviceability problems.<p />
+          </td></tr></table><p /></div>
+          <p xmlns="">What to consider when you install SQL Server Compact 3.5:</p>
+          <ul xmlns=""><li>
+              To install or uninstall SQL Server Compact 3.5, you must be an administrator on the Windows desktop computer. <br />
+            </li><li>
+              
+                .NET Framework 2.0 or a later version is required before you install SQL Server Compact 3.5 for managed code development. You can download the .NET Framework 2.0 from <a href="http://go.microsoft.com/fwlink/?LinkId=67329" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">.NET Framework 2.0 Download Center</linkText></a>. Native developers can use OLEDB without requiring the .NET Framework.<br />
+            </li></ul>
+        </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <h4 class="subHeading" xmlns="">To uninstall SQL Server Compact 3.5</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  In Control Panel, double-click <b>Add or Remove Programs</b>. <br />
+                </li><li>
+                  From the list of installed programs, select <b>Microsoft SQL Server Compact 3.5</b>. <br />
+                </li><li>
+                  Click <b>Remove</b>.<br />
+                </li></ol>
+            </content></div>
+        </sections></div>
+      <h3 class="subHeading" xmlns="">2.3 Installing and Uninstalling SQL Server Compact 3.5 Server Tools</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">Server Tools for SQL Server Compact 3.5 can be downloaded from the <a href="http://go.microsoft.com/fwlink/?LinkId=80578" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">Microsoft Download Center</linkText></a>. SQL Server Compact 3.5 Server Tools cannot be installed side-by-side with earlier versions of Server Tools on the server that is running IIS.</p>
+          <p xmlns="">For more information about how to install and configure a server environment for Remote Data Access or merge replication, see "Installing a Server Environment" and "Configuring and Securing Server Environment" in SQL Server Compact 3.5 Books Online. </p>
+        </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <h4 class="subHeading" xmlns="">To uninstall SQL Server Compact 3.5 Server Tools</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ol xmlns=""><li>
+                  In Control Panel, double-click <b>Add or Remove Programs</b>. <br />
+                </li><li>
+                  From the list of installed programs, select <b>Microsoft SQL Server Compact 3.5 Server Tools</b>.<br />
+                </li><li>
+                  Click <b>Remove</b>.<br />
+                </li></ol>
+              <p xmlns="">After uninstalling, restart IIS or restart the server that is running IIS. </p>
+              <p xmlns="">
+                <a href="#_contents_ar5q">[Top]</a>
+              </p>
+            </content></div>
+        </sections></div>
+    </sections></div><a name="_supported_platforms_2y0t" /><h1 class="heading">3.0 Supported Operating Systems and Platforms for SQL Server Compact 3.5</h1><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">This release of SQL Server Compact 3.5 supports the following operating systems.</p>
+    </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+        </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <h4 class="subHeading" xmlns="">Desktop computers</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ul xmlns=""><li>
+                  
+                    Microsoft Windows XP Professional SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows XP Home Edition SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows XP Media Center Edition 2004 SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows XP Media Center Edition 2005 <br />
+                </li><li>
+                  
+                    Microsoft Windows XP Tablet PC Edition SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows XP Embedded SP2<br />
+                </li><li>
+                  
+                    Microsoft Windows XP Professional x64 SP2 (WOW),<br />
+                </li><li>
+                  Windows Embedded for Point of Service SP2<br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003, Standard Edition SP2<br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003, Enterprise Edition SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003, Datacenter Edition SP2 <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2, Standard Edition <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2, Enterprise Edition <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2, Datacenter Edition<br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 x64, Standard Edition (WOW) <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 x64, Enterprise x64 Edition (WOW) <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 x64, Datacenter Edition (WOW)<br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2 x64, Standard Edition (WOW) <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2 x64, Enterprise Edition (WOW) <br />
+                </li><li>
+                  
+                    Microsoft Windows Server 2003 R2 x64, Datacenter Edition (WOW)<br />
+                </li><li>
+                  
+                    Windows Vista Home Basic<br />
+                </li><li>
+                  
+                    Windows Vista Home Premium<br />
+                </li><li>
+                  
+                    Windows Vista Business<br />
+                </li><li>
+                  
+                    Windows Vista Enterprise<br />
+                </li><li>
+                  
+                    Windows Vista Ultimate<br />
+                </li><li>
+                  
+                    Windows Vista Starter Edition<br />
+                </li><li>
+                  
+                    Windows Vista Home Basic x64 (WOW)<br />
+                </li><li>
+                  
+                    Windows Vista Home Premium x64 (WOW)<br />
+                </li><li>
+                  
+                    Windows Vista Business x64 (WOW)<br />
+                </li><li>
+                  
+                    Windows Vista Enterprise x64 (WOW)<br />
+                </li><li>
+                  
+                    Windows Vista Ultimate x64 (WOW)<br />
+                </li></ul>
+            </content></div>
+          <h4 class="subHeading" xmlns="">Windows Mobile devices</h4><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+              <ul xmlns=""><li>
+                  Windows CE 4.2<br />
+                </li><li>
+                  Windows CE 5.0<br />
+                </li><li>
+                  Windows CE 6.0<br />
+                </li><li>
+                  
+                    Windows Mobile 2003 for Pocket PC
+                  <br />
+                </li><li>
+                  
+                    Windows Mobile 5.0<br />
+                </li><li>
+                  
+                    Windows Mobile 6.0<br />
+                </li></ul>
+              <p xmlns="">
+                <a href="#_contents_ar5q">[Top]</a>
+              </p>
+            </content></div>
+        </sections></div>
+    </sections></div><a name="_sql_mobile_desktop_development_support_i_0a8g" /><h1 class="heading">4.0 Deploying SQL Server Compact 3.5 Applications</h1><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">This section describes support for deploying SQL Server Compact 3.5 applications. </p>
+    </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <h3 class="subHeading" xmlns="">4.1 SQL Server Compact 3.5 Desktop Deployment Support in Visual Studio</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">You can deploy a SQL Server Compact 3.5 application to Windows desktop computers by using ClickOnce support in Visual Studio. The <b>DataDirectory</b> substitution string also simplifies deploying an application. For more information about ClickOnce and <b>DataDirectory</b>, see <b>Installing a Development Environment</b> and <b>Installing  and Deploying on a Desktop (SQL Server Compact 3.5)</b> in <a href="http://go.microsoft.com/fwlink/?LinkId=66522" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SQL Server Compact </linkText></a> and Microsoft Knowledge Base article <a href="http://support.microsoft.com/kb/934452" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">934452</linkText></a>.</p>
+        </content></div>
+      <h3 class="subHeading" xmlns="">4.2 SQL Server Compact 3.5 Mobile Device Deployment Support in Visual Studio</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">You can use Visual Studio to deploy a SQL Server Compact 3.5 application to either an emulator or a device in the following ways. </p>
+          <p xmlns="">A Pocket PC 2003 application can be deployed on the following: </p>
+          <ul xmlns=""><li>
+              Pocket PC 2003 device<br />
+            </li><li>
+              Pocket PC 2003 emulator<br />
+            </li><li>
+              Pocket PC 2003 SE VGA emulator <br />
+            </li></ul>
+          <p xmlns="">A Windows CE 5.0 application can be deployed on the following: </p>
+          <ul xmlns=""><li>
+              
+                Windows Mobile Version 5.0 Pocket PC device<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC Phone Edition GSM (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC Phone Edition GSM VGA (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC VGA emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Smartphone device<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Smartphone GSM (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Smartphone GSM QVGA (virtual radio) emulator<br />
+            </li><li>
+              Windows CE 5.0 devices <br />
+            </li></ul>
+          <p xmlns="">A Windows Mobile Version 5.0 Pocket PC application can be deployed on the following: </p>
+          <ul xmlns=""><li>
+              
+                Windows Mobile Version 5.0 Pocket PC device<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC Phone Edition GSM (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC Phone Edition GSM VGA (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Pocket PC VGA emulator <br />
+            </li></ul>
+          <p xmlns="">A Windows Mobile Version 5.0 Smartphone application can be deployed on the following: </p>
+          <ul xmlns=""><li>
+              
+                Windows Mobile Version 5.0 Smartphone device<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Smartphone GSM (virtual radio) emulator<br />
+            </li><li>
+              
+                Windows Mobile Version 5.0 Smartphone GSM QVGA (virtual radio) emulator <br />
+            </li></ul>
+          <p xmlns="">A Windows Mobile Version 6.0 application can be deployed on the following: </p>
+          <ul xmlns=""><li>
+              
+                Windows Mobile 6 Standard <br />
+            </li><li>
+              
+                Windows Mobile 6 Standard Landscape QVGA<br />
+            </li><li>
+              
+                Windows Mobile 6 Standard QVGA <br />
+            </li><li>
+              
+                Windows Mobile 6 Classic <br />
+            </li><li>
+              
+                Windows Mobile 6 Professional <br />
+            </li><li>
+              
+                Windows Mobile 6 Professional Square <br />
+            </li><li>
+              
+                Windows Mobile 6 Professional Square QVGA <br />
+            </li><li>
+              
+                Windows Mobile 6 Professional Square VGA <br />
+            </li><li>
+              
+                Windows Mobile 6 Professional VGA<br />
+            </li></ul>
+          <p xmlns="">
+            <a href="#_contents_ar5q">[Top]</a>
+          </p>
+        </content></div>
+    </sections></div><a name="knownissues" /><h1 class="heading">5.0 Known Issues</h1><div id="sectionSection5" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <ol xmlns=""><li>
+          Upgrading CTP and beta versions of SQL Server Compact 3.5 is not supported. Remove all CTP and beta installations of SQL Server Compact 3.5 or SQL Server Compact 3.5 for Devices or SQL Server Compact 3.5 Design Tools before you install the release version of SQL Server Compact 3.5 or Visual Studio 2008.<br />
+        </li><li>
+          The Encrypt token is no longer used in SqlCeConnectionString. The token is retained in SQL Server Compact 3.5 for backward compatibility. The token should not be used; it will be deprecated in a future release. To change the encryption mode of an existing SQL Server Compact 3.5 database or to encrypt an unencrypted SQL Server Compact 3.5 database, create a new SQL Server Compact 3.5 database. Then, copy the schema and data to the new database.<br />
+        </li><li>
+          When upgrading a Visual Studio 2005 project to Visual Studio 2008, encrypted databases must be manually upgraded by using the following steps:.<br />
+          <ol><li>
+              Click <b>Data</b>. <br />
+            </li><li>
+              Click <b>Add New Data Source</b>.<br />
+            </li><li>
+              Click <b>Add Connection</b>. If an earlier version of the database file is opened, a message appears. If you select <b>OK</b>, the <b>Upgrade to SQL Server Compact 3.5 Database</b> dialog box appears.<br />
+            </li></ol>
+          Alternatively the SqlCeEngine.Upgrade API can be used for programmatic scenarios.<br />
+        </li></ol>
+      <p xmlns="">
+        <a href="#_contents_ar5q">[Top]</a>
+      </p>
+    </content></div><a name="_4460_documentation_notes_2y0t" /><h1 class="heading">6.0 Additional Information</h1><div id="sectionSection6" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <p xmlns="">This section describes how to obtain assistance and provide feedback about SQL Server Compact 3.5. </p>
+    </content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+      <a name="gettingassistance" xmlns="" /><h3 class="subHeading" xmlns="">6.1 Getting SQL Server Compact 3.5 Assistance</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">For more information, see the <a href="http://go.microsoft.com/fwlink/?LinkId=66523" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SQL Server Compact</linkText></a> Forum and the <a href="http://go.microsoft.com/fwlink/?LinkId=67575" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SQL Server Compact 3.5 Team Blog</linkText></a>. </p>
+        </content></div>
+      <a name="provfeedback" xmlns="" /><h3 class="subHeading" xmlns="">6.2 Providing Feedback on SQL Server Compact 3.5</h3><div class="subSection" xmlns=""><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">
+          <p xmlns="">To provide suggestions and bug reports about SQL Server Compact 3.5:</p>
+          <ul xmlns=""><li>
+              Make suggestions and file bug reports about the features or the user interface of SQL Server Compact 3.5 at the <a href="http://go.microsoft.com/fwlink/?LinkId=51684" alt=""><linkText xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">MSDN product feedback Web site</linkText></a>.<br />
+            </li><li>
+              Send suggestions or report inaccuracies in the documentation by using the feedback functionality in SQL Server Compact 3.5 Books Online.<br />
+            </li></ul>
+          <p xmlns="">
+            <a href="#_contents_ar5q">[Top]</a>
+          </p>
+        </content></div>
+    </sections></div><!--[if gte IE 5]>
+			<tool:tip element="seeAlsoToolTip" avoidmouse="false"/><tool:tip element="languageFilterToolTip" avoidmouse="false"/><tool:tip element="roleInfoSpan" avoidmouse="false"/>
+		<![endif]--></div>
+      <div id="footer">
+			
+			© 2007 Microsoft Corporation. All rights reserved.
+		</div>
+    </div>
+  </body>
+</html>
