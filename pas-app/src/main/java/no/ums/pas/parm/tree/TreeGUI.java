@@ -85,6 +85,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 				{
 					AlertVO avo = (AlertVO)tip;
 					String tiptext = "<html>" + PAS.l("main_parmtab_popup_alert") + " = " + avo.getAlertpk().substring(1);
+					tiptext += "<br>" + avo.toString();
 					if(SendController.HasType(avo.getAddresstypes(), SendController.SENDTO_CELL_BROADCAST_TEXT))
 					{
 						tiptext += "<br><br><table>";
