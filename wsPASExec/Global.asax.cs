@@ -8,9 +8,6 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Xml.Linq;
 using com.ums.UmsCommon;
-using com.ums.db;
-
-using NHibernate;
 using com.ums.address;
 
 namespace com.ums.wsPASExec

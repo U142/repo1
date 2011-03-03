@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib-ums2-csharp\libums2-csharp.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\ExtLib\Lucene-2.9.2\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -89,6 +92,12 @@
     <Content Include="WS\Voice.asmx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address\AddressIndexer.cs" />
+    <Compile Include="Address\AddressInfo.cs" />
+    <Compile Include="Address\DocReader.cs" />
+    <Compile Include="Address\FileInfo.cs" />
+    <Compile Include="Address\FilenameFilter.cs" />
+    <Compile Include="Address\Importers.cs" />
     <Compile Include="PARM\AlertExec\ConfirmJobResponse.cs" />
     <Compile Include="PARM\AlertExec\ExecResponse.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

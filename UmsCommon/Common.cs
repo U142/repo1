@@ -366,6 +366,11 @@ namespace com.ums.UmsCommon
     {
         public double lon;
         public double lat;
+
+        public double distance(double lon, double lat)
+        {
+            return Math.Pow(this.lon - lon, 2) + Math.Pow(this.lat - lat, 2);
+        }
     }
     [XmlType(Namespace="http://ums.no/ws/common")]
     public class UEllipseDef

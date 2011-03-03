@@ -8,7 +8,7 @@ namespace com.ums.UmsCommon.CoorConvert
     public class UTM
     {
         public static double rad2deg = 180.0 / Math.PI;
-        public void UTM2LL(int ReferenceEllipsoid, double UTMNorthing, double UTMEasting, ref string UTMZone, ref char ZoneLetter,
+        public static void UTM2LL(int ReferenceEllipsoid, double UTMNorthing, double UTMEasting, string UTMZone, char ZoneLetter,
 			          ref double Lat, ref double Long )
         {
         //converts UTM coords to lat/long.  Equations from USGS Bulletin 1532 
