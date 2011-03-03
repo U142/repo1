@@ -127,6 +127,7 @@ public class EventGUI extends JFrame implements WindowListener {
 				lblCategory.setPreferredSize(d);
 				add(Box.createVerticalStrut(10));
 				add(lblSetEpicentre = new JLabel(PAS.l("main_parm_event_dlg_set_epicentre")));
+				lblSetEpicentre.setVisible(false);
 				add(Box.createVerticalStrut(28));
 			}
 
@@ -156,6 +157,7 @@ public class EventGUI extends JFrame implements WindowListener {
 				ImageIcon icon = ImageLoader.load_icon("epicentre_pinpoint.png");
 				icon.setImage(icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH));
 				add(btnEpicentre = new JButton(icon));
+				btnEpicentre.setVisible(false);
 				add(this.msgpanel = new msgPanel());
 			}
 
