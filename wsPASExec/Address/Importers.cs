@@ -81,7 +81,7 @@ namespace com.ums.address
 
         public void RefreshDatabase()
         {
-            var expired = _getFiles(_importFolder).Where(isExpired);
+            var expired = (Directory.Exists(_importFolder)) ? _getFiles(_importFolder).Where(isExpired) : new List<string>();
 
             if (expired.Count() != 0)
             {
