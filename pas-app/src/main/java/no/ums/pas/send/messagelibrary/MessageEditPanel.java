@@ -330,14 +330,16 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	}
 	
 	public void set_size_label(String text, StdTextLabel activeLabel) {
-		
-		Matcher m = GSM_Alphabet_Regex.matcher(text);
-		int ext = 0;
-		while(m.find() == true)
-			++ext;
-		//System.out.println("Extended chars = " + ext);
-		
-		activeLabel.setText(String.format(PAS.l("main_message_library_counter"), text.length() + ext));
+		if(text!=null)
+		{
+			Matcher m = GSM_Alphabet_Regex.matcher(text);
+			int ext = 0;
+			while(m.find() == true)
+				++ext;
+			//System.out.println("Extended chars = " + ext);
+			
+			activeLabel.setText(String.format(PAS.l("main_message_library_counter"), text.length() + ext));
+		}
 		
 		
 			

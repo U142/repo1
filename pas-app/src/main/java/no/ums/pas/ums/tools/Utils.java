@@ -198,7 +198,14 @@ public final class Utils {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             if (pw != null) {
-                md.update(pw.getBytes());
+            	try
+            	{
+            		md.update(pw.getBytes("UTF-8"));
+            	}
+            	catch(Exception e)
+            	{
+            		e.printStackTrace();
+            	}
             }
             return getHex(md.digest());
         } catch (NoSuchAlgorithmException e) {
