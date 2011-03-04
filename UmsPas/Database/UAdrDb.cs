@@ -844,6 +844,19 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
     "ADR_KONSUM WHERE %s AND BEDRIFT IN (0,1)", sz_filter1);
 */
             String szSQL = "";
+            if (double.IsNaN(param.b_bo) ||
+                double.IsNaN(param.u_bo) ||
+                double.IsNaN(param.l_bo) ||
+                double.IsNaN(param.r_bo))
+            {
+                return list;
+            }
+            if (param.b_bo > 90 || param.u_bo < -90 ||
+                param.l_bo > 180 && param.r_bo <= -180)
+            {
+                return list;
+            }
+
             if (m_n_pastype == 1)
             {
                 szSQL = String.Format(UCommon.UGlobalizationInfo, "SELECT isnull(KON_DMID, 0) KON_DMID, isnull(LON, 0) LON, isnull(LAT, 0) LAT, isnull(NAVN, ' '), isnull(ADRESSE, ' '), isnull(HUSNR, 0) HUSNR, isnull(OPPGANG, ' ') OPPGANG, isnull(POSTNR, '0'), isnull(POSTSTED, ''), isnull(KOMMUNENR, 0) KOMMUNENR, isnull(FØDTÅR, '0'), isnull(TELEFON, ''), isnull(GNR, 0) GNR, isnull(BNR, 0) BNR, isnull(BEDRIFT, 0) BEDRIFT, isnull(l_importid, -1) l_importid, " +

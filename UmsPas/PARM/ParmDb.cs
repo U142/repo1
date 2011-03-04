@@ -347,7 +347,7 @@ namespace com.ums.UmsParm
         public bool UpdatePAShape(Int64 pk, String sz_xml, PASHAPETYPES type, ref bool bShapeChanged)
         {
             OdbcDataReader rs = null;
-
+            sz_xml = sz_xml.Replace("'", "''");
             try
             {
                 bool exists = false;

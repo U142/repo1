@@ -329,14 +329,15 @@ namespace com.ums.UmsCommon
         public static string CreateSHA512Hash(string input)
         {
             SHA512 sha = SHA512.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            //byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
             byte[] hashBytes = sha.ComputeHash(inputBytes);
 
             // Convert the byte array to hexadecimal string
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hashBytes.Length; i++)
             {
-                sb.Append(hashBytes[i].ToString("X2"));
+                sb.Append(hashBytes[i].ToString("x2"));
                 // To force the hex string to lower-case letters instead of
                 // upper-case, use he following line instead:
                 // sb.Append(hashBytes[i].ToString("x2")); 
