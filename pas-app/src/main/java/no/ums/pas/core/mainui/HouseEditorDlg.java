@@ -2,6 +2,7 @@ package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
@@ -55,12 +56,12 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 		
 		m_panel = new HouseEditorPanel(this, point, house);
 		m_move  = new HouseMovePanel(this);
-		m_tab.addTab(PAS.l("main_houseeditortab_newdelete"), null,
+		m_tab.addTab(Localization.l("main_houseeditortab_newdelete"), null,
 				m_panel,
-    			PAS.l("main_houseeditortab_newdelete_tooltip"));
-		m_tab.addTab(PAS.l("main_houseeditortab_manualgeocoding"), null,
+    			Localization.l("main_houseeditortab_newdelete_tooltip"));
+		m_tab.addTab(Localization.l("main_houseeditortab_manualgeocoding"), null,
 				m_move,
-				PAS.l("main_houseeditortab_manualgeocoding_tooltip"));
+				Localization.l("main_houseeditortab_manualgeocoding_tooltip"));
 
 		m_tab.addChangeListener(this);
 		setLayout(new BorderLayout());

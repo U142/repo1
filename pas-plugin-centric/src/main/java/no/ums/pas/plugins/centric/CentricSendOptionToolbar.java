@@ -7,6 +7,7 @@ import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PLMNShape;
@@ -131,8 +132,12 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	protected MODE current_mode = MODE.MESSAGE_WRITING;
 	
 	LoadingFrame progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
-	
-	protected long n_parent_refno = 0;
+
+    {
+        progress = new LoadingFrame(PAS.l("main_statustext_lba_sending"), null);
+    }
+
+    protected long n_parent_refno = 0;
 	public boolean isResend() { return n_parent_refno>0; }
 	public void setParentRefno(long parent_refno)
 	{
@@ -460,8 +465,9 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			break;
 		case SHOWING_SUMMARY: //if training mode is off, we may enable send button
 			//m_btn_send.setEnabled(!PAS.TRAINING_MODE);
-			if(PAS.TRAINING_MODE)
-				m_btn_send.setToolTipText(PAS.l("mainmenu_trainingmode"));
+			if(PAS.TRAINING_MODE) {
+                m_btn_send.setToolTipText(PAS.l("mainmenu_trainingmode"));
+            }
 			else
 				m_btn_send.setToolTipText(null);
 			break;
@@ -1702,8 +1708,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			m_lbl_characters.setText(pageno + " " + PAS.l("common_pages") + " (" + chars_left + " " + PAS.l("common_characters") + " " + PAS.l("common_remaining") + ")");
 			break;
 		}*/
-		m_lbl_pages.setText(PAS.l("common_page") + " " + pageno + "/" + MAX_PAGES);
-		m_lbl_characters.setText(PAS.l("common_characters") + " " + PAS.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE);
+        m_lbl_pages.setText(Localization.l("common_page") + " " + pageno + "/" + MAX_PAGES);
+        m_lbl_characters.setText(Localization.l("common_characters") + " " + Localization.l("common_remaining") + " " + chars_left + "/" + MAX_MESSAGELENGTH_PR_PAGE);
 	}
 	
 	public void fromTemplate(CBSTATUS cb)

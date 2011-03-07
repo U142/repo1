@@ -10,6 +10,7 @@ import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSHouseByQuality;
 import no.ums.pas.core.ws.WSHouseEditor;
 import no.ums.pas.core.ws.WSHouseEditor.SaveGABResult;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.send.SendController;
@@ -40,15 +41,15 @@ import java.util.ArrayList;
 public class HouseMovePanel extends DefaultPanel implements ComponentListener, KeyListener {
 	public static final long serialVersionUID = 1;
 	private HouseEditorDlg m_dlg;
-	private StdTextLabel m_lbl_heading = new StdTextLabel(PAS.l("main_houseeditortab_search_then_assign"), 400, 14, true);
-	private StdTextLabel m_lbl_postno = new StdTextLabel(PAS.l("common_adr_postno") + ":", 70);
-	private StdTextArea m_txt_postno = new StdTextArea("", false, 70);
-	private JButton m_btn_search = new JButton(PAS.l("common_search"));
-	private JCheckBox m_chk_private = new JCheckBox(PAS.l("common_adr_private"), true);
-	private JCheckBox m_chk_company = new JCheckBox(PAS.l("common_adr_company"), true);
-	private JCheckBox m_chk_mobile	= new JCheckBox(PAS.l("common_adr_mobile"), true);
-	private JButton m_btn_export = new JButton(PAS.l("common_export"));
-	private HouseInhabitantsList m_list;
+	private StdTextLabel m_lbl_heading = new StdTextLabel(Localization.l("main_houseeditortab_search_then_assign"), 400, 14, true);
+    private StdTextLabel m_lbl_postno = new StdTextLabel(Localization.l("common_adr_postno") + ":", 70);
+    private StdTextArea m_txt_postno = new StdTextArea("", false, 70);
+	private JButton m_btn_search = new JButton(Localization.l("common_search"));
+    private JCheckBox m_chk_private = new JCheckBox(Localization.l("common_adr_private"), true);
+    private JCheckBox m_chk_company = new JCheckBox(Localization.l("common_adr_company"), true);
+    private JCheckBox m_chk_mobile	= new JCheckBox(Localization.l("common_adr_mobile"), true);
+    private JButton m_btn_export = new JButton(Localization.l("common_export"));
+    private HouseInhabitantsList m_list;
 	//private XMLHouses m_xml;
 	//protected XMLHouses get_xml() { return m_xml; }
 	private WSHouseByQuality m_xml;
@@ -62,7 +63,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 	public HouseMovePanel(HouseEditorDlg dlg) {
 		super();
 		m_dlg = dlg;
-		m_list = new HouseInhabitantsList(new String [] { PAS.l("common_adr_quality"), "", PAS.l("common_adr_name"), PAS.l("common_adr_address"), PAS.l("common_adr_postno"), PAS.l("common_adr_postplace"), PAS.l("common_adr_phone"), PAS.l("common_adr_mobile") }, new int [] { 32, 16, 100, 100, 50, 100, 75, 75 } );
+		m_list = new HouseInhabitantsList(new String [] { Localization.l("common_adr_quality"), "", Localization.l("common_adr_name"), Localization.l("common_adr_address"), Localization.l("common_adr_postno"), Localization.l("common_adr_postplace"), Localization.l("common_adr_phone"), Localization.l("common_adr_mobile") }, new int [] { 32, 16, 100, 100, 50, 100, 75, 75 } );
 		add_controls();
 		//m_txt_postno.grabFocus();
 		m_txt_postno.addKeyListener(this);
@@ -112,7 +113,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 			int n_postno = Integer.parseInt(s);
 			return true;
 		} catch(Exception e) {
-			System.out.println(PAS.l("error_not_a_number"));
+			System.out.println(Localization.l("error_not_a_number"));
 			e.printStackTrace();
 			Error.getError().addError("HouseMovePanel","Exception in checkInteger",e,1);
 		}
@@ -132,7 +133,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 		if("act_search_postno".equals(e.getActionCommand())) {
 			String sz_postno = m_txt_postno.getText();
 			if(!checkInteger(sz_postno)) {
-				JOptionPane.showMessageDialog(this, PAS.l("error_not_a_number_info"), PAS.l("error_heading"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, Localization.l("error_not_a_number_info"), Localization.l("error_heading"), JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			String sz_quality = "E,F,G,H,I";

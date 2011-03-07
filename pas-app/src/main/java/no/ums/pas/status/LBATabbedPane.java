@@ -31,10 +31,12 @@ public class LBATabbedPane extends JTabbedPane implements ComponentListener, Cha
 	public LBAListCC getListCC() { return m_listcc; }
 	public LBAListCell getListCell() { return m_listcell; }
 	final String [] colscc = new String[] { PAS.l("main_status_lba_country"), PAS.l("common_countrycode_short"), PAS.l("main_status_queue"), PAS.l("main_status_delivered"), PAS.l("main_status_failed"), PAS.l("main_status_expired"), PAS.l("main_status_subscribers"), PAS.l("common_progress") };
-	final int [] widthcc = new int[] { 100, 40, 70, 70, 70, 70, 70, 100 };
+
+    final int [] widthcc = new int[] { 100, 40, 70, 70, 70, 70, 70, 100 };
 
 	final String [] colscell = new String [] { PAS.l("main_status_lba_cellid"), PAS.l("main_status_queue"), PAS.l("main_status_delivered"), PAS.l("main_status_failed"), PAS.l("common_progress") };
-	final int [] widthcell = new int[] { 120, 30, 30, 30, 200 };
+
+    final int [] widthcell = new int[] { 120, 30, 30, 30, 200 };
 	final LBATabbedPane tabbedpane = this;
 	ActionListener callback = null;
 	public void setCallback(ActionListener l)

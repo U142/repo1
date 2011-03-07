@@ -1,6 +1,7 @@
 package no.ums.pas.status;
 
 
+import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -9,19 +10,20 @@ import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.ws.WSTasResend;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MunicipalStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendProperties;
+import no.ums.pas.send.sendpanels.ShowProfileAction;
 import no.ums.pas.sound.SoundPlayer;
 import no.ums.pas.sound.SoundlibFileWav;
 import no.ums.pas.status.LBASEND.LBAHISTCC;
 import no.ums.pas.status.LBASEND.LBASEND_TS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.common.LBALanguage;
@@ -498,11 +500,16 @@ public class StatusSending extends Object {
 						long diff = end.getTimeInMillis() - start.getTimeInMillis();
 						SimpleDateFormat dateFormat;
 						if(diff >= 1000*60*60*24) //one day or more
-							dateFormat = new SimpleDateFormat("dd'" + PAS.l("common_days_short") + " 'HH'" + PAS.l("common_hours_short") + " 'mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
+                        {
+                            dateFormat = new SimpleDateFormat("dd'" + PAS.l("common_days_short") + " 'HH'" + PAS.l("common_hours_short") + " 'mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
+                        }
 						if(diff >= 1000*60*60)//one hour or more
-							dateFormat = new SimpleDateFormat("HH'" + PAS.l("common_hours_short") + " 'mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
-						else
-							dateFormat = new SimpleDateFormat("mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
+                        {
+                            dateFormat = new SimpleDateFormat("HH'" + PAS.l("common_hours_short") + " 'mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
+                        }
+						else {
+                            dateFormat = new SimpleDateFormat("mm'" + PAS.l("common_minutes_short") + " 'ss'" + PAS.l("common_seconds_short") + "'");
+                        }
 						
 						sz_time_used = "    [" + PAS.l("common_completed") + " " + dateFormat.format(new java.util.Date(diff)) + "] "; 
 					}
@@ -522,12 +529,15 @@ public class StatusSending extends Object {
 				sz_type = PAS.l("main_status_locationbased_alert");
 				break;
 			}
-			if(m_lba.f_simulation==2)
-				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live") + "]" + sz_time_used));
-			else if(m_lba.f_simulation==1)
-				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_simulated") + "]" + sz_time_used)); //JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Simulated) -- JobID " + m_lba.sz_jobid));
-			else
-				pnl_cell.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_live") + "]" + sz_time_used));// JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Live sending) -- JobID " + m_lba.sz_jobid));
+			if(m_lba.f_simulation==2) {
+                pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live") + "]" + sz_time_used));
+            }
+			else if(m_lba.f_simulation==1) {
+                pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_simulated") + "]" + sz_time_used)); //JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Simulated) -- JobID " + m_lba.sz_jobid));
+            }
+			else {
+                pnl_cell.setBorder(TextFormat.CreateStdBorder(" " + sz_type + "    [" + PAS.l("main_sending_live") + "]" + sz_time_used));// JobID=" + m_lba.sz_jobid));//BorderFactory.createTitledBorder("Location Based Alert (Live sending) -- JobID " + m_lba.sz_jobid));
+            }
 		}
 		catch(Exception e)
 		{
@@ -1041,9 +1051,9 @@ public class StatusSending extends Object {
 		JButton m_btn_confirm_lba_sending = null;
 		JButton m_btn_cancel_lba_sending = null;
 		private JCheckBox m_chk_layers_gsm = new JCheckBox("GSM900 " + PAS.l("main_status_gsmcoverage"), false);
-		public JCheckBox get_chk_layers_gsm() { return m_chk_layers_gsm; }
+        public JCheckBox get_chk_layers_gsm() { return m_chk_layers_gsm; }
 		private JCheckBox m_chk_layers_umts = new JCheckBox("UMTS " + PAS.l("main_status_gsmcoverage"), false);
-		public JCheckBox get_chk_layers_umts() { return m_chk_layers_umts; }
+        public JCheckBox get_chk_layers_umts() { return m_chk_layers_umts; }
 		//private StdTextLabel m_lbl_lbalanguages = new StdTextLabel("Languages", 150, 11, false);
 		private JButton m_btn_lbalanguages = new JButton(ImageLoader.load_icon("message_32.png"));
 		private JPopupMenu m_pop_lbalanguages = new JPopupMenu();
@@ -1224,7 +1234,7 @@ public class StatusSending extends Object {
 			
 			sbnot.append("<b>The following operator(s) are not yet ready</b><br>");
 			sbprepared.append("<b>");
-			sbprepared.append((confirm ? PAS.l("common_confirm").toUpperCase() : PAS.l("common_cancel").toUpperCase()));
+            sbprepared.append((confirm ? Localization.l("common_confirm").toUpperCase() : Localization.l("common_cancel").toUpperCase()));
 			sbprepared.append("-operation will only affect</b><br>");
 			if(m_lba_by_operator!=null)
 			{
@@ -1250,12 +1260,12 @@ public class StatusSending extends Object {
 				sbtotal.append(sbprepared.toString());
 				sbtotal.append(sbnot.toString());
 				sbtotal.append("<b>");
-				sbtotal.append(PAS.l("common_are_you_sure"));
+                sbtotal.append(Localization.l("common_are_you_sure"));
 				sbtotal.append("<br><br></b>");
 				sbtotal.append("</html>");
 				if(notprepared.size()>0)
 				{
-					if(JOptionPane.showConfirmDialog(this, sbtotal.toString(), PAS.l("common_are_you_sure"), 
+                    if(JOptionPane.showConfirmDialog(this, sbtotal.toString(), Localization.l("common_are_you_sure"),
 												JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION)
 					{
 						ret = true;
@@ -1316,8 +1326,9 @@ public class StatusSending extends Object {
 						System.out.println("Loading GSM overlay for job="+jobid+" (" + sz_operator + ")");
 						PAS.get_pas().get_mappane().showAllOverlays(1, chk.isSelected(), jobid, chk, sz_operator);
 					}
-					else
-						Error.getError().addError(PAS.l("common_error"), "No valid JobId for operator found", new Exception(), Error.SEVERITY_ERROR);
+					else {
+                        Error.getError().addError(Localization.l("common_error"), "No valid JobId for operator found", new Exception(), Error.SEVERITY_ERROR);
+                    }
 				}
 				catch(Exception err)
 				{
@@ -1549,29 +1560,36 @@ public class StatusSending extends Object {
 		public static final long serialVersionUID = 1;
 		static final int lbl_width = 170;
 		private StdTextLabel m_lbl_name		= new StdTextLabel(PAS.l("common_sendingname") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_refno	= new StdTextLabel(PAS.l("common_refno") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_resendrefno = new StdTextLabel(PAS.l("main_status_resent_from_refno") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_created	= new StdTextLabel(PAS.l("common_created") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_sched	= new StdTextLabel(PAS.l("common_scheduled") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_status	= new StdTextLabel(PAS.l("common_sendingstatus") + ":", lbl_width, 11, true);
-		private StdTextLabel m_lbl_type		= new StdTextLabel(PAS.l("common_type") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_addresstypes = new StdTextLabel(PAS.l("common_addresstypes") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_queuestatus  = new StdTextLabel("Queue status:" , lbl_width, 11, false);
+        private StdTextLabel m_lbl_refno	= new StdTextLabel(PAS.l("common_refno") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_resendrefno = new StdTextLabel(PAS.l("main_status_resent_from_refno") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_created	= new StdTextLabel(PAS.l("common_created") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_sched	= new StdTextLabel(PAS.l("common_scheduled") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_status	= new StdTextLabel(PAS.l("common_sendingstatus") + ":", lbl_width, 11, true);
+        private StdTextLabel m_lbl_type		= new StdTextLabel(PAS.l("common_type") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_addresstypes = new StdTextLabel(PAS.l("common_addresstypes") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_queuestatus  = new StdTextLabel("Queue status:" , lbl_width, 11, false);
 		private StdTextLabel m_lbl_items	= new StdTextLabel(PAS.l("common_items") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_proc		= new StdTextLabel(PAS.l("common_processed") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_alloc	= new StdTextLabel(PAS.l("common_allocated") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_maxalloc = new StdTextLabel(PAS.l("common_maxchannels") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_oadc		= new StdTextLabel(PAS.l("common_origin") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_nofax	= new StdTextLabel(PAS.l("common_company_blocklist") + ":", lbl_width, 11, false);
-		private StdTextLabel m_lbl_actionprofile = new StdTextLabel(PAS.l("main_sending_settings_msg_profile") + ":", lbl_width, 11, false);
-		
-		private JSlider m_progress			= new JSlider(1, 840);
+        private StdTextLabel m_lbl_proc		= new StdTextLabel(PAS.l("common_processed") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_alloc	= new StdTextLabel(PAS.l("common_allocated") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_maxalloc = new StdTextLabel(PAS.l("common_maxchannels") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_oadc		= new StdTextLabel(PAS.l("common_origin") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_nofax	= new StdTextLabel(PAS.l("common_company_blocklist") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_actionprofile = new StdTextLabel(PAS.l("main_sending_settings_msg_profile") + ":", lbl_width, 11, false);
+        private JSlider m_progress			= new JSlider(1, 840);
 		private JButton m_channels_plus		= new JButton("+");
 		private JButton m_channels_minus	= new JButton("-");
 		private StdTextLabel m_lbl_setmaxalloc = new StdTextLabel("", 40, 12, true);
 		private JButton m_btn_setmaxalloc	= new JButton(String.format("%s %s", PAS.l("common_set"), PAS.l("common_maxchannels")));
-		
-		private StdTextLabel m_txt_name		= new StdTextLabel("", 250, 11, false);
+
+        {
+            m_btn_setmaxalloc = new JButton(String.format("%s %s", Localization.l("common_set"), Localization.l("common_maxchannels")));
+        }
+
+        {
+            m_btn_setmaxalloc = new JButton(String.format("%s %s", Localization.l("common_set"), Localization.l("common_maxchannels")));
+        }
+
+        private StdTextLabel m_txt_name		= new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_refno	= new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_resendrefno = new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_created  = new StdTextLabel("", 250, 11, false);
@@ -1593,15 +1611,15 @@ public class StatusSending extends Object {
 		private boolean b_is_hovering_dynfiles = false;
 		
 		private JButton m_btn_resend		= new JButton(PAS.l("main_status_resend"));
-		
-		public boolean m_b_allocset = false;
+        public boolean m_b_allocset = false;
 		
 		public VoicePanel() {
 			super();
 			m_btn_resend.setEnabled(false);
 			setPreferredSize(new Dimension(300, 500));
-			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
-				m_lbl_resendrefno.setText(PAS.l("main_status_new_message_from_refno") + ":");
+			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4) {
+                m_lbl_resendrefno.setText(Localization.l("main_status_new_message_from_refno") + ":");
+            }
 			//setPreferredSize(new Dimension(get_uipanel().getWidth()-4, get_uipanel().getHeight()/2));
 			add_controls();
 			m_progress.addChangeListener(new ChangeListener( ) {
@@ -1696,8 +1714,8 @@ public class StatusSending extends Object {
 			m_txt_type.setText(TextFormat.get_sendingtype(get_sendingtype()));
 			m_txt_addresstypes.setText(TextFormat.get_addresstypes(get_addresstypes()));
 			m_txt_oadc.setText(get_oadc());
-			m_progress.setValue(get_maxalloc()); 
-			m_txt_nofax.setText(get_nofax()==1 ? PAS.l("common_yes") : PAS.l("common_no"));
+			m_progress.setValue(get_maxalloc());
+            m_txt_nofax.setText(get_nofax()==1 ? Localization.l("common_yes") : Localization.l("common_no"));
 			switch(get_type())
 			{
 			case 1:
@@ -1741,45 +1759,14 @@ public class StatusSending extends Object {
 				break;
 			}
 
-			/*String sz_label = PAS.l("main_sending_settings_show_msg_profile");
-			final StdTextLabel lbl = new StdTextLabel(sz_label, 16, true);
-			//Substance 3.3
-			lbl.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor());
-			
-			//Substance 5.2
-			//lbl.setBackground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getUltraDarkColor());
-			lbl.setBorder(UMS.Tools.TextFormat.CreateStdBorder(""));
-			lbl.addMouseListener(new MouseAdapter() {
-				public void mouseEntered(MouseEvent e)
-				{
-					setCursor(new Cursor(Cursor.HAND_CURSOR));
-					lbl.setOpaque(true);
-					lbl.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getLightColor());
-				}
-				public void mouseExited(MouseEvent e)
-				{
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					lbl.setOpaque(false);
-					lbl.setBackground(new Color(0,0,0,0));
-				}
-				public void mousePressed(MouseEvent e)
-				{
-					openMessageProfile();
-				}
-			});
-			lbl.setPreferredSize(new Dimension(170, 25));*/
-			//m_menu_dynfiles.setPreferredSize(new Dimension(130, 0));
-			
-			//m_menu_dynfiles.add(lbl);
-			//JButton btn_open = new JButton(PAS.l("main_sending_settings_show_msg_profile"));
-			//btn_open.setPreferredSize(new Dimension(200, 25));
-			//btn_open.addActionListener(this);
-			//btn_open.setActionCommand("act_open_messageprofile");
-			JMenuItem menuitem = new JMenuItem(PAS.l("main_sending_settings_show_msg_profile"));
-			String face = UIManager.getString("Common.Fontface");
+            JMenuItem menuitem = new JMenuItem(new ShowProfileAction(new Supplier<Integer>() {
+                @Override
+                public Integer get() {
+                    return _n_profilepk;
+                }
+            }));
+            String face = UIManager.getString("Common.Fontface");
 			Font font = new Font(face, Font.BOLD, 12);
-			menuitem.setActionCommand("act_open_messageprofile");
-			menuitem.addActionListener(this);
 			menuitem.setFont(font);//menuitem.getFont().deriveFont(Font.BOLD));
 			//menuitem.setFont(menuitem.getFont().deriveFont(16));
 
@@ -1810,29 +1797,6 @@ public class StatusSending extends Object {
 					//b_is_dynfiles_showing = false;
 				}				
 			});
-			//m_menu_dynfiles.setPreferredSize(new Dimension(150, m_menu_dynfiles.getPreferredSize().height));
-			/*m_menu_dynfiles.addComponentListener(new ComponentListener() {
-
-				@Override
-				public void componentHidden(ComponentEvent e) {
-				}
-
-				@Override
-				public void componentMoved(ComponentEvent e) {
-				}
-
-				@Override
-				public void componentResized(ComponentEvent e) {
-					//lblfile.setPreferredSize(new Dimension(m_menu_dynfiles.getWidth(),25));
-					for(int i=0; i < m_menu_dynfiles.getComponentCount(); i++)
-						m_menu_dynfiles.getComponent(i).setPreferredSize(new Dimension(m_menu_dynfiles.getWidth(), 25));
-				}
-
-				@Override
-				public void componentShown(ComponentEvent e) {					
-				}
-				
-			});*/
 			update_ui();
 		}
 		SoundPlayer player = null;
@@ -1890,7 +1854,7 @@ public class StatusSending extends Object {
 
 			@Override
 			public void add_controls() {
-				StdTextLabel lblfile = new StdTextLabel(PAS.l("common_file") + " " + (fileno));
+                StdTextLabel lblfile = new StdTextLabel(Localization.l("common_file") + " " + (fileno));
 				lblfile.setHorizontalTextPosition(JLabel.LEFT);
 				lblfile.setVerticalTextPosition(JLabel.CENTER);
 				JButton btn_play = new JButton(no.ums.pas.ums.tools.ImageLoader.load_icon("play_media_16.png"));
@@ -2000,16 +1964,16 @@ public class StatusSending extends Object {
 			switch(get_type())
 			{
 			case 1:
-				tmp = PAS.l("main_status_voicesending");
+                tmp = Localization.l("main_status_voicesending");
 				break;
 			case 2:
-				tmp = PAS.l("main_status_smssending");
+                tmp = Localization.l("main_status_smssending");
 				if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 0)
 					m_btn_resend.setEnabled(false);
 				_ShowMaxAlloc(false);
 				break;
 			}
-			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + tmp + "    " + (isSimulation() ? String.format("[%s] ", PAS.l("main_sending_simulated")) : String.format("[%s] ", PAS.l("main_sending_live")))));
+            setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + tmp + "    " + (isSimulation() ? String.format("[%s] ", Localization.l("main_sending_simulated")) : String.format("[%s] ", Localization.l("main_sending_live")))));
 			
 		}
 		protected void _ShowMaxAlloc(boolean b)
@@ -2061,11 +2025,6 @@ public class StatusSending extends Object {
 			{
 				m_progress.setValue(m_progress.getValue()-1);
 			}
-			else if("act_open_messageprofile".equals(e.getActionCommand()))
-			{
-				openMessageProfile();
-			}
-			
 		}
 		public void add_controls() {
 			m_gridconst.fill = GridBagConstraints.BOTH;
@@ -2170,7 +2129,7 @@ public class StatusSending extends Object {
 			add(m_btn_resend, m_gridconst);
 			
 			//Border voice = BorderFactory.createTitledBorder("Voice Broadcast");
-			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(String.format(" %s    ", PAS.l("main_status_voicesending")) + (isSimulation() ? String.format("[%s] ", PAS.l("main_sending_simulated")) : String.format("[%s]", PAS.l("main_sending_live")))));
+            setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(String.format(" %s    ", Localization.l("main_status_voicesending")) + (isSimulation() ? String.format("[%s] ", Localization.l("main_sending_simulated")) : String.format("[%s]", Localization.l("main_sending_live")))));
 			
 			init();
 		}
@@ -2179,33 +2138,22 @@ public class StatusSending extends Object {
 				m_btn_resend.setVisible(false);
 			setVisible(true);
 		}
-		protected void openMessageProfile()
-		{
-			try {
-				OpenBrowser.browse(PAS.get_pas().VB4_URL + "/PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+_n_profilepk +"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
-				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().VB4_URL + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
-			} catch(Exception err) {
-				javax.swing.JOptionPane.showMessageDialog(this, "Error opening web browser", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-				Error.getError().addError("Sending_Settings","Exception in actionPerformed",err,1);
-			}
-		}
 
-	}
+    }
 	
 	public class CellPanel extends DefaultPanel implements ComponentListener {
 		
 		public static final long serialVersionUID = 1;
 		private StdTextLabel m_lbl_refno = new StdTextLabel(PAS.l("common_refno") + ":", 150, 11, true);
-		private StdTextLabel m_lbl_operator = new StdTextLabel(PAS.l("common_operator") + ":", 150, 11, true);
-		private StdTextLabel m_lbl_sendingstatus = new StdTextLabel(PAS.l("common_sendingstatus") + ":", 150, 11, true);
-		private StdTextLabel m_lbl_items = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 150, 11, false);
-		private StdTextLabel m_lbl_processed = new StdTextLabel(PAS.l("common_processed") + ":", 150, 11, false);
-		private StdTextLabel m_lbl_queued = new StdTextLabel(PAS.l("common_sending") + ":", 150, 11, false);
-		private StdTextLabel m_lbl_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 150, 11, false);
-		private StdTextLabel m_lbl_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 150, 11, false);
-		private StdTextLabel m_lbl_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 150, 11, false);
-
-		private StdTextLabel m_txt_refno = new StdTextLabel("", 150, 11, false);
+        private StdTextLabel m_lbl_operator = new StdTextLabel(PAS.l("common_operator") + ":", 150, 11, true);
+        private StdTextLabel m_lbl_sendingstatus = new StdTextLabel(PAS.l("common_sendingstatus") + ":", 150, 11, true);
+        private StdTextLabel m_lbl_items = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_processed = new StdTextLabel(PAS.l("common_processed") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_queued = new StdTextLabel(PAS.l("common_sending") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 150, 11, false);
+        private StdTextLabel m_txt_refno = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_sendingstatus = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_items = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_processed = new StdTextLabel("", 150, 11, false);
@@ -2307,8 +2255,8 @@ public class StatusSending extends Object {
 			add(m_lba_progress, m_gridconst);
 			add_spacing(DefaultPanel.DIR_VERTICAL, 10);
 			set_gridconst(0, inc_panels(), 1, 1);
-			
-			m_btn_tas_resend = new JButton(PAS.l("main_status_resend"));
+
+            m_btn_tas_resend = new JButton(Localization.l("main_status_resend"));
 			add(m_btn_tas_resend, m_gridconst);
 			
 			m_btn_tas_resend.setVisible(false);
@@ -2347,7 +2295,7 @@ public class StatusSending extends Object {
 			switch(m_filter_status_by_operator)
 			{
 			case -1:
-				m_txt_operator.setText(PAS.l("main_status_lba_nationalities"));
+                m_txt_operator.setText(Localization.l("main_status_lba_nationalities"));
 				break;
 			default:
 			{
@@ -2373,8 +2321,8 @@ public class StatusSending extends Object {
 			m_txt_queued.setText(String.valueOf(get_lba_queued()));
 			m_txt_failed.setText(String.valueOf(get_lba_failed()));
 			m_txt_expired.setText(String.valueOf(get_lba_expired()));
-			m_txt_processed.setText((get_lba_processed() >= 0 ? String.valueOf(get_lba_processed()) : PAS.l("common_na")));
-			m_txt_items.setText((get_lba_items() >= 0 ? String.valueOf(get_lba_items()) : PAS.l("common_na")));
+            m_txt_processed.setText((get_lba_processed() >= 0 ? String.valueOf(get_lba_processed()) : Localization.l("common_na")));
+            m_txt_items.setText((get_lba_items() >= 0 ? String.valueOf(get_lba_items()) : Localization.l("common_na")));
 			
 			if(m_filter_status_by_operator > -1 && m_lba.n_status > 42000) {
 				m_btn_tas_resend.setVisible(true);
@@ -2440,11 +2388,12 @@ public class StatusSending extends Object {
 					sz_operators += "<b>";
 					if(m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION || m_lba_by_operator.get(i).n_status==LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
 					{
-						sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + PAS.l("common_ready") + "<br>";
+                        sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + Localization.l("common_ready") + "<br>";
 						n_total_items += (m_lba_by_operator.get(i).n_items > 0 ? m_lba_by_operator.get(i).n_items : 0);
 					}
-					else if(m_lba_by_operator.get(i).n_status < LBASEND.LBASTATUS_PREPARED_CELLVISION)
-						sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + PAS.l("common_not_ready") + "<br>";
+					else if(m_lba_by_operator.get(i).n_status < LBASEND.LBASTATUS_PREPARED_CELLVISION) {
+                        sz_operators += m_lba_by_operator.get(i).sz_operator + " - " + Localization.l("common_not_ready") + "<br>";
+                    }
 					else if(m_lba_by_operator.get(i).n_status > LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE)
 						sz_operators += m_lba_by_operator.get(i).sz_operator + " - (" + LBASEND.LBASTATUSTEXT(m_lba_by_operator.get(i).n_status)+ ")<br>";
 					sz_operators += "</b>";
@@ -2453,16 +2402,16 @@ public class StatusSending extends Object {
 				switch(getLBA().f_simulation)
 				{
 				case 1:
-					sz_sendtext = PAS.l("main_sending_simulated").toUpperCase();
+                    sz_sendtext = Localization.l("main_sending_simulated").toUpperCase();
 					break;
 				case 0:
-					sz_sendtext = PAS.l("main_sending_live").toUpperCase();
+                    sz_sendtext = Localization.l("main_sending_live").toUpperCase();
 					break;
 				case 2:
-					sz_sendtext = PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live").toUpperCase();
+                    sz_sendtext = Localization.l("common_silent").toUpperCase() + " " + Localization.l("main_sending_live").toUpperCase();
 					break;
 				}
-				pnl_icon._SetToolTipText_Confirm(PAS.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + PAS.l("common_to") + "&nbsp;" + n_total_items + "&nbsp;" + PAS.l("main_sending_recipients") + "<br><br>" + sz_operators);
+                pnl_icon._SetToolTipText_Confirm(Localization.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + Localization.l("common_to") + "&nbsp;" + n_total_items + "&nbsp;" + Localization.l("main_sending_recipients") + "<br><br>" + sz_operators);
 			}
 
 			String tooltip = "";
@@ -2560,10 +2509,9 @@ public class StatusSending extends Object {
 
 		public static final long serialVersionUID = 1;
 		private StdTextLabel m_lbl_message = new StdTextLabel(PAS.l("main_sending_lba_message") + ":", 150,11,true);
-		private JTextArea 	 m_txt_message = new JTextArea("",1,1);
+        private JTextArea 	 m_txt_message = new JTextArea("",1,1);
 		private StdTextLabel m_lbl_operator = new StdTextLabel(PAS.l("common_operator") + ":", 150, 11, true);
-		
-		private StdTextLabel [] m_lbl_status_ts = new StdTextLabel[7];
+        private StdTextLabel [] m_lbl_status_ts = new StdTextLabel[7];
 		private StdTextLabel [] m_txt_status_ts = new StdTextLabel[7];
 		//private StdTextLabel m_lbl_status_cc = new StdTextLabel("GSM numbers from ", 150, 12, true);
 		private JTextArea m_txt_status_cc = new JTextArea(" ", 1, 1);

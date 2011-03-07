@@ -115,7 +115,7 @@ public class TasFilterPanel extends DefaultPanel
 			{
 				return PAS.l("main_tas_stats_rowcount_ALL");
 			}
-			return new Integer(l_rows).toString();
+			return Integer.toString(l_rows);
 		}
 	}
 	public class ComboChartTypeItem extends Object
@@ -145,11 +145,24 @@ public class TasFilterPanel extends DefaultPanel
 	JComboBox combo_filterfunction = new JComboBox();
 	JComboBox combo_filterrowcount = new JComboBox();
 	JCheckBox btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
-	DateTimePicker date_from = new DateTimePicker(this, false, 0, 1, 0);
+
+    {
+        btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
+    }
+
+    {
+        btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
+    }
+
+    DateTimePicker date_from = new DateTimePicker(this, false, 0, 1, 0);
 	DateTimePicker date_to = new DateTimePicker(this, false, 0, 0, 0);
 	JButton btn_export = new JButton(PAS.l("common_export"));
-	
-	ActionListener callback;
+
+    {
+        btn_export = new JButton(PAS.l("common_export"));
+    }
+
+    ActionListener callback;
 	public TasFilterPanel(ActionListener callback)
 	{
 		super();

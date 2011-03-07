@@ -9,6 +9,7 @@ import no.ums.pas.core.defines.tree.TreeUpdater;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.ws.WSTas;
 import no.ums.pas.core.ws.WSTasCount;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.tas.painters.LogPainter;
 import no.ums.pas.tas.statistics.UMSChartFrame;
@@ -210,7 +211,12 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	//TreeRenderer cr;
 	//StdTextLabel lbl_search = new StdTextLabel(PAS.l("common_search"), true, new Dimension(100, 25));
 	StdSearchArea txt_search = new StdSearchArea("", false, new Dimension(200, 25), PAS.l("common_search"));
-	JButton btn_show_world = new JButton();
+
+    {
+        txt_search = new StdSearchArea("", false, new Dimension(200, 25), PAS.l("common_search"));
+    }
+
+    JButton btn_show_world = new JButton();
 	//JButton btn_cancel_search = new JButton(ImageLoader.load_icon("delete_16.png"));
 	TasDetailView pnl_details = new TasDetailView(this);
 	SendListPanel pnl_send_list = new SendListPanel();
@@ -1415,8 +1421,9 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 									
 								//g.setFont(usefont);
 								String tourists = ((Integer)cou.getCountry().getNTouristcount()).toString();
-								if(cou.getCountry().getNOldestupdate()<=0)
-									tourists = PAS.l("common_na");
+								if(cou.getCountry().getNOldestupdate()<=0) {
+                                    tourists = Localization.l("common_na");
+                                }
 								if(screen!=null)
 									paintItem(g, (cou.b_selected ? true : b_paint_countrytext), cou.getCountry().getSzName(), tourists, usefont, col, screen, 10, cou.b_selected, false, cou);
 								
@@ -1457,8 +1464,9 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor();
 						c1 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 128);
 						String tourists = ((Integer)showCountry.getCountry().getNTouristcount()).toString();
-						if(showCountry.getCountry().getNOldestupdate()<=0)
-							tourists = PAS.l("common_na");
+						if(showCountry.getCountry().getNOldestupdate()<=0) {
+                            tourists = Localization.l("common_na");
+                        }
 						if(showCountry.getCountry().getWeightpointScreen()!=null)
 							paintItem(g, true, showCountry.getCountry().getSzName(), tourists, usefont, c1, showCountry.getCountry().getWeightpointScreen(), 10, showCountry.b_selected, true, showCountry);
 					}
@@ -1472,8 +1480,9 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor();
 			c1 = new Color(c1.getRed(), c1.getGreen()/10, c1.getBlue()/10, 128);
 			String tourists = ((Integer)showCountry.getCountry().getNTouristcount()).toString();
-			if(showCountry.getCountry().getNOldestupdate()<=0)
-				tourists = PAS.l("common_na");
+			if(showCountry.getCountry().getNOldestupdate()<=0) {
+                tourists = Localization.l("common_na");
+            }
 			if(showCountry.getCountry().getWeightpointScreen()!=null)
 				paintItem(g, true, showCountry.getCountry().getSzName(), tourists, usefont, c1, showCountry.getCountry().getWeightpointScreen(), 10, showCountry.b_selected, true, showCountry);
 			

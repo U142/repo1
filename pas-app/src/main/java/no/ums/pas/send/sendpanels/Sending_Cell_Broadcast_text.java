@@ -113,8 +113,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public SendWindow get_parent() { return parent; }
 	public void set_parent(SendWindow parent) { this.parent = parent; }
 	protected StdTextLabel m_lbl_expirydate = new StdTextLabel(PAS.l("main_sending_lba_expirytime") + ":");
-	protected StdTextLabel m_lbl_messagename = new StdTextLabel(PAS.l("main_sending_lba_messagename") + ":");
-	protected StdTextArea m_txt_messagename;
+    protected StdTextLabel m_lbl_messagename = new StdTextLabel(PAS.l("main_sending_lba_messagename") + ":");
+    protected StdTextArea m_txt_messagename;
 	public StdTextArea get_txt_messagename() { return m_txt_messagename; }
 	public StdTextLabel m_lbl_enable_response;
 	public JCheckBox m_check_enable_response;
@@ -122,13 +122,13 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public JComboBox m_combo_replynumbers;
 	public JComboBox get_replynumbers() { return m_combo_replynumbers; }
 	protected StdTextLabel m_lbl_messagetext = new StdTextLabel(PAS.l("main_sending_lba_message") + ":");
-	protected StdTextLabel m_lbl_area = new StdTextLabel(PAS.l("main_sending_lba_area") + ":");
-	protected StdTextLabel m_lbl_messagesize = new StdTextLabel("(0 " + PAS.l("common_x_of_y") + " " + m_maxSize + ")");
-	public JLabel get_lbl_localsize() { return m_lbl_messagesize; }
+    protected StdTextLabel m_lbl_area = new StdTextLabel(PAS.l("main_sending_lba_area") + ":");
+    protected StdTextLabel m_lbl_messagesize = new StdTextLabel("(0 " + PAS.l("common_x_of_y") + " " + m_maxSize + ")");
+    public JLabel get_lbl_localsize() { return m_lbl_messagesize; }
 	protected StdTextLabel m_lbl_internationalsize = new StdTextLabel("(0 " + PAS.l("common_x_of_y") + " " + m_maxSize + ")");
-	public JLabel get_lbl_internationalsize() { return m_lbl_internationalsize; }
+    public JLabel get_lbl_internationalsize() { return m_lbl_internationalsize; }
 	public StdTextLabel m_lbl_oadc_text = new StdTextLabel(PAS.l("main_sending_lba_sender_text") + ":"); // 11
-	public StdTextLabel get_lbl_oadc_text() { return m_lbl_oadc_text; }
+    public StdTextLabel get_lbl_oadc_text() { return m_lbl_oadc_text; }
 	public StdTextArea m_txt_oadc_text;
 	public StdTextArea get_txt_oadc_text() { return m_txt_oadc_text; }
 	public JList m_lst_cc;
@@ -137,9 +137,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	protected JComboBox m_cbx_messages;
 	public JComboBox get_cbx_messages() { return m_cbx_messages; }
 	protected JButton m_btn_new = new JButton(PAS.l("common_new"));
-	protected JButton m_btn_add = new JButton(PAS.l("common_add"));
-	protected JButton m_btn_delete = new JButton(PAS.l("common_delete"));
-	protected int m_n_expiry_minutes = 0;
+    protected JButton m_btn_add = new JButton(PAS.l("common_add"));
+    protected JButton m_btn_delete = new JButton(PAS.l("common_delete"));
+    protected int m_n_expiry_minutes = 0;
 	public int get_expiryMinutes() { return m_n_expiry_minutes; }
 	public void set_expiryMinutes(int n) { 
 		m_n_expiry_minutes = n;
@@ -158,7 +158,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public int n_focuscounter=0;
 	public JComboBox m_combo_templates = new JComboBox();
 	public StdTextLabel m_lbl_template = new StdTextLabel(PAS.l("main_sending_text_template") + ":");
-	protected MessageLibTreePanel tree_msglib;
+    protected MessageLibTreePanel tree_msglib;
 	protected StdSearchArea txt_msglib_search;
 
 	protected JButton btn_set_default_oadc = new JButton(SET_DEFAULT_OADC);
@@ -179,9 +179,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public JTextArea getTextArea() { return m_txt_messagetext;  }
 	
 	protected StdTextLabel m_lbl_requesttype = new StdTextLabel(PAS.l("main_status_locationbased_alert_short"));
-	protected JRadioButton m_radio_requesttype_0 = new JRadioButton(PAS.l("main_sending_settings_lba_send_now"), true);
-	protected JRadioButton m_radio_requesttype_1 = new JRadioButton(PAS.l("main_sending_settings_lba_send_confirm"));
-	protected ButtonGroup btn_group_requesttype = new ButtonGroup();
+    protected JRadioButton m_radio_requesttype_0 = new JRadioButton(PAS.l("main_sending_settings_lba_send_now"), true);
+    protected JRadioButton m_radio_requesttype_1 = new JRadioButton(PAS.l("main_sending_settings_lba_send_confirm"));
+    protected ButtonGroup btn_group_requesttype = new ButtonGroup();
 	
 	protected UnderlineHighlightPainter painter = new UnderlineHighlightPainter(Color.red);
 
@@ -378,8 +378,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		//if(get_txt_messagetext().getText().length() < 1)
 		//	return "Cell Broadcast requires a message";
-		if(validateSenderText())
-			return PAS.l("main_sending_lba_error_content");
+		if(validateSenderText()) {
+            return PAS.l("main_sending_lba_error_content");
+        }
 
 		return null;
 	}

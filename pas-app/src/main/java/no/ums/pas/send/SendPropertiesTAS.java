@@ -57,8 +57,9 @@ public class SendPropertiesTAS extends SendProperties
 		String sendto = "";
 		if(c.size()==1)
 			sendto = c.get(0).getSzName();
-		else if(c.size()>1)
-			sendto = PAS.l("main_tas_send_multiple_countries") + " (" + c.size() + ")";
+		else if(c.size()>1) {
+            sendto = PAS.l("main_tas_send_multiple_countries") + " (" + c.size() + ")";
+        }
 		set_sendingname(PAS.l("main_tas_title") + " - " + sendto, "");
 		get_sendobject().get_sendproperties().get_toolbar().lock_sending(true);
 	}

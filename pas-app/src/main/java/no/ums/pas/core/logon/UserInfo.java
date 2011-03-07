@@ -2,6 +2,7 @@ package no.ums.pas.core.logon;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
@@ -171,10 +172,12 @@ public class UserInfo extends Object {
 		public Boolean get_success() { return m_b_success; }
 		public String toString() { return get_domain(); }
 		public String get_ssuccess() { 
-			if(m_b_success.booleanValue())
-				return PAS.l("logon_success");
-			else
-				return PAS.l("logon_failed"); 
+			if(m_b_success.booleanValue()) {
+                return Localization.l("logon_success");
+            }
+			else {
+                return Localization.l("logon_failed");
+            }
 		}
 		
 		public NSLookup(String sz_domain, String sz_ip, long lastdatetime, String sz_location, boolean b_success)

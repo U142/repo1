@@ -2,6 +2,7 @@ package no.ums.pas.core.dataexchange.soap;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,8 +66,9 @@ public class SoapExecAlert extends MiniSOAP
 			public String toStringHeading()
 			{
 				String ret = "<u>";
-				if(n_refno>0)
-					ret += PAS.l("common_refno") + n_refno;
+				if(n_refno>0) {
+                    ret += Localization.l("common_refno") + n_refno;
+                }
 				if(sz_alertname.length()>0)
 					ret += " [" + sz_alertname + "]";
 				ret += "</u>";
@@ -114,19 +116,24 @@ public class SoapExecAlert extends MiniSOAP
 		public String toString(boolean b_openstatus_question)
 		{
 			String sz_showfunc;
-			if(sz_sendfunction.equals("live"))
-				sz_showfunc = PAS.l("main_sending_live");
-			else if(sz_sendfunction.equals("simulate"))
-				sz_showfunc = PAS.l("main_sending_simulated");
-			else if(sz_sendfunction.equals("silent"))
-				sz_showfunc = PAS.l("common_silent").toUpperCase() + " " + PAS.l("main_sending_live");
-			else if(sz_sendfunction.equals("test"))
-				sz_showfunc = PAS.l("main_sending_test");
-			else
-				sz_showfunc = PAS.l("main_sending_unknown");
+			if(sz_sendfunction.equals("live")) {
+                sz_showfunc = Localization.l("main_sending_live");
+            }
+			else if(sz_sendfunction.equals("simulate")) {
+                sz_showfunc = Localization.l("main_sending_simulated");
+            }
+			else if(sz_sendfunction.equals("silent")) {
+                sz_showfunc = Localization.l("common_silent").toUpperCase() + " " + Localization.l("main_sending_live");
+            }
+			else if(sz_sendfunction.equals("test")) {
+                sz_showfunc = Localization.l("main_sending_test");
+            }
+			else {
+                sz_showfunc = Localization.l("main_sending_unknown");
+            }
 			
 			String sz_result = 	"<html>"+
-								"<b><u>" + PAS.l("projectdlg_project") + " ["+
+								"<b><u>" + Localization.l("projectdlg_project") + " ["+
 								l_projectpk+
 								"] [" + sz_showfunc + "]" +
 								"</u></b><br>";
@@ -154,8 +161,9 @@ public class SoapExecAlert extends MiniSOAP
 				sz_result += "<br>";
 			}
 								
-			if(hasProject() && PAS.get_pas().get_statuscontroller().get_sendinglist().size() < 1 && hasOneOrMoreSuccess() && !getSendFunction().equals("test") && b_openstatus_question)
-				sz_result +=		"<br>" + PAS.l("main_sending_open_status");
+			if(hasProject() && PAS.get_pas().get_statuscontroller().get_sendinglist().size() < 1 && hasOneOrMoreSuccess() && !getSendFunction().equals("test") && b_openstatus_question) {
+                sz_result +=		"<br>" + Localization.l("main_sending_open_status");
+            }
 			
 			sz_result += "</html>";
 			return sz_result;
@@ -374,7 +382,7 @@ public class SoapExecAlert extends MiniSOAP
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"), "An error occured when preparing the Alert Sending", e, 1);
+			Error.getError().addError(Localization.l("common_error"), "An error occured when preparing the Alert Sending", e, 1);
 			return false;
 		}
 		SOAPMessage replyMsg = null;
@@ -385,7 +393,7 @@ public class SoapExecAlert extends MiniSOAP
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "An error occured when executing Alert Sending", e, 1);
+			Error.getError().addError(Localization.l("common_error"), "An error occured when executing Alert Sending", e, 1);
 			return false;
 		}
 		try
@@ -417,7 +425,7 @@ public class SoapExecAlert extends MiniSOAP
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "An error occured when parsing results for Alert Sending.\nThe sending may have been sent.", e, 1);
+			Error.getError().addError(Localization.l("common_error"), "An error occured when parsing results for Alert Sending.\nThe sending may have been sent.", e, 1);
 			return false;
 		}
     	return true;

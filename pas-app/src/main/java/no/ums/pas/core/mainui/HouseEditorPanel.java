@@ -7,6 +7,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSClosestGAB;
 import no.ums.pas.core.ws.WSHouseEditor;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
@@ -54,18 +55,18 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	}
 	
 	private StdTextLabel m_lbl_houseinfo= new StdTextLabel("", 300, 12, true);
-	private StdTextLabel m_lbl_name		= new StdTextLabel(PAS.l("common_adr_name"), 150);
-	private StdTextLabel m_lbl_phone	= new StdTextLabel(PAS.l("common_adr_phone"), 150);
-	private StdTextLabel m_lbl_mobile	= new StdTextLabel(PAS.l("common_adr_mobile"), 150);
-	private StdTextLabel m_lbl_address	= new StdTextLabel(PAS.l("common_adr_address"), 150);
-	//private StdTextLabel m_lbl_postno	= new StdTextLabel("Postno", 100);
-	private StdTextLabel m_lbl_place	= new StdTextLabel(PAS.l("common_adr_postno") + "/" + PAS.l("common_adr_postplace") ,150);
-	private StdTextLabel m_lbl_gnrbnr		= new StdTextLabel(PAS.l("common_adr_gno") + "/" + PAS.l("common_adr_bno"), 150);
-	private StdTextLabel m_lbl_municipal= new StdTextLabel(PAS.l("common_adr_municipal_no"), 150);
-	private StdTextLabel m_lbl_streetid = new StdTextLabel(PAS.l("common_adr_streetid"), 150);
-	private StdTextLabel m_lbl_lonlat	= new StdTextLabel(PAS.l("common_lon") + "/" + PAS.l("common_lat"), 150);
-	private StdTextLabel m_lbl_birthday = new StdTextLabel(PAS.l("common_adr_birthday") + " (DD.MM.YYYY)", 150);
-	private StdTextArea m_txt_name		= new StdTextArea("", false, 150);
+	private StdTextLabel m_lbl_name		= new StdTextLabel(Localization.l("common_adr_name"), 150);
+    private StdTextLabel m_lbl_phone	= new StdTextLabel(Localization.l("common_adr_phone"), 150);
+    private StdTextLabel m_lbl_mobile	= new StdTextLabel(Localization.l("common_adr_mobile"), 150);
+    private StdTextLabel m_lbl_address	= new StdTextLabel(Localization.l("common_adr_address"), 150);
+	private StdTextLabel m_lbl_place	= new StdTextLabel(Localization.l("common_adr_postno") + "/" + Localization.l("common_adr_postplace") ,150);
+    private StdTextLabel m_lbl_gnrbnr		= new StdTextLabel(Localization.l("common_adr_gno") + "/" + Localization.l("common_adr_bno"), 150);
+    private StdTextLabel m_lbl_municipal= new StdTextLabel(Localization.l("common_adr_municipal_no"), 150);
+    private StdTextLabel m_lbl_streetid = new StdTextLabel(Localization.l("common_adr_streetid"), 150);
+    private StdTextLabel m_lbl_lonlat	= new StdTextLabel(Localization.l("common_lon") + "/" + Localization.l("common_lat"), 150);
+    private StdTextLabel m_lbl_birthday = new StdTextLabel(Localization.l("common_adr_birthday") + " (DD.MM.YYYY)", 150);
+
+    private StdTextArea m_txt_name		= new StdTextArea("", false, 150);
 	private StdTextArea m_txt_phone		= new StdTextArea("", false, 100);
 	private StdTextArea m_txt_mobile	= new StdTextArea("", false, 100);
 	private StdTextArea m_txt_address	= new StdTextArea("", false, 150);
@@ -80,11 +81,12 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	private StdTextLabel m_txt_lonshow  = new StdTextLabel("", false, 75);
 	private StdTextLabel m_txt_latshow  = new StdTextLabel("", false, 75);
 	private StdTextArea m_txt_birthday = new StdTextArea("", false, 75);
-	private JButton m_btn_save			= new JButton(PAS.l("common_save"));
-	private HouseInhabitantsList m_inhablist = null;
-	private IconRadio m_radio_private	= new IconRadio(PAS.l("common_adr_private"), 0, true);
-	private IconRadio m_radio_company	= new IconRadio(PAS.l("common_adr_company"), 1);
-	private ButtonGroup m_group_user	= new ButtonGroup();
+	private JButton m_btn_save			= new JButton(Localization.l("common_save"));
+
+    private HouseInhabitantsList m_inhablist = null;
+	private IconRadio m_radio_private	= new IconRadio(Localization.l("common_adr_private"), 0, true);
+    private IconRadio m_radio_company	= new IconRadio(Localization.l("common_adr_company"), 1);
+    private ButtonGroup m_group_user	= new ButtonGroup();
 	
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
@@ -171,7 +173,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		m_callback = callback;
 		m_house = new ArrayList<HouseItem>();//house;
 		
-		m_inhablist = new HouseInhabitantsList(new String [] { "", PAS.l("common_adr_name"), PAS.l("common_adr_address"), PAS.l("common_adr_postno"), PAS.l("common_adr_postplace"), PAS.l("common_adr_phone"), PAS.l("common_adr_mobile"), "" }, new int [] { 16, 100, 100, 50, 100, 75, 75, 16 } );
+		m_inhablist = new HouseInhabitantsList(new String [] { "", Localization.l("common_adr_name"), Localization.l("common_adr_address"), Localization.l("common_adr_postno"), Localization.l("common_adr_postplace"), Localization.l("common_adr_phone"), Localization.l("common_adr_mobile"), "" }, new int [] { 16, 100, 100, 50, 100, 75, 75, 16 } );
 		
 		m_group_user.add(m_radio_private);
 		m_group_user.add(m_radio_company);
@@ -254,7 +256,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		m_txt_house.setText(get_inhabitant().get_no());
 		m_txt_letter.setText(get_inhabitant().get_letter());
 		m_txt_place.setText(get_inhabitant().get_postarea());
-		String sz_houseinfo = PAS.l("main_houseeditortab_newhouse");
+		String sz_houseinfo = Localization.l("main_houseeditortab_newhouse");
 		if(get_house()!=null && get_house().size()>=1)
 		{
 			int total_inhab = 0;
@@ -262,7 +264,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			{
 				total_inhab += h.get_inhabitantcount();
 			}
-			sz_houseinfo = PAS.l("main_houseeditortab_house_with") + " " + total_inhab + " " + PAS.l("common_adr_inhabitants");
+			sz_houseinfo = Localization.l("main_houseeditortab_house_with") + " " + total_inhab + " " + Localization.l("common_adr_inhabitants");
 		}
 		m_lbl_houseinfo.setText(sz_houseinfo);
 	}
@@ -300,7 +302,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		else if("act_delete_inhabitant".equals(e.getActionCommand())) {
 			Inhabitant i = (Inhabitant)e.getSource();
 			m_inhabitant = i;
-			if(JOptionPane.showConfirmDialog(this, PAS.l("common_delete_are_you_sure") + " " + i.get_adrname() + " ?", PAS.l("main_houseeditortab_delete_heading"), JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, Localization.l("common_delete_are_you_sure") + " " + i.get_adrname() + " ?", Localization.l("main_houseeditortab_delete_heading"), JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
 				delete_inhabitant(i);
 			}
 		}
@@ -341,11 +343,11 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 		try {
 			if(m_txt_municipal.getText().length() == 0 || m_txt_municipal.getText().matches("[^0-9]"))
 			{
-				showErrorDialog(PAS.l("main_houseeditortab_municipal_required"));
+				showErrorDialog(Localization.l("main_houseeditortab_municipal_required"));
 				return false;
 			}
 			if(m_point == null) {
-				showErrorDialog(PAS.l("main_houseeditortab_point_not_selected"));
+				showErrorDialog(Localization.l("main_houseeditortab_point_not_selected"));
 				return false;
 			}
 			String sz_operation = "insert";
@@ -545,7 +547,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	
 	private void showErrorDialog(String errormsg) {
 		JFrame frame = get_frame();
-		JOptionPane.showMessageDialog(frame, errormsg, PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(frame, errormsg, Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 		frame.dispose();
 	}
 	

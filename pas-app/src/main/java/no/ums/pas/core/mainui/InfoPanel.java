@@ -7,6 +7,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSWeatherReport;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
@@ -1017,20 +1018,14 @@ public class InfoPanel extends GeneralPanel {
 				ActionListener {
 			public static final long serialVersionUID = 1;
 			protected JLabel m_lbl_lon = new JLabel(PAS.l("common_longitude"));
-			protected JLabel m_lbl_lat = new JLabel(PAS.l("common_latitude"));
-			protected JLabel m_lbl_lon_deg = new JLabel(PAS
-					.l("common_degree_sign"));
-			protected JLabel m_lbl_lat_deg = new JLabel(PAS
-					.l("common_degree_sign"));
-			private JLabel m_lbl_lon_min = new JLabel(PAS
-					.l("common_minute_sign"));
-			private JLabel m_lbl_lat_min = new JLabel(PAS
-					.l("common_minute_sign"));
-			private JLabel m_lbl_lon_sec = new JLabel(PAS
-					.l("common_second_sign"));
-			private JLabel m_lbl_lat_sec = new JLabel(PAS
-					.l("common_second_sign"));
-			protected StdIntegerArea m_txt_lon_deg = new StdIntegerArea("",
+            protected JLabel m_lbl_lat = new JLabel(PAS.l("common_latitude"));
+            protected JLabel m_lbl_lon_deg = new JLabel(PAS.l("common_degree_sign"));
+            protected JLabel m_lbl_lat_deg = new JLabel(PAS.l("common_degree_sign"));
+            private JLabel m_lbl_lon_min = new JLabel(PAS.l("common_minute_sign"));
+            private JLabel m_lbl_lat_min = new JLabel(PAS.l("common_minute_sign"));
+            private JLabel m_lbl_lon_sec = new JLabel(PAS.l("common_second_sign"));
+            private JLabel m_lbl_lat_sec = new JLabel(PAS.l("common_second_sign"));
+            protected StdIntegerArea m_txt_lon_deg = new StdIntegerArea("",
 					false, 35, StdIntegerArea.INTEGER);
 			protected StdIntegerArea m_txt_lat_deg = new StdIntegerArea("",
 					false, 35, StdIntegerArea.INTEGER);
@@ -1043,9 +1038,9 @@ public class InfoPanel extends GeneralPanel {
 			private StdIntegerArea m_txt_lat_sec = new StdIntegerArea("",
 					false, 35, StdIntegerArea.DOUBLE);
 
-			protected JButton m_btn_go_ll = new JButton(PAS
-					.l("main_infotab_goto_map"));
-			protected ActionListener m_callback;
+			protected JButton m_btn_go_ll = new JButton(PAS.l("main_infotab_goto_map"));
+
+            protected ActionListener m_callback;
 
 			public CoorSearchLL(ActionListener a) {
 				m_callback = a;
@@ -1160,12 +1155,11 @@ public class InfoPanel extends GeneralPanel {
 		public class CoorSearchUTM extends DefaultPanel implements
 				ActionListener {
 			public static final long serialVersionUID = 1;
-			private JLabel m_lbl_utm_easting = new JLabel(PAS
-					.l("common_utm_easting"));
-			private JLabel m_lbl_utm_northing = new JLabel(PAS
-					.l("common_utm_northing"));
-			private JLabel m_lbl_utm_zone = new JLabel(PAS.l("common_utm_zone"));
-			// private JComboBox m_combo_utm_ellipsoid = new JComboBox();
+			private JLabel m_lbl_utm_easting = new JLabel(PAS.l("common_utm_easting"));
+            private JLabel m_lbl_utm_northing = new JLabel(PAS.l("common_utm_northing"));
+            private JLabel m_lbl_utm_zone = new JLabel(PAS.l("common_utm_zone"));
+
+            // private JComboBox m_combo_utm_ellipsoid = new JComboBox();
 			private StdIntegerArea m_txt_utm_easting = new StdIntegerArea("",
 					false, 65, StdIntegerArea.DOUBLE);
 			private StdIntegerArea m_txt_utm_northing = new StdIntegerArea("",
@@ -1173,9 +1167,9 @@ public class InfoPanel extends GeneralPanel {
 			private StdTextUTMZone m_txt_utm_zone = new StdTextUTMZone("32V",
 					false, 30);
 
-			private JButton m_btn_go_utm = new JButton(PAS
-					.l("main_infotab_goto_map"));
-			private ActionListener m_callback;
+			private JButton m_btn_go_utm = new JButton(PAS.l("main_infotab_goto_map"));
+
+            private ActionListener m_callback;
 
 			public CoorSearchUTM(ActionListener a) {
 				// m_btn_go_utm.setPreferredSize(new Dimension(75, 16));
@@ -1334,19 +1328,15 @@ public class InfoPanel extends GeneralPanel {
 			StdTextLabel symbols = new StdTextLabel("");
 			// symbols.setPreferredSize(new Dimension(50,25));
 
-			StdTextLabel wind_speed = new StdTextLabel(PAS
-					.l("main_infotab_weather_windspeed"));
+            StdTextLabel wind_speed = new StdTextLabel(Localization.l("main_infotab_weather_windspeed"));
 			// wind_speed.setPreferredSize(new Dimension(40,25));
 
-			StdTextLabel cloud_cover = new StdTextLabel(PAS
-					.l("main_infotab_weather_cloudcover"));
+            StdTextLabel cloud_cover = new StdTextLabel(Localization.l("main_infotab_weather_cloudcover"));
 			// cloud_cover.setPreferredSize(new Dimension(40,25));
 
-			StdTextLabel temperature = new StdTextLabel(PAS
-					.l("main_infotab_weather_temperature"));
+            StdTextLabel temperature = new StdTextLabel(Localization.l("main_infotab_weather_temperature"));
 
-			StdTextLabel temp_min_max = new StdTextLabel(PAS
-					.l("main_infotab_weather_minmax"));
+            StdTextLabel temp_min_max = new StdTextLabel(Localization.l("main_infotab_weather_minmax"));
 
 			// lblLocalTime.setPreferredSize(new Dimension(200,25));
 			// FontSet time.setFont(font);
@@ -1499,7 +1489,7 @@ public class InfoPanel extends GeneralPanel {
 			lblMinMaxTemp.setText("");
 			lblCloudCover.setText("");
 			lblDirection.setText("");
-			lblSpeed.setText(PAS.l("main_infotab_weather_nodata"));
+            lblSpeed.setText(Localization.l("main_infotab_weather_nodata"));
 
 		}
 

@@ -1,5 +1,6 @@
 package no.ums.pas.send.sendpanels;
 
+import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.send.BBProfile;
@@ -9,7 +10,6 @@ import no.ums.pas.send.SchedDateTime;
 import no.ums.pas.send.TTSLang;
 import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.calendarutils.SchedCalendar;
@@ -40,20 +40,19 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	protected SendWindow parent = null;
 	public SendWindow get_parent() { return parent; }
 	protected StdTextLabel m_lbl_profiles = new StdTextLabel(PAS.l("main_sending_settings_msg_profile") + ":");
-	protected StdTextLabel m_lbl_schedprofiles = new StdTextLabel(PAS.l("main_sending_settings_config_profile") + ":");
-	protected StdTextLabel m_lbl_oadc = new StdTextLabel(PAS.l("main_sending_settings_origin_number") + ":");
-	protected StdTextLabel m_lbl_validity = new StdTextLabel(PAS.l("main_sending_settings_validity"));
-	protected JComboBox m_combo_validity = new JComboBox(new String [] { "1", "2", "3", "4", "5", "6", "7" } );
+    protected StdTextLabel m_lbl_schedprofiles = new StdTextLabel(PAS.l("main_sending_settings_config_profile") + ":");
+    protected StdTextLabel m_lbl_oadc = new StdTextLabel(PAS.l("main_sending_settings_origin_number") + ":");
+    protected StdTextLabel m_lbl_validity = new StdTextLabel(PAS.l("main_sending_settings_validity"));
+    protected JComboBox m_combo_validity = new JComboBox(new String [] { "1", "2", "3", "4", "5", "6", "7" } );
 	protected StdTextLabel m_lbl_sendname;
 	protected StdTextArea m_txt_sendname;
 	protected StdTextLabel m_lbl_scheddate = new StdTextLabel(PAS.l("common_date") + "/" + PAS.l("common_time") + ":");
-	protected JRadioButton m_radio_sendnow = new JRadioButton(PAS.l("main_sending_settings_schedule_now"), true);
-	protected JRadioButton m_radio_sched = new JRadioButton(PAS.l("main_sending_settings_schedule_later"));
-	
-	protected StdTextLabel m_lbl_requesttype = new StdTextLabel(PAS.l("main_status_locationbased_alert_short"));
-	protected JRadioButton m_radio_requesttype_0 = new JRadioButton(PAS.l("main_sending_settings_lba_send_now"), true);
-	protected JRadioButton m_radio_requesttype_1 = new JRadioButton(PAS.l("main_sending_settings_lba_send_confirm"));
-	protected ButtonGroup btn_group_requesttype = new ButtonGroup();
+    protected JRadioButton m_radio_sendnow = new JRadioButton(PAS.l("main_sending_settings_schedule_now"), true);
+    protected JRadioButton m_radio_sched = new JRadioButton(PAS.l("main_sending_settings_schedule_later"));
+    protected StdTextLabel m_lbl_requesttype = new StdTextLabel(PAS.l("main_status_locationbased_alert_short"));
+    protected JRadioButton m_radio_requesttype_0 = new JRadioButton(PAS.l("main_sending_settings_lba_send_now"), true);
+    protected JRadioButton m_radio_requesttype_1 = new JRadioButton(PAS.l("main_sending_settings_lba_send_confirm"));
+    protected ButtonGroup btn_group_requesttype = new ButtonGroup();
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
@@ -74,7 +73,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	protected JButton m_channels_minus = new JButton();
 	
 	protected StdTextLabel m_lbl_maxchannels = new StdTextLabel(PAS.l("main_sending_settings_max_voice_channels") + ":");
-	protected StdTextLabel m_lbl_showmaxchannels = new StdTextLabel("");
+    protected StdTextLabel m_lbl_showmaxchannels = new StdTextLabel("");
 	protected int m_n_maxchannels = 0;
 	protected int m_n_requesttype = 0;
 	
@@ -147,9 +146,12 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_combo_profiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_profiles.addActionListener(this);
 		m_combo_profiles.setActionCommand("act_profile_changed");
-		m_btn_showprofile = new JButton(PAS.l("main_sending_settings_show_msg_profile"));
-		m_btn_showprofile.addActionListener(this);
-		m_btn_showprofile.setActionCommand("act_profile_show");
+		m_btn_showprofile = new JButton(new ShowProfileAction(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return m_current_profile.get_profilepk();
+            }
+        }));
 		m_combo_oadc = new JComboBox();
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);
@@ -374,14 +376,6 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			}
 
 			//PAS.get_pas().add_event("Opening " + PAS.get_pas().get_sitename());
-		} else if("act_profile_show".equals(e.getActionCommand()) && get_current_profile() != null) {
-			try {
-				OpenBrowser.browse(PAS.get_pas().VB4_URL + "/PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
-				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().VB4_URL + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
-			} catch(Exception err) {
-				javax.swing.JOptionPane.showMessageDialog(this, "Error opening web browser", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-				Error.getError().addError("Sending_Settings","Exception in actionPerformed",err,1);
-			}
 		} else if("act_oadc_changed".equals(e.getActionCommand())) {
 			m_current_oadc = (OADC)m_combo_oadc.getSelectedItem();
 		} else if("act_schedprofile_changed".equals(e.getActionCommand())) {
@@ -404,7 +398,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		} else if("act_requesttype_1".equals(e.getActionCommand())) {
 			m_n_requesttype = 1;
 		}*/ else if("inc_channels".equals(e.getActionCommand())) {
-			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue()+1);
+			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue() + 1);
 		} else if("dec_channels".equals(e.getActionCommand())) {
 			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue()-1);
 		}
@@ -608,4 +602,5 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	public void set_name(String sz_name){
 		m_txt_sendname.setText(sz_name);
 	}
+
 }

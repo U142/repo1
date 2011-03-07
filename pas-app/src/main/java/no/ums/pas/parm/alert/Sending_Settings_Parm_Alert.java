@@ -1,5 +1,6 @@
 package no.ums.pas.parm.alert;
 
+import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
@@ -7,9 +8,8 @@ import no.ums.pas.send.OADC;
 import no.ums.pas.send.SchedDateTime;
 import no.ums.pas.send.TTSLang;
 import no.ums.pas.send.sendpanels.Sending_Settings;
+import no.ums.pas.send.sendpanels.ShowProfileAction;
 import no.ums.pas.sound.SoundlibFile;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.OpenBrowser;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 
@@ -36,7 +36,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 	public BBSchedProfile get_current_schedprofile() { return m_current_schedprofile; }
 	public JTextField get_sending_name() { return m_txt_sendname; } 
 	private StdTextLabel m_lbl_validity_days;
-	
+
 	public Sending_Settings_Parm_Alert(AlertWindow parentwin) {
 		super(PAS.get_pas());
 		alertparent = parentwin;
@@ -45,9 +45,12 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_combo_profiles = new JComboBox();
 		m_combo_profiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_profiles.setActionCommand("act_profile_changed");
-		m_btn_showprofile = new JButton(PAS.l("main_sending_settings_show_msg_profile"));
-		m_btn_showprofile.addActionListener(this);
-		m_btn_showprofile.setActionCommand("act_profile_show");
+		m_btn_showprofile = new JButton(new ShowProfileAction(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return m_current_profile.get_profilepk();
+            }
+        }));
 		m_combo_oadc = new JComboBox();
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);
@@ -191,14 +194,6 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 				
 			}
 			//PAS.get_pas().add_event("Opening " + PAS.get_pas().get_sitename());
-		} else if("act_profile_show".equals(e.getActionCommand())) {
-			try {
-				OpenBrowser.browse(PAS.get_pas().VB4_URL + "/PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd());
-				//new OpenBrowser().showDocument(new java.net.URL(PAS.get_pas().VB4_URL + "PAS_msg_profile_dlg.asp?f_setreadonly=True&lProfilePk="+m_current_profile.get_profilepk()+"&l_deptpk="+PAS.get_pas().get_userinfo().get_default_dept().get_deptpk()+"&usr="+PAS.get_pas().get_userinfo().get_userid()+"&cmp="+PAS.get_pas().get_userinfo().get_compid()+"&pas="+PAS.get_pas().get_userinfo().get_passwd()));
-			} catch(Exception err) {
-				javax.swing.JOptionPane.showMessageDialog(this, "Error opening web browser", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-				Error.getError().addError(PAS.l("common_error"),"Sending_Settings Exception in actionPerformed",err,1);
-			}
 		} else if("act_oadc_changed".equals(e.getActionCommand())) {
 			m_current_oadc = (OADC)m_combo_oadc.getSelectedItem();
 		} else if("act_schedprofile_changed".equals(e.getActionCommand())) {
@@ -209,7 +204,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		} else if("act_requesttype_1".equals(e.getActionCommand())) {
 			m_n_requesttype = 1;
 		}*/ else if("inc_channels".equals(e.getActionCommand())) {
-			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue()+1);
+			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue() + 1);
 		} else if("dec_channels".equals(e.getActionCommand())) {
 			m_slider_maxchannels.setValue(m_slider_maxchannels.getValue()-1);
 		}
@@ -293,4 +288,5 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_slider_maxchannels.setEnabled(val);
 		
 	}
+
 }

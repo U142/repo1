@@ -130,25 +130,33 @@ public class Sending_Files extends DefaultPanel {
 		}
 		
 		//if(rec)
-			if(PAS.icon_version==2)
-				m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
-			else
-				m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_icon("mic_20x20.gif"), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+			if(PAS.icon_version==2) {
+                m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+            }
+			else {
+                m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_icon("mic_20x20.gif"), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+            }
 
-		if(PAS.icon_version==2)
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_and_scale_icon("tts.gif",15,15), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
-		else
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_icon("tts_20x20.gif"), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
+		if(PAS.icon_version==2) {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_and_scale_icon("tts.gif", 15, 15), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
+        }
+		else {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_icon("tts_20x20.gif"), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
+        }
 		
-		if(PAS.icon_version==2)
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_and_scale_icon("library.gif",15,15), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
-		else
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_icon("library_20x20.png"), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
+		if(PAS.icon_version==2) {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_and_scale_icon("library.gif", 15, 15), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
+        }
+		else {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_icon("library_20x20.png"), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
+        }
 			
-		if(PAS.icon_version==2)
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_and_scale_icon("folder_open_24.png",15,15), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
-		else
-			m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_icon("open.gif"), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
+		if(PAS.icon_version==2) {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_and_scale_icon("folder_open_24.png", 15, 15), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
+        }
+		else {
+            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_icon("open.gif"), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
+        }
 		m_lbl_soundmodule.setText(PAS.l("main_sending_info_soundfile_for_module") + " " + get_soundfile().get_modulename());
 		
 		if(file.get_template() == 1) {

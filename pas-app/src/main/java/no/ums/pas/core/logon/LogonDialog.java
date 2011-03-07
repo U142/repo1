@@ -7,6 +7,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.localization.LocalizationFinder;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -113,7 +114,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	}
 	protected void set_response(boolean b_quit) {
 		m_logon.set_response(b_quit);
-		set_errortext(PAS.l("common_contacting_server"), false);
+		set_errortext(Localization.l("common_contacting_server"), false);
 	}
 	protected void enableInput(boolean b) {
 		m_panel.m_txt_userid.setEnabled(b);
@@ -149,7 +150,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 	public LogonDialog(Logon logon, JFrame owner, boolean b_modal, 
 			LogonInfo logoninfo, String wantedlanguage,
 			boolean b_request_newsession) {
-		super(PAS.l("logon_heading"));
+		super(Localization.l("logon_heading"));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setIconImage(PAS.get_pas().getIconImage());
@@ -300,14 +301,14 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 					return tooltip;
 				}
 			};
-			m_lbl_userid = new StdTextLabel(PAS.l("logon_userid"));
-			m_lbl_compid = new StdTextLabel(PAS.l("logon_company"));
-			m_lbl_passwd = new StdTextLabel(PAS.l("logon_password"));
-			m_lbl_language = new StdTextLabel(PAS.l("common_language"));
+			m_lbl_userid = new StdTextLabel(Localization.l("logon_userid"));
+			m_lbl_compid = new StdTextLabel(Localization.l("logon_company"));
+			m_lbl_passwd = new StdTextLabel(Localization.l("logon_password"));
+			m_lbl_language = new StdTextLabel(Localization.l("common_language"));
 			m_lbl_errormsg = new StdTextLabel("");
 			m_combo_language = new JComboBox();
 			m_lbl_errormsg.setForeground(Color.RED);
-			m_btn_submit = new JButton(PAS.l("common_submit"));
+			m_btn_submit = new JButton(Localization.l("common_submit"));
 			m_txt_userid.setPreferredSize(new Dimension(100, 19));
 			m_txt_compid.setPreferredSize(new Dimension(100, 19));
 			m_txt_passwd.setPreferredSize(new Dimension(100, 19));
@@ -324,7 +325,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_userid.enableInputMethods(false);
 			m_lbl_compid.enableInputMethods(false);
 			m_lbl_passwd.enableInputMethods(false);
-			m_nslist = new NSList(new String [] { PAS.l("common_date") + "/" + PAS.l("common_time"), PAS.l("common_domain"), PAS.l("common_ip"), PAS.l("common_location"), "" }, new int [] { 80, 40, 40, 80, 20 }, new Dimension(380, 100));
+			m_nslist = new NSList(new String [] { Localization.l("common_date") + "/" + Localization.l("common_time"), Localization.l("common_domain"), Localization.l("common_ip"), Localization.l("common_location"), "" }, new int [] { 80, 40, 40, 80, 20 }, new Dimension(380, 100));
 			this.addKeyListener(this);
 			m_txt_userid.addKeyListener(this);
 			m_txt_compid.addKeyListener(this);
@@ -436,7 +437,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				}
 				catch(Exception err)
 				{
-					Error.getError().addError(PAS.l("common_error"), "Error while encrypting password", err, Error.SEVERITY_ERROR);
+					Error.getError().addError(Localization.l("common_error"), "Error while encrypting password", err, Error.SEVERITY_ERROR);
 				}
 			}
 			else if(e.getActionCommand().equals("act_language_changed"))
@@ -485,7 +486,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				boolean b = java.awt.Toolkit.getDefaultToolkit().getLockingKeyState(java.awt.event.KeyEvent.VK_CAPS_LOCK);
 				if(b)
 				{
-					m_txt_passwd.setToolTipText(PAS.l("logon_caps_lock_warning"));
+					m_txt_passwd.setToolTipText(Localization.l("logon_caps_lock_warning"));
 					javax.swing.Action toolTipAction = m_txt_passwd.getActionMap().get("postTip");
 					if (toolTipAction != null)
 					{

@@ -33,7 +33,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	 */
 	private static final long serialVersionUID = 1L;
 	private StdTextLabel m_lbl_message = new StdTextLabel(PAS.l("main_sending_lba_message") + ":");
-	public JTextArea get_txt_message() {
+    public JTextArea get_txt_message() {
 		return m_txt_message;
 	}
 
@@ -43,11 +43,11 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	private JTabbedPane m_tabbed_operators = new JTabbedPane();
 	public JTabbedPane get_tpane() { return m_tabbed_operators; }
 	private JButton m_btn_confirmation = new JButton(PAS.l("common_show_message_authorization_text"));
-	private JButton m_btn_kill = new JButton(PAS.l("common_kill_sending"));
-	private JButton m_btn_new_message = new JButton(PAS.l("main_tas_panel_new_message"));
-	private JButton m_btn_resend = new JButton(PAS.l("main_status_resend"));
-	private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
-	private CentricMessages m_parent;
+    private JButton m_btn_kill = new JButton(PAS.l("common_kill_sending"));
+    private JButton m_btn_new_message = new JButton(PAS.l("main_tas_panel_new_message"));
+    private JButton m_btn_resend = new JButton(PAS.l("main_status_resend"));
+    private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
+    private CentricMessages m_parent;
 	public CentricMessages get_parent() { return m_parent; }
 	protected Hashtable<Integer, CentricOperatorStatus> hash_operators = new Hashtable<Integer, CentricOperatorStatus>(); //operatorpk as key
 	protected CentricOperatorStatus total_statuspane = null;
@@ -234,10 +234,12 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 			}
 		}
 		else if(e.getSource().equals(m_btn_confirmation)) {
-			if(lastcbstatus!=null && lastcbstatus.getMessageconfirmation() != null)
-				JOptionPane.showMessageDialog(this, lastcbstatus.getMessageconfirmation().getSzName(), PAS.l("common_show_message_authorization_text"), JOptionPane.INFORMATION_MESSAGE);
-			else
-				JOptionPane.showMessageDialog(this, "No info...", PAS.l("common_show_message_authorization_text"), JOptionPane.WARNING_MESSAGE);
+			if(lastcbstatus!=null && lastcbstatus.getMessageconfirmation() != null) {
+                JOptionPane.showMessageDialog(this, lastcbstatus.getMessageconfirmation().getSzName(), PAS.l("common_show_message_authorization_text"), JOptionPane.INFORMATION_MESSAGE);
+            }
+			else {
+                JOptionPane.showMessageDialog(this, "No info...", PAS.l("common_show_message_authorization_text"), JOptionPane.WARNING_MESSAGE);
+            }
 		}
 		else if(e.getSource().equals(m_btn_new_message)) {
 			if(checkResendRights())
@@ -526,8 +528,9 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 	public void checkEnableKillButton()
 	{
 		m_btn_kill.setEnabled(getAtLeastOneOperatorCanBeKilled());
-		if(PAS.TRAINING_MODE)
-			m_btn_kill.setToolTipText(PAS.l("mainmenu_trainingmode"));
+		if(PAS.TRAINING_MODE) {
+            m_btn_kill.setToolTipText(PAS.l("mainmenu_trainingmode"));
+        }
 		else
 			m_btn_kill.setToolTipText(null);
 

@@ -22,13 +22,13 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 	JSlider m_slider_playvol = new JSlider(0, 100);
 	JSlider m_slider_headvol = new JSlider(0, 100);
 	JCheckBox m_chk_playmute = new JCheckBox(PAS.l("sound_mixer_mute"));
-	JCheckBox m_chk_headmute = new JCheckBox(PAS.l("sound_mixer_mute"));
-	SoundMixer m_mixer;
+    JCheckBox m_chk_headmute = new JCheckBox(PAS.l("sound_mixer_mute"));
+    SoundMixer m_mixer;
 	JLabel m_lbl_record = new JLabel(PAS.l("sound_mixer_recording"));
-	JLabel m_lbl_speaker = new JLabel(PAS.l("sound_mixer_volume"));
-	JLabel m_lbl_head	=new JLabel(PAS.l("sound_mixer_heading"));
-	
-	public SoundMixer getMixer() { return m_mixer; }
+    JLabel m_lbl_speaker = new JLabel(PAS.l("sound_mixer_volume"));
+    JLabel m_lbl_head	=new JLabel(PAS.l("sound_mixer_heading"));
+
+    public SoundMixer getMixer() { return m_mixer; }
 	
 	public SoundMixerPanel() {
 		super();

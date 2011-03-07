@@ -130,16 +130,21 @@ public class ObjectController {
 
 		String msg = PAS.l("common_delete_are_you_sure") + " '" + object.getName() + "'";
 		if (children[0] == true || children[1] == true || children[2] == true
-				|| children[3] == true)
-			msg += "\n\n" + PAS.l("common_contains") + ":";
-		if(children[0])
-			msg += "\n" + PAS.l("main_parmtab_popup_objectfolder");
-		if(children[1])
-			msg += "\n" + PAS.l("main_parmtab_popup_object");
-		if(children[2])
-			msg += "\n" + PAS.l("main_parmtab_popup_event");
-		if(children[3])
-			msg += "\n" + PAS.l("main_parmtab_popup_alert");
+				|| children[3] == true) {
+            msg += "\n\n" + PAS.l("common_contains") + ":";
+        }
+		if(children[0]) {
+            msg += "\n" + PAS.l("main_parmtab_popup_objectfolder");
+        }
+		if(children[1]) {
+            msg += "\n" + PAS.l("main_parmtab_popup_object");
+        }
+		if(children[2]) {
+            msg += "\n" + PAS.l("main_parmtab_popup_event");
+        }
+		if(children[3]) {
+            msg += "\n" + PAS.l("main_parmtab_popup_alert");
+        }
 		/*	msg += "\nWarning, this " + type + " also contains:";
 		if (children[0] == true)
 			msg += "\n* ObjectFolder";

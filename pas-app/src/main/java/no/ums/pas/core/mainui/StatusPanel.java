@@ -50,10 +50,11 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	private JProgressBar m_lba_total_progress = new JProgressBar();
 	
 	private StdTextLabel m_lbl_lba_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 90, 11, false);
-	private StdTextLabel m_lbl_lba_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 90, 11, false);
-	private StdTextLabel m_lbl_lba_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 90, 11, false);
-	private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 90, 11, false);
-	private StdTextLabel m_txt_lba_delivered = new StdTextLabel("", 100, 11, false);
+    private StdTextLabel m_lbl_lba_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 90, 11, false);
+    private StdTextLabel m_lbl_lba_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 90, 11, false);
+    private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 90, 11, false);
+
+    private StdTextLabel m_txt_lba_delivered = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_expired = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_failed = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_recipients = new StdTextLabel("", 100, 11, false);
@@ -382,8 +383,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	
 	public void setMainStatusText(String sz)
 	{
-		if(m_n_completion_percent<0)
-			sz = PAS.l("common_na");
+		if(m_n_completion_percent<0) {
+            sz = PAS.l("common_na");
+        }
 		lbl_mainstatus.setText(PAS.l("main_status") + "   "+m_n_completion_percent+"% " + PAS.l("common_completed") + "   " + sz);
 		//lbl_mainstatus.setHorizontalTextPosition(StdTextLabel.CENTER);
 		lbl_mainstatus.setHorizontalAlignment(StdTextLabel.CENTER);		
@@ -615,10 +617,12 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	{
 		try
 		{
-			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4)
-				LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_traveller_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));			
-			else
-				LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_locationbased_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4) {
+                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_traveller_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+            }
+			else {
+                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_locationbased_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+            }
 		}
 		catch(Exception e) { }
 	}

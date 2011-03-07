@@ -113,14 +113,14 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		public static final long serialVersionUID = 1;
 		protected StdTextLabel m_lbl_errormsg = new StdTextLabel("",false, 200);
 		protected StdTextLabel m_lbl_projectname = new StdTextLabel(PAS.l("projectdlg_projectname") + ":", true, 85);
-		protected StdTextArea m_txt_projectname = new StdTextArea("", false, new Dimension(200,23));
+        protected StdTextArea m_txt_projectname = new StdTextArea("", false, new Dimension(200,23));
 		protected JButton m_btn_save = new JButton(PAS.l("common_save"));
-		protected JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
-		protected ProjectList m_project_list;
+        protected JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
+        protected ProjectList m_project_list;
 		protected ArrayList<StatusListObject> m_arr_sendings;
 		protected ArrayList<Project> m_arr_projects;
 		protected JButton m_btn_open = new JButton(PAS.l("common_open"));
-		public ProjectList get_projectlist() { return m_project_list; }
+        public ProjectList get_projectlist() { return m_project_list; }
 		protected Project m_proj;
 		
 		//private LoadingPanel m_loader = new LoadingPanel("Idle...", new Dimension(300, 20));
@@ -165,8 +165,9 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 					get_project().set_projectname(m_txt_projectname.getText());
 					save();
 				}
-				else
-					m_lbl_errormsg.setText(PAS.l("projectdlg_project_entername"));
+				else {
+                    m_lbl_errormsg.setText(PAS.l("projectdlg_project_entername"));
+                }
 					
 			}
 			else if("act_cancel".equals(e.getActionCommand())) {

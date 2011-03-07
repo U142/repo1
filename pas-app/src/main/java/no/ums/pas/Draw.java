@@ -1,6 +1,7 @@
 package no.ums.pas;
 
 
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -303,21 +304,21 @@ import java.awt.image.ImageObserver;
 						if(!get_mappane().getMapLoader().IsLoadingMapImage() && !b_firstmap)
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
-							g2d.drawString(PAS.l("maps_error_loading"), 20, 50);
+							g2d.drawString(Localization.l("maps_error_loading"), 20, 50);
 							if(PAS.get_pas() != null) {
 								
 								g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 14));
-								g2d.drawString(PAS.l("maps_error_send_from_parm"), 20, 100);
-								g2d.drawString(PAS.l("maps_error_alt_quicksend_from_parm"), 40, 150);
-								g2d.drawString(PAS.l("maps_error_alt_generate_sending_from_parm"), 40, 180);
-								g2d.drawString(PAS.l("maps_error_alt_gis_import"), 40, 210);
+								g2d.drawString(Localization.l("maps_error_send_from_parm"), 20, 100);
+								g2d.drawString(Localization.l("maps_error_alt_quicksend_from_parm"), 40, 150);
+								g2d.drawString(Localization.l("maps_error_alt_generate_sending_from_parm"), 40, 180);
+								g2d.drawString(Localization.l("maps_error_alt_gis_import"), 40, 210);
 							}
 							
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 12));
 							//int sec = 10;
-							g2d.drawString(PAS.l("maps_error_auto_retry_in") + " " + get_mappane().getMapLoader().getSecondsToReload() + " " + PAS.l("common_seconds"), 20, 280);
+							g2d.drawString(Localization.l("maps_error_auto_retry_in") + " " + get_mappane().getMapLoader().getSecondsToReload() + " " + Localization.l("common_seconds"), 20, 280);
 							g2d.setColor(new java.awt.Color(255, 0, 0));
-							g2d.drawString(PAS.l("maps_error_extended_error"), 20, 300);
+							g2d.drawString(Localization.l("maps_error_extended_error"), 20, 300);
 							if(get_mappane().getMapLoader().getErrorMsg()!=null)
 								g2d.drawString(get_mappane().getMapLoader().getErrorMsg(), 40, 320);
 							set_lasterror("m_mapimg == null");
@@ -325,7 +326,7 @@ import java.awt.image.ImageObserver;
 						else if(b_firstmap)
 						{
 							g2d.setFont(new java.awt.Font(null, java.awt.Font.BOLD, 18));
-							g2d.drawString(PAS.l("common_initializing"), 20, 50);
+							g2d.drawString(Localization.l("common_initializing"), 20, 50);
 						}
 						else if(m_mapimg==null)
 							System.out.println("m_mapimg==null");

@@ -13,6 +13,7 @@ import no.ums.pas.core.menus.StatusActions;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.ws.WSGetStatusItems;
 import no.ums.pas.core.ws.WSGetStatusList;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
 import no.ums.pas.maps.defines.MapPointLL;
@@ -73,26 +74,20 @@ public class StatusController extends Controller implements ActionListener {
 		setClosed(); //initialize as closed
 	}
 
-	public static final String STATUS_1 = PAS
-			.l("main_status_progress_parsequeue_bcp");
-	public static final String STATUS_2 = PAS
-			.l("main_status_progress_parsing_bcp");
-	public static final String STATUS_3 = PAS
-			.l("main_status_progress_writing_bcp");
-	public static final String STATUS_4 = PAS
-			.l("main_status_progress_parsequeue_aep");
-	public static final String STATUS_5 = PAS
-			.l("main_status_progress_parsing_aep");
-	public static final String STATUS_6 = PAS
-			.l("main_status_progress_send_queue_bb");
-	public static final String STATUS_7 = PAS.l("common_finished");
-	public static final String STATUS_8 = PAS.l("common_cancelling");
-	public static final String STATUSSTOP = PAS.l("common_stopped"); // l_altjmp=1
-	public static final String STATUSERR = PAS.l("common_error"); // else
-	public static final String STATUSNOREC = PAS
-			.l("main_status_progress_no_recipients"); // -2
+	public static final String STATUS_1 = Localization.l("main_status_progress_parsequeue_bcp");
+    public static final String STATUS_2 = Localization.l("main_status_progress_parsing_bcp");
+    public static final String STATUS_3 = Localization.l("main_status_progress_writing_bcp");
+    public static final String STATUS_4 = Localization.l("main_status_progress_parsequeue_aep");
+    public static final String STATUS_5 = Localization.l("main_status_progress_parsing_aep");
+    public static final String STATUS_6 = Localization.l("main_status_progress_send_queue_bb");
+    public static final String STATUS_7 = Localization.l("common_finished");
+    public static final String STATUS_8 = Localization.l("common_cancelling");
+    
+    public static final String STATUSSTOP = Localization.l("common_stopped"); // l_altjmp=1
+    public static final String STATUSERR = Localization.l("common_error"); // else
+    public static final String STATUSNOREC = Localization.l("main_status_progress_no_recipients"); // -2
 
-	// private XMLStatusItems m_xmlstatusitems = null;
+    // private XMLStatusItems m_xmlstatusitems = null;
 	// private XMLStatusList m_xmlstatuslist = null;
 	private OpenStatusFrame m_statuslistframe = null;
 	private StatuscodeFrame m_statuscodeframe = null;
@@ -406,18 +401,23 @@ public class StatusController extends Controller implements ActionListener {
 	protected String _createBorderText(int n_pending, int n_sending,
 			int n_finished, int n_cancelled, int n_failed, int n_totalsendings) {
 		String ret = "";
-		if (n_finished > 0)
-			ret = "    " + PAS.l("common_finished") + ": " + n_finished;
-		if (n_cancelled > 0)
-			ret += "    " + PAS.l("common_cancelled") + ": " + n_cancelled;
-		if (n_sending > 0)
-			ret += "    " + PAS.l("common_sending") + ": " + n_sending;
-		if (n_pending > 0)
-			ret += "    " + PAS.l("common_pending") + ": " + n_pending;
-		if (n_failed > 0)
-			ret += "    " + PAS.l("common_failed") + ": " + n_failed;
-		ret += "    (" + PAS.l("common_x_of_y") + " " + n_totalsendings + " "
-				+ PAS.l("common_sendings") + ")";
+		if (n_finished > 0) {
+            ret = "    " + Localization.l("common_finished") + ": " + n_finished;
+        }
+		if (n_cancelled > 0) {
+            ret += "    " + Localization.l("common_cancelled") + ": " + n_cancelled;
+        }
+		if (n_sending > 0) {
+            ret += "    " + Localization.l("common_sending") + ": " + n_sending;
+        }
+		if (n_pending > 0) {
+            ret += "    " + Localization.l("common_pending") + ": " + n_pending;
+        }
+		if (n_failed > 0) {
+            ret += "    " + Localization.l("common_failed") + ": " + n_failed;
+        }
+		ret += "    (" + Localization.l("common_x_of_y") + " " + n_totalsendings + " "
+				+ Localization.l("common_sendings") + ")";
 		return ret;
 	}
 
@@ -1085,7 +1085,7 @@ public class StatusController extends Controller implements ActionListener {
 		}
 		if(!exported) {
 			JFrame frame = PopupDialog.get_frame();
-			JOptionPane.showMessageDialog(frame,PAS.l("main_status_export_no_records"));
+			JOptionPane.showMessageDialog(frame,Localization.l("main_status_export_no_records"));
 			frame.dispose();
 		}
 	}

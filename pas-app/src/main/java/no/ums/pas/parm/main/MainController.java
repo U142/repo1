@@ -9,6 +9,7 @@ import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.OtherActions;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
@@ -320,8 +321,8 @@ public class MainController implements ActionListener, TreeModelListener,
 		try {
 			new Thread("PARM endSession thread") {
 				public void run() {
-					m_progress = new LoadingFrame(PAS.l("main_parmtab_closing_parm"), null);
-					m_progress.set_totalitems(0, PAS.l("main_parmtab_closing_parm"));
+					m_progress = new LoadingFrame(Localization.l("main_parmtab_closing_parm"), null);
+					m_progress.set_totalitems(0, Localization.l("main_parmtab_closing_parm"));
 					m_progress.start_and_show();
 					/*treeCtrl.SetInitializing(true);
 					treeCtrl.get_treegui().loader.set_text("Closing PARM");
@@ -1381,7 +1382,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		//Her er det jeg må loade inn kategoriene i minnet og ikke kjøre denne på alle alerts
 		if (this.m_categories == null) {
 			this.m_categories = new HashMap<Long, CategoryVO>();
-			m_categories.put((long)-1, new CategoryVO("c-1", PAS.l("main_parm_category_select"), null, null, null));
+            m_categories.put((long)-1, new CategoryVO("c-1", Localization.l("main_parm_category_select"), null, null, null));
 			if (this.allElements == null) {
 				this.getAllElementsFromXmlFile();
 			}

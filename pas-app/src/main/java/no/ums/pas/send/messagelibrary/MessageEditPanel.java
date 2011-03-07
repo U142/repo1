@@ -6,6 +6,7 @@ import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.ws.WSMessageLibEdit;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.sound.SoundRecorderPanel;
 import no.ums.pas.sound.SoundTextTemplatePanel;
@@ -45,11 +46,11 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	protected MessageLibNode m_msg = null;
 	public MessageLibNode getActiveMessage() { return m_msg; }
 	private JTabbedPane m_tabbedpane;
-	protected JButton btn_new_lang = new JButton(PAS.l("common_new"));
-	protected JButton btn_save = new JButton(PAS.l("common_save"));
-	protected JButton btn_cancel = new JButton(PAS.l("common_cancel"));
-	protected JButton btn_select = new JButton(PAS.l("common_select"));
-	protected StdTextLabel lbl_counter = new StdTextLabel("",120);
+	protected JButton btn_new_lang = new JButton(Localization.l("common_new"));
+    protected JButton btn_save = new JButton(Localization.l("common_save"));
+    protected JButton btn_cancel = new JButton(Localization.l("common_cancel"));
+    protected JButton btn_select = new JButton(Localization.l("common_select"));
+    protected StdTextLabel lbl_counter = new StdTextLabel("",120);
 	private SoundRecorderPanel m_rec;
 	//private SoundTTSPanel m_tts;
 	//private SoundOpenPanel m_open;
@@ -89,8 +90,8 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 			}*/
 			m_template = new SoundTextTemplatePanel(this);
 			
-			//m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
-			m_tabbedpane.addTab(PAS.l("main_sending_text_template"), null, m_template, null);
+			//m_tabbedpane.addTab(Localization.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, Localization.l("main_sending_audio_type_record_tooltip"));
+			m_tabbedpane.addTab(Localization.l("main_sending_text_template"), null, m_template, null);
 		}
 		catch(Exception e)
 		{
@@ -110,8 +111,13 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		txt_name.addKeyListener(this);
 	}
 	
-	protected StdTextLabel lbl_name = new StdTextLabel(PAS.l("common_name"), 150);
-	protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(150,20));
+	protected StdTextLabel lbl_name = new StdTextLabel(Localization.l("common_name"), 150);
+
+    {
+        lbl_name = new StdTextLabel(Localization.l("common_name"), 150);
+    }
+
+    protected StdTextArea txt_name = new StdTextArea("", false, new Dimension(150,20));
 	protected StdTextLabel lbl_lang = new StdTextLabel("Language", 150);
 	protected cccombo cbx_lang = new cccombo();
 	
@@ -330,16 +336,14 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 	}
 	
 	public void set_size_label(String text, StdTextLabel activeLabel) {
-		if(text!=null)
-		{
-			Matcher m = GSM_Alphabet_Regex.matcher(text);
-			int ext = 0;
-			while(m.find() == true)
-				++ext;
-			//System.out.println("Extended chars = " + ext);
-			
-			activeLabel.setText(String.format(PAS.l("main_message_library_counter"), text.length() + ext));
-		}
+		
+		Matcher m = GSM_Alphabet_Regex.matcher(text);
+		int ext = 0;
+		while(m.find() == true)
+			++ext;
+		//System.out.println("Extended chars = " + ext);
+		
+		activeLabel.setText(String.format(Localization.l("main_message_library_counter"), text.length() + ext));
 		
 		
 			

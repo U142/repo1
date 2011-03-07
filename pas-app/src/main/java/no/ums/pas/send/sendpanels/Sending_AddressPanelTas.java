@@ -22,9 +22,19 @@ import java.util.List;
 public class Sending_AddressPanelTas extends Sending_AddressPanel
 {
 	StdTextLabel lbl_destination = new StdTextLabel(PAS.l("main_tas_destination_country") , true, 150);
-	StdTextLabel txt_destination = new StdTextLabel("", true, 200);
+
+    {
+        lbl_destination = new StdTextLabel(PAS.l("main_tas_destination_country") , true, 150);
+    }
+
+    StdTextLabel txt_destination = new StdTextLabel("", true, 200);
 	StdTextLabel lbl_addresses = new StdTextLabel(PAS.l("main_tas_touristcount"), true, 150);
-	StdTextLabel txt_addresses = new StdTextLabel("", true, 200);
+
+    {
+        lbl_addresses = new StdTextLabel(PAS.l("main_tas_touristcount"), true, 150);
+    }
+
+    StdTextLabel txt_addresses = new StdTextLabel("", true, 200);
 	//StdTextLabel lbl_operators = new StdTextLabel("", true, new Dimension(410, 100));
 	JLabel lbl_operators = new JLabel();
 	StdTextLabel lbl_runupdate = new StdTextLabel("", true, 350);
@@ -85,10 +95,12 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 		String sendto = "";
 		if(tas.getCountry().size()==1)
 			sendto = tas.getCountry().get(0).getSzName();
-		else if(tas.getCountry().size()>1)
-			sendto = PAS.l("main_tas_send_multiple_countries") + " (" + m_country.size() + ")";
-		else
-			sendto = PAS.l("common_none");
+		else if(tas.getCountry().size()>1) {
+            sendto = PAS.l("main_tas_send_multiple_countries") + " (" + m_country.size() + ")";
+        }
+		else {
+            sendto = PAS.l("common_none");
+        }
 		txt_destination.setText(sendto);
 		String str_operators = "<html><font color=red>" + PAS.l("main_tas_send_no_touristcount_updates") + "</font></html>";
 		int n_max_seconds = (int)(TasPanel.TAS_ADRCOUNT_TIMESTAMP_EXPIRED_SECONDS);

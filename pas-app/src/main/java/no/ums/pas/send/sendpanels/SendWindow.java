@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendObject;
@@ -370,15 +371,17 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			
 			//m_resendpanel = new Sending_AddressResend(this, controller.get_pas().get_statuscontroller().get_statuscodes(), obj.get_sendproperties().get_resend_refno());				
 			m_resendpanel = new Sending_AddressResend(this, list, obj.get_sendproperties().get_resend_refno());
-			if(obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_ && obj.get_sendproperties().get_isresend())
-				m_tabbedpane.addTab(PAS.l("main_tas_panel_new_message") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,m_resendpanel,
-						//"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
-						String.format(PAS.l("main_resend_tas_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
-			else
-				m_tabbedpane.addTab(PAS.l("main_status_resend") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,
-					m_resendpanel,
-					//"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
-					String.format(PAS.l("main_resend_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
+			if(obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_ && obj.get_sendproperties().get_isresend()) {
+                m_tabbedpane.addTab(PAS.l("main_tas_panel_new_message") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,m_resendpanel,
+                        //"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
+                        String.format(PAS.l("main_resend_tas_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
+            }
+			else {
+                m_tabbedpane.addTab(PAS.l("main_status_resend") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,
+                    m_resendpanel,
+                    //"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
+                    String.format(PAS.l("main_resend_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
+            }
 		} else {		
 			m_tabbedpane.addTab(PAS.l("main_sending_address_overview"), null,
 								m_addresspanel,
@@ -591,10 +594,12 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				if(m_resendpanel.get_checked().size() == 0)
 					selected= false;
 				if(!selected) {
-					if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"),get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-					else
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"),get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
+					else {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
 					return;
 				}
 						
@@ -694,13 +699,16 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				{
 					int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 					int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
-					if(n_voice + n_sms == 0)
-						message = PAS.l("main_sending_confirm_live_sending_no_recipients");
+					if(n_voice + n_sms == 0) {
+                        message = PAS.l("main_sending_confirm_live_sending_no_recipients");
+                    }
 					else
-						if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-							message = String.format(PAS.l("main_sending_confirm_live_sending"),n_sms);
-						else
-							message = String.format(PAS.l("main_sending_confirm_live_sending_voice_and_sms"), n_voice, n_sms);//"Confirm LIVE sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+						if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                            message = String.format(PAS.l("main_sending_confirm_live_sending"),n_sms);
+                        }
+						else {
+                            message = String.format(PAS.l("main_sending_confirm_live_sending_voice_and_sms"), n_voice, n_sms);//"Confirm LIVE sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                        }
 				}
 				//message = "Confirm simulated sending to " + get_addresscount().get_total_by_types() + " recipients";
 				
@@ -718,8 +726,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					frame.dispose();
 				}
 				else {
-					if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("LIVE"))
-						JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"));
+					if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("LIVE")) {
+                        JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "LIVE"));
+                    }
 					System.out.println("Sending aborted");
 					frame.dispose();
 				}
@@ -770,13 +779,16 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					{
 						int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 						int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
-						if(n_voice + n_sms == 0)
-							message = PAS.l("main_sending_confirm_simulated_sending_no_recipients");
+						if(n_voice + n_sms == 0) {
+                            message = PAS.l("main_sending_confirm_simulated_sending_no_recipients");
+                        }
 						else
-							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-								message = String.format(PAS.l("main_sending_confirm_simulated_sending"), n_sms);
-							else
-								message = String.format(PAS.l("main_sending_confirm_simulated_sending_voice_and_sms"), n_voice, n_sms);//"Confirm simulated sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                                message = String.format(PAS.l("main_sending_confirm_simulated_sending"), n_sms);
+                            }
+							else {
+                                message = String.format(PAS.l("main_sending_confirm_simulated_sending_voice_and_sms"), n_voice, n_sms);//"Confirm simulated sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                            }
 					}
 					LightPanel panel = new LightPanel();
 					panel.add(new JLabel("<html>" + message + "</html>"),panel.m_gridconst);
@@ -793,8 +805,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						//this.close();
 					}
 					else {
-						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SIMULATE"))
-							JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SIMULATE"));
+						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SIMULATE")) {
+                            JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SIMULATE"));
+                        }
 							
 						frame.dispose();
 						System.out.println("Sending aborted");
@@ -844,13 +857,16 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					{
 						int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 						int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
-						if(n_voice + n_sms == 0)
-							message = PAS.l("main_sending_confirm_silent_sending_no_recipients");
+						if(n_voice + n_sms == 0) {
+                            message = PAS.l("main_sending_confirm_silent_sending_no_recipients");
+                        }
 						else
-							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-								message = String.format(PAS.l("main_sending_confirm_silent_sending"), n_sms);
-							else
-								message = String.format(PAS.l("main_sending_confirm_silent_sending_voice_and_sms"), n_voice, n_sms);//"Confirm silent sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                                message = String.format(PAS.l("main_sending_confirm_silent_sending"), n_sms);
+                            }
+							else {
+                                message = String.format(PAS.l("main_sending_confirm_silent_sending_voice_and_sms"), n_voice, n_sms);//"Confirm silent sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                            }
 					}
 					LightPanel panel = new LightPanel();
 					panel.add(new JLabel("<html>" + message + "</html>"),panel.m_gridconst);
@@ -867,8 +883,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						//this.close();
 					}
 					else {
-						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SILENT"))
-							JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SILENT"));
+						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SILENT")) {
+                            JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SILENT"));
+                        }
 							
 						frame.dispose();
 						System.out.println("Sending aborted");
@@ -967,7 +984,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	
 	public void showSpecifyLanguage() {
 		JFrame frame = get_frame();
-		JOptionPane.showMessageDialog(frame, PAS.l("main_parm_alert_dlg_specify_default_lang"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_default_lang"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 		frame.dispose();
 	}
 	
@@ -975,7 +992,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		// Check if scheddatetime has passed				
 		if(!m_tabbedpane.getSelectedComponent().equals(m_settings) && schedDatePassed()) {
 			m_tabbedpane.setSelectedComponent(m_settings);
-			JOptionPane.showMessageDialog(this, PAS.l("main_sending_schedule_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, Localization.l("main_sending_schedule_error"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		if(((m_sendobject.get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_send)) &&

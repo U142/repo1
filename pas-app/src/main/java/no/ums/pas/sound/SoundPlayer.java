@@ -25,7 +25,6 @@ import java.nio.ByteBuffer;
 
 
 public class SoundPlayer {
-	PAS m_pas;
 	String m_sz_filename;
 	Clip clip;
 	boolean playing = false;

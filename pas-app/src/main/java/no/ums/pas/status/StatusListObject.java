@@ -36,14 +36,18 @@ public class StatusListObject extends Object {
 	public String toString() { return new Integer(get_refno()).toString(); }
 	public String getChannel()
 	{
-		if(get_type()==1)
-			return PAS.l("main_status_channel_voice");
-		else if(get_type()==2)
-			return PAS.l("main_status_channel_sms");
-		else if(get_type()==4)
-			return PAS.l("main_status_channel_lba");
-		else if(get_type()==5)
-			return PAS.l("main_status_channel_tas");
+		if(get_type()==1) {
+            return PAS.l("main_status_channel_voice");
+        }
+		else if(get_type()==2) {
+            return PAS.l("main_status_channel_sms");
+        }
+		else if(get_type()==4) {
+            return PAS.l("main_status_channel_lba");
+        }
+		else if(get_type()==5) {
+            return PAS.l("main_status_channel_tas");
+        }
 		return "Unknown";
 	}
 

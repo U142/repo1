@@ -101,8 +101,9 @@ public class CentricEastContent extends EastContent
 			boolean not_found=true;
 			switch(n_leaf) {
 				case PANEL_CENTRICSTATUS_:
-					if(find_component(m_centricstatus)==-1)
-						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_centricstatus, PAS.l("main_statustab_title_tooltip"));
+					if(find_component(m_centricstatus)==-1) {
+                        get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_centricstatus, PAS.l("main_statustab_title_tooltip"));
+                    }
 					not_found=false;
 					break;
 			}

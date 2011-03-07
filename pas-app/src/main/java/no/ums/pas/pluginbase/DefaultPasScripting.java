@@ -107,10 +107,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
     @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
-		if(ws.getResult()==WSRESULTCODE.OK)
-			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
-		else
-			dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
+		if(ws.getResult()==WSRESULTCODE.OK) {
+            dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
+        }
+		else {
+            dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
+        }
 		try {
 			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
 		} catch(Exception e) {
@@ -295,8 +297,9 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onSetAppTitle(PAS pas, String s, final UserInfo userinfo)
 	{
-		if(s.length()==0)
-			s = PAS.l("common_app_title");
+		if(s.length()==0) {
+            s = PAS.l("common_app_title");
+        }
 		pas.setMainTitle(s + " - " + pas.get_sitename());
 		pas.setTitle(pas.getMainTitle() + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project")); //+ m_sz_sitename);		
 		return true;

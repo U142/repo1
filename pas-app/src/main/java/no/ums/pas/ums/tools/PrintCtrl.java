@@ -202,8 +202,9 @@ public class PrintCtrl implements Printable {
 	        	//g2d.scale(0.80, 0.80);
 	        	g2d.setFont(new Font(null, Font.BOLD, 8));
 	        	
-	        	if(is.get_table() != null && is.get_table().getRowCount() > 0)
-	        		g2d.drawString(PAS.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
+	        	if(is.get_table() != null && is.get_table().getRowCount() > 0) {
+                    g2d.drawString(PAS.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
+                }
 	        	
 	        	g2d.setFont(new Font(null, Font.PLAIN, 8));
 	        	

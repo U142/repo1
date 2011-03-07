@@ -2,6 +2,7 @@ package no.ums.pas.core.logon;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.ws.common.UNSLOOKUP;
 import no.ums.ws.common.parm.UDEPARTMENT;
@@ -169,7 +170,7 @@ public class Logon implements ActionListener {
 		
 		
 		if(timer.timer_exceeded()) {
-			set_last_error(PAS.l("error_logon_request_timed_out"));
+			set_last_error(Localization.l("error_logon_request_timed_out"));
 			if(canTryAgain()) {
 				dlg.set_errortext(get_last_error());
 				incLogonTries();
@@ -202,13 +203,13 @@ public class Logon implements ActionListener {
 			switch(proc.getReason())
 			{
 			case BLOCKED_BY_ADMIN:
-				dlg.set_errortext(PAS.l("logon_error_user_blocked"));
+				dlg.set_errortext(Localization.l("logon_error_user_blocked"));
 				break;
 			case NONE:
-				dlg.set_errortext(String.format(PAS.l("error_logon_invalid_userinfo_format"), getLogonTries(), getMaxLogonTries())); //"Invalid user-information (try " + getLogonTries() + " / " + getMaxLogonTries() + ")");
+				dlg.set_errortext(String.format(Localization.l("error_logon_invalid_userinfo_format"), getLogonTries(), getMaxLogonTries())); //"Invalid user-information (try " + getLogonTries() + " / " + getMaxLogonTries() + ")");
 				break;
 			case REACHED_RETRY_LIMIT:
-				dlg.set_errortext(PAS.l("logon_error_user_retry_limit"));
+				dlg.set_errortext(Localization.l("logon_error_user_retry_limit"));
 				break;
 			}
 			m_logoninfo = null;

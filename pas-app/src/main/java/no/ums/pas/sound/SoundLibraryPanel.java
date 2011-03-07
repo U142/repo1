@@ -1,5 +1,6 @@
 package no.ums.pas.sound;
 
+import com.google.common.io.ByteStreams;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -65,25 +66,11 @@ public class SoundLibraryPanel extends DefaultPanel {
 				if(f.m_f.exists())
 					m_playpanel.initialize_player(f.get_file().getPath(), true);
 				else {
-					URL url = new URL(/*PAS.get_pas().get_sitename()*/ PAS.get_pas().getVB4Url() + "/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
-					//URL url = new URL("https://secure.ums.no/vb45/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/1199.wav");
-					URLConnection urlConn;
-					
-					urlConn = url.openConnection();
-					urlConn.setDoInput(true);
+					URL url = new URL(PAS.get_pas().getVB4Url() + "/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
+					URLConnection urlConn = url.openConnection();
 					urlConn.setUseCaches(false);
-					//urlConn.
-					InputStream is = urlConn.getInputStream();
-					byte[] buffer = new byte[1024];
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					int r;
-					while(true) {
-						r = is.read(buffer);
-						if(r == -1)
-							break;
-						out.write(buffer, 0, r);
-					}
-					ByteBuffer bb = ByteBuffer.wrap(out.toByteArray());
+                    
+					ByteBuffer bb = ByteBuffer.wrap(ByteStreams.toByteArray(urlConn.getInputStream()));
 					m_playpanel.initialize_player(bb, true);
 				}
 					

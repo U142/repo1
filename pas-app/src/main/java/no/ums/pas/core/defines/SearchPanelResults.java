@@ -3,6 +3,7 @@ package no.ums.pas.core.defines;
 
 import no.ums.pas.PAS;
 import no.ums.pas.importer.csv.csvexporter;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -365,7 +366,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     		try {
     			n_temp = new Integer((String)m_tbl_list.getValueAt(i, n_column)).intValue();
     		} catch(Exception e) {
-    			Error.getError().addError(PAS.l("common_error"),"Exception in find",e,1);
+    			Error.getError().addError(Localization.l("common_error"),"Exception in find",e,1);
     		}
     		if(n_temp == n_value) {
     			return i;
@@ -407,7 +408,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
             		} catch(Exception e) {
             			System.out.println(e.getMessage());
             			e.printStackTrace();
-            			Error.getError().addError(PAS.l("common_error"),"Exception in delete_row",e,1);
+            			Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
             		}
             	}
 
@@ -420,7 +421,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     	} catch(Exception e) {
     		System.out.println(e.getMessage());
     		e.printStackTrace();
-    		Error.getError().addError(PAS.l("common_error"),"Exception in delete_row",e,1);
+    		Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
     	}
     	return false;
     }
@@ -496,11 +497,11 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		}
 		catch(IOException ioe){
 			ioe.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"IOException in exportToFile",ioe,1);
+			Error.getError().addError(Localization.l("common_error"),"IOException in exportToFile",ioe,1);
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"Exception in exportToFile",e,1);
+			Error.getError().addError(Localization.l("common_error"),"Exception in exportToFile",e,1);
 		}
 	}
 	public void exportToCSV() {
@@ -795,7 +796,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
         			ret[i] = getValueAt(row, i);//.toString();
         		}
         		catch(Exception e) {
-        			Error.getError().addError(PAS.l("common_error"),"Exception in getRowContent",e,1);
+        			Error.getError().addError(Localization.l("common_error"),"Exception in getRowContent",e,1);
         			ret[i] = null;
         		}
         	}

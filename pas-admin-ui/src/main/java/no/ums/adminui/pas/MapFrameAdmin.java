@@ -9,6 +9,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -38,7 +39,7 @@ public class MapFrameAdmin extends MapFrame {
 				public void run()
 				{
 					//b_loading_in_progress = true;
-					SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("common_map"));
+					SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
 					kickRepaint();
 					load_map();
 					SetIsLoading(false, "");

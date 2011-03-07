@@ -12,6 +12,7 @@ public class UmsExec {
                 "-x$jnlp_codebase",
                 "-shttps://secure.ums2.no/vb4utv/",
                 "-whttps://secure.ums2.no/PAS/ws_pasutv/WS/",
+                "-vhttps://secure.ums.no/vb4/",
                 "-p"
         });
     }

@@ -45,7 +45,12 @@ public class Sending_Send extends DefaultPanel {
 	protected StdTextLabel m_txt_adrfile;
 	protected ImageIcon m_icon_indicator[] = new ImageIcon[3];
 	protected JButton m_btn_sendtest = new JButton(PAS.l("main_sending_send_test"));
-	protected StdTextArea m_txt_sendtest = new StdTextArea("", false, 75);
+
+    {
+        m_btn_sendtest = new JButton(PAS.l("main_sending_send_test"));
+    }
+
+    protected StdTextArea m_txt_sendtest = new StdTextArea("", false, 75);
 	protected SendWindow get_parent() { return parent; }
 	
 	public int get_refno() { return m_n_refno; }
@@ -175,10 +180,12 @@ public class Sending_Send extends DefaultPanel {
 						selected = true;
 				if(!selected) {
 					b_continue = false;
-					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-					else
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
+					else {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
 				}	
@@ -200,10 +207,12 @@ public class Sending_Send extends DefaultPanel {
 						selected = true;
 				if(!selected) {
 					b_continue = false;
-					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-					else
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
+					else {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
 				}
@@ -227,10 +236,12 @@ public class Sending_Send extends DefaultPanel {
 						selected = true;
 				if(!selected) {
 					b_continue = false;
-					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_)
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-					else
-						JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"),parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
+					else {
+                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
 				}

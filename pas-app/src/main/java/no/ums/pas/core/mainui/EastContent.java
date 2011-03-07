@@ -6,6 +6,7 @@ import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.laf.ULookAndFeel.UTabbedPaneUI;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
@@ -229,7 +230,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Failed to init TAS", e, Error.SEVERITY_ERROR);
+			Error.getError().addError(Localization.l("common_error"), "Failed to init TAS", e, Error.SEVERITY_ERROR);
 		}
 	}
 	public void UninitTAS()
@@ -550,40 +551,42 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		{
 			switch(n_leaf) {
 				case PANEL_INFO_:
-					get_tabbedpane().addTab(PAS.l("main_infotab_title"), null, m_infopanel, PAS.l("main_infotab_title_tooltip"));
+					get_tabbedpane().addTab(Localization.l("main_infotab_title"), null, m_infopanel, Localization.l("main_infotab_title_tooltip"));
 					break;
 				case PANEL_STATUS_LIST:
 					if(find_component(m_statuspanel)==-1)
 					{
-						get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_statuspanel, PAS.l("main_statustab_title_tooltip"));
+						get_tabbedpane().addTab(Localization.l("main_statustab_title"), null, m_statuspanel, Localization.l("main_statustab_title_tooltip"));
 						//m_statuspanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
 				case PANEL_GPS_LIST_:
-					if(find_component(m_gpspanel)==-1)
-						get_tabbedpane().addTab(PAS.l("main_fleetcontroltab_title"), null, m_gpspanel, PAS.l("main_fleetcontroltab_title_tooltip"));
+					if(find_component(m_gpspanel)==-1) {
+                        get_tabbedpane().addTab(Localization.l("main_fleetcontroltab_title"), null, m_gpspanel, Localization.l("main_fleetcontroltab_title_tooltip"));
+                    }
 					ensure_added(EastContent.PANEL_GPSEVENTS_LIST);
 					break;
 				case PANEL_GPSEVENTS_LIST:
-					if(find_component(m_gpseventpanel)==-1)
-						get_tabbedpane().addTab(PAS.l("main_gpseventstab_title"), null, m_gpseventpanel, PAS.l("main_gpseventstab_title_tooltip"));
+					if(find_component(m_gpseventpanel)==-1) {
+                        get_tabbedpane().addTab(Localization.l("main_gpseventstab_title"), null, m_gpseventpanel, Localization.l("main_gpseventstab_title_tooltip"));
+                    }
 					break;
 				case PANEL_SENDING_:
 					if(find_component(m_sendingpanel.getScrollPane())==-1)
 					{
-						get_tabbedpane().addTab(PAS.l("main_sendingtab_title"), null, m_sendingpanel.getScrollPane(), PAS.l("main_sendingtab_title_tooltip"));
+						get_tabbedpane().addTab(Localization.l("main_sendingtab_title"), null, m_sendingpanel.getScrollPane(), Localization.l("main_sendingtab_title_tooltip"));
 						m_sendingpanel.getScrollPane().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
 				case PANEL_HOUSEEDITOR_:
 					if(find_component(m_houseeditor)==-1)
 					{
-						get_tabbedpane().addTab(PAS.l("main_houseeditortab_title"), null, m_houseeditor, PAS.l("main_houseeditortab_title_tooltip"));
+						get_tabbedpane().addTab(Localization.l("main_houseeditortab_title"), null, m_houseeditor, Localization.l("main_houseeditortab_title_tooltip"));
 					}
 					break;
 				case PANEL_PARM_:
 					if(find_component(get_parm())==-1) {
-						get_tabbedpane().addTab(PAS.l("main_parmtab_title"), null, get_parm(), PAS.l("main_parmtab_title_tooltip"));
+						get_tabbedpane().addTab(Localization.l("main_parmtab_title"), null, get_parm(), Localization.l("main_parmtab_title_tooltip"));
 						get_parm().putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);
 					}
 					break;
@@ -591,7 +594,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					if(get_taspanel()!=null)
 					{
 						if(find_component(get_taspanel())==-1) {
-							get_tabbedpane().addTab(PAS.l("main_tas_title") + " (" + CountryCodes.getCountryByCCode(PAS.get_pas().get_userinfo().get_current_department().get_stdcc()) + ")", null, get_taspanel(), PAS.l("main_tas_title"));
+							get_tabbedpane().addTab(Localization.l("main_tas_title") + " (" + CountryCodes.getCountryByCCode(PAS.get_pas().get_userinfo().get_current_department().get_stdcc()) + ")", null, get_taspanel(), Localization.l("main_tas_title"));
 						}
 					}
 			}

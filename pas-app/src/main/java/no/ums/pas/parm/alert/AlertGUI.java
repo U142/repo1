@@ -156,8 +156,18 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		public static final long serialVersionUID = 1;
 
 		private JLabel lblDescription = new JLabel(PAS.l("main_parm_alert_dlg_description"));
-		private JLabel lblInformation = new JLabel(PAS.l("main_parm_alert_dlg_please_draw_area"));
-		private JTextArea txaDescription = new JTextArea();
+
+        {
+            lblDescription = new JLabel(PAS.l("main_parm_alert_dlg_description"));
+        }
+
+        private JLabel lblInformation = new JLabel(PAS.l("main_parm_alert_dlg_please_draw_area"));
+
+        {
+            lblInformation = new JLabel(PAS.l("main_parm_alert_dlg_please_draw_area"));
+        }
+
+        private JTextArea txaDescription = new JTextArea();
 		private JScrollPane scroll = new JScrollPane(txaDescription);
 		private JPanel pnlContainerLeft = new JPanel();
 		private JPanel pnlContainerRigth = new JPanel();
@@ -250,7 +260,11 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		public static final long serialVersionUID = 1;
 		private JButton btnSave = new JButton(PAS.l("common_save"));
 
-		public SendingSaveButtonPanel() {
+        {
+            btnSave = new JButton(PAS.l("common_save"));
+        }
+
+        public SendingSaveButtonPanel() {
 			setLayout(new FlowLayout());
 			add(btnSave);
 			btnSave.setSize(30, 30);
@@ -274,7 +288,11 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		public static final long serialVersionUID = 1;
 		private JButton btnCancel = new JButton(PAS.l("common_cancel"));
 
-		public SendingCancelButtonPanel() {
+        {
+            btnCancel = new JButton(PAS.l("common_cancel"));
+        }
+
+        public SendingCancelButtonPanel() {
 			setLayout(new FlowLayout());
 			add(btnCancel);
 			btnCancel.setSize(10, 10);

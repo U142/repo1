@@ -21,7 +21,7 @@ public class SoundOpenPanel extends DefaultPanel {
 	//private SendController m_controller;
 	private JTextField m_txt_file = new JTextField("");
 	private JButton m_btn_open = new JButton(PAS.l("common_browse"));
-	private File m_file;
+    private File m_file;
 	public File get_file() { return m_file; }
 	private SoundRecorderPanel m_play;
 	private Sending_Files m_soundfile;
@@ -29,11 +29,11 @@ public class SoundOpenPanel extends DefaultPanel {
 	private SendWindow m_parent = null;
 	public SendWindow get_parent() { return m_parent; }
 	
-	private String sz_filter [][] = new String[][] {
+	private String[][] sz_filter  = new String[][] {
 			{ PAS.l("sound_panel_open_filefilter"), "wav" }
 	};
-	
-	public SoundOpenPanel(Sending_Files f) {
+
+    public SoundOpenPanel(Sending_Files f) {
 		super();
 		m_soundfile = f;
 		//m_controller = controller;

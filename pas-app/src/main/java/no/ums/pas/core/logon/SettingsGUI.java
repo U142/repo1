@@ -6,6 +6,7 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -116,7 +117,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	}
 	
 	public SettingsGUI(PAS parent) {
-		super(PAS.l("mainmenu_settings"));
+		super(Localization.l("mainmenu_settings"));
 		try
 		{
 			this.setIconImage(PAS.get_pas().getIconImage());
@@ -139,10 +140,10 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		m_lbl_error = new StdTextLabel("", 200);
 		m_lbl_error.setForeground(Color.RED);
 		
-		m_lbl_username = new StdTextLabel(PAS.l("logon_userid"),100, 12 ,true);
+		m_lbl_username = new StdTextLabel(Localization.l("logon_userid"),100, 12 ,true);
 		m_txt_username = new StdTextArea("", false, 175);
 		
-		m_lbl_company = new StdTextLabel(PAS.l("logon_company"),100,12,true);
+		m_lbl_company = new StdTextLabel(Localization.l("logon_company"),100,12,true);
 		m_txt_company = new StdTextArea("", false, 175);
 		
 		m_lbl_load_on_start = new StdTextLabel("Load on start:",100,12,true);
@@ -155,7 +156,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		m_txt_wms_password.setPreferredSize(d);
 		m_txt_wms_username.setPreferredSize(d);
 		
-		m_lbl_start_parm = new StdTextLabel(PAS.l("mainmenu_parm"),100);
+		m_lbl_start_parm = new StdTextLabel(Localization.l("mainmenu_parm"),100);
 		m_chk_start_parm = new JCheckBox();
 		
 		m_lbl_mapsite = new StdTextLabel("Map Site", 100,12,true);
@@ -168,7 +169,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		m_group_mapsite.add(m_btn_wms);
 		m_btn_default.addActionListener(this);
 		m_btn_wms.addActionListener(this);
-		m_btn_openwms = new JButton(PAS.l("common_open"));
+		m_btn_openwms = new JButton(Localization.l("common_open"));
 		m_btn_openwms.addActionListener(this);
 		
 		//m_model = new DefaultTreeModel(null);
@@ -205,8 +206,8 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		m_lbl_lba_refresh = new StdTextLabel("LBA map update percentage:", 185,12,true);
 		m_txt_lba_refresh = new StdTextArea("", false, 175);
 		
-		m_btn_cancel = new JButton(PAS.l("common_cancel"));
-		m_btn_save = new JButton(PAS.l("common_save"));
+		m_btn_cancel = new JButton(Localization.l("common_cancel"));
+		m_btn_save = new JButton(Localization.l("common_save"));
 		
 		m_btn_cancel.addActionListener(this);
 		m_btn_save.addActionListener(this);

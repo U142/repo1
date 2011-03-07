@@ -158,10 +158,12 @@ public class CentricPrintCtrl implements Printable, Pageable {
         g.setFont(UIManager.getFont("PrintJobTitle.font"));
         printTranslate(g, 0, g.getFontMetrics().getAscent());
         g.setColor(Color.black);
-        if(PAS.TRAINING_MODE)
-    		g.drawString(PAS.l("common_app_title") + " - " + PAS.l("mainmenu_trainingmode"), 0, 0);
-    	else
-    		g.drawString(PAS.l("common_app_title"), 0, 0);
+        if(PAS.TRAINING_MODE) {
+            g.drawString(PAS.l("common_app_title") + " - " + PAS.l("mainmenu_trainingmode"), 0, 0);
+        }
+    	else {
+            g.drawString(PAS.l("common_app_title"), 0, 0);
+        }
         return g.getFontMetrics().getHeight();
 	}
 	

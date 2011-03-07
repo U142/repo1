@@ -72,19 +72,19 @@ public class TasDetailView extends DefaultPanel
 
 	
 	StdTextLabel lbl_countrycode	= new StdTextLabel(PAS.l("common_countrycode"), true, 150);
-	StdTextLabel txt_countrycode	= new StdTextLabel("", true, 150);
+    StdTextLabel txt_countrycode	= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_iso			= new StdTextLabel(PAS.l("common_iso3166"), true, 150);
-	StdTextLabel txt_iso			= new StdTextLabel("", true, 150);
+    StdTextLabel txt_iso			= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_name			= new StdTextLabel(PAS.l("common_name"), true, 150);
-	StdTextLabel txt_name			= new StdTextLabel("", true, 150);
+    StdTextLabel txt_name			= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_continent		= new StdTextLabel(PAS.l("common_continent"), true, 150);
-	StdTextLabel txt_continent		= new StdTextLabel("", true, 150);
+    StdTextLabel txt_continent		= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_isonumeric		= new StdTextLabel(PAS.l("common_iso3166_num"), true, 150);
-	StdTextLabel txt_isonumeric		= new StdTextLabel("", true, 150);
+    StdTextLabel txt_isonumeric		= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_touristcount	= new StdTextLabel(PAS.l("main_tas_touristcount"), true, 150);
-	StdTextLabel txt_touristcount	= new StdTextLabel("", true, 150);
+    StdTextLabel txt_touristcount	= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_lastupdate		= new StdTextLabel(PAS.l("main_tas_lastupdate"), true, 150);
-	StdTextLabel txt_lastupdate		= new StdTextLabel("", true, 150);
+    StdTextLabel txt_lastupdate		= new StdTextLabel("", true, 150);
 	StdTextLabel lbl_lastupdate_diff= new StdTextLabel("", true, 150);
 	JButton btn_sendmessage			= new JButton(no.ums.pas.ums.tools.ImageLoader.load_icon("outbox_32.png"));
 	JButton btn_add_to_sendlist		= new JButton(no.ums.pas.ums.tools.ImageLoader.load_icon("add_32.png"));
@@ -350,8 +350,9 @@ public class TasDetailView extends DefaultPanel
 				txt_lastupdate.setForeground(TasHelpers.getOutdatedColor(c));
 				szlastupdatediff = TasHelpers.getOutdatedText(c);
 			}
-			else
-				szlastupdatediff = PAS.l("common_na");
+			else {
+                szlastupdatediff = PAS.l("common_na");
+            }
 			setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(szname));
 			if(c.getOperators()!=null)
 			{

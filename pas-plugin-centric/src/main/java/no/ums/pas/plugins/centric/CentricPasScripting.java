@@ -670,10 +670,12 @@ public class CentricPasScripting extends DefaultPasScripting {
             int member_of_dept = ui.get_departments().size();
             switch (ui.get_current_department().get_userprofile().get_send()) {
                 case 1: //regional or regional super user
-                    if (member_of_dept == 1)
+                    if (member_of_dept == 1) {
                         str += PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
-                    else
+                    }
+                    else {
                         str += PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
+                    }
                     for (int i = 0; i < ui.get_departments().size(); i++)
                         str += " \"" + ((DeptInfo) ui.get_departments().get(i)).get_deptid() + "\"";
                     break;
@@ -1050,10 +1052,12 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
-        if (ws.getResult() == WSRESULTCODE.OK)
+        if (ws.getResult() == WSRESULTCODE.OK) {
             dlg.set_errortext(PAS.l("logon_ws_active"), false);
-        else
+        }
+        else {
             dlg.set_errortext(PAS.l("logon_ws_inactive"));
+        }
         try {
             dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
         } catch (Exception e) {
@@ -1120,7 +1124,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         dlg.get_logonpanel().getLblCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);
-        dlg.get_logonpanel().getBtnSubmit().setText(PAS.l("common_ok"));
+        dlg.get_logonpanel().getBtnSubmit().setText(Localization.l("common_ok"));
 
         /*dlg.get_logonpanel().get_gridconst().anchor = GridBagConstraints.CENTER;
           dlg.get_logonpanel().add_spacing(DefaultPanel.DIR_VERTICAL, 10);
@@ -1158,9 +1162,10 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         g.setFont(UIManager.getFont("InternalFrame.titleFont"));
 
-        String str = PAS.l("common_live").toUpperCase();
-        if (IsInTrainingMode())
-            str = PAS.l("mainmenu_trainingmode").toUpperCase();
+        String str = Localization.l("common_live").toUpperCase();
+        if (IsInTrainingMode()) {
+            str = Localization.l("mainmenu_trainingmode").toUpperCase();
+        }
         int strwidth = g.getFontMetrics().stringWidth(str);
         int x = bar.getWidth() / 2 - strwidth / 2;
         int y = bar.getHeight() / 2 - 9;
@@ -1174,7 +1179,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         //HELPDESK
         g.setColor(Color.black);
-        str = PAS.l("common_helpdesk_contact");
+        str = Localization.l("common_helpdesk_contact");
         strwidth = g.getFontMetrics().stringWidth(str);
         x = bar.getWidth() - strwidth - 20;
 //        w = strwidth;
@@ -1190,7 +1195,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         CentricSendOptionToolbar send = new CentricSendOptionToolbar();
         CentricVariables.setCentric_send(send);
         //((CentricEastContent)PAS.get_pas().get_eastcontent()).set_centricsend(send);
-        tab.addTab(PAS.l("mainmenu_file_newsending"), null, send, PAS.l("main_parmtab_popup_generate_sending"));
+        tab.addTab(Localization.l("mainmenu_file_newsending"), null, send, Localization.l("main_parmtab_popup_generate_sending"));
         return ret;
     }
 
@@ -1358,7 +1363,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onShowContactinformation() {
         //show contact information
-        JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_helpdesk_contact"), PAS.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("common_helpdesk_contact"), Localization.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
         return true;
     }
 
@@ -1429,7 +1434,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     private int confirmClosing() {
         JFrame frame = get_frame();
         int answer;
-        answer = JOptionPane.showConfirmDialog(frame, PAS.l("project_cb_ask_new_close_event"), null, JOptionPane.YES_NO_OPTION);
+        answer = JOptionPane.showConfirmDialog(frame, Localization.l("project_cb_ask_new_close_event"), null, JOptionPane.YES_NO_OPTION);
         frame.dispose();
         return answer;
     }

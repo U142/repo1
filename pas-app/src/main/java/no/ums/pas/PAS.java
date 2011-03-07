@@ -340,37 +340,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public static final Error langErrors = new Error(false);
 	public static String l(String s) {
-        if (true) {
-            return Localization.l(s);
-        }
-		try
-		{
-			if(DEBUGMODE)
-				return sz_mark_language_words + lang.getString(s) + sz_mark_language_words;
-			else
-				return lang.getString(s);
-		}
-		catch(Exception e)
-		{
-            log.error("Glossary for %s / %s is missing", locale.getDisplayCountry(), locale.getDisplayLanguage());
-            String defaultWord = "";
-			if(defaultLang==null)
-			{
-				try
-				{
-					defaultLang = ResourceBundle.getBundle("localization/lang", new Locale("en", "EN"));
-                    defaultWord = defaultLang.getString(s);
-				}
-				catch(Exception err)
-				{
-					defaultLang = null;
-				}
-			}
-			if(langErrors!=null && langErrors.getError(0)!=null)
-				langErrors.getError(0).appendBodyFiltered("\n"+s + " = " + defaultWord + "\n");
-                log.info("Default for %s is %s", s, defaultWord);
-			return "[NO STRING]";
-		}
+        return Localization.l(s);
 	}
 	public static void setLocale(String country, String language)
 	{
@@ -383,7 +353,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_warning"), "Could not set default locale", e, Error.SEVERITY_WARNING);
+			Error.getError().addError(Localization.l("common_warning"), "Could not set default locale", e, Error.SEVERITY_WARNING);
 		}
 	}
 	public static void setLocale(String str)
@@ -590,7 +560,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
-			Error.getError().addError(PAS.l("common_error"), "Error setting Look and Feel", e, Error.SEVERITY_ERROR);
+			Error.getError().addError(Localization.l("common_error"), "Error setting Look and Feel", e, Error.SEVERITY_ERROR);
 		}
 		try
 		{
@@ -803,7 +773,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			m_settings = xmlreader.loadLogonSettings(m_settings);
 			Variables.setSettings(m_settings);
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
+			Error.getError().addError(Localization.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
 		}
 
 		if(m_settings!=null)
@@ -917,7 +887,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						} catch(Exception e) {
 							System.out.println(e.getMessage());
 							e.printStackTrace();
-							Error.getError().addError(PAS.l("common_warning"), "Unable to find your default e-mail settings in registry.", 0, Error.SEVERITY_INFORMATION);
+							Error.getError().addError(Localization.l("common_warning"), "Unable to find your default e-mail settings in registry.", 0, Error.SEVERITY_INFORMATION);
 						}
 						try
 						{
@@ -972,7 +942,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			try {
 				m_settings = xmlreader.loadAutostartSettings(m_settings);
 			} catch(Exception e) {
-				Error.getError().addError(PAS.l("common_error"), "Could not load user-defined settings", e, Error.SEVERITY_WARNING);
+				Error.getError().addError(Localization.l("common_error"), "Could not load user-defined settings", e, Error.SEVERITY_WARNING);
 			}
 			try
 			{
@@ -1039,7 +1009,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		System.out.println("Logged on");
 		pasplugin.onAfterLogon();
 
-		this.setTitle(m_sz_maintitle + " (" + String.format(PAS.l("common_logged_on_as_format"), m_userinfo.get_realname()) + ")");
+		this.setTitle(m_sz_maintitle + " (" + String.format(Localization.l("common_logged_on_as_format"), m_userinfo.get_realname()) + ")");
 		
 		m_rightsmanagament = new RightsManagement(m_userinfo.get_default_dept().get_userprofile());
 		
@@ -1080,7 +1050,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			printStackTrace(e.getStackTrace());
-			Error.getError().addError(PAS.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
+			Error.getError().addError(Localization.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
 		}
 		
 		try
@@ -1098,7 +1068,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						kickRepaint();
 					} catch(Exception e) {
 						add_event("ERROR: Could not initialize mappane " + e.getMessage(), e);
-						Error.getError().addError(PAS.l("common_error"), "Error initializing mappane", e, Error.SEVERITY_ERROR);
+						Error.getError().addError(Localization.l("common_error"), "Error initializing mappane", e, Error.SEVERITY_ERROR);
 					}
 				}
 				catch(Exception e)
@@ -1172,7 +1142,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				setLocation(m_settings.getXpos(), m_settings.getYpos());						
 			}
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Error setting GUI size", e, Error.SEVERITY_ERROR);
+			Error.getError().addError(Localization.l("common_error"), "Error setting GUI size", e, Error.SEVERITY_ERROR);
 		}
 
 		/*UIManager.put(LafWidget.TABBED_PANE_PREVIEW_PAINTER,
@@ -1553,7 +1523,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							return;
 					}
 					m_current_project = p;
-					setTitle(m_sz_maintitle + "        " + PAS.l("projectdlg_project")+ " - <" + m_current_project.get_projectname() + ">");
+                    setTitle(m_sz_maintitle + "        " + Localization.l("projectdlg_project") + " - <" + m_current_project.get_projectname() + ">");
 					switch(get_userinfo().get_current_department().get_pas_rights())
 					{
 					case 4: //dont enable sendpane on TAS
@@ -1561,7 +1531,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					default:
 						get_eastcontent().flip_to(EastContent.PANEL_SENDING_);
 						get_eastcontent().ensure_added(EastContent.PANEL_SENDING_);
-						get_eastcontent().set_tabtext(EastContent.PANEL_SENDING_, PAS.l("projectdlg_project") + " - " + get_current_project().get_projectname());
+                        get_eastcontent().set_tabtext(EastContent.PANEL_SENDING_, Localization.l("projectdlg_project") + " - " + get_current_project().get_projectname());
 						break;
 					}
 					get_sendcontroller().setActiveProject(p);
@@ -1576,13 +1546,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public void close_parm(final boolean b_appexit) {
 		if(get_parmcontroller()!=null) {
-			final LoadingFrame progress = new LoadingFrame(PAS.l("main_parm_closing_parm"), null);
+            final LoadingFrame progress = new LoadingFrame(Localization.l("main_parm_closing_parm"), null);
 			try
 			{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
-						progress.set_totalitems(0, PAS.l("main_parm_closing_parm"));
+                        progress.set_totalitems(0, Localization.l("main_parm_closing_parm"));
 						progress.start_and_show();
 					}
 				});
@@ -1653,7 +1623,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public int invoke_project(boolean bNewSending) {
-		System.out.println(PAS.l("project_ask_new_project"));
+        System.out.println(Localization.l("project_ask_new_project"));
 
 		int answer = PAS.pasplugin.onInvokeProject();
 		if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
@@ -1661,14 +1631,16 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		else {
 			if(this.m_current_project!=null) {
 				Object[] options;
-				if(get_userinfo().get_current_department().get_pas_rights() == 4)
-					options = new Object[] { PAS.l("common_yes") };
-				else
-					options = new Object[] { PAS.l("common_discard_sendings"), PAS.l("common_keep_sendings") };
-	
-				Object input = JOptionPane.showInputDialog(PAS.get_pas(), PAS.l("project_ask_close_current_project") +" <" + m_current_project.get_projectname() + ">", PAS.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]); 
+				if(get_userinfo().get_current_department().get_pas_rights() == 4) {
+                    options = new Object[] {Localization.l("common_yes")};
+                }
+				else {
+                    options = new Object[] {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
+                }
+
+                Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("project_ask_close_current_project") +" <" + m_current_project.get_projectname() + ">", Localization.l("project_ask_new_project"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 				if(input != null) {
-					if(input.equals(PAS.l("common_keep_sendings"))) {
+                    if(input.equals(Localization.l("common_keep_sendings"))) {
 						m_keep_sendings = true;
 						System.out.println("m_keep_sendings=" + m_keep_sendings);
 					}
@@ -1702,7 +1674,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public boolean keep_using_current_tas() {
-		if(JOptionPane.showConfirmDialog(PAS.get_pas(), PAS.l("project_ask_continue_current_project"),PAS.l("main_tas_panel_new_message"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        if(JOptionPane.showConfirmDialog(PAS.get_pas(), Localization.l("project_ask_continue_current_project"), Localization.l("main_tas_panel_new_message"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 			return true;
 		else {
 			PAS.get_pas().close_active_project(true, true);
@@ -1723,7 +1695,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
 
 			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
-				ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(PAS.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), PAS.l("project_close"), JOptionPane.YES_NO_OPTION);
+                ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION);
 				if(ret_answer == JOptionPane.YES_OPTION)
 				{
 					Variables.setStatusController(m_statuscontroller);
@@ -1797,7 +1769,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						loader.set_currentitem(0);
 			
 						loader.start_and_show();*/
-						get_mappane().SetIsLoading(true, PAS.l("main_status_closing"));
+                        get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
 						while(get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
 							try { Thread.sleep(time.get_msec_interval()); } catch(InterruptedException e ) { }
 							time.inc_timer();

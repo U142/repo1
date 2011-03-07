@@ -84,12 +84,15 @@ public class TasHelpers
 	public static String getDateText(long diff)
 	{
 		String ret = "";
-		if(diff>60*24)
-			ret += diff /60/24 + " " + PAS.l("common_days_maybe") + " " + PAS.l("common_ago");
-		else if(diff>60)
-			ret += diff /60 + " " + PAS.l("common_hours_maybe") + " " + PAS.l("common_ago");
-		else
-			ret += diff + " " + PAS.l("common_minutes_maybe") + " " + PAS.l("common_ago");
+		if(diff>60*24) {
+            ret += diff /60/24 + " " + PAS.l("common_days_maybe") + " " + PAS.l("common_ago");
+        }
+		else if(diff>60) {
+            ret += diff /60 + " " + PAS.l("common_hours_maybe") + " " + PAS.l("common_ago");
+        }
+		else {
+            ret += diff + " " + PAS.l("common_minutes_maybe") + " " + PAS.l("common_ago");
+        }
 		return ret;
 	}
 	

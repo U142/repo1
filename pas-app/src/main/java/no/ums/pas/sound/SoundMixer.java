@@ -132,10 +132,12 @@ public class SoundMixer implements LineListener {
 		} catch(Exception e) {
 			System.out.println("No Speaker lines found");
 			error = true;
-			if(str_error_msg.length() > 0)
-				str_error_msg += " & " + PAS.l("sound_mixer_no_speaker_lines_found");
-			else
-				str_error_msg = PAS.l("sound_mixer_no_speaker_lines_found");
+			if(str_error_msg.length() > 0) {
+                str_error_msg += " & " + PAS.l("sound_mixer_no_speaker_lines_found");
+            }
+			else {
+                str_error_msg = PAS.l("sound_mixer_no_speaker_lines_found");
+            }
 			//JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("sound_mixer_no_speaker_lines_found"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			//e.printStackTrace();
 			SoundRecorderPanel.b_line_ok = false;

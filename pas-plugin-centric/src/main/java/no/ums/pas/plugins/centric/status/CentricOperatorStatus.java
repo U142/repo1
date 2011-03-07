@@ -39,14 +39,13 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	 */
 	private static final long serialVersionUID = 1L;
 	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(PAS.l("common_completed"));
-	private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("common_total"));
-	private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("common_percent"));
-	private StdTextLabel m_lbl_hdr_channel = new StdTextLabel(PAS.l("common_channel"));
-	private StdTextLabel m_lbl_hdr_duration = new StdTextLabel(PAS.l("common_duration"));
-	private StdTextLabel m_lbl_hdr_start = new StdTextLabel(PAS.l("common_start"));
-	private StdTextLabel m_lbl_hdr_unknown = new StdTextLabel(PAS.l("main_sending_type_unknown"));
-	
-	private StdTextLabel m_lbl_completed = new StdTextLabel("");
+    private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("common_total"));
+    private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("common_percent"));
+    private StdTextLabel m_lbl_hdr_channel = new StdTextLabel(PAS.l("common_channel"));
+    private StdTextLabel m_lbl_hdr_duration = new StdTextLabel(PAS.l("common_duration"));
+    private StdTextLabel m_lbl_hdr_start = new StdTextLabel(PAS.l("common_start"));
+    private StdTextLabel m_lbl_hdr_unknown = new StdTextLabel(PAS.l("main_sending_type_unknown"));
+    private StdTextLabel m_lbl_completed = new StdTextLabel("");
 	private StdTextLabel m_lbl_total = new StdTextLabel("");
 	private StdTextLabel m_lbl_percent = new StdTextLabel("");
 	private StdTextLabel m_lbl_channel = new StdTextLabel("991");

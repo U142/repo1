@@ -247,7 +247,11 @@ public class ObjectGUI extends JFrame implements WindowListener {
 				+ "necessary information, please mark the "
 				+ "position on the map.";*/
 
-		public PolygonPanel() {
+        {
+            msg = PAS.l("main_parm_object_dlg_mark");
+        }
+
+        public PolygonPanel() {
 
 			setBorder(BorderFactory
 					.createTitledBorder(PAS.l("main_parm_object_dlg_set_polygon")));

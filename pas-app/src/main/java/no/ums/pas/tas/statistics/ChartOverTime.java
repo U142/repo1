@@ -213,7 +213,12 @@ public class ChartOverTime extends TasChart implements ActionListener
 	public class GroupKey implements Comparable<GroupKey>
 	{
 		String key = PAS.l("common_na");
-		int categoryno;
+
+        {
+            key = PAS.l("common_na");
+        }
+
+        int categoryno;
 		STATS_RESULTS_GROUPBY groupby;
 		public int getCategoryno() { return categoryno; }
 		public GroupKey(String key, int categoryno, STATS_RESULTS_GROUPBY groupby)
@@ -644,8 +649,9 @@ public class ChartOverTime extends TasChart implements ActionListener
 		String szSub = PAS.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
 		if(filter.getRowcount()>0)
 			szSub += " " + filter.getRowcount();
-		else
-			szSub += " " + PAS.l("main_tas_stats_rowcount_ALL");
+		else {
+            szSub += " " + PAS.l("main_tas_stats_rowcount_ALL");
+        }
 		szSub += " " + PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
 		szSub += " " + PAS.l("main_tas_stats_chart_grouped_by") + " " + PAS.l("main_tas_stats_groupby_" + getResultsGroupBy().toString());
 		
@@ -758,8 +764,9 @@ public class ChartOverTime extends TasChart implements ActionListener
 		String axisTitle = PAS.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
 		if(filter.getRowcount()>0)
 			axisTitle += " " + filter.getRowcount();
-		else
-			axisTitle += " " + PAS.l("main_tas_stats_rowcount_ALL");
+		else {
+            axisTitle += " " + PAS.l("main_tas_stats_rowcount_ALL");
+        }
 		axisTitle += " " + PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
 		CategoryAxis axis = new CategoryAxis(axisTitle);
 		//axis.setCategoryLabelPositionOffset(10);
