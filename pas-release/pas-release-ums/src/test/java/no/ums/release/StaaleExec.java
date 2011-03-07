@@ -9,11 +9,10 @@ import no.ums.pas.ums.tools.Utils;
 public class StaaleExec {
 
     public static void main(String[] args) {
-        System.out.println(Utils.encrypt("mh123mh123"));
         ExecApp.main(new String[]{
                 "-x$jnlp_codebase",
                 "-shttps://secure.ums2.no/vb4utv/",
-                "-whttp://192.168.3.183:8080/WS/",
+                "-whttp://192.168.3.183/WS/",
                 "-p"
         });
     }
