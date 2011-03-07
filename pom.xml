@@ -18,7 +18,6 @@
         <module>pas-ui</module>
         <module>pas-admin-ui</module>
         <module>pas-cellbroadcast</module>
-        <module>pas-map-control</module>
     </modules>
     <scm>
         <url>scm:svn:ssh://eris.sublevel3.org/svn/pas-java-client/branches/maven-release-build/PAS.1.5</url>
