@@ -33,6 +33,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -101,7 +103,6 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		this.setIconImage(PAS.get_pas().getIconImage());
 
 		edit = false;
-		
 		m_sendobject = obj;
 		load_background();
 		//register window with toolbar
@@ -535,28 +536,58 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				
 				if((m_alert.getAlert()==null && !node.getUserObject().getClass().equals(EventVO.class))) { 
 					// I have to check that m_alert is the one selected
-					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,new String("Parent is not an Event, please make sure that the selected item in the tree structure is an Event"),"Parent is not an Event", JOptionPane.ERROR_MESSAGE);
-					frame.dispose();
-					ready = false;
+					TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(),
+							(ParmVO)m_alert.getAlertParent());
+					if(tp != null) {
+						PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setSelectionPath(tp);
+					}
+					else {
+						JFrame frame = get_frame();
+						JOptionPane.showMessageDialog(frame,new String("Parent is not an Event, please make sure that the selected item in the tree structure is an Event"),"Parent is not an Event", JOptionPane.ERROR_MESSAGE);
+						frame.dispose();
+						ready = false;
+					}
 				} else if(m_alert.getAlert()!=null && !node.getUserObject().equals(m_alert.getAlert())){
-					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,new String("Parent is not an Event, please make sure that the selected item in the tree structure is an Event"),"Parent is not an Event", JOptionPane.ERROR_MESSAGE);
-					frame.dispose();
-					ready = false;
+					TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(),
+							(ParmVO)m_alert.getAlertParent());
+					if(tp != null) {
+						PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setSelectionPath(tp);
+					}
+					else {
+						JFrame frame = get_frame();
+						JOptionPane.showMessageDialog(frame,new String("Parent is not an Event, please make sure that the selected item in the tree structure is an Event"),"Parent is not an Event", JOptionPane.ERROR_MESSAGE);
+						frame.dispose();
+						ready = false;
+					}
 				}
 				if(ready && m_alert.getAlert()!=null) {
 					if(!node.getUserObject().equals(m_alert.getAlert())) {
+						TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(),
+								(ParmVO)m_alert.getAlertParent());
+						
+						if(tp != null) {
+							PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setSelectionPath(tp);
+						}
+						else {
+							JFrame frame = get_frame();
+							JOptionPane.showMessageDialog(frame,new String("The selected parent is different from your original selection, please make sure that the selected item in the tree structure is correct"),"Parent differs from original", JOptionPane.ERROR_MESSAGE);
+							frame.dispose();
+							ready = false;
+						}
+					}
+				}else if(ready && !((ParmVO)node.getUserObject()).getPk().equals(((ParmVO)m_alert.getAlertParent()).getPk())) {
+					// Finn noden i treet
+					TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(),
+							(ParmVO)m_alert.getAlertParent());
+					if(tp != null) {
+						PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setSelectionPath(tp);
+					}
+					else {
 						JFrame frame = get_frame();
 						JOptionPane.showMessageDialog(frame,new String("The selected parent is different from your original selection, please make sure that the selected item in the tree structure is correct"),"Parent differs from original", JOptionPane.ERROR_MESSAGE);
 						frame.dispose();
 						ready = false;
 					}
-				}else if(ready && !((ParmVO)node.getUserObject()).getPk().equals(((ParmVO)m_alert.getAlertParent()).getPk())) {
-					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,new String("The selected parent is different from your original selection, please make sure that the selected item in the tree structure is correct"),"Parent differs from original", JOptionPane.ERROR_MESSAGE);
-					frame.dispose();
-					ready = false;
 				}
 				if(ready) {
 					//ParmVO

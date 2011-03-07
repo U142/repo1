@@ -17,15 +17,18 @@ import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.JPanel;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 //Substance 3.3
@@ -613,6 +616,57 @@ public class TreeController {
 					"TreeController ClassCastException in findObject", ccEx, 1);
 		}
 		return selectedObject;
+	}
+	/*
+	public void selectNode(ParmVO node) {
+		
+		get_treegui().getTree().setSelectionPath(path)
+	}*/
+	/*
+	private TreePath findNode(TreePath current_path, ParmVO node) {
+		ParmVO vo;
+		for(int i=0; i<current_path.getPathCount(); i++)
+		{
+			vo = (ParmVO)current_path.getPathComponent(i);
+			if(vo.getPk().equals(node.getPk()))
+				return current_path.getPathComponent(i).
+		}
+	}*/
+	
+	public TreePath find(JTree tree, Object node) {
+	    TreeNode root = (TreeNode)tree.getModel().getRoot();
+	    return find2(tree, new TreePath(root), node);
+	}
+	
+	private TreePath find2(JTree tree, TreePath parent, Object node) {
+	    TreeNode tnode = (DefaultMutableTreeNode)parent.getLastPathComponent();
+	    
+	    Object o = null;
+	    
+	    try {
+	    	o = ((DefaultMutableTreeNode)tnode).getUserObject();
+	    	
+	    	if(o != null && ((ParmVO)o).getPk().equals(((ParmVO)node).getPk()))
+	    		return parent.pathByAddingChild(tnode);
+	    	
+	    } catch(Exception e) {}
+
+	    
+        // Traverse children
+        if (tnode.getChildCount() >= 0) {
+            for (Enumeration e=tnode.children(); e.hasMoreElements(); ) {
+                TreeNode n = (TreeNode)e.nextElement();
+                TreePath path = parent.pathByAddingChild(n);
+                TreePath result = find2(tree, path, node);
+                // Found a match
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+	    // No match at this branch
+	    return null;
 	}
 
 	public TreeGUI getGui() {
