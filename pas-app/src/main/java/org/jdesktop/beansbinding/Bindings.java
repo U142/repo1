@@ -8,7 +8,7 @@ import javax.swing.text.JTextComponent;
  */
 public class Bindings {
 
-    public static <SS, TS, V> Binding<SS, TS, V> createAutoBinding(AutoBinding.UpdateStrategy strategy, SS sourceObject, BeanProperty<SS, V> sourceProperty, TS targetObject, BeanProperty<TS, V> targetProperty) {
-        return new Binding<SS, TS, V>(strategy, sourceObject, sourceProperty, targetObject, targetProperty);
+    public static <SS, SV, TS, TV> Binding<SS, SV, TS, TV> createAutoBinding(AutoBinding.UpdateStrategy strategy, SS sourceObject, BeanProperty<SS, SV> sourceProperty, TS targetObject, BeanProperty<TS, TV> targetProperty) {
+        return new Binding<SS, SV, TS, TV>(strategy, sourceObject, sourceProperty, targetObject, targetProperty);
     }
 }

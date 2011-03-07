@@ -10,7 +10,7 @@ public class BindingGroup {
 
     private final List<Binding> bindings = new ArrayList<Binding>();
 
-    public void addBinding(Binding<Object, Object, Object> binding) {
+    public void addBinding(Binding<Object, Object, Object, Object> binding) {
         bindings.add(binding);
     }
 

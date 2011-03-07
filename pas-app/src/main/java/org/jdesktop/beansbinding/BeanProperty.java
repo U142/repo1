@@ -99,11 +99,6 @@ public class BeanProperty<BT, PT> {
     private final String getterName;
     private final String setterName;
 
-    public Class<?> getWriteType(BT source)
-    {
-    	return Object.class;
-    }
-
     public BeanProperty(String propertyName) {
         this.propertyName = propertyName;
         this.getterName = "get" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
