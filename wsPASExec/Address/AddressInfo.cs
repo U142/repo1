@@ -74,11 +74,11 @@ namespace com.ums.address
             }
 
         }
-        public UAddress toUAddress()
+        public virtual UAddress toUAddress()
         {
             var adr = new UAddress();
             adr.address = Address;
-            adr.bday = (this as PersonInfo).Birthday.ToString();
+            adr.bday = "";
             adr.bedrift = 0;
             adr.bno = (int) Bno;
             adr.gno = (int) Gno;
@@ -231,6 +231,13 @@ namespace com.ums.address
         public string Firstname { get; set; }
         public string Midname { get; set; }
         public string FamilyId { get; set; }
+
+        public override UAddress toUAddress()
+        {
+            var adr = base.toUAddress();
+            adr.bday = Birthday.ToString();
+            return adr;
+        }
 
         public class Import : AddressImport<PersonInfo>
         {

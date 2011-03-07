@@ -28,6 +28,8 @@ using System.Data.Odbc;
 using System.Reflection;
 
 using System.Collections.Generic;
+using com.ums.wsPASExec;
+using com.ums.address;
 
 namespace com.ums.ws.pas
 {
@@ -261,31 +263,7 @@ namespace com.ums.ws.pas
             var result = new UAddressList();
             foreach (var address in addressInfos)
             {
-                var adr = new UAddress();
-                adr.address = address.Address;
-                adr.bday = (address as PersonInfo).Birthday.ToString();
-                adr.bedrift = 0;
-                adr.bno = (int)(address as PersonInfo).Bno;
-                adr.gno = (int)(address as PersonInfo).Gno;
-                adr.hasfixed = (address.Phone.Trim().Length > 0) ? 1 : 0;
-                adr.hasmobile = (address.Mobile.Trim().Length > 0) ? 1 : 0;
-                adr.houseno = int.Parse(address.HouseId);
-                adr.importid = -1;
-                adr.kondmid = address.Id;
-                adr.lon = address.lat;
-                adr.lat = address.lng;
-                adr.letter = address.HouseLetter;
-                adr.mobile = address.Mobile;
-                adr.municipalid = address.MuncipalId.ToString();
-                adr.name = address.Fullname;
-                adr.number = address.Phone;
-                adr.postarea = address.ZipName;
-                adr.postno = address.Zip;
-                adr.region = int.Parse(address.MuncipalId);
-                adr.streetid = int.Parse(address.StreetId);
-                adr.xycode = address.CoorCode;
-
-                result.addLine(ref adr);
+                result.addLine(address.toUAddress());
             }
             return result;
         }
@@ -466,13 +444,6 @@ namespace com.ums.ws.pas
             {
                 throw;
             }
-        }
-
-        [WebMethod]
-        public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)
-        {
-            UMapAddressSearch search = new UMapAddressSearch(ref searchparams, ref logoninfo);
-            return (UAddressList)search.Find();
         }
 
         [WebMethod]

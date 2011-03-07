@@ -157,7 +157,7 @@ namespace com.ums.PAS.Address
         //public UAddress [] list;
         public List<UAddressBasics> list_basics = new List<UAddressBasics>();
         public List<UAddress> list = new List<UAddress>();
-        public void addLine(ref UAddress adr)
+        public void addLine(UAddress adr)
         {
             list.Add(adr);
         }

@@ -564,7 +564,7 @@ namespace com.ums.PAS.Database
                 {
                     UAddress adr = new UAddress();
                     readAddressFromDbByFieldnames(ref adr, ref rs, false);
-                    list.addLine(ref adr);
+                    list.addLine(adr);
                     counter++;
                     percent.n_currentrecord = counter;
                     percent.n_percent = (int)(percent.n_currentrecord * 100.0 / percent.n_totalrecords);
@@ -664,7 +664,7 @@ namespace com.ums.PAS.Database
                                 readAddressFromDb(ref adr, ref rs, only_coors);
                                 if (adr.arrayindex >= 0)
                                 {
-                                    p[adr.arrayindex].list.addLine(ref adr);
+                                    p[adr.arrayindex].list.addLine(adr);
                                     //p[adr.arrayindex].list.finalize();
                                 }
                             }
@@ -880,7 +880,7 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                     UAddress adr = new UAddress();
                     UAddressBasics _adr = (UAddressBasics)adr;
                     readAddressFromDb(ref adr, ref rs, false);
-                    list.addLine(ref adr);
+                    list.addLine(adr);
 
                     /*try
                     {
