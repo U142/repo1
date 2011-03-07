@@ -1239,6 +1239,72 @@ namespace com.ums.UmsParm
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UPolygon : UShape
     {
+        public UBoundingRect CalcBounds()
+        {
+            UBoundingRect rect = new UBoundingRect(180, -180, -90, 90);
+            foreach(UPolypoint p in this.getPolygon())
+            {
+                if (p.lat > rect._top)
+                    rect._top = p.lat;
+                if (p.lat < rect._bottom)
+                    rect._bottom = p.lat;
+                if (p.lon < rect._left)
+                    rect._left = p.lon;
+                if(p.lon > rect._right)
+                    rect._right = p.lon;
+            }
+            return rect;
+        }
+
+        public bool PointInside(double lon, double lat)
+        {
+            UMapPoint mp = new UMapPoint();
+            mp.lon = lon;
+            mp.lat = lat;
+            return PointInside(ref mp);
+        }
+
+        public bool PointInside(ref UMapPoint p)
+        {
+            if (getPolygon() == null)
+                return false;
+            if (getPolygon().Count < 3)
+                return false;
+            int counter = 0;
+            double p1x, p1y, p2x, p2y;
+            double xinters;
+
+            p1x = getPolygon()[0].lon;
+            p1y = getPolygon()[0].lat;
+            for (int i = 1; i <= getPolygon().Count; i++)
+            {
+                p2x = getPolygon()[i % getPolygon().Count].lon;
+                p2y = getPolygon()[i % getPolygon().Count].lat;
+                if (p.lat > Math.Min(p1y, p2y))
+                {
+                    if (p.lat <= Math.Max(p1y, p2y))
+                    {
+                        if (p.lon <= Math.Max(p1x, p2x))
+                        {
+                            if (p1y != p2y)
+                            {
+                                xinters = (p.lat - p1y) * (p2x - p1x) / (p2y - p1y) + p1x;
+                                if (p1x == p2x || p.lon <= xinters)
+                                    counter++;
+                            }
+                        }
+                    }
+                }
+                p1x = p2x;
+                p1y = p2y;
+            }
+            if (counter % 2 == 0)
+                return false;
+            return true;
+
+        }
+
+
         public static UPolygon Deserialize(String xml)
         {
             UPolygon cob = new UPolygon();

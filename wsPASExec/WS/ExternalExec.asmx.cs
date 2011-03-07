@@ -252,7 +252,8 @@ namespace com.ums.ws.parm
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
                 {
-                    return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
+                    //return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
+                    return GetAddressCount(ref mapsending);
                 }
                 else
                 {
@@ -264,6 +265,63 @@ namespace com.ums.ws.parm
             {
                 throw e;
             }
+        }
+
+        protected UAdrCount _PolyCount(ref UPOLYGONSENDING p, long adrtypes)
+        {
+            UAdrCount a = new UAdrCount();
+            return a;
+        }
+
+        protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
+        {
+            UAdrCount a = new UAdrCount();
+            return a;
+        }
+
+        protected UAdrCount _MunicipalCount(ref List<UMunicipalDef> m, long adrtypes)
+        {
+            UAdrCount a = new UAdrCount();
+            return a;
+        }
+
+        protected UAdrCount GetAddressCount(ref UMAPSENDING sending)
+        {
+            long n_adrtypes = sending.n_addresstypes;
+
+            if (typeof(UPOLYGONSENDING) == sending.GetType())
+            {
+                UPOLYGONSENDING s = (UPOLYGONSENDING)sending;
+                UMapBounds bound = s._calcbounds();
+                UMapPoint[] points = s.polygonpoints;
+
+                return _PolyCount(ref s, n_adrtypes);
+            }
+            else if (typeof(UELLIPSESENDING) == sending.GetType())
+            {
+                UELLIPSESENDING s = (UELLIPSESENDING)sending;
+                UEllipseDef ell = s.ellipse;
+                return _EllipseCount(ref ell, n_adrtypes);
+            }
+            else if (typeof(UGIS) == sending.GetType())
+            {
+            }
+            else if (typeof(UTESTSENDING) == sending.GetType())
+            {
+                UTESTSENDING s = (UTESTSENDING)sending;
+                UAdrCount a = new UAdrCount();
+                a.n_private_fixed = s.numbers.Count;
+                return a;
+                //return s.numbers.Count;
+            }
+            else if (typeof(UMUNICIPALSENDING) == sending.GetType())
+            {
+                UMUNICIPALSENDING s = (UMUNICIPALSENDING)sending;
+                List<UMunicipalDef> m = s.municipals;
+                return _MunicipalCount(ref m, n_adrtypes);
+            }
+            throw new NotImplementedException();
+            
         }
 
         /*

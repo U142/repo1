@@ -63,21 +63,13 @@ namespace com.ums.ws.pas
         [WebMethod] //(EnableSession=true)
         public UPASLOGON PasLogon(ULOGONINFO l)
         {
-            try
-            {
-                //System.Web.SessionState.HttpSessionState state = this.Session;
-                l.sessionid = l.onetimekey; //Guid.NewGuid().ToString();//state.SessionID.ToString();
-                //String sha = Helpers.CreateSHA512Hash(l.sz_password);
-                ULogon logon = new ULogon();
-                UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
-                logon.close();
-                return ret;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
+            //System.Web.SessionState.HttpSessionState state = this.Session;
+            l.sessionid = l.onetimekey; //Guid.NewGuid().ToString();//state.SessionID.ToString();
+            //String sha = Helpers.CreateSHA512Hash(l.sz_password);
+            ULogon logon = new ULogon();
+            UPASLOGON ret = logon.Logon(ref l); //if ok, sessionid is stored in ret
+            logon.close();
+            return ret;
         }
         [WebMethod]
         public bool PasLogoff(ULOGONINFO l)
@@ -257,6 +249,45 @@ namespace com.ums.ws.pas
             {
                 PercentProgress.DeleteJob(ref logon, ProgressJobType.HOUSE_DOWNLOAD);
             }
+        }
+
+
+        [WebMethod]
+        public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)
+        {
+            //UMapAddressSearch search = new UMapAddressSearch(ref searchparams, ref logoninfo);
+            //return (UAddressList)search.Find();
+            var addressInfos = Global.AdrIndex.FindInArea(searchparams.l_bo, searchparams.u_bo, searchparams.r_bo, searchparams.b_bo, 5000);
+            var result = new UAddressList();
+            foreach (var address in addressInfos)
+            {
+                var adr = new UAddress();
+                adr.address = address.Address;
+                adr.bday = (address as PersonInfo).Birthday.ToString();
+                adr.bedrift = 0;
+                adr.bno = (int)(address as PersonInfo).Bno;
+                adr.gno = (int)(address as PersonInfo).Gno;
+                adr.hasfixed = (address.Phone.Trim().Length > 0) ? 1 : 0;
+                adr.hasmobile = (address.Mobile.Trim().Length > 0) ? 1 : 0;
+                adr.houseno = int.Parse(address.HouseId);
+                adr.importid = -1;
+                adr.kondmid = address.Id;
+                adr.lon = address.lat;
+                adr.lat = address.lng;
+                adr.letter = address.HouseLetter;
+                adr.mobile = address.Mobile;
+                adr.municipalid = address.MuncipalId.ToString();
+                adr.name = address.Fullname;
+                adr.number = address.Phone;
+                adr.postarea = address.ZipName;
+                adr.postno = address.Zip;
+                adr.region = int.Parse(address.MuncipalId);
+                adr.streetid = int.Parse(address.StreetId);
+                adr.xycode = address.CoorCode;
+
+                result.addLine(ref adr);
+            }
+            return result;
         }
 
         [WebMethod]
