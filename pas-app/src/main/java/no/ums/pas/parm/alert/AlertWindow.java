@@ -5,6 +5,7 @@ import no.ums.pas.ParmController;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -73,14 +74,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
 		} catch(Exception e){
-			Error.getError().addError(PAS.l("common_error"),"Error while creating alert",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Error while creating alert",e,1);
 		}
 	}
 	public void editAlert(AlertController ac) {
 		try {
 			ac.editAlert(ac.getAlert(),PAS.get_pas().get_parmcontroller(),(DefaultMutableTreeNode)((DefaultMutableTreeNode)PAS.get_pas().get_parmcontroller().getTreeCtrl().getSelPath().getLastPathComponent()).getParent());
 		}catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Error in edit alert",e,Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"),"Error in edit alert",e,Error.SEVERITY_ERROR);
 		}
 	}
 	
@@ -90,7 +91,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			//imgbg = ImageLoader.makeTransparent(imgbg, 0.55f);
 			return true;
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Could not load scenario background image", e, Error.SEVERITY_WARNING);
+            Error.getError().addError(Localization.l("common_error"), "Could not load scenario background image", e, Error.SEVERITY_WARNING);
 			return false;
 		}
 	}
@@ -111,7 +112,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			this.setAlwaysOnTop(true);
 			//this.setModal(false);
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in SendWindow",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
 		}
 		
 		//this.setTitle("New Alert - \"" + m_sendobject.get_sendproperties().get_sendingname() + "\"");
@@ -127,11 +128,11 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		reset_comstatus();
 		
 		if(ac == null){
-			this.setTitle(PAS.l("main_parm_alert_dlg_new"));
+            this.setTitle(Localization.l("main_parm_alert_dlg_new"));
 			m_alert = new AlertController(PAS.get_pas().get_parmcontroller(), Variables.getNavigation(), this);
 			createAlert();
 		} else {
-			this.setTitle(PAS.l("main_parm_alert_dlg_edit"));
+            this.setTitle(Localization.l("main_parm_alert_dlg_edit"));
 			m_alert = ac;
 			editAlert(m_alert);
 			edit = true;
@@ -145,12 +146,12 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_tabbedpane = new JTabbedPane();
 		m_tabbedpane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		//m_tabbedpane.removeChangeListener(this);
-		m_tabbedpane.addTab(PAS.l("main_parm_alert_dlg_area_and_recipients"), null,
+        m_tabbedpane.addTab(Localization.l("main_parm_alert_dlg_area_and_recipients"), null,
 							m_alert.getGui(),
-							PAS.l("main_parm_alert_dlg_area_and_recipients_tooltip"));
-		m_tabbedpane.addTab(PAS.l("main_sending_settings"), null,
+                Localization.l("main_parm_alert_dlg_area_and_recipients_tooltip"));
+        m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
 				m_alert_settings,
-				PAS.l("main_sending_settings_tooltip"));
+                Localization.l("main_sending_settings_tooltip"));
 		
 		//m_alert.getPanelToolbar().get_cell_broadcast_text().addActionListener(this);
 		//m_alert.getPanelToolbar().get_cell_broadcast_voice().addActionListener(this);
@@ -158,15 +159,15 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		//m_alert.getPanelToolbar().get_cell_broadcast_text().addActionListener(m_sendobject);
 		//m_alert.getPanelToolbar().get_cell_broadcast_voice().addActionListener(m_sendobject);
 
-		m_tabbedpane.addTab(PAS.l("main_sending_finalize_heading"), null,
+        m_tabbedpane.addTab(Localization.l("main_sending_finalize_heading"), null,
 							m_alert_send,
-							PAS.l("main_sending_finalize_heading_tooltip"));
+                Localization.l("main_sending_finalize_heading_tooltip"));
 		//m_tabbedpane.setEnabledAt(1, false);
 		//m_tabbedpane.setEnabledAt(2, false);
-		
-		m_btn_next = new JButton(PAS.l("common_wizard_next"));
-		m_btn_back = new JButton(PAS.l("common_wizard_back"));
-		m_btn_simulation = new JButton(PAS.l("main_sending_simulate"));
+
+        m_btn_next = new JButton(Localization.l("common_wizard_next"));
+        m_btn_back = new JButton(Localization.l("common_wizard_back"));
+        m_btn_simulation = new JButton(Localization.l("main_sending_simulate"));
 		m_btn_next.setPreferredSize(new Dimension(100, 20));
 		m_btn_back.setPreferredSize(new Dimension(100, 20));
 		m_btn_next.setActionCommand("act_next");
@@ -269,7 +270,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	
 	public void set_next_text() {
 		if(m_tabbedpane.getSelectedIndex() == m_tabbedpane.getTabCount()-1) {
-			m_btn_next.setText(PAS.l("common_save"));
+            m_btn_next.setText(Localization.l("common_save"));
 			
 			if(PAS.get_pas().get_rightsmanagement().write_parm())
 				m_btn_next.setEnabled(true);
@@ -281,7 +282,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 1)
 				m_btn_next.setEnabled(false);
 		} else {
-			m_btn_next.setText(PAS.l("common_wizard_next"));
+            m_btn_next.setText(Localization.l("common_wizard_next"));
 			m_btn_next.setActionCommand("act_next");
 			m_btn_next.setEnabled(true);
 			m_btn_simulation.setVisible(false);
@@ -427,7 +428,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			
 			if(!proceed) {
 				JFrame frame = get_frame();
-				JOptionPane.showMessageDialog(frame, PAS.l("main_parm_alert_dlg_paint_or_open"),PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_paint_or_open"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 				frame.dispose();
 			}
 			//JOptionPane.showMessageDialog(this, "rols: " + m_tabbedpane.getSelectedComponent().toString() + m_alert.getGui().toString());
@@ -442,7 +443,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			//set_next_text();
 		} else if("act_adrcount".equals(e.getActionCommand())) {
 			m_btn_next.setEnabled(false);
-			m_loader.start_progress(0, PAS.l("main_sending_address_count"));
+            m_loader.start_progress(0, Localization.l("main_sending_address_count"));
 			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_alert_settings), false);		
 		} else if("act_settings_startload".equals(e.getActionCommand())) {
 			m_btn_next.setEnabled(false);
@@ -452,7 +453,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_xmlsendsettings.start();
 		} else if("act_settings_loaded".equals(e.getActionCommand())) {
 			get_loader().get_progress().setIndeterminate(false);
-			get_loader().set_starttext(PAS.l("common_finished"));
+            get_loader().set_starttext(Localization.l("common_finished"));
 			m_btn_next.setEnabled(true);
 			m_btn_simulation.setEnabled(false);
 			//m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_alert_settings), true);
@@ -484,7 +485,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			if((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 					(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) {
 				JFrame frame = get_frame();
-				JOptionPane.showMessageDialog(frame,PAS.l("main_parm_alert_dlg_specify_recipient_type"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"));
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert.getGui());
 				ready = false;
@@ -494,14 +495,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					ready = false;
 					// Please enter a message
 					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,PAS.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"));
 					frame.dispose();
 					m_tabbedpane.setSelectedComponent(m_sms_broadcast_text_panel);
 				}	
 			}
 			if(ready && get_alert_settings().get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-				JOptionPane.showMessageDialog(frame,PAS.l("main_sending_sendingname_mandatory"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"));
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				ready = false;
@@ -517,14 +518,14 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				if(m_alert.getParent().m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1) {
 					ready = false;
 					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,PAS.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms"));
 					frame.dispose();
 					m_alert.getParent().m_tabbedpane.setSelectedComponent(m_alert.getParent().m_sms_broadcast_text_panel);
 				}
 				else if (m_alert.getParent().m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1) {
 					ready = false;
 					JFrame frame = get_frame();
-					JOptionPane.showMessageDialog(frame,PAS.l("main_sending_warning_empty_sms_oadc"));
+                    JOptionPane.showMessageDialog(frame, Localization.l("main_sending_warning_empty_sms_oadc"));
 					frame.dispose();
 					m_alert.getParent().m_tabbedpane.setSelectedComponent(m_alert.getParent().m_sms_broadcast_text_panel);
 				}
@@ -580,9 +581,9 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			int tmp = m_alert.getPanelToolbar().get_addresstypes();
 			if(hasSMS(tmp))
 			{
-				m_tabbedpane.insertTab(PAS.l("main_sending_sms_heading"), null, 
+                m_tabbedpane.insertTab(Localization.l("main_sending_sms_heading"), null,
 						m_sms_broadcast_text_panel,
-						PAS.l("main_sending_sms_heading_tooltip"),
+                        Localization.l("main_sending_sms_heading_tooltip"),
 						m_tabbedpane.getTabCount()-1); //m_tabbedpane.indexOfComponent(m_tabbedpane.getTabComponentAt(m_tabbedpane.getTabCount()-1)));//m_alert.getGui())+1);
 
 				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel);i<m_tabbedpane.getTabCount();i++) {
@@ -599,10 +600,10 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 
 			if((m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT ||
 					(m_alert.getPanelToolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {
-				
-				m_tabbedpane.insertTab(PAS.l("main_status_locationbased_alert"), null, 
+
+                m_tabbedpane.insertTab(Localization.l("main_status_locationbased_alert"), null,
 						m_cell_broadcast_text_panel,
-						PAS.l("main_sending_lba_tooltip"),
+                        Localization.l("main_sending_lba_tooltip"),
 						m_tabbedpane.getTabCount()-1);
 						//m_tabbedpane.indexOfComponent(m_alert.getGui())+1);
 
@@ -725,7 +726,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR set_values() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"SendWindow Exception in set_values",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SendWindow Exception in set_values",e,1);
 		}
 	}
 	
@@ -770,7 +771,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(((hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes()-SendController.SENDTO_USE_NOFAX_COMPANY < 1)||
 				(!hasBlocklist(m_alert.getPanelToolbar().get_addresstypes()) && m_alert.getPanelToolbar().get_addresstypes() < 1)) && m_tabbedpane.getSelectedComponent().getClass() != m_alert.getGui().getClass()) {
 			JFrame frame = get_frame();
-			JOptionPane.showMessageDialog(frame,PAS.l("main_parm_alert_dlg_specify_recipient_type"));
+            JOptionPane.showMessageDialog(frame, Localization.l("main_parm_alert_dlg_specify_recipient_type"));
 			frame.dispose();
 			m_tabbedpane.setSelectedComponent(m_alert.getGui());
 			return;
@@ -786,7 +787,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(alert_name_index < m_tabbedpane.getSelectedIndex()) {
 			if(m_alert_settings.get_sending_name().getText().length() < 1) {
 				JFrame frame = get_frame();
-				JOptionPane.showMessageDialog(frame,PAS.l("main_sending_sendingname_mandatory"));
+                JOptionPane.showMessageDialog(frame, Localization.l("main_sending_sendingname_mandatory"));
 				frame.dispose();
 				m_tabbedpane.setSelectedComponent(m_alert_settings);
 				return;

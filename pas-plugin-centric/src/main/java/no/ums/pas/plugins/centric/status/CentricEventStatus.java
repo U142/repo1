@@ -1,7 +1,7 @@
 package no.ums.pas.plugins.centric.status;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.cb.CBSENDINGRESPONSE;
@@ -18,16 +18,16 @@ public class CentricEventStatus extends DefaultPanel implements ComponentListene
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private StdTextLabel m_lbl_status = new StdTextLabel(PAS.l("main_statustab_title"),300);
+	private StdTextLabel m_lbl_status = new StdTextLabel(Localization.l("main_statustab_title"),300);
     //private StdTextLabel m_lbl_refno = new StdTextLabel(PAS.l("common_refno") + ": ",300);
-	private StdTextLabel m_lbl_sent = new StdTextLabel(PAS.l("main_status_messages_sent") + ":",300);
-    private StdTextLabel m_lbl_active = new StdTextLabel(PAS.l("main_status_messages_active")+ ":",300);
+	private StdTextLabel m_lbl_sent = new StdTextLabel(Localization.l("main_status_messages_sent") + ":",300);
+    private StdTextLabel m_lbl_active = new StdTextLabel(Localization.l("main_status_messages_active") + ":",300);
     private StdTextArea m_status = new StdTextArea("",100);
 	private StdTextArea m_refno = new StdTextArea("",100);
 	private StdTextArea m_sent = new StdTextArea("",100);
 	private StdTextArea m_active = new StdTextArea("",100);
 	
-	private JButton m_btn_finish = new JButton(PAS.l("main_status_finish_project"));
+	private JButton m_btn_finish = new JButton(Localization.l("main_status_finish_project"));
     private CentricStatus m_parent;
 	public CentricStatus get_parent() { return m_parent; }
 	public StdTextArea get_sent() { return m_sent; }

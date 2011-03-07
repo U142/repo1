@@ -17,14 +17,6 @@
             <groupId>no.ums</groupId>
             <artifactId>pas-app</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jdesktop.bsaf</groupId>
-            <artifactId>bsaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.beansbinding</groupId>
-            <artifactId>beansbinding</artifactId>
-        </dependency>
     </dependencies>
 
 

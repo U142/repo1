@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
@@ -168,7 +169,7 @@ public class MapLoader {
 						//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 						if (tracker.isErrorAny()) {
 							System.out.println("Error loading overlay image ");
-							Error.getError().addError(PAS.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
+                            Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 							b_loading_overlay_in_progress = false;
 							return null;
 						}
@@ -261,7 +262,7 @@ public class MapLoader {
 			catch(Exception e)
 			{
 				System.out.println(e.getMessage());
-				Error.getError().addError(PAS.l("common_error"), e.toString(), e, 1);
+                Error.getError().addError(Localization.l("common_error"), e.toString(), e, 1);
 			}
 
 		}
@@ -322,7 +323,7 @@ public class MapLoader {
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Error receiving WMS capabilities", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "Error receiving WMS capabilities", e, Error.SEVERITY_ERROR);
 			throw e;
 		}
 		finally{
@@ -515,7 +516,7 @@ public class MapLoader {
 					//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 					if (tracker.isErrorAny()) {
 						System.out.println("Error loading overlay image ");
-						Error.getError().addError(PAS.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
+                        Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 						setErrorMsg("Error loading map into media tracker");
 						m_img_load = null;;
 					}
@@ -524,7 +525,7 @@ public class MapLoader {
 					b_error = true;
 					m_img_load =  null;
 					setErrorMsg(ex.getMessage());
-					Error.getError().addError(PAS.l("common_error"), "An error occured communicating with the WMS server", ex, Error.SEVERITY_ERROR);
+                    Error.getError().addError(Localization.l("common_error"), "An error occured communicating with the WMS server", ex, Error.SEVERITY_ERROR);
 					
 				}
 
@@ -614,7 +615,7 @@ public class MapLoader {
 						//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 						if (tracker.isErrorAny()) {
 							System.out.println("Error loading overlay image ");
-							Error.getError().addError(PAS.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
+                            Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 							setErrorMsg("Error loading map into media tracker");
 							m_img_load = null;;
 						}

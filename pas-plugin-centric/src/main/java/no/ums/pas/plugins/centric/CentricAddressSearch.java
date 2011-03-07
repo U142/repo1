@@ -9,6 +9,7 @@ import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.ws.common.parm.UBoundingRect;
@@ -19,7 +20,6 @@ import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -115,7 +115,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(spr, PAS.l("adrsearch_dlg_general_error"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(spr, Localization.l("adrsearch_dlg_general_error"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			return new UGabSearchResultList();
 		}
 		
@@ -133,10 +133,10 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 			throws Exception {
 		System.out.println("CentricAddressSearch.onCreateSearchPanelResultsAddrSearch");
         String[] sz_columns  = {
-				PAS.l("adrsearch_dlg_address"),
-				PAS.l("adrsearch_dlg_region"),
-				PAS.l("common_lon"),
-				PAS.l("common_lat"),};//"icon"
+                Localization.l("adrsearch_dlg_address"),
+                Localization.l("adrsearch_dlg_region"),
+                Localization.l("common_lon"),
+                Localization.l("common_lat"),};//"icon"
 		int[] n_width = { 200, 100, 50, 50 }; //, 16 };
 		return new CentricSearchPanelResultsAddrSearch(panel, sz_columns, n_width, new Dimension(100, 100), callback);
 	}

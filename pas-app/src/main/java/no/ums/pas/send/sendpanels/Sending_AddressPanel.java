@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.ShapeStruct.DETAILMODE;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
@@ -21,17 +22,17 @@ import java.awt.event.ActionEvent;
  * Show address info
 */
 public abstract class Sending_AddressPanel extends DefaultPanel {
-	private StdTextLabel m_lbl_adrcount_private = new StdTextLabel(PAS.l("main_sending_adr_type_private_fixed"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_company = new StdTextLabel(PAS.l("main_sending_adr_type_company_fixed"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_privatemobile  = new StdTextLabel(PAS.l("main_sending_adr_type_private_mobile"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_companymobile  = new StdTextLabel(PAS.l("main_sending_adr_type_company_mobile"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_private_sms =  new StdTextLabel(PAS.l("main_sending_adr_type_private_sms"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_company_sms =  new StdTextLabel(PAS.l("main_sending_adr_type_company_sms"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_lba_sms = new StdTextLabel(PAS.l("main_sending_adr_type_lba_sms"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_privatenonumber  = new StdTextLabel(PAS.l("main_sending_adr_type_private_nonumber"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_companynonumber  = new StdTextLabel(PAS.l("main_sending_adr_type_company_nonumber"), new Dimension(250, 16));
-    private StdTextLabel m_lbl_adrcount_total   = new StdTextLabel(PAS.l("main_sending_adr_total_voice"), new Dimension(250,16));
-    private StdTextLabel m_lbl_adrcount_total_sms = new StdTextLabel(PAS.l("main_sending_adr_total_sms"), new Dimension(250,16));
+	private StdTextLabel m_lbl_adrcount_private = new StdTextLabel(Localization.l("main_sending_adr_type_private_fixed"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_company = new StdTextLabel(Localization.l("main_sending_adr_type_company_fixed"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_privatemobile  = new StdTextLabel(Localization.l("main_sending_adr_type_private_mobile"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_companymobile  = new StdTextLabel(Localization.l("main_sending_adr_type_company_mobile"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_private_sms = new StdTextLabel(Localization.l("main_sending_adr_type_private_sms"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_company_sms = new StdTextLabel(Localization.l("main_sending_adr_type_company_sms"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_lba_sms = new StdTextLabel(Localization.l("main_sending_adr_type_lba_sms"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_privatenonumber  = new StdTextLabel(Localization.l("main_sending_adr_type_private_nonumber"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_companynonumber  = new StdTextLabel(Localization.l("main_sending_adr_type_company_nonumber"), new Dimension(250, 16));
+    private StdTextLabel m_lbl_adrcount_total   = new StdTextLabel(Localization.l("main_sending_adr_total_voice"), new Dimension(250,16));
+    private StdTextLabel m_lbl_adrcount_total_sms = new StdTextLabel(Localization.l("main_sending_adr_total_sms"), new Dimension(250,16));
 
     private StdTextLabel m_txt_adrcount_private = new StdTextLabel("", new Dimension(50, 16));
 	private StdTextLabel m_txt_adrcount_company = new StdTextLabel("", new Dimension(50, 16));

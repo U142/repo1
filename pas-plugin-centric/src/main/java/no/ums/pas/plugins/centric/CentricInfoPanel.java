@@ -1,8 +1,8 @@
 package no.ums.pas.plugins.centric;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.InfoPanel;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,10 +127,10 @@ public class CentricInfoPanel extends InfoPanel
 			
 			m_coorsearch = new CoorSearchUI();
 
-			address_search.setBorder(BorderFactory.createTitledBorder(PAS.l("adrsearch_dlg_title")));
-			coorinfo.setBorder(BorderFactory.createTitledBorder(PAS.l("main_infotab_map_information")));
-			userinfo.setBorder(BorderFactory.createTitledBorder(PAS.l("main_infotab_user_information")));
-			m_coorsearch.setBorder(BorderFactory.createTitledBorder(PAS.l("main_infotab_coordinate_search")));
+            address_search.setBorder(BorderFactory.createTitledBorder(Localization.l("adrsearch_dlg_title")));
+            coorinfo.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_map_information")));
+            userinfo.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_user_information")));
+            m_coorsearch.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_coordinate_search")));
 
 			
 			set_gridconst(0,inc_panels(),1,1);

@@ -2,6 +2,7 @@ package no.ums.pas.status;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.USMSINSTATS;
 
@@ -41,16 +42,16 @@ public class LbaSmsReplyPanel extends DefaultPanel implements ActionListener {
 		refno = new ArrayList<StdTextLabel>();
 		status = new ArrayList<StdTextLabel>();
 		count = new ArrayList<StdTextLabel>();
-		
-		lbl_refno = new StdTextLabel(PAS.l("common_refno"));
-		lbl_status = new StdTextLabel(PAS.l("mainmenu_status"));
-		lbl_count = new StdTextLabel(PAS.l("main_tas_panel_response_count"));
-		
-		btn_new_message = new JButton(PAS.l("main_tas_panel_new_message"));
+
+        lbl_refno = new StdTextLabel(Localization.l("common_refno"));
+        lbl_status = new StdTextLabel(Localization.l("mainmenu_status"));
+        lbl_count = new StdTextLabel(Localization.l("main_tas_panel_response_count"));
+
+        btn_new_message = new JButton(Localization.l("main_tas_panel_new_message"));
 		btn_new_message.addActionListener(this);
 		btn_new_message.setActionCommand("act_resend");
-		
-		btn_response_details = new JButton(PAS.l("main_tas_panel_response_details"));
+
+        btn_response_details = new JButton(Localization.l("main_tas_panel_response_details"));
 		btn_response_details.addActionListener(this);
 		btn_response_details.setActionCommand("act_open_response_details");
 		btn_response_details.setVisible(false);

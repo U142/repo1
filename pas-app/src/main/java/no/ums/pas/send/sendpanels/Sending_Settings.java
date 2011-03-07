@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
 import no.ums.pas.send.OADC;
@@ -39,19 +40,19 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 
 	protected SendWindow parent = null;
 	public SendWindow get_parent() { return parent; }
-	protected StdTextLabel m_lbl_profiles = new StdTextLabel(PAS.l("main_sending_settings_msg_profile") + ":");
-    protected StdTextLabel m_lbl_schedprofiles = new StdTextLabel(PAS.l("main_sending_settings_config_profile") + ":");
-    protected StdTextLabel m_lbl_oadc = new StdTextLabel(PAS.l("main_sending_settings_origin_number") + ":");
-    protected StdTextLabel m_lbl_validity = new StdTextLabel(PAS.l("main_sending_settings_validity"));
+	protected StdTextLabel m_lbl_profiles = new StdTextLabel(Localization.l("main_sending_settings_msg_profile") + ":");
+    protected StdTextLabel m_lbl_schedprofiles = new StdTextLabel(Localization.l("main_sending_settings_config_profile") + ":");
+    protected StdTextLabel m_lbl_oadc = new StdTextLabel(Localization.l("main_sending_settings_origin_number") + ":");
+    protected StdTextLabel m_lbl_validity = new StdTextLabel(Localization.l("main_sending_settings_validity"));
     protected JComboBox m_combo_validity = new JComboBox(new String [] { "1", "2", "3", "4", "5", "6", "7" } );
 	protected StdTextLabel m_lbl_sendname;
 	protected StdTextArea m_txt_sendname;
-	protected StdTextLabel m_lbl_scheddate = new StdTextLabel(PAS.l("common_date") + "/" + PAS.l("common_time") + ":");
-    protected JRadioButton m_radio_sendnow = new JRadioButton(PAS.l("main_sending_settings_schedule_now"), true);
-    protected JRadioButton m_radio_sched = new JRadioButton(PAS.l("main_sending_settings_schedule_later"));
-    protected StdTextLabel m_lbl_requesttype = new StdTextLabel(PAS.l("main_status_locationbased_alert_short"));
-    protected JRadioButton m_radio_requesttype_0 = new JRadioButton(PAS.l("main_sending_settings_lba_send_now"), true);
-    protected JRadioButton m_radio_requesttype_1 = new JRadioButton(PAS.l("main_sending_settings_lba_send_confirm"));
+	protected StdTextLabel m_lbl_scheddate = new StdTextLabel(Localization.l("common_date") + "/" + Localization.l("common_time") + ":");
+    protected JRadioButton m_radio_sendnow = new JRadioButton(Localization.l("main_sending_settings_schedule_now"), true);
+    protected JRadioButton m_radio_sched = new JRadioButton(Localization.l("main_sending_settings_schedule_later"));
+    protected StdTextLabel m_lbl_requesttype = new StdTextLabel(Localization.l("main_status_locationbased_alert_short"));
+    protected JRadioButton m_radio_requesttype_0 = new JRadioButton(Localization.l("main_sending_settings_lba_send_now"), true);
+    protected JRadioButton m_radio_requesttype_1 = new JRadioButton(Localization.l("main_sending_settings_lba_send_confirm"));
     protected ButtonGroup btn_group_requesttype = new ButtonGroup();
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -72,7 +73,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	protected JButton m_channels_plus = new JButton();
 	protected JButton m_channels_minus = new JButton();
 	
-	protected StdTextLabel m_lbl_maxchannels = new StdTextLabel(PAS.l("main_sending_settings_max_voice_channels") + ":");
+	protected StdTextLabel m_lbl_maxchannels = new StdTextLabel(Localization.l("main_sending_settings_max_voice_channels") + ":");
     protected StdTextLabel m_lbl_showmaxchannels = new StdTextLabel("");
 	protected int m_n_maxchannels = 0;
 	protected int m_n_requesttype = 0;
@@ -160,7 +161,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_combo_schedprofiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");
-		m_lbl_sendname = new StdTextLabel(PAS.l("common_sendingname") + ":");
+        m_lbl_sendname = new StdTextLabel(Localization.l("common_sendingname") + ":");
 		int common_width = 170;
 		m_lbl_sendname.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
@@ -302,7 +303,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			set_gridconst(5, get_panel(), 2, 1, GridBagConstraints.WEST);
 			add(m_combo_validity, m_gridconst);
 			set_gridconst(7, get_panel(), 3, 1, GridBagConstraints.WEST);
-			add(new StdTextLabel(PAS.l("common_days")), m_gridconst);
+            add(new StdTextLabel(Localization.l("common_days")), m_gridconst);
 		
 			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
 			add(m_radio_sendnow, m_gridconst);
@@ -346,7 +347,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_settings_loaded".equals(e.getActionCommand())) {
-			get_parent().set_comstatus(PAS.l("main_sending_settings_dl_complete"));
+            get_parent().set_comstatus(Localization.l("main_sending_settings_dl_complete"));
 			populate_controls();
 			parent.actionPerformed(e);
 			

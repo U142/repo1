@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendController;
 import no.ums.pas.sound.Oscillator;
 import no.ums.pas.sound.OscillatorProperties;
@@ -126,38 +127,38 @@ public class Sending_Files extends DefaultPanel {
 			m_open.setPreferredSize(new Dimension(x, y));
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR new SoundRecorderPanel : " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in Sending_Files",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in Sending_Files",e,1);
 		}
 		
 		//if(rec)
 			if(PAS.icon_version==2) {
-                m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+                m_tabbedpane.addTab(Localization.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, Localization.l("main_sending_audio_type_record_tooltip"));
             }
 			else {
-                m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_icon("mic_20x20.gif"), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+                m_tabbedpane.addTab(Localization.l("main_sending_audio_type_record"), ImageLoader.load_icon("mic_20x20.gif"), m_rec, Localization.l("main_sending_audio_type_record_tooltip"));
             }
 
 		if(PAS.icon_version==2) {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_and_scale_icon("tts.gif", 15, 15), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_tts"), ImageLoader.load_and_scale_icon("tts.gif", 15, 15), m_tts, Localization.l("main_sending_audio_type_tts_tooltip"));
         }
 		else {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_tts"), ImageLoader.load_icon("tts_20x20.gif"), m_tts, PAS.l("main_sending_audio_type_tts_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_tts"), ImageLoader.load_icon("tts_20x20.gif"), m_tts, Localization.l("main_sending_audio_type_tts_tooltip"));
         }
 		
 		if(PAS.icon_version==2) {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_and_scale_icon("library.gif", 15, 15), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_library"), ImageLoader.load_and_scale_icon("library.gif", 15, 15), m_lib, Localization.l("main_sending_audio_type_library_tooltip"));
         }
 		else {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_library"), ImageLoader.load_icon("library_20x20.png"), m_lib, PAS.l("main_sending_audio_type_library_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_library"), ImageLoader.load_icon("library_20x20.png"), m_lib, Localization.l("main_sending_audio_type_library_tooltip"));
         }
 			
 		if(PAS.icon_version==2) {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_and_scale_icon("folder_open_24.png", 15, 15), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_open"), ImageLoader.load_and_scale_icon("folder_open_24.png", 15, 15), m_open, Localization.l("main_sending_audio_type_open_tooltip"));
         }
 		else {
-            m_tabbedpane.addTab(PAS.l("main_sending_audio_type_open"), ImageLoader.load_icon("open.gif"), m_open, PAS.l("main_sending_audio_type_open_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_audio_type_open"), ImageLoader.load_icon("open.gif"), m_open, Localization.l("main_sending_audio_type_open_tooltip"));
         }
-		m_lbl_soundmodule.setText(PAS.l("main_sending_info_soundfile_for_module") + " " + get_soundfile().get_modulename());
+        m_lbl_soundmodule.setText(Localization.l("main_sending_info_soundfile_for_module") + " " + get_soundfile().get_modulename());
 		
 		if(file.get_template() == 1) {
 			m_tabbedpane.setSelectedComponent(m_tts);
@@ -218,19 +219,19 @@ public class Sending_Files extends DefaultPanel {
 		set_soundtypetext(n_soundtype, f);
 	}
 	public void set_soundtypetext(int n_soundtype, SoundInfo f) {
-		String sz_use = PAS.l("common_using") + ": ";
+        String sz_use = Localization.l("common_using") + ": ";
 		switch(n_soundtype) {
 			case Sending_Files.SOUNDFILE_TYPE_LIBRARY_:
-				sz_use += PAS.l("main_sending_audio_type_library");//"Sound Library File";
+                sz_use += Localization.l("main_sending_audio_type_library");//"Sound Library File";
 			break;
 			case Sending_Files.SOUNDFILE_TYPE_LOCAL_:
-				sz_use += PAS.l("main_sending_audio_type_open");
+                sz_use += Localization.l("main_sending_audio_type_open");
 			break;
 			case Sending_Files.SOUNDFILE_TYPE_RECORD_:
-				sz_use += PAS.l("main_sending_audio_use_recorded");
+                sz_use += Localization.l("main_sending_audio_use_recorded");
 			break;
 			case Sending_Files.SOUNDFILE_TYPE_TTS_:
-				sz_use += PAS.l("main_sending_audio_use_tts");
+                sz_use += Localization.l("main_sending_audio_use_tts");
 			break;
 		}
 		if(f!=null) {

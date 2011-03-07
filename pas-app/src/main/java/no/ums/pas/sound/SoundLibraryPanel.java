@@ -5,6 +5,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
@@ -16,8 +17,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
@@ -35,8 +34,8 @@ public class SoundLibraryPanel extends DefaultPanel {
 	
 	public void start_progress() {
 		get_playpanel().enable_player(false);
-		get_parent().set_comstatus(PAS.l("sound_file_type_download_from_lib"));
-		get_parent().get_loader().start_progress(0, PAS.l("common_downloading"));
+        get_parent().set_comstatus(Localization.l("sound_file_type_download_from_lib"));
+        get_parent().get_loader().start_progress(0, Localization.l("common_downloading"));
 	}
 	public void stop_progress() {
 		get_playpanel().enable_player(true);
@@ -49,8 +48,8 @@ public class SoundLibraryPanel extends DefaultPanel {
 		//m_controller = controller;
 		m_file = file;
 		m_parent = parent;
-		
-		String sz_columns[] = { PAS.l("sound_panel_library_file_table_head_name") };
+
+        String sz_columns[] = {Localization.l("sound_panel_library_file_table_head_name")};
 		int n_width[] = { 325 };
 		m_liblist = new SearchPanelSoundlib(PAS.get_pas(), this, sz_columns, n_width);
 		m_liblist.setPreferredSize(new Dimension(400, 250));
@@ -74,7 +73,8 @@ public class SoundLibraryPanel extends DefaultPanel {
 					m_playpanel.initialize_player(bb, true);
 				}
 					
-			} catch(Exception err) {Error.getError().addError(PAS.l("common_error"),"Exception in actionPerformed",err,1);}
+			} catch(Exception err) {
+                Error.getError().addError(Localization.l("common_error"),"Exception in actionPerformed",err,1);}
 			stop_progress();
 		}
 	}
@@ -102,7 +102,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 			}
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR populate_soundlib() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in populate_wav",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in populate_wav",e,1);
 		}
 	}	
 	public void load_wav(SoundlibFileWav f) {
@@ -154,13 +154,13 @@ public class SoundLibraryPanel extends DefaultPanel {
 					try {
 						((SoundLibraryPanel)m_parent).load_wav(f);
 					} catch(Exception e) {
-						Error.getError().addError(PAS.l("common_error"),"Exception in onMouseLClick",e,1);
+                        Error.getError().addError(Localization.l("common_error"),"Exception in onMouseLClick",e,1);
 					}
 					//PAS.get_pas().add_event("Download " + f.get_localfile());
 				//}
 			} catch(Exception e) {
 				PAS.get_pas().add_event("ERROR onMouseLClick " + e.getMessage(), e);
-				Error.getError().addError(PAS.l("common_error"),"Exception in onMouseLClick",e,1);
+                Error.getError().addError(Localization.l("common_error"),"Exception in onMouseLClick",e,1);
 			}
 		}
 		protected void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p) {

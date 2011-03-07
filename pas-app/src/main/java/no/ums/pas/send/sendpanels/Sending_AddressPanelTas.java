@@ -2,6 +2,7 @@ package no.ums.pas.send.sendpanels;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSTasCount;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendPropertiesTAS;
 import no.ums.pas.tas.TasHelpers;
@@ -21,17 +22,17 @@ import java.util.List;
 
 public class Sending_AddressPanelTas extends Sending_AddressPanel
 {
-	StdTextLabel lbl_destination = new StdTextLabel(PAS.l("main_tas_destination_country") , true, 150);
+	StdTextLabel lbl_destination = new StdTextLabel(Localization.l("main_tas_destination_country"), true, 150);
 
     {
-        lbl_destination = new StdTextLabel(PAS.l("main_tas_destination_country") , true, 150);
+        lbl_destination = new StdTextLabel(Localization.l("main_tas_destination_country"), true, 150);
     }
 
     StdTextLabel txt_destination = new StdTextLabel("", true, 200);
-	StdTextLabel lbl_addresses = new StdTextLabel(PAS.l("main_tas_touristcount"), true, 150);
+	StdTextLabel lbl_addresses = new StdTextLabel(Localization.l("main_tas_touristcount"), true, 150);
 
     {
-        lbl_addresses = new StdTextLabel(PAS.l("main_tas_touristcount"), true, 150);
+        lbl_addresses = new StdTextLabel(Localization.l("main_tas_touristcount"), true, 150);
     }
 
     StdTextLabel txt_addresses = new StdTextLabel("", true, 200);
@@ -96,13 +97,13 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 		if(tas.getCountry().size()==1)
 			sendto = tas.getCountry().get(0).getSzName();
 		else if(tas.getCountry().size()>1) {
-            sendto = PAS.l("main_tas_send_multiple_countries") + " (" + m_country.size() + ")";
+            sendto = Localization.l("main_tas_send_multiple_countries") + " (" + m_country.size() + ")";
         }
 		else {
-            sendto = PAS.l("common_none");
+            sendto = Localization.l("common_none");
         }
 		txt_destination.setText(sendto);
-		String str_operators = "<html><font color=red>" + PAS.l("main_tas_send_no_touristcount_updates") + "</font></html>";
+        String str_operators = "<html><font color=red>" + Localization.l("main_tas_send_no_touristcount_updates") + "</font></html>";
 		int n_max_seconds = (int)(TasPanel.TAS_ADRCOUNT_TIMESTAMP_EXPIRED_SECONDS);
 		//if(tas.getCountry().getOperators()!=null && tas.getCountry().getOperators().getUTOURISTCOUNT().size()>0)
 		{
@@ -174,7 +175,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 			//list.add(m_country);
 			new WSTasCount(this, list).start();
 			//PAS.get_pas().get_eastcontent().get_taspanel().actionPerformed(new ActionEvent(list, ActionEvent.ACTION_PERFORMED, "act_request_touristcount"));
-			lbl_runupdate.setText("<html><font color=red>" + PAS.l("main_tas_count_request_sent") + "</font></html>");
+            lbl_runupdate.setText("<html><font color=red>" + Localization.l("main_tas_count_request_sent") + "</font></html>");
 		}
 		catch(Exception e)
 		{

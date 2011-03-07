@@ -3,6 +3,7 @@ package no.ums.pas.send;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolySnapStruct;
@@ -58,9 +59,9 @@ public class SendPropertiesTAS extends SendProperties
 		if(c.size()==1)
 			sendto = c.get(0).getSzName();
 		else if(c.size()>1) {
-            sendto = PAS.l("main_tas_send_multiple_countries") + " (" + c.size() + ")";
+            sendto = Localization.l("main_tas_send_multiple_countries") + " (" + c.size() + ")";
         }
-		set_sendingname(PAS.l("main_tas_title") + " - " + sendto, "");
+        set_sendingname(Localization.l("main_tas_title") + " - " + sendto, "");
 		get_sendobject().get_sendproperties().get_toolbar().lock_sending(true);
 	}
 	

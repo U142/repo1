@@ -2,6 +2,7 @@ package no.ums.pas.parm.tree;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.exception.ParmException;
@@ -502,7 +503,7 @@ public class TreeController {
 							gui.getSnapSimulation().setEnabled(false);
 							gui.getTools().setEnabled(false);
 							if(((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_GISIMPORT) {
-								gui.getGotoMap().setToolTipText(PAS.l("main_parmtab_popup_goto_unavailable_for_gis"));
+								gui.getGotoMap().setToolTipText(Localization.l("main_parmtab_popup_goto_unavailable_for_gis"));
 								gui.getGotoMap().setEnabled(false);
 								gui.getExportPolygon().setEnabled(false);
 							}
@@ -549,7 +550,7 @@ public class TreeController {
 							} else {
 								gui.getGotoMap().setEnabled(false);
 								if( ((AlertVO)o).getM_shape()!=null && ((AlertVO) o).getM_shape().getType() == ShapeStruct.SHAPE_GISIMPORT) {
-									gui.getGotoMap().setToolTipText(PAS.l("main_parmtab_popup_goto_unavailable_for_gis"));
+									gui.getGotoMap().setToolTipText(Localization.l("main_parmtab_popup_goto_unavailable_for_gis"));
 								}
 								if(((AlertVO)o).getM_shape()!=null && ((AlertVO) o).getM_shape().getType() != ShapeStruct.SHAPE_POLYGON)
 									gui.getExportPolygon().setEnabled(false);
@@ -608,7 +609,7 @@ public class TreeController {
 			System.out
 					.println("Feil ved konvertering til ObjectVO. Object ikke et Object");
 			ccEx.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),
+			Error.getError().addError(Localization.l("common_error"),
 					"TreeController ClassCastException in findObject", ccEx, 1);
 		}
 		return selectedObject;

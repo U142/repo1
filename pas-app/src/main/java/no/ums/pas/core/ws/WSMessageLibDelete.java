@@ -1,6 +1,7 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.UBBMESSAGE;
 import no.ums.ws.common.ULOGONINFO;
@@ -45,7 +46,7 @@ public class WSMessageLibDelete extends WSMessageLibEdit
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Error saving message library", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "Error saving message library", e, Error.SEVERITY_ERROR);
 			m_msg.setBValid(false);
 			//list = new UBBMESSAGELIST();
 			//list.setNServertimestamp(-1);

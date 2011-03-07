@@ -1,6 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.errorhandling.Error;
@@ -33,7 +34,7 @@ public class Sending_AddressPanelEllipse extends Sending_AddressPanel {
 		//n_radius_width = Math.abs(get_parent().get_sendobject().get_sendproperties().typecast_ellipse().get_corner().get_lon() - get_parent().get_sendobject().get_sendproperties().typecast_ellipse().get_center().get_lon();
 		n_radius_width = pas.get_navigation().calc_distance(mp_width_start, mp_width_end);
 		n_radius_height= pas.get_navigation().calc_distance(mp_height_start, mp_height_end);
-		m_lbl_pointcount = new StdTextLabel(PAS.l("main_sending_adr_ellipse_center") + ": " + get_parent().get_sendobject().get_sendproperties().typecast_ellipse().get_center() + "  " + PAS.l("common_width") + ": " + n_radius_width + PAS.l("common_meters_short") + " " + PAS.l("common_height") + ": " + n_radius_height + PAS.l("common_meters_short"));
+        m_lbl_pointcount = new StdTextLabel(Localization.l("main_sending_adr_ellipse_center") + ": " + get_parent().get_sendobject().get_sendproperties().typecast_ellipse().get_center() + "  " + Localization.l("common_width") + ": " + n_radius_width + Localization.l("common_meters_short") + " " + Localization.l("common_height") + ": " + n_radius_height + Localization.l("common_meters_short"));
 		m_lbl_pointcount.setPreferredSize(new Dimension(400, 16));
 		add_controls();
 	}

@@ -3,7 +3,7 @@ package no.ums.pas.sound;
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.BooleanControl;
@@ -111,7 +111,7 @@ public class SoundMixer implements LineListener {
 		} catch(Exception e) {
 			error=true;
 			//JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("sound_mixer_no_mic_lines_found"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-			str_error_msg = PAS.l("sound_mixer_no_mic_lines_found");
+            str_error_msg = Localization.l("sound_mixer_no_mic_lines_found");
 			System.out.println("No MIC lines found");
 			SoundRecorderPanel.b_line_ok = false;
 		}
@@ -133,10 +133,10 @@ public class SoundMixer implements LineListener {
 			System.out.println("No Speaker lines found");
 			error = true;
 			if(str_error_msg.length() > 0) {
-                str_error_msg += " & " + PAS.l("sound_mixer_no_speaker_lines_found");
+                str_error_msg += " & " + Localization.l("sound_mixer_no_speaker_lines_found");
             }
 			else {
-                str_error_msg = PAS.l("sound_mixer_no_speaker_lines_found");
+                str_error_msg = Localization.l("sound_mixer_no_speaker_lines_found");
             }
 			//JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("sound_mixer_no_speaker_lines_found"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			//e.printStackTrace();
@@ -165,7 +165,7 @@ public class SoundMixer implements LineListener {
 	
 	public void checkError(Component window) {
 		if(error && !b_has_reported_error) {
-			JOptionPane.showMessageDialog(window, str_error_msg, PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(window, str_error_msg, Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			b_has_reported_error = true;
 		}
 	}

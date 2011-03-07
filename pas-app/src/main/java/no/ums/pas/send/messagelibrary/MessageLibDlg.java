@@ -1,6 +1,7 @@
 package no.ums.pas.send.messagelibrary;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.ws.common.UBBMESSAGE;
 
 import javax.swing.JDialog;
@@ -32,7 +33,7 @@ public class MessageLibDlg extends JDialog implements ComponentListener, ActionL
 	}
 	public MessageLibDlg(ActionListener callback, JFrame parent, boolean b_editor_mode, boolean b_enable_multi_cc)
 	{
-		super(parent, PAS.l("main_sending_audio_type_library"), false);
+        super(parent, Localization.l("main_sending_audio_type_library"), false);
 		this.callback = callback;
 		panel = new MessageLibPanel(this, MessageLibTreePanel.MESSAGELIB_UPDATE_INTERVAL, b_editor_mode, b_enable_multi_cc);
 		final Rectangle rect = PAS.get_pas().get_settings().getRectMessageLibDlg();

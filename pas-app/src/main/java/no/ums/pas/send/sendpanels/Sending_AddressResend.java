@@ -1,8 +1,8 @@
 package no.ums.pas.send.sendpanels;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusCodeList;
 
@@ -29,7 +29,7 @@ public class Sending_AddressResend extends Sending_AddressPanel implements Compo
 		super(null, parent);
 		m_n_resend_refno = n_refno;
 		m_statuscodes = statuscodes;
-		String [] sz_columns = new String [] { PAS.l("main_status_code"), PAS.l("main_status_name"), PAS.l("main_sending_recipients"), "" };
+        String [] sz_columns = new String [] {Localization.l("main_status_code"), Localization.l("main_status_name"), Localization.l("main_sending_recipients"), "" };
 		int [] n_width = new int [] { 50, 300, 50, 16 };
 		boolean [] b_editable = new boolean [] { false, false, false, true };
 		Dimension dim = new Dimension(500, 350);

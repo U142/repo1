@@ -1,6 +1,5 @@
 package no.ums.pas.send.messagelibrary;
 
-import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CCode;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -90,8 +89,8 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 			}*/
 			m_template = new SoundTextTemplatePanel(this);
 			
-			//m_tabbedpane.addTab(Localization.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, Localization.l("main_sending_audio_type_record_tooltip"));
-			m_tabbedpane.addTab(Localization.l("main_sending_text_template"), null, m_template, null);
+			//m_tabbedpane.addTab(PAS.l("main_sending_audio_type_record"), ImageLoader.load_and_scale_icon("mic_transparent.gif", 15, 15), m_rec, PAS.l("main_sending_audio_type_record_tooltip"));
+            m_tabbedpane.addTab(Localization.l("main_sending_text_template"), null, m_template, null);
 		}
 		catch(Exception e)
 		{
@@ -342,8 +341,8 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		while(m.find() == true)
 			++ext;
 		//System.out.println("Extended chars = " + ext);
-		
-		activeLabel.setText(String.format(Localization.l("main_message_library_counter"), text.length() + ext));
+
+        activeLabel.setText(String.format(Localization.l("main_message_library_counter"), text.length() + ext));
 		
 		
 			

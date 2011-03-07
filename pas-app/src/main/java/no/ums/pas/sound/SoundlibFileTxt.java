@@ -2,6 +2,7 @@ package no.ums.pas.sound;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.io.BufferedReader;
@@ -47,11 +48,11 @@ public class SoundlibFileTxt extends SoundlibFile {
 			br.close();
 		} catch (FileNotFoundException ex) {
 			PAS.get_pas().add_event("File not found (" + f.getPath() + ") " + ex.getMessage(), ex);
-			Error.getError().addError(PAS.l("common_error"),"Exception in read",ex,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in read",ex,1);
 			return false;
 		} catch (IOException ex) {
 			PAS.get_pas().add_event("IOException on (" + f.getPath() + ") " + ex.getMessage(), ex);
-			Error.getError().addError(PAS.l("common_error"),"Exception in read",ex,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in read",ex,1);
 			return false;
 		}
 		m_sz_text = sz_text;

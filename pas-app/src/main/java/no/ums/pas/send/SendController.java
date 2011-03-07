@@ -213,7 +213,7 @@ public class SendController implements ActionListener {
 			try {
 				PAS.get_pas().get_eastcontent().get_sendingpanel().remove(((SendObject)get_sendings().get(i)).get_toolbar());
 			} catch(Exception e) {
-				Error.getError().addError(PAS.l("common_warning"), "Error removing sending. Non-fatal Error in SendController", e, 2);
+                Error.getError().addError(Localization.l("common_warning"), "Error removing sending. Non-fatal Error in SendController", e, 2);
 			}
 		}
 		get_sendings().clear();
@@ -282,7 +282,7 @@ public class SendController implements ActionListener {
 		else if(alert.getM_shape().getClass().equals(MunicipalStruct.class))
 			n_type = SendProperties.SENDING_TYPE_MUNICIPAL_;
 		if(n_type==-1) {
-            Error.getError().addError(PAS.l("common_error"), "Could not identify sending type = -1", 0, 1);
+            Error.getError().addError(Localization.l("common_error"), "Could not identify sending type = -1", 0, 1);
         }
 			//else if(alert.getM_shape().getClass().equals(UnknownShape.class))
 			//n_type = SendProperties.SENDING_TYPE_ADRLIST_;
@@ -310,7 +310,7 @@ public class SendController implements ActionListener {
 				}
 			}
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Could not clone Alert polygon", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "Could not clone Alert polygon", e, Error.SEVERITY_ERROR);
 		}
 		obj.get_toolbar().set_addresstypes(alert.getAddresstypes());
 		obj.get_toolbar().init_addresstypes(alert.getAddresstypes());
@@ -391,7 +391,7 @@ public class SendController implements ActionListener {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"SendController Exception in create_new_sending",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			return false;
 		}
 		return true;
@@ -406,7 +406,7 @@ public class SendController implements ActionListener {
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
-				Error.getError().addError(PAS.l("common_error"),"SendController Exception in create_new_sending",e,1);
+                Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			}
 
 				SendObject obj;
@@ -425,7 +425,7 @@ public class SendController implements ActionListener {
 		} catch(Exception err) {
 			System.out.println(err.getMessage());
 			err.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"SendController Exception in create_new_sending",err,1);
+            Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",err,1);
 			return null;
 		}
 	}
@@ -485,17 +485,17 @@ public class SendController implements ActionListener {
 			obj.get_sendproperties().set_oadc_number(sending.get_oadc());
 			obj.get_sendproperties().set_sendchannels(sending.get_type());
 			if(obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                obj.get_sendproperties().set_sendingname(PAS.l("main_tas_panel_new_message")+" - " + sending.get_sendingname() + "(" + sending.get_refno() + ")", PAS.l("main_resend_default_sendingname") + " - " + sending.get_refno());
+                obj.get_sendproperties().set_sendingname(Localization.l("main_tas_panel_new_message") +" - " + sending.get_sendingname() + "(" + sending.get_refno() + ")", Localization.l("main_resend_default_sendingname") + " - " + sending.get_refno());
             }
 			else {
-                obj.get_sendproperties().set_sendingname(PAS.l("main_resend_default_sendingname")+" - " + sending.get_sendingname() + "(" + sending.get_refno() + ")", PAS.l("main_resend_default_sendingname") + " - " + sending.get_refno());
+                obj.get_sendproperties().set_sendingname(Localization.l("main_resend_default_sendingname") +" - " + sending.get_sendingname() + "(" + sending.get_refno() + ")", Localization.l("main_resend_default_sendingname") + " - " + sending.get_refno());
             }
 			actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_send_one"));
 			//m_n_send_id++;
 			//add_sending(obj);
 			return obj;
 		} catch(Exception err) {
-			Error.getError().addError(PAS.l("common_error"), "SendController Exception in create_resend", err, 1);
+            Error.getError().addError(Localization.l("common_error"), "SendController Exception in create_resend", err, 1);
 			return null;
 		}
 	}
@@ -523,7 +523,7 @@ public class SendController implements ActionListener {
 				win.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(350, 300));
 			} catch(Exception err) {
 				PAS.get_pas().add_event("ERROR SendController.act_send_one - " + err.getMessage(), err);
-				Error.getError().addError(PAS.l("common_error"),"SendController Exception in actionPerformed",err,1);
+                Error.getError().addError(Localization.l("common_error"),"SendController Exception in actionPerformed",err,1);
 			}
 		}
 		else if("act_sending_close".equals(e.getActionCommand())) {
@@ -633,7 +633,7 @@ public class SendController implements ActionListener {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"SendController Exception in set_activesending",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SendController Exception in set_activesending",e,1);
 		}
 		if(!m_active_sending.isLocked()) {
 			if(get_pas() != null) {
@@ -651,7 +651,7 @@ public class SendController implements ActionListener {
 			PAS.get_pas().get_housecontroller().show_addresstypes(n_types);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
-			Error.getError().addError(PAS.l("common_error"),"SendController Exception in show_addresstypes",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SendController Exception in show_addresstypes",e,1);
 		}
 	}
 	
@@ -687,7 +687,7 @@ public class SendController implements ActionListener {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"SendController Exception in draw_polygons",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SendController Exception in draw_polygons",e,1);
 		}
 	}
 	
@@ -703,8 +703,8 @@ public class SendController implements ActionListener {
 		pass.setPreferredSize(new Dimension(150, 16));
 		pass.setEchoChar('*');
 		LightPanel panel = new LightPanel();
-		
-		LoadingFrame loader = new LoadingFrame("[" + sz_function.toUpperCase() + "] "+PAS.l("common_preparing") + " ", null);
+
+        LoadingFrame loader = new LoadingFrame("[" + sz_function.toUpperCase() + "] "+ Localization.l("common_preparing") + " ", null);
 		loader.setAlwaysOnTop(true);
 		//loader.set_totalitems(0, "Sending");
 		
@@ -753,7 +753,7 @@ public class SendController implements ActionListener {
 			wsdl = new java.net.URL(vars.WSDL_EXTERNALEXEC); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/ExternalExec.asmx?WSDL"); 
 		} catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), e.getLocalizedMessage(), e, 1);
+            Error.getError().addError(Localization.l("common_error"), e.getLocalizedMessage(), e, 1);
 			return ;
 		}
 		QName service = null;
@@ -765,7 +765,7 @@ public class SendController implements ActionListener {
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Could not run Quick Send", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "Could not run Quick Send", e, Error.SEVERITY_ERROR);
 			return ;
 		}
 	
@@ -779,7 +779,7 @@ public class SendController implements ActionListener {
 			if(sz_function.equals("live"))
 				cnf += "<font color=\"red\">";
 			//cnf += "Are you sure you want to send the Alert [" + a.getName() + "] as a <u>[" + sz_function.toUpperCase() + "]</u> sending?<br><br>Confirm using your password<br>";
-			cnf += String.format(PAS.l("quicksend_alert_dlg_are_you_sure"), a.getName(),sz_function.toUpperCase() );
+            cnf += String.format(Localization.l("quicksend_alert_dlg_are_you_sure"), a.getName(),sz_function.toUpperCase() );
 			cnf += "</font>";
 			cnf += "</html>";
 			JLabel label = new JLabel(cnf);
@@ -789,10 +789,10 @@ public class SendController implements ActionListener {
 			
 			panel.set_gridconst(0, panel.inc_panels(), 1, 1);
 			if(sz_function.equals("live")) {
-                panel.add(new JLabel(String.format(PAS.l("quicksend_alert_dlg_confirm"),"LIVE")), panel.m_gridconst);
+                panel.add(new JLabel(String.format(Localization.l("quicksend_alert_dlg_confirm"),"LIVE")), panel.m_gridconst);
             }
 			else {
-                panel.add(new JLabel(String.format(PAS.l("quicksend_alert_dlg_confirm"),"SIMULATE")), panel.m_gridconst);
+                panel.add(new JLabel(String.format(Localization.l("quicksend_alert_dlg_confirm"),"SIMULATE")), panel.m_gridconst);
             }
 			panel.set_gridconst(0, panel.inc_panels(), 1, 1);
 			StdTextArea confirm = new StdTextArea("",false);
@@ -806,12 +806,12 @@ public class SendController implements ActionListener {
 			    	  pass.requestFocusInWindow();
 			      }
 			});
-			
 
-			int dlg_ret = JOptionPane.showConfirmDialog(PAS.get_pas(), panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            int dlg_ret = JOptionPane.showConfirmDialog(PAS.get_pas(), panel, Localization.l("common_confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if(dlg_ret != JOptionPane.YES_OPTION)
 			{
-				JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_aborted"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("quicksend_dlg_aborted"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			try {
@@ -823,19 +823,19 @@ public class SendController implements ActionListener {
 					pwd="";
 				}
 				if(!pwd.equals(logon.getSzPassword())) {
-					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_error_password"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("quicksend_dlg_error_password"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				
 				if(sz_function.equals("live")) {
 					if(!confirm.getText().equals("LIVE")) {
-						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(PAS.get_pas(), String.format(Localization.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
 				else {
 					if(!confirm.getText().equals("SIMULATE")) {
-						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SIMULATE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(PAS.get_pas(), String.format(Localization.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SIMULATE"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
@@ -877,7 +877,7 @@ public class SendController implements ActionListener {
 			}
 			catch(Exception e)
 			{
-				no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), e.getMessage(), e, 1);
+                no.ums.pas.ums.errorhandling.Error.getError().addError(Localization.l("common_error"), e.getMessage(), e, 1);
 				System.out.println(e.getMessage());
 				loader.setVisible(false);
 				return;
@@ -891,7 +891,7 @@ public class SendController implements ActionListener {
 			if(sz_function.equals("live"))
 				cnf += "<font color=\"red\">";
 			//cnf += "Are you sure you want to send the Event [" + a.getName() + "] as a <u>[" + sz_function.toUpperCase() + "]</u> sending?<br>Containing " + a.getAlertListe().size() + " alerts<br><br>Confirm using your password<br>";
-			cnf += String.format(PAS.l("quicksend_event_dlg_are_you_sure"), a.getName(), sz_function.toUpperCase(), a.getAlertListe().size());
+            cnf += String.format(Localization.l("quicksend_event_dlg_are_you_sure"), a.getName(), sz_function.toUpperCase(), a.getAlertListe().size());
 			cnf += "</font>";
 			cnf += "</html>";
 			JLabel label = new JLabel(cnf);
@@ -901,10 +901,10 @@ public class SendController implements ActionListener {
 			
 			panel.set_gridconst(0, panel.inc_panels(), 1, 1);
 			if(sz_function.equals("live")) {
-                panel.add(new JLabel(String.format(PAS.l("quicksend_alert_dlg_confirm"),"LIVE")), panel.m_gridconst);
+                panel.add(new JLabel(String.format(Localization.l("quicksend_alert_dlg_confirm"),"LIVE")), panel.m_gridconst);
             }
 			else {
-                panel.add(new JLabel(String.format(PAS.l("quicksend_alert_dlg_confirm"),"SIMULATE")), panel.m_gridconst);
+                panel.add(new JLabel(String.format(Localization.l("quicksend_alert_dlg_confirm"),"SIMULATE")), panel.m_gridconst);
             }
 			panel.set_gridconst(0, panel.inc_panels(), 1, 1);
 			StdTextArea confirm = new StdTextArea("",false);
@@ -919,10 +919,10 @@ public class SendController implements ActionListener {
 			      }
 			});
 
-			int dlg_ret = JOptionPane.showConfirmDialog(PAS.get_pas(), panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int dlg_ret = JOptionPane.showConfirmDialog(PAS.get_pas(), panel, Localization.l("common_confirm"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if(dlg_ret != JOptionPane.YES_OPTION)
 			{
-				JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_aborted"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("quicksend_dlg_aborted"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			try {
@@ -934,19 +934,19 @@ public class SendController implements ActionListener {
 					pwd="";
 				}
 				if(!pwd.equals(logon.getSzPassword())) {
-					JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("quicksend_dlg_error_password"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("quicksend_dlg_error_password"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				
 				if(sz_function.equals("live")) {
 					if(!confirm.getText().equals("LIVE")) {
-						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(PAS.get_pas(), String.format(Localization.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "LIVE"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
 				else {
 					if(!confirm.getText().equals("SIMULATE")) {
-						JOptionPane.showMessageDialog(PAS.get_pas(), String.format(PAS.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SIMULATE"), PAS.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(PAS.get_pas(), String.format(Localization.l("quicksend_alert_dlg_confirm_err"),confirm.getText(), "SIMULATE"), Localization.l("common_information"), JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
@@ -972,7 +972,7 @@ public class SendController implements ActionListener {
 			}
 			catch(Exception e)
 			{
-				no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), e.getMessage(), e, 1);
+                no.ums.pas.ums.errorhandling.Error.getError().addError(Localization.l("common_error"), e.getMessage(), e, 1);
 				System.out.println(e.getMessage());
 				loader.setVisible(false);
 				return;
@@ -1006,17 +1006,17 @@ public class SendController implements ActionListener {
 				}
 				if(res.getSendFunction().equals("test"))
 				{
-					JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), PAS.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
 				}
 				else
 				{
 					int answer= JOptionPane.NO_OPTION;
 					if(PAS.get_pas().get_statuscontroller().get_sendinglist().size() > 0) {
-						JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question),PAS.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
 						openStatus(res);
 					}
 					else {
-                        if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), PAS.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
+                        if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), Localization.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
                             openStatus(res);
                         else if(b_openstatus_question && answer==JOptionPane.NO_OPTION)
                         {
@@ -1030,7 +1030,7 @@ public class SendController implements ActionListener {
                             }
                         }
                         else if(!b_openstatus_question) {
-                            JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), PAS.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(parent_to_popup, res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"), JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
 				}

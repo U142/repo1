@@ -50,7 +50,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -171,83 +170,83 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(group==ADRGROUPS.PRIVATE)
 			{
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed") + "<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed") + "<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed_alt_sms")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed_alt_sms") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed_and_mobile")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed_and_mobile") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_MOBILE_PRIVATE) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_mobile")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_mobile") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_mobile_and_fixed")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_mobile_and_fixed") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_SMS_PRIVATE) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_sms")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_sms") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_SMS_PRIVATE_ALT_FIXED) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_sms_alt_fixed")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_sms_alt_fixed") +"<br>";
                 }
 				if(temp.length()>0) //add heading
 				{
 					if((m_n_addresstypes & SendController.SENDTO_USE_NOFAX_COMPANY) > 0) {
-                        temp += sz_font + "- " + PAS.l("main_sending_adr_option_using_blocklist");
+                        temp += sz_font + "- " + Localization.l("main_sending_adr_option_using_blocklist");
                     }
 				}
-				ret += "<font size='3'><b>" + PAS.l("common_adr_private") + "</b></font><br>";
+                ret += "<font size='3'><b>" + Localization.l("common_adr_private") + "</b></font><br>";
 				ret += temp; //add text
 			}
 
 			if(group==ADRGROUPS.COMPANY)
 			{
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_COMPANY) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed") + "<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed") + "<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_COMPANY_ALT_SMS) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed_alt_sms")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed_alt_sms") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_FIXED_COMPANY_AND_MOBILE) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_fixed_and_mobile")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_fixed_and_mobile") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_MOBILE_COMPANY) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_mobile")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_mobile") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_MOBILE_COMPANY_AND_FIXED) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_mobile_and_fixed")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_mobile_and_fixed") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_SMS_COMPANY) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_sms")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_sms") +"<br>";
                 }
 				if((m_n_addresstypes & SendController.SENDTO_SMS_COMPANY_ALT_FIXED) > 0) {
-                    temp += sz_font + "- "+ PAS.l("main_sending_adr_option_sms_alt_fixed")+"<br>";
+                    temp += sz_font + "- "+ Localization.l("main_sending_adr_option_sms_alt_fixed") +"<br>";
                 }
 				if(temp.length()>0) //add heading
 				{
 					if((m_n_addresstypes & SendController.SENDTO_USE_NOFAX_COMPANY) > 0) {
-                        temp += sz_font + "- " + PAS.l("main_sending_adr_option_using_blocklist");
+                        temp += sz_font + "- " + Localization.l("main_sending_adr_option_using_blocklist");
                     }
 				}
-				ret += "<font size='3'><b>" + PAS.l("common_adr_company") + "</b></font><br>";
+                ret += "<font size='3'><b>" + Localization.l("common_adr_company") + "</b></font><br>";
 				ret += temp;
 			}
 
 			if(group==ADRGROUPS.LBA)
 			{
 				if((m_n_addresstypes & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) {
-                    temp += sz_font + "- " + PAS.l("main_sending_adr_option_location_based_sms");
+                    temp += sz_font + "- " + Localization.l("main_sending_adr_option_location_based_sms");
                 }
 				if(temp.length()>0) {
-                    ret += "<font size='3'><b>" + PAS.l("main_sending_adr_option_location_based") + "</b></font><br>";
+                    ret += "<font size='3'><b>" + Localization.l("main_sending_adr_option_location_based") + "</b></font><br>";
                 }
 				ret += temp;
 			}
 			if(group==ADRGROUPS.NOFAX)
 			{
 				if((m_n_addresstypes & SendController.SENDTO_USE_NOFAX_COMPANY) > 0) {
-                    temp += sz_font + "- " + PAS.l("main_sending_adr_option_using_blocklist");
+                    temp += sz_font + "- " + Localization.l("main_sending_adr_option_using_blocklist");
                 }
 				ret += temp;
 			}
@@ -742,7 +741,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	}
 	public void init() {
 		try {
-		m_txt_sendname = new StdTextArea(String.format(PAS.l("main_sending_init_sendingname"), m_n_initsendnumber), false);
+            m_txt_sendname = new StdTextArea(String.format(Localization.l("main_sending_init_sendingname"), m_n_initsendnumber), false);
 		this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(m_txt_sendname.getText(), TitledBorder.TOP));
 		m_txt_sendname.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e){				
@@ -849,25 +848,25 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else
 			m_btn_open = new JButton(ImageLoader.load_icon("open.gif"));
 
-		m_radio_sendingtype_polygon.setToolTipText(PAS.l("main_sending_type_polygon"));
-		m_radio_sendingtype_ellipse.setToolTipText(PAS.l("main_sending_type_ellipse"));
-		m_radio_sendingtype_polygonal_ellipse.setToolTipText(PAS.l("main_sending_type_ellipse") + " (polygonal)");
-		m_radio_sendingtype_municipal.setToolTipText(PAS.l("main_sending_type_municipal"));
-		m_btn_goto.setToolTipText(PAS.l("main_status_show_map_of_sending"));
-		m_btn_adrtypes_private_fixed.setToolTipText(PAS.l("main_sending_adr_btn_fixed_private_tooltip"));
-		m_btn_adrtypes_private_mobile.setToolTipText(PAS.l("main_sending_adr_btn_mobile_private_tooltip"));
-		m_btn_adrtypes_company_fixed.setToolTipText(PAS.l("main_sending_adr_btn_fixed_company_tooltip"));
-		m_btn_adrtypes_company_mobile.setToolTipText(PAS.l("main_sending_adr_btn_mobile_company_tooltip"));
-		m_btn_adrtypes_nophone_private.setToolTipText(PAS.l("main_sending_adr_btn_nophone_private_tooltip"));
-		m_btn_adrtypes_nophone_company.setToolTipText(PAS.l("main_sending_adr_btn_nophone_company_tooltip"));
-		m_btn_adrtypes_cell_broadcast_text.setToolTipText(PAS.l("main_sending_adr_btn_lba_text_tooltip"));
-		m_btn_adrtypes_cell_broadcast_voice.setToolTipText(PAS.l("main_sending_adr_btn_lba_voice_tooltip"));
-		m_btn_adrtypes_nofax.setToolTipText(PAS.l("main_sending_adr_btn_company_blocklist_tooltip"));
-		m_btn_finalize.setToolTipText(PAS.l("main_sending_adr_btn_lock_tooltip"));
-		m_btn_color.setToolTipText(PAS.l("common_color"));
-		m_btn_send.setToolTipText(PAS.l("main_sending_prepare"));
-		m_btn_close.setToolTipText(PAS.l("main_sending_adr_btn_close_sending"));
-		m_btn_open.setToolTipText(PAS.l("mainmenu_file_import"));
+            m_radio_sendingtype_polygon.setToolTipText(Localization.l("main_sending_type_polygon"));
+            m_radio_sendingtype_ellipse.setToolTipText(Localization.l("main_sending_type_ellipse"));
+            m_radio_sendingtype_polygonal_ellipse.setToolTipText(Localization.l("main_sending_type_ellipse") + " (polygonal)");
+            m_radio_sendingtype_municipal.setToolTipText(Localization.l("main_sending_type_municipal"));
+            m_btn_goto.setToolTipText(Localization.l("main_status_show_map_of_sending"));
+            m_btn_adrtypes_private_fixed.setToolTipText(Localization.l("main_sending_adr_btn_fixed_private_tooltip"));
+            m_btn_adrtypes_private_mobile.setToolTipText(Localization.l("main_sending_adr_btn_mobile_private_tooltip"));
+            m_btn_adrtypes_company_fixed.setToolTipText(Localization.l("main_sending_adr_btn_fixed_company_tooltip"));
+            m_btn_adrtypes_company_mobile.setToolTipText(Localization.l("main_sending_adr_btn_mobile_company_tooltip"));
+            m_btn_adrtypes_nophone_private.setToolTipText(Localization.l("main_sending_adr_btn_nophone_private_tooltip"));
+            m_btn_adrtypes_nophone_company.setToolTipText(Localization.l("main_sending_adr_btn_nophone_company_tooltip"));
+            m_btn_adrtypes_cell_broadcast_text.setToolTipText(Localization.l("main_sending_adr_btn_lba_text_tooltip"));
+            m_btn_adrtypes_cell_broadcast_voice.setToolTipText(Localization.l("main_sending_adr_btn_lba_voice_tooltip"));
+            m_btn_adrtypes_nofax.setToolTipText(Localization.l("main_sending_adr_btn_company_blocklist_tooltip"));
+            m_btn_finalize.setToolTipText(Localization.l("main_sending_adr_btn_lock_tooltip"));
+            m_btn_color.setToolTipText(Localization.l("common_color"));
+            m_btn_send.setToolTipText(Localization.l("main_sending_prepare"));
+            m_btn_close.setToolTipText(Localization.l("main_sending_adr_btn_close_sending"));
+            m_btn_open.setToolTipText(Localization.l("mainmenu_file_import"));
 		
 		m_group_sendingtype.add(m_radio_sendingtype_polygon);
 		m_group_sendingtype.add(m_radio_sendingtype_ellipse);
@@ -964,8 +963,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//Color c = SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getMidColor();
 		
 		//PRIVATE MOBILE
-		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, PAS.l("main_sending_adr_sel_private_mobile_none_tooltip"), c));
-		group_smsprivbtn.add(new CheckItem(PAS.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, true, PAS.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
+        group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, Localization.l("main_sending_adr_sel_private_mobile_none_tooltip"), c));
+        group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, true, Localization.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
 		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms"), SendController.SENDTO_SMS_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
             group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms"), SendController.SENDTO_MOBILE_PRIVATE | SendController.SENDTO_SMS_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));

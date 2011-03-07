@@ -3,6 +3,7 @@ package no.ums.pas.sound;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
@@ -20,7 +21,7 @@ public class SoundOpenPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;
 	//private SendController m_controller;
 	private JTextField m_txt_file = new JTextField("");
-	private JButton m_btn_open = new JButton(PAS.l("common_browse"));
+	private JButton m_btn_open = new JButton(Localization.l("common_browse"));
     private File m_file;
 	public File get_file() { return m_file; }
 	private SoundRecorderPanel m_play;
@@ -30,7 +31,7 @@ public class SoundOpenPanel extends DefaultPanel {
 	public SendWindow get_parent() { return m_parent; }
 	
 	private String[][] sz_filter  = new String[][] {
-			{ PAS.l("sound_panel_open_filefilter"), "wav" }
+			{Localization.l("sound_panel_open_filefilter"), "wav" }
 	};
 
     public SoundOpenPanel(Sending_Files f) {
@@ -67,13 +68,13 @@ public class SoundOpenPanel extends DefaultPanel {
 			m_play.initialize_player(m_file.getPath(), false);
 		} catch(Exception e) {
 			PAS.get_pas().add_event("Could not initialize SoundPlayer", e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in play_file",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in play_file",e,1);
 		}
 	}
 	public boolean open_file() {
-		FilePicker picker = new FilePicker(this, 
+        FilePicker picker = new FilePicker(this,
 				StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_),
-				PAS.l("sound_panel_open_file_title"), sz_filter, FilePicker.MODE_OPEN_);
+                Localization.l("sound_panel_open_file_title"), sz_filter, FilePicker.MODE_OPEN_);
 		m_file = picker.getSelectedFile();
 		try
 		{

@@ -1,7 +1,7 @@
 package no.ums.pas.status;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.localization.Localization;
 
 public class StatusListObject extends Object {
 
@@ -37,16 +37,16 @@ public class StatusListObject extends Object {
 	public String getChannel()
 	{
 		if(get_type()==1) {
-            return PAS.l("main_status_channel_voice");
+            return Localization.l("main_status_channel_voice");
         }
 		else if(get_type()==2) {
-            return PAS.l("main_status_channel_sms");
+            return Localization.l("main_status_channel_sms");
         }
 		else if(get_type()==4) {
-            return PAS.l("main_status_channel_lba");
+            return Localization.l("main_status_channel_lba");
         }
 		else if(get_type()==5) {
-            return PAS.l("main_status_channel_tas");
+            return Localization.l("main_status_channel_tas");
         }
 		return "Unknown";
 	}

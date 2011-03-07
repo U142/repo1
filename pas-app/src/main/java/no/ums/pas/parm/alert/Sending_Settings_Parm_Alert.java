@@ -2,6 +2,7 @@ package no.ums.pas.parm.alert;
 
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
 import no.ums.pas.send.OADC;
@@ -59,7 +60,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_combo_schedprofiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");
-		m_lbl_sendname = new StdTextLabel(PAS.l("main_parm_alert_dlg_name") + ":");
+        m_lbl_sendname = new StdTextLabel(Localization.l("main_parm_alert_dlg_name") + ":");
 		int common_width = 150;
 		m_lbl_sendname.setPreferredSize(new Dimension(common_width, 20));
 		m_lbl_profiles.setPreferredSize(new Dimension(common_width, 20));
@@ -172,7 +173,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_settings_loaded".equals(e.getActionCommand())) {
-			get_parent().set_comstatus(PAS.l("main_sending_settings_dl_complete"));
+            get_parent().set_comstatus(Localization.l("main_sending_settings_dl_complete"));
 			populate_controls();
 			parent.actionPerformed(e);
 			//set_selected_oadc(PAS.get_pas().get_userinfo().get_current_department().get_defaultnumber());

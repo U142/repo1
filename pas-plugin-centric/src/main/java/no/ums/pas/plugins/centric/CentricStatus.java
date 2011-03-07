@@ -2,6 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.ws.common.cb.CBSENDINGRESPONSE;
@@ -55,11 +56,11 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		add(m_status_tabbed, m_gridconst);
 		
 		m_event = new CentricEventStatus();
-		m_status_tabbed.addTab(PAS.l("projectdlg_projectname"), m_event);
+        m_status_tabbed.addTab(Localization.l("projectdlg_projectname"), m_event);
 		
 		
 		m_messages = new JPanel();
-		m_status_tabbed.addTab(PAS.l("main_sending_lba_heading_messages"), m_messages);
+        m_status_tabbed.addTab(Localization.l("main_sending_lba_heading_messages"), m_messages);
 		
 		/*
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -153,16 +154,16 @@ class CentricMessagesStatus extends DefaultPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private StdTextLabel m_lbl_message = new StdTextLabel(PAS.l("main_sending_lba_message"));
-    private StdTextArea m_txt_message = new StdTextArea(PAS.l("common_message_content"));
+	private StdTextLabel m_lbl_message = new StdTextLabel(Localization.l("main_sending_lba_message"));
+    private StdTextArea m_txt_message = new StdTextArea(Localization.l("common_message_content"));
     private JTabbedPane m_tabbed_operators = new JTabbedPane();
-	private JButton m_btn_kill = new JButton(PAS.l("common_kill_sending"));
-    private JButton m_btn_update = new JButton(PAS.l("common_update"));
-    private JButton m_btn_resend = new JButton(PAS.l("main_status_resend"));
+	private JButton m_btn_kill = new JButton(Localization.l("common_kill_sending"));
+    private JButton m_btn_update = new JButton(Localization.l("common_update"));
+    private JButton m_btn_resend = new JButton(Localization.l("main_status_resend"));
 
-    private JButton m_btn_send_to_address_book = new JButton(PAS.l("main_sending_send_notification"));
+    private JButton m_btn_send_to_address_book = new JButton(Localization.l("main_sending_send_notification"));
 
-	@Override
+    @Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(m_btn_kill)) {
 			
@@ -222,9 +223,9 @@ class CentricOperatorStatus extends DefaultPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(PAS.l("common_completed"));
-    private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("common_total"));
-    private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("common_percent"));
+	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(Localization.l("common_completed"));
+    private StdTextLabel m_lbl_hdr_total = new StdTextLabel(Localization.l("common_total"));
+    private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(Localization.l("common_percent"));
     private StdTextLabel m_lbl_completed = new StdTextLabel("");
 	private StdTextLabel m_lbl_total = new StdTextLabel("");
 	private StdTextLabel m_lbl_percent = new StdTextLabel("");

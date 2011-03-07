@@ -5,6 +5,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.imageio.ImageIO;
@@ -181,7 +182,7 @@ public class PrintCtrl implements Printable {
 	        g2d.setFont(new Font(null, Font.BOLD, 20));
 	        int headerHeight = g2d.getFontMetrics(g2d.getFont()).getHeight();
 	        g2d.setColor(Color.black);
-	        g2d.drawString(PAS.l("common_app_title"), 0, 20);
+            g2d.drawString(Localization.l("common_app_title"), 0, 20);
 	        g2d.translate(0, 25);
 	        int pagewidth = (int)pageFormat.getWidth();
 	        g2d.drawLine(0, 0, pagewidth, 0);
@@ -203,7 +204,7 @@ public class PrintCtrl implements Printable {
 	        	g2d.setFont(new Font(null, Font.BOLD, 8));
 	        	
 	        	if(is.get_table() != null && is.get_table().getRowCount() > 0) {
-                    g2d.drawString(PAS.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
+                    g2d.drawString(Localization.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
                 }
 	        	
 	        	g2d.setFont(new Font(null, Font.PLAIN, 8));
@@ -249,7 +250,7 @@ public class PrintCtrl implements Printable {
 	        	for(int i=pageIndex*pagelines;i<is.get_table().getRowCount();++i) {
 	        	//for(int i=0;i<is.get_table().getRowCount();++i) {
 	        		if(line == pagelines) {// Page is full
-	        			g2d.drawString(PAS.l("common_page") + " " + (pageIndex + 1) + " "+PAS.l("common_x_of_y") + " " + ((int)is.get_table().getRowCount()/pagelines), 0, line*10+30);
+                        g2d.drawString(Localization.l("common_page") + " " + (pageIndex + 1) + " "+ Localization.l("common_x_of_y") + " " + ((int)is.get_table().getRowCount()/pagelines), 0, line*10+30);
 	        			enableDoubleBuffering(componentToBePrinted);
 	        			return PAGE_EXISTS;
 	        		}

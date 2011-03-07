@@ -1,6 +1,7 @@
 package no.ums.pas.parm.event;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.fieldlimit.TextFieldLimit;
 import no.ums.pas.ums.tools.ImageLoader;
 
@@ -83,7 +84,7 @@ public class EventGUI extends JFrame implements WindowListener {
 		public EventInputPanel() {
 
 			setBorder(BorderFactory
-					.createTitledBorder(PAS.l("main_parm_event_dlg_information")));
+					.createTitledBorder(Localization.l("main_parm_event_dlg_information")));
 
 			txaDesc = new JTextArea();
 			scroll = new JScrollPane(txaDesc);
@@ -92,9 +93,9 @@ public class EventGUI extends JFrame implements WindowListener {
 			this.iptPanel = new InputPanel();
 			this.mandatoryPanel = new MandatoryPanel();
 
-			this.lblName.setText(PAS.l("main_parm_event_dlg_name"));
-			this.lblDescription.setText(PAS.l("main_parm_event_dlg_description"));
-			this.lblCategory.setText(PAS.l("main_parm_event_dlg_category"));
+            this.lblName.setText(Localization.l("main_parm_event_dlg_name"));
+            this.lblDescription.setText(Localization.l("main_parm_event_dlg_description"));
+            this.lblCategory.setText(Localization.l("main_parm_event_dlg_category"));
 			
 			txaDesc.setPreferredSize(new Dimension(100, 57));
 			txaDesc.setWrapStyleWord(true);
@@ -126,7 +127,7 @@ public class EventGUI extends JFrame implements WindowListener {
 				add(lblCategory = new JLabel());
 				lblCategory.setPreferredSize(d);
 				add(Box.createVerticalStrut(10));
-				add(lblSetEpicentre = new JLabel(PAS.l("main_parm_event_dlg_set_epicentre")));
+                add(lblSetEpicentre = new JLabel(Localization.l("main_parm_event_dlg_set_epicentre")));
 				lblSetEpicentre.setVisible(false);
 				add(Box.createVerticalStrut(28));
 			}
@@ -171,7 +172,7 @@ public class EventGUI extends JFrame implements WindowListener {
 					//FontSet this.lblSign.setFont(new Font(null, Font.BOLD, 18));
 					this.lblSign.setAlignmentX(Component.RIGHT_ALIGNMENT);
 					add(this.lblSign);
-					add(new JLabel(" = " + PAS.l("common_mandatory_input")));
+                    add(new JLabel(" = " + Localization.l("common_mandatory_input")));
 				}
 			}
 
@@ -235,8 +236,8 @@ public class EventGUI extends JFrame implements WindowListener {
 			add(btnSave);
 			add(btnCancel);
 
-			this.btnSave.setText(PAS.l("common_save"));
-			this.btnCancel.setText(PAS.l("common_cancel"));
+            this.btnSave.setText(Localization.l("common_save"));
+            this.btnCancel.setText(Localization.l("common_cancel"));
 		}
 
 		public JButton getBtnCancel() {

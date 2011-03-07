@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import no.ums.pas.PAS;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
@@ -21,10 +22,10 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 	public Sending_AddressPanelGIS(PAS pas, SendWindow parentwin) {
 		super(pas, parentwin); // Houses er null, må få tak i husene. Må kjøre set_gislist
 		if(get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses() != null) {
-            m_lbl_pointcount = new StdTextLabel(PAS.l("main_sending_adr_housecount") + " - " + get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses().get_houses().size());
+            m_lbl_pointcount = new StdTextLabel(Localization.l("main_sending_adr_housecount") + " - " + get_parent().get_sendobject().get_sendproperties().typecast_gis().get_houses().get_houses().size());
         }
 		else {
-            m_lbl_pointcount = new StdTextLabel(PAS.l("main_sending_adr_housecount") + " - " + PAS.get_pas().get_statuscontroller().get_houses().get_houses().size());
+            m_lbl_pointcount = new StdTextLabel(Localization.l("main_sending_adr_housecount") + " - " + PAS.get_pas().get_statuscontroller().get_houses().get_houses().size());
         }
 		m_lbl_pointcount.setPreferredSize(new Dimension(200, 16));
 		add_controls();

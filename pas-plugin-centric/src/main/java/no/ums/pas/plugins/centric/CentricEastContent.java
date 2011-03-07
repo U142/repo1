@@ -2,6 +2,7 @@ package no.ums.pas.plugins.centric;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.plugins.centric.status.CentricStatus;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -102,7 +103,7 @@ public class CentricEastContent extends EastContent
 			switch(n_leaf) {
 				case PANEL_CENTRICSTATUS_:
 					if(find_component(m_centricstatus)==-1) {
-                        get_tabbedpane().addTab(PAS.l("main_statustab_title"), null, m_centricstatus, PAS.l("main_statustab_title_tooltip"));
+                        get_tabbedpane().addTab(Localization.l("main_statustab_title"), null, m_centricstatus, Localization.l("main_statustab_title_tooltip"));
                     }
 					not_found=false;
 					break;

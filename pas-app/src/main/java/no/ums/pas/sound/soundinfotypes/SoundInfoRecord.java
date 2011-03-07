@@ -1,6 +1,6 @@
 package no.ums.pas.sound.soundinfotypes;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -17,7 +17,7 @@ public class SoundInfoRecord extends SoundInfo {
 		m_f = f;
 	}
 	public SoundInfoRecord(OutputStream os) {
-		super(PAS.l("main_sending_audio_use_recorded"));
+        super(Localization.l("main_sending_audio_use_recorded"));
 		m_os = os;
 	}
 }

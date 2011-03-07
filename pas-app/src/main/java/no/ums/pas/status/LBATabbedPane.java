@@ -1,7 +1,7 @@
 package no.ums.pas.status;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -30,12 +30,10 @@ public class LBATabbedPane extends JTabbedPane implements ComponentListener, Cha
 	
 	public LBAListCC getListCC() { return m_listcc; }
 	public LBAListCell getListCell() { return m_listcell; }
-	final String [] colscc = new String[] { PAS.l("main_status_lba_country"), PAS.l("common_countrycode_short"), PAS.l("main_status_queue"), PAS.l("main_status_delivered"), PAS.l("main_status_failed"), PAS.l("main_status_expired"), PAS.l("main_status_subscribers"), PAS.l("common_progress") };
-
+	final String [] colscc = new String[] {Localization.l("main_status_lba_country"), Localization.l("common_countrycode_short"), Localization.l("main_status_queue"), Localization.l("main_status_delivered"), Localization.l("main_status_failed"), Localization.l("main_status_expired"), Localization.l("main_status_subscribers"), Localization.l("common_progress")};
     final int [] widthcc = new int[] { 100, 40, 70, 70, 70, 70, 70, 100 };
 
-	final String [] colscell = new String [] { PAS.l("main_status_lba_cellid"), PAS.l("main_status_queue"), PAS.l("main_status_delivered"), PAS.l("main_status_failed"), PAS.l("common_progress") };
-
+	final String [] colscell = new String [] {Localization.l("main_status_lba_cellid"), Localization.l("main_status_queue"), Localization.l("main_status_delivered"), Localization.l("main_status_failed"), Localization.l("common_progress")};
     final int [] widthcell = new int[] { 120, 30, 30, 30, 200 };
 	final LBATabbedPane tabbedpane = this;
 	ActionListener callback = null;
@@ -51,7 +49,7 @@ public class LBATabbedPane extends JTabbedPane implements ComponentListener, Cha
 			//this.setUI(new SubstanceTabbedPaneUI());
 			m_listcc = new LBAListCC(colscc, widthcc, new Dimension(200,100));
 			m_listcell = new LBAListCell(colscell, widthcell, new Dimension(200, 100));
-			addTab(m_listcc, PAS.l("main_status_lba_nationalities"));
+            addTab(m_listcc, Localization.l("main_status_lba_nationalities"));
 			this.addComponentListener(this);
 			this.addChangeListener(this);
 			//addTab(m_listcell, PAS.l("main_status_lba_nationalities"));

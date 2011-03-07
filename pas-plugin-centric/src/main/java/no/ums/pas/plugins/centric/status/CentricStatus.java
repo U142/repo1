@@ -3,6 +3,7 @@ package no.ums.pas.plugins.centric.status;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.Variables;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -254,7 +255,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		
 		
 		m_messages = new CentricMessages(this);
-		m_status_tabbed.addTab(PAS.l("main_sending_lba_heading_messages"), m_messages);
+        m_status_tabbed.addTab(Localization.l("main_sending_lba_heading_messages"), m_messages);
 		
 		/*
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -376,32 +377,32 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
                 case INITIALIZING:
                 case ACTIVE:
                     //lbl_pane += "<font color=green>";
-                    lbl_pane += PAS.l("main_status_lba_progress_active_abb");
-                    tooltip_pane = PAS.l("main_status_lba_progress_active");
+                    lbl_pane += Localization.l("main_status_lba_progress_active_abb");
+                    tooltip_pane = Localization.l("main_status_lba_progress_active");
                     active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
                     break;
                 case KILLING:
                     //lbl_pane += "<font color=green>";
-                    lbl_pane += PAS.l("main_status_lba_progress_killing_abb");
-                    tooltip_pane = PAS.l("main_status_lba_progress_killing");
+                    lbl_pane += Localization.l("main_status_lba_progress_killing_abb");
+                    tooltip_pane = Localization.l("main_status_lba_progress_killing");
                     active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
                     break;
                 case FINISHED:
                     //lbl_pane += "<font color=green>";
-                    lbl_pane += PAS.l("main_status_lba_progress_finished_abb");
-                    tooltip_pane = PAS.l("main_status_lba_progress_finished");
+                    lbl_pane += Localization.l("main_status_lba_progress_finished_abb");
+                    tooltip_pane = Localization.l("main_status_lba_progress_finished");
                     break;
                 case ERROR:
                     //lbl_pane += "<font color=red>";
-                    lbl_pane += PAS.l("main_status_lba_progress_error_abb");
-                    tooltip_pane = PAS.l("main_status_lba_progress_error");
+                    lbl_pane += Localization.l("main_status_lba_progress_error_abb");
+                    tooltip_pane = Localization.l("main_status_lba_progress_error");
                     break;
             }
             lbl_pane += "</font>";
             lbl_pane += "<font color=black>";
             lbl_pane += " " + currentstatus.getMdv().getSzSendingname();
             if (currentstatus.getFSimulation() == 1) {
-                lbl_pane += "<br>&nbsp;&nbsp;&nbsp;" + PAS.l("mainmenu_trainingmode") + "";
+                lbl_pane += "<br>&nbsp;&nbsp;&nbsp;" + Localization.l("mainmenu_trainingmode") + "";
             }
             lbl_pane += "</font>";
             lbl_pane += "</html>";

@@ -1,7 +1,7 @@
 package no.ums.pas.parm.alert;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendOptionToolbar;
 
 import javax.swing.BorderFactory;
@@ -73,8 +73,8 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 	}
 
 	private void createToolbar(JPanel sendingPanel, SendOptionToolbar toolbar) {
-		
-		JLabel lblAHeader = new JLabel(PAS.l("main_parm_alert_dlg_area_definition"));
+
+        JLabel lblAHeader = new JLabel(Localization.l("main_parm_alert_dlg_area_definition"));
 		//pnlTop.set_gridconst(0, pnlTop.inc_panels() , 10, 1);
 		
 		
@@ -96,7 +96,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		
 		//lblAHeader.setAlignmentY(Component.LEFT_ALIGNMENT);
 		//pnlTop.set_gridconst(0, pnlTop.inc_panels(), 10, 1);
-		JLabel lblRTHeader = new JLabel(PAS.l("main_parm_alert_dlg_recipient_types"));
+        JLabel lblRTHeader = new JLabel(Localization.l("main_parm_alert_dlg_recipient_types"));
 		
 		
 		JPanel pnlRtypesbtns = new JPanel();
@@ -110,7 +110,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		pnlRtypesbtns.add(toolbar.get_adrtype_cell_broadcast_voice());
 		pnlRtypesbtns.add(toolbar.get_adrtype_nofax());
 		*/
-		toolbar.set_sendingname("", PAS.l("main_parm_alert_dlg_default_sendingname"));
+        toolbar.set_sendingname("", Localization.l("main_parm_alert_dlg_default_sendingname"));
 		//toolbar.setBorder(null);
 		pnlRtypesbtns.add(toolbar);
 		//JPanel pnlRTypesLbls = new JPanel();
@@ -155,16 +155,16 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 	public class TopPanel extends DefaultPanel {
 		public static final long serialVersionUID = 1;
 
-		private JLabel lblDescription = new JLabel(PAS.l("main_parm_alert_dlg_description"));
+		private JLabel lblDescription = new JLabel(Localization.l("main_parm_alert_dlg_description"));
 
         {
-            lblDescription = new JLabel(PAS.l("main_parm_alert_dlg_description"));
+            lblDescription = new JLabel(Localization.l("main_parm_alert_dlg_description"));
         }
 
-        private JLabel lblInformation = new JLabel(PAS.l("main_parm_alert_dlg_please_draw_area"));
+        private JLabel lblInformation = new JLabel(Localization.l("main_parm_alert_dlg_please_draw_area"));
 
         {
-            lblInformation = new JLabel(PAS.l("main_parm_alert_dlg_please_draw_area"));
+            lblInformation = new JLabel(Localization.l("main_parm_alert_dlg_please_draw_area"));
         }
 
         private JTextArea txaDescription = new JTextArea();
@@ -222,7 +222,7 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 
 		@Override
 		public void add_controls() {
-			setBorder(BorderFactory.createTitledBorder(PAS.l("main_parm_alert_dlg_information")));
+            setBorder(BorderFactory.createTitledBorder(Localization.l("main_parm_alert_dlg_information")));
 			//setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 			add_spacing(DIR_VERTICAL, 20);
@@ -258,10 +258,10 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 
 	public class SendingSaveButtonPanel extends JPanel {
 		public static final long serialVersionUID = 1;
-		private JButton btnSave = new JButton(PAS.l("common_save"));
+		private JButton btnSave = new JButton(Localization.l("common_save"));
 
         {
-            btnSave = new JButton(PAS.l("common_save"));
+            btnSave = new JButton(Localization.l("common_save"));
         }
 
         public SendingSaveButtonPanel() {
@@ -286,10 +286,10 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 
 	public class SendingCancelButtonPanel extends JPanel {
 		public static final long serialVersionUID = 1;
-		private JButton btnCancel = new JButton(PAS.l("common_cancel"));
+		private JButton btnCancel = new JButton(Localization.l("common_cancel"));
 
         {
-            btnCancel = new JButton(PAS.l("common_cancel"));
+            btnCancel = new JButton(Localization.l("common_cancel"));
         }
 
         public SendingCancelButtonPanel() {

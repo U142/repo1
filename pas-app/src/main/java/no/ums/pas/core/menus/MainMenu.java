@@ -5,6 +5,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.themes.ThemeColorComponent;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.MapSite;
 import no.ums.pas.ums.errorhandling.Error;
@@ -227,7 +228,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_btn_search.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));	
 	        //m_btn_search.setFont(PAS.f().getMenuFont());
 
-	        m_btn_houseeditor = new JButton(PAS.l("mainmenu_house_editor"));
+        m_btn_houseeditor = new JButton(Localization.l("mainmenu_house_editor"));
 	        m_btn_houseeditor.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_houseeditor.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_houseeditor.setMnemonic('e');
@@ -235,7 +236,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_btn_houseeditor.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));
 	        //m_btn_houseeditor.setFont(PAS.f().getMenuFont());
 
-	        m_btn_showhousedetails = new JButton(PAS.l("mainmenu_house_select"));
+        m_btn_showhousedetails = new JButton(Localization.l("mainmenu_house_select"));
 	        m_btn_showhousedetails.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_showhousedetails.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_showhousedetails.setMnemonic('h');
@@ -243,7 +244,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_btn_showhousedetails.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));					
 	        //m_btn_showhousedetails.setFont(PAS.f().getMenuFont());
 
-	        m_btn_zoom_to_world = new JButton(PAS.l("common_pas_zoom_world"));
+        m_btn_zoom_to_world = new JButton(Localization.l("common_pas_zoom_world"));
 	        m_btn_zoom_to_world.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_zoom_to_world.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_zoom_to_world.setMnemonic('w');
@@ -503,11 +504,11 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		}
 		else if("act_change_department".equals(e.getActionCommand())) {
 			if(PAS.get_pas().get_sendcontroller().get_sendings().size() > 0) {
-				Object[] options = { PAS.l("common_discard_sendings"), PAS.l("common_keep_sendings") };
+                Object[] options = {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
 	//			System.out.println(JOptionPane.showInputDialog(PAS.get_pas(), "Do you want to close current project <" + m_current_project.get_projectname() + ">", "New project", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]));
-				Object input = JOptionPane.showInputDialog(PAS.get_pas(), PAS.l("mainmenu_department_onchange"), PAS.l("mainmenu_department_change"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("mainmenu_department_onchange"), Localization.l("mainmenu_department_change"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 				if(input != null) {
-					if(input.equals(PAS.l("common_keep_sendings"))) {
+                    if(input.equals(Localization.l("common_keep_sendings"))) {
 						PAS.get_pas().set_keep_sendings(true);
 						System.out.println("m_keep_sendings=" + PAS.get_pas().get_keep_sendings());
 					}
@@ -519,7 +520,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 				}
 			}
 			else {
-				if(JOptionPane.showConfirmDialog(PAS.get_pas(), PAS.l("mainmenu_department_onchange"), PAS.l("mainmenu_department_change"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION) {
+                if(JOptionPane.showConfirmDialog(PAS.get_pas(), Localization.l("mainmenu_department_onchange"), Localization.l("mainmenu_department_change"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION) {
 					PAS.get_pas().actionPerformed(e);
 				}
 			}

@@ -2,6 +2,7 @@ package no.ums.pas.sound;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.sound.soundinfotypes.SoundInfoRecord;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -104,7 +105,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		
 		m_txt_seconds.set_width(90);
 		m_txt_sampleinfo.setPreferredSize(new Dimension(350,20));
-		m_txt_sampleinfo.setText(PAS.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + PAS.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + PAS.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? PAS.l("sound_panel_recorder_mono") : PAS.l("sound_panel_recorder_stereo")));
+        m_txt_sampleinfo.setText(Localization.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + Localization.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + Localization.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")));
 		
 		if(b_line_ok) {
 			m_btn_play.setEnabled(true);
@@ -214,7 +215,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 			enable_player(true);
 			//m_player.reset();
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in initialize_player",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in initialize_player",e,1);
 		}
 	}
 	public void initialize_player(ByteBuffer buffer, boolean b_default_path) {
@@ -224,7 +225,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 			enable_player(true);
 			//m_player.reset();
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in initialize_player",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in initialize_player",e,1);
 		}
 	}
 	

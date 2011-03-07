@@ -5,6 +5,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.TTSLang;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.send.sendpanels.Sending_Files;
@@ -76,8 +77,8 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		//m_text.setPreferredSize(new Dimension(350, 200));
 		//m_scrollPane.setPreferredSize(new Dimension(350, 200));
 		
-		m_text.setEditable(true);		
-		m_btn_convert = new JButton(PAS.l("sound_panel_tts_convert"));
+		m_text.setEditable(true);
+        m_btn_convert = new JButton(Localization.l("sound_panel_tts_convert"));
 		//m_text.setPreferredSize(new Dimension(350,200));
 		m_combo_tts = new JComboBox();
 		m_combo_tts.setPreferredSize(new Dimension(150, 20));
@@ -105,7 +106,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 				m_combo_txtlib.addItem(m_parent.get_txtlib().get(i));
 			}
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in populate_txtlib",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in populate_txtlib",e,1);
 		}
 	}
 	
@@ -121,7 +122,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			}
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR populate_tts() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in populate_txtlib",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in populate_txtlib",e,1);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -145,7 +146,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 				if(m_combo_txtlib.getSelectedIndex()>0)
 				{
 					//if(obj.get_messagepk() != "-1") {
-					start_progress(PAS.l("sound_panel_tts_retrieving_text_data"));
+                    start_progress(Localization.l("sound_panel_tts_retrieving_text_data"));
 					obj.load_file(this, "act_download_txtfile_finished");
 				}
 				else //null selected
@@ -170,13 +171,13 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 				PAS.get_pas().add_event("act_download_txtfile_finished", null);
 				set_text(obj.get_text());
 				set_language(obj.get_langpk());
-				m_text.setToolTipText(PAS.l("main_sending_text_template_tooltip"));
+                m_text.setToolTipText(Localization.l("main_sending_text_template_tooltip"));
 				//UpdateTextFields();
 				n_current_bracket = -1;
 				m_text.requestFocus();
 			} catch(Exception err) {
 				PAS.get_pas().add_event("Exception caught on SoundTTSPanel.actionPerformed act_download_finished " + err.getMessage(), err);
-				Error.getError().addError(PAS.l("common_error"),"Exception in actionPerformed",err,1);
+                Error.getError().addError(Localization.l("common_error"),"Exception in actionPerformed",err,1);
 			}			
 			stop_progress();
 		}
@@ -195,14 +196,14 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		m_text.setText(sz_text);
 	}
 	public void start_converter() {
-		start_progress(PAS.l("sound_panel_tts_converting_tts"));
+        start_progress(Localization.l("sound_panel_tts_converting_tts"));
 		try {
 			String sz_data = m_text.getText();
 			TTSLang lang = (TTSLang)m_combo_tts.getSelectedItem();
 			convert(lang.get_langpk(), lang.get_name(), sz_data);
 		} catch(Exception err) {
 			PAS.get_pas().add_event("ERROR: act_tts_convert " + err.getMessage(), err);
-			Error.getError().addError(PAS.l("common_error"),"Exception in start_converter",err,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in start_converter",err,1);
 		}
 		m_btn_convert.setEnabled(false);
 	}
@@ -248,7 +249,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 			
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR: SoundTTSPanel.download_finished() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in download_finished",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in download_finished",e,1);
 		}
 		
 	}
@@ -263,8 +264,8 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		get_parent().get_loader().reset_progress();
 	}
 	public void start_download() {
-		get_parent().set_comstatus(PAS.l("common_downloading"));
-		get_parent().get_loader().start_progress(0, PAS.l("common_downloading"));
+        get_parent().set_comstatus(Localization.l("common_downloading"));
+        get_parent().get_loader().start_progress(0, Localization.l("common_downloading"));
 	}
 	public void convert(int n_langpk, String sz_name, String sz_text) {
 		PAS.get_pas().add_event("Execute TTS convertion", null);
@@ -428,7 +429,7 @@ class TTSConverter extends Thread {
 		try {
 			sz_file = convert();
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in run",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in run",e,1);
 		}
 		get_callback().actionPerformed(new ActionEvent(sz_file, ActionEvent.ACTION_PERFORMED, get_action()));
 	}
@@ -471,7 +472,7 @@ class TTSConverter extends Thread {
 			
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR TTSConverter.convert() " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in convert",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in convert",e,1);
 			return new String("");
 		}
 		return sz_filename;	
@@ -503,7 +504,7 @@ class TTSConverter extends Thread {
 					n_read = is.read(bytes, offset, bytes.length);
 				} catch(Exception e) {
 					PAS.get_pas().add_event("Error reading TTS inputstream " + e.getMessage(), e);
-					Error.getError().addError(PAS.l("common_error"),"Exception in parse",e,1);
+                    Error.getError().addError(Localization.l("common_error"),"Exception in parse",e,1);
 					try { Thread.sleep(1000); } catch(InterruptedException err) { }
 					errors++;
 					if(errors >= 10)
@@ -519,7 +520,7 @@ class TTSConverter extends Thread {
 			}
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR: parsing TTS InputStream " + e.getMessage(), e);
-			Error.getError().addError(PAS.l("common_error"),"Exception in parse",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in parse",e,1);
 			return new String("");
 		}
 		return sz_out;

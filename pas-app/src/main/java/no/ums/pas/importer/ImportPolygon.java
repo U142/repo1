@@ -5,6 +5,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.esri.ShapeImporter;
 import no.ums.pas.importer.gis.GISFile;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendObject;
@@ -128,11 +129,11 @@ public class ImportPolygon implements ActionListener {
 	boolean m_b_isalert = false;
 	
 	public ImportPolygon(ActionListener callback, String action, boolean bIsAlert, Component parent) {
-		
-		
-		FilePicker picker = new FilePicker(parent, 
-								StorageController.StorageElements.get_path(StorageController.PATH_HOME_), 
-								PAS.l("common_open_file"), FILE_FILTERS_, FilePicker.MODE_OPEN_){
+
+
+        FilePicker picker = new FilePicker(parent,
+								StorageController.StorageElements.get_path(StorageController.PATH_HOME_),
+                Localization.l("common_open_file"), FILE_FILTERS_, FilePicker.MODE_OPEN_){
 			protected JDialog createDialog(Component parent) throws HeadlessException {
 				JDialog dialog = super.createDialog(parent);
 				dialog.setAlwaysOnTop(true);
@@ -319,7 +320,7 @@ public class ImportPolygon implements ActionListener {
 					return;
 				}
 
-				String [] sz_columns = { PAS.l("common_id"), PAS.l("common_name") };
+                String [] sz_columns = {Localization.l("common_id"), Localization.l("common_name")};
 				int [] n_width = { 50, 250 };
 				boolean [] b_edit = { false, false };
 				Dimension d = new Dimension(400, 500);

@@ -2,6 +2,7 @@ package no.ums.pas.parm.event;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.UnknownShape;
 import no.ums.pas.parm.main.MainController;
@@ -43,7 +44,7 @@ public class EventController implements ActionListener {
 		this.event = null;
 		this.tempPk = highestTempPk;
 		this.object = object;
-		gui = new EventGUI(PAS.l("main_parm_event_new_dlg_heading"));
+        gui = new EventGUI(Localization.l("main_parm_event_new_dlg_heading"));
 		gui.getEventInputPanel().getBtnEpicentre().addActionListener(this);
 		this.addCategoryToCombobox(categoryList);
 		// Litt juks for å sette active_shape til null ;)
@@ -53,7 +54,7 @@ public class EventController implements ActionListener {
 
 	public void editEvent(EventVO event, HashMap<Long, CategoryVO> categoryList, DefaultMutableTreeNode eventNode) {
 		this.event = event;
-		gui = new EventGUI(PAS.l("main_parm_event_edit"));
+        gui = new EventGUI(Localization.l("main_parm_event_edit"));
 		this.object = (ObjectVO) eventNode.getUserObject();
 		this.addCategoryToCombobox(categoryList);
 
@@ -75,22 +76,22 @@ public class EventController implements ActionListener {
 	public boolean deleteEvent(EventVO event, DefaultMutableTreeNode eventNode) {
 		System.out.println("object" + this.object);
 		this.event = event;
-		Object[] options = { PAS.l("common_yes"), PAS.l("common_cancel") };
+        Object[] options = {Localization.l("common_yes"), Localization.l("common_cancel")};
 
 		String msg = null;
 		if (hasEventChildren(this.event)) {
-			msg = PAS.l("common_delete_are_you_sure") + " '"
+            msg = Localization.l("common_delete_are_you_sure") + " '"
 					+ this.event.getName() + "'?" +
-					"\n" + PAS.l("common_subnodes") + " " + PAS.l("common_will_be_deleted");
+					"\n" + Localization.l("common_subnodes") + " " + Localization.l("common_will_be_deleted");
 					
 					//"?\nAll alerts in "
 					//+ this.event.getName() + " will be deleted!";
 		} else {
-			msg = PAS.l("common_delete_are_you_sure")
+            msg = Localization.l("common_delete_are_you_sure")
 					+ this.event.getName() + "?";
 		}
 
-		int n = JOptionPane.showOptionDialog(null, msg, PAS.l("common_delete") + " " + PAS.l("main_parmtab_popup_event"),
+        int n = JOptionPane.showOptionDialog(null, msg, Localization.l("common_delete") + " " + Localization.l("main_parmtab_popup_event"),
 				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
 				options, options[1]);
 		// yes = 0, no = 1

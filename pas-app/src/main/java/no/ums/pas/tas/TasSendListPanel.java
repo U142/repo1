@@ -1,11 +1,11 @@
 package no.ums.pas.tas;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.TreeRenderer;
 import no.ums.pas.core.defines.tree.TreeTable;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.tas.treenodes.CommonTASListItem;
 import no.ums.pas.tas.treenodes.CountryListItem;
 
@@ -43,7 +43,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		addComponentListener(this);
 		setVisible(false);
 		this.callback = callback;
-		String [] cols = new String [] { PAS.l("common_country"), PAS.l("touristscount") };
+        String [] cols = new String [] {Localization.l("common_country"), Localization.l("touristscount")};
 		int [] width = new int [] { 150, 50 };
 		boolean [] edit = new boolean [] { false, false };
 		//list = new CountryList(cols, width, edit, dim);
@@ -51,7 +51,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		scroller = new JScrollPane(list);
 		add_controls();
 		init();
-		this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(PAS.l("main_tas_sendlist")));
+        this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(Localization.l("main_tas_sendlist")));
 	}
 	
 	public void CancelSendlist()
@@ -69,7 +69,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		list.model.nodeStructureChanged(list.top);
 		i.setAddedToSendList(true);
 		newitem.setAddedToSendList(true);
-		this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(PAS.l("main_tas_sendlist") + " " + list.model.getChildCount(list.top) + " " + PAS.l("common_countries")));
+        this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(Localization.l("main_tas_sendlist") + " " + list.model.getChildCount(list.top) + " " + Localization.l("common_countries")));
 	}
 	public void removeCountry(CountryListItem i)
 	{
@@ -85,7 +85,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		i.setAddedToSendList(false);
 		toremove.setAddedToSendList(false);*/
 		callback.actionPerformed(new ActionEvent(i, ActionEvent.ACTION_PERFORMED, "act_removed_from_sendlist"));
-		this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(PAS.l("main_tas_sendlist") + " " + list.model.getChildCount(list.top) + " " + PAS.l("common_countries")));
+        this.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(Localization.l("main_tas_sendlist") + " " + list.model.getChildCount(list.top) + " " + Localization.l("common_countries")));
 		if(hash_tree.size()==0)
 			callback.actionPerformed(new ActionEvent(i, ActionEvent.ACTION_PERFORMED, "act_sendlist_cleared"));
 	}
@@ -143,7 +143,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 		public void InitRenderer() {
 			try
 			{
-				final String [] cols = new String [] {"", PAS.l("main_tas_panel_table_heading_tourists"), PAS.l("main_tas_panel_table_heading_updated") };
+                final String [] cols = new String [] {"", Localization.l("main_tas_panel_table_heading_tourists"), Localization.l("main_tas_panel_table_heading_updated")};
 				final int [] width = new int [] { 250, 80, 150 };
 				final boolean [] b_editable = new boolean [] { false, false, false };
 	

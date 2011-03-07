@@ -161,16 +161,14 @@ public class InfoPanel extends GeneralPanel {
 			userinfo.init();
 			coorinfo.init();
 
-			coorinfo.setBorder(BorderFactory.createTitledBorder(PAS
-					.l("main_infotab_map_information")));
+            coorinfo.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_map_information")));
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(coorinfo, m_gridconst);
 			// add(Box.createRigidArea(new Dimension(5,20)));
 			add_spacing(DIR_VERTICAL, 20);
 			// coorinfo.doLayout();
 
-			userinfo.setBorder(BorderFactory.createTitledBorder(PAS
-					.l("main_infotab_user_information")));
+            userinfo.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_user_information")));
 			// userinfo.doLayout();
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(userinfo, m_gridconst);
@@ -178,8 +176,7 @@ public class InfoPanel extends GeneralPanel {
 			add_spacing(DIR_VERTICAL, 20);
 
 			m_coorsearch = new CoorSearchUI();
-			m_coorsearch.setBorder(BorderFactory.createTitledBorder(PAS
-					.l("main_infotab_coordinate_search")));
+            m_coorsearch.setBorder(BorderFactory.createTitledBorder(Localization.l("main_infotab_coordinate_search")));
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(m_coorsearch, m_gridconst);
 
@@ -281,7 +278,7 @@ public class InfoPanel extends GeneralPanel {
 				break;
 			case 2:
 				// folkereg address
-				db += " [" + PAS.l("common_national_register") + "] - ";
+                db += " [" + Localization.l("common_national_register") + "] - ";
 				db += "";
 				municipals = "<html>";
 				for (int i = 0; i < info.get_current_department()
@@ -301,13 +298,13 @@ public class InfoPanel extends GeneralPanel {
 				break;
 			case 4:
 				// TAS
-				db += " [" + PAS.l("main_tas_title") + "]";
+                db += " [" + Localization.l("main_tas_title") + "]";
 				if (m_weatherinfo != null)
 					m_weatherinfo.setVisible(false); // Hide weather info for
 														// TAS
 				break;
 			default:
-				db += PAS.l("main_infotab_no_db_rights");
+                db += Localization.l("main_infotab_no_db_rights");
 				// db+="</b>";
 				m_lbl_adrdatabase_output.setToolTipText("");
 				if (m_weatherinfo != null)
@@ -329,17 +326,15 @@ public class InfoPanel extends GeneralPanel {
 	}
 
 	protected void init_controls() {
-		m_lbl_xy = new StdTextLabel(PAS.l("main_infotab_xy_coors"), true, 150);
-		m_lbl_coor = new StdTextLabel(PAS.l("common_lon") + " "
-				+ PAS.l("common_lat"), true, 150);
+        m_lbl_xy = new StdTextLabel(Localization.l("main_infotab_xy_coors"), true, 150);
+        m_lbl_coor = new StdTextLabel(Localization.l("common_lon") + " "
+				+ Localization.l("common_lat"), true, 150);
 		m_lbl_coor_dec = new StdTextLabel("", true, 150);
-		m_lbl_utm = new StdTextLabel(PAS.l("common_utm"), true, 150);
-		m_lbl_mapdimpix = new StdTextLabel(PAS.l("main_infotab_mapdimensions"),
+        m_lbl_utm = new StdTextLabel(Localization.l("common_utm"), true, 150);
+        m_lbl_mapdimpix = new StdTextLabel(Localization.l("main_infotab_mapdimensions"),
 				true, 150);
-		m_lbl_mapdimmeters = new StdTextLabel(PAS
-				.l("main_infotab_mapdimensions"), true, 150);
-		m_lbl_housesdownload = new StdTextLabel(PAS
-				.l("main_infotab_housedownload"), true, 150);
+        m_lbl_mapdimmeters = new StdTextLabel(Localization.l("main_infotab_mapdimensions"), true, 150);
+        m_lbl_housesdownload = new StdTextLabel(Localization.l("main_infotab_housedownload"), true, 150);
 
 		m_txt_xy_x = new StdTextLabel("", true, 125);
 		m_txt_xy_y = new StdTextLabel("", true, 125);
@@ -357,20 +352,19 @@ public class InfoPanel extends GeneralPanel {
 		m_txt_housesdownload = new StdTextLabel("", true, 150);
 		m_txt_housedownload_progress = new StdTextLabel("", true, 155);
 
-		m_lbl_name = new StdTextLabel(PAS.l("common_name"), true, 150);
+        m_lbl_name = new StdTextLabel(Localization.l("common_name"), true, 150);
 		m_lbl_name_output = new StdTextLabel("", true, 280);
-		m_lbl_userid = new StdTextLabel(PAS.l("logon_userid"), true, 150);
+        m_lbl_userid = new StdTextLabel(Localization.l("logon_userid"), true, 150);
 		m_lbl_userid_output = new StdTextLabel("", true, 280);
-		m_lbl_deptid = new StdTextLabel(PAS.l("main_infotab_departmentid"),
+        m_lbl_deptid = new StdTextLabel(Localization.l("main_infotab_departmentid"),
 				true, 150);
 		m_lbl_deptid_output = new StdTextLabel("", true, 280);
-		m_lbl_compid = new StdTextLabel(PAS.l("logon_company"), true, 150);
+        m_lbl_compid = new StdTextLabel(Localization.l("logon_company"), true, 150);
 		m_lbl_compid_output = new StdTextLabel("", true, 280);
-		m_lbl_userprofile = new StdTextLabel(PAS.l("main_infotab_userprofile"),
+        m_lbl_userprofile = new StdTextLabel(Localization.l("main_infotab_userprofile"),
 				true, 150);
 		m_lbl_userprofile_output = new StdTextLabel("", true, 280);
-		m_lbl_adrdatabase = new StdTextLabel(PAS
-				.l("main_infotab_addressdatabase"), true, 150, 170);
+        m_lbl_adrdatabase = new StdTextLabel(Localization.l("main_infotab_addressdatabase"), true, 150, 170);
 		m_lbl_adrdatabase_output = new StdTextLabel("", true, 140, 170);
 		m_lbl_adrdatabase_municipals = new StdTextLabel("", true, 140, 170);
 
@@ -696,14 +690,14 @@ public class InfoPanel extends GeneralPanel {
 	public void set_mapdimpix(int x, int y) {
 		// m_txt_mapdimpix.setText(x + ", " + y + " (pixels)");
 		m_txt_mapdimpix_x.setText(Integer.toString(x));
-		m_txt_mapdimpix_y.setText(Integer.toString(y) + " ("
-				+ PAS.l("common_pixels") + ")");
+        m_txt_mapdimpix_y.setText(Integer.toString(y) + " ("
+				+ Localization.l("common_pixels") + ")");
 	}
 
 	public void set_mapdimmeters(int width, int height) {
 		// m_txt_mapdimmeters.setText(width + ", " + height + " (meters)");
 		m_txt_mapdimmeters_x.setText(width + "");
-		m_txt_mapdimmeters_y.setText(height + " (" + PAS.l("common_meters")
+        m_txt_mapdimmeters_y.setText(height + " (" + Localization.l("common_meters")
 				+ ")");
 	}
 
@@ -711,26 +705,25 @@ public class InfoPanel extends GeneralPanel {
 		String sz_text;
 		switch (STATUS) {
 		case HouseController.HOUSE_DOWNLOAD_DISABLED_:
-			sz_text = PAS.l("common_disabled");
+            sz_text = Localization.l("common_disabled");
 			break;
 		case HouseController.HOUSE_DOWNLOAD_FINISHED_:
-			sz_text = PAS.l("common_finished");
+            sz_text = Localization.l("common_finished");
 			break;
 		case HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_:
-			sz_text = PAS.l("common_inprogress");
+            sz_text = Localization.l("common_inprogress");
 			break;
 		case HouseController.HOUSE_DOWNLOAD_NO_:
-			sz_text = PAS.l("main_infotab_mapwidth_exceeded");
+            sz_text = Localization.l("main_infotab_mapwidth_exceeded");
 			break;
 		default:
-			sz_text = PAS.l("common_unknown_status");
+            sz_text = Localization.l("common_unknown_status");
 			break;
 		}
 
 		try {
 			m_txt_housesdownload.setText(sz_text);
-			m_txt_housedownload_progress.setText(PAS
-					.l("main_infotab_housedownload")
+            m_txt_housedownload_progress.setText(Localization.l("main_infotab_housedownload")
 					+ " - " + sz_text);
 		} catch (Exception e) {
 
@@ -857,11 +850,11 @@ public class InfoPanel extends GeneralPanel {
 			m_search_utm.setPreferredSize(new Dimension(500, 80));
 			m_search_ll_dec.setPreferredSize(new Dimension(500, 80));
 
-			m_radio_ll = new JRadioButton(PAS.l("common_lon") + "/"
-					+ PAS.l("common_lat"));
-			m_radio_ll_dec = new JRadioButton(PAS.l("common_lon") + "/"
-					+ PAS.l("common_lat") + "(" + PAS.l("common_decimal") + ")");
-			m_radio_utm = new JRadioButton(PAS.l("common_utm"));
+            m_radio_ll = new JRadioButton(Localization.l("common_lon") + "/"
+					+ Localization.l("common_lat"));
+            m_radio_ll_dec = new JRadioButton(Localization.l("common_lon") + "/"
+					+ Localization.l("common_lat") + "(" + Localization.l("common_decimal") + ")");
+            m_radio_utm = new JRadioButton(Localization.l("common_utm"));
 			// FontSet m_radio_ll.setFont(f1);
 			// FontSet m_radio_ll_dec.setFont(f1);
 			// FontSet m_radio_utm.setFont(f1);
@@ -1017,14 +1010,14 @@ public class InfoPanel extends GeneralPanel {
 		public class CoorSearchLL extends DefaultPanel implements
 				ActionListener {
 			public static final long serialVersionUID = 1;
-			protected JLabel m_lbl_lon = new JLabel(PAS.l("common_longitude"));
-            protected JLabel m_lbl_lat = new JLabel(PAS.l("common_latitude"));
-            protected JLabel m_lbl_lon_deg = new JLabel(PAS.l("common_degree_sign"));
-            protected JLabel m_lbl_lat_deg = new JLabel(PAS.l("common_degree_sign"));
-            private JLabel m_lbl_lon_min = new JLabel(PAS.l("common_minute_sign"));
-            private JLabel m_lbl_lat_min = new JLabel(PAS.l("common_minute_sign"));
-            private JLabel m_lbl_lon_sec = new JLabel(PAS.l("common_second_sign"));
-            private JLabel m_lbl_lat_sec = new JLabel(PAS.l("common_second_sign"));
+			protected JLabel m_lbl_lon = new JLabel(Localization.l("common_longitude"));
+            protected JLabel m_lbl_lat = new JLabel(Localization.l("common_latitude"));
+            protected JLabel m_lbl_lon_deg = new JLabel(Localization.l("common_degree_sign"));
+            protected JLabel m_lbl_lat_deg = new JLabel(Localization.l("common_degree_sign"));
+            private JLabel m_lbl_lon_min = new JLabel(Localization.l("common_minute_sign"));
+            private JLabel m_lbl_lat_min = new JLabel(Localization.l("common_minute_sign"));
+            private JLabel m_lbl_lon_sec = new JLabel(Localization.l("common_second_sign"));
+            private JLabel m_lbl_lat_sec = new JLabel(Localization.l("common_second_sign"));
             protected StdIntegerArea m_txt_lon_deg = new StdIntegerArea("",
 					false, 35, StdIntegerArea.INTEGER);
 			protected StdIntegerArea m_txt_lat_deg = new StdIntegerArea("",
@@ -1038,7 +1031,7 @@ public class InfoPanel extends GeneralPanel {
 			private StdIntegerArea m_txt_lat_sec = new StdIntegerArea("",
 					false, 35, StdIntegerArea.DOUBLE);
 
-			protected JButton m_btn_go_ll = new JButton(PAS.l("main_infotab_goto_map"));
+			protected JButton m_btn_go_ll = new JButton(Localization.l("main_infotab_goto_map"));
 
             protected ActionListener m_callback;
 
@@ -1155,9 +1148,9 @@ public class InfoPanel extends GeneralPanel {
 		public class CoorSearchUTM extends DefaultPanel implements
 				ActionListener {
 			public static final long serialVersionUID = 1;
-			private JLabel m_lbl_utm_easting = new JLabel(PAS.l("common_utm_easting"));
-            private JLabel m_lbl_utm_northing = new JLabel(PAS.l("common_utm_northing"));
-            private JLabel m_lbl_utm_zone = new JLabel(PAS.l("common_utm_zone"));
+			private JLabel m_lbl_utm_easting = new JLabel(Localization.l("common_utm_easting"));
+            private JLabel m_lbl_utm_northing = new JLabel(Localization.l("common_utm_northing"));
+            private JLabel m_lbl_utm_zone = new JLabel(Localization.l("common_utm_zone"));
 
             // private JComboBox m_combo_utm_ellipsoid = new JComboBox();
 			private StdIntegerArea m_txt_utm_easting = new StdIntegerArea("",
@@ -1167,7 +1160,7 @@ public class InfoPanel extends GeneralPanel {
 			private StdTextUTMZone m_txt_utm_zone = new StdTextUTMZone("32V",
 					false, 30);
 
-			private JButton m_btn_go_utm = new JButton(PAS.l("main_infotab_goto_map"));
+			private JButton m_btn_go_utm = new JButton(Localization.l("main_infotab_goto_map"));
 
             private ActionListener m_callback;
 
@@ -1221,8 +1214,7 @@ public class InfoPanel extends GeneralPanel {
 					UTMZone = m_txt_utm_zone.getUTM();
 					m_txt_utm_zone.setText(UTMZone);
 					if (UTMZone.length() != 3) {
-						JOptionPane.showMessageDialog(this, PAS
-								.l("main_infotab_error_specify_utm_zone"),
+                        JOptionPane.showMessageDialog(this, Localization.l("main_infotab_error_specify_utm_zone"),
 								"Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1322,7 +1314,7 @@ public class InfoPanel extends GeneralPanel {
 			layout.setAutoCreateGaps(true);
 			layout.setAutoCreateContainerGaps(true);
 
-			StdTextLabel time = new StdTextLabel(PAS.l("common_time"));
+            StdTextLabel time = new StdTextLabel(Localization.l("common_time"));
 			// time.setPreferredSize(new Dimension(200,25));
 
 			StdTextLabel symbols = new StdTextLabel("");

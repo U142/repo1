@@ -1,7 +1,7 @@
 package no.ums.pas.tas.statistics;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.tas.statistics.TasChart.STATS_CHARTTYPE;
 import no.ums.pas.tas.statistics.TasChart.STATS_RESULTS_GROUPBY;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker;
@@ -113,8 +113,8 @@ public class TasFilterPanel extends DefaultPanel
 		{
 			if(l_rows<=0)
 			{
-				return PAS.l("main_tas_stats_rowcount_ALL");
-			}
+                return Localization.l("main_tas_stats_rowcount_ALL");
+            }
 			return Integer.toString(l_rows);
 		}
 	}
@@ -144,22 +144,26 @@ public class TasFilterPanel extends DefaultPanel
 	JComboBox combo_grouping = new JComboBox();
 	JComboBox combo_filterfunction = new JComboBox();
 	JComboBox combo_filterrowcount = new JComboBox();
-	JCheckBox btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
+	JCheckBox btn_group_by_operator = new JCheckBox(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_OPERATOR"));
 
     {
-        btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
+        btn_group_by_operator = new JCheckBox(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_OPERATOR"));
     }
 
     {
-        btn_group_by_operator = new JCheckBox(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_OPERATOR"));
+        btn_group_by_operator = new JCheckBox(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_OPERATOR"));
+    }
+
+    {
+        btn_group_by_operator = new JCheckBox(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_OPERATOR"));
     }
 
     DateTimePicker date_from = new DateTimePicker(this, false, 0, 1, 0);
 	DateTimePicker date_to = new DateTimePicker(this, false, 0, 0, 0);
-	JButton btn_export = new JButton(PAS.l("common_export"));
+	JButton btn_export = new JButton(Localization.l("common_export"));
 
     {
-        btn_export = new JButton(PAS.l("common_export"));
+        btn_export = new JButton(Localization.l("common_export"));
     }
 
     ActionListener callback;
@@ -310,17 +314,17 @@ public class TasFilterPanel extends DefaultPanel
 	@Override
 	public void add_controls() {
 		combo_charttype.addActionListener(this);
-		
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.LINECHART.toString()), STATS_CHARTTYPE.LINECHART));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.LINECHART_3D.toString()), STATS_CHARTTYPE.LINECHART_3D));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.BARCHART.toString()), STATS_CHARTTYPE.BARCHART));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.BARCHART_3D.toString()), STATS_CHARTTYPE.BARCHART_3D));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_BARCHART.toString()), STATS_CHARTTYPE.STACKED_BARCHART));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_BARCHART_3D.toString()), STATS_CHARTTYPE.STACKED_BARCHART_3D));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.MULTIPLE_PAI.toString()), STATS_CHARTTYPE.MULTIPLE_PAI));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.MULTIPLE_PAI_3D.toString()), STATS_CHARTTYPE.MULTIPLE_PAI_3D));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.AREA_CHART.toString()), STATS_CHARTTYPE.AREA_CHART));
-		combo_charttype.addItem(new ComboChartTypeItem(PAS.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_AREA_CHART.toString()), STATS_CHARTTYPE.STACKED_AREA_CHART));
+
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.LINECHART.toString()), STATS_CHARTTYPE.LINECHART));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.LINECHART_3D.toString()), STATS_CHARTTYPE.LINECHART_3D));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.BARCHART.toString()), STATS_CHARTTYPE.BARCHART));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.BARCHART_3D.toString()), STATS_CHARTTYPE.BARCHART_3D));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_BARCHART.toString()), STATS_CHARTTYPE.STACKED_BARCHART));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_BARCHART_3D.toString()), STATS_CHARTTYPE.STACKED_BARCHART_3D));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.MULTIPLE_PAI.toString()), STATS_CHARTTYPE.MULTIPLE_PAI));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.MULTIPLE_PAI_3D.toString()), STATS_CHARTTYPE.MULTIPLE_PAI_3D));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.AREA_CHART.toString()), STATS_CHARTTYPE.AREA_CHART));
+        combo_charttype.addItem(new ComboChartTypeItem(Localization.l("main_tas_stats_chart_type_" + STATS_CHARTTYPE.STACKED_AREA_CHART.toString()), STATS_CHARTTYPE.STACKED_AREA_CHART));
 		
 		set_gridconst(0, inc_panels(), 3, 1);
 		add(date_from, m_gridconst);
@@ -334,10 +338,10 @@ public class TasFilterPanel extends DefaultPanel
 		add(combo_charttype, m_gridconst);
 		add_spacing(DIR_VERTICAL, 5);
 
-		
-		combo_filterfunction.addItem(new ComboStatFunctionItem(PAS.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_AVERAGE.toString()), ULBAFILTERSTATFUNCTION.STAT_AVERAGE));
-		combo_filterfunction.addItem(new ComboStatFunctionItem(PAS.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_MAX.toString()), ULBAFILTERSTATFUNCTION.STAT_MAX));
-		combo_filterfunction.addItem(new ComboStatFunctionItem(PAS.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_MIN.toString()), ULBAFILTERSTATFUNCTION.STAT_MIN));
+
+        combo_filterfunction.addItem(new ComboStatFunctionItem(Localization.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_AVERAGE.toString()), ULBAFILTERSTATFUNCTION.STAT_AVERAGE));
+        combo_filterfunction.addItem(new ComboStatFunctionItem(Localization.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_MAX.toString()), ULBAFILTERSTATFUNCTION.STAT_MAX));
+        combo_filterfunction.addItem(new ComboStatFunctionItem(Localization.l("main_tas_stats_dbfunc_" + ULBAFILTERSTATFUNCTION.STAT_MIN.toString()), ULBAFILTERSTATFUNCTION.STAT_MIN));
 		combo_filterrowcount.addItem(new ComboFilterRowcount(0));
 		combo_filterrowcount.addItem(new ComboFilterRowcount(1));
 		combo_filterrowcount.addItem(new ComboFilterRowcount(2));
@@ -349,13 +353,13 @@ public class TasFilterPanel extends DefaultPanel
 		
 		ComboFilterTimeunit default_data_per;
 		combo_filtertimeunit.addActionListener(this);
-		ComboFilterTimeunit data_per = new ComboFilterTimeunit(PAS.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_HOUR.toString()), ULBAFILTERSTATTIMEUNIT.PER_HOUR);
+        ComboFilterTimeunit data_per = new ComboFilterTimeunit(Localization.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_HOUR.toString()), ULBAFILTERSTATTIMEUNIT.PER_HOUR);
 		combo_filtertimeunit.addItem(data_per);
-		default_data_per = data_per = new ComboFilterTimeunit(PAS.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_DAY.toString()), ULBAFILTERSTATTIMEUNIT.PER_DAY);
+        default_data_per = data_per = new ComboFilterTimeunit(Localization.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_DAY.toString()), ULBAFILTERSTATTIMEUNIT.PER_DAY);
 		combo_filtertimeunit.addItem(data_per);
-		data_per = new ComboFilterTimeunit(PAS.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_MONTH.toString()), ULBAFILTERSTATTIMEUNIT.PER_MONTH);
+        data_per = new ComboFilterTimeunit(Localization.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_MONTH.toString()), ULBAFILTERSTATTIMEUNIT.PER_MONTH);
 		combo_filtertimeunit.addItem(data_per);
-		data_per = new ComboFilterTimeunit(PAS.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_YEAR.toString()), ULBAFILTERSTATTIMEUNIT.PER_YEAR);
+        data_per = new ComboFilterTimeunit(Localization.l("main_tas_stats_data_" + ULBAFILTERSTATTIMEUNIT.PER_YEAR.toString()), ULBAFILTERSTATTIMEUNIT.PER_YEAR);
 		combo_filtertimeunit.addItem(data_per);
 
 		set_gridconst(0, inc_panels(), 1, 1);
@@ -370,9 +374,9 @@ public class TasFilterPanel extends DefaultPanel
 		ComboResultsGroupTimeunit timeunit;
 		ComboResultsGroupTimeunit default_timeunit;
 		combo_grouping.addActionListener(this);
-		default_timeunit = timeunit = new ComboResultsGroupTimeunit(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_" + STATS_RESULTS_GROUPBY.COUNTRY.toString()),STATS_RESULTS_GROUPBY.COUNTRY);
+        default_timeunit = timeunit = new ComboResultsGroupTimeunit(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_" + STATS_RESULTS_GROUPBY.COUNTRY.toString()),STATS_RESULTS_GROUPBY.COUNTRY);
 		combo_grouping.addItem(timeunit);
-		timeunit = new ComboResultsGroupTimeunit(PAS.l("main_tas_stats_groupby") + " " + PAS.l("main_tas_stats_groupby_" + STATS_RESULTS_GROUPBY.TIMEUNIT.toString()),STATS_RESULTS_GROUPBY.TIMEUNIT);
+        timeunit = new ComboResultsGroupTimeunit(Localization.l("main_tas_stats_groupby") + " " + Localization.l("main_tas_stats_groupby_" + STATS_RESULTS_GROUPBY.TIMEUNIT.toString()),STATS_RESULTS_GROUPBY.TIMEUNIT);
 		combo_grouping.addItem(timeunit);
 		
 		

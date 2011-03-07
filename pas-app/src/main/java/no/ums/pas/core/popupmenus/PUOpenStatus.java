@@ -3,6 +3,7 @@ package no.ums.pas.core.popupmenus;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.SearchPanelStatusList;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusListObject;
 
 import javax.swing.JMenuItem;
@@ -24,7 +25,7 @@ public class PUOpenStatus extends PUMenu implements ActionListener {
 	{
 		super(pas, sz_name);
 		//item_refno = new JMenuItem("Open status for refno");
-		item_project = new JMenuItem(PAS.l("projectdlg_open_project"));
+        item_project = new JMenuItem(Localization.l("projectdlg_open_project"));
 		//item_refno.setActionCommand("act_status_refno");
 		item_project.setActionCommand("act_status_project");
 		//add(item_refno);

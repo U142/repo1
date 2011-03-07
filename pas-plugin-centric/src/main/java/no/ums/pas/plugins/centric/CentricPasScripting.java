@@ -5,7 +5,6 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
-import no.ums.pas.core.dataexchange.MailCtrl;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.*;
 import no.ums.pas.core.logon.LogonDialog.LogonPanel;
@@ -176,7 +175,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.add(menu.get_btn_search(), menu.m_gridconst);
         menu.get_btn_search().setEnabled(true); //IDDIATTS
 
-        JButton btn_goto_restriction = new JButton(PAS.l("common_navigate_home"));
+        JButton btn_goto_restriction = new JButton(Localization.l("common_navigate_home"));
         btn_goto_restriction.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         btn_goto_restriction.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -189,7 +188,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
         menu.add_spacing(DefaultPanel.DIR_HORIZONTAL, 30);
 
-        menu_btn_draw_polygon = new JButton(PAS.l("main_sending_type_polygon"));
+        menu_btn_draw_polygon = new JButton(Localization.l("main_sending_type_polygon"));
         menu_btn_draw_polygon.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_polygon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -202,7 +201,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu_btn_draw_polygon, menu.m_gridconst);
 
-        menu_btn_draw_ellipse = new JButton(PAS.l("main_sending_type_ellipse"));
+        menu_btn_draw_ellipse = new JButton(Localization.l("main_sending_type_ellipse"));
         menu_btn_draw_ellipse.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_ellipse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -214,7 +213,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu.set_gridconst(menu.inc_xpanels(), 1, 1, 1, GridBagConstraints.NORTHWEST);
         menu.add(menu_btn_draw_ellipse, menu.m_gridconst);
 
-        menu_btn_draw_plmn = new JButton(PAS.l("main_sending_type_national"));
+        menu_btn_draw_plmn = new JButton(Localization.l("main_sending_type_national"));
         menu_btn_draw_plmn.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_plmn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -528,8 +527,8 @@ public class CentricPasScripting extends DefaultPasScripting {
                     UBBNEWS b = (UBBNEWS) list.getDefaultModel().getElementAt(location);
                     String html = "<html><table width=300>";
                     //html += "<tr><td colspan=1><b>" + PAS.l("common_updated") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLTimestampDb()) + "</td></tr>";
-                    html += "<tr><td colspan=1><b>" + PAS.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
-                    html += "<tr><td colspan=1><b>" + PAS.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
+                    html += "<tr><td colspan=1><b>" + Localization.l("common_start") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentStart()) + "</td></tr>";
+                    html += "<tr><td colspan=1><b>" + Localization.l("common_end") + ":</b></td><td>" + no.ums.pas.ums.tools.TextFormat.format_datetime(b.getLIncidentEnd()) + "</td></tr>";
                     html += "<tr><td colspan=2 style=\"word-wrap: break-word\">" + b.getNewstext().getSzNews() + "</td></tr>";
                     html += "</html>";
                     return html;
@@ -671,16 +670,16 @@ public class CentricPasScripting extends DefaultPasScripting {
             switch (ui.get_current_department().get_userprofile().get_send()) {
                 case 1: //regional or regional super user
                     if (member_of_dept == 1) {
-                        str += PAS.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
+                        str += Localization.l("logon_rights_regional_user") + " - ";//" - $Regional user - ";
                     }
                     else {
-                        str += PAS.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
+                        str += Localization.l("logon_rights_regional_superuser") + " - "; //" - $Regional Super User - ";
                     }
                     for (int i = 0; i < ui.get_departments().size(); i++)
                         str += " \"" + ((DeptInfo) ui.get_departments().get(i)).get_deptid() + "\"";
                     break;
                 case 2: //national user
-                    str += PAS.l("logon_rights_national_user"); //" - $Regional Super User - ";
+                    str += Localization.l("logon_rights_national_user"); //" - $Regional Super User - ";
                     break;
             }
 
@@ -876,7 +875,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onSetAppTitle(PAS pas, String s, UserInfo userinfo) {
 //        boolean trainingmode = IsInTrainingMode(userinfo);
         System.out.println("onSetAppTitle");
-        String maintitle = PAS.l("common_app_title");
+        String maintitle = Localization.l("common_app_title");
         CentricStatusController sc = (CentricStatusController) PAS.get_pas().get_statuscontroller();
         if (sc != null) {
             CentricStatus status = sc.getOpenedStatus();
@@ -1053,10 +1052,10 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
         if (ws.getResult() == WSRESULTCODE.OK) {
-            dlg.set_errortext(PAS.l("logon_ws_active"), false);
+            dlg.set_errortext(Localization.l("logon_ws_active"), false);
         }
         else {
-            dlg.set_errortext(PAS.l("logon_ws_inactive"));
+            dlg.set_errortext(Localization.l("logon_ws_inactive"));
         }
         try {
             dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
@@ -1097,7 +1096,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
         p.add(p.getBtnSubmit(), p.m_gridconst);
 
-        JButton btn_cancel = new JButton(PAS.l("common_cancel"));
+        JButton btn_cancel = new JButton(Localization.l("common_cancel"));
         btn_cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

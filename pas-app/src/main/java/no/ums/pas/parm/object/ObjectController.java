@@ -2,6 +2,7 @@ package no.ums.pas.parm.object;
 
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.parm.exception.ParmException;
@@ -50,9 +51,9 @@ public class ObjectController {
 		this.m_edit_polygon = new PolygonStruct(nav.getDimension());
 		
 		if (this.isObjectFolder == true) {
-			this.gui = new ObjectGUI(PAS.l("main_parm_objectfolder_new_dlg_heading"));
+            this.gui = new ObjectGUI(Localization.l("main_parm_objectfolder_new_dlg_heading"));
 		} else {
-			this.gui = new ObjectGUI(PAS.l("main_parm_object_new_dlg_heading"));
+            this.gui = new ObjectGUI(Localization.l("main_parm_object_new_dlg_heading"));
 		}
 		addCategoryToCombobox(categoryList);
 		
@@ -66,9 +67,9 @@ public class ObjectController {
 		m_edit_polygon = null;
 		
 		if (this.object.isObjectFolder() == true) {
-			this.gui = new ObjectGUI(PAS.l("main_parm_objectfolder_edit_dlg_heading"));
+            this.gui = new ObjectGUI(Localization.l("main_parm_objectfolder_edit_dlg_heading"));
 		} else {
-			this.gui = new ObjectGUI(PAS.l("main_parm_object_edit_dlg_heading"));
+            this.gui = new ObjectGUI(Localization.l("main_parm_object_edit_dlg_heading"));
 		}
 		addCategoryToCombobox(categoryList);
 
@@ -119,31 +120,31 @@ public class ObjectController {
 		String type = null;
 
 		if (this.object.isObjectFolder()) {
-			type = PAS.l("main_parmtab_popup_objectfolder");
+            type = Localization.l("main_parmtab_popup_objectfolder");
 		} else {
-			type = PAS.l("main_parmtab_popup_object");
+            type = Localization.l("main_parmtab_popup_object");
 		}
 
-		Object[] options = { PAS.l("common_yes"), PAS.l("common_cancel") };
+        Object[] options = {Localization.l("common_yes"), Localization.l("common_cancel")};
 
 		boolean children[] = hasObjectChildren(this.object);
 
-		String msg = PAS.l("common_delete_are_you_sure") + " '" + object.getName() + "'";
+        String msg = Localization.l("common_delete_are_you_sure") + " '" + object.getName() + "'";
 		if (children[0] == true || children[1] == true || children[2] == true
 				|| children[3] == true) {
-            msg += "\n\n" + PAS.l("common_contains") + ":";
+            msg += "\n\n" + Localization.l("common_contains") + ":";
         }
 		if(children[0]) {
-            msg += "\n" + PAS.l("main_parmtab_popup_objectfolder");
+            msg += "\n" + Localization.l("main_parmtab_popup_objectfolder");
         }
 		if(children[1]) {
-            msg += "\n" + PAS.l("main_parmtab_popup_object");
+            msg += "\n" + Localization.l("main_parmtab_popup_object");
         }
 		if(children[2]) {
-            msg += "\n" + PAS.l("main_parmtab_popup_event");
+            msg += "\n" + Localization.l("main_parmtab_popup_event");
         }
 		if(children[3]) {
-            msg += "\n" + PAS.l("main_parmtab_popup_alert");
+            msg += "\n" + Localization.l("main_parmtab_popup_alert");
         }
 		/*	msg += "\nWarning, this " + type + " also contains:";
 		if (children[0] == true)
@@ -155,7 +156,7 @@ public class ObjectController {
 		if (children[3] == true)
 			msg += "\n* Alert";*/
 
-		int n = JOptionPane.showOptionDialog(null, msg, PAS.l("common_delete") + " " + type,
+        int n = JOptionPane.showOptionDialog(null, msg, Localization.l("common_delete") + " " + type,
 				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
 				options, options[1]);
 		// yes = 0, no = 1

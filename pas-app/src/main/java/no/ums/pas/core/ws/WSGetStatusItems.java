@@ -3,6 +3,7 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.MapPoint;
@@ -97,7 +98,7 @@ public class WSGetStatusItems extends WSThread
 	public void call() throws Exception {
 		if(sz_datefilter<=0 && sz_timefilter<=0)
 		{
-			PAS.get_pas().get_mappane().SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("mainmenu_status"));
+            PAS.get_pas().get_mappane().SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("mainmenu_status"));
 			b_use_loading_image = true;
 			set_datetimefilter(1, 1);
 		}
@@ -947,9 +948,9 @@ public class WSGetStatusItems extends WSThread
 		//m_statuscodes.add(new StatusCode(-1001, "Queue (no details)", true, get_queue()));
 		//m_statuscodes.add(new StatusCode(-1002, "Sending (no details)", true, get_sending()));
 		ActionEvent event_code;
-		fire_event(new ActionEvent(new StatusCode(-1000, PAS.l("common_parsing") + " (" + PAS.l("common_no_details") + ")", true, get_parsing(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
-		fire_event(new ActionEvent(new StatusCode(-1001, PAS.l("common_queue") + " (" + PAS.l("common_queue") + ")", true, get_queue(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
-		fire_event(new ActionEvent(new StatusCode(-1002, PAS.l("common_sending") + " (" + PAS.l("common_sending") + ")", true, get_sending(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
+        fire_event(new ActionEvent(new StatusCode(-1000, Localization.l("common_parsing") + " (" + Localization.l("common_no_details") + ")", true, get_parsing(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
+        fire_event(new ActionEvent(new StatusCode(-1001, Localization.l("common_queue") + " (" + Localization.l("common_queue") + ")", true, get_queue(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
+        fire_event(new ActionEvent(new StatusCode(-1002, Localization.l("common_sending") + " (" + Localization.l("common_sending") + ")", true, get_sending(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
 		
 		for(int n_items=0; n_items < list_codes.getLength(); n_items++)
 		{

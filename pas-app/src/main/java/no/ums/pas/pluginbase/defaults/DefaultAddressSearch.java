@@ -7,6 +7,7 @@ import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.GABTYPE;
@@ -29,11 +30,11 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback)
 			throws Exception {
 		System.out.println("onCreateSearchPanelResultsAddrSearch");
-        String[] sz_columns  = {PAS.l("adrsearch_dlg_hit"),
-				PAS.l("adrsearch_dlg_address"),
-				PAS.l("adrsearch_dlg_region"),
-				PAS.l("common_lon"),
-				PAS.l("common_lat"),};//"icon"
+        String[] sz_columns  = {Localization.l("adrsearch_dlg_hit"),
+                Localization.l("adrsearch_dlg_address"),
+                Localization.l("adrsearch_dlg_region"),
+                Localization.l("common_lon"),
+                Localization.l("common_lat"),};//"icon"
 		int[] n_width = { 30, 200, 100, 50, 50 }; //, 16 };
 		return new SearchPanelResultsAddrSearch(panel, sz_columns, n_width, new Dimension(800, 200), callback);
 	}
@@ -91,7 +92,7 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 			UGabSearchResultList response = myService.getPaswsSoap12().gabSearch(params, logoninfo);
 			if(response.isBHaserror())
 			{
-				no.ums.pas.ums.errorhandling.Error.getError().addError(PAS.l("common_error"), response.getSzErrortext(), new Exception(response.getSzExceptiontext()), 1);
+                no.ums.pas.ums.errorhandling.Error.getError().addError(Localization.l("common_error"), response.getSzErrortext(), new Exception(response.getSzExceptiontext()), 1);
 				throw new Exception(response.getSzErrortext());
 			}
 			return response;
@@ -116,23 +117,23 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 			TableColumnModel tcm = list.getJTable().getColumnModel();
 			if(result.getType().equals(GABTYPE.HOUSE))
 			{
-				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_address"));
-				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));
+                tcm.getColumn(1).setHeaderValue(Localization.l("adrsearch_dlg_address"));
+                tcm.getColumn(2).setHeaderValue(Localization.l("adrsearch_dlg_region"));
 			}
 			else if(result.getType().equals(GABTYPE.STREET))
 			{
-				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_streetname"));
-				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));
+                tcm.getColumn(1).setHeaderValue(Localization.l("adrsearch_dlg_streetname"));
+                tcm.getColumn(2).setHeaderValue(Localization.l("adrsearch_dlg_region"));
 			}
 			else if(result.getType().equals(GABTYPE.POST))
 			{
-				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_postno"));
-				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));				
+                tcm.getColumn(1).setHeaderValue(Localization.l("adrsearch_dlg_postno"));
+                tcm.getColumn(2).setHeaderValue(Localization.l("adrsearch_dlg_region"));
 			}
 			else if(result.getType().equals(GABTYPE.REGION))
 			{
-				tcm.getColumn(1).setHeaderValue(PAS.l("adrsearch_dlg_region"));
-				tcm.getColumn(2).setHeaderValue(PAS.l("adrsearch_dlg_region"));								
+                tcm.getColumn(1).setHeaderValue(Localization.l("adrsearch_dlg_region"));
+                tcm.getColumn(2).setHeaderValue(Localization.l("adrsearch_dlg_region"));
 			}
 			list.getJTable().getTableHeader().repaint();
 			

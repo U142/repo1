@@ -5,6 +5,7 @@ package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusListObject;
 
 import javax.swing.JFrame;
@@ -25,7 +26,7 @@ public class OpenStatusFrame extends JFrame implements ActionListener {
 	
 	public OpenStatusFrame()
 	{
-		super(PAS.l("mainmenu_status_open"));
+        super(Localization.l("mainmenu_status_open"));
 		//m_statuscontroller = controller;
 		this.setIconImage(PAS.get_pas().getIconImage());
 		Dimension dim = new Dimension(700, 400);
@@ -33,7 +34,7 @@ public class OpenStatusFrame extends JFrame implements ActionListener {
 		getContentPane().setLayout(new BorderLayout ());
 //String[] sz_itemattr = { "l_refno", "l_sendingtype", "l_totitem", "l_altjmp", "l_createdate", "l_createtime",
 // "sz_sendingname", "l_sendingstatus", "l_group", "l_type", "l_deptpk", "sz_deptid" };
-		String sz_columns[] = { PAS.l("projectdlg_projectname"), PAS.l("common_owner"), PAS.l("common_refno"), PAS.l("common_channel"), PAS.l("common_items"), PAS.l("common_type"), PAS.l("common_created"), PAS.l("common_time"), PAS.l("common_sendingname"), PAS.l("common_sendingstatus") };
+        String sz_columns[] = {Localization.l("projectdlg_projectname"), Localization.l("common_owner"), Localization.l("common_refno"), Localization.l("common_channel"), Localization.l("common_items"), Localization.l("common_type"), Localization.l("common_created"), Localization.l("common_time"), Localization.l("common_sendingname"), Localization.l("common_sendingstatus")};
 		int n_width[] = { 100, 50, 50, 50, 75, 75, 100, 75, 200, 100 };
 		m_statuspanel = new SearchPanelStatusList(PAS.get_pas(), this, sz_columns, n_width);
 		

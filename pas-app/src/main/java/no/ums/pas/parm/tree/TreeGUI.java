@@ -3,6 +3,7 @@ package no.ums.pas.parm.tree;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
@@ -115,12 +116,12 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 				if(tip.getClass().equals(AlertVO.class))
 				{
 					AlertVO avo = (AlertVO)tip;
-					String tiptext = "<html>" + PAS.l("main_parmtab_popup_alert") + " = " + avo.getAlertpk().substring(1);
+                    String tiptext = "<html>" + Localization.l("main_parmtab_popup_alert") + " = " + avo.getAlertpk().substring(1);
 					tiptext += "<br>" + avo.toString();
 					if(SendController.HasType(avo.getAddresstypes(), SendController.SENDTO_CELL_BROADCAST_TEXT))
 					{
 						tiptext += "<br><br><table>";
-						tiptext += "<th colspan=2 width=200>" + PAS.l("main_status_locationbased_alert") + "</th>";
+                        tiptext += "<th colspan=2 width=200>" + Localization.l("main_status_locationbased_alert") + "</th>";
 						for(int i=0; i < avo.getOperators().size(); i++)
 						{
 							tiptext +="<tr><td>";
@@ -137,12 +138,12 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 				else if(tip.getClass().equals(EventVO.class))
 				{
 					EventVO evo = (EventVO)tip;
-					return PAS.l("main_parmtab_popup_event") + " = " + evo.getEventPk().substring(1);
+                    return Localization.l("main_parmtab_popup_event") + " = " + evo.getEventPk().substring(1);
 				}
 				else if(tip.getClass().equals(ObjectVO.class))
 				{
 					ObjectVO ovo = (ObjectVO)tip;
-					return (ovo.isObjectFolder() ? PAS.l("main_parmtab_popup_objectfolder") : PAS.l("main_parmtab_popup_object")) + " = " + ovo.getObjectPK().substring(1);
+                    return (ovo.isObjectFolder() ? Localization.l("main_parmtab_popup_objectfolder") : Localization.l("main_parmtab_popup_object")) + " = " + ovo.getObjectPK().substring(1);
 				}
 			}
 			return "";
@@ -682,19 +683,19 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 	public void createPopupMenu() {
 
 		popup = new JPopupMenu("PopupMenu");
-		menuNew = new JMenu(PAS.l("common_new"));
-		objectfolder = new JMenuItem(PAS.l("main_parmtab_popup_objectfolder"));
-		object = new JMenuItem(PAS.l("main_parmtab_popup_object"));
-		alert = new JMenuItem(PAS.l("main_parmtab_popup_alert"));
-		event = new JMenuItem(PAS.l("main_parmtab_popup_event"));
-		gotomap = new JMenuItem(PAS.l("main_parmtab_popup_goto"));
-		generateSending = new JMenuItem(PAS.l("main_parmtab_popup_generate_sending"));
-		snapshot_livesending = new JMenuItem(PAS.l("main_parmtab_popup_quicksend_send"));
-		snapshot_simulation = new JMenuItem(PAS.l("main_parmtab_popup_quicksend_simulate"));
-		snapshot_test = new JMenuItem(PAS.l("main_parmtab_popup_quicksend_test"));
-		
-		tools = new JMenu(PAS.l("main_parmtab_popup_tools"));
-		export_polygon = new JMenuItem(PAS.l("main_parmtab_popup_export_polygon"));
+        menuNew = new JMenu(Localization.l("common_new"));
+        objectfolder = new JMenuItem(Localization.l("main_parmtab_popup_objectfolder"));
+        object = new JMenuItem(Localization.l("main_parmtab_popup_object"));
+        alert = new JMenuItem(Localization.l("main_parmtab_popup_alert"));
+        event = new JMenuItem(Localization.l("main_parmtab_popup_event"));
+        gotomap = new JMenuItem(Localization.l("main_parmtab_popup_goto"));
+        generateSending = new JMenuItem(Localization.l("main_parmtab_popup_generate_sending"));
+        snapshot_livesending = new JMenuItem(Localization.l("main_parmtab_popup_quicksend_send"));
+        snapshot_simulation = new JMenuItem(Localization.l("main_parmtab_popup_quicksend_simulate"));
+        snapshot_test = new JMenuItem(Localization.l("main_parmtab_popup_quicksend_test"));
+
+        tools = new JMenu(Localization.l("main_parmtab_popup_tools"));
+        export_polygon = new JMenuItem(Localization.l("main_parmtab_popup_export_polygon"));
 
 		menuNew.add(objectfolder);
 		menuNew.add(object);
@@ -705,14 +706,14 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 
 		popup.add(menuNew);
 		popup.addSeparator();
-		edit = new JMenuItem(PAS.l("common_edit"));
+        edit = new JMenuItem(Localization.l("common_edit"));
 
 		popup.add(edit);
-		delete = new JMenuItem(PAS.l("common_delete"));
+        delete = new JMenuItem(Localization.l("common_delete"));
 		popup.add(delete);
 		popup.add(gotomap);
 		popup.add(generateSending);
-		submenu = new JMenu(PAS.l("main_parmtab_popup_quicksend"));
+        submenu = new JMenu(Localization.l("main_parmtab_popup_quicksend"));
 		submenu.add(snapshot_livesending);
 		submenu.add(snapshot_simulation);
 		submenu.add(snapshot_test);

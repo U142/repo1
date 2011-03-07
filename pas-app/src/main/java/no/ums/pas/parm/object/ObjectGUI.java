@@ -1,6 +1,7 @@
 package no.ums.pas.parm.object;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.fieldlimit.TextFieldLimit;
 
 import javax.swing.BorderFactory;
@@ -88,8 +89,8 @@ public class ObjectGUI extends JFrame implements WindowListener {
 
 		public ObjInfoPanel() {
 
-			setBorder(BorderFactory
-					.createTitledBorder(PAS.l("main_parm_object_dlg_information")));
+            setBorder(BorderFactory
+					.createTitledBorder(Localization.l("main_parm_object_dlg_information")));
 
 			this.cbxCategory = new JComboBox();
 
@@ -129,12 +130,12 @@ public class ObjectGUI extends JFrame implements WindowListener {
 				lblTab[4] = lblPlace;
 				lblTab[5] = lblPhone;
 
-				lblName.setText(PAS.l("main_parm_object_dlg_name"));
-				lblCategory.setText(PAS.l("main_parm_object_dlg_category"));
-				lblAdress.setText(PAS.l("main_parm_object_dlg_address"));
-				lblPostno.setText(PAS.l("main_parm_object_dlg_postno"));
-				lblPlace.setText(PAS.l("main_parm_object_dlg_place"));
-				lblPhone.setText(PAS.l("main_parm_object_dlg_phone"));
+                lblName.setText(Localization.l("main_parm_object_dlg_name"));
+                lblCategory.setText(Localization.l("main_parm_object_dlg_category"));
+                lblAdress.setText(Localization.l("main_parm_object_dlg_address"));
+                lblPostno.setText(Localization.l("main_parm_object_dlg_postno"));
+                lblPlace.setText(Localization.l("main_parm_object_dlg_place"));
+                lblPhone.setText(Localization.l("main_parm_object_dlg_phone"));
 
 				
 				for (int i = 0; i < lblTab.length; i++) {
@@ -184,7 +185,7 @@ public class ObjectGUI extends JFrame implements WindowListener {
 					//FontSet this.lblSign.setFont(new Font(null, Font.BOLD, 18));
 					this.lblSign.setAlignmentX(Component.RIGHT_ALIGNMENT);
 					add(this.lblSign);
-					add(new JLabel(" = " + PAS.l("common_mandatory_input")));
+                    add(new JLabel(" = " + Localization.l("common_mandatory_input")));
 				}
 			}
 
@@ -243,18 +244,18 @@ public class ObjectGUI extends JFrame implements WindowListener {
 	public class PolygonPanel extends JEditorPane {
 		public static final long serialVersionUID = 1;
 
-		private String msg = PAS.l("main_parm_object_dlg_mark");/*"After given an object "
+		private String msg = Localization.l("main_parm_object_dlg_mark");/*"After given an object "
 				+ "necessary information, please mark the "
 				+ "position on the map.";*/
 
         {
-            msg = PAS.l("main_parm_object_dlg_mark");
+            msg = Localization.l("main_parm_object_dlg_mark");
         }
 
         public PolygonPanel() {
 
-			setBorder(BorderFactory
-					.createTitledBorder(PAS.l("main_parm_object_dlg_set_polygon")));
+            setBorder(BorderFactory
+					.createTitledBorder(Localization.l("main_parm_object_dlg_set_polygon")));
 
 			setText(msg);
 			setEditable(false);
@@ -282,7 +283,7 @@ public class ObjectGUI extends JFrame implements WindowListener {
 
 			this.lblDescription = new JLabel();
 			this.lblDescription.setPreferredSize(new Dimension(110, 18));
-			this.lblDescription.setText(PAS.l("main_parm_object_dlg_more_description"));
+            this.lblDescription.setText(Localization.l("main_parm_object_dlg_more_description"));
 
 			this.txaDescription = new JTextArea();
 			this.scrDescription = new JScrollPane(this.txaDescription);
@@ -337,8 +338,8 @@ public class ObjectGUI extends JFrame implements WindowListener {
 			add(btnSave);
 			add(btnCancel);
 
-			this.btnSave.setText(PAS.l("common_save"));
-			this.btnCancel.setText(PAS.l("common_cancel"));
+            this.btnSave.setText(Localization.l("common_save"));
+            this.btnCancel.setText(Localization.l("common_cancel"));
 		}
 
 		public JButton getBtnCancel() {

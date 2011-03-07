@@ -5,6 +5,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.core.ws.WSProject;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -57,7 +58,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	
 	public ProjectDlg(JFrame parent, ActionListener callback, String sz_callback_action, boolean bNewSending) {
 		//super(parent, "Create/Open Project", true);
-		super(parent, PAS.l("mainmenu_file_project"));
+        super(parent, Localization.l("mainmenu_file_project"));
 		this.setIconImage(PAS.get_pas().getIconImage());
 		try
 		{
@@ -112,14 +113,15 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	public class ProjectPanel extends DefaultPanel {
 		public static final long serialVersionUID = 1;
 		protected StdTextLabel m_lbl_errormsg = new StdTextLabel("",false, 200);
-		protected StdTextLabel m_lbl_projectname = new StdTextLabel(PAS.l("projectdlg_projectname") + ":", true, 85);
+		protected StdTextLabel m_lbl_projectname = new StdTextLabel(Localization.l("projectdlg_projectname") + ":", true, 85);
         protected StdTextArea m_txt_projectname = new StdTextArea("", false, new Dimension(200,23));
-		protected JButton m_btn_save = new JButton(PAS.l("common_save"));
-        protected JButton m_btn_cancel = new JButton(PAS.l("common_cancel"));
+		protected JButton m_btn_save = new JButton(Localization.l("common_save"));
+        protected JButton m_btn_cancel = new JButton(Localization.l("common_cancel"));
         protected ProjectList m_project_list;
 		protected ArrayList<StatusListObject> m_arr_sendings;
 		protected ArrayList<Project> m_arr_projects;
-		protected JButton m_btn_open = new JButton(PAS.l("common_open"));
+		protected JButton m_btn_open = new JButton(Localization.l("common_open"));
+
         public ProjectList get_projectlist() { return m_project_list; }
 		protected Project m_proj;
 		
@@ -131,15 +133,15 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			//m_loader.removeComponentListener(m_loader);
 //			if(bNewSending)
 //				m_btn_cancel.setText("No name");
-			
-			m_project_list = new ProjectList( new String [] { PAS.l("projectdlg_projectid"), PAS.l("projectdlg_projectname"), PAS.l("common_created"), PAS.l("common_sendings") }, new int [] { 100, 250, 100, 50 });
+
+            m_project_list = new ProjectList( new String [] {Localization.l("projectdlg_projectid"), Localization.l("projectdlg_projectname"), Localization.l("common_created"), Localization.l("common_sendings")}, new int [] { 100, 250, 100, 50 });
 			init_controls();
 			
 			add_controls();
 			init();
 			
 			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
-				m_txt_projectname.setText(PAS.l("main_status_traveller_alert"));
+                m_txt_projectname.setText(Localization.l("main_status_traveller_alert"));
 				m_txt_projectname.setSelectionStart(0);
 				m_txt_projectname.setSelectionEnd(m_txt_projectname.getText().length());
 			}
@@ -166,7 +168,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 					save();
 				}
 				else {
-                    m_lbl_errormsg.setText(PAS.l("projectdlg_project_entername"));
+                    m_lbl_errormsg.setText(Localization.l("projectdlg_project_entername"));
                 }
 					
 			}
@@ -241,7 +243,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			public static final long serialVersionUID = 1;
 			public ProjectList(String [] sz_columns, int [] n_width) {
 				super(sz_columns, n_width, null, new Dimension(250, 100), ListSelectionModel.SINGLE_SELECTION);
-				setBorder(BorderFactory.createTitledBorder(PAS.l("projectdlg_open_project")));
+                setBorder(BorderFactory.createTitledBorder(Localization.l("projectdlg_open_project")));
 			}
 			public boolean is_cell_editable(int row, int col) {
 				return false;

@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.sound.SoundFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -44,10 +45,10 @@ public class Sending_Send extends DefaultPanel {
 	protected JLabel m_lbl_adrfile;
 	protected StdTextLabel m_txt_adrfile;
 	protected ImageIcon m_icon_indicator[] = new ImageIcon[3];
-	protected JButton m_btn_sendtest = new JButton(PAS.l("main_sending_send_test"));
+	protected JButton m_btn_sendtest = new JButton(Localization.l("main_sending_send_test"));
 
     {
-        m_btn_sendtest = new JButton(PAS.l("main_sending_send_test"));
+        m_btn_sendtest = new JButton(Localization.l("main_sending_send_test"));
     }
 
     protected StdTextArea m_txt_sendtest = new StdTextArea("", false, 75);
@@ -71,8 +72,8 @@ public class Sending_Send extends DefaultPanel {
 		//btn_send = new JButton("send");
 		//btn_send.addActionListener(this);
 		//btn_send.setActionCommand("act_send");
-		m_txt_refno = new StdTextLabel(PAS.l("common_refno"), 400, 14, true);
-		m_txt_adrfile = new StdTextLabel(PAS.l("main_sending_address_file"), 400, 14, true);
+        m_txt_refno = new StdTextLabel(Localization.l("common_refno"), 400, 14, true);
+        m_txt_adrfile = new StdTextLabel(Localization.l("main_sending_address_file"), 400, 14, true);
 		if(PAS.icon_version==2)
 		{
 			m_icon_indicator[0] = ImageLoader.load_icon("status_red_16.png");
@@ -90,7 +91,7 @@ public class Sending_Send extends DefaultPanel {
 		m_btn_sendtest.setActionCommand("act_send_test");
 		m_btn_sendtest.addActionListener(this);
 		m_btn_sendtest.setPreferredSize(new Dimension(70, 17));
-		m_btn_sendtest.setToolTipText(PAS.l("main_sending_send_test_tooltip"));
+        m_btn_sendtest.setToolTipText(Localization.l("main_sending_send_test_tooltip"));
 		add_controls();
 	}
 	public void add_controls() {
@@ -143,7 +144,7 @@ public class Sending_Send extends DefaultPanel {
 		m_lbl_wav_upload = new JLabel[parent.get_files().length];
 		for(int i=0; i < m_txt_wav_upload.length; i++) {
 			m_lbl_wav_upload[i] = new JLabel(m_icon_indicator[INDICATOR_RED_]);
-			m_txt_wav_upload[i] = new StdTextLabel(PAS.l("common_file") + " - " + parent.get_files()[i].get_soundfile().get_name() + " (" + parent.get_files()[i].get_soundfile().get_modulename() + ")", 400, 14, true);
+            m_txt_wav_upload[i] = new StdTextLabel(Localization.l("common_file") + " - " + parent.get_files()[i].get_soundfile().get_name() + " (" + parent.get_files()[i].get_soundfile().get_modulename() + ")", 400, 14, true);
 		}
 	}
 	public boolean checkSMSInput() {
@@ -152,15 +153,15 @@ public class Sending_Send extends DefaultPanel {
 			istas=true;
 		}
 		if(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1) {
-			JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms"));
+            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"));
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
 		} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && !istas) {
-			JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms_oadc"));
+            JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"));
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
 		} else if(parent.m_sms_broadcast_text_panel.get_gsmsize(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText())>parent.m_sms_broadcast_text_panel.m_maxSize) {
-			JOptionPane.showMessageDialog(this, String.format(PAS.l("main_sending_warning_sms_too_long"),parent.m_sms_broadcast_text_panel.m_maxSize));
+            JOptionPane.showMessageDialog(this, String.format(Localization.l("main_sending_warning_sms_too_long"),parent.m_sms_broadcast_text_panel.m_maxSize));
 			parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 			return false;
 		}
@@ -181,10 +182,10 @@ public class Sending_Send extends DefaultPanel {
 				if(!selected) {
 					b_continue = false;
 					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					else {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
@@ -208,10 +209,10 @@ public class Sending_Send extends DefaultPanel {
 				if(!selected) {
 					b_continue = false;
 					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					else {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
@@ -237,10 +238,10 @@ public class Sending_Send extends DefaultPanel {
 				if(!selected) {
 					b_continue = false;
 					if(parent.get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_tas_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					else {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_status_select_tooltip"), parent.get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					parent.m_tabbedpane.setSelectedComponent(parent.m_resendpanel);
 					return;
@@ -255,8 +256,8 @@ public class Sending_Send extends DefaultPanel {
 		}
 		else if("act_set_refno".equals(e.getActionCommand())) { //wait for refno, then send
 			m_n_refno = ((Integer)e.getSource()).intValue();
-			m_txt_refno.setText(PAS.l("common_refno") + " - " + m_n_refno);
-			parent.set_comstatus(PAS.l("main_sending_refno_retrieved") + " - " + m_n_refno);
+            m_txt_refno.setText(Localization.l("common_refno") + " - " + m_n_refno);
+            parent.set_comstatus(Localization.l("main_sending_refno_retrieved") + " - " + m_n_refno);
 			set_refnostatus(INDICATOR_GREEN_);
 			if(send()) {
 				/*
@@ -271,21 +272,21 @@ public class Sending_Send extends DefaultPanel {
 			
 			String sz_number = m_txt_sendtest.getText();
 			if(sz_number.length() < 8) {
-				JOptionPane.showMessageDialog(this, PAS.l("main_sending_send_test_warning"));
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"));
 				return;
 			}
 			if(parent.hasSMS(parent.m_sendobject.get_toolbar().get_addresstypes())) {
 				if(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText().length() < 1 && b_continue) {
 					b_continue = false;
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms"));
 					parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 				} else if (parent.m_sms_broadcast_text_panel.get_txt_oadc_text().getText().length() < 1 && b_continue) {
 					b_continue = false;
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_empty_sms_oadc"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_empty_sms_oadc"));
 					parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 				} else if(parent.m_sms_broadcast_text_panel.get_gsmsize(parent.m_sms_broadcast_text_panel.get_txt_messagetext().getText())>parent.m_sms_broadcast_text_panel.m_maxSize) {
 					b_continue = false;
-					JOptionPane.showMessageDialog(this, String.format(PAS.l("main_sending_warning_sms_too_long"),parent.m_sms_broadcast_text_panel.m_maxSize));
+                    JOptionPane.showMessageDialog(this, String.format(Localization.l("main_sending_warning_sms_too_long"),parent.m_sms_broadcast_text_panel.m_maxSize));
 					parent.m_tabbedpane.setSelectedComponent(parent.m_sms_broadcast_text_panel);
 				}
 			}
@@ -296,7 +297,7 @@ public class Sending_Send extends DefaultPanel {
 		} else if("act_set_testrefno".equals(e.getActionCommand())) {
 			String sz_number = m_txt_sendtest.getText();
 			m_n_refno = ((Integer)e.getSource()).intValue();
-			parent.set_comstatus(PAS.l("main_sending_refno_test_retrieved") + " - " + m_n_refno);
+            parent.set_comstatus(Localization.l("main_sending_refno_test_retrieved") + " - " + m_n_refno);
 			ArrayList<String> arr_numbers = new ArrayList<String>();
 			//arr_numbers.add("98220213");
 			arr_numbers.add(sz_number);
@@ -316,7 +317,7 @@ public class Sending_Send extends DefaultPanel {
 				try {
 					if(parent.get_files()[i]!=null && parent.get_files()[i].get_soundfile()!=null)
 					{
-						parent.set_comstatus(PAS.l("main_sending_uploading_file") + " - " + parent.get_files()[i].get_soundfile().get_name());
+                        parent.set_comstatus(Localization.l("main_sending_uploading_file") + " - " + parent.get_files()[i].get_soundfile().get_name());
 						if(b_use_indicators)
 							set_filestatus(i, INDICATOR_YELLOW_);
 						SoundFile file = parent.get_files()[i].get_soundfile();
@@ -330,14 +331,14 @@ public class Sending_Send extends DefaultPanel {
 						//PAS.get_pas().add_event("Ready to send wav type " + parent.get_files()[i].get_filetype() + " refno=" + get_refno());
 						boolean b_ok = file.send_wav(get_refno(), parent.get_files()[i].get_filetype(), parent.get_files()[i].get_current_fileinfo());
 						if(!b_ok) {
-							parent.set_comstatus(PAS.l("main_sending_error_uploading_wav_file"));
+                            parent.set_comstatus(Localization.l("main_sending_error_uploading_wav_file"));
 							if(b_use_indicators)
 								set_filestatus(i, INDICATOR_RED_);
 							return false;
 						}
 						if(b_use_indicators)
 							set_filestatus(i, INDICATOR_GREEN_);
-						parent.set_comstatus(PAS.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
+                        parent.set_comstatus(Localization.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
 					}
 				} catch(Exception e) {
 					System.out.println(e.getMessage());
@@ -355,12 +356,12 @@ public class Sending_Send extends DefaultPanel {
 		//Serverside Script - rename wav files and upload send-data, return new refno
 		set_adrfilestatus(INDICATOR_YELLOW_);
 		if(send_adrfile()) {
-			parent.set_comstatus(PAS.l("main_sending_message_sent"));
+            parent.set_comstatus(Localization.l("main_sending_message_sent"));
 			set_adrfilestatus(INDICATOR_GREEN_);
 			return true;
 		}
 		else {
-			parent.set_comstatus(PAS.l("main_sending_error_uploading_address_file"));
+            parent.set_comstatus(Localization.l("main_sending_error_uploading_address_file"));
 			set_adrfilestatus(INDICATOR_RED_);
 		}
 		return false;
@@ -369,7 +370,7 @@ public class Sending_Send extends DefaultPanel {
 	private boolean send_test(ArrayList<String> arr_numbers) {
 		if(upload_wavfiles(false)) {
 			if(send_testadrfile(arr_numbers)) {
-				parent.set_comstatus(PAS.l("main_sending_message_sent") + " " + get_refno());
+                parent.set_comstatus(Localization.l("main_sending_message_sent") + " " + get_refno());
 				return true;
 			}
 		}
@@ -391,7 +392,7 @@ public class Sending_Send extends DefaultPanel {
 		return true;
 	}
 	protected boolean retrieve_refno(boolean b_indicator, String sz_callback) {
-		parent.set_comstatus(PAS.l("main_sending_refno_retrieving"));
+        parent.set_comstatus(Localization.l("main_sending_refno_retrieving"));
 		boolean b = false;
 		if(b_indicator)
 			set_refnostatus(INDICATOR_YELLOW_);
@@ -426,7 +427,7 @@ public class Sending_Send extends DefaultPanel {
 			catch(Exception e)
 			{
 				e.printStackTrace();
-				parent.set_comstatus(PAS.l("main_sending_error_retrieving_refno"));				
+                parent.set_comstatus(Localization.l("main_sending_error_retrieving_refno"));
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());

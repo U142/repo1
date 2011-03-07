@@ -1,7 +1,7 @@
 package no.ums.pas.plugins.centric.status;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
@@ -38,13 +38,13 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(PAS.l("common_completed"));
-    private StdTextLabel m_lbl_hdr_total = new StdTextLabel(PAS.l("common_total"));
-    private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(PAS.l("common_percent"));
-    private StdTextLabel m_lbl_hdr_channel = new StdTextLabel(PAS.l("common_channel"));
-    private StdTextLabel m_lbl_hdr_duration = new StdTextLabel(PAS.l("common_duration"));
-    private StdTextLabel m_lbl_hdr_start = new StdTextLabel(PAS.l("common_start"));
-    private StdTextLabel m_lbl_hdr_unknown = new StdTextLabel(PAS.l("main_sending_type_unknown"));
+	private StdTextLabel m_lbl_hdr_completed = new StdTextLabel(Localization.l("common_completed"));
+    private StdTextLabel m_lbl_hdr_total = new StdTextLabel(Localization.l("common_total"));
+    private StdTextLabel m_lbl_hdr_percent = new StdTextLabel(Localization.l("common_percent"));
+    private StdTextLabel m_lbl_hdr_channel = new StdTextLabel(Localization.l("common_channel"));
+    private StdTextLabel m_lbl_hdr_duration = new StdTextLabel(Localization.l("common_duration"));
+    private StdTextLabel m_lbl_hdr_start = new StdTextLabel(Localization.l("common_start"));
+    private StdTextLabel m_lbl_hdr_unknown = new StdTextLabel(Localization.l("main_sending_type_unknown"));
     private StdTextLabel m_lbl_completed = new StdTextLabel("");
 	private StdTextLabel m_lbl_total = new StdTextLabel("");
 	private StdTextLabel m_lbl_percent = new StdTextLabel("");
@@ -114,19 +114,19 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_hdr_total, m_gridconst);
-		m_lbl_hdr_total.setToolTipText(PAS.l("main_status_lba_total_number_of_cells"));
+        m_lbl_hdr_total.setToolTipText(Localization.l("main_status_lba_total_number_of_cells"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_total, m_gridconst);
 		
 		set_gridconst(0, inc_panels(), 1, 1);	
 		add(m_lbl_hdr_completed, m_gridconst);
-		m_lbl_hdr_completed.setToolTipText(PAS.l("main_status_lba_cells_sending"));
+        m_lbl_hdr_completed.setToolTipText(Localization.l("main_status_lba_cells_sending"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_completed, m_gridconst);
 		
 		set_gridconst(0, inc_panels(), 1, 1);
 		add(m_lbl_hdr_unknown, m_gridconst);
-		m_lbl_hdr_unknown.setToolTipText(PAS.l("main_status_lba_cells_unavailable"));
+        m_lbl_hdr_unknown.setToolTipText(Localization.l("main_status_lba_cells_unavailable"));
 		set_gridconst(1, get_panel(), 1, 1);
 		add(m_lbl_unknown, m_gridconst);
 		
@@ -177,10 +177,10 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		percent = tmp_percent;
 		if(total<=0)
 			percent=0;
-		get_lbl_completed().setText(String.valueOf(total_ok<0?PAS.l("common_na"):total_ok));
-		get_lbl_unknown().setText(String.valueOf(total<0?PAS.l("common_na"):tmp_total_unknown));
-		get_lbl_total().setText(String.valueOf(total<0?PAS.l("common_na"):total));
-		get_lbl_unknown().setText(String.valueOf(unknown<0?PAS.l("common_na"):unknown));
+        get_lbl_completed().setText(String.valueOf(total_ok<0? Localization.l("common_na") :total_ok));
+        get_lbl_unknown().setText(String.valueOf(total<0? Localization.l("common_na") :tmp_total_unknown));
+        get_lbl_total().setText(String.valueOf(total<0? Localization.l("common_na") :total));
+        get_lbl_unknown().setText(String.valueOf(unknown<0? Localization.l("common_na") :unknown));
 		get_lbl_percent().setText(String.valueOf(percent));
 		// Channel
 		get_lbl_channel().setText(String.valueOf(cbs.getLChannel()));
@@ -206,7 +206,7 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 			timestamp = cbs.getLLastTs();
 		else
 			timestamp = db_timestamp;*/
-		get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),timestamp)) + " " + PAS.l("common_minutes_maybe"));
+        get_lbl_duration().setText(String.valueOf(TextFormat.datetime_diff_minutes(cbs.getLCreatedTs(),timestamp)) + " " + Localization.l("common_minutes_maybe"));
 		
 		
 		m_sz_status_abb = "";
@@ -217,22 +217,22 @@ public class CentricOperatorStatus extends DefaultPanel implements ComponentList
 		{
 		case INITIALIZING:
 		case ACTIVE:
-			m_sz_status_abb += PAS.l("main_status_lba_progress_active_abb");
-			m_sz_status_tooltip = PAS.l("main_status_lba_progress_active");
+            m_sz_status_abb += Localization.l("main_status_lba_progress_active_abb");
+            m_sz_status_tooltip = Localization.l("main_status_lba_progress_active");
 			//active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 			break;
 		case KILLING:
-			m_sz_status_abb += PAS.l("main_status_lba_progress_killing_abb");
-			m_sz_status_tooltip = PAS.l("main_status_lba_progress_killing");
+            m_sz_status_abb += Localization.l("main_status_lba_progress_killing_abb");
+            m_sz_status_tooltip = Localization.l("main_status_lba_progress_killing");
 			//active.put(currentstatus.getLRefno(), currentstatus.getLRefno());
 			break;
 		case FINISHED:
-			m_sz_status_abb += PAS.l("main_status_lba_progress_finished_abb");
-			m_sz_status_tooltip = PAS.l("main_status_lba_progress_finished");
+            m_sz_status_abb += Localization.l("main_status_lba_progress_finished_abb");
+            m_sz_status_tooltip = Localization.l("main_status_lba_progress_finished");
 			break;
 		case ERROR:
-			m_sz_status_abb += PAS.l("main_status_lba_progress_error_abb");
-			m_sz_status_tooltip = PAS.l("main_status_lba_progress_error");
+            m_sz_status_abb += Localization.l("main_status_lba_progress_error_abb");
+            m_sz_status_tooltip = Localization.l("main_status_lba_progress_error");
 			break;
 		}
 		m_sz_status_abb += "</font>";

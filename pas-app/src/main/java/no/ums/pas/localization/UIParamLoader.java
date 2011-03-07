@@ -23,12 +23,12 @@ public class UIParamLoader extends ClassLoader
 		try
 		{
 			UIDefaults defaults = UIManager.getDefaults();
-			
-			System.out.println(PAS.l("common_yes"));
-			defaults.put("OptionPane.cancelButtonText", PAS.l("common_cancel"));
-			defaults.put("OptionPane.noButtonText", PAS.l("common_no"));
-			defaults.put("OptionPane.okButtonText", PAS.l("common_ok"));
-			defaults.put("OptionPane.yesButtonText", PAS.l("common_yes"));
+
+            System.out.println(Localization.l("common_yes"));
+            defaults.put("OptionPane.cancelButtonText", Localization.l("common_cancel"));
+            defaults.put("OptionPane.noButtonText", Localization.l("common_no"));
+            defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
+            defaults.put("OptionPane.yesButtonText", Localization.l("common_yes"));
 			/*
 			 * List defaults
 			 * 
@@ -154,14 +154,14 @@ public class UIParamLoader extends ClassLoader
 				}
 				catch(Exception e)
 				{
-					Error.getError().addError(PAS.l("common_warning"), "Error in UI parameters", e, Error.SEVERITY_WARNING);
+                    Error.getError().addError(Localization.l("common_warning"), "Error in UI parameters", e, Error.SEVERITY_WARNING);
 				}
 			}
 			return true;
 		}
 		catch(Exception e)
 		{
-			throw new ParameterNotFoundException(PAS.l("common_warning"), "Could not load UI parameter." + e.getMessage());
+            throw new ParameterNotFoundException(Localization.l("common_warning"), "Could not load UI parameter." + e.getMessage());
 		}
 	}
 	
@@ -180,7 +180,7 @@ public class UIParamLoader extends ClassLoader
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_warning"), String.format("Servers UI defaults file could not be loaded (%s)",file), e, Error.SEVERITY_WARNING);
+            Error.getError().addError(Localization.l("common_warning"), String.format("Servers UI defaults file could not be loaded (%s)",file), e, Error.SEVERITY_WARNING);
 			return false;			
 		}
 	}
@@ -206,7 +206,7 @@ public class UIParamLoader extends ClassLoader
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_warning"), String.format("UI defaults file could not be loaded (%s)",sz_filename), e, Error.SEVERITY_WARNING);
+            Error.getError().addError(Localization.l("common_warning"), String.format("UI defaults file could not be loaded (%s)",sz_filename), e, Error.SEVERITY_WARNING);
 			return false;
 		}
 		/*

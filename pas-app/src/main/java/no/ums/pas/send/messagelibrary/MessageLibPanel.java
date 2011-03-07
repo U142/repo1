@@ -1,9 +1,9 @@
 package no.ums.pas.send.messagelibrary;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.StdSearchArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -31,9 +31,9 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 		this.callback = callback;
 		treepanel = new MessageLibTreePanel(this, (b_editor_mode ? TREEMODE.EDITOR : TREEMODE.SELECTION_ONLY), UPDATE_INTERVAL, b_editor_mode);
 		editpanel = new MessageEditPanel(this, b_editor_mode, b_enable_multi_cc);
-		search = new StdSearchArea("", false, PAS.l("common_search"));
+        search = new StdSearchArea("", false, Localization.l("common_search"));
 		search.addActionListener(this);
-		lbl_treeinfo = new StdTextLabel("  " + PAS.l("main_message_library_tree_info"));
+        lbl_treeinfo = new StdTextLabel("  " + Localization.l("main_message_library_tree_info"));
 		addComponentListener(this);
 		add_controls();
 		init();

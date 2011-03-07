@@ -1,6 +1,7 @@
 package no.ums.pas.core.mainui.address_search;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.JFrame;
@@ -24,7 +25,7 @@ public class SearchFrame extends JFrame implements ComponentListener {
 	
 	public SearchFrame()
 	{
-		super(PAS.l("adrsearch_dlg_title"));
+        super(Localization.l("adrsearch_dlg_title"));
 		m_panel.init();
 		this.setIconImage(PAS.get_pas().getIconImage());
 		initialize();
@@ -89,7 +90,7 @@ public class SearchFrame extends JFrame implements ComponentListener {
 		}
 		catch(SecurityException e) {
 			PAS.get_pas().add_event("setAlwaysOnTop() : Security exception", e);
-			Error.getError().addError(PAS.l("common_error"),"SearchFrame Exception in activate",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SearchFrame Exception in activate",e,1);
 		}
 
 	}
@@ -100,7 +101,7 @@ public class SearchFrame extends JFrame implements ComponentListener {
 		try {
 			//UIManager.setLookAndFeel(PAS.get_pas().get_lookandfeel());
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"SearchFrame Exception in initUI",e,1);
+            Error.getError().addError(Localization.l("common_error"),"SearchFrame Exception in initUI",e,1);
 		}
 		SwingUtilities.updateComponentTreeUI(this);
 	}

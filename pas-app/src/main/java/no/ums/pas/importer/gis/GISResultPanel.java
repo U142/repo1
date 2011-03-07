@@ -2,6 +2,7 @@ package no.ums.pas.importer.gis;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.LetterPairSimilarity;
@@ -204,7 +205,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 				if(m_parent.get_loader()!=null)
 				{
 					m_parent.get_loader().set_currentitem(get_gislist().size());
-					m_parent.get_loader().set_text(PAS.l("common_finished"));
+                    m_parent.get_loader().set_text(Localization.l("common_finished"));
 					
 				}
 

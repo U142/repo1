@@ -27,7 +27,6 @@ import no.ums.ws.common.PASHAPETYPES;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.*;
-import no.ums.ws.pas.*;
 import no.ums.ws.pas.ArrayOfUDEPARTMENT;
 
 import javax.swing.*;

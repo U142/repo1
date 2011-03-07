@@ -2,6 +2,7 @@ package no.ums.pas.core.mainui.address_search;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 
@@ -101,10 +102,10 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
 	
 	void prepare_controls()
 	{
-		m_txt_address		= new StdTextLabel(PAS.l("adrsearch_dlg_address_and_house"));
-		m_txt_postno		= new StdTextLabel(PAS.l("adrsearch_dlg_postcode_place"));
-		m_txt_region		= new StdTextLabel(PAS.l("adrsearch_dlg_region"));
-		m_txt_country		= new StdTextLabel(PAS.l("adrsearch_dlg_country"));
+        m_txt_address		= new StdTextLabel(Localization.l("adrsearch_dlg_address_and_house"));
+        m_txt_postno		= new StdTextLabel(Localization.l("adrsearch_dlg_postcode_place"));
+        m_txt_region		= new StdTextLabel(Localization.l("adrsearch_dlg_region"));
+        m_txt_country		= new StdTextLabel(Localization.l("adrsearch_dlg_country"));
 		m_txt_address.setFocusable(false);
 		m_txt_postno.setFocusable(false);
 		m_txt_region.setFocusable(false);
@@ -132,7 +133,7 @@ public class SearchPanelVals extends DefaultPanel implements KeyListener {
         m_val_region.setPreferredSize(new Dimension(134, 15));
         m_val_country.setPreferredSize(new Dimension(134, 15));*/
 
-        m_btn_search = new JButton(PAS.l("common_search"));
+        m_btn_search = new JButton(Localization.l("common_search"));
         m_btn_search.setVerticalTextPosition(AbstractButton.CENTER);
         m_btn_search.setHorizontalTextPosition(AbstractButton.LEFT);
         m_btn_search.setMnemonic('s');

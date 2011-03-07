@@ -1,7 +1,7 @@
 package no.ums.pas.maps.defines;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.localization.Localization;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -64,7 +64,7 @@ public class PLMNShape extends ShapeStruct
 		int y = Variables.getMapFrame().getHeight()/2;
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		String sOutput = "";
-		sOutput = PAS.l("main_sending_type_national") + "\n" + shapeName;
+        sOutput = Localization.l("main_sending_type_national") + "\n" + shapeName;
 		String[] arr = sOutput.split("\n");
 
 		int borderline = 10;

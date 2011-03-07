@@ -108,10 +108,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
 	public boolean onAfterPowerUp(LogonDialog dlg, WSPowerup ws) {
 		if(ws.getResult()==WSRESULTCODE.OK) {
-            dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_active"));
+            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_active"));
         }
 		else {
-            dlg.setTitle(PAS.l("logon_heading") + " - " + PAS.l("logon_ws_inactive"));
+            dlg.setTitle(Localization.l("logon_heading") + " - " + Localization.l("logon_ws_inactive"));
         }
 		try {
 			dlg.setMaxLogonTries(ws.getResponse().getLMaxLogontries());
@@ -298,10 +298,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onSetAppTitle(PAS pas, String s, final UserInfo userinfo)
 	{
 		if(s.length()==0) {
-            s = PAS.l("common_app_title");
+            s = Localization.l("common_app_title");
         }
 		pas.setMainTitle(s + " - " + pas.get_sitename());
-		pas.setTitle(pas.getMainTitle() + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project")); //+ m_sz_sitename);		
+        pas.setTitle(pas.getMainTitle() + "        " + Localization.l("projectdlg_project") + " - " + Localization.l("projectdlg_no_project")); //+ m_sz_sitename);
 		return true;
 	}
 	@Override
@@ -343,7 +343,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		case 4: //TAS
 			pas.get_mainmenu().setTASMode(true);
 			//pas.setAppTitle("UMS - " + PAS.l("main_tas_appname"));
-			onSetAppTitle(pas, "UMS - " + PAS.l("main_tas_appname"), PAS.get_pas().get_userinfo());
+            onSetAppTitle(pas, "UMS - " + Localization.l("main_tas_appname"), PAS.get_pas().get_userinfo());
 			pas.get_eastcontent().InitTAS();
 			pas.get_eastcontent().flip_to(EastContent.PANEL_TAS_);
 			pas.get_mainmenu().enable_mapsite(false);
@@ -369,10 +369,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onAddInfoTab(JTabbedPane tab, InfoPanel panel) {
-		tab.addTab(PAS.l("main_infotab_title"), null,
+        tab.addTab(Localization.l("main_infotab_title"), null,
 				panel,
 				//sp,
-				PAS.l("main_infotab_title_tooltip"));
+                Localization.l("main_infotab_title_tooltip"));
 		return true;
 	}
 	
@@ -587,24 +587,24 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			else if(sz_class.equals("com.ums.UmsCommon.UNoAccessOperatorsException"))
 			{
 				//JOptionPane.showMessageDialog(null, "No operators are active at the moment.\nAborting sending...", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
-				JOptionPane.showMessageDialog(null, PAS.l("main_sending_lba_error_no_operators"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, Localization.l("main_sending_lba_error_no_operators"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 				return true;
 			}
 			else if(sz_class.equals("com.ums.UmsCommon.UEmptySMSMessageException"))
 			{
-				JOptionPane.showMessageDialog(null, PAS.l("main_sending_warning_empty_sms"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+                JOptionPane.showMessageDialog(null, Localization.l("main_sending_warning_empty_sms"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 			else if(sz_class.equals("com.ums.UmsCommon.UEmptySMSOadcException"))
 			{
-				JOptionPane.showMessageDialog(null, PAS.l("main_sending_warning_empty_sms_oadc"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+                JOptionPane.showMessageDialog(null, Localization.l("main_sending_warning_empty_sms_oadc"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 			else if(sz_class.equals("com.ums.UmsCommon.URefnoException"))
 			{
-				JOptionPane.showMessageDialog(null, PAS.l("main_sending_error_retrieving_refno"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);				
+                JOptionPane.showMessageDialog(null, Localization.l("main_sending_error_retrieving_refno"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(null, "An unexpected error occured\n\n" + e.getMessage(), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An unexpected error occured\n\n" + e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		return false;
@@ -646,10 +646,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				switch(info.get_session_inactive_reason())
 				{
 				case DELETED:
-					JOptionPane.showMessageDialog(null, PAS.l("logon_error_user_blocked"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, Localization.l("logon_error_user_blocked"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 					break;
 				case EXPIRED:
-					JOptionPane.showMessageDialog(null, PAS.l("logon_error_user_session_timeout"), PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, Localization.l("logon_error_user_session_timeout"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 				Logon logon = new Logon(PAS.get_pas(), new LogonInfo(PAS.get_pas().get_settings().getUsername(),
@@ -738,7 +738,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         final StringWriter aboutContent = new StringWriter();
         final PrintWriter about = new PrintWriter(aboutContent);
 
-        about.println(PAS.l("common_aboutbox_content"));
+        about.println(Localization.l("common_aboutbox_content"));
         about.println();
         about.println();
 //        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
@@ -762,7 +762,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         }
 	    about.close();
 
-        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), PAS.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), Localization.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}
 
@@ -1122,7 +1122,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onShowContactinformation() {
-		JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("common_helpdesk_contact"), PAS.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(PAS.get_pas(), Localization.l("common_helpdesk_contact"), Localization.l("common_contact_information"), JOptionPane.INFORMATION_MESSAGE);
 		return true;
 	}
 

@@ -3,6 +3,7 @@ package no.ums.pas.core.mainui;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUOpenStatus;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
@@ -29,7 +30,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	{
 		super(sz_columns, n_width, null, new Dimension(800, 200), ListSelectionModel.SINGLE_SELECTION);
 		m_statusframe = statusframe;
-		m_popup = new PUOpenStatus(pas, PAS.l("common_open"), this);
+        m_popup = new PUOpenStatus(pas, Localization.l("common_open"), this);
 	}
 	protected void valuesChanged() { }
 

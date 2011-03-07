@@ -1,6 +1,6 @@
 package no.ums.pas.status;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.ws.common.LBALanguage;
 
 import javax.swing.JProgressBar;
@@ -149,62 +149,62 @@ public class LBASEND
 	public final static Hashtable<Integer, String> LBASTATUS = new Hashtable<Integer, String>();
 	public static void CreateLbaStatusHash()
 	{
-		LBASTATUS.put(LBASTATUS_INITED, String.format(PAS.l("main_statustext_lba_inited"), "UMS"));
-		LBASTATUS.put(LBASTATUS_SENT_TO_LBA, PAS.l("main_statustext_lba_sent_to_server"));
-		LBASTATUS.put(LBASTATUS_PARSING_LBAS, PAS.l("main_statustext_lba_parsing"));
-		LBASTATUS.put(LBASTATUS_PARSING_LBAS_FAILED_TO_SEND, PAS.l("main_statustext_lba_service_not_available"));
-		
-		LBASTATUS.put(LBASTATUS_PREPARING_CELLVISION, String.format(PAS.l("main_statustext_lba_preparing_operator"), "Operator"));
-		LBASTATUS.put(LBASTATUS_PREPARED_CELLVISION, String.format(PAS.l("main_statustext_lba_prepared_operator"), "Operator"));
-		LBASTATUS.put(LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE, String.format(PAS.l("main_statustext_lba_prepared_operator_count_complete"), "Operator"));
-		LBASTATUS.put(LBASTATUS_PROCESSING_SUBSCRIBERS_CELLVISION, String.format(PAS.l("main_statustext_lba_processing_subscribers"), "Operator"));
-		LBASTATUS.put(LBASTATUS_CONFIRMED_BY_USER, PAS.l("main_statustext_lba_confirmed_by_user"));
-		LBASTATUS.put(LBASTATUS_CANCELLED_BY_USER, PAS.l("main_statustext_lba_cancelled_by_user"));
-		LBASTATUS.put(LBASTATUS_SENDING, PAS.l("main_statustext_lba_sending"));
-		
-		LBASTATUS.put(TASSTATUS_PREPARING_CELLVISION, String.format(PAS.l("main_statustext_lba_preparing_operator"), "Operator"));
-		LBASTATUS.put(TASSTATUS_PREPARED_CELLVISION, String.format(PAS.l("main_statustext_lba_prepared_operator"), "Operator"));
-		LBASTATUS.put(TASSTATUS_PREPARED_CELLVISION_COUNT_COMPLETE, String.format(PAS.l("main_statustext_lba_prepared_operator_count_complete"), "Operator"));
-		LBASTATUS.put(TASSTATUS_PROCESSING_SUBSCRIBERS_CELLVISION, String.format(PAS.l("main_statustext_lba_processing_subscribers"), "Operator"));
-		LBASTATUS.put(TASSTATUS_CONFIRMED_BY_USER, PAS.l("main_statustext_lba_confirmed_by_user"));
-		LBASTATUS.put(TASSTATUS_CANCELLED_BY_USER, PAS.l("main_statustext_lba_cancelled_by_user"));
-		LBASTATUS.put(TASSTATUS_SENDING, PAS.l("main_statustext_lba_sending"));
+        LBASTATUS.put(LBASTATUS_INITED, String.format(Localization.l("main_statustext_lba_inited"), "UMS"));
+        LBASTATUS.put(LBASTATUS_SENT_TO_LBA, Localization.l("main_statustext_lba_sent_to_server"));
+        LBASTATUS.put(LBASTATUS_PARSING_LBAS, Localization.l("main_statustext_lba_parsing"));
+        LBASTATUS.put(LBASTATUS_PARSING_LBAS_FAILED_TO_SEND, Localization.l("main_statustext_lba_service_not_available"));
 
-		LBASTATUS.put(LBASTATUS_CANCEL_IN_PROGRESS, PAS.l("main_statustext_lba_cancel_in_progress"));
-		LBASTATUS.put(LBASTATUS_FINISHED, PAS.l("common_finished"));
-		LBASTATUS.put(LBASTATUS_CANCELLED, PAS.l("common_cancelled"));
-		LBASTATUS.put(LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM, PAS.l("main_statustext_lba_cancelled_by_user_or_system"));
-		LBASTATUS.put(LBASTATUS_CANCELLED_AFTER_LOOKUP, PAS.l("common_cancelled"));
-		LBASTATUS.put(LBASTATUS_COULD_NOT_PUBLISH_LBA_FILE, PAS.l("main_statustext_lba_ws_error"));
+        LBASTATUS.put(LBASTATUS_PREPARING_CELLVISION, String.format(Localization.l("main_statustext_lba_preparing_operator"), "Operator"));
+        LBASTATUS.put(LBASTATUS_PREPARED_CELLVISION, String.format(Localization.l("main_statustext_lba_prepared_operator"), "Operator"));
+        LBASTATUS.put(LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE, String.format(Localization.l("main_statustext_lba_prepared_operator_count_complete"), "Operator"));
+        LBASTATUS.put(LBASTATUS_PROCESSING_SUBSCRIBERS_CELLVISION, String.format(Localization.l("main_statustext_lba_processing_subscribers"), "Operator"));
+        LBASTATUS.put(LBASTATUS_CONFIRMED_BY_USER, Localization.l("main_statustext_lba_confirmed_by_user"));
+        LBASTATUS.put(LBASTATUS_CANCELLED_BY_USER, Localization.l("main_statustext_lba_cancelled_by_user"));
+        LBASTATUS.put(LBASTATUS_SENDING, Localization.l("main_statustext_lba_sending"));
 
-		LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_AREAALERT, PAS.l("main_statustext_ex_areaalert"));
-		LBASTATUS.put(LBASTATUS_EXCEPTION_PREPARE_AREAALERT, PAS.l("main_statustext_ex_areaalert_prepare"));
-		LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_CUSTOMALERT, PAS.l("main_statustext_ex_customalert"));
-		LBASTATUS.put(LBASTATUS_EXCEPTION_PREPARE_CUSTOMALERT, PAS.l("main_statustext_ex_customalert_prepare"));
-		
-		LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_PREPARED_ALERT, PAS.l("main_statustext_ex_preparedalert"));
-		LBASTATUS.put(LBASTATUS_EXCEPTION_CANCEL_PREPARED_ALERT, PAS.l("main_statustext_ex_cancel_preparedalert"));
-		
-		LBASTATUS.put(TASSTATUS_EXCEPTION_EXECUTE_INT_ALERT, PAS.l("main_statustext_ex_intalert_execute"));
-		LBASTATUS.put(TASSTATUS_EXCEPTION_PREPARE_INT_ALERT, PAS.l("main_statustext_ex_intalert_prepare"));
-		
-		LBASTATUS.put(TASSTATUS_FAILED_EXECUTE_INT_ALERT, PAS.l("main_statustext_fail_intalert_execute"));
-		LBASTATUS.put(TASSTATUS_FAILED_PREPARE_INT_ALERT, PAS.l("main_statustext_fail_intalert_prepare"));
-		
-		LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_AREAALERT, PAS.l("main_statustext_fail_areaalert_execute"));
-		LBASTATUS.put(LBASTATUS_FAILED_PREPARE_AREAALERT, PAS.l("main_statustext_fail_areaalert_prepare"));		
-		LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_CUSTOMALERT, PAS.l("main_statustext_fail_customalert_execute"));
-		LBASTATUS.put(LBASTATUS_FAILED_PREPARE_CUSTOMALERT, PAS.l("main_statustext_fail_customalert_prepare"));
-		LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_PREPARED_ALERT, PAS.l("main_statustext_fail_preparedalert_execute"));
-		LBASTATUS.put(LBASTATUS_FAILED_CANCEL_PREPARED_ALERT, PAS.l("main_statustext_fail_preparedalert_cancel"));
-		
-		LBASTATUS.put(LBASTATUS_MISSING_TAG_TEXTMESSAGES, PAS.l("main_statustext_missing_tag_textmessages"));
-		LBASTATUS.put(LBASTATUS_MISSING_ATTRIBUTE_AREANAME, PAS.l("main_statustext_missing_attribute_areaname"));
-		LBASTATUS.put(LBASTATUS_MISSING_TAG_POLYGON_ELLIPSE, PAS.l("main_statustext_missing_tag_polygon_ellipse"));
-		LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_EXCEPTION, PAS.l("main_statustext_ex_get_alert_message"));
-		LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_FAILED_MISSING_CC_TAG, PAS.l("main_statustext_fail_get_alert_msg_m_cc"));
-		
-		LBASTATUS.put(CELLVISION_JOB_STATUS_ERROR, PAS.l("main_statustext_fail_cellvision_job_error"));
+        LBASTATUS.put(TASSTATUS_PREPARING_CELLVISION, String.format(Localization.l("main_statustext_lba_preparing_operator"), "Operator"));
+        LBASTATUS.put(TASSTATUS_PREPARED_CELLVISION, String.format(Localization.l("main_statustext_lba_prepared_operator"), "Operator"));
+        LBASTATUS.put(TASSTATUS_PREPARED_CELLVISION_COUNT_COMPLETE, String.format(Localization.l("main_statustext_lba_prepared_operator_count_complete"), "Operator"));
+        LBASTATUS.put(TASSTATUS_PROCESSING_SUBSCRIBERS_CELLVISION, String.format(Localization.l("main_statustext_lba_processing_subscribers"), "Operator"));
+        LBASTATUS.put(TASSTATUS_CONFIRMED_BY_USER, Localization.l("main_statustext_lba_confirmed_by_user"));
+        LBASTATUS.put(TASSTATUS_CANCELLED_BY_USER, Localization.l("main_statustext_lba_cancelled_by_user"));
+        LBASTATUS.put(TASSTATUS_SENDING, Localization.l("main_statustext_lba_sending"));
+
+        LBASTATUS.put(LBASTATUS_CANCEL_IN_PROGRESS, Localization.l("main_statustext_lba_cancel_in_progress"));
+        LBASTATUS.put(LBASTATUS_FINISHED, Localization.l("common_finished"));
+        LBASTATUS.put(LBASTATUS_CANCELLED, Localization.l("common_cancelled"));
+        LBASTATUS.put(LBASTATUS_CANCELLED_BY_USER_OR_SYSTEM, Localization.l("main_statustext_lba_cancelled_by_user_or_system"));
+        LBASTATUS.put(LBASTATUS_CANCELLED_AFTER_LOOKUP, Localization.l("common_cancelled"));
+        LBASTATUS.put(LBASTATUS_COULD_NOT_PUBLISH_LBA_FILE, Localization.l("main_statustext_lba_ws_error"));
+
+        LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_AREAALERT, Localization.l("main_statustext_ex_areaalert"));
+        LBASTATUS.put(LBASTATUS_EXCEPTION_PREPARE_AREAALERT, Localization.l("main_statustext_ex_areaalert_prepare"));
+        LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_CUSTOMALERT, Localization.l("main_statustext_ex_customalert"));
+        LBASTATUS.put(LBASTATUS_EXCEPTION_PREPARE_CUSTOMALERT, Localization.l("main_statustext_ex_customalert_prepare"));
+
+        LBASTATUS.put(LBASTATUS_EXCEPTION_EXECUTE_PREPARED_ALERT, Localization.l("main_statustext_ex_preparedalert"));
+        LBASTATUS.put(LBASTATUS_EXCEPTION_CANCEL_PREPARED_ALERT, Localization.l("main_statustext_ex_cancel_preparedalert"));
+
+        LBASTATUS.put(TASSTATUS_EXCEPTION_EXECUTE_INT_ALERT, Localization.l("main_statustext_ex_intalert_execute"));
+        LBASTATUS.put(TASSTATUS_EXCEPTION_PREPARE_INT_ALERT, Localization.l("main_statustext_ex_intalert_prepare"));
+
+        LBASTATUS.put(TASSTATUS_FAILED_EXECUTE_INT_ALERT, Localization.l("main_statustext_fail_intalert_execute"));
+        LBASTATUS.put(TASSTATUS_FAILED_PREPARE_INT_ALERT, Localization.l("main_statustext_fail_intalert_prepare"));
+
+        LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_AREAALERT, Localization.l("main_statustext_fail_areaalert_execute"));
+        LBASTATUS.put(LBASTATUS_FAILED_PREPARE_AREAALERT, Localization.l("main_statustext_fail_areaalert_prepare"));
+        LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_CUSTOMALERT, Localization.l("main_statustext_fail_customalert_execute"));
+        LBASTATUS.put(LBASTATUS_FAILED_PREPARE_CUSTOMALERT, Localization.l("main_statustext_fail_customalert_prepare"));
+        LBASTATUS.put(LBASTATUS_FAILED_EXECUTE_PREPARED_ALERT, Localization.l("main_statustext_fail_preparedalert_execute"));
+        LBASTATUS.put(LBASTATUS_FAILED_CANCEL_PREPARED_ALERT, Localization.l("main_statustext_fail_preparedalert_cancel"));
+
+        LBASTATUS.put(LBASTATUS_MISSING_TAG_TEXTMESSAGES, Localization.l("main_statustext_missing_tag_textmessages"));
+        LBASTATUS.put(LBASTATUS_MISSING_ATTRIBUTE_AREANAME, Localization.l("main_statustext_missing_attribute_areaname"));
+        LBASTATUS.put(LBASTATUS_MISSING_TAG_POLYGON_ELLIPSE, Localization.l("main_statustext_missing_tag_polygon_ellipse"));
+        LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_EXCEPTION, Localization.l("main_statustext_ex_get_alert_message"));
+        LBASTATUS.put(LBASTATUS_GET_ALERT_MESSAGE_FAILED_MISSING_CC_TAG, Localization.l("main_statustext_fail_get_alert_msg_m_cc"));
+
+        LBASTATUS.put(CELLVISION_JOB_STATUS_ERROR, Localization.l("main_statustext_fail_cellvision_job_error"));
 	
 	}
 	

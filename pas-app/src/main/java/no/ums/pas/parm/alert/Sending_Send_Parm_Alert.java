@@ -1,6 +1,7 @@
 package no.ums.pas.parm.alert;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.sendpanels.Sending_Send;
 import no.ums.pas.sound.SoundFile;
 import no.ums.pas.ums.errorhandling.Error;
@@ -34,9 +35,9 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		//btn_send = new JButton("send");
 		//btn_send.addActionListener(this);
 		//btn_send.setActionCommand("act_send");
-		m_txt_refno = new StdTextLabel(PAS.l("common_refno"), 400, 14, true);
-		m_txt_adrfile = new StdTextLabel(PAS.l("main_sending_address_file"), 400, 14, true);
-		m_txt_activate_ext = new StdTextLabel(PAS.l("main_parm_alert_dlg_activate_for_ext_exec"), true, 180);
+        m_txt_refno = new StdTextLabel(Localization.l("common_refno"), 400, 14, true);
+        m_txt_adrfile = new StdTextLabel(Localization.l("main_sending_address_file"), 400, 14, true);
+        m_txt_activate_ext = new StdTextLabel(Localization.l("main_parm_alert_dlg_activate_for_ext_exec"), true, 180);
 		if(PAS.icon_version==2)
 		{
 			m_icon_indicator[0] = ImageLoader.load_icon("status_red_16.png");
@@ -123,7 +124,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		m_lbl_wav_upload = new JLabel[parent.get_files().length];
 		for(int i=0; i < m_txt_wav_upload.length; i++) {
 			m_lbl_wav_upload[i] = new JLabel(m_icon_indicator[INDICATOR_RED_]);
-			m_txt_wav_upload[i] = new StdTextLabel(PAS.l("common_file") + " - " + parent.get_files()[i].get_soundfile().get_name() + " (" + parent.get_files()[i].get_soundfile().get_modulename() + ")", 400, 14, true);
+            m_txt_wav_upload[i] = new StdTextLabel(Localization.l("common_file") + " - " + parent.get_files()[i].get_soundfile().get_name() + " (" + parent.get_files()[i].get_soundfile().get_modulename() + ")", 400, 14, true);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -137,18 +138,18 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 			retrieve_refno(true, "act_set_refno");
 		} else if("act_set_refno".equals(e.getActionCommand())) { //wait for refno, then send
 			m_n_refno = ((Integer)e.getSource()).intValue();
-			m_txt_refno.setText(PAS.l("common_refno") + " - " + m_n_refno);
-			parent.set_comstatus(PAS.l("main_sending_refno_retrieved") + " - " + m_n_refno);
+            m_txt_refno.setText(Localization.l("common_refno") + " - " + m_n_refno);
+            parent.set_comstatus(Localization.l("main_sending_refno_retrieved") + " - " + m_n_refno);
 			set_refnostatus(INDICATOR_GREEN_);
 			if(send()) {
-				parent.get_btn_next().setText(PAS.l("common_finish"));
+                parent.get_btn_next().setText(Localization.l("common_finish"));
 				parent.get_btn_next().setActionCommand("act_finish");
 			}
 			parent.get_btn_next().setEnabled(true);
 		} else if("act_send_test".equals(e.getActionCommand())) {
 			String sz_number = m_txt_sendtest.getText();
 			if(sz_number.length() < 8) {
-				JOptionPane.showMessageDialog(this, PAS.l("main_sending_send_test_warning"));
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_send_test_warning"));
 				return;
 			}
 			parent.get_btn_next().setEnabled(false);
@@ -156,7 +157,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		} else if("act_set_testrefno".equals(e.getActionCommand())) {
 			String sz_number = m_txt_sendtest.getText();
 			m_n_refno = ((Integer)e.getSource()).intValue();
-			parent.set_comstatus(PAS.l("main_sending_refno_test_retrieved") + " - " + m_n_refno);
+            parent.set_comstatus(Localization.l("main_sending_refno_test_retrieved") + " - " + m_n_refno);
 			ArrayList<String> arr_numbers = new ArrayList<String>();
 			//arr_numbers.add("98220213");
 			arr_numbers.add(sz_number);
@@ -173,7 +174,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		if(parent.get_files()!=null) {			
 			for(int i=0; i < parent.get_files().length; i++) {
 				try {
-					parent.set_comstatus(PAS.l("main_sending_uploading_file") + " - " + parent.get_files()[i].get_soundfile().get_name());
+                    parent.set_comstatus(Localization.l("main_sending_uploading_file") + " - " + parent.get_files()[i].get_soundfile().get_name());
 					if(b_use_indicators)
 						set_filestatus(i, INDICATOR_YELLOW_);
 					SoundFile file = parent.get_files()[i].get_soundfile();
@@ -182,18 +183,18 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 					//PAS.get_pas().add_event("Ready to send wav type " + parent.get_files()[i].get_filetype() + " refno=" + get_refno());
 					boolean b_ok = file.send_wav(get_refno(), parent.get_files()[i].get_filetype(), parent.get_files()[i].get_current_fileinfo());
 					if(!b_ok) {
-						parent.set_comstatus(PAS.l("main_sending_error_uploading_wav_file"));
+                        parent.set_comstatus(Localization.l("main_sending_error_uploading_wav_file"));
 						if(b_use_indicators)
 							set_filestatus(i, INDICATOR_RED_);
 						return false;
 					}
 					if(b_use_indicators)
 						set_filestatus(i, INDICATOR_GREEN_);
-					parent.set_comstatus(PAS.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
+                    parent.set_comstatus(Localization.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
 				} catch(Exception e) {
 					System.out.println(e.getMessage());
 					e.printStackTrace();
-					Error.getError().addError(PAS.l("common_error"),"Sending_Send Exception in upload_wavfiles",e,1);
+                    Error.getError().addError(Localization.l("common_error"),"Sending_Send Exception in upload_wavfiles",e,1);
 				}
 			}
 		}
@@ -206,12 +207,12 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 		//Serverside Script - rename wav files and upload send-data, return new refno
 		set_adrfilestatus(INDICATOR_YELLOW_);
 		if(send_adrfile()) {
-			parent.set_comstatus(PAS.l("main_sending_message_sent"));
+            parent.set_comstatus(Localization.l("main_sending_message_sent"));
 			set_adrfilestatus(INDICATOR_GREEN_);
 			return true;
 		}
 		else {
-			parent.set_comstatus(PAS.l("main_sending_error_uploading_address_file"));
+            parent.set_comstatus(Localization.l("main_sending_error_uploading_address_file"));
 			set_adrfilestatus(INDICATOR_RED_);
 		}
 		return false;
@@ -220,7 +221,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 	private boolean send_test(ArrayList<String> arr_numbers) {
 		if(upload_wavfiles(false)) {
 			if(send_testadrfile(arr_numbers)) {
-				parent.set_comstatus(PAS.l("main_sending_message_sent") + get_refno());
+                parent.set_comstatus(Localization.l("main_sending_message_sent") + get_refno());
 				return true;
 			}
 		}
@@ -233,7 +234,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 			try {
 				Thread.sleep(timer.get_msec_interval());
 			} catch(InterruptedException e) {
-				Error.getError().addError(PAS.l("common_error"),"Sending_Send Exception in wait_for_refno",e,1);
+                Error.getError().addError(Localization.l("common_error"),"Sending_Send Exception in wait_for_refno",e,1);
 			}
 			timer.inc_timer();
 		}

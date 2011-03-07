@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.ws.WSTasResponseNumbers;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.sound.SoundlibFileTxt;
 import no.ums.pas.ums.tools.ExpiryMins;
@@ -86,8 +87,8 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		
 		if(PAS.get_pas().get_sendcontroller().get_activesending() != null && PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_ && 
 				!PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_isresend() ) {
-			
-			m_lbl_enable_response = new StdTextLabel(PAS.l("main_sending_lba_allow_response") + ":", true, 150);
+
+            m_lbl_enable_response = new StdTextLabel(Localization.l("main_sending_lba_allow_response") + ":", true, 150);
 			m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), 7, 1, GridBagConstraints.WEST);
 			m_panel_messages.add(m_lbl_enable_response, m_panel_messages.m_gridconst);
 			m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 1, 1, GridBagConstraints.WEST);
@@ -169,8 +170,8 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		pnl.add(m_btn_add);
 		pnl.add(m_btn_delete);
 		
-		m_panel_messages.add(pnl, m_panel_messages.m_gridconst);		
-		m_panel_messages.setBorder(BorderFactory.createTitledBorder(PAS.l("common_message_content")));		
+		m_panel_messages.add(pnl, m_panel_messages.m_gridconst);
+        m_panel_messages.setBorder(BorderFactory.createTitledBorder(Localization.l("common_message_content")));
 		set_gridconst(0, 0, 1, 1);
 		add(m_panel_messages, m_gridconst);
 		init();
@@ -240,7 +241,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			{
 				SoundlibFileTxt s = (SoundlibFileTxt)e.getSource();
 				m_txt_messagetext.setText(s.get_text());
-				m_txt_messagetext.setToolTipText(PAS.l("main_sending_text_template_tooltip"));
+                m_txt_messagetext.setToolTipText(Localization.l("main_sending_text_template_tooltip"));
 				UpdateTextFields();
 				n_current_bracket = -1;
 				m_txt_messagetext.requestFocus();
@@ -256,7 +257,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			else if(m_combo_replynumbers.getItemCount()==0) {
 				m_check_enable_response.setSelected(false);
 				m_combo_replynumbers.setEnabled(false);
-				JOptionPane.showMessageDialog(this,PAS.l("main_sending_warning_no_response_no"));				
+                JOptionPane.showMessageDialog(this, Localization.l("main_sending_warning_no_response_no"));
 			} else
 				m_combo_replynumbers.setEnabled(false);
 		}

@@ -270,7 +270,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			//this.setAlwaysOnTop(false);
 			//this.setModal(false);
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in SendWindow",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
 		}
 
 		setWindowTitle(m_sendobject.get_sendproperties().get_sendingname());
@@ -372,50 +372,50 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			//m_resendpanel = new Sending_AddressResend(this, controller.get_pas().get_statuscontroller().get_statuscodes(), obj.get_sendproperties().get_resend_refno());				
 			m_resendpanel = new Sending_AddressResend(this, list, obj.get_sendproperties().get_resend_refno());
 			if(obj.get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_ && obj.get_sendproperties().get_isresend()) {
-                m_tabbedpane.addTab(PAS.l("main_tas_panel_new_message") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,m_resendpanel,
+                m_tabbedpane.addTab(Localization.l("main_tas_panel_new_message") + " (" + Localization.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,m_resendpanel,
                         //"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
-                        String.format(PAS.l("main_resend_tas_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
+                        String.format(Localization.l("main_resend_tas_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
             }
 			else {
-                m_tabbedpane.addTab(PAS.l("main_status_resend") + " (" + PAS.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,
+                m_tabbedpane.addTab(Localization.l("main_status_resend") + " (" + Localization.l("main_resend_from_refno") + " " + obj.get_sendproperties().get_resend_refno() + ")", null,
                     m_resendpanel,
                     //"Include addresses for resend (from refno " + obj.get_sendproperties().get_resend_refno() + ")");
-                    String.format(PAS.l("main_resend_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
+                    String.format(Localization.l("main_resend_status_select_tooltip"), obj.get_sendproperties().get_resend_refno()));
             }
-		} else {		
-			m_tabbedpane.addTab(PAS.l("main_sending_address_overview"), null,
+		} else {
+            m_tabbedpane.addTab(Localization.l("main_sending_address_overview"), null,
 								m_addresspanel,
-								PAS.l("main_sending_address_overview_tooltip"));
+                    Localization.l("main_sending_address_overview_tooltip"));
 		}
-		m_tabbedpane.addTab(PAS.l("main_sending_settings"), null,
+        m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
 							m_settings,
-							PAS.l("main_sending_settings_tooltip"));
+                Localization.l("main_sending_settings_tooltip"));
 		int tmp = obj.get_sendproperties().get_addresstypes();
 		if(hasSMS(tmp))
 		{
-			m_tabbedpane.addTab(PAS.l("main_sending_sms_heading"), null,
+            m_tabbedpane.addTab(Localization.l("main_sending_sms_heading"), null,
 								m_sms_broadcast_text_panel,
-								PAS.l("main_sending_sms_heading_tooltip"));
+                    Localization.l("main_sending_sms_heading_tooltip"));
 			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel), true);
 		}
 
 		if(obj.get_toolbar().get_cell_broadcast_text().isSelected() || obj.get_toolbar().get_cell_broadcast_voice().isSelected()) {
-			m_tabbedpane.addTab(PAS.l("main_status_locationbased_alert"), null, 
+            m_tabbedpane.addTab(Localization.l("main_status_locationbased_alert"), null,
 							m_cell_broadcast_text_panel,
-							PAS.l("main_sending_lba_tooltip"));
+                    Localization.l("main_sending_lba_tooltip"));
 		}
-		m_tabbedpane.addTab(PAS.l("main_sending_finalize_heading"), null,
+        m_tabbedpane.addTab(Localization.l("main_sending_finalize_heading"), null,
 							m_send,
-							PAS.l("main_sending_finalize_heading_tooltip"));
+                Localization.l("main_sending_finalize_heading_tooltip"));
 		m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_send), false);
 		//m_tabbedpane.setEnabledAt(1, false);
 		m_tabbedpane.setEnabledAt(2, false);
-		
-		m_btn_next = new JButton(PAS.l("common_wizard_next"));
-		m_btn_back = new JButton(PAS.l("common_wizard_back"));
-		m_btn_simulation = new JButton(PAS.l("main_sending_simulate"));
+
+        m_btn_next = new JButton(Localization.l("common_wizard_next"));
+        m_btn_back = new JButton(Localization.l("common_wizard_back"));
+        m_btn_simulation = new JButton(Localization.l("main_sending_simulate"));
 		m_btn_simulation.setVisible(PAS.get_pas().get_rightsmanagement().cansimulate());
-		m_btn_silent = new JButton(PAS.l("common_silent"));
+        m_btn_silent = new JButton(Localization.l("common_silent"));
 		m_btn_silent.setVisible(PAS.get_pas().get_rightsmanagement().canlbasilent());
 		m_btn_next.setPreferredSize(new Dimension(100, 20));
 		m_btn_back.setPreferredSize(new Dimension(100, 20));
@@ -441,20 +441,20 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	
 	public void setWindowTitle(String s)
 	{
-		this.setTitle(PAS.l("mainmenu_file_newsending") + " - \"" + s + "\"");
+        this.setTitle(Localization.l("mainmenu_file_newsending") + " - \"" + s + "\"");
 	}
 	protected void add_controls() {
 		init();
 	}
 	public void set_comstatus(String sz_text) {
-		m_txt_comstatus.setText(PAS.l("main_sending_settings_dl_status") + sz_text);
+        m_txt_comstatus.setText(Localization.l("main_sending_settings_dl_status") + sz_text);
 	}
 	public void reset_comstatus() {
-		set_comstatus(PAS.l("main_sending_settings_dl_idle"));
+        set_comstatus(Localization.l("main_sending_settings_dl_idle"));
 	}
 	public void start_download_settings() {
-		set_comstatus(PAS.l("main_sending_settings_dl_downloading"));
-		get_loader().set_totalitems(0, PAS.l("main_sending_settings_loading"));
+        set_comstatus(Localization.l("main_sending_settings_dl_downloading"));
+        get_loader().set_totalitems(0, Localization.l("main_sending_settings_loading"));
 		ActionEvent e = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_settings_startload");
 		actionPerformed(e);
 	}
@@ -490,7 +490,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 			add_filepanes();
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"), "Could not initialize soundfile panes", e, 1);
+            Error.getError().addError(Localization.l("common_error"), "Could not initialize soundfile panes", e, 1);
 		}
 	}
 	public void add_filepanes() {
@@ -501,9 +501,9 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				try {
 					file = (SoundFile)m_settings.get_current_profile().get_soundfiles().get(i);
 					m_files[i] = new Sending_Files(PAS.get_pas(), this, file); //(SoundFile)get_sendobject().get_sendproperties().get_bbprofile().get_soundfiles().get(i)
-					m_tabbedpane.insertTab("WAV " + (i+1) + " (" + file.get_modulename() + ")", null, 
+                    m_tabbedpane.insertTab("WAV " + (i+1) + " (" + file.get_modulename() + ")", null,
 										m_files[i],
-										PAS.l("main_sending_sound_soundfileno") + " " + (i+1), (m_n_fileindex + i));
+										Localization.l("main_sending_sound_soundfileno") + " " + (i+1), (m_n_fileindex + i));
 					m_tabbedpane.setEnabledAt(m_n_fileindex + i, false);
 				} catch(Exception e) {
 					PAS.get_pas().add_event("ERROR add_filepanes() : " + e.getMessage(), e);
@@ -524,14 +524,14 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	public void set_next_text() {
 		if(m_tabbedpane.getSelectedIndex() == m_tabbedpane.getTabCount()-1) {
 			m_btn_next.setEnabled(PAS.get_pas().get_rightsmanagement().cansend());
-			m_btn_next.setText(PAS.l("main_sending_send"));
+            m_btn_next.setText(Localization.l("main_sending_send"));
 			m_btn_next.setActionCommand("act_send");
 			m_btn_simulation.setVisible(PAS.get_pas().get_rightsmanagement().cansimulate());
 			m_btn_silent.setVisible(PAS.get_pas().get_rightsmanagement().canlbasilent());
 			m_tabbedpane.setEnabledAt(m_tabbedpane.getSelectedIndex(), true);
 		} else {
 			m_btn_next.setEnabled(true);
-			m_btn_next.setText(PAS.l("common_wizard_next"));
+            m_btn_next.setText(Localization.l("common_wizard_next"));
 			m_btn_next.setActionCommand("act_next");
 			m_btn_simulation.setVisible(false);
 			m_btn_silent.setVisible(false);
@@ -582,7 +582,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			boolean movenext = true;
 			if(m_tabbedpane.getSelectedComponent().equals(m_settings) && m_settings.m_b_use_scheddatetime){
 				if(schedDatePassed()) {
-					JOptionPane.showMessageDialog(this, PAS.l("main_sending_schedule_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_schedule_error"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 			}
@@ -595,10 +595,10 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					selected= false;
 				if(!selected) {
 					if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_tas_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_tas_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					else {
-                        JOptionPane.showMessageDialog(this, String.format(PAS.l("main_resend_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, String.format(Localization.l("main_resend_status_select_tooltip"), get_sendobject().get_sendproperties().get_resend_refno()), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
                     }
 					return;
 				}
@@ -608,13 +608,13 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				if(!m_send.checkSMSInput())
 					return;
 				if(m_sms_broadcast_text_panel.validateOADC(m_sms_broadcast_text_panel.get_txt_oadc_text().getText())) {
-					JOptionPane.showMessageDialog(this, PAS.l("main_sending_lba_error_content"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_lba_error_content"));
 					return;
 				}
 			}
 			if(m_tabbedpane.getSelectedComponent().equals(m_cell_broadcast_text_panel) && !m_cell_broadcast_text_panel.defaultLanguage()) {
 				if((get_sendobject().get_sendproperties().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
-					JOptionPane.showMessageDialog(this, PAS.l("main_sending_lba_default_lang_error"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_lba_default_lang_error"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 					for(int i=m_tabbedpane.indexOfComponent(m_cell_broadcast_text_panel);i<m_tabbedpane.getTabCount();++i){
 							m_tabbedpane.setEnabledAt(i, false);
 					}
@@ -639,7 +639,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			//set_next_text();
 		} else if("act_adrcount".equals(e.getActionCommand())) {
 			m_btn_next.setEnabled(false);
-			m_loader.start_progress(0, PAS.l("main_sending_address_count"));
+            m_loader.start_progress(0, Localization.l("main_sending_address_count"));
 			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), false);
 			if(m_addresspanel!=null)
 				m_addresspanel.exec_adrcount(); //wait for this to finish before downloading settings
@@ -652,7 +652,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			m_xmlsendsettings.start();
 		} else if("act_settings_loaded".equals(e.getActionCommand())) {
 			get_loader().get_progress().setIndeterminate(false);
-			get_loader().set_starttext(PAS.l("common_finished"));
+            get_loader().set_starttext(Localization.l("common_finished"));
 			m_btn_next.setEnabled(true);
 			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), true);
 			init_values();
@@ -693,21 +693,21 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 							}
 						}*/
 					}
-					message = String.format(PAS.l("main_sending_confirm_live_sending"), count);//"Confirm LIVE sending to " + count + " recipients";
+                    message = String.format(Localization.l("main_sending_confirm_live_sending"), count);//"Confirm LIVE sending to " + count + " recipients";
 				}
 				else
 				{
 					int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 					int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
 					if(n_voice + n_sms == 0) {
-                        message = PAS.l("main_sending_confirm_live_sending_no_recipients");
+                        message = Localization.l("main_sending_confirm_live_sending_no_recipients");
                     }
 					else
 						if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                            message = String.format(PAS.l("main_sending_confirm_live_sending"),n_sms);
+                            message = String.format(Localization.l("main_sending_confirm_live_sending"),n_sms);
                         }
 						else {
-                            message = String.format(PAS.l("main_sending_confirm_live_sending_voice_and_sms"), n_voice, n_sms);//"Confirm LIVE sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                            message = String.format(Localization.l("main_sending_confirm_live_sending_voice_and_sms"), n_voice, n_sms);//"Confirm LIVE sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
                         }
 				}
 				//message = "Confirm simulated sending to " + get_addresscount().get_total_by_types() + " recipients";
@@ -720,14 +720,14 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				panel.add(confirm, panel.m_gridconst);
 				
 				JFrame frame = get_frame();
-				int cr = JOptionPane.showConfirmDialog(frame, panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION);
+                int cr = JOptionPane.showConfirmDialog(frame, panel, Localization.l("common_confirm"), JOptionPane.YES_NO_OPTION);
 				if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("LIVE")) {
 					m_send.actionPerformed(e);
 					frame.dispose();
 				}
 				else {
 					if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("LIVE")) {
-                        JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "LIVE"));
+                        JOptionPane.showMessageDialog(frame, String.format(Localization.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "LIVE"));
                     }
 					System.out.println("Sending aborted");
 					frame.dispose();
@@ -750,11 +750,11 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_profile() == null) {
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_msg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"));
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_schedprofile() == null) {
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_cfg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"));
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} 
@@ -773,21 +773,21 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 							Object[] obj = (Object[])statuslist.get(j);
 							count +=  Integer.parseInt(obj[2].toString());
 						}
-						message = String.format(PAS.l("main_sending_confirm_simulated_sending"), count);//"Confirm simulated sending to " + count + " recipients";
+                        message = String.format(Localization.l("main_sending_confirm_simulated_sending"), count);//"Confirm simulated sending to " + count + " recipients";
 					}
 					else
 					{
 						int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 						int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
 						if(n_voice + n_sms == 0) {
-                            message = PAS.l("main_sending_confirm_simulated_sending_no_recipients");
+                            message = Localization.l("main_sending_confirm_simulated_sending_no_recipients");
                         }
 						else
 							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                                message = String.format(PAS.l("main_sending_confirm_simulated_sending"), n_sms);
+                                message = String.format(Localization.l("main_sending_confirm_simulated_sending"), n_sms);
                             }
 							else {
-                                message = String.format(PAS.l("main_sending_confirm_simulated_sending_voice_and_sms"), n_voice, n_sms);//"Confirm simulated sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                                message = String.format(Localization.l("main_sending_confirm_simulated_sending_voice_and_sms"), n_voice, n_sms);//"Confirm simulated sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
                             }
 					}
 					LightPanel panel = new LightPanel();
@@ -797,8 +797,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					confirm.setPreferredSize(new Dimension(150,16));
 					panel.add(confirm, panel.m_gridconst);
 					JFrame frame = get_frame();
-					
-					int cr = JOptionPane.showConfirmDialog(frame, panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION);
+
+                    int cr = JOptionPane.showConfirmDialog(frame, panel, Localization.l("common_confirm"), JOptionPane.YES_NO_OPTION);
 					if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("SIMULATE")) {
 						frame.dispose();
 						m_send.actionPerformed(e);
@@ -806,7 +806,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					}
 					else {
 						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SIMULATE")) {
-                            JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SIMULATE"));
+                            JOptionPane.showMessageDialog(frame, String.format(Localization.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SIMULATE"));
                         }
 							
 						frame.dispose();
@@ -816,7 +816,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 			catch(Exception err)
 			{
-				Error.getError().addError(PAS.l("common_error"), "Error while executing simulation", err, Error.SEVERITY_ERROR);
+                Error.getError().addError(Localization.l("common_error"), "Error while executing simulation", err, Error.SEVERITY_ERROR);
 			}
 		} 
 		else if("act_send_silent".equals(e.getActionCommand())) {
@@ -828,11 +828,11 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_profile() == null) {
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_msg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_msg_profile"));
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} else if(hasVoice(m_sendobject.get_toolbar().get_addresstypes()) && m_settings.get_current_schedprofile() == null) {
-					JOptionPane.showMessageDialog(this,PAS.l("main_sending_settings_error_no_cfg_profile"));
+                    JOptionPane.showMessageDialog(this, Localization.l("main_sending_settings_error_no_cfg_profile"));
 					m_tabbedpane.setSelectedComponent(m_settings);
 					ready = false;
 				} 
@@ -851,21 +851,21 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 							Object[] obj = (Object[])statuslist.get(j);
 							count +=  Integer.parseInt(obj[2].toString());
 						}
-						message = String.format(PAS.l("main_sending_confirm_silent_sending"), count);//"Confirm silent sending to " + count + " recipients";
+                        message = String.format(Localization.l("main_sending_confirm_silent_sending"), count);//"Confirm silent sending to " + count + " recipients";
 					}
 					else
 					{
 						int n_voice = get_addresscount().get_company()+get_addresscount().get_private()+get_addresscount().get_companymobile()+get_addresscount().get_privatemobile();
 						int n_sms = get_addresscount().get_companysms()+get_addresscount().get_privatesms();
 						if(n_voice + n_sms == 0) {
-                            message = PAS.l("main_sending_confirm_silent_sending_no_recipients");
+                            message = Localization.l("main_sending_confirm_silent_sending_no_recipients");
                         }
 						else
 							if(get_sendobject().get_sendproperties().get_sendingtype() == SendProperties.SENDING_TYPE_TAS_COUNTRY_) {
-                                message = String.format(PAS.l("main_sending_confirm_silent_sending"), n_sms);
+                                message = String.format(Localization.l("main_sending_confirm_silent_sending"), n_sms);
                             }
 							else {
-                                message = String.format(PAS.l("main_sending_confirm_silent_sending_voice_and_sms"), n_voice, n_sms);//"Confirm silent sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
+                                message = String.format(Localization.l("main_sending_confirm_silent_sending_voice_and_sms"), n_voice, n_sms);//"Confirm silent sending\nVoice: " +  n_voice + "\nSMS: " +  n_sms;
                             }
 					}
 					LightPanel panel = new LightPanel();
@@ -875,8 +875,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					confirm.setPreferredSize(new Dimension(150,16));
 					panel.add(confirm, panel.m_gridconst);
 					JFrame frame = get_frame();
-					
-					int cr = JOptionPane.showConfirmDialog(frame, panel, PAS.l("common_confirm"), JOptionPane.YES_NO_OPTION);
+
+                    int cr = JOptionPane.showConfirmDialog(frame, panel, Localization.l("common_confirm"), JOptionPane.YES_NO_OPTION);
 					if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("SILENT")) {
 						frame.dispose();
 						m_send.actionPerformed(e);
@@ -884,7 +884,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					}
 					else {
 						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SILENT")) {
-                            JOptionPane.showMessageDialog(frame, String.format(PAS.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SILENT"));
+                            JOptionPane.showMessageDialog(frame, String.format(Localization.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "SILENT"));
                         }
 							
 						frame.dispose();
@@ -894,7 +894,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 			catch(Exception err)
 			{
-				Error.getError().addError(PAS.l("common_error"), "Error while executing silent sending", err, Error.SEVERITY_ERROR);
+                Error.getError().addError(Localization.l("common_error"), "Error while executing silent sending", err, Error.SEVERITY_ERROR);
 			}			
 		}
 		else if("act_finish".equals(e.getActionCommand())) {
@@ -961,7 +961,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			get_sendobject().get_sendproperties().set_refno(m_send.get_refno());
 			get_sendobject().get_sendproperties().set_scheddatetime(m_settings.get_scheddatetime());
 			get_sendobject().get_sendproperties().set_oadc(m_settings.get_current_oadc());
-			get_sendobject().get_sendproperties().set_sendingname(m_settings.get_sendingname(), PAS.l("mainmenu_file_newsending"));
+            get_sendobject().get_sendproperties().set_sendingname(m_settings.get_sendingname(), Localization.l("mainmenu_file_newsending"));
 			get_sendobject().get_sendproperties().set_schedprofile(m_settings.get_current_schedprofile());
 			get_sendobject().get_sendproperties().set_validity(m_settings.get_current_validity());
 			if(get_sendcontroller().get_pas().get_current_project()!=null)

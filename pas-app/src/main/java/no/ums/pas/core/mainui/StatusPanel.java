@@ -10,6 +10,7 @@ import no.ums.pas.core.defines.ComboRow;
 import no.ums.pas.core.defines.ComboRowCellRenderer;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.laf.ULookAndFeel;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -49,10 +50,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	LBATabbedPane get_lbatab() { return PAS.get_pas().get_statuscontroller().getLBATotalPane(); }
 	private JProgressBar m_lba_total_progress = new JProgressBar();
 	
-	private StdTextLabel m_lbl_lba_delivered = new StdTextLabel(PAS.l("main_status_delivered") + ":", 90, 11, false);
-    private StdTextLabel m_lbl_lba_expired = new StdTextLabel(PAS.l("main_status_expired") + ":", 90, 11, false);
-    private StdTextLabel m_lbl_lba_failed = new StdTextLabel(PAS.l("main_status_failed") + ":", 90, 11, false);
-    private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(PAS.l("main_status_subscribers") + ":", 90, 11, false);
+	private StdTextLabel m_lbl_lba_delivered = new StdTextLabel(Localization.l("main_status_delivered") + ":", 90, 11, false);
+    private StdTextLabel m_lbl_lba_expired = new StdTextLabel(Localization.l("main_status_expired") + ":", 90, 11, false);
+    private StdTextLabel m_lbl_lba_failed = new StdTextLabel(Localization.l("main_status_failed") + ":", 90, 11, false);
+    private StdTextLabel m_lbl_lba_recipients = new StdTextLabel(Localization.l("main_status_subscribers") + ":", 90, 11, false);
 
     private StdTextLabel m_txt_lba_delivered = new StdTextLabel("", 100, 11, false);
 	private StdTextLabel m_txt_lba_expired = new StdTextLabel("", 100, 11, false);
@@ -248,8 +249,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	
 	public StatusPanel(PAS pas, Dimension size) {
 		super();
-		
-		lbl_mainstatus = new no.ums.pas.ums.tools.StdTextLabel(PAS.l("main_status"), n_mainstatus_width, 12, true);
+
+        lbl_mainstatus = new no.ums.pas.ums.tools.StdTextLabel(Localization.l("main_status"), n_mainstatus_width, 12, true);
 		//lbl_mainstatus = new UMS.Tools.StdTextLabel("Status", 100, 12, true);
 		ico_updating = ImageLoader.load_icon("remembermilk_orange.gif");
 		lbl_mainstatus.setIconTextGap(4);
@@ -274,7 +275,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_combo_voice_filter.addItemListener(this);
 		int height = m_combo_voice_filter.getPreferredSize().height;
 		m_combo_voice_filter.setRenderer(new ComboRowCellRenderer(new Class [] { String.class, ImageIcon.class, JLabel.class, JLabel.class, JLabel.class }, new int [] { 40, 40, 250, 80, 60 }, height));
-		m_combo_voice_filter.addItem(new ComboRow(null, new Object[] {PAS.l("main_status_filter") + ":", new ImageIcon(""), new JLabel(PAS.l("main_status_filter_none")), m_lbl_proc_and_total, new JLabel("")}));
+        m_combo_voice_filter.addItem(new ComboRow(null, new Object[] {Localization.l("main_status_filter") + ":", new ImageIcon(""), new JLabel(Localization.l("main_status_filter_none")), m_lbl_proc_and_total, new JLabel("")}));
 		addComponentListener(this);
 		
 	}
@@ -285,9 +286,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
 				{
-					m_tab.addTab(PAS.l("main_status"), null,
+                    m_tab.addTab(Localization.l("main_status"), null,
 								m_main,
-								PAS.l("main_status"));
+                            Localization.l("main_status"));
 					set_gridconst(0, 0, 1, 1);
 					add(m_tab, m_gridconst);
 					m_tab.addComponentListener(panel);
@@ -384,9 +385,9 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	public void setMainStatusText(String sz)
 	{
 		if(m_n_completion_percent<0) {
-            sz = PAS.l("common_na");
+            sz = Localization.l("common_na");
         }
-		lbl_mainstatus.setText(PAS.l("main_status") + "   "+m_n_completion_percent+"% " + PAS.l("common_completed") + "   " + sz);
+        lbl_mainstatus.setText(Localization.l("main_status") + "   "+m_n_completion_percent+"% " + Localization.l("common_completed") + "   " + sz);
 		//lbl_mainstatus.setHorizontalTextPosition(StdTextLabel.CENTER);
 		lbl_mainstatus.setHorizontalAlignment(StdTextLabel.CENTER);		
 		
@@ -433,10 +434,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			switch(n_sendinggroup)
 			{
 			case 4: //LBAS
-				tooltip = PAS.l("main_status_lba_sent_to_phones_from");
+                tooltip = Localization.l("main_status_lba_sent_to_phones_from");
 				break;
 			case 5: //TAS
-				tooltip = PAS.l("main_status_tas_sent_to_phones_in");
+                tooltip = Localization.l("main_status_tas_sent_to_phones_in");
 				break;
 			}
 			tip += "<font face=Verdana size=3><b>" + tooltip + "</b></font><br><font face=Arial size=2>";
@@ -479,22 +480,22 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			case 1: //voice
 				{
 					ico = ImageLoader.load_icon("sound_18.png");
-					s_channel = PAS.l("main_status_channel_voice") + " ";
+                    s_channel = Localization.l("main_status_channel_voice") + " ";
 				}
 				break;
 			case 2: //SMS
 				ico = ImageLoader.load_icon("text_18.png");
-				s_channel = PAS.l("main_status_channel_sms") + " ";
+                s_channel = Localization.l("main_status_channel_sms") + " ";
 				break;
 			case 3: //e-MAIL
 				break;
 			case 4: //LBA
 				ico = ImageLoader.load_icon("lba_18.png");
-				s_channel = PAS.l("main_status_channel_lba") + " ";
+                s_channel = Localization.l("main_status_channel_lba") + " ";
 				break;
 			case 5: //TAS
 				ico = ImageLoader.load_icon("tas_18.png");
-				s_channel = PAS.l("main_status_channel_tas") + " ";
+                s_channel = Localization.l("main_status_channel_tas") + " ";
 				break;
 			case 6: //PA
 				ico = ImageLoader.load_icon("text_18.png");
@@ -505,7 +506,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			if(sending.get_type()==0 || sending.get_type()==1 || sending.get_type()==2 || sending.get_type()==4 || sending.get_type()==5)
 				
 				sending.getTotalSendingnameLabel().setIcon(ico);
-				String tip = "<html><font face=Arial size=4><b>" + PAS.l("main_status_for_refno") + " " + sending.get_refno() + "</b></font>";
+            String tip = "<html><font face=Arial size=4><b>" + Localization.l("main_status_for_refno") + " " + sending.get_refno() + "</b></font>";
 				tip += "<br><font face=Arial size=4>\"" + sending.get_sendingname() + "\"</font>";
 				if(sending.get_type()==2) //sms
 				{
@@ -519,7 +520,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 							msgtext += "<br>";
 						msgtext += words[i] + " ";
 					}//<img src=\"file:PASIcons/text_18.png\">
-					tip += "<br><br><b><font face=Arial size=3>" + PAS.l("main_status_sms_content") + "</font></b><hr noshade><br><font face=Arial size=3><b>" + sending.get_oadc()+ "</b></font><br><font face=Arial size=3><table wrap=hard><tr><td><b>" + msgtext + "</b></td></tr></table><br>&nbsp;</font>";
+                    tip += "<br><br><b><font face=Arial size=3>" + Localization.l("main_status_sms_content") + "</font></b><hr noshade><br><font face=Arial size=3><b>" + sending.get_oadc()+ "</b></font><br><font face=Arial size=3><table wrap=hard><tr><td><b>" + msgtext + "</b></td></tr></table><br>&nbsp;</font>";
 				}
 				tip+="</html>";
 				m_tab.addTab(sending.get_sendingname(), ico,
@@ -566,7 +567,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					ico = ImageLoader.load_icon("text_24.gif");
 					break;
 				}*/
-				m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { PAS.l("main_status_filter") + ":", ico, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
+            m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { Localization.l("main_status_filter") + ":", ico, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
 				
 			try
 			{
@@ -618,10 +619,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		try
 		{
 			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4) {
-                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_traveller_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + Localization.l("main_status_traveller_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
             }
 			else {
-                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_locationbased_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+                LBAPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + Localization.l("main_status_locationbased_alert") + "     - " + sz + " "));//BorderFactory.createTitledBorder(null, "Location Based Alert - " + sz, TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
             }
 		}
 		catch(Exception e) { }
@@ -630,7 +631,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	{
 		try
 		{
-			VOICEPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + PAS.l("main_status_addressbased_alert") + "     - " + sz + " "));
+            VOICEPANEL.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(" " + Localization.l("main_status_addressbased_alert") + "     - " + sz + " "));
 		}
 		catch(Exception e) {
             //logger.warn("Failed to set border text for voice (%s)", sz, e);
@@ -861,7 +862,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			m_btn_goto.setPreferredSize(new Dimension(40,40));
 			m_btn_goto.addActionListener(this);
 			add_controls();
-			m_btn_goto.setToolTipText(PAS.l("main_status_show_map_of_sending"));
+            m_btn_goto.setToolTipText(Localization.l("main_status_show_map_of_sending"));
 		}
 		
 		public void actionPerformed(ActionEvent e) {
@@ -926,13 +927,13 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 				{
 					StatusSending s = (StatusSending)row.getId();
 					String sz_filterby = s.toString();
-					System.out.println(PAS.l("main_status_filter_codes_by") + " " + sz_filterby);
+                    System.out.println(Localization.l("main_status_filter_codes_by") + " " + sz_filterby);
 					get_statuscodeframe().setFilter(s);
 					return;
 				}
 			}
 			//assume turn off filter
-			System.out.println(PAS.l("main_status_filter_codes_disable"));
+            System.out.println(Localization.l("main_status_filter_codes_disable"));
 			get_statuscodeframe().setFilter(null);
 		}
 	}

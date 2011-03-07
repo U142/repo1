@@ -1,6 +1,6 @@
 package no.ums.pas.sound;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextLabel;
 
 import javax.sound.sampled.AudioFormat;
@@ -71,7 +71,7 @@ public class SoundPlayer {
 		}
 	}
 	void set_timer(String sz_time) {
-		m_txt_seconds.setText(sz_time + PAS.l("common_seconds_maybe"));
+        m_txt_seconds.setText(sz_time + Localization.l("common_seconds_maybe"));
 	}
 	
     public SoundPlayer(File f, InputStream is, JSlider slider, SoundRecorderPanel rec_panel, StdTextLabel txt_seconds)

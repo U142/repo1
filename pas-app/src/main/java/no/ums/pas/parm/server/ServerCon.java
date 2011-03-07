@@ -6,6 +6,7 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.ws.WSProgressPoller;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.ums.errorhandling.Error;
@@ -63,7 +64,7 @@ public class ServerCon {
 				WSProgressPoller progress = null;
 				try
 				{
-					progress = new WSProgressPoller(/*PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().lbl_initializing*/PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().loader, ProgressJobType.PARM_UPDATE, tmp, PAS.l("main_parmtab_loading_parm"), PAS.l("main_parmtab_populating_tree"), false);
+                    progress = new WSProgressPoller(/*PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().lbl_initializing*/PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().loader, ProgressJobType.PARM_UPDATE, tmp, Localization.l("main_parmtab_loading_parm"), Localization.l("main_parmtab_populating_tree"), false);
 					progress.setShowOnlyPercent(true);
 					progress.start();
 				}

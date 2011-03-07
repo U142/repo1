@@ -1,6 +1,6 @@
 package no.ums.pas.plugins.centric;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +19,13 @@ class DisclaimerDialog extends JDialog {
 	public void init()
 	{
 		this.setLayout(new BorderLayout());
-		setTitle(PAS.l("disclaimer_heading"));
+        setTitle(Localization.l("disclaimer_heading"));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(700,400);
 		setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
 		setModal(true);
-		JTextArea area = new JTextArea(PAS.l("disclaimer_text"));
+        JTextArea area = new JTextArea(Localization.l("disclaimer_text"));
 		JScrollPane scrollPane = new JScrollPane(area);
 		scrollPane.setPreferredSize(new Dimension(500, 100));
 		area.setEditable(false);
@@ -42,10 +42,10 @@ class DisclaimerDialog extends JDialog {
 			e.printStackTrace();
 		}
 		JLabel lbl = new JLabel(img);
-		
-		final JLabel helpdesk = new JLabel(PAS.l("common_helpdesk_contact"));//"For helpdesk call: 0123-456789");
-		final JButton btn_ok = new JButton(PAS.l("common_accept"));
-		final JButton btn_cancel = new JButton(PAS.l("common_decline"));
+
+        final JLabel helpdesk = new JLabel(Localization.l("common_helpdesk_contact"));//"For helpdesk call: 0123-456789");
+        final JButton btn_ok = new JButton(Localization.l("common_accept"));
+        final JButton btn_cancel = new JButton(Localization.l("common_decline"));
 		btn_ok.addActionListener(new ActionListener()
 		{
 			@Override

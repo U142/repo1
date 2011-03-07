@@ -1,6 +1,6 @@
 package no.ums.pas.sound;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class SoundlibFileWav extends SoundlibFile {
 		try {
 			m_f = new File(sz_dest);
 		} catch(Exception e) {
-			Error.getError().addError(PAS.l("common_error"),"Exception in read",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in read",e,1);
 			return false;
 		}
 		if(m_f.canRead())

@@ -11,6 +11,7 @@ import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
 import no.ums.pas.core.defines.tree.UMSTreeNode;
 import no.ums.pas.core.ws.WSMessageLib;
 import no.ums.pas.core.ws.WSMessageLibDelete;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.messagelibrary.tree.MessageLibNode;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdSearchArea;
@@ -481,7 +482,7 @@ public class MessageLibTreePanel extends DefaultPanel
 					RemoveFromTree(node);
 					return;
 				}
-				if(JOptionPane.showConfirmDialog(MessageLibTreePanel.this, PAS.l("common_are_you_sure"), PAS.l("common_delete") + " " + node.getMessage().getSzName() + "?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.OK_OPTION)
+                if(JOptionPane.showConfirmDialog(MessageLibTreePanel.this, Localization.l("common_are_you_sure"), Localization.l("common_delete") + " " + node.getMessage().getSzName() + "?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.OK_OPTION)
 				{
 					WSMessageLibDelete del = new WSMessageLibDelete(this, node.getMessage());
 					del.start();
@@ -550,8 +551,8 @@ public class MessageLibTreePanel extends DefaultPanel
 				
 			};*/
 			super.setModel(model);
-			menu_select = new JMenu(PAS.l("common_select"));
-			menu_new = new JMenu(PAS.l("common_new"));
+            menu_select = new JMenu(Localization.l("common_select"));
+            menu_new = new JMenu(Localization.l("common_new"));
 			menu_item_new_txt_template = new JMenuItem("New text template");
 			menu_item_new_txt_template.addActionListener(this);
 			menu_item_new_txt_template.setActionCommand("act_new_txt_template");
@@ -561,7 +562,7 @@ public class MessageLibTreePanel extends DefaultPanel
 			//item = new JMenuItem("New Recorded audio");
 			//menu_new.add(item);
 
-			menu_item_delete = new JMenuItem(PAS.l("common_delete"));
+            menu_item_delete = new JMenuItem(Localization.l("common_delete"));
 			menu_item_delete.addActionListener(this);
 			menu_item_delete.setActionCommand("act_delete");
 			switch(treemode)

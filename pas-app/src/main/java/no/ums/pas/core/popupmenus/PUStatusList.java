@@ -2,6 +2,7 @@ package no.ums.pas.core.popupmenus;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.ums.tools.PrintCtrl;
 
@@ -17,9 +18,9 @@ public class PUStatusList extends PUMenu {
 	{
 		super(pas, sz_name);
 		m_actionlistener = new PUStatusList.PUActionListener();
-		JMenuItem item_showall = new JMenuItem(PAS.l("main_status_popup_list_all_recipients"));
-		JMenuItem item_showvisible = new JMenuItem(PAS.l("main_status_popup_list_only_visible"));
-		JMenuItem item_print = new JMenuItem(PAS.l("common_print"));
+        JMenuItem item_showall = new JMenuItem(Localization.l("main_status_popup_list_all_recipients"));
+        JMenuItem item_showvisible = new JMenuItem(Localization.l("main_status_popup_list_only_visible"));
+        JMenuItem item_print = new JMenuItem(Localization.l("common_print"));
 		item_showall.setActionCommand("act_status_showall");
 		item_showvisible.setActionCommand("act_status_showvisible");
 		item_print.setActionCommand("act_status_print");

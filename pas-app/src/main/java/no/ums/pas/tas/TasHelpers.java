@@ -1,6 +1,6 @@
 package no.ums.pas.tas;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 
@@ -85,13 +85,13 @@ public class TasHelpers
 	{
 		String ret = "";
 		if(diff>60*24) {
-            ret += diff /60/24 + " " + PAS.l("common_days_maybe") + " " + PAS.l("common_ago");
+            ret += diff /60/24 + " " + Localization.l("common_days_maybe") + " " + Localization.l("common_ago");
         }
 		else if(diff>60) {
-            ret += diff /60 + " " + PAS.l("common_hours_maybe") + " " + PAS.l("common_ago");
+            ret += diff /60 + " " + Localization.l("common_hours_maybe") + " " + Localization.l("common_ago");
         }
 		else {
-            ret += diff + " " + PAS.l("common_minutes_maybe") + " " + PAS.l("common_ago");
+            ret += diff + " " + Localization.l("common_minutes_maybe") + " " + Localization.l("common_ago");
         }
 		return ret;
 	}

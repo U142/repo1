@@ -321,8 +321,8 @@ public class MainController implements ActionListener, TreeModelListener,
 		try {
 			new Thread("PARM endSession thread") {
 				public void run() {
-					m_progress = new LoadingFrame(Localization.l("main_parmtab_closing_parm"), null);
-					m_progress.set_totalitems(0, Localization.l("main_parmtab_closing_parm"));
+                    m_progress = new LoadingFrame(Localization.l("main_parmtab_closing_parm"), null);
+                    m_progress.set_totalitems(0, Localization.l("main_parmtab_closing_parm"));
 					m_progress.start_and_show();
 					/*treeCtrl.SetInitializing(true);
 					treeCtrl.get_treegui().loader.set_text("Closing PARM");

@@ -3,6 +3,7 @@ package no.ums.pas.plugins.centric.tools;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -159,10 +160,10 @@ public class CentricPrintCtrl implements Printable, Pageable {
         printTranslate(g, 0, g.getFontMetrics().getAscent());
         g.setColor(Color.black);
         if(PAS.TRAINING_MODE) {
-            g.drawString(PAS.l("common_app_title") + " - " + PAS.l("mainmenu_trainingmode"), 0, 0);
+            g.drawString(Localization.l("common_app_title") + " - " + Localization.l("mainmenu_trainingmode"), 0, 0);
         }
     	else {
-            g.drawString(PAS.l("common_app_title"), 0, 0);
+            g.drawString(Localization.l("common_app_title"), 0, 0);
         }
         return g.getFontMetrics().getHeight();
 	}
@@ -308,7 +309,7 @@ public class CentricPrintCtrl implements Printable, Pageable {
 			Font fontMessageHeader = UIManager.getFont("PrintJobMedium.font");
 			g2d.setFont(fontMessageHeader);
 	        printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
-			g2d.drawString(PAS.l("common_message_content"), 0, 0);
+            g2d.drawString(Localization.l("common_message_content"), 0, 0);
 			//drawPosY += g2d.getFontMetrics().getAscent();
 			printTranslate(g2d, 0, g2d.getFontMetrics().getAscent());
 			

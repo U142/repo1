@@ -1,7 +1,7 @@
 package no.ums.pas.ums.tools;
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendProperties;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
@@ -187,7 +187,7 @@ public final class TextFormat {
 			sz = format_date(sz) + " " + format_time(sz.substring(8), 6);
 			break;
 		default:
-			sz = PAS.l("common_na");
+            sz = Localization.l("common_na");
 		}
 		return sz;
 	}
@@ -308,22 +308,22 @@ public final class TextFormat {
 		String sz_ret;
 		switch(n_type)  {
 			case SendProperties.SENDING_TYPE_POLYGON_:
-				sz_ret = PAS.l("main_sending_type_polygon");
+                sz_ret = Localization.l("main_sending_type_polygon");
 				break;
 			case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
-				sz_ret = PAS.l("main_sending_type_gis_street");
+                sz_ret = Localization.l("main_sending_type_gis_street");
 				break;
 			case SendProperties.SENDING_TYPE_GEMINI_GNRBNR_:
-				sz_ret = PAS.l("main_sending_type_gis_gbno");
+                sz_ret = Localization.l("main_sending_type_gis_gbno");
 				break;
 			case SendProperties.SENDING_TYPE_CIRCLE_:
-				sz_ret = PAS.l("main_sending_type_ellipse");
+                sz_ret = Localization.l("main_sending_type_ellipse");
 				break;
 			case SendProperties.SENDING_TYPE_MUNICIPAL_:
-				sz_ret = PAS.l("main_sending_type_municipal");
+                sz_ret = Localization.l("main_sending_type_municipal");
 				break;
 			default:
-				sz_ret = PAS.l("main_sending_type_unknown");
+                sz_ret = Localization.l("main_sending_type_unknown");
 				break;
 		}
 		return sz_ret;

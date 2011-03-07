@@ -1,8 +1,8 @@
 package no.ums.pas.parm.voobjects;
 
-import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.map.MapPanel;
@@ -23,15 +23,15 @@ public class AlertVO extends ParmVO implements Cloneable {
 		switch(status)
 		{
 		case -3: //sent to lba server
-			return PAS.l("main_parmtab_lba_area_creation_sent_to_lbaserver");
-		case -2: //failed
-			return PAS.l("main_parmtab_lba_area_creation_failed");
-		case -1: //processing
-			return PAS.l("main_parmtab_lba_area_creation_processing");
-		case 0: //ok finished
-			return PAS.l("main_parmtab_lba_area_creation_finished");
-		default:
-			ret = PAS.l("common_unknown_status");
+            return Localization.l("main_parmtab_lba_area_creation_sent_to_lbaserver");
+            case -2: //failed
+                return Localization.l("main_parmtab_lba_area_creation_failed");
+            case -1: //processing
+                return Localization.l("main_parmtab_lba_area_creation_processing");
+            case 0: //ok finished
+                return Localization.l("main_parmtab_lba_area_creation_finished");
+            default:
+                ret = Localization.l("common_unknown_status");
 			break;
 		}
 		return ret;

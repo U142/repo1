@@ -12,6 +12,7 @@ import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.popupmenus.PUPolyPoint;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Inhabitant;
@@ -539,7 +540,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			m_icon_pinpoint = null;
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"Exception in MapFrame",e,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in MapFrame",e,1);
 		}
 		try {
 			m_icon_adredit = ImageLoader.load_icon("pinpoint.png");
@@ -1032,7 +1033,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 					public void run()
 					{
 						//b_loading_in_progress = true;
-						SetIsLoading(true, PAS.l("common_loading") + " " + PAS.l("common_map"));
+                        SetIsLoading(true, Localization.l("common_loading") + " " + Localization.l("common_map"));
 						PAS.get_pas().kickRepaint();
 						load_map();
 						SetIsLoading(false, "");

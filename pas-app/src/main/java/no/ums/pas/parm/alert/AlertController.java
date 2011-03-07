@@ -6,6 +6,7 @@ import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.importer.SubsetSelect;
 import no.ums.pas.importer.gis.GISList;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Navigation;
@@ -252,7 +253,7 @@ public class AlertController implements ActionListener {
 
 		//if (this.toolbarPanel.get_addresstypes() != 0)
 		//toolbarPanel.gen_addresstypes();
-		gui = new AlertGUI(PAS.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
+        gui = new AlertGUI(Localization.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
 		toolbarPanel.set_addresstypes(alert.getAddresstypes());
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
@@ -297,11 +298,11 @@ public class AlertController implements ActionListener {
 	public boolean deleteAlert(AlertVO alert, DefaultMutableTreeNode eventNode)
 			throws ParmException {
 		this.alert = alert;
-		Object[] options = { PAS.l("common_yes"), PAS.l("common_cancel") };
+        Object[] options = {Localization.l("common_yes"), Localization.l("common_cancel")};
 
-		int n = JOptionPane.showOptionDialog(null,
-				PAS.l("common_delete_are_you_sure") + " '" + alert.getName() + "'",
-				PAS.l("common_delete") + " " + PAS.l("main_parmtab_popup_alert") + "?", JOptionPane.YES_NO_OPTION,
+        int n = JOptionPane.showOptionDialog(null,
+				Localization.l("common_delete_are_you_sure") + " '" + alert.getName() + "'",
+				Localization.l("common_delete") + " " + Localization.l("main_parmtab_popup_alert") + "?", JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 		// yes = 0, no = 1
 		if (n == 0) {
@@ -435,7 +436,7 @@ public class AlertController implements ActionListener {
 			main.activateAlertBtnListener();
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			Error.getError().addError(PAS.l("common_error"),"Exception in editAlert",exception,1);
+            Error.getError().addError(Localization.l("common_error"),"Exception in editAlert",exception,1);
 		}
 	}
 

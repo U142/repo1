@@ -1,8 +1,8 @@
 package no.ums.pas.sound;
 
 
-import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -21,18 +21,18 @@ public class SoundMixerPanel extends DefaultPanel implements ChangeListener {
 	JSlider m_slider_recvol = new JSlider(0, 100);
 	JSlider m_slider_playvol = new JSlider(0, 100);
 	JSlider m_slider_headvol = new JSlider(0, 100);
-	JCheckBox m_chk_playmute = new JCheckBox(PAS.l("sound_mixer_mute"));
-    JCheckBox m_chk_headmute = new JCheckBox(PAS.l("sound_mixer_mute"));
+	JCheckBox m_chk_playmute = new JCheckBox(Localization.l("sound_mixer_mute"));
+    JCheckBox m_chk_headmute = new JCheckBox(Localization.l("sound_mixer_mute"));
     SoundMixer m_mixer;
-	JLabel m_lbl_record = new JLabel(PAS.l("sound_mixer_recording"));
-    JLabel m_lbl_speaker = new JLabel(PAS.l("sound_mixer_volume"));
-    JLabel m_lbl_head	=new JLabel(PAS.l("sound_mixer_heading"));
+	JLabel m_lbl_record = new JLabel(Localization.l("sound_mixer_recording"));
+    JLabel m_lbl_speaker = new JLabel(Localization.l("sound_mixer_volume"));
+    JLabel m_lbl_head	= new JLabel(Localization.l("sound_mixer_heading"));
 
     public SoundMixer getMixer() { return m_mixer; }
 	
 	public SoundMixerPanel() {
 		super();
-		this.setBorder(BorderFactory.createTitledBorder(PAS.l("sound_mixer_heading")));
+        this.setBorder(BorderFactory.createTitledBorder(Localization.l("sound_mixer_heading")));
 		m_mixer = new SoundMixer();
 		init();
 	}

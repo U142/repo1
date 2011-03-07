@@ -3,6 +3,7 @@ package no.ums.pas.tas.statistics;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSTasStats_Countries_Timeunit;
 import no.ums.pas.importer.csv.csvexporter;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.tas.TasPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.TextFormat;
@@ -84,15 +85,15 @@ public class ChartOverTime extends TasChart implements ActionListener
 		try
 		{
 			List<ULBACOUNTRYSTATISTICS> list = results.getULBACOUNTRYSTATISTICS();
-			ArrayList<Object[]> explist = new ArrayList<Object[]>(); 
-			
-			Object [] headers = new Object[] {
-					PAS.l("common_countrycode"),
-					PAS.l("common_iso3166"),
-					PAS.l("main_tas_stats_groupby_COUNTRY"),
-					PAS.l("main_tas_stats_groupby_OPERATOR"),
-					PAS.l("main_tas_stats_groupby_TIMEUNIT"),
-					PAS.l("main_tas_panel_response_count"),
+			ArrayList<Object[]> explist = new ArrayList<Object[]>();
+
+            Object [] headers = new Object[] {
+                    Localization.l("common_countrycode"),
+                    Localization.l("common_iso3166"),
+                    Localization.l("main_tas_stats_groupby_COUNTRY"),
+                    Localization.l("main_tas_stats_groupby_OPERATOR"),
+                    Localization.l("main_tas_stats_groupby_TIMEUNIT"),
+                    Localization.l("main_tas_panel_response_count"),
 					//PAS.l("main_tas_panel_response_count"),
 			};
 			explist.add(headers);
@@ -157,7 +158,7 @@ public class ChartOverTime extends TasChart implements ActionListener
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "Error saving CSV export", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "Error saving CSV export", e, Error.SEVERITY_ERROR);
 		}
 	}
 
@@ -212,10 +213,10 @@ public class ChartOverTime extends TasChart implements ActionListener
 	}
 	public class GroupKey implements Comparable<GroupKey>
 	{
-		String key = PAS.l("common_na");
+		String key = Localization.l("common_na");
 
         {
-            key = PAS.l("common_na");
+            key = Localization.l("common_na");
         }
 
         int categoryno;
@@ -605,10 +606,10 @@ public class ChartOverTime extends TasChart implements ActionListener
 		n_skip_categories = (int)Math.ceil( (n_num_categories / (double) n_max_categories) );
 		if(n_skip_categories<=0)
 			n_skip_categories = 1;
-		
-		String title = PAS.l("main_tas_stats_chart_heading") + " " + sz_location; //+ " (Data " + filter.getGroupTimeunit().value() + " grouped by " + getResultsGroupBy().name() + ")";
-		String cat_x = PAS.l("common_date");
-		String cat_y = PAS.l("main_tas_stats_chart_amount_legend");
+
+        String title = Localization.l("main_tas_stats_chart_heading") + " " + sz_location; //+ " (Data " + filter.getGroupTimeunit().value() + " grouped by " + getResultsGroupBy().name() + ")";
+        String cat_x = Localization.l("common_date");
+        String cat_y = Localization.l("main_tas_stats_chart_amount_legend");
 		switch(getChartType())
 		{
 		case LINECHART:
@@ -646,14 +647,14 @@ public class ChartOverTime extends TasChart implements ActionListener
 		
 		//String szSub = PAS.l("main_tas_stats_chart_data") + " " + PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString()) + " " + PAS.l("main_tas_stats_chart_grouped_by") + " " + PAS.l("main_tas_stats_groupby_" + getResultsGroupBy().toString());
 		//String szSub = PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString()) + " " + PAS.l("main_tas_stats_chart_grouped_by") + " " + PAS.l("main_tas_stats_groupby_" + getResultsGroupBy().toString());
-		String szSub = PAS.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
+        String szSub = Localization.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
 		if(filter.getRowcount()>0)
 			szSub += " " + filter.getRowcount();
 		else {
-            szSub += " " + PAS.l("main_tas_stats_rowcount_ALL");
+            szSub += " " + Localization.l("main_tas_stats_rowcount_ALL");
         }
-		szSub += " " + PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
-		szSub += " " + PAS.l("main_tas_stats_chart_grouped_by") + " " + PAS.l("main_tas_stats_groupby_" + getResultsGroupBy().toString());
+        szSub += " " + Localization.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
+        szSub += " " + Localization.l("main_tas_stats_chart_grouped_by") + " " + Localization.l("main_tas_stats_groupby_" + getResultsGroupBy().toString());
 		
 		TextTitle subtitle = new TextTitle(szSub);
 		subtitle.setFont(new Font(UIManager.getString("Common.Fontface"), Font.PLAIN, 10));
@@ -761,13 +762,13 @@ public class ChartOverTime extends TasChart implements ActionListener
 		}*/
 		
 		//CategoryAxis axis = new CategoryAxis(filter.getStatFunction().value() + " / " + filter.getGroupTimeunit().value());
-		String axisTitle = PAS.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
+        String axisTitle = Localization.l("main_tas_stats_dbfunc_" + filter.getStatFunction().toString());
 		if(filter.getRowcount()>0)
 			axisTitle += " " + filter.getRowcount();
 		else {
-            axisTitle += " " + PAS.l("main_tas_stats_rowcount_ALL");
+            axisTitle += " " + Localization.l("main_tas_stats_rowcount_ALL");
         }
-		axisTitle += " " + PAS.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
+        axisTitle += " " + Localization.l("main_tas_stats_data_" + filter.getGroupTimeunit().toString());
 		CategoryAxis axis = new CategoryAxis(axisTitle);
 		//axis.setCategoryLabelPositionOffset(10);
 		//axis.setCategoryMargin(CategoryAxis.DEFAULT_CATEGORY_MARGIN);

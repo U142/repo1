@@ -210,10 +210,10 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	//TreeColumnsRenderer cr;
 	//TreeRenderer cr;
 	//StdTextLabel lbl_search = new StdTextLabel(PAS.l("common_search"), true, new Dimension(100, 25));
-	StdSearchArea txt_search = new StdSearchArea("", false, new Dimension(200, 25), PAS.l("common_search"));
+	StdSearchArea txt_search = new StdSearchArea("", false, new Dimension(200, 25), Localization.l("common_search"));
 
     {
-        txt_search = new StdSearchArea("", false, new Dimension(200, 25), PAS.l("common_search"));
+        txt_search = new StdSearchArea("", false, new Dimension(200, 25), Localization.l("common_search"));
     }
 
     JButton btn_show_world = new JButton();
@@ -289,17 +289,17 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			//super.setModel(model);
 			//addTreeSelectionListener(this);
 			//popup = new JPopupMenu();
-			JMenuItem mi = new JMenuItem(PAS.l("main_infotab_goto_map"));
+            JMenuItem mi = new JMenuItem(Localization.l("main_infotab_goto_map"));
 			mi.addActionListener(TasPanel.this);
 			mi.setActionCommand("act_goto_map");
-			m_mi_request_touristcount = new JMenuItem(PAS.l("main_tas_panel_request_touristcount"));
+            m_mi_request_touristcount = new JMenuItem(Localization.l("main_tas_panel_request_touristcount"));
 			m_mi_request_touristcount.addActionListener(TasPanel.this);
 			m_mi_request_touristcount.setActionCommand("act_request_touristcount");
 			popup.add(mi);
 			popup.add(m_mi_request_touristcount);
 			popup.setOpaque(true);
 	        popup.setLightWeightPopupEnabled(true);
-	        mi = new JMenuItem(PAS.l("main_tas_show_country_history"), ImageLoader.load_icon("history_16.png"));
+            mi = new JMenuItem(Localization.l("main_tas_show_country_history"), ImageLoader.load_icon("history_16.png"));
 	        mi.addActionListener(TasPanel.this);
 	        mi.setActionCommand("act_tas_show_statistics");
 	        popup.add(mi);
@@ -352,7 +352,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		
 		@Override
 		public void InitRenderer() {
-			final String [] cols = new String [] {"", PAS.l("main_tas_panel_table_heading_tourists"), PAS.l("main_tas_panel_table_heading_updated") };
+            final String [] cols = new String [] {"", Localization.l("main_tas_panel_table_heading_tourists"), Localization.l("main_tas_panel_table_heading_updated")};
 			final int [] width = new int [] { 250, 80, 150 };
 			final boolean [] b_editable = new boolean [] { false, false, false };
 
@@ -602,10 +602,10 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		btn_showhistory.setActionCommand("act_tas_show_statistics_multiple");
 		btn_showhistory.setVisible(true);
 		btn_showhistory.setEnabled(false);
-		
-		btn_send_to_list.setToolTipText(PAS.l("main_tas_send_to_selected_countries"));
-		btn_clear_list.setToolTipText(PAS.l("main_tas_clear_country_list"));
-		btn_showhistory.setToolTipText(PAS.l("main_tas_show_country_history"));
+
+        btn_send_to_list.setToolTipText(Localization.l("main_tas_send_to_selected_countries"));
+        btn_clear_list.setToolTipText(Localization.l("main_tas_clear_country_list"));
+        btn_showhistory.setToolTipText(Localization.l("main_tas_show_country_history"));
 		//cr = new TreeColumnsRenderer(tree);
 		
 
@@ -656,7 +656,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		btn_show_world.setIcon(no.ums.pas.ums.tools.ImageLoader.load_icon("earth_32.png"));
 		btn_show_world.addActionListener(PAS.get_pas().get_pasactionlistener());
 		btn_show_world.setActionCommand("act_show_world");
-		btn_show_world.setToolTipText(PAS.l("common_pas_zoom_world"));
+        btn_show_world.setToolTipText(Localization.l("common_pas_zoom_world"));
 		
 		slide_detaillevel.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e)
@@ -694,7 +694,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		
 		set_gridconst(0, inc_panels(), 8, 1);
 		add(pnl_send_list, m_gridconst);
-		pnl_send_list.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(PAS.l("main_tas_send_multiple_countries")));
+        pnl_send_list.setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(Localization.l("main_tas_send_multiple_countries")));
 		
 		/*
 		set_gridconst(inc_xpanels(), get_panel(), 1, 1);
@@ -918,7 +918,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				countries.add(c.getCountry());
 				//TasChart chart = new ChartOverTime(countries);
 				//chart.UpdateChart();
-				UMSChartFrame frame = new UMSChartFrame(PAS.l("main_tas_stats_heading_over_time"), true, countries);
+                UMSChartFrame frame = new UMSChartFrame(Localization.l("main_tas_stats_heading_over_time"), true, countries);
 
 			}
 			else if(prevsel!=null && prevsel.getClass().equals(ContinentListItem.class))
@@ -929,7 +929,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				//UMSChartFrame frame = new UMSChartFrame("Statistics", chart.getChart(), true);
 				//TasChart chart = new ChartOverTime(c.getContinent());
 				//chart.UpdateChart();
-				UMSChartFrame chart = new UMSChartFrame(PAS.l("main_tas_stats_heading_over_time"), true, c.getContinent());
+                UMSChartFrame chart = new UMSChartFrame(Localization.l("main_tas_stats_heading_over_time"), true, c.getContinent());
 				
 			}
 		}
@@ -1131,8 +1131,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			c.setCountRequestSent(b);
 		}
 		catch(Exception e)
-		{		
-			Error.getError().addError(PAS.l("common_error"), "An error occured", e, Error.SEVERITY_ERROR);
+		{
+            Error.getError().addError(Localization.l("common_error"), "An error occured", e, Error.SEVERITY_ERROR);
 		}
 	}
 	protected void markItemAsCountInProgress(ULBACOUNTRY c, boolean b)
@@ -1147,7 +1147,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), "An error occured", e, Error.SEVERITY_ERROR);
+            Error.getError().addError(Localization.l("common_error"), "An error occured", e, Error.SEVERITY_ERROR);
 		}
 	}
 	

@@ -14,6 +14,7 @@ import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.MapPoint;
@@ -812,7 +813,7 @@ public class XmlReader {
 				}
 				catch(Exception e)
 				{
-					Error.getError().addError(PAS.l("common_error"), "Error parsing LBA operator details", e, Error.SEVERITY_ERROR);
+                    Error.getError().addError(Localization.l("common_error"), "Error parsing LBA operator details", e, Error.SEVERITY_ERROR);
 				}
 				
 				
@@ -951,7 +952,7 @@ public class XmlReader {
 			else
 				categoryPk = "-1";
 			name = eAttributes.getAttribute("sz_name");
-			name = PAS.l("main_parm_category_" + categoryPk.substring(1));
+            name = Localization.l("main_parm_category_" + categoryPk.substring(1));
 			description = eAttributes.getAttribute("sz_description");
 			fileext = eAttributes.getAttribute("sz_fileext");
 			timestamp = eAttributes.getAttribute("l_timestamp");

@@ -1,6 +1,6 @@
 package no.ums.pas.sound;
 
-import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JComponent;
@@ -33,7 +33,7 @@ public class Record {
 		catch(Exception e)
 		{
 			e.printStackTrace();
-        	JOptionPane.showMessageDialog(null, "Unable to get AudioLine", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Unable to get AudioLine", Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
         	throw e;
 		}
 		m_sz_path = sz_path;
@@ -111,7 +111,7 @@ public class Record {
 				return false;
 			} else {
 				if(m_current_bytebuffer!=null) {
-					if(JOptionPane.showConfirmDialog(parent, PAS.l("sound_recorder_prompt_overwrite"), PAS.l("sound_recorder_prompt_overwrite_heading"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION) {
+                    if(JOptionPane.showConfirmDialog(parent, Localization.l("sound_recorder_prompt_overwrite"), Localization.l("sound_recorder_prompt_overwrite_heading"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION) {
 						
 					} else
 						return false;

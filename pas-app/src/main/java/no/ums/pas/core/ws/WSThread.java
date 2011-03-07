@@ -1,6 +1,7 @@
 package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.xml.ws.soap.SOAPFaultException;
@@ -45,13 +46,13 @@ public abstract class WSThread extends Thread
 			e.printStackTrace();
 			boolean b = PAS.pasplugin.onSoapFaultException(PAS.get_pas().get_userinfo(), e);
 			if(!b) {
-                Error.getError().addError(PAS.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);
+                Error.getError().addError(Localization.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);
             }
 
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);			
+            Error.getError().addError(Localization.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);
 		}
 		finally
 		{

@@ -2,6 +2,7 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.Parmws;
@@ -64,7 +65,7 @@ public class WSConfirmLBA
 			}
 			catch(Exception e)
 			{
-				Error.getError().addError(PAS.l("common_error"), "Could not confirm or cancel the sending", e, Error.SEVERITY_ERROR);
+                Error.getError().addError(Localization.l("common_error"), "Could not confirm or cancel the sending", e, Error.SEVERITY_ERROR);
 			}
 		}
 	}

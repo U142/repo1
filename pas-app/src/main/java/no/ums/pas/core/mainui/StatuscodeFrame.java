@@ -2,6 +2,7 @@ package no.ums.pas.core.mainui;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusSending;
 
 import javax.swing.JLabel;
@@ -32,11 +33,11 @@ public class StatuscodeFrame extends JPanel implements ComponentListener{ //JFra
 		//m_statuscontroller = controller;
 		m_dim = new Dimension(PAS.get_pas().get_eastwidth()-30, 300);
 		//setBounds(0,0,m_dim.width, m_dim.height);
-		String sz_columns[] = { PAS.l("main_status_code"), PAS.l("mainmenu_status"), PAS.l("common_items"), PAS.l("common_show"), PAS.l("common_animate"), PAS.l("common_color") };
+        String sz_columns[] = {Localization.l("main_status_code"), Localization.l("mainmenu_status"), Localization.l("common_items"), Localization.l("common_show"), Localization.l("common_animate"), Localization.l("common_color")};
 		boolean b_editable[] = { false, false, false, true, true, false };
 		int n_width[] = { 20, 150, 30, 30, 30, 50 };
 		m_statuspanel = new OpenStatuscodes(PAS.get_pas(), this, sz_columns, n_width, b_editable, m_dim);
-		m_label = new JLabel(PAS.l("main_status_statuscodes"));
+        m_label = new JLabel(Localization.l("main_status_statuscodes"));
 		addComponentListener(this);
 		
 		init();

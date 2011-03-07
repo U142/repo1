@@ -3,6 +3,7 @@ package no.ums.pas.sound;
 import no.ums.pas.Installer;
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.event.ActionEvent;
@@ -96,7 +97,7 @@ public abstract class SoundlibFile extends Object implements ActionListener{
 					m_callback.actionPerformed(new ActionEvent(e.getSource(), ActionEvent.ACTION_PERFORMED, m_sz_action_command));
 			} catch(Exception err) {
 				PAS.get_pas().add_event("Exception on SoundlibFile.actionPerformed " + err.getMessage(), err);
-				Error.getError().addError(PAS.l("common_error"),"Exception in actionPerformed",err,1);
+                Error.getError().addError(Localization.l("common_error"),"Exception in actionPerformed",err,1);
 			}
 		}
 	}

@@ -338,11 +338,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 
 	
-	public static final Error langErrors = new Error(false);
-	public static String l(String s) {
-        return Localization.l(s);
-	}
-	public static void setLocale(String country, String language)
+    public static void setLocale(String country, String language)
 	{
         Localization.INSTANCE.setLocale(new Locale(country, language));
 		try
@@ -1440,8 +1436,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		get_drawthread().setRepaint(get_mappane().get_mapimage());
 		get_mappane().repaint(x, y, width, height);
 	}
-	
-	protected class RepaintCycler extends Thread {
+
+    public static String l(String str) {
+        return Localization.l(str);
+    }
+
+    protected class RepaintCycler extends Thread {
 		private int m_n_ms = 100; //msec pr repaint
 		private boolean b_stop = false;
 		public void setStop() { b_stop = true; }

@@ -5,6 +5,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.RadioItemList;
+import no.ums.pas.localization.Localization;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -76,15 +77,15 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 		public MainMenuBar()
 		{
 			super();
-			m_menu_departments = new JMenu(PAS.l("mainmenu_departments"));
+            m_menu_departments = new JMenu(Localization.l("mainmenu_departments"));
 
-			m_item_training_mode = new JCheckBoxMenuItem(PAS.l("mainmenu_trainingmode"));
-			m_item_address_book = new JMenuItem(PAS.l("common_address_book"));
+            m_item_training_mode = new JCheckBoxMenuItem(Localization.l("mainmenu_trainingmode"));
+            m_item_address_book = new JMenuItem(Localization.l("common_address_book"));
 
 			//m_item_gps_epsilon = new JMenu("Point epsilon");
 			//m_item_gps_epsilon_slider = new SliderMenuItem(get_pas(), "");
-			
-			m_item_status_updates = new JMenu(PAS.l("mainmenu_status_updates"));
+
+            m_item_status_updates = new JMenu(Localization.l("mainmenu_status_updates"));
 			
 			updateDeptSelection(false);
 

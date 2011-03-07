@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfo;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
@@ -129,7 +130,7 @@ public class SoundFile extends Object {
 					PAS.get_pas().add_event("send_wav() bytebuffer = NULL", null);
 					return false;
 				}
-				PAS.get_pas().add_event(PAS.l("common_uploading") + " - " + sz_filename, null);
+                PAS.get_pas().add_event(Localization.l("common_uploading") + " - " + sz_filename, null);
 				try {
 					byte[] wavarray = get_bytebuffer().duplicate().array();
 					audioreq.setWav(wavarray);
@@ -137,14 +138,14 @@ public class SoundFile extends Object {
 					audioreq.setNParam(get_filenumber());
 				} catch(Exception e) {
 					PAS.get_pas().add_event("ERROR: Upload failed " + e.getMessage(), e);
-					Error.getError().addError(PAS.l("common_error"),"Exception in send_wav",e,1);
+                    Error.getError().addError(Localization.l("common_error"),"Exception in send_wav",e,1);
 					return false;
 				}
 				break;
 			case Sending_Files.SOUNDFILE_TYPE_TTS_:
 				//check serverside existence
 				SoundInfoTTS infotts = (SoundInfoTTS)info;
-				PAS.get_pas().add_event(PAS.l("sound_file_uploading_tts_text") + " : " + infotts.get_serverfilename(), null);
+                PAS.get_pas().add_event(Localization.l("sound_file_uploading_tts_text") + " : " + infotts.get_serverfilename(), null);
 				audioreq.setNFiletype(n_filetype);
 				audioreq.setSzTtsText(infotts.get_tts_text());
 				audioreq.setSzFilename(infotts.get_serverfilename());
@@ -155,7 +156,7 @@ public class SoundFile extends Object {
 			case Sending_Files.SOUNDFILE_TYPE_LIBRARY_:
 				//check serverside existence
 				SoundInfoLibrary infolib = (SoundInfoLibrary)info;
-				PAS.get_pas().add_event(PAS.l("sound_file_uploading_lib_file") + " : " + infolib.get_deptpk() + "/" + infolib.get_messagepk(), null);
+                PAS.get_pas().add_event(Localization.l("sound_file_uploading_lib_file") + " : " + infolib.get_deptpk() + "/" + infolib.get_messagepk(), null);
 				try {
 					audioreq.setNFiletype(n_filetype);
 					audioreq.setNMessagepk(Integer.parseInt(infolib.get_messagepk()));
@@ -163,13 +164,13 @@ public class SoundFile extends Object {
 					audioreq.setNParam(get_filenumber());
 					//form.setParameter("l_owner", new Integer(infolib.get_deptpk()).toString());
 				} catch(Exception e) {
-					Error.getError().addError(PAS.l("common_error"),"Exception in send_wav",e,1);
+                    Error.getError().addError(Localization.l("common_error"),"Exception in send_wav",e,1);
 				}
 				break;
 			case Sending_Files.SOUNDFILE_TYPE_LOCAL_:
 				sz_filename = n_refno + "_" + get_filenumber() + ".wav";
 				SoundInfoLocal infoloc = (SoundInfoLocal)info;
-				PAS.get_pas().add_event(PAS.l("sound_file_uploading_local_file") + " : " + infoloc.get_file().getPath(), null);
+                PAS.get_pas().add_event(Localization.l("sound_file_uploading_local_file") + " : " + infoloc.get_file().getPath(), null);
 				//upload
 				try {
 					File f = infoloc.get_file();
@@ -191,7 +192,7 @@ public class SoundFile extends Object {
 					//form.setParameter("file", sz_filename, is);
 					//InputStream is = HttpPostForm.newInputStream(new java.io.File(infoloc.get_file().getPath()).
 				} catch(Exception e) {
-					Error.getError().addError(PAS.l("common_error"),"Exception in send_wav",e,1);
+                    Error.getError().addError(Localization.l("common_error"),"Exception in send_wav",e,1);
 				}
 				break;
 		}
@@ -203,13 +204,13 @@ public class SoundFile extends Object {
 			{
 				//ERROR occured
 				PAS.get_pas().add_event("ERROR on SoundFile.send_wav() form-post " + response.getSzResponsetext(), new Exception(response.getSzResponsetext()));
-				Error.getError().addError(PAS.l("common_error"),"Exception in send_wav",new Exception(response.getSzResponsetext()),1);
+                Error.getError().addError(Localization.l("common_error"),"Exception in send_wav",new Exception(response.getSzResponsetext()),1);
 			}
 				
 		}
 		catch(Exception e)
 		{
-			Error.getError().addError(PAS.l("sound_file_uploading_error"), e.getLocalizedMessage(), e, 1);
+            Error.getError().addError(Localization.l("sound_file_uploading_error"), e.getLocalizedMessage(), e, 1);
 			return false;
 		}
 		/*try {

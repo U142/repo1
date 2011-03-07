@@ -1,6 +1,7 @@
 package no.ums.pas.core.popupmenus;
 
 import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.status.StatusItemObject;
 
@@ -22,7 +23,7 @@ public class PUInhabitantList extends PUMenu {
 	{
 		super(pas, sz_name);
 		m_actionlistener = new PUInhabitantList.PUActionListener();
-		JMenuItem item_find = new JMenuItem(PAS.l("main_status_popup_find_on_map"));
+        JMenuItem item_find = new JMenuItem(Localization.l("main_status_popup_find_on_map"));
 		item_find.setActionCommand("act_find");
 		add(item_find);
 		item_find.addActionListener(m_actionlistener);
