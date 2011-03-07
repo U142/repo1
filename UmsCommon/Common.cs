@@ -376,6 +376,16 @@ namespace com.ums.UmsCommon
     [XmlType(Namespace="http://ums.no/ws/common")]
     public class UEllipseDef
     {
+        UMapBounds bounds;
+        public UMapBounds CalcBounds()
+        {
+            bounds = new UMapBounds();
+            bounds.l_bo = center.lon - Math.Abs(radius.lon);
+            bounds.r_bo = center.lon + Math.Abs(radius.lon);
+            bounds.u_bo = center.lat + Math.Abs(radius.lat);
+            bounds.b_bo = center.lat - Math.Abs(radius.lat);
+            return bounds;
+        }
         public UMapPoint center;
         public UMapPoint radius;
     }

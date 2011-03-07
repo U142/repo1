@@ -478,11 +478,22 @@ namespace com.ums.ws.pas
         [WebMethod]
         public UGabResultFromPoint GetNearestGABFromPoint(ULOGONINFO logon, UMapPoint p)
         {
-            //UGabResult search = new UGabResult();
-            //return search;
             try
             {
-                return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
+                AddressInfo adr = Global.AdrIndex.FindClosestAddressFromPoint(p);
+                UGabResultFromPoint res = new UGabResultFromPoint();
+                if (adr != null)
+                {
+                    res.lat = adr.lat;
+                    res.lon = adr.lng;
+                    res.match = 0;
+                    res.name = adr.Address;
+                    res.postno = adr.Zip;
+                    res.region = adr.ZipName;
+                    res.no = adr.HouseId;
+                }
+                return res;
+                //return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
             }
             catch (Exception)
             {

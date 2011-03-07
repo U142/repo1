@@ -189,8 +189,9 @@ namespace com.ums.ws.parm
                 if (typeof(UMUNICIPALSENDING).Equals(s.GetType()))
                 {
                     UMUNICIPALSENDING m = (UMUNICIPALSENDING)s;
-                    UAdrDb db = new UAdrDb(logon.sz_stdcc, 60, logon.l_deptpk);
-                    return db.GetMunicipalBounds(ref m);
+                    //UAdrDb db = new UAdrDb(logon.sz_stdcc, 60, logon.l_deptpk);
+                    //return db.GetMunicipalBounds(ref m);
+                    return com.ums.wsPASExec.Global.AdrIndex.FindMunicipalBounds(ref m.municipals);
                 }
 
             }
@@ -275,14 +276,36 @@ namespace com.ums.ws.parm
 
         protected UAdrCount _EllipseCount(ref UEllipseDef e, long adrtypes)
         {
-            UAdrCount a = new UAdrCount();
-            return a;
+            //((lat-@centerx)*(lat-@centerx) / (@width * @width)) + ((lon-@centery)*(lon-@centery)/(@height * @height)) < 1
+            UAdrCount adrcount = new UAdrCount();
+            UMapBounds bounds = e.CalcBounds();
+            var addressInfos = com.ums.wsPASExec.Global.AdrIndex.FindInArea(bounds.l_bo, bounds.u_bo, bounds.r_bo, bounds.b_bo, 500000);
+            foreach (var address in addressInfos)
+            {
+                var adr = address.toUAddress();
+                if(Math.Pow(adr.lon-e.center.lat,2) / Math.Pow(e.radius.lat, 2) + Math.Pow(adr.lat-e.center.lon,2) / Math.Pow(e.radius.lon,2) < 1)
+                {
+                    _AddToAdrcount(ref adrcount, ref adr, adrtypes);
+                }
+            }
+            return adrcount;
         }
 
         protected UAdrCount _MunicipalCount(ref List<UMunicipalDef> m, long adrtypes)
         {
-            UAdrCount a = new UAdrCount();
-            return a;
+            UAdrCount adrcount = new UAdrCount();
+            foreach(UMunicipalDef municipal in m)
+            {
+                if (municipal.sz_municipalid.Length <= 0)
+                    continue;
+                var addressInfos = com.ums.wsPASExec.Global.AdrIndex.FindInMunicipal(municipal);
+                foreach (var address in addressInfos)
+                {
+                    var adr = address.toUAddress();
+                    _AddToAdrcount(ref adrcount, ref adr, adrtypes);
+                }
+            }
+            return adrcount;
         }
 
         protected UAdrCount GetAddressCount(ref UMAPSENDING sending)
