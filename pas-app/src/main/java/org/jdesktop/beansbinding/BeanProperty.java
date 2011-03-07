@@ -1,15 +1,19 @@
 package org.jdesktop.beansbinding;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.MapMaker;
 
+import javax.annotation.Nullable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.IdentityHashMap;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -46,7 +50,43 @@ public class BeanProperty<BT, PT> {
         }
     }
 
+    private static class NamedMethodKey {
+        private final Class type;
+        private final String name;
+
+        private NamedMethodKey(Class type, String name) {
+            this.type = Preconditions.checkNotNull(type, "type cannot be null");
+            this.name = Preconditions.checkNotNull(name, "setter name cannot be null");
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            NamedMethodKey namedMethodKey = (NamedMethodKey) o;
+
+            return name.equals(namedMethodKey.name) && type.equals(namedMethodKey.type);
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * type.hashCode() + name.hashCode();
+        }
+    }
+
     private static final Set<Identity> instanceMap = new ConcurrentSkipListSet<Identity>();
+    private static final Map<NamedMethodKey, Method> setterMap = new MapMaker().makeComputingMap(new Function<NamedMethodKey, Method>() {
+        @Override
+        public Method apply(@Nullable NamedMethodKey input) {
+            for (Method method : input.type.getMethods()) {
+                if (method.getParameterTypes().length == 1 && input.name.equals(method.getName())) {
+                    return method;
+                }
+            }
+            throw new IllegalArgumentException("No method "+ input.name +" on "+input.type);
+        }
+    });
 
     private final String propertyName;
     private final String getterName;
@@ -63,6 +103,7 @@ public class BeanProperty<BT, PT> {
         return propertyName;
     }
 
+    @SuppressWarnings("unchecked")
     public PT read(BT src) {
         try {
             return (PT) src.getClass().getMethod(getterName).invoke(src);
@@ -78,13 +119,11 @@ public class BeanProperty<BT, PT> {
     public void write(BT target, PT value) {
         try {
             if (!instanceMap.contains(new Identity(target)) && !Objects.equal(value, read(target))) {
-                target.getClass().getMethod(setterName, value.getClass()).invoke(target, value);
+                setterMap.get(new NamedMethodKey(target.getClass(), setterName)).invoke(target, value);
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Failed to invoke setter for "+propertyName+" on "+target, e);
         } catch (InvocationTargetException e) {
-            throw new IllegalStateException("Failed to invoke setter for "+propertyName+" on "+target, e);
-        } catch (NoSuchMethodException e) {
             throw new IllegalStateException("Failed to invoke setter for "+propertyName+" on "+target, e);
         }
     }
