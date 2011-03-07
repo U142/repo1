@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="WS\AddressDatabase.asmx" />
     <Content Include="WS\Conference.asmx" />
     <Content Include="WS\ExternalExec.asmx" />
     <Content Include="Global.asax">
@@ -108,6 +109,10 @@
     <Compile Include="VB\Conference.cs" />
     <Compile Include="VB\Infosentral.cs" />
     <Compile Include="VB\Pincode.cs" />
+    <Compile Include="WS\AddressDatabase.asmx.cs">
+      <DependentUpon>AddressDatabase.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WS\Conference.asmx.cs">
       <DependentUpon>Conference.asmx</DependentUpon>
       <SubType>Component</SubType>
