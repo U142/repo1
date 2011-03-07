@@ -40,6 +40,6 @@ public class AutoBinding {
             }
         };
 
-        public abstract <SB, TB, V> void bind(SB src, BeanProperty<SB, V> srcProp, TB target, BeanProperty<TB, V> targetProp);
+        public abstract <SB, TB, V> void bind(SB src, BeanProperty<SB, V> srcProp, TB target, BeanProperty<TB, V> targetProp, Converter<S, T>);
     }
 }

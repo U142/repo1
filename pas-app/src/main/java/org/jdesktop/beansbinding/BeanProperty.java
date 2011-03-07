@@ -7,9 +7,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nullable;
+import javax.swing.JComboBox;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
+
+import org.jdesktop.beansbinding.converters.StringToInt;
+
+import java.awt.ItemSelectable;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -92,6 +99,11 @@ public class BeanProperty<BT, PT> {
     private final String getterName;
     private final String setterName;
 
+    public Class<?> getWriteType(BT source)
+    {
+    	return Object.class;
+    }
+
     public BeanProperty(String propertyName) {
         this.propertyName = propertyName;
         this.getterName = "get" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
@@ -157,7 +169,24 @@ public class BeanProperty<BT, PT> {
                     }
                 }
             });
-        } else {
+        } else if(propertyName.equals("selectedItem") && target instanceof JComboBox) {
+        	((JComboBox) target).addItemListener(new ItemListener() {
+        		private Object value = ((JComboBox) target).getSelectedItem();
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					instanceMap.add(id);
+					try
+					{
+						final Object oldValue = value;
+						value = ((JComboBox) target).getSelectedItem();
+						propertyChangeListener.propertyChange(new PropertyChangeEvent(target, propertyName, oldValue, value));
+					} finally {
+						instanceMap.remove(id);
+					}
+				}
+			});
+        }
+        else {
             try {
                 target.getClass().getMethod("addPropertyChangeListener", String.class, PropertyChangeListener.class).invoke(target, propertyName, new PropertyChangeListener() {
                     @Override
@@ -180,3 +209,4 @@ public class BeanProperty<BT, PT> {
         }
     }
 }
+
