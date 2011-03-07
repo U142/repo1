@@ -34,7 +34,8 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 	public PreviewPanel get_previewpanel() { return m_panel; }
 	private StatisticsPanel m_statisticspanel;
 	public StatisticsPanel get_statisticspanel() { return m_statisticspanel; }
-	
+	public String encoding = "ISO-8859-15";
+	public GISFile m_gis;
 	
 	public PreviewFrame(GISFile gis) {
 		super(PAS.get_pas(), "Import preview", true);
@@ -47,6 +48,7 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 		init_common();
 		//get_statisticspanel().n_filelines = gis.
 		//setModal(true);
+		m_gis = gis;
 		m_options = new PreviewOptions(this, gis.getIsAlert());
 		m_panel = new PreviewPanel(gis, this);
 		m_btn_finish = new JButton("Finish");

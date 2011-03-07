@@ -385,7 +385,7 @@ public class SosiFile extends Object {
 		m_parser.set_callback(callback);
 		m_parser.set_action(action);
 		m_parser.set_object(this);
-		m_parser.begin_parsing();
+		m_parser.begin_parsing("");
 		//PAS.get_pas().add_event(get_polygon().toString());
 		/*for(int i=0; i < get_polygon().get_size(); i++) {
 			PAS.get_pas().add_event(new Double(get_polygon().get_coor_lat(i)).toString() + new Double(get_polygon().get_coor_lon(i)).toString());
@@ -447,7 +447,7 @@ public class SosiFile extends Object {
 			m_importpolygon_callback = callback;
 		}
 		public void begin() {
-			begin_parsing();
+			begin_parsing("");
 		}
 		public boolean parse() {
 			create_values();

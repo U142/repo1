@@ -11,21 +11,27 @@ public class GISFile implements ActionListener {
 	private GISParser m_gisparser = null;
 	public GISParser get_parser() { return m_gisparser; }
 	private PreviewFrame m_preview;
+	public void set_preview(PreviewFrame preview) { m_preview = preview; }
 	private ActionListener m_callback;
 	protected boolean m_b_is_alert = false;
 	public boolean getIsAlert() { return m_b_is_alert; }
 	protected ActionListener get_callback() { return m_callback; }
+	private File m_gisfile;
+	public File get_file() { return m_gisfile; }
+	private String encoding;
+	public void set_encoding(String encoding) { this.encoding = encoding; }
 	
 	public GISFile() {
 	}
 	public boolean parse(File f, ActionListener callback, String sz_action, boolean bIsAlert) {
 		m_gisparser = new GISParser(f, callback);
+		m_gisfile = f;
 		m_callback = callback;
 		m_b_is_alert = bIsAlert;
 		get_parser().set_callback(this);
 		get_parser().set_action(sz_action);
 		get_parser().set_object(this);
-		get_parser().begin_parsing();
+		get_parser().begin_parsing(encoding);
 		return true;
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -35,7 +41,11 @@ public class GISFile implements ActionListener {
 		}
 	}
 	public void show_preview() {
-		m_preview = new PreviewFrame(this);
+		if(m_preview == null)
+			m_preview = new PreviewFrame(this);
+		else {
+			m_preview.m_panel.get_previewlist().m_panel.start_search();
+		}
 		m_preview.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(350, 400));
 		if(get_callback()!=null)
 			get_callback().actionPerformed(new ActionEvent(m_preview, ActionEvent.ACTION_PERFORMED, "act_register_gis_previewframe"));

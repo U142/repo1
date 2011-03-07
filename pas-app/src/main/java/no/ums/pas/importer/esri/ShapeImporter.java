@@ -270,7 +270,7 @@ public class ShapeImporter extends FileParser
 			fileinputstream.read(b);
 	
 	        fileinputstream.close();*/
-	        begin_parsing();
+	        begin_parsing("");
 		}
 		catch(Exception e)
 		{

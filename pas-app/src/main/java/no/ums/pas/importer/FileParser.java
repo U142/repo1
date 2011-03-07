@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public abstract class FileParser extends Thread {
@@ -33,6 +34,8 @@ public abstract class FileParser extends Thread {
 	public String get_action() { return m_action; }
 	public Object get_object() { return m_object; }
 
+	private String m_encoding;
+	
     protected void set_action_eof(String sz_action) { m_action_eof = sz_action; }
 	public String get_action_eof() { return m_action_eof; }
 	
@@ -58,11 +61,15 @@ public abstract class FileParser extends Thread {
 		}
 	}
 	protected boolean readlines() {
+		
 		String sz_line;
 		try {
 			BufferedReader br;
+			if(m_encoding == null || m_encoding.length() < 1)
+				m_encoding = "ISO-8859-15";
+			
 			if(m_f != null)
-				br = new BufferedReader(new InputStreamReader(new FileInputStream(m_f)));
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(m_f),m_encoding));
 			else
 				br = new BufferedReader(new InputStreamReader(m_dis));
 			
@@ -70,6 +77,13 @@ public abstract class FileParser extends Thread {
 				sz_line = br.readLine();
 				if(sz_line==null)
 					break;
+				/*byte[] ba = sz_line.getBytes();
+				StringBuffer sz_parsed_line = new StringBuffer();
+				for(int i=0;i<ba.length;++i) {
+					 sz_parsed_line.append((char)ba[i]);
+				}*/
+				
+				//m_lines.add(sz_parsed_line.toString());
 				m_lines.add(sz_line);
 			}
 			br.close();
@@ -82,8 +96,9 @@ public abstract class FileParser extends Thread {
 		}
 		return true;
 	}
-	public void begin_parsing() {
+	public void begin_parsing(String encoding) {
 		//PAS.get_pas().add_event("begin_parsing()");
+		m_encoding = encoding;
 		start();
 	}
 
