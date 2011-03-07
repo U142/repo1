@@ -1021,8 +1021,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 						m_mappane = new MapFrame(dim_map.width, dim_map.height, m_drawthread, m_navigation, null, true);
 						Variables.setMapFrame(m_mappane);
 						m_mappane.addActionListener(get_pasactionlistener());
-						m_drawthread.setMapImage(get_mappane().get_mapimage());
-						//m_drawthread.setMapOverlay(get_mappane().get_mapoverlay());
+                        //m_drawthread.setMapOverlay(get_mappane().get_mapoverlay());
 						m_drawthread.set_mappane(get_mappane());
 	
 						m_gpscontroller = new GPSController();
@@ -1397,8 +1396,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//	return;
 		try
 		{
-			if(get_drawthread()!=null)
-				get_drawthread().setRepaint(get_mappane().get_mapimage());
+			if(get_drawthread()!=null) {
+//			m_mapimg = img;
+                //if(m_b_needrepaint==0)
+                //m_b_needrepaint ++;
+            }
 		}
 		catch(Exception e)
 		{
@@ -1427,14 +1429,18 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	{
 		if(r!=null)
 		{
-			get_drawthread().setRepaint(get_mappane().get_mapimage());
-			get_mappane().repaint(r.x, r.y, r.width, r.height);
+            //			m_mapimg = img;
+            //if(m_b_needrepaint==0)
+            //m_b_needrepaint ++;
+            get_mappane().repaint(r.x, r.y, r.width, r.height);
 		}
 	}
 	public synchronized void kickRepaint(int x, int y, int width, int height)
 	{
-		get_drawthread().setRepaint(get_mappane().get_mapimage());
-		get_mappane().repaint(x, y, width, height);
+        //			m_mapimg = img;
+        //if(m_b_needrepaint==0)
+        //m_b_needrepaint ++;
+        get_mappane().repaint(x, y, width, height);
 	}
 
     public static String l(String str) {

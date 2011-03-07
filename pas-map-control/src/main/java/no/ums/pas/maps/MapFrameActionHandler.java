@@ -17,7 +17,6 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
-import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.SwingUtilities;
 import java.awt.Dimension;
@@ -35,8 +34,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 //import PAS.*;
-
-
 
 
 public class MapFrameActionHandler implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
@@ -338,7 +335,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	}
 	
 	/*MOUSE-MOTION-LISTENER*/
-	public synchronized void mouseMoved(java.awt.event.MouseEvent e)
+	public synchronized void mouseMoved(MouseEvent e)
 	{
 		if(get_mappane().get_mouseoverhouse()!=null)
 			get_mappane().set_mouseoverhouse(null);
@@ -364,7 +361,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					//PAS.get_pas().kickRepaint();
 				break;
 			case MapFrame.MAP_MODE_HOUSESELECT:
-				
+
 				break;
 			case MapFrame.MAP_MODE_SENDING_POLY:
 				if(get_enable_snap()) {
@@ -385,7 +382,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			case MapFrame.MAP_MODE_OBJECT_MOVE:
 				try {
 					if(get_mappane().get_current_object()!=null) {
-						MapPoint mp = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));					
+						MapPoint mp = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 						get_mappane().get_current_object().set_pos(new Point(e.getX(), e.getY()), mp);
 					}
 				} catch(Exception err) {
@@ -393,10 +390,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					Error.getError().addError("MapFrameActionHandler","Exception in mouseMoved",err,1);
 				}
 				//check_snap(e);
-                //			m_mapimg = img;
-                //if(m_b_needrepaint==0)
-                //m_b_needrepaint ++;
-                break;
+				get_mappane().get_drawthread().setRepaint(get_mappane().get_mapimage());
+				break;
 			case MapFrame.MAP_MODE_HOUSEEDITOR_:
 				//execMouseOver(e);
 				//check_snap(e);
@@ -414,14 +409,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		//addAction("act_checkmouseover", new Point(e.getX(), e.getY()));
 		//PAS.get_pas().get_housecontroller().check_mouseover(e.getX(), e.getY());
 	}
-	
+
 	/**
 	 * Points where poly-drawing is outside clip-area/restriction area
 	 */
 	List<MapPointLL> intersects = new ArrayList<MapPointLL>();
 	List<MapPointLL> intersects_last = new ArrayList<MapPointLL>();
 	List<MapPointLL> intersects_first = new ArrayList<MapPointLL>();
-	
+
 	enum PAINTMODE
 	{
 		NORMAL,
@@ -441,9 +436,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		FORCE_INSIDE,
 		FORCE_OUTSIDE,
 	};
-	
+
 	/**
-	 * 
+	 *
 	 * @param b_click - if called from mouse click
 	 * @param mode - force polygon to be painted by this rule
 	 * @param n_deptpk - specify department restriction polygons. if <1, use the combined restriction polygon
@@ -491,7 +486,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		{
 			//List<ShapeStruct> list = ((DeptInfo)depts.get(n_dept)).get_restriction_shapes();
 			//List<ShapeStruct> list = ;
-			
+
 			for(int i=0;i < list.size(); i++)
 			{
 				/*if(list.get(i).isHidden())
@@ -500,7 +495,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						return true; //
 					continue;
 				}*/
-				
+
 				//check line intersects with last line (last polypoint and mouse pos)
 				PolygonStruct current_polygon = null;
 				try
@@ -527,7 +522,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					current_polygon.ellipseToRestrictionlines(list.get(i).typecast_polygon());
 					return true;
 				}
-				
+
 				boolean b = list.get(i).pointInsideShape(p.get_mappointll());
 				switch(mode)
 				{
@@ -540,15 +535,15 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				//Variables.NAVIGATION.
 				if(b)
 				{
-	
-	
+
+
 					MapPointLL ll1 = current_polygon.getLastPoint();
 					MapPointLL ll2 = p.get_mappointll();
 					if(ll1!=null && ll2!=null)
 					{
 						intersects_last = list.get(i).typecast_polygon().LineIntersect(ll1, ll2, nearest_point.getPointReference(), ll1, false);
 						//the user clicked, we need to configure polygon automatically to obay restriction area
-						if((intersects_last.size()>0 || isKeyHot(HOTKEYS.CTRL)) && b_click) 
+						if((intersects_last.size()>0 || isKeyHot(HOTKEYS.CTRL)) && b_click)
 						{
 							if(isKeyHot(HOTKEYS.CTRL))
 							{
@@ -585,9 +580,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 								{
 									Collections.sort(intersects_last);
 									/*current_polygon.FollowRestrictionLines(
-											p.get_mappointll(), 
-											intersects_last.get(0), 
-											intersects_last.get(1),//intersects_last.size()-1), 
+											p.get_mappointll(),
+											intersects_last.get(0),
+											intersects_last.get(1),//intersects_last.size()-1),
 											list.get(i).typecast_polygon(),
 											true,
 											true,
@@ -597,13 +592,13 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 										if((isect % 2)==0) //going outside
 										{
 											current_polygon.FollowRestrictionLines(
-											p.get_mappointll(), 
-											intersects_last.get(isect), 
-											intersects_last.get(isect+1),//intersects_last.size()-1), 
+											p.get_mappointll(),
+											intersects_last.get(isect),
+											intersects_last.get(isect+1),//intersects_last.size()-1),
 											list.get(i).typecast_polygon(),
 											true,
 											true,
-											false);											
+											false);
 										}
 										else
 										{
@@ -621,11 +616,11 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 											list.get(i).typecast_polygon(),
 											false,
 											true,
-											false);	
+											false);
 								}
 								break;
 							}
-							
+
 							return true;
 						}
 					}
@@ -637,7 +632,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					intersects.addAll(intersects_first);
 					intersects.addAll(intersects_last);
-					
+
 					double pixel_dist = Variables.getNavigation().calc_pix_distance(nearest_point.getDegreeDistance());
 					//System.out.println(pixel_dist+"");
 					if(nearest_point!=null && pixel_dist < 15)
@@ -660,7 +655,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					else if(intersects_last.size()==0 || ll1==null)
 					{
 						setPaintMode(PAINTMODE.NORMAL);
-						get_mappane().set_cursor(get_mappane().get_cursor_draw());					
+						get_mappane().set_cursor(get_mappane().get_cursor_draw());
 						return true;
 					}
 					else if(intersects_last.size()>0 && !b_click)
@@ -675,7 +670,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		get_mappane().setCursor(get_mappane().get_cursor_illegal_draw());
 		return false;
 	}
-	
+
 	private void mouse_move(MouseEvent e) {
 		if(e instanceof no.ums.pas.send.SnapMouseEvent) {
 			do_snap(e);
@@ -711,7 +706,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 		addAction("act_check_mousesnap", p);
 	}
-	
+
 	private void do_snap(MouseEvent e) {
 		try {
 			MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -753,7 +748,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		//PAS.get_pas().get_sendcontroller().actionPerformed(action);
 		//get_mappane().get_drawthread().setRepaint(get_mappane().get_mapimage());
 	}
-	public synchronized void mouseDragged(java.awt.event.MouseEvent e)
+	public synchronized void mouseDragged(MouseEvent e)
 	{
 		switch(get_mappane().get_mode())
 		{
@@ -793,7 +788,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					catch(Exception err)
 					{
-						
+
 					}
 				}
 				break;
@@ -810,9 +805,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				break;
 		}
 	}
-	
-	/*MOUSE-LISTENER*/	
-	public synchronized void mousePressed(java.awt.event.MouseEvent e)
+
+	/*MOUSE-LISTENER*/
+	public synchronized void mousePressed(MouseEvent e)
 	{
 		switch(e.getButton())
 		{
@@ -827,7 +822,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					catch(Exception err)
 					{
-						
+
 					}
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAN_BY_DRAG) {
@@ -837,7 +832,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					catch(Exception err)
 					{
-						
+
 					}
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM) {
@@ -855,10 +850,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {
-                        //			m_mapimg = img;
-                        //if(m_b_needrepaint==0)
-                        //m_b_needrepaint ++;
-                        SwingUtilities.invokeLater(new Runnable() {
+						Variables.getDraw().setRepaint(get_mappane().get_mapimage());
+						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
@@ -869,7 +862,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 							}
 						});
 					}
-					
+
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -879,10 +872,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					if(PAS.get_pas() == null)
 					{
-                        //			m_mapimg = img;
-                        //if(m_b_needrepaint==0)
-                        //m_b_needrepaint ++;
-                        SwingUtilities.invokeLater(new Runnable() {
+						Variables.getDraw().setRepaint(get_mappane().get_mapimage());
+						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
@@ -894,7 +885,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						});
 					}
 					else
-						PAS.get_pas().kickRepaint();					
+						PAS.get_pas().kickRepaint();
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE) {
 					try {
@@ -916,7 +907,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						set_isdragging(true);
 					}
 					catch(Exception err) {
-						
+
 					}
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_OBJECT_MOVE) {
@@ -924,7 +915,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					get_mappane().get_current_object().setMoving(false);
 					get_mappane().set_current_object(null);
 					get_mappane().set_prev_mode();
-					//get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);					
+					//get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 				}
 				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_HOUSEEDITOR_) {
 					//new or edit object
@@ -934,7 +925,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						//System.out.println("House found at same location with " + get_mappane().get_mouseoverhouse().get_inhabitantcount() + " inhabitants");
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get(0).get_lon(), get_mappane().get_mouseoverhouse().get(0).get_lat()));
 					}
-					else 
+					else
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					/*if(m_houseeditordlg==null)
 						m_houseeditordlg = new HouseEditorDlg(PAS.get_pas(), PAS.get_pas(), p, get_mappane().get_mouseoverhouse());
@@ -974,13 +965,13 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					addAction("act_mouse_rightclick", p);
 					//ActionEvent action = new ActionEvent(p, ActionEvent.ACTION_PERFORMED, "act_mouse_rightclick");
-					//PAS.get_pas().get_sendcontroller().actionPerformed(action);					
+					//PAS.get_pas().get_sendcontroller().actionPerformed(action);
 				}
 				break;
 		}
 	}
-	
-	public synchronized void mouseReleased(java.awt.event.MouseEvent e)
+
+	public synchronized void mouseReleased(MouseEvent e)
 	{
 		switch(e.getButton())
 		{
@@ -992,10 +983,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {
-                        //			m_mapimg = img;
-                        //if(m_b_needrepaint==0)
-                        //m_b_needrepaint ++;
-                        SwingUtilities.invokeLater(new Runnable() {
+						Variables.getDraw().setRepaint(Variables.getMapFrame().m_img_onscreen);
+						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
@@ -1023,7 +1012,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					nav._bbo = Variables.getNavigation().getHeaderBBO() + ll.get_lat();
 					nav._lbo = Variables.getNavigation().getHeaderLBO() - ll.get_lon();
 					nav._rbo = Variables.getNavigation().getHeaderRBO() - ll.get_lon();
-					
+
 					/*System.out.println("delta y = " + ll.get_lat());
 					double mod1 = Math.cos(CoorConverter.deg2rad * nav._bbo); //old
 					double mod2 = Math.cos(CoorConverter.deg2rad * (nav._bbo + ll.get_lat()));
@@ -1045,9 +1034,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					{
 						//modifier = Math.sin(CoorConverter.deg2rad * ll.get_lat());
 						nav._lbo += ll.get_lon() * modifier;// * Math.signum(ll.get_lat());
-						nav._rbo += ll.get_lon() * modifier;// * Math.signum(ll.get_lat());						
+						nav._rbo += ll.get_lon() * modifier;// * Math.signum(ll.get_lat());
 					}*/
-					
+
 					/*double ydiff = (nav._ubo - nav._bbo + ll.get_lat()) / 2; //center
 					System.out.println("ydiff="+ydiff);
 					double mod_for_aspect = Math.sin(CoorConverter.deg2rad * (ydiff));
@@ -1065,7 +1054,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						//if(nav._bbo > 0)
 						//	nav._bbo += ll.get_lat() * Math.abs(mod_for_aspect);
 						//else
-							nav._bbo += add;//ll.get_lat() * mod_for_aspect;							
+							nav._bbo += add;//ll.get_lat() * mod_for_aspect;
 					}
 					else
 					{
@@ -1074,7 +1063,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						//else
 							nav._ubo += add;
 					}*/
-					
+
 					//if(Variables.NAVIGATION.setNavigation(nav))
 					Variables.getNavigation().setNavigation(nav);
 						get_mappane().load_map();
@@ -1087,25 +1076,25 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				break;
 			case MouseEvent.BUTTON2:
 			case MouseEvent.BUTTON3:
-				break;	
+				break;
 		}
 		//m_b_isdragging = false;
 		set_isdragging(false);
 
 	}
-	
-	public synchronized void mouseExited(java.awt.event.MouseEvent e)
+
+	public synchronized void mouseExited(MouseEvent e)
 	{
-	
+
 	}
 
 	/*we need to focus the mappane so that shortcut-keys will work*/
-	public synchronized void mouseEntered(java.awt.event.MouseEvent e)
+	public synchronized void mouseEntered(MouseEvent e)
 	{
 		get_mappane().requestFocusInWindow();
 	}
-	
-	public synchronized void mouseClicked(java.awt.event.MouseEvent e)
+
+	public synchronized void mouseClicked(MouseEvent e)
 	{
 		switch(e.getButton())
 		{

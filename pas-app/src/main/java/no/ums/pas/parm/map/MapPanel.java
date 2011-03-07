@@ -122,8 +122,10 @@ public class MapPanel extends JPanel implements ActionListener {
 		local_event = e;
 		if ("act_loadmap".equals(e.getActionCommand())) {
 			m_mapframe.load_map(true);
-			m_draw.setRepaint(m_mapframe.get_mapimage());
-			repaint();
+            //			m_mapimg = img;
+            //if(m_b_needrepaint==0)
+            //m_b_needrepaint ++;
+            repaint();
 		} else if ("act_download_houses".equals(e.getActionCommand())) {
 		} else if ("act_setzoom".equals(e.getActionCommand())) {
 			m_mapproperties.set_zoom(((Double) e.getSource()).intValue());
@@ -177,8 +179,10 @@ public class MapPanel extends JPanel implements ActionListener {
 	}
 
 	public void redraw() {
-		m_draw.setRepaint(m_mapframe.get_mapimage());
-		repaint();
+        //			m_mapimg = img;
+        //if(m_b_needrepaint==0)
+        //m_b_needrepaint ++;
+        repaint();
 	}
 
 	class DrawPoly extends Draw {

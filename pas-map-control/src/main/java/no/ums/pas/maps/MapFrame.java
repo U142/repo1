@@ -5,13 +5,7 @@ package no.ums.pas.maps;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.pas.Draw;
-import no.ums.pas.PAS;
-import no.ums.pas.core.Variables;
-import no.ums.pas.core.dataexchange.HTTPReq;
-import no.ums.pas.core.logon.Settings.MAPSERVER;
-import no.ums.pas.core.menus.ViewOptions;
-import no.ums.pas.core.popupmenus.PUPolyPoint;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.HouseItem;
@@ -27,9 +21,7 @@ import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.TasStruct;
 import no.ums.pas.maps.defines.UMSMapObject;
-import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.ImageLoader;
-import no.ums.pas.ums.tools.PrintCtrl;
+import no.ums.pas.maps.popup.PUPolyPoint;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.ImageIcon;
@@ -59,10 +51,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-//import netscape.javascript.JSObject;
-//import sun.plugin.liveconnect.JavaScriptPermission;
-
 
 public class MapFrame extends JPanel implements ActionListener, ComponentListener, MouseWheelListener, MouseListener {
     private static final Log log = UmsLog.getLogger(MapFrame.class);
@@ -173,7 +161,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
-	public void set_active_shape(ShapeStruct s) { 
+	public void set_active_shape(ShapeStruct s) {
 		m_active_shape = s;
 		try
 		{
@@ -198,9 +186,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		{
 			
 		}
-		Variables.getMapFrame().kickRepaint();
-		//set_mode(MAP_MODE_SENDING_POLY);
-	}	
+		kickRepaint();
+	}
+
 	private PUPolyPoint m_polypoint_popup = null;
 	private PolySnapStruct m_polysnapstruct = null;
 	public void set_current_snappoint(PolySnapStruct p) { m_polysnapstruct = p; }
@@ -209,26 +197,14 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	protected boolean b_mouse_inside_canvas = true;
 	protected void setMouseInsideCanvas(boolean b) { 
 		b_mouse_inside_canvas = b;
-		if(PAS.get_pas()!=null)
-			PAS.get_pas().kickRepaint();
-		else {
-            //			m_mapimg = img;
-            //if(m_b_needrepaint==0)
-            //m_b_needrepaint ++;
-            SwingUtilities.invokeLater(new Runnable() {
-				public void run()
-				{
-					//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-					//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-					//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
-					Variables.getMapFrame().repaint();
-					Variables.getMapFrame().validate();
-				}
-			});
-		}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                repaint();
+                validate();
+            }
+        });
 	}
-	public boolean getMouseInsideCanvas() { return b_mouse_inside_canvas; }
-	
+
 	public Cursor get_cursor_draw() { return m_cursor_draw; }
 	public Cursor get_cursor_illegal_draw() { return m_cursor_illegal_draw; }
 	public Cursor get_cursor_epicentre() { return m_cursor_epicentre; }
@@ -305,54 +281,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			m_overlays.get(i).b_needupdate = true;
 		}
 	}
-	public void setAllOverlays()
-	{
-		try
-		{
-			m_overlays = new ArrayList<MapOverlay>();
-			//resetAllOverlays();
-			for(int i=0; i < PAS.get_pas().get_statuscontroller().get_sendinglist().size(); i++)
-			{
-				try
-				{
-					String sz_jobid = PAS.get_pas().get_statuscontroller().get_sendinglist().get(i).getLBA().sz_jobid;
-					
-					//m_overlays.add(new MapOverlay(sz_jobid, 1)); //gsm900/1800
-					//m_overlays.add(new MapOverlay(sz_jobid, 4)); //UMTS	
-					//start_gsm_coverage_loader();
-				}
-				catch(Exception e)
-				{
-					
-				}
-				
-			}
-		}
-		catch(Exception e)
-		{
-			return ;
-		}					
 
-	}
-
-	//close status should run this
-	public void resetAllOverlays()
-	{
-		if(m_overlays!=null)
-		{
-			for(int i=0; i < m_overlays.size(); i++)
-			{
-				JCheckBox chk = m_overlays.get(i).chk_ref;
-				if(chk!=null)
-					chk.setSelected(false);
-			}
-			m_overlays.clear();
-			m_overlays = null;
-			System.out.println("Overlays reset");
-		}
-	}
-	
-	MapFrameActionHandler m_actionhandler;
+    MapFrameActionHandler m_actionhandler;
 	int m_n_current_cursor = Cursor.DEFAULT_CURSOR;
 	protected int m_n_current_mode = MAP_MODE_PAN;
 	protected int m_n_prev_mode = MAP_MODE_PAN;
@@ -365,9 +295,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	UMSMapObject m_current_object = null;
 	protected UMSMapObject get_current_object() { return m_current_object; }
 	void set_current_object(UMSMapObject obj) { m_current_object = obj; }
-	private Draw m_drawthread;
 	private Navigation m_navigation;
-	protected Draw get_drawthread() { return m_drawthread; }
 	protected Navigation get_navigation() { return m_navigation; }
 	public void addActionListener(ActionListener callback) { m_actionhandler.addActionListener(callback); }
 	private ImageIcon m_icon_pinpoint = null;
@@ -399,7 +327,6 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	public void set_mouseoverhouse(ArrayList<HouseItem> i) { m_mouseoverhouse = i; }
 	public void set_pinpoint(MapPointLL p) {
 		m_pinpointll = p;
-        ViewOptions.TOGGLE_SEARCHPOINTS.setSelected(true);
     }
 	public void set_adredit(MapPointLL p) {
 		m_adreditll = p;
@@ -428,12 +355,6 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		
         tip.setBackground(c1);
 		
-		//Substance 3.3
-        tip.setForeground(SubstanceLookAndFeel.getActiveColorScheme().getForegroundColor());
-        
-		//Substance 5.2
-		//tip.setForeground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getForegroundColor());
-        
         m_tooltip = tip;
         return tip;
     }
@@ -468,22 +389,13 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		
 	}
 
-	public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap)
+	public MapFrame(int n_width, int n_height, Navigation nav, HTTPReq http, boolean b_enable_snap)
 	{
 		super();
 		setPreferredSize(new Dimension(100,100));
 		setLayout(new BorderLayout());
 		
-		try
-		{
-			//img_loader_snake = ImageLoader.load_icon("ajax-loader.gif").getImage();
-			img_loader_snake = ImageLoader.load_icon("convert_32.png").getImage();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		m_drawthread = drawthread;
+        img_loader_snake = ImageFetcher.getImage("convert_32.png");
 		m_navigation = nav;
 		m_n_mapsite = 0;
 		//this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
@@ -494,32 +406,29 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		m_maploader = new MapLoader(this, http);
 		m_current_cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		this.setPreferredSize(m_dimension);
-		m_polypoint_popup = new PUPolyPoint(PAS.get_pas(), "Menu", this);
+		m_polypoint_popup = new PUPolyPoint("Menu", this);
 		m_current_mousepos = new Point();
 
 
-		String sz_url = "edit.gif";
-		if(PAS.icon_version==2)
-			sz_url = "brush_16_paint.png";
+		String sz_url = "brush_16_paint.png";
 		try {
-			Dimension best_size = Toolkit.getDefaultToolkit().getBestCursorSize(16, 16);
-			ImageIcon icon = ImageLoader.load_icon(sz_url);
+			ImageIcon icon = ImageFetcher.getIcon(sz_url);
 			//m_cursor_draw = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH), 
 			//		  new Point(15, 22), "Draw");
 			m_cursor_draw = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH), 
 					  new Point(7, 24), "Draw");
 			sz_url = "brush_16_paint_illegal.gif";
-			icon = ImageLoader.load_icon(sz_url);
+			icon = ImageFetcher.getIcon(sz_url);
 			m_cursor_illegal_draw = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage(), 
 					  new Point(7, 24), "Illegal Draw");
 			
 			sz_url = "brush_16_merge.gif";
-			icon = ImageLoader.load_icon(sz_url);
+			icon = ImageFetcher.getIcon(sz_url);
 			m_cursor_draw_merge = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage(), 
 					  new Point(7, 24), "Merge");
 
 			sz_url = "brush_16_pin.gif";
-			icon = ImageLoader.load_icon(sz_url);
+			icon = ImageFetcher.getIcon(sz_url);
 			m_cursor_draw_pin_to_border = Toolkit.getDefaultToolkit().createCustomCursor(icon.getImage(), 
 					  new Point(7, 24), "Pin to border");
 			
@@ -529,7 +438,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
         }
 		sz_url = "epicentre_pinpoint.png";
 		try {
-			ImageIcon icon_epicentre = ImageLoader.load_icon(sz_url);
+			ImageIcon icon_epicentre = ImageFetcher.getIcon(sz_url);
 			m_cursor_epicentre = Toolkit.getDefaultToolkit().createCustomCursor(icon_epicentre.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH),
 					new Point(0,0), "Epicentre");
 		} catch(Exception e) {
@@ -537,25 +446,19 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
         }
 		String sz_pinpointfile = "pinpoint_blue.png";
 		try {
-			m_icon_pinpoint = ImageLoader.load_icon(sz_pinpointfile);
+			m_icon_pinpoint = ImageFetcher.getIcon(sz_pinpointfile);
 		} catch(Exception e) {
-			m_icon_pinpoint = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-            Error.getError().addError(Localization.l("common_error"),"Exception in MapFrame",e,1);
+            log.error("Exception in MapFrame", e, 1);
 		}
 		try {
-			m_icon_adredit = ImageLoader.load_icon("pinpoint.png");
+			m_icon_adredit = ImageFetcher.getIcon("pinpoint.png");
 		} catch(Exception e) {
-			m_icon_adredit = null;
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in MapFrame",e,1);
+			log.error("Exception in MapFrame", e, 1);
 		}
 		Dimension dim = Toolkit.getDefaultToolkit().getBestCursorSize(10, 10);
 		//System.out.println("Best cursor size " + dim.width + ", " + dim.height);
 		try {
-			m_icon_sethousecoor_private = ImageLoader.load_icon("cursor_private.png");
+			m_icon_sethousecoor_private = ImageFetcher.getIcon("cursor_private.png");
 			m_cursor_houseeditor_private_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_private.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH), 
 					  							new Point(Math.min(dim.width-1, 16), Math.min(dim.height-1, 16)), "Private");
 		} catch(Exception e) {
@@ -563,7 +466,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 			m_icon_sethousecoor_private = null;
 		}
 		try {
-			m_icon_sethousecoor_company = ImageLoader.load_icon("cursor_company.png");
+			m_icon_sethousecoor_company = ImageFetcher.getIcon("cursor_company.png");
 			m_cursor_houseeditor_company_coor = Toolkit.getDefaultToolkit().createCustomCursor(m_icon_sethousecoor_company.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH),
 						new Point(Math.min(dim.width-1, 16), Math.min(dim.height-1, 16)), "Company");
 		} catch(Exception e) {
@@ -604,7 +507,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			Error.getError().addError("MapFrame","Exception in draw_adredit",e,1);
+			log.error("Exception in draw_adredit", e, 1);
 		}
 	}
 	public void draw_moveinhab_text(Graphics g) {
@@ -766,7 +669,9 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		addMouseListener(m_actionhandler);
 		try {
 			this.addKeyListener(m_actionhandler);
-		} catch(Exception e) { Error.getError().addError("MapFrame","Exception in initialize",e,1);/*PAS.get_pas().add_event(e.getMessage());*/ }
+		} catch(Exception e) {
+            log.error("Exception in initialize", e);
+        }
 	}
 	public void drawOnEvents(Graphics gfx)
 	{
@@ -1173,10 +1078,8 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	}
 	
 	public void kickRepaint() {
-        //			m_mapimg = img;
-        //if(m_b_needrepaint==0)
-        //m_b_needrepaint ++;
-        SwingUtilities.invokeLater(new Runnable() {
+		get_drawthread().setRepaint(Variables.getMapFrame().get_mapimage());
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
 				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());

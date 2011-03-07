@@ -32,7 +32,7 @@ import java.awt.image.ImageObserver;
 		private int m_n_currenttrackerid;
 		//private PAS m_pas;
 		private boolean m_b_suspended = false;
-		private Image m_mapimg = null;
+//		private Image m_mapimg = null;
 		//private Image m_mapoverlay = null;
 		private boolean m_b_imgpaint_success = false;
 		public boolean isImgpaintSuccess() { return m_b_imgpaint_success; }
@@ -91,17 +91,8 @@ import java.awt.image.ImageObserver;
 			m_gfx_buffer = m_img_offscreen.getGraphics();	
 			
 		}
-		public void setMapImage(Image img) { m_mapimg = img; }
-		//public void setMapOverlay(Image img) { m_mapoverlay = img; }
-		public void setRepaint(Image img) { 
-			m_mapimg = img; 
-			//if(m_b_needrepaint==0) 
-			//m_b_needrepaint ++;
-		}
-		public void setNeedRepaint() { 
-			m_b_needrepaint ++; 
-		}
-		public void setPainted() { 
+
+        public void setPainted() {
 			if(m_b_needrepaint>0) 
 				m_b_needrepaint --;
 			//System.out.println("m_b_needrepaint="+m_b_needrepaint);
@@ -210,6 +201,7 @@ import java.awt.image.ImageObserver;
 				{
 						//set_neednewcoors(false);
 					//m_mapimg = null;
+                    final Image m_mapimg = (get_mappane() == null) ? null : get_mappane().get_image();
 					if(m_mapimg!=null) {
 						try {
 							/*MediaTracker tracker = new MediaTracker(get_mappane());

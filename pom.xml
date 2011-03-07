@@ -18,6 +18,7 @@
         <module>pas-ui</module>
         <module>pas-admin-ui</module>
         <module>pas-cellbroadcast</module>
+        <module>pas-map-control</module>
     </modules>
     <scm>
         <url>scm:svn:ssh://eris.sublevel3.org/svn/pas-java-client/branches/maven-release-build/PAS.1.5</url>
@@ -264,6 +265,12 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>1.6.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>2.3.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
