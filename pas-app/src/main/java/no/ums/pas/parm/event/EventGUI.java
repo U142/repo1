@@ -86,8 +86,9 @@ public class EventGUI extends JFrame implements WindowListener {
 			setBorder(BorderFactory
 					.createTitledBorder(Localization.l("main_parm_event_dlg_information")));
 
-			txaDesc = new JTextArea();
+			txaDesc = new JTextArea(100,20);
 			scroll = new JScrollPane(txaDesc);
+		
 
 			this.txtPanel = new TextPanel();
 			this.iptPanel = new InputPanel();
@@ -97,9 +98,10 @@ public class EventGUI extends JFrame implements WindowListener {
             this.lblDescription.setText(Localization.l("main_parm_event_dlg_description"));
             this.lblCategory.setText(Localization.l("main_parm_event_dlg_category"));
 			
-			txaDesc.setPreferredSize(new Dimension(100, 57));
-			txaDesc.setWrapStyleWord(true);
-			scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			txaDesc.setPreferredSize(new Dimension(100, 60));
+			//txaDesc.setWrapStyleWord(true);
+			txaDesc.setLineWrap(true);
+			scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 			add(this.txtPanel);
 			add(this.iptPanel);

@@ -13,9 +13,13 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.TitledBorder;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -277,23 +281,20 @@ public class ObjectGUI extends JFrame implements WindowListener {
 		public DescriptionPanel() {
 
 			setLayout(new FlowLayout(FlowLayout.LEFT));
-
+			setBorder(new TitledBorder(Localization.l("main_parm_object_dlg_more_description")));
 			this.txtPanel = new JPanel();
 			this.iptPanel = new JPanel();
 
-			this.lblDescription = new JLabel();
-			this.lblDescription.setPreferredSize(new Dimension(110, 18));
-            this.lblDescription.setText(Localization.l("main_parm_object_dlg_more_description"));
-
-			this.txaDescription = new JTextArea();
+			this.txaDescription = new JTextArea(100,30);
 			this.scrDescription = new JScrollPane(this.txaDescription);
 			this.scrDescription.setAutoscrolls(true);
 
-			this.txtPanel.add(lblDescription);
 			this.iptPanel.add(scrDescription);
 
-			txaDescription.setPreferredSize(new Dimension(1000, 600));
-			scrDescription.setPreferredSize(new Dimension(1000, 600));
+			txaDescription.setPreferredSize(new Dimension(320, 80));
+			txaDescription.setLineWrap(true);
+			scrDescription.setPreferredSize(new Dimension(320, 90));
+			scrDescription.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 			
 			add(this.txtPanel);
 			add(this.iptPanel);
