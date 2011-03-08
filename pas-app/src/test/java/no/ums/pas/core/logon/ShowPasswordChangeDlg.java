@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import no.ums.pas.core.logon.view.PasswordUpdate;
+import no.ums.pas.core.logon.view.PasswordUpdateCtrl;
 import no.ums.pas.core.logon.view.PasswordUpdateModel;
 import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordResult;
@@ -12,11 +13,10 @@ import no.ums.pas.ums.tools.Utils;
 
 public class ShowPasswordChangeDlg {
 	public static void main(String[] args) {
-		final PasswordUpdate dlg = new PasswordUpdate(new PasswordUpdate.PasswordUpdateComplete() {
+		/*final PasswordUpdate dlg = new PasswordUpdate(new PasswordUpdate.PasswordUpdateComplete() {
 			
 			@Override
 			public PasswordResult onOk(PasswordUpdateModel model) {
-				System.out.println("onok");
 				//save new password
 				String shaOld = Utils.encrypt(model.getOldpassword());
 				String shaNew = Utils.encrypt(model.getNewpassword());
@@ -30,12 +30,14 @@ public class ShowPasswordChangeDlg {
 			
 			@Override
 			public void onCancel(PasswordUpdateModel model) {
-				System.out.println("okcancel");
 				//do nothing
 			}
 		});
 		dlg.setModal(true);
-		dlg.setVisible(true);
+		dlg.setVisible(true);*/
+		UserInfo ui = new UserInfo();
+		ui.set_passwd(Utils.encrypt("æøåÆØÅ"));
+		new PasswordUpdateCtrl(ui).ShowGUI(true);
 		System.exit(0);
 	}
 }

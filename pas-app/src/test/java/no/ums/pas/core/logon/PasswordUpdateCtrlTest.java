@@ -25,7 +25,7 @@ public class PasswordUpdateCtrlTest {
 		PasswordUpdateCtrl ctrl = new PasswordUpdateCtrl(ui);
 		PasswordUpdateModel model = new PasswordUpdateModel();
 		model.setOldpassword("testæøå12");
-		assertThat(ctrl.onOk(model), equalTo(PasswordResult.WRONG_PASSWORD));
+		assertThat(ctrl.onValidation(model), equalTo(PasswordResult.WRONG_PASSWORD));
 	}
 	
 	@Test
@@ -37,7 +37,7 @@ public class PasswordUpdateCtrlTest {
 		model.setOldpassword("testæøåÆØÅ123");
 		model.setNewpassword("testæøå");
 		model.setRepeatnewpassword("ÆØÅ");
-		assertThat(ctrl.onOk(model), equalTo(PasswordResult.PASSWORD_MISMATCH));
+		assertThat(ctrl.onValidation(model), equalTo(PasswordResult.PASSWORD_MISMATCH));
 	}
 	
 	@Test
@@ -49,6 +49,6 @@ public class PasswordUpdateCtrlTest {
 		model.setOldpassword("testæøåÆØÅ123");
 		model.setNewpassword("'\"#¤%&/()=?`\\**");
 		model.setRepeatnewpassword("'\"#¤%&/()=?`\\**");
-		assertThat(ctrl.onOk(model), equalTo(PasswordResult.OK));		
+		assertThat(ctrl.onValidation(model), equalTo(PasswordResult.OK));		
 	}
 }

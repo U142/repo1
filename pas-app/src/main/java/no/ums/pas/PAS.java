@@ -1231,7 +1231,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private int n_previous_mapwidth = 0;
 	private int n_previous_mapheight = 0;
 	private static Boolean m_b_firstmap = Boolean.TRUE;
-	public static Boolean firstMapLoaded() { return !m_b_firstmap; }
+	public static void signalFirstMapLoaded() { 
+		m_b_firstmap = Boolean.FALSE; 
+	}
+	public static Boolean firstMapLoaded() { 
+		return !m_b_firstmap; 
+	}
 
     public void waitForFirstMap()
 	{
@@ -1242,11 +1247,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			/*	synchronized(m_b_firstmap) {
 					m_b_firstmap.wait(20000);
 				}*/
-				Timeout to = new Timeout(20, 200);
+				Timeout to = new Timeout(20, 500);
 				while(!to.timer_exceeded())
 				{
 					if(firstMapLoaded())
 						break;
+					Thread.sleep(to.get_msec_interval());
 					to.inc_timer();
 				}
 			}
@@ -1374,7 +1380,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			if(m_b_firstmap && b_from_timer) {
 				//checkLoadParm();
-				m_b_firstmap = false;
+				//m_b_firstmap = false;
 				m_b_hasinitedsize = true;
 			}
 		}

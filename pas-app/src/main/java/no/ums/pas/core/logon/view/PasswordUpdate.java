@@ -24,8 +24,18 @@ public class PasswordUpdate extends JDialog {
 	
 	public interface PasswordUpdateComplete
 	{
-		public PasswordResult onOk(PasswordUpdateModel model);
+		/**
+		 * user clicks Save. Validate values
+		 * @param model
+		 * @return
+		 */
+		public PasswordResult onValidation(PasswordUpdateModel model);
 		public void onCancel(PasswordUpdateModel model);
+		/**
+		 * after onValidation
+		 * @param result
+		 */
+		public void onAfterValidation(PasswordResult result);
 	}
 	
 	public enum PasswordResult
@@ -33,11 +43,12 @@ public class PasswordUpdate extends JDialog {
 		OK,
 		WRONG_PASSWORD,
 		PASSWORD_MISMATCH,
+		PASSWORD_EMPTY,
 	}
 	
 
 	private void btnOkActionPerformed(ActionEvent e) {
-		callback.onOk(passwordModel1);
+		callback.onAfterValidation(callback.onValidation(passwordModel1));
 	}
 
 	private void btnCancelActionPerformed(ActionEvent e) {

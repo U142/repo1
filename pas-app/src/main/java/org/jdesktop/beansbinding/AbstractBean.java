@@ -4,19 +4,19 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class AbstractBean {
-	private final PropertyChangeSupport prop = new PropertyChangeSupport(this);
+	public final PropertyChangeSupport prop = new PropertyChangeSupport(this);
 	
-	private void addPropertyChangeListener(PropertyChangeListener listener) {
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		prop.addPropertyChangeListener(listener);
 	}
-	private void removePropertyChangeListener(PropertyChangeListener listener) {
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		prop.removePropertyChangeListener(listener);
 	}
-	private void addPropertyChangeListener(String propertyName,
+	public void addPropertyChangeListener(String propertyName,
 			PropertyChangeListener listener) {
 		prop.addPropertyChangeListener(propertyName, listener);
 	}
-	private void removePropertyChangeListener(String propertyName,
+	public void removePropertyChangeListener(String propertyName,
 			PropertyChangeListener listener) {
 		prop.removePropertyChangeListener(propertyName, listener);
 	}

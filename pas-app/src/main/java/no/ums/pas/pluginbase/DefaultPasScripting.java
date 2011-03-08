@@ -313,8 +313,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
             }
 		}
 		else if(pas.get_rightsmanagement().read_parm() && pas.get_userinfo().get_current_department().get_pas_rights() != 4) {
-			if(pas.get_parmcontroller()==null && pas.get_settings().parm()) {
-				pas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
+			if(pas.get_settings().parm()) {
+				//pas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
+	            if(PAS.get_pas().get_parmcontroller()==null && !PAS.isParmOpen()) {
+					PAS.setParmOpen(PAS.pasplugin.onStartParm());
+				}
 			}	
 		}
 
@@ -547,6 +550,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			MapFrame frame) {
 		if(Variables.getStatusController()!=null)
 			Variables.getStatusController().refresh_search_houses();
+		PAS.signalFirstMapLoaded();
 		return true;
 	}
 
