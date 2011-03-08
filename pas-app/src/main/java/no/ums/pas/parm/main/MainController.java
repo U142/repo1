@@ -1383,7 +1383,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		if (this.m_categories == null) {
 			this.m_categories = new HashMap<Long, CategoryVO>();
             m_categories.put((long)-1, new CategoryVO("c-1", Localization.l("main_parm_category_select"), null, null, null));
-			if (this.allElements == null) {
+			if (this.allElements == null || this.allElements.size() < 1) {
 				this.getAllElementsFromXmlFile();
 			}
 			for (int i = 0; i < allElements.size(); i++) {
