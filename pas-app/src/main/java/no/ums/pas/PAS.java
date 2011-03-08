@@ -1558,38 +1558,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	public void close_parm(final boolean b_appexit) {
 		if(get_parmcontroller()!=null) {
-            final LoadingFrame progress = new LoadingFrame(Localization.l("main_parm_closing_parm"), null);
-			try
-			{
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-                        progress.set_totalitems(0, Localization.l("main_parm_closing_parm"));
-						progress.start_and_show();
-					}
-				});
-			}
-			catch(Exception e)
-			{
-				
-			}
 			
 			(new File(ParmConstants.cleanExit)).delete();
 			new Thread("PARM Exit thread")
 			{
 				public void run()
 				{
-					/*if(!b_appexit) { //also remove parm tab
-						try
-						{
-							get_eastcontent().setIndexZero();
-							get_eastcontent().remove_tab(EastContent.PANEL_PARM_);
-						}
-						catch(Exception e)
-						{
-							
-						}
-					}*/
+		            final LoadingFrame progress = new LoadingFrame(Localization.l("main_parm_closing_parm"), null);
+		            progress.set_totalitems(0, Localization.l("main_parm_closing_parm"));
+					progress.start_and_show();
 					try
 					{
 						new XmlWriter().writeTreeToFile(get_parmcontroller().getTreeCtrl().get_treegui().getTree(),get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel());
@@ -1607,12 +1584,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					// Hvis programmet avslutter før dette blir gjort vet det at tempfilene skal slettes
 					// og henter alt fra databasen igjen.
 					
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run()
-						{
-							progress.stop_and_hide();
-						}
-					});
 					if(!b_appexit) { //also remove parm tab
 						try
 						{
@@ -1626,6 +1597,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					}
 
 					m_parmcontroller = null;
+					progress.stop_and_hide();
 					get_pasactionlistener().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"act_set_parm_closed"));
 				}
 			}.start();

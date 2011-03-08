@@ -127,7 +127,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		{
 			
 		}
-		new SettingsGUI2(this).dlg.setVisible(true);
+		//new SettingsGUI2(this).dlg.setVisible(true);
 		try
 		{
 			this.setAlwaysOnTop(true);

@@ -43,6 +43,7 @@ import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.common.USYSTEMMESSAGES;
 import org.geotools.data.ows.Layer;
@@ -307,18 +308,26 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onDepartmentChanged(PAS pas)
 	{
-		if(!pas.get_rightsmanagement().read_parm()) {
-			if(PAS.isParmOpen()) {
-                OtherActions.PARM_CLOSE.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
-            }
-		}
-		else if(pas.get_rightsmanagement().read_parm() && pas.get_userinfo().get_current_department().get_pas_rights() != 4) {
-			if(pas.get_settings().parm()) {
-				//pas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_start_parm"));
-	            if(PAS.get_pas().get_parmcontroller()==null && !PAS.isParmOpen()) {
-					PAS.setParmOpen(PAS.pasplugin.onStartParm());
+		if(PAS.isParmOpen()) {
+            OtherActions.PARM_CLOSE.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
+        }
+		if(pas.get_rightsmanagement().read_parm() && pas.get_userinfo().get_current_department().get_pas_rights() != 4) {
+			Timeout t = new Timeout(30, 200);
+			while(PAS.isParmOpen() && !t.timer_exceeded())
+			{
+				try
+				{
+					Thread.sleep(t.get_msec_interval());
+					t.inc_timer();
 				}
-			}	
+				catch(Exception e)
+				{
+					
+				}
+			}
+            if(!PAS.isParmOpen() && pas.get_settings().parm()) {
+				PAS.setParmOpen(PAS.pasplugin.onStartParm());
+			}
 		}
 
         final boolean enableSending = pas.get_rightsmanagement().cansend() || pas.get_rightsmanagement().cansimulate();

@@ -511,8 +511,8 @@ public class PASActions implements ActionListener {
 				parm_open = true;
 			else
 				parm_open = false;*/
-			if(PAS.isParmOpen())
-				PAS.get_pas().close_parm(false);
+			//if(PAS.isParmOpen())
+			//	PAS.get_pas().close_parm(false);
 			CheckItem dept = (CheckItem)e.getSource();
 			PAS.get_pas().get_userinfo().set_current_department((DeptInfo)dept.get_value());
 			PAS.get_pas().get_eastcontent().get_infopanel().actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo(), ActionEvent.ACTION_PERFORMED, "act_update_accountinfo"));
@@ -523,7 +523,13 @@ public class PASActions implements ActionListener {
 			//if(PAS.get_pas().get_eastcontent().get_statuspanel() != null) { // Update max channels
 			//	 for(int i=0;i<PAS.get_pas().get_eastcontent().get_tabbedpane().size();++i)
 			//}
-			actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_dept_changed"));
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run()
+				{
+					PAS.pasplugin.onDepartmentChanged(PAS.get_pas());
+				}
+			});
+			//actionPerformed(new ActionEvent(dept, ActionEvent.ACTION_PERFORMED, "act_dept_changed"));
 			// La til denne for å enten ta vare på eller slette sendingene ved department bytte
 			if(PAS.get_pas().get_current_project()!=null) {
 				//PAS.get_pas().close_active_project(true, true);
