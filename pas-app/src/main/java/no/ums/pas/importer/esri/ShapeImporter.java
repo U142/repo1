@@ -19,6 +19,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +34,34 @@ public class ShapeImporter extends FileParser
 	
 	public void parse_with_geotools(File file)
 	{
+		CoordinateReferenceSystem ref = null;
+		ShpFiles shp = null;
+		List<String> dbf_fields = new ArrayList<String>();
+		List<Object[]> dbf_content = new ArrayList<Object[]>();
+		List<String> dbf_strings = new ArrayList<String>();
+
 		try
 		{
-			ShpFiles shp = new ShpFiles(file);
-			GeometryFactory fact = new GeometryFactory();
+			shp = new ShpFiles(file);			
+		}
+		catch(MalformedURLException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		try
+		{
 			org.geotools.data.shapefile.prj.PrjFileReader prj = new org.geotools.data.shapefile.prj.PrjFileReader(shp);
-			CoordinateReferenceSystem ref = prj.getCoodinateSystem();
+			ref = prj.getCoodinateSystem();
 			prj.close();
+		}
+		catch(IOException e)
+		{
+			
+		}
+		try
+		{
 			DbaseFileReader dbf = new DbaseFileReader(shp, true, Charset.forName("ISO-8859-1"));
-			String projection_code = ref.getName().getCode();
-			System.out.println("Projection = " + projection_code);
-			List<String> dbf_fields = new ArrayList<String>();
-			List<Object[]> dbf_content = new ArrayList<Object[]>();
-			List<String> dbf_strings = new ArrayList<String>();
 			int n_fields = dbf.getHeader().getNumFields();
 			for(int i=0; i < n_fields; i++)
 			{
@@ -65,16 +82,18 @@ public class ShapeImporter extends FileParser
 				dbf_content.add(fields);
 				dbf_strings.add(output);
 				System.out.println(output);
-				/*dbf.readField(fieldNum)
-				//String output = "DBF " + ": ";
-				String output = "";
-				for(int i=0; i < fields.length; i++)
-					output += fields[i] + ", ";
-				dbf_content.add(fields);
-				dbf_strings.add(output);*/
-				
 			}
 			dbf.close();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		try
+		{
+			GeometryFactory fact = new GeometryFactory();
+			String projection_code = (ref!=null ? ref.getName().getCode() : "lonlat");
+			System.out.println("Projection = " + projection_code);
 			/*IndexFile indexfile = new IndexFile(shp, true);
 			for(int i=0; i < indexfile.getRecordCount(); i++)
 			{
@@ -119,7 +138,7 @@ public class ShapeImporter extends FileParser
 						com.vividsolutions.jts.geom.Coordinate [] coors = g.getCoordinates();
 						PolygonStruct poly = new PolygonStruct(new java.awt.Dimension(1,1));
 						poly.shapeID = (totalshapes+1);
-						poly.shapeName = dbf_strings.get(totalshapes);
+						poly.shapeName = (dbf_strings.size() > totalshapes ? dbf_strings.get(totalshapes) : "Poly"+poly.shapeID);
 						//poly.SetBounds(geom.getBoundary()., bounds._rbo, bounds._ubo, bounds._bbo);
 						for(int p = 0; p < coors.length; p++)
 						{
