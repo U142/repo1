@@ -2,7 +2,8 @@ package no.ums.pas.maps;
 
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.SettingsGUI;
-import no.ums.pas.core.logon.SettingsGUI.WmsLayerTree;
+import no.ums.pas.core.logon.WmsLayerTree;
+
 import org.geotools.data.ows.Layer;
 
 import javax.swing.JCheckBox;
@@ -29,7 +30,7 @@ public class WMSLayerSelectorPanel extends DefaultPanel implements MouseListener
 	}
 	
 	boolean tree_added = false;
-	WmsLayerTree layertree = new SettingsGUI().new WmsLayerTree(new DefaultTreeModel(null));
+	WmsLayerTree layertree = new WmsLayerTree(new DefaultTreeModel(null));
 	
 	public WMSLayerSelectorPanel()
 	{

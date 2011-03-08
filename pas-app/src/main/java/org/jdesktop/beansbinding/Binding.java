@@ -32,6 +32,6 @@ public class Binding<SB, SV, TB, TV> {
     }
 
     public void bind() {
-        strategy.bind(src, srcProp, target, targetProp, converter);
+        strategy.bind(src, srcProp, target, targetProp, getConverter());
     }
 }

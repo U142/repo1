@@ -34,7 +34,7 @@ public class AutoBinding {
                 targetProp.addPropertyChangeListener(target, new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
-                        srcProp.write(src, converter.convertReverse(targetProp.read(target)));
+                    	srcProp.write(src, converter.convertReverse(targetProp.read(target)));
                     }
                 });
             }
