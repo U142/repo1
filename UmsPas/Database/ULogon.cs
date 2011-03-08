@@ -61,13 +61,13 @@ namespace com.ums.PAS.Database
                                             wms_layers,
                                             ui.sz_wms_format,
                                             ui.l_drag_mode,
-                                            ui.sz_email_name,
-                                            ui.sz_email,
-                                            ui.sz_emailserver,
+                                            ui.sz_email_name.Replace("'","''"),
+                                            ui.sz_email.Replace("'", "''"),
+                                            ui.sz_emailserver.Replace("'", "''"),
                                             ui.l_mailport,
                                             ui.l_lba_update_percent,
-                                            ui.sz_wms_username,
-                                            ui.sz_wms_password);
+                                            ui.sz_wms_username.Replace("'", "''"),
+                                            ui.sz_wms_password.Replace("'", "''"));
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
