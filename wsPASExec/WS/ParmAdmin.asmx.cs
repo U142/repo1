@@ -2774,7 +2774,7 @@ namespace com.ums.ws.parm
                 sz_pkid = "l_objectpk";
 
             String sz_sql = String.Format("UPDATE {0} SET sz_description='{1}' WHERE {2}={3}",
-                                          sz_table, sz_desc, sz_pkid, l_objpk);
+                                          sz_table, sz_desc.Replace("'","''"), sz_pkid, l_objpk);
             try
             {
                 db.ExecNonQuery(sz_sql);
