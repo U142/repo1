@@ -1,13 +1,14 @@
 package no.ums.pas.core.logon.view;
 
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordResult;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordUpdateComplete;
 import no.ums.pas.ums.tools.Utils;
 
-import org.jdesktop.beansbinding.IBeanCtrl;
 
 
 /**
@@ -28,8 +29,9 @@ public class PasswordUpdateCtrl implements PasswordUpdateComplete {
 		userinfo = ui;
 	}
 	
-	public void ShowGUI(boolean modal)
+	public void ShowGUI(boolean modal, JComponent parent)
 	{		
+		dlg.setLocationRelativeTo(parent);
 		dlg.setModal(modal);
 		dlg.setVisible(true);
 	}
@@ -76,13 +78,13 @@ public class PasswordUpdateCtrl implements PasswordUpdateComplete {
 		case OK: //save changes
 			break;
 		case PASSWORD_EMPTY:
-			JOptionPane.showMessageDialog(dlg, "Empty password");
+			JOptionPane.showMessageDialog(dlg, PAS.l("mainmenu_update_password_empty_password"));
 			break;
 		case PASSWORD_MISMATCH:
-			JOptionPane.showMessageDialog(dlg, "Password mismatch");
+			JOptionPane.showMessageDialog(dlg, PAS.l("mainmenu_update_password_password_mismatch"));
 			break;
 		case WRONG_PASSWORD:
-			JOptionPane.showMessageDialog(dlg, "You entered wrong old password");
+			JOptionPane.showMessageDialog(dlg, PAS.l("mainmenu_update_password_wrong_password"));
 			break;
 		}
 	}

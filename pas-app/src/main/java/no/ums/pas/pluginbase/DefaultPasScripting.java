@@ -177,6 +177,9 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         file.add(FileMenuActions.FILE_IMPORT);
         file.add(FileMenuActions.PRINT_MAP);
         file.add(FileMenuActions.SAVE_MAP);
+        file.addSeparator();
+        file.add(FileMenuActions.UPDATE_PASSWORD);
+        file.addSeparator();
         file.add(FileMenuActions.EXIT);
 
         final JMenu navigate = menu.add(new JMenu(Localization.l("mainmenu_navigation")));

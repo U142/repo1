@@ -3,6 +3,7 @@ package no.ums.pas.core.menus;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.logon.view.PasswordUpdateCtrl;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.send.SendObject;
@@ -82,6 +83,14 @@ public interface FileMenuActions {
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().save_map();
         }
+    };
+    
+    // act_update_password
+    Action UPDATE_PASSWORD = new UmsAction("mainmenu_update_password") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new PasswordUpdateCtrl(PAS.get_pas().get_userinfo()).ShowGUI(true, PAS.get_pas().get_mappane());
+		}
     };
 
     // act_exit_application

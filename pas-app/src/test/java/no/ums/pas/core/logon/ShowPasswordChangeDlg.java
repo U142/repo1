@@ -37,7 +37,7 @@ public class ShowPasswordChangeDlg {
 		dlg.setVisible(true);*/
 		UserInfo ui = new UserInfo();
 		ui.set_passwd(Utils.encrypt("æøåÆØÅ"));
-		new PasswordUpdateCtrl(ui).ShowGUI(true);
+		new PasswordUpdateCtrl(ui).ShowGUI(true, null);
 		System.exit(0);
 	}
 }
