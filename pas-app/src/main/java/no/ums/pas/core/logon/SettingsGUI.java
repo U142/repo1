@@ -139,7 +139,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 
 		m_settings_layout = new SettingsLayout(parent);
 		
-		m_lbl_error = new StdTextLabel("", 200);
+		m_lbl_error = new StdTextLabel("", 300);
 		m_lbl_error.setForeground(Color.RED);
 		
 		m_lbl_username = new StdTextLabel(Localization.l("logon_userid"),100, 12 ,true);
@@ -336,6 +336,12 @@ public class SettingsGUI extends JFrame implements ActionListener {
 			}
 			try {
 				Integer.parseInt(m_txt_lba_refresh.getText());
+				if(Integer.parseInt(m_txt_lba_refresh.getText())>100 || Integer.parseInt(m_txt_lba_refresh.getText()) < 0)
+				{
+					valid= false;
+					errormsg = "LBA refresh has to be between 0 and 100";
+					m_txt_lba_refresh.requestFocus();
+				}
 			}catch (NumberFormatException nfe) {
 				valid= false;
 				errormsg = "LBA refresh is not a number";
