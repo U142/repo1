@@ -260,7 +260,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			int n_col_namefilter2 = get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2);
 			int n_skiplines		= (get_previewlist().isFirstlineHeading() ? 1 : 0);
 			String sz_separator = get_previewlist().get_gis().get_parser().get_separator();
-			
+
 			File f_post = create_umsgisfile(get_previewlist().get_gis().get_parser().get_file(), 
 					  get_previewlist().get_gis().get_parser().get_linedata(), 
 					  n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);

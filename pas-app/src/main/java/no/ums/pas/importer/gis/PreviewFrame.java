@@ -5,12 +5,15 @@ package no.ums.pas.importer.gis;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.PopupDialog;
 import no.ums.pas.ums.tools.Utils;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -161,12 +164,26 @@ public class PreviewFrame extends JDialog implements ComponentListener, ActionLi
 			m_panel.get_previewlist().actionPerformed(e);
 		}
 		else if("act_fetch_addresses".equals(e.getActionCommand())) { //get event from PreviewOptions
-			m_panel.actionPerformed(e);
-			enableControls(false);
+			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+					get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
+				m_panel.actionPerformed(e);
+				enableControls(false);
+			}
+			else
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
 		}
 		else if("act_gis_finish".equals(e.getActionCommand())) {
-			m_panel.actionPerformed(e);
-			this.setVisible(false);
+			if(get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_MUNICIPALID) != -1 &&
+			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_STREETID) != -1 &&
+			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_HOUSENO) != -1 &&
+			get_previewpanel().get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_LETTER) != -1) {
+				m_panel.actionPerformed(e);
+				this.setVisible(false);
+			}
+			else
+				JOptionPane.showMessageDialog(PopupDialog.get_frame(), Localization.l("importpreview_please_specify")); 
 		}
 		else if("act_set_statistics_view".equals(e.getActionCommand())) {
 			if(m_options!=null) {
