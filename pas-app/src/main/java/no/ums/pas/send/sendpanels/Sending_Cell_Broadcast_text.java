@@ -106,6 +106,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public static final long serialVersionUID = 1;
 	
 	Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\]");
+	public int m_maxname = 40;
 	public int m_maxSize = 500;
 	public int m_maxSafe = 160;
 	private final int m_oadc_maxSize = 11;
@@ -879,6 +880,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 //		int location = e.getKeyLocation(); 
 //		if(e.getSource() == m_txt_localtext && location == KeyEvent.VK_TAB)
 //			m_txt_internationaltext
+		if(e.getSource() == m_txt_messagename) {
+			if(m_txt_messagename.getText().length() > m_maxname)
+				m_txt_messagename.setText(m_txt_messagename.getText().substring(0,m_maxname));
+		}
 		if(e.getKeyChar()=='\t')
 		{
 			e.consume();
