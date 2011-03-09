@@ -252,8 +252,7 @@ namespace com.ums.ws.parm
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
                 {
-                    //return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
-                    return GetAddressCount(ref mapsending);
+                    return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
                 }
                 else
                 {
