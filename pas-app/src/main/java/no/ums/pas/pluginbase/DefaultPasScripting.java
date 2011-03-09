@@ -186,6 +186,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         navigate.add(NavigateActions.PAN);
         navigate.add(NavigateActions.ZOOM);
         navigate.add(NavigateActions.SEARCH);
+        navigate.add(NavigateActions.MAP_GOTO_HOME);
 
         final JMenu view = menu.add(new JMenu(Localization.l("mainmenu_view")));
         view.add(ViewOptions.TOGGLE_POLYGON.asChecked());
@@ -198,6 +199,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
             settings.add(OtherActions.SHOW_MESSAGELIB);
         }
+        settings.addSeparator();
+        settings.add(OtherActions.SET_DEPARTMENT_MAPBOUNDS);
 
         final JMenu status = menu.add(new JMenu(Localization.l("mainmenu_status")));
         status.add(StatusActions.OPEN);
@@ -593,6 +596,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				info.set_session_active(false);
 				info.set_session_inactive_reason(SESSION_INACTIVE_REASON.EXPIRED);
 				return onSessionTimedOutException(info);
+			}
+			else if(sz_class.equals("com.ums.UmsCommon.ULogonFailedException"))
+			{
+				info.set_session_active(false);
+				info.set_session_inactive_reason(SESSION_INACTIVE_REASON.EXPIRED);
+				return onSessionTimedOutException(info);				
 			}
 			else if(sz_class.equals("com.ums.UmsCommon.USessionDeletedException"))
 			{

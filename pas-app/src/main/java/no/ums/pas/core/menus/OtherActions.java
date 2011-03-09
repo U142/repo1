@@ -1,19 +1,33 @@
 package no.ums.pas.core.menus;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.SettingsGUI;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
+import no.ums.pas.core.ws.vars;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.send.messagelibrary.MessageLibDlg;
 import no.ums.pas.swing.UmsAction;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UMapBounds;
+import no.ums.ws.pas.Pasws;
 
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.xml.namespace.QName;
+
 import java.awt.event.ActionEvent;
+import java.net.URL;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
 public interface OtherActions {
+    Log log = UmsLog.getLogger(OtherActions.class);
 
     // act_show_settings - mainmenu_settings_show
     Action SHOW_SETTINGS = new UmsAction("mainmenu_settings_show") {
@@ -139,5 +153,50 @@ public interface OtherActions {
             PAS.pasplugin.onShowContactinformation();
         }
     };
+    
+    
+    Action SET_DEPARTMENT_MAPBOUNDS = new UmsAction("mainmenu_settings_set_mapbounds") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ULOGONINFO logon = new ULOGONINFO();
+			UserInfo userinfo = PAS.get_pas().get_userinfo();
+			logon.setLComppk(userinfo.get_comppk());
+			logon.setLDeptpk(userinfo.get_current_department().get_deptpk());
+			logon.setLUserpk(new Long(userinfo.get_userpk()));
+			logon.setSzPassword(userinfo.get_passwd());
+			logon.setSzUserid(userinfo.get_userid());
+			logon.setSzCompid(userinfo.get_compid());
+			logon.setSessionid(userinfo.get_sessionid());
+			
+			try
+			{
+				URL wsdl = new URL(vars.WSDL_PAS);
+				QName service = new QName("http://ums.no/ws/pas/", "pasws");
+				UMapBounds bounds = new UMapBounds();
+				bounds.setLBo(Variables.getNavigation().get_lbo());
+				bounds.setRBo(Variables.getNavigation().get_rbo());
+				bounds.setUBo(Variables.getNavigation().get_ubo());
+				bounds.setBBo(Variables.getNavigation().get_bbo());
+				switch(new Pasws(wsdl, service).getPaswsSoap12().updateMapBounds(logon, bounds))
+				{
+				case OK:
+					NavStruct nav = new NavStruct(Variables.getNavigation().get_lbo(),
+							Variables.getNavigation().get_rbo(),
+							Variables.getNavigation().get_ubo(),
+							Variables.getNavigation().get_bbo());
+					Variables.getUserInfo().set_nav_init(nav);
+					break;
+				case FAILED:
+					JOptionPane.showMessageDialog(PAS.get_pas().get_mainmenu(), "Set default map failed", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+					break;
+				}
+			}
+			catch(Exception err)
+			{
+				log.error("Error updating department mapbounds", e);
+			}
+		}
+    };
+
 
 }

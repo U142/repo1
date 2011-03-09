@@ -1,6 +1,7 @@
 package no.ums.pas.core.menus;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.swing.UmsAction;
 
@@ -39,4 +40,13 @@ public interface NavigateActions {
 			PAS.get_pas().get_mainmenu().get_searchframe().toFront();
         }
     };
+    
+    Action MAP_GOTO_HOME = new UmsAction("common_navigate_home") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Variables.getNavigation().setNavigation(Variables.getUserInfo().get_nav_init());
+			PAS.get_pas().get_mappane().load_map(true);
+		}
+    };
+
 }
