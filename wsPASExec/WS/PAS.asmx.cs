@@ -746,6 +746,47 @@ namespace com.ums.ws.pas
         }
 
         [WebMethod]
+        public UPASSWORD_UPDATE_RESULT updatePassword(ULOGONINFO logon, UPASSWORD_UPDATE_REQUEST req)
+        {
+            try
+            {
+                req.shaNew = req.shaNew.Replace("'", "''");
+                req.shaNewRepeat = req.shaNewRepeat.Replace("'", "''");
+                req.newPassword = req.newPassword.Replace("'", "''");
+                req.shaOld = req.shaOld.Replace("'", "''");
+                PASUmsDb db = new PASUmsDb();
+                db.CheckLogon(ref logon, true);
+                db.ExecNonQuery(String.Format("UPDATE BBUSER SET sz_hash_paspwd='{0}', sz_paspassword='{1}' WHERE l_userpk={2} AND sz_hash_paspwd='{3}'",
+                                req.shaNew, req.newPassword, logon.l_userpk, req.shaOld));
+                return UPASSWORD_UPDATE_RESULT.OK;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, "Error updating password for user/comp \"" + logon.sz_userid + "\" / \"" + logon.sz_compid + "\".\n", e.Message);
+                return UPASSWORD_UPDATE_RESULT.FAILED;
+            }
+        }
+
+        [WebMethod]
+        public UGENERIC_RESULT updateMapBounds(ULOGONINFO logon, UMapBounds bounds)
+        {
+            try
+            {
+                PASUmsDb db = new PASUmsDb();
+                db.CheckLogon(ref logon, true);
+                db.ExecNonQuery(String.Format(UCommon.UGlobalizationInfo, 
+                                                "UPDATE BBDEPARTMENT SET l_mapinit='{0}|{1}|{2}|{3}' WHERE l_deptpk={4}", 
+                                            bounds.l_bo, bounds.u_bo, bounds.r_bo, bounds.b_bo, logon.l_deptpk));
+                return UGENERIC_RESULT.OK;
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, String.Format("Error updating MapBounds for sz_deptid \"{0}\". Initiated by user / comp \"{1}\" / \"{2}\"", logon.sz_deptid, logon.sz_userid, logon.sz_compid), e.Message);
+                return UGENERIC_RESULT.FAILED;
+            }
+        }
+
+        [WebMethod]
         public PASVERSION getVersionNumber()
         {
             /*Type type = Type.GetType("pasws");

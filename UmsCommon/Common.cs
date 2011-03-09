@@ -1568,4 +1568,28 @@ namespace com.ums.UmsCommon
         BY_SIMULATION = 16,
     }
 
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public enum UPASSWORD_UPDATE_RESULT
+    {
+        OK = 0,
+        TOO_WEAK = 1,
+        FAILED = 2,
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public enum UGENERIC_RESULT
+    {
+        OK = 0,
+        FAILED = 1,
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public class UPASSWORD_UPDATE_REQUEST
+    {
+        public String shaOld;
+        public String shaNew;
+        public String shaNewRepeat;
+        public String newPassword;
+    }
+
 }
