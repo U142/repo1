@@ -745,6 +745,14 @@
         </void> 
        </object> 
       </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>settingsModel1</string> 
+        <string>autoStartParm</string> 
+        <string>chkAutoStartParm</string> 
+        <string>selected</string> 
+       </object> 
+      </void> 
      </object> 
     </void> 
    </object> 

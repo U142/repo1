@@ -471,6 +471,9 @@ public class Settings extends JDialog {
 			binding.setConverter(stringToInt1);
 			bindingGroup.addBinding(binding);
 		}
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("autoStartParm"),
+			chkAutoStartParm, BeanProperty.create("selected")));
 		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

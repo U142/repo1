@@ -7,7 +7,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -96,12 +99,15 @@ public class BeanProperty<BT, PT> {
     });
 
     private final String propertyName;
-    private final String getterName;
+    private String getterName;
     private final String setterName;
 
     public BeanProperty(String propertyName) {
         this.propertyName = propertyName;
-        this.getterName = "get" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
+        if(propertyName.equals("selected")) //modification for JCheckBox
+            this.getterName = "is" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
+        else
+        	this.getterName = "get" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
         this.setterName = "set" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
 
     }
@@ -174,6 +180,22 @@ public class BeanProperty<BT, PT> {
 					{
 						final Object oldValue = value;
 						value = ((JComboBox) target).getSelectedItem();
+						propertyChangeListener.propertyChange(new PropertyChangeEvent(target, propertyName, oldValue, value));
+					} finally {
+						instanceMap.remove(id);
+					}
+				}
+			});
+        } else if(propertyName.equals("selected") && target instanceof AbstractButton) {
+        	((AbstractButton) target).addChangeListener(new ChangeListener() {
+				private Object value = ((AbstractButton) target).isSelected();
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					instanceMap.add(id);
+					try
+					{
+						final Object oldValue = value;
+						value = ((AbstractButton) target).isSelected();
 						propertyChangeListener.propertyChange(new PropertyChangeEvent(target, propertyName, oldValue, value));
 					} finally {
 						instanceMap.remove(id);
