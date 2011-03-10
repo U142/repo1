@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 public class PreviewPanel extends DefaultPanel implements ComponentListener, ChangeListener {
 	public static final long serialVersionUID = 1;
@@ -119,7 +120,16 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 					sz_sitename = "http://vb4utv/";
 					Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
 				}
-				File f_post = create_umsgisfile(get_previewlist().get_gis().get_parser().get_file(), 
+				String filename = "tmpfile.txt";
+				if(get_previewlist().get_gis().get_parser().get_file()!=null)
+				{
+					filename = get_previewlist().get_gis().get_parser().get_file().getName();
+				}
+				else if(get_previewlist().get_gis().get_parser().get_url()!=null)
+				{
+					filename = get_previewlist().get_gis().get_parser().get_url().getFile().substring(get_previewlist().get_gis().get_parser().get_url().getFile().lastIndexOf("/")+1);
+				}
+				File f_post = create_umsgisfile(filename, 
 								  get_previewlist().get_gis().get_parser().get_linedata(), 
 								  n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
 				
@@ -261,7 +271,17 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			int n_skiplines		= (get_previewlist().isFirstlineHeading() ? 1 : 0);
 			String sz_separator = get_previewlist().get_gis().get_parser().get_separator();
 
-			File f_post = create_umsgisfile(get_previewlist().get_gis().get_parser().get_file(), 
+			
+			String filename = "tmpfile.txt";
+			if(get_previewlist().get_gis().get_parser().get_file()!=null)
+			{
+				filename = get_previewlist().get_gis().get_parser().get_file().getName();
+			}
+			else if(get_previewlist().get_gis().get_parser().get_url()!=null)
+			{
+				filename = get_previewlist().get_gis().get_parser().get_url().getFile();
+			}
+			File f_post = create_umsgisfile(filename, 
 					  get_previewlist().get_gis().get_parser().get_linedata(), 
 					  n_col_municipal, n_col_streetid, n_col_houseno, n_col_letter, n_skiplines, n_col_namefilter1, n_col_namefilter2, sz_separator);
 			GISList gislist = create_gislist(f_post, sz_separator);
@@ -318,11 +338,12 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 		}
 		return list;
 	}
-	public File create_umsgisfile(File f, LineData linedata, int n_mun, int n_str, int n_hou, int n_let, int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
-		System.out.println(f.getName());
+	
+	public File create_umsgisfile(String filename, LineData linedata, int n_mun, int n_str, int n_hou, int n_let, int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
+		System.out.println(filename);
 		File f_ums;
 		try {
-			f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + f.getName());
+			f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
 		} catch(Exception e) {
 			//f_ums = new File("C:\\Program Files\\UMS Population Alert System\\GIS\\tmp_" + f.getName());
 			Error.getError().addError("PreviewPanel","Exception in create_umsgisfile",e,1);

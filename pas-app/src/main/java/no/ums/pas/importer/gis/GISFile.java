@@ -5,6 +5,7 @@ import no.ums.pas.importer.FileParser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.URL;
 
 public class GISFile implements ActionListener {
 	public static final String [] EXPECTED_SEPARATORS_ = new String [] { "	", ";", ",", "|" };
@@ -17,7 +18,9 @@ public class GISFile implements ActionListener {
 	public boolean getIsAlert() { return m_b_is_alert; }
 	protected ActionListener get_callback() { return m_callback; }
 	private File m_gisfile;
+	private URL m_gisurl;
 	public File get_file() { return m_gisfile; }
+	public URL get_url() { return m_gisurl; }
 	private String encoding;
 	public void set_encoding(String encoding) { this.encoding = encoding; }
 	
@@ -33,6 +36,18 @@ public class GISFile implements ActionListener {
 		get_parser().set_object(this);
 		get_parser().begin_parsing(encoding);
 		return true;
+	}
+	public boolean parse(URL url, ActionListener callback, String sz_action, boolean bIsAlert) {
+		m_gisparser = new GISParser(url, callback);
+		m_gisfile = null;
+		m_gisurl = url;
+		m_callback = callback;
+		m_b_is_alert = bIsAlert;
+		get_parser().set_callback(this);
+		get_parser().set_action(sz_action);
+		get_parser().set_object(this);
+		get_parser().begin_parsing(encoding);
+		return true;		
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_gis_imported_eof".equals(e.getActionCommand())) {
@@ -63,6 +78,9 @@ public class GISFile implements ActionListener {
 		
 		public GISParser(File f, ActionListener callback) {
 			super(f, callback, "act_gis_imported_eof");
+		}
+		public GISParser(URL url, ActionListener callback) {
+			super(url, callback, "act_gis_imported_eof");
 		}
 		public boolean create_values() {
 			System.out.println("create_values");

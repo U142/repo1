@@ -1,5 +1,7 @@
 package no.ums.pas.importer;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
@@ -21,7 +23,9 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 /*
@@ -91,6 +95,10 @@ abstract class PolygonParser extends FileParser {
 	PolygonParser(File f, ActionListener callback) {
 		super(f, callback, "act_polygon_imported_eof");
 	}
+	PolygonParser(URL url, ActionListener callback)
+	{
+		super(url, callback, "axt_polygon_imported_eof");
+	}
 	public abstract boolean parse();
 	public abstract boolean create_values();
 }
@@ -101,6 +109,8 @@ abstract class PolygonParser extends FileParser {
 
 
 public class ImportPolygon implements ActionListener {
+	private static final Log log = UmsLog.getLogger(ImportPolygon.class); 
+	
 	public static final String MIME_TYPE_SOSI_ = ".sos";
 	public static final String MIME_TYPE_ISO_  = ".iso";
 	public static final String MIME_TYPE_GIS_  = ".gis";
@@ -157,7 +167,21 @@ public class ImportPolygon implements ActionListener {
 				callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_enable_next"));
 		}
 	}
-	
+	public ImportPolygon(ActionListener callback, String action, URL url)
+	{
+		try
+		{
+			m_callback = callback;
+			m_action = action;
+			PAS.get_pas().add_event("Opening import inputstream", null);
+			parse_file(url, url.getFile().substring(url.getFile().lastIndexOf(".")).toLowerCase());
+		}
+		catch(Exception e)
+		{
+			log.error("Error in opening import-file from URL " + url, e);
+			e.printStackTrace();
+		}
+	}
 	public ImportPolygon(ActionListener callback, String action, File polygonFile) {
 		m_polygonfile = polygonFile;
 		m_callback = callback;
@@ -169,6 +193,23 @@ public class ImportPolygon implements ActionListener {
 		if(m_polygonfile!=null) {
 			PAS.get_pas().add_event("Opening import file " + m_polygonfile.getPath(), null);
 			parse_file(m_polygonfile);
+		}
+	}
+	
+	public void parse_file(URL url, String extension)
+	{
+		if(extension.equals(MIME_TYPE_SOSI_)) {
+			read_as_sosi(url);
+		}
+		else if(extension.equals(MIME_TYPE_SHP_) ||
+				extension.equals(MIME_TYPE_DBF_) ||
+				extension.equals(MIME_TYPE_PRJ_)) {
+			read_as_shape(url);
+		}
+		else if(extension.equals(MIME_TYPE_TXT_) ||
+				extension.equals(MIME_TYPE_GIS_))
+		{
+			read_as_gis(url);
 		}
 	}
 	
@@ -212,6 +253,19 @@ public class ImportPolygon implements ActionListener {
 	private boolean read_as_iso(File f) {
 		return false;
 	}
+	
+	private boolean read_as_sosi(URL url)
+	{
+		try
+		{
+			parse_sosi(url);
+			return true;
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
+	}
 	private boolean read_as_sosi(File f) {
 		if(!f.canRead()) {
 			PAS.get_pas().add_event("Cannot read file " + f.getPath(), null);
@@ -228,6 +282,10 @@ public class ImportPolygon implements ActionListener {
 		parse_shape(f);
 		return true;
 	}
+	private boolean read_as_shape(URL url) {
+		parse_shape(url);
+		return true;
+	}
 	private boolean read_as_gis(File f) {
 		if(!f.canRead()) {
 			return false;
@@ -235,8 +293,26 @@ public class ImportPolygon implements ActionListener {
 		parse_gis(f);
 		return true;
 	}
+	private boolean read_as_gis(URL url) {
+		parse_gis(url);
+		return true;
+	}
 	protected void set_actionlistener(ActionListener a) {
 		m_callback = a;
+	}
+	
+	private SosiFile parse_sosi(URL url) {
+		try
+		{
+			SosiFile sosi = new SosiFile();
+			sosi.parse(url, this, m_action);
+			return sosi;
+		}
+		catch(Exception e)
+		{
+			log.error("Failed to parse SOSI-file from inputstream", e);
+			return null;
+		}
 	}
 	
 	private SosiFile parse_sosi(File f) {
@@ -255,7 +331,6 @@ public class ImportPolygon implements ActionListener {
 		try
 		{
 			ShapeImporter shape = new ShapeImporter(f, this, m_action);
-			//shape.parse();
 			return shape;
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -264,10 +339,25 @@ public class ImportPolygon implements ActionListener {
 		}
 		return null;
 	}
+	private ShapeImporter parse_shape(URL url) {
+		try
+		{
+			ShapeImporter shape = new ShapeImporter(url, this, m_action);
+			return shape;
+		} catch(Exception e) {
+			log.error("Error parsing shape-file from URL", e);
+			return null;
+		}
+	}
 	private void parse_gis(File f) {
 		GISFile gis = new GISFile();
 		m_action = "act_gis_import_finished";
 		gis.parse(f, m_callback, m_action, this.m_b_isalert);
+	}
+	private void parse_gis(URL url) {
+		GISFile gis = new GISFile();
+		m_action = "act_gis_import_finished";
+		gis.parse(url, m_callback, m_action, this.m_b_isalert);
 	}
 	protected void reportSosiFile() {
 		

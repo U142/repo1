@@ -81,7 +81,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -460,12 +463,36 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				val = str.substring(3);
 				if(str.startsWith("-f"))
 				{
-					
-					SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
-					if(obj!=null)
+					try
 					{
-						new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", new File(val));
+						SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
+						if(val.toLowerCase().startsWith("http"))
+						{
+							URL url = new URL(val);
+							if(url.getProtocol().equals("http") || url.getProtocol().equals("https"))
+							{
+								System.out.println("AUTOIMPORT - Using url="+url);
+								//BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+								if(obj!=null)
+								{
+									new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", url);
+								}														
+							}
+						}
+						else
+						{
+							if(obj!=null)
+							{
+								new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", new File(val));
+							}							
+						}
 					}
+					catch(Exception e)
+					{
+						log.error("Failed to autoimport file", e);
+						e.printStackTrace();
+					}
+					
 				}
 			}
 		}

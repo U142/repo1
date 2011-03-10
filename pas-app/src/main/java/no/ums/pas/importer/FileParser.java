@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -19,8 +20,10 @@ public abstract class FileParser extends Thread {
 	protected String m_sz;
 	public String data() { return m_sz; }
 	File m_f;
+	URL m_url;
 	DataInputStream m_dis;
 	public File get_file() { return m_f; }
+	public URL get_url() { return m_url; }
 	ArrayList<Object> m_lines = new ArrayList<Object>();
 	protected ArrayList<Object> lines() { return m_lines; }
 	protected ActionListener m_callback;
@@ -33,6 +36,18 @@ public abstract class FileParser extends Thread {
 	public ActionListener get_callback() { return m_callback; }
 	public String get_action() { return m_action; }
 	public Object get_object() { return m_object; }
+	public boolean openUrlStream()
+	{
+		try
+		{
+			m_dis = new DataInputStream(get_url().openStream());
+			return true;
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	private String m_encoding;
 	
@@ -45,9 +60,10 @@ public abstract class FileParser extends Thread {
 		set_action_eof(sz_action_eof);
 		set_callback(callback);
 	}
-	public FileParser(DataInputStream dis, ActionListener callback, String sz_action_eof) {
+	public FileParser(URL url, ActionListener callback, String sz_action_eof) {
 		super("FileParser thread");
-		m_dis = dis;
+		//m_dis = dis;
+		m_url = url;
 		set_action_eof(sz_action_eof);
 		set_callback(callback);
 	}
@@ -71,7 +87,10 @@ public abstract class FileParser extends Thread {
 			if(m_f != null)
 				br = new BufferedReader(new InputStreamReader(new FileInputStream(m_f),m_encoding));
 			else
-				br = new BufferedReader(new InputStreamReader(m_dis));
+			{
+				this.openUrlStream();
+				br = new BufferedReader(new InputStreamReader(m_dis, m_encoding));
+			}
 			
 			for(;;) {
 				sz_line = br.readLine();

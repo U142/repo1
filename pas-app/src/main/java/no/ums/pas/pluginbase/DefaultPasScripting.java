@@ -196,9 +196,9 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         final JMenu settings = menu.add(new JMenu(Localization.l("mainmenu_settings")));
         settings.add(OtherActions.SHOW_SETTINGS);
         settings.add(OtherActions.SHOW_MESSAGELIB);
-        if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
-            settings.add(OtherActions.SHOW_MESSAGELIB);
-        }
+        //if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights() == 4) {
+        //    settings.add(OtherActions.SHOW_MESSAGELIB);
+        //}
         settings.addSeparator();
         settings.add(OtherActions.SET_DEPARTMENT_MAPBOUNDS);
 

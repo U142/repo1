@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ShapeImporter extends FileParser
 		return false;
 	}
 	
-	public void parse_with_geotools(File file)
+	public void parse_with_geotools()
 	{
 		CoordinateReferenceSystem ref = null;
 		ShpFiles shp = null;
@@ -42,7 +43,10 @@ public class ShapeImporter extends FileParser
 
 		try
 		{
-			shp = new ShpFiles(file);			
+			if(get_file()!=null)
+				shp = new ShpFiles(get_file());
+			else if(get_url()!=null)
+				shp = new ShpFiles(get_url());
 		}
 		catch(MalformedURLException e)
 		{
@@ -278,6 +282,16 @@ public class ShapeImporter extends FileParser
 	public List<MapPointF> pointlist = new ArrayList<MapPointF>();
 	public List<MapLine> linelist = new ArrayList<MapLine>();
 	
+	public ShapeImporter(URL url, ActionListener callback, String sz_action_eof)
+	{
+		super(url, callback, sz_action_eof);
+		try
+		{
+			begin_parsing("");
+		}
+		finally{ }
+	}
+	
 	public ShapeImporter(File f, ActionListener callback, String sz_action_eof)
 	{
 		super(f, callback, sz_action_eof);
@@ -303,7 +317,7 @@ public class ShapeImporter extends FileParser
 		try
 		{
 			//parse();
-			parse_with_geotools(get_file());
+			parse_with_geotools();
 		}
 		catch(Exception e)
 		{

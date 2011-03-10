@@ -13,7 +13,9 @@ import no.ums.pas.ums.tools.TextFormat;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -380,17 +382,21 @@ public class SosiFile extends Object {
 	public static final int COORSYS_LL_ = 1;
 	public static final int COORSYS_UTM_ = 2;
 	
+	public boolean parse(URL url, ActionListener callback, String action) {
+		m_parser = new SosiParser(url, callback);
+		m_parser.set_callback(callback);
+		m_parser.set_action(action);
+		m_parser.set_object(this);
+		m_parser.begin_parsing("");
+		return true;
+	}
+	
 	public boolean parse(File f, ActionListener callback, String action) {
 		m_parser = new SosiParser(f, callback);
 		m_parser.set_callback(callback);
 		m_parser.set_action(action);
 		m_parser.set_object(this);
 		m_parser.begin_parsing("");
-		//PAS.get_pas().add_event(get_polygon().toString());
-		/*for(int i=0; i < get_polygon().get_size(); i++) {
-			PAS.get_pas().add_event(new Double(get_polygon().get_coor_lat(i)).toString() + new Double(get_polygon().get_coor_lon(i)).toString());
-		}*/
-		//onDownloadFinished(event);
 		return true;
 	}
 	/*private void onDownloadFinished(ActionPolygonLoaded e) {
@@ -444,6 +450,11 @@ public class SosiFile extends Object {
 		protected ActionListener m_importpolygon_callback;
 		public SosiParser(File f, ActionListener callback) {
 			super(f, callback);
+			m_importpolygon_callback = callback;
+		}
+		public SosiParser(URL url, ActionListener callback) {
+			super(url, callback);
+			openUrlStream();
 			m_importpolygon_callback = callback;
 		}
 		public void begin() {
