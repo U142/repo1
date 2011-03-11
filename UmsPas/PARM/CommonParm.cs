@@ -104,6 +104,7 @@ namespace com.ums.UmsParm
         public String sz_wms_password;
         public String sz_wms_epsg;
         public int l_drag_mode;
+        public int l_zoom_mode;
 
         public String sz_email_name;
         public String sz_email;
