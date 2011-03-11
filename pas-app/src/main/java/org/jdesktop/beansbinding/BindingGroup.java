@@ -14,6 +14,7 @@ public class BindingGroup {
         bindings.add(binding);
     }
 
+
     public void bind() {
         for (Binding binding : bindings) {
             binding.bind();

@@ -36,6 +36,7 @@ public class Settings {
 	private String sz_wms_password;
 	private String sz_wms_epsg;
 	private boolean b_pan_by_drag;
+	private boolean b_zoom_from_center;
 	private String sz_languageid; //en_EN, no_NO
 	private Rectangle rect_messagelib_dlg;
 	List<Object> messagelib_exploded_nodes;
@@ -62,6 +63,7 @@ public class Settings {
 		sz_wms_password = "";
 		rect_messagelib_dlg = new Rectangle(0,0,0,0);
 		messagelib_exploded_nodes = null;
+		b_zoom_from_center = true;
 	}
 	
 	public static String getLanguageID(int n_language)
@@ -126,6 +128,14 @@ public class Settings {
 	public void setPanByDrag(boolean b) {
 		b_pan_by_drag = b;
 	}
+	public boolean getZoomFromCenter() {
+		return b_zoom_from_center;
+	}
+
+	public void setZoomFromCenter(boolean b_zoom_from_center) {
+		this.b_zoom_from_center = b_zoom_from_center;
+	}
+
 	public MAPSERVER getMapServer() {
 		return n_mapserver;
 	}

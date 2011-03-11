@@ -234,11 +234,11 @@ public class WmsLayerTree extends JTree
 		
 		public LayerRenderer()
 		{
-			selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
+			/*selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
 		    selectionForeground = UIManager.getColor("Tree.selectionForeground");
 		    selectionBackground = UIManager.getColor("Tree.selectionBackground");
 		    textForeground = UIManager.getColor("Tree.textForeground");
-		    textBackground = UIManager.getColor("Tree.textBackground");
+		    textBackground = UIManager.getColor("Tree.textBackground");*/
 		}
 		public Component getTreeCellRendererComponent(
 				JTree tree,

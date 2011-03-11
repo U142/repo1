@@ -6,6 +6,7 @@ import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.logon.view.SettingsCtrl;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
@@ -128,6 +129,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 			
 		}
 		//new SettingsGUI2(this).dlg.setVisible(true);
+		new SettingsCtrl(this, true, PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo().get_mailaccount());
 		try
 		{
 			this.setAlwaysOnTop(true);

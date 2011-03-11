@@ -5,16 +5,15 @@
 package no.ums.pas.core.logon.view;
 
 import java.awt.*;
-import java.awt.Component;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.SwingConstants;
 import javax.swing.border.*;
+import javax.swing.event.*;
 import no.ums.pas.core.logon.*;
-import no.ums.pas.maps.*;
+import no.ums.pas.localization.Localization;
+
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.converters.*;
@@ -23,8 +22,25 @@ import org.jdesktop.beansbinding.converters.*;
  * @author User #2
  */
 public class Settings extends JDialog {
-	public Settings(Frame owner) {
+
+	/**
+	 * 
+	 * @author Modda
+	 * Interface for communicating with SettingsCtrl
+	 */
+	public interface SettingsUpdate
+	{
+		public void onOpenWmsSite(final WmsLayerTree tree, final String wmsUrl, final String wmsUser, final String wmsPassword, final JComboBox imageformats);
+		public void onWmsLayerSelect(final WmsLayerTree tree, final TreeSelectionEvent e);
+		public void onCancel();
+		public void onOk(final WmsLayerTree tree, final SettingsModel model);
+		public void onMapWmsSelected(boolean b);
+	}
+
+	
+	public Settings(Frame owner, SettingsUpdate callback) {
 		super(owner);
+		this.callback = callback;
 		initComponents();
 		comboLbaUpdate.addItem(new Integer(10));
 		comboLbaUpdate.addItem(new Integer(20));
@@ -32,6 +48,8 @@ public class Settings extends JDialog {
 		comboLbaUpdate.addItem(new Integer(40));
 		comboLbaUpdate.addItem(new Integer(50));
 	}
+	SettingsUpdate callback;
+
 
 	public Settings(Dialog owner) {
 		super(owner);
@@ -39,22 +57,89 @@ public class Settings extends JDialog {
 	}
 
 	private void btnMapWmsOpenActionPerformed(ActionEvent e) {
-		
+		callback.onOpenWmsSite(treeWMS, settingsModel1.getWmsUrl(), settingsModel1.getWmsUsername(), settingsModel1.getWmsPassword(), comboMapWmsImg);
 	}
 
 	private void comboLbaUpdateItemStateChanged(ItemEvent e) {
 	}
 
 	private void txtUserKeyPressed(KeyEvent e) {
-		// TODO add your code here
 	}
 
 	private void settingsModel1PropertyChange(PropertyChangeEvent e) {
-		// TODO add your code here
+	}
+
+	public WmsLayerTree getTreeWMS() {
+		return treeWMS;
+	}
+
+	private void treeWMSValueChanged(TreeSelectionEvent e) {
+		callback.onWmsLayerSelect(treeWMS, e);
+	}
+
+	private void btnCancelActionPerformed(ActionEvent e) {
+		callback.onCancel();
+	}
+
+	private void btnSaveActionPerformed(ActionEvent e) {
+		callback.onOk(treeWMS, settingsModel1);
+	}
+
+	private void radioMapDefaultActionPerformed(ActionEvent e) {
+		callback.onMapWmsSelected(false);
+	}
+
+	private void radioMapWmsActionPerformed(ActionEvent e) {
+		callback.onMapWmsSelected(true);
+	}
+
+	public JTextField getTxtMapWms() {
+		return txtMapWms;
+	}
+
+	public JButton getBtnMapWmsOpen() {
+		return btnMapWmsOpen;
+	}
+
+	public JTextField getTxtMapWmsUser() {
+		return txtMapWmsUser;
+	}
+
+	public JPasswordField getTxtMapWmsPassword() {
+		return txtMapWmsPassword;
+	}
+
+	public JComboBox getComboMapWmsImg() {
+		return comboMapWmsImg;
+	}
+
+	public JRadioButton getRadioNavPanByClick() {
+		return radioNavPanByClick;
+	}
+
+	public JRadioButton getRadioNavPanByDrag() {
+		return radioNavPanByDrag;
+	}
+
+	public JRadioButton getRadioNavZoomFromCenter() {
+		return radioNavZoomFromCenter;
+	}
+
+	public JRadioButton getRadioNavZoomFromCorner() {
+		return radioNavZoomFromCorner;
+	}
+
+	public JRadioButton getRadioMapDefault() {
+		return radioMapDefault;
+	}
+
+	public JRadioButton getRadioMapWms() {
+		return radioMapWms;
 	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
 		userinfo = new JPanel();
 		lblUser = new JLabel();
 		lblCompany = new JLabel();
@@ -70,7 +155,7 @@ public class Settings extends JDialog {
 		lblMapWmsUser = new JLabel();
 		lblMapWmsPassword = new JLabel();
 		txtMapWmsUser = new JTextField();
-		txtMapWmsPassword = new JTextField();
+		txtMapWmsPassword = new JPasswordField();
 		comboMapWmsImg = new JComboBox();
 		scrollWMS = new JScrollPane();
 		treeWMS = new WmsLayerTree();
@@ -98,6 +183,7 @@ public class Settings extends JDialog {
 		setAlwaysOnTop(true);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		setResizable(false);
+		setTitle(bundle.getString("mainmenu_settings"));
 		Container contentPane = getContentPane();
 
 		//======== userinfo ========
@@ -105,10 +191,10 @@ public class Settings extends JDialog {
 			userinfo.setBorder(new TitledBorder("Userinfo"));
 
 			//---- lblUser ----
-			lblUser.setText("text");
+			lblUser.setText(bundle.getString("logon_userid"));
 
 			//---- lblCompany ----
-			lblCompany.setText("text");
+			lblCompany.setText(bundle.getString("logon_company"));
 
 			//---- txtUser ----
 			txtUser.addKeyListener(new KeyAdapter() {
@@ -153,7 +239,7 @@ public class Settings extends JDialog {
 			autostartup.setBorder(new TitledBorder("Auto startup"));
 
 			//---- chkAutoStartParm ----
-			chkAutoStartParm.setText("text");
+			chkAutoStartParm.setText(bundle.getString("mainmenu_parm"));
 
 			GroupLayout autostartupLayout = new GroupLayout(autostartup);
 			autostartup.setLayout(autostartupLayout);
@@ -177,28 +263,49 @@ public class Settings extends JDialog {
 			mapsettings.setBorder(new TitledBorder("Map Settings"));
 
 			//---- radioMapDefault ----
-			radioMapDefault.setText("text");
+			radioMapDefault.setText(bundle.getString("main_pas_settings_mapsite_default"));
+			radioMapDefault.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					radioMapDefaultActionPerformed(e);
+				}
+			});
 
 			//---- radioMapWms ----
-			radioMapWms.setText("text");
+			radioMapWms.setText(bundle.getString("main_pas_settings_mapsite_wms"));
+			radioMapWms.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					radioMapWmsActionPerformed(e);
+				}
+			});
 
 			//---- btnMapWmsOpen ----
-			btnMapWmsOpen.setText("text");
+			btnMapWmsOpen.setText(bundle.getString("common_open"));
 			btnMapWmsOpen.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					btnMapWmsOpenActionPerformed(e);
 					btnMapWmsOpenActionPerformed(e);
 				}
 			});
 
 			//---- lblMapWmsUser ----
-			lblMapWmsUser.setText("text");
+			lblMapWmsUser.setText(bundle.getString("main_pas_settings_mapsite_wms_username"));
 
 			//---- lblMapWmsPassword ----
-			lblMapWmsPassword.setText("text");
+			lblMapWmsPassword.setText(bundle.getString("main_pas_settings_mapsite_wms_password"));
 
 			//======== scrollWMS ========
 			{
+
+				//---- treeWMS ----
+				treeWMS.addTreeSelectionListener(new TreeSelectionListener() {
+					@Override
+					public void valueChanged(TreeSelectionEvent e) {
+						treeWMSValueChanged(e);
+					}
+				});
 				scrollWMS.setViewportView(treeWMS);
 			}
 
@@ -206,19 +313,19 @@ public class Settings extends JDialog {
 			mapsettings.setLayout(mapsettingsLayout);
 			mapsettingsLayout.setHorizontalGroup(
 				mapsettingsLayout.createParallelGroup()
-					.addGroup(mapsettingsLayout.createSequentialGroup()
+					.addGroup(GroupLayout.Alignment.TRAILING, mapsettingsLayout.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(mapsettingsLayout.createParallelGroup()
-							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-							.addGroup(mapsettingsLayout.createSequentialGroup()
+						.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+							.addComponent(scrollWMS, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
-							.addGroup(mapsettingsLayout.createSequentialGroup()
+							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
 								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-							.addGroup(mapsettingsLayout.createSequentialGroup()
+							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addGroup(mapsettingsLayout.createParallelGroup()
 									.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
 									.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
@@ -254,8 +361,8 @@ public class Settings extends JDialog {
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+						.addContainerGap())
 			);
 		}
 
@@ -264,16 +371,17 @@ public class Settings extends JDialog {
 			navigation.setBorder(new TitledBorder("Navigation"));
 
 			//---- radioNavPanByClick ----
-			radioNavPanByClick.setText("text");
+			radioNavPanByClick.setText(bundle.getString("main_pas_settings_pan_by_click"));
 
 			//---- radioNavPanByDrag ----
-			radioNavPanByDrag.setText("text");
+			radioNavPanByDrag.setText(bundle.getString("main_pas_settings_pan_by_drag"));
 
 			//---- radioNavZoomFromCenter ----
-			radioNavZoomFromCenter.setText("text");
+			radioNavZoomFromCenter.setText(bundle.getString("main_pas_settings_zoom_from_center"));
+			radioNavZoomFromCenter.setActionCommand(bundle.getString("main_pas_settings_zoom_from_center"));
 
 			//---- radioNavZoomFromCorner ----
-			radioNavZoomFromCorner.setText("text");
+			radioNavZoomFromCorner.setText(bundle.getString("main_pas_settings_zoom_from_corner"));
 
 			GroupLayout navigationLayout = new GroupLayout(navigation);
 			navigation.setLayout(navigationLayout);
@@ -309,13 +417,13 @@ public class Settings extends JDialog {
 			panel4.setBorder(new TitledBorder("E-mail settings"));
 
 			//---- lblMailDisplayname ----
-			lblMailDisplayname.setText("text");
+			lblMailDisplayname.setText(bundle.getString("main_pas_settings_email_displayname"));
 
 			//---- lblMailAddress ----
-			lblMailAddress.setText("text");
+			lblMailAddress.setText(bundle.getString("main_pas_settings_email_address"));
 
 			//---- lblMailServer ----
-			lblMailServer.setText("text");
+			lblMailServer.setText(bundle.getString("main_pas_settings_email_server"));
 
 			GroupLayout panel4Layout = new GroupLayout(panel4);
 			panel4.setLayout(panel4Layout);
@@ -323,10 +431,10 @@ public class Settings extends JDialog {
 				panel4Layout.createParallelGroup()
 					.addGroup(panel4Layout.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-							.addComponent(lblMailDisplayname, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-							.addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(lblMailServer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(panel4Layout.createParallelGroup()
+							.addComponent(lblMailServer, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+							.addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+							.addComponent(lblMailDisplayname, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 							.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
@@ -338,20 +446,18 @@ public class Settings extends JDialog {
 			panel4Layout.setVerticalGroup(
 				panel4Layout.createParallelGroup()
 					.addGroup(panel4Layout.createSequentialGroup()
-						.addGroup(panel4Layout.createParallelGroup()
-							.addGroup(panel4Layout.createSequentialGroup()
-								.addComponent(lblMailDisplayname)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(lblMailAddress)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(lblMailServer))
-							.addGroup(panel4Layout.createSequentialGroup()
-								.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(txtMailAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblMailDisplayname))
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(txtMailAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblMailAddress))
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblMailServer))
+						.addContainerGap(8, Short.MAX_VALUE))
 			);
 		}
 
@@ -360,7 +466,7 @@ public class Settings extends JDialog {
 			panel1.setBorder(new TitledBorder("LBA"));
 
 			//---- lblLbaUpdate ----
-			lblLbaUpdate.setText("text");
+			lblLbaUpdate.setText(bundle.getString("main_pas_settings_auto_lba_update"));
 
 			//---- comboLbaUpdate ----
 			comboLbaUpdate.addItemListener(new ItemListener() {
@@ -376,10 +482,10 @@ public class Settings extends JDialog {
 				panel1Layout.createParallelGroup()
 					.addGroup(panel1Layout.createSequentialGroup()
 						.addContainerGap()
-						.addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(216, Short.MAX_VALUE))
+						.addContainerGap(162, Short.MAX_VALUE))
 			);
 			panel1Layout.setVerticalGroup(
 				panel1Layout.createParallelGroup()
@@ -387,15 +493,27 @@ public class Settings extends JDialog {
 						.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(lblLbaUpdate)
 							.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap(5, Short.MAX_VALUE))
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 			);
 		}
 
 		//---- btnCancel ----
-		btnCancel.setText("text");
+		btnCancel.setText(bundle.getString("common_cancel"));
+		btnCancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnCancelActionPerformed(e);
+			}
+		});
 
 		//---- btnSave ----
-		btnSave.setText("text");
+		btnSave.setText(bundle.getString("common_save"));
+		btnSave.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnSaveActionPerformed(e);
+			}
+		});
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);
@@ -406,14 +524,14 @@ public class Settings extends JDialog {
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 						.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(mapsettings, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(userinfo, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(navigation, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(panel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(panel4, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(contentPaneLayout.createSequentialGroup()
 							.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
+						.addComponent(navigation, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		contentPaneLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnCancel, btnSave});
@@ -421,18 +539,18 @@ public class Settings extends JDialog {
 			contentPaneLayout.createParallelGroup()
 				.addGroup(contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(userinfo, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
+					.addComponent(userinfo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(autostartup, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(mapsettings, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(navigation, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-					.addComponent(panel4, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-					.addComponent(panel1, GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-					.addGap(18, 18, 18)
+					.addComponent(panel4, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(btnSave)
 						.addComponent(btnCancel))
@@ -441,20 +559,20 @@ public class Settings extends JDialog {
 		pack();
 		setLocationRelativeTo(getOwner());
 
-		//---- buttonGroup1 ----
-		ButtonGroup buttonGroup1 = new ButtonGroup();
-		buttonGroup1.add(radioMapDefault);
-		buttonGroup1.add(radioMapWms);
+		//---- btnGroupMapSite ----
+		ButtonGroup btnGroupMapSite = new ButtonGroup();
+		btnGroupMapSite.add(radioMapDefault);
+		btnGroupMapSite.add(radioMapWms);
 
-		//---- buttonGroup2 ----
-		ButtonGroup buttonGroup2 = new ButtonGroup();
-		buttonGroup2.add(radioNavPanByClick);
-		buttonGroup2.add(radioNavPanByDrag);
+		//---- btnGroupPan ----
+		ButtonGroup btnGroupPan = new ButtonGroup();
+		btnGroupPan.add(radioNavPanByClick);
+		btnGroupPan.add(radioNavPanByDrag);
 
-		//---- buttonGroup3 ----
-		ButtonGroup buttonGroup3 = new ButtonGroup();
-		buttonGroup3.add(radioNavZoomFromCenter);
-		buttonGroup3.add(radioNavZoomFromCorner);
+		//---- btnGroupZoom ----
+		ButtonGroup btnGroupZoom = new ButtonGroup();
+		btnGroupZoom.add(radioNavZoomFromCenter);
+		btnGroupZoom.add(radioNavZoomFromCorner);
 
 		//---- bindings ----
 		bindingGroup = new BindingGroup();
@@ -474,6 +592,42 @@ public class Settings extends JDialog {
 		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
 			settingsModel1, BeanProperty.create("autoStartParm"),
 			chkAutoStartParm, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("mapSiteDefault"),
+			radioMapDefault, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("mapSiteWms"),
+			radioMapWms, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsUrl"),
+			txtMapWms, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsUsername"),
+			txtMapWmsUser, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsPassword"),
+			txtMapWmsPassword, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("panByClick"),
+			radioNavPanByClick, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("panByDrag"),
+			radioNavPanByDrag, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("zoomFromCenter"),
+			radioNavZoomFromCenter, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("zoomFromCorner"),
+			radioNavZoomFromCorner, BeanProperty.create("selected")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailDisplayName"),
+			txtMailDisplayname, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailAddress"),
+			txtMailAddress, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("emailServer"),
+			txtMailServer, BeanProperty.create("text")));
 		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -494,7 +648,7 @@ public class Settings extends JDialog {
 	private JLabel lblMapWmsUser;
 	private JLabel lblMapWmsPassword;
 	private JTextField txtMapWmsUser;
-	private JTextField txtMapWmsPassword;
+	private JPasswordField txtMapWmsPassword;
 	private JComboBox comboMapWmsImg;
 	private JScrollPane scrollWMS;
 	private WmsLayerTree treeWMS;

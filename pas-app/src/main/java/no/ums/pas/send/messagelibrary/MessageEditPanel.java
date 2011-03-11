@@ -185,7 +185,10 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 			m_tabbedpane.setSelectedComponent(m_rec);
 			
 		}*/
-		set_size_label(m_msg.getMessage().getSzMessage(),lbl_counter);
+		if(m_msg.getMessage().getSzMessage()!=null)
+		{
+			set_size_label(m_msg.getMessage().getSzMessage(),lbl_counter);
+		}
 	}
 	
 	@Override
