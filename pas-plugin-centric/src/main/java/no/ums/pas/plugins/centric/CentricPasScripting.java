@@ -1016,7 +1016,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
-    public boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check) {
+    public boolean onWmsLayerListLoaded(List<Layer> layers, List<String> check) {
         //wms_layer_selector.populate(layers, check);
         return true;
     }

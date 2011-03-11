@@ -21,7 +21,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp panel1::l:::x, comp mapsettings::l:::x, comp userinfo::l:::x, comp panel4::l:::x, comp autostartup::t:::x, seq t {comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p}, comp navigation::l:::x}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp panel1::l:::x, comp mapsettings::l::528:x, comp userinfo::l:::x, comp panel4::l:::x, comp autostartup::t:::x, seq t {comp btnCancel:4::p:103:p, space :::p, comp btnSave:4::p:94:p}, comp navigation::l:::x}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
@@ -186,11 +186,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq t {space :::p, par t {comp scrollWMS::l::504:x, seq l {comp txtMapWms:::p:409:p, space :::p, comp btnMapWmsOpen::::88:x}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::250:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::255:x}}, space :::p}}</string> 
+          <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:409:p, space :::p, comp btnMapWmsOpen::::94:x}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::256:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::261:x}, seq l {comp scrollWMS:::p:450:p, space :::p, par t {comp btnMoveUp:::p::p, comp btnMoveDown::t:p::p}}}, space :::p}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, comp scrollWMS::::111:x, space :::p}}</string> 
+          <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par l {comp scrollWMS::::111:x, seq {comp btnMoveUp:::p::p, space :::p, comp btnMoveDown:::p::p}}, space :::p}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -429,6 +429,58 @@
               <boolean>true</boolean> 
              </object> 
             </void> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <string>text</string> 
+          </void> 
+          <void property="name"> 
+           <string>btnMoveUp</string> 
+          </void> 
+          <void method="auxiliary"> 
+           <void method="setProperty"> 
+            <string>JavaCodeGenerator.variableGetter</string> 
+            <boolean>true</boolean> 
+           </void> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>btnMoveUpActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <string>text</string> 
+          </void> 
+          <void property="name"> 
+           <string>btnMoveDown</string> 
+          </void> 
+          <void method="auxiliary"> 
+           <void method="setProperty"> 
+            <string>JavaCodeGenerator.variableGetter</string> 
+            <boolean>true</boolean> 
+           </void> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>btnMoveDownActionPerformed</string> 
+            <boolean>true</boolean> 
            </object> 
           </void> 
          </object> 
@@ -1049,6 +1101,14 @@
         <string>emailServer</string> 
         <string>txtMailServer</string> 
         <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>settingsModel1</string> 
+        <string>wmsImageFormat</string> 
+        <string>comboMapWmsImg</string> 
+        <string>selectedItem</string> 
        </object> 
       </void> 
      </object> 

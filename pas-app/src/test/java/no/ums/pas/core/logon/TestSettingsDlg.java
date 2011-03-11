@@ -19,6 +19,18 @@ public class TestSettingsDlg {
 		new Settings(frm, new SettingsUpdate() {
 			
 			@Override
+			public void onMoveLayerUp(WmsLayerTree tree) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onMoveLayerDown(WmsLayerTree tree) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
 			public void onCancel() {
 				// TODO Auto-generated method stub
 				

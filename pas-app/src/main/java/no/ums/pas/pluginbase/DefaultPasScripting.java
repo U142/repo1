@@ -570,7 +570,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	@Override
-	public boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check) {
+	public boolean onWmsLayerListLoaded(List<Layer> layers, List<String> check) {
 		return false;
 	}
 

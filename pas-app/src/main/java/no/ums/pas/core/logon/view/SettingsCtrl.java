@@ -1,6 +1,7 @@
 package no.ums.pas.core.logon.view;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,11 +15,13 @@ import org.geotools.data.ows.Layer;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.WmsLayerTree;
 import no.ums.pas.core.logon.view.Settings.SettingsUpdate;
+import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.MapLoader;
 
@@ -64,6 +67,16 @@ public class SettingsCtrl implements SettingsUpdate {
     }
     
 	@Override
+	public void onMoveLayerUp(final WmsLayerTree tree) {
+		System.out.println("Move up");
+	}
+
+	@Override
+	public void onMoveLayerDown(final WmsLayerTree tree) {
+		System.out.println("Move down");
+	}
+
+	@Override
 	public void onCancel() {
 		System.out.println("Cancel");
 		dlg.setVisible(false);
@@ -72,6 +85,52 @@ public class SettingsCtrl implements SettingsUpdate {
 	@Override
 	public void onOk(WmsLayerTree tree, SettingsModel model) {
 		System.out.println("Save");
+		no.ums.pas.core.logon.Settings s = Variables.getSettings();
+		MailAccount ma = PAS.get_pas().get_userinfo().get_mailaccount();
+		s.setUsername(model.getUsername());
+		s.setCompany(model.getCompanyid());
+		s.setParm(model.getAutoStartParm());
+		s.setMapServer((model.getMapSiteDefault() ? MAPSERVER.DEFAULT : MAPSERVER.WMS));
+		s.setWmsSite(model.getWmsUrl());
+		s.setWmsUsername(model.getWmsUsername());
+		s.setWmsPassword(model.getWmsPassword());
+		s.setPanByDrag(model.getPanByDrag());
+		s.setZoomFromCenter(model.getZoomFromCenter());
+		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
+		s.setSelectedWmsFormat(model.getWmsImageFormat());
+		ma.set_accountname(model.getEmailAddress());
+		ma.set_displayname(model.getEmailDisplayName());
+		ma.set_mailaddress(model.getEmailAddress());
+		ma.set_mailserver(model.getEmailServer());
+		List<String> selected_layers;
+		if(s.getMapServer()==MAPSERVER.WMS && tree.getModel().getRoot()!=null) // m_wms_list.m_tbl_list.getRowCount() > 0)
+		{
+			selected_layers = tree.getSelectedLayers();
+		}
+		else //keep the old ones
+		{
+			selected_layers = PAS.get_pas().get_settings().getSelectedWmsLayers();
+		}
+		s.setSelectedWmsLayers(selected_layers);
+		dlg.getBtnSave().setEnabled(false);
+		
+		new SwingWorker() {
+
+			@Override
+			protected Object doInBackground() throws Exception {
+				new WSSaveUI(null).runNonThreaded();
+				return "OK";
+			}
+
+			@Override
+			protected void done() {
+				super.done();
+				dlg.getBtnSave().setEnabled(true);
+				dlg.setVisible(false);
+				Variables.getNavigation().reloadMap();
+			}
+		
+		}.execute();
 	}
 
 	@Override
@@ -134,6 +193,8 @@ public class SettingsCtrl implements SettingsUpdate {
 		dlg.getTreeWMS().setEnabled(b);
 		dlg.getBtnMapWmsOpen().setEnabled(b);
 		dlg.getComboMapWmsImg().setEnabled(b);
+		dlg.getBtnMoveDown().setEnabled(b);
+		dlg.getBtnMoveUp().setEnabled(b);
 	}
 	
 

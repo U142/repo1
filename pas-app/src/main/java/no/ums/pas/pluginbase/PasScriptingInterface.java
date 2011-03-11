@@ -263,7 +263,7 @@ public interface PasScriptingInterface {
     
     boolean onAfterLoadMap(Settings settings, Navigation nav, MapFrame frame);
 	
-    boolean onWmsLayerListLoaded(List<Layer> layers, ArrayList<String> check);
+    boolean onWmsLayerListLoaded(List<Layer> layers, List<String> check);
 	
     /**
      * 

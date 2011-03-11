@@ -353,19 +353,10 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				MAPSERVER mapserver = MAPSERVER.DEFAULT;
 				if(m_btn_wms.isSelected())
 					mapserver = MAPSERVER.WMS;
-				ArrayList<String> selected_layers = null;
+				List<String> selected_layers = null;
 				String selected_format = "image/png";
 				if(mapserver==MAPSERVER.WMS && m_wms_tree.getModel().getRoot()!=null) // m_wms_list.m_tbl_list.getRowCount() > 0)
 				{
-					/*selected_layers = new java.util.ArrayList<String>();
-					for(int i=0; i < m_wms_list.m_tbl_list.getRowCount(); i++)
-					{
-						Boolean b = (Boolean)m_wms_list.m_tbl_list.getValueAt(i, 0);
-						if(b)
-						{
-							selected_layers.add(((Layer)m_wms_list.m_tbl_list.getValueAt(i, 2)).getName());
-						}
-					}*/
 					selected_layers = m_wms_tree.getSelectedLayers();
 				}
 				else //keep the old ones
@@ -391,7 +382,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				String s = String.copyValueOf(m_txt_wms_password.getPassword());
 				settings = new Settings(m_txt_username.getText(), m_txt_company.getText(),
 						m_chk_start_parm.isSelected(),/*m_chk_start_fleetcontrol.isSelected()*/false, Integer.parseInt(m_txt_lba_refresh.getText()),
-						mapserver, m_txt_wms_site.getText(), selected_layers, selected_format, (m_btn_pan_by_drag.isSelected() ? true : false), false, sz_language,
+						mapserver, m_txt_wms_site.getText(), selected_layers, selected_format, (m_btn_pan_by_drag.isSelected() ? true : false), PAS.get_pas().get_settings().getZoomFromCenter(), sz_language,
 						m_txt_wms_username.getText(), s);
 				MailAccount mail = PAS.get_pas().get_userinfo().get_mailaccount();
 				mail.set_displayname(m_txt_mail_displayname.getText());

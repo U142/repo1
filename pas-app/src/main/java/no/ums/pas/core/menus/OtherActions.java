@@ -6,6 +6,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.SettingsGUI;
 import no.ums.pas.core.logon.UserInfo;
+import no.ums.pas.core.logon.view.SettingsCtrl;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.NavStruct;
@@ -35,7 +36,8 @@ public interface OtherActions {
         public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    SettingsGUI sGui = new SettingsGUI(PAS.get_pas());
+            		new SettingsCtrl(null, true, PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo().get_mailaccount());
+                    /*SettingsGUI sGui = new SettingsGUI(PAS.get_pas());
                     if (PAS.get_pas().get_settings() != null) {
                         if (PAS.get_pas().get_settings().getUsername().length() < 1)
                             sGui.getM_txt_username().setText(PAS.get_pas().get_userinfo().get_userid());
@@ -49,12 +51,7 @@ public interface OtherActions {
                             sGui.getM_chk_start_parm().setSelected(true);
                         else
                             sGui.getM_chk_start_parm().setSelected(false);
-                        /*if(PAS.get_pas().get_settings().fleetcontrol())
-                                  sGui.getM_chk_start_fleetcontrol().setSelected(true);
-                              else
-                                  sGui.getM_chk_start_fleetcontrol().setSelected(false);*/
                         sGui.getM_txt_lba_refresh().setText(String.valueOf(PAS.get_pas().get_settings().getLbaRefresh()));
-                        //if(PAS.get_pas().get_settings().getMapServer())
                         sGui.setMapServer(PAS.get_pas().get_settings().getMapServer());
                         sGui.setWmsUser(PAS.get_pas().get_settings().getWmsUsername());
                         sGui.setWmsPassword(PAS.get_pas().get_settings().getWmsPassword());
@@ -68,7 +65,7 @@ public interface OtherActions {
                         sGui.getM_txt_mail_displayname().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_displayname());
                         sGui.getM_txt_mail_address().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_mailaddress());
                         sGui.getM_txt_mail_outgoing().setText(PAS.get_pas().get_userinfo().get_mailaccount().get_mailserver());
-                    }
+                    }*/
                 }
             });
         }

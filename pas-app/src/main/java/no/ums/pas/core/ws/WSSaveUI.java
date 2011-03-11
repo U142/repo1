@@ -71,6 +71,7 @@ public class WSSaveUI extends WSThread
 			ui.setSzWmsFormat(settings.getSelectedWmsFormat());
 			ui.setSzWmsLayers(layerlist);
 			ui.setLDragMode((settings.getPanByDrag() ? 1 : 0));
+			ui.setLZoomMode((settings.getZoomFromCenter() ? 0 : 1));
 			
 			ui.setSzSkinClass(settings.getSkinClassName());
 			ui.setSzButtonshaperClass(settings.getButtonShaperClassname());

@@ -30,7 +30,7 @@ public class Settings {
 	private String sz_titlepainter_classname;
 	private MAPSERVER n_mapserver;
 	private String sz_wms_site;
-	private ArrayList<String> m_wms_layers = new ArrayList<String>();
+	private List<String> m_wms_layers = new ArrayList<String>();
 	private String sz_wms_format;
 	private String sz_wms_username;
 	private String sz_wms_password;
@@ -100,7 +100,7 @@ public class Settings {
 	public Settings(String username, String company, boolean parm, 
 					boolean fleetcontrol, int lbarefresh, 
 					MAPSERVER n_mapserver, String sz_wms_site, 
-					ArrayList<String> selected_layers, String sz_wms_format, 
+					List<String> selected_layers, String sz_wms_format, 
 					boolean b_pan_by_drag, boolean b_zoom_from_center, String sz_language, 
 					String sz_wms_username, String sz_wms_password) {
 		this.username = username;
@@ -272,7 +272,7 @@ public class Settings {
 	{
 		return gis_download_details_threshold;
 	}
-	public void setSelectedWmsLayers(ArrayList<String> l)
+	public void setSelectedWmsLayers(List<String> l)
 	{
 		m_wms_layers = l;
 	}
@@ -285,7 +285,7 @@ public class Settings {
 			m_wms_layers.add(l[i]);
 		}
 	}
-	public ArrayList<String> getSelectedWmsLayers()
+	public List<String> getSelectedWmsLayers()
 	{
 		return m_wms_layers;
 	}

@@ -35,6 +35,8 @@ public class Settings extends JDialog {
 		public void onCancel();
 		public void onOk(final WmsLayerTree tree, final SettingsModel model);
 		public void onMapWmsSelected(boolean b);
+		public void onMoveLayerUp(final WmsLayerTree tree);
+		public void onMoveLayerDown(final WmsLayerTree tree);
 	}
 
 	
@@ -141,6 +143,22 @@ public class Settings extends JDialog {
 		return btnSave;
 	}
 
+	private void btnMoveUpActionPerformed(ActionEvent e) {
+		callback.onMoveLayerUp(treeWMS);
+	}
+
+	private void btnMoveDownActionPerformed(ActionEvent e) {
+		callback.onMoveLayerDown(treeWMS);
+	}
+
+	public JButton getBtnMoveUp() {
+		return btnMoveUp;
+	}
+
+	public JButton getBtnMoveDown() {
+		return btnMoveDown;
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
@@ -163,6 +181,8 @@ public class Settings extends JDialog {
 		comboMapWmsImg = new JComboBox();
 		scrollWMS = new JScrollPane();
 		treeWMS = new WmsLayerTree();
+		btnMoveUp = new JButton();
+		btnMoveDown = new JButton();
 		navigation = new JPanel();
 		radioNavPanByClick = new JRadioButton();
 		radioNavPanByDrag = new JRadioButton();
@@ -290,7 +310,6 @@ public class Settings extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					btnMapWmsOpenActionPerformed(e);
-					btnMapWmsOpenActionPerformed(e);
 				}
 			});
 
@@ -313,6 +332,24 @@ public class Settings extends JDialog {
 				scrollWMS.setViewportView(treeWMS);
 			}
 
+			//---- btnMoveUp ----
+			btnMoveUp.setText("text");
+			btnMoveUp.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnMoveUpActionPerformed(e);
+				}
+			});
+
+			//---- btnMoveDown ----
+			btnMoveDown.setText("text");
+			btnMoveDown.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnMoveDownActionPerformed(e);
+				}
+			});
+
 			GroupLayout mapsettingsLayout = new GroupLayout(mapsettings);
 			mapsettings.setLayout(mapsettingsLayout);
 			mapsettingsLayout.setHorizontalGroup(
@@ -320,15 +357,14 @@ public class Settings extends JDialog {
 					.addGroup(GroupLayout.Alignment.TRAILING, mapsettingsLayout.createSequentialGroup()
 						.addContainerGap()
 						.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-							.addComponent(scrollWMS, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addGroup(mapsettingsLayout.createParallelGroup()
 									.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
@@ -339,7 +375,13 @@ public class Settings extends JDialog {
 								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 									.addComponent(txtMapWmsPassword)
 									.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE))
+							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
+								.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(btnMoveUp)
+									.addComponent(btnMoveDown))))
 						.addContainerGap())
 			);
 			mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
@@ -365,7 +407,12 @@ public class Settings extends JDialog {
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+						.addGroup(mapsettingsLayout.createParallelGroup()
+							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+							.addGroup(mapsettingsLayout.createSequentialGroup()
+								.addComponent(btnMoveUp)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(btnMoveDown)))
 						.addContainerGap())
 			);
 		}
@@ -527,7 +574,7 @@ public class Settings extends JDialog {
 					.addContainerGap()
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 						.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(mapsettings, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(mapsettings, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
 						.addComponent(userinfo, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(panel4, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -632,6 +679,9 @@ public class Settings extends JDialog {
 		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
 			settingsModel1, BeanProperty.create("emailServer"),
 			txtMailServer, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			settingsModel1, BeanProperty.create("wmsImageFormat"),
+			comboMapWmsImg, BeanProperty.create("selectedItem")));
 		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -656,6 +706,8 @@ public class Settings extends JDialog {
 	private JComboBox comboMapWmsImg;
 	private JScrollPane scrollWMS;
 	private WmsLayerTree treeWMS;
+	private JButton btnMoveUp;
+	private JButton btnMoveDown;
 	private JPanel navigation;
 	private JRadioButton radioNavPanByClick;
 	private JRadioButton radioNavPanByDrag;

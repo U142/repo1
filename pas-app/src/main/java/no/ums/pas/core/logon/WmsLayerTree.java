@@ -117,7 +117,7 @@ public class WmsLayerTree extends JTree
         	chk.selected = b;
         }
     }
-	public void populate(List<Layer> layers, ArrayList<String> check, boolean b_new_url /*check none*/, ActionListener callback)
+	public void populate(List<Layer> layers, List<String> check, boolean b_new_url /*check none*/, ActionListener callback)
 	{
 		this.setEditable(true);
 		boolean b_topnode_set = false;
