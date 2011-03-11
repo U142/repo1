@@ -633,7 +633,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 			switch(e.getButton())
 			{
 				case MouseEvent.BUTTON1:
-					if(e.getClickCount()==1)
+					if(e.getClickCount()==1 || m_n_selectedcolumn == 3 || m_n_selectedcolumn == 4) // Dette er litt jalla, men må nesten ha det for at den skal få med seg despoklikkingen til Randi (altså ikke hoppe over til double click)
 					{
 						if(m_n_selectedindex>=0) {
 							//PAS.get_pas().add_event("mouseClicked " + m_n_selectedcolumn);
@@ -646,7 +646,6 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 						{
 							select(e);
 							onMouseLDblClick(m_n_selectedindex, m_n_selectedcolumn, sorter.getRowContent(m_n_selectedindex), new Point(e.getX(), e.getY()));
-							
 						}
 					}
 					break;
