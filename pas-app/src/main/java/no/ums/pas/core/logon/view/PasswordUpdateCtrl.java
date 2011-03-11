@@ -15,6 +15,7 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordResult;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordUpdateComplete;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.ums.tools.Utils;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.UPASSWORDUPDATEREQUEST;
@@ -46,6 +47,7 @@ public class PasswordUpdateCtrl implements PasswordUpdateComplete {
 	public void ShowGUI(boolean modal, JComponent parent)
 	{		
 		dlg.setLocationRelativeTo(parent);
+		dlg.setIconImage(ImageFetcher.getImage("pas_appicon_16.png"));
 		dlg.setModal(modal);
 		dlg.setVisible(true);
 	}

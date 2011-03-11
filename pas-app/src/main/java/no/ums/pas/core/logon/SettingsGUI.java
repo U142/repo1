@@ -391,7 +391,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 				String s = String.copyValueOf(m_txt_wms_password.getPassword());
 				settings = new Settings(m_txt_username.getText(), m_txt_company.getText(),
 						m_chk_start_parm.isSelected(),/*m_chk_start_fleetcontrol.isSelected()*/false, Integer.parseInt(m_txt_lba_refresh.getText()),
-						mapserver, m_txt_wms_site.getText(), selected_layers, selected_format, (m_btn_pan_by_drag.isSelected() ? true : false), sz_language,
+						mapserver, m_txt_wms_site.getText(), selected_layers, selected_format, (m_btn_pan_by_drag.isSelected() ? true : false), false, sz_language,
 						m_txt_wms_username.getText(), s);
 				MailAccount mail = PAS.get_pas().get_userinfo().get_mailaccount();
 				mail.set_displayname(m_txt_mail_displayname.getText());

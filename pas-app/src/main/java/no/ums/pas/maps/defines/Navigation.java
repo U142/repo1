@@ -332,6 +332,10 @@ public class Navigation {
 		return false;
 	}
 	
+	public boolean exec_zoom_in_from_corner(Dimension dim_start, Dimension dim_stop) {
+		return exec_zoom_in(new Dimension((dim_start.width+dim_stop.width)/2, (dim_start.height+dim_stop.height)/2),
+							dim_stop); 
+	}
 	
 	/**
 	 * 
@@ -350,26 +354,9 @@ public class Navigation {
 			n_minzoom = Variables.MINMAPDIMENSIONS.width;
 		
 
-		//System.out.println("mapwidth = " + m_f_mapwidthmeters + " " + calc_distance(dim_stop.width, dim_stop.height, dim_start.width, dim_stop.height));
-		
 		double d_deltax = Math.abs(dim_stop.width-dim_start.width);
 		double d_dist = calc_distance(0, 0, (int)d_deltax, 0);
 		System.out.println(d_dist);
-		/*if(d_dist < n_minzoom) { //mapwidth of n_minzoom meters
-			int centerx = (dim_start.width);
-			int centery = (dim_start.height);
-			double d_metersprpix_x = m_f_mapwidthmeters.doubleValue() / m_dimension.width;
-			double d_metersprpix_y = m_f_mapheightmeters.doubleValue() / m_dimension.height;
-			
-			double d_pixelsx = (n_minzoom / d_metersprpix_x) + 5;
-			double d_pixelsy = (n_minzoom / d_metersprpix_y) + 5;
-			
-			Dimension dstart = new Dimension((int)(centerx), (int)(centery));
-			Dimension dstop  = new Dimension((int)(centerx + d_pixelsx), (int)(centery + d_pixelsy));
-			exec_zoom_in(dstart, dstop);
-			return false;
-		}*/
-		
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
 		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
 		

@@ -818,10 +818,25 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 	{
 		gfx.setColor(new Color((float)0.0, (float)0.0, (float)0.0, (float)0.2));
 		int x1, x2, y1, y2;
-		x1 = get_actionhandler().getMousedownPos().width - Math.abs(get_actionhandler().getMousedownPos().width - get_actionhandler().getCursorPos().width);
-		x2 = get_actionhandler().getMousedownPos().width + Math.abs(get_actionhandler().getMousedownPos().width - get_actionhandler().getCursorPos().width);
-		y1 = get_actionhandler().getMousedownPos().height -  Math.abs(get_actionhandler().getMousedownPos().height - get_actionhandler().getCursorPos().height);
-		y2 = get_actionhandler().getMousedownPos().height +  Math.abs(get_actionhandler().getMousedownPos().height - get_actionhandler().getCursorPos().height);
+		if(Variables.getSettings().getZoomFromCenter())
+		{
+			x1 = get_actionhandler().getMousedownPos().width - Math.abs(get_actionhandler().getMousedownPos().width - get_actionhandler().getCursorPos().width);
+			x2 = get_actionhandler().getMousedownPos().width + Math.abs(get_actionhandler().getMousedownPos().width - get_actionhandler().getCursorPos().width);
+			y1 = get_actionhandler().getMousedownPos().height -  Math.abs(get_actionhandler().getMousedownPos().height - get_actionhandler().getCursorPos().height);
+			y2 = get_actionhandler().getMousedownPos().height +  Math.abs(get_actionhandler().getMousedownPos().height - get_actionhandler().getCursorPos().height);
+		}
+		else
+		{
+			int tmpx1, tmpx2, tmpy1, tmpy2;
+			tmpx1 = get_actionhandler().getMousedownPos().width;
+			tmpx2 = get_actionhandler().getCursorPos().width;
+			tmpy1 = get_actionhandler().getMousedownPos().height;
+			tmpy2 = get_actionhandler().getCursorPos().height;
+			x1 = Math.min(tmpx1, tmpx2);
+			x2 = Math.max(tmpx1, tmpx2);
+			y1 = Math.min(tmpy1, tmpy2);
+			y2 = Math.max(tmpy1, tmpy2);
+		}
 		gfx.fillRect(x1, y1, x2-x1, y2-y1);
 		gfx.setColor(Color.black);
 		gfx.drawRect(x1, y1, x2-x1, y2-y1);		 

@@ -776,6 +776,12 @@
         <void property="name"> 
          <string>btnSave</string> 
         </void> 
+        <void method="auxiliary"> 
+         <void method="setProperty"> 
+          <string>JavaCodeGenerator.variableGetter</string> 
+          <boolean>true</boolean> 
+         </void> 
+        </void> 
         <void method="addEvent"> 
          <object class="com.jformdesigner.model.FormEvent"> 
           <string>java.awt.event.ActionListener</string> 

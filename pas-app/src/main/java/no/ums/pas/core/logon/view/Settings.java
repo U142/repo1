@@ -137,6 +137,10 @@ public class Settings extends JDialog {
 		return radioMapWms;
 	}
 
+	public JButton getBtnSave() {
+		return btnSave;
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");

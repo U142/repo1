@@ -7,6 +7,7 @@ package no.ums.pas.core.logon.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,6 +120,7 @@ public class PasswordUpdate extends JDialog {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
 		lblOldPassword = new JLabel();
 		lblNewPassword = new JLabel();
 		lblRepeatNewPassword = new JLabel();
@@ -134,6 +136,7 @@ public class PasswordUpdate extends JDialog {
 		//======== this ========
 		setAlwaysOnTop(true);
 		setResizable(false);
+		setTitle(bundle.getString("mainmenu_update_password"));
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -144,15 +147,14 @@ public class PasswordUpdate extends JDialog {
 		getRootPane().setDefaultButton(btnOk);
 
 		//---- lblOldPassword ----
-		lblOldPassword.setText("text");
-		lblOldPassword.setText(PAS.l("mainmenu_update_password_old"));
+		lblOldPassword.setText(bundle.getString("mainmenu_update_password_old"));
 
 		//---- lblNewPassword ----
-		lblNewPassword.setText("text");
+		lblNewPassword.setText(bundle.getString("mainmenu_update_password_new"));
 		lblNewPassword.setText(PAS.l("mainmenu_update_password_new"));
 
 		//---- lblRepeatNewPassword ----
-		lblRepeatNewPassword.setText("text");
+		lblRepeatNewPassword.setText(bundle.getString("mainmenu_update_password_repeat"));
 		lblRepeatNewPassword.setText(PAS.l("mainmenu_update_password_repeat"));
 
 		//---- txtNewPassword ----

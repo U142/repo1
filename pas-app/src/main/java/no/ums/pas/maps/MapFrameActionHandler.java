@@ -988,7 +988,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				setMouseupPos(e.getX(), e.getY());
 				if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM)
 				{
-					get_mappane().get_navigation().exec_zoom_in(getMousedownPos(), getMouseupPos());
+					if(Variables.getSettings().getZoomFromCenter())
+					{
+						get_mappane().get_navigation().exec_zoom_in(getMousedownPos(), getMouseupPos());
+					}
+					else
+					{
+						get_mappane().get_navigation().exec_zoom_in_from_corner(getMousedownPos(), getMouseupPos());
+					}
 					if(PAS.get_pas() != null)
 						PAS.get_pas().kickRepaint();
 					else {

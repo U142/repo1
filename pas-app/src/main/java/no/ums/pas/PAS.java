@@ -312,6 +312,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		m_settings.setLbaRefresh(ui.getLLbaUpdatePercent());
 		m_settings.setMapServer((ui.getLMapserver()==0 ? MAPSERVER.DEFAULT : MAPSERVER.WMS));
 		m_settings.setPanByDrag((ui.getLDragMode()==1 ? true : false));
+		m_settings.setZoomFromCenter(ui.getLZoomMode()==0);
 		m_settings.setParm(ui.isBAutostartParm());
 		m_settings.setSelectedWmsFormat(ui.getSzWmsFormat());
 		m_settings.setWmsUsername(ui.getSzWmsUsername());

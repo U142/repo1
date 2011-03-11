@@ -101,7 +101,7 @@ public class Settings {
 					boolean fleetcontrol, int lbarefresh, 
 					MAPSERVER n_mapserver, String sz_wms_site, 
 					ArrayList<String> selected_layers, String sz_wms_format, 
-					boolean b_pan_by_drag, String sz_language, 
+					boolean b_pan_by_drag, boolean b_zoom_from_center, String sz_language, 
 					String sz_wms_username, String sz_wms_password) {
 		this.username = username;
 		this.company = company;
