@@ -68,7 +68,8 @@ public class SettingsCtrl implements SettingsUpdate {
     
 	@Override
 	public void onMoveLayerUp(final WmsLayerTree tree) {
-		System.out.println("Move up");
+		Layer l = tree.getSelectedLayer();
+		System.out.println("Move up "+l.getName());
 	}
 
 	@Override

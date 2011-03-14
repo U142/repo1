@@ -74,6 +74,13 @@ public class WmsLayerTree extends JTree
 	{
 		this(new DefaultTreeModel(new DefaultMutableTreeNode()));
 	}
+	
+	public Layer getSelectedLayer()
+	{
+		return ((LayerCheckBoxNode)((DefaultMutableTreeNode)this.getSelectionPath().getLastPathComponent()).getUserObject()).layer;
+		
+	}
+	
 	public ArrayList<String> getSelectedLayers()
 	{
 		
