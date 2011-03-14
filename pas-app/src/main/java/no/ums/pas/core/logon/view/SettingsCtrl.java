@@ -150,7 +150,7 @@ public class SettingsCtrl implements SettingsUpdate {
 				boolean b_new_url = false;
 				if(!current_url.equals(new_url))
 					b_new_url = true;
-				MapLoader l = new MapLoader(null, null);
+				MapLoader l = new MapLoader(null);
 				l.testWmsUrl(new_url, wmsUser, wmsPassword.toCharArray());
 				layers = l.getCapabilitiesTest().getLayerList();
 				

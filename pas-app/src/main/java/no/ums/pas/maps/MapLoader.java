@@ -2,7 +2,6 @@ package no.ums.pas.maps;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
-import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.NavStruct;
@@ -46,7 +45,6 @@ import java.util.List;
 public class MapLoader {
 	Image m_img_load = null;
 	MediaTracker m_mtracker;
-	HTTPReq m_httpreq;
 	MapFrame m_mappane;
 	//LoadingFrame m_loadingframe = null;
 	Component m_mapcomponent;
@@ -74,18 +72,13 @@ public class MapLoader {
 	}
 
 	
-	public MapLoader(Component c, HTTPReq http)
+	public MapLoader(Component c)
 	{
 		m_mapcomponent = c;
-		m_httpreq = http;
 		m_mtracker = new MediaTracker(m_mapcomponent);
 	}
 
 
-	HTTPReq get_httpreq()
-	{
-		return m_httpreq;
-	}
 	
     static BufferedImage toImage(byte[] pixels, int w, int h) {
         DataBuffer db = new DataBufferByte(pixels, w*h);
@@ -454,6 +447,7 @@ public class MapLoader {
 			 for(int i=0; i < layers.length; i++) 
 			 {
 				 //System.out.println(layers[i].getName());
+				 //if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
 				 if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
 			 }

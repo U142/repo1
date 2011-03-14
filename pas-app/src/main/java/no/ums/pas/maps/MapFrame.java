@@ -491,7 +491,7 @@ public class MapFrame extends JPanel implements ActionListener, ComponentListene
 		m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
 		m_dimension = new Dimension(n_width, n_height);
 		setSize(m_dimension.width, m_dimension.height);	
-		m_maploader = new MapLoader(this, http);
+		m_maploader = new MapLoader(this);
 		m_current_cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		this.setPreferredSize(m_dimension);
 		m_polypoint_popup = new PUPolyPoint(PAS.get_pas(), "Menu", this);
