@@ -8,6 +8,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -16,16 +17,9 @@ public class LogRecordCollector extends Handler {
     public static final LogRecordModel MODEL = new LogRecordModel();
 
     public static void install() {
-        try {
-            final Properties config = new Properties();
-            config.put("handlers", LogRecordCollector.class.getName());
-            config.put(".level", Level.FINEST.getName());
-            final StringWriter writer = new StringWriter();
-            config.store(writer, "");
-            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(writer.toString().getBytes()));
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to install new logging configuration", e);
-        }
+        Logger umsLog = Logger.getLogger("no.ums");
+        umsLog.addHandler(new LogRecordCollector());
+        umsLog.setLevel(Level.FINEST);
     }
 
     @Override
