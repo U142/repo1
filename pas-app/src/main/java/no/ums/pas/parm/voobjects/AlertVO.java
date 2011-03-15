@@ -312,7 +312,7 @@ public class AlertVO extends ParmVO implements Cloneable {
 	
 	public String getLBAAreaID() { return sz_lba_areaid; }
 	public void setLBAAreaID(String sz) { 
-		if(sz_lba_areaid != sz) {
+		/*if(sz_lba_areaid != sz) {
 			TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(
 			PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(), 
 			this);
@@ -350,7 +350,7 @@ public class AlertVO extends ParmVO implements Cloneable {
 				}
 				
 			}
-		}
+		}*/
 		sz_lba_areaid = sz; 
 	}
 	public boolean hasValidAreaIDFromCellVision() {
