@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.util.*;
+import java.util.regex.Pattern;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -17,6 +19,7 @@ import no.ums.pas.localization.Localization;
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.converters.*;
+import org.jdesktop.validation.VisibleValidation;
 
 /**
  * @author User #2
@@ -84,7 +87,26 @@ public class Settings extends JDialog {
 	}
 
 	private void btnSaveActionPerformed(ActionEvent e) {
-		callback.onOk(treeWMS, settingsModel1);
+		if(onValidate())
+			callback.onOk(treeWMS, settingsModel1);
+	}
+	private boolean onValidate()
+	{
+		boolean b_error = false;
+		//validate email address
+				//"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$");
+		//validate email server
+		if(settingsModel1.getEmailAddress().length()>0)
+			b_error ^= !VisibleValidation.validateEmail(settingsModel1.getEmailAddress(), txtMailAddress);
+		if(settingsModel1.getEmailServer().length()>0)
+			b_error ^= !VisibleValidation.validateHost(settingsModel1.getEmailServer(), txtMailServer);
+		if(settingsModel1.getMapSiteWms())
+			b_error ^= !VisibleValidation.validateUrl(settingsModel1.getWmsUrl(), txtMapWms);
+		else
+			VisibleValidation.validateUrl("http://www.ums.no/map/", txtMapWms);
+		
+		getBtnSave().setEnabled(!b_error);
+		return !b_error;
 	}
 
 	private void radioMapDefaultActionPerformed(ActionEvent e) {
@@ -93,6 +115,7 @@ public class Settings extends JDialog {
 
 	private void radioMapWmsActionPerformed(ActionEvent e) {
 		callback.onMapWmsSelected(true);
+		onValidate();
 	}
 
 	public JTextField getTxtMapWms() {
@@ -159,6 +182,22 @@ public class Settings extends JDialog {
 		return btnMoveDown;
 	}
 
+	private void txtMapWmsKeyReleased(KeyEvent e) {
+		onValidate();
+	}
+
+	private void txtMailDisplaynameKeyReleased(KeyEvent e) {
+		onValidate();
+	}
+
+	private void txtMailAddressKeyReleased(KeyEvent e) {
+		onValidate();
+	}
+
+	private void txtMailServerKeyReleased(KeyEvent e) {
+		onValidate();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
@@ -206,8 +245,8 @@ public class Settings extends JDialog {
 		//======== this ========
 		setAlwaysOnTop(true);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		setResizable(false);
 		setTitle(bundle.getString("mainmenu_settings"));
+		setResizable(false);
 		Container contentPane = getContentPane();
 
 		//======== userinfo ========
@@ -304,6 +343,14 @@ public class Settings extends JDialog {
 				}
 			});
 
+			//---- txtMapWms ----
+			txtMapWms.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					txtMapWmsKeyReleased(e);
+				}
+			});
+
 			//---- btnMapWmsOpen ----
 			btnMapWmsOpen.setText(bundle.getString("common_open"));
 			btnMapWmsOpen.addActionListener(new ActionListener() {
@@ -360,11 +407,11 @@ public class Settings extends JDialog {
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
+								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
+								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addGroup(mapsettingsLayout.createParallelGroup()
 									.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
@@ -375,13 +422,13 @@ public class Settings extends JDialog {
 								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 									.addComponent(txtMapWmsPassword)
 									.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-								.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE)
+								.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 469, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-									.addComponent(btnMoveUp)
-									.addComponent(btnMoveDown))))
+								.addGroup(mapsettingsLayout.createParallelGroup()
+									.addComponent(btnMoveDown, 0, 0, Short.MAX_VALUE)
+									.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))))
 						.addContainerGap())
 			);
 			mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
@@ -408,11 +455,11 @@ public class Settings extends JDialog {
 						.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(mapsettingsLayout.createParallelGroup()
-							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
 							.addGroup(mapsettingsLayout.createSequentialGroup()
 								.addComponent(btnMoveUp)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(btnMoveDown)))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+								.addComponent(btnMoveDown))
+							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
 						.addContainerGap())
 			);
 		}
@@ -475,6 +522,30 @@ public class Settings extends JDialog {
 
 			//---- lblMailServer ----
 			lblMailServer.setText(bundle.getString("main_pas_settings_email_server"));
+
+			//---- txtMailDisplayname ----
+			txtMailDisplayname.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					txtMailDisplaynameKeyReleased(e);
+				}
+			});
+
+			//---- txtMailAddress ----
+			txtMailAddress.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					txtMailAddressKeyReleased(e);
+				}
+			});
+
+			//---- txtMailServer ----
+			txtMailServer.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					txtMailServerKeyReleased(e);
+				}
+			});
 
 			GroupLayout panel4Layout = new GroupLayout(panel4);
 			panel4.setLayout(panel4Layout);

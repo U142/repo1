@@ -18,16 +18,16 @@ public class SettingsModel extends AbstractBean {
 	private String companyid = "";
 	private Object lbaupdate;
 	private boolean autoStartParm = false;
-	private boolean mapSiteDefault;
-	private boolean mapSiteWms;
+	private boolean mapSiteDefault = true;
+	private boolean mapSiteWms = false;
 	private String wmsUrl = "";
 	private String wmsUsername = "";
 	private String wmsPassword = "";
 	private String wmsImageFormat = "";
 	private List<String> wmsImageFormatElements;
 	
-	private int panMode;
-	private int zoomMode;
+	private int panMode = 0;
+	private int zoomMode = 1;
 	
 	private boolean panByDrag;
 	private boolean panByClick;
@@ -36,9 +36,9 @@ public class SettingsModel extends AbstractBean {
 	
 
 
-	private String emailDisplayName;
-	private String emailAddress;
-	private String emailServer;
+	private String emailDisplayName = "";
+	private String emailAddress = "";
+	private String emailServer = "";
 	
 	
 	private int n_lbaupdate_selecteditem = -1;

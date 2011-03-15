@@ -2,6 +2,7 @@ package no.ums.pas.core.logon;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -69,6 +70,7 @@ public class WmsLayerTree extends JTree
 		m_model = (DefaultTreeModel)model;
 		setCellRenderer(new LayerRenderer());
 		setCellEditor(new CheckBoxNodeEditor(this));
+		this.setRowHeight(0);
 	}
 	public WmsLayerTree()
 	{
@@ -230,14 +232,18 @@ public class WmsLayerTree extends JTree
 	{
 		public Layer layer;
 	}
-	protected class LayerRenderer implements TreeCellRenderer
+	protected class LayerRenderer extends DefaultTreeCellRenderer//implements TreeCellRenderer
 	{
 		private LayerCheckBox checkboxrenderer = new LayerCheckBox();
 		private DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		public LayerCheckBox getCheckRenderer() { return checkboxrenderer; }
 		public DefaultTreeCellRenderer getNormalRenderer() { return renderer; }
-		Color selectionBorderColor, selectionForeground, selectionBackground,
-	      textForeground, textBackground;
+		final Color selectionBorderColor = this.getBorderSelectionColor();
+		final Color selectionForeground = this.getTextSelectionColor();
+		final Color selectionBackground = this.getBackgroundSelectionColor();
+		final Color nonselectionBackground = this.getBackgroundNonSelectionColor();
+		final Color textForeground = this.getForeground();
+		final Color textBackground = this.getBackground(); 
 		
 		public LayerRenderer()
 		{
@@ -255,7 +261,7 @@ public class WmsLayerTree extends JTree
                 boolean leaf,
                 int row,
                 boolean hasFocus) {
-	        checkboxrenderer.setOpaque(false);
+	        checkboxrenderer.setOpaque(true);
 			
 			Component returnValue = null;
 	      if ((value != null) && (value instanceof DefaultMutableTreeNode)) 
@@ -265,9 +271,9 @@ public class WmsLayerTree extends JTree
 	              .getUserObject();
 	          if (userObject instanceof CheckBoxNode) 
 	          {
-		            LayerCheckBoxNode node = (LayerCheckBoxNode) userObject;
-		            if(treenode.getChildCount()==0 && treenode.getParent().equals(tree.getModel().getRoot()) || 
-		            		treenode.getChildCount()>0 && treenode.getParent().equals(tree.getModel().getRoot()))
+	            LayerCheckBoxNode node = (LayerCheckBoxNode) userObject;
+	            if(treenode.getChildCount()==0 && treenode.getParent().equals(tree.getModel().getRoot()) || 
+	            		treenode.getChildCount()>0 && treenode.getParent().equals(tree.getModel().getRoot()))
 	        	  {
 		            checkboxrenderer.setText(node.getText());
 		            checkboxrenderer.setSelected(node.isSelected());
@@ -279,6 +285,10 @@ public class WmsLayerTree extends JTree
 	        		  renderer.setText(node.getText());
 	        		  returnValue = renderer;
 	        	  }
+	            returnValue.setBackground(sel ? selectionBackground : nonselectionBackground);
+	            returnValue.setForeground(sel ? selectionForeground : textForeground);
+	            //returnValue = super.getTreeCellRendererComponent(tree, returnValue, sel, expanded, leaf, row, hasFocus);
+		            //return super.getTreeCellRendererComponent(tree, returnValue, sel, expanded, leaf, row, hasFocus);
 	          }
 	          else if (userObject instanceof DefaultMutableTreeNode)
 	          {
@@ -288,23 +298,23 @@ public class WmsLayerTree extends JTree
 	        	  {
 		        	  Layer node = (Layer) userObject2;
 		        	  renderer.setText(node.getTitle());
-		        	  returnValue = renderer;
+		        	  returnValue = renderer; //.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);;
 	        	  }
 	          }
 	          else
 			        returnValue = renderer.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);	
 	          
-		      if (sel) {
+		      /*if (sel) {
 		    	  returnValue.setForeground(selectionForeground);
 		    	  returnValue.setBackground(selectionBackground);
 		        } else {
 		        	returnValue.setForeground(textForeground);
 		        	returnValue.setBackground(textBackground);
-		        }
+		        }*/
         	  if(treenode.isRoot())
         	  {
         		  //Substance 3.3
-        		  returnValue.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getDarkColor());
+        		  //returnValue.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getDarkColor());
         		  
         		  //Substance 5.2
         		  //returnValue.setBackground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getDarkColor());

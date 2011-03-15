@@ -40,15 +40,15 @@
        </object> 
       </void> 
       <void method="setProperty"> 
-       <string>resizable</string> 
-       <boolean>false</boolean> 
-      </void> 
-      <void method="setProperty"> 
        <string>title</string> 
        <object class="com.jformdesigner.model.FormMessage"> 
         <null/> 
         <string>mainmenu_settings</string> 
        </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>resizable</string> 
+       <boolean>false</boolean> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormContainer"> 
@@ -186,11 +186,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:409:p, space :::p, comp btnMapWmsOpen::::94:x}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::256:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::261:x}, seq l {comp scrollWMS:::p:450:p, space :::p, par t {comp btnMoveUp:::p::p, comp btnMoveDown::t:p::p}}}, space :::p}}</string> 
+          <string>par l {seq t {space :::p, par t {seq l {comp txtMapWms:::p:409:p, space :::p, comp btnMapWmsOpen::::89:x}, seq l {comp radioMapDefault:::p:250:p, space u:::p, comp radioMapWms::::251:x}, seq l {par l {comp lblMapWmsUser:2:l:p:104:p, par t:l::p {comp comboMapWmsImg::l:::x:1, comp lblMapWmsPassword:2:l::92:x:1}}, space :::p, par l:::p {comp txtMapWmsPassword:::::x:1, comp txtMapWmsUser::l::138:x:1}, space ::256:x}, seq l {comp scrollWMS:::p:469:p, space :::p, par l {comp btnMoveDown:::0:0:x:1, comp btnMoveUp::l:p:29:p:1}}}, space :::p}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par l {comp scrollWMS::::111:x, seq {comp btnMoveUp:::p::p, space :::p, comp btnMoveDown:::p::p}}, space :::p}}</string> 
+          <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par l {seq {comp btnMoveUp:::p::p, space ::61:x, comp btnMoveDown:::p::p}, comp scrollWMS::::111:x}, space :::p}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -288,6 +288,14 @@
             <string>JavaCodeGenerator.variableGetter</string> 
             <boolean>true</boolean> 
            </void> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.KeyListener</string> 
+            <string>keyReleased</string> 
+            <string>txtMapWmsKeyReleased</string> 
+            <boolean>true</boolean> 
+           </object> 
           </void> 
          </object> 
         </void> 
@@ -711,6 +719,14 @@
           <void property="name"> 
            <string>txtMailDisplayname</string> 
           </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.KeyListener</string> 
+            <string>keyReleased</string> 
+            <string>txtMailDisplaynameKeyReleased</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
          </object> 
         </void> 
         <void method="add"> 
@@ -719,6 +735,14 @@
           <void property="name"> 
            <string>txtMailAddress</string> 
           </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.KeyListener</string> 
+            <string>keyReleased</string> 
+            <string>txtMailAddressKeyReleased</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
          </object> 
         </void> 
         <void method="add"> 
@@ -726,6 +750,14 @@
           <string>javax.swing.JTextField</string> 
           <void property="name"> 
            <string>txtMailServer</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.KeyListener</string> 
+            <string>keyReleased</string> 
+            <string>txtMailServerKeyReleased</string> 
+            <boolean>true</boolean> 
+           </object> 
           </void> 
          </object> 
         </void> 

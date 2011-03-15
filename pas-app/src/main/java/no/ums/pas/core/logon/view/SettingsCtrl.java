@@ -145,6 +145,7 @@ public class SettingsCtrl implements SettingsUpdate {
 			@Override
 			protected DefaultTreeModel doInBackground() throws Exception {
 				dlg.getBtnSave().setEnabled(false);
+				dlg.getBtnMapWmsOpen().setEnabled(false);
 				String current_url = wmsUrl;
 				String new_url = wmsUrl;
 				boolean b_new_url = false;
@@ -172,6 +173,7 @@ public class SettingsCtrl implements SettingsUpdate {
 			@Override
 			protected void done() {
 				dlg.getBtnSave().setEnabled(true);
+				dlg.getBtnMapWmsOpen().setEnabled(true);
 				PAS.pasplugin.onWmsLayerListLoaded(layers, s.getSelectedWmsLayers());
 				super.done();
 			}
