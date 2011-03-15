@@ -257,15 +257,15 @@ namespace com.ums.ws.pas
         [WebMethod]
         public UAddressList GetAddressList(UMapAddressParams searchparams, ULOGONINFO logoninfo)
         {
-            //UMapAddressSearch search = new UMapAddressSearch(ref searchparams, ref logoninfo);
-            //return (UAddressList)search.Find();
-            var addressInfos = Global.AdrIndex.FindInArea(searchparams.l_bo, searchparams.u_bo, searchparams.r_bo, searchparams.b_bo, 5000);
+            UMapAddressSearch search = new UMapAddressSearch(ref searchparams, ref logoninfo);
+            return (UAddressList)search.Find();
+            /*var addressInfos = Global.AdrIndex.FindInArea(searchparams.l_bo, searchparams.u_bo, searchparams.r_bo, searchparams.b_bo, 5000);
             var result = new UAddressList();
             foreach (var address in addressInfos)
             {
                 result.addLine(address.toUAddress());
             }
-            return result;
+            return result;*/
         }
 
         [WebMethod]
