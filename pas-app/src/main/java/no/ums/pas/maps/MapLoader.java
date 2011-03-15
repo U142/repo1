@@ -415,8 +415,8 @@ public class MapLoader {
 			
 			 Layer[] layers = WMSUtils.getNamedLayers(capabilities);
 			 request.setDimensions(dim.width, dim.height);
-			 request.setTransparent(false);
-			 request.setVersion("1.1.1");
+			 request.setTransparent(true);
+			 request.setVersion(capabilities.getVersion());//"1.1.1");
 			 
 			 //Variables.SETTINGS.setWmsEpsg("28992");
 			 //Variables.SETTINGS.setWmsEpsg("4326");
@@ -444,20 +444,28 @@ public class MapLoader {
 			 
 			 m_selected_layers.clear(); //remove
 			 
-			 for(int i=0; i < layers.length; i++) 
+			 /*for(int i=0; i < layers.length; i++) 
 			 {
-				 //System.out.println(layers[i].getName());
-				 //if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
 				 if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
 					 m_selected_layers.add(layers[i]);
+			 }*/
+			 for(String sellayer : Variables.getSettings().getSelectedWmsLayers())
+			 {
+				 for(Layer layer : layers) {
+					 if(sellayer.equals(layer.getName()))
+					 {
+						 m_selected_layers.add(layer);
+						 request.addLayer(layer);
+					 }
+				 }
 			 }
 			 
 			 //for(int i=m_selected_layers.size()-1; i >= 0 ; i--)
-			 for(int i=0; i < m_selected_layers.size(); i++)
+			 /*for(int i=0; i < m_selected_layers.size(); i++)
 			 //for(int i=13; i <m_selected_layers.size() ; i++)
 			 {
 				 request.addLayer(m_selected_layers.get(i));
-			 }
+			 }*/
 
 			 NavStruct nav = no.ums.pas.maps.defines.Navigation.preserve_aspect(n_lbo, n_rbo, n_ubo, n_bbo, dim);
 			 n_lbo = nav._lbo;

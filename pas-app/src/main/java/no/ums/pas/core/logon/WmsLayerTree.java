@@ -2,6 +2,7 @@ package no.ums.pas.core.logon;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -15,12 +16,15 @@ import java.util.List;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
@@ -70,7 +74,8 @@ public class WmsLayerTree extends JTree
 		m_model = (DefaultTreeModel)model;
 		setCellRenderer(new LayerRenderer());
 		setCellEditor(new CheckBoxNodeEditor(this));
-		this.setRowHeight(0);
+		this.setRowHeight(24);
+		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	public WmsLayerTree()
 	{
@@ -83,13 +88,67 @@ public class WmsLayerTree extends JTree
 		
 	}
 	
+	public void moveNodeUp()
+	{
+		MutableTreeNode old = (MutableTreeNode)this.getSelectionPath().getLastPathComponent();
+		int oldIndex = m_model.getIndexOfChild(old.getParent(), old);
+		if(oldIndex>0) //can't move further up
+		{
+			int newIndex = oldIndex-1;
+			MutableTreeNode newNode = (MutableTreeNode)m_model.getChild(old.getParent(), newIndex);
+			m_model.insertNodeInto(old, (MutableTreeNode)old.getParent(), newIndex);
+			m_model.insertNodeInto(newNode, (MutableTreeNode)newNode.getParent(), oldIndex);
+			m_model.nodeChanged(old);
+			m_model.nodeChanged(newNode);
+			this.scrollPathToVisible(this.getSelectionPath());
+			this.updateUI();
+		}
+	}
+	public void moveNodeDown()
+	{
+		MutableTreeNode old = (MutableTreeNode)this.getSelectionPath().getLastPathComponent();
+		int oldIndex = m_model.getIndexOfChild(old.getParent(), old);
+		if(oldIndex<m_model.getChildCount(old.getParent())-1) //can't move further down
+		{
+			int newIndex = oldIndex+1;
+			MutableTreeNode newNode = (MutableTreeNode)m_model.getChild(old.getParent(), newIndex);
+			m_model.insertNodeInto(old, (MutableTreeNode)old.getParent(), newIndex);
+			m_model.insertNodeInto(newNode, (MutableTreeNode)newNode.getParent(), oldIndex);
+			m_model.nodeChanged(old);
+			m_model.nodeChanged(newNode);
+			this.scrollPathToVisible(this.getSelectionPath());
+			this.updateUI();
+		}
+	}
+	
+
+	
+	
+	public List<WmsLayer> getLayers()
+	{
+		List<WmsLayer> ret = new ArrayList<WmsLayer>();
+		TreePath path = new TreePath(((DefaultMutableTreeNode)getModel().getRoot()).getPath());
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+        if (node.getChildCount() > 0) {
+            java.util.Enumeration<DefaultMutableTreeNode> e = node.children();
+            while(e.hasMoreElements()) {
+                DefaultMutableTreeNode n = e.nextElement();
+                if(n.getUserObject() instanceof LayerCheckBoxNode)
+                {
+                	LayerCheckBoxNode chk = (LayerCheckBoxNode)n.getUserObject();
+                	ret.add(new WmsLayer(chk.layer.getName(), chk.selected));
+                }
+            }
+        }
+		return ret;
+	}
+	
 	public ArrayList<String> getSelectedLayers()
 	{
 		
 		TreePath path = new TreePath(((DefaultMutableTreeNode)getModel().getRoot()).getPath());
 		ArrayList<String> ret = new ArrayList<String>();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-        //select(node, b);
         if (node.getChildCount() > 0) {
             java.util.Enumeration<DefaultMutableTreeNode> e = node.children();
             while(e.hasMoreElements()) {
@@ -100,8 +159,6 @@ public class WmsLayerTree extends JTree
                 	if(chk.selected)
                 		ret.add(chk.layer.getName());
                 }
-                //select(n, b);
-                //selectAllChildren(path.pathByAddingChild(n), b);
             }
         }
 		return ret;
@@ -126,7 +183,7 @@ public class WmsLayerTree extends JTree
         	chk.selected = b;
         }
     }
-	public void populate(List<Layer> layers, List<String> check, boolean b_new_url /*check none*/, ActionListener callback)
+	public void populate(List<Layer> layers, List<WmsLayer> check, boolean b_new_url /*check none*/, ActionListener callback)
 	{
 		this.setEditable(true);
 		boolean b_topnode_set = false;
@@ -135,13 +192,13 @@ public class WmsLayerTree extends JTree
 		DefaultMutableTreeNode node;
 		DefaultMutableTreeNode topnode = null;
 		Layer toplayer = null;
-		//m_model.setRoot(new DefaultMutableTreeNode(layers.get(0)));
+		
+		//set top node first
 		for(int i=0; i < layers.size(); i++)
 		{
 			if(m_layers.get(i)!=null && m_layers.get(i).getParent()==null)
 			{
 				toplayer = layers.get(i);
-				//LayerCheckBoxNode chk = new LayerCheckBoxNode(toplayer.getName(), false, toplayer);
 				topnode = new DefaultMutableTreeNode(new DefaultMutableTreeNode(toplayer));
 				m_model.setRoot(topnode);
 				hash.put(layers.get(i), topnode);
@@ -152,12 +209,44 @@ public class WmsLayerTree extends JTree
 		if(!b_topnode_set)
 		{
 			toplayer = new Layer("Top node");
-			//LayerCheckBoxNode chk = new LayerCheckBoxNode(toplayer.getName(), false, toplayer);
 			topnode = new DefaultMutableTreeNode(toplayer);
 			hash.put(toplayer, topnode);
 			m_model.setRoot(topnode);
 		}
-		
+
+		//add main items
+		if(!b_new_url)
+		{
+			for(WmsLayer l : check){
+				String layername = l.layername;
+				boolean b_check = l.checked;
+				if(hash.containsKey(layername))
+					continue;
+				DefaultMutableTreeNode parent = hash.get(toplayer);
+				if(parent==null)
+					parent = topnode;
+				//if(layers.contains(new Layer(layername))) //this is a valid layer
+				//find layer by name
+				Layer currentlayer = null;
+				for(Layer w : layers)
+				{
+					if(w.getName()!=null && w.getName().equals(layername))
+					{
+						currentlayer = w;
+						break;
+					}
+				}
+				if(currentlayer!=null)
+				{
+					LayerCheckBoxNode chk = new LayerCheckBoxNode(currentlayer.getName(), b_check, currentlayer, callback);
+					node = new DefaultMutableTreeNode(chk);
+					m_model.insertNodeInto(node, parent, parent.getChildCount());
+					hash.put(currentlayer, node);
+				}
+				
+			}
+		}
+		//add the rest
 		for(int i=0; i < layers.size(); i++)
 		{
 			Layer currentlayer = layers.get(i);
@@ -168,26 +257,48 @@ public class WmsLayerTree extends JTree
 			if(parent==null)
 				parent = topnode;
 
-			Boolean b = new Boolean(false);
+			Boolean b = false;
 			if(b_new_url)
-				b = new Boolean(true);
-			else if(check.contains(layers.get(i).getName()))
-				b = new Boolean(true);
+				b = true;
+			else if(check.contains(new WmsLayer(layers.get(i).getName(), false)))
+				b = true;
 
 			LayerCheckBoxNode chk = new LayerCheckBoxNode(currentlayer.getName(), b.booleanValue(), currentlayer, callback);
 			node = new DefaultMutableTreeNode(chk);
-			m_model.insertNodeInto(node, parent, 0);
+			int idx = check.indexOf(new WmsLayer(layers.get(i).getName(), false));
+			m_model.insertNodeInto(node, parent, idx>=0 ? idx : 0);
 			
 			hash.put(currentlayer, node);
 		}
+		
 		TreePath path = new TreePath(topnode.getPath());
 		
+		//this.updateUI();
 		this.expandPath(path);
 		//selectAllChildren(path, false);
-
 		
 	}
 	
+	
+	@Override
+	public String getToolTipText(MouseEvent event) {
+		
+		TreePath path = getPathForLocation(event.getX(),
+											event.getY());
+		if(path!=null && path.getLastPathComponent()!=null && path.getLastPathComponent() instanceof DefaultMutableTreeNode)
+		{
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+			Object userobj = node.getUserObject();
+			if(userobj instanceof LayerCheckBoxNode)
+			{
+				return ((LayerCheckBoxNode)userobj).layer.getTitle();
+			}
+		}
+		
+		return super.getToolTipText(event);
+	}
+
+
 	class LayerCheckBoxNode extends CheckBoxNode {
 		Layer layer;
 		ActionListener callback;
@@ -247,11 +358,6 @@ public class WmsLayerTree extends JTree
 		
 		public LayerRenderer()
 		{
-			/*selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
-		    selectionForeground = UIManager.getColor("Tree.selectionForeground");
-		    selectionBackground = UIManager.getColor("Tree.selectionBackground");
-		    textForeground = UIManager.getColor("Tree.textForeground");
-		    textBackground = UIManager.getColor("Tree.textBackground");*/
 		}
 		public Component getTreeCellRendererComponent(
 				JTree tree,
@@ -262,6 +368,7 @@ public class WmsLayerTree extends JTree
                 int row,
                 boolean hasFocus) {
 	        checkboxrenderer.setOpaque(true);
+	        renderer.setOpaque(true);
 			
 			Component returnValue = null;
 	      if ((value != null) && (value instanceof DefaultMutableTreeNode)) 
@@ -274,21 +381,26 @@ public class WmsLayerTree extends JTree
 	            LayerCheckBoxNode node = (LayerCheckBoxNode) userObject;
 	            if(treenode.getChildCount()==0 && treenode.getParent().equals(tree.getModel().getRoot()) || 
 	            		treenode.getChildCount()>0 && treenode.getParent().equals(tree.getModel().getRoot()))
-	        	  {
-		            checkboxrenderer.setText(node.getText());
-		            checkboxrenderer.setSelected(node.isSelected());
+	            {
+	            	checkboxrenderer.setText(node.getText());
+	            	checkboxrenderer.setSelected(node.isSelected());
 		            checkboxrenderer.layer = node.layer;
-				      returnValue = checkboxrenderer;
-	        	  }
-	        	  else
-	        	  {
-	        		  renderer.setText(node.getText());
-	        		  returnValue = renderer;
-	        	  }
+		            returnValue = checkboxrenderer;
+	            }
+	            else
+	            {
+	            	renderer.setText(node.getText());
+	            	returnValue = renderer;
+	            	renderer.setBackground(sel ? selectionBackground : nonselectionBackground);
+	            	renderer.setForeground(sel ? selectionForeground : textForeground);
+	            	renderer.setBackgroundSelectionColor(selectionBackground);
+	            	renderer.setBackgroundNonSelectionColor(nonselectionBackground);
+	            	renderer.setTextNonSelectionColor(textNonSelectionColor);
+	            	renderer.setTextSelectionColor(textSelectionColor);
+	            	return new JLabel(node.getText());
+	            }
 	            returnValue.setBackground(sel ? selectionBackground : nonselectionBackground);
 	            returnValue.setForeground(sel ? selectionForeground : textForeground);
-	            //returnValue = super.getTreeCellRendererComponent(tree, returnValue, sel, expanded, leaf, row, hasFocus);
-		            //return super.getTreeCellRendererComponent(tree, returnValue, sel, expanded, leaf, row, hasFocus);
 	          }
 	          else if (userObject instanceof DefaultMutableTreeNode)
 	          {
@@ -298,31 +410,18 @@ public class WmsLayerTree extends JTree
 	        	  {
 		        	  Layer node = (Layer) userObject2;
 		        	  renderer.setText(node.getTitle());
-		        	  returnValue = renderer; //.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);;
+		        	  returnValue = renderer; //super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);;
+		        	  returnValue = new JLabel(node.getTitle());
 	        	  }
 	          }
 	          else
-			        returnValue = renderer.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);	
-	          
-		      /*if (sel) {
-		    	  returnValue.setForeground(selectionForeground);
-		    	  returnValue.setBackground(selectionBackground);
-		        } else {
-		        	returnValue.setForeground(textForeground);
-		        	returnValue.setBackground(textBackground);
-		        }*/
-        	  if(treenode.isRoot())
-        	  {
-        		  //Substance 3.3
-        		  //returnValue.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getDarkColor());
-        		  
-        		  //Substance 5.2
-        		  //returnValue.setBackground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getDarkColor());
-        	  }
-	          
+	          {
+	        	  returnValue = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+	          }	          
 	      }
 	      else {
-	        returnValue = renderer.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+	    	  return new JLabel(value.toString());
+	        //returnValue = renderer.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 	      }	
 	        return returnValue;
 		}
@@ -350,28 +449,38 @@ public class WmsLayerTree extends JTree
 		  public boolean isCellEditable(EventObject event) {
 		    boolean returnValue = false;
 		    if (event instanceof MouseEvent) {
-		      MouseEvent mouseEvent = (MouseEvent) event;
-		      TreePath path = tree.getPathForLocation(mouseEvent.getX(),
-		          mouseEvent.getY());
-		      if (path != null) {
-		        Object node = path.getLastPathComponent();
-		        if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
-		          DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-		          Object userObject = treeNode.getUserObject();
-		          //returnValue = ((treeNode.isLeaf()) && (userObject instanceof CheckBoxNode));
-		          //returnValue = ((!treeNode.isRoot()) && userObject instanceof CheckBoxNode);
-		          //if((!treeNode.isRoot()) && userObject instanceof CheckBoxNode)
-		        	//  return true
-		          if(treeNode.isRoot())
-		        	  return false;
-		          if(treeNode.getChildCount()==0 && treeNode.getParent().equals(tree.getModel().getRoot()))
-		        	  return true;
-		          if(treeNode.getChildCount()>0 && treeNode.getParent().equals(tree.getModel().getRoot()))
-		        	  return true;
-		          
-		        		  
-		        }
-		      }
+		    	MouseEvent mouseEvent = (MouseEvent) event;
+		    	TreePath path = tree.getPathForLocation(mouseEvent.getX(),
+		    							mouseEvent.getY());
+		    	//select the node before altering it's check-state
+		      	if(path!=null && !path.getLastPathComponent().equals(tree.getLastSelectedPathComponent()))
+		      	{
+		      		Object o = path.getLastPathComponent();
+		      		if(o instanceof DefaultMutableTreeNode)
+		      		{
+		      			Rectangle rectPath = tree.getPathBounds(path);
+		      			rectPath.width = tree.getRowHeight();
+		      			rectPath.height = tree.getRowHeight();
+		      			if(rectPath.contains(mouseEvent.getPoint()))
+		      			{
+		      				return true;
+		      			}		      			
+		      		}
+		      		return false;
+		      	}
+		      	if (path != null) {
+		      		Object node = path.getLastPathComponent();
+		      		if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
+		      			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+		      			Object userObject = treeNode.getUserObject();
+		      			if(treeNode.isRoot())
+		      				return false;
+		      			if(treeNode.getChildCount()==0 && treeNode.getParent().equals(tree.getModel().getRoot()))
+		      				return true;
+		      			if(treeNode.getChildCount()>0 && treeNode.getParent().equals(tree.getModel().getRoot()))
+		      				return true;
+		      		}
+		      	}
 		    }
 		    return returnValue;
 		  }

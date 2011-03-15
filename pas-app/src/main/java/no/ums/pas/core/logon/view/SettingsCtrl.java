@@ -2,6 +2,7 @@ package no.ums.pas.core.logon.view;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,6 +20,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.logon.WmsLayer;
 import no.ums.pas.core.logon.WmsLayerTree;
 import no.ums.pas.core.logon.view.Settings.SettingsUpdate;
 import no.ums.pas.core.ws.WSSaveUI;
@@ -70,11 +72,13 @@ public class SettingsCtrl implements SettingsUpdate {
 	public void onMoveLayerUp(final WmsLayerTree tree) {
 		Layer l = tree.getSelectedLayer();
 		System.out.println("Move up "+l.getName());
+		tree.moveNodeUp();
 	}
 
 	@Override
 	public void onMoveLayerDown(final WmsLayerTree tree) {
 		System.out.println("Move down");
+		tree.moveNodeDown();
 	}
 
 	@Override
@@ -106,13 +110,19 @@ public class SettingsCtrl implements SettingsUpdate {
 		List<String> selected_layers;
 		if(s.getMapServer()==MAPSERVER.WMS && tree.getModel().getRoot()!=null) // m_wms_list.m_tbl_list.getRowCount() > 0)
 		{
-			selected_layers = tree.getSelectedLayers();
+			selected_layers = new ArrayList<String>();
+			List<WmsLayer> layers = tree.getLayers();
+			for(WmsLayer l : layers)
+			{
+				selected_layers.add(l.toString());
+			}
+			s.setWmsLayers(layers);
+			
 		}
 		else //keep the old ones
 		{
 			selected_layers = PAS.get_pas().get_settings().getSelectedWmsLayers();
 		}
-		s.setSelectedWmsLayers(selected_layers);
 		dlg.getBtnSave().setEnabled(false);
 		
 		new SwingWorker() {
@@ -152,8 +162,15 @@ public class SettingsCtrl implements SettingsUpdate {
 				if(!current_url.equals(new_url))
 					b_new_url = true;
 				MapLoader l = new MapLoader(null);
-				l.testWmsUrl(new_url, wmsUser, wmsPassword.toCharArray());
-				layers = l.getCapabilitiesTest().getLayerList();
+				try
+				{
+					l.testWmsUrl(new_url, wmsUser, wmsPassword.toCharArray());
+					layers = l.getCapabilitiesTest().getLayerList();
+				}
+				catch(Exception e)
+				{
+					throw e;
+				}
 				
 				imageformats.removeAllItems();
 				List<String> formats = l.m_wms_formats;
@@ -164,9 +181,10 @@ public class SettingsCtrl implements SettingsUpdate {
 					if(s.getSelectedWmsFormat().equals(formats.get(i)))
 						select_index = i;
 				}
-				imageformats.setSelectedIndex(select_index);
+				if(select_index>=0)
+					imageformats.setSelectedIndex(select_index);
 				
-				tree.populate(layers, s.getSelectedWmsLayers(), b_new_url, null);
+				tree.populate(layers, s.getWmsLayers(), b_new_url, null);
 				return tree.getModel();
 			}
 

@@ -4,6 +4,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.ums.pas.core.logon.WmsLayer;
+
 public class Settings {
 	public enum MAPSERVER
 	{
@@ -30,7 +32,8 @@ public class Settings {
 	private String sz_titlepainter_classname;
 	private MAPSERVER n_mapserver;
 	private String sz_wms_site;
-	private List<String> m_wms_layers = new ArrayList<String>();
+	private List<WmsLayer> m_wms_layers = new ArrayList<WmsLayer>();
+	private List<String> m_selected_wms_layers = new ArrayList<String>();
 	private String sz_wms_format;
 	private String sz_wms_username;
 	private String sz_wms_password;
@@ -100,7 +103,7 @@ public class Settings {
 	public Settings(String username, String company, boolean parm, 
 					boolean fleetcontrol, int lbarefresh, 
 					MAPSERVER n_mapserver, String sz_wms_site, 
-					List<String> selected_layers, String sz_wms_format, 
+					List<String> layers, String sz_wms_format, 
 					boolean b_pan_by_drag, boolean b_zoom_from_center, String sz_language, 
 					String sz_wms_username, String sz_wms_password) {
 		this.username = username;
@@ -110,7 +113,9 @@ public class Settings {
 		this.lbarefresh = lbarefresh;
 		this.n_mapserver = n_mapserver;
 		this.sz_wms_site = sz_wms_site;
-		this.m_wms_layers = selected_layers;
+		//this.m_wms_layers = selected_layers;
+		//setWmsLayers(layers);
+		
 		this.sz_wms_format = sz_wms_format;
 		this.b_pan_by_drag = b_pan_by_drag;
 		this.sz_languageid = sz_language;
@@ -274,20 +279,56 @@ public class Settings {
 	}
 	public void setSelectedWmsLayers(List<String> l)
 	{
+		m_selected_wms_layers = l;
+	}
+	public void setWmsLayers(List<WmsLayer> l)
+	{
 		m_wms_layers = l;
+		String s = "";
+		for(WmsLayer layer : l)
+		{
+			s+=layer.toString();
+			s+=",";
+		}
+		setSelectedWmsLayers(s);
+	}
+	public void setWmsLayers(String s)
+	{
+		setSelectedWmsLayers(s);
 	}
 	public void setSelectedWmsLayers(String s)
 	{
 		String [] l = s.split(",");
 		m_wms_layers.clear();
+		m_selected_wms_layers.clear();
 		for(int i=0; i < l.length; i++)
 		{
-			m_wms_layers.add(l[i]);
+			if(l[i].length()==0)
+				continue;
+			//try to split layer=[false,true]
+			int idx = l[i].indexOf("=");
+			if(idx>0)
+			{
+				String layername = l[i].substring(0, idx);
+				boolean checked = Boolean.parseBoolean(l[i].substring(idx+1));
+				m_wms_layers.add(new WmsLayer(layername, checked));
+				if(checked)
+					m_selected_wms_layers.add(layername);
+			}
+			else //compatability
+			{
+				m_wms_layers.add(new WmsLayer(l[i], true));
+				m_selected_wms_layers.add(l[i]);
+			}
 		}
+	}
+	public List<WmsLayer> getWmsLayers()
+	{
+		return m_wms_layers;
 	}
 	public List<String> getSelectedWmsLayers()
 	{
-		return m_wms_layers;
+		return m_selected_wms_layers;
 	}
 	public void setSelectedWmsFormat(String s)
 	{
@@ -299,7 +340,7 @@ public class Settings {
 	}
 	public void setWmsUsername(String s)
 	{
-		sz_wms_username = s;
+		sz_wms_username = (s.trim().length()==0 ? "" : s);
 	}
 	public String getWmsUsername()
 	{
@@ -307,7 +348,7 @@ public class Settings {
 	}
 	public void setWmsPassword(String s)
 	{
-		sz_wms_password = s;
+		sz_wms_password = (s.trim().length()==0 ? "" : s);
 	}
 	public String getWmsPassword()
 	{

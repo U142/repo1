@@ -3,6 +3,7 @@ package no.ums.pas.core.ws;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
+import no.ums.pas.core.logon.WmsLayer;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
@@ -41,11 +42,15 @@ public class WSSaveUI extends WSThread
 			Settings settings = PAS.get_pas().get_settings();
 			String layerlist = "";
 			//Element layer;
-			for(int i=0; i < settings.getSelectedWmsLayers().size(); i++)
+			/*for(int i=0; i < settings.getSelectedWmsLayers().size(); i++)
 			{
 				if(i>0)
 					layerlist+=",";
 				layerlist+=settings.getSelectedWmsLayers().get(i);
+			}*/
+			for(WmsLayer l : settings.getWmsLayers())
+			{
+				layerlist+=l.toString() + ",";
 			}
 			
 			if(account!=null)

@@ -431,8 +431,15 @@ public class SettingsGUI extends JFrame implements ActionListener {
 						boolean b_new_url = false;
 						if(!current_url.equals(new_url))
 							b_new_url = true;
-						PAS.get_pas().get_mappane().getMapLoader().testWmsUrl(new_url, m_txt_wms_username.getText(), m_txt_wms_password.getPassword());
-						layers = PAS.get_pas().get_mappane().getMapLoader().getCapabilitiesTest().getLayerList();
+						try
+						{
+							PAS.get_pas().get_mappane().getMapLoader().testWmsUrl(new_url, m_txt_wms_username.getText(), m_txt_wms_password.getPassword());
+							layers = PAS.get_pas().get_mappane().getMapLoader().getCapabilitiesTest().getLayerList();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
 						
 						m_combo_wmsformat.removeAllItems();
 						List<String> formats = PAS.get_pas().get_mappane().getMapLoader().m_wms_formats;
@@ -445,7 +452,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 						}
 						m_combo_wmsformat.setSelectedIndex(select_index);
 						
-						m_wms_tree.populate(layers, s.getSelectedWmsLayers(), b_new_url, null);
+						m_wms_tree.populate(layers, s.getWmsLayers(), b_new_url, null);
 						return m_wms_tree.getModel();
 					}
 

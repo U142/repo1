@@ -380,7 +380,7 @@ public class Settings extends JDialog {
 			}
 
 			//---- btnMoveUp ----
-			btnMoveUp.setText("text");
+			btnMoveUp.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_up_32.png")));
 			btnMoveUp.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -389,7 +389,7 @@ public class Settings extends JDialog {
 			});
 
 			//---- btnMoveDown ----
-			btnMoveDown.setText("text");
+			btnMoveDown.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/arrow_down_32.png")));
 			btnMoveDown.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -407,11 +407,11 @@ public class Settings extends JDialog {
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
+								.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+								.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 								.addGroup(mapsettingsLayout.createParallelGroup()
 									.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
@@ -422,16 +422,17 @@ public class Settings extends JDialog {
 								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 									.addComponent(txtMapWmsPassword)
 									.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE))
 							.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-								.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 469, GroupLayout.PREFERRED_SIZE)
+								.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(mapsettingsLayout.createParallelGroup()
-									.addComponent(btnMoveDown, 0, 0, Short.MAX_VALUE)
-									.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))))
+								.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(btnMoveDown, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+									.addComponent(btnMoveUp, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))))
 						.addContainerGap())
 			);
 			mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {lblMapWmsPassword, lblMapWmsUser});
+			mapsettingsLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnMoveDown, btnMoveUp});
 			mapsettingsLayout.setVerticalGroup(
 				mapsettingsLayout.createParallelGroup()
 					.addGroup(mapsettingsLayout.createSequentialGroup()
@@ -456,12 +457,12 @@ public class Settings extends JDialog {
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(mapsettingsLayout.createParallelGroup()
 							.addGroup(mapsettingsLayout.createSequentialGroup()
-								.addComponent(btnMoveUp)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-								.addComponent(btnMoveDown))
-							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
-						.addContainerGap())
+								.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+								.addComponent(btnMoveDown, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+							.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)))
 			);
+			mapsettingsLayout.linkSize(SwingConstants.VERTICAL, new Component[] {btnMoveDown, btnMoveUp});
 		}
 
 		//======== navigation ========
@@ -644,15 +645,15 @@ public class Settings extends JDialog {
 				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-						.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(mapsettings, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
 						.addComponent(userinfo, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(panel4, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(contentPaneLayout.createSequentialGroup()
 							.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(panel4, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(navigation, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addContainerGap())
 		);
@@ -665,14 +666,14 @@ public class Settings extends JDialog {
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(autostartup, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-					.addComponent(mapsettings, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(mapsettings, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(navigation, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(panel4, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(btnSave)
 						.addComponent(btnCancel))

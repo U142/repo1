@@ -2,6 +2,7 @@ package no.ums.pas.maps;
 
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.SettingsGUI;
+import no.ums.pas.core.logon.WmsLayer;
 import no.ums.pas.core.logon.WmsLayerTree;
 
 import org.geotools.data.ows.Layer;
@@ -41,7 +42,7 @@ public class WMSLayerSelectorPanel extends DefaultPanel implements MouseListener
 		addMouseListener(this);
 	}
 	
-	public void populate(List<Layer> layers, ArrayList<String> check)
+	public void populate(List<Layer> layers, List<WmsLayer> check)
 	{
 		//layers.add(new Layer("tester"));
 		//layers.add(new Layer("tester2"));
