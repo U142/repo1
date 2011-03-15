@@ -12,6 +12,7 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
@@ -33,6 +34,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.LookAndFeel;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.Dimension;
@@ -84,6 +86,18 @@ public interface PasScriptingInterface {
          * @return true if ok
          * @throws Exception
          */
+        
+        UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, String sz_country) throws Exception;
+		
+        /**
+         * 
+         * @param results Use the list retrieved from onExecSearch
+         * @param list Populate this list
+         * @return true if ok
+         * @throws Exception
+         */
+        
+        
         boolean onPopulateList(UGabSearchResultList results, SearchPanelResults.TableList list) throws Exception;
 		
         /**
@@ -92,6 +106,7 @@ public interface PasScriptingInterface {
          * @return a new overridden version of SearchPanelVals
          * @throws Exception
          */
+        
         SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception;
 		
         /**

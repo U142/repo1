@@ -2,6 +2,8 @@ package no.ums.pas.core.menus;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults.AdressTblListener;
+import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
 import no.ums.pas.core.mainui.address_search.SearchFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.themes.ThemeColorComponent;
@@ -60,7 +62,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	private JButton		m_btn_zoom_to_world;
 	private ButtonGroup m_group_navigation;
 	private MapSiteCombo m_combo_mapsite;
-	private SearchFrame m_searchframe = null;
+	//private SearchFrame m_searchframe = null;
+	private AddressSearchCtrl m_addresssearch = null;
 	private MainSelectMenu m_selectmenu;
 
 	public JButton get_btn_zoom()
@@ -154,7 +157,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
     public MainMenu(PAS pas)
 	{
 		super();
-		m_searchframe = new SearchFrame();
+		//m_searchframe = new SearchFrame();
+		m_addresssearch = new AddressSearchCtrl();
 
 		//setSize(get_pas().get_mappane().get_dimension().width + get_pas().get_eastwidth(), 40);
 		int w = getWidth();
@@ -168,7 +172,6 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		m_selectmenu.get_bar().setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		addComponentListener(this);
 		//setBackground(new Color(191, 191, 191)); //Color.white);		
-		
 	}
 	
 	
@@ -196,8 +199,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }		
 	
-	public SearchFrame get_searchframe() { return m_searchframe; }
-	
+	//public SearchFrame get_searchframe() { return m_searchframe; }
+	public AddressSearchCtrl get_searchframe() { return m_addresssearch; }
 	void prepare_controls()
 	{
 		m_group_navigation = new ButtonGroup();

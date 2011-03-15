@@ -6,6 +6,7 @@ import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
+import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.pluginbase.AbstractPasScriptingInterface;
@@ -53,6 +54,12 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		String sz_postarea	= vals.get_postarea();
 		String sz_region	= vals.get_region();
 		String sz_country	= vals.get_country();
+		
+		
+		return onExecSearch(sz_address, sz_no, sz_postno, sz_postarea, sz_region, sz_country);
+	}
+	public UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, String sz_country) throws Exception
+	{
 		String sz_language = "NO";
 		if(sz_country=="Norway")
 			sz_language = "NO";
@@ -67,14 +74,14 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		UGabSearchParams params = factory.createUGabSearchParams();
 		params.setNCount(10);
 		params.setNSort(0);
-		params.setSzAddress(sz_address);
+		params.setSzAddress(sz_address==null?"":sz_address);
 		params.setSzCountry(sz_language);
 		params.setSzLanguage(sz_language);
-		params.setSzNo(sz_no);
-		params.setSzPostarea(sz_postarea);
-		params.setSzPostno(sz_postno);
+		params.setSzNo(sz_no==null?"":sz_no);
+		params.setSzPostarea(sz_postarea==null?"":sz_postarea);
+		params.setSzPostno(sz_postno==null?"":sz_postno);
 		params.setSzPwd("MSG");
-		params.setSzRegion(sz_region);
+		params.setSzRegion(sz_region==null?"":sz_region);
 		params.setSzUid("UMS");
 		ULOGONINFO logoninfo = new ULOGONINFO();
 		logoninfo.setSessionid(PAS.get_pas().get_userinfo().get_sessionid());
@@ -143,4 +150,5 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 
 		return true;
 	}
+	
 }

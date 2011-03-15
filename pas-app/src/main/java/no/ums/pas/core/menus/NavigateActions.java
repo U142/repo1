@@ -36,8 +36,9 @@ public interface NavigateActions {
     Action SEARCH = new UmsAction("mainmenu_navigation_search") {
         @Override
         public void actionPerformed(ActionEvent e) {
-            PAS.get_pas().get_mainmenu().get_searchframe().activate();
-			PAS.get_pas().get_mainmenu().get_searchframe().toFront();
+            //PAS.get_pas().get_mainmenu().get_searchframe().activate();
+			//PAS.get_pas().get_mainmenu().get_searchframe().toFront();
+        	PAS.get_pas().get_mainmenu().get_searchframe().showGUI();
         }
     };
     
