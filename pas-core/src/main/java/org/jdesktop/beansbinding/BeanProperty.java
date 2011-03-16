@@ -6,6 +6,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
@@ -88,8 +89,8 @@ public class BeanProperty<BT, PT> {
     private static final Set<Identity> instanceMap = new ConcurrentSkipListSet<Identity>();
     private static final Map<NamedMethodKey, Method> setterMap = new MapMaker().makeComputingMap(new Function<NamedMethodKey, Method>() {
         @Override
-        public Method apply(@Nullable NamedMethodKey input) {
-            for (Method method : Preconditions.checkNotNull(input, "input cannot be null").type.getMethods()) {
+        public Method apply(@Nonnull NamedMethodKey input) {
+            for (Method method : input.type.getMethods()) {
                 if (method.getParameterTypes().length == 1 && input.name.equals(method.getName())) {
                     return method;
                 }
