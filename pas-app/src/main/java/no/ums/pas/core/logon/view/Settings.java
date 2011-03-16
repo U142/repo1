@@ -21,7 +21,7 @@ import no.ums.pas.localization.Localization;
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.converters.*;
-import org.jdesktop.validation.VisibleValidation;
+import org.jdesktop.beansbinding.validation.VisibleValidation;
 
 /**
  * @author User #2
@@ -103,7 +103,6 @@ public class Settings extends JDialog {
 		if(((c==null || c.equals(txtMapWms))) && settingsModel1.getMapSiteWms())
 		{
 			b_error ^= tmpValidUrl = !VisibleValidation.validateUrl(settingsModel1.getWmsUrl(), txtMapWms);
-			//VisibleValidation.forceValid(txtMapWms);
 		}
 		else if((c==null || c.equals(txtMapWms)))
 		{

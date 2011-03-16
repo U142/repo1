@@ -1,4 +1,4 @@
-package org.jdesktop.validation;
+package org.jdesktop.beansbinding.validation;
 
 import java.awt.Color;
 import java.awt.SystemColor;

@@ -12,7 +12,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.geotools.data.ows.Layer;
-import org.jdesktop.validation.VisibleValidation;
+import org.jdesktop.beansbinding.validation.VisibleValidation;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
