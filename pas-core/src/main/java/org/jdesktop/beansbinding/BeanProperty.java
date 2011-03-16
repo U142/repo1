@@ -89,7 +89,7 @@ public class BeanProperty<BT, PT> {
     private static final Map<NamedMethodKey, Method> setterMap = new MapMaker().makeComputingMap(new Function<NamedMethodKey, Method>() {
         @Override
         public Method apply(@Nullable NamedMethodKey input) {
-            for (Method method : input.type.getMethods()) {
+            for (Method method : Preconditions.checkNotNull(input, "input cannot be null").type.getMethods()) {
                 if (method.getParameterTypes().length == 1 && input.name.equals(method.getName())) {
                     return method;
                 }
