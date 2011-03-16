@@ -10,11 +10,13 @@
  */
 package no.ums.log.swing;
 
+import java.awt.*;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.File;
@@ -24,6 +26,8 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -83,7 +87,11 @@ public class LogFrame extends javax.swing.JFrame {
             }
         });
         jComboBox1.setSelectedItem(LogRecordCollector.MODEL.getLevel());
+        jComboBox1.setModel(LogSwingUtil.LEVEL_MODEL);
+        jComboBox1.setSelectedItem(Level.SEVERE);
+
         jList1.setCellRenderer(LogSwingUtil.LOG_RECORD_RENDERER);
+        jList1.setModel(LogRecordCollector.MODEL);
         jScrollPane1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
             @Override
@@ -130,103 +138,122 @@ public class LogFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        jSplitPane1 = new JSplitPane();
+        jPanel2 = new JPanel();
+        jScrollPane1 = new JScrollPane();
+        jList1 = new JList();
+        closeButton = new JButton();
+        saveButton = new JButton();
+        filterLabel = new JLabel();
+        jComboBox1 = new JComboBox();
+        logRecordDetail1 = new LogRecordDetail();
 
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        closeButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
-        filterLabel = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        logRecordDetail1 = new no.ums.log.swing.LogRecordDetail();
+        //======== this ========
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Container contentPane = getContentPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        //======== jSplitPane1 ========
+        {
+            jSplitPane1.setBorder(new EtchedBorder());
+            jSplitPane1.setDividerLocation(400);
+            jSplitPane1.setResizeWeight(1.0);
 
-        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jSplitPane1.setDividerLocation(400);
-        jSplitPane1.setResizeWeight(1.0);
+            //======== jPanel2 ========
+            {
 
-        jList1.setModel(LogRecordCollector.MODEL);
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                //======== jScrollPane1 ========
+                {
+
+                    //---- jList1 ----
+                    jList1.addListSelectionListener(new ListSelectionListener() {
+                        @Override
+                        public void valueChanged(ListSelectionEvent e) {
+                            jList1ValueChanged(e);
+                        }
+                    });
+                    jList1.addComponentListener(new ComponentAdapter() {
+                        @Override
+                        public void componentResized(ComponentEvent e) {
+                            jList1ComponentResized(e);
+                        }
+                    });
+                    jScrollPane1.setViewportView(jList1);
+                }
+
+                //---- closeButton ----
+                closeButton.setText("Close");
+                closeButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        closeButtonActionPerformed(e);
+                    }
+                });
+
+                //---- saveButton ----
+                saveButton.setText("Save");
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        saveButtonActionPerformed(e);
+                    }
+                });
+
+                //---- filterLabel ----
+                filterLabel.setText("Filter:");
+
+                //---- jComboBox1 ----
+                jComboBox1.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        jComboBox1ActionPerformed(e);
+                    }
+                });
+
+                GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
+                jPanel2.setLayout(jPanel2Layout);
+                jPanel2Layout.setHorizontalGroup(
+                    jPanel2Layout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(filterLabel)
+                            .addGap(18, 18, 18)
+                            .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
+                            .addComponent(saveButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(closeButton)
+                            .addContainerGap())
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                );
+                jPanel2Layout.setVerticalGroup(
+                    jPanel2Layout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(closeButton)
+                                .addComponent(saveButton)
+                                .addComponent(filterLabel)
+                                .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap())
+                );
             }
-        });
-        jList1.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                jList1ComponentResized(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jList1);
+            jSplitPane1.setLeftComponent(jPanel2);
+            jSplitPane1.setRightComponent(logRecordDetail1);
+        }
 
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        filterLabel.setText("Filter:");
-
-        jComboBox1.setModel(LogSwingUtil.LEVEL_MODEL);
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(filterLabel)
-                .addGap(18, 18, 18)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
-                .addComponent(saveButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(closeButton)
-                .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addComponent(jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closeButton)
-                    .addComponent(saveButton)
-                    .addComponent(filterLabel)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
         );
-
-        jSplitPane1.setLeftComponent(jPanel2);
-        jSplitPane1.setRightComponent(logRecordDetail1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
-        );
-
         pack();
+        setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -316,14 +343,14 @@ public class LogFrame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JLabel filterLabel;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JList jList1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
-    private no.ums.log.swing.LogRecordDetail logRecordDetail1;
-    private javax.swing.JButton saveButton;
+    private JSplitPane jSplitPane1;
+    private JPanel jPanel2;
+    private JScrollPane jScrollPane1;
+    private JList jList1;
+    private JButton closeButton;
+    private JButton saveButton;
+    private JLabel filterLabel;
+    private JComboBox jComboBox1;
+    private LogRecordDetail logRecordDetail1;
     // End of variables declaration//GEN-END:variables
 }

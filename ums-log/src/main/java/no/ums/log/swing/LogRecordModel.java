@@ -43,7 +43,9 @@ public class LogRecordModel extends AbstractListModel {
             this.level = level;
             int size = filteredList.size();
             filteredList.clear();
-            fireIntervalRemoved(this, 0, size - 1);
+            if (size > 0) {
+                fireIntervalRemoved(this, 0, size - 1);
+            }
             // Copy content to avoid concurrent modification exception.
             for (LogRecord record : content.toArray(new LogRecord[content.size()])) {
                 internalAdd(record);

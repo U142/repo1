@@ -17,6 +17,10 @@ public class LogRecordCollector extends Handler {
     public static final LogRecordModel MODEL = new LogRecordModel();
     private static final Logger umsLog = Logger.getLogger("no.ums");
 
+    // Findbugs reports an error here, as the can potentially fail when using OpenJDK.
+    // As we only deploy to the Oracle JDK, we can ignore this warning.
+    // http://findbugs.sourceforge.net/bugDescriptions.html#LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE")
     public static void install() {
         umsLog.addHandler(new LogRecordCollector());
         umsLog.setLevel(Level.FINEST);

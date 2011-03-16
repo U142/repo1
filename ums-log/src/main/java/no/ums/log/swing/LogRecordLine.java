@@ -54,44 +54,48 @@ public class LogRecordLine extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        level = new JLabel();
+        msg = new JLabel();
+        time = new JLabel();
 
-        level = new javax.swing.JLabel();
-        msg = new javax.swing.JLabel();
-        time = new javax.swing.JLabel();
+        //======== this ========
 
-        level.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
-        level.setForeground(new java.awt.Color(2, 167, 34));
+        //---- level ----
+        level.setFont(new Font("DejaVu Sans", Font.BOLD, 13));
+        level.setForeground(new Color(2, 167, 34));
         level.setText("DEBUG");
 
+        //---- msg ----
         msg.setText("This is the message");
 
+        //---- time ----
         time.setText("10:48:35");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(time)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(level, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(msg, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
+            layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(time)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(level, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(msg, GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(time)
-                .addComponent(level)
-                .addComponent(msg))
+            layout.createParallelGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(time)
+                    .addComponent(level)
+                    .addComponent(msg))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel level;
-    private javax.swing.JLabel msg;
-    private javax.swing.JLabel time;
+    private JLabel level;
+    private JLabel msg;
+    private JLabel time;
     // End of variables declaration//GEN-END:variables
 
 }
