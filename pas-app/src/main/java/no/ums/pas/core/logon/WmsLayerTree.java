@@ -18,6 +18,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -271,12 +272,19 @@ public class WmsLayerTree extends JTree
 			hash.put(currentlayer, node);
 		}
 		
-		TreePath path = new TreePath(topnode.getPath());
+		final TreePath path = new TreePath(topnode.getPath());
 		
-		//this.updateUI();
-		//this.expandPath(path);
-		this.fireTreeExpanded(path);
-		//selectAllChildren(path, false);
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				//WmsLayerTree.this.updateUI();
+				//this.expandPath(path);
+				WmsLayerTree.this.fireTreeExpanded(path);
+				//selectAllChildren(path, false);
+				
+			}
+		});
 		
 	}
 	
