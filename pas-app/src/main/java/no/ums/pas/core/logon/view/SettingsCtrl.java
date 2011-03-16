@@ -72,13 +72,11 @@ public class SettingsCtrl implements SettingsUpdate {
 	@Override
 	public void onMoveLayerUp(final WmsLayerTree tree) {
 		Layer l = tree.getSelectedLayer();
-		System.out.println("Move up "+l.getName());
 		tree.moveNodeUp();
 	}
 
 	@Override
 	public void onMoveLayerDown(final WmsLayerTree tree) {
-		System.out.println("Move down");
 		tree.moveNodeDown();
 	}
 
@@ -171,15 +169,7 @@ public class SettingsCtrl implements SettingsUpdate {
 				catch(Exception e)
 				{
 					//dlg.getTxtMapWms().grabFocus();
-					StringBuilder sb = new StringBuilder();
-					sb.append("<html>");
-					sb.append("<br>");
-					sb.append("<b>Error contacting WMS-server</b>");
-					sb.append("<br><br>");
-					sb.append(e.getMessage());
-					sb.append("<br><br>");
-					sb.append("</html>");
-					VisibleValidation.forceInvalid(dlg.getTxtMapWms(), sb.toString());
+					dlg.onWmsLayerlistLoaded(false, e);
 					throw e;
 				}
 				
@@ -196,7 +186,7 @@ public class SettingsCtrl implements SettingsUpdate {
 					imageformats.setSelectedIndex(select_index);
 				
 				tree.populate(layers, s.getWmsLayers(), b_new_url, null);
-				VisibleValidation.forceValid(dlg.getTxtMapWms());
+				dlg.onWmsLayerlistLoaded(true, null);
 				return tree.getModel();
 			}
 

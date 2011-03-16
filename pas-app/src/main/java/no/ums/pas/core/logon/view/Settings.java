@@ -112,6 +112,26 @@ public class Settings extends JDialog {
 		getBtnSave().setEnabled(!b_error);
 		return !b_error;
 	}
+	
+	public void onWmsLayerlistLoaded(boolean bOk, Exception e)
+	{
+		if(!bOk)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html>");
+			sb.append("<br>");
+			sb.append("<b>");
+			sb.append(Localization.l("main_pas_settings_mapsite_wms_test_failed"));
+			sb.append("</b>");
+			sb.append("<br><br>");
+			sb.append(e.getMessage());
+			sb.append("<br><br>");
+			sb.append("</html>");
+			VisibleValidation.forceInvalid(getTxtMapWms(), sb.toString());
+		}
+		//else
+		//	VisibleValidation.forceValid(getTxtMapWms());
+	}
 
 	private void radioMapDefaultActionPerformed(ActionEvent e) {
 		callback.onMapWmsSelected(false);

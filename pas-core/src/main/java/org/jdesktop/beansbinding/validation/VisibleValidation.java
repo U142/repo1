@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
+import no.ums.pas.localization.Localization;
+
 public class VisibleValidation {
 	public static final Color colError = Color.red;
 	public static final Color colOkText = SystemColor.textText;
@@ -35,15 +37,17 @@ public class VisibleValidation {
 			c.setToolTipText(toolTip);
 			ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
 			c.getActionMap().get("postTip").actionPerformed(postTip);
-			System.out.println("PostTip");
+			System.out.println("PostTip " + toolTip);
 			c.putClientProperty("UToolTipShowing", Boolean.TRUE);
+			isToolTipShowing = true;
 		}
 		else if(bIsOk && tooltipShowing)
 		{
 			ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
 			c.getActionMap().get("postTip").actionPerformed(postTip);			
 			c.putClientProperty("UToolTipShowing", Boolean.FALSE);
-			System.out.println("RemoveTip");
+			System.out.println("RemoveTip " + c.getText());
+			isToolTipShowing = false;
 		}
 		return bIsOk;
 	}
@@ -65,15 +69,15 @@ public class VisibleValidation {
 	
 	public static boolean validateEmail(String text, JTextComponent c)
 	{
-		return doNotify(c, patternEmail.matcher(text).matches(), "Write a valid e-mail address");
+		return doNotify(c, patternEmail.matcher(text).matches(), Localization.l("common_validation_failed_email"));
 	}
 	
 	public static boolean validateUrl(String text, JTextComponent c)
 	{
-		return doNotify(c, patternWms.matcher(text).matches(), "Write a valid URL");
+		return doNotify(c, patternWms.matcher(text).matches(), Localization.l("common_validation_failed_url"));
 	}
 	public static boolean validateHost(String text, JTextComponent c)
 	{
-		return doNotify(c, patternEmailServer.matcher(text).matches(), "Write a valid host");
+		return doNotify(c, patternEmailServer.matcher(text).matches(), Localization.l("common_validation_failed_hostname"));
 	}
 }
