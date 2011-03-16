@@ -15,9 +15,9 @@ import java.util.logging.Logger;
  */
 public class LogRecordCollector extends Handler {
     public static final LogRecordModel MODEL = new LogRecordModel();
+    private static final Logger umsLog = Logger.getLogger("no.ums");
 
     public static void install() {
-        Logger umsLog = Logger.getLogger("no.ums");
         umsLog.addHandler(new LogRecordCollector());
         umsLog.setLevel(Level.FINEST);
     }
