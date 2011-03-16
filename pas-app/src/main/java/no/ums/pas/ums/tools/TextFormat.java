@@ -10,8 +10,10 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Font;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,7 +76,7 @@ public final class TextFormat {
 			sz_ret = sz_date.substring(6,8) + "." + sz_date.substring(4,6) + "." + sz_date.substring(0, 4); 
 		}
 		else
-			return "N/A";
+			return Localization.l("common_na");
 		return sz_ret;
 	}
 
@@ -198,7 +200,7 @@ public final class TextFormat {
 			String sz_date = Integer.toString(n_date);
 			return format_date(sz_date);
 		}
-		return "N/A";
+		return Localization.l("common_na");
 	}
 	public synchronized static String format_time(String sz_time, int n_size)
 	{
@@ -217,7 +219,7 @@ public final class TextFormat {
 			sz_ret = format_time6(sz_time);
 		}
 		else
-			return "N/A";
+			return Localization.l("common_na");
 		return sz_ret;
 	}
 	public synchronized static String format_seconds_to_hms(int s)
@@ -238,7 +240,7 @@ public final class TextFormat {
 	}
 	public synchronized static String format_datetime(String sz_dt /*expect yyyymmddhhmmss*/) {
 		if(sz_dt.length()<14)
-			return "N/A";
+			return Localization.l("common_na");
 		return format_date(sz_dt.substring(0, 8)) + " " + format_time(sz_dt.substring(8, 14), 6);
 	}
 	private synchronized static String format_time6(String sz_time)
@@ -251,7 +253,38 @@ public final class TextFormat {
 	{
 		if(n_time>=0)
 			return format_time((String)(Integer.toString(n_time)), n_size);
-		return "N/A";
+		return Localization.l("common_na");
+	}
+	public synchronized static String secondsToReadableTime(int n)
+	{
+		if(n<60)
+		{
+			return Integer.valueOf(n).toString();
+		}
+		return minutesToReadableTime(n/60);
+	}
+	
+	public synchronized static String dateAddFromNowToReadable(int days)
+	{
+		if(days<0)
+		{
+			return Localization.l("common_na");
+		}
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.DATE, days);
+		return new SimpleDateFormat("dd.MM.yyyy").format(now.getTime());
+	}
+	public synchronized static String minutesToReadableTime(int n)
+	{
+		if(n<0)
+			return Localization.l("common_na");
+		long hours = TimeUnit.MINUTES.toHours(n);
+		
+		String hourPart = Long.valueOf(TimeUnit.MINUTES.toHours(n)).toString();
+		long minRest = n-hours*60;
+		String minutePart = Long.valueOf(TimeUnit.MINUTES.toSeconds(minRest)).toString();
+		return hourPart + " " + Localization.l("common_hours_maybe") + (minRest>0 ? " " + minutePart + Localization.l("common_minutes_maybe") : "");
+		
 	}
 	public synchronized static String padding(String sz_str, char c_padding, int n_total_length)
 	{

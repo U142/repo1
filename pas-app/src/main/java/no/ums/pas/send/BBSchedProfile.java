@@ -1,8 +1,12 @@
 package no.ums.pas.send;
 
+import no.ums.pas.core.defines.TooltipItem;
+import no.ums.pas.localization.Localization;
+import no.ums.pas.ums.tools.TextFormat;
+
 //"l_reschedpk", "sz_name", "l_deptpk", "sz_deptid", "l_retries", "l_interval", "l_canceltime", 
 //"l_canceldate", "l_pausetime", "l_pauseinterval", "sharing"
-public class BBSchedProfile extends Object {
+public class BBSchedProfile extends Object implements TooltipItem{
 	private String m_sz_reschedpk;
 	private String m_sz_name;
 	private int m_n_deptpk;
@@ -43,4 +47,61 @@ public class BBSchedProfile extends Object {
 			 new Integer(vals[5]).intValue(), new Integer(vals[6]).intValue(), new Integer(vals[7]).intValue(),
 			 new Integer(vals[8]).intValue(), new Integer(vals[9]).intValue(), (new Integer(vals[10]).intValue()==1 ? true : false));
 	}
+	@Override
+	public String toTooltipString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		sb.append("<b>");
+		sb.append(get_name());
+		sb.append("</b><hr>");
+		sb.append("<table>");
+		
+		sb.append("<tr><td>");
+		sb.append(Localization.l("main_sending_settings_config_profile_retries"));
+		sb.append("</td><td>");
+		sb.append(get_retries());
+		sb.append("</td></tr>");
+		
+		sb.append("<tr><td>");
+		sb.append(Localization.l("main_sending_settings_config_profile_interval"));
+		sb.append("</td><td>");
+		sb.append(get_interval());
+		sb.append(" ");
+		sb.append(Localization.l("common_minutes_maybe"));
+		sb.append("</td></tr>");
+				
+		sb.append("<tr><td>");
+		sb.append(Localization.l("main_sending_settings_config_profile_pausetime"));
+		sb.append("</td><td>");
+		sb.append(TextFormat.format_time(get_pausetime(), 4));
+		sb.append("</td></tr>");
+
+		sb.append("<tr><td>");
+		sb.append(Localization.l("main_sending_settings_config_profile_pauseinterval"));
+		sb.append("</td><td>");
+		sb.append(TextFormat.minutesToReadableTime((get_pausetime()>=0 ? get_pauseinterval() : -1)));
+		sb.append("</td></tr>");
+
+		sb.append("<tr><td>");
+		sb.append(Localization.l("main_sending_settings_config_profile_canceldate"));
+		sb.append("</td><td>");
+		//sb.append(TextFormat.dateAddFromNowToReadable((get_canceltime() >= 0 ? Math.max(0, get_canceldate()) : get_canceldate())));
+		if(get_canceldate()<=0 && get_canceltime()<=0)
+			sb.append(Localization.l("common_na"));
+		else
+		{
+			sb.append(get_canceldate()<=0 ? Localization.l("common_today") : get_canceldate() + " " + Localization.l("common_days_maybe"));
+			sb.append(" ");
+			sb.append(TextFormat.format_time(Math.max(get_canceltime(),0), 4));
+		}
+			
+		sb.append("</td></tr>");
+
+
+		sb.append("</table>");
+		sb.append("</html>");
+		return sb.toString();
+	}
+	
+	
 }

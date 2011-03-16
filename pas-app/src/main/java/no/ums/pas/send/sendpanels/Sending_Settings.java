@@ -3,6 +3,7 @@ package no.ums.pas.send.sendpanels;
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.TooltipCombo;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
@@ -18,12 +19,17 @@ import no.ums.pas.ums.tools.calendarutils.SchedCalendar;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -138,12 +144,17 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			g.drawImage(get_parent().get_bgimg(),0,0,getWidth(),getHeight(),this);
 	}
 	
+
+	
+
+	
+
 	
 	public Sending_Settings(PAS pas, SendWindow parentwin) {
 		super();
 		parent = parentwin;
 		m_scheddatetime = new SchedDateTime();
-		m_combo_profiles = new JComboBox();
+		m_combo_profiles = new TooltipCombo();
 		m_combo_profiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_profiles.addActionListener(this);
 		m_combo_profiles.setActionCommand("act_profile_changed");
@@ -157,7 +168,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);
 		m_combo_oadc.setActionCommand("act_oadc_changed");
-		m_combo_schedprofiles = new JComboBox();
+		m_combo_schedprofiles = new TooltipCombo();
 		m_combo_schedprofiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");

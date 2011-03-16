@@ -2,6 +2,7 @@ package no.ums.pas.parm.alert;
 
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
+import no.ums.pas.core.defines.TooltipCombo;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
@@ -17,6 +18,8 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -43,7 +46,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		alertparent = parentwin;
 		parent = parentwin;
 		m_scheddatetime = new SchedDateTime();
-		m_combo_profiles = new JComboBox();
+		m_combo_profiles = new TooltipCombo();
 		m_combo_profiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_profiles.setActionCommand("act_profile_changed");
 		m_btn_showprofile = new JButton(new ShowProfileAction(new Supplier<Integer>() {
@@ -56,7 +59,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);
 		m_combo_oadc.setActionCommand("act_oadc_changed");
-		m_combo_schedprofiles = new JComboBox();
+		m_combo_schedprofiles = new TooltipCombo();
 		m_combo_schedprofiles.setPreferredSize(new Dimension(200, 20));
 		m_combo_schedprofiles.addActionListener(this);
 		m_combo_schedprofiles.setActionCommand("act_schedprofile_changed");

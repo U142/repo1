@@ -1,8 +1,10 @@
 package no.ums.pas.send;
 
+import no.ums.pas.core.defines.TooltipItem;
+import no.ums.pas.localization.Localization;
 import no.ums.pas.sound.SoundFile;
 
-public class BBProfile extends Object {
+public class BBProfile extends Object implements TooltipItem {
 	private int m_sz_profilepk;
 	private String m_sz_name;
 	private int m_n_deptpk;
@@ -34,5 +36,28 @@ public class BBProfile extends Object {
 	}
 	public void add_soundfile(SoundFile file) {
 		m_soundfiles.add(file);
+	}
+	@Override
+	public String toTooltipString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		sb.append("<b>");
+		sb.append(get_profilename());
+		sb.append("</b>");
+		sb.append("<br><br>");
+		sb.append(Localization.l("main_sending_settings_num_dyn_audio"));
+		sb.append(": ");
+		sb.append(get_soundfiles().size());
+		sb.append("<br><hr>");
+		for(SoundFile sf : get_soundfiles())
+		{
+			sb.append(sf.get_filenumber());
+			sb.append(": ");
+			sb.append(sf.get_modulename());
+			//sb.append((sf.get_template()>0 ? " (template)" : ""));
+			sb.append("<br>");
+		}
+		
+		return sb.toString();
 	}
 }
