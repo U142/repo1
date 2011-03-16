@@ -59,6 +59,7 @@
                             <wsdlUrl>${wsdl.base}/PasStatus.asmx?WSDL</wsdlUrl>
                             <wsdlUrl>${wsdl.base}/TAS.asmx?WSDL</wsdlUrl>
                             <wsdlUrl>${wsdl.base}/Voice.asmx?WSDL</wsdlUrl>
+                            <wsdlUrl>${wsdl.base}/AddressDatabase.asmx?WSDL</wsdlUrl>
 <!--                            <wsdlUrl>${wsdl.base}/Parm.asmx?WSDL</wsdlUrl>-->
                         </wsdlUrls>
                         <extension>true</extension>
