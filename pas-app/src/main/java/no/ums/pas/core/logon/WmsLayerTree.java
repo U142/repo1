@@ -274,7 +274,8 @@ public class WmsLayerTree extends JTree
 		TreePath path = new TreePath(topnode.getPath());
 		
 		//this.updateUI();
-		this.expandPath(path);
+		//this.expandPath(path);
+		this.fireTreeExpanded(path);
 		//selectAllChildren(path, false);
 		
 	}

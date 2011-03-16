@@ -12,6 +12,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.geotools.data.ows.Layer;
+import org.jdesktop.validation.VisibleValidation;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
@@ -169,6 +170,16 @@ public class SettingsCtrl implements SettingsUpdate {
 				}
 				catch(Exception e)
 				{
+					//dlg.getTxtMapWms().grabFocus();
+					StringBuilder sb = new StringBuilder();
+					sb.append("<html>");
+					sb.append("<br>");
+					sb.append("<b>Error contacting WMS-server</b>");
+					sb.append("<br><br>");
+					sb.append(e.getMessage());
+					sb.append("<br><br>");
+					sb.append("</html>");
+					VisibleValidation.forceInvalid(dlg.getTxtMapWms(), sb.toString());
 					throw e;
 				}
 				
@@ -185,6 +196,7 @@ public class SettingsCtrl implements SettingsUpdate {
 					imageformats.setSelectedIndex(select_index);
 				
 				tree.populate(layers, s.getWmsLayers(), b_new_url, null);
+				VisibleValidation.forceValid(dlg.getTxtMapWms());
 				return tree.getModel();
 			}
 

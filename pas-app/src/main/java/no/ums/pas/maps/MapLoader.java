@@ -314,11 +314,6 @@ public class MapLoader {
 			m_wms_formats = wmstest.getCapabilities().getRequest().getGetMap().getFormats();//capabilitiestest.getRequest().getGetLegendGraphic().getFormats();
 			
 		}
-		catch(Exception e)
-		{
-            Error.getError().addError(Localization.l("common_error"), "Error receiving WMS capabilities", e, Error.SEVERITY_ERROR);
-			throw e;
-		}
 		finally{
 			resetWmsAuthenticator();
 		}
@@ -549,6 +544,8 @@ public class MapLoader {
 		catch(Exception e)
 		{
 			//m_retry = null;
+			if(m_retry==null)
+				m_retry = new AutoLoadRetry(info);
 			
 			setErrorMsg(e.getMessage());
 			Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
@@ -558,7 +555,7 @@ public class MapLoader {
 				m_retry = new AutoLoadRetry(info);
 			b_loading_mapimage = false;
 			resetWmsAuthenticator();
-			throw e;
+			//throw e;
 		}
 		b_loading_mapimage = false;
 		resetWmsAuthenticator();

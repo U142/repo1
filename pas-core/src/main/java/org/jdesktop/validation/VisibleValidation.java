@@ -25,11 +25,12 @@ public class VisibleValidation {
 	
 	public static boolean isToolTipShowing = false;
 	
-	private static boolean doNotify(JTextComponent c, boolean bIsOk, String toolTip)
+	private static boolean doNotify(JTextComponent c, boolean bIsOk, String toolTip, boolean bForced)
 	{
 		c.setForeground(bIsOk ? colOkText : colError);
-		boolean tooltip = (c.getClientProperty("UToolTipShowing")==null ? false : (Boolean)c.getClientProperty("UToolTipShowing"));
-		if(!tooltip && !bIsOk && c.hasFocus() && toolTip!=null && toolTip.length()>0)
+		boolean tooltipShowing = (c.getClientProperty("UToolTipShowing")==null ? false : (Boolean)c.getClientProperty("UToolTipShowing"));
+		boolean hasFocus = c.hasFocus();
+		if(bForced || (!tooltipShowing && !bIsOk && hasFocus && toolTip!=null && toolTip.length()>0))
 		{
 			c.setToolTipText(toolTip);
 			ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
@@ -37,13 +38,29 @@ public class VisibleValidation {
 			System.out.println("PostTip");
 			c.putClientProperty("UToolTipShowing", Boolean.TRUE);
 		}
-		else if(bIsOk && tooltip)
+		else if(bIsOk && tooltipShowing)
 		{
 			ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
 			c.getActionMap().get("postTip").actionPerformed(postTip);			
 			c.putClientProperty("UToolTipShowing", Boolean.FALSE);
+			System.out.println("RemoveTip");
 		}
 		return bIsOk;
+	}
+	
+	private static boolean doNotify(JTextComponent c, boolean bIsOk, String toolTip)
+	{
+		return doNotify(c, bIsOk, toolTip, false);
+	}
+	
+	public static void forceInvalid(JTextComponent c, String toolTip)
+	{
+		doNotify(c, false, toolTip, true);
+	}
+	
+	public static void forceValid(JTextComponent c)
+	{
+		doNotify(c, true, "", true);
 	}
 	
 	public static boolean validateEmail(String text, JTextComponent c)

@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import javax.swing.text.JTextComponent;
+
 import no.ums.pas.core.logon.*;
 import no.ums.pas.localization.Localization;
 
@@ -87,35 +89,39 @@ public class Settings extends JDialog {
 	}
 
 	private void btnSaveActionPerformed(ActionEvent e) {
-		if(onValidate())
+		if(onValidate(null))
 			callback.onOk(treeWMS, settingsModel1);
 	}
-	private boolean onValidate()
+	private boolean onValidate(JComponent c)
 	{
 		boolean b_error = false;
-		//validate email address
-				//"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$");
-		//validate email server
-		if(settingsModel1.getEmailAddress().length()>0)
+		boolean tmpValidUrl = false;
+		if((c==null || c.equals(txtMailAddress)) && settingsModel1.getEmailAddress().length()>0)
 			b_error ^= !VisibleValidation.validateEmail(settingsModel1.getEmailAddress(), txtMailAddress);
-		if(settingsModel1.getEmailServer().length()>0)
+		if((c==null || c.equals(txtMailServer)) && settingsModel1.getEmailServer().length()>0)
 			b_error ^= !VisibleValidation.validateHost(settingsModel1.getEmailServer(), txtMailServer);
-		if(settingsModel1.getMapSiteWms())
-			b_error ^= !VisibleValidation.validateUrl(settingsModel1.getWmsUrl(), txtMapWms);
-		else
-			VisibleValidation.validateUrl("http://www.ums.no/map/", txtMapWms);
-		
+		if(((c==null || c.equals(txtMapWms))) && settingsModel1.getMapSiteWms())
+		{
+			b_error ^= tmpValidUrl = !VisibleValidation.validateUrl(settingsModel1.getWmsUrl(), txtMapWms);
+			//VisibleValidation.forceValid(txtMapWms);
+		}
+		else if((c==null || c.equals(txtMapWms)))
+		{
+			VisibleValidation.forceValid(txtMapWms);
+		}
+		getBtnMapWmsOpen().setEnabled(!tmpValidUrl);
 		getBtnSave().setEnabled(!b_error);
 		return !b_error;
 	}
 
 	private void radioMapDefaultActionPerformed(ActionEvent e) {
 		callback.onMapWmsSelected(false);
+		onValidate(getTxtMapWms());
 	}
 
 	private void radioMapWmsActionPerformed(ActionEvent e) {
 		callback.onMapWmsSelected(true);
-		onValidate();
+		onValidate(getTxtMapWms());
 	}
 
 	public JTextField getTxtMapWms() {
@@ -183,19 +189,19 @@ public class Settings extends JDialog {
 	}
 
 	private void txtMapWmsKeyReleased(KeyEvent e) {
-		onValidate();
+		onValidate(getTxtMapWms());
 	}
 
 	private void txtMailDisplaynameKeyReleased(KeyEvent e) {
-		onValidate();
+		onValidate(txtMailDisplayname);
 	}
 
 	private void txtMailAddressKeyReleased(KeyEvent e) {
-		onValidate();
+		onValidate(txtMailAddress);
 	}
 
 	private void txtMailServerKeyReleased(KeyEvent e) {
-		onValidate();
+		onValidate(txtMailServer);
 	}
 
 	private void initComponents() {
