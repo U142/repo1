@@ -19,7 +19,6 @@ import no.ums.ws.pas.UGabSearchResultList;
 
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
-import org.jdesktop.swingbinding.*;
 
 /**
  * @author User #3
