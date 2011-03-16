@@ -190,7 +190,6 @@ public class AddressSearchDlg extends JFrame {
 		if(e.getClickCount()>=2)
 		{
 			int selRow = tblResults.getSelectedRow();
-			Object [] vals = new Object[tblResults.getColumnCount()];
 			AddressSearchListItem sel = new AddressSearchListItem();
 			sel.hit = (Float)tblResults.getValueAt(selRow, 0);
 			sel.lon = Float.parseFloat(tblResults.getValueAt(selRow, 3).toString());

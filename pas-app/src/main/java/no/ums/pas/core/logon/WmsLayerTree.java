@@ -220,7 +220,7 @@ public class WmsLayerTree extends JTree
 			for(WmsLayer l : check){
 				String layername = l.layername;
 				boolean b_check = l.checked;
-				if(hash.containsKey(layername))
+				if(hash.containsKey(new Layer(layername)))
 					continue;
 				DefaultMutableTreeNode parent = hash.get(toplayer);
 				if(parent==null)

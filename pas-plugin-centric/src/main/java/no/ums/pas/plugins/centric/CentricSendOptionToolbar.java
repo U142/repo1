@@ -1419,7 +1419,6 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			int n_total_len = TextFormat.GsmStrLen(m_txt_preview.getText());//m_txt_preview.getText().length();
 			if(e.getSource().equals(m_txt_message))// || e.getSource().equals(m_txt_sender_name))
 			{
-				JTextComponent c = (JTextComponent)e.getSource();
 				//int n_chars_left_for_message = MAX_TOTAL_CHARS - getTextLengthOfFields() + num_chars_selected;
 //				int len_of_message = TextFormat.GsmStrLen(c.getText()); //c.getText().length();
 				//if(len_of_message<n_chars_left_for_message)

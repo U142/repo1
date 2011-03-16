@@ -32,7 +32,6 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 		countries.add("Denmark");
 		if(dlg == null) {
 			dlg = new AddressSearchDlg(this, countries);
-			AddressSearchListHeader headers = dlg.new AddressSearchListHeader();
 		}
 		dlg.setVisible(true);
 	}

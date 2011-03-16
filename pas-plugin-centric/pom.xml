@@ -19,6 +19,31 @@
         <dependency>
             <groupId>no.ums</groupId>
             <artifactId>pas-app</artifactId>
+            <classifier>gps</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>importer</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>sound</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>parm</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>tas</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
             <classifier>ums</classifier>
         </dependency>
         <dependency>

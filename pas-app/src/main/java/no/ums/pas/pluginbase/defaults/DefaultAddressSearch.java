@@ -61,11 +61,11 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 	public UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, String sz_country) throws Exception
 	{
 		String sz_language = "NO";
-		if(sz_country=="Norway")
+		if(sz_country.equals("Norway"))
 			sz_language = "NO";
-		else if(sz_country=="Sweden")
+		else if(sz_country.equals("Sweden"))
 			sz_language = "SE";
-		else if(sz_country=="Denmark")
+		else if(sz_country.equals("Denmark"))
 			sz_language = "DK";
 		
 		ObjectFactory factory = new ObjectFactory();
