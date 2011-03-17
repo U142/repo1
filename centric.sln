@@ -5,20 +5,20 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "centric", "S:\Projects\cent
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
 		Debug.AspNetCompiler.VirtualPath = "/centric"
-		Debug.AspNetCompiler.PhysicalPath = "S:\Projects\centricadmin\trunk\centric\"
+		Debug.AspNetCompiler.PhysicalPath = "centric\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\centric\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/centric"
-		Release.AspNetCompiler.PhysicalPath = "S:\Projects\centricadmin\trunk\centric\"
+		Release.AspNetCompiler.PhysicalPath = "centric\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\centric\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "2058"
+		VWDPort = "1823"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject

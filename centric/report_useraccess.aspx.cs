@@ -97,7 +97,7 @@ public partial class report_useraccess : System.Web.UI.Page
         String[] areas = new String[lst_areas.GetSelectedIndices().Length];
         for (int i = 0; i < lst_areas.GetSelectedIndices().Length; ++i)
         {
-            areas[i] = lst_areas.Items[i].Text;
+            areas[i] = lst_areas.Items[lst_areas.GetSelectedIndices()[i]].Text;
         }
         List<UBBUSER[]> users = (List<UBBUSER[]>)Session["userlist"];
         Util.WriteUsersPerAccessPermissionToCSV(users, areas);

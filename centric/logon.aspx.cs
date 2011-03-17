@@ -57,7 +57,8 @@ public partial class logon : System.Web.UI.Page
             }
             else
             {
-                lbl_error.Text = res.reason;
+                //lbl_error.Text = res.reason;
+                lbl_error.Text = "Your account has been blocked, please contact the administrator";
             }
         }
         catch (Exception ex)

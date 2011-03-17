@@ -202,7 +202,7 @@ public partial class report_monthly : System.Web.UI.Page
             cell = new HtmlTableCell();
             cell.Attributes.Add("style", "WORD-BREAK:BREAK-ALL;");
             txt = new Label();
-            txt.Text = res[i].sz_text;
+            txt.Text = Server.HtmlEncode(res[i].sz_text);
             cell.Controls.Add(txt);
             row.Cells.Add(cell);
             tbl_output.Rows.Add(row);

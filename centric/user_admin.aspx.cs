@@ -230,7 +230,7 @@ public partial class user_admin : System.Web.UI.Page
         if (rad_administrator.Checked)
         {
             // No regions allowed
-            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["admin_department"]);
+            user.l_profilepk = int.Parse(ConfigurationSettings.AppSettings["usertype_administrator"]);
         }
         else if (rad_national.Checked)
         {

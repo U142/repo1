@@ -137,15 +137,18 @@ public class Util
     {
         value = value.Replace('\n', ' ');
         value = value.Replace('\r', ' ');
-        stringBuilder.Append(value.Replace(',', '.'));
-        stringBuilder.Append(", ");
+        //stringBuilder.Append(value.Replace(',', '.'));
+        stringBuilder.Append(value);
+        stringBuilder.Append(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator.ToString() + " ");
+        System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator.ToString();
     }
 
     private static void AddLast(string value, StringBuilder stringBuilder)
     {
         value = value.Replace('\n', ' ');
         value = value.Replace('\r', ' ');
-        stringBuilder.Append(value.Replace(',', '.'));
+        //stringBuilder.Append(value.Replace(',', '.'));
+        stringBuilder.Append(value);
     }
 
     /*********************************
@@ -196,6 +199,7 @@ public class Util
         HttpContext.Current.Response.AddHeader("content-disposition", attachment);
         HttpContext.Current.Response.ContentType = "text/csv";
         HttpContext.Current.Response.AddHeader("Pragma", "public");
+        //HttpContext.Current.Response.ContentEncoding = Encoding.GetEncoding("ISO-8859-1");
         WriteMonthlyReportColumnName();
         foreach (CB_MESSAGE_MONTHLY_REPORT_RESPONSE report in monthlyreport)
         {

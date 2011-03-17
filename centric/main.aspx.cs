@@ -238,12 +238,16 @@ public partial class main : System.Web.UI.Page
 
     protected void btn_deactivate_Click(object sender, EventArgs e)
     {
-        PasAdmin pasa = new PasAdmin();
-        pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
-        com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
-        DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
-        if (res.successful)
-            lst_messages.Items.Remove(lst_messages.SelectedItem);
+        if (lst_messages.SelectedIndex != -1)
+        {
+            PasAdmin pasa = new PasAdmin();
+            pasa.Url = ConfigurationSettings.AppSettings["PasAdmin"];
+            com.ums.ws.pas.admin.ULOGONINFO logon = (com.ums.ws.pas.admin.ULOGONINFO)Session["logoninfo"];
+            
+            DeactivateMessageResponse res = pasa.doDeactivateMessage(Util.convertLogonInfoPasAdmin(logon), long.Parse(lst_messages.SelectedValue));
+            if (res.successful)
+                lst_messages.Items.Remove(lst_messages.SelectedItem);
+        }
                 
     }
   
