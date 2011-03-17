@@ -47,6 +47,7 @@ public class VisibleValidation {
 			c.getActionMap().get("postTip").actionPerformed(postTip);			
 			c.putClientProperty("UToolTipShowing", Boolean.FALSE);
 			System.out.println("RemoveTip " + c.getText());
+			c.setToolTipText(null);
 			isToolTipShowing = false;
 		}
 		return bIsOk;

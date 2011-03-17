@@ -289,6 +289,7 @@ public class WmsLayerTree extends JTree
 	}
 	
 	
+	
 	@Override
 	public String getToolTipText(MouseEvent event) {
 		
@@ -308,7 +309,7 @@ public class WmsLayerTree extends JTree
 	}
 
 
-	class LayerCheckBoxNode extends CheckBoxNode {
+	public class LayerCheckBoxNode extends CheckBoxNode {
 		Layer layer;
 		ActionListener callback;
 		public LayerCheckBoxNode(String text, boolean selected, Layer layer, ActionListener callback)

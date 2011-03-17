@@ -129,8 +129,8 @@ public class Settings extends JDialog {
 			sb.append("</html>");
 			VisibleValidation.forceInvalid(getTxtMapWms(), sb.toString());
 		}
-		//else
-		//	VisibleValidation.forceValid(getTxtMapWms());
+		else
+			VisibleValidation.forceValid(getTxtMapWms());
 	}
 
 	private void radioMapDefaultActionPerformed(ActionEvent e) {
