@@ -33,14 +33,6 @@ public class CentricProjectDlg extends ProjectDlg
 			set_gridconst(0, inc_panels(), 2, 1);
 			add(m_lbl_errormsg, m_gridconst);
 			m_lbl_errormsg.setForeground(Color.RED);
-			/*set_gridconst(0, inc_panels(), 1, 1);
-			add(m_lbl_projectname, m_gridconst);
-			set_gridconst(1, get_panel(), 2, 1);
-			add(m_txt_projectname, m_gridconst);
-			set_gridconst(3, get_panel(), 1, 1, GridBagConstraints.EAST);
-			add(m_btn_save, m_gridconst);
-			set_gridconst(4, get_panel(), 1, 1, GridBagConstraints.EAST);
-			add(m_btn_cancel, m_gridconst);*/
 			set_gridconst(0, inc_panels(), 10, 1);
 			add(m_project_list, get_gridconst());
 			set_gridconst(0, inc_panels(), 2, 1);

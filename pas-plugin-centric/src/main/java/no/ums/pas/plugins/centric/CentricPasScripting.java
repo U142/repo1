@@ -262,23 +262,24 @@ public class CentricPasScripting extends DefaultPasScripting {
         ViewOptions.TOGGLE_HOUSES.setSelected(false);
 
         final JMenu file = menu.add(new JMenu(Localization.l("mainmenu_file")));
-        file.add(FileMenuActions.NEW_SENDING);
+        //file.add(FileMenuActions.NEW_SENDING);
         file.add(FileMenuActions.OPEN_PROJECT);
         file.add(FileMenuActions.CLOSE_PROJECT);
         file.addSeparator();
-        file.add(FileMenuActions.FILE_IMPORT);
-        file.add(FileMenuActions.PRINT_MAP);
-        file.add(FileMenuActions.SAVE_MAP);
+        //file.add(FileMenuActions.FILE_IMPORT);
+        //file.add(FileMenuActions.PRINT_MAP);
+        //file.add(FileMenuActions.SAVE_MAP);
         file.add(FileMenuActions.EXIT);
 
         JMenu addressBook = menu.add(new JMenu(Localization.l("common_address_book")));
         addressBook.add(menu.get_item_address_book());
         menu.get_item_address_book().setEnabled(false);
-        menu_trainingmode.add(menu.get_item_training_mode());
-
+        //menu_trainingmode.add(menu.get_item_training_mode());
+		menu.add((menu_trainingmode= new JMenu(Localization.l("mainmenu_trainingmode"))));
+		menu_trainingmode.add(menu.get_item_training_mode());
         final JMenu help = menu.add(new JMenu(Localization.l("mainmenu_help")));
         help.add(OtherActions.HELP_ABOUT);
-        help.add(OtherActions.SHOW_CONTACT_INFO);
+        //help.add(OtherActions.SHOW_CONTACT_INFO);
         return true;
     }
 
@@ -1070,6 +1071,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         p.m_gridconst.fill = GridBagConstraints.HORIZONTAL;
         p.m_gridconst.anchor = GridBagConstraints.CENTER;
 
+        p.add_spacing(DefaultPanel.DIR_HORIZONTAL, 75);
 
         p.set_gridconst(3, p.inc_panels(), 1, 1, GridBagConstraints.CENTER); //x,y,sizex,sizey
         p.add(p.getLblCompId(), p.m_gridconst);
@@ -1119,7 +1121,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     public boolean onCustomizeLogonDlg(LogonDialog dlg) {
-        dlg.setSize(new Dimension(300, 200));
+        dlg.setSize(new Dimension(400, 200));
         dlg.get_logonpanel().getLblCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setVisible(false);
         dlg.get_logonpanel().getCompId().setEditable(false);

@@ -17,10 +17,12 @@ import no.ums.pas.ums.tools.Utils;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPasswordField;
 import javax.swing.JToolTip;
 import javax.swing.ListCellRenderer;
+import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
@@ -305,7 +307,16 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_compid = new StdTextLabel(Localization.l("logon_company"));
 			m_lbl_passwd = new StdTextLabel(Localization.l("logon_password"));
 			m_lbl_language = new StdTextLabel(Localization.l("common_language"));
-			m_lbl_errormsg = new StdTextLabel("");
+			m_lbl_errormsg = new StdTextLabel()
+			{
+				@Override
+				public String getToolTipText() {
+					return this.getText();
+				}
+				
+			};
+			ToolTipManager.sharedInstance().registerComponent(m_lbl_errormsg);
+			m_lbl_errormsg.setHorizontalAlignment(JLabel.CENTER);
 			m_combo_language = new JComboBox();
 			m_lbl_errormsg.setForeground(Color.RED);
 			m_btn_submit = new JButton(Localization.l("common_submit"));
@@ -318,7 +329,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_passwd.setPreferredSize(new Dimension(100, 19));
 			m_lbl_language.setPreferredSize(new Dimension(100, 19));
 			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(200, 15));
+			m_lbl_errormsg.setPreferredSize(new Dimension(350, 15));
 			m_btn_submit.setActionCommand(ENABLE);
 			m_btn_submit.setActionCommand("act_logon");
 			m_btn_submit.addActionListener(this);

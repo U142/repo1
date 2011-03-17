@@ -20,6 +20,12 @@ public class StdTextLabel extends JLabel
 		return getText();
 	}
 	
+	public StdTextLabel()
+	{
+		super("");
+		init(true);
+	}
+	
 	public StdTextLabel(String sz_text)
 	{
 		super(sz_text);

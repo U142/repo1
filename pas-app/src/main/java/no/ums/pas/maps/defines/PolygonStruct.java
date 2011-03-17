@@ -1466,24 +1466,6 @@ public class PolygonStruct extends ShapeStruct {
 				break;
 			cur++;
 		}
-		/*else if(start<stop)
-		{
-			for(int i=start; i <= stop; i++)
-			{
-				int idx = (i % restrict.get_size());
-				MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
-				poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);
-			}
-		}
-		else
-		{
-			for(int i=start; i >= stop; i--)
-			{
-				int idx = (i % restrict.get_size());
-				MapPointLL ll = new MapPointLL(restrict.get_coor_lon(idx), restrict.get_coor_lat(idx));
-				poly.add_coor(ll.get_lon(), ll.get_lat(), true, POINT_PRECISION, false);				
-			}
-		}*/
 		poly.finalizeShape();
 	}
 	protected void followRestrictionLines(PolygonStruct poly, PolygonStruct restrict, POLY_FOLLOW_RESTRICT r,

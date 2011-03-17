@@ -8,6 +8,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.dataexchange.MailAccount;
+import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Logon;
@@ -809,6 +810,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onLogonAddControls(LogonPanel p) {
+		p.add_spacing(DefaultPanel.DIR_HORIZONTAL, 100);
 		p.add_controls();
 		return true;
 	}
@@ -816,6 +818,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
 		System.out.println("onCustomizeLogonDlg");
+		dlg.setPreferredSize(new Dimension(400, 350));
 		return true;
 	}
 

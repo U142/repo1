@@ -1535,11 +1535,17 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		{
 			
 			JTextComponent c = (JTextComponent)e.getSource();
+			
+			int selectionStart = c.getSelectionStart();
+			int selectionEnd = c.getSelectionEnd();
+			
 			String strText = c.getText();
 			TextFormat.RegExpResult res = TextFormat.RegExpGsm(strText + e.getKeyChar());
 			if(!res.valid)
 			{
 				c.setText(res.resultstr);
+				c.setSelectionStart(selectionStart);
+				c.setSelectionEnd(selectionEnd);
 				e.consume();
 			}
 			int before = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
@@ -1566,6 +1572,8 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 //						int current_len = c.getText().length();
 						String cut = TextFormat.GsmStrMaxLen(c.getText(), txt_before-diff);
 						c.setText(cut);
+						c.setSelectionStart(selectionStart);
+						c.setSelectionEnd(selectionEnd);
 						//c.setText(c.getText().substring(0, current_len-diff));
 					}
 					catch(Exception err)

@@ -74,7 +74,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		m_b_newsending = bNewSending;
 		addComponentListener(this);
 		init();
-		Dimension d = new Dimension(500, 350);
+		Dimension d = new Dimension(700, 350);
 		Dimension ul = Utils.screendlg_upperleft(d);
 		setBounds(ul.width, ul.height, d.width, d.height);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(d.width, d.height));
@@ -322,8 +322,9 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		if(getWidth()<0 || getHeight()<0)
 			return;
 		m_projectpanel.setPreferredSize(new Dimension(getWidth()-20, getHeight()));
-		Dimension d = new Dimension(getWidth()-40, getHeight()-200);
+		Dimension d = new Dimension(getWidth()-40, getHeight()-150);
 		m_projectpanel.get_projectlist().get_scrollpane().setPreferredSize(d);
+		m_projectpanel.m_project_list.setPreferredSize(d);
 		//m_projectpanel.get_projectlist().get_scrollpane().setSize(d);
 		//m_projectpanel.get_projectlist().get_scrollpane().get_table().setPreferredSize(d);
 		m_projectpanel.revalidate();
