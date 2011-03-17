@@ -340,7 +340,10 @@ public class Settings {
 	}
 	public void setWmsUsername(String s)
 	{
-		sz_wms_username = (s.trim().length()==0 ? "" : s);
+		if(s != null)
+			sz_wms_username = (s.trim().length()==0 ? "" : s);
+		else
+			sz_wms_username = "";
 	}
 	public String getWmsUsername()
 	{
@@ -348,7 +351,10 @@ public class Settings {
 	}
 	public void setWmsPassword(String s)
 	{
-		sz_wms_password = (s.trim().length()==0 ? "" : s);
+		if(s != null)
+			sz_wms_password = (s.trim().length()==0 ? "" : s);
+		else
+			sz_wms_password = "";
 	}
 	public String getWmsPassword()
 	{
