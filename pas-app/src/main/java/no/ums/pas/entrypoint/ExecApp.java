@@ -39,6 +39,7 @@ public class
 		String sz_vb4_url = null;
         String codebaseFolder = "";
 		String[] arr_args = args;
+		String shaPassword = null;
 
         for (String arg : args) {
             if (arg.charAt(0) == '-') {
@@ -70,6 +71,9 @@ public class
                     case 'x':
                         codebaseFolder = arg.substring(2);
                         break;
+                    case 'p':
+                    	shaPassword = arg.substring(2);
+                    	break;
                     case 'f':
                         if (arg.length() > 3) {
                             System.out.println("auto import file=" + arg.substring(3));
@@ -107,6 +111,7 @@ public class
 		m_pas.setSiteName(sz_sitename);
 		m_pas.setOverrideUserId(sz_userid);
 		m_pas.setOverrideCompId(sz_compid);
+		m_pas.setOverrideShaPassword(shaPassword);
 		m_pas.setPasWsSite(sz_pasws); 
 		m_pas.setDebug(debug);
 		m_pas.setCodeBase(sz_codebase);

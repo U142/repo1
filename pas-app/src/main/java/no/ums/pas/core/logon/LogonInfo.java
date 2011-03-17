@@ -9,6 +9,12 @@ public class LogonInfo {
 	private String m_sz_passwd;
 	private String m_sz_sessionid;
 	private String m_sz_language;
+	public boolean isAutoLogonReady()
+	{
+		return (m_sz_userid!=null && m_sz_userid.length()>0 &&
+			m_sz_compid!=null && m_sz_compid.length()>0 &&
+			m_sz_passwd!=null && m_sz_passwd.length()>0);
+	}
 	public String get_userid() { return m_sz_userid; }
 	public String get_compid() { return m_sz_compid; }
 	public String get_passwd() { return m_sz_passwd; }

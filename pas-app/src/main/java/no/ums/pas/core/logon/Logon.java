@@ -41,6 +41,7 @@ public class Logon implements ActionListener {
 	private String wantedlanguage = "";
 	public LogonInfo getLogonInfo() { return m_logoninfo; }
 	private boolean b_request_newsession = false;
+	private boolean bAutoLogon = false;
 	
 	public int getLogonTries() {
 		return m_n_logontries;
@@ -69,6 +70,7 @@ public class Logon implements ActionListener {
 		m_initinfo = info;
 		wantedlanguage = language;
 		this.b_request_newsession = b_request_newsession;
+		bAutoLogon = info.isAutoLogonReady();
 		start();
 	}
 	
@@ -79,28 +81,19 @@ public class Logon implements ActionListener {
 	
 
 	private synchronized UserInfo start() {
+
 		LogonInfo info = null;
-/*		if(m_logoninfo==null) {
-		} else if(m_logoninfo.get_userid().length()>0 || m_logoninfo.get_compid().length()>0) {
-			if(dlg==null)
-				dlg = new LogonDialog(this, get_pas(), true, m_logoninfo);
-			dlg.setVisible(true);
-			info = dlg.get_logoninfo();
-		} else
-			info = m_logoninfo;*/
-				
+		
 		final Logon temp = this;
 		if(dlg==null)
 		{
 			try
 			{
-				//SwingUtilities.invokeLater(new Runnable() {
 				java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run()
 				{
 					dlg = new LogonDialog(temp, get_pas(), true, m_initinfo, wantedlanguage, b_request_newsession);
 					PAS.pasplugin.onCustomizeLogonDlg(dlg);
-					dlg.setVisible(true);
 				}
 				});
 			}
@@ -109,49 +102,45 @@ public class Logon implements ActionListener {
 				
 			}
 		}
-		try
-		{
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run()
-				{
-					dlg.restart();
-					dlg.setVisible(true);
-				}
-			});
-		}
-		catch(Exception e)
-		{
-			
-		}
+
 		
-		try {
-			wait();
-		} catch(InterruptedException e) {
+		if(!bAutoLogon)
+		{
 			
-		} catch(Exception e) {
-			
-		}
-		if(m_b_doexit)
-			return null;
-		/*while(dlg.isVisible()) {
-			try {
-				Thread.sleep(100);
-				//dlg.get_response().wait();
-			} catch(InterruptedException e) {
+			try
+			{
+				java.awt.EventQueue.invokeLater(new Runnable() {
+					public void run()
+					{
+						dlg.restart();
+						dlg.setVisible(true);
+					}
+				});
+			}
+			catch(Exception e)
+			{
 				
 			}
-		}*/
-		if(!dlg.get_logonproc_start()) { //window closed for exit
-			return null;
+			
+			try {
+				wait();
+			} catch(InterruptedException e) {
+				
+			} catch(Exception e) {
+				
+			}
+			if(m_b_doexit)
+				return null;
+			if(!dlg.get_logonproc_start()) { //window closed for exit
+				return null;
+			}
+			info = dlg.get_logoninfo();
+			m_logoninfo = dlg.get_logoninfo();
+			dlg.setLoading(true);
 		}
-		info = dlg.get_logoninfo();
-		m_logoninfo = dlg.get_logoninfo();
-		
-		
-		//LogonProc proc = new LogonProc(Thread.NORM_PRIORITY, get_pas(), "PAS_logon.asp", (JFrame)get_pas().get_applet_frame(), info);
-		//proc.start();
+		else
+			info = m_logoninfo;
 		b_results_ready = false;
-		dlg.setLoading(true);
 		
 		WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
 		proc.start();
@@ -166,7 +155,9 @@ public class Logon implements ActionListener {
 			} catch(InterruptedException e) { 
 			}
 		}
-		dlg.setLoading(false);
+		if(!bAutoLogon)
+			dlg.setLoading(false);
+		bAutoLogon = false;
 		
 		
 		if(timer.timer_exceeded()) {

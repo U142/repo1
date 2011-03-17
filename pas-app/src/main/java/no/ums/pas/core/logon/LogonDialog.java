@@ -329,7 +329,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_lbl_passwd.setPreferredSize(new Dimension(100, 19));
 			m_lbl_language.setPreferredSize(new Dimension(100, 19));
 			//m_btn_submit.setPreferredSize(new Dimension(100, 15));
-			m_lbl_errormsg.setPreferredSize(new Dimension(350, 15));
+			m_lbl_errormsg.setPreferredSize(new Dimension(390, 15));
 			m_btn_submit.setActionCommand(ENABLE);
 			m_btn_submit.setActionCommand("act_logon");
 			m_btn_submit.addActionListener(this);

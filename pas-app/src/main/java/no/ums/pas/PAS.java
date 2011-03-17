@@ -188,6 +188,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private String PAS_SITENAME;
 	private String PAS_OVERRIDE_USERID = null;
 	private String PAS_OVERRIDE_COMPID = null;
+	private String PAS_OVERRIDE_SHAPASSWORD = null;
 	private String PAS_WS_SITE;;
 	private String PAS_CODEBASE;
 	public String ADDRESSSEARCH_URL = "";
@@ -398,12 +399,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setCodeBase(String s) { PAS_CODEBASE = s; }
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
+	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }
 	public void setAddressSeachUrl(String s) { ADDRESSSEARCH_URL = s; }
 	public void setVB4Url(String s) { VB4_URL = s; }
 	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
 	public String getVB4Url() { return VB4_URL; }
 	
-	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_pasws, 
+	public PAS(String sz_sitename, String sz_userid, String sz_compid, String sz_shapassword, String sz_pasws, 
 			boolean b_debug, String sz_codebase, String sz_plugin, 
 			String sz_force_wms_site, String [] args)
 	{
@@ -445,7 +447,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//m_lookandfeel = new SubstanceBusinessBlackSteelLookAndFeel();
 		PAS_OVERRIDE_COMPID = sz_compid;
 		PAS_OVERRIDE_USERID = sz_userid;
-
+		PAS_OVERRIDE_SHAPASSWORD = sz_shapassword;
 		//LBASEND.CreateLbaStatusHash();
 		
 		
@@ -624,7 +626,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String sz_userid, sz_compid, sz_passwd;
 		sz_userid = PAS_OVERRIDE_USERID; //this.getParameter("sz_userid");
 		sz_compid = PAS_OVERRIDE_COMPID; //this.getParameter("sz_compid");
-		sz_passwd = ""; //this.getParameter("sz_passwd");
+		sz_passwd = PAS_OVERRIDE_SHAPASSWORD; //this.getParameter("sz_passwd");
 		if(PAS_SITENAME==null)
 			PAS_SITENAME = "https://secure.ums.no/vb4/";
 		this.addComponentListener(this);
@@ -783,13 +785,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			
 		}
-		LogonInfo info = null;
-		if(sz_userid!=null && sz_compid!=null && sz_passwd!=null) {
-			if(sz_userid.length()>0 && sz_compid.length()>0 && sz_passwd.length()>0)
-			{
-				info = new LogonInfo(sz_userid, sz_compid, sz_passwd, m_settings.getLanguage());
-			}
-		}
 
 		XmlReader xmlreader = new XmlReader();
 		//Kun default logon settings skal lastes her. resten kommer fra Logon WS
@@ -799,7 +794,15 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		} catch(Exception e) {
 			Error.getError().addError(Localization.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
 		}
+		LogonInfo info = null;
+		if(sz_userid!=null && sz_compid!=null && sz_passwd!=null) {
+			if(sz_userid.length()>0 && sz_compid.length()>0 && sz_passwd.length()>0)
+			{
+				info = new LogonInfo(sz_userid, sz_compid, sz_passwd, m_settings.getLanguage());
+			}
+		}
 
+		
 		if(m_settings!=null)
 		{
 			if(m_settings.getUsername().length()>0 && m_settings.getCompany().length() > 0)
@@ -842,7 +845,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						m_settings.setUsername(PAS_OVERRIDE_USERID);
 					}
-					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany()), m_settings.getLanguage(), false);
+					Logon logon = new Logon(get_pas(), new LogonInfo(m_settings.getUsername(),m_settings.getCompany(), PAS_OVERRIDE_SHAPASSWORD, m_settings.getLanguage()), m_settings.getLanguage(), false);
 					if(!logon.isLoggedOn() || logon.get_userinfo()==null) {
                         LogFrame.remove();
                         for (Frame frame : Frame.getFrames()) {
