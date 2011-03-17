@@ -128,7 +128,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
         NavigateActions.SEARCH.setEnabled(!b);
 
         m_selectmenu.get_bar().showHouseEditor(!b);
-        m_selectmenu.get_bar().showHouseSelect(!b);
+        m_selectmenu.get_bar().showHouseSelect(false);
         m_selectmenu.get_bar().showMapSelection(true);
 
         m_btn_zoom_to_world.setVisible(b);

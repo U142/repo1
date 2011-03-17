@@ -763,6 +763,7 @@ public class WSGetStatusItems extends WSThread
 				fire_update_lbasendings(lbasendlist);
 		}
 		PAS.get_pas().get_statuscontroller().enableMainStatusVoice(b_hasvoice);
+		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().showHouseSelect(b_hasvoice);
 		if(lbasendlist.size()==0)
 			PAS.get_pas().get_statuscontroller().updateLBA(lbasendlist);
 			

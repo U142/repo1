@@ -160,6 +160,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		menu.add(menu.get_btn_houseeditor(), menu.m_gridconst);
 		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_showhousedetails(), menu.m_gridconst);
+		menu.get_selectmenu().get_bar().showHouseSelect(false);
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom_to_world(), menu.m_gridconst);
 		
@@ -1159,6 +1160,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		FileMenuActions.CLOSE_PROJECT.setEnabled(false);
 		//PAS.get_pas().get_mappane().set_active_shape(null);
 		PAS.get_pas().get_sendcontroller().remove_all_sendings();
+		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().showHouseSelect(false);
 		return true;
 	}
 
