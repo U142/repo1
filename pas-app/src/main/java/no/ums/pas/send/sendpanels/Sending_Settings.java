@@ -372,7 +372,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			BBSchedProfile sched = null;
 			try
 			{
-				sched = find_schedprofile(m_current_schedprofile.get_reschedpk());
+				sched = find_schedprofile(n_default_sched);
 			}
 			catch(Exception err) {	Error.getError().addError("Sending_Settings","Exception trying to set Schedule Profile",err,1);	}
 			
@@ -596,21 +596,21 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		try {
 			m_combo_schedprofiles.setSelectedIndex(findSchedProfile(sz_profilepk));
 		} catch(Exception e) {
-			Error.getError().addError("Schedule profile not found", "Could not find the loaded schedule profile in list", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError("Schedule profile not found", "Could not find the loaded schedule profile in list", e, Error.SEVERITY_ERROR);
 		}
 	}
 	public void set_selected_oadc(String sz_number) {
 		try {
 			m_combo_oadc.setSelectedIndex(findOadc(sz_number));
 		} catch(Exception e) {
-			Error.getError().addError("Origin number not found", "Could not find the loaded origin number in list", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError("Origin number not found", "Could not find the loaded origin number in list", e, Error.SEVERITY_ERROR);
 		}
 	}
 	public void set_selected_validity(int n_days) {
 		try {
 			m_combo_validity.setSelectedIndex(findValidity(n_days));
 		} catch(Exception e) {
-			Error.getError().addError("Message validity not found", "The loaded validity is not eligible", e, Error.SEVERITY_ERROR);
+			//Error.getError().addError("Message validity not found", "The loaded validity is not eligible", e, Error.SEVERITY_ERROR);
 		}
 	}
 	public void set_name(String sz_name){
