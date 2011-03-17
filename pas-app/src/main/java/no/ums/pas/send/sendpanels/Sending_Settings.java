@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /*
  * download : profiles, oadc and schedprofiles
@@ -474,6 +475,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 	}
 	private void populate_profiles() {
 		final ArrayList<BBProfile> profiles = get_parent().get_settingsloader().get_profiles();
+		Collections.sort(profiles);
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable() {

@@ -4,7 +4,7 @@ import no.ums.pas.core.defines.TooltipItem;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.sound.SoundFile;
 
-public class BBProfile extends Object implements TooltipItem {
+public class BBProfile extends Object implements TooltipItem, Comparable<BBProfile> {
 	private int m_sz_profilepk;
 	private String m_sz_name;
 	private int m_n_deptpk;
@@ -59,5 +59,9 @@ public class BBProfile extends Object implements TooltipItem {
 		}
 		
 		return sb.toString();
+	}
+	@Override
+	public int compareTo(BBProfile o) {
+		return this.get_profilename().compareTo(o.get_profilename());
 	}
 }
