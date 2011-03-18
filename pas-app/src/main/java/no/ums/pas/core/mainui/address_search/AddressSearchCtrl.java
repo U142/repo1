@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
+import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListHeader;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.IAddressSearch;
@@ -26,13 +28,23 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	
 	public void showGUI()
 	{
-		List<String> countries = new ArrayList<String>();
-		countries.add("Norway");
-		countries.add("Sweden");
-		countries.add("Denmark");
 		if(dlg == null) {
-			dlg = new AddressSearchDlg(this, countries);
+			dlg = new AddressSearchDlg(this, Variables.getMapFrame());
 		}
+		int defaultCC = 47;
+		try
+		{
+			defaultCC = Integer.valueOf(Variables.getUserInfo().get_current_department().get_stdcc());
+		}
+		catch(Exception e)
+		{
+			//ignore, for test purposes
+		}
+		List<AddressSearchCountry> countries = new ArrayList<AddressSearchCountry>();
+		countries.add(dlg.newAddressSearchCountry(47, Localization.l("common_cc_country_47")));
+		countries.add(dlg.newAddressSearchCountry(46, Localization.l("common_cc_country_46")));
+		countries.add(dlg.newAddressSearchCountry(45, Localization.l("common_cc_country_45")));
+		dlg.setCountries(countries, defaultCC);
 		dlg.setVisible(true);
 	}
 
@@ -42,16 +54,6 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 		//kjør ws
 		AdrSearchThread ws = new AdrSearchThread(m, this, 1);
 		ws.run();
-
-		/*AddressSearchListItem item = dlg.new AddressSearchListItem();
-		item.setHit(100);
-		item.setAdr("Steinstemveien 20");
-		item.setRegion("Sandnes");
-		item.setLat(50);
-		item.setLon(11);
-		List<AddressSearchListItem> items = new ArrayList<AddressSearchDlg.AddressSearchListItem>();
-		items.add(item);*/
-		//dlg.fillResults(items);
 		return false;
 	}
 
@@ -85,16 +87,11 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 			started();
 			try
 			{	
-				UGabSearchResultList response = PAS.pasplugin.getAddressSearch().onExecSearch(m.getAddress(),m.getHouse(), m.getPostno(), m.getPlace(), m.getRegion(), m.getCountry());
-				//boolean b_populate = PAS.pasplugin.getAddressSearch().onPopulateList(response, items);
+				UGabSearchResultList response = PAS.pasplugin.getAddressSearch().onExecSearch(m.getAddress(),m.getHouse(), m.getPostno(), m.getPlace(), m.getRegion(), (AddressSearchCountry)m.getCountry());
 				dlg.fillResults(response);
 			} 
 			catch(Exception e)
 			{
-				//Error.getError().addError(PAS.l("common_error"), "Error populating list", e, Error.SEVERITY_ERROR);
-				//if(m_tbl_list!=null) {
-				//	m_tbl_list.clear();
-				//}
 				throw e;
 
 			}
@@ -135,4 +132,6 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
 }

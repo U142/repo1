@@ -12,6 +12,7 @@ import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.InfoPanel;
+import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
 import no.ums.pas.core.mainui.address_search.AddressSearchDlg.AddressSearchListItem;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
@@ -87,7 +88,7 @@ public interface PasScriptingInterface {
          * @throws Exception
          */
         
-        UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, String sz_country) throws Exception;
+        UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, AddressSearchCountry sz_country) throws Exception;
 		
         /**
          * 

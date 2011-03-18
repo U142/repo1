@@ -181,6 +181,7 @@ public class BeanProperty<BT, PT> {
 					{
 						final Object oldValue = value;
 						value = ((JComboBox) target).getSelectedItem();
+						
 						propertyChangeListener.propertyChange(new PropertyChangeEvent(target, propertyName, oldValue, value));
 					} finally {
 						instanceMap.remove(id);

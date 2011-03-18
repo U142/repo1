@@ -3,6 +3,7 @@ package no.ums.pas.pluginbase.defaults;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
+import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
 import no.ums.pas.core.mainui.address_search.SearchPanelResultsAddrSearch;
 import no.ums.pas.core.mainui.address_search.SearchPanelVals;
@@ -54,19 +55,32 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		String sz_postarea	= vals.get_postarea();
 		String sz_region	= vals.get_region();
 		String sz_country	= vals.get_country();
+		AddressSearchCountry c = new AddressSearchCountry(-1, sz_country);
 		
-		
-		return onExecSearch(sz_address, sz_no, sz_postno, sz_postarea, sz_region, sz_country);
+		return onExecSearch(sz_address, sz_no, sz_postno, sz_postarea, sz_region, c);
 	}
-	public UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, String sz_postarea, String sz_region, String sz_country) throws Exception
+	public UGabSearchResultList onExecSearch(String sz_address, String sz_no, String sz_postno, 
+						String sz_postarea, String sz_region, AddressSearchCountry country) throws Exception
 	{
 		String sz_language = "NO";
-		if(sz_country.equals("Norway"))
+		/*if(sz_country.equals("Norway"))
 			sz_language = "NO";
 		else if(sz_country.equals("Sweden"))
 			sz_language = "SE";
 		else if(sz_country.equals("Denmark"))
+			sz_language = "DK";*/
+		if(country.equals(47))
+		{
+			sz_language = "NO";
+		}
+		else if(country.equals(46))
+		{
+			sz_language = "SE";
+		}
+		else if(country.equals(45))
+		{
 			sz_language = "DK";
+		}
 		
 		ObjectFactory factory = new ObjectFactory();
 		//GabSearch searcher = factory.createGabSearch();

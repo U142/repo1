@@ -2,6 +2,8 @@ package no.ums.pas.core.mainui.address_search;
 
 import java.util.List;
 
+import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
+
 import org.jdesktop.beansbinding.AbstractBean;
 
 public class AddressSearchModel extends AbstractBean {
@@ -10,7 +12,7 @@ public class AddressSearchModel extends AbstractBean {
 	private String Postno;
 	private String Place;
 	private String Region;
-	private String Country;
+	private Object Country;
 	
 	
 	public String getAddress() {
@@ -53,14 +55,17 @@ public class AddressSearchModel extends AbstractBean {
 		Region = region;
 		update("Region", oldValue, region);
 	}
-	public String getCountry() {
+	public Object getCountry() {
 		return Country;
 	}
-	public void setCountry(String country) {
-		String oldValue = this.Country;
-		Country = country;
-		update("Country", oldValue, country);
-		System.out.println(country);
+	public void setCountry(Object country) {
+		if(country instanceof AddressSearchCountry)
+		{
+			Object oldValue = this.Country;
+			Country = country;
+			update("Country", oldValue, country);
+			System.out.println(country + " " + ((AddressSearchCountry)country).n_cc);
+		}
 	}
 	
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.ws.pas.GABTYPE;
 import no.ums.ws.pas.UGabResult;
@@ -25,13 +26,44 @@ import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
  */
 public class AddressSearchDlg extends JFrame {
 	private IAddressSearch callback;
-	public AddressSearchDlg(IAddressSearch callback, java.util.List<String> countries) {
+	public AddressSearchDlg(IAddressSearch callback, JComponent parent) {
 		this.callback = callback;
 		initComponents();
-		for(String s : countries)
+		getRootPane().setDefaultButton(btnSearch);
+		this.setLocationRelativeTo(parent);
+		try
+		{
+			this.setIconImage(PAS.get_pas().getIconImage());
+		}
+		catch(Exception e)
+		{
+			//if icon is not set, ignore. Only for test purposes
+		}
+	}
+	
+	public AddressSearchCountry newAddressSearchCountry(int cc, String country)
+	{
+		return new AddressSearchCountry(cc, country);
+	}
+
+	
+	
+	public void setCountries(List<AddressSearchCountry> countries, int defaultCountry)
+	{
+		cbxCountry.removeAllItems();
+		AddressSearchCountry def = null;
+		for(AddressSearchCountry s : countries)
 		{
 			cbxCountry.addItem(s);
+			if(s.n_cc==defaultCountry)
+				def = s;
 		}
+		cbxCountry.setSelectedItem(def);
+		//addressSearchModel1.setCountry(def);
+	}
+	public void setDefaultCountry(AddressSearchCountry defaultCountry)
+	{
+		cbxCountry.setSelectedItem(defaultCountry);
 	}
 	
 	public class AddressSearchListHeader
@@ -207,13 +239,13 @@ public class AddressSearchDlg extends JFrame {
 		txtAddress = new JTextField();
 		txtPostCode = new JTextField();
 		txtRegion = new JTextField();
-		cbxCountry = new JComboBox();
 		lblPostCode = new JLabel();
 		lblRegion = new JLabel();
 		lblCountry = new JLabel();
 		btnSearch = new JButton();
 		scrollPane1 = new JScrollPane();
 		tblResults = new JTable();
+		cbxCountry = new JComboBox();
 		addressSearchModel1 = new AddressSearchModel();
 
 		//======== this ========
@@ -285,26 +317,26 @@ public class AddressSearchDlg extends JFrame {
 				.addGroup(contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(contentPaneLayout.createParallelGroup()
-						.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-								.addComponent(lblAddress, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-								.addComponent(lblPostCode, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(lblRegion, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(lblCountry, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addGap(18, 18, 18)
-							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-								.addComponent(txtRegion, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-								.addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
-									.addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+							.addGroup(contentPaneLayout.createParallelGroup()
+								.addComponent(lblPostCode, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+								.addComponent(lblCountry, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+								.addComponent(lblRegion, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+								.addComponent(lblAddress, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup()
 								.addGroup(contentPaneLayout.createSequentialGroup()
 									.addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(txtPlace, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
-								.addComponent(cbxCountry, GroupLayout.Alignment.LEADING, 0, 218, Short.MAX_VALUE)))
-						.addComponent(btnSearch, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+									.addComponent(txtPlace, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+								.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+									.addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+									.addComponent(txtNumber, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtRegion, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+								.addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(btnSearch, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
 		contentPaneLayout.setVerticalGroup(
@@ -318,20 +350,20 @@ public class AddressSearchDlg extends JFrame {
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(txtPlace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblPostCode))
+						.addComponent(lblPostCode)
+						.addComponent(txtPostCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(txtRegion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblRegion))
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblCountry))
-					.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+						.addComponent(lblCountry)
+						.addComponent(cbxCountry, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(13, 13, 13)
 					.addComponent(btnSearch)
 					.addGap(18, 18, 18)
-					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		pack();
@@ -368,13 +400,13 @@ public class AddressSearchDlg extends JFrame {
 	private JTextField txtAddress;
 	private JTextField txtPostCode;
 	private JTextField txtRegion;
-	private JComboBox cbxCountry;
 	private JLabel lblPostCode;
 	private JLabel lblRegion;
 	private JLabel lblCountry;
 	private JButton btnSearch;
 	private JScrollPane scrollPane1;
 	private JTable tblResults;
+	private JComboBox cbxCountry;
 	private AddressSearchModel addressSearchModel1;
 	private BindingGroup bindingGroup;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

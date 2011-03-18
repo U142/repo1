@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_24" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_20" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void method="setProperty"> 
    <string>i18n.bundlePackage</string> 
@@ -21,11 +21,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {comp scrollPane1::l::327:x:1, seq l {par l:::p {comp lblAddress::l::91:x:1, comp lblPostCode::l:::x:1, comp lblRegion::l:::x:1, comp lblCountry::l:::x:1}, space :p:18:p, par t {comp txtRegion::l::218:x:1, seq l {comp txtAddress::::117:x, space :::p, comp txtNumber:::p:95:p:1}, seq t {comp txtPostCode:::p:56:p, space :::p, comp txtPlace::::156:x:1}, comp cbxCountry::l::218:x:1}}, comp btnSearch::t:p:81:p}, space :::p}}</string> 
+        <string>par l {seq {space :::p, par l {comp scrollPane1::l::458:x:1, seq t {par l {comp lblPostCode::::137:x:1, comp lblCountry::l::137:x:1, comp lblRegion::l::137:x:1, comp lblAddress::t::137:x:1}, space :::p, par l {seq l {comp txtPostCode:::p:56:p, space :::p, comp txtPlace::::253:x:1}, seq t {comp txtAddress::::260:x, space :::p, comp txtNumber:::p:49:p:1}, comp txtRegion::t::316:x:1, comp cbxCountry::l:p:159:p}}, comp btnSearch::t:p:124:p}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par b {comp lblAddress::b:p::p, comp txtAddress::b:p::p, comp txtNumber::b:p::p}, space :::p, par b {comp txtPlace::b:p::p, comp txtPostCode::b:p::p, comp lblPostCode::b:p::p}, space :::p, par b {comp txtRegion::b:p::p, comp lblRegion::b:p::p}, space :::p, par b {comp cbxCountry::b:p::p, comp lblCountry::b:p::p}, space u:::p, comp btnSearch:::p::p, space :p:18:p, comp scrollPane1::::129:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par b {comp lblAddress::b:p::p, comp txtAddress::b:p::p, comp txtNumber::b:p::p}, space :::p, par b {comp txtPlace::b:p::p, comp lblPostCode::b:p::p, comp txtPostCode::b:p::p}, space :::p, par b {comp txtRegion::b:p::p, comp lblRegion::b:p::p}, space :::p, par b {comp lblCountry::b:p::p, comp cbxCountry::b:p::p}, space :p:13:p, comp btnSearch:::p::p, space s:::p, comp scrollPane1::::117:x, space :::p}}</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -99,14 +99,6 @@
         <string>javax.swing.JTextField</string> 
         <void property="name"> 
          <string>txtRegion</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JComboBox</string> 
-        <void property="name"> 
-         <string>cbxCountry</string> 
         </void> 
        </object> 
       </void> 
@@ -301,6 +293,14 @@
         </void> 
        </object> 
       </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JComboBox</string> 
+        <void property="name"> 
+         <string>cbxCountry</string> 
+        </void> 
+       </object> 
+      </void> 
       <void property="name"> 
        <string>this</string> 
       </void> 
@@ -317,7 +317,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>355</int> 
+        <int>490</int> 
         <int>335</int> 
        </object> 
       </void> 
