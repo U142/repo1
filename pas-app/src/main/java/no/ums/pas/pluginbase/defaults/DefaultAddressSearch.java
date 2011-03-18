@@ -69,15 +69,15 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 			sz_language = "SE";
 		else if(sz_country.equals("Denmark"))
 			sz_language = "DK";*/
-		if(country.equals(47))
+		if(country.n_cc==47)
 		{
 			sz_language = "NO";
 		}
-		else if(country.equals(46))
+		else if(country.n_cc==46)
 		{
 			sz_language = "SE";
 		}
-		else if(country.equals(45))
+		else if(country.n_cc==45)
 		{
 			sz_language = "DK";
 		}

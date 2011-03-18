@@ -16,7 +16,7 @@ public class AddressSearchCountry
 	}
 	@Override
 	public boolean equals(Object obj) {
-		return obj!=null && this.hashCode()==((AddressSearchCountry)obj).hashCode();
+		return obj!=null && this.hashCode()==obj.hashCode();
 	}
 	@Override
 	public String toString() {

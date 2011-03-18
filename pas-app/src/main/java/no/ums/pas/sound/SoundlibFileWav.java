@@ -30,4 +30,14 @@ public class SoundlibFileWav extends SoundlibFile {
 		else
 			return false;
 	}
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+	
+	
 }
