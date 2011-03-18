@@ -16,15 +16,7 @@ public class AddressSearchCountry
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof AddressSearchCountry)
-		{
-			return this.n_cc == ((AddressSearchCountry)obj).n_cc;//this.hashCode()==((AddressSearchCountry)obj).hashCode();
-		}
-		else if(obj instanceof Integer)
-		{
-			return this.n_cc==((Integer)obj);
-		}
-		return false;
+		return obj!=null && this.hashCode()==((AddressSearchCountry)obj).hashCode();
 	}
 	@Override
 	public String toString() {
