@@ -291,7 +291,7 @@ public class WSSendSettings extends WSThread
 		list_items = parent;
 		SoundlibFile file;
 		//get_txtlib().add(new SoundlibFileTxt());
-		sz_itemattr = new String [] { "sh", "deptpk", "name", "pk", "langpk", "def", "template" };
+		sz_itemattr = new String [] { "sh", "deptpk", "name", "pk", "langpk", "def", "template", "type" };
 		for(int n_items=0; n_items < list_items.getLength(); n_items++) {
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();

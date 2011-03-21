@@ -6,7 +6,7 @@ import no.ums.pas.ums.errorhandling.Error;
 import java.io.File;
 
 
-public class SoundlibFileWav extends SoundlibFile {
+public class SoundlibFileWav extends SoundlibFile implements Comparable<SoundlibFile>{
 	File m_f = null;
 	public File get_file() { return m_f; }
 	public SoundlibFileWav(String [] values) {
@@ -30,6 +30,7 @@ public class SoundlibFileWav extends SoundlibFile {
 		else
 			return false;
 	}
+	
 	@Override
 	public int hashCode() {
 		return super.hashCode();

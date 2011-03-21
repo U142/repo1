@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class SoundLibraryPanel extends DefaultPanel {
 	public static final long serialVersionUID = 1;
@@ -95,6 +97,22 @@ public class SoundLibraryPanel extends DefaultPanel {
 		SoundlibFileWav wav;
 		//URL url = new URL(MapObjectPicturepane.load_icon("play.gif"));
 		try {
+			//prioritet til de 3 siste innringt-wav
+			//deretter sortert alfabetisk.
+			Collections.sort(m_parent.get_soundlib(), new SoundlibFile.CompareMessagePk());
+			int n_pri = 0;
+			int n_pri_count = 0;
+			for(int i=m_parent.get_soundlib().size()-1; i>=0; i--)
+			{
+				m_parent.get_soundlib().get(i).setListPriority(m_parent.get_soundlib().get(i).get_name().startsWith("TLF:") ? ++n_pri : 0);
+				if(m_parent.get_soundlib().get(i).getListPriority()>0)
+				{
+					System.out.println("type==1 pri="+ n_pri + " wav="+m_parent.get_soundlib().get(i).get_name());
+					if(++n_pri_count>=3)
+						break;
+				}
+			}
+			Collections.sort(m_parent.get_soundlib());
 			for(int i=0; i < m_parent.get_soundlib().size(); i++) {
 				wav = (SoundlibFileWav)m_parent.get_soundlib().get(i);
 				Object[] obj_insert = { wav };
