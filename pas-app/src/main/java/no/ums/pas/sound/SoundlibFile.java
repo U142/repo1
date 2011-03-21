@@ -121,10 +121,13 @@ public abstract class SoundlibFile extends Object implements ActionListener, Com
 	@Override
 	public int compareTo(SoundlibFile o) {
 		if(o.getListPriority() != this.getListPriority())
-			return o.getListPriority() - this.getListPriority();
-		if(o.getListPriority()!=0)
 		{
-			return (int)(Long.valueOf(o.get_messagepk())-Long.valueOf(get_messagepk()));			
+			if(this.getListPriority()==0)
+				return 1;
+			if(o.getListPriority()==0)
+				return -1;
+			
+			return this.getListPriority() - o.getListPriority();
 		}
 		return get_name().toUpperCase().compareTo(o.get_name().toUpperCase());
 	}

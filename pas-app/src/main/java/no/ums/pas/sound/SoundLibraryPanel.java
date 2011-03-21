@@ -102,12 +102,13 @@ public class SoundLibraryPanel extends DefaultPanel {
 			Collections.sort(m_parent.get_soundlib(), new SoundlibFile.CompareMessagePk());
 			int n_pri = 0;
 			int n_pri_count = 0;
-			for(int i=m_parent.get_soundlib().size()-1; i>=0; i--)
+			//for(int i=0; i>=m_parent.get_soundlib().size(); i--)
+			for(SoundlibFile s : m_parent.get_soundlib())
 			{
-				m_parent.get_soundlib().get(i).setListPriority(m_parent.get_soundlib().get(i).get_name().startsWith("TLF:") ? ++n_pri : 0);
-				if(m_parent.get_soundlib().get(i).getListPriority()>0)
+				s.setListPriority(s.get_name().startsWith("TLF:") ? ++n_pri : 0);
+				if(s.getListPriority()>0)
 				{
-					System.out.println("type==1 pri="+ n_pri + " wav="+m_parent.get_soundlib().get(i).get_name());
+					System.out.println("type==1 pri="+ n_pri + " wav="+s.get_name());
 					if(++n_pri_count>=3)
 						break;
 				}
