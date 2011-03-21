@@ -192,6 +192,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
         final JMenu view = menu.add(new JMenu(Localization.l("mainmenu_view")));
         view.add(ViewOptions.TOGGLE_POLYGON.asChecked());
+        //view.add(ViewOptions.TOGGLE_STATUSCODES.asChecked());
         view.add(ViewOptions.TOGGLE_HOUSES.asChecked());
         view.add(ViewOptions.TOGGLE_SEARCHPOINTS.asChecked());
 

@@ -2,6 +2,7 @@ package no.ums.pas.send;
 
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
@@ -103,15 +104,15 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public JToggleButton get_radio_polygonal_ellipse() { return m_radio_sendingtype_polygonal_ellipse; }
 	public JToggleButton get_radio_municipal() { return m_radio_sendingtype_municipal; }
 	JButton m_btn_goto;
-	ToggleAddresstype m_btn_adrtypes_private_fixed;
-	ToggleAddresstype m_btn_adrtypes_company_fixed;
-	ToggleAddresstype m_btn_adrtypes_private_mobile;
-	ToggleAddresstype m_btn_adrtypes_company_mobile;
-	ToggleAddresstype m_btn_adrtypes_nophone_private;
-	ToggleAddresstype m_btn_adrtypes_nophone_company;
-	ToggleAddresstype m_btn_adrtypes_cell_broadcast_text;
-	ToggleAddresstype m_btn_adrtypes_cell_broadcast_voice;
-	ToggleAddresstype m_btn_adrtypes_nofax;
+	public ToggleAddresstype m_btn_adrtypes_private_fixed;
+	public ToggleAddresstype m_btn_adrtypes_company_fixed;
+	public ToggleAddresstype m_btn_adrtypes_private_mobile;
+	public ToggleAddresstype m_btn_adrtypes_company_mobile;
+	public ToggleAddresstype m_btn_adrtypes_nophone_private;
+	public ToggleAddresstype m_btn_adrtypes_nophone_company;
+	public ToggleAddresstype m_btn_adrtypes_cell_broadcast_text;
+	public ToggleAddresstype m_btn_adrtypes_cell_broadcast_voice;
+	public ToggleAddresstype m_btn_adrtypes_nofax;
 	public ToggleAddresstype get_cell_broadcast_text() { return m_btn_adrtypes_cell_broadcast_text; }
 	public ToggleAddresstype get_cell_broadcast_voice() { return m_btn_adrtypes_cell_broadcast_voice; }
 	JToggleButton m_btn_finalize;
@@ -123,6 +124,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	private int m_n_addresstypes = 0;
 	ActionListener m_callback;
 	protected ActionListener get_callback() { return m_callback; }
+	public void setCallback(ActionListener c) { m_callback = c; }
 	protected ActionListener m_alert_callback;
 	protected ActionListener report_addresschanges() { return m_alert_callback; }
 	public void setReportAddressChanges(ActionListener a) { m_alert_callback = a; }
@@ -157,7 +159,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_nophone_private.setSelected(np);
 		m_btn_adrtypes_nofax.setSelected((nofax==1 ? true : false));
 	}
-	protected String gen_adrtypes_text(int n_adrtypes, ADRGROUPS group)
+	public String gen_adrtypes_text(int n_adrtypes, ADRGROUPS group)
 	{
 		String ret = "<html>";
 		/*if(n_adrtypes<=0)
@@ -260,6 +262,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		_SelectAddressSelection(m_n_addresstypes);
 		
 	}
+	
+	public void remove_addresstypes(int n_adrtypes) {
+		set_addresstypes(get_addresstypes() & ~n_adrtypes);
+	}
+	
+	public void add_addresstypes(int n_adrtypes) {
+		set_addresstypes(get_addresstypes() | n_adrtypes); 
+	}
 	public void set_addresstypes(int n_adrtypes) {
 		boolean b = false;
 		m_n_addresstypes = n_adrtypes;
@@ -293,12 +303,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				can_lba())
 		{
 			m_btn_adrtypes_cell_broadcast_text.setSelected(true);
-			//m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 		}
 		else
 		{
-			//if(m_btn_adrtypes_cell_broadcast_text.isSelected())
-			//	m_btn_adrtypes_cell_broadcast_text.doClick();
 			m_btn_adrtypes_cell_broadcast_text.setSelected(false);
 			m_n_addresstypes &= ~SendController.SENDTO_CELL_BROADCAST_TEXT;
 			
@@ -306,7 +313,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if((m_n_addresstypes & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE)
 		{
 			m_btn_adrtypes_cell_broadcast_voice.setSelected(true);
-			//m_btn_adrtypes_cell_broadcast_text.setSelected(false);
 		}
 		else
 			m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
@@ -318,22 +324,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else
 			m_btn_adrtypes_nofax.setSelected(false);
 		
-		/*if((m_n_addresstypes & SendController.SENDTO_NOPHONE_PRIVATE) == SendController.SENDTO_NOPHONE_PRIVATE)
-			m_btn_adrtypes_nophone_private.setSelected(true);
-		else*/
-			m_btn_adrtypes_nophone_private.setSelected(false);
-		/*if((m_n_addresstypes & SendController.SENDTO_NOPHONE_COMPANY) == SendController.SENDTO_NOPHONE_COMPANY)
-			m_btn_adrtypes_nophone_company.setSelected(true);
-		else*/
-			m_btn_adrtypes_nophone_company.setSelected(false);
+		m_btn_adrtypes_nophone_private.setSelected(false);
+		m_btn_adrtypes_nophone_company.setSelected(false);
 				
-			if(report_addresschanges()!=null)
-				report_addresschanges().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
-			m_lbl_addresstypes_private.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.PRIVATE));
-			m_lbl_addresstypes_company.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.COMPANY));
-			m_lbl_addresstypes_lba.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.LBA));
-			
-		//_SelectAddressSelection(m_n_addresstypes);			
+		if(report_addresschanges()!=null)
+			report_addresschanges().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
+		m_lbl_addresstypes_private.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.PRIVATE));
+		m_lbl_addresstypes_company.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.COMPANY));
+		m_lbl_addresstypes_lba.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.LBA));			
 	}
 	
 	public static final int BTN_SENDINGTYPE_POLYGON_	= 1;
@@ -402,25 +400,37 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public void show_buttonsbyadrtype(long ADR) {
 		m_btn_adrtypes_nophone_private.setVisible((ADR & SendController.SENDTO_NOPHONE_PRIVATE) == SendController.SENDTO_NOPHONE_PRIVATE);
 		m_btn_adrtypes_nophone_company.setVisible((ADR & SendController.SENDTO_NOPHONE_COMPANY) == SendController.SENDTO_NOPHONE_COMPANY);
-			
-		m_btn_adrtypes_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
-		m_btn_adrtypes_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
+		show_buttonsbyadrtype(ADR, m_btn_adrtypes_private_fixed, m_btn_adrtypes_private_mobile, 
+				m_btn_adrtypes_company_fixed, m_btn_adrtypes_company_mobile, m_btn_adrtypes_cell_broadcast_text);
+		//m_btn_adrtypes_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
+		//m_btn_adrtypes_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
 		if(m_btn_adrtypes_private_fixed.isVisible() || m_btn_adrtypes_private_mobile.isVisible())
 			m_lbl_addresstypes_private.setVisible(true);
 		else
 			m_lbl_addresstypes_private.setVisible(false);
 		
-		m_btn_adrtypes_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
-		m_btn_adrtypes_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);
+		//m_btn_adrtypes_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
+		//m_btn_adrtypes_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);
 		if(m_btn_adrtypes_company_fixed.isVisible() || m_btn_adrtypes_company_mobile.isVisible())
 			m_lbl_addresstypes_company.setVisible(true);
 		else
 			m_lbl_addresstypes_company.setVisible(false);
 		
-		m_btn_adrtypes_cell_broadcast_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
+		//m_btn_adrtypes_cell_broadcast_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
 		m_btn_adrtypes_cell_broadcast_voice.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE);
-		
 	}
+	
+	public void show_buttonsbyadrtype(long ADR, AbstractButton btn_private_fixed, AbstractButton btn_private_mobile,
+								AbstractButton btn_company_fixed, AbstractButton btn_company_mobile,
+								AbstractButton btn_lba_text)
+	{
+		btn_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
+		btn_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
+		btn_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
+		btn_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);		
+		btn_lba_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
+	}
+	
 	
 	public void show_buttons(int FLAGS, boolean b_show) {
 		if((FLAGS & BTN_SENDINGTYPE_POLYGON_) == BTN_SENDINGTYPE_POLYGON_) {
@@ -919,6 +929,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_open.addActionListener(this);
 		ActionEvent e = new ActionEvent(m_radio_activate, ActionEvent.ACTION_PERFORMED, "act_register_activation_btn");
 		//if(get_parent().get_sendcontroller() != null)
+		if(get_callback()!=null)
 			get_callback().actionPerformed(e);
 
 		m_btn_color.setActionCommand("act_open_colorpicker");
@@ -965,12 +976,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//PRIVATE MOBILE
         group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, Localization.l("main_sending_adr_sel_private_mobile_none_tooltip"), c));
         group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, true, Localization.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms"), SendController.SENDTO_SMS_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
             group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms"), SendController.SENDTO_MOBILE_PRIVATE | SendController.SENDTO_SMS_PRIVATE, SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
 		}
         group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED, SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, false, Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smsprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), SendController.SENDTO_SMS_PRIVATE_ALT_FIXED, SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_PRIVATE_ALT_SMS | SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, false, Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
         }
 		
@@ -978,7 +989,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         group_fixedprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_none"), 0, 0, true, Localization.l("main_sending_adr_sel_private_fixed_none_tooltip"), c));
         group_fixedprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_voice"), SendController.SENDTO_FIXED_PRIVATE, SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED, true, Localization.l("main_sending_adr_sel_private_fixed_voice_tooltip"), c));
         group_fixedprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_and_mobile"), SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE, SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED | SendController.SENDTO_MOBILE_PRIVATE, true, Localization.l("main_sending_adr_sel_private_fixed_and_mobile_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_fixedprivbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_alt_sms"), SendController.SENDTO_FIXED_PRIVATE_ALT_SMS, SendController.SENDTO_SMS_PRIVATE | SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED | SendController.SENDTO_SMS_PRIVATE_ALT_FIXED | SendController.SENDTO_MOBILE_PRIVATE, false, Localization.l("main_sending_adr_sel_private_fixed_alt_sms_tooltip"), c));
         }
 
@@ -986,12 +997,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//COMPANY MOBILE
         group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, Localization.l("main_sending_adr_sel_company_mobile_none_tooltip"), Color.yellow));
         group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_COMPANY, SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, true, Localization.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms"), SendController.SENDTO_SMS_COMPANY, SendController.SENDTO_FIXED_COMPANY_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
             group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms"), SendController.SENDTO_MOBILE_COMPANY | SendController.SENDTO_SMS_COMPANY, SendController.SENDTO_FIXED_COMPANY_AND_MOBILE | SendController.SENDTO_FIXED_COMPANY_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_voice_and_sms_tooltip"), c));
 		}
         group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed"), SendController.SENDTO_MOBILE_COMPANY_AND_FIXED, SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, false, Localization.l("main_sending_adr_sel_private_mobile_voice_and_fixed_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed"), SendController.SENDTO_SMS_COMPANY_ALT_FIXED, SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, false, Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
         }
 		
@@ -999,7 +1010,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_none"), 0, 0, true, Localization.l("main_sending_adr_sel_company_fixed_none_tooltip"), c));
         group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_voice"), SendController.SENDTO_FIXED_COMPANY, SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED, true, Localization.l("main_sending_adr_sel_private_fixed_voice_tooltip"), c));
         group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_and_mobile"), SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY, true, Localization.l("main_sending_adr_sel_private_fixed_and_mobile_tooltip"), c));
-		if(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_sms() == 1) {
+		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_alt_sms"), SendController.SENDTO_FIXED_COMPANY_ALT_SMS, SendController.SENDTO_MOBILE_COMPANY | SendController.SENDTO_SMS_COMPANY | SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY, false, Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
         }
 	
@@ -1124,7 +1135,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			return mun.get_id() + "     " + mun.get_name();
 		}
 	}
-	protected void add_adrtypemenus(final AbstractButton btn, final JPopupMenu pop, ButtonGroup group, String sz_label)
+	public void add_adrtypemenus(final AbstractButton btn, final JPopupMenu pop, ButtonGroup group, String sz_label)
 	{
 		StdTextLabel lbl = new StdTextLabel(sz_label, 14, true);
 		//Substance 3.3
@@ -1148,7 +1159,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	        public void mousePressed(MouseEvent evt) {
 	            //if (evt.isPopupTrigger()) {
 	        	actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
-	        	if(!get_parent().isLocked() && btn.isEnabled())
+	        	if(get_parent()!=null && !get_parent().isLocked() && btn.isEnabled())
+	        		pop.show(evt.getComponent(), 0, btn.getHeight());
+	        	else if(get_parent()==null)
 	        		pop.show(evt.getComponent(), 0, btn.getHeight());
 	            //}
 	        }
@@ -1399,16 +1412,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 				
 			gen_addresstypes();
-			if(get_parent().isActive()) {
-				//if(((ToggleAddresstype)e.getSource()).isSelected())
-					get_callback().actionPerformed(e);
-					//PAS.get_pas().get_housecontroller().add_addresstype(((ToggleAddresstype)e.getSource()).get_adrtype());
-				//else
-					//PAS.get_pas().get_housecontroller().rem_addresstype(((ToggleAddresstype)e.getSource()).get_adrtype());
-				//PAS.get_pas().kickRepaint();
+			if(get_parent()!=null && get_parent().isActive()) {
+				get_callback().actionPerformed(e);
 			}
-			//if(report_addresschanges()!=null)
-			//	report_addresschanges().actionPerformed(e);
+			else if(get_callback()!=null)
+				get_callback().actionPerformed(e);
 		}
 		else if("act_find_sending".equals(e.getActionCommand())) {
 			System.out.println("SendOptionToolbar.act_find_sending");
@@ -1638,6 +1646,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			RightsManagement rights = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management();
 			if(!rights.cell_broadcast())
 				return false;
+			if(get_parent()==null)
+				return true;
 			switch(get_parent().get_sendproperties().get_sendingtype())
 			{
 			case SendProperties.SENDING_TYPE_POLYGON_:
@@ -1654,7 +1664,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	}
 	
 	public void lock_sending(boolean b) {
-		if(get_parent().setLocked(b)) {
+		if(get_parent()!=null && get_parent().setLocked(b)) {
 			//RightsManagement rights = PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management();
 			m_btn_send.setEnabled(b);
 			m_btn_adrtypes_private_fixed.setEnabled(!b);
@@ -1741,7 +1751,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			//PAS.get_pas().add_event("Cannot lock sending at this time", null);
 			m_btn_finalize.setSelected(false);
 		}
-		if(get_parent().isLocked())
+		if(get_parent()!=null && get_parent().isLocked())
 			m_btn_finalize.setActionCommand("act_unlock");
 		else
 			m_btn_finalize.setActionCommand("act_lock");

@@ -11,4 +11,14 @@ public class ToggleAddresstype extends JToggleButton {
 		super(icon, b);
 		m_n_adrtype = n_adrtype;
 	}
+	public ToggleAddresstype(ImageIcon icon)
+	{
+		super(icon);
+		m_n_adrtype = 0;
+	}
+	public ToggleAddresstype()
+	{
+		super();
+		m_n_adrtype = 0;
+	}
 }

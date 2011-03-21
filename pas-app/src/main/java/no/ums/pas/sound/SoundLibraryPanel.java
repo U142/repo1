@@ -102,7 +102,6 @@ public class SoundLibraryPanel extends DefaultPanel {
 			Collections.sort(m_parent.get_soundlib(), new SoundlibFile.CompareMessagePk());
 			int n_pri = 0;
 			int n_pri_count = 0;
-			//for(int i=0; i>=m_parent.get_soundlib().size(); i--)
 			for(SoundlibFile s : m_parent.get_soundlib())
 			{
 				s.setListPriority(s.get_name().startsWith("TLF:") ? ++n_pri : 0);
