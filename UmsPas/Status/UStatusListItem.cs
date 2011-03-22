@@ -32,6 +32,7 @@ namespace com.ums.PAS.Status
         public String sz_projectname;
         public long n_createtimestamp;
         public long n_updatetimestamp;
+        public int n_simulation;
     }
 
     /*search class*/

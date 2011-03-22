@@ -203,6 +203,7 @@ namespace com.ums.PAS.Database
                         item.n_createtimestamp = rs.GetInt64(15);
                         item.n_updatetimestamp = (long)rs.GetDecimal(16);
                         item.n_finished = rs.GetInt16(17);
+                        item.n_simulation = rs.GetInt32(18);
 
                         res.addLine(ref item);
                     }
