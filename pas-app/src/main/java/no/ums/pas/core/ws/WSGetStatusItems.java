@@ -602,7 +602,7 @@ public class WSGetStatusItems extends WSThread
 		list_sendings = doc.getElementsByTagName("LBASEND");
 		NodeList list_cbstatus;
 		
-		String [] sz_lbasend_attr = { "l_parentrefno", "l_cbtype", "l_status", "l_response", "l_items", "l_proc", "l_retries", "l_requesttype", "sz_jobid", "sz_areaid", "f_simulation", "l_operator", "sz_operator" };
+		String [] sz_lbasend_attr = { "l_parentrefno", "l_cbtype", "l_status", "l_response", "l_items", "l_proc", "l_retries", "l_requesttype", "sz_jobid", "sz_areaid", "f_simulation", "l_operator", "sz_operator", "l_type", "l_created_ts", "l_started_ts", "l_expires_ts" };
 		String [] sz_lbasend_vals = new String[sz_lbasend_attr.length];
 		String [] sz_lbahistcc_attr = { "sz_ccode", "l_delivered", "l_expired", "l_failed", "l_unknown", "l_submitted", "l_queued", "l_subscribers", "l_operator" };
 		String [] sz_lbatext_attr = { "name", "oadc", "text" };

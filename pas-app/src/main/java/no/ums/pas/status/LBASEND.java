@@ -250,6 +250,10 @@ public class LBASEND
 	public int f_simulation;
 	public int l_operator;
 	public String sz_operator;
+	public int n_type;
+	public long l_created_ts;
+	public long l_started_ts;
+	public long l_expires_ts;
 	
 	protected int n_delivered = 0;
 	protected int n_failed = 0;
@@ -312,6 +316,10 @@ public class LBASEND
 			f_simulation = new Integer(v[10]).intValue();
 			l_operator = new Integer(v[11]).intValue();
 			sz_operator = v[12];
+			n_type = Integer.valueOf(v[13]);
+			l_created_ts = Integer.valueOf(v[14]);
+			l_started_ts = Integer.valueOf(v[15]);
+			l_expires_ts = Integer.valueOf(v[16]);
 		}
 		catch(Exception e)
 		{
