@@ -497,6 +497,10 @@ namespace com.ums.PAS.Status
                                     outxml.insertAttribute("f_simulation", lbasending.f_simulation.ToString());
                                     outxml.insertAttribute("l_operator", lbasending.l_operator.ToString());
                                     outxml.insertAttribute("sz_operator", lbasending.sz_operator);
+                                    outxml.insertAttribute("l_type", lbasending.l_type.ToString());
+                                    outxml.insertAttribute("l_created_ts", lbasending.l_created_ts.ToString());
+                                    outxml.insertAttribute("l_started_ts", lbasending.l_started_ts.ToString());
+                                    outxml.insertAttribute("l_expires_ts", lbasending.l_expires_ts.ToString());
                                     for (int st = 0; st < lbasending.histcc.Count; st++)
                                     {
                                         ULBAHISTCC cc = lbasending.histcc[st];

@@ -1380,6 +1380,10 @@ namespace com.ums.UmsCommon
         public int l_requesttype;
         public int f_simulation;
         public int l_operator;
+        public int l_type;
+        public long l_created_ts;
+        public long l_started_ts;
+        public long l_expires_ts;
         public String sz_operator;
         public String sz_jobid;
         public String sz_areaid;

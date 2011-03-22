@@ -146,6 +146,10 @@ namespace com.ums.PAS.Database
                     sending.sz_areaid = rs.GetString(8);
                     sending.l_operator = rs.GetInt32(9);
                     sending.sz_operator = rs.GetString(10);
+                    sending.l_type = rs.GetInt32(11);
+                    sending.l_created_ts = rs.GetInt64(12);
+                    sending.l_started_ts = rs.GetInt64(13);
+                    sending.l_expires_ts = rs.GetInt64(14);
                     operatorlink.Add(sending.l_operator, n_index); //add operator as key and an index to the List as value
                     ret.Add(sending);
                     n_index++;
