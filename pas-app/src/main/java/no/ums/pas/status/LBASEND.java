@@ -316,7 +316,7 @@ public class LBASEND
 			f_simulation = new Integer(v[10]).intValue();
 			l_operator = new Integer(v[11]).intValue();
 			sz_operator = v[12];
-			n_type = Integer.valueOf(v[13]);
+			n_type = Integer.valueOf(v[13]); 
 			l_created_ts = Integer.valueOf(v[14]);
 			l_started_ts = Integer.valueOf(v[15]);
 			l_expires_ts = Integer.valueOf(v[16]);
