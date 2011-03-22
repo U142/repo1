@@ -25,6 +25,9 @@ public class SettingsModel extends AbstractBean {
 	private String wmsPassword = "";
 	private String wmsImageFormat = "";
 	private List<String> wmsImageFormatElements;
+	private long newSendingAutoChannel = 0;
+	private int newSendingAutoShape = 0;
+	private Object oNewSendingAutoShape;
 	
 	private int panMode = 0;
 	private int zoomMode = 1;
@@ -220,6 +223,24 @@ public class SettingsModel extends AbstractBean {
 		String oldValue = this.emailServer;
 		this.emailServer = emailServer;
 		update("emailServer", oldValue, emailServer);
+	}
+	public long getNewSendingAutoChannel() {
+		return newSendingAutoChannel;
+	}
+	public void setNewSendingAutoChannel(long newSendingAutoChannel) {
+		this.newSendingAutoChannel = newSendingAutoChannel;
+	}
+	public int getNewSendingAutoShape() {
+		return newSendingAutoShape;
+	}
+	public void setNewSendingAutoShape(int newSendingAutoShape) {
+		this.newSendingAutoShape = newSendingAutoShape;
+	}
+	public Object getoNewSendingAutoShape() {
+		return oNewSendingAutoShape;
+	}
+	public void setoNewSendingAutoShape(Object oNewSendingAutoShape) {
+		this.oNewSendingAutoShape = oNewSendingAutoShape;
 	}
 	
 	

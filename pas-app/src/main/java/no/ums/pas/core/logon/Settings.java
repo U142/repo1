@@ -43,6 +43,8 @@ public class Settings {
 	private String sz_languageid; //en_EN, no_NO
 	private Rectangle rect_messagelib_dlg;
 	List<Object> messagelib_exploded_nodes;
+	private long n_newsending_autochannel = 0;
+	private int n_autoselect_shapetype = 0;
 	
 	public Settings() {
 		username = "";
@@ -127,6 +129,22 @@ public class Settings {
 
 	}
 	
+	public long getN_newsending_autochannel() {
+		return n_newsending_autochannel;
+	}
+
+	public void setN_newsending_autochannel(long n_newsending_autochannel) {
+		this.n_newsending_autochannel = n_newsending_autochannel;
+	}
+
+	public int getN_autoselect_shapetype() {
+		return n_autoselect_shapetype;
+	}
+
+	public void setN_autoselect_shapetype(int n_autoselect_shapetype) {
+		this.n_autoselect_shapetype = n_autoselect_shapetype;
+	}
+
 	public boolean getPanByDrag() {
 		return b_pan_by_drag;
 	}

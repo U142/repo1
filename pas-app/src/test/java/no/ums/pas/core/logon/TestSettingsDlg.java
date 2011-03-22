@@ -1,5 +1,6 @@
 package no.ums.pas.core.logon;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.event.TreeSelectionEvent;
@@ -62,6 +63,12 @@ public class TestSettingsDlg {
 
 			@Override
 			public void onMapWmsSelected(boolean b) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNewSendingAutoShape(AbstractButton value) {
 				// TODO Auto-generated method stub
 				
 			}

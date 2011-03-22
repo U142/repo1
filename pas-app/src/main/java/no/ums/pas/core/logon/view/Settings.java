@@ -48,6 +48,7 @@ public class Settings extends JDialog {
 		public void onMapWmsSelected(boolean b);
 		public void onMoveLayerUp(final WmsLayerTree tree);
 		public void onMoveLayerDown(final WmsLayerTree tree);
+		public void onNewSendingAutoShape(AbstractButton value);
 	}
 
 	final SendOptionToolbar sot = new SendOptionToolbar(null, null, 0);
@@ -73,29 +74,32 @@ public class Settings extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				if("act_set_addresstypes".equals(e.getActionCommand()))
 				{
-					System.out.println("Addresstypes="+sot.get_addresstypes());
+					lblPrivateAdrTypes.setText(sot.gen_adrtypes_text(sot.get_addresstypes(), SendOptionToolbar.ADRGROUPS.PRIVATE));
+					lblCompanyAdrtypes.setText(sot.gen_adrtypes_text(sot.get_addresstypes(), SendOptionToolbar.ADRGROUPS.COMPANY));
+					updateAutoChannelButtons(sot.get_addresstypes());
+					settingsModel1.setNewSendingAutoChannel(sot.get_addresstypes());
+				}
+				else if("act_init_addresstypes".equals(e.getActionCommand()))
+				{					
 					lblPrivateAdrTypes.setText(sot.gen_adrtypes_text(sot.get_addresstypes(), SendOptionToolbar.ADRGROUPS.PRIVATE));
 					lblCompanyAdrtypes.setText(sot.gen_adrtypes_text(sot.get_addresstypes(), SendOptionToolbar.ADRGROUPS.COMPANY));
 					updateAutoChannelButtons(sot.get_addresstypes());
 				}
 			}
 		});
-		sot.show_buttonsbyadrtype(PAS.get_pas().get_rightsmanagement().addresstypes(), 
-				togglePrivateFixed, togglePrivateMobile, toggleCompanyFixed, toggleCompanyMobile, toggleLba);
-		
 		sot.add_adrtypemenus(togglePrivateFixed, sot.menu_fixedpriv, sot.group_fixedprivbtn, "");
 		sot.add_adrtypemenus(togglePrivateMobile, sot.menu_smspriv, sot.group_smsprivbtn, "");
 		sot.add_adrtypemenus(toggleCompanyFixed, sot.menu_fixedcomp, sot.group_fixedcompbtn, "");
 		sot.add_adrtypemenus(toggleCompanyMobile, sot.menu_smscomp, sot.group_smscompbtn, "");
-		int n_init_addresstypes = 134218044;
-		sot.set_addresstypes(n_init_addresstypes);		
-		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
-		updateAutoChannelButtons(n_init_addresstypes);
-		if((n_init_addresstypes & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0)
+		sot.set_addresstypes((int)settingsModel1.getNewSendingAutoChannel());
+		sot.initSelections();
+		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_init_addresstypes"));
+		updateAutoChannelButtons(sot.get_addresstypes());
+		if((sot.get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0)
 		{
 			toggleLba.doClick();
 		}
-		if((n_init_addresstypes & SendController.SENDTO_USE_NOFAX_COMPANY) > 0)
+		if((sot.get_addresstypes() & SendController.SENDTO_USE_NOFAX_COMPANY) > 0)
 		{
 			toggleBlocklist.doClick();
 		}
@@ -104,6 +108,10 @@ public class Settings extends JDialog {
 	
 	protected void updateAutoChannelButtons(int adrtypes)
 	{
+		togglePrivateFixed.setSelected(sot.adrGroupRepresented(sot.group_fixedprivbtn));
+		togglePrivateMobile.setSelected(sot.adrGroupRepresented(sot.group_smsprivbtn));
+		toggleCompanyFixed.setSelected(sot.adrGroupRepresented(sot.group_fixedcompbtn));
+		toggleCompanyMobile.setSelected(sot.adrGroupRepresented(sot.group_smscompbtn));
 	}
 
 
@@ -290,6 +298,42 @@ public class Settings extends JDialog {
 		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
 	}
 
+	private void toggleImportActionPerformed(ActionEvent e) {
+		settingsModel1.setNewSendingAutoShape(SendOptionToolbar.BTN_OPEN_);
+		callback.onNewSendingAutoShape((AbstractButton)e.getSource());
+	}
+
+	private void togglePolygonActionPerformed(ActionEvent e) {
+		settingsModel1.setNewSendingAutoShape(SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_);
+		callback.onNewSendingAutoShape((AbstractButton)e.getSource());
+	}
+
+	private void toggleEllipseActionPerformed(ActionEvent e) {
+		settingsModel1.setNewSendingAutoShape(SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_);
+		callback.onNewSendingAutoShape((AbstractButton)e.getSource());
+	}
+
+	private void toggleMunicipalActionPerformed(ActionEvent e) {
+		settingsModel1.setNewSendingAutoShape(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_);
+		callback.onNewSendingAutoShape((AbstractButton)e.getSource());
+	}
+
+	public JToggleButton getTogglePolygon() {
+		return togglePolygon;
+	}
+
+	public JToggleButton getToggleEllipse() {
+		return toggleEllipse;
+	}
+
+	public JToggleButton getToggleMunicipal() {
+		return toggleMunicipal;
+	}
+
+	public JToggleButton getToggleImport() {
+		return toggleImport;
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
@@ -343,6 +387,10 @@ public class Settings extends JDialog {
 		lblPrivateAdrTypes = new JLabel();
 		lblCompanyAdrtypes = new JLabel();
 		lblLbaText = new JLabel();
+		togglePolygon = new JToggleButton();
+		toggleEllipse = new JToggleButton();
+		toggleMunicipal = new JToggleButton();
+		toggleImport = new JToggleButton();
 		settingsModel1 = new SettingsModel();
 		stringToInt1 = new StringToInt();
 
@@ -459,6 +507,7 @@ public class Settings extends JDialog {
 				btnMapWmsOpen.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						btnMapWmsOpenActionPerformed(e);
 						btnMapWmsOpenActionPerformed(e);
 					}
 				});
@@ -799,53 +848,106 @@ public class Settings extends JDialog {
 						}
 					});
 
+					//---- togglePolygon ----
+					togglePolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
+					togglePolygon.setSelected(true);
+					togglePolygon.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							togglePolygonActionPerformed(e);
+						}
+					});
+
+					//---- toggleEllipse ----
+					toggleEllipse.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_ellipse_24.png")));
+					toggleEllipse.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleEllipseActionPerformed(e);
+						}
+					});
+
+					//---- toggleMunicipal ----
+					toggleMunicipal.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_municipal_24.png")));
+					toggleMunicipal.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleMunicipalActionPerformed(e);
+						}
+					});
+
+					//---- toggleImport ----
+					toggleImport.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/folder2_24.png")));
+					toggleImport.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleImportActionPerformed(e);
+						}
+					});
+
 					GroupLayout panel2Layout = new GroupLayout(panel2);
 					panel2.setLayout(panel2Layout);
 					panel2Layout.setHorizontalGroup(
 						panel2Layout.createParallelGroup()
 							.addGroup(panel2Layout.createSequentialGroup()
 								.addGap(31, 31, 31)
-								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-									.addComponent(lblPrivateAdrTypes, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createSequentialGroup()
-										.addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addGap(18, 18, 18)
-								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-									.addGroup(panel2Layout.createSequentialGroup()
-										.addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
-									.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-								.addGap(29, 29, 29)
 								.addGroup(panel2Layout.createParallelGroup()
 									.addGroup(panel2Layout.createSequentialGroup()
-										.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGap(24, 24, 24)
-										.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+										.addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleMunicipal, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+									.addGroup(panel2Layout.createSequentialGroup()
+										.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+											.addGroup(panel2Layout.createSequentialGroup()
+												.addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+										.addGap(18, 18, 18)
+										.addGroup(panel2Layout.createParallelGroup()
+											.addGroup(panel2Layout.createSequentialGroup()
+												.addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(panel2Layout.createParallelGroup()
+											.addGroup(panel2Layout.createSequentialGroup()
+												.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(24, 24, 24)
+												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
 								.addContainerGap())
 					);
 					panel2Layout.setVerticalGroup(
 						panel2Layout.createParallelGroup()
-							.addGroup(panel2Layout.createSequentialGroup()
-								.addGap(22, 22, 22)
+							.addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(togglePolygon)
+									.addComponent(toggleEllipse)
+									.addComponent(toggleMunicipal)
+									.addComponent(toggleImport))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addGroup(panel2Layout.createParallelGroup()
 									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
 										.addComponent(togglePrivateFixed, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-											.addComponent(togglePrivateMobile, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-											.addComponent(toggleCompanyMobile, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-											.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+										.addComponent(togglePrivateMobile, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 										.addComponent(toggleLba, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+										.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(toggleCompanyMobile, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+										.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(panel2Layout.createParallelGroup()
-									.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-									.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-									.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(lblPrivateAdrTypes, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+									.addComponent(lblLbaText, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+									.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 								.addContainerGap())
 					);
 				}
@@ -858,7 +960,7 @@ public class Settings extends JDialog {
 							.addContainerGap()
 							.addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(autostartup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(autostartup, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 							.addContainerGap())
 				);
@@ -867,11 +969,11 @@ public class Settings extends JDialog {
 						.addGroup(pnlDiverseLayout.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(autostartup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGap(18, 18, 18)
 							.addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(101, Short.MAX_VALUE))
+							.addGap(18, 18, 18)
+							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(73, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
@@ -921,6 +1023,13 @@ public class Settings extends JDialog {
 		ButtonGroup btnGroupZoom = new ButtonGroup();
 		btnGroupZoom.add(radioNavZoomFromCenter);
 		btnGroupZoom.add(radioNavZoomFromCorner);
+
+		//---- btnGroupAutoShape ----
+		ButtonGroup btnGroupAutoShape = new ButtonGroup();
+		btnGroupAutoShape.add(togglePolygon);
+		btnGroupAutoShape.add(toggleEllipse);
+		btnGroupAutoShape.add(toggleMunicipal);
+		btnGroupAutoShape.add(toggleImport);
 
 		//---- bindings ----
 		bindingGroup = new BindingGroup();
@@ -1034,6 +1143,10 @@ public class Settings extends JDialog {
 	private JLabel lblPrivateAdrTypes;
 	private JLabel lblCompanyAdrtypes;
 	private JLabel lblLbaText;
+	private JToggleButton togglePolygon;
+	private JToggleButton toggleEllipse;
+	private JToggleButton toggleMunicipal;
+	private JToggleButton toggleImport;
 	public SettingsModel settingsModel1;
 	private StringToInt stringToInt1;
 	private BindingGroup bindingGroup;

@@ -100,6 +100,8 @@ public class WSSaveUI extends WSThread
 			ui.setFMapinitLbo(0);
 			ui.setFMapinitRbo(0);
 			ui.setFMapinitUbo(0);
+			ui.setLSendingAutochannel(settings.getN_newsending_autochannel());
+			ui.setLSendingAutoshape(settings.getN_autoselect_shapetype());
 			try
 			{
 				URL wsdl = new URL(vars.WSDL_PAS);

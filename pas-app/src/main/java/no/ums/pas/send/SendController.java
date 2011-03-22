@@ -409,16 +409,20 @@ public class SendController implements ActionListener {
                 Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			}
 
-				SendObject obj;
-				if(alert!=null) {
-					obj = createSendingFromAlert(alert);
-				} else {
-					obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, Variables.getNavigation());
-				}
+			SendObject obj;
+			if(alert!=null) {
+				obj = createSendingFromAlert(alert);
+			} else {
+				obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, Variables.getNavigation());
+			}
 			m_n_send_id++;
-			add_sending(obj);
+			add_sending(obj, alert==null);
 			obj.get_sendproperties().get_shapestruct().finalizeShape();
 
+			if(alert==null)
+			{
+
+			}
 			System.out.println("New sending created");
 			return obj;
 			
@@ -587,8 +591,8 @@ public class SendController implements ActionListener {
 		}
 	}
 	
-	
-	public void add_sending(final SendObject obj) {
+	public void add_sending(final SendObject obj, final boolean userValues)
+	{
 		try
 		{
 			SwingUtilities.invokeLater(new Runnable()
@@ -605,6 +609,29 @@ public class SendController implements ActionListener {
 						}
 						get_sendings().add(obj);
 						set_activesending(obj);
+						if(userValues)
+						{
+							obj.get_toolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
+							obj.get_toolbar().initSelections();				
+
+							//Variables.getSettings().setN_autoselect_shapetype(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_);
+							switch(Variables.getSettings().getN_autoselect_shapetype())
+							{
+							case SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_:
+								obj.get_toolbar().get_radio_polygon().doClick();
+								break;
+							case SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_:
+								obj.get_toolbar().get_radio_ellipse().doClick();
+								break;
+							case SendOptionToolbar.BTN_OPEN_:
+								obj.get_toolbar().get_btn_open().doClick();
+								break;
+							case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
+								obj.get_toolbar().get_radio_municipal().doClick();
+								break;
+							}
+						}
+						
 						if(PAS.get_pas() != null)
 							PAS.get_pas().repaint();
 					}
@@ -619,6 +646,11 @@ public class SendController implements ActionListener {
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void add_sending(final SendObject obj) {
+		add_sending(obj, false);
+
 	}
 	public void set_activesending(SendObject obj) {
 		if(get_activesending()!=null)

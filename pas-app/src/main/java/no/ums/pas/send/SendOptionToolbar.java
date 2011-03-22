@@ -402,21 +402,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_nophone_company.setVisible((ADR & SendController.SENDTO_NOPHONE_COMPANY) == SendController.SENDTO_NOPHONE_COMPANY);
 		show_buttonsbyadrtype(ADR, m_btn_adrtypes_private_fixed, m_btn_adrtypes_private_mobile, 
 				m_btn_adrtypes_company_fixed, m_btn_adrtypes_company_mobile, m_btn_adrtypes_cell_broadcast_text);
-		//m_btn_adrtypes_private_fixed.setVisible((ADR & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE);
-		//m_btn_adrtypes_private_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE);
 		if(m_btn_adrtypes_private_fixed.isVisible() || m_btn_adrtypes_private_mobile.isVisible())
 			m_lbl_addresstypes_private.setVisible(true);
 		else
 			m_lbl_addresstypes_private.setVisible(false);
 		
-		//m_btn_adrtypes_company_fixed.setVisible((ADR & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY);
-		//m_btn_adrtypes_company_mobile.setVisible((ADR & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY);
 		if(m_btn_adrtypes_company_fixed.isVisible() || m_btn_adrtypes_company_mobile.isVisible())
 			m_lbl_addresstypes_company.setVisible(true);
 		else
 			m_lbl_addresstypes_company.setVisible(false);
 		
-		//m_btn_adrtypes_cell_broadcast_text.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT);
 		m_btn_adrtypes_cell_broadcast_voice.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE);
 	}
 	
@@ -497,17 +492,62 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			this.m_btn_adrtypes_nofax.setVisible(b_show);
 		}
 	}
-	
-	public void gen_addresstypes() {
 
-		int TYPES = 0;
-		if(m_btn_adrtypes_nophone_private.isSelected() && m_btn_adrtypes_nophone_private.isVisible()) TYPES |= m_btn_adrtypes_nophone_private.get_adrtype();
-		if(m_btn_adrtypes_nophone_company.isSelected() && m_btn_adrtypes_nophone_company.isVisible()) TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
+	public boolean adrGroupRepresented(ButtonGroup bg)
+	{
+		Enumeration<AbstractButton> en = bg.getElements();
+		while(en.hasMoreElements())
+		{
+			CheckItem it = (CheckItem)en.nextElement();
+			int i = ((Integer)it.get_value()).intValue();
+			if(i>0 && it.isSelected())
+				return true;
+		}
 		
-		if(m_btn_adrtypes_nofax.isSelected()) TYPES |= m_btn_adrtypes_nofax.get_adrtype();
-		
+		return false;
+	}
+	
+	public void initSelections()
+	{
+		int TYPES = get_addresstypes();
+		Enumeration<AbstractButton> en = group_smsprivbtn.getElements();
+		while(en.hasMoreElements())
+		{
+			CheckItem it = (CheckItem)en.nextElement();
+			int i = ((Integer)it.get_value()).intValue();
+			if((TYPES & i) == i)
+				it.setSelected(true);
+		}
+		en = group_fixedprivbtn.getElements();
+		while(en.hasMoreElements())
+		{
+			CheckItem it = (CheckItem)en.nextElement();
+			int i = ((Integer)it.get_value()).intValue();
+			if((TYPES & i) == i)
+				it.setSelected(true);
+		}
+		en = group_smscompbtn.getElements();
+		while(en.hasMoreElements())
+		{
+			CheckItem it = (CheckItem)en.nextElement();
+			int i = ((Integer)it.get_value()).intValue();
+			if((TYPES & i) == i)
+				it.setSelected(true);
+		}
+		en = group_fixedcompbtn.getElements();
+		while(en.hasMoreElements())
+		{
+			CheckItem it = (CheckItem)en.nextElement();
+			int i = ((Integer)it.get_value()).intValue();
+			if((TYPES & i) == i)
+				it.setSelected(true);
+		}
+		disableAddressMenus();
+		actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
+	}
+	
+	public int customizeSelections(int TYPES)
+	{
 		Enumeration<AbstractButton> en = group_smsprivbtn.getElements();
 		while(en.hasMoreElements())
 		{
@@ -540,7 +580,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(it.isSelected())
 				TYPES |= i;
 		}
-
+		disableAddressMenus();
+		return TYPES;
+	}
+	
+	protected void disableAddressMenus()
+	{
         //disable buttons if certain criterias are met
 		try
 		{
@@ -556,10 +601,22 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}		
+	}
+	
+	public void gen_addresstypes() {
 
+		int TYPES = 0;
+		if(m_btn_adrtypes_nophone_private.isSelected() && m_btn_adrtypes_nophone_private.isVisible()) TYPES |= m_btn_adrtypes_nophone_private.get_adrtype();
+		if(m_btn_adrtypes_nophone_company.isSelected() && m_btn_adrtypes_nophone_company.isVisible()) TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
+		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
+		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
+		
+		if(m_btn_adrtypes_nofax.isSelected()) TYPES |= m_btn_adrtypes_nofax.get_adrtype();
+		TYPES = customizeSelections(TYPES);
 		set_addresstypes(TYPES);
 		System.out.println("Addresstypes = " + TYPES);
+
 		
 	}
 	
@@ -574,7 +631,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			if(c.isSelected())
 			{
 				int val = ((Integer)c.get_value2()).intValue();
-				for(int x = 0; x < 32; x++)
+				for(int x = 0; x <= 32; x++)
 				{
 					if(((1 << x) & val) > 0)
 						ret &= ~_EnableAddressSelection((1 << x), false, btngroup_to_disable);
@@ -621,28 +678,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				{
 					int remainder = (value & ~n);
 					boolean b_found_remainder = false;
-					/*if(remainder>0 && itm.isSelected()) //combination of two or more
-					{
-						Enumeration<AbstractButton> find_alternative = btngroup.getElements();
-						while(find_alternative.hasMoreElements())
-						{
-							CheckItem itm2 = ((CheckItem)find_alternative.nextElement());
-							int value2 = 0;
-							value2 = ((Integer)itm2.get_value()).intValue();
-							if((remainder & value2) > 0)
-							{
-								itm2.setSelected(true);
-								b_found_remainder = true;
-								break;
-							}
-						}
-					}*/
 					if(!b_found_remainder && !b && itm.isSelected())
 						btngroup_to_disable.getElements().nextElement().setSelected(true);
 					
 				}
-				//if(n!=0)
-					itm.setEnabled(b);
+				itm.setEnabled(b);
 
 			}
 				
@@ -1012,7 +1052,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
         group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_and_mobile"), SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY, true, Localization.l("main_sending_adr_sel_private_fixed_and_mobile_tooltip"), c));
 		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_fixedcompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_fixed_alt_sms"), SendController.SENDTO_FIXED_COMPANY_ALT_SMS, SendController.SENDTO_MOBILE_COMPANY | SendController.SENDTO_SMS_COMPANY | SendController.SENDTO_MOBILE_COMPANY_AND_FIXED | SendController.SENDTO_SMS_COMPANY_ALT_FIXED | SendController.SENDTO_MOBILE_COMPANY, false, Localization.l("main_sending_adr_sel_private_mobile_sms_or_fixed_tooltip"), c));
-        }
+
+		}
 	
 		add_adrtypemenus(m_btn_adrtypes_private_mobile, menu_smspriv, group_smsprivbtn, "      Private Mobile Phones");
 		add_adrtypemenus(m_btn_adrtypes_private_fixed, menu_fixedpriv, group_fixedprivbtn, "      Private Fixed Phones");
@@ -1069,51 +1110,28 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			chk.setActionCommand("act_sendingtype_municipal");
 			pop.add(chk);
 		}
-		//pop.add(new JButton("close"));
 		
 		
 		btn.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent evt) {
-	        	try
-	        	{
-	        		//Thread.sleep(60);
-	        	}catch(Exception e) {}
-	        	//super.mousePressed(evt);
-	        	//btn.doClick();
-	        	btn.setSelected(true);
-	        	pop.setLightWeightPopupEnabled(true);
-	        	
-	        	/*if(!pop.isVisible())
-	        	{
-	        		pop.show(evt.getComponent(), 0, btn.getHeight());
-	        		pop.setVisible(true);
-	        	}
-	        	else
-	        		pop.setVisible(false);*/
-				Point componentLocation = btn.getLocationOnScreen();
-				if(!pop.isShowing())
-					pop.show(null, componentLocation.x, componentLocation.y + btn.getHeight());
-				else
-					pop.setVisible(false);
+	        	popMunicipals();
 	        	
 	        }
 	        public void mouseReleased(MouseEvent evt) {
 	        }
 	    });
-		/*btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				Point componentLocation = btn.getLocationOnScreen();
-				//pop.setPreferredSize(new Dimension(150, 500));
-				//pop.setMinimumSize(new Dimension(150, 100));
-				//pop.setPreferredSize(new Dimension(150, pop.getHeight()));
-				if(!pop.isShowing())
-					pop.show(null, componentLocation.x, componentLocation.y + btn.getHeight());
-				else
-					pop.setVisible(false);
-			}
-		});*/
-
+	}
+	
+	public void popMunicipals()
+	{
+		m_radio_sendingtype_municipal.setSelected(true);
+    	menu_municipals.setLightWeightPopupEnabled(true);
+    	
+		Point componentLocation = m_radio_sendingtype_municipal.getLocationOnScreen();
+		if(!menu_municipals.isShowing())
+			menu_municipals.show(null, componentLocation.x, componentLocation.y + m_radio_sendingtype_municipal.getHeight());
+		else
+			menu_municipals.setVisible(false);		
 	}
 	
 	public class MunicipalCheckbox extends JCheckBox
@@ -1390,22 +1408,6 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}
 		}
 		else if("act_set_addresstypes".equals(e.getActionCommand())) {
-			/*if(m_btn_adrtypes_cell_broadcast_voice.isSelected() || m_btn_adrtypes_cell_broadcast_text.isSelected()) {
-				if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice) && ((!m_btn_adrtypes_cell_broadcast_voice.isSelected() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) || (!m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_text.isSelected()))) {
-					m_group_sendingtype.remove(m_btn_adrtypes_cell_broadcast_voice);
-					m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
-					m_group_sendingtype.add(m_btn_adrtypes_cell_broadcast_voice);
-				} else {
-					//m_btn_adrtypes_cell_broadcast_voice.setSelected(true);				
-				}
-				if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text) && ((!m_btn_adrtypes_cell_broadcast_text.isSelected() && !m_btn_adrtypes_cell_broadcast_voice.isSelected()) || (!m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isSelected()))) {
-					m_group_sendingtype.remove(m_btn_adrtypes_cell_broadcast_text);
-					m_btn_adrtypes_cell_broadcast_text.setSelected(false);
-					m_group_sendingtype.add(m_btn_adrtypes_cell_broadcast_text);
-				} else {
-					//m_btn_adrtypes_cell_broadcast_text.setSelected(true);				
-				}
-			}*/
 			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice) && m_btn_adrtypes_cell_broadcast_text.isSelected())
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
 			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text) && m_btn_adrtypes_cell_broadcast_voice.isSelected())
@@ -1417,6 +1419,9 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}
 			else if(get_callback()!=null)
 				get_callback().actionPerformed(e);
+		}
+		else if("act_init_addresstypes".equals(e.getActionCommand())) {
+			get_callback().actionPerformed(e);
 		}
 		else if("act_find_sending".equals(e.getActionCommand())) {
 			System.out.println("SendOptionToolbar.act_find_sending");
@@ -1636,6 +1641,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public JButton get_btn_open() { return m_btn_open; }
 	public ColorButton get_btn_color() { return m_btn_color; }
 	public JToggleButton get_btn_finalize() { return m_btn_finalize; }
+	
 	
 	public boolean can_lba()
 	{

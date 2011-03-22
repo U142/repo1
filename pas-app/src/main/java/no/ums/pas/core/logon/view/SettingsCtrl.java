@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
 import javax.swing.SwingWorker;
 import javax.swing.event.TreeSelectionEvent;
@@ -27,6 +28,7 @@ import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.MapLoader;
+import no.ums.pas.send.SendOptionToolbar;
 
 public class SettingsCtrl implements ISettingsUpdate {
     private static final Log log = UmsLog.getLogger(SettingsCtrl.class);
@@ -63,6 +65,24 @@ public class SettingsCtrl implements ISettingsUpdate {
     	dlg.settingsModel1.setWmsUsername(s.getWmsUsername());
     	dlg.settingsModel1.setZoomFromCenter(s.getZoomFromCenter());
     	dlg.settingsModel1.setZoomFromCorner(!s.getZoomFromCenter());
+    	dlg.settingsModel1.setNewSendingAutoChannel(s.getN_newsending_autochannel());
+    	dlg.settingsModel1.setNewSendingAutoShape(s.getN_autoselect_shapetype());
+    	switch(s.getN_autoselect_shapetype())
+    	{
+    	case SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_:
+    		dlg.getTogglePolygon().doClick();
+    		break;
+    	case SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_:
+    		dlg.getToggleEllipse().doClick();
+    		break;
+    	case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
+    		dlg.getToggleMunicipal().doClick();
+    		break;
+    	case SendOptionToolbar.BTN_OPEN_:
+    		dlg.getToggleImport().doClick();
+    		break;
+    	}
+    	
     	onMapWmsSelected(s.getMapServer()==MAPSERVER.WMS);
     	if(s.getMapServer()==MAPSERVER.WMS)
     	{
@@ -103,10 +123,14 @@ public class SettingsCtrl implements ISettingsUpdate {
 		s.setZoomFromCenter(model.getZoomFromCenter());
 		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
 		s.setSelectedWmsFormat(model.getWmsImageFormat());
+		s.setN_newsending_autochannel(model.getNewSendingAutoChannel());
+		s.setN_autoselect_shapetype(model.getNewSendingAutoShape());
+		
 		ma.set_accountname(model.getEmailAddress());
 		ma.set_displayname(model.getEmailDisplayName());
 		ma.set_mailaddress(model.getEmailAddress());
 		ma.set_mailserver(model.getEmailServer());
+		
 		List<String> selected_layers;
 		if(s.getMapServer()==MAPSERVER.WMS && tree.getModel().getRoot()!=null) // m_wms_list.m_tbl_list.getRowCount() > 0)
 		{
@@ -219,6 +243,11 @@ public class SettingsCtrl implements ISettingsUpdate {
 		dlg.getComboMapWmsImg().setEnabled(b);
 		dlg.getBtnMoveDown().setEnabled(b);
 		dlg.getBtnMoveUp().setEnabled(b);
+	}
+
+	@Override
+	public void onNewSendingAutoShape(AbstractButton value) {
+		
 	}
 	
 

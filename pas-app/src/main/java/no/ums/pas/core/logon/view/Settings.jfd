@@ -800,11 +800,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp autostartup::t:::x:1, comp panel1::l:::x:1}, space :::p}}</string> 
+            <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp autostartup::l:::x:1, comp panel1::l:::x:1}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space :::p, comp panel1:::p::p, space :::p, comp panel2:::p::p, space ::101:x}}</string> 
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp panel1:::p::p, space s:::p, comp panel2:::p:151:p, space ::73:x}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -923,11 +923,11 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :p:31:p, par t:::p {comp lblPrivateAdrTypes::l:::x:1, seq l {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}}, space s:::p, par l:::p {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes:::::x:1}, space :p:29:p, par l {seq {comp toggleLba:::p::p, space :p:24:p, comp toggleBlocklist:::p::p}, comp lblLbaText::::180:x}, space :::p}}</string> 
+              <string>par l {seq l {space :p:31:p, par l {seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleMunicipal:::p:46:p, space :::p, comp toggleImport:::p:44:p}, seq l {par l:::p {seq {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}, comp lblPrivateAdrTypes:::::x:1}, space s:::p, par l {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes::::153:x:1}, space :::p, par l {seq {comp toggleLba:::p::p, space :p:24:p, comp toggleBlocklist:::p::p}, comp lblLbaText::::170:x}}}, space :::p}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
-              <string>par l {seq {space :22:22:p, par l {par t:l::p {comp togglePrivateFixed::l:::x:1, par b:l {comp togglePrivateMobile::b:::x:1, comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}}, par b {comp toggleLba::b:::x:1, comp toggleBlocklist::b:::x:1}}, space :::p, par l {comp lblLbaText::::41:x, comp lblCompanyAdrtypes::::41:x, comp lblPrivateAdrTypes::l::41:x}, space :::p}}</string> 
+              <string>par l {seq t {space :::p, par t {comp togglePolygon:::p::p, comp toggleEllipse:::p::p, comp toggleMunicipal:::p::p, comp toggleImport:::p::p}, space :::p, par l {par t:l::p {comp togglePrivateFixed::l:::x:1, comp togglePrivateMobile::l:::x:1}, par b {comp toggleLba::b:::x:1, comp toggleBlocklist::b:::x:1}, par b {comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}}, space :::p, par t {comp lblPrivateAdrTypes::l::35:x, comp lblLbaText::l::35:x, comp lblCompanyAdrtypes:::p:35:p}, space :::p}}</string> 
              </void> 
             </object> 
             <void method="setProperty"> 
@@ -1098,6 +1098,150 @@
               </void> 
              </object> 
             </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JToggleButton</string> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>btnGroupAutoShape</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/send_polygon_24.png</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>selected</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void property="name"> 
+               <string>togglePolygon</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>togglePolygonActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JToggleButton</string> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>btnGroupAutoShape</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/send_ellipse_24.png</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>toggleEllipse</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>toggleEllipseActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JToggleButton</string> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>btnGroupAutoShape</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/send_municipal_24.png</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>toggleMunicipal</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>toggleMunicipalActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JToggleButton</string> 
+              <void method="setProperty"> 
+               <string>$buttonGroup</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>btnGroupAutoShape</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/folder2_24.png</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>toggleImport</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>toggleImportActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
            </object> 
           </void> 
          </object> 
@@ -1228,6 +1372,24 @@
        <object class="java.awt.Point"> 
         <int>0</int> 
         <int>927</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormNonVisual"> 
+      <string>javax.swing.ButtonGroup</string> 
+      <void property="name"> 
+       <string>btnGroupAutoShape</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>989</int> 
        </object> 
       </void> 
      </object> 
