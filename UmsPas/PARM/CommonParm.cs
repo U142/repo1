@@ -111,6 +111,8 @@ namespace com.ums.UmsParm
         public String sz_emailserver;
         public int l_mailport;
         public int l_lba_update_percent;
+        public long l_sending_autochannel;
+        public int l_sending_autoshape;
     }
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]

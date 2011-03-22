@@ -35,7 +35,7 @@ namespace com.ums.PAS.Database
                 //base.CheckLogon(ref l);
                 String szSQL = String.Format("sp_pas_ins_ui {0}, '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, " +
                                             "{11}, {12}, {13}, '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', " +
-                                            "{20}, '{21}', '{22}', '{23}', {24}, '{25}', '{26}', '{27}', {28}, {29}, '{30}', '{31}', {32}",
+                                            "{20}, '{21}', '{22}', '{23}', {24}, '{25}', '{26}', '{27}', {28}, {29}, '{30}', '{31}', {32}, {33}, {34}",
                                             l.l_userpk,
                                             ui.sz_languageid,
                                             ui.f_mapinit_lbo,
@@ -68,7 +68,9 @@ namespace com.ums.PAS.Database
                                             ui.l_lba_update_percent,
                                             ui.sz_wms_username.Replace("'", "''"),
                                             ui.sz_wms_password.Replace("'", "''"),
-                                            ui.l_zoom_mode);
+                                            ui.l_zoom_mode,
+                                            ui.l_sending_autochannel,
+                                            ui.l_sending_autoshape);
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 if (rs.Read())
                 {
@@ -285,6 +287,8 @@ namespace com.ums.PAS.Database
                         ret.sz_wms_username = rs.GetString(29);
                         ret.sz_wms_password = rs.GetString(30);
                         ret.l_zoom_mode = rs.GetInt32(31);
+                        ret.l_sending_autochannel = rs.GetInt64(32);
+                        ret.l_sending_autoshape = rs.GetInt32(33);
                     }
                 }
                 rs.Close();

@@ -52,6 +52,7 @@ namespace com.ums.PAS.Database
                     xml.insertAttribute("l_langpk", rs["l_langpk"].ToString());
                     xml.insertAttribute("def", rs["moduledef"].ToString());
                     xml.insertAttribute("template", rs["f_template"].ToString());
+                    xml.insertAttribute("type", rs["l_type"].ToString());
                     xml.insertEndElement(); //SERVERFILE
                 }
                 xml.insertEndElement(); //SOUNDLIB
