@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics</artifactId>
-            <version>0.6.0</version>
+            <version>0.5.2</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -44,37 +44,6 @@
     </distributionManagement>
     <build>
         <plugins>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>jaxws-maven-plugin</artifactId>-->
-            <!--<version>1.12</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>wsimport</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<wsdlUrls>-->
-            <!--<wsdlUrl>${wsdl.base}/PasAdmin.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Pas.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/conference.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/ExternalExec.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Infosentral.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/ParmAdmin.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/PasStatus.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/TAS.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Voice.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/AddressDatabase.asmx?WSDL</wsdlUrl>-->
-            <!--&lt;!&ndash;<wsdlUrl>${wsdl.base}/ParmService.asmx?WSDL</wsdlUrl>&ndash;&gt;-->
-            <!--</wsdlUrls>-->
-            <!--<extension>true</extension>-->
-            <!--<bindingFiles>-->
-            <!--<bindingFile>${project.basedir}/src/jaxws/bindings.xml</bindingFile>-->
-            <!--</bindingFiles>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
@@ -85,95 +54,95 @@
                             <target>
                                 <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport"/>
                                 <echo message="Starting wsimport"/>
-                                <mkdir dir="target/jaxws/wsimport/java"/>
+                                <mkdir dir="target/generated-sources/jaxws"/>
                                 <wsimport wsdl="${wsdl.base}/PasAdmin.asmx?WSDL"
                                           binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/Pas.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/conference.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/ExternalExec.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/Infosentral.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/ParmAdmin.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/PasStatus.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/TAS.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/Voice.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/AddressDatabase.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
-                                          target="2.1" xnocompile="true">
-                                    <!--<xjcarg value="-Xequals"/>-->
-                                    <!--<xjcarg value="-XhashCode"/>-->
-                                    <!--<xjcarg value="-XtoString"/>-->
-                                </wsimport>
-                                <wsimport wsdl="${wsdl.base}/ParmService.asmx?WSDL"
-                                          binding="${project.basedir}/src/jaxws/bindings.xml"
-                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
                                           target="2.1" xnocompile="true">
                                     <xjcarg value="-Xequals"/>
                                     <xjcarg value="-XhashCode"/>
                                     <xjcarg value="-XtoString"/>
-                                    <xjcarg value="-Xfluent-api"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Pas.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/conference.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/ExternalExec.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Infosentral.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/ParmAdmin.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/PasStatus.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/TAS.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Voice.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/AddressDatabase.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/ParmService.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/generated-sources/jaxws" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                    
                                 </wsimport>
                             </target>
                         </configuration>
@@ -191,23 +160,7 @@
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
-                        <version>0.6.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.sun.xml</groupId>
-                        <artifactId>jaxb-xjc</artifactId>
-                        <version>2.0EA3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>net.java.dev.jaxb2-commons</groupId>
-                        <artifactId>jaxb-fluent-api</artifactId>
-                        <version>2.0.1</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>com.sun.xml</groupId>
-                                <artifactId>jaxb-xjc</artifactId>
-                            </exclusion>
-                        </exclusions>
+                        <version>0.5.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -224,7 +177,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>target/jaxws/wsimport/java</source>
+                                <source>target/generated-sources/jaxws</source>
                             </sources>
                         </configuration>
                     </execution>
