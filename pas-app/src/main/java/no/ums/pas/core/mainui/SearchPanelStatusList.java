@@ -67,7 +67,23 @@ public class SearchPanelStatusList extends SearchPanelResults {
 				sz_statustext = LBASEND.LBASTATUSTEXT(obj.get_sendingstatus());
 			else
 				sz_statustext = TextFormat.get_statustext_from_code(obj.get_sendingstatus(), obj.get_altjmp());
-			Object sz_visible[] = { obj.get_project().get_projectname(), obj.get_deptid(), obj, obj.getChannel(), Integer.toString(obj.get_totitem()), obj.get_groupdesc(),
+			String sz_simulation = "Unknown";
+			switch(obj.get_simulation())
+			{
+			case 0:
+				sz_simulation = Localization.l("common_live");
+				break;
+			case 1:
+				sz_simulation = Localization.l("common_simulated");
+				break;
+			case 2:
+				sz_simulation = Localization.l("common_test");
+				break;
+			case 4:
+				sz_simulation = Localization.l("common_silent");
+				break;
+			}
+			Object sz_visible[] = { obj.get_project().get_projectname(), obj.get_deptid(), obj, obj.getChannel(), sz_simulation, Integer.toString(obj.get_totitem()), obj.get_groupdesc(),
 					TextFormat.format_date(obj.get_createdate()), TextFormat.format_time(obj.get_createtime(),4), 
 					obj.get_sendingname(), sz_statustext/*new Integer(obj.get_sendingstatus()).toString()*/ };
 			this.insert_row(sz_visible, -1);

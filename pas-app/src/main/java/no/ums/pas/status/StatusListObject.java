@@ -19,6 +19,7 @@ public class StatusListObject extends Object {
 	private int m_n_type;
 	private int m_n_deptpk;
 	private String m_sz_deptid;
+	private int m_n_simulation;
 	
 	public Project get_project() { return m_project; }
 	public int get_refno() { return m_n_refno; }
@@ -34,6 +35,7 @@ public class StatusListObject extends Object {
 	public int get_deptpk() { return m_n_deptpk; }
 	public String get_deptid() { return m_sz_deptid; }
 	public String toString() { return new Integer(get_refno()).toString(); }
+	public int get_simulation() { return m_n_simulation; }
 	public String getChannel()
 	{
 		if(get_type()==1) {
@@ -54,7 +56,7 @@ public class StatusListObject extends Object {
 	
 	public StatusListObject(int n_refno, int n_sendingtype, int n_totitem, int  n_altjmp, int n_createdate, int n_createtime, 
 			 String sz_sendingname, int n_sendingstatus, int n_group, int n_type, int n_deptpk, String sz_deptid, String sz_projectpk,
-			 String sz_projectname, String sz_createtimestamp, String sz_updatetimestamp)
+			 String sz_projectname, String sz_createtimestamp, String sz_updatetimestamp, int simulation)
 	{
 		m_n_refno	= n_refno;
 		m_n_sendingtype	= n_sendingtype;
@@ -68,6 +70,7 @@ public class StatusListObject extends Object {
 		m_n_type	= n_type;
 		m_n_deptpk	= n_deptpk;
 		m_sz_deptid	= sz_deptid;
+		m_n_simulation = simulation;
 		get_project().set_projectpk(sz_projectpk);
 		get_project().set_projectname(sz_projectname);
 		get_project().set_createtimestamp(sz_createtimestamp);
@@ -80,7 +83,7 @@ public class StatusListObject extends Object {
 				new Integer(sz_values[3]).intValue(), new Integer(sz_values[4]).intValue(), new Integer(sz_values[5]).intValue(),
 				sz_values[6], new Integer(sz_values[7]).intValue(), new Integer(sz_values[8]).intValue(), 
 				new Integer(sz_values[9]).intValue(), new Integer(sz_values[10]).intValue(), sz_values[11], sz_values[12],
-				sz_values[13], sz_values[14], sz_values[15]);
+				sz_values[13], sz_values[14], sz_values[15], Integer.valueOf(sz_values[16]));
 		/*m_n_refno	= new Integer(sz_values[0]).intValue();
 		m_n_sendingtype	= new Integer(sz_values[1]).intValue();
 		m_n_totitem	= new Integer(sz_values[2]).intValue();
