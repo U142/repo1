@@ -508,7 +508,6 @@ public class Settings extends JDialog {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						btnMapWmsOpenActionPerformed(e);
-						btnMapWmsOpenActionPerformed(e);
 					}
 				});
 
@@ -901,12 +900,12 @@ public class Settings extends JDialog {
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
 									.addGroup(panel2Layout.createSequentialGroup()
-										.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+										.addGroup(panel2Layout.createParallelGroup()
 											.addGroup(panel2Layout.createSequentialGroup()
 												.addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 												.addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-											.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+											.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
 										.addGap(18, 18, 18)
 										.addGroup(panel2Layout.createParallelGroup()
 											.addGroup(panel2Layout.createSequentialGroup()
@@ -944,12 +943,13 @@ public class Settings extends JDialog {
 										.addComponent(toggleCompanyMobile, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
 										.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-									.addComponent(lblPrivateAdrTypes, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-									.addComponent(lblLbaText, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-									.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+									.addComponent(lblLbaText, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblPrivateAdrTypes, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE))
 								.addContainerGap())
 					);
+					panel2Layout.linkSize(SwingConstants.VERTICAL, new Component[] {lblCompanyAdrtypes, lblLbaText, lblPrivateAdrTypes});
 				}
 
 				GroupLayout pnlDiverseLayout = new GroupLayout(pnlDiverse);
@@ -972,8 +972,8 @@ public class Settings extends JDialog {
 							.addGap(18, 18, 18)
 							.addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
-							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(73, Short.MAX_VALUE))
+							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(41, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);

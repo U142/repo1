@@ -18,6 +18,10 @@ public class ShowSettingsDlg {
 		JFrame frm = new JFrame();
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Settings s = new Settings(frm);
+		UserInfo ui = new UserInfo();
+		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2);
+		ui.set_current_department(new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null));
+		Variables.setUserInfo(ui);
 		no.ums.pas.core.logon.Settings settings = new no.ums.pas.core.logon.Settings();
 		MailAccount mail = new MailAccount();
 		Variables.setSettings(settings);
