@@ -39,7 +39,7 @@ public class Settings extends JDialog {
 	 * @author Modda
 	 * Interface for communicating with SettingsCtrl
 	 */
-	public interface SettingsUpdate
+	public interface ISettingsUpdate
 	{
 		public void onOpenWmsSite(final WmsLayerTree tree, final String wmsUrl, final String wmsUser, final String wmsPassword, final JComboBox imageformats);
 		public void onWmsLayerSelect(final WmsLayerTree tree, final TreeSelectionEvent e);
@@ -51,11 +51,17 @@ public class Settings extends JDialog {
 	}
 
 	final SendOptionToolbar sot = new SendOptionToolbar(null, null, 0);
+	ISettingsUpdate callback;
 	
-	public Settings(Frame owner, SettingsUpdate callback) {
+	public Settings(Frame owner, ISettingsUpdate callback) {
 		super(owner);
 		this.callback = callback;
 		initComponents();
+
+	}
+	
+	protected void initValues()
+	{
 		comboLbaUpdate.addItem(new Integer(10));
 		comboLbaUpdate.addItem(new Integer(20));
 		comboLbaUpdate.addItem(new Integer(30));
@@ -94,7 +100,7 @@ public class Settings extends JDialog {
 			toggleBlocklist.doClick();
 		}
 	}
-	SettingsUpdate callback;
+	
 	
 	protected void updateAutoChannelButtons(int adrtypes)
 	{

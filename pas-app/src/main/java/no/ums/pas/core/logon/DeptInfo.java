@@ -95,7 +95,7 @@ public class DeptInfo extends Object {
 		m_l_pas = l_pas;
 		m_l_langpk = l_langpk;
 		System.out.println("Department=" + m_sz_deptid);
-		m_restriction_shapestructs = ConvertUShapes_to_ShapeStructs(restriction_shapes.getUShape());
+		m_restriction_shapestructs = (restriction_shapes!=null ? ConvertUShapes_to_ShapeStructs(restriction_shapes.getUShape()) : null);
 	}
 	
 	protected List<ShapeStruct> ConvertUShapes_to_ShapeStructs(List<UShape> s)

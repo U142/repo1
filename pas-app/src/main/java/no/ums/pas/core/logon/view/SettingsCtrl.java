@@ -23,12 +23,12 @@ import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
 import no.ums.pas.core.logon.WmsLayer;
 import no.ums.pas.core.logon.WmsLayerTree;
-import no.ums.pas.core.logon.view.Settings.SettingsUpdate;
+import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.MapLoader;
 
-public class SettingsCtrl implements SettingsUpdate {
+public class SettingsCtrl implements ISettingsUpdate {
     private static final Log log = UmsLog.getLogger(SettingsCtrl.class);
     
     private final Settings dlg;
@@ -38,6 +38,7 @@ public class SettingsCtrl implements SettingsUpdate {
     	dlg = new Settings(null, this);
     	dlg.setIconImage(ImageFetcher.getImage("pas_appicon_16.png"));
     	initializeGui(settings, mailaccount);
+    	dlg.initValues();
     	dlg.setLocationRelativeTo(parent);
     	dlg.setModal(modal);
     	dlg.setVisible(true);

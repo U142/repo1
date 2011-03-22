@@ -4,8 +4,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.event.TreeSelectionEvent;
 
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.view.Settings;
-import no.ums.pas.core.logon.view.Settings.SettingsUpdate;
+import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
 import no.ums.pas.core.logon.view.SettingsModel;
 
 import org.junit.Test;
@@ -16,7 +17,11 @@ public class TestSettingsDlg {
 	{
 		JFrame frm = new JFrame();
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		new Settings(frm, new SettingsUpdate() {
+		UserInfo ui = new UserInfo();
+		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2);
+		ui.set_current_department(new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null));
+		Variables.setUserInfo(ui);
+		new Settings(frm, new ISettingsUpdate() {
 			
 			@Override
 			public void onMoveLayerUp(WmsLayerTree tree) {
