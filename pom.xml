@@ -166,6 +166,7 @@
                                     <!--<xjcarg value="-XhashCode"/>-->
                                     <!--<xjcarg value="-XtoString"/>-->
                                 </wsimport>
+<!--
                                 <wsimport wsdl="${wsdl.base}/ParmService.asmx?WSDL"
                                           binding="${project.basedir}/src/jaxws/bindings.xml"
                                           sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
@@ -175,6 +176,7 @@
                                     <xjcarg value="-XtoString"/>
                                     <xjcarg value="-Xfluent-api"/>
                                 </wsimport>
+-->
                             </target>
                         </configuration>
                         <goals>
