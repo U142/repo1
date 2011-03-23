@@ -2084,6 +2084,61 @@ namespace com.ums.UmsParm
             }
         }
 
+        /**
+         * delete from MDVSENDINGINFO to make sending disappear from status views
+         * 
+         */
+        public UDELETESTATUSRESPONSE DeleteStatus(ref ULOGONINFO l, ref UDELETESTATUSREQUEST r)
+        {
+            if (r.l_refno > 0)
+            {
+                if (canUserDeleteStatus(ref l, r.l_refno))
+                {
+                    try
+                    {
+                        String sql = String.Format("DELETE FROM MDVSENDINGINFO WHERE l_refno={0}", r.l_refno);
+                        //ExecNonQuery(sql);
+                        return UDELETESTATUSRESPONSE.OK;
+                    }
+                    catch (Exception e)
+                    {
+                        return UDELETESTATUSRESPONSE.ERROR;
+                    }
+                }
+                else
+                {
+                    return UDELETESTATUSRESPONSE.FAILED_USER_RESTRICTED;
+                }
+            }
+            return UDELETESTATUSRESPONSE.ERROR;
+        }
+
+
+        /**
+         * Check if user is member of the owner-department of the sending, 
+         * and if the user is having a role that allows him to delete status
+         */
+        protected Boolean canUserDeleteStatus(ref ULOGONINFO l, long refno)
+        {
+            String sql = String.Format(
+                "select BUP.l_status FROM BBUSER BU, BBUSERPROFILE BUP, BBUSERPROFILE_X_DEPT BUXD, MDVSENDINGINFO MDV WHERE "+
+                "BU.sz_hash_paspwd='{0}' AND "+
+                "BU.l_userpk={1} AND "+
+                "BU.l_userpk=BUXD.l_userpk AND "+
+                "BUXD.l_deptpk=MDV.l_deptpk AND "+
+                "MDV.l_refno={2} AND "+
+                "BUXD.l_profilepk=BUP.l_profilepk",
+                l.sz_password, l.l_userpk, refno);
+            int status = 0;
+            OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+            if (rs.Read())
+            {
+                status = rs.GetInt32(0);
+            }
+            rs.Close();
+            return status>=2;
+        }
+
         public Boolean updateStatusForOperator(long l_refno, int l_status, int l_operator)
         {
             String szSQL = "";

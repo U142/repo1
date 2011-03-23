@@ -789,11 +789,6 @@ namespace com.ums.ws.pas
         [WebMethod]
         public PASVERSION getVersionNumber()
         {
-            /*Type type = Type.GetType("pasws");
-            Assembly assembly = Assembly.GetAssembly(type);
-            AssemblyName assemblyName = assembly.GetName();
-            Version version = assemblyName.Version;
-            return version.ToString();*/
             PASVERSION v = new PASVERSION();
             Version n = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             v.build = n.Build;
@@ -802,19 +797,9 @@ namespace com.ums.ws.pas
             v.minor = n.Minor;
             v.revision = n.MinorRevision;
             return v;
-            /*string s = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.;
-            object[] attrs = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(true); //System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(true);
-            String programName = "Unknown";
-            String version = "Unknown";
-            foreach (object o in attrs)
-            {
-                if (o.GetType() == typeof(System.Reflection.AssemblyFileVersionAttribute))
-                    version = ((System.Reflection.AssemblyFileVersionAttribute)o).Version;
-                //if (o.GetType() == typeof(System.Reflection.AssemblyTitleAttribute))
-                    //programName = ((System.Reflection.AssemblyTitleAttribute)o).;
-            }
-            return s;*/
         }
+
+
         /*[WebMethod]
         public UWeatherReportResults GetWeatherTest()
         {

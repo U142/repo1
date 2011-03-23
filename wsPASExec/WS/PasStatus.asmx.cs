@@ -131,6 +131,17 @@ namespace com.ums.ws.pas.status
         }
 
         [WebMethod]
+        public UDELETESTATUSRESPONSE DeleteStatus(ULOGONINFO l, UDELETESTATUSREQUEST r)
+        {
+            //check if user may delete
+            PASUmsDb db = new PASUmsDb();
+            db.CheckLogon(ref l, true);
+            
+            return db.DeleteStatus(ref l, ref r);
+        }
+
+
+        [WebMethod]
         public byte[] GetStatusItemsTest()
         {
             /*ULOGONINFO logoninfo = new ULOGONINFO();

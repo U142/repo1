@@ -1596,4 +1596,19 @@ namespace com.ums.UmsCommon
         public String newPassword;
     }
 
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public class UDELETESTATUSREQUEST
+    {
+        public long l_refno;
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public enum UDELETESTATUSRESPONSE
+    {
+        OK = 0,
+        ERROR = 1,
+        FAILED_USER_RESTRICTED,
+        FAILED_SENDING_STILL_ACTIVE,
+    }
+
 }
