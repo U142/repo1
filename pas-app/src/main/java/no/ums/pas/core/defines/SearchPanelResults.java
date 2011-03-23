@@ -30,6 +30,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -40,6 +42,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.SystemColor;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -54,7 +57,7 @@ import java.util.ArrayList;
 
 
 
-public abstract class SearchPanelResults extends JPanel implements ComponentListener//JPanel 
+public abstract class SearchPanelResults extends JPanel implements ComponentListener, TableModelListener //JPanel 
 {
 	/*@Override
 	public void actionPerformed(ActionEvent e) {
@@ -128,6 +131,41 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	{
 		this(sz_columns, n_width, b_editable, panelDimension, model, true);
 	}
+	
+	public final Color DEFAULT_SELECTION_COLOR = new JTable().getSelectionBackground();
+	public final Color ALTERNATING_BG_COLOR_1 = new JTable().getBackground();
+	public final Color ALTERNATING_BG_COLOR_2 = SystemColor.control;
+	public final Color FOREGROUND_SELECTION_COLOR = new JTable().getSelectionForeground();
+	public final Color FOREGROUND_COLOR = new JTable().getForeground();
+	
+	public Color getBgColorForRow(int row)
+	{
+		boolean bSelected = get_table().isRowSelected(row);
+		if (row % 2 == 0 && !bSelected) {
+			return ALTERNATING_BG_COLOR_1;
+		}
+		else if(bSelected)
+		{
+			return DEFAULT_SELECTION_COLOR;
+		}
+		else
+		{
+			return ALTERNATING_BG_COLOR_2;
+		}
+	}
+	
+	public Color getFgColorForRow(int row)
+	{
+		return (get_table().isRowSelected(row) ? FOREGROUND_SELECTION_COLOR : FOREGROUND_COLOR);
+	}
+	
+
+	
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		
+	}
+
 	public SearchPanelResults(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension panelDimension, int model, boolean b_enable_sort)
 	{
 	        //super(new GridLayout(1,0));
@@ -138,7 +176,17 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	        m_tbl_list = new TableList(sz_columns, n_width);
 			sorter = new TableSorter(m_tbl_list);	        		
 	        
-	        m_tbl = new JTable(sorter);
+	        m_tbl = new JTable(sorter) {
+				@Override
+				public Component prepareRenderer(TableCellRenderer renderer,
+						int row, int column) {
+					Component comp = super.prepareRenderer(renderer, row, column);
+					comp.setBackground(SearchPanelResults.this.getBgColorForRow(row));
+					comp.setForeground(SearchPanelResults.this.getFgColorForRow(row));
+					return super.prepareRenderer(renderer, row, column);
+				}
+	        	
+	        };
 	        if(b_enable_sort)
 	        {
 		        m_tbl.getTableHeader().setDefaultRenderer(m_tbl.getTableHeader().getDefaultRenderer());
@@ -150,9 +198,10 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		        });
 	        }
 
+	        
 			m_b_editable = b_editable;
         	m_tbl.setSelectionMode(model);
-        	m_tbl.setCellSelectionEnabled(true);
+        	m_tbl.setCellSelectionEnabled(false);
         	m_tbl.setRowSelectionAllowed(true);
         	m_tbl.setColumnSelectionAllowed(true);
         	
@@ -197,6 +246,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		        colSM.setColumnSelectionAllowed(true);
 		        m_tbl.addMouseListener(m_listener);
 				m_tbl.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				m_tbl_list.addTableModelListener(this);
 	        }
 	        catch(Exception e)
 	        {

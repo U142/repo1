@@ -16,7 +16,7 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeptArray extends ArrayList<Object> {
+public class DeptArray extends ArrayList<DeptInfo> {
 	public static final long serialVersionUID = 1;
 	public DeptInfo add(int n_deptpk, String sz_deptid, String sz_stdcc, NavStruct nav_init, boolean b_default_dept, 
 						int n_deptpri, int n_maxalloc, String sz_defaultnumber, UserProfile m_userprofile,

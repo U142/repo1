@@ -218,14 +218,19 @@ public class LBASEND
 		return (n_status==LBASTATUS_PREPARED_CELLVISION || n_status==LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE);
 	}
 	
+	public static boolean HasFinalStatus(int status)
+	{
+		if(status==LBASTATUS_FINISHED)
+			return true;
+		else if(status==LBASTATUS_CANCELLED)
+			return true;
+		else if(status>=42000)
+			return true;
+		return false;		
+	}
+	
 	public boolean HasFinalStatus(){
-		if(n_status==LBASTATUS_FINISHED)
-			return true;
-		else if(n_status==LBASTATUS_CANCELLED)
-			return true;
-		else if(n_status>=42000)
-			return true;
-		return false;
+		return HasFinalStatus(n_status);
 	}
 	public boolean HasFailedStatus()
 	{
