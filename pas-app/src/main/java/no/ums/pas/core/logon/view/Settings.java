@@ -87,10 +87,10 @@ public class Settings extends JDialog {
 				}
 			}
 		});
-		sot.add_adrtypemenus(togglePrivateFixed, sot.menu_fixedpriv, sot.group_fixedprivbtn, "");
-		sot.add_adrtypemenus(togglePrivateMobile, sot.menu_smspriv, sot.group_smsprivbtn, "");
-		sot.add_adrtypemenus(toggleCompanyFixed, sot.menu_fixedcomp, sot.group_fixedcompbtn, "");
-		sot.add_adrtypemenus(toggleCompanyMobile, sot.menu_smscomp, sot.group_smscompbtn, "");
+		sot.add_adrtypemenus(togglePrivateFixed, new JPopupMenu(), sot.group_fixedprivbtn, Localization.l("main_sending_adr_sel_heading_private_fixed"));
+		sot.add_adrtypemenus(togglePrivateMobile, new JPopupMenu(), sot.group_smsprivbtn, Localization.l("main_sending_adr_sel_heading_private_mobile"));
+		sot.add_adrtypemenus(toggleCompanyFixed, new JPopupMenu(), sot.group_fixedcompbtn, Localization.l("main_sending_adr_sel_heading_company_fixed"));
+		sot.add_adrtypemenus(toggleCompanyMobile, new JPopupMenu(), sot.group_smscompbtn, Localization.l("main_sending_adr_sel_heading_company_mobile"));
 		sot.set_addresstypes((int)settingsModel1.getNewSendingAutoChannel());
 		sot.initSelections();
 		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_init_addresstypes"));

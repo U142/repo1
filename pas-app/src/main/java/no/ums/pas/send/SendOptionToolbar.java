@@ -22,20 +22,24 @@ import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 import no.ums.ws.common.UMunicipalDef;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import java.awt.Component;
@@ -43,6 +47,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -1008,7 +1013,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		add_controls();
 		
 		//Substance 3.3
-		Color c = SubstanceLookAndFeel.getActiveColorScheme().getMidColor();
+		//Color c = SubstanceLookAndFeel.getActiveColorScheme().getMidColor();
+		Color c = SystemColor.window;
 		
 		//Substance 5.2
 		//Color c = SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getMidColor();
@@ -1055,10 +1061,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		}
 	
-		add_adrtypemenus(m_btn_adrtypes_private_mobile, menu_smspriv, group_smsprivbtn, "      Private Mobile Phones");
-		add_adrtypemenus(m_btn_adrtypes_private_fixed, menu_fixedpriv, group_fixedprivbtn, "      Private Fixed Phones");
-		add_adrtypemenus(m_btn_adrtypes_company_mobile, menu_smscomp, group_smscompbtn, "      Company Mobile Phones");
-		add_adrtypemenus(m_btn_adrtypes_company_fixed, menu_fixedcomp, group_fixedcompbtn, "      Company Fixed Phones");
+		add_adrtypemenus(m_btn_adrtypes_private_mobile, menu_smspriv, group_smsprivbtn, Localization.l("main_sending_adr_sel_heading_private_mobile"));
+		add_adrtypemenus(m_btn_adrtypes_private_fixed, menu_fixedpriv, group_fixedprivbtn, Localization.l("main_sending_adr_sel_heading_private_fixed"));
+		add_adrtypemenus(m_btn_adrtypes_company_mobile, menu_smscomp, group_smscompbtn, Localization.l("main_sending_adr_sel_heading_company_mobile"));
+		add_adrtypemenus(m_btn_adrtypes_company_fixed, menu_fixedcomp, group_fixedcompbtn, Localization.l("main_sending_adr_sel_heading_company_fixed"));
 		//_SelectAddressSelection(m_n_addresstypes);
 		
 		if(PAS.get_pas() != null)
@@ -1088,15 +1094,12 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	
 	protected void add_municipals(final AbstractButton btn, final JPopupMenu pop, String sz_label)
 	{
-		StdTextLabel lbl = new StdTextLabel(sz_label, 14, true);
-		//lbl.setIcon(UMS.Tools.ImageLoader.load_icon("no.gif"));
-
-		//Substance 3.3
-		lbl.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor());
-		
-		//Substance 5.2
-		//lbl.setBackground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getUltraDarkColor());
-
+		//StdTextLabel lbl = new StdTextLabel(sz_label, 14, true);
+		JLabel lbl = new JLabel("<html><b>"+sz_label+"</b></html>");
+		lbl.setOpaque(true);
+		lbl.setBackground(SystemColor.controlDkShadow);
+		lbl.setForeground(SystemColor.controlHighlight);
+		lbl.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		
 		pop.add(lbl);
 		SendPropertiesMunicipal mun;
@@ -1155,16 +1158,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	}
 	public void add_adrtypemenus(final AbstractButton btn, final JPopupMenu pop, ButtonGroup group, String sz_label)
 	{
-		StdTextLabel lbl = new StdTextLabel(sz_label, 14, true);
-		//Substance 3.3
-		lbl.setBackground(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor());
-		
-		//Substance 5.2
-		//lbl.setBackground(SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getUltraDarkColor());
-		
-		
-		//lbl.setBorder(UMS.Tools.TextFormat.CreateStdBorder(""));
+		JLabel lbl = new JLabel(sz_label);
+		lbl.setOpaque(true);
+		lbl.setBackground(SystemColor.controlDkShadow);
+		lbl.setForeground(SystemColor.controlHighlight);
+		lbl.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));//(SystemColor.controlDkShadow, 3));
 		pop.add(lbl);
+		
 		java.util.Enumeration<AbstractButton> e = group.getElements();
 		while(e.hasMoreElements())
 		{
