@@ -71,7 +71,7 @@ public class SoundPlayer {
 		}
 	}
 	void set_timer(String sz_time) {
-        m_txt_seconds.setText(sz_time + Localization.l("common_seconds_maybe"));
+        m_txt_seconds.setText(sz_time + Localization.l("common_seconds_short"));
 	}
 	
     public SoundPlayer(File f, InputStream is, JSlider slider, SoundRecorderPanel rec_panel, StdTextLabel txt_seconds)
@@ -116,23 +116,35 @@ public class SoundPlayer {
 		    progress.setMaximum(audioLength);
 		    // Whenever the slider value changes, first update the time label.
 		    // Next, if we're not already at the new position, skip to it.
-		    progress.addChangeListener(new ChangeListener( ) {
+		    if(changelistener!=null)
+		    	progress.removeChangeListener(changelistener);
+		    progress.addChangeListener(changelistener = new ChangeListener( ) {
 		            public void stateChanged(ChangeEvent e) {
 		                int value = progress.getValue( );
 		                // Update the time label
-		                set_timer(value/1000 + "." + (value%1000)/100);
+		                
+		                //set_timer(value/1000 + "." + (value%1000)/100);
+		                //set_timer(String.format("%s / %s", value/1000 + "." + (value%1000)/100, audioLength/1000 + "." + (audioLength%1000)/100));
+		                updateTimer(value, audioLength);
 		                // If we're not already there, skip there.
 		                if (value != audioPosition) skip(value);
 		            }
 		    		});
 	    }
-	    
+        updateTimer(0, audioLength);
 	    // This timer calls the tick( ) method 10 times a second to keep 
 	    // our slider in sync with the music.
-	    timer = new javax.swing.Timer(100, new ActionListener( ) {
+	    timer = new javax.swing.Timer(50, new ActionListener( ) {
 	            public void actionPerformed(ActionEvent e) { tick( ); }
 	        });
+	    reset();
 	}	
+    protected void updateTimer(int msWhere, int msLength)
+    {
+        set_timer(String.format("%s / %s", msWhere/1000 + "." + (msWhere%1000)/100, msLength/1000 + "." + (msLength%1000)/100));    	
+    }
+    protected static ChangeListener changelistener = null;
+    
     /** Start playing the sound at the current position */
     public void play( ) {
         clip.start( );

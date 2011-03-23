@@ -19,6 +19,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.nio.ByteBuffer;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.Timer;
 
 
 
@@ -40,12 +43,18 @@ public class SoundRecorderPanel extends DefaultPanel  {
 	}
 	public static boolean b_line_ok = false;
 	
+	private Date date_start;
+	private Date date_stop;
 	private Record m_rec = null;
 	public Record get_recorder() { return m_rec; }
 	public SoundPlayer get_player() { return m_player; }
 	JButton m_btn_record;
 	JButton m_btn_play;
 	StdTextLabel m_txt_seconds = new StdTextLabel("");
+	public void setSeconds(double n)
+	{
+		m_txt_seconds.setText(String.format("%.1f " + Localization.l("common_seconds_short"), n));
+	}
 	JSlider m_slider;
 	public JSlider get_slider() { return m_slider; }
 	StdTextLabel m_txt_sampleinfo = new StdTextLabel("", 320, 9, false);
@@ -153,16 +162,30 @@ public class SoundRecorderPanel extends DefaultPanel  {
     	}
     }
 	
+    protected final Timer timer_seconds = new Timer(100, this);
 	
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() instanceof Timer)
+		{
+			date_stop = Calendar.getInstance().getTime();
+			double diff = (date_stop.getTime() - date_start.getTime()) / 1000.0;
+			setSeconds(diff);
+			
+		}
 		if("act_record".equals(e.getActionCommand())) {
 			if(get_recorder().toggle_recording(this)) {
+				//start timer
+				date_start = Calendar.getInstance().getTime();
+				timer_seconds.start();
 				set_mode(MODE_RECORD_);
 				m_btn_play.setEnabled(false);
 				if(m_callback!=null)
 					m_callback.actionPerformed(e);
 			}
 			else {
+				//stop timer
+				timer_seconds.stop();
+
 				set_mode(MODE_RECSTOP_);
 				if(get_recorder().get_recorder().RECTYPE==SoundRecorder.RECTYPE_FILE) {
 					m_player = new SoundPlayer(get_recorder().get_recorder().get_filename(), 
@@ -173,6 +196,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 				}
 				m_btn_play.setEnabled(true);
 				//get_recorder().get_recorder().get_filename()
+
 				
 				if(m_callback!=null) {
 					if(get_recorder().get_recorder().RECTYPE==SoundRecorder.RECTYPE_FILE)
