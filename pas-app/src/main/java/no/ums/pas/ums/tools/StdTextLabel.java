@@ -9,6 +9,12 @@ public class StdTextLabel extends JLabel
 {
 	public static final long serialVersionUID = 1;
 	
+	public enum SIZING
+	{
+		FIXED,
+		DYNAMIC,
+	}
+	
 	int m_n_items = 0;
 	int m_n_itemsize = 17;
 	int m_n_height = 15;
@@ -31,6 +37,12 @@ public class StdTextLabel extends JLabel
 		super(sz_text);
 		init(true);
 	}
+	public StdTextLabel(String sz_text, SIZING sizing)
+	{
+		super(sz_text);
+		init(true, sizing);
+	}
+	
 	public StdTextLabel(String sz_text, boolean bIsHeading)
 	{
 		super(sz_text);
@@ -62,7 +74,7 @@ public class StdTextLabel extends JLabel
 	public StdTextLabel(String sz_text, int n_width, int n_fontsize, boolean b_bold) {
 		super(sz_text);
 		m_dim = new Dimension(n_width, n_fontsize + 4);
-		init(true, n_fontsize, b_bold);
+		init(true, n_fontsize, b_bold, SIZING.FIXED);
 	}
 	public StdTextLabel(String sz_text, boolean bIsHeading, int n_width) {
 		super(sz_text);
@@ -75,17 +87,21 @@ public class StdTextLabel extends JLabel
 		init(bIsHeading);
 	}
 	public void init(boolean bIsHeading) {
-		init(bIsHeading, 12, false);
+		init(bIsHeading, 12, false, SIZING.FIXED);
 	}
-	public void init(boolean bIsHeading, int n_fontsize, boolean b_bold)
+	public void init(boolean bIsHeading, SIZING sizing)
 	{
-		//FontSet this.setFont(new Font("Arial", (!b_bold ? Font.PLAIN : Font.BOLD), n_fontsize));
-		//this.setFont(PAS.f().getTitleFont());
+		init(bIsHeading, 12, false, sizing);
+	}
+	public void init(boolean bIsHeading, int n_fontsize, boolean b_bold, SIZING sizing)
+	{
 		if(m_dim==null)
 			m_dim = new Dimension(100, m_n_height);
-		this.setPreferredSize(m_dim);
-		this.setSize(m_dim);
-		//this.setMinimumSize(m_dim);
+		if(sizing==SIZING.FIXED)
+		{
+			this.setPreferredSize(m_dim);
+			this.setSize(m_dim);
+		}
 		m_n_items++;
 		if(bIsHeading)
 		{

@@ -9,6 +9,7 @@ import no.ums.pas.send.AddressCount;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.tools.StdTextLabel;
+import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -34,17 +35,17 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
     private StdTextLabel m_lbl_adrcount_total   = new StdTextLabel(Localization.l("main_sending_adr_total_voice"), new Dimension(250,16));
     private StdTextLabel m_lbl_adrcount_total_sms = new StdTextLabel(Localization.l("main_sending_adr_total_sms"), new Dimension(250,16));
 
-    private StdTextLabel m_txt_adrcount_private = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_company = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_privatemobile  = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_companymobile  = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_private_sms = new StdTextLabel("", new Dimension(50,16));
-	private StdTextLabel m_txt_adrcount_company_sms = new StdTextLabel("", new Dimension(50,16));
-	private StdTextLabel m_txt_adrcount_lba_sms = new StdTextLabel("N/A", new Dimension(50,16));
-	private StdTextLabel m_txt_adrcount_privatenonumber  = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_companynonumber  = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_total   = new StdTextLabel("", new Dimension(50, 16));
-	private StdTextLabel m_txt_adrcount_total_sms = new StdTextLabel("", new Dimension(50, 16));
+    private StdTextLabel m_txt_adrcount_private = new StdTextLabel("", SIZING.DYNAMIC); //new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_company = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_privatemobile  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_companymobile  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_private_sms = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250,16));
+	private StdTextLabel m_txt_adrcount_company_sms = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250,16));
+	private StdTextLabel m_txt_adrcount_lba_sms = new StdTextLabel("N/A", SIZING.DYNAMIC); //, new Dimension(250,16));
+	private StdTextLabel m_txt_adrcount_privatenonumber  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_companynonumber  = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_total   = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
+	private StdTextLabel m_txt_adrcount_total_sms = new StdTextLabel("", SIZING.DYNAMIC); //, new Dimension(250, 16));
 	
 	protected SendWindow parent = null;
 	//private String m_sz_url = PAS.get_pas().get_sitename() + "PAS_getadrcount.asp";
@@ -258,6 +259,9 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 		if((n_addrtypes & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) {
 			m_lbl_adrcount_lba_sms.setVisible(true);
 			m_txt_adrcount_lba_sms.setVisible(true);
+			m_txt_adrcount_lba_sms.setText(Localization.l("main_sending_adr_type_lba_sms_explanation"));
+			m_txt_adrcount_lba_sms.setToolTipText(Localization.l("main_sending_adr_type_lba_sms_explanation_tooltip"));
+			m_lbl_adrcount_lba_sms.setToolTipText(Localization.l("main_sending_adr_type_lba_sms_explanation_tooltip"));
 		} else {
 			m_lbl_adrcount_lba_sms.setVisible(false);
 			m_txt_adrcount_lba_sms.setVisible(false);
