@@ -474,4 +474,5 @@ public interface PasScriptingInterface {
      */
     float getMapZoomSpeed();
     
+    boolean onDownloadDocumentation(UserInfo userinfo);
 }

@@ -151,6 +151,14 @@ public interface OtherActions {
         }
     };
     
+    Action DOWNLOAD_DOCUMENTATION = new UmsAction("mainmenu_help_documentation") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			PAS.pasplugin.onDownloadDocumentation(Variables.getUserInfo());
+		}
+    	
+    };
     
     Action SET_DEPARTMENT_MAPBOUNDS = new UmsAction("mainmenu_settings_set_mapbounds") {
 		@Override

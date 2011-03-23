@@ -3,6 +3,7 @@ package no.ums.pas.pluginbase;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.Installer;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
@@ -30,6 +31,7 @@ import no.ums.pas.core.menus.StatusActions;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
@@ -64,6 +66,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -72,9 +75,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -234,6 +240,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         final JMenu help = menu.add(new JMenu(Localization.l("mainmenu_help")));
         help.add(OtherActions.HELP_ABOUT);
         help.add(OtherActions.SHOW_CONTACT_INFO);
+        help.add(OtherActions.DOWNLOAD_DOCUMENTATION);
 		return true;
 	}
 	
@@ -1226,6 +1233,22 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public float getMapZoomSpeed() {
 		return 0.25f;
+	}
+
+	@Override
+	public boolean onDownloadDocumentation(UserInfo userinfo) {
+		try
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append(PAS.get_pas().getVB4Url());
+			sb.append("/uploadedfiles/");
+			sb.append("0_NO-UMS-PAS.pdf");
+			Desktop.getDesktop().browse(URI.create(sb.toString()));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 	
