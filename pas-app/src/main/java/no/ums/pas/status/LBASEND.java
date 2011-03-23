@@ -221,7 +221,7 @@ public class LBASEND
 	public static boolean HasFinalStatus(int status)
 	{
 		if(status==LBASTATUS_FINISHED)
-			return true;
+			return true; 
 		else if(status==LBASTATUS_CANCELLED)
 			return true;
 		else if(status>=42000)
