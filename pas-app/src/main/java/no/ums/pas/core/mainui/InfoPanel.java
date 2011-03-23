@@ -945,11 +945,11 @@ public class InfoPanel extends GeneralPanel {
 
 			public CoorSearchLLDec(ActionListener a) {
 				super(a);
-				m_txt_lon_deg.setPreferredSize(new Dimension(65, 15));
-				m_txt_lat_deg.setPreferredSize(new Dimension(65, 15));
+				m_txt_lon_deg_dec.setPreferredSize(new Dimension(65, 15));
+				m_txt_lat_deg_dec.setPreferredSize(new Dimension(65, 15));
 				// m_btn_go_ll.setPreferredSize(new Dimension(75, 16));
-				m_txt_lon_deg.setType(StdIntegerArea.DOUBLE);
-				m_txt_lat_deg.setType(StdIntegerArea.DOUBLE);
+				m_txt_lon_deg_dec.setType(StdIntegerArea.DOUBLE);
+				m_txt_lat_deg_dec.setType(StdIntegerArea.DOUBLE);
 			}
 
 			public void add_controls() {
@@ -960,7 +960,7 @@ public class InfoPanel extends GeneralPanel {
 				super.add_spacing(DIR_HORIZONTAL, 5);
 
 				set_gridconst(inc_xpanels(), get_panel(), 1, 1);
-				add(m_txt_lon_deg, get_gridconst());
+				add(m_txt_lon_deg_dec, get_gridconst());
 				super.add_spacing(DIR_HORIZONTAL, 5);
 				set_gridconst(inc_xpanels(), get_panel(), 1, 1);
 				add(m_lbl_lon_deg, get_gridconst());
@@ -973,7 +973,7 @@ public class InfoPanel extends GeneralPanel {
 				super.add_spacing(DIR_HORIZONTAL, 5);
 
 				set_gridconst(inc_xpanels(), get_panel(), 1, 1);
-				add(m_txt_lat_deg, get_gridconst());
+				add(m_txt_lat_deg_dec, get_gridconst());
 				super.add_spacing(DIR_HORIZONTAL, 5);
 				set_gridconst(inc_xpanels(), get_panel(), 1, 1);
 				add(m_lbl_lat_deg, get_gridconst());
@@ -994,8 +994,8 @@ public class InfoPanel extends GeneralPanel {
 				double lon;
 				double lat;
 				try {
-					lon = Double.parseDouble(m_txt_lon_deg.getText());
-					lat = Double.parseDouble(m_txt_lat_deg.getText());
+					lon = Double.valueOf(m_txt_lon_deg_dec.getText().replace(",", "."));//Double.parseDouble(m_txt_lon_deg.getText());
+					lat = Double.valueOf(m_txt_lat_deg_dec.getText().replace(",", "."));
 				} catch (Exception err) {
 					return;
 				}
@@ -1018,18 +1018,30 @@ public class InfoPanel extends GeneralPanel {
             private JLabel m_lbl_lat_min = new JLabel(Localization.l("common_minute_sign"));
             private JLabel m_lbl_lon_sec = new JLabel(Localization.l("common_second_sign"));
             private JLabel m_lbl_lat_sec = new JLabel(Localization.l("common_second_sign"));
+
+            protected StdIntegerArea m_txt_lon_deg_dec = new StdIntegerArea("",
+					false, 35, StdIntegerArea.INTEGER, -180.0, 180.0);
+
+			protected StdIntegerArea m_txt_lat_deg_dec = new StdIntegerArea("",
+					false, 35, StdIntegerArea.INTEGER, -90.0, 90.0);
+            
+            
             protected StdIntegerArea m_txt_lon_deg = new StdIntegerArea("",
-					false, 35, StdIntegerArea.INTEGER);
+					false, 35, StdIntegerArea.INTEGER, -179.0, 179.0);
+            
 			protected StdIntegerArea m_txt_lat_deg = new StdIntegerArea("",
-					false, 35, StdIntegerArea.INTEGER);
+					false, 35, StdIntegerArea.INTEGER, -89.0, 89.0);
+			
 			private StdIntegerArea m_txt_lon_min = new StdIntegerArea("",
-					false, 35, StdIntegerArea.INTEGER);
+					false, 35, StdIntegerArea.INTEGER, 0, 59, true);
+			
 			private StdIntegerArea m_txt_lat_min = new StdIntegerArea("",
-					false, 35, StdIntegerArea.INTEGER);
+					false, 35, StdIntegerArea.INTEGER, 0, 59, true);
 			private StdIntegerArea m_txt_lon_sec = new StdIntegerArea("",
-					false, 35, StdIntegerArea.DOUBLE);
+					false, 35, StdIntegerArea.DOUBLE, 0, 59.9, true);
+			
 			private StdIntegerArea m_txt_lat_sec = new StdIntegerArea("",
-					false, 35, StdIntegerArea.DOUBLE);
+					false, 35, StdIntegerArea.DOUBLE, 0, 59.9, true);
 
 			protected JButton m_btn_go_ll = new JButton(Localization.l("main_infotab_goto_map"));
 
@@ -1125,14 +1137,14 @@ public class InfoPanel extends GeneralPanel {
 				double lon_sec, lat_sec;
 				double lon, lat;
 				try {
-					lon_deg = Integer.parseInt(m_txt_lon_deg.getText());
-					lon_min = Integer.parseInt(m_txt_lon_min.getText());
-					lon_sec = Double.parseDouble(m_txt_lon_sec.getText());
-					lat_deg = Integer.parseInt(m_txt_lat_deg.getText());
-					lat_min = Integer.parseInt(m_txt_lat_min.getText());
-					lat_sec = Double.parseDouble(m_txt_lat_sec.getText());
-					lon = lon_deg + (lon_min / 60.0) + (lon_sec / 3600.0);
-					lat = lat_deg + (lat_min / 60.0) + (lat_sec / 3600.0);
+					lon_deg = Integer.valueOf(m_txt_lon_deg.getText());
+					lon_min = (m_txt_lon_min.getText().length() > 0 ? Integer.valueOf(m_txt_lon_min.getText()) : 0);
+					lon_sec = (m_txt_lon_sec.getText().length() > 0 ? Double.valueOf(m_txt_lon_sec.getText().replace(",", ".")) : 0);
+					lat_deg = (m_txt_lat_deg.getText().length() > 0 ? Integer.valueOf(m_txt_lat_deg.getText()) : 0);
+					lat_min = (m_txt_lat_min.getText().length() > 0 ? Integer.valueOf(m_txt_lat_min.getText()) : 0);
+					lat_sec = (m_txt_lat_sec.getText().length() > 0 ? Double.valueOf(m_txt_lat_sec.getText().replace(",", ".")) : 0);
+					lon = lon_deg + Math.signum(lon_deg) * (lon_min / 60.0) + Math.signum(lon_deg) * (lon_sec / 3600.0);
+					lat = lat_deg + Math.signum(lat_deg) * (lat_min / 60.0) + Math.signum(lat_deg) * (lat_sec / 3600.0);
 
 				} catch (Exception err) {
 					return;
@@ -1219,10 +1231,10 @@ public class InfoPanel extends GeneralPanel {
 						return;
 					}
 					try {
-						UTMNorthing = Double.parseDouble(m_txt_utm_northing
-								.getText());
-						UTMEasting = Double.parseDouble(m_txt_utm_easting
-								.getText());
+						UTMNorthing = Double.valueOf(m_txt_utm_northing
+								.getText().replace(",", "."));
+						UTMEasting = Double.valueOf(m_txt_utm_easting
+								.getText().replace(",", "."));
 					} catch (Exception err) {
 						return;
 					}
