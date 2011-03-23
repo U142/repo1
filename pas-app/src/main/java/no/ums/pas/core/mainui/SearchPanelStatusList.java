@@ -10,6 +10,7 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.common.UDELETESTATUSRESPONSE;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.util.ArrayList;
+import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {
@@ -37,7 +39,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	private OpenStatusFrame m_statusframe;
 	private PUOpenStatus m_popup;
 	public OpenStatusFrame get_statusframe() { return m_statusframe; }
-	private final int n_refno_column = 1;
+	private final int n_refno_column = 2;
 	private final int n_delete_column = 11;
 	
 	public PAS get_pas() { return m_pas; }
@@ -121,26 +123,30 @@ public class SearchPanelStatusList extends SearchPanelResults {
 		}
 		return b_ret;
 	}
-	protected void onMouseLClick(int n_row, int n_col, Object [] rowcontent, Point p)
+	protected void onMouseLClick(final int n_row, int n_col, final Object [] rowcontent, Point p)
 	{
 		if(n_col==n_delete_column)
 		{
 			if(rowcontent[n_delete_column] instanceof StatusListObject &&
 				statusMayBeDeleted((StatusListObject)rowcontent[n_delete_column]) && JOptionPane.showConfirmDialog(this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
 			{
-				System.out.println("Delete alert");
+				System.out.println("Delete status");
+				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[n_delete_column]).get_refno(),
+						new IDeleteStatus() {							
+							@Override
+							public void Complete(long refno, UDELETESTATUSRESPONSE response) {
+								if(response.equals(UDELETESTATUSRESPONSE.OK))
+								{
+									delete_row(rowcontent[n_delete_column], n_delete_column, StatusListObject.class);
+								}
+							}
+						});
 			}
 		}
 	}
 	protected void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
-		//Point mouse = this.getMousePosition();
-		//m_popup.pop(this, mouse, (StatusListObject)rowcontent[2]);
-		//openStatus(true, ((StatusListObject)rowcontent[2]).get_project().get_projectpk(), -1);
 		openStatus(true, (StatusListObject)rowcontent[2], -1);
-		//get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), new Integer((String)rowcontent[2]).intValue(), true /*init*/);
-			
-		//get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), ((StatusListObject)rowcontent[2]).get_project().get_projectpk(), ((StatusListObject)rowcontent[2]).get_refno(), true /*init*/);
 	}
 	protected void onMouseRClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
@@ -189,8 +195,9 @@ public class SearchPanelStatusList extends SearchPanelResults {
 					obj.get_sendingname(), 
 					sz_statustext, 
 					obj};
-			this.insert_row(sz_visible, -1);
+			this.insert_row(sz_visible, -1, false);
 		}
+		this.get_tablelist().fireTableDataChanged();
 	}
 
 	void onDownloadFinished()

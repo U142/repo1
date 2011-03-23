@@ -62,7 +62,7 @@ public class MapObjectGpsHistory extends DefaultPanel {
 		protected void start_search()
 		{
 			//System.out.println("Info: inserting search row");
-			m_tbl_list.insert_row(new String[] {"", "Starting searchthread", "" }, -1); //, ""
+			m_tbl_list.insert_row(new String[] {"", "Starting searchthread", "" }, -1, true); //, ""
 			m_adrthread = new SearchThread(Thread.MIN_PRIORITY);
 			m_adrthread.start();		
 		}
@@ -113,7 +113,7 @@ public class MapObjectGpsHistory extends DefaultPanel {
 					String coors [] = new String[] { TextFormat.format_date(coor.get_gpsdate()) + " " + TextFormat.format_time(coor.get_gpstime(), 6), 
 							""+coor.get_speed(), coor.get_course()+"", ""+coor.get_asl(), ""+coor.get_battery(), ""+coor.get_satellites(), 
 							""+coor.get_lon(),  ""+coor.get_lat(), ""+Math.round(coor.get_distance_to_prev()), coor.get_street(), coor.get_region() };
-					m_tbl_list.insert_row(coors, -1);
+					m_tbl_list.insert_row(coors, -1, true);
 				}
 				
 				stopped();

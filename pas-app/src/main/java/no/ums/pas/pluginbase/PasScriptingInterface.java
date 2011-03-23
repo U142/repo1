@@ -22,6 +22,7 @@ import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.MapLoader;
 import no.ums.pas.maps.defines.NavStruct;
@@ -475,4 +476,6 @@ public interface PasScriptingInterface {
     float getMapZoomSpeed();
     
     boolean onDownloadDocumentation(UserInfo userinfo);
+    
+    boolean onDeleteStatus(long refno, IDeleteStatus callback);
 }

@@ -151,7 +151,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 			return false;
 		for (UGabResult result : results.getList().getUGabResult()) {
 			Object[] obj_insert = { result, result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
-			list.insert_row(obj_insert, -1);
+			list.insert_row(obj_insert, -1, true);
 		}
 
 		return true;

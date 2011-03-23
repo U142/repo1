@@ -6,6 +6,7 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -76,7 +77,7 @@ import java.util.Map;
  * @version 2.0 02/27/04
  */
 
-public class TableSorter extends AbstractTableModel {
+public class TableSorter extends DefaultTableModel {
 	public static final long serialVersionUID = 1;
     protected TableModel tableModel;
 

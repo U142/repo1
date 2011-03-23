@@ -34,6 +34,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -305,7 +306,11 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	}
 	public void insert_row(Object [] data, int n_index)
 	{
-		get_tablelist().insert_row(data, n_index);
+		this.insert_row(data, n_index, true);
+	}
+	public void insert_row(Object [] data, int n_index, boolean bAutoUpdate)
+	{
+		get_tablelist().insert_row(data, n_index, bAutoUpdate);
 	}
 	public void insert_component_row(Object [] data, int n_index) {
 		get_tablelist().insert_component_row(data, n_index);
@@ -437,21 +442,30 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     	}
     	return -1;
     }
+    
+
+    
+    public boolean delete_row(int row)
+    {
+    	try
+    	{
+    		int modelRow = get_table().convertRowIndexToModel(row);
+    		get_tablelist().remove_row(modelRow);
+	    	get_tablelist().fireTableRowsDeleted(modelRow, modelRow);
+	    	return true;
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    	return false;
+    }
     public boolean delete_row(Object o, int n_objcol, Class expect) {
     	try {
-    		//m_tbl.remove(find(o, n_objcol));
     		int i = find(o, n_objcol, expect);
     		if(i >= 0) {
-	    		//m_tbl_list.m_data[i].clear();
-            	/*for(int x=0; x < m_tbl_list.m_data[i].size(); x++)
-            	{
-            		//m_data[x].add(idx, data[x]);
-            		m_tbl_list.m_data[x].set(i, "");
-            	}*/
             	for(int x=0; x < m_tbl_list.m_data.length; x++)
             	{
-            		//sorter.setValueAt(null, i, x);
-            		//m_data[x].add(idx, data[x]);
             		try {
 	            		((ArrayList<Object>)m_tbl_list.m_data[x]).remove(i);
 	            		m_tbl_list.fireTableRowsDeleted(i, i);
@@ -462,12 +476,11 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
             		}
             	}
 
-    			//sorter.fireTableRowsDeleted(i, i);
 	    		sorter.fireTableDataChanged();
-	    		//m_tbl_list.fireTableRowsDeleted(i, i);
 	    		m_tbl_list.fireTableDataChanged();
+	    		return true;
     		}
-    		return true;
+    		return false;
     	} catch(Exception e) {
     		System.out.println(e.getMessage());
     		e.printStackTrace();
@@ -722,7 +735,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		}	
 	}
 	
-	public class TableList extends AbstractTableModel
+	public class TableList extends DefaultTableModel
 	{
 		public static final long serialVersionUID = 1;
 		int m_n_columns;
@@ -756,7 +769,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 			}		
 			
 		}
-        public void insert_row(Object[] data, int n_index)
+        public void insert_row(Object[] data, int n_index, boolean bAutoUpdateList)
         {
         	int idx;
         	if(n_index>=0)
@@ -767,7 +780,10 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
         	{
         		m_data[i].add(idx, data[i]);
         	}
-        	fireTableDataChanged();
+        	if(bAutoUpdateList)
+        	{
+        		fireTableDataChanged();
+        	}
         }
         public void insert_component_row(Object[] data, int n_index) {
         	int idx;
@@ -780,6 +796,13 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
         		m_data[i].add(idx, new javax.swing.JLabel(data[i].toString()));
         	}
         	fireTableDataChanged();
+        }
+        
+        public void remove_row(int n)
+        {
+			for(int j=0;j<m_data.length;++j) {
+				m_data[j].remove(n);
+			}
         }
         
         public void remove_row(Object data) {
@@ -821,7 +844,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
         }
 
         public int getRowCount() {
-            return m_data[0].size();
+        	return (m_data!=null ? m_data[0].size() : 0);
         }
 
         public String getColumnName(int col) {
