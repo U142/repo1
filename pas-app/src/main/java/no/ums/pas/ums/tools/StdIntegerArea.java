@@ -67,7 +67,7 @@ public class StdIntegerArea extends StdTextArea {
 		String oldText = getText();
 		char c = ev.getKeyChar();
 		
-		if((c == KeyEvent.VK_MINUS || c == '-') && getDocument().getLength() > 0 && (m_n_type & UNSIGNED) != UNSIGNED) 
+		if(c == '-' && getDocument().getLength() > 0 && (m_n_type & UNSIGNED) != UNSIGNED) 
 		{
 			ev.consume();
 			String newText = oldText.replace("-", "");
