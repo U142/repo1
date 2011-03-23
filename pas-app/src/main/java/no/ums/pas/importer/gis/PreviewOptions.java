@@ -43,6 +43,10 @@ class PreviewOptions extends DefaultPanel {
 		}
 		else if("act_goto_next_valid".equals(e.getActionCommand())) {
 			m_btn_fetch.setEnabled(((Boolean)e.getSource()).booleanValue());
+			if(m_btn_fetch.isEnabled())
+				m_btn_fetch.setToolTipText(null);
+			else
+				m_btn_fetch.setToolTipText(Localization.l("importpreview_please_specify"));
 		}
 		else if("act_change_encoding".equals(e.getActionCommand())) {
 			m_parent.m_gis.set_encoding((String)m_cbx_encoding.getSelectedItem().toString());
