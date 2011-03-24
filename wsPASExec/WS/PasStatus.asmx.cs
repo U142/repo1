@@ -131,7 +131,7 @@ namespace com.ums.ws.pas.status
         }
 
         [WebMethod]
-        public UDELETESTATUSRESPONSE DeleteStatus(ULOGONINFO l, UDELETESTATUSREQUEST r)
+        public UDeleteStatusResponse DeleteStatus(ULOGONINFO l, UDeleteStatusRequest r)
         {
             //check if user may delete
             PASUmsDb db = new PASUmsDb();

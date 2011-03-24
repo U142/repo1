@@ -1597,24 +1597,32 @@ namespace com.ums.UmsCommon
     }
 
     [XmlType(Namespace = "http://ums.no/ws/common")]
-    public class UDELETESTATUSREQUEST
+    public class UDeleteStatusRequest
     {
         public long l_refno;
     }
 
     [XmlType(Namespace = "http://ums.no/ws/common")]
-    public class UDELETEPROJECTREQUEST
+    public class UDeleteProjectRequest
     {
-        public long l_project;
+        public long l_projectpk;
     }
 
     [XmlType(Namespace = "http://ums.no/ws/common")]
-    public enum UDELETESTATUSRESPONSE
+    public enum UDeleteStatusResponse
     {
         OK = 0,
         ERROR = 1,
         FAILED_USER_RESTRICTED = 2,
         FAILED_SENDING_STILL_ACTIVE = 3,
+        PROJECT_USER_RESTRICTED = 4,
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public class UDeleteProjectResponse
+    {
+        public UDeleteStatusResponse responsecode;
+
     }
 
 }

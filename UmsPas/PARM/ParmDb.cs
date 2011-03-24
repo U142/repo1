@@ -2084,57 +2084,104 @@ namespace com.ums.UmsParm
             }
         }
 
-        /**
-         * delete all status under a project, then the project itself an its links (mdvsendinginfo, bbproject, bbproject_x_refno)
-         * check if user have rights to delete each sending in this project
-         * check if user have rights to delete the project itself
-         * 
-         */
-        public UDELETESTATUSRESPONSE DeleteProject(ref ULOGONINFO l, ref UDELETEPROJECTREQUEST p)
+        ///
+        /// delete all status under a project, then the project itself an its links (mdvsendinginfo, bbproject, bbproject_x_refno)
+        /// check if user have rights to delete each sending in this project
+        /// check if user have rights to delete the project itself
+        ///
+        ///
+        public UDeleteProjectResponse DeleteProject(ref ULOGONINFO l, ref UDeleteProjectRequest p)
         {
+            UDeleteProjectResponse response = new UDeleteProjectResponse();
             List<long> refnolist = new List<long>();
-            String sql = String.Format("SELECT l_projectpk FROM BBPROJECT BP, BBPROJECT_X_REFNO PXR WHERE BP.l_projectpk={0} AND " +
-                                        "BP.l_projectpk=PXR");
-            return UDELETESTATUSRESPONSE.OK;
+
+            response.responsecode = canUserDeleteProject(ref l, p.l_projectpk);
+            if (response.responsecode != UDeleteStatusResponse.OK)
+                return response;
+
+            String sql = String.Format("SELECT l_refno BBPROJECT_X_REFNO PXR WHERE BP.l_projectpk={0} ", p.l_projectpk);
+            OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+            while (rs.Read())
+            {
+                refnolist.Add(rs.GetInt64(0));
+            }
+            rs.Close();
+            //check rights for each sending
+            foreach(var refno in refnolist)
+            {
+                response.responsecode = canUserDeleteStatus(ref l, refno);
+                if (response.responsecode != UDeleteStatusResponse.OK)
+                {
+                    return response;
+                }
+            }
+            
+            response.responsecode = UDeleteStatusResponse.OK;
+            return response;
         }
 
-        /**
-         * delete from MDVSENDINGINFO to make sending disappear from status views
-         * check if user have rights to delete
-         * check if sending have a final status
-         * 
-         */
-        public UDELETESTATUSRESPONSE DeleteStatus(ref ULOGONINFO l, ref UDELETESTATUSREQUEST r)
+        /// <summary>
+        /// delete from MDVSENDINGINFO to make sending disappear from status views
+        /// check if user have rights to delete
+        /// check if sending have a final status
+        /// </summary>
+        public UDeleteStatusResponse DeleteStatus(ref ULOGONINFO l, ref UDeleteStatusRequest r)
         {
             if (r.l_refno > 0)
             {
-                if (canUserDeleteStatus(ref l, r.l_refno))
+                if (canUserDeleteStatus(ref l, r.l_refno)==UDeleteStatusResponse.OK)
                 {
                     try
                     {
                         String sql = String.Format("DELETE FROM MDVSENDINGINFO WHERE l_refno={0}", r.l_refno);
                         //ExecNonQuery(sql);
-                        return UDELETESTATUSRESPONSE.OK;
+                        return UDeleteStatusResponse.OK;
                     }
                     catch (Exception e)
                     {
-                        return UDELETESTATUSRESPONSE.ERROR;
+                        return UDeleteStatusResponse.ERROR;
                     }
                 }
                 else
                 {
-                    return UDELETESTATUSRESPONSE.FAILED_USER_RESTRICTED;
+                    return UDeleteStatusResponse.FAILED_USER_RESTRICTED;
                 }
             }
-            return UDELETESTATUSRESPONSE.ERROR;
+            return UDeleteStatusResponse.ERROR;
         }
 
 
-        /**
-         * Check if user is member of the owner-department of the sending, 
-         * and if the user is having a role that allows him to delete status
-         */
-        protected Boolean canUserDeleteStatus(ref ULOGONINFO l, long refno)
+        /// <summary>
+        /// Check if user is member of the owner-department of the project,
+        /// and if the user is having a role that allows him to delete the project
+        /// </summary>
+        protected UDeleteStatusResponse canUserDeleteProject(ref ULOGONINFO l, long projectpk)
+        {
+            String sql = String.Format(
+                                "select BUP.l_status FROM BBUSER BU, BBUSERPROFILE BUP, BBUSERPROFILE_X_DEPT BUXD, BBPROJECT BP WHERE " +
+                                "BU.sz_hash_paspwd='{0}' AND " +
+                                "BU.l_userpk={1} AND " +
+                                "BU.l_userpk=BUXD.l_userpk AND " +
+                                "BUXD.l_deptpk=BP.l_deptpk AND " +
+                                "BP.l_projectpk={2} AND " +
+                                "BUXD.l_profilepk=BUP.l_profilepk",
+                                l.sz_password, l.l_userpk, projectpk);
+            int status = 0;
+            OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+            if (rs.Read())
+            {
+                status = rs.GetInt32(0);
+            }
+            rs.Close();
+            return (status >= 2 ? UDeleteStatusResponse.OK : UDeleteStatusResponse.PROJECT_USER_RESTRICTED);
+
+        }
+
+        /// <summary>
+        /// Check if user is member of the owner-department of the sending, 
+        /// and if the user is having a role that allows him to delete status
+        /// </summary>
+        protected UDeleteStatusResponse canUserDeleteStatus(ref ULOGONINFO l, long refno)
         {
             String sql = String.Format(
                 "select BUP.l_status FROM BBUSER BU, BBUSERPROFILE BUP, BBUSERPROFILE_X_DEPT BUXD, MDVSENDINGINFO MDV WHERE "+
@@ -2152,7 +2199,7 @@ namespace com.ums.UmsParm
                 status = rs.GetInt32(0);
             }
             rs.Close();
-            return status>=2;
+            return (status>=2 ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_USER_RESTRICTED);
         }
 
         public Boolean updateStatusForOperator(long l_refno, int l_status, int l_operator)
