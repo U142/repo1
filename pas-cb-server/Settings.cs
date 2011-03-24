@@ -182,7 +182,8 @@ namespace pas_cb_server
                 Settings.GetValue("Syslog", false),
                 add_slash(Settings.GetValue("LogFilePath", exec_folder())),
                 Settings.GetValue("LogFileName", "cbserver"),
-                Settings.GetValue("LogFile", true));
+                Settings.GetValue("LogFile", true),
+                Settings.GetValue("LogDatabase", true));
         }
 
         private static string add_slash(string path)

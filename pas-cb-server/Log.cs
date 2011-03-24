@@ -23,9 +23,11 @@ namespace pas_cb_server
         private const string szLogDTM = "yyyy'-'MM'-'dd HH':'mm':'ss";
         private static bool bsyslog = false;
         private static bool blogfile = false;
+        private static bool blogdatabase = false;
         private static string szlogfilename = "";
         private static Queue<string> qlog = new Queue<string>();
-        public static void InitLog(string app, string sysloghost, int syslogport, bool syslog, string logfilepath, string logfilename, bool logfile)
+
+        public static void InitLog(string app, string sysloghost, int syslogport, bool syslog, string logfilepath, string logfilename, bool logfile, bool logdatabase)
         {
             try
             {
@@ -69,6 +71,20 @@ namespace pas_cb_server
                         "Not using syslog",
                         9);
                 }
+
+                blogdatabase = logdatabase;
+                if (blogdatabase)
+                {
+                    WriteLog(
+                        "Logging to database",
+                        9);
+                }
+                else
+                {
+                    WriteLog(
+                        "Not logging to database",
+                        9);
+                }
             }
             catch (Exception e)
             {
@@ -102,6 +118,9 @@ namespace pas_cb_server
             if (bsyslog) // write to syslog if enabled
                 WriteSysLog(consoletext, severity);
 
+            if (blogdatabase && severity != 9) // write to database log if enabled
+                WriteDBLog(consoletext, severity);
+
             if (blogfile && severity != 9) // add to logfile queue if enabled, but don't log severity 9
                 lock (qlog)
                     qlog.Enqueue(szLogLine);
@@ -122,6 +141,24 @@ namespace pas_cb_server
                 case 2: // error
                     ULog.error("error: " + logtext);
                     break;
+            }
+        }
+
+        private static void WriteDBLog(string logtext, int severity)
+        {
+            string sz_logdtm = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string sz_hostname = "";
+
+            try
+            {
+                sz_hostname = System.Net.Dns.GetHostName();
+
+                Database.WriteLogEntry(severity, sz_logdtm, sz_hostname, logtext); 
+            }
+            catch(Exception e)
+            {
+                WriteLog("ERROR -- Failed to write log entry to database", 9);
+                WriteLog("Exception: " + e, 9);
             }
         }
 
@@ -146,7 +183,7 @@ namespace pas_cb_server
                     }
                     catch (Exception e)
                     {
-                        WriteLog("ERROR -- Failed to write log til file", 9);
+                        WriteLog("ERROR -- Failed to write log entry to file", 9);
                         WriteLog("Exception: " + e, 9);
                     }
                 }

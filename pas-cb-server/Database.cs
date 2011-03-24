@@ -507,6 +507,13 @@ namespace pas_cb_server
             return ts_ret;
         }
 
+        public static void WriteLogEntry(int severity, string timestamp, string hostname, string logtext)
+        {
+            string sql = String.Format("sp_cbserver_log {0}, {1}, '{2}', '{3}'", severity, timestamp, hostname, logtext);
+
+            Database.ExecuteNonQuery(sql);
+        }
+
         private static void ExecuteNonQuery(string sz_sql)
         {
             try
