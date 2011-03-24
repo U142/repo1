@@ -756,10 +756,11 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	private int n_search_status = -99999;
+	public int get_n_search_status() { return n_search_status; }
 	private boolean b_search_all = false;
 	private MapPointLL dim_screen_coor_search = new MapPointLL(-99999,-99999);
 
-	public void search_houses(int n_status, boolean b_all, MapPointLL ll_search) {
+	public synchronized void search_houses(int n_status, boolean b_all, MapPointLL ll_search) {
 		PAS.get_pas().get_inhabitantframe().m_inhabitantpanel.pushSelection();
 		n_search_status = n_status;
 		b_search_all = b_all;
