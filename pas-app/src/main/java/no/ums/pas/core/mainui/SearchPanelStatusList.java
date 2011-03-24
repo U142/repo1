@@ -10,7 +10,6 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
-import no.ums.ws.common.UDELETESTATUSRESPONSE;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +28,7 @@ import java.awt.Point;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
+import no.ums.ws.common.UDELETESTATUSRESPONSE;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {
@@ -132,7 +132,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 			{
 				System.out.println("Delete status");
 				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[n_delete_column]).get_refno(),
-						new IDeleteStatus() {							
+						new IDeleteStatus() {	
 							@Override
 							public void Complete(long refno, UDELETESTATUSRESPONSE response) {
 								if(response.equals(UDELETESTATUSRESPONSE.OK))
