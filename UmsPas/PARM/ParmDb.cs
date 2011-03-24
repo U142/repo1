@@ -2085,7 +2085,23 @@ namespace com.ums.UmsParm
         }
 
         /**
+         * delete all status under a project, then the project itself an its links (mdvsendinginfo, bbproject, bbproject_x_refno)
+         * check if user have rights to delete each sending in this project
+         * check if user have rights to delete the project itself
+         * 
+         */
+        public UDELETESTATUSRESPONSE DeleteProject(ref ULOGONINFO l, ref UDELETEPROJECTREQUEST p)
+        {
+            List<long> refnolist = new List<long>();
+            String sql = String.Format("SELECT l_projectpk FROM BBPROJECT BP, BBPROJECT_X_REFNO PXR WHERE BP.l_projectpk={0} AND " +
+                                        "BP.l_projectpk=PXR");
+            return UDELETESTATUSRESPONSE.OK;
+        }
+
+        /**
          * delete from MDVSENDINGINFO to make sending disappear from status views
+         * check if user have rights to delete
+         * check if sending have a final status
          * 
          */
         public UDELETESTATUSRESPONSE DeleteStatus(ref ULOGONINFO l, ref UDELETESTATUSREQUEST r)

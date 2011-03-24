@@ -1603,12 +1603,18 @@ namespace com.ums.UmsCommon
     }
 
     [XmlType(Namespace = "http://ums.no/ws/common")]
+    public class UDELETEPROJECTREQUEST
+    {
+        public long l_project;
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
     public enum UDELETESTATUSRESPONSE
     {
         OK = 0,
         ERROR = 1,
-        FAILED_USER_RESTRICTED,
-        FAILED_SENDING_STILL_ACTIVE,
+        FAILED_USER_RESTRICTED = 2,
+        FAILED_SENDING_STILL_ACTIVE = 3,
     }
 
 }
