@@ -179,6 +179,25 @@ public class Navigation {
 		if(Math.abs(bbo)>90)
 			bbo = 90 * Math.signum(bbo);
 
+		if(Math.abs(lbo)-Math.abs(rbo)<0.0001 || Math.abs(ubo)-Math.abs(bbo)<0.0001)
+		{
+			lbo-=0.001;
+			rbo+=0.001;
+			ubo+=0.001;
+			bbo-=0.001;
+		}
+		if(lbo>rbo) //switch
+		{
+			double tmp = lbo;
+			lbo = rbo;
+			rbo = tmp;
+		}
+		if(ubo<bbo)
+		{
+			double tmp = ubo;
+			ubo = bbo;
+			bbo = tmp;
+		}
 		if(b_check_zoom_level)
 		{
 			NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
