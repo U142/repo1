@@ -4,6 +4,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.logon.Settings;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.menus.OtherActions;
@@ -547,7 +548,20 @@ public class PASActions implements ActionListener {
 				if(PAS.get_pas().get_userinfo().get_current_department().get_nav_init()!=null)
 					actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			}*/
-			PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
+			// Sets the departments default map if it is not the default department for the user 
+			if(PAS.get_pas().get_userinfo().get_default_dept().get_deptpk() == PAS.get_pas().get_userinfo().get_current_department().get_deptpk())
+				PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
+			else {
+				try {
+					UserInfo ui = (UserInfo)PAS.get_pas().get_userinfo().clone();
+					ui.set_nav_init(PAS.get_pas().get_userinfo().get_current_department().get_nav_init());
+					PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), ui);
+				}
+				catch(CloneNotSupportedException ce) {
+					
+				}
+				
+			}
 			PAS.get_pas().get_mappane().load_map(false);
 			/*
 			// Denne skal oppdatere weatherdata

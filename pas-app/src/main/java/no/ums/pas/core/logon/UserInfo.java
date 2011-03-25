@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UserInfo extends Object {
+public class UserInfo extends Object implements Cloneable {
 	
 	public enum SESSION_INACTIVE_REASON 
 	{
@@ -26,6 +26,10 @@ public class UserInfo extends Object {
 	private String m_sz_userid;
 	private String m_sz_compid;
 	private String m_sz_passwd;
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 	private String m_sz_sessionid;
 	private boolean m_b_session_active = false;
 	private SESSION_INACTIVE_REASON m_session_inactive_reason = SESSION_INACTIVE_REASON.NONE;

@@ -204,7 +204,9 @@ public class PrintCtrl implements Printable {
 	        	g2d.setFont(new Font(null, Font.BOLD, 8));
 	        	
 	        	if(is.get_table() != null && is.get_table().getRowCount() > 0) {
-                    g2d.drawString(Localization.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
+                    // Superhacks for å få riktig status, av en eller annen grunn så ble det ikke alltid riktig med den andre
+	        		//g2d.drawString(Localization.l("main_statustab_title") + ": " + is.get_table().getValueAt(1, 1).toString(), 0, 0);
+	        		g2d.drawString(Localization.l("main_statustab_title") + ": " + PAS.get_pas().get_statuscontroller().find_status(PAS.get_pas().get_statuscontroller().get_n_search_status()).get_status(),0,0);
                 }
 	        	
 	        	g2d.setFont(new Font(null, Font.PLAIN, 8));
