@@ -366,23 +366,45 @@ namespace com.ums.UmsParm
                 {
                     if (!sz_existing_md5.Equals(md5)) //only update if md5 is changed
                     {
-                        sql = String.Format("UPDATE PASHAPE set l_type={0}, sz_md5='{1}', sz_xml='{2}' WHERE l_pk={3}",
+                        /*sql = String.Format("UPDATE PASHAPE set l_type={0}, sz_md5='{1}', sz_xml='{2}' WHERE l_pk={3}",
                                             (int)type, md5, sz_xml, pk);
                         if (ExecNonQuery(sql))
                         {
                             bShapeChanged = true;
                             return true;
+                        }*/
+                        sql = String.Format("UPDATE PASHAPE set l_type=?, sz_md5=?, sz_xml=? WHERE l_pk=?");
+                        OdbcCommand cmd = new OdbcCommand(sql, this.conn);
+                        cmd.Parameters.Add("@l_type", OdbcType.Int).Value = (int)type;
+                        cmd.Parameters.Add("@sz_md5", OdbcType.Char, 32).Value = md5;
+                        cmd.Parameters.Add("@sz_xml", OdbcType.Text).Value = sz_xml;
+                        cmd.Parameters.Add("@l_pk", OdbcType.Numeric).Value = pk;
+                        int ret = cmd.ExecuteNonQuery();
+                        if (ret > 0)
+                        {
+                            bShapeChanged = true;
+                            return true;
                         }
+
                     }
                     else
                         return true;
                 }
                 else
                 {
-                    sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) " +
-                                        "VALUES({0}, {1}, {2}, '{3}', '{4}')",
-                                        pk, (int)type, getDbClock(), md5, sz_xml);
-                    if (ExecNonQuery(sql))
+                    long time = getDbClock();
+                    //sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) " +
+                     //                   "VALUES({0}, {1}, {2}, '{3}', '{4}')",
+                     //                   pk, (int)type, getDbClock(), md5, sz_xml);
+                    sql = String.Format("INSERT INTO PASHAPE(l_pk, l_type, l_timestamp, sz_md5, sz_xml) VALUES(?, ?, ?, ?, ?)");
+                    OdbcCommand cmd = new OdbcCommand(sql, this.conn);
+                    cmd.Parameters.Add("@l_pk", OdbcType.Numeric).Value = pk;
+                    cmd.Parameters.Add("@l_type", OdbcType.Int).Value = (int)type;
+                    cmd.Parameters.Add("@l_timestamp", OdbcType.Numeric).Value = time;
+                    cmd.Parameters.Add("@sz_md5", OdbcType.Char, 32).Value = md5;
+                    cmd.Parameters.Add("@sz_xml", OdbcType.Text).Value = sz_xml;
+                    int ret = cmd.ExecuteNonQuery();
+                    if (ret > 0)
                     {
                         bShapeChanged = true;
                         return true;
@@ -2095,11 +2117,12 @@ namespace com.ums.UmsParm
             UDeleteProjectResponse response = new UDeleteProjectResponse();
             List<long> refnolist = new List<long>();
 
+            //check rights for deleting the project
             response.responsecode = canUserDeleteProject(ref l, p.l_projectpk);
             if (response.responsecode != UDeleteStatusResponse.OK)
                 return response;
 
-            String sql = String.Format("SELECT l_refno BBPROJECT_X_REFNO PXR WHERE BP.l_projectpk={0} ", p.l_projectpk);
+            String sql = String.Format("SELECT PXR.l_refno FROM BBPROJECT_X_REFNO PXR WHERE PXR.l_projectpk={0} ", p.l_projectpk);
             OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
             while (rs.Read())
             {
@@ -2116,16 +2139,27 @@ namespace com.ums.UmsParm
                 }
             }
             
+            //delete all mdvsendinginfos
+            foreach(var refno in refnolist)
+            {
+                deleteStatus(refno);
+            }
+            //delete the project and it links to x_refno
+            sql = String.Format("DELETE FROM BBPROJECT_X_REFNO WHERE l_projectpk={0}", p.l_projectpk);
+            ExecNonQuery(sql);
+            sql = String.Format("DELETE FROM BBPROJECT WHERE l_projectpk={0}", p.l_projectpk);
+            ExecNonQuery(sql);
             response.responsecode = UDeleteStatusResponse.OK;
             return response;
         }
+
 
         /// <summary>
         /// delete from MDVSENDINGINFO to make sending disappear from status views
         /// check if user have rights to delete
         /// check if sending have a final status
         /// </summary>
-        public UDeleteStatusResponse DeleteStatus(ref ULOGONINFO l, ref UDeleteStatusRequest r)
+        public UDeleteStatusResponse DeleteStatusWithCheck(ref ULOGONINFO l, ref UDeleteStatusRequest r)
         {
             if (r.l_refno > 0)
             {
@@ -2133,11 +2167,9 @@ namespace com.ums.UmsParm
                 {
                     try
                     {
-                        String sql = String.Format("DELETE FROM MDVSENDINGINFO WHERE l_refno={0}", r.l_refno);
-                        //ExecNonQuery(sql);
-                        return UDeleteStatusResponse.OK;
+                        return deleteStatus(r.l_refno);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         return UDeleteStatusResponse.ERROR;
                     }
@@ -2148,6 +2180,20 @@ namespace com.ums.UmsParm
                 }
             }
             return UDeleteStatusResponse.ERROR;
+        }
+
+        protected UDeleteStatusResponse deleteStatus(long refno)
+        {
+            try
+            {
+                String sql = String.Format("DELETE FROM MDVSENDINGINFO WHERE l_refno={0}", refno);
+                ExecNonQuery(sql);
+                return UDeleteStatusResponse.OK;
+            }
+            catch (Exception e)
+            {
+                return UDeleteStatusResponse.ERROR;
+            }
         }
 
 

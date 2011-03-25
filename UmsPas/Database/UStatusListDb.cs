@@ -204,7 +204,8 @@ namespace com.ums.PAS.Database
                         item.n_updatetimestamp = (long)rs.GetDecimal(16);
                         item.n_finished = rs.GetInt16(17);
                         item.n_simulation = rs.GetInt32(18);
-
+                        item.n_project_owner_deptpk = rs.GetInt32(19);
+                        item.n_project_owner_userpk = rs.GetInt32(20);
                         res.addLine(ref item);
                     }
                     catch (Exception e)

@@ -33,6 +33,8 @@ namespace com.ums.PAS.Status
         public long n_createtimestamp;
         public long n_updatetimestamp;
         public int n_simulation;
+        public int n_project_owner_deptpk;
+        public int n_project_owner_userpk;
     }
 
     /*search class*/

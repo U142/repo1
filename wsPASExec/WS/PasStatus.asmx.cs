@@ -137,9 +137,16 @@ namespace com.ums.ws.pas.status
             PASUmsDb db = new PASUmsDb();
             db.CheckLogon(ref l, true);
             
-            return db.DeleteStatus(ref l, ref r);
+            return db.DeleteStatusWithCheck(ref l, ref r);
         }
 
+        [WebMethod]
+        public UDeleteProjectResponse DeleteProject(ULOGONINFO l, UDeleteProjectRequest r)
+        {
+            PASUmsDb db = new PASUmsDb();
+            db.CheckLogon(ref l, true);
+            return db.DeleteProject(ref l, ref r);
+        }
 
         [WebMethod]
         public byte[] GetStatusItemsTest()

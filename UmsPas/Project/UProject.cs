@@ -86,6 +86,7 @@ namespace com.ums.PAS.Project
         public Int64 n_updatedtimestamp;
         public int n_responsecode;
         public string sz_responsetext;
+        public Int32 n_deptpk;
     }
 
 }
