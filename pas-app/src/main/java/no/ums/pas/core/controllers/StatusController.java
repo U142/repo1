@@ -976,7 +976,7 @@ public class StatusController extends Controller implements ActionListener {
 	 */
 
 	public void open_statuslistframe() {
-		//if (m_statuslistframe == null)
+		if (m_statuslistframe == null)
 			m_statuslistframe = new OpenStatusFrame();
 		m_statuslistframe.open(); 
 	}

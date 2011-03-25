@@ -1041,7 +1041,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 
 		
 		//COMPANY MOBILE
-        group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, Localization.l("main_sending_adr_sel_company_mobile_none_tooltip"), Color.yellow));
+        group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_none"), 0, 0, true, Localization.l("main_sending_adr_sel_company_mobile_none_tooltip"), c));
         group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_voice"), SendController.SENDTO_MOBILE_COMPANY, SendController.SENDTO_FIXED_COMPANY_ALT_SMS | SendController.SENDTO_FIXED_COMPANY_AND_MOBILE, true, Localization.l("main_sending_adr_sel_private_mobile_voice_tooltip"), c));
 		if(Variables.getUserInfo().get_current_department().get_userprofile().get_sms() == 1) {
             group_smscompbtn.add(new CheckItem(Localization.l("main_sending_adr_sel_private_mobile_sms"), SendController.SENDTO_SMS_COMPANY, SendController.SENDTO_FIXED_COMPANY_ALT_SMS, false, Localization.l("main_sending_adr_sel_private_mobile_sms_tooltip"), c));
