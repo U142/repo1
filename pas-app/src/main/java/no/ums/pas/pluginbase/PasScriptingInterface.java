@@ -21,6 +21,7 @@ import no.ums.pas.core.menus.MainMenu;
 import no.ums.pas.core.menus.MainSelectMenu;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSPowerup;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.maps.MapFrame;
@@ -478,4 +479,6 @@ public interface PasScriptingInterface {
     boolean onDownloadDocumentation(UserInfo userinfo);
     
     boolean onDeleteStatus(long refno, IDeleteStatus callback);
+    
+    boolean onDeleteProject(long projectpk, IDeleteProject callback);
 }

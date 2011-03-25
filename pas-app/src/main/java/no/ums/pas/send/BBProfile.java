@@ -60,6 +60,12 @@ public class BBProfile extends Object implements TooltipItem, Comparable<BBProfi
 		
 		return sb.toString();
 	}
+	
+	
+	@Override
+	public String toTooltipString(int at_column) {
+		return toTooltipString();
+	}
 	@Override
 	public int compareTo(BBProfile o) {
 		return this.get_profilename().compareTo(o.get_profilename());

@@ -229,6 +229,11 @@ public class LBASEND
 		return false;		
 	}
 	
+	public static boolean HasErrorStatus(int status)
+	{
+		return (status>=42000);
+	}
+	
 	public boolean HasFinalStatus(){
 		return HasFinalStatus(n_status);
 	}

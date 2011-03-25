@@ -48,6 +48,10 @@ public class BBSchedProfile extends Object implements TooltipItem{
 			 new Integer(vals[8]).intValue(), new Integer(vals[9]).intValue(), (new Integer(vals[10]).intValue()==1 ? true : false));
 	}
 	@Override
+	public String toTooltipString(int at_column) {
+		return toTooltipString();
+	}
+	@Override
 	public String toTooltipString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>");

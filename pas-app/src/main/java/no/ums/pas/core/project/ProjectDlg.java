@@ -5,21 +5,32 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.core.ws.WSProject;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Utils;
+import no.ums.ws.common.UDeleteProjectResponse;
+import no.ums.ws.common.UDeleteStatusResponse;
 import no.ums.ws.pas.UPROJECTREQUEST;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Point;
@@ -30,6 +41,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 
 //import Core.MainUI.*;
 
@@ -39,6 +51,8 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	public static final int ACT_PROJECTDLG_OPEN  = 2;
 	public static final int ACT_PROJECTDLG_SAVE  = 3;
 	public static final int ACT_PROJECTDLG_CANCEL= 4;
+
+	public static final int DELETE_COLUMN = 5;
 
 	
 	private int m_n_selectedaction = ACT_PROJECTDLG_CLOSE;
@@ -74,7 +88,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		m_b_newsending = bNewSending;
 		addComponentListener(this);
 		init();
-		Dimension d = new Dimension(700, 350);
+		Dimension d = new Dimension(800, 550);
 		Dimension ul = Utils.screendlg_upperleft(d);
 		setBounds(ul.width, ul.height, d.width, d.height);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(d.width, d.height));
@@ -134,7 +148,8 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 //			if(bNewSending)
 //				m_btn_cancel.setText("No name");
 
-            m_project_list = new ProjectList( new String [] {Localization.l("projectdlg_projectid"), Localization.l("projectdlg_projectname"), Localization.l("common_created"), Localization.l("common_sendings")}, new int [] { 100, 250, 100, 50 });
+            m_project_list = new ProjectList( new String [] {Localization.l("projectdlg_projectid"), Localization.l("projectdlg_projectname"), Localization.l("common_created"), Localization.l("common_sendings"), Localization.l("main_status_messages_active"), ""}, 
+            						new int [] { 100, 200, 150, 75, 75, 32});
 			init_controls();
 			
 			add_controls();
@@ -241,9 +256,13 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	
 		public class ProjectList extends SearchPanelResults {
 			public static final long serialVersionUID = 1;
+			
+
+			
 			public ProjectList(String [] sz_columns, int [] n_width) {
 				super(sz_columns, n_width, null, new Dimension(250, 100), ListSelectionModel.SINGLE_SELECTION);
                 setBorder(BorderFactory.createTitledBorder(Localization.l("projectdlg_open_project")));
+                super.get_table().setRowHeight(24);
 			}
 			public boolean is_cell_editable(int row, int col) {
 				return false;
@@ -265,7 +284,12 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 							}
 						}
 					}
-					p.add_status_sending((StatusListObject)arr_slo.get(i));
+					p.add_status_sending(arr_slo.get(i));
+				}
+				for(Project p : ret)
+				{
+
+					p.setMayOrNotBeDeleted();
 				}
 				return ret;
 			}
@@ -278,15 +302,109 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 				ArrayList<Project> project_list = createProjectList(m_arr_sendings);
 				m_arr_projects = project_list;
                 for (Project item : m_arr_projects) {
-                    Object[] obj = new Object[]{item, item.get_projectname(), TextFormat.format_datetime(item.get_createtimestamp()), Integer.toString(item.get_num_sendings())};
+                    Object[] obj = new Object[]{ 
+                    		item, 
+                    		item.get_projectname(), 
+                    		TextFormat.format_datetime(item.get_createtimestamp()), 
+                    		Integer.valueOf(item.get_num_sendings()), 
+                    		Integer.valueOf(item.getNumberOfActiveSendings()), 
+                    		item };
                     this.insert_row(obj, -1);
                 }
 				
 			}
-			protected void onMouseLClick(int n_row, int n_col, Object[] rowcontent, Point p) {
+			
+			@Override
+			public void set_custom_cellrenderer(TableColumn column, final int n_col) {
+				final ImageIcon ico_delete = ImageFetcher.getIcon("delete_16.png");
+				final ImageIcon cant_delete = ImageFetcher.makeGrayscale(ico_delete);
+
+				//if(n_col==n_delete_column)
+				{
+					column.setCellRenderer(new DefaultTableCellRenderer() {
+						@Override
+						public Component getTableCellRendererComponent(JTable table, Object value,
+								boolean isSelected, boolean hasFocus, int row, int column) {
+							if(value instanceof Project && n_col==DELETE_COLUMN)
+							{
+								Project obj = (Project)value;
+								if(obj.canProjectBeDeleted()==UDeleteStatusResponse.OK)
+								{
+									ImageIcon ico = ico_delete;
+									setIcon(ico);
+									this.setHorizontalAlignment(SwingConstants.CENTER);
+								}
+								else
+								{
+									setIcon(cant_delete);
+									this.setHorizontalAlignment(SwingConstants.CENTER);
+									//setText("");
+								}
+								this.setBackground(getBgColorForRow(row));
+								this.setForeground(getFgColorForRow(row));
+							}
+							else if(value instanceof Integer)
+							{
+								this.setHorizontalAlignment(SwingConstants.CENTER);		
+								setText(value.toString());
+							}
+							else
+							{
+								setText(value.toString());
+							}
+							return this;
+						}
+					});
+				}
+				super.set_custom_cellrenderer(column, n_col);
+			}
+
+			protected void onMouseLClick(int n_row, int n_col, final Object[] rowcontent, Point p) {
 				try {
-					m_proj = (Project)rowcontent[0];
-					m_btn_open.setEnabled(true);
+					if(n_col!=DELETE_COLUMN)
+					{
+						m_proj = (Project)rowcontent[0];
+						m_btn_open.setEnabled(true);
+					}
+					else
+					{
+						//user clicked delete
+						Project proj = (Project)rowcontent[0];
+						if(proj.canProjectBeDeleted()==UDeleteStatusResponse.OK)
+						{
+							if(JOptionPane.showConfirmDialog(ProjectDlg.this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
+							{
+								PAS.pasplugin.onDeleteProject(Long.valueOf(proj.get_projectpk()), new IDeleteProject() {
+									@Override
+									public void Complete(long projectpk,
+											UDeleteProjectResponse response) {
+										String error = null;
+										switch(response.getResponsecode())
+										{
+										case OK:
+											delete_row(rowcontent[DELETE_COLUMN], DELETE_COLUMN, Project.class);
+											break;
+										case ERROR:
+											error = Localization.l("main_status_delete_general_error");
+											break;
+										case FAILED_SENDING_STILL_ACTIVE:
+											error = Localization.l("main_status_delete_sending_active");
+											break;
+										case FAILED_USER_RESTRICTED:
+										case PROJECT_USER_RESTRICTED:
+											error = Localization.l("main_project_delete_restricted");
+											break;
+										}
+										if(error!=null)
+										{
+											JOptionPane.showMessageDialog(ProjectDlg.this, error, PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
+										}
+									}
+									
+								});
+							}
+						}
+					}
 				} catch(Exception e) {
 					m_btn_open.setEnabled(false);
 					m_proj = null;

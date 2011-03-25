@@ -60,7 +60,8 @@ public class WSGetStatusList extends WSThread
                     item.getNAltjmp(), item.getNCreatedate(), item.getNCreatetime(), item.getSzSendingname(),
                     item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
                     item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
-                    Long.toString(item.getNUpdatetimestamp()), item.getNSimulation());
+                    Long.toString(item.getNUpdatetimestamp()), item.getNSimulation(),
+                    item.getNProjectOwnerDeptpk(), item.getNProjectOwnerUserpk());
             m_arr_statusobjects.add(obj);
         }
 	}

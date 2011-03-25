@@ -36,7 +36,19 @@ public class OpenStatusFrame extends JFrame implements ActionListener {
 		getContentPane().setLayout(new BorderLayout ());
 //String[] sz_itemattr = { "l_refno", "l_sendingtype", "l_totitem", "l_altjmp", "l_createdate", "l_createtime",
 // "sz_sendingname", "l_sendingstatus", "l_group", "l_type", "l_deptpk", "sz_deptid" };
-        String sz_columns[] = {Localization.l("projectdlg_projectname"), Localization.l("common_owner"), Localization.l("common_refno"), Localization.l("common_channel"), Localization.l("common_mode"), Localization.l("common_items"), Localization.l("common_type"), Localization.l("common_created"), Localization.l("common_time"), Localization.l("common_sendingname"), Localization.l("common_sendingstatus") , "" };
+        String sz_columns[] = {
+        		Localization.l("projectdlg_projectname"), 
+        		Localization.l("common_owner"), 
+        		Localization.l("common_refno"), 
+        		Localization.l("common_channel"), 
+        		Localization.l("common_mode"), 
+        		Localization.l("common_items"), 
+        		Localization.l("common_type"), 
+        		Localization.l("common_created"), 
+        		Localization.l("common_time"), 
+        		Localization.l("common_sendingname"), 
+        		Localization.l("common_sendingstatus") , 
+        		"" };
 		int n_width[] = { 150, 100, 100, 100, 100, 75, 90, 120, 75, 200, 200,32 };
 		m_statuspanel = new SearchPanelStatusList(PAS.get_pas(), this, sz_columns, n_width);
 		

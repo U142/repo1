@@ -22,13 +22,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
-import no.ums.ws.common.UDELETESTATUSRESPONSE;
+import no.ums.ws.common.UDeleteStatusResponse;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {
@@ -40,7 +41,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	private PUOpenStatus m_popup;
 	public OpenStatusFrame get_statusframe() { return m_statusframe; }
 	private final int n_refno_column = 2;
-	private final int n_delete_column = 11;
+	public static final int DELETE_COLUMN = 11;
 	
 	public PAS get_pas() { return m_pas; }
 	
@@ -53,26 +54,28 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	}
 	@Override
 	public void set_custom_cellrenderer(TableColumn column, int n_col) {
-		if(n_col==n_delete_column)
+		final ImageIcon ico_delete = ImageFetcher.getIcon("delete_16.png");
+		final ImageIcon cant_delete = ImageFetcher.makeGrayscale(ico_delete);
+		if(n_col==DELETE_COLUMN)
 		{
 			column.setCellRenderer(new DefaultTableCellRenderer() {
-				JButton del = new JButton(ImageFetcher.getIcon("delete_16.png"));
+				//JButton del = new JButton(ImageFetcher.getIcon("delete_16.png"));
 				@Override
 				public Component getTableCellRendererComponent(JTable table, Object value,
 						boolean isSelected, boolean hasFocus, int row, int column) {
 					if(value instanceof StatusListObject)
 					{
 						StatusListObject obj = (StatusListObject)value;
-						if(statusMayBeDeleted(obj))
+						if(obj.statusMayBeDeleted()==UDeleteStatusResponse.OK)
 						{
-							ImageIcon ico = ImageFetcher.getIcon("delete_16.png");
-							setIcon(ico);
+							//ImageIcon ico = ImageFetcher.getIcon("delete_16.png");
+							setIcon(ico_delete);
 							this.setHorizontalAlignment(SwingConstants.CENTER);
 						}
 						else
 						{
-							setIcon(null);
-							setText("");
+							setIcon(cant_delete);
+							this.setHorizontalAlignment(SwingConstants.CENTER);
 						}
 						this.setBackground(getBgColorForRow(row));
 						this.setForeground(getFgColorForRow(row));
@@ -94,50 +97,22 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	protected void start_search()
 	{
 	}
-	protected boolean statusMayBeDeleted(StatusListObject s)
-	{
-		//check if user is member of dept and that membership allows to delete (status>=2)
-		for(DeptInfo di : Variables.getUserInfo().get_departments())
-		{
-			if(di.get_deptpk()==s.get_deptpk())
-			{
-				if(di.get_userprofile().get_status()<2)
-				{
-					return false;
-				}
-			}
-		}
-		boolean b_ret = false;
-		switch(s.get_type())
-		{
-		case 1: //voice
-		case 2: //sms
-		case 3: //email
-			if(s.get_sendingstatus() <= 0 || s.get_sendingstatus()>=7)
-				b_ret = true;
-			break;
-		case 4: //lba
-		case 5: //tas
-			b_ret = LBASEND.HasFinalStatus(s.get_sendingstatus());
-			break;
-		}
-		return b_ret;
-	}
 	protected void onMouseLClick(final int n_row, int n_col, final Object [] rowcontent, Point p)
 	{
-		if(n_col==n_delete_column)
+		if(n_col==DELETE_COLUMN)
 		{
-			if(rowcontent[n_delete_column] instanceof StatusListObject &&
-				statusMayBeDeleted((StatusListObject)rowcontent[n_delete_column]) && JOptionPane.showConfirmDialog(this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
+			StatusListObject slo = ((StatusListObject)rowcontent[DELETE_COLUMN]);
+			if(rowcontent[DELETE_COLUMN] instanceof StatusListObject &&
+					slo.statusMayBeDeleted()==UDeleteStatusResponse.OK && JOptionPane.showConfirmDialog(this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
 			{
 				System.out.println("Delete status");
-				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[n_delete_column]).get_refno(),
+				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[DELETE_COLUMN]).get_refno(),
 						new IDeleteStatus() {	
 							@Override
-							public void Complete(long refno, UDELETESTATUSRESPONSE response) {
-								if(response.equals(UDELETESTATUSRESPONSE.OK))
+							public void Complete(long refno, UDeleteStatusResponse response) {
+								if(response.equals(UDeleteStatusResponse.OK))
 								{
-									delete_row(rowcontent[n_delete_column], n_delete_column, StatusListObject.class);
+									delete_row(rowcontent[DELETE_COLUMN], DELETE_COLUMN, StatusListObject.class);
 								}
 							}
 						});
@@ -146,13 +121,13 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	}
 	protected void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
-		openStatus(true, (StatusListObject)rowcontent[2], -1);
+		openStatus(true, (StatusListObject)rowcontent[0], -1);
 	}
 	protected void onMouseRClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
 		m_tbl.getSelectionModel().setSelectionInterval(n_row, n_row);
 		Point mouse = this.getMousePosition();
-		m_popup.pop(this, mouse, (StatusListObject)rowcontent[2]);
+		m_popup.pop(this, mouse, (StatusListObject)rowcontent[0]);
 	}
 	protected void onMouseRDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
@@ -161,39 +136,19 @@ public class SearchPanelStatusList extends SearchPanelResults {
 		String sz_statustext = "";
 		for(int i=0; i < arr_statuslist.size(); i++) {
 			StatusListObject obj = (StatusListObject)arr_statuslist.get(i);
-			if(obj.get_type()==4 || obj.get_type()==5)//LBA or TAS
-				sz_statustext = LBASEND.LBASTATUSTEXT(obj.get_sendingstatus());
-			else
-				sz_statustext = TextFormat.get_statustext_from_code(obj.get_sendingstatus(), obj.get_altjmp());
-			String sz_simulation = "Unknown";
-			switch(obj.get_simulation())
-			{
-			case 0:
-				sz_simulation = Localization.l("common_live");
-				break;
-			case 1:
-				sz_simulation = Localization.l("common_simulated");
-				break;
-			case 2:
-				sz_simulation = Localization.l("common_test");
-				break;
-			case 4:
-				sz_simulation = Localization.l("common_silent");
-				break;
-			}
 			JButton del = new JButton(ImageFetcher.getIcon("delete_24.png"));
 			Object sz_visible[] = { 
-					obj.get_project().get_projectname(), 
-					obj.get_deptid(), 
 					obj, 
+					obj.get_deptid(), 
+					obj.get_refno(), 
 					obj.getChannel(), 
-					sz_simulation, 
+					obj.getSimulationText(), 
 					Integer.toString(obj.get_totitem()), 
 					obj.get_groupdesc(),
 					TextFormat.format_date(obj.get_createdate()), 
 					TextFormat.format_time(obj.get_createtime(),4), 
 					obj.get_sendingname(), 
-					sz_statustext, 
+					obj.getStatusText(), 
 					obj};
 			this.insert_row(sz_visible, -1, false);
 		}

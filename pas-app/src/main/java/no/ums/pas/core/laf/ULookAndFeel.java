@@ -1,5 +1,6 @@
 package no.ums.pas.core.laf;
 
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.ums.tools.ImageLoader;
 
 import javax.swing.Icon;
@@ -212,23 +213,22 @@ public class ULookAndFeel
 		UAttentionUI ui;		
 		private static ImageIcon m_icon_close = null;
 		private static ImageIcon m_icon_close_grayscale = null;
-		protected final static int CLOSE_ICONSIZE = 10;
-		protected final static int CLOSE_RIGHT_PADDING = 5;
+		protected static int CLOSE_ICONSIZE = 10;
+		protected static int CLOSE_RIGHT_PADDING = 5;
 		protected final static String CLOSE_ICON_FILE = "delete_16.png";
 		
 		private TabCallback callback;
+		
 		UTabbedPaneUI(JComponent c, TabCallback callback)
 		{
 			ui = new UAttentionUI(c);
 			this.callback = callback;
-			m_icon_close = new ImageIcon(ImageLoader.load_icon(CLOSE_ICON_FILE).getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
-			BufferedImage bufferedImage = new BufferedImage(m_icon_close.getIconWidth(), m_icon_close.getIconHeight(), BufferedImage.TYPE_BYTE_GRAY);
-			m_icon_close_grayscale = new ImageIcon();
-			Graphics gi = bufferedImage.getGraphics();
-			gi.drawImage(m_icon_close.getImage(), 0, 0, SystemColor.control, null);
-			gi.dispose();
-			m_icon_close_grayscale = new ImageIcon(bufferedImage);
-			
+			m_icon_close = new ImageIcon(ImageLoader.load_icon(CLOSE_ICON_FILE).getImage()); //.getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
+			//CLOSE_ICONSIZE = m_icon_close.getIconWidth();
+			//CLOSE_RIGHT_PADDING = CLOSE_ICONSIZE/2;
+			m_icon_close_grayscale = ImageFetcher.makeGrayscale(m_icon_close);
+			m_icon_close = new ImageIcon(m_icon_close.getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
+			m_icon_close_grayscale = new ImageIcon(m_icon_close_grayscale.getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
 			
 			((JTabbedPane)c).addMouseListener(new MouseListener());
 			((JTabbedPane)c).addMouseMotionListener(new MouseListener());

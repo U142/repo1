@@ -5,28 +5,28 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import no.ums.pas.core.Variables;
-import no.ums.ws.common.UDeleteStatusRequest;
+import no.ums.ws.common.UDeleteProjectRequest;
+import no.ums.ws.common.UDeleteProjectResponse;
 import no.ums.ws.common.UDeleteStatusResponse;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.status.PasStatus;
 
-public class WSDeleteStatus extends WSThread {
+public class WSDeleteProject extends WSThread {
 
-	IDeleteStatus icallback;
-	long n_refno = 0;
+	IDeleteProject icallback;
+	long projectpk;
 	
-	public WSDeleteStatus(long n_refno, IDeleteStatus icallback)
+	public WSDeleteProject(long projectpk, IDeleteProject callback)
 	{
 		super(null);
-		this.icallback = icallback;
-		this.n_refno = n_refno;
+		this.icallback = callback;
+		this.projectpk = projectpk;
 	}
 	
-	public interface IDeleteStatus
+	public interface IDeleteProject
 	{
-		public void Complete(long refno, UDeleteStatusResponse response);
+		public void Complete(long projectpk, UDeleteProjectResponse response);
 	}
-	
 	@Override
 	protected String getErrorMessage() {
 		return null;
@@ -39,22 +39,22 @@ public class WSDeleteStatus extends WSThread {
 
 	@Override
 	public void call() throws Exception {
+		UDeleteProjectResponse response = new UDeleteProjectResponse();
 		try
 		{
 			URL wsdl = new URL(vars.WSDL_PASSTATUS);
 			QName service = new QName("http://ums.no/ws/pas/status", "PasStatus");
-
 			ULOGONINFO logon = new ULOGONINFO();
 			WSFillLogoninfo.fill(logon, Variables.getUserInfo());
-			UDeleteStatusRequest req = new UDeleteStatusRequest();
-			req.setLRefno(n_refno);
-			UDeleteStatusResponse response = new PasStatus(wsdl, service).getPasStatusSoap12().deleteStatus(logon, req);
-			icallback.Complete(n_refno, response);
+			UDeleteProjectRequest req = new UDeleteProjectRequest();
+			req.setLProjectpk(projectpk);
+			response = new PasStatus(wsdl, service).getPasStatusSoap12().deleteProject(logon, req);
+			icallback.Complete(projectpk, response);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			icallback.Complete(n_refno, UDeleteStatusResponse.ERROR);
+			icallback.Complete(projectpk, response);
 		}
 	}
 

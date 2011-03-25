@@ -1,8 +1,15 @@
 package no.ums.pas.icons;
 
 import javax.swing.ImageIcon;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.net.URL;
 
 /**
@@ -24,4 +31,40 @@ public class ImageFetcher {
     public static ImageIcon getIcon(String url) {
         return new ImageIcon(getResource(url));
     }
+    
+	public static ImageIcon makeGrayscale(ImageIcon icon)
+	{
+		BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics gi = bufferedImage.getGraphics();
+
+		Image source = icon.getImage();
+		PixelGrabber pgsource = new PixelGrabber(source, 0, 0, source.getWidth(null), source.getHeight(null), true);
+		try
+		{
+			if(pgsource.grabPixels())
+			{
+				int [] pixels = (int[])pgsource.getPixels();
+				for(int x=0; x < source.getWidth(null); x++)
+				{
+					for(int y=0; y < source.getHeight(null); y++)
+					{
+						int rgb = pixels[x + y * source.getWidth(null)];
+						int luma = (((int)rgb & 0xFF) << 24) | //alpha
+			            			(((int)rgb & 0xFF) << 16) | //red
+			            			(((int)rgb & 0xFF) << 8)  | //green
+			            			(((int)rgb & 0xFF) << 0); //blue
+						bufferedImage.setRGB(x, y, luma);
+					}
+				}
+			}
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		//g2d.drawImage(icon.getImage(), 0, 0, new Color(255,255,255,0), null);
+		gi.dispose();
+		return new ImageIcon(bufferedImage);			
+	}
+
 }

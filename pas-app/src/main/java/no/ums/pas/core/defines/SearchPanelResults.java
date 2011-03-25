@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -48,6 +49,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -188,6 +190,22 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 				}
 	        	
 	        };
+	        m_tbl.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = m_tbl.rowAtPoint(p);
+					int column = m_tbl.getColumnModel().getColumnIndexAtX(p.x);
+					Object o = m_tbl.getValueAt(row, 0);
+					if(o instanceof TooltipItem)
+					{
+						TooltipItem tip = (TooltipItem)o;
+						m_tbl.setToolTipText(tip.toTooltipString(column));
+					}
+					//super.mouseMoved(e);
+				}
+	        	
+			});
 	        if(b_enable_sort)
 	        {
 		        m_tbl.getTableHeader().setDefaultRenderer(m_tbl.getTableHeader().getDefaultRenderer());
@@ -197,6 +215,26 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 						sorter.setTableHeader(m_tbl.getTableHeader());
 		        	}
 		        });
+	        	/*m_tbl.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
+	        		
+					@Override
+					public Component getTableCellRendererComponent(
+							JTable table, Object value, boolean isSelected,
+							boolean hasFocus, int row, int column) {
+						//Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+						//		row, column);
+						this.setText(value.toString());
+						this.setHorizontalAlignment(SwingConstants.CENTER);
+						return this;
+					}
+	        		
+	        	});
+	        	SwingUtilities.invokeLater(new Runnable() {
+		        	public void run()
+		        	{
+			        	sorter.setTableHeader(m_tbl.getTableHeader());
+		        	}
+	        	});*/
 	        }
 
 	        

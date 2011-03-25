@@ -32,6 +32,8 @@ import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.core.ws.WSDeleteProject;
+import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSDeleteStatus;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
@@ -1263,6 +1265,18 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				return Boolean.TRUE;
 			}
 			
+		}.execute();
+		return true;
+	}
+
+	@Override
+	public boolean onDeleteProject(final long projectpk, final IDeleteProject callback) {
+		new SwingWorker() {
+			@Override
+			protected Object doInBackground() throws Exception {
+				new WSDeleteProject(projectpk, callback).runNonThreaded();
+				return Boolean.TRUE;
+			}			
 		}.execute();
 		return true;
 	}

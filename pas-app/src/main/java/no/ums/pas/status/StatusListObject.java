@@ -1,9 +1,15 @@
 package no.ums.pas.status;
 
+import no.ums.pas.core.Variables;
+import no.ums.pas.core.defines.TooltipItem;
+import no.ums.pas.core.logon.DeptInfo;
+import no.ums.pas.core.mainui.SearchPanelStatusList;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.ums.tools.TextFormat;
+import no.ums.ws.common.UDeleteStatusResponse;
 
-public class StatusListObject extends Object {
+public class StatusListObject extends Object implements TooltipItem {
 
 	private Project m_project = new Project();
 	
@@ -34,7 +40,7 @@ public class StatusListObject extends Object {
 	public int get_type() { return m_n_type; }
 	public int get_deptpk() { return m_n_deptpk; }
 	public String get_deptid() { return m_sz_deptid; }
-	public String toString() { return new Integer(get_refno()).toString(); }
+	public String toString() { return get_sendingname(); }//return new Integer(get_refno()).toString(); }
 	public int get_simulation() { return m_n_simulation; }
 	public String getChannel()
 	{
@@ -44,6 +50,9 @@ public class StatusListObject extends Object {
 		else if(get_type()==2) {
             return Localization.l("main_status_channel_sms");
         }
+		else if(get_type()==3) {
+			return Localization.l("main_status_channel_email");
+		}
 		else if(get_type()==4) {
             return Localization.l("main_status_channel_lba");
         }
@@ -52,11 +61,38 @@ public class StatusListObject extends Object {
         }
 		return "Unknown";
 	}
+	public String getSimulationText()
+	{
+		String ret = "Unknown";
+		switch(get_simulation())
+		{
+		case 0:
+			ret = Localization.l("common_live");
+			break;
+		case 1:
+			ret = Localization.l("common_simulated");
+			break;
+		case 2:
+			ret = Localization.l("common_silent");
+			break;
+		}
+		return ret;
+	}
 
+	public String getStatusText()
+	{
+		String sz_statustext = "Unknown";
+		if(get_type()==4 || get_type()==5)//LBA or TAS
+			sz_statustext = LBASEND.LBASTATUSTEXT(get_sendingstatus());
+		else
+			sz_statustext = TextFormat.get_statustext_from_code(get_sendingstatus(), get_altjmp());
+		return sz_statustext;
+	}
 	
 	public StatusListObject(int n_refno, int n_sendingtype, int n_totitem, int  n_altjmp, int n_createdate, int n_createtime, 
 			 String sz_sendingname, int n_sendingstatus, int n_group, int n_type, int n_deptpk, String sz_deptid, String sz_projectpk,
-			 String sz_projectname, String sz_createtimestamp, String sz_updatetimestamp, int simulation)
+			 String sz_projectname, String sz_createtimestamp, String sz_updatetimestamp, int simulation, 
+			 int n_project_owner_deptpk, int n_project_owner_userpk)
 	{
 		m_n_refno	= n_refno;
 		m_n_sendingtype	= n_sendingtype;
@@ -76,6 +112,8 @@ public class StatusListObject extends Object {
 		get_project().set_createtimestamp(sz_createtimestamp);
 		get_project().set_updatetimestamp(sz_updatetimestamp);
 		get_project().set_saved();
+		get_project().setOwnerDeptpk(n_project_owner_deptpk);
+		get_project().setOwnerUserpk(n_project_owner_userpk);
 	}
 	public StatusListObject(String [] sz_values)
 	{
@@ -83,7 +121,8 @@ public class StatusListObject extends Object {
 				new Integer(sz_values[3]).intValue(), new Integer(sz_values[4]).intValue(), new Integer(sz_values[5]).intValue(),
 				sz_values[6], new Integer(sz_values[7]).intValue(), new Integer(sz_values[8]).intValue(), 
 				new Integer(sz_values[9]).intValue(), new Integer(sz_values[10]).intValue(), sz_values[11], sz_values[12],
-				sz_values[13], sz_values[14], sz_values[15], Integer.valueOf(sz_values[16]));
+				sz_values[13], sz_values[14], sz_values[15], Integer.valueOf(sz_values[16]),
+				Integer.valueOf(sz_values[17]), Integer.valueOf(sz_values[18]));
 		/*m_n_refno	= new Integer(sz_values[0]).intValue();
 		m_n_sendingtype	= new Integer(sz_values[1]).intValue();
 		m_n_totitem	= new Integer(sz_values[2]).intValue();
@@ -118,4 +157,86 @@ public class StatusListObject extends Object {
 		}
 		return "N/A";
 	}
+	
+	public boolean HasFinalStatus()
+	{
+		boolean b_ret = false;
+		switch(get_type())
+		{
+		case 1: //voice
+		case 2: //sms
+		case 3: //email
+			if(get_sendingstatus() < 0 || get_sendingstatus()>=7)
+				b_ret = true;
+			break;
+		case 4: //lba
+		case 5: //tas
+			b_ret = LBASEND.HasFinalStatus(get_sendingstatus());
+			break;
+		}
+		return b_ret;
+	}
+	
+	public boolean HasErrorStatus()
+	{
+		boolean b_ret = false;
+		if(!HasFinalStatus())
+			return false;
+		switch(get_type())
+		{
+		case 1: //voice
+		case 2: //sms
+		case 3: //email
+			if(get_sendingstatus() <= 0 || get_sendingstatus()>7)
+				b_ret = true;
+			break;
+		case 4: //lba
+		case 5: //tas
+			b_ret = LBASEND.HasErrorStatus(get_sendingstatus());
+			break;
+		}		
+		return b_ret;
+	}
+	
+	public UDeleteStatusResponse statusMayBeDeleted()
+	{
+		//check if user is member of dept and that membership allows to delete (status>=2)
+		for(DeptInfo di : Variables.getUserInfo().get_departments())
+		{
+			if(di.get_deptpk()==get_deptpk())
+			{
+				if(di.get_userprofile().get_status()<2)
+				{
+					return UDeleteStatusResponse.FAILED_USER_RESTRICTED;
+				}
+			}
+		}
+		
+		return (HasFinalStatus() ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_SENDING_STILL_ACTIVE);
+	}
+	@Override
+	public String toTooltipString() {
+		return "";
+	}
+	@Override
+	public String toTooltipString(int at_column) {
+		if(at_column==SearchPanelStatusList.DELETE_COLUMN)
+		{
+			switch(statusMayBeDeleted())
+			{
+			case OK:
+				return Localization.l("common_delete");
+			case ERROR:
+				return Localization.l("main_status_delete_general_error");
+			case FAILED_SENDING_STILL_ACTIVE:
+				return Localization.l("main_status_delete_sending_active");
+			case FAILED_USER_RESTRICTED:
+				return Localization.l("main_status_delete_restricted_by_profile");
+			case PROJECT_USER_RESTRICTED:
+				return Localization.l("main_status_delete_restricted_by_ownership");
+			}
+		}
+		return null;
+	}
+
 }

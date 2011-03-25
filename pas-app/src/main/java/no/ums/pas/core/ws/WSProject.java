@@ -2,11 +2,13 @@ package no.ums.pas.core.ws;
 
 import no.ums.pas.PAS;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.localization.Localization;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
 import no.ums.ws.pas.UPROJECTREQUEST;
 import no.ums.ws.pas.UPROJECTRESPONSE;
 
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +34,7 @@ public class WSProject extends WSThread
 			{
 				projectresponse = new UPROJECTRESPONSE();
 				projectresponse.setNProjectpk(-1);
+				JOptionPane.showMessageDialog(null, "Save project failed", Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
