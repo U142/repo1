@@ -213,8 +213,8 @@ public class ULookAndFeel
 		UAttentionUI ui;		
 		private static ImageIcon m_icon_close = null;
 		private static ImageIcon m_icon_close_grayscale = null;
-		protected static int CLOSE_ICONSIZE = 10;
-		protected static int CLOSE_RIGHT_PADDING = 5;
+		protected final static int CLOSE_ICONSIZE = 10;
+		protected final static int CLOSE_RIGHT_PADDING = 5;
 		protected final static String CLOSE_ICON_FILE = "delete_16.png";
 		
 		private TabCallback callback;
