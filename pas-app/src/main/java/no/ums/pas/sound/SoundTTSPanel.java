@@ -17,6 +17,7 @@ import no.ums.ws.pas.UCONVERTTTSRESPONSE;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultHighlighter;
@@ -131,10 +132,17 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		} else if("act_tts_convert_complete".equals(e.getActionCommand())) {
 			converter_stopped((String)e.getSource());
 			//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, (String)e.getSource());
-			get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS((String)e.getSource(),-1, null));
-			
-			// Her gjøres den ferdig og reloader parent for å enable next knappen
-			get_parent().set_next_text();
+			if(((String)e.getSource()).equals(""))
+			{
+				//failed
+				JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_converting_tts") + " " + Localization.l("common_failed"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS((String)e.getSource(),-1, null));
+				// Her gjøres den ferdig og reloader parent for å enable next knappen
+				get_parent().set_next_text();
+			}
 		} else if("act_txtlib_changed".equals(e.getActionCommand())) {
 			//load text from server
 			try {
@@ -210,6 +218,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	String sz_localpath;
 	String sz_localfile;
 	public void converter_stopped(String sz_file) {
+		m_btn_convert.setEnabled(true);
 		sz_localpath = StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_);
 		sz_localfile = sz_file;
 		
@@ -436,14 +445,6 @@ class TTSConverter extends Thread {
 	public String convert() {
 		String sz_filename = null;
 		try {
-			/*HttpPostForm form = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_convert_tts.asp");
-			form.setParameter("n_langpk", new Integer(get_langpk()).toString());
-			form.setParameter("n_sendingid", new Integer(get_sendingid()).toString());
-			form.setParameter("n_dynfile", new Integer(get_dynfile()).toString());
-			form.setParameter("sz_text", get_text());
-			InputStream is = null;
-			sz_filename = parse(form.post());*/
-			
 			no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
 			ULOGONINFO logon = new ULOGONINFO();
 			UCONVERTTTSREQUEST ttsreq = new UCONVERTTTSREQUEST();
@@ -460,8 +461,7 @@ class TTSConverter extends Thread {
 			ttsreq.setNLangpk(get_langpk());
 			ttsreq.setSzText(get_text());
 			
-			java.net.URL wsdl = new java.net.URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL");
-			//java.net.URL wsdl = new java.net.URL("http://localhost/WS/PAS.asmx?WSDL");
+			java.net.URL wsdl = new java.net.URL(vars.WSDL_PAS);
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			UCONVERTTTSRESPONSE response = new no.ums.ws.pas.Pasws(wsdl, service).getPaswsSoap12().convertTTS(logon, ttsreq);
 			switch(response.getNResponsecode())
