@@ -995,10 +995,21 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
             JOptionPane.showMessageDialog(this, Localization.l("main_sending_schedule_error"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		if(((m_sendobject.get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && ((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent())) || m_tabbedpane.getSelectedComponent().equals(m_send)) &&
+		if(((m_sendobject.get_toolbar().get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0) && 
+				((componentIndex(m_cell_broadcast_text_panel)<componentIndex(m_tabbedpane.getSelectedComponent()) && !m_tabbedpane.getSelectedComponent().getClass().equals(Sending_Files.class))
+						|| m_tabbedpane.getSelectedComponent().equals(m_send)) &&
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
+			/*
+			int index = -1;
+			System.out.println("Selected index: " + m_tabbedpane.getSelectedIndex());
+			for(int i=0;i<m_tabbedpane.getTabCount();i++) {
+				if(m_tabbedpane.getComponent(i).equals(m_cell_broadcast_text_panel))
+					index = i;
+			}*/
+			//if(index != -1) {
 			showSpecifyLanguage();
 			m_tabbedpane.setSelectedComponent(m_cell_broadcast_text_panel);
+			//}
 		}
 		Component sel = ((JTabbedPane)e.getSource()).getSelectedComponent();
 		if(sel instanceof Sending_Files) //start new instance of recorder
@@ -1027,7 +1038,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				}
 			}
 			
-			if(sms_index < m_tabbedpane.getSelectedIndex()) {
+			if(sms_index != -1 && sms_index < m_tabbedpane.getSelectedIndex()) {
 				if(!m_send.checkSMSInput()) {
 					return;
 				}
@@ -1082,7 +1093,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		{
 			err.printStackTrace();
 		}
-
+		m_tabbedpane.setSelectedIndex(0);
 		if(close)
 			PAS.get_pas().get_statuscontroller().set_pause(false);
 	}

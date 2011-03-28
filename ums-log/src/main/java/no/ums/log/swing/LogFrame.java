@@ -149,7 +149,7 @@ public class LogFrame extends javax.swing.JFrame {
         logRecordDetail1 = new LogRecordDetail();
 
         //======== this ========
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         Container contentPane = getContentPane();
 
         //======== jSplitPane1 ========
