@@ -10,10 +10,12 @@ public class ReflectionChildPathAccessor<P, T, V> extends IPathAccessor.Abstract
 
     private final IPathAccessor<P, T> parent;
     private final BeanPropertyAccessor accessor;
+    private final String name;
 
     public ReflectionChildPathAccessor(IPathAccessor<P, T> parent, BeanPropertyName prop, Class<V> valueType) {
         super(prop.getFullName(), parent.getTargetType(), valueType);
         this.parent = parent;
+        this.name = prop.getName();
         this.accessor = prop.getAccessor(parent.getValueType());
     }
 
@@ -35,7 +37,7 @@ public class ReflectionChildPathAccessor<P, T, V> extends IPathAccessor.Abstract
     @Override
     protected void addPropertyChangeListenerImpl(final P instance, final PropertyChangeListener listener) {
         @SuppressWarnings("unchecked")
-        final ListenerHandle<Object> handle = ListenerHandle.Factory.addPropertyChangeListener(parent.getValue(instance), getPropertyName(), listener);
+        final ListenerHandle<Object> handle = ListenerHandle.Factory.addPropertyChangeListener(parent.getValue(instance), name, listener);
         parent.addPropertyChangeListener(instance, new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {

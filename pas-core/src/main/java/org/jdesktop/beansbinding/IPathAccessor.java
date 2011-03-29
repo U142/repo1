@@ -24,7 +24,7 @@ public interface IPathAccessor<T, V> {
 
         @Override
         public void addPropertyChangeListener(T tgt, PropertyChangeListener listener) {
-            values.put(type.cast(tgt), getValue(type.cast(tgt)));
+            values.put(tgt, getValue(tgt));
             addPropertyChangeListenerImpl(type.cast(tgt), listener);
         }
 

@@ -34,14 +34,12 @@ public class VisibleValidation {
             c.setToolTipText(toolTip);
             ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
             c.getActionMap().get("postTip").actionPerformed(postTip);
-			System.out.println("PostTip " + toolTip);
             c.putClientProperty("UToolTipShowing", Boolean.TRUE);
 			isToolTipShowing = true;
         } else if (bIsOk && tooltipShowing) {
             ActionEvent postTip = new ActionEvent(c, ActionEvent.ACTION_PERFORMED, "");
             c.getActionMap().get("postTip").actionPerformed(postTip);
             c.putClientProperty("UToolTipShowing", Boolean.FALSE);
-			System.out.println("RemoveTip " + c.getText());
 			c.setToolTipText(null);
 			isToolTipShowing = false;
         }

@@ -135,7 +135,6 @@ public class BeanPropertyTest {
     @Test
     public void testNestedPropertyRead() {
         final TestNestedBean nestedBeanSrc = new TestNestedBean(new TestBean());
-        nestedBeanSrc.setNested(new TestBean());
         final TestBean tgt = new TestBean();
         Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, nestedBeanSrc, BeanProperty.create("nested.name"), tgt, BeanProperty.create("name")).bind();
 

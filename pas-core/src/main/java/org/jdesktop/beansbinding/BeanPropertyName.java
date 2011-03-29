@@ -35,7 +35,7 @@ public interface BeanPropertyName {
 
         @Override
         public String getFullName() {
-            return (getParent() == null) ? getName() : getParent() + getName();
+            return (getParent() == null) ? getName() : getParent().getFullName() + "." + getName();
         }
 
         @Override
