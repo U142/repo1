@@ -5,13 +5,18 @@ import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ImageLoader;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.SystemColor;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -208,6 +213,8 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p);
 	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, 
 						Point p, boolean b_border, boolean b_fill, int pensize, boolean bPaintShapeName);
+	public abstract void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, 
+			Point p, boolean b_border, boolean b_fill, int pensize, boolean bPaintShapeName, boolean bHasFocus);
 	public abstract NavStruct calc_bounds();
 	public abstract PolySnapStruct snap_to_point(Point p1, int n_max_distance, boolean b_current,
 			Dimension dim_map, Navigation nav);
@@ -260,4 +267,33 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 		m_tex_paint = new TexturePaint(m_buff_image,rek);
 	}
 
+	public void paintShapeName(Graphics g, boolean bIsActive, boolean bHasFocus)
+	{
+		if(m_center_pix.get_x()<=0 && m_center_pix.get_y()<=0)
+			return;
+		Color gOldColor = g.getColor();
+		Font f = new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 10);
+		FontMetrics fm = g.getFontMetrics(f);
+		int width = fm.stringWidth(this.shapeName);
+		int height = fm.getHeight();
+		Color transBg = new Color(SystemColor.control.getRed(),
+				SystemColor.control.getGreen(),
+				SystemColor.control.getBlue(),
+				70);
+		
+		Color bg = transBg;
+		g.setColor(bg);
+		int factor = 5;
+		g.fillRoundRect(m_center_pix.get_x()-width/2-factor, m_center_pix.get_y()-height/2-factor, 
+				width+factor*2, height+factor, 10, 10);
+		g.setColor(Color.black);
+		g.drawRoundRect(m_center_pix.get_x()-width/2-factor, m_center_pix.get_y()-height/2-factor, 
+				width+factor*2, height+factor, 10, 10);
+		Font fOldFont = g.getFont();
+		g.setFont(f);
+		g.setColor((bHasFocus ? SystemColor.textText : SystemColor.controlDkShadow));
+		g.drawString(this.shapeName, m_center_pix.get_x()-width/2, m_center_pix.get_y()+2);
+		g.setFont(fOldFont);
+		g.setColor(gOldColor);	
+	}
 }

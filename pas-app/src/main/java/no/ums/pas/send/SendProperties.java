@@ -133,6 +133,10 @@ public abstract class SendProperties extends Object {
 		m_sz_sendingname = sz_name;
 		m_sz_description = sz_description;
 		parent.set_sendingname(m_sz_sendingname, sz_description);
+		if(get_shapestruct()!=null)
+		{
+			get_shapestruct().shapeName = m_sz_sendingname;
+		}
 	}
 	public String get_sendingname() { return m_sz_sendingname; }
 	public String get_description() { return m_sz_description; }

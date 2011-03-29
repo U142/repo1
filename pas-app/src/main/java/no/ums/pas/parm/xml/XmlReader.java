@@ -188,17 +188,20 @@ public class XmlReader {
 			this.sortListAscending(arrayObjects);
 			//this.readPolyXml();
 
-			if (!arrayObjects.isEmpty()){
-				sortListAscending(arrayObjects);
-				objectList.addAll(arrayObjects);
-			}
-			if (!arrayEvents.isEmpty()){
-				sortListAscending(arrayEvents);
-				objectList.addAll(arrayEvents);
-			}
-			if (!arrayAlerts.isEmpty()){
-				sortListAscending(arrayAlerts);
-				objectList.addAll(arrayAlerts);
+			if(objectList!=null)
+			{
+				if (!arrayObjects.isEmpty()){
+					sortListAscending(arrayObjects);
+					objectList.addAll(arrayObjects);
+				}
+				if (!arrayEvents.isEmpty()){
+					sortListAscending(arrayEvents);
+					objectList.addAll(arrayEvents);
+				}
+				if (!arrayAlerts.isEmpty()){
+					sortListAscending(arrayAlerts);
+					objectList.addAll(arrayAlerts);
+				}
 			}
 		}
 		if (objectList == null || objectList.isEmpty())
@@ -836,6 +839,10 @@ public class XmlReader {
 		String yCor = "";
 
 		PolygonStruct shape = new PolygonStruct(main.getMapSize());
+		if(o instanceof AlertVO)
+		{
+			shape.shapeName = ((AlertVO)o).getName();
+		}
 		
 		if (elPolyObject.hasAttribute("col_r")
 		 && elPolyObject.hasAttribute("col_g")

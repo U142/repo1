@@ -12,6 +12,7 @@ import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
+import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.Dimension;
@@ -116,14 +117,26 @@ public class ParmController extends MainController {
 				ShapeStruct s = (ShapeStruct)it.next();
 				if(s!=null) {
 					try {
-						if(!s.equals(get_shape())) {
-							if(s!=null)
+						if(getAlertController()==null || !s.equals(getAlertController().get_m_edit_shape_original()) ||
+								s.equals(getAlertController().get_m_edit_shape())) //get_shape())) {
+							if(getMapNavigation().bboxOverlap(s.getFullBBox()))
 							{
-								if(getMapNavigation().bboxOverlap(s.getFullBBox()))
-									s.draw(g, getMapNavigation(), true, true, false, null);
+								boolean b_focus = false;
+								//if(getSelectedObject()!=null && getSelectedObject() instanceof AlertVO)
+								//	b_focus = ((AlertVO)getSelectedObject()).getShape().equals(s);
+								//if(getSelectedObject()!=null)
+								{
+									//ParmVO pvo = getSelectedObject();
+									//if(pvo instanceof AlertVO)
+									{
+										ShapeStruct selectedShape = getSelectedObject()==null ? null : ((AlertVO)getSelectedObject()).getShape();
+										b_focus = selectedShape==s;
+										s.draw(g, getMapNavigation(), !b_focus, true, false, null, true, true, 1, true, b_focus);
+									}
+								}
 							}
 						}
-					} catch(Exception e) {
+					catch(Exception e) {
 						e.printStackTrace();
 					}
 				}
@@ -135,10 +148,10 @@ public class ParmController extends MainController {
 		}
 		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
-			get_shape().draw(g, getMapNavigation(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos());
+			get_shape().draw(g, Variables.getNavigation(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 2, false);
 		}
 		if(get_shape_filled()!=null && get_shape()==null) {
-			get_shape_filled().draw(g, getMapNavigation(), false, false, false, PAS.get_pas().get_mappane().get_current_mousepos());
+			//get_shape_filled().draw(g, getMapNavigation(), false, false, false, PAS.get_pas().get_mappane().get_current_mousepos());
 		}
 		long n_stop = System.currentTimeMillis();
 		//System.out.println("drawLayers in " + (n_stop-n_start) + "msecs");
@@ -197,11 +210,22 @@ public class ParmController extends MainController {
 	public void addShapeToDrawQueue(ShapeStruct s) {
 		get_shapelist().add(s);
 	}
+	public void removeShapeFromDrawQueue(ShapeStruct s) {
+		get_shapelist().remove(s);
+	}
+	public void clearShapesFromDrawQueue()
+	{
+		get_shapelist().clear();
+	}
 	protected void mapRedraw() {
 		PAS.get_pas().kickRepaint();
 	}
 	public void updateShape(ShapeStruct s) { //override
 		m_shape = s;
+		if(getAlertController()!=null && m_shape==null)
+		{
+			getAlertController().resetEditShape();
+		}
 	}
 	public void updateShapeFilled(ShapeStruct s) {
 		m_shape_filled = s;

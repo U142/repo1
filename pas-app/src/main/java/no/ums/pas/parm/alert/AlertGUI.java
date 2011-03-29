@@ -308,7 +308,6 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 	}
 
 	public void windowClosed(WindowEvent e) {
-		
 	}
 
 	public void windowClosing(WindowEvent e) {

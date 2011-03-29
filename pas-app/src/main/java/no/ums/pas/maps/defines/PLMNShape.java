@@ -122,5 +122,14 @@ public class PLMNShape extends ShapeStruct
 			boolean bCurrent, Dimension dimMap, Navigation nav) {
 		return null;
 	}
+
+	@Override
+	public void draw(Graphics g, Navigation nav, boolean b_dashed,
+			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+			boolean b_fill, int pensize, boolean bPaintShapeName,
+			boolean bHasFocus) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

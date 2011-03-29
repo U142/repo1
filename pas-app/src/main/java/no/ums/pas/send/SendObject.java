@@ -178,6 +178,7 @@ public class SendObject extends Object {
 			}
 		}
 		get_toolbar().set_sendingtype();
+		get_sendproperties().set_sendingname(m_toolbar.m_txt_sendname.getText(), "");
 		
 	}
 	public void destroy_all() {

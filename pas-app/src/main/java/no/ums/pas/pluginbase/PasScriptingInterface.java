@@ -395,6 +395,8 @@ public interface PasScriptingInterface {
 	
     void addShapeToPaint(ShapeStruct s);
 	
+    void removeShapeToPaint(ShapeStruct s);
+    
     boolean removeShapeToPaint(long id);
 	
     void clearShapesToPaint();

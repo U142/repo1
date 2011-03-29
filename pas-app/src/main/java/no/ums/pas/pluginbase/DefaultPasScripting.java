@@ -48,6 +48,7 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
+import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Timeout;
@@ -952,7 +953,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		return false;
 	}
 	
-	
+	@Override
+	public void removeShapeToPaint(ShapeStruct s) {
+		String key = "s" + s.shapeID;
+		if(shapes_to_paint.containsKey(key))
+		{
+			shapes_to_paint.remove(key);
+		}
+	}
+
 	public void clearShapesToPaint()
 	{
 		shapes_to_paint.clear();
@@ -986,13 +995,44 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		{
 			e.printStackTrace();
 		}
-		if(p.get_parmcontroller()!=null)
+		if(p.get_parmcontroller()!=null && 
+				(EastContent.CURRENT_PANEL==EastContent.PANEL_PARM_ ||
+				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_))
+		{
 			p.get_parmcontroller().drawLayers(g);
-		try {
-			p.get_sendcontroller().draw_polygons(g, PAS.get_pas().get_mappane().get_current_mousepos());
+		}
+		
+		/*try {
+			if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
+				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
+			{
+				p.get_sendcontroller().draw_polygons(g, PAS.get_pas().get_mappane().get_current_mousepos());
+			}
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
+		*/
+		
+		if(EastContent.CURRENT_PANEL==EastContent.PANEL_SENDING_ ||
+			EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
+		{
+			for(SendObject so : p.get_sendcontroller().get_sendings())
+			{
+				//if(!so.get_sendproperties().get_shapestruct().equals(p.get_mappane().get_active_shape()))
+				{
+					boolean bEdit = p.get_mappane().isInPaintMode() && so.get_sendproperties().get_shapestruct().equals(p.get_mappane().get_active_shape());
+					so.get_sendproperties().get_shapestruct().draw(
+							g, nav, !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);
+				}
+			}
+		}
 		try {
-			p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+			if(EastContent.CURRENT_PANEL==EastContent.PANEL_PARM_ ||
+				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
+			{
+				//if(p.get_parmcontroller().get_shape().equals(p.get_mappane().get_active_shape()))
+				{
+					//p.get_mappane().get_active_shape().draw(g, nav, false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+				}
+			}
 		} catch(Exception e) { }
 
 		Enumeration<ShapeStruct> en = getShapesToPaint().elements();
@@ -1021,9 +1061,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			}
 		} catch(Exception e) { }
 		try {
-			p.get_statuscontroller().drawItems(g);
+			if(EastContent.CURRENT_PANEL==EastContent.PANEL_STATUS_LIST ||
+				EastContent.CURRENT_PANEL==EastContent.PANEL_INFO_)
+			{
+				p.get_statuscontroller().drawItems(g);
+			}
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
-		//get_pas().get_mappane().drawOnEvents(m_gfx_buffer);
 		try {
 			p.get_gpscontroller().drawItems(g);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
@@ -1192,6 +1235,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
+		System.out.println("Tab: " + pane.getTitleAt(pane.getSelectedIndex()));
+		PAS.get_pas().kickRepaint();
 		return true;
 	}
 

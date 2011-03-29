@@ -10,13 +10,18 @@ import no.ums.pas.ums.tools.ImageLoader;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 //Substance 3.3
 
@@ -30,6 +35,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 	private ImageIcon icon = null;
 	private Border border = null;
 	private JTree tree;
+	private JLabel renderer = new JLabel();
 	
 	public CustomRenderer(JTree tree){
 		//border = BorderFactory.createBevelBorder(BevelBorder.RAISED);
@@ -42,9 +48,10 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 	
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
             											boolean leaf, int row, boolean hasFocus){
-		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+		renderer = (JLabel)super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 	
-		
+		//renderer.setOpaque(true);
+
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 		Object o = node.getUserObject();
@@ -54,7 +61,8 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 			setFont(UIManager.getFont("Tree.font"));
 			return this;
 		}
-		
+		renderer.setText(" " + o.toString());
+
 		if (o.getClass().equals(ObjectVO.class)){
 			initObjectVO(o);
 			}
@@ -67,20 +75,43 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 		if(o.getClass().getSuperclass().equals(ParmVO.class)) {
 			setHighlight((ParmVO)o);
 		}
-		setFont(UIManager.getFont("Tree.font"));		
-        return this;
+		renderer.setPreferredSize(new Dimension(500, tree.getRowHeight()));
+		renderer.setSize(new Dimension(500, tree.getRowHeight()));
+		renderer.setBounds(0, 0, 500, tree.getRowHeight());
+		renderer.setIconTextGap(5);
+		//renderer.setSize(tree.getPreferredSize().width, tree.getRowHeight());
+		int w = tree.getPreferredSize().width;
+		//renderer.setSize(new Dimension(w, tree.getRowHeight()));
+		/*if(sel)
+		{
+			renderer.setBackground(this.getBackgroundSelectionColor());
+			renderer.setForeground(this.getForeground());
+			renderer.setBorder(BorderFactory.createLineBorder(this.getBorderSelectionColor(), 1));
+		}
+		else
+		{
+			renderer.setBackground(this.getBackground());
+			renderer.setForeground(this.getTextNonSelectionColor());
+			renderer.setBorder(null);
+		}
+		if(hasFocus)
+		{
+			renderer.setBorder(BorderFactory.createLineBorder(this.getBorderSelectionColor(), 1));
+		}*/
+		//renderer.setFont(UIManager.getFont("Tree.font"));	
+        return renderer;
 	}
 	
 	private void setHighlight(ParmVO o) {
 		if(o.getDragOver()) {
 			//setOpaque(true);
 			//setBackground(new Color(50, 50, 150, 20));
-			this.setBorder(border);
+			renderer.setBorder(border);
 		}
 		else {
 			//setOpaque(false);
 			//setBackground(null);
-			setBorder(null);
+			renderer.setBorder(null);
 		}
 	}
 
@@ -105,7 +136,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 				icon = ImageLoader.load_icon(path);
 		        Image test = icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH);
 		        icon.setImage(test);
-				setIcon(icon);
+		        renderer.setIcon(icon);
 				return;
 			}
 			else if(areaid.equals("-2"))
@@ -114,7 +145,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 				icon = ImageLoader.load_icon(path);
 		        Image test = icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH);
 		        icon.setImage(test);
-				setIcon(icon);
+		        renderer.setIcon(icon);
 				return;				
 			}
 		}
@@ -124,13 +155,13 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 			icon = ImageLoader.load_icon(path);
 	        Image test = icon.getImage().getScaledInstance(16,16,Image.SCALE_SMOOTH);
 	        icon.setImage(test);
-			setIcon(icon);
+	        renderer.setIcon(icon);
 			return;
 		}
 		//SubstanceImageCreator ic = new SubstanceImageCreator();
 		//Icon ic = new ImageIcon(SubstanceImageCreator.getTreeIcon(tree, SubstanceLookAndFeel.getTheme(), false));
 		Icon ic =  this.getLeafIcon();
-		setIcon(ic);
+		renderer.setIcon(ic);
 		//render default icon
 		/*path = "lock" + "." + "gif";
 		icon = ImageLoader.load_icon(path);
@@ -165,11 +196,11 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 				icon = ImageLoader.load_icon(path);
 		        Image test = icon.getImage().getScaledInstance(32,32,Image.SCALE_SMOOTH);
 		        icon.setImage(test);
-				setIcon(icon);
+		        renderer.setIcon(icon);
 		} 
 		else {
 		       //System.err.println("Couldn't find file: " + path);
-			setIcon(null);
+			renderer.setIcon(null);
 		}
 		
 	}
@@ -199,9 +230,10 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 	        
 	        Image test = icon.getImage().getScaledInstance(32,32,Image.SCALE_SMOOTH);
 	        icon.setImage(test);
-			setIcon(icon);
+	        renderer.setIcon(icon);
 			}
 		else {
+			renderer.setIcon(null);
 	       //System.err.println("Couldn't find file: " + path);
 		}
 

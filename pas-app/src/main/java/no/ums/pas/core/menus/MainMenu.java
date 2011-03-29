@@ -476,8 +476,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			try {
 				PAS.get_pas().get_sendcontroller().actionPerformed(action);
 				if(PAS.get_pas().get_parmcontroller()!=null) {
-					PAS.get_pas().get_parmcontroller().clearDrawQueue();
-					PAS.get_pas().get_parmcontroller().setFilled(null);
+					//PAS.get_pas().get_parmcontroller().clearDrawQueue();
+					//PAS.get_pas().get_parmcontroller().setFilled(null);
 				}
 			} catch(Exception err) {
 				System.out.println(err.getMessage());

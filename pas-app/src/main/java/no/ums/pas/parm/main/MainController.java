@@ -4,6 +4,7 @@ import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.cellbroadcast.CCode;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.OtherActions;
@@ -116,6 +117,9 @@ public class MainController implements ActionListener, TreeModelListener,
 	public ScrollPane getTreeScrollPane() { return treeScrollPane; }
 	public int tempPK;
 	public HashMap<Long, CategoryVO> m_categories;
+	public AlertController getAlertController() { return alertCtrl; }
+	private ParmVO selectedObject = null;
+	public ParmVO getSelectedObject() { return selectedObject; }
 	
 	public class ScrollPane extends JScrollPane implements AdjustmentListener {
 		public static final long serialVersionUID = 1;
@@ -986,6 +990,13 @@ public class MainController implements ActionListener, TreeModelListener,
 						DefaultMutableTreeNode editNode = (DefaultMutableTreeNode) treeCtrl.getSelPath().getLastPathComponent();
 						this.treeCtrl.getGui().getTreeModel().reload(editNode);						
 					}
+					DefaultMutableTreeNode node = findNodeByPk(alert.getAlertpk());
+					if(node!=null)
+					{
+						System.out.println("Node = " + node);
+						node.setUserObject(alert);
+					}
+					
 				} catch (ParmException e1) {
 					e1.printStackTrace();
 					Error.getError().addError("MainController","Exception in actionPerformed - Alert save/cancel",e1,1);
@@ -998,9 +1009,20 @@ public class MainController implements ActionListener, TreeModelListener,
 			System.out.println("Address-types: " + this.alertCtrl.getPanelToolbar().get_addresstypes());
 //					alertCtrl.getGui().dispose();
 
-			addShapeToDrawQueue(this.alert.getM_shape());
+			//PAS.pasplugin.removeShapeToPaint(this.alert.getM_shape());
+			
+			//addShapeToDrawQueue(this.alert.getM_shape()); //this.alert.getM_shape());
 			getUpdateXML().saveProject();
-			//updateShape(null);
+			updateShape(null);
+			try
+			{
+				this.alert.getShape().shapeName = this.alert.getName();
+				setSelectedAlert(this.alert);
+			}
+			catch(Exception err)
+			{
+				err.printStackTrace();
+			}
 		}
 		
 		// '-- EventController Save & Cancel --
@@ -1595,7 +1617,21 @@ public class MainController implements ActionListener, TreeModelListener,
 									} // Var kommentert ut
 								} // Var kommentert ut
 								if(!event.getAlertListe().contains(o))
+								{
+									System.out.println("contains");
 									event.addAlerts((AlertVO)o);
+								}
+								else
+								{
+									int idx = event.getAlertListe().indexOf(o);
+									if(idx>=0)
+									{
+										event.getAlertListe().set(idx, o);
+										AlertVO node = (AlertVO)event.getAlertListe().get(idx);
+										this.getTreeCtrl().get_treegui().getTreeModel().nodeChanged(parent);
+										//this.getTreeCtrl().get_treegui().getTreeModel().valueForPathChanged(parent., newValue)
+									}
+								}
 							} else
 								event.addAlerts((AlertVO)o);
 						}
@@ -1788,7 +1824,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			} else if (o.getClass().equals(EventVO.class)) {
 				// Av en eller annen merkelig grunn mister event innholdet i alertlisten, dette må jeg sjekke om skjer og fikse det
 				EventVO event = (EventVO)o;
-
+				setSelectedAlert(null);
 				// Her må jeg nesten sjekke om childcount fra treet stemmer med childcount i selve objektet
 				int count = node.getChildCount();
 				if(count != event.getAlertListe().size()){				
@@ -1803,13 +1839,18 @@ public class MainController implements ActionListener, TreeModelListener,
 					UnknownShape epicentre = new UnknownShape();
 					epicentre.set_epicentre(new MapPoint(getMapNavigation(),
 							new MapPointLL(event.getEpicentreX(),event.getEpicentreY())));
-					addShapeToDrawQueue(epicentre);					
+					//addShapeToDrawQueue(epicentre);
+					PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(epicentre);
 				}
-					
+				for(Object obj : event.getAlertListe())
+				{
+					AlertVO avo = (AlertVO)obj;
+					avo.getM_shape().calc_coortopix(Variables.getNavigation());
+					PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(avo.getM_shape());
+				}
 				
 				System.out.println("Event = " + event.getName() + " " + event.getAlertListe().size());
-				//System.out.println("Nå skal jeg gjøre noe smart");
-				showAlertShape(event);
+				//showAlertShape(event);
 			}
 			// register the event invoker with map-panel..
 
@@ -1925,7 +1966,11 @@ public class MainController implements ActionListener, TreeModelListener,
 	}
 	
 	public void setSelectedAlert(Object o) {
+		PAS.get_pas().get_parmcontroller().clearShapesFromDrawQueue();
 		ParmVO alert = (ParmVO)o;
+		selectedObject = alert;
+		if(o==null)
+			return;
 		try {
 			ShapeStruct shape = null;
 			if(alert.getM_shape() != null) {
@@ -1940,7 +1985,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			EventVO event = (EventVO)dmt.getUserObject();
 			for(int i=0;i<event.getAlertListe().size();i++) {
 				ParmVO p = (ParmVO)event.getAlertListe().get(i);
-				if(alert.getPk().equals(p.getPk()) && shape != null)
+				/*if(alert.getPk().equals(p.getPk()) && shape != null)
 				{
 					p.getM_shape().calc_coortopix(getMapNavigation());
 					addShapeToDrawQueue(p.getM_shape());
@@ -1950,7 +1995,11 @@ public class MainController implements ActionListener, TreeModelListener,
 				{
 					p.getM_shape().calc_coortopix(getMapNavigation());
 					addShapeToDrawQueue(p.getM_shape());
-				}
+				}*/
+				p.getM_shape().calc_coortopix(getMapNavigation());
+				//addShapeToDrawQueue(p.getM_shape());
+				PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(p.getM_shape());
+				
 			}
 			// Her må jeg legge til objektet i edit
 			// Dette må gjøres i send option toolbar egentlig

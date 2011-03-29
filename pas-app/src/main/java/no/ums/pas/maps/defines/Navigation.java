@@ -353,7 +353,7 @@ public class Navigation {
 	
 	public boolean exec_zoom_in_from_corner(Dimension dim_start, Dimension dim_stop) {
 		return exec_zoom_in(new Dimension((dim_start.width+dim_stop.width)/2, (dim_start.height+dim_stop.height)/2),
-							dim_stop); 
+							dim_stop, false); 
 	}
 	
 	/**
@@ -362,10 +362,12 @@ public class Navigation {
 	 * @param dim_stop
 	 * @return true if map is approved and loaded
 	 */
-	public boolean exec_zoom_in(Dimension dim_start, Dimension dim_stop) {
+	public boolean exec_zoom_in(Dimension dim_start, Dimension dim_stop, boolean bMouseWheel) {
 		double f_centerpoint_x, f_centerpoint_y;
 		//int n_minzoom = 60;
 		int n_minzoom;
+		if(dim_start.equals(dim_stop))
+			bMouseWheel = true;
 		
 		if(PAS.pasplugin != null)
 			n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
@@ -387,11 +389,11 @@ public class Navigation {
 		f_delta_y = n_delta_y * m_f_heightprpix.doubleValue();
 		
 		//NEW test
-		if(PAS.pasplugin != null) {
+		if(PAS.pasplugin != null && bMouseWheel) {
 			f_delta_x = (m_f_rbo - m_f_lbo) * PAS.pasplugin.getMapZoomSpeed();
 			f_delta_y = (m_f_ubo - m_f_bbo) * PAS.pasplugin.getMapZoomSpeed();
 		}
-		else
+		else if(bMouseWheel)
 		{
 			f_delta_x = (m_f_rbo - m_f_lbo) * Variables.MAPZOOMSPEED;
 			f_delta_y = (m_f_ubo - m_f_bbo) * Variables.MAPZOOMSPEED;
@@ -403,9 +405,11 @@ public class Navigation {
 		ubo = f_centerpoint_y + f_delta_y;
 		bbo = f_centerpoint_y - f_delta_y;
 		NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
-		//setNavigation(lbo, rbo, ubo, bbo);
-		if(setNavigation(nav, NAVIGATION_GESTURE.ZOOM_IN))
-			load_map();
+		//if(calc_distance_y_meters(ubo, bbo) > n_minzoom)
+		{
+			if(setNavigation(nav, NAVIGATION_GESTURE.ZOOM_IN))
+				load_map();
+		}
 		return true;
 	}
 	public boolean exec_zoom_out(Dimension dim_start)
@@ -461,7 +465,7 @@ public class Navigation {
 				start  = new Dimension((int)(m_dimension.width / 2), (int)(m_dimension.height / 2));
 				stop = new Dimension((int)((m_dimension.width / 2) + ((m_dimension.width / 2 * zoompercent))), (int)((m_dimension.height / 2) + ((m_dimension.height / 2 * zoompercent))));
 				//m_pas.add_event(uleft.width + " " + uleft.height + " / " + bright.width + " / " + bright.height);
-				exec_zoom_in(start, stop);
+				exec_zoom_in(start, stop, true);
 				break;
 			case Zoom.ZOOMOUT:
 				exec_zoom_out(new Dimension(m_dimension.width / 2, m_dimension.height / 2));
@@ -552,6 +556,11 @@ public class Navigation {
         }
 		load_map();
 		
+	}
+	
+	public synchronized double calc_distance_y_meters(double lat1, double lat2)
+	{
+		return Math.abs((lat2-lat1)*30.92*3600);
 	}
 	
 	public synchronized long calc_distance(MapPoint p1, MapPoint p2) {

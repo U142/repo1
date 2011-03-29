@@ -11,22 +11,46 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.util.Hashtable;
 
-public class SendingPanel extends GeneralPanel {
+public class SendingPanel extends JScrollPane {
 	public static final long serialVersionUID = 1;
-	JScrollPane sp;
-	public JScrollPane getScrollPane() { return sp; }
+	//JScrollPane sp;
+	//public JScrollPane getScrollPane() { return sp; }
+	GeneralPanel panel = new GeneralPanel() {
+		
+		@Override
+		protected void set_layout() {
+			m_gridconst.fill = GridBagConstraints.BOTH;
+			//setLayout(new FlowLayout(FlowLayout.LEADING));
+			setLayout(new VerticalLayout(0, VerticalLayout.TOP, VerticalLayout.TOP));
+
+		}
+		
+		@Override
+		protected void init_controls() {
+			
+		}
+		
+		@Override
+		protected void do_layout() {
+			
+		}
+	};
+	
 	SendingPanel(Dimension dim) {
 		super();
-		sp = new JScrollPane(this);
-		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		super.getViewport().add(panel, null);
+		//sp = new JScrollPane(this);
+		this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	}
+	
+	public void doInit()
+	{
+		panel.doInit();
 	}
 	
 	
 	protected void set_layout() {
-		m_gridconst.fill = GridBagConstraints.BOTH;
-		//setLayout(new FlowLayout(FlowLayout.LEADING));
-		setLayout(new VerticalLayout(0, VerticalLayout.TOP, VerticalLayout.TOP));
 	}
 	protected void do_layout() {
 		
@@ -36,16 +60,16 @@ public class SendingPanel extends GeneralPanel {
 	}
 	public void add(SendOptionToolbar sot)
 	{
-		super.add(sot);
-		updateUI();
-		revalidate();
+		panel.add(sot);
+		panel.updateUI();
+		panel.revalidate();
 	}
 	public void remove(SendOptionToolbar sot)
 	{
-		super.remove(sot);
+		panel.remove(sot);
 		sot.setVisible(false);
-		updateUI();
-		revalidate();
+		panel.updateUI();
+		panel.revalidate();
 	}
 	
 	

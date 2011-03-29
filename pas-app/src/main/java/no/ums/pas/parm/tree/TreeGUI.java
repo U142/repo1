@@ -18,17 +18,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -89,7 +93,6 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 	
 	public class Tree extends JTree implements DragSourceListener, DropTargetListener, DragGestureListener, ComponentListener, TreeSelectionListener {
 		public static final long serialVersionUID = 1;
-
 		@Override
 		public Dimension getPreferredSize()
 		{
@@ -159,6 +162,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		
 		public Tree(DefaultTreeModel model) {
 			super(model);
+			this.setRowHeight(24);
 			m_source = new DragSource();
 			m_recognizer = m_source.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
 			m_droptarget = new DropTarget (this, this);
@@ -601,11 +605,12 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 				createTree();
 		addComponentListener(this);
 	}
+	
+
 
 	public void createTree() {
 		rootnode = new DefaultMutableTreeNode("Rotnode");
 		treeModel = new DefaultTreeModel(rootnode);
-		
 //		tree = new Tree(treeModel){
 //            public void paintComponent(Graphics g)
 //            {
@@ -621,7 +626,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 //        };
 		
 		tree = new Tree(treeModel);
-		tree.setRowHeight(0);
+		tree.setRowHeight(32);
 		
 		
 		tree.setCellRenderer(new CustomRenderer(tree));

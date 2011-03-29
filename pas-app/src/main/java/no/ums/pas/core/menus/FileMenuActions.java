@@ -40,8 +40,8 @@ public interface FileMenuActions {
                 PAS.get_pas().get_sendcontroller().create_new_sending();
 			    PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 				if(PAS.get_pas().get_parmcontroller()!=null) {
-					PAS.get_pas().get_parmcontroller().clearDrawQueue();
-					PAS.get_pas().get_parmcontroller().setFilled(null);
+					//PAS.get_pas().get_parmcontroller().clearDrawQueue();
+					//PAS.get_pas().get_parmcontroller().setFilled(null);
 				}
 			} catch(Exception err) {
 				log.error("Failed to create new sending.",err);

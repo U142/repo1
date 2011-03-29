@@ -690,7 +690,7 @@ public class StatusController extends Controller implements ActionListener {
 				if (ViewOptions.TOGGLE_POLYGON.isSelected()) {
 					try {
 						shape.draw(gfx, Variables.getNavigation(), false,
-								true, false, null);
+								true, false, null, true, true, 1, false);
 					} catch (Exception e) {
                         log.warn("Failed to update drawing", e);
 					}
@@ -708,6 +708,21 @@ public class StatusController extends Controller implements ActionListener {
 					PAS.get_pas().get_mapproperties().get_fontsize(),
 					HouseController.ADR_TYPES_SHOW_ALL_, null);
 		}
+		
+		if (get_sendinglist() != null) {
+			for (int i = 0; i < get_sendinglist().size(); i++) {
+				ShapeStruct shape = get_sendinglist().get_sending(i)
+						.get_shape();
+				if (ViewOptions.TOGGLE_POLYGON.isSelected()) {
+					try {
+						shape.paintShapeName(gfx, true, true);
+					} catch (Exception e) {
+                        log.warn("Failed to update drawing", e);
+					}
+				}
+			}
+		}
+
 		// if(get_alertborders_activated())
 		{
 			update_alertborder();

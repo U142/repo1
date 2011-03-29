@@ -4,6 +4,7 @@ package no.ums.pas.parm.alert;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.Area;
+import no.ums.pas.core.Variables;
 import no.ums.pas.importer.SubsetSelect;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.localization.Localization;
@@ -25,6 +26,8 @@ import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,8 +42,15 @@ public class AlertController implements ActionListener {
 	private int tmptPk;
 	private boolean toObjectList;
 //	private PolygonStruct m_shape;
-	private ShapeStruct m_edit_shape;
+	public void resetEditShape()
+	{
+		m_edit_shape = null;
+		m_edit_shape_original = null;
+	}
+	protected ShapeStruct m_edit_shape;
+	protected ShapeStruct m_edit_shape_original;
 	public ShapeStruct get_m_edit_shape() { return m_edit_shape; }
+	public ShapeStruct get_m_edit_shape_original() { return m_edit_shape_original; }
 	//private MapPanel map;
 	private MainController main;
 	public MainController get_main() { return main; }
@@ -116,47 +126,10 @@ public class AlertController implements ActionListener {
 			}
 			
 			if(m_edit_shape.getType() == ShapeStruct.SHAPE_POLYGON) {
-				//System.out.println(o.toString());
-				//parent.get_sendcontroller().get_activesending().get_toolbar().get_radio_polygon().doClick();
 			}
-			/*else if(e.getSource().getClass().equals(Object[].class))
-			{
-				int num = ((Object[])e.getSource()).length;
-				if(num>0)
-				{
-					ShapeStruct [] sendings = new ShapeStruct[num];//(ShapeStruct[])e.getSource();
-					for(int i=0; i < num; i++)
-					{
-						sendings[i] = (ShapeStruct)((Object[])e.getSource())[i];
-					}
-					new SubsetSelect(sz_columns, n_width, b_edit, d, this, sendings);
-				}
-			}*/
-				if(m_edit_shape != null) {
-					parent.get_btn_next().setEnabled(true);
-				}
-			/*} else if(sendings.size()==1){
-				m_edit_shape = ((SendObject)sendings.get(0)).get_sendproperties().typecast_poly().get_shapestruct();
-				PAS.get_pas().actionPerformed(new ActionEvent(m_edit_shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_goto_map"));
-			}*/
-			/*ActionFileLoaded event = (ActionFileLoaded)e;
-			SosiFile sosi = (SosiFile)e.getSource();
-			//PAS.get_pas().get_drawthread().set_suspended(true);
-			try {
-				//get_parent().get_sendproperties().typecast_poly().set_shapestruct(new PolygonStruct(PAS.get_pas().get_mappane().get_dimension(), sosi.get_polygon()));
-				//get_parent().get_sendproperties().typecast_poly().set_polygon_color();
-			} catch(Exception err) {
-				Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
+			if(m_edit_shape != null) {
+				parent.get_btn_next().setEnabled(true);
 			}
-			try {
-				String sz_description = sosi.toString();
-				System.out.println(sz_description);
-				//get_parent().get_sendproperties().set_sendingname((sosi.get_flater().get_current_flate().get_name().length() > 0 ? sosi.get_flater().get_current_flate().get_name() : sosi.get_flater().get_current_flate().get_objecttype()), sz_description);
-			} catch(Exception err) {
-				System.out.println(err.getMessage());
-				err.printStackTrace();
-				Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
-			}*/
 		}
 		else if("act_gis_imported".equals(e.getActionCommand())) {// || "act_gis_finish".equals(e.getActionCommand())) {
 			GISList list = (GISList)e.getSource();
@@ -205,9 +178,6 @@ public class AlertController implements ActionListener {
 		else if("act_enable_next".equals(e.getActionCommand())) {
 			getParent().get_btn_next().setEnabled(true);
 		}
-		//toolbarPanel.setActiveShape(m_edit_shape);
-		//main.mapClear();
-		//main.setDrawMode(m_edit_shape);
 	}
 
 	public void createNewAlert(int highestTempPk, EventVO eventParent,ShapeStruct shape) throws ParmException {
@@ -215,6 +185,7 @@ public class AlertController implements ActionListener {
 		this.tmptPk = highestTempPk;
 		this.eventParent = eventParent;
 		this.m_edit_shape = shape;
+		this.m_edit_shape_original = shape;
 
 		this.toolbarPanel.init_addresstypes(SendController.SENDTO_FIXED_PRIVATE | SendController.SENDTO_FIXED_COMPANY | SendController.SENDTO_MOBILE_PRIVATE | SendController.SENDTO_MOBILE_COMPANY);
 		gui = new AlertGUI("New Alert", this.toolbarPanel);
@@ -230,7 +201,15 @@ public class AlertController implements ActionListener {
 				if(toolbarPanel.get_colorpicker()!=null && toolbarPanel.get_colorpicker().get_selected_color()!=null)
 					shape.set_fill_color(toolbarPanel.get_colorpicker().get_selected_color());
 				else
-					shape.set_fill_color(toolbarPanel.get_colorbutton().getBackground());
+				{
+					shape.set_fill_color(Color.blue);
+					toolbarPanel.shapeColorChanged(shape.get_fill_color());
+				}
+					//shape.set_fill_color(toolbarPanel.get_colorbutton().getBackground());
+			}
+			else
+			{
+				toolbarPanel.get_colorpicker().setColor(Color.blue);
 			}
 		} catch(Exception e) {
 			Error.getError().addError("Error", "Set fill color failed on alertpolygon", e, 1);
@@ -244,40 +223,30 @@ public class AlertController implements ActionListener {
 
 	public void editAlert(AlertVO alert, MainController main, DefaultMutableTreeNode eventNode) throws ParmException {
 		m_edit_shape = null;
-		//m_polygon = PAS.get_pas().get_parmcontroller().getMapPolygon();
-				
+		m_edit_shape_original = null;
 		this.alert = alert;
 		this.eventParent = (EventVO) eventNode.getUserObject();
 		if (alert.getSendObject() != null && alert.getSendObject().get_toolbar() != null)
 			this.toolbarPanel = alert.getSendObject().get_toolbar();
 
-		//if (this.toolbarPanel.get_addresstypes() != 0)
-		//toolbarPanel.gen_addresstypes();
         gui = new AlertGUI(Localization.l("main_parm_alert_dlg_edit"), this.toolbarPanel);
 		toolbarPanel.set_addresstypes(alert.getAddresstypes());
 		toolbarPanel.init_addresstypes(alert.getAddresstypes());
 		toolbarPanel.show_buttons(SendOptionToolbar.BTN_FINALIZE_, false);
 
-		
-		//gui.setTitle("Edit Alert");
-
-		// Dette er for å gå over til edit mode på polygonen
-		//main.mapClear();
-		//if(this.m_polygon != null) {
-			/*try{
-				m_edit_polygon = (PolygonStruct) m_polygon.clone();
-			} catch(Exception e){
-				e.printStackTrace();
-			}*/
-		//}
-		//else
 		if(alert.getM_shape()==null) {
 			//default to polygon
 			m_edit_shape = (new PolygonStruct(main.getMapNavigation().getDimension()));
+			m_edit_shape.calc_coortopix(Variables.getNavigation());
+			m_edit_shape_original = alert.getM_shape();
 		}
 		else {
 			try {
 				m_edit_shape = (ShapeStruct)alert.getM_shape().clone();
+				m_edit_shape.shapeName = alert.getName();
+				m_edit_shape.calc_coortopix(Variables.getNavigation());
+				m_edit_shape_original = alert.getM_shape();
+				m_edit_shape_original.shapeName = alert.getName();
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -286,13 +255,10 @@ public class AlertController implements ActionListener {
 		}
 		try {
 			toolbarPanel.setActiveShape(m_edit_shape);
-			//toolbarPanel.setActivePolygon(PAS.get_pas().get_parmcontroller().getMapPolygon());
 		} catch(Exception e){
 			Error.getError().addError("AlertController","Exception in editAlert",e,1);
 		}
-		//main.mapClear();
 		main.setDrawMode(m_edit_shape);
-		//System.out.println("Coors: " + m_edit_shape.get_coors_lat().size());
 	}
 
 	public boolean deleteAlert(AlertVO alert, DefaultMutableTreeNode eventNode)

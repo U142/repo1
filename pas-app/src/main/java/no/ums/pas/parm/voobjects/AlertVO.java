@@ -206,6 +206,10 @@ public class AlertVO extends ParmVO implements Cloneable {
 		iAddresstypes = addresstypes;
 		strTimestamp = timestamp;
 		this.m_shape = shape;
+		if(this.m_shape!=null)
+		{
+			this.m_shape.shapeName = strName;
+		}
 	}
 	
 	public AlertVO(String alertpk, String parent, String name, String description, int profilepk, String schedpk, String oadc, int validity,

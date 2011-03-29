@@ -88,18 +88,19 @@ public class EllipseStruct extends ShapeStruct {
 	public void draw(Graphics g, Navigation nav, boolean bDashed,
 			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
 			boolean bFill, int nPenSize, boolean bPaintShapeName) {		
-		draw(g, nav, !bEditmode, bFinalized, true, null);
+		draw(g, nav, bDashed, bFinalized, bEditmode, p, bBorder,bFill, nPenSize, bPaintShapeName, false);
 	}
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_active, boolean b_islocked) {
-		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true, null);
-	}
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_details, Point mousepos) {
+	@Override
+	public void draw(Graphics g, Navigation nav, boolean bDashed,
+			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+			boolean bFill, int nPenSize, boolean bPaintShapeName,
+			boolean bHasFocus) {
 		Graphics2D g2d = (Graphics2D)g;
 		calc_coortopix(nav);
 		Stroke stroke_revert = g2d.getStroke();
 		try {
 			if(get_center()!=null && m_ellipseshape!=null) {
-				if(b_details) {
+				if(true) {
 					g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
 					g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
 					g2d.drawLine((get_center().get_x() - get_diameter_width_pix()/2), (get_center().get_y() + get_diameter_height_pix()/2), (get_center().get_x() + get_diameter_width_pix()/2), (get_center().get_y() + get_diameter_height_pix()/2));
@@ -110,12 +111,12 @@ public class EllipseStruct extends ShapeStruct {
 					g2d.drawString(sz_height, (get_center().get_x() + get_diameter_width_pix()/2) + 5, get_center().get_y());
 					g2d.drawString(sz_width,get_center().get_x(), (get_center().get_y() + get_diameter_height_pix()/2) + 17);
 				}
-				if(b_dashed)
-					g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
+				if(bDashed)
+					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
 				else
-					g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 				
-				if(b_dashed)
+				if(bDashed)
 					g2d.setPaint(m_tex_paint);
 				else
 					g2d.setColor(get_fill_color());
@@ -123,6 +124,10 @@ public class EllipseStruct extends ShapeStruct {
 				g2d.setColor(get_border_color());
 				g2d.draw(m_ellipseshape);
 				g2d.setStroke(stroke_revert);
+				if(bPaintShapeName)
+				{
+					super.paintShapeName(g, bEditmode, bHasFocus);
+				}
 			}
 		} catch(Exception e) {
 			g2d.setStroke(stroke_revert);
@@ -131,6 +136,12 @@ public class EllipseStruct extends ShapeStruct {
 			Error.getError().addError("SendPropertiesEllipse","Exception in draw",e,1);
 		}
 		super.draw_epicentre(g);
+	}
+	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_active, boolean b_islocked) {
+		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true, null);
+	}
+	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_details, Point mousepos) {
+		draw(g, nav, !b_finalized, b_finalized, true, null, true, true, 1, false);
 	}
 	public void set_ellipse(Navigation nav, MapPoint p_center, MapPoint p_corner) {
 		m_p_center = p_center;
@@ -170,6 +181,8 @@ public class EllipseStruct extends ShapeStruct {
 			m_p_corner = new MapPoint(nav, new MapPointLL(m_p_corner.get_mappointll()));
 			recalc_shape(nav);
 			calc_epicentre_coortopix(nav);
+			Dimension screen = new Dimension(nav.coor_to_screen(m_p_center.get_lon(), m_p_center.get_lat(), false));
+			m_center_pix.set(screen);
 		}
 	}
 	public NavStruct calc_bounds() {

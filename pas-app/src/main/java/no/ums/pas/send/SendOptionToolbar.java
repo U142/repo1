@@ -802,7 +802,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			public void keyPressed(KeyEvent e){				
 			}
 			public void keyReleased(KeyEvent e){
-				setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(m_txt_sendname.getText()));
+				try
+				{
+					setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(m_txt_sendname.getText()));
+					get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "");
+					PAS.get_pas().kickRepaint();
+				}
+				catch(Exception err)
+				{
+					err.printStackTrace();
+				}
 				//TitledBorder b = (TitledBorder)getBorder();
 				//b.setTitle(m_txt_sendname.getText());
 			}
@@ -1769,5 +1778,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public synchronized void focusLost(FocusEvent e) {
 		
 	}
-	
+	public void shapeColorChanged(Color c)
+	{
+		//remove alpha
+		Color setColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
+		m_btn_color.setBg(setColor);
+	}
 }

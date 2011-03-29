@@ -395,12 +395,12 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		else
 			if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 0)
 				m_alert_send.get_chk_execute_remote().setEnabled(true);*/
-		if(m_alert.getAlert() != null) {
+		if(m_alert!=null && m_alert.getAlert() != null) {
 			m_alert_send.get_chk_execute_remote().setSelected(m_alert.getAlert().getLocked()>0);
 			boolean b = can_external_exec() && (m_alert.getAlert().getLocked() == 0);
 			m_alert_send.get_chk_execute_remote().setEnabled(b);
 		}
-		else
+		else if(m_alert_send!=null)
 			m_alert_send.get_chk_execute_remote().setEnabled(true);
 				
 			
@@ -609,6 +609,8 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				m_alert_send.get_chk_execute_remote().setEnabled(true);*/
 			verify_external_exec();
 		} else if("act_set_addresstypes".equals(e.getActionCommand())) { //callback from toolbar
+			if(m_alert==null)
+				return;
 			int tmp = m_alert.getPanelToolbar().get_addresstypes();
 			if(hasSMS(tmp))
 			{
@@ -885,9 +887,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		if(m_alert != null) {
 			PAS.get_pas().add_event("windowClosed", null);
 			send_activationevent(false);
-			//PAS.get_pas().get_parmcontroller().clearDrawQueue();
 			PAS.get_pas().get_parmcontroller().updateShape(null);
-			//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(m_alert.getAlert().getM_shape());
 			if(m_alert.getAlert() != null) {
 				PAS.get_pas().get_parmcontroller().setFilled(m_alert.getAlert().getM_shape());
 			}

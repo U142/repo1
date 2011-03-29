@@ -40,7 +40,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	private OpenStatusFrame m_statusframe;
 	private PUOpenStatus m_popup;
 	public OpenStatusFrame get_statusframe() { return m_statusframe; }
-	private final int n_refno_column = 2;
+	private final int OBJECT_COLUMN = 9;
 	public static final int DELETE_COLUMN = 11;
 	
 	public PAS get_pas() { return m_pas; }
@@ -121,13 +121,13 @@ public class SearchPanelStatusList extends SearchPanelResults {
 	}
 	protected void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
-		openStatus(true, (StatusListObject)rowcontent[0], -1);
+		openStatus(true, (StatusListObject)rowcontent[OBJECT_COLUMN], -1);
 	}
 	protected void onMouseRClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
 		m_tbl.getSelectionModel().setSelectionInterval(n_row, n_row);
 		Point mouse = this.getMousePosition();
-		m_popup.pop(this, mouse, (StatusListObject)rowcontent[0]);
+		m_popup.pop(this, mouse, (StatusListObject)rowcontent[OBJECT_COLUMN]);
 	}
 	protected void onMouseRDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
@@ -138,7 +138,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 			StatusListObject obj = (StatusListObject)arr_statuslist.get(i);
 			JButton del = new JButton(ImageFetcher.getIcon("delete_24.png"));
 			Object sz_visible[] = { 
-					obj, 
+					obj.get_project().get_projectname(), 
 					obj.get_deptid(), 
 					obj.get_refno(), 
 					obj.getChannel(), 
@@ -147,7 +147,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 					obj.get_groupdesc(),
 					TextFormat.format_date(obj.get_createdate()), 
 					TextFormat.format_time(obj.get_createtime(),4), 
-					obj.get_sendingname(), 
+					obj, 
 					obj.getStatusText(), 
 					obj};
 			this.insert_row(sz_visible, -1, false);

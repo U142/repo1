@@ -218,6 +218,10 @@ public class Project extends Object implements TooltipItem {
 		sb.append("</td><td><b>");
 		sb.append(Localization.l("common_mode"));
 		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_items"));
+		sb.append("</td><td><b>");
+		sb.append(Localization.l("common_type"));
+		sb.append("</td><td><b>");
 		sb.append(Localization.l("common_created"));
 		sb.append("</td><td><b>");
 		sb.append(Localization.l("common_time"));
@@ -238,6 +242,12 @@ public class Project extends Object implements TooltipItem {
 			sb.append(slo.getChannel());
 			sb.append("</td><td>");
 			sb.append(slo.getSimulationText());
+			sb.append("</td><td>");
+			//Localization.l("common_items"), 
+			//Localization.l("common_type"), 
+			sb.append(slo.get_totitem());
+			sb.append("</td><td>");
+			sb.append(slo.get_groupdesc());
 			sb.append("</td><td>");
 			sb.append(TextFormat.format_date(slo.get_createdate()));
 			sb.append("</td><td>");

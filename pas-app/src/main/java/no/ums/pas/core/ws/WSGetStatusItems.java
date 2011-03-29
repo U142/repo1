@@ -11,6 +11,7 @@ import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.MunicipalStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.TasStruct;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusCode;
@@ -311,9 +312,11 @@ public class WSGetStatusItems extends WSThread
 							
 						}
 					}
+					ShapeStruct shapeStruct = null;
 					switch(sending.get_group()) {
 						case 3:
-							sending.set_shape(new PolygonStruct(PAS.get_pas().get_mappane().get_dimension()));
+							shapeStruct = new PolygonStruct(PAS.get_pas().get_mappane().get_dimension());
+							sending.set_shape(shapeStruct);
 							NodeList list_points = current.getChildNodes(); //polygon
 							if(list_points!=null) {
 								String[] sz_itemattr = { "lon", "lat" };
@@ -570,9 +573,8 @@ public class WSGetStatusItems extends WSThread
 										else
 											f_radiusy = null;
 										
-										EllipseStruct e = new EllipseStruct();
-										//MapPoint p_center = new MapPoint(Variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue(), f_centery.doubleValue()));
-										//MapPoint p_corner = new MapPoint(Variables.NAVIGATION, new MapPointLL(f_centerx.doubleValue() + f_radiusx.doubleValue(), f_centery.doubleValue() + f_radiusy.doubleValue()));
+										shapeStruct = new EllipseStruct();
+										EllipseStruct e = (EllipseStruct)shapeStruct;
 										MapPoint p_center = new MapPoint(Variables.getNavigation(), new MapPointLL(f_centerx==null?0.0:f_centerx.doubleValue(), f_centery==null?0.0:f_centery.doubleValue()));
 										MapPoint p_corner = new MapPoint(Variables.getNavigation(), new MapPointLL((f_centerx==null?0.0:f_centerx.doubleValue()) + (f_radiusx==null?0.0:f_radiusx.doubleValue()), (f_centery==null?0.0:f_centery.doubleValue()) + (f_radiusy==null?0.0:f_radiusy.doubleValue())));
 										e.set_ellipse(Variables.getNavigation(), p_center, p_corner);
@@ -586,6 +588,8 @@ public class WSGetStatusItems extends WSThread
 							break;
 							
 					}
+					if(shapeStruct!=null)
+						shapeStruct.shapeName = Localization.l("common_refno") + " " + sending.get_refno();
 					try {
 						//System.out.println("sending " + sending.get_refno() + " with " + sending.get_polygon().get_size() + " points");
 						get_callback().actionPerformed(new ActionEvent(sending, ActionEvent.ACTION_PERFORMED, "act_add_sending"));

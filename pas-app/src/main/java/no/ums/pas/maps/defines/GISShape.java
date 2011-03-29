@@ -91,6 +91,14 @@ public class GISShape extends ShapeStruct {
 		
 	}
 
+	@Override
+	public void draw(Graphics g, Navigation nav, boolean b_dashed,
+			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+			boolean b_fill, int pensize, boolean bPaintShapeName,
+			boolean bHasFocus) {
+		
+	}
+
 	public PolySnapStruct snap_to_point(Point p1, int n_max_distance, boolean b_current, Dimension dim_map, Navigation nav) {
 		return null;
 	}

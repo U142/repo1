@@ -748,7 +748,7 @@ public class PolygonStruct extends ShapeStruct {
 	}
 	public NavStruct calc_bounds() {
 		ArrayList<Double> arr_use_lon = null, arr_use_lat = null;
-		switch(this.m_n_current_show_mode) {
+		/*switch(this.m_n_current_show_mode) {
 		case SHOW_POLYGON_FULL:
 			arr_use_lon = m_coor_lon;
 			arr_use_lat = m_coor_lat;
@@ -763,7 +763,10 @@ public class PolygonStruct extends ShapeStruct {
 				arr_use_lat = m_coor_lat;				
 			}
 			break;
-		}
+		}*/
+		arr_use_lon = m_coor_lon;
+		arr_use_lat = m_coor_lat;
+		
 		//arr_use_lon = m_coor_lon;
 		//arr_use_lat = m_coor_lat;
 		double lbo = 9999, rbo = -9999, ubo = -9999, bbo = 9999;
@@ -793,6 +796,7 @@ public class PolygonStruct extends ShapeStruct {
 			total_lat += ((lat+next_lat)*(lon*next_lat-next_lon*lat));
 			//System.out.println("BBO: " + bbo + " RBO: " + rbo + " LBO: " + lbo + " UBO: " + ubo +  " LON: " + lon + " LAT: " + lat + " p: " + (i+1));
 		}
+		calc_area_sqm();
 		total_lon *= 1/(6*m_f_area_sqm);
 		total_lat *= 1/(6*m_f_area_sqm);
 		NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
@@ -836,6 +840,7 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			calc_show_coortopix(nav);
 			calc_epicentre_coortopix(nav);
+			calc_bounds();
 			screen = new Dimension(nav.coor_to_screen(m_center.get_lon(), m_center.get_lat(), false));
 			m_center_pix.set(screen);
 			m_b_needcoortopix = false;
@@ -860,6 +865,7 @@ public class PolygonStruct extends ShapeStruct {
 		{
 			
 		}
+		calc_bounds();
 		m_b_recalcing = false;
 
 	}
@@ -1050,7 +1056,8 @@ public class PolygonStruct extends ShapeStruct {
 	@Override
 	public void draw(Graphics g, Navigation nav, boolean bDashed,
 			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {
+			boolean bFill, int nPenSize, boolean bPaintShapeName,
+			boolean bHasFocus) {
 		if(m_b_recalcing || isHidden())
 			return;
 		if(!nav.bboxOverlap(getFullBBox()))
@@ -1154,39 +1161,10 @@ public class PolygonStruct extends ShapeStruct {
 					}
 					g.setFont(fOldFont);
 				}*/
-				//paint shape name
-				if(bPaintShapeName)
-				{					
-					Color gOldColor = g.getColor();
-					Font f = new Font(UIManager.getString("Common.Fontface"), Font.BOLD, 10);
-					FontMetrics fm = g.getFontMetrics(f);
-					int width = fm.stringWidth(this.shapeName);
-					int height = fm.getHeight();
-					/*Color bg = new Color(SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getRed(),
-							SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getGreen(),
-							SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor().getBlue(),
-							70);
-					g.setColor(bg);*/
-					g.setColor(get_text_bg_color());
-					int factor = 5;
-					g.fillRoundRect(m_center_pix.get_x()-width/2-factor, m_center_pix.get_y()-height/2-factor, 
-							width+factor*2, height+factor, 10, 10);
-					g.setColor(Color.black);
-					g.drawRoundRect(m_center_pix.get_x()-width/2-factor, m_center_pix.get_y()-height/2-factor, 
-							width+factor*2, height+factor, 10, 10);
-					Font fOldFont = g.getFont();
-					g.setFont(f);
-					//g.setColor(Color.black);
-					g.setColor(get_text_color());
-					g.drawString(this.shapeName, m_center_pix.get_x()-width/2, m_center_pix.get_y()+2);
-					g.setFont(fOldFont);
-					g.setColor(gOldColor);
-				}
 			} catch(Exception e) {
 				try {
 					g2d.setStroke(stroke_revert);
 				} catch(Exception rev) { Error.getError().addError("PolyStruct","Exception in draw",rev,1); }
-				//get_pas().add_event("Error: SendObject.draw(Graphics g)");
 				Error.getError().addError("PolyStruct","Exception in draw",e,1);
 			}
 		}	
@@ -1244,12 +1222,25 @@ public class PolygonStruct extends ShapeStruct {
 		}*/
 		//if(get_size()>0)
 		//	g.drawString(get_area_sqm()+"m2", get_pix_int_x()[0], get_pix_int_y()[0]);
+		//paint shape name
+		if(bPaintShapeName)
+		{					
+			super.paintShapeName(g, bEditmode, bHasFocus);
+		}
+
 		super.draw_epicentre(g);
+	}
+
+	@Override
+	public void draw(Graphics g, Navigation nav, boolean bDashed,
+			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+			boolean bFill, int nPenSize, boolean bPaintShapeName) {
+		draw(g, nav, bDashed, bFinalized, bEditmode, p, bBorder, bFill, nPenSize, bPaintShapeName, false);
 	}
 
 	
 	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
-		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 2, false);
+		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 1, false);
 	}
 	
 	protected void updateCanLock(List<ShapeStruct> restrictionShapes)
