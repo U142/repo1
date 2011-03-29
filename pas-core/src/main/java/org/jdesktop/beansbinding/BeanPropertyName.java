@@ -116,7 +116,7 @@ public interface BeanPropertyName {
 
         Method findSetter(Class<?> fromType, int argLength) {
             for (Method method : fromType.getMethods()) {
-                if (method.getName().endsWith(namePostfix) && method.getParameterTypes().length == argLength) {
+                if (method.getName().equals("set"+namePostfix) && method.getParameterTypes().length == argLength) {
                     return method;
                 }
             }
