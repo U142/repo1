@@ -62,19 +62,16 @@ public class SettingsModel extends AbstractBean {
 		Object oldValue = this.getCompanyid();
 		this.companyid = companyid;
 		update("companyid", oldValue, companyid);
-		System.out.println("companyid=" + companyid);
 	}
 	public void setUsername(String username) {
 		Object oldValue = this.getUsername();
 		this.username = username;
 		update("username", oldValue, username);
-		System.out.println("username=" + username);
 	}
 	public void setLbaupdate(Object lbaupdate) {
 		Object oldValue = this.getLbaupdate();
 		this.lbaupdate = lbaupdate;
 		update("lbaupdate", oldValue, lbaupdate);
-		System.out.println("lbaupdate=" + lbaupdate);
 	}
 	public Object getLbaupdate() {
 		return lbaupdate;
@@ -86,7 +83,6 @@ public class SettingsModel extends AbstractBean {
 		boolean oldValue = this.getAutoStartParm();
 		this.autoStartParm = autoStartParm;
 		update("autoStartParm", oldValue, autoStartParm);
-		System.out.println("AutoStart: Parm="+autoStartParm);
 	}
 	public boolean getMapSiteDefault() {
 		return mapSiteDefault;
@@ -95,7 +91,6 @@ public class SettingsModel extends AbstractBean {
 		boolean oldValue = this.getMapSiteDefault();
 		this.mapSiteDefault = mapSiteDefault;
 		update("mapSiteDefault", oldValue, mapSiteDefault);
-		System.out.println("MapSiteDefault="+mapSiteDefault);
 	}
 	public boolean getMapSiteWms() {
 		return mapSiteWms;
@@ -104,7 +99,6 @@ public class SettingsModel extends AbstractBean {
 		boolean oldValue = this.getMapSiteWms();
 		this.mapSiteWms = mapSiteWms;
 		update("mapSiteWms", oldValue, mapSiteWms);
-		System.out.println("MapSiteWms="+mapSiteWms);
 	}
 	public String getWmsUrl() {
 		return wmsUrl;
@@ -113,7 +107,6 @@ public class SettingsModel extends AbstractBean {
 		String oldValue = this.getWmsUrl();
 		this.wmsUrl = wmsUrl;
 		update("wmsUrl", oldValue, wmsUrl);
-		System.out.println("WMS-URL="+wmsUrl);
 	}
 	public String getWmsUsername() {
 		return wmsUsername;
@@ -122,7 +115,6 @@ public class SettingsModel extends AbstractBean {
 		String oldValue = this.getWmsUsername();
 		this.wmsUsername = wmsUsername;
 		update("wmsUsername", oldValue, wmsUsername);
-		System.out.println(wmsUsername);
 	}
 	public String getWmsPassword() {
 		return wmsPassword;
@@ -131,7 +123,6 @@ public class SettingsModel extends AbstractBean {
 		String oldValue = this.getWmsPassword();
 		this.wmsPassword = wmsPassword;
 		update("wmsPassword", oldValue, wmsPassword);
-		System.out.println(wmsPassword);
 	}
 	public String getWmsImageFormat() {
 		return wmsImageFormat;
@@ -140,7 +131,6 @@ public class SettingsModel extends AbstractBean {
 		String oldValue = this.getWmsImageFormat();
 		this.wmsImageFormat = wmsImageFormat;
 		update("wmsImageFormat", oldValue, wmsImageFormat);
-		System.out.println(wmsImageFormat);
 	}
 	public List<String> getWmsImageFormatElements() {
 		return wmsImageFormatElements;
@@ -166,11 +156,9 @@ public class SettingsModel extends AbstractBean {
 	}
 	private void setZoomMode(int zoomMode) {
 		this.zoomMode = zoomMode;
-		System.out.println("Zoommode="+zoomMode);
 	}
 	public void setPanMode(int panMode) {
 		this.panMode = panMode;		
-		System.out.println("Panmode="+panMode);
 	}
 	public boolean getPanByClick() {
 		return panByClick;
