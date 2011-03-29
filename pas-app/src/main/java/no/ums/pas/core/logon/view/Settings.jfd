@@ -851,6 +851,12 @@
               <void property="name"> 
                <string>chkAutoStartParm</string> 
               </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
              </object> 
             </void> 
            </object> 

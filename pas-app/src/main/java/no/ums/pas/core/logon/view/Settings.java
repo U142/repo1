@@ -334,6 +334,10 @@ public class Settings extends JDialog {
 		return toggleImport;
 	}
 
+	public JCheckBox getChkAutoStartParm() {
+		return chkAutoStartParm;
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");

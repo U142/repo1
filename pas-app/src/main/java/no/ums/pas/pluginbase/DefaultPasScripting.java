@@ -297,9 +297,18 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
             @Override
             protected void done() {
-                PAS.get_pas().init_parmcontroller();
-                PAS.get_pas().get_parmcontroller().setExpandedNodes();
-                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
+            	if(Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1)
+            	{
+	                PAS.get_pas().init_parmcontroller();
+	                PAS.get_pas().get_parmcontroller().setExpandedNodes();
+	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
+	                OtherActions.PARM_START.setEnabled(false);
+	                OtherActions.PARM_CLOSE.setEnabled(true);
+            	}
+            	else
+            	{
+            		System.out.println("No PARM righs");
+            	}
             }
         }.execute();
         return true;
@@ -309,6 +318,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onCloseParm()
 	{
 		PAS.get_pas().close_parm(false);
+        OtherActions.PARM_START.setEnabled(Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1);
+        OtherActions.PARM_CLOSE.setEnabled(false);
 		return true;
 	}
 	
@@ -331,6 +342,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	@Override
 	public boolean onDepartmentChanged(PAS pas)
 	{
+		boolean b_activate_parm = Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1;
+		OtherActions.PARM_CLOSE.setEnabled(b_activate_parm);
+		OtherActions.PARM_REFRESH.setEnabled(b_activate_parm);
+		OtherActions.PARM_START.setEnabled(b_activate_parm);
 		if(PAS.isParmOpen()) {
             OtherActions.PARM_CLOSE.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "act_close_parm"));
         }

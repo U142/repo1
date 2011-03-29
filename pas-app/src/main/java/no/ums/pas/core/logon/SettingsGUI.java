@@ -129,7 +129,9 @@ public class SettingsGUI extends JFrame implements ActionListener {
 			
 		}
 		//new SettingsGUI2(this).dlg.setVisible(true);
-		new SettingsCtrl(this, true, PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo().get_mailaccount());
+		new SettingsCtrl(this, true, PAS.get_pas().get_settings(), 
+				PAS.get_pas().get_userinfo().get_mailaccount(),
+				Variables.getUserInfo());
 		try
 		{
 			this.setAlwaysOnTop(true);

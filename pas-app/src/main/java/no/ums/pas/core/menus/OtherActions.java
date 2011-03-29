@@ -36,7 +36,10 @@ public interface OtherActions {
         public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-            		new SettingsCtrl(PAS.get_pas(), true, PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo().get_mailaccount());
+            		new SettingsCtrl(PAS.get_pas(), true, 
+            				PAS.get_pas().get_settings(), 
+            				PAS.get_pas().get_userinfo().get_mailaccount(),
+            				Variables.getUserInfo());
                     /*SettingsGUI sGui = new SettingsGUI(PAS.get_pas());
                     if (PAS.get_pas().get_settings() != null) {
                         if (PAS.get_pas().get_settings().getUsername().length() < 1)

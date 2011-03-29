@@ -25,7 +25,7 @@ public class ShowSettingsDlg {
 		no.ums.pas.core.logon.Settings settings = new no.ums.pas.core.logon.Settings();
 		MailAccount mail = new MailAccount();
 		Variables.setSettings(settings);
-		SettingsCtrl s = new SettingsCtrl(null, true, settings, mail);
+		SettingsCtrl s = new SettingsCtrl(null, true, settings, mail, ui);
 		System.exit(0);
 	}
 

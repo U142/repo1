@@ -21,7 +21,9 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.view.Settings;
+import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.Settings.MAPSERVER;
+import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.logon.WmsLayer;
 import no.ums.pas.core.logon.WmsLayerTree;
 import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
@@ -35,18 +37,20 @@ public class SettingsCtrl implements ISettingsUpdate {
     
     private final Settings dlg;
 
-    public SettingsCtrl(Component parent, boolean modal, no.ums.pas.core.logon.Settings settings, MailAccount mailaccount)
+    public SettingsCtrl(Component parent, boolean modal, 
+    		no.ums.pas.core.logon.Settings settings, MailAccount mailaccount,
+    		UserInfo userinfo)
     {
     	dlg = new Settings(null, this);
     	dlg.setIconImage(ImageFetcher.getImage("pas_appicon_16.png"));
-    	initializeGui(settings, mailaccount);
+    	initializeGui(settings, mailaccount, userinfo);
     	dlg.initValues();
     	dlg.setLocationRelativeTo(parent);
     	dlg.setModal(modal);
     	dlg.setVisible(true);
     }
     
-    public void initializeGui(no.ums.pas.core.logon.Settings s, MailAccount a)
+    public void initializeGui(no.ums.pas.core.logon.Settings s, MailAccount a, UserInfo userinfo)
     {
     	dlg.settingsModel1.setAutoStartParm(s.parm());
     	dlg.settingsModel1.setCompanyid(s.getCompany());
@@ -88,6 +92,18 @@ public class SettingsCtrl implements ISettingsUpdate {
     	{
     		dlg.getBtnMapWmsOpen().doClick();
     	}
+    	
+    	//check if user may use parm on one or more departments
+    	/*boolean b_enable_parm = false;
+    	for(DeptInfo di : userinfo.get_departments())
+    	{
+    		if(di.get_userprofile().get_parm_rights()>=1)
+    		{
+    			b_enable_parm = true;
+    			break;
+    		}
+    	}
+    	dlg.getChkAutoStartParm().setEnabled(b_enable_parm);*/
     }
     
 	@Override
