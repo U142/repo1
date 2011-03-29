@@ -50,6 +50,7 @@ import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.pluginbase.defaults.DefaultAddressSearch;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.send.SendOptionToolbar;
+import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
@@ -76,6 +77,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -1019,8 +1021,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				//if(!so.get_sendproperties().get_shapestruct().equals(p.get_mappane().get_active_shape()))
 				{
 					boolean bEdit = p.get_mappane().isInPaintMode() && so.get_sendproperties().get_shapestruct().equals(p.get_mappane().get_active_shape());
-					so.get_sendproperties().get_shapestruct().draw(
-							g, nav, !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);
+					if(so.get_sendproperties() instanceof SendPropertiesGIS)
+					{
+						so.draw(g, Variables.getMapFrame().get_current_mousepos());
+					}
+					else
+					{
+						so.get_sendproperties().get_shapestruct().draw(
+								g, nav, !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);						
+					}
 				}
 			}
 		}

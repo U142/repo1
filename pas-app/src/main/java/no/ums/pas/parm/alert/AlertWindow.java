@@ -350,13 +350,16 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 	}
 	
 	private void disableNext() {
-		for(int i=m_tabbedpane.indexOfComponent(m_alert.getGui())+1;i<m_tabbedpane.getTabCount();i++)
-			m_tabbedpane.setEnabledAt(i, false);
-		
-		if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert.getGui()))
-			m_btn_next.setEnabled(false);
-		else
-			m_btn_next.setEnabled(true);
+		if(m_tabbedpane!=null && m_alert!=null)
+		{
+			for(int i=m_tabbedpane.indexOfComponent(m_alert.getGui())+1;i<m_tabbedpane.getTabCount();i++)
+				m_tabbedpane.setEnabledAt(i, false);
+			
+			if(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()).equals(m_alert.getGui()))
+				m_btn_next.setEnabled(false);
+			else
+				m_btn_next.setEnabled(true);
+		}
 		//m_btn_next.setEnabled(true);
 	}
 	

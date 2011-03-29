@@ -179,7 +179,7 @@ public class Navigation {
 		if(Math.abs(bbo)>90)
 			bbo = 90 * Math.signum(bbo);
 
-		if(Math.abs(lbo)-Math.abs(rbo)<0.0001 || Math.abs(ubo)-Math.abs(bbo)<0.0001)
+		if(Math.abs(lbo-rbo)<0.00001 || Math.abs(ubo-bbo)<0.00001)
 		{
 			lbo-=0.001;
 			rbo+=0.001;

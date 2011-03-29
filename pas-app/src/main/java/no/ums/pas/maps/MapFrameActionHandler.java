@@ -1083,8 +1083,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}*/
 					
 					//if(Variables.NAVIGATION.setNavigation(nav))
-					Variables.getNavigation().setNavigation(nav);
-						get_mappane().load_map();
+					Variables.getNavigation().setNavigation(nav, false);
+					get_mappane().load_map();
 					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 					//Variables.NAVIGATION.gotoMap(nav);
 					resetPanDrag();

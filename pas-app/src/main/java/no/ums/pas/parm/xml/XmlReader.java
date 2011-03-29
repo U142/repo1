@@ -20,6 +20,7 @@ import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.PolygonStruct;
+import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
 import no.ums.pas.parm.main.MainController;
@@ -883,7 +884,11 @@ public class XmlReader {
 		double cornery;
 		
 		EllipseStruct shape = new EllipseStruct();
-		
+		if(o instanceof AlertVO)
+		{
+			shape.shapeName = ((AlertVO)o).getName();
+		}
+
 		if (elPolyObject.hasAttribute("col_r")
 		 && elPolyObject.hasAttribute("col_g")
 		 && elPolyObject.hasAttribute("col_b")
@@ -937,7 +942,9 @@ public class XmlReader {
 				gislist.add(gisr);
 			}
 		}
-		alert.setM_shape(new GISShape(gislist));
+		ShapeStruct ss = new GISShape(gislist);
+		alert.setM_shape(ss);
+		ss.shapeName = alert.getName();
 	}
 	
 	private void paCategory() {

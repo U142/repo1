@@ -166,7 +166,7 @@ public class SendPropertiesPolygon extends SendProperties {
 		if(get_shapestruct()==null)
 			return;
 		if(PAS.get_pas() != null)
-			get_shapestruct().draw(g, get_pas().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
+			get_shapestruct().draw(g, get_pas().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint, true, true, 1, true, !b_drawmode);
 		else
 			get_shapestruct().draw(g, get_toolbar().get_parent().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
 		if(get_toolbar().get_parent().isActive()) {

@@ -711,8 +711,8 @@ public class SendController implements ActionListener {
 		try {
 			for(int i=0; i < get_sendings().size(); i++) {
 				SendObject obj = (SendObject)get_sendings().get(i);
-				if(obj.get_sendproperties().get_shapestruct()==PAS.get_pas().get_mappane().get_active_shape())
-					continue;
+				//if(obj.get_sendproperties().get_shapestruct()==PAS.get_pas().get_mappane().get_active_shape())
+				//	continue;
 				if(obj!=null)
 					obj.draw(g, mousepos);
 			}
