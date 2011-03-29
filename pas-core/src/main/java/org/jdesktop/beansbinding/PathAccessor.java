@@ -1,5 +1,8 @@
 package org.jdesktop.beansbinding;
 
+import com.google.common.collect.ImmutableMap;
+
+import javax.annotation.CheckForNull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -27,10 +30,22 @@ import java.lang.reflect.Method;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-class PathAccessor {
+class PathAccessor implements IPathAccessor {
+
+    static final ImmutableMap<Class, Object> DEFAULT_VALUES = ImmutableMap.<Class, Object>builder()
+            .put(boolean.class, false)
+            .put(char.class, '\u0000')
+            .put(byte.class, 0)
+            .put(short.class, 0)
+            .put(int.class, 0)
+            .put(long.class, 0l)
+            .put(float.class, 0.0)
+            .put(double.class, 0.0d)
+            .build();
+            
 
     // Parent path accessor, if any. The propety "nested.name" will have a parent PathAccessor for "nested".
-    private final PathAccessor parent;
+    private final IPathAccessor parent;
     // The fill property name, for "nested.name" this will be "nested.name".
     private final String propertyName;
     // The leaf name of the property, for "nested.name" this will be "name".
@@ -40,7 +55,7 @@ class PathAccessor {
     // Setter method to update values on a target, null for read only properties.
     private final Method getter;
 
-    PathAccessor(PathAccessor parent, Method setter, Method getter, String propertyName) {
+    PathAccessor(IPathAccessor parent, Method setter, Method getter, String propertyName) {
         this.parent = parent;
         this.setter = setter;
         this.getter = getter;
@@ -58,10 +73,16 @@ class PathAccessor {
      * and set values from the result of object.getNested().
      *
      * @param src the object that this PathAccessor is bound to
-     * @return the object to invoke get and set on.
+     * @return the object to invoke get and set on, may be null.
      */
+    @CheckForNull
     private Object getInstance(Object src) {
         return (parent == null) ? src : parent.getValue(src);
+    }
+
+    @Override
+    public String getPropertyName() {
+        return propertyName;
     }
 
     /**
@@ -70,9 +91,11 @@ class PathAccessor {
      * @param instance to read this property from
      * @return the value for this PathAccessor on the target object.
      */
-    Object getValue(Object instance) {
+    @Override
+    public Object getValue(Object instance) {
         try {
-            return invokeGetOn(getter, getInstance(instance));
+            Object o = getInstance(instance);
+            return (o == null) ? null : invokeGetOn(getter, o);
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Failed to read property " + propertyName + " by invoking " + getter + " on " + instance, e);
         } catch (InvocationTargetException e) {
@@ -86,16 +109,27 @@ class PathAccessor {
      * @param instance to write to
      * @param value    to write to the instance.
      */
-    void setValue(Object instance, Object value) {
+    @Override
+    public void setValue(Object instance, Object value) {
         if (setter == null) {
             throw new IllegalStateException("Read only property");
         }
         try {
-            invokeSetOn(setter, getInstance(instance), value);
+            Object o = getInstance(instance);
+            if (o != null) {
+                // For primitive values, we cannot assign null, so we need
+                // to lookup the default value to use.
+                if (getValueType().isPrimitive() && value == null) {
+                    value = DEFAULT_VALUES.get(getValueType());
+                }
+                invokeSetOn(setter, o, value);
+            }
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Failed to write property " + propertyName + " by invoking " + setter + " on " + instance, e);
+            throw new IllegalStateException("Failed to write property " +value+" on property "+ propertyName + " by invoking " + setter + " on " + instance, e);
         } catch (InvocationTargetException e) {
-            throw new IllegalStateException("Failed to write property " + propertyName + " by invoking " + setter + " on " + instance, e);
+            throw new IllegalStateException("Failed to write property " +value+" on property "+ propertyName + " by invoking " + setter + " on " + instance, e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to write value "+value+" on property " + propertyName + " by invoking " + setter + " on " + instance, e);
         }
     }
 
@@ -137,7 +171,8 @@ class PathAccessor {
      * @param tgt      object to listen on
      * @param listener to be notified when the property identified by this PathAccessor changes.
      */
-    void addPropertyChangeListener(final Object tgt, final PropertyChangeListener listener) {
+    @Override
+    public void addPropertyChangeListener(final Object tgt, final PropertyChangeListener listener) {
         // Get the actual instance that we need to listen to. For PathAccessors with parents, we
         // need to get the leaf object to be able to add listeners to it.
         final Object instance = getInstance(tgt);
@@ -182,10 +217,17 @@ class PathAccessor {
      *
      * @return the type of this PathAccessor
      */
+    @Override
     public Class getValueType() {
         return getter.getReturnType();
     }
 
+    @Override
+    public Class getTargetType() {
+        return getter.getDeclaringClass();
+    }
+
+    @Override
     public boolean isWriteable() {
         return setter != null;
     }
@@ -197,7 +239,7 @@ class PathAccessor {
     static class Indexed extends PathAccessor {
         private final int index;
 
-        Indexed(PathAccessor parent, Method setter, Method getter, String propertyName, int index) {
+        Indexed(IPathAccessor parent, Method setter, Method getter, String propertyName, int index) {
             super(parent, setter, getter, propertyName);
             this.index = index;
         }

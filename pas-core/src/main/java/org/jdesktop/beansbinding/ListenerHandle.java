@@ -2,10 +2,13 @@ package org.jdesktop.beansbinding;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -46,6 +49,8 @@ interface ListenerHandle<T> {
                 return new JComboBoxSelectedItemListenerHandle((JComboBox) target, propertyName, propertyChangeListener);
             } else if (propertyName.equals("selected") && target instanceof AbstractButton) {
                 return new AbstractButtonSelectedListenerHandle((AbstractButton) target, propertyName, propertyChangeListener);
+            } else if (propertyName.equals("selectedElement") && target instanceof JList) {
+                return new JListSelectedElementListenerHandler((JList) target, propertyName, propertyChangeListener);
             } else {
                 return new PropertyListenerHandle(target, propertyName, propertyChangeListener);
             }
@@ -269,6 +274,38 @@ interface ListenerHandle<T> {
         @Override
         protected void removeListener(JComboBox value, ItemListener listener) {
             value.removeItemListener(listener);
+        }
+    }
+
+    static class JListSelectedElementListenerHandler extends AbstractListenerHandler<JList, ListSelectionListener> {
+
+        public JListSelectedElementListenerHandler(JList target, String propertyName, PropertyChangeListener propertyChangeListener) {
+            super(target, propertyName, propertyChangeListener);
+        }
+
+        @Override
+        protected Object getValue(JList instance) {
+            return instance.getSelectedValue();
+        }
+
+        @Override
+        protected ListSelectionListener createListener() {
+            return new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    update();
+                }
+            };
+        }
+
+        @Override
+        protected void addListener(JList value, ListSelectionListener listener) {
+            value.addListSelectionListener(listener);
+        }
+
+        @Override
+        protected void removeListener(JList value, ListSelectionListener listener) {
+            value.removeListSelectionListener(listener);
         }
     }
 

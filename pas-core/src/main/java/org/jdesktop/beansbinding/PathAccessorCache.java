@@ -6,6 +6,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nonnull;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentMap;
 
@@ -19,57 +23,74 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class PathAccessorCache {
 
-    private final ConcurrentMap<PropertyTypeKey, PathAccessor> accessorCache = new MapMaker().makeComputingMap(new Function<PropertyTypeKey, PathAccessor>() {
+    private final ConcurrentMap<PropertyTypeKey, IPathAccessor> accessorCache = new MapMaker().makeComputingMap(new Function<PropertyTypeKey, IPathAccessor>() {
         @Override
-        public PathAccessor apply(@Nonnull PropertyTypeKey input) {
+        public IPathAccessor apply(@Nonnull PropertyTypeKey input) {
             final String name = input.getName();
-            final Class type = input.getType();
-
-            // Split at the last . to get the parent property
-            int dotSplit = name.lastIndexOf('.');
-            // At symbol, indicating that this path has an index.
-            int atIndex = name.lastIndexOf('@');
-            // Index where the name ends, either end of the string, or at the last @
-            int propertyNameEnd = (atIndex == -1) ? name.length() : atIndex;
-            // If we have a . in our name, get the parent PathAccessor.
-            PathAccessor parent = (dotSplit == -1) ? null : accessorCache.get(new PropertyTypeKey(type, name.substring(0, dotSplit)));
-            // Get the actual property name, with out dots and @ symbols
-            String propertyName = (dotSplit == -1) ? name.substring(0, propertyNameEnd) : name.substring(dotSplit + 1, propertyNameEnd);
-            // Change the property name to all upper camel, as a postfix to get and set methods.
-            String propertyPostfix = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
-
-            // The target type of object for this path accessor. If we have a parent, it will be
-            // the value type of the parent, otherwise it's the actual target as this is a root path accessor.
-            Class targetType = (parent == null) ? type : parent.getValueType();
-
-            Method getter;
-
-            // If the property name contains an at, it indicates an int indexed variable
-            Class[] getterArgs = (atIndex != -1) ? new Class[]{int.class} : new Class[0];
-            try {
-                // Look for a method starting with get followed by the propertyPostfix
-                getter = targetType.getMethod("get" + propertyPostfix, getterArgs);
-            } catch (NoSuchMethodException e) {
-                try {
-                    // Look for a method starting with is for boolean properties,
-                    // followed by the propertyPostfix
-                    getter = targetType.getMethod("is" + propertyPostfix, getterArgs);
-                } catch (NoSuchMethodException e1) {
-                    throw new IllegalArgumentException("No reader for " + propertyPostfix + " on " + targetType, e);
-                }
+            @SuppressWarnings("unchecked")
+            final Class<Object> type = (Class<Object>) input.getType();
+            BeanPropertyName beanPropertyName = BeanPropertyName.Factory.of(name);
+            if (beanPropertyName.getParent() == null) {
+                Method getter = beanPropertyName.getAccessor(type).getGetter();
+                Preconditions.checkNotNull(getter, "Could not find getter for " + beanPropertyName.getFullName() + " on " + type);
+                @SuppressWarnings("unchecked")
+                Class<Object> returnType = (Class<Object>) getter.getReturnType();
+                return new ReflectionPathAccessor<Object, Object>(beanPropertyName, type, returnType);
             }
-            for (Method method : targetType.getMethods()) {
-                // Go through the methods of the targetType, looking for the setter.
-                if (method.getName().endsWith(propertyPostfix) && method.getParameterTypes().length == getterArgs.length + 1) {
-                    // return a read/write path accessor
-                    return newPathAccessor(name, parent, method, getter, propertyName, atIndex);
-                }
+            else {
+                IPathAccessor<Object, Object> parentAccessor = getAccessor(type, beanPropertyName.getParent().getFullName());
+                Method getter = beanPropertyName.getAccessor(parentAccessor.getValueType()).getGetter();
+                Preconditions.checkNotNull(getter, "Could not find getter for " + beanPropertyName.getFullName() + " on " + type);
+                @SuppressWarnings("unchecked")
+                Class<Object> returnType = (Class<Object>) getter.getReturnType();
+                return new ReflectionChildPathAccessor<Object, Object, Object>(parentAccessor, beanPropertyName, returnType);
             }
-            // No write method, return a read-only accessor.
-            return newPathAccessor(name, parent, null, getter, name, atIndex);
+
+//            // Split at the last . to get the parent property
+//            int dotSplit = name.lastIndexOf('.');
+//            // At symbol, indicating that this path has an index.
+//            int atIndex = name.lastIndexOf('@');
+//            // Index where the name ends, either end of the string, or at the last @
+//            int propertyNameEnd = (atIndex == -1) ? name.length() : atIndex;
+//            // If we have a . in our name, get the parent PathAccessor.
+//            IPathAccessor parent = (dotSplit == -1) ? null : accessorCache.get(new PropertyTypeKey(type, name.substring(0, dotSplit)));
+//            // Get the actual property name, with out dots and @ symbols
+//            String propertyName = (dotSplit == -1) ? name.substring(0, propertyNameEnd) : name.substring(dotSplit + 1, propertyNameEnd);
+//            // Change the property name to all upper camel, as a postfix to get and set methods.
+//            String propertyPostfix = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
+//
+//            // The target type of object for this path accessor. If we have a parent, it will be
+//            // the value type of the parent, otherwise it's the actual target as this is a root path accessor.
+//            Class targetType = (parent == null) ? type : parent.getValueType();
+//
+//            Method getter;
+//
+//            // If the property name contains an at, it indicates an int indexed variable
+//            Class[] getterArgs = (atIndex != -1) ? new Class[]{int.class} : new Class[0];
+//            try {
+//                // Look for a method starting with get followed by the propertyPostfix
+//                getter = targetType.getMethod("get" + propertyPostfix, getterArgs);
+//            } catch (NoSuchMethodException e) {
+//                try {
+//                    // Look for a method starting with is for boolean properties,
+//                    // followed by the propertyPostfix
+//                    getter = targetType.getMethod("is" + propertyPostfix, getterArgs);
+//                } catch (NoSuchMethodException e1) {
+//                    throw new IllegalArgumentException("No reader for " + propertyPostfix + " on " + targetType, e);
+//                }
+//            }
+//            for (Method method : targetType.getMethods()) {
+//                // Go through the methods of the targetType, looking for the setter.
+//                if (method.getName().endsWith(propertyPostfix) && method.getParameterTypes().length == getterArgs.length + 1) {
+//                    // return a read/write path accessor
+//                    return newPathAccessor(name, parent, method, getter, propertyName, atIndex);
+//                }
+//            }
+//            // No write method, return a read-only accessor.
+//            return newPathAccessor(name, parent, null, getter, name, atIndex);
         }
 
-        private PathAccessor newPathAccessor(String name, PathAccessor parent, Method setter, Method getter, String propertyName, int atIndex) {
+        private PathAccessor newPathAccessor(String name, IPathAccessor parent, Method setter, Method getter, String propertyName, int atIndex) {
             if (atIndex == -1) {
                 return new PathAccessor(parent, setter, getter, propertyName);
             } else {
@@ -79,6 +100,36 @@ public class PathAccessorCache {
 
     });
 
+    public PathAccessorCache() {
+        accessorCache.put(new PropertyTypeKey(JList.class, "selectedElement"), new IPathAccessor.Abstract<JList, Object>("selectedElement", JList.class, Object.class) {
+
+            @Override
+            public Object getValue(JList instance) {
+                return instance.getSelectedValue();
+            }
+
+            @Override
+            public void setValue(JList instance, Object value) {
+                instance.setSelectedValue(value, true);
+            }
+
+            @Override
+            public boolean isWriteable() {
+                return true;
+            }
+
+            @Override
+            protected void addPropertyChangeListenerImpl(final JList instance, final PropertyChangeListener listener) {
+                instance.addListSelectionListener(new ListSelectionListener() {
+                    @Override
+                    public void valueChanged(ListSelectionEvent e) {
+                        update(instance, listener);
+                    }
+                });
+            }
+        });
+    }
+
     /**
      * Return an accessor for the property "name" on the target type.
      *
@@ -86,8 +137,9 @@ public class PathAccessorCache {
      * @param name of the property, using the syntax described in {@link PathAccessor}
      * @return the path accessor.
      */
-    public PathAccessor getAccessor(Class type, String name) {
-        return accessorCache.get(new PropertyTypeKey(type, name));
+    @SuppressWarnings("unchecked")
+    public <T, V> IPathAccessor<T, V> getAccessor(Class<T> type, String name) {
+        return (IPathAccessor<T, V>) accessorCache.get(new PropertyTypeKey(type, name));
     }
 
     /**

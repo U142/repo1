@@ -50,8 +50,8 @@ public class BeanProperty<BT, PT> {
         getPathAccessor(src).addPropertyChangeListener(src, listener);
     }
 
-    private PathAccessor getPathAccessor(BT target) {
-        return cache.getAccessor(target.getClass(), propertyName);
+    private IPathAccessor<BT, PT> getPathAccessor(BT target) {
+        return cache.getAccessor((Class<BT>) target.getClass(), propertyName);
     }
 
     @Override
