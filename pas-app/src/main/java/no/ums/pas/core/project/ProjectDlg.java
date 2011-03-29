@@ -101,6 +101,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 	protected void createPanel() {
 		m_projectpanel = new ProjectPanel(true);
         m_projectpanel.start();
+		getRootPane().setDefaultButton(m_projectpanel.m_btn_save);
 	}
 	protected void init() {
 		createPanel();
