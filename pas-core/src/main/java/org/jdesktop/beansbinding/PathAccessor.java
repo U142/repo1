@@ -1,7 +1,5 @@
 package org.jdesktop.beansbinding;
 
-import com.google.common.collect.ImmutableMap;
-
 import javax.annotation.CheckForNull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,18 +29,6 @@ import java.lang.reflect.Method;
  * @author Ståle Undheim <su@ums.no>
  */
 class PathAccessor implements IPathAccessor {
-
-    static final ImmutableMap<Class, Object> DEFAULT_VALUES = ImmutableMap.<Class, Object>builder()
-            .put(boolean.class, false)
-            .put(char.class, '\u0000')
-            .put(byte.class, 0)
-            .put(short.class, 0)
-            .put(int.class, 0)
-            .put(long.class, 0l)
-            .put(float.class, 0.0)
-            .put(double.class, 0.0d)
-            .build();
-            
 
     // Parent path accessor, if any. The propety "nested.name" will have a parent PathAccessor for "nested".
     private final IPathAccessor parent;
@@ -172,7 +158,7 @@ class PathAccessor implements IPathAccessor {
      * @param listener to be notified when the property identified by this PathAccessor changes.
      */
     @Override
-    public void addPropertyChangeListener(final Object tgt, final PropertyChangeListener listener) {
+    public ListenerHandle<Object> addPropertyChangeListener(final Object tgt, final PropertyChangeListener listener) {
         // Get the actual instance that we need to listen to. For PathAccessors with parents, we
         // need to get the leaf object to be able to add listeners to it.
         final Object instance = getInstance(tgt);
@@ -183,11 +169,7 @@ class PathAccessor implements IPathAccessor {
         final ListenerHandle<Object> handle = ListenerHandle.Factory.addPropertyChangeListener(instance, leafPropertyName, listener);
 
         if (parent != null) {
-            // We have a parent, so we also need to listen to property changes on the parent
-            // path accessor, as that will mean that the instance value also changes. So
-            // if we are a PathAccessor for "nested.name", we need to be notified when "nested"
-            // changes, to propagate that down to the listener.
-            parent.addPropertyChangeListener(tgt, new PropertyChangeListener() {
+            return parent.addPropertyChangeListener(tgt, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     try {
@@ -210,6 +192,7 @@ class PathAccessor implements IPathAccessor {
                 }
             });
         }
+        return handle;
     }
 
     /**

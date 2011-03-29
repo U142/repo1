@@ -1,15 +1,11 @@
 package org.jdesktop.beansbinding;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nonnull;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentMap;
 
@@ -39,95 +35,16 @@ public class PathAccessorCache {
             }
             else {
                 IPathAccessor<Object, Object> parentAccessor = getAccessor(type, beanPropertyName.getParent().getFullName());
-                Method getter = beanPropertyName.getAccessor(parentAccessor.getValueType()).getGetter();
-                Preconditions.checkNotNull(getter, "Could not find getter for " + beanPropertyName.getFullName() + " on " + type);
-                @SuppressWarnings("unchecked")
-                Class<Object> returnType = (Class<Object>) getter.getReturnType();
-                return new ReflectionChildPathAccessor<Object, Object, Object>(parentAccessor, beanPropertyName, returnType);
-            }
-
-//            // Split at the last . to get the parent property
-//            int dotSplit = name.lastIndexOf('.');
-//            // At symbol, indicating that this path has an index.
-//            int atIndex = name.lastIndexOf('@');
-//            // Index where the name ends, either end of the string, or at the last @
-//            int propertyNameEnd = (atIndex == -1) ? name.length() : atIndex;
-//            // If we have a . in our name, get the parent PathAccessor.
-//            IPathAccessor parent = (dotSplit == -1) ? null : accessorCache.get(new PropertyTypeKey(type, name.substring(0, dotSplit)));
-//            // Get the actual property name, with out dots and @ symbols
-//            String propertyName = (dotSplit == -1) ? name.substring(0, propertyNameEnd) : name.substring(dotSplit + 1, propertyNameEnd);
-//            // Change the property name to all upper camel, as a postfix to get and set methods.
-//            String propertyPostfix = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, propertyName);
-//
-//            // The target type of object for this path accessor. If we have a parent, it will be
-//            // the value type of the parent, otherwise it's the actual target as this is a root path accessor.
-//            Class targetType = (parent == null) ? type : parent.getValueType();
-//
-//            Method getter;
-//
-//            // If the property name contains an at, it indicates an int indexed variable
-//            Class[] getterArgs = (atIndex != -1) ? new Class[]{int.class} : new Class[0];
-//            try {
-//                // Look for a method starting with get followed by the propertyPostfix
-//                getter = targetType.getMethod("get" + propertyPostfix, getterArgs);
-//            } catch (NoSuchMethodException e) {
-//                try {
-//                    // Look for a method starting with is for boolean properties,
-//                    // followed by the propertyPostfix
-//                    getter = targetType.getMethod("is" + propertyPostfix, getterArgs);
-//                } catch (NoSuchMethodException e1) {
-//                    throw new IllegalArgumentException("No reader for " + propertyPostfix + " on " + targetType, e);
-//                }
-//            }
-//            for (Method method : targetType.getMethods()) {
-//                // Go through the methods of the targetType, looking for the setter.
-//                if (method.getName().endsWith(propertyPostfix) && method.getParameterTypes().length == getterArgs.length + 1) {
-//                    // return a read/write path accessor
-//                    return newPathAccessor(name, parent, method, getter, propertyName, atIndex);
-//                }
-//            }
-//            // No write method, return a read-only accessor.
-//            return newPathAccessor(name, parent, null, getter, name, atIndex);
-        }
-
-        private PathAccessor newPathAccessor(String name, IPathAccessor parent, Method setter, Method getter, String propertyName, int atIndex) {
-            if (atIndex == -1) {
-                return new PathAccessor(parent, setter, getter, propertyName);
-            } else {
-                return new PathAccessor.Indexed(parent, setter, getter, name, Integer.parseInt(name.substring(atIndex + 1)));
+                IPathAccessor<Object, Object> childAccessor = getAccessor(parentAccessor.getValueType(), beanPropertyName.getName());
+                return new ParentPathAccessor<Object, Object, Object>(parentAccessor, childAccessor);
             }
         }
 
     });
 
     public PathAccessorCache() {
-        accessorCache.put(new PropertyTypeKey(JList.class, "selectedElement"), new IPathAccessor.Abstract<JList, Object>("selectedElement", JList.class, Object.class) {
-
-            @Override
-            public Object getValue(JList instance) {
-                return instance.getSelectedValue();
-            }
-
-            @Override
-            public void setValue(JList instance, Object value) {
-                instance.setSelectedValue(value, true);
-            }
-
-            @Override
-            public boolean isWriteable() {
-                return true;
-            }
-
-            @Override
-            protected void addPropertyChangeListenerImpl(final JList instance, final PropertyChangeListener listener) {
-                instance.addListSelectionListener(new ListSelectionListener() {
-                    @Override
-                    public void valueChanged(ListSelectionEvent e) {
-                        update(instance, listener);
-                    }
-                });
-            }
-        });
+        IPathAccessor<JList, Object> overridePath = CustomOveridePaths.JLIST_SELECTED_ELEMENT;
+        accessorCache.put(new PropertyTypeKey(overridePath.getTargetType(), overridePath.getPropertyName()), overridePath);
     }
 
     /**

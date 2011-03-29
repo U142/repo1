@@ -63,8 +63,10 @@ interface ListenerHandle<T> {
      * value.
      *
      * @param value a new value to listen on.
+     *
+     * @return this instance.
      */
-    void changeListenTarget(T value);
+    ListenerHandle<T> changeListenTarget(T value);
 
 
     /**
@@ -96,7 +98,7 @@ interface ListenerHandle<T> {
         }
 
         @Override
-        public void changeListenTarget(T value) {
+        public ListenerHandle<T> changeListenTarget(T value) {
             if (current != null) {
                 removeListener(value, listener);
             }
@@ -105,6 +107,7 @@ interface ListenerHandle<T> {
                 currentValue = getValue(current);
                 addListener(value, listener);
             }
+            return this;
         }
 
         /**
@@ -339,7 +342,7 @@ interface ListenerHandle<T> {
         }
 
         @Override
-        public void changeListenTarget(Object value) {
+        public ListenerHandle changeListenTarget(Object value) {
             if (current != null) {
                 try {
                     current.getClass().getMethod("removePropertyChangeListener", String.class, PropertyChangeListener.class).invoke(current, propertyName, listener);
@@ -363,6 +366,7 @@ interface ListenerHandle<T> {
                     throw new IllegalStateException("Failed to bind property " + propertyName + " on " + current, e);
                 }
             }
+            return this;
         }
     }
 }

@@ -66,7 +66,7 @@ public interface BeanPropertyName {
                         Object value = readImpl(instance, getter);
                         try {
                             if (value == null && returnValue.isPrimitive()) {
-                                return (T) PathAccessor.DEFAULT_VALUES.get(returnValue);
+                                return (T) IPathAccessor.DEFAULT_VALUES.get(returnValue);
                             }
                             return (T) value;
                         } catch (ClassCastException e) {
@@ -88,7 +88,7 @@ public interface BeanPropertyName {
                     }
                     try {
                         if (value == null && getter.getReturnType().isPrimitive()) {
-                            value = PathAccessor.DEFAULT_VALUES.get(getter.getReturnType());
+                            value = IPathAccessor.DEFAULT_VALUES.get(getter.getReturnType());
                         }
                         writeImpl(instance, setter, value);
                     } catch (IllegalAccessException e) {

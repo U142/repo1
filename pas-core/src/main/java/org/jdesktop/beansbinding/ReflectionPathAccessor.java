@@ -1,12 +1,11 @@
 package org.jdesktop.beansbinding;
 
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class ReflectionPathAccessor<T, V> extends IPathAccessor.Abstract<T, V> {
+public class ReflectionPathAccessor<T, V> extends AbstractPathAccessor<T, V> {
 
     private final BeanPropertyAccessor accessor;
     private final String name;
@@ -33,8 +32,8 @@ public class ReflectionPathAccessor<T, V> extends IPathAccessor.Abstract<T, V> {
     }
 
     @Override
-    protected void addPropertyChangeListenerImpl(T instance, PropertyChangeListener listener) {
-        ListenerHandle.Factory.addPropertyChangeListener(instance, name, listener);
+    protected ListenerHandle<T> addPropertyChangeListenerImpl(T instance, PropertyChangeListener listener) {
+        return ListenerHandle.Factory.addPropertyChangeListener(instance, name, listener);
     }
 
 
