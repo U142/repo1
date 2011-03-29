@@ -94,7 +94,7 @@ public class SettingsCtrl implements ISettingsUpdate {
     	}
     	
     	//check if user may use parm on one or more departments
-    	/*boolean b_enable_parm = false;
+    	boolean b_enable_parm = false;
     	for(DeptInfo di : userinfo.get_departments())
     	{
     		if(di.get_userprofile().get_parm_rights()>=1)
@@ -103,7 +103,11 @@ public class SettingsCtrl implements ISettingsUpdate {
     			break;
     		}
     	}
-    	dlg.getChkAutoStartParm().setEnabled(b_enable_parm);*/
+    	if(!b_enable_parm)
+    	{
+    		dlg.settingsModel1.setAutoStartParm(b_enable_parm);
+    		dlg.getChkAutoStartParm().setEnabled(b_enable_parm);
+    	}
     }
     
 	@Override
