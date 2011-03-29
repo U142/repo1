@@ -736,7 +736,8 @@ namespace com.ums.ws.parm
             String nodetype = "objectpolygon";
             StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
             bool b_ret = _write_server_shape(ref obj.m_shape, l_pk, nodetype, ref w, ref szDbShapeString);
-            w.Close();
+            if(w!=null)
+                w.Close();
             bool bShapeChanged = false;
             db.UpdatePAShape(obj.l_objectpk, szDbShapeString, PASHAPETYPES.PAOBJECT, ref bShapeChanged); // Må finne pashapetypes
             return b_ret;
@@ -758,20 +759,13 @@ namespace com.ums.ws.parm
             FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + l_pk + ".xml");
             try
             {
-                if (fmode.Equals(FileMode.Create))
-                {
-                    try
-                    {
-                        t.Delete();
-                    }
-                    catch (Exception) { }
-                }
+                t.Delete();
                 StreamWriter w = (fmode.Equals(FileMode.Create) ? t.CreateText() : t.AppendText());
                 return w;
             }
-            catch (Exception)
-            {
-                throw;
+            catch (Exception e) {
+                ULog.error(0, "Error in ParmAdmin._create_server_shape_file", e.Message);
+                return null;
             }
         }
         protected bool _delete_server_shape_file(String nodetype, String l_pk)
@@ -781,9 +775,10 @@ namespace com.ums.ws.parm
                 FileInfo t = new FileInfo(UCommon.UPATHS.sz_path_predefined_areas + "\\" + nodetype + l_pk + ".xml");
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                ULog.error(0, "Error in ParmAdmin._delete_server_shape_file", e.Message);
+                return false;
             }
         }
 
@@ -806,18 +801,21 @@ namespace com.ums.ws.parm
                             nodetype, poly.col_alpha, poly.col_red, poly.col_green, poly.col_blue,
                             pktype, l_pk);
                 szShapeString += tmp;
-                w.WriteLine(tmp);
+                if(w!=null)
+                    w.WriteLine(tmp);
                 List<UPolypoint> p = poly.m_array_polypoints;
                 for (int i = 0; i < p.Count; i++)
                 {
                     tmp = String.Format(UCommon.UGlobalizationInfo, "<polypoint xcord=\"{0}\" ycord=\"{1}\" />", p[i].lon, p[i].lat);
                     szShapeString += tmp;
-                    w.WriteLine(tmp);
+                    if(w!=null)
+                        w.WriteLine(tmp);
                     
                 }
                 tmp = String.Format("</{0}>", nodetype);
                 szShapeString += tmp;
-                w.WriteLine(tmp);
+                if(w!=null)
+                    w.WriteLine(tmp);
 
 
                 //w.Close();
@@ -838,7 +836,8 @@ namespace com.ums.ws.parm
                 String tmp = String.Format(UCommon.UGlobalizationInfo, "<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\" centerx=\"{7}\" centery=\"{8}\" cornerx=\"{9}\" cornery=\"{10}\" />",
                                             nodetype, ell.col_alpha, ell.col_red, ell.col_green, ell.col_blue, "l_alertpk", l_pk, ell.ellipse().lon, ell.ellipse().lat, ell.ellipse().lon + ell.x, ell.ellipse().lat + ell.y);
                 szShapeString += tmp;
-                w.WriteLine(tmp);
+                if(w!=null)
+                    w.WriteLine(tmp);
             }
             catch (Exception e)
             {
@@ -859,7 +858,8 @@ namespace com.ums.ws.parm
                 tmp = String.Format("<{0} col_a=\"{1}\" col_r=\"{2}\" col_g=\"{3}\" col_b=\"{4}\" {5}=\"{6}\">",
                     nodetype, shape.col_alpha, shape.col_red, shape.col_green, shape.col_blue, sz_pkfield, l_pk);
                 szShapeString += tmp;
-                w.WriteLine(tmp);
+                if(w!=null)
+                    w.WriteLine(tmp);
 
                 Hashtable tbl = new Hashtable();
                 int written = 0;
@@ -896,15 +896,17 @@ namespace com.ums.ws.parm
                     tmp = String.Format("<line municipal=\"{0}\" streetid=\"{1}\" houseno=\"{2}\" letter=\"{3}\" namefilter1=\"{4}\" namefilter2=\"{5}\" />",
                         mun, stre, hou, let, nam1, nam2);
                     szShapeString += tmp;
-                    w.WriteLine(tmp);
+                    if(w!=null)
+                        w.WriteLine(tmp);
                     written++;
                 }
                 //WRITE END LINE
                 tmp = String.Format("</{0}>", nodetype);
                 szShapeString += tmp;
-                w.WriteLine(tmp);
-
-                w.Close();
+                if(w!=null)
+                    w.WriteLine(tmp);
+                if(w!=null)
+                    w.Close();
             }
             catch (Exception e)
             {
@@ -970,7 +972,8 @@ namespace com.ums.ws.parm
                     StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
                     _write_server_shape(ref poly, l_pk, nodetype, ref w, ref szShapeToDb);
                     _write_server_lbashape(ref a, ref w, op, ref szShapeToDb, ref bUseLba);
-                    w.Close();
+                    if(w!=null)
+                        w.Close();
                 }
                 else if (typeof(UEllipse).Equals(a.m_shape.GetType()))
                 {
@@ -979,7 +982,8 @@ namespace com.ums.ws.parm
                     StreamWriter w = _create_server_shape_file(l_pk, FileMode.Create);
                     _write_server_shape(ref ell, l_pk, nodetype, ref w, ref szShapeToDb);
                     _write_server_lbashape(ref a, ref w, op, ref szShapeToDb, ref bUseLba);
-                    w.Close();
+                    if(w!=null)
+                        w.Close();
                 }
                 else if (typeof(UGeminiStreet).Equals(a.m_shape.GetType()))
                 {
