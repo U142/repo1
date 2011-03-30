@@ -45,7 +45,7 @@ public interface IPathAccessor<T, V> {
      * The fully qualified property name that this path accessor is for.
      * @return the full property name.
      */
-    String getPropertyName();
+    BeanPropertyName getPropertyName();
 
     /**
      * Reads the value that this PathAccessor identifies on an object.

@@ -1,18 +1,28 @@
 package org.jdesktop.beansbinding;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.JTextComponent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
 public class CustomOveridePaths {
-    protected static final IPathAccessor<JList,Object> JLIST_SELECTED_ELEMENT = new AbstractPathAccessor<JList, Object>("selectedElement", JList.class, Object.class) {
+
+    protected static final IPathAccessor<JList, Object> JLIST_SELECTED_ELEMENT = new ListenerAbstractPathAccessor<JList, ListSelectionListener, Object>("selectedElement", JList.class, Object.class) {
 
         @Override
         public Object getValue(JList instance) {
@@ -30,61 +40,29 @@ public class CustomOveridePaths {
         }
 
         @Override
-        protected ListenerHandle<JList> addPropertyChangeListenerImpl(final JList instance, final PropertyChangeListener listener) {
-            final ListSelectionListener selectionListener = new ListSelectionListener() {
+        protected ListSelectionListener createListener(final AbstractListenerHandle2<JList, ListSelectionListener, Object> abstractHandle) {
+            return new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
-                    update(instance, listener);
-                }
-            };
-            instance.addListSelectionListener(selectionListener);
-            return new ListenerHandle<JList>() {
-
-                JList current = instance;
-
-                @Override
-                public ListenerHandle<JList> changeListenTarget(JList value) {
-                    if (current != null) {
-                        current.removeListSelectionListener(selectionListener);
-                    }
-                    current = value;
-                    if (current != null) {
-                        current.addListSelectionListener(selectionListener);
-                    }
-                    return this;
+                    abstractHandle.update();
                 }
             };
         }
+
+        @Override
+        protected void removeListener(JList current, ListSelectionListener listener) {
+            current.removeListSelectionListener(listener);
+        }
+
+        @Override
+        protected void addListener(JList current, ListSelectionListener listener) {
+            current.addListSelectionListener(listener);
+        }
+
+
     };
 
-    protected static final IPathAccessor<JComboBox,Object> JCOMBOBOX_SELECTED_ITEM = new AbstractPathAccessor<JComboBox, Object>("selectedItem", JComboBox.class, Object.class) {
-        @Override
-        protected ListenerHandle<JComboBox> addPropertyChangeListenerImpl(final JComboBox instance, final PropertyChangeListener listener) {
-            final ItemListener itemListener = new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    update(instance, listener);
-                }
-            };
-            instance.addItemListener(itemListener);
-            return new ListenerHandle<JComboBox>() {
-
-                JComboBox current = instance;
-
-                @Override
-                public ListenerHandle<JComboBox> changeListenTarget(JComboBox value) {
-                    if (current != null) {
-                        current.removeItemListener(itemListener);
-                    }
-                    current = value;
-                    if (current != null) {
-                        current.addItemListener(itemListener);
-                    }
-                    return this;
-                }
-            };
-        }
-
+    protected static final IPathAccessor<JComboBox, Object> JCOMBOBOX_SELECTED_ITEM = new ListenerAbstractPathAccessor<JComboBox, ItemListener, Object>("selectedItem", JComboBox.class, Object.class) {
         @Override
         public Object getValue(JComboBox instance) {
             return instance.getSelectedItem();
@@ -99,5 +77,200 @@ public class CustomOveridePaths {
         public boolean isWriteable() {
             return true;
         }
+
+        @Override
+        protected ItemListener createListener(final AbstractListenerHandle2<JComboBox, ItemListener, Object> abstractHandle) {
+            return new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    abstractHandle.update();
+                }
+            };
+        }
+
+        @Override
+        protected void removeListener(JComboBox current, ItemListener listener) {
+            current.removeItemListener(listener);
+        }
+
+        @Override
+        protected void addListener(JComboBox current, ItemListener listener) {
+            current.addItemListener(listener);
+        }
     };
+
+    public static final IPathAccessor<JTextComponent, String> JTEXTCOMPONENT_TEXT = new ListenerAbstractPathAccessor<JTextComponent, DocumentListener, String>("text", JTextComponent.class, String.class) {
+
+        @Override
+        protected DocumentListener createListener(final AbstractListenerHandle2<JTextComponent, DocumentListener, String> abstractHandle) {
+            return new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    abstractHandle.update();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    abstractHandle.update();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    abstractHandle.update();
+                }
+            };
+        }
+
+        @Override
+        protected void removeListener(JTextComponent current, DocumentListener listener) {
+            current.getDocument().removeDocumentListener(listener);
+        }
+
+        @Override
+        protected void addListener(JTextComponent current, DocumentListener listener) {
+            current.getDocument().addDocumentListener(listener);
+        }
+
+        @Override
+        public String getValue(JTextComponent instance) {
+            return instance.getText();
+        }
+
+        @Override
+        public void setValue(JTextComponent instance, String value) {
+            instance.setText(value);
+        }
+
+        @Override
+        public boolean isWriteable() {
+            return true;
+        }
+
+    };
+
+    public static IPathAccessor<AbstractButton, Boolean> ABSTRACT_BUTTON_SELECTED = new ListenerAbstractPathAccessor<AbstractButton, ChangeListener, Boolean>("selected", AbstractButton.class, Boolean.class) {
+        @Override
+        protected ChangeListener createListener(final AbstractListenerHandle2<AbstractButton, ChangeListener, Boolean> abstractHandle) {
+            return new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    abstractHandle.update();
+                }
+            };
+        }
+
+        @Override
+        protected void addListener(AbstractButton current, ChangeListener listener) {
+            current.addChangeListener(listener);
+        }
+
+        @Override
+        protected void removeListener(AbstractButton current, ChangeListener listener) {
+            current.removeChangeListener(listener);
+        }
+
+        @Override
+        public Boolean getValue(AbstractButton instance) {
+            return instance.isSelected();
+        }
+
+        @Override
+        public void setValue(AbstractButton instance, Boolean value) {
+            instance.setSelected(value);
+        }
+
+        @Override
+        public boolean isWriteable() {
+            return true;
+        }
+
+    };
+
+    static abstract class ListenerAbstractPathAccessor<SRC, LST, VAL> extends AbstractPathAccessor<SRC, VAL> {
+
+        protected ListenerAbstractPathAccessor(String name, Class<SRC> type, Class<VAL> valueType) {
+            super(name, type, valueType);
+        }
+
+        @Override
+        protected ListenerHandle<SRC> addPropertyChangeListenerImpl(SRC instance, PropertyChangeListener listener) {
+            return new AbstractListenerHandle2<SRC, LST, VAL>(this, instance, listener) {
+                @Override
+                protected LST createListener() {
+                    return ListenerAbstractPathAccessor.this.createListener(this);
+                }
+
+                @Override
+                protected void removeListener(SRC current, LST listener) {
+                    ListenerAbstractPathAccessor.this.removeListener(current, listener);
+                }
+
+                @Override
+                protected void addListener(SRC current, LST listener) {
+                    ListenerAbstractPathAccessor.this.addListener(current, listener);
+                }
+            };
+        }
+
+        protected abstract LST createListener(AbstractListenerHandle2<SRC, LST, VAL> abstractHandle);
+
+        protected abstract void addListener(SRC current, LST listener);
+
+        protected abstract void removeListener(SRC current, LST listener);
+
+    }
+
+
+    protected static final List<? extends IPathAccessor> OVERRIDES = Arrays.asList(
+            CustomOveridePaths.JCOMBOBOX_SELECTED_ITEM,
+            CustomOveridePaths.JLIST_SELECTED_ELEMENT,
+            CustomOveridePaths.JTEXTCOMPONENT_TEXT,
+            CustomOveridePaths.ABSTRACT_BUTTON_SELECTED);
+
+    static abstract class AbstractListenerHandle2<SRC, LST, VAL> implements ListenerHandle<SRC> {
+
+        private SRC current;
+        private final LST listener;
+        private VAL currentValue;
+        private final PropertyChangeListener propertyChangeListener;
+        private final IPathAccessor<SRC, VAL> accessor;
+
+        protected AbstractListenerHandle2(IPathAccessor<SRC, VAL> accessor, SRC instance, PropertyChangeListener propertyChangeListener) {
+            this.accessor = accessor;
+            this.propertyChangeListener = propertyChangeListener;
+            listener = createListener();
+            currentValue = (instance == null) ? null : accessor.getValue(instance);
+            changeListenTarget(instance);
+        }
+
+        protected abstract LST createListener();
+
+        protected abstract void addListener(SRC current, LST listener);
+
+        protected abstract void removeListener(SRC current, LST listener);
+
+        @Override
+        public ListenerHandle<SRC> changeListenTarget(SRC value) {
+            if (current != null) {
+                removeListener(current, listener);
+            }
+            current = value;
+            if (current != null) {
+                addListener(current, listener);
+            }
+            return this;
+        }
+
+        protected void update() {
+            VAL oldValue = currentValue;
+            currentValue = accessor.getValue(current);
+            THREAD_STACK_VISITED.get().put(current, null);
+            try {
+                propertyChangeListener.propertyChange(new PropertyChangeEvent(current, accessor.getPropertyName().getName(), oldValue, currentValue));
+            } finally {
+                THREAD_STACK_VISITED.get().remove(current);
+            }
+        }
+
+    }
 }

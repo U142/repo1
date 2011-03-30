@@ -11,10 +11,14 @@ public abstract class AbstractPathAccessor<T, V> implements IPathAccessor<T, V> 
 
     private final Class<T> type;
     private final Class<V> valueType;
-    private final String propertyName;
+    private final BeanPropertyName propertyName;
     private final IdentityHashMap<T, V> values = new IdentityHashMap<T, V>();
 
-    public AbstractPathAccessor(String propertyName, Class<T> type, Class<V> valueType) {
+    public AbstractPathAccessor(String name, Class<T> type, Class<V> valueType) {
+        this(BeanPropertyName.Factory.of(name), type, valueType);
+    }
+
+    public AbstractPathAccessor(BeanPropertyName propertyName, Class<T> type, Class<V> valueType) {
         this.propertyName = propertyName;
         this.type = type;
         this.valueType = valueType;
@@ -32,7 +36,7 @@ public abstract class AbstractPathAccessor<T, V> implements IPathAccessor<T, V> 
         ListenerHandle.THREAD_STACK_VISITED.get().put(instance, null);
         try {
             V oldValue = values.put(instance, getValue(instance));
-            propertyChangeListener.propertyChange(new PropertyChangeEvent(instance, getPropertyName(), oldValue, values.get(instance)));
+            propertyChangeListener.propertyChange(new PropertyChangeEvent(instance, getPropertyName().getName(), oldValue, values.get(instance)));
         } finally {
             ListenerHandle.THREAD_STACK_VISITED.get().remove(instance);
         }
@@ -49,7 +53,7 @@ public abstract class AbstractPathAccessor<T, V> implements IPathAccessor<T, V> 
     }
 
     @Override
-    public String getPropertyName() {
+    public BeanPropertyName getPropertyName() {
         return propertyName;
     }
 }

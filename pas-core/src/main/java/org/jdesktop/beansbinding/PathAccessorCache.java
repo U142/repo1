@@ -7,6 +7,9 @@ import com.google.common.collect.MapMaker;
 import javax.annotation.Nonnull;
 import javax.swing.JList;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -25,6 +28,32 @@ public class PathAccessorCache {
             final String name = input.getName();
             @SuppressWarnings("unchecked")
             final Class<Object> type = (Class<Object>) input.getType();
+
+
+            // Check if a key for a supertype exists
+            List<PropertyTypeKey> supertTypeKeys = new ArrayList<PropertyTypeKey>();
+
+            // Add all super types for the object to the list off potential keys
+            Class superType = type.getSuperclass();
+            while (superType != null && superType != Object.class) {
+                supertTypeKeys.add(new PropertyTypeKey(superType, name));
+                superType = superType.getSuperclass();
+            }
+            // Add all the implemented interfaces for the object to the list of
+            // potential keys
+            for (Class<?> superInterface : type.getInterfaces()) {
+                supertTypeKeys.add(new PropertyTypeKey(superInterface, name));
+            }
+
+            // Go through the potential keys, checking if we already have a key
+            // for the property and a super type of the type. If we do, we can
+            // reuse that accessor.
+            for (PropertyTypeKey key : supertTypeKeys) {
+                if (accessorCache.containsKey(key)) {
+                    return accessorCache.get(key);
+                }
+            }
+
             BeanPropertyName beanPropertyName = BeanPropertyName.Factory.of(name);
             if (beanPropertyName.getParent() == null) {
                 Method getter = beanPropertyName.getAccessor(type).getGetter();
@@ -45,26 +74,29 @@ public class PathAccessorCache {
     });
 
     public PathAccessorCache() {
-        IPathAccessor<JList, Object> overridePath = CustomOveridePaths.JLIST_SELECTED_ELEMENT;
-        accessorCache.put(new PropertyTypeKey(overridePath.getTargetType(), overridePath.getPropertyName()), overridePath);
+        for (IPathAccessor accessor : CustomOveridePaths.OVERRIDES) {
+            accessorCache.put(new PropertyTypeKey(accessor.getTargetType(), accessor.getPropertyName().getFullName()), accessor);
+        }
     }
 
     /**
      * Return an accessor for the property "name" on the target type.
      *
      * @param type to bind this property to.
-     * @param name of the property, using the syntax described in {@link PathAccessor}
+     * @param name of the property, using the syntax described in {@link IPathAccessor}
      * @return the path accessor.
      */
     @SuppressWarnings("unchecked")
     public <T, V> IPathAccessor<T, V> getAccessor(Class<T> type, String name) {
-        return (IPathAccessor<T, V>) accessorCache.get(new PropertyTypeKey(type, name));
+        PropertyTypeKey requestKey = new PropertyTypeKey(type, name);
+
+        return (IPathAccessor<T, V>) accessorCache.get(requestKey);
     }
 
     /**
      * This class represents a key pointing to a property on a class.
      * <p/>
-     * This is used for lookup of a {@link org.jdesktop.beansbinding.PathAccessor} to
+     * This is used for lookup of a {@link org.jdesktop.beansbinding.IPathAccessor} to
      * read and write the properties on a single object.
      * <p/>
      * It correctly implements equals and hashCode, and is immutable, so it can be safely used as a

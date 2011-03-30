@@ -41,7 +41,7 @@ public class ParentPathAccessor<P, T, V> extends AbstractPathAccessor<P, V> {
                 handle.changeListenTarget(newInstance);
 
                 // Notify the listener about the property change.
-                listener.propertyChange(new PropertyChangeEvent(evt.getSource(), child.getPropertyName(), oldValue, newValue));
+                listener.propertyChange(new PropertyChangeEvent(evt.getSource(), child.getPropertyName().getName(), oldValue, newValue));
             }
         });
     }

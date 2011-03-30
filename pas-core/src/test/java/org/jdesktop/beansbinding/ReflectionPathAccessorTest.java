@@ -44,7 +44,7 @@ public class ReflectionPathAccessorTest {
 
     @Test
     public void testPropertyName() {
-        assertThat(accessor.getPropertyName(), equalTo("name"));
+        assertThat(accessor.getPropertyName().getName(), equalTo("name"));
     }
 
 
