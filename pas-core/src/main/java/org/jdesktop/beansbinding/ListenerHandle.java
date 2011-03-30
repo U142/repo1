@@ -41,22 +41,6 @@ interface ListenerHandle<T> {
         }
     };
 
-    static class Factory {
-        static ListenerHandle addPropertyChangeListener(final Object target, final String propertyName, final PropertyChangeListener propertyChangeListener) {
-            if (propertyName.equals("text") && target instanceof JTextComponent) {
-                return new JTextComponentTextListenerHandle((JTextComponent) target, propertyName, propertyChangeListener);
-            } else if (propertyName.equals("selectedItem") && target instanceof JComboBox) {
-                return new JComboBoxSelectedItemListenerHandle((JComboBox) target, propertyName, propertyChangeListener);
-            } else if (propertyName.equals("selected") && target instanceof AbstractButton) {
-                return new AbstractButtonSelectedListenerHandle((AbstractButton) target, propertyName, propertyChangeListener);
-            } else if (propertyName.equals("selectedElement") && target instanceof JList) {
-                return new JListSelectedElementListenerHandler((JList) target, propertyName, propertyChangeListener);
-            } else {
-                return new PropertyListenerHandle(target, propertyName, propertyChangeListener);
-            }
-        }
-    }
-
     /**
      * Change which instance this handle should be attached to. This should remove
      * the current listener from it's current target, and update the listener to the new
@@ -68,258 +52,14 @@ interface ListenerHandle<T> {
      */
     ListenerHandle<T> changeListenTarget(T value);
 
-
-    /**
-     * Abstract ListenerHandle to implement handlers that require custom listeners.
-     * <p/>
-     * Subclasses should call "update()" whenever an event is triggered that causes
-     * the value of the object to change.
-     * <p/>
-     * This class requires that subclasses know how to read the current value from the
-     * target object.
-     *
-     * @param <T> Type that this handler is bound to
-     * @param <L> Listener type for this handler.
-     */
-    static abstract class AbstractListenerHandler<T, L> implements ListenerHandle<T> {
-
-        private final L listener;
-        private T current;
-        private Object currentValue;
-        private final String propertyName;
-        private final PropertyChangeListener propertyChangeListener;
-
-
-        public AbstractListenerHandler(T target, String propertyName, PropertyChangeListener propertyChangeListener) {
-            this.listener = createListener();
-            this.propertyName = propertyName;
-            this.propertyChangeListener = propertyChangeListener;
-            changeListenTarget(target);
-        }
-
-        @Override
-        public ListenerHandle<T> changeListenTarget(T value) {
-            if (current != null) {
-                removeListener(value, listener);
-            }
-            current = value;
-            if (current != null) {
-                currentValue = getValue(current);
-                addListener(value, listener);
-            }
-            return this;
-        }
-
-        /**
-         * Implement this method to get the current value of the bound property on an instance.
-         *
-         * @param instance to get the value for
-         * @return the current value for the instance.
-         */
-        protected abstract Object getValue(T instance);
-
-        /**
-         * Creates a new Listener of the desired type. The listener should just invoke
-         * {@link #update()} on all events that cause a value change, and the update
-         * will broadcast the change to the propertyChangeListener correctly.
-         * <p/>
-         * Only called once during instance construction.
-         *
-         * @return a new listener.
-         */
-        protected abstract L createListener();
-
-        /**
-         * Adds a listener to a value.
-         * <p/>
-         * This method should call the proper add listener method on the value.
-         *
-         * @param value    to add a listener to.
-         * @param listener to add
-         */
-        protected abstract void addListener(T value, L listener);
-
-        /**
-         * Removes a listener from a value.
-         * <p/>
-         * This method should call the proper remove listener method on the value.
-         *
-         * @param value    to remove a listener from
-         * @param listener to remove
-         */
-        protected abstract void removeListener(T value, L listener);
-
-        /**
-         * Send an updated value to the property change listener.
-         * <p/>
-         * This method should be invoked by listeners returned from {@link #createListener()}
-         * whenver an event occurs that indicates a value change.
-         */
-        public void update() {
-            THREAD_STACK_VISITED.get().put(current, null);
-            try {
-                final Object oldValue = currentValue;
-                currentValue = getValue(current);
-                propertyChangeListener.propertyChange(new PropertyChangeEvent(current, propertyName, oldValue, currentValue));
-            } finally {
-                THREAD_STACK_VISITED.get().remove(current);
-            }
-        }
-    }
-
-    /**
-     * ListenerHandle implementation for "text" property on JTextComponents.
-     * <p/>
-     * Since the "text" property on JTextComponents don't publish change on the "text"
-     * property, we need to attach a DocumentListener instead.
-     */
-    static class JTextComponentTextListenerHandle extends AbstractListenerHandler<JTextComponent, DocumentListener> {
-
-        public JTextComponentTextListenerHandle(JTextComponent target, String propertyName, PropertyChangeListener propertyChangeListener) {
-            super(target, propertyName, propertyChangeListener);
-        }
-
-        @Override
-        protected DocumentListener createListener() {
-            return new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    update();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    update();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    update();
-                }
-            };
-        }
-
-        @Override
-        protected Object getValue(JTextComponent instance) {
-            return instance.getText();
-        }
-
-        @Override
-        protected void addListener(JTextComponent value, DocumentListener listener) {
-            value.getDocument().addDocumentListener(listener);
-        }
-
-        @Override
-        protected void removeListener(JTextComponent value, DocumentListener listener) {
-            value.getDocument().removeDocumentListener(listener);
-        }
-
-    }
-
-    static class AbstractButtonSelectedListenerHandle extends AbstractListenerHandler<AbstractButton, ChangeListener> {
-
-        public AbstractButtonSelectedListenerHandle(AbstractButton target, String propertyName, PropertyChangeListener propertyChangeListener) {
-            super(target, propertyName, propertyChangeListener);
-        }
-
-        @Override
-        protected Object getValue(AbstractButton instance) {
-            return instance.isSelected();
-        }
-
-        @Override
-        protected ChangeListener createListener() {
-            return new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    update();
-                }
-            };
-        }
-
-        @Override
-        protected void addListener(AbstractButton value, ChangeListener listener) {
-            value.addChangeListener(listener);
-        }
-
-        @Override
-        protected void removeListener(AbstractButton value, ChangeListener listener) {
-            value.removeChangeListener(listener);
-        }
-    }
-
-    static class JComboBoxSelectedItemListenerHandle extends AbstractListenerHandler<JComboBox, ItemListener> {
-
-        public JComboBoxSelectedItemListenerHandle(JComboBox target, String propertyName, PropertyChangeListener propertyChangeListener) {
-            super(target, propertyName, propertyChangeListener);
-        }
-
-        @Override
-        protected Object getValue(JComboBox instance) {
-            return instance.getSelectedItem();
-        }
-
-        @Override
-        protected ItemListener createListener() {
-            return new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    update();
-                }
-            };
-        }
-
-        @Override
-        protected void addListener(JComboBox value, ItemListener listener) {
-            value.addItemListener(listener);
-        }
-
-        @Override
-        protected void removeListener(JComboBox value, ItemListener listener) {
-            value.removeItemListener(listener);
-        }
-    }
-
-    static class JListSelectedElementListenerHandler extends AbstractListenerHandler<JList, ListSelectionListener> {
-
-        public JListSelectedElementListenerHandler(JList target, String propertyName, PropertyChangeListener propertyChangeListener) {
-            super(target, propertyName, propertyChangeListener);
-        }
-
-        @Override
-        protected Object getValue(JList instance) {
-            return instance.getSelectedValue();
-        }
-
-        @Override
-        protected ListSelectionListener createListener() {
-            return new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    update();
-                }
-            };
-        }
-
-        @Override
-        protected void addListener(JList value, ListSelectionListener listener) {
-            value.addListSelectionListener(listener);
-        }
-
-        @Override
-        protected void removeListener(JList value, ListSelectionListener listener) {
-            value.removeListSelectionListener(listener);
-        }
-    }
-
-    static class PropertyListenerHandle implements ListenerHandle {
+    static class PropertyListenerHandle<T> implements ListenerHandle<T> {
 
         private final PropertyChangeListener listener = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 THREAD_STACK_VISITED.get().put(current, null);
                 try {
-                    propertyChangeListener.propertyChange(evt);
+                    delegate.propertyChange(evt);
                 } finally {
                     THREAD_STACK_VISITED.get().remove(current);
                 }
@@ -327,22 +67,22 @@ interface ListenerHandle<T> {
 
             @Override
             public String toString() {
-                return "Change on [" + propertyName + "] for [" + current + "] -> " + propertyChangeListener;
+                return "Change on [" + propertyName + "] for [" + current + "] -> " + delegate;
             }
         };
 
-        private Object current;
+        private T current;
         private final String propertyName;
-        private final PropertyChangeListener propertyChangeListener;
+        private final PropertyChangeListener delegate;
 
-        private PropertyListenerHandle(Object target, String propertyName, PropertyChangeListener propertyChangeListener) {
+        PropertyListenerHandle(T target, String propertyName, PropertyChangeListener delegate) {
             this.propertyName = propertyName;
-            this.propertyChangeListener = propertyChangeListener;
+            this.delegate = delegate;
             changeListenTarget(target);
         }
 
         @Override
-        public ListenerHandle changeListenTarget(Object value) {
+        public ListenerHandle<T> changeListenTarget(T value) {
             if (current != null) {
                 try {
                     current.getClass().getMethod("removePropertyChangeListener", String.class, PropertyChangeListener.class).invoke(current, propertyName, listener);

@@ -33,7 +33,7 @@ public class ReflectionPathAccessor<T, V> extends AbstractPathAccessor<T, V> {
 
     @Override
     protected ListenerHandle<T> addPropertyChangeListenerImpl(T instance, PropertyChangeListener listener) {
-        return ListenerHandle.Factory.addPropertyChangeListener(instance, name, listener);
+        return new ListenerHandle.PropertyListenerHandle<T>(instance, getPropertyName().getName(), listener);
     }
 
 
