@@ -1,10 +1,10 @@
 package org.jdesktop.beansbinding;
 
 import com.google.common.collect.ImmutableMap;
+import org.jdesktop.beansbinding.impl.BeanPropertyName;
+import org.jdesktop.beansbinding.impl.ListenerHandle;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.IdentityHashMap;
 
 /**
  * This class represents a path to a property, and can read and write values from/to an

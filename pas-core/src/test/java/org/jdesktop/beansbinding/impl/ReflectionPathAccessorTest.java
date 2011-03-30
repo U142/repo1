@@ -1,7 +1,10 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.jdesktop.beansbinding.AbstractBean;
+import org.jdesktop.beansbinding.impl.BeanPropertyName;
+import org.jdesktop.beansbinding.impl.ReflectionPathAccessor;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;

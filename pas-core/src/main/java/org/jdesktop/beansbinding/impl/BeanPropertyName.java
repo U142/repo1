@@ -1,11 +1,11 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
 public final class BeanPropertyName {
 
-    static BeanPropertyName of(final String propertyName) {
+    public static BeanPropertyName of(final String propertyName) {
         int dot = propertyName.lastIndexOf('.');
         final String leafName = propertyName.substring(dot + 1);
         final int at = leafName.lastIndexOf('@');

@@ -1,4 +1,6 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
+
+import org.jdesktop.beansbinding.PathAccessor;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComboBox;
@@ -221,7 +223,7 @@ public class CustomOveridePaths {
     }
 
 
-    protected static final List<? extends PathAccessor> OVERRIDES = Arrays.asList(
+    public static final List<? extends PathAccessor> OVERRIDES = Arrays.asList(
             CustomOveridePaths.JCOMBOBOX_SELECTED_ITEM,
             CustomOveridePaths.JLIST_SELECTED_ELEMENT,
             CustomOveridePaths.JTEXTCOMPONENT_TEXT,

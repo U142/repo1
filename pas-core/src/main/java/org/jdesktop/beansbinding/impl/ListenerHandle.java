@@ -1,17 +1,5 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
-import javax.swing.AbstractButton;
-import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.JTextComponent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +13,7 @@ import java.util.Map;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-interface ListenerHandle<T> {
+public interface ListenerHandle<T> {
 
     /**
      * This holds a list of all bean properties visited in the current thread stack.

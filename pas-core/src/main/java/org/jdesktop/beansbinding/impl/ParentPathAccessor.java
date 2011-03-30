@@ -1,4 +1,6 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
+
+import org.jdesktop.beansbinding.PathAccessor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

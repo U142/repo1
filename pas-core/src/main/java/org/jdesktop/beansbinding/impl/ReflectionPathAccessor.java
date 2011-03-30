@@ -1,4 +1,4 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
 import java.beans.PropertyChangeListener;
 

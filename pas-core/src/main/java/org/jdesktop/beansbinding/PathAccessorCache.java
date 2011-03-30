@@ -3,6 +3,11 @@ package org.jdesktop.beansbinding;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
+import org.jdesktop.beansbinding.impl.BeanPropertyAccessor;
+import org.jdesktop.beansbinding.impl.BeanPropertyName;
+import org.jdesktop.beansbinding.impl.CustomOveridePaths;
+import org.jdesktop.beansbinding.impl.ParentPathAccessor;
+import org.jdesktop.beansbinding.impl.ReflectionPathAccessor;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

@@ -1,5 +1,7 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
+import org.jdesktop.beansbinding.impl.BeanPropertyAccessor;
+import org.jdesktop.beansbinding.impl.BeanPropertyName;
 import org.junit.Test;
 
 import java.lang.reflect.Method;

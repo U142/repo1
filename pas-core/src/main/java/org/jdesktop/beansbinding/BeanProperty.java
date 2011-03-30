@@ -1,6 +1,7 @@
 package org.jdesktop.beansbinding;
 
 import com.google.common.base.Objects;
+import org.jdesktop.beansbinding.impl.ListenerHandle;
 
 import java.beans.PropertyChangeListener;
 

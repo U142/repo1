@@ -1,8 +1,6 @@
-package org.jdesktop.beansbinding;
+package org.jdesktop.beansbinding.impl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.IdentityHashMap;
+import org.jdesktop.beansbinding.PathAccessor;
 
 /**
 * @author Ståle Undheim <su@ums.no>

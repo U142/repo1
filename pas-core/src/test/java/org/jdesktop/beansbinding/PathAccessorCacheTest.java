@@ -1,5 +1,6 @@
 package org.jdesktop.beansbinding;
 
+import org.jdesktop.beansbinding.impl.CustomOveridePaths;
 import org.junit.Test;
 
 import javax.swing.AbstractButton;
@@ -29,7 +30,7 @@ public class PathAccessorCacheTest {
         assertThat(cache.<AbstractButton, Boolean>getAccessor(JButton.class, "selected"), is(CustomOveridePaths.ABSTRACT_BUTTON_SELECTED));
     }
 
-    class Model extends AbstractBean {
+    public static class Model extends AbstractBean {
         private String name;
 
         public String getName() {
