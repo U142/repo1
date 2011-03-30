@@ -1712,8 +1712,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			WaitForStatusThread thread = null;
             boolean b_confirmed_close = true;
 
-
-			if(m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()) {
+            boolean b_status_is_open = m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk(); 
+			if(b_status_is_open) {
                 ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION);
 				if(ret_answer == JOptionPane.YES_OPTION)
 				{
@@ -1731,8 +1731,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					return ret_answer;
 				}
 			}
-			else
-				thread = new WaitForStatusThread(b_close_all_gui);
+			//else
+			//	thread = new WaitForStatusThread(b_close_all_gui);
 			if(thread!=null)
 			{
 				thread.doInBackground();

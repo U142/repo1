@@ -800,11 +800,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp autostartup::l:::x:1, comp panel1::l:::x:1}, space :::p}}</string> 
+            <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp autostartup::l:::x:1, comp pnlLBA::l:::x:1}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp panel1:::p::p, space s:::p, comp panel2:::p::p, space ::41:x}}</string> 
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::41:x}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -886,8 +886,14 @@
               <null/> 
              </object> 
             </void> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.variableGetter</string> 
+              <boolean>true</boolean> 
+             </void> 
+            </void> 
             <void property="name"> 
-             <string>panel1</string> 
+             <string>pnlLBA</string> 
             </void> 
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
@@ -929,11 +935,11 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :p:31:p, par l {seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleMunicipal:::p:46:p, space :::p, comp toggleImport:::p:44:p}, seq l {par l {seq {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}, comp lblPrivateAdrTypes::::121:x:1}, space s:::p, par l {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes::::153:x:1}, space :::p, par l {seq {comp toggleLba:::p::p, space :p:24:p, comp toggleBlocklist:::p::p}, comp lblLbaText::::170:x}}}, space :::p}}</string> 
+              <string>par l {seq l {space :p:31:p, par l {seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}, seq l {par l {seq {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}, comp lblPrivateAdrTypes::::121:x:1}, space s:::p, par l {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes::::153:x:1}, space :::p, par l {seq {comp toggleLba:::p::p, space :p:24:p, comp toggleBlocklist:::p::p}, comp lblLbaText::::170:x}}}, space :::p}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
-              <string>par l {seq t::p {space :::p, par t {comp togglePolygon:::p::p, comp toggleEllipse:::p::p, comp toggleMunicipal:::p::p, comp toggleImport:::p::p}, space :::p, par l {par t:l::p {comp togglePrivateFixed::l:::x:1, comp togglePrivateMobile::l:::x:1}, par b {comp toggleLba::b:::x:1, comp toggleBlocklist::b:::x:1}, par b {comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}}, space :::p, par l:::p {comp lblLbaText:7:l:p:48:p, comp lblCompanyAdrtypes:7:l:p:48:p, comp lblPrivateAdrTypes:7:l:p:48:p:1}, space :::p}}</string> 
+              <string>par l {seq t::p {space :::p, par t {comp togglePolygon:::p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {par t:l::p {comp togglePrivateFixed::l:::x:1, comp togglePrivateMobile::l:::x:1}, par b {comp toggleLba::b:::x:1, comp toggleBlocklist::b:::x:1}, par b {comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}}, space :::p, par l:::p {comp lblLbaText:7:l:p:48:p, comp lblCompanyAdrtypes:7:l:p:48:p, comp lblPrivateAdrTypes:7:l:p:48:p:1}, space :::p}}</string> 
              </void> 
             </object> 
             <void method="setProperty"> 
@@ -964,8 +970,21 @@
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_fixed_private_tooltip</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>togglePrivateFixed</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
               </void> 
              </object> 
             </void> 
@@ -983,8 +1002,21 @@
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_mobile_private_tooltip</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>togglePrivateMobile</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
               </void> 
              </object> 
             </void> 
@@ -1002,8 +1034,21 @@
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_fixed_company_tooltip</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>toggleCompanyFixed</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
               </void> 
              </object> 
             </void> 
@@ -1021,8 +1066,21 @@
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_mobile_company_tooltip</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>toggleCompanyMobile</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
               </void> 
              </object> 
             </void> 
@@ -1040,8 +1098,21 @@
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_lba_text_tooltip</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>toggleLba</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
               </void> 
               <void method="addEvent"> 
                <object class="com.jformdesigner.model.FormEvent"> 
@@ -1066,6 +1137,13 @@
               <void method="setProperty"> 
                <string>rolloverEnabled</string> 
                <boolean>false</boolean> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_company_blocklist_tooltip</string> 
+               </object> 
               </void> 
               <void property="name"> 
                <string>toggleBlocklist</string> 
@@ -1124,6 +1202,13 @@
                <string>selected</string> 
                <boolean>true</boolean> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_type_polygon</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>togglePolygon</string> 
               </void> 
@@ -1159,6 +1244,13 @@
                 <string>/no/ums/pas/icons/send_ellipse_24.png</string> 
                </object> 
               </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_type_ellipse</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>toggleEllipse</string> 
               </void> 
@@ -1191,42 +1283,14 @@
                <string>icon</string> 
                <object class="com.jformdesigner.model.SwingIcon"> 
                 <int>0</int> 
-                <string>/no/ums/pas/icons/send_municipal_24.png</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>toggleMunicipal</string> 
-              </void> 
-              <void method="auxiliary"> 
-               <void method="setProperty"> 
-                <string>JavaCodeGenerator.variableGetter</string> 
-                <boolean>true</boolean> 
-               </void> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>toggleMunicipalActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JToggleButton</string> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>btnGroupAutoShape</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>icon</string> 
-               <object class="com.jformdesigner.model.SwingIcon"> 
-                <int>0</int> 
                 <string>/no/ums/pas/icons/folder2_24.png</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>mainmenu_file_import</string> 
                </object> 
               </void> 
               <void property="name"> 

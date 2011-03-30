@@ -326,16 +326,36 @@ public class Settings extends JDialog {
 		return toggleEllipse;
 	}
 
-	public JToggleButton getToggleMunicipal() {
-		return toggleMunicipal;
-	}
-
 	public JToggleButton getToggleImport() {
 		return toggleImport;
 	}
 
 	public JCheckBox getChkAutoStartParm() {
 		return chkAutoStartParm;
+	}
+
+	public JPanel getPnlLBA() {
+		return pnlLBA;
+	}
+
+	public ToggleAddresstype getToggleLba() {
+		return toggleLba;
+	}
+
+	public ToggleAddresstype getTogglePrivateFixed() {
+		return togglePrivateFixed;
+	}
+
+	public ToggleAddresstype getTogglePrivateMobile() {
+		return togglePrivateMobile;
+	}
+
+	public ToggleAddresstype getToggleCompanyFixed() {
+		return toggleCompanyFixed;
+	}
+
+	public ToggleAddresstype getToggleCompanyMobile() {
+		return toggleCompanyMobile;
 	}
 
 	private void initComponents() {
@@ -378,7 +398,7 @@ public class Settings extends JDialog {
 		pnlDiverse = new JPanel();
 		autostartup = new JPanel();
 		chkAutoStartParm = new JCheckBox();
-		panel1 = new JPanel();
+		pnlLBA = new JPanel();
 		lblLbaUpdate = new JLabel();
 		comboLbaUpdate = new JComboBox();
 		panel2 = new JPanel();
@@ -393,7 +413,6 @@ public class Settings extends JDialog {
 		lblLbaText = new JLabel();
 		togglePolygon = new JToggleButton();
 		toggleEllipse = new JToggleButton();
-		toggleMunicipal = new JToggleButton();
 		toggleImport = new JToggleButton();
 		settingsModel1 = new SettingsModel();
 		stringToInt1 = new StringToInt();
@@ -511,6 +530,7 @@ public class Settings extends JDialog {
 				btnMapWmsOpen.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						btnMapWmsOpenActionPerformed(e);
 						btnMapWmsOpenActionPerformed(e);
 					}
 				});
@@ -775,9 +795,9 @@ public class Settings extends JDialog {
 					);
 				}
 
-				//======== panel1 ========
+				//======== pnlLBA ========
 				{
-					panel1.setBorder(new TitledBorder("LBA"));
+					pnlLBA.setBorder(new TitledBorder("LBA"));
 
 					//---- lblLbaUpdate ----
 					lblLbaUpdate.setText(bundle.getString("main_pas_settings_auto_lba_update"));
@@ -790,21 +810,21 @@ public class Settings extends JDialog {
 						}
 					});
 
-					GroupLayout panel1Layout = new GroupLayout(panel1);
-					panel1.setLayout(panel1Layout);
-					panel1Layout.setHorizontalGroup(
-						panel1Layout.createParallelGroup()
-							.addGroup(panel1Layout.createSequentialGroup()
+					GroupLayout pnlLBALayout = new GroupLayout(pnlLBA);
+					pnlLBA.setLayout(pnlLBALayout);
+					pnlLBALayout.setHorizontalGroup(
+						pnlLBALayout.createParallelGroup()
+							.addGroup(pnlLBALayout.createSequentialGroup()
 								.addContainerGap()
 								.addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
 								.addContainerGap(158, Short.MAX_VALUE))
 					);
-					panel1Layout.setVerticalGroup(
-						panel1Layout.createParallelGroup()
-							.addGroup(panel1Layout.createSequentialGroup()
-								.addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					pnlLBALayout.setVerticalGroup(
+						pnlLBALayout.createParallelGroup()
+							.addGroup(pnlLBALayout.createSequentialGroup()
+								.addGroup(pnlLBALayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 									.addComponent(lblLbaUpdate)
 									.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -818,22 +838,27 @@ public class Settings extends JDialog {
 					//---- togglePrivateFixed ----
 					togglePrivateFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
 					togglePrivateFixed.setRolloverEnabled(false);
+					togglePrivateFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_private_tooltip"));
 
 					//---- togglePrivateMobile ----
 					togglePrivateMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
 					togglePrivateMobile.setRolloverEnabled(false);
+					togglePrivateMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_private_tooltip"));
 
 					//---- toggleCompanyFixed ----
 					toggleCompanyFixed.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/phone_24.png")));
 					toggleCompanyFixed.setRolloverEnabled(false);
+					toggleCompanyFixed.setToolTipText(bundle.getString("main_sending_adr_btn_fixed_company_tooltip"));
 
 					//---- toggleCompanyMobile ----
 					toggleCompanyMobile.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/mobile_24.png")));
 					toggleCompanyMobile.setRolloverEnabled(false);
+					toggleCompanyMobile.setToolTipText(bundle.getString("main_sending_adr_btn_mobile_company_tooltip"));
 
 					//---- toggleLba ----
 					toggleLba.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/lba_24.png")));
 					toggleLba.setRolloverEnabled(false);
+					toggleLba.setToolTipText(bundle.getString("main_sending_adr_btn_lba_text_tooltip"));
 					toggleLba.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -844,6 +869,7 @@ public class Settings extends JDialog {
 					//---- toggleBlocklist ----
 					toggleBlocklist.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/flag_red_24.gif")));
 					toggleBlocklist.setRolloverEnabled(false);
+					toggleBlocklist.setToolTipText(bundle.getString("main_sending_adr_btn_company_blocklist_tooltip"));
 					toggleBlocklist.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -854,6 +880,7 @@ public class Settings extends JDialog {
 					//---- togglePolygon ----
 					togglePolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
 					togglePolygon.setSelected(true);
+					togglePolygon.setToolTipText(bundle.getString("main_sending_type_polygon"));
 					togglePolygon.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -863,6 +890,7 @@ public class Settings extends JDialog {
 
 					//---- toggleEllipse ----
 					toggleEllipse.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_ellipse_24.png")));
+					toggleEllipse.setToolTipText(bundle.getString("main_sending_type_ellipse"));
 					toggleEllipse.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -870,17 +898,9 @@ public class Settings extends JDialog {
 						}
 					});
 
-					//---- toggleMunicipal ----
-					toggleMunicipal.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_municipal_24.png")));
-					toggleMunicipal.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							toggleMunicipalActionPerformed(e);
-						}
-					});
-
 					//---- toggleImport ----
 					toggleImport.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/folder2_24.png")));
+					toggleImport.setToolTipText(bundle.getString("mainmenu_file_import"));
 					toggleImport.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -899,8 +919,6 @@ public class Settings extends JDialog {
 										.addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(toggleMunicipal, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
 									.addGroup(panel2Layout.createSequentialGroup()
@@ -933,7 +951,6 @@ public class Settings extends JDialog {
 								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 									.addComponent(togglePolygon)
 									.addComponent(toggleEllipse)
-									.addComponent(toggleMunicipal)
 									.addComponent(toggleImport))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addGroup(panel2Layout.createParallelGroup()
@@ -965,7 +982,7 @@ public class Settings extends JDialog {
 							.addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(autostartup, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addComponent(pnlLBA, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 							.addContainerGap())
 				);
 				pnlDiverseLayout.setVerticalGroup(
@@ -974,7 +991,7 @@ public class Settings extends JDialog {
 							.addContainerGap()
 							.addComponent(autostartup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
-							.addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
 							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addContainerGap(41, Short.MAX_VALUE))
@@ -1032,7 +1049,6 @@ public class Settings extends JDialog {
 		ButtonGroup btnGroupAutoShape = new ButtonGroup();
 		btnGroupAutoShape.add(togglePolygon);
 		btnGroupAutoShape.add(toggleEllipse);
-		btnGroupAutoShape.add(toggleMunicipal);
 		btnGroupAutoShape.add(toggleImport);
 
 		//---- bindings ----
@@ -1134,7 +1150,7 @@ public class Settings extends JDialog {
 	private JPanel pnlDiverse;
 	private JPanel autostartup;
 	private JCheckBox chkAutoStartParm;
-	private JPanel panel1;
+	private JPanel pnlLBA;
 	private JLabel lblLbaUpdate;
 	private JComboBox comboLbaUpdate;
 	private JPanel panel2;
@@ -1149,7 +1165,6 @@ public class Settings extends JDialog {
 	private JLabel lblLbaText;
 	private JToggleButton togglePolygon;
 	private JToggleButton toggleEllipse;
-	private JToggleButton toggleMunicipal;
 	private JToggleButton toggleImport;
 	public SettingsModel settingsModel1;
 	private StringToInt stringToInt1;

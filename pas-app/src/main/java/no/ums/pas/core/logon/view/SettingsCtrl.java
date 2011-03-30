@@ -30,6 +30,7 @@ import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.MapLoader;
+import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendOptionToolbar;
 
 public class SettingsCtrl implements ISettingsUpdate {
@@ -80,7 +81,6 @@ public class SettingsCtrl implements ISettingsUpdate {
     		dlg.getToggleEllipse().doClick();
     		break;
     	case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
-    		dlg.getToggleMunicipal().doClick();
     		break;
     	case SendOptionToolbar.BTN_OPEN_:
     		dlg.getToggleImport().doClick();
@@ -95,12 +95,17 @@ public class SettingsCtrl implements ISettingsUpdate {
     	
     	//check if user may use parm on one or more departments
     	boolean b_enable_parm = false;
+    	boolean b_enable_lba = false;
     	for(DeptInfo di : userinfo.get_departments())
     	{
     		if(di.get_userprofile().get_parm_rights()>=1)
     		{
     			b_enable_parm = true;
-    			break;
+    		}
+    		long adrtypes = di.get_userprofile().get_addresstypes();
+    		if((adrtypes & SendController.SENDTO_CELL_BROADCAST_TEXT)>0)
+    		{
+    			b_enable_lba = true;
     		}
     	}
     	if(!b_enable_parm)
@@ -108,6 +113,12 @@ public class SettingsCtrl implements ISettingsUpdate {
     		dlg.settingsModel1.setAutoStartParm(b_enable_parm);
     		dlg.getChkAutoStartParm().setEnabled(b_enable_parm);
     	}
+    	if(!b_enable_lba)
+    	{
+    		dlg.getPnlLBA().setVisible(false);
+    		dlg.getToggleLba().setVisible(false);
+    	}
+    	
     }
     
 	@Override
@@ -161,7 +172,6 @@ public class SettingsCtrl implements ISettingsUpdate {
 				selected_layers.add(l.toString());
 			}
 			s.setWmsLayers(layers);
-			
 		}
 		else //keep the old ones
 		{
