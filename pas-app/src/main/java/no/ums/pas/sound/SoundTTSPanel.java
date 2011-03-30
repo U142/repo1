@@ -55,6 +55,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 	public SendWindow get_parent() { return m_parent; }
 	private SoundRecorderPanel m_playpanel;
 	public SoundRecorderPanel get_playpanel() { return m_playpanel; }
+	protected UCONVERTTTSRESPONSE current_response;
 	
 	public SoundTTSPanel(Sending_Files file, /*SendController controller, */SendWindow parent) {
 		super();
@@ -130,19 +131,21 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		if("act_tts_convert".equals(e.getActionCommand())) {
 			start_converter();
 		} else if("act_tts_convert_complete".equals(e.getActionCommand())) {
-			converter_stopped((String)e.getSource());
+			UCONVERTTTSRESPONSE response = (UCONVERTTTSRESPONSE)e.getSource();
 			//get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, (String)e.getSource());
-			if(((String)e.getSource()).equals(""))
+			if(response.getNResponsecode()!=0)
 			{
 				//failed
 				JOptionPane.showMessageDialog(this, Localization.l("sound_panel_tts_converting_tts") + " " + Localization.l("common_failed"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
-				get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS((String)e.getSource(),-1, null));
+				current_response = response;
+				get_soundpanel().set_soundfiletype(Sending_Files.SOUNDFILE_TYPE_TTS_, new SoundInfoTTS(response,-1, null));
 				// Her gjøres den ferdig og reloader parent for å enable next knappen
 				get_parent().set_next_text();
 			}
+			converter_stopped(response.getSzServerFilename());
 		} else if("act_txtlib_changed".equals(e.getActionCommand())) {
 			//load text from server
 			try {
@@ -221,18 +224,17 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		m_btn_convert.setEnabled(true);
 		sz_localpath = StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_);
 		sz_localfile = sz_file;
-		
-		m_playpanel.enable_player(false);
-		start_download();
-		new Installer().download_and_save(PAS.get_pas().getVB4Url() + "audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
+		//the wav-data is now in memory
+		download_finished();
+		//m_playpanel.enable_player(false);
+		//start_download();
+		//new Installer().download_and_save(PAS.get_pas().getVB4Url() + "audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
 		//new Installer().download_and_save("https://secure.ums2.no/vb4utv/audiofiles/" + sz_file, sz_localpath + sz_localfile, true, this, "act_download_finished", this);
 	}
 	public void download_finished() {
 		try {
 			stop_progress();
-			//if(m_file.get_soundfile().)
-			//m_playpanel.initialize_player(sz_localfile, true);
-			String sz_vb4 = PAS.get_pas().getVB4Url();
+			/*String sz_vb4 = PAS.get_pas().getVB4Url();
 			URL url = new URL(sz_vb4 + "/audiofiles/" + sz_localfile);
 			URLConnection urlConn;
 			
@@ -250,11 +252,13 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 					break;
 				out.write(buffer, 0, r);
 			}
-			ByteBuffer bb = ByteBuffer.wrap(out.toByteArray());
-			
-			m_playpanel.initialize_player(bb, true);
-			
-			m_btn_convert.setEnabled(true);
+			ByteBuffer bb = ByteBuffer.wrap(out.toByteArray());*/
+			if(current_response!=null && current_response.getWav()!=null)
+			{
+				ByteBuffer bb = ByteBuffer.wrap(current_response.getWav());
+				m_playpanel.initialize_player(bb, true);			
+				m_btn_convert.setEnabled(true);
+			}
 			
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR: SoundTTSPanel.download_finished() " + e.getMessage(), e);
@@ -411,6 +415,7 @@ class TTSConverter extends Thread {
 	private String m_sz_name;
 	private String m_sz_text;
 	private String m_sz_action;
+	private UCONVERTTTSRESPONSE response;
 	private ActionListener m_callback;
 	private String m_sz_serverfile;
 	public int get_sendingid() { return m_n_sendingid; }
@@ -440,7 +445,7 @@ class TTSConverter extends Thread {
 		} catch(Exception e) {
             Error.getError().addError(Localization.l("common_error"),"Exception in run",e,1);
 		}
-		get_callback().actionPerformed(new ActionEvent(sz_file, ActionEvent.ACTION_PERFORMED, get_action()));
+		get_callback().actionPerformed(new ActionEvent(this.response, ActionEvent.ACTION_PERFORMED, get_action()));
 	}
 	public String convert() {
 		String sz_filename = null;
@@ -464,6 +469,7 @@ class TTSConverter extends Thread {
 			java.net.URL wsdl = new java.net.URL(vars.WSDL_PAS);
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			UCONVERTTTSRESPONSE response = new no.ums.ws.pas.Pasws(wsdl, service).getPaswsSoap12().convertTTS(logon, ttsreq);
+			TTSConverter.this.response = response;
 			switch(response.getNResponsecode())
 			{
 			case 0: //OK
@@ -473,6 +479,8 @@ class TTSConverter extends Thread {
 		} catch(Exception e) {
 			PAS.get_pas().add_event("ERROR TTSConverter.convert() " + e.getMessage(), e);
             Error.getError().addError(Localization.l("common_error"),"Exception in convert",e,1);
+            this.response = new UCONVERTTTSRESPONSE();
+            this.response.setNResponsecode(-1);
 			return new String("");
 		}
 		return sz_filename;	

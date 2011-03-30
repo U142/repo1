@@ -35,6 +35,7 @@ public class Sending_Files extends DefaultPanel {
 	public static final int SOUNDFILE_TYPE_TTS_		= 2;
 	public static final int SOUNDFILE_TYPE_LIBRARY_	= 4;
 	public static final int SOUNDFILE_TYPE_LOCAL_	= 8;
+	public static final int SOUNDFILE_TYPE_MEMORY_	= 16;
 
 	@Override
 	public void componentShown(ComponentEvent e) {

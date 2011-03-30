@@ -344,6 +344,7 @@ public class Sending_Send extends DefaultPanel {
 					System.out.println(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("Sending_Send","Exception in upload_wavfiles",e,1);
+					return false;
 				}
 			}
 		}
@@ -351,7 +352,11 @@ public class Sending_Send extends DefaultPanel {
 	}
 	private boolean send() {
 		//upload wav files
-		upload_wavfiles(true);
+		if(!upload_wavfiles(true))
+		{
+			JOptionPane.showMessageDialog(this, Localization.l("main_sending_error_uploading_wav_file"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 
 		//Serverside Script - rename wav files and upload send-data, return new refno
 		set_adrfilestatus(INDICATOR_YELLOW_);

@@ -66,6 +66,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import java.awt.Container;
@@ -1703,6 +1704,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
+	
 	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui) {
 		try
 		{
@@ -1732,15 +1734,17 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			else
 				thread = new WaitForStatusThread(b_close_all_gui);
 			if(thread!=null)
-				thread.start();
+			{
+				thread.doInBackground();
+				thread.done();
+			}
 			if(thread!=null && b_wait_for_close)
 			{
-				thread.waitToFinish();
+				//thread.waitToFinish();
 			}
 			if(b_close_all_gui && b_confirmed_close)
 				PAS.pasplugin.onCloseProject();
 			PAS.get_pas().get_sendcontroller().reset_send_id(); // Resets the send id, alerts in a new project should now start from beginning
-			//Variables.getStatusController().set_autoupdate(false);
 			Variables.setStatusController(null);
 			m_statuscontroller = PAS.pasplugin.onCreateStatusController();
 			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
@@ -1752,13 +1756,46 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
-	class WaitForStatusThread extends Thread {
+	class WaitForStatusThread extends SwingWorker {
 		boolean b_running = false;
 		boolean b_close_all = false;
 		WaitForStatusThread(boolean close_all) {
-			super("WaitForStatus Thread");
-			b_close_all = close_all;
+			//super("WaitForStatus Thread");
+			super();
 			b_running = true;
+			b_close_all = close_all;
+		}
+		@Override
+		protected Object doInBackground() throws Exception {
+			final Timeout time = new Timeout(10, 50);
+            get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
+			while(get_statuscontroller().isOpen() && get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
+				try { 
+					Thread.sleep(time.get_msec_interval()); 
+				} 
+				catch(InterruptedException e ) { }
+				time.inc_timer();
+			}
+			return Boolean.TRUE;
+		}
+		@Override
+		protected void done() {
+			super.done();
+			if(b_close_all)
+			{
+				get_sendcontroller().resetActiveProject();
+				get_eastcontent().setIndexZero();
+				get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
+				get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
+				m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+				Variables.setStatusController(PAS.get_pas().m_statuscontroller);
+				Variables.getStatusController().set_autoupdate(false);
+				//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
+				PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
+				m_current_project = null;
+			}
+			get_mappane().SetIsLoading(false, "");	
+			b_running = false;
 		}
 		public void waitToFinish()
 		{
@@ -1772,52 +1809,42 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				} catch(Exception e) { }
 			}
 		}
-		public void run() {
+		/*public void run() {
 			b_running = true;
 			final Timeout time = new Timeout(10, 50);
 			try
 			{
-				//SwingUtilities.invokeLater(new Runnable() {
-				//	public void run()
-					{
-						/*LoadingFrame loader = new LoadingFrame("Waiting for current statusupdate to finish", get_mappane());
-						loader.setSize(new Dimension(300, 30));
-						loader.set_totalitems(100, "Waiting for current statusupdate to finish");
-						loader.set_currentitem(0);
-			
-						loader.start_and_show();*/
-                        get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
-						while(get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
-							try { Thread.sleep(time.get_msec_interval()); } catch(InterruptedException e ) { }
-							time.inc_timer();
-							//loader.set_currentitem(0, new Integer(time.get_remaining_seconds()).toString() + "s");
-						}
-						//loader.stop_and_hide();
+                get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
+				while(get_statuscontroller().isOpen() && get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
+					try { 
+						Thread.sleep(time.get_msec_interval()); 
+					} 
+					catch(InterruptedException e ) { }
+					time.inc_timer();
+				}
 						
 						
-						if(b_close_all)
-						{
-							get_sendcontroller().resetActiveProject();
-							get_eastcontent().setIndexZero();
-							get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
-							get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
-							m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-							Variables.setStatusController(PAS.get_pas().m_statuscontroller);
-							Variables.getStatusController().set_autoupdate(false);
-							//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
-							PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
-							m_current_project = null;
-						}
-						get_mappane().SetIsLoading(false, "");
-						b_running = false;
-					}
-				//});
+				if(b_close_all)
+				{
+					get_sendcontroller().resetActiveProject();
+					get_eastcontent().setIndexZero();
+					get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
+					get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
+					m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+					Variables.setStatusController(PAS.get_pas().m_statuscontroller);
+					Variables.getStatusController().set_autoupdate(false);
+					//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
+					PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
+					m_current_project = null;
+				}
+				get_mappane().SetIsLoading(false, "");
+				b_running = false;
 			}
 			catch(Exception e)
 			{
 				b_running = false;
 			}
-		}
+		}*/
 	}
 	
 	public void init_parmcontroller() {

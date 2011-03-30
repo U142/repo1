@@ -9,6 +9,7 @@ import no.ums.pas.send.sendpanels.Sending_Files;
 import no.ums.pas.sound.soundinfotypes.SoundInfo;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLibrary;
 import no.ums.pas.sound.soundinfotypes.SoundInfoLocal;
+import no.ums.pas.sound.soundinfotypes.SoundInfoMemory;
 import no.ums.pas.sound.soundinfotypes.SoundInfoTTS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.ULOGONINFO;
@@ -16,6 +17,7 @@ import no.ums.ws.pas.AUDIOREQUEST;
 import no.ums.ws.pas.AUDIORESPONSE;
 import no.ums.ws.pas.Pasws;
 
+import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -117,8 +119,8 @@ public class SoundFile extends Object {
 		// This fixes the problem with the TTS file being "used up", can now simulate and test without error
 		if(n_filetype == Sending_Files.SOUNDFILE_TYPE_TTS_) {
 			SoundInfoTTS infotts = (SoundInfoTTS)info;
-			SoundInfoLocal infoloc = new SoundInfoLocal(new File(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_) + infotts.get_serverfilename()));
-			n_filetype = Sending_Files.SOUNDFILE_TYPE_LOCAL_;
+			//SoundInfoLocal infoloc = new SoundInfoLocal(new File(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_) + infotts.get_serverfilename()));
+			SoundInfoMemory infoloc = new SoundInfoMemory(infotts.getResponse());
 			info = infoloc;
 		}
 		
@@ -144,14 +146,18 @@ public class SoundFile extends Object {
 				break;
 			case Sending_Files.SOUNDFILE_TYPE_TTS_:
 				//check serverside existence
-				SoundInfoTTS infotts = (SoundInfoTTS)info;
-                PAS.get_pas().add_event(Localization.l("sound_file_uploading_tts_text") + " : " + infotts.get_serverfilename(), null);
+				SoundInfoMemory infotts = (SoundInfoMemory)info;
+                //PAS.get_pas().add_event(Localization.l("sound_file_uploading_tts_text") + " : " + infotts.toString(), null);
 				audioreq.setNFiletype(n_filetype);
-				audioreq.setSzTtsText(infotts.get_tts_text());
-				audioreq.setSzFilename(infotts.get_serverfilename());
+				//audioreq.setSzTtsText(infotts.get_tts_text());
+				//audioreq.setSzFilename(infotts.getResponse().getSzServerFilename());
 				audioreq.setNParam(get_filenumber());
-				if(infotts.get_tts_text() != null && !infotts.get_tts_text().equals(""))
-					audioreq.setNLangpk(infotts.get_n_langpk());
+				//if(infotts.get_tts_text() != null && !infotts.get_tts_text().equals(""))
+				//	audioreq.setNLangpk(infotts.get_n_langpk());
+				audioreq.setSzTtsText(infotts.toString());
+				audioreq.setSzFilename(infotts.toString());
+				audioreq.setWav(infotts.getWave());
+				
 				break;
 			case Sending_Files.SOUNDFILE_TYPE_LIBRARY_:
 				//check serverside existence
@@ -195,6 +201,9 @@ public class SoundFile extends Object {
                     Error.getError().addError(Localization.l("common_error"),"Exception in send_wav",e,1);
 				}
 				break;
+			default:
+				JOptionPane.showMessageDialog(null, "Unknown audio filetype", Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+				return false;
 		}
 		Pasws myService = new Pasws(wsdl, service); //wsdlLocation, new QName("https://secure.ums2.no/vb4utv/ExecAlert/ExternalExec.asmx"));
 		try

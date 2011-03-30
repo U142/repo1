@@ -68,6 +68,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -1187,56 +1188,47 @@ public class MainController implements ActionListener, TreeModelListener,
 		}
 		
 		if(e.getSource() == treeCtrl.getGui().getGenerateSending()) {
-			DefaultMutableTreeNode remNode = (DefaultMutableTreeNode) treeCtrl.getSelPath().getLastPathComponent();
-			Object o = remNode.getUserObject();
-			if(o.getClass().equals(EventVO.class)) {
-				event = (EventVO)o;
-				Iterator it = event.getAlertListe().iterator();
-				boolean allSaved = true;
-				while(it.hasNext())
-					if(!((AlertVO)it.next()).getAlertpk().startsWith("a"))
-						allSaved = false;
-				
-				if(allSaved) {
-					PAS.get_pas().actionPerformed(new ActionEvent(event,ActionEvent.ACTION_PERFORMED,"act_send_scenario"));
-					clearDrawQueue();
-					setFilled(null);
-					setDrawMode(null);
-				}
-				else 
-					if(JOptionPane.showConfirmDialog(gui,"One or more alerts not saved, do you want to save?","Alert not saved",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-						try {
-							updXml.readXML();
-						} catch(Exception ex) {
-							Error.getError().addError("MainController","Exception saving alert",ex,Error.SEVERITY_ERROR);
-						}
-					}
-			
-			} else if(o.getClass().equals(AlertVO.class)) {
-				alert = (AlertVO)o;
-				if(alertSaved(alert))
+			SwingUtilities.invokeLater(new Runnable() 
+			{
+				public void run()
 				{
-					PAS.get_pas().actionPerformed(new ActionEvent(alert,ActionEvent.ACTION_PERFORMED,"act_send_scenario"));
-					clearDrawQueue();
-					setFilled(null);
-					setDrawMode(null);					
-				}
-				/*if(alert.getAlertpk().startsWith("a")) {
-					PAS.get_pas().actionPerformed(new ActionEvent(alert,ActionEvent.ACTION_PERFORMED,"act_send_scenario"));
-					clearDrawQueue();
-					setFilled(null);
-					setDrawMode(null);
-				}
-				else {
-					if(JOptionPane.showConfirmDialog(gui,"Alert not saved, do you want to save?","Alert not saved",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-						try {
-							updXml.readXML();
-						} catch(Exception ex) {
-							Error.getError().addError("MainController","Exception saving alert",ex,Error.SEVERITY_ERROR);
+					DefaultMutableTreeNode remNode = (DefaultMutableTreeNode) treeCtrl.getSelPath().getLastPathComponent();
+					Object o = remNode.getUserObject();
+					if(o.getClass().equals(EventVO.class)) {
+						event = (EventVO)o;
+						Iterator it = event.getAlertListe().iterator();
+						boolean allSaved = true;
+						while(it.hasNext())
+							if(!((AlertVO)it.next()).getAlertpk().startsWith("a"))
+								allSaved = false;
+						
+						if(allSaved) {
+							PAS.get_pas().actionPerformed(new ActionEvent(event,ActionEvent.ACTION_PERFORMED,"act_send_scenario"));
+							clearDrawQueue();
+							setFilled(null);
+							setDrawMode(null);
+						}
+						else 
+							if(JOptionPane.showConfirmDialog(gui,"One or more alerts not saved, do you want to save?","Alert not saved",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								try {
+									updXml.readXML();
+								} catch(Exception ex) {
+									Error.getError().addError("MainController","Exception saving alert",ex,Error.SEVERITY_ERROR);
+								}
+							}
+					
+					} else if(o.getClass().equals(AlertVO.class)) {
+						alert = (AlertVO)o;
+						if(alertSaved(alert))
+						{
+							PAS.get_pas().actionPerformed(new ActionEvent(alert,ActionEvent.ACTION_PERFORMED,"act_send_scenario"));
+							clearDrawQueue();
+							setFilled(null);
+							setDrawMode(null);					
 						}
 					}
-				}*/
-			}
+				}
+			});
 		} 
 		else if(e.getSource() == treeCtrl.getGui().getSnapSimulation() ||
 				e.getSource() == treeCtrl.getGui().getSnapSending() ||
