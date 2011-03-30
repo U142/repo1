@@ -85,7 +85,7 @@ public class ReflectionPathAccessorTest {
         assertThat(sample.getName(), equalTo("test"));
     }
 
-    @Test
+    /*@Test
     public void testPropertyListener() {
         Mockery context = new Mockery();
         final SampleClass sample = new SampleClass();
@@ -100,7 +100,7 @@ public class ReflectionPathAccessorTest {
         sample.setName("test");
 
         context.assertIsSatisfied();
-    }
+    }*/
 
     private Matcher<PropertyChangeEvent> propertyChangeEvent(final String name, final Object oldValue, final Object newValue) {
         final Matcher<String> nameMatcher = equalTo(name);
