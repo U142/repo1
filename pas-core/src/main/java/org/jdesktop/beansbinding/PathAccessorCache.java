@@ -87,10 +87,8 @@ public class PathAccessorCache {
      * @return the path accessor.
      */
     @SuppressWarnings("unchecked")
-    public <T, V> IPathAccessor<T, V> getAccessor(Class<T> type, String name) {
-        PropertyTypeKey requestKey = new PropertyTypeKey(type, name);
-
-        return (IPathAccessor<T, V>) accessorCache.get(requestKey);
+    public <T, V> IPathAccessor<T, V> getAccessor(Class<? extends T> type, String name) {
+        return (IPathAccessor<T, V>) accessorCache.get(new PropertyTypeKey(type, name));
     }
 
     /**
