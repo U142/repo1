@@ -4,12 +4,9 @@ import org.junit.Test;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-
-import java.awt.Button;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
