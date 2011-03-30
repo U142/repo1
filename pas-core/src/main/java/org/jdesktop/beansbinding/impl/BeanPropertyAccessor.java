@@ -46,9 +46,10 @@ public interface BeanPropertyAccessor {
         }
 
         @Override
-        public <T> T read(Object instance, Class<T> returnValue) {
+        @SuppressWarnings("unchecked")
+        public <T> T read(Object instance) {
             try {
-                return returnValue.cast(readImpl(getter, name, instance));
+                return (T) readImpl(getter, name, instance);
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Failed to read property " + name.getFullName() + " by invoking " + getter + " on " + instance, e);
             } catch (InvocationTargetException e) {
@@ -143,7 +144,7 @@ public interface BeanPropertyAccessor {
 
     Method getSetter();
 
-    <T> T read(Object instance, Class<T> returnValue);
+    <T> T read(Object instance);
 
     void write(Object instance, Object value);
 }

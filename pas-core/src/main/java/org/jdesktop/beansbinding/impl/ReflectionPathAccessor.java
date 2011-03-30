@@ -16,7 +16,7 @@ public class ReflectionPathAccessor<T, V> extends AbstractPathAccessor<T, V> {
 
     @Override
     public V getValue(T instance) {
-        return accessor.read(instance, getValueType());
+        return accessor.read(instance);
     }
 
     @Override

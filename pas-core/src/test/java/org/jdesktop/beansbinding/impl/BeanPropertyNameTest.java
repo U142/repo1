@@ -1,7 +1,5 @@
 package org.jdesktop.beansbinding.impl;
 
-import org.jdesktop.beansbinding.impl.BeanPropertyAccessor;
-import org.jdesktop.beansbinding.impl.BeanPropertyName;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -109,7 +107,7 @@ public class BeanPropertyNameTest {
     public void testRead() {
         SampleClass instance = new SampleClass();
         instance.setName("test1");
-        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).read(instance, String.class);
+        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).read(instance);
         assertThat(name, equalTo("test1"));
     }
 
@@ -124,7 +122,7 @@ public class BeanPropertyNameTest {
     public void testReadIndexed() {
         SampleClass instance = new SampleClass();
         instance.setIndexedName(4, "test1");
-        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@4"), SampleClass.class).read(instance, String.class);
+        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@4"), SampleClass.class).read(instance);
         assertThat(name, equalTo("test1"));
     }
 
