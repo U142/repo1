@@ -31,6 +31,7 @@ public class GISShape extends ShapeStruct {
 		
 	}
 
+	
 	public NavStruct calc_bounds() {
 //		GISRecord gisr;
 //		for(int i=0;i<m_gislist.size();i++) {

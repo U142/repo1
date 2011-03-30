@@ -20,6 +20,7 @@ import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;

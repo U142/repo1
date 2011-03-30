@@ -199,6 +199,11 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public GISShape typecast_gis() { return (GISShape)this; }
 	public TasStruct typecast_tas() { return (TasStruct)this; }
 
+	public boolean hasValidBounds() {
+		return m_bounds._lbo>-180 && m_bounds._rbo<180 && m_bounds._bbo>-90 && m_bounds._ubo<90;
+	}
+
+	
 	public ShapeStruct() {
 		m_icon_epicentre = ImageLoader.load_icon("epicentre_pinpoint.png");
 	}
