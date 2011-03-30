@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
  */
 public class BeanPropertyTest {
 
-    public static class TestBean extends AbstractBean{
+    public static class TestBean extends AbstractBean {
         private String name;
 
         public TestBean() {

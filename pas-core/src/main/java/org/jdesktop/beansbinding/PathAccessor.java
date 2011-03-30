@@ -30,17 +30,6 @@ import java.beans.PropertyChangeListener;
  */
 public interface PathAccessor<T, V> {
 
-    ImmutableMap<Class, Object> DEFAULT_VALUES = ImmutableMap.<Class, Object>builder()
-            .put(boolean.class, false)
-            .put(char.class, '\u0000')
-            .put(byte.class, 0)
-            .put(short.class, 0)
-            .put(int.class, 0)
-            .put(long.class, 0l)
-            .put(float.class, 0.0)
-            .put(double.class, 0.0d)
-            .build();
-
     /**
      * The fully qualified property name that this path accessor is for.
      * @return the full property name.

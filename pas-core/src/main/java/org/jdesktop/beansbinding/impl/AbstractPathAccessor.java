@@ -35,4 +35,9 @@ public abstract class AbstractPathAccessor<T, V> implements PathAccessor<T, V> {
     public BeanPropertyName getPropertyName() {
         return propertyName;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"{"+valueType.getSimpleName()+" "+ getPropertyName().getFullName()+" on "+type.getSimpleName()+"}";
+    }
 }

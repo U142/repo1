@@ -2,6 +2,7 @@ package org.jdesktop.beansbinding.impl;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +11,17 @@ import java.lang.reflect.Method;
  * @author Ståle Undheim <su@ums.no>
  */
 public interface BeanPropertyAccessor {
+
+    ImmutableMap<Class, Object> DEFAULT_VALUES = ImmutableMap.<Class, Object>builder()
+            .put(boolean.class, false)
+            .put(char.class, '\u0000')
+            .put(byte.class, (byte) 0)
+            .put(short.class, (short) 0)
+            .put(int.class, 0)
+            .put(long.class, 0l)
+            .put(float.class, 0.0f)
+            .put(double.class, 0.0d)
+            .build();
 
     abstract class Abstract implements BeanPropertyAccessor {
 
@@ -48,7 +60,11 @@ public interface BeanPropertyAccessor {
         public void write(Object instance, Object value) {
             Preconditions.checkNotNull(setter, "Read only property: " + name.getFullName() + " on " + instance);
             try {
-                writeImpl(setter, name, instance, value);
+                if (getter.getReturnType().isPrimitive() && value == null) {
+                    writeImpl(setter, name, instance, DEFAULT_VALUES.get(getter.getReturnType()));
+                } else {
+                    writeImpl(setter, name, instance, value);
+                }
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Failed to write property " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance, e);
             } catch (InvocationTargetException e) {
