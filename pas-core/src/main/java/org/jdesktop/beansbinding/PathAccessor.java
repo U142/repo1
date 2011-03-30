@@ -28,7 +28,7 @@ import java.util.IdentityHashMap;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-public interface IPathAccessor<T, V> {
+public interface PathAccessor<T, V> {
 
     ImmutableMap<Class, Object> DEFAULT_VALUES = ImmutableMap.<Class, Object>builder()
             .put(boolean.class, false)

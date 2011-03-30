@@ -8,12 +8,10 @@ import java.beans.PropertyChangeListener;
 public class ReflectionPathAccessor<T, V> extends AbstractPathAccessor<T, V> {
 
     private final BeanPropertyAccessor accessor;
-    private final String name;
 
     public ReflectionPathAccessor(BeanPropertyName prop, Class<T> type, Class<V> valueType) {
         super(prop.getFullName(), type, valueType);
-        this.accessor = prop.getAccessor(type);
-        this.name = prop.getName();
+        this.accessor = BeanPropertyAccessor.Factory.of(prop, type);
     }
 
     @Override
@@ -32,7 +30,7 @@ public class ReflectionPathAccessor<T, V> extends AbstractPathAccessor<T, V> {
     }
 
     @Override
-    protected ListenerHandle<T> addPropertyChangeListenerImpl(T instance, PropertyChangeListener listener) {
+    public ListenerHandle<T> addPropertyChangeListener(T instance, PropertyChangeListener listener) {
         return new ListenerHandle.PropertyListenerHandle<T>(instance, getPropertyName().getName(), listener);
     }
 

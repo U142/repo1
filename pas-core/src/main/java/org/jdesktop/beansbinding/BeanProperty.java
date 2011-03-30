@@ -33,7 +33,7 @@ public class BeanProperty<BT, PT> {
 
     @SuppressWarnings("unchecked")
     public PT read(BT src) {
-        return (PT) getPathAccessor(src).getValue(src);
+        return getPathAccessor(src).getValue(src);
     }
 
     public void write(BT target, PT value) {
@@ -50,7 +50,7 @@ public class BeanProperty<BT, PT> {
         getPathAccessor(src).addPropertyChangeListener(src, listener);
     }
 
-    private IPathAccessor<BT, PT> getPathAccessor(BT target) {
+    private PathAccessor<BT, PT> getPathAccessor(BT target) {
         return cache.getAccessor((Class<BT>) target.getClass(), propertyName);
     }
 

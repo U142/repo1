@@ -37,9 +37,9 @@ public class ReflectionPathAccessorTest {
     }
 
     private final ReflectionPathAccessor<SampleClass, String> accessor =
-            new ReflectionPathAccessor<SampleClass, String>(BeanPropertyName.Factory.of("name"), SampleClass.class, String.class);
+            new ReflectionPathAccessor<SampleClass, String>(BeanPropertyName.of("name"), SampleClass.class, String.class);
     private final ReflectionPathAccessor<SampleClass, String> readOnlyAccessor =
-            new ReflectionPathAccessor<SampleClass, String>(BeanPropertyName.Factory.of("readOnly"), SampleClass.class, String.class);
+            new ReflectionPathAccessor<SampleClass, String>(BeanPropertyName.of("readOnly"), SampleClass.class, String.class);
 
 
     @Test
@@ -92,7 +92,7 @@ public class ReflectionPathAccessorTest {
             one(listener).propertyChange(with(propertyChangeEvent("name", null, "test")));
         }});
 
-        accessor.addPropertyChangeListenerImpl(sample, listener);
+        accessor.addPropertyChangeListener(sample, listener);
 
         sample.setName("test");
 

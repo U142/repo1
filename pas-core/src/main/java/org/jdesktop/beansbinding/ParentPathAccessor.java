@@ -8,17 +8,17 @@ import java.beans.PropertyChangeListener;
  */
 public class ParentPathAccessor<P, T, V> extends AbstractPathAccessor<P, V> {
 
-    private final IPathAccessor<P, T> parent;
-    private final IPathAccessor<T, V> child;
+    private final PathAccessor<P, T> parent;
+    private final PathAccessor<T, V> child;
 
-    public ParentPathAccessor(IPathAccessor<P, T> parent, IPathAccessor<T, V> child) {
+    public ParentPathAccessor(PathAccessor<P, T> parent, PathAccessor<T, V> child) {
         super(parent.getPropertyName() + "." + child.getPropertyName(), parent.getTargetType(), child.getValueType());
         this.parent = parent;
         this.child = child;
     }
 
     @Override
-    protected ListenerHandle<P> addPropertyChangeListenerImpl(P instance, final PropertyChangeListener listener) {
+    public ListenerHandle<P> addPropertyChangeListener(P instance, final PropertyChangeListener listener) {
         final ListenerHandle<T> handle = child.addPropertyChangeListener(parent.getValue(instance), listener);
         // We have a parent, so we also need to listen to property changes on the parent
         // path accessor, as that will mean that the instance value also changes. So

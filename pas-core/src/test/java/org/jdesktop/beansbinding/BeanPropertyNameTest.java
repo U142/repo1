@@ -1,6 +1,5 @@
 package org.jdesktop.beansbinding;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -17,14 +16,14 @@ public class BeanPropertyNameTest {
 
     @Test
     public void testSimpleProperty() throws Exception {
-        BeanPropertyName simple = BeanPropertyName.Factory.of("simple");
+        BeanPropertyName simple = BeanPropertyName.of("simple");
         assertThat(simple.getName(), equalTo("simple"));
         assertThat(simple.getParent(), nullValue());
     }
 
     @Test
     public void testParentProperty() throws Exception {
-        BeanPropertyName child = BeanPropertyName.Factory.of("parent.child");
+        BeanPropertyName child = BeanPropertyName.of("parent.child");
         assertThat(child.getName(), equalTo("child"));
         assertThat(child.getParent(), not(nullValue()));
 
@@ -34,14 +33,14 @@ public class BeanPropertyNameTest {
 
     @Test
     public void testIndexedProperty() throws Exception {
-        BeanPropertyName indexed = BeanPropertyName.Factory.of("indexed@5");
+        BeanPropertyName indexed = BeanPropertyName.of("indexed@5");
         assertThat(indexed.getName(), equalTo("indexed"));
         assertThat(indexed.getParent(), nullValue());
     }
 
     @Test
     public void testIndexedChildProperty() throws Exception {
-        BeanPropertyName indexedChild = BeanPropertyName.Factory.of("parent.indexedChild@3");
+        BeanPropertyName indexedChild = BeanPropertyName.of("parent.indexedChild@3");
         assertThat(indexedChild.getName(), equalTo("indexedChild"));
         assertThat(indexedChild.getParent(), not(nullValue()));
 
@@ -51,7 +50,7 @@ public class BeanPropertyNameTest {
     
     @Test
     public void testIndexedParentProperty() throws Exception {
-        BeanPropertyName child = BeanPropertyName.Factory.of("parent@4.child");
+        BeanPropertyName child = BeanPropertyName.of("parent@4.child");
         assertThat(child.getName(), equalTo("child"));
         assertThat(child.getParent(), not(nullValue()));
 
@@ -82,25 +81,25 @@ public class BeanPropertyNameTest {
 
     @Test
     public void testGetterMethod() throws NoSuchMethodException {
-        Method method = BeanPropertyName.Factory.of("name").getAccessor(SampleClass.class).getGetter();
+        Method method = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).getGetter();
         assertThat(method, equalTo(SampleClass.class.getMethod("getName")));
     }
 
     @Test
     public void testSetterMethod() throws NoSuchMethodException {
-        Method method = BeanPropertyName.Factory.of("name").getAccessor(SampleClass.class).getSetter();
+        Method method = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).getSetter();
         assertThat(method, equalTo(SampleClass.class.getMethod("setName", String.class)));
     }
 
     @Test
     public void testIndexedGetterMethod() throws NoSuchMethodException {
-        Method method = BeanPropertyName.Factory.of("indexedName@1").getAccessor(SampleClass.class).getGetter();
+        Method method = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@1"), SampleClass.class).getGetter();
         assertThat(method, equalTo(SampleClass.class.getMethod("getIndexedName", int.class)));
     }
 
     @Test
     public void testIndexedSetterMethod() throws NoSuchMethodException {
-        Method method = BeanPropertyName.Factory.of("indexedName@1").getAccessor(SampleClass.class).getSetter();
+        Method method = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@1"), SampleClass.class).getSetter();
         assertThat(method, equalTo(SampleClass.class.getMethod("setIndexedName", int.class, String.class)));
     }
 
@@ -108,14 +107,14 @@ public class BeanPropertyNameTest {
     public void testRead() {
         SampleClass instance = new SampleClass();
         instance.setName("test1");
-        String name = BeanPropertyName.Factory.of("name").getAccessor(SampleClass.class).read(instance, String.class);
+        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).read(instance, String.class);
         assertThat(name, equalTo("test1"));
     }
 
     @Test
     public void testWrite() {
         SampleClass instance = new SampleClass();
-        BeanPropertyName.Factory.of("name").getAccessor(SampleClass.class).write(instance, "test1");
+        BeanPropertyAccessor.Factory.of(BeanPropertyName.of("name"), SampleClass.class).write(instance, "test1");
         assertThat(instance.getName(), equalTo("test1"));
     }
 
@@ -123,14 +122,14 @@ public class BeanPropertyNameTest {
     public void testReadIndexed() {
         SampleClass instance = new SampleClass();
         instance.setIndexedName(4, "test1");
-        String name = BeanPropertyName.Factory.of("indexedName@4").getAccessor(SampleClass.class).read(instance, String.class);
+        String name = BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@4"), SampleClass.class).read(instance, String.class);
         assertThat(name, equalTo("test1"));
     }
 
     @Test
     public void testIndexedWrite() {
         SampleClass instance = new SampleClass();
-        BeanPropertyName.Factory.of("indexedName@4").getAccessor(SampleClass.class).write(instance, "test1");
+        BeanPropertyAccessor.Factory.of(BeanPropertyName.of("indexedName@4"), SampleClass.class).write(instance, "test1");
         assertThat(instance.getIndexedName(4), equalTo("test1"));
     }
 

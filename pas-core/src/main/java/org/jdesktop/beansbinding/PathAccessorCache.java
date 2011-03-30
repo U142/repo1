@@ -5,10 +5,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 
 import javax.annotation.Nonnull;
-import javax.swing.JList;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,13 +20,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class PathAccessorCache {
 
-    private final ConcurrentMap<PropertyTypeKey, IPathAccessor> accessorCache = new MapMaker().makeComputingMap(new Function<PropertyTypeKey, IPathAccessor>() {
+    private final ConcurrentMap<PropertyTypeKey, PathAccessor> accessorCache = new MapMaker().makeComputingMap(new Function<PropertyTypeKey, PathAccessor>() {
         @Override
-        public IPathAccessor apply(@Nonnull PropertyTypeKey input) {
+        public PathAccessor apply(@Nonnull PropertyTypeKey input) {
             final String name = input.getName();
             @SuppressWarnings("unchecked")
             final Class<Object> type = (Class<Object>) input.getType();
-
 
             // Check if a key for a supertype exists
             List<PropertyTypeKey> supertTypeKeys = new ArrayList<PropertyTypeKey>();
@@ -54,9 +51,9 @@ public class PathAccessorCache {
                 }
             }
 
-            BeanPropertyName beanPropertyName = BeanPropertyName.Factory.of(name);
+            BeanPropertyName beanPropertyName = BeanPropertyName.of(name);
             if (beanPropertyName.getParent() == null) {
-                Method getter = beanPropertyName.getAccessor(type).getGetter();
+                Method getter = BeanPropertyAccessor.Factory.of(beanPropertyName, type).getGetter();
                 Preconditions.checkNotNull(getter, "Could not find getter for " + beanPropertyName.getFullName() + " on " + type);
                 @SuppressWarnings("unchecked")
                 Class<Object> returnType = (Class<Object>) getter.getReturnType();
@@ -64,9 +61,9 @@ public class PathAccessorCache {
             }
             else {
                 // Get the parent accessor
-                IPathAccessor<Object, Object> parentAccessor = getAccessor(type, beanPropertyName.getParent().getFullName());
+                PathAccessor<Object, Object> parentAccessor = getAccessor(type, beanPropertyName.getParent().getFullName());
                 // Get the leaf accessor for the child property
-                IPathAccessor<Object, Object> childAccessor = getAccessor(parentAccessor.getValueType(), beanPropertyName.getName());
+                PathAccessor<Object, Object> childAccessor = getAccessor(parentAccessor.getValueType(), beanPropertyName.getName());
                 return new ParentPathAccessor<Object, Object, Object>(parentAccessor, childAccessor);
             }
         }
@@ -74,7 +71,7 @@ public class PathAccessorCache {
     });
 
     public PathAccessorCache() {
-        for (IPathAccessor accessor : CustomOveridePaths.OVERRIDES) {
+        for (PathAccessor accessor : CustomOveridePaths.OVERRIDES) {
             accessorCache.put(new PropertyTypeKey(accessor.getTargetType(), accessor.getPropertyName().getFullName()), accessor);
         }
     }
@@ -83,18 +80,18 @@ public class PathAccessorCache {
      * Return an accessor for the property "name" on the target type.
      *
      * @param type to bind this property to.
-     * @param name of the property, using the syntax described in {@link IPathAccessor}
+     * @param name of the property, using the syntax described in {@link PathAccessor}
      * @return the path accessor.
      */
     @SuppressWarnings("unchecked")
-    public <T, V> IPathAccessor<T, V> getAccessor(Class<? extends T> type, String name) {
-        return (IPathAccessor<T, V>) accessorCache.get(new PropertyTypeKey(type, name));
+    public <T, V> PathAccessor<T, V> getAccessor(Class<? extends T> type, String name) {
+        return (PathAccessor<T, V>) accessorCache.get(new PropertyTypeKey(type, name));
     }
 
     /**
      * This class represents a key pointing to a property on a class.
      * <p/>
-     * This is used for lookup of a {@link org.jdesktop.beansbinding.IPathAccessor} to
+     * This is used for lookup of a {@link PathAccessor} to
      * read and write the properties on a single object.
      * <p/>
      * It correctly implements equals and hashCode, and is immutable, so it can be safely used as a
@@ -108,7 +105,7 @@ public class PathAccessorCache {
 
         PropertyTypeKey(Class type, String name) {
             this.type = Preconditions.checkNotNull(type, "type cannot be null");
-            this.name = Preconditions.checkNotNull(name, "setter name cannot be null");
+            this.name = Preconditions.checkNotNull(name, "name cannot be null");
         }
 
         public Class getType() {

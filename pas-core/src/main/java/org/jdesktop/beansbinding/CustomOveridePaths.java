@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CustomOveridePaths {
 
-    protected static final IPathAccessor<JList, Object> JLIST_SELECTED_ELEMENT = new ListenerAbstractPathAccessor<JList, ListSelectionListener, Object>("selectedElement", JList.class, Object.class) {
+    protected static final PathAccessor<JList, Object> JLIST_SELECTED_ELEMENT = new ListenerAbstractPathAccessor<JList, ListSelectionListener, Object>("selectedElement", JList.class, Object.class) {
 
         @Override
         public Object getValue(JList instance) {
@@ -40,7 +40,7 @@ public class CustomOveridePaths {
         }
 
         @Override
-        protected ListSelectionListener createListener(final AbstractListenerHandle2<JList, ListSelectionListener, Object> abstractHandle) {
+        protected ListSelectionListener createListener(final AbstractListenerHandle<JList, ListSelectionListener, Object> abstractHandle) {
             return new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
@@ -62,7 +62,7 @@ public class CustomOveridePaths {
 
     };
 
-    protected static final IPathAccessor<JComboBox, Object> JCOMBOBOX_SELECTED_ITEM = new ListenerAbstractPathAccessor<JComboBox, ItemListener, Object>("selectedItem", JComboBox.class, Object.class) {
+    protected static final PathAccessor<JComboBox, Object> JCOMBOBOX_SELECTED_ITEM = new ListenerAbstractPathAccessor<JComboBox, ItemListener, Object>("selectedItem", JComboBox.class, Object.class) {
         @Override
         public Object getValue(JComboBox instance) {
             return instance.getSelectedItem();
@@ -79,7 +79,7 @@ public class CustomOveridePaths {
         }
 
         @Override
-        protected ItemListener createListener(final AbstractListenerHandle2<JComboBox, ItemListener, Object> abstractHandle) {
+        protected ItemListener createListener(final AbstractListenerHandle<JComboBox, ItemListener, Object> abstractHandle) {
             return new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
@@ -99,10 +99,10 @@ public class CustomOveridePaths {
         }
     };
 
-    public static final IPathAccessor<JTextComponent, String> JTEXTCOMPONENT_TEXT = new ListenerAbstractPathAccessor<JTextComponent, DocumentListener, String>("text", JTextComponent.class, String.class) {
+    public static final PathAccessor<JTextComponent, String> JTEXTCOMPONENT_TEXT = new ListenerAbstractPathAccessor<JTextComponent, DocumentListener, String>("text", JTextComponent.class, String.class) {
 
         @Override
-        protected DocumentListener createListener(final AbstractListenerHandle2<JTextComponent, DocumentListener, String> abstractHandle) {
+        protected DocumentListener createListener(final AbstractListenerHandle<JTextComponent, DocumentListener, String> abstractHandle) {
             return new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
@@ -148,9 +148,9 @@ public class CustomOveridePaths {
 
     };
 
-    public static IPathAccessor<AbstractButton, Boolean> ABSTRACT_BUTTON_SELECTED = new ListenerAbstractPathAccessor<AbstractButton, ChangeListener, Boolean>("selected", AbstractButton.class, Boolean.class) {
+    public static PathAccessor<AbstractButton, Boolean> ABSTRACT_BUTTON_SELECTED = new ListenerAbstractPathAccessor<AbstractButton, ChangeListener, Boolean>("selected", AbstractButton.class, Boolean.class) {
         @Override
-        protected ChangeListener createListener(final AbstractListenerHandle2<AbstractButton, ChangeListener, Boolean> abstractHandle) {
+        protected ChangeListener createListener(final AbstractListenerHandle<AbstractButton, ChangeListener, Boolean> abstractHandle) {
             return new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent e) {
@@ -193,8 +193,8 @@ public class CustomOveridePaths {
         }
 
         @Override
-        protected ListenerHandle<SRC> addPropertyChangeListenerImpl(SRC instance, PropertyChangeListener listener) {
-            return new AbstractListenerHandle2<SRC, LST, VAL>(this, instance, listener) {
+        public ListenerHandle<SRC> addPropertyChangeListener(SRC instance, PropertyChangeListener listener) {
+            return new AbstractListenerHandle<SRC, LST, VAL>(this, instance, listener) {
                 @Override
                 protected LST createListener() {
                     return ListenerAbstractPathAccessor.this.createListener(this);
@@ -212,7 +212,7 @@ public class CustomOveridePaths {
             };
         }
 
-        protected abstract LST createListener(AbstractListenerHandle2<SRC, LST, VAL> abstractHandle);
+        protected abstract LST createListener(AbstractListenerHandle<SRC, LST, VAL> abstractHandle);
 
         protected abstract void addListener(SRC current, LST listener);
 
@@ -221,21 +221,21 @@ public class CustomOveridePaths {
     }
 
 
-    protected static final List<? extends IPathAccessor> OVERRIDES = Arrays.asList(
+    protected static final List<? extends PathAccessor> OVERRIDES = Arrays.asList(
             CustomOveridePaths.JCOMBOBOX_SELECTED_ITEM,
             CustomOveridePaths.JLIST_SELECTED_ELEMENT,
             CustomOveridePaths.JTEXTCOMPONENT_TEXT,
             CustomOveridePaths.ABSTRACT_BUTTON_SELECTED);
 
-    static abstract class AbstractListenerHandle2<SRC, LST, VAL> implements ListenerHandle<SRC> {
+    static abstract class AbstractListenerHandle<SRC, LST, VAL> implements ListenerHandle<SRC> {
 
         private SRC current;
         private final LST listener;
         private VAL currentValue;
         private final PropertyChangeListener propertyChangeListener;
-        private final IPathAccessor<SRC, VAL> accessor;
+        private final PathAccessor<SRC, VAL> accessor;
 
-        protected AbstractListenerHandle2(IPathAccessor<SRC, VAL> accessor, SRC instance, PropertyChangeListener propertyChangeListener) {
+        protected AbstractListenerHandle(PathAccessor<SRC, VAL> accessor, SRC instance, PropertyChangeListener propertyChangeListener) {
             this.accessor = accessor;
             this.propertyChangeListener = propertyChangeListener;
             listener = createListener();
