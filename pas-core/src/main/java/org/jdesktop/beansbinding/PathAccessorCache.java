@@ -34,7 +34,9 @@ public class PathAccessorCache {
                 return new ReflectionPathAccessor<Object, Object>(beanPropertyName, type, returnType);
             }
             else {
+                // Get the parent accessor
                 IPathAccessor<Object, Object> parentAccessor = getAccessor(type, beanPropertyName.getParent().getFullName());
+                // Get the leaf accessor for the child property
                 IPathAccessor<Object, Object> childAccessor = getAccessor(parentAccessor.getValueType(), beanPropertyName.getName());
                 return new ParentPathAccessor<Object, Object, Object>(parentAccessor, childAccessor);
             }
