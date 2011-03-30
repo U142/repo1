@@ -148,6 +148,15 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			return true;
 		return false;
 	}
+	public boolean hasLBA(int n_adrtypes)
+	{
+		if((n_adrtypes & SendController.SENDTO_CELL_BROADCAST_TEXT) > 0 ||
+			(n_adrtypes & SendController.SENDTO_CELL_BROADCAST_VOICE) > 0)
+		{
+			return true;
+		}
+		return false;
+	}
 	public boolean hasVoice(int n_adrtypes)
 	{
 		if(/*doSendVoice() &&*/ 
@@ -990,7 +999,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	
 	public void stateChanged(ChangeEvent e) {
 		// Check if scheddatetime has passed				
-		if(!m_tabbedpane.getSelectedComponent().equals(m_settings) && schedDatePassed()) {
+		if(this.isVisible() && !m_tabbedpane.getSelectedComponent().equals(m_settings) && schedDatePassed()) {
 			m_tabbedpane.setSelectedComponent(m_settings);
             JOptionPane.showMessageDialog(this, Localization.l("main_sending_schedule_error"), Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
 			return;

@@ -316,24 +316,26 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			add(m_combo_validity, m_gridconst);
 			set_gridconst(7, get_panel(), 3, 1, GridBagConstraints.WEST);
             add(new StdTextLabel(Localization.l("common_days")), m_gridconst);
-		
-			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
-			add(m_radio_sendnow, m_gridconst);
-			set_gridconst(5, get_panel(), 5, 1, GridBagConstraints.WEST);
-			add(m_radio_sched, m_gridconst);
-			
-			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
-			add(m_lbl_scheddate, m_gridconst);
-			set_gridconst(5, get_panel(), 1, 1, GridBagConstraints.WEST);
-			add(m_combo_scheddate, m_gridconst);
-			set_gridconst(6, get_panel(), 1, 1, GridBagConstraints.WEST);
-			add(m_combo_schedtimehour, m_gridconst);
-			//set_gridconst(7, get_panel(), 1, 1, GridBagConstraints.WEST);
-			//add(new StdTextArea(":"), m_gridconst);
-			set_gridconst(8, get_panel(), 1, 1, GridBagConstraints.WEST);
-			add(m_combo_schedtimeminute, m_gridconst);
 		}
-		else if(parent.hasSMS(n_addrtypes)) {
+            //if(!parent.hasLBA(n_addrtypes))
+        /*    {
+				set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
+				add(m_radio_sendnow, m_gridconst);
+				set_gridconst(5, get_panel(), 5, 1, GridBagConstraints.WEST);
+				add(m_radio_sched, m_gridconst);
+				set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
+				add(m_lbl_scheddate, m_gridconst);
+				set_gridconst(5, get_panel(), 1, 1, GridBagConstraints.WEST);
+				add(m_combo_scheddate, m_gridconst);
+				set_gridconst(6, get_panel(), 1, 1, GridBagConstraints.WEST);
+				add(m_combo_schedtimehour, m_gridconst);
+				set_gridconst(8, get_panel(), 1, 1, GridBagConstraints.WEST);
+				add(m_combo_schedtimeminute, m_gridconst);
+
+            }
+			
+		}*/
+		if(parent.hasSMS(n_addrtypes) || parent.hasVoice(n_addrtypes)) {
 			set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
 			add(m_radio_sendnow, m_gridconst);
 			set_gridconst(5, get_panel(), 5, 1, GridBagConstraints.WEST);
@@ -345,15 +347,22 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			add(m_combo_scheddate, m_gridconst);
 			set_gridconst(6, get_panel(), 1, 1, GridBagConstraints.WEST);
 			add(m_combo_schedtimehour, m_gridconst);
-			//set_gridconst(7, get_panel(), 1, 1, GridBagConstraints.WEST);
-			//add(new StdTextArea(":"), m_gridconst);
-			set_gridconst(8, get_panel(), 1, 1, GridBagConstraints.WEST);
+			set_gridconst(8, get_panel(), 2, 1, GridBagConstraints.WEST);
 			add(m_combo_schedtimeminute, m_gridconst);
 			
 		}
+        if(parent.hasLBA(n_addrtypes))
+        {
+        	m_radio_sendnow.setEnabled(false);
+        	m_radio_sched.setEnabled(false);
+        	enable_sched(false);
+        	m_radio_sched.setToolTipText(Localization.l("main_sending_settings_schedule_not_allowed_for_lbas"));
+        }
 
 		init();
 	}
+	
+	
 	public void init() {
 		setVisible(true);
 	}
@@ -417,9 +426,10 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		}
 	}
 	public void enable_sched(boolean b_enable) {
-		m_combo_scheddate.setEnabled(b_enable);
-		m_combo_schedtimehour.setEnabled(b_enable);
-		m_combo_schedtimeminute.setEnabled(b_enable);
+		m_lbl_scheddate.setVisible(b_enable);
+		m_combo_scheddate.setVisible(b_enable);
+		m_combo_schedtimehour.setVisible(b_enable);
+		m_combo_schedtimeminute.setVisible(b_enable);
 		if(b_enable) {
 			actionPerformed(new ActionEvent(m_combo_scheddate, ActionEvent.ACTION_PERFORMED, "act_scheddate_changed"));
 			actionPerformed(new ActionEvent(m_combo_schedtimehour, ActionEvent.ACTION_PERFORMED, "act_schedhour_changed"));
