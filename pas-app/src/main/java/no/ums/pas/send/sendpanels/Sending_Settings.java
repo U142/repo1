@@ -377,7 +377,12 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			System.out.println("Profile changed to: " + m_current_profile.toString());
 			get_parent().initialize_file_panes();
 			//get_pas().add_event("selected profile: " + m_current_profile.get_profilename());
-			String n_default_sched = m_current_profile.get_reschedpk();
+			String n_default_sched;
+			if(get_parent().get_sendobject().get_sendproperties().get_schedprofilepk() != null)
+				n_default_sched = get_parent().get_sendobject().get_sendproperties().get_schedprofilepk();
+			else
+				n_default_sched = m_current_profile.get_reschedpk();
+			
 			BBSchedProfile sched = null;
 			try
 			{
