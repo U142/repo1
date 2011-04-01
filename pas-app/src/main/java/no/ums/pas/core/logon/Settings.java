@@ -162,14 +162,18 @@ public class Settings {
 	public MAPSERVER getMapServer() {
 		return n_mapserver;
 	}
-	public void setMapServer(MAPSERVER m) {
+	public boolean setMapServer(MAPSERVER m) {
+		boolean b_change = this.n_mapserver!=m;
 		this.n_mapserver = m;
+		return b_change;
 	}
 	public String getWmsSite() {
 		return this.sz_wms_site;
 	}
-	public void setWmsSite(String s) {
+	public boolean setWmsSite(String s) {
+		boolean b_change = this.sz_wms_site!=s;
 		this.sz_wms_site = s;
+		return b_change;
 	}
 
 	public String getCompany() {
@@ -299,8 +303,14 @@ public class Settings {
 	{
 		m_selected_wms_layers = l;
 	}
-	public void setWmsLayers(List<WmsLayer> l)
+	public boolean setWmsLayers(List<WmsLayer> l)
 	{
+		String oldValue = "";
+		for(WmsLayer layer : m_wms_layers)
+		{
+			oldValue+=layer.toString();
+			oldValue+=",";
+		}
 		m_wms_layers = l;
 		String s = "";
 		for(WmsLayer layer : l)
@@ -309,6 +319,7 @@ public class Settings {
 			s+=",";
 		}
 		setSelectedWmsLayers(s);
+		return !oldValue.equals(s);
 	}
 	public void setWmsLayers(String s)
 	{
@@ -356,23 +367,27 @@ public class Settings {
 	{
 		return sz_wms_format;
 	}
-	public void setWmsUsername(String s)
+	public boolean setWmsUsername(String s)
 	{
+		String oldValue = this.sz_wms_username;
 		if(s != null)
 			sz_wms_username = (s.trim().length()==0 ? "" : s);
 		else
 			sz_wms_username = "";
+		return oldValue!=s;
 	}
 	public String getWmsUsername()
 	{
 		return sz_wms_username;
 	}
-	public void setWmsPassword(String s)
+	public boolean setWmsPassword(String s)
 	{
+		String oldValue = this.sz_wms_password;
 		if(s != null)
 			sz_wms_password = (s.trim().length()==0 ? "" : s);
 		else
 			sz_wms_password = "";
+		return oldValue!=s;
 	}
 	public String getWmsPassword()
 	{

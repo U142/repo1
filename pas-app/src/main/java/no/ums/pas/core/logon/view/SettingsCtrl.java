@@ -141,15 +141,17 @@ public class SettingsCtrl implements ISettingsUpdate {
 	@Override
 	public void onOk(WmsLayerTree tree, SettingsModel model) {
 		System.out.println("Save");
+		
 		no.ums.pas.core.logon.Settings s = Variables.getSettings();
 		MailAccount ma = PAS.get_pas().get_userinfo().get_mailaccount();
 		s.setUsername(model.getUsername());
 		s.setCompany(model.getCompanyid());
 		s.setParm(model.getAutoStartParm());
-		s.setMapServer((model.getMapSiteDefault() ? MAPSERVER.DEFAULT : MAPSERVER.WMS));
-		s.setWmsSite(model.getWmsUrl());
-		s.setWmsUsername(model.getWmsUsername());
-		s.setWmsPassword(model.getWmsPassword());
+		boolean b_reload_map = 
+			s.setMapServer((model.getMapSiteDefault() ? MAPSERVER.DEFAULT : MAPSERVER.WMS)) |
+			s.setWmsSite(model.getWmsUrl()) | 
+			s.setWmsUsername(model.getWmsUsername()) |
+			s.setWmsPassword(model.getWmsPassword());
 		s.setPanByDrag(model.getPanByDrag());
 		s.setZoomFromCenter(model.getZoomFromCenter());
 		s.setLbaRefresh(Integer.parseInt(model.getLbaupdate().toString()));
@@ -171,14 +173,14 @@ public class SettingsCtrl implements ISettingsUpdate {
 			{
 				selected_layers.add(l.toString());
 			}
-			s.setWmsLayers(layers);
+			b_reload_map |= s.setWmsLayers(layers);
 		}
 		else //keep the old ones
 		{
 			selected_layers = PAS.get_pas().get_settings().getSelectedWmsLayers();
 		}
 		dlg.getBtnSave().setEnabled(false);
-		
+		final boolean final_reload_map = b_reload_map;
 		new SwingWorker() {
 
 			@Override
@@ -192,7 +194,10 @@ public class SettingsCtrl implements ISettingsUpdate {
 				super.done();
 				dlg.getBtnSave().setEnabled(true);
 				dlg.setVisible(false);
-				Variables.getNavigation().reloadMap();
+				if(final_reload_map)
+				{
+					Variables.getNavigation().reloadMap();
+				}
 			}
 		
 		}.execute();

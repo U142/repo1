@@ -531,7 +531,6 @@ public class Settings extends JDialog {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						btnMapWmsOpenActionPerformed(e);
-						btnMapWmsOpenActionPerformed(e);
 					}
 				});
 
