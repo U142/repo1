@@ -163,7 +163,7 @@ public class Settings {
 		return n_mapserver;
 	}
 	public boolean setMapServer(MAPSERVER m) {
-		boolean b_change = this.n_mapserver!=m;
+		boolean b_change = !this.n_mapserver.equals(m);
 		this.n_mapserver = m;
 		return b_change;
 	}
@@ -171,7 +171,7 @@ public class Settings {
 		return this.sz_wms_site;
 	}
 	public boolean setWmsSite(String s) {
-		boolean b_change = this.sz_wms_site!=s;
+		boolean b_change = !this.sz_wms_site.equals(s);
 		this.sz_wms_site = s;
 		return b_change;
 	}
@@ -374,7 +374,7 @@ public class Settings {
 			sz_wms_username = (s.trim().length()==0 ? "" : s);
 		else
 			sz_wms_username = "";
-		return oldValue!=s;
+		return !oldValue.equals(s);
 	}
 	public String getWmsUsername()
 	{
@@ -387,7 +387,7 @@ public class Settings {
 			sz_wms_password = (s.trim().length()==0 ? "" : s);
 		else
 			sz_wms_password = "";
-		return oldValue!=s;
+		return !oldValue.equals(s);
 	}
 	public String getWmsPassword()
 	{

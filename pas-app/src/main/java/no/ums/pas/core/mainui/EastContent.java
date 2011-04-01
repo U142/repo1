@@ -134,12 +134,26 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 						}
 						else if(c instanceof ParmPanel)
 						{
-							PAS.pasplugin.onCloseParm();
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run()
+								{
+									m_tabbedpane.setSelectedComponent(get_infopanel());
+									PAS.pasplugin.onCloseParm();									
+								}
+							});
 						}
 						else if(c.equals(m_sendingpanel))
 						{
-							PAS.pasplugin.onCloseProject();
-							PAS.get_pas().close_active_project(false, true);	
+							
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run()
+								{
+									remove_tab(PANEL_STATUS_LIST);
+									m_tabbedpane.setSelectedComponent(get_infopanel());
+									PAS.pasplugin.onCloseProject();
+									PAS.get_pas().close_active_project(false, true, false);	
+								}
+							});
 							//m_statuspanel = null;
 						}
 					}

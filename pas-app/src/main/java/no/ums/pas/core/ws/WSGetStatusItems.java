@@ -922,21 +922,15 @@ public class WSGetStatusItems extends WSThread
 					if(obj.get_item() > m_n_max_litem)
 						m_n_max_litem = obj.get_item();
 					fire_statusitem(obj);
-					//m_statusitems.add(obj);
-					//m_statusitems.set(n_index, obj);
-					//MsgBox message = new  MsgBox(new Frame(""), sz_values[0] + " " + sz_values[1] + " " + sz_values[2] + " " + sz_values[3], true);
 				} catch(Exception e) { 
 					System.out.println(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
+					return;
 				}				
 			}
 			fire_set_itemfilter(m_n_max_litem);
-		//}
-		
 		/*parse the statuscodes*/
-		//get_pas().add_event("Inflating and parsing statuscodes");
-		//m_statuscodes = new ArrayList();
 		
 		NodeList list_codelist = doc.getElementsByTagName("STATUSCODES");
 		if(list_codelist==null)

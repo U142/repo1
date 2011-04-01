@@ -1704,8 +1704,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
+	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui)
+	{
+		return close_active_project(b_wait_for_close, b_close_all_gui, true);
+	}
 	
-	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui) {
+	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui, boolean b_ask) {
 		try
 		{
 			int ret_answer = 0;
@@ -1714,7 +1718,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
             boolean b_status_is_open = m_statuscontroller.isOpen() || (m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()); 
 			if(b_status_is_open) {
-                ret_answer = JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION);
+				
+                ret_answer = b_ask ? JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION) : JOptionPane.YES_OPTION;
 				if(ret_answer == JOptionPane.YES_OPTION)
 				{
 					Variables.setStatusController(m_statuscontroller);
@@ -1785,8 +1790,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				get_sendcontroller().resetActiveProject();
 				get_eastcontent().setIndexZero();
-				get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 				get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
+				get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
 				m_statuscontroller = PAS.pasplugin.onCreateStatusController();
 				Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 				Variables.getStatusController().set_autoupdate(false);
