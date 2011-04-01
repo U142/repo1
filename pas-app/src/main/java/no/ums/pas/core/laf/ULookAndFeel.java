@@ -226,7 +226,7 @@ public class ULookAndFeel
 			m_icon_close = new ImageIcon(ImageLoader.load_icon(CLOSE_ICON_FILE).getImage()); //.getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
 			//CLOSE_ICONSIZE = m_icon_close.getIconWidth();
 			//CLOSE_RIGHT_PADDING = CLOSE_ICONSIZE/2;
-			m_icon_close_grayscale = ImageFetcher.makeGrayscale(m_icon_close);
+			m_icon_close_grayscale = ImageFetcher.makeBlurred(m_icon_close); //ImageFetcher.makeGrayscale(m_icon_close);
 			m_icon_close = new ImageIcon(m_icon_close.getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
 			m_icon_close_grayscale = new ImageIcon(m_icon_close_grayscale.getImage().getScaledInstance(CLOSE_ICONSIZE, CLOSE_ICONSIZE, Image.SCALE_SMOOTH));
 			
