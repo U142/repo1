@@ -277,8 +277,9 @@ public class ULookAndFeel
 					JComponent c = (JComponent)tabPane.getComponentAt(index);
 					UpdateFlag(c, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
 					UpdateFlag(null, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.FALSE);
-					UTabbedPaneUI.this.tabPane.removeTabAt(index);
 					callback.CloseButtonClicked(c);
+					if(UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getTabComponentAt(index)!=null)
+						UTabbedPaneUI.this.tabPane.removeTabAt(index);
 				}
 				super.mouseReleased(e);
 			}
