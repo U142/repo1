@@ -53,6 +53,8 @@ public class SettingsCtrl implements ISettingsUpdate {
     
     public void initializeGui(no.ums.pas.core.logon.Settings s, MailAccount a, UserInfo userinfo)
     {
+    	dlg.getToggleLba().setSelected(false);
+    	dlg.getToggleBlocklist().setSelected(false);
     	dlg.settingsModel1.setAutoStartParm(s.parm());
     	dlg.settingsModel1.setCompanyid(s.getCompany());
     	dlg.settingsModel1.setEmailAddress(a.get_mailaddress());
@@ -113,11 +115,8 @@ public class SettingsCtrl implements ISettingsUpdate {
     		dlg.settingsModel1.setAutoStartParm(b_enable_parm);
     		dlg.getChkAutoStartParm().setEnabled(b_enable_parm);
     	}
-    	if(!b_enable_lba)
-    	{
-    		dlg.getPnlLBA().setVisible(false);
-    		dlg.getToggleLba().setVisible(false);
-    	}
+    	dlg.getPnlLBA().setVisible(b_enable_lba);
+    	dlg.getToggleLba().setVisible(b_enable_lba);
     	
     }
     

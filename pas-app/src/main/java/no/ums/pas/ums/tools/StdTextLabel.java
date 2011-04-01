@@ -2,6 +2,7 @@ package no.ums.pas.ums.tools;
 
 import javax.swing.JLabel;
 import java.awt.Dimension;
+import java.awt.Font;
 
 
 
@@ -68,6 +69,9 @@ public class StdTextLabel extends JLabel
 		super(sz_text);
 		setMinimumSize(new Dimension(30, n_fontsize));
 		this.setBorder(null);
+		//Font f = this.getFont();
+		//f.deriveFont((b_bold ? Font.BOLD : Font.PLAIN), n_fontsize);
+		//setFont(f);
 		//FontSet this.setFont(new Font("Arial", (!b_bold ? Font.PLAIN : Font.BOLD), n_fontsize));
 		//this.setFont(PAS.f().getTitleFont());
 	}

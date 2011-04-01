@@ -7,6 +7,7 @@ import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
 import no.ums.pas.core.menus.defines.CheckItem;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.importer.ActionFileLoaded;
 import no.ums.pas.importer.ImportPolygon;
 import no.ums.pas.importer.SosiFile;
@@ -203,6 +204,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
                         temp += sz_font + "- " + Localization.l("main_sending_adr_option_using_blocklist");
                     }
 				}
+				if(temp.length()==0)
+				{
+					//temp += sz_font + "- " + Localization.l("common_none");
+				}
                 ret += "<font size='3'><b>" + Localization.l("common_adr_private") + "</b></font><br>";
 				ret += temp; //add text
 			}
@@ -281,9 +286,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if((m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE) == SendController.SENDTO_FIXED_PRIVATE ||
 			(m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) == SendController.SENDTO_FIXED_PRIVATE_ALT_SMS ||
 			(m_n_addresstypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) == SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE)
+		{
 			m_btn_adrtypes_private_fixed.setSelected(true);
+		}
 		else
+		{
 			m_btn_adrtypes_private_fixed.setSelected(false);
+		}
 		if((m_n_addresstypes & SendController.SENDTO_MOBILE_PRIVATE) == SendController.SENDTO_MOBILE_PRIVATE ||
 			(m_n_addresstypes & SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) == SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED ||
 			(m_n_addresstypes & SendController.SENDTO_SMS_PRIVATE) == SendController.SENDTO_SMS_PRIVATE ||
@@ -1417,10 +1426,16 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			}
 		}
 		else if("act_set_addresstypes".equals(e.getActionCommand())) {
-			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice) && m_btn_adrtypes_cell_broadcast_text.isSelected())
+			/*if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice) && m_btn_adrtypes_cell_broadcast_text.isSelected())
 				m_btn_adrtypes_cell_broadcast_text.setSelected(false);
 			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text) && m_btn_adrtypes_cell_broadcast_voice.isSelected())
-				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
+				m_btn_adrtypes_cell_broadcast_voice.setSelected(false);*/
+			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_voice))
+				m_btn_adrtypes_cell_broadcast_voice.toggleSelection();
+			if(e.getSource().equals(m_btn_adrtypes_cell_broadcast_text))
+				m_btn_adrtypes_cell_broadcast_text.toggleSelection();
+			if(e.getSource().equals(m_btn_adrtypes_nofax))
+				m_btn_adrtypes_nofax.toggleSelection();
 				
 			gen_addresstypes();
 			if(get_parent()!=null && get_parent().isActive()) {

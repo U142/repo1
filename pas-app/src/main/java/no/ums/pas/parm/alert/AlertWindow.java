@@ -75,6 +75,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		}
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
+			m_alert.getPanelToolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
 		} catch(Exception e){
             Error.getError().addError(Localization.l("common_error"),"Error while creating alert",e,1);
 		}

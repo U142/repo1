@@ -112,6 +112,7 @@ public class Settings extends JDialog {
 		togglePrivateMobile.setSelected(sot.adrGroupRepresented(sot.group_smsprivbtn));
 		toggleCompanyFixed.setSelected(sot.adrGroupRepresented(sot.group_fixedcompbtn));
 		toggleCompanyMobile.setSelected(sot.adrGroupRepresented(sot.group_smscompbtn));
+		
 	}
 
 
@@ -281,6 +282,7 @@ public class Settings extends JDialog {
 	}
 
 	private void toggleLbaActionPerformed(ActionEvent e) {
+		toggleLba.toggleSelection();
 		if(toggleLba.isSelected()) 
 			sot.add_addresstypes(SendController.SENDTO_CELL_BROADCAST_TEXT);
 		else
@@ -290,6 +292,7 @@ public class Settings extends JDialog {
 	}
 
 	private void toggleBlocklistActionPerformed(ActionEvent e) {
+		toggleBlocklist.toggleSelection();
 		if(toggleBlocklist.isSelected())
 			sot.add_addresstypes(SendController.SENDTO_USE_NOFAX_COMPANY);
 		else
@@ -356,6 +359,10 @@ public class Settings extends JDialog {
 
 	public ToggleAddresstype getToggleCompanyMobile() {
 		return toggleCompanyMobile;
+	}
+
+	public ToggleAddresstype getToggleBlocklist() {
+		return toggleBlocklist;
 	}
 
 	private void initComponents() {
@@ -530,6 +537,7 @@ public class Settings extends JDialog {
 				btnMapWmsOpen.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						btnMapWmsOpenActionPerformed(e);
 						btnMapWmsOpenActionPerformed(e);
 					}
 				});
