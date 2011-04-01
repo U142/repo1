@@ -15,13 +15,21 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
 
 public class AlertVO extends ParmVO implements Cloneable {
@@ -314,48 +322,29 @@ public class AlertVO extends ParmVO implements Cloneable {
 	public void setSMSOadc(String smsoadc) { m_sz_sms_oadc = smsoadc; }
 	public void setSMSMessage(String smsmessage) { m_sz_sms_message=smsmessage; }
 	
+	public boolean hasSMSTemplate() { 
+		Pattern start = Pattern.compile("\\[");
+		Pattern end = Pattern.compile("\\]");
+		boolean start_found = false;
+		boolean end_found = false;
+		
+		Matcher m = start.matcher(m_sz_sms_message);
+		while(m.find())
+			start_found = true;
+		
+		m = end.matcher(m_sz_sms_message);
+		while(m.find())
+			end_found = true;
+		
+		if(start_found && end_found)
+			return true;
+		else
+			return false;
+	}
+	
 	public String getLBAAreaID() { return sz_lba_areaid; }
 	public void setLBAAreaID(String sz) { 
-		/*if(sz_lba_areaid != sz) {
-			TreePath tp = PAS.get_pas().get_parmcontroller().getTreeCtrl().find(
-			PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree(), 
-			this);
-			if(tp != null) {
-				
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tp.getLastPathComponent();
-				DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setSelectionPath(null);
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().nodeChanged(node);
-				
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getPopup().show(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui(),0,0);
-				
-				
-				Enumeration<TreePath> treepaths = PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().getExpandedDescendants(new TreePath(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().getRoot()));
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().reload();
-
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().setRowHeight(PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().getRowHeight());
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().removeNodeFromParent(node);
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().insertNodeInto((MutableTreeNode)node, (MutableTreeNode)parent,parent.getChildCount());
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().nodeStructureChanged(node);
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().invalidate();
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().validate();
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().repaint();
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().invalidate();
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().validate();
-				PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().repaint();
-				
-			
-				//PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTreeModel().reload(node);
-				
-				TreePath exp;
-				for(;treepaths.hasMoreElements();) {
-					exp = treepaths.nextElement();
-					PAS.get_pas().get_parmcontroller().getTreeCtrl().get_treegui().getTree().expandPath(exp);
-				}
-				
-			}
-		}*/
-		sz_lba_areaid = sz; 
+			sz_lba_areaid = sz;
 	}
 	public boolean hasValidAreaIDFromCellVision() {
 		//check if alert has addresstypes with LBA sending AND also has a valid areaid from CellVision

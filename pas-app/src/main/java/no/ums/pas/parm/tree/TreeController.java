@@ -401,6 +401,7 @@ public class TreeController {
 							eVO.setTempPk(null);
 						
 						boolean alertHasPolygon = false;
+						boolean alertHasTemplate = false;
 						boolean eventHasPolygons = false;
 						Iterator it = eVO.getAlertListe().iterator();
 						while (it.hasNext()) {
@@ -411,7 +412,9 @@ public class TreeController {
 							}
 							if(vo.getShape() != null && vo.getShape().getClass().equals(PolygonStruct.class))
 								eventHasPolygons = true;
-							
+							if(vo.hasSMSTemplate())
+								alertHasTemplate = true;
+								
 
 						}
 						if (alertHasPolygon) {
@@ -426,6 +429,9 @@ public class TreeController {
 							gui.getExportPolygon().setEnabled(false);
 						}
 						gui.getTools().setEnabled(eventHasPolygons);
+						if(alertHasTemplate) {
+							gui.getQuickSendMenu().setEnabled(false);
+						}
 						
 					} else if (o.getClass().equals(ObjectVO.class)) { // if
 																		// user
@@ -545,7 +551,10 @@ public class TreeController {
 													.hasValidAreaIDFromCellVision()) {
 										benable = false;
 									}
-									gui.getQuickSendMenu().setEnabled(benable);
+									if(((AlertVO)o).hasSMSTemplate())
+										gui.getQuickSendMenu().setEnabled(false);
+									else
+										gui.getQuickSendMenu().setEnabled(benable);	
 									gui.getSnapSending().setEnabled(benable);
 									gui.getSnapSimulation().setEnabled(benable);
 									gui.getSnapTest().setEnabled(benable);
