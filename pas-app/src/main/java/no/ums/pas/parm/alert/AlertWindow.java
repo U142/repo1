@@ -215,7 +215,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_alert.getPanelToolbar().get_radio_ellipse().addActionListener(this);
 		m_alert.getPanelToolbar().get_radio_polygon().addActionListener(this);
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(n_width, n_height));
-		if(m_alert.getAlert() != null && m_alert.getAlert().getLocked() == 1) {
+		if(m_alert.getAlert() != null && (m_alert.getAlert().getLocked() == 1 || !PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management().write_parm())) {
 			m_alert.enableInput(false);
 			m_alert_settings.enableInput(false);
 			m_cell_broadcast_text_panel.enableInput(false);
@@ -781,8 +781,6 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			catch(Exception ex) {}
 			finally { }
 		}
-		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
-			m_cell_broadcast_text_panel.m_popup.hide();
 		
 		if(hasVoice(m_alert.getPanelToolbar().get_addresstypes()))
 			m_alert_settings.toggleVoiceSettings(true);
@@ -860,7 +858,19 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		{
 			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 		}*/
-			
+
+		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null) {
+			m_cell_broadcast_text_panel.get_lbl_localsize().setToolTipText(null);
+			m_cell_broadcast_text_panel.m_popup.hide();
+		}
+		if(m_sms_broadcast_text_panel != null && m_sms_broadcast_text_panel.m_popup != null) {
+			m_sms_broadcast_text_panel.get_lbl_localsize().setToolTipText(null);
+			m_sms_broadcast_text_panel.m_popup.hide();
+		}
+		if(m_tabbedpane.getSelectedComponent().equals(m_sms_broadcast_text_panel))
+			m_sms_broadcast_text_panel.set_size_label(m_sms_broadcast_text_panel.get_txt_messagetext().getText(), m_sms_broadcast_text_panel.get_lbl_localsize());
+		else if(m_tabbedpane.getSelectedComponent().equals(m_cell_broadcast_text_panel))
+			m_cell_broadcast_text_panel.set_size_label(m_cell_broadcast_text_panel.get_txt_messagetext().getText(), m_cell_broadcast_text_panel.get_lbl_localsize());
 		has_shape();
 		set_next_text();
 	}

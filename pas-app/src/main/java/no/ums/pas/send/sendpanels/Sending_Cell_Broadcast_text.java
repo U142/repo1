@@ -47,6 +47,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
+import java.awt.IllegalComponentStateException;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.ScrollPane;
@@ -126,7 +127,6 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	protected StdTextLabel m_lbl_messagetext = new StdTextLabel(Localization.l("main_sending_lba_message") + ":");
     protected StdTextLabel m_lbl_area = new StdTextLabel(Localization.l("main_sending_lba_area") + ":");
     protected StdTextLabel m_lbl_messagesize = new StdTextLabel("(0 " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
-
     public JLabel get_lbl_localsize() { return m_lbl_messagesize; }
 	protected StdTextLabel m_lbl_internationalsize = new StdTextLabel("(0 " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
 
@@ -190,9 +190,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	protected UnderlineHighlightPainter painter = new UnderlineHighlightPainter(Color.red);
 
-	private JToolTip m_tooltip;
+	protected JToolTip m_tooltip;
 	public Popup m_popup;
-	private PopupFactory popupFactory;
+	protected PopupFactory popupFactory;
 	
 	public int get_requesttype() {
 		if(m_radio_requesttype_0.isSelected())
@@ -238,13 +238,15 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	
 	private Sending_Cell_Broadcast_text(PAS pas) {
 		super();
+		//addComponentListener(this);
+		
 		//m_panel_messages	= new DefaultPanel(pas);
 		//m_panel_area		= new DefaultPanel(pas);
 		
 //		this.setPreferredSize(new Dimension(810, 610));
 		m_panel_messages = new LightPanel();
 		//m_panel_area	 = new LightPanel();
-		//this.addComponentListener(this);
+		
 		
 		m_lbl_messagename.setPreferredSize(new Dimension(150, 70));
 		m_lbl_messagename.setAlignmentX(StdTextLabel.TOP_ALIGNMENT);
@@ -554,10 +556,9 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		add(m_panel_messages, m_gridconst);
 		
 		m_tooltip = m_lbl_messagesize.createToolTip();
-        m_tooltip.setTipText(m_maxSafe + " " + Localization.l("main_sending_lba_messagetextlabel"));
+        m_tooltip.setTipText("<html> " + m_maxSafe + " " + Localization.l("main_sending_lba_messagetextlabel"));
 		//activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
 		popupFactory = PopupFactory.getSharedInstance();
-		
 		init();
 	}
 	
@@ -849,23 +850,29 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		//System.out.println("Extended chars = " + ext);
 
         activeLabel.setText("(" + get_gsmsize(text) + " " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
-		if(this.getClass().equals(Sending_Cell_Broadcast_text.class)) {
+		if(this.getClass().equals(Sending_Cell_Broadcast_text.class) || this.getClass().equals(Sending_SMS_Broadcast_text.class)) {
 			if(text.length() > m_maxSafe) {
 				activeLabel.setForeground(Color.RED);
 				//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
-				m_popup = popupFactory.getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
-				m_popup.show();
+				try {
+					if(m_popup!=null)
+						m_popup.hide();
+					m_popup = PopupFactory.getSharedInstance().getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
+					m_popup.show();
+				}
+				catch(IllegalComponentStateException e) {}
 				
 			}
 			else {
-				activeLabel.setForeground(PAS.get_pas().getForeground());
 				//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
 				activeLabel.setToolTipText(null);
-				if(m_popup!=null)
+				activeLabel.setForeground(PAS.get_pas().getForeground());
+				if(m_popup!=null) {
 					m_popup.hide();
+				}
+					
 			}
-		}
-			
+		}			
 	}
 	
 	public int get_gsmsize(String text) {
@@ -1036,6 +1043,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 				m_n_expiry_minutes = Integer.parseInt(((ExpiryMins)m_combo_expdate.getSelectedItem()).get_minutes());
 			
 		}
+		
 	}
 	
 	public void sort_cclist() {
@@ -1093,13 +1101,15 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		super.componentResized(e);
 	}
 	public void componentMoved(ComponentEvent e) {
-		
+		super.componentMoved(e);
 	}
 	public void componentShown(ComponentEvent e) {
+		super.componentShown(e);
+		//set_size_label(get_txt_messagetext().getText(), get_lbl_localsize());
 		downloadMessageLib();
 	}
 	public void componentHidden(ComponentEvent e) {
-		
+		super.componentHidden(e);
 	}
 	@Override
 	public void focusGained(FocusEvent e) {

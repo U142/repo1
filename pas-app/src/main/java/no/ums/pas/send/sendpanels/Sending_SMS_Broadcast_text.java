@@ -14,9 +14,11 @@ import no.ums.ws.pas.tas.UTASRESPONSENUMBER;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.PopupFactory;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -181,6 +183,11 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		m_txt_messagetext.setSelectedTextColor(Color.black);
 		m_txt_messagetext.setFocusTraversalKeysEnabled(false);
 		m_txt_messagetext.setHighlighter(new DefaultHighlighter());
+		
+		m_tooltip = m_lbl_messagesize.createToolTip();
+        m_tooltip.setTipText("<html> " + m_maxSafe + " " + Localization.l("main_sending_sms_messagetextlabel"));
+		//activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
+		popupFactory = PopupFactory.getSharedInstance();
 	}
 	// Tatt fra Sending_SMS_Broadcast_text.java
 	
@@ -199,6 +206,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		resetHighLights();
 		if(n_current_bracket==-1)
 			tabPressed();
+		//set_size_label(get_txt_messagetext().getText(), get_lbl_localsize());
 	}
 	
 	@Override
@@ -286,6 +294,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		super.itemStateChanged(e);
+		set_size_label(m_txt_messagetext.getText(),m_lbl_messagesize);
 		if(e.getSource().equals(m_combo_expdate)) {
 			if(m_combo_expdate.getSelectedItem().equals(""))
 				super.m_n_expiry_minutes = 0;
@@ -293,8 +302,8 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 				super.m_n_expiry_minutes = Integer.parseInt(((ExpiryMins)m_combo_expdate.getSelectedItem()).get_minutes());
 			
 		}
-			
 	}
+	
 	public void enableInput(boolean val) {
 		m_combo_expdate.setEnabled(val);
 		m_txt_oadc_text.setEnabled(val);

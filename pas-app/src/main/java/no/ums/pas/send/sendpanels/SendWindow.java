@@ -630,6 +630,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					
 					movenext = false;
 				}
+				m_cell_broadcast_text_panel.set_size_label(m_cell_broadcast_text_panel.get_txt_messagetext().getText(), m_cell_broadcast_text_panel.get_lbl_localsize());
 			}
 			if(m_tabbedpane.getSelectedIndex() < m_tabbedpane.getTabCount()-1 && movenext) {
 				m_tabbedpane.setSelectedComponent(m_tabbedpane.getComponentAt(m_tabbedpane.getSelectedIndex()+1));
@@ -1054,9 +1055,19 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 		}
 		
-		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null)
+		if(m_cell_broadcast_text_panel != null && m_cell_broadcast_text_panel.m_popup != null) {
+			m_cell_broadcast_text_panel.m_lbl_messagesize.setToolTipText(null);
 			m_cell_broadcast_text_panel.m_popup.hide();
-		
+		}
+		if(m_sms_broadcast_text_panel != null && m_sms_broadcast_text_panel.m_popup != null) {
+			m_sms_broadcast_text_panel.m_lbl_messagesize.setToolTipText(null);
+			m_sms_broadcast_text_panel.m_popup.hide();
+		}
+		// Fordi componentListener ødelegger for guien på m_cell_broadcast_text_panel
+		if(m_tabbedpane.getSelectedComponent().equals(m_sms_broadcast_text_panel))
+				m_sms_broadcast_text_panel.set_size_label(m_sms_broadcast_text_panel.get_txt_messagetext().getText(), m_sms_broadcast_text_panel.get_lbl_localsize());
+		else if(m_tabbedpane.getSelectedComponent().equals(m_cell_broadcast_text_panel))
+			m_cell_broadcast_text_panel.set_size_label(m_cell_broadcast_text_panel.get_txt_messagetext().getText(), m_cell_broadcast_text_panel.get_lbl_localsize());
 		set_next_text();
 	}
 	public void windowActivated(WindowEvent e) {
