@@ -255,7 +255,7 @@ namespace com.ums.UmsCommon.Audio
                 return response;
             }
             db.close();
-
+            String sz_destfile;
             try
             {
                 convertClass conv = new convertClass();
@@ -263,6 +263,7 @@ namespace com.ums.UmsCommon.Audio
                 switch (req.n_filetype)
                 {
                     case 1: //SOUNDFILE_TYPE_RECORD_
+                    case 2: //TTS posted audio
                         sz_physpath = UCommon.UPATHS.sz_path_parmtemp;
                         sz_tempfile = "v" + req.n_refno + "_" + req.n_param;
                         sz_tempfileraw = sz_tempfile + ".raw";
@@ -299,27 +300,13 @@ namespace com.ums.UmsCommon.Audio
                         }
 
                         break;
-                    case 2: //SOUNDFILE_TYPE_TTS_
+                    /*case 2: //SOUNDFILE_TYPE_TTS_
                         string sz_filename = req.sz_filename;
                         string sz_destfile;
                         sz_physpath = UCommon.UPATHS.sz_path_audiofiles;    
                         // This means the user has previewed the file and it doesn't need to be converted again
                         if (req.sz_filename == null || req.sz_filename.Equals(""))
                         {
-                            /*libums2_csharp.SendVoice voice = new libums2_csharp.SendVoice();
-                            voice.ConnectionString = String.Format("DSN={0};UID={1};PWD={2};", UCommon.UBBDATABASE.sz_dsn_aoba, UCommon.UBBDATABASE.sz_uid, UCommon.UBBDATABASE.sz_pwd);
-                            voice.EatPath = UCommon.UPATHS.sz_path_voice;
-                            voice.TTSServer = UCommon.UPATHS.sz_path_ttsserver;
-                            voice.Wav2RawRMS = UCommon.UVOICE.f_rms;
-
-                            VOCFILE voc = new VOCFILE();
-                            voc.l_langpk = req.language;
-                            voc.sz_tts_string = req.sz_tts_text;
-                            voc.type = VOCTYPE.TTS;
-
-                            sz_filename = voice.generateVoice(new VOCFILE[] { voc }, req.n_refno)[0];*/
-                            
-                            //sz_physpath = UCommon.UPATHS.sz_path_ttsserver;
                             UCONVERT_TTS_REQUEST ttsreq = new UCONVERT_TTS_REQUEST();
                             ttsreq.n_dynfile = req.n_param;
                             ttsreq.sz_text = req.sz_tts_text;
@@ -349,7 +336,7 @@ namespace com.ums.UmsCommon.Audio
                         {
                             throw;
                         }
-                        break;
+                        break;*/
                     case 4: //SOUNDFILE_TYPE_LIBRARY_
                         sz_physdestpath = UCommon.UPATHS.sz_path_audiofiles;
                         sz_physpath = UCommon.UPATHS.sz_path_bbmessages + req.n_deptpk + "/";
