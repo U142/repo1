@@ -376,9 +376,11 @@ public class XmlWriter {
                     element.setAttribute("sz_sms_oadc", alert.get_sms_oadc());
                     element.setAttribute("sz_sms_message", alert.get_sms_message());
                     if (alert.getShape() != null) {
-
+                    	// Fjerner evt shapes som er lagret fra før
+                    	removeCurrentShape(element);
                         if (alert.getShape().getClass().equals(PolygonStruct.class)) {
-                            Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertPoly));
+                            
+                        	Node shape = element.appendChild(xmlDoc.createElement(ParmConstants.xmlElmAlertPoly));
 
                             Element el_shape = (Element) shape;
 
@@ -2188,5 +2190,19 @@ public class XmlWriter {
 		//writeXMLFile(xmlDoc,filepath);
 		return xmlDoc;
 
+	}
+	private void removeCurrentShape(Element element)
+	{
+		NodeList nl = element.getElementsByTagName(ParmConstants.xmlElmAlertPoly);
+		for(int i=0;i<nl.getLength();i++)
+			element.removeChild(nl.item(i));
+		
+		nl = element.getElementsByTagName(ParmConstants.xmlElmAlertEllipse);
+		for(int i=0;i<nl.getLength();i++)
+			element.removeChild(nl.item(i));
+		
+		nl = element.getElementsByTagName(ParmConstants.xmlElmAlertstreetid);
+		for(int i=0;i<nl.getLength();i++)
+			element.removeChild(nl.item(i));
 	}
 }
