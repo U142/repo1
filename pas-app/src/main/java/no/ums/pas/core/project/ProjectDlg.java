@@ -7,6 +7,7 @@ import no.ums.pas.core.ws.WSGetStatusList;
 import no.ums.pas.core.ws.WSProject;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -136,7 +137,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 		protected ArrayList<StatusListObject> m_arr_sendings;
 		protected ArrayList<Project> m_arr_projects;
 		protected JButton m_btn_open = new JButton(Localization.l("common_open"));
-
+		
         public ProjectList get_projectlist() { return m_project_list; }
 		protected Project m_proj;
 		
@@ -178,6 +179,9 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 
 		public void actionPerformed(ActionEvent e) {
 			if("act_save".equals(e.getActionCommand())) {
+				// For å unngå dobbeltlagring ved ninjaklikking fra support
+				get_projectpanel().m_btn_save.setEnabled(false);
+				get_projectpanel().m_btn_cancel.setEnabled(false);
 				setSelectedAction(ACT_PROJECTDLG_SAVE);
 				if(m_txt_projectname.getText().length() > 0) {
 					get_project().set_projectname(m_txt_projectname.getText());
@@ -185,7 +189,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 				}
 				else {
                     m_lbl_errormsg.setText(Localization.l("projectdlg_project_entername"));
-                }
+                }				
 					
 			}
 			else if("act_cancel".equals(e.getActionCommand())) {
