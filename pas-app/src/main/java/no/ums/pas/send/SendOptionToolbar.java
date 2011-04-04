@@ -621,10 +621,14 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	public void gen_addresstypes() {
 
 		int TYPES = 0;
-		if(m_btn_adrtypes_nophone_private.isSelected() && m_btn_adrtypes_nophone_private.isVisible()) TYPES |= m_btn_adrtypes_nophone_private.get_adrtype();
-		if(m_btn_adrtypes_nophone_company.isSelected() && m_btn_adrtypes_nophone_company.isVisible()) TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
-		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
+		if(m_btn_adrtypes_nophone_private.isSelected() && m_btn_adrtypes_nophone_private.isVisible()) 
+			TYPES |= m_btn_adrtypes_nophone_private.get_adrtype();
+		if(m_btn_adrtypes_nophone_company.isSelected() && m_btn_adrtypes_nophone_company.isVisible()) 
+			TYPES |= m_btn_adrtypes_nophone_company.get_adrtype();
+		if(m_btn_adrtypes_cell_broadcast_text.isSelected() && m_btn_adrtypes_cell_broadcast_text.isVisible()) 
+			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
+		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
+			TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
 		
 		if(m_btn_adrtypes_nofax.isSelected()) TYPES |= m_btn_adrtypes_nofax.get_adrtype();
 		TYPES = customizeSelections(TYPES);

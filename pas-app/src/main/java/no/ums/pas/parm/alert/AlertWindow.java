@@ -76,6 +76,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
 			m_alert.getPanelToolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
+			m_alert.getPanelToolbar().initSelections();
 		} catch(Exception e){
             Error.getError().addError(Localization.l("common_error"),"Error while creating alert",e,1);
 		}
@@ -107,24 +108,16 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_sendobject = obj;
 		load_background();
 		//register window with toolbar
-//		m_sendobject.set_sendwindow(this);
-		//generate_sendingid();
 		try {
-			//this.setAlwaysOnTop(false);
 			this.setAlwaysOnTop(true);
-			//this.setModal(false);
 		} catch(Exception e) {
             Error.getError().addError(Localization.l("common_error"),"Exception in SendWindow",e,1);
 		}
-		
-		//this.setTitle("New Alert - \"" + m_sendobject.get_sendproperties().get_sendingname() + "\"");
-		
+				
 		setLayout(new BorderLayout());
 		int n_width = 770, n_height = 550;
-		//int n_width = 570, n_height = 450;
 		Dimension d = Utils.screendlg_upperleft(n_width, n_height);
 		
-		//setSize(d);
 		setBounds(d.width, d.height, n_width, n_height);
 		m_loader = new LoadingPanel("", new Dimension(100, 20), false);
 		reset_comstatus();
@@ -140,14 +133,12 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			edit = true;
 		}
 		
-//		set_EditMode();
 		m_alert_settings = new Sending_Settings_Parm_Alert(this);
 		m_alert_send = new Sending_Send_Parm_Alert(this);
 		m_cell_broadcast_text_panel = new Sending_Cell_Broadcast_text(PAS.get_pas(),this);
 		m_sms_broadcast_text_panel = new Sending_SMS_Broadcast_text(PAS.get_pas(), this);
 		m_tabbedpane = new JTabbedPane();
 		m_tabbedpane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		//m_tabbedpane.removeChangeListener(this);
         m_tabbedpane.addTab(Localization.l("main_parm_alert_dlg_area_and_recipients"), null,
 							m_alert.getGui(),
                 Localization.l("main_parm_alert_dlg_area_and_recipients_tooltip"));
@@ -155,17 +146,11 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				m_alert_settings,
                 Localization.l("main_sending_settings_tooltip"));
 		
-		//m_alert.getPanelToolbar().get_cell_broadcast_text().addActionListener(this);
-		//m_alert.getPanelToolbar().get_cell_broadcast_voice().addActionListener(this);
 		m_alert.getPanelToolbar().setReportAddressChanges(this);
-		//m_alert.getPanelToolbar().get_cell_broadcast_text().addActionListener(m_sendobject);
-		//m_alert.getPanelToolbar().get_cell_broadcast_voice().addActionListener(m_sendobject);
 
         m_tabbedpane.addTab(Localization.l("main_sending_finalize_heading"), null,
 							m_alert_send,
                 Localization.l("main_sending_finalize_heading_tooltip"));
-		//m_tabbedpane.setEnabledAt(1, false);
-		//m_tabbedpane.setEnabledAt(2, false);
 
         m_btn_next = new JButton(Localization.l("common_wizard_next"));
         m_btn_back = new JButton(Localization.l("common_wizard_back"));
@@ -183,33 +168,19 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		m_txt_comstatus.setPreferredSize(new Dimension(200, 16));
 		add_controls();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		// Lurer på om dette går?
-		//ac.setParent(this);
-		
 		// Dette er for å aktivere cell broadcast tab'en
 			if(m_alert.getAlert() != null && m_alert.getAlert().getArea() != null) {
 				if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT) {
-			//switch(m_alert.getAlert().getAddresstypes()) {
-				//case SendController.SENDTO_CELL_BROADCAST_TEXT:
 					m_alert.getPanelToolbar().get_cell_broadcast_text().setSelected(true);
 					actionPerformed(new ActionEvent(m_alert.getPanelToolbar().get_cell_broadcast_text(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
 				}
 			}
-				//	break;
-				//case SendController.SENDTO_CELL_BROADCAST_VOICE:
-			//if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {
-			//		m_alert.getPanelToolbar().get_cell_broadcast_voice().setSelected(true);
-			//		actionPerformed(new ActionEvent(m_alert.getPanelToolbar().get_cell_broadcast_voice(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
-			//}
-				//	break;
-			//}
 			if(m_alert.getAlert()!=null) {
 				if((m_alert.getAlert().getAddresstypes() & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE) {
 					m_alert.getPanelToolbar().get_cell_broadcast_voice().setSelected(true);
 					actionPerformed(new ActionEvent(m_alert.getPanelToolbar().get_cell_broadcast_voice(), ActionEvent.ACTION_PERFORMED, "act_button_pressed"));
 				}
 			}
-		//m_alert.getAlert().setAddresstypes(m_alert.getAlert().getAddresstypes());
 		actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
 		m_alert.setParent(this);
 		PAS.get_pas().get_mappane().addActionListener(this);
