@@ -111,6 +111,8 @@ namespace com.ums.ws.parm
             //UCommon.Initialize("Web Service - wsPASExec");
         }
 
+
+
         protected int ValidateFunction(String s)
         {
             if (s.Equals("live"))
@@ -123,6 +125,7 @@ namespace com.ums.ws.parm
                 return UCommon.USENDING_LIVE_SILENT;
             return -1;
         }
+
 
         [WebMethod]
         public ExecResponse ExecTasSending(UTASSENDING tas)
@@ -322,6 +325,15 @@ namespace com.ums.ws.parm
             throw new NotImplementedException();
             
         }
+
+        [WebMethod]
+        public UCancelSendingResponse CancelSending(ULOGONINFO logon, long refno)
+        {
+            PASUmsDb db = new PASUmsDb();
+            db.CheckLogon(ref logon, true);
+            return db.cancelSending(ref logon, refno);
+        }
+
 
         /*
          * Resending tas or lba

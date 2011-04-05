@@ -184,6 +184,7 @@ namespace com.ums.PAS.Status
                 {
                     outxml.insertAttribute("l_num_dynfiles", "-3");
                 }
+                outxml.insertAttribute("b_marked_as_cancelled", mdv.b_marked_as_cancelled.ToString());
 
                 List<USMSINSTATS> smsinstats = m_db.GetSmsInStats(mdv.l_refno);
                 outxml.insertStartElement("SMSINSTATS");

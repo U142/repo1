@@ -760,6 +760,7 @@ namespace com.ums.UmsParm
                     {
                         m.sz_actionprofilename = "N/A";
                     }
+                    m.b_marked_as_cancelled = rs.GetInt32(25) <= 0 ? false : true;
 
                     return true;
                 }
@@ -2246,6 +2247,40 @@ namespace com.ums.UmsParm
             }
             rs.Close();
             return (status>=2 ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_USER_RESTRICTED);
+        }
+
+        public UCancelSendingResponse cancelSending(ref ULOGONINFO logon, long refno)
+        {
+            UCancelSendingResponse r = new UCancelSendingResponse();
+            r.l_refno = refno;
+            switch (canUserDeleteStatus(ref logon, refno))
+            {
+                case UDeleteStatusResponse.OK:
+                    break;
+                case UDeleteStatusResponse.FAILED_USER_RESTRICTED:
+                    r.response = UCancelSending.FAILED_USER_RESTRICTED;
+                    return r;
+            }
+            String sql = String.Format("SELECT l_refno FROM BBCANCEL WHERE l_refno={0}", refno);
+            OdbcDataReader rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+            if (rs.Read())
+            {
+                rs.Close();
+                r.response = UCancelSending.ALREADY_MARKED_AS_CANCELLED;
+                return r;
+            }
+            rs.Close();
+            sql = String.Format("SELECT l_sendingstatus FROM MDVSENDINGINFO WHERE l_refno={0} AND l_sendingstatus>={1} AND l_sendingstatus<={2}", refno, 1, 6);
+            rs = ExecReader(sql, UmsDb.UREADER_KEEPOPEN);
+            r.response = rs.Read() ? UCancelSending.OK : UCancelSending.INVALID_SENDING_STATE;
+            rs.Close();
+
+            if (r.response != UCancelSending.OK)
+                return r;
+            sql = String.Format("INSERT INTO BBCANCEL VALUES({0}, {1})", refno, -1);
+            ExecNonQuery(sql);
+            r.response = UCancelSending.OK;
+            return r;
         }
 
         public Boolean updateStatusForOperator(long l_refno, int l_status, int l_operator)

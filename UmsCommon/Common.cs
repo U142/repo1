@@ -1073,6 +1073,7 @@ namespace com.ums.UmsCommon
         public int l_resendrefno; //if it's a resend
         public String sz_messagetext; //for sms messages
         public String sz_actionprofilename; //actionprofile used in sending (voice)
+        public bool b_marked_as_cancelled; //if a record exists in BBCANCEL
     }
     public struct BBVALID
     {
@@ -1625,4 +1626,20 @@ namespace com.ums.UmsCommon
 
     }
 
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public enum UCancelSending
+    {
+        OK = 0,
+        ERROR = 1,
+        ALREADY_MARKED_AS_CANCELLED = 2,
+        FAILED_USER_RESTRICTED = 3,
+        INVALID_SENDING_STATE = 4,
+    }
+
+    [XmlType(Namespace = "http://ums.no/ws/common")]
+    public class UCancelSendingResponse
+    {
+        public long l_refno;
+        public UCancelSending response;
+    }
 }
