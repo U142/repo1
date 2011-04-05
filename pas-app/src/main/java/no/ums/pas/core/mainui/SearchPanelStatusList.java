@@ -5,6 +5,7 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.popupmenus.PUOpenStatus;
+import no.ums.pas.core.project.Project;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
@@ -187,7 +188,11 @@ public class SearchPanelStatusList extends SearchPanelResults {
 				try
 				{
 					m_statusframe.setVisible(false);
+					PAS.pasplugin.onCloseProject();
 					PAS.get_pas().close_active_project(true, false);
+					Project proj = new Project();
+					proj.set_projectpk(sz_projectpk);
+					PAS.pasplugin.onOpenProject(proj, -1);
 					get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), (b_project ? sz_projectpk : "-1"), n_refno, true /*init*/);
 				}
 				catch(Exception e)

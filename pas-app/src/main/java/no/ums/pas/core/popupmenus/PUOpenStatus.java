@@ -54,8 +54,9 @@ public class PUOpenStatus extends PUMenu implements ActionListener {
 		/*if("act_status_refno".equals(e.getActionCommand())) {
 			m_callback.openStatus(false, "-1", m_obj.get_refno());
 		}
-		else */if("act_status_project".equals(e.getActionCommand())) {
-			m_callback.openStatus(true, m_obj.get_project().get_projectpk(), m_obj.get_refno());
+		else */
+		if("act_status_project".equals(e.getActionCommand())) {
+			m_callback.openStatus(true, m_obj, -1);
 		}
 	}
 }
