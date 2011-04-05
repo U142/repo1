@@ -72,11 +72,8 @@ public class WSGetStatusItems extends WSThread
 	@Override
 	public void onDownloadFinished() {
 		try {
-			//((OpenStatusFrame)get_parentframe()).onDownloadFinishedStatusItems();
 			fire_set_datetimefilter(m_n_max_date, m_n_max_time);
 			fire_update_complete();
-			//Thread.sleep(50);
-			//PAS.get_pas().actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
 			if(!b_automatic_update)
 			{
 				PAS.get_pas().get_eastcontent().get_statuspanel().m_icon_panel_main.getBoundsTing();
@@ -214,7 +211,7 @@ public class WSGetStatusItems extends WSThread
 								  "l_sendingstatus", "l_comppk", "l_deptpk", "l_type", "l_addresstypes", "l_profilepk", 
 								  "l_queuestatus", "l_totitem", "l_proc", "l_altjmp", "l_alloc", "l_maxalloc", "sz_oadc", "l_qreftype",
 								  "f_dynacall", "l_nofax", "l_linktype", "l_resendrefno", "sz_messagetext", "sz_actionprofilename",
-								  "l_num_dynfiles"};
+								  "l_num_dynfiles", "b_marked_as_cancelled"};
 		
 		
 		/*parse polygon*/
@@ -1013,23 +1010,34 @@ public class WSGetStatusItems extends WSThread
 	
 	
 	private void fire_statusitem(StatusItemObject obj) {
-		PAS.get_pas().get_statuscontroller().getStatusItems()._add(obj);
-		check_datetimefilter(obj.get_latestdate(), obj.get_latesttime());
+		if(PAS.get_pas().get_statuscontroller()!=null && PAS.get_pas().get_statuscontroller().getStatusItems()!=null && PAS.get_pas().get_statuscontroller().isOpen())
+		{
+			PAS.get_pas().get_statuscontroller().getStatusItems()._add(obj);
+			check_datetimefilter(obj.get_latestdate(), obj.get_latesttime());
+		}
 	}
 	private void fire_statuscode(StatusCode obj) {
-		if(obj!=null && PAS.get_pas().get_statuscontroller().getStatusCodes() != null)
+		if(obj!=null && PAS.get_pas().get_statuscontroller().getStatusCodes() != null && PAS.get_pas().get_statuscontroller().isOpen())
+		{
 			PAS.get_pas().get_statuscontroller().getStatusCodes()._add(obj);
+		}
 	}
 	private void fire_update_complete() {
-		PAS.get_pas().get_statuscontroller().status_update();
+		if(PAS.get_pas().get_statuscontroller()!=null && PAS.get_pas().get_statuscontroller().isOpen())
+		{
+			PAS.get_pas().get_statuscontroller().status_update();
+		}
 	}
 	private void fire_set_itemfilter(Integer i) {
 		PAS.get_pas().get_statuscontroller().set_item_filter(i.intValue());
 	}
 	private void fire_set_datetimefilter(int n_date, int n_time) {
 		try {
-			DateTime t = new DateTime(n_date, n_time);
-			PAS.get_pas().get_statuscontroller().set_datetime_filter(t);
+			if(PAS.get_pas().get_statuscontroller()!=null && PAS.get_pas().get_statuscontroller().isOpen())
+			{
+				DateTime t = new DateTime(n_date, n_time);
+				PAS.get_pas().get_statuscontroller().set_datetime_filter(t);
+			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

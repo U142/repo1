@@ -1718,7 +1718,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 
             boolean b_status_is_open = m_statuscontroller.isOpen() || (m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()); 
 			if(b_status_is_open) {
-				
+				b_ask = m_sendcontroller.get_sendings().size() > 0;
                 ret_answer = b_ask ? JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION) : JOptionPane.YES_OPTION;
 				if(ret_answer == JOptionPane.YES_OPTION)
 				{

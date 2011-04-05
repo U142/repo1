@@ -592,7 +592,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
                     }
 					break;
 				case PANEL_SENDING_:
-					if(find_component(m_sendingpanel)==-1)
+					if(find_component(m_sendingpanel)==-1 && !Variables.getStatusController().isClosedByUser())
 					{
 						get_tabbedpane().addTab(Localization.l("main_sendingtab_title"), null, m_sendingpanel, Localization.l("main_sendingtab_title_tooltip"));
 						m_sendingpanel.putClientProperty(ULookAndFeel.TABBEDPANE_CLOSEBUTTON, Boolean.TRUE);

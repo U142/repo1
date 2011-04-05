@@ -9,6 +9,7 @@ import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
+import no.ums.pas.core.ws.WSCancelSending;
 import no.ums.pas.core.ws.WSTasResend;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -27,6 +28,7 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.ws.common.LBALanguage;
+import no.ums.ws.common.UCancelSendingResponse;
 import no.ums.ws.common.USMSINSTATS;
 import no.ums.ws.pas.UMAXALLOC;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -54,6 +56,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Point;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -72,6 +75,8 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import no.ums.pas.core.ws.WSCancelSending.ICallback;
+
 
 public class StatusSending extends Object {
 	/*sprintf(sz_xmltemp, "<SENDING sz_sendingname=\"%s\" l_refno=\"%d\" l_group=\"%d\" l_createdate=\"%d\" l_createtime=\"%d\" "
@@ -620,6 +625,16 @@ public class StatusSending extends Object {
 	private String _sz_sms_messagetext;
 	private String _sz_actionprofilename;
 	private int _n_num_dynfiles;
+	private boolean _b_marked_as_cancelled = false;
+	private boolean cancelRequestSent = false;
+	
+	
+	public boolean isCancelRequestSent() {
+		return cancelRequestSent;
+	}
+	public void setCancelRequestSent(boolean cancelRequestSent) {
+		this.cancelRequestSent = cancelRequestSent;
+	}
 	
 	private List<USMSINSTATS> _m_smsin_stats;
 	public void setSmsInStats(List<USMSINSTATS> ref)
@@ -691,6 +706,7 @@ public class StatusSending extends Object {
 	public int get_resendrefno() { return _n_resendrefno; }
 	public String get_actionprofilename() { return _sz_actionprofilename; }
 	public int get_num_dynfiles() { return _n_num_dynfiles; }
+	public boolean isMarkedAsCancelled() { return _b_marked_as_cancelled; }
 	
 	public boolean isSimulation() { return (get_dynacall()==2 ? true : false); }
 	
@@ -740,15 +756,18 @@ public class StatusSending extends Object {
 	}
 	
 	public StatusSending(String [] sz) {
-		this(sz[0], sz[1], sz[2], sz[3], sz[4], sz[5], sz[6], sz[7], sz[8], sz[9], sz[10], sz[11], sz[12], sz[13],
-			sz[14], sz[15], sz[16], sz[17], sz[18], sz[19], sz[20], sz[21], sz[22], sz[23], sz[24], sz[25], sz[26], sz[27]);
+		this(sz[0], sz[1], sz[2], sz[3], sz[4], sz[5], sz[6], sz[7], sz[8], sz[9], 
+				sz[10], sz[11], sz[12], sz[13],
+			sz[14], sz[15], sz[16], sz[17], sz[18], sz[19], sz[20], 
+			sz[21], sz[22], sz[23], sz[24], sz[25], sz[26], sz[27],
+			sz[28]);
 	}
 	public StatusSending(String sz_sendingname, String sz_refno, String sz_group, String sz_createdate, String sz_createtime,
 						String sz_scheddate, String sz_schedtime, String sz_sendingstatus, String sz_comppk, String sz_deptpk,
 						String sz_type, String sz_addresstypes, String sz_profilepk, String sz_queuestatus, String sz_totitem,
 						String sz_proc, String sz_altjmp, String sz_alloc, String sz_maxalloc, String sz_oadc, String sz_qreftype,
 						String sz_dynacall, String sz_nofax, String sz_linktype, String sz_resendrefno, String sz_messagetext, String sz_actionprofilename,
-						String sz_num_dynfiles) {
+						String sz_num_dynfiles, String sz_marked_as_cancelled) {
 		pnl_icon = new IconPanel();
 
 		_sz_sendingname = sz_sendingname;
@@ -781,6 +800,7 @@ public class StatusSending extends Object {
 		_sz_sms_messagetext = sz_messagetext;
 		_sz_actionprofilename = sz_actionprofilename;
 		_n_num_dynfiles = new Integer(sz_num_dynfiles).intValue();
+		_b_marked_as_cancelled = Boolean.parseBoolean(sz_marked_as_cancelled);
 		_m_smsin_stats = new ArrayList<USMSINSTATS>();
 		m_this			= this;
 		m_sendingname_label.setText(_sz_sendingname);
@@ -873,6 +893,7 @@ public class StatusSending extends Object {
 		_f_dynacall		= s.get_dynacall();
 		_sz_sms_messagetext = s.get_sms_message_text();
 		_sz_actionprofilename = s.get_actionprofilename();
+		_b_marked_as_cancelled = s.isMarkedAsCancelled();
 		updateLabels();
 		//m_sendingname_label.setText(_sz_sendingname);
 		if(get_type()!=4) //if LBA, wait update_ui until all statistics are parsed from WS
@@ -1617,11 +1638,13 @@ public class StatusSending extends Object {
 		private boolean b_is_hovering_dynfiles = false;
 		
 		private JButton m_btn_resend		= new JButton(Localization.l("main_status_resend"));
+		private JButton m_btn_kill			= new JButton(Localization.l("common_kill_sending"));
         public boolean m_b_allocset = false;
 		
 		public VoicePanel() {
 			super();
 			m_btn_resend.setEnabled(false);
+			m_btn_kill.setEnabled(false);
 			setPreferredSize(new Dimension(300, 500));
 			if(PAS.get_pas().get_userinfo().get_current_department().get_pas_rights()==4) {
                 m_lbl_resendrefno.setText(Localization.l("main_status_new_message_from_refno") + ":");
@@ -1663,8 +1686,8 @@ public class StatusSending extends Object {
 				@Override
 				public void mousePressed(MouseEvent e) {
 					//Substance 3.3
-					Color c = SubstanceLookAndFeel.getActiveColorScheme().getMidColor();
-					
+					//Color c = SubstanceLookAndFeel.getActiveColorScheme().getMidColor();
+					Color c = SystemColor.controlShadow;
 					//Substance 5.2
 					//Color c = SubstanceLookAndFeel.getCurrentSkin().getMainActiveColorScheme().getMidColor()
 					
@@ -1706,10 +1729,13 @@ public class StatusSending extends Object {
 			
 			m_btn_resend.setActionCommand("act_resend");
 			m_btn_resend.addActionListener(this);
-			m_btn_resend.setSize(new Dimension(50, 32));
-			m_btn_resend.setPreferredSize(new Dimension(50, 32));
+			m_btn_resend.setSize(new Dimension(135, 22));
+			m_btn_resend.setPreferredSize(new Dimension(135, 22));
 			
-			
+			m_btn_kill.setActionCommand("act_kill_sending");
+			m_btn_kill.addActionListener(this);
+			m_btn_kill.setSize(new Dimension(135, 22));
+			m_btn_kill.setPreferredSize(new Dimension(135, 22));
 			
 			m_progress.setPreferredSize(new Dimension(250, 22));
 			
@@ -1888,14 +1914,19 @@ public class StatusSending extends Object {
 				{
 					pnl_cell.setVisible(true);
 					pnl_voice.setVisible(false);
+					m_btn_kill.setVisible(false);
 				}
 				else
 				{
 					pnl_cell.setVisible(false);
 					pnl_voice.setVisible(true);
+					m_btn_kill.setVisible(true);
 					if(get_sendingstatus()==7) {
 						enableResend();
-					}
+					} 
+					boolean b_send_rights = Variables.getUserInfo().get_departments().getDepartment(get_deptpk()).get_userprofile().get_send()>0;
+					m_btn_kill.setEnabled(get_sendingstatus()>0 && get_sendingstatus()<7 && !StatusSending.this.isMarkedAsCancelled() && !isCancelRequestSent() && b_send_rights);
+					m_btn_kill.setVisible(get_sendingstatus()>0 && get_sendingstatus()<7 && !StatusSending.this.isMarkedAsCancelled() && !isCancelRequestSent() && b_send_rights);
 				}
 			}
 			catch(Exception e)
@@ -1908,11 +1939,14 @@ public class StatusSending extends Object {
 				m_btn_resend.setEnabled(false);
 				m_progress.setEnabled(false);
 			}
+			
+			
+			
 			m_lbl_resendrefno.setVisible((get_resendrefno()>0 ? true : false));
 			m_txt_resendrefno.setVisible((get_resendrefno()>0 ? true : false));
 			m_txt_resendrefno.setText(new Integer(get_resendrefno()).toString());
 				
-			m_txt_status.setText(TextFormat.get_statustext_from_code(get_sendingstatus(), get_altjmp()));
+			m_txt_status.setText(TextFormat.get_statustext_from_code(get_sendingstatus(), get_altjmp(), isMarkedAsCancelled()));
 			m_txt_queuestatus.setText("");
 			m_txt_items.setText(new Integer(get_totitem()).toString());
 			m_txt_proc.setText(new Integer(get_proc()).toString());
@@ -2031,9 +2065,31 @@ public class StatusSending extends Object {
 			{
 				m_progress.setValue(m_progress.getValue()-1);
 			}
+			else if("act_kill_sending".equals(e.getActionCommand()))
+			{
+				setCancelRequestSent(true);
+				m_btn_kill.setEnabled(false);
+				new WSCancelSending(get_refno(), new ICallback() {
+					@Override
+					public void onFinished(UCancelSendingResponse response) {
+						switch(response.getResponse())
+						{
+						case OK:
+							m_btn_kill.setEnabled(false);
+							break;
+						case ALREADY_MARKED_AS_CANCELLED:
+						case ERROR:
+						case FAILED_USER_RESTRICTED:
+							m_btn_kill.setEnabled(true);
+							break;
+						}
+						setCancelRequestSent(false);
+					}
+				}).execute();
+			}
 		}
 		public void add_controls() {
-			m_gridconst.fill = GridBagConstraints.BOTH;
+			//m_gridconst.fill = GridBagConstraints.BOTH;
 			
 			int text_1_x = 2;
 			set_gridconst(0, inc_panels(), text_1_x, 1);
@@ -2129,10 +2185,13 @@ public class StatusSending extends Object {
 			add(m_lbl_setmaxalloc, m_gridconst);
 			set_gridconst(6, get_panel(), 1, 1);
 			add(m_btn_setmaxalloc, m_gridconst);
-			add_spacing(DIR_VERTICAL, 10);
+			add_spacing(DIR_VERTICAL, 20);
 			
 			set_gridconst(0, inc_panels(), 2, 1);
 			add(m_btn_resend, m_gridconst);
+			
+			set_gridconst(2, get_panel(), 4, 1);
+			add(m_btn_kill, m_gridconst);
 			
 			//Border voice = BorderFactory.createTitledBorder("Voice Broadcast");
             setBorder(no.ums.pas.ums.tools.TextFormat.CreateStdBorder(String.format(" %s    ", Localization.l("main_status_voicesending")) + (isSimulation() ? String.format("[%s] ", Localization.l("main_sending_simulated")) : String.format("[%s]", Localization.l("main_sending_live")))));

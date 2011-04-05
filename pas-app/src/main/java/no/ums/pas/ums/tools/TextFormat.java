@@ -296,11 +296,16 @@ public final class TextFormat {
 		//PAS.get_pas().add_event(sz_ret);
 		return sz_ret;
 	}
-	public synchronized static String get_statustext_from_code(int n_status, int n_altjmp)
+	public synchronized static String get_statustext_from_code(int n_status, int n_altjmp, 
+									boolean markedAsCancelled)
 	{
 		String sz_ret;
 		if(n_altjmp==1)
 			return StatusController.STATUSSTOP;
+		
+		if(markedAsCancelled && n_status>=1 && n_status<=6)
+			n_status = 8;
+		
 		switch(n_status)
 		{
 			case 1:

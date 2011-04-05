@@ -34,7 +34,7 @@ class StatusCellBroadcastItem extends Object {
 	public int get_items() { return _n_items; }
 	public int get_proc() { return _n_proc; }
 	public int get_sendingstatus() { return _n_sendingstatus; }
-	public String get_sendingstatustext() { return TextFormat.get_statustext_from_code(get_sendingstatus(), 0); }
+	public String get_sendingstatustext() { return TextFormat.get_statustext_from_code(get_sendingstatus(), 0, false); }
 	
 	StatusCellBroadcastItem(String sz_projectpk, int n_dst, String sz_ccode, boolean f_simulation, int n_recipients,
 								String sz_oadc, int n_pri, int n_expecteditems, int n_items, int n_proc, int n_sendingstatus) {
@@ -101,7 +101,7 @@ public class StatusCellBroadcast extends Object {
 	protected int _getSendingStatus() { return m_n_sendingstatus; }
 	public int getItems() { return m_n_items; }
 	public int getProcessed() { return m_n_proc; }
-	public String getSendingStatus() { return TextFormat.get_statustext_from_code(_getSendingStatus(), 0); }
+	public String getSendingStatus() { return TextFormat.get_statustext_from_code(_getSendingStatus(), 0, false); }
 
 	public StatusCellBroadcast(String [] sz) {
 		this(sz[0]);

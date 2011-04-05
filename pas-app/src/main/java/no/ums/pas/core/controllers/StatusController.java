@@ -71,7 +71,8 @@ public class StatusController extends Controller implements ActionListener {
 		m_statuscodeframe = new StatuscodeFrame();
 		m_n_autoupdate_seconds = 5;
 		set_autoupdate(StatusActions.AUTOMATIC_UPDATE.isSelected());
-		setClosed(); //initialize as closed
+		initClosed();
+		//setClosed(); //initialize as closed
 	}
 
 	public static final String STATUS_1 = Localization.l("main_status_progress_parsequeue_bcp");
@@ -485,10 +486,13 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	protected void onDownloadFinished() {
-		set_lastupdate();
-		set_updates_in_progress(false);
-		PAS.get_pas().get_eastcontent().get_statuspanel()
-				.updateMainStatusStatistics();
+		if(isOpen())
+		{
+			set_lastupdate();
+			set_updates_in_progress(false);
+			PAS.get_pas().get_eastcontent().get_statuspanel()
+					.updateMainStatusStatistics();
+		}
 	}
 
 	public synchronized void set_statuscolor(int n_status, Color col) {

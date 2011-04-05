@@ -28,6 +28,16 @@ public class DeptArray extends ArrayList<DeptInfo> {
 		return dept;
 	}
 	
+	public DeptInfo getDepartment(int deptpk)
+	{
+		for(DeptInfo di : this)
+		{
+			if(di.get_deptpk()==deptpk)
+				return di;
+		}
+		return null;
+	}
+	
 	public List<ShapeStruct> m_combined_shapestruct_list = new ArrayList<ShapeStruct>();;
 	public List<ShapeStruct> get_combined_restriction_shape() { return m_combined_shapestruct_list; }
 	public void ClearCombinedRestrictionShapelist() {

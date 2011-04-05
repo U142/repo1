@@ -52,10 +52,18 @@ public abstract class Controller implements ActionListener {
 	private int m_n_filter_time = -2;
 	private boolean m_b_pause = false;
 	private boolean m_b_closed = false;
+	private boolean m_b_closed_by_user = false;
 	
+	public boolean isClosedByUser() { return m_b_closed_by_user; }
 	public boolean isClosed() { return m_b_closed; }
 	public boolean isOpen() { return !m_b_closed; }
-	public void setClosed() { m_b_closed = true; }
+	public void setClosed() { 
+		m_b_closed = m_b_closed_by_user = true; 
+	}
+	public void initClosed()
+	{
+		m_b_closed = true;
+	}
 	public void setOpen() { m_b_closed = false; }
 	
 	
