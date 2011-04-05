@@ -412,6 +412,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
             m_tabbedpane.addTab(Localization.l("main_status_locationbased_alert"), null,
 							m_cell_broadcast_text_panel,
                     Localization.l("main_sending_lba_tooltip"));
+            m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_cell_broadcast_text_panel), false);
 		}
         m_tabbedpane.addTab(Localization.l("main_sending_finalize_heading"), null,
 							m_send,
