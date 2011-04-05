@@ -1736,6 +1736,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					return ret_answer;
 				}
 			}
+			else
+			{
+				b_wait_for_close = false;
+				thread = new WaitForStatusThread(b_close_all_gui);
+			}
 			//else
 			//	thread = new WaitForStatusThread(b_close_all_gui);
 			if(thread!=null)
