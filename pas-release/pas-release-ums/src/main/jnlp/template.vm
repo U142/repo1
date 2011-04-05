@@ -26,6 +26,5 @@
     <argument>-s$jnlp_s</argument>
     <argument>-w$jnlp_w</argument>
 	<argument>-v$jnlp_v</argument>
-    <argument>-p</argument>
   </application-desc>
 </jnlp>
