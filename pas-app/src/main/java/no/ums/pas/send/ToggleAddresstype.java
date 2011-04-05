@@ -58,7 +58,7 @@ public class ToggleAddresstype extends JButton { //JToggleButton {
 		if(defaultIcon!=null && ico==null)
 		{
 			ico = (ImageIcon)defaultIcon;
-			icoGray = ImageFetcher.makeBlurred(ico);//makeGrayscale(ico);
+			icoGray = (ImageIcon)defaultIcon; //ImageFetcher.makeBlurred(ico);//makeGrayscale(ico);
 		}
 		super.setIcon(defaultIcon);
 	}
