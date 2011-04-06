@@ -433,6 +433,7 @@ namespace com.ums.PAS.Database
                     ret.sz_organization = rs["sz_organization"].ToString();
                     ret.default_oadc.l_type = int.Parse(rs["l_oadc_type"].ToString());
                     ret.default_oadc.sz_value = rs["sz_oadc_value"].ToString();
+                    
                     do //parse departments
                     {
                         UDEPARTMENT dept = new UDEPARTMENT(); //CREATE NEW DEPARTMENT
@@ -467,6 +468,7 @@ namespace com.ums.PAS.Database
                         Int32 l_deptpk, l_default_deptpk;
                         long l_profilepk, l_default_profilepk;
                         Int32 l_dept_parm, l_dept_fleetcontrol, l_dept_houseeditor, l_dept_pas_send, l_pas_send;
+                        Int32 l_dept_email, l_profile_sms;
 
                         l_deptpk = Int32.Parse(rs["l_deptpk"].ToString());
                         l_default_deptpk = Int32.Parse(rs["l_default_deptpk"].ToString());
@@ -503,6 +505,33 @@ namespace com.ums.PAS.Database
                         dept.f_sms = Int32.Parse(rs["f_sms"].ToString());
                         dept.l_pas = Int32.Parse(rs["l_dept_pas"].ToString());
                         dept.l_langpk = Int32.Parse(rs["l_langpk"].ToString());
+
+                        dept.l_messagelib = Int32.Parse(rs["l_messagelib"].ToString());
+                        dept.l_phonebook = Int32.Parse(rs["l_phonebook"].ToString());
+                        dept.l_lists = Int32.Parse(rs["l_lists"].ToString());
+                        l_profile_sms = Int32.Parse(rs["l_sms"].ToString());
+                        dept.l_modules = Int32.Parse(rs["l_modules"].ToString());
+                        dept.l_profiles = Int32.Parse(rs["l_profiles"].ToString());
+                        dept.l_phonebook_share = Int32.Parse(rs["l_phonebook_share"].ToString());
+                        dept.l_lists_share = Int32.Parse(rs["l_lists_share"].ToString());
+                        dept.l_modules_share = Int32.Parse(rs["l_modules_share"].ToString());
+                        dept.l_profiles_share = Int32.Parse(rs["l_profiles_share"].ToString());
+                        dept.l_pb_name = Int32.Parse(rs["l_pb_name"].ToString());
+                        dept.l_pb_phone = Int32.Parse(rs["l_pb_phone"].ToString());
+                        dept.l_pb_pin = Int32.Parse(rs["l_pb_pin"].ToString());
+                        dept.l_pb_locality = Int32.Parse(rs["l_pb_locality"].ToString());
+                        dept.l_locality = Int32.Parse(rs["l_locality"].ToString());
+                        dept.l_sched = Int32.Parse(rs["l_sched"].ToString());
+                        dept.l_sched_retry = Int32.Parse(rs["l_sched_retry"].ToString());
+                        dept.l_sched_cancel = Int32.Parse(rs["l_sched_cancel"].ToString());
+                        dept.l_sched_pause = Int32.Parse(rs["l_sched_pause"].ToString());
+                        dept.l_sched_share = Int32.Parse(rs["l_sched_share"].ToString());
+                        dept.l_messagelib_share = Int32.Parse(rs["l_messagelib_share"].ToString());
+                        dept.f_superuser = Int32.Parse(rs["f_superuser"].ToString());
+                        dept.l_resource = Int32.Parse(rs["l_resource"].ToString());
+                        dept.l_email = Int32.Parse(rs["l_email"].ToString());
+                        l_dept_email = Int32.Parse(rs["l_dept_email"].ToString());
+
                         String xml = rs["sz_restriction_shape"].ToString();
                         UShape restrictionshape = UShape.ParseFromXml(xml);
                         dept.AddRestrictionShape(ref restrictionshape);
@@ -525,6 +554,10 @@ namespace com.ums.PAS.Database
                             dept.l_parm = 0;
                         if (l_dept_fleetcontrol <= 0)
                             dept.l_fleetcontrol = 0;
+                        if (l_dept_email <= 0)
+                            dept.l_email = 0;
+                        if (l_profile_sms <= 0)
+                            dept.f_sms = 0;
 
                         //check the folkereg adr database of this department if the user has access to municipals
                         if (UCommon.USETTINGS.b_enable_adrdb)

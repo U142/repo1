@@ -139,6 +139,31 @@ namespace com.ums.UmsParm
         public int f_sms;
         public int l_pas; //0=no access, 1=access to norway db, 2=access to folkereg db
         public int l_langpk;
+
+        public int l_messagelib;
+        public int l_phonebook;
+        public int l_lists;
+        public int l_modules;
+        public int l_profiles;
+        public int l_phonebook_share;
+        public int l_lists_share;
+        public int l_modules_share;
+        public int l_profiles_share;
+        public int l_pb_name;
+        public int l_pb_phone;
+        public int l_pb_pin;
+        public int l_pb_locality;
+        public int l_locality;
+        public int l_sched;
+        public int l_sched_retry;
+        public int l_sched_cancel;
+        public int l_sched_pause;
+        public int l_sched_share;
+        public int l_messagelib_share;
+        public int f_superuser;
+        public int l_resource;
+        public int l_email;
+
         public List<UMunicipalDef> municipals = new List<UMunicipalDef>();
         public void AddMunicipal(String sz_id, String sz_name)
         {
