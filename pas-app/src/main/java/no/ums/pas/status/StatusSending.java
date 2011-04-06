@@ -2080,6 +2080,7 @@ public class StatusSending extends Object {
 						case ALREADY_MARKED_AS_CANCELLED:
 						case ERROR:
 						case FAILED_USER_RESTRICTED:
+							JOptionPane.showMessageDialog(m_btn_kill, Localization.l("Failed to kill sending") + "\n" + response.getResponse().toString(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 							m_btn_kill.setEnabled(true);
 							break;
 						}
