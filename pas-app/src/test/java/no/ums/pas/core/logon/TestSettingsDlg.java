@@ -19,7 +19,8 @@ public class TestSettingsDlg {
 		JFrame frm = new JFrame();
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserInfo ui = new UserInfo();
-		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2);
+		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2, 
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		ui.set_current_department(new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null));
 		Variables.setUserInfo(ui);
 		new Settings(frm, new ISettingsUpdate() {

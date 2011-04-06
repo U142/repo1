@@ -235,7 +235,8 @@ public class MapApplet extends JApplet implements ActionListener {
                         (float) Variables.getUserInfo().get_default_dept().get_nav_init()._rbo,
                         (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
                         (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
-                        false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape);
+                        false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 				
 				
 				Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();
@@ -284,7 +285,32 @@ public class MapApplet extends JApplet implements ActionListener {
 					d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
 					d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
 					d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
-					d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), d.getFSms(), d.getRestrictionShapes());
+					d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), 
+					d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), d.getFSms(), 
+					d.getRestrictionShapes(),
+					d.getLMessagelib(),
+					d.getLPhonebook(),
+					d.getLLists(),
+					d.getLModules(),
+					d.getLProfiles(),
+					d.getLPhonebookShare(),
+					d.getLListsShare(),
+					d.getLModulesShare(),
+					d.getLProfilesShare(),
+					d.getLPbName(),
+					d.getLPbPhone(),
+					d.getLPbPin(),
+					d.getLPbLocality(),
+					d.getLLocality(),
+					d.getLSched(),
+					d.getLSchedRetry(),
+					d.getLSchedCancel(),
+					d.getLSchedPause(),
+					d.getLSchedShare(),
+					d.getLMessagelibShare(),
+					d.getFSuperuser(),
+					d.getLResource(),
+					d.getLEmail());
 			}
 
 
@@ -699,7 +725,8 @@ public class MapApplet extends JApplet implements ActionListener {
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._rbo,
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._ubo,
                 (float) Variables.getUserInfo().get_default_dept().get_nav_init()._bbo,
-                false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape);
+                false, 3, 150, "fjols", "", 1, 1, 1, 1, 1, 1, (long) 1, "", null, 2, 1, 0, arrShape,
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		
 		
 		Variables.getUserInfo().get_current_department().CalcCoorRestrictionShapes();

@@ -2,6 +2,7 @@ package no.ums.pas.parm.alert;
 
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.TooltipCombo;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.BBProfile;
@@ -55,6 +56,7 @@ public class Sending_Settings_Parm_Alert extends Sending_Settings {
                 return m_current_profile.get_profilepk();
             }
         }));
+		checkEnableShowProfile();
 		m_combo_oadc = new JComboBox();
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);

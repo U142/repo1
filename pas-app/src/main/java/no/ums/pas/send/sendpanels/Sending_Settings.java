@@ -2,6 +2,7 @@ package no.ums.pas.send.sendpanels;
 
 import com.google.common.base.Supplier;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.TooltipCombo;
 import no.ums.pas.localization.Localization;
@@ -150,6 +151,14 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 
 	
 
+	protected void checkEnableShowProfile()
+	{
+		if(!Variables.getUserInfo().get_current_department().get_userprofile().canReadProfiles())
+		{
+			m_btn_showprofile.setEnabled(false);
+			m_btn_showprofile.setToolTipText(Localization.l("common_restricted_by_userprofile"));
+		}
+	}
 	
 	public Sending_Settings(PAS pas, SendWindow parentwin) {
 		super();
@@ -165,6 +174,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
                 return m_current_profile.get_profilepk();
             }
         }));
+		checkEnableShowProfile();
 		m_combo_oadc = new JComboBox();
 		m_combo_oadc.setPreferredSize(new Dimension(200, 20));
 		m_combo_oadc.addActionListener(this);

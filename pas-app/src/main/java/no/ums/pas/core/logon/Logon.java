@@ -261,7 +261,33 @@ public class Logon implements ActionListener {
 							d.getUbo(), d.getBbo(), d.isFDefault(), d.getLDeptpri(), d.getLMaxalloc(), 
 							d.getSzUserprofilename(), d.getSzUserprofiledesc(), d.getLStatus(), 
 							d.getLNewsending(), d.getLParm(), d.getLFleetcontrol(), d.getLLba(), 
-							d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), d.getFSms(), d.getRestrictionShapes());
+							d.getLHouseeditor(), d.getLAddresstypes(), d.getSzDefaultnumber(), 
+							d.getMunicipals().getUMunicipalDef(), d.getLPas(), d.getLLangpk(), 
+							d.getFSms(), d.getRestrictionShapes(),
+							d.getLMessagelib(),
+							d.getLPhonebook(),
+							d.getLLists(),
+							d.getLModules(),
+							d.getLProfiles(),
+							d.getLPhonebookShare(),
+							d.getLListsShare(),
+							d.getLModulesShare(),
+							d.getLProfilesShare(),
+							d.getLPbName(),
+							d.getLPbPhone(),
+							d.getLPbPin(),
+							d.getLPbLocality(),
+							d.getLLocality(),
+							d.getLSched(),
+							d.getLSchedRetry(),
+							d.getLSchedCancel(),
+							d.getLSchedPause(),
+							d.getLSchedShare(),
+							d.getLMessagelibShare(),
+							d.getFSuperuser(),
+							d.getLResource(),
+							d.getLEmail());
+							
 				}
 				//m_info.get_departments().CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 				m_info.get_departments().CreateCombinedRestrictionShape();

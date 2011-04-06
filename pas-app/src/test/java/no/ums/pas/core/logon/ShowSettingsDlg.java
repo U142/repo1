@@ -19,7 +19,8 @@ public class ShowSettingsDlg {
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Settings s = new Settings(frm);
 		UserInfo ui = new UserInfo();
-		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2);
+		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0,
+							0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		ui.set_current_department(new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null));
 		Variables.setUserInfo(ui);
 		no.ums.pas.core.logon.Settings settings = new no.ums.pas.core.logon.Settings();

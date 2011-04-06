@@ -142,13 +142,25 @@ public class UserInfo extends Object implements Cloneable {
 					boolean f_default, int l_deptpri, int l_maxalloc, String sz_userprofilename, 
 					String sz_userprofiledesc, int l_status, int l_newsending, int l_parm, int l_fleetcontrol,
 					int l_cellbroadcast, int l_houseeditor, long l_addresstypes, String sz_defaultnumber,
-					List<UMunicipalDef> municipals, int l_pas, int l_langpk, int l_sms, ArrayOfUShape restriction_shapes)
+					List<UMunicipalDef> municipals, int l_pas, int l_langpk, int l_sms, ArrayOfUShape restriction_shapes,
+					 int l_messagelib, int l_phonebook, int l_lists, int l_modules, int l_profiles,
+					 int l_phonebook_share, int l_lists_share, int l_modules_share, int l_profiles_share,
+					 int l_pb_name, int l_pb_phone, int l_pb_pin, int l_pb_locality, int l_locality,
+					 int l_sched, int l_sched_retry, int l_sched_cancel, int l_sched_pause,
+					 int l_sched_share, int l_messagelib_share, int l_superuser, int l_resource,
+					 int l_email)
 	{
 		try {
 		NavStruct nav_init = new NavStruct(lbo, rbo, ubo, bbo);
 		UserProfile m_userprofile = new UserProfile(sz_userprofilename, sz_userprofiledesc, l_fleetcontrol,
 									l_parm, l_status, l_newsending, l_cellbroadcast, l_houseeditor,
-									l_addresstypes, l_sms);
+									l_addresstypes, l_sms, l_messagelib, l_phonebook, l_lists,
+									l_modules, l_profiles, l_phonebook_share, l_lists_share,
+									l_modules_share, l_profiles_share,
+									l_pb_name, l_pb_phone, l_pb_pin, l_pb_locality,
+									l_locality, l_sched, l_sched_retry, l_sched_cancel,
+									l_sched_pause, l_sched_share, l_messagelib_share,
+									l_superuser, l_resource, l_email);
 		DeptInfo dept = get_departments().add(l_deptpk, sz_deptid, sz_stdcc, nav_init, f_default, l_deptpri, 
 										l_maxalloc, sz_defaultnumber, m_userprofile, municipals, l_pas, l_langpk,
 										restriction_shapes);
