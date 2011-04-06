@@ -23,6 +23,7 @@ import javax.swing.text.DefaultHighlighter;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.IllegalComponentStateException;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
@@ -309,5 +310,41 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		m_txt_oadc_text.setEnabled(val);
 		m_combo_templates.setEnabled(val);
 		m_txt_messagetext.setEnabled(val);
+	}
+	
+	public void set_size_label(String text, JLabel activeLabel) {
+		
+		/*Matcher m = GSM_Alphabet_Regex.matcher(text);
+		int ext = 0;
+		while(m.find() == true)
+			++ext;
+			*/
+		int part = 1;
+		if(get_gsmsize(text)>m_maxSafe)
+			part = (int)Math.ceil((double)(get_gsmsize(text)/(double)(m_maxSafe-8)));
+        activeLabel.setText("(" + get_gsmsize(text) + " / " + (m_maxSize-get_gsmsize(text)) + " / " + part + ")");
+		if(this.getClass().equals(Sending_Cell_Broadcast_text.class) || this.getClass().equals(Sending_SMS_Broadcast_text.class)) {
+			if(text.length() > m_maxSafe) {
+				activeLabel.setForeground(Color.RED);
+				//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
+				try {
+					if(m_popup!=null)
+						m_popup.hide();
+					m_popup = PopupFactory.getSharedInstance().getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
+					m_popup.show();
+				}
+				catch(IllegalComponentStateException e) {}
+				
+			}
+			else {
+				//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
+				activeLabel.setToolTipText(null);
+				activeLabel.setForeground(PAS.get_pas().getForeground());
+				if(m_popup!=null) {
+					m_popup.hide();
+				}
+					
+			}
+		}			
 	}
 }
