@@ -241,6 +241,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	private int m_n_repaints = 0;
 	private static boolean m_b_parm_open = false;
 	public static boolean TRAINING_MODE = false;
+	private static boolean SAVE_DEFAULT_USER_ON_EXIT = false;
 	
 	
 	public static void setParmOpen(boolean b)
@@ -793,6 +794,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//Kun default logon settings skal lastes her. resten kommer fra Logon WS
 		try {
 			m_settings = xmlreader.loadLogonSettings(m_settings);
+			if(m_settings.getUsername().length()==0 && m_settings.getCompany().length()==0)
+			{
+				SAVE_DEFAULT_USER_ON_EXIT = true;
+			}
 			Variables.setSettings(m_settings);
 		} catch(Exception e) {
 			Error.getError().addError(Localization.l("common_error"), "Could not load default logon information", e, Error.SEVERITY_WARNING);
@@ -864,8 +869,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					m_userinfo = new UserInfo(logon.get_userinfo());
 					Variables.setUserInfo(m_userinfo);
 					m_userinfo.set_sitename(PAS_SITENAME);
-					m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
-					m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
+					if(SAVE_DEFAULT_USER_ON_EXIT)
+					{
+						m_settings.setUsername(m_userinfo.get_userid().toUpperCase());
+						m_settings.setCompany(m_userinfo.get_compid().toUpperCase());
+					}
 					UPASUISETTINGS ui = logon.get_uisettings();
 					if(!ui.isInitialized())
 					{
@@ -1901,7 +1909,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		try
 		{
-			new XmlWriter().saveSettings();
+			new XmlWriter().saveSettings(SAVE_DEFAULT_USER_ON_EXIT);
 		}
 		catch(Exception e)
 		{

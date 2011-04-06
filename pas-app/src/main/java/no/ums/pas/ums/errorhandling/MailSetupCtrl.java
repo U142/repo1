@@ -49,7 +49,7 @@ public class MailSetupCtrl implements ActionListener {
 				account.set_mailserver(gui.getOutgoingServer());
 				account.set_mailaddress(gui.getReplyAddress());
 				XmlWriter writer = new XmlWriter();
-				writer.saveSettings();
+				writer.saveSettings(true);
 				returnValue = true;
 			}
 			catch(Exception err)

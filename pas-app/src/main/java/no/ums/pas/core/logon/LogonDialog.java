@@ -134,6 +134,10 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			m_panel.m_txt_compid.requestFocusInWindow();
 			m_panel.m_txt_compid.selectAll();
 		}
+		else
+		{
+			m_panel.m_txt_userid.requestFocusInWindow();			
+		}
 		
 	}
 	public void windowClosed(WindowEvent e) {
@@ -189,6 +193,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		} catch(Exception e) {
 		}
 		m_panel.init();
+
 		if(b_request_newsession)
 		{
 			m_panel.m_txt_userid.setEditable(false);

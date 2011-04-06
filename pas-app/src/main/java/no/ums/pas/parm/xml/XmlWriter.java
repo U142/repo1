@@ -1633,7 +1633,7 @@ public class XmlWriter {
 		writeXMLFile(polyxmlDoc,ParmConstants.polyxmlLocation);
 	}
 	
-	public void saveSettings() {
+	public void saveSettings(boolean b_save_default_user) {
 		/*try
 		{
 			PAS.get_pas().setSubstanceChanges();
@@ -1725,44 +1725,47 @@ public class XmlWriter {
 		
 		autoChild.setTextContent(String.valueOf(settings.fleetcontrol()));
 		*/
-		nl = rootnd.getElementsByTagName("defaultuser");
+		if(b_save_default_user)
+		{
+			nl = rootnd.getElementsByTagName("defaultuser");
+			
+			if(nl.getLength() < 1) {
+				element = (Element) doc.createElement("defaultuser");
+				rootnd.appendChild(element);
+			}
+			else
+				element = (Element)nl.item(0);
+			
+			Element userchild = null;
+			
+			nl = element.getElementsByTagName("username");
+			
+			if(nl.getLength() < 1) {
+				userchild = (Element) doc.createElement("username");
+				element.appendChild(userchild);
+			} else
+				userchild = (Element)nl.item(0);
+			
+			userchild.setTextContent(settings.getUsername());
+			
+			nl = element.getElementsByTagName("company");
+			
+			if(nl.getLength() < 1) {
+				userchild = (Element) doc.createElement("company");
+				element.appendChild(userchild);
+			} else 
+				userchild = (Element)nl.item(0);
+			
+			userchild.setTextContent(settings.getCompany());
 		
-		if(nl.getLength() < 1) {
-			element = (Element) doc.createElement("defaultuser");
-			rootnd.appendChild(element);
+			nl = element.getElementsByTagName("language");
+			if(nl.getLength() < 1) {
+				userchild = (Element) doc.createElement("language");
+				element.appendChild(userchild);
+			} else
+				userchild = (Element)nl.item(0);
+			userchild.setTextContent(settings.getLanguage());
 		}
-		else
-			element = (Element)nl.item(0);
-		
-		Element userchild = null;
-		
-		nl = element.getElementsByTagName("username");
-		
-		if(nl.getLength() < 1) {
-			userchild = (Element) doc.createElement("username");
-			element.appendChild(userchild);
-		} else
-			userchild = (Element)nl.item(0);
-		
-		userchild.setTextContent(settings.getUsername());
-		
-		nl = element.getElementsByTagName("company");
-		
-		if(nl.getLength() < 1) {
-			userchild = (Element) doc.createElement("company");
-			element.appendChild(userchild);
-		} else 
-			userchild = (Element)nl.item(0);
-		
-		userchild.setTextContent(settings.getCompany());
-		
-		nl = element.getElementsByTagName("language");
-		if(nl.getLength() < 1) {
-			userchild = (Element) doc.createElement("language");
-			element.appendChild(userchild);
-		} else
-			userchild = (Element)nl.item(0);
-		userchild.setTextContent(settings.getLanguage());
 		
 		/*nl = element.getElementsByTagName("lbarefresh");
 		

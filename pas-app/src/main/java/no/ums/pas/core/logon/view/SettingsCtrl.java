@@ -30,6 +30,7 @@ import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
 import no.ums.pas.core.ws.WSSaveUI;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.maps.MapLoader;
+import no.ums.pas.parm.xml.XmlWriter;
 import no.ums.pas.send.SendController;
 import no.ums.pas.send.SendOptionToolbar;
 
@@ -185,6 +186,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 			@Override
 			protected Object doInBackground() throws Exception {
 				new WSSaveUI(null).runNonThreaded();
+				new XmlWriter().saveSettings(true);
 				return "OK";
 			}
 
