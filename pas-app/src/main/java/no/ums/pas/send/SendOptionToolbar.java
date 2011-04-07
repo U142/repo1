@@ -907,13 +907,15 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//m_radio_activate.setSelectedIcon(load_icon("yes.gif"));
 		
 		if(PAS.icon_version==2)
-			m_icon_polygon_no_edit = ImageLoader.load_icon("brush_disabled_16.png");
-		else
-			m_icon_polygon_no_edit = ImageLoader.load_icon("no_edit.gif");
-		if(PAS.icon_version==2)
 			m_icon_polygon_edit = ImageLoader.load_icon("brush_16.png");
 		else
 			m_icon_polygon_edit = ImageLoader.load_icon("edit.gif");
+
+		if(PAS.icon_version==2)
+			m_icon_polygon_no_edit = ImageFetcher.makeGrayscale("brush_16.png");//ImageLoader.load_icon("brush_disabled_16.png");
+		else
+			m_icon_polygon_no_edit = ImageLoader.load_icon("no_edit.gif");
+
 		m_icon_gis_no_edit = ImageLoader.load_icon("no_edit_gis_import.png");
 		m_icon_gis_edit = ImageLoader.load_icon("edit_gis_import.png");		
 		
