@@ -280,6 +280,8 @@ public class ULookAndFeel
 					callback.CloseButtonClicked(c);
 					if(UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getTabComponentAt(index)!=null)
 						UTabbedPaneUI.this.tabPane.removeTabAt(index);
+					else if(UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getComponentAt(index)!=null)
+						UTabbedPaneUI.this.tabPane.removeTabAt(index);
 				}
 				super.mouseReleased(e);
 			}
