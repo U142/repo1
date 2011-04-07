@@ -160,7 +160,8 @@ public class EllipseStruct extends ShapeStruct {
 	public void recalc_shape(Navigation nav) {
 		//Ellipse2D.Double height, width, upperleft_x, upperleft_y
 		try {
-			if(m_p_center!=null && m_p_corner!=null) {
+			
+			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_mappointpix()!=null && m_p_corner.get_mappointpix()!=null) {
 				int height, width, uleft_x, uleft_y;
 				height = Math.abs(m_p_corner.get_y() - m_p_center.get_y()) * 2;
 				width  = Math.abs(m_p_corner.get_x() - m_p_center.get_x()) * 2;
@@ -175,7 +176,10 @@ public class EllipseStruct extends ShapeStruct {
 			Error.getError().addError("SendPropertiesEllipse","Exception in recalc_shape",e,1);
 		}
 	}
-	public void calc_coortopix(Navigation nav) {
+	
+	@Override
+	public void calc_coortopix(Navigation nav)
+	{
 		if(m_p_center!=null && m_p_corner!=null) {
 			m_p_center = new MapPoint(nav, new MapPointLL(m_p_center.get_mappointll()));
 			m_p_corner = new MapPoint(nav, new MapPointLL(m_p_corner.get_mappointll()));
@@ -183,8 +187,9 @@ public class EllipseStruct extends ShapeStruct {
 			calc_epicentre_coortopix(nav);
 			Dimension screen = new Dimension(nav.coor_to_screen(m_p_center.get_lon(), m_p_center.get_lat(), false));
 			m_center_pix.set(screen);
-		}
+		}		
 	}
+
 	public NavStruct calc_bounds() {
 		NavStruct nav = null;
 		if(m_p_center!=null && m_p_corner!=null) {

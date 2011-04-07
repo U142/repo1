@@ -286,6 +286,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     PAS.get_pas().waitForFirstMap();
 
                     log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
+                    System.out.println(String.format("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
                     if (PAS.get_pas().get_parmcontroller() != null) {
                         return null;
                     }
@@ -299,6 +300,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
             protected void done() {
             	if(Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1)
             	{
+            		System.out.println("Starting PARM");
 	                PAS.get_pas().init_parmcontroller();
 	                PAS.get_pas().get_parmcontroller().setExpandedNodes();
 	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
