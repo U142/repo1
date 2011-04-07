@@ -327,22 +327,22 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			if(text.length() > m_maxSafe) {
 				activeLabel.setForeground(Color.RED);
 				//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
-				try {
+				/*try {
 					if(m_popup!=null)
 						m_popup.hide();
 					m_popup = PopupFactory.getSharedInstance().getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
 					m_popup.show();
 				}
 				catch(IllegalComponentStateException e) {}
-				
+				*/
 			}
 			else {
 				//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
-				activeLabel.setToolTipText(null);
+				//activeLabel.setToolTipText(null);
 				activeLabel.setForeground(PAS.get_pas().getForeground());
-				if(m_popup!=null) {
+				/*if(m_popup!=null) {
 					m_popup.hide();
-				}
+				}*/
 					
 			}
 		}			
