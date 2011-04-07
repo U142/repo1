@@ -221,6 +221,29 @@ public class SendController implements ActionListener {
 		PAS.get_pas().get_mappane().set_active_shape(null);
 		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
 	}
+	public void remove_sending(final SendOptionToolbar with_toolbar)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				List<SendObject> toremove = new ArrayList<SendObject>();
+				for(SendObject so : get_sendings())
+				{
+					if(so.get_toolbar().equals(with_toolbar))
+					{
+						PAS.get_pas().get_eastcontent().get_sendingpanel().remove(so.get_toolbar());	
+						toremove.add(so);
+					}
+				}
+				for(SendObject so : toremove)
+				{
+					get_sendings().remove(so);
+				}
+				PAS.get_pas().get_mappane().set_active_shape(null);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);				
+			}
+		});
+	}
 	
 	public String m_sz_projectpk = "-1";
 	public void setActiveProject(Project p) {
@@ -247,7 +270,7 @@ public class SendController implements ActionListener {
 	}
 	
 	public boolean insert_alert_sending(AlertVO alert) {
-		create_new_sending(alert);
+		create_new_sending(alert, false);
 		return true;
 	}
 	public boolean insert_event_sending(EventVO event) {
@@ -350,7 +373,7 @@ public class SendController implements ActionListener {
 	}
 	
 	public SendObject create_new_sending() {
-		return create_new_sending(null);
+		return create_new_sending(null, true);
 	}
 	
 	protected SendObject create_tas_sending(List<ULBACOUNTRY> c)
@@ -399,7 +422,7 @@ public class SendController implements ActionListener {
 		
 	}
 	
-	public SendObject create_new_sending(AlertVO alert) {
+	public SendObject create_new_sending(AlertVO alert, boolean bAutoSelectShapeType) {
 		try {
 			try {
 				if(!CheckForProject())
@@ -417,7 +440,7 @@ public class SendController implements ActionListener {
 				obj = new SendObject("New sending", SendProperties.SENDING_TYPE_POLYGON_, m_n_send_id, this, Variables.getNavigation());
 			}
 			m_n_send_id++;
-			add_sending(obj, alert==null);
+			add_sending(obj, alert==null, bAutoSelectShapeType);
 			obj.get_sendproperties().get_shapestruct().finalizeShape();
 
 			if(alert==null)
@@ -592,7 +615,17 @@ public class SendController implements ActionListener {
 		}
 	}
 	
-	public void add_sending(final SendObject obj, final boolean userValues)
+	public void add_sending(final SendObject obj, final boolean userValues, final boolean bAutoSelectShapeType)
+	{
+		add_sending(obj, userValues, bAutoSelectShapeType, null);
+	}
+	
+	public interface ISendingAdded
+	{
+		public void sendingAdded(SendObject obj);
+	}
+	
+	public void add_sending(final SendObject obj, final boolean userValues, final boolean bAutoSelectShapeType, final ISendingAdded callback)
 	{
 		try
 		{
@@ -616,25 +649,32 @@ public class SendController implements ActionListener {
 							obj.get_toolbar().initSelections();				
 
 							//Variables.getSettings().setN_autoselect_shapetype(SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_);
-							switch(Variables.getSettings().getN_autoselect_shapetype())
+							if(bAutoSelectShapeType)
 							{
-							case SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_:
-								obj.get_toolbar().get_radio_polygon().doClick();
-								break;
-							case SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_:
-								obj.get_toolbar().get_radio_ellipse().doClick();
-								break;
-							case SendOptionToolbar.BTN_OPEN_:
-								obj.get_toolbar().get_btn_open().doClick();
-								break;
-							case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
-								obj.get_toolbar().get_radio_municipal().doClick();
-								break;
+								switch(Variables.getSettings().getN_autoselect_shapetype())
+								{
+								case SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_:
+									obj.get_toolbar().get_radio_polygon().doClick();
+									break;
+								case SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_:
+									obj.get_toolbar().get_radio_ellipse().doClick();
+									break;
+								case SendOptionToolbar.BTN_OPEN_:
+									obj.get_toolbar().get_btn_open().doClick();
+									break;
+								case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
+									obj.get_toolbar().get_radio_municipal().doClick();
+									break;
+								}
 							}
 						}
 						
 						if(PAS.get_pas() != null)
 							PAS.get_pas().repaint();
+						if(callback!=null)
+						{
+							callback.sendingAdded(obj);
+						}
 					}
 					catch(Exception e)
 					{
@@ -649,8 +689,8 @@ public class SendController implements ActionListener {
 		}
 	}
 	
-	public void add_sending(final SendObject obj) {
-		add_sending(obj, false);
+	public void add_sending(final SendObject obj, final boolean bAutoSelectShapeType) {
+		add_sending(obj, false, bAutoSelectShapeType);
 
 	}
 	public void set_activesending(SendObject obj) {

@@ -31,6 +31,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AlertController implements ActionListener {
@@ -109,16 +111,13 @@ public class AlertController implements ActionListener {
 
 		}
 		else if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
-			//SosiFile sosi = (SosiFile)e.getSource();
-			//SosiFile.FlateArray sendings = sosi.get_flater();
 			String [] sz_columns = { "ID", "Name" };
 			int [] n_width = { 50, 250 };
 			boolean [] b_edit = { false, false };
 			Dimension d = new Dimension(400, 500);
-			//if(e.getSource().getClass().equals(ArrayList.class))
-            if (e.getSource() instanceof java.util.List) {
+            if (e.getSource() instanceof List) {
                 @SuppressWarnings("unchecked")
-				java.util.List<SendObject> sendings = (java.util.List<SendObject>)e.getSource();
+				List<SendObject> sendings = (List<SendObject>)e.getSource();
 				
 				//SELECT SOSI-KURVE FOR IMPORT
 				//if(sendings.size()>1) {

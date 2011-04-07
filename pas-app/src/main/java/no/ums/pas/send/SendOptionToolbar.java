@@ -18,6 +18,7 @@ import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.send.SendController.ISendingAdded;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -1480,6 +1481,18 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
 			@SuppressWarnings("unchecked")
 			List<SendObject> sendings_found = (List<SendObject>)e.getSource();
+			final int wait_for_sendings = sendings_found.size()-1; //dont wait for the first one
+			ISendingAdded icallback_sendingadded = new ISendingAdded() {
+				int sendings = 0;
+				@Override
+				public void sendingAdded(SendObject obj) {
+					++sendings;
+					if(wait_for_sendings==this.sendings)
+					{
+						PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
+					}
+				}
+			};
 			for(int i=0; i < sendings_found.size(); i++) {
 				SendObject obj = sendings_found.get(i);
 				if(obj==null)
@@ -1487,17 +1500,26 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				if(obj.get_sendproperties()==null)
 					continue;
 				if(obj.get_sendproperties().get_sendingname()==null)
-					continue;
+				{
+					obj.get_sendproperties().set_sendingname("Unknown Sendingname", "");
+				}
 				if(i==0)
+				{
 					this.get_parent().get_sendproperties().set_shapestruct(obj.get_sendproperties().get_shapestruct());
+					set_sendingtype();
+					this.get_parent().get_sendproperties().set_sendingname(obj.get_sendproperties().get_sendingname(), "");
+				}
 				else
-					//PAS.get_pas().get_sendcontroller().add_sending(obj);
-					PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
+				{
+					Variables.getSendController().add_sending(obj, true, false, icallback_sendingadded);
+				}
+					//Variables.getSendController().remove_sending(this);
+					//PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
 				System.out.println("Adding sending " + obj.get_sendproperties().get_sendingname());
 			
 			}
 			try {
-				PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
+				//PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
 			} catch(Exception err) {
 				System.out.println(err.getMessage());
 				err.printStackTrace();

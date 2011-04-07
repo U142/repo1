@@ -198,7 +198,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				if(Variables.getSendController().get_activesending() == null) {
 					SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 					Variables.getSendController().set_activesending(so);
-					Variables.getSendController().add_sending(so);
+					Variables.getSendController().add_sending(so, false);
 					sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 					so.set_sendproperties(sp);
 				}
@@ -545,7 +545,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			else if("act_add_sending".equals(e.getActionCommand())) {
 				if(e.getSource().getClass().equals(SendObject.class)) {
-					PAS.get_pas().get_sendcontroller().add_sending((SendObject)e.getSource());
+					PAS.get_pas().get_sendcontroller().add_sending((SendObject)e.getSource(), false);
 				}
 			}
 			else if("act_exec_snapsending".equals(e.getActionCommand())) {
@@ -579,7 +579,7 @@ public class MapApplet extends JApplet implements ActionListener {
 				ArrayList<SendObject> sendings_found = (ArrayList<SendObject>)e.getSource();
 				for(int i=0; i < sendings_found.size(); i++) {
 					SendObject obj = (SendObject)sendings_found.get(i);
-					PAS.get_pas().get_sendcontroller().add_sending(obj);
+					PAS.get_pas().get_sendcontroller().add_sending(obj, false);
 				}
 			}
 			else if("act_project_saved".equals(e.getActionCommand())) {
@@ -679,7 +679,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		if(Variables.getSendController().get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 			Variables.getSendController().set_activesending(so);
-			Variables.getSendController().add_sending(so);
+			Variables.getSendController().add_sending(so, false);
 			sp = new SendPropertiesPolygon(s,new SendOptionToolbar(so,this,0), new Col());
 			so.set_sendproperties(sp);
 		}
@@ -766,7 +766,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		if(Variables.getSendController().get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 			Variables.getSendController().set_activesending(so);
-			Variables.getSendController().add_sending(so);
+			Variables.getSendController().add_sending(so, false);
 			sp = new SendPropertiesPolygon(new PolygonStruct(new Dimension(applet_width,applet_height)),new SendOptionToolbar(so,this,0), new Col());
 			so.set_sendproperties(sp);
 		}

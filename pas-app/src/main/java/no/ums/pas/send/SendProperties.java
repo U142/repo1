@@ -130,8 +130,8 @@ public abstract class SendProperties extends Object {
 	public void set_bbprofile(BBProfile profile) { m_bbprofile = profile; }
 	public void set_scheddatetime(SchedDateTime sched) { m_sched = sched; }
 	public void set_sendingname(String sz_name, String sz_description) {
-		m_sz_sendingname = sz_name;
-		m_sz_description = sz_description;
+		m_sz_sendingname = sz_name!=null ? sz_name : "";
+		m_sz_description = sz_description!=null ? sz_description : "";
 		parent.set_sendingname(m_sz_sendingname, sz_description);
 		if(get_shapestruct()!=null)
 		{
@@ -163,7 +163,9 @@ public abstract class SendProperties extends Object {
 	public void set_sms_broadcast_oadc(String sms_oadc) { m_sz_sms_oadc = sms_oadc; }
 	public String get_sms_broadcast_oadc() { return m_sz_sms_oadc; }
 	public ShapeStruct get_shapestruct() { return m_shape; }
-	public void set_shapestruct(ShapeStruct s) { m_shape = s; }
+	public void set_shapestruct(ShapeStruct s) { 
+		m_shape = s; 
+	}
 	public void set_resend(int n_refno) {
 		m_b_isresend = true;
 		m_n_resend_refno = n_refno;

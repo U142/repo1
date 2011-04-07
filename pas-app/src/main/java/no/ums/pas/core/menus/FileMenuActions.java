@@ -37,7 +37,7 @@ public interface FileMenuActions {
         @Override
         public void actionPerformed(ActionEvent e) {
 			try {
-                PAS.get_pas().get_sendcontroller().create_new_sending();
+                PAS.get_pas().get_sendcontroller().create_new_sending(null, true);
 			    PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
 				if(PAS.get_pas().get_parmcontroller()!=null) {
 					//PAS.get_pas().get_parmcontroller().clearDrawQueue();
@@ -73,10 +73,12 @@ public interface FileMenuActions {
     Action FILE_IMPORT = new UmsAction("mainmenu_file_import") {
         @Override
         public void actionPerformed(ActionEvent e) {
-            SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
+            SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending(null, false);
             if (obj != null) {
                 new ImportPolygon(obj.get_toolbar(), "act_polygon_imported", false, PAS.get_pas());
             }
+        	//PAS.get_pas().invoke_project(true);
+        	//new ImportPolygon(null, "act_polygon_imported", false, PAS.get_pas());
         }
     };
 

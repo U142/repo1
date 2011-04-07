@@ -472,7 +472,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				{
 					try
 					{
-						SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending();
+						SendObject obj = PAS.get_pas().get_sendcontroller().create_new_sending(null, false);
 						if(val.toLowerCase().startsWith("http"))
 						{
 							URL url = new URL(val);

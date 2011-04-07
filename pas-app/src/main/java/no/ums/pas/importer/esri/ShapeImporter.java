@@ -142,7 +142,7 @@ public class ShapeImporter extends FileParser
 						com.vividsolutions.jts.geom.Coordinate [] coors = g.getCoordinates();
 						PolygonStruct poly = new PolygonStruct(new java.awt.Dimension(1,1));
 						poly.shapeID = (totalshapes+1);
-						poly.shapeName = (dbf_strings.size() > totalshapes ? dbf_strings.get(totalshapes) : "Poly"+poly.shapeID);
+						poly.shapeName = (dbf_strings.size() > totalshapes ? dbf_strings.get(totalshapes) : "Imported Polygon "+poly.shapeID);
 						//poly.SetBounds(geom.getBoundary()., bounds._rbo, bounds._ubo, bounds._bbo);
 						for(int p = 0; p < coors.length; p++)
 						{

@@ -10,7 +10,9 @@ import no.ums.pas.importer.gis.GISFile;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.parm.alert.AlertController;
 import no.ums.pas.send.SendObject;
+import no.ums.pas.send.SendOptionToolbar;
 import no.ums.pas.send.SendProperties;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.FilePicker;
@@ -27,6 +29,9 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
+import no.ums.pas.send.SendController.ISendingAdded;
 
 /*
 .HODE
@@ -365,18 +370,34 @@ public class ImportPolygon implements ActionListener {
 	private ArrayList <SendObject>m_sendings_found = new ArrayList<SendObject>();
 	private ArrayList <ShapeStruct>m_shapes_found = new ArrayList<ShapeStruct>();
 	public void actionPerformed(ActionEvent e) {
+
+		
 		if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
-			//SosiFile file = (SosiFile)e.getSource();
-			//zoom into view
-			if(m_callback!=null)
-				m_callback.actionPerformed(new ActionEvent(m_sendings_found, ActionEvent.ACTION_PERFORMED, e.getActionCommand()));
-				//m_callback.actionPerformed(e);
-			else { //import from menu
-				ArrayList<SendObject> sendings_found = m_sendings_found;
-				for(int i=0; i < sendings_found.size(); i++) {
+			List<SendObject> sendings_found = m_sendings_found;
+			final int wait_for_sendings = sendings_found.size();
+			ISendingAdded icallback_sendingadded = new ISendingAdded() {
+				int sendings = 0;
+				@Override
+				public void sendingAdded(SendObject obj) {
+					++sendings;
+					if(wait_for_sendings==this.sendings)
+					{
+						PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
+					}
+				}
+			};
+			if(m_callback!=null && m_callback instanceof SendOptionToolbar)
+			{
+				for(int i=0; i < sendings_found.size(); i++) 
+				{
 					SendObject obj = sendings_found.get(i);
-					PAS.get_pas().actionPerformed(new ActionEvent(m_sendings_found.get(i), ActionEvent.ACTION_PERFORMED, "act_add_sending"));
-				}				
+					Variables.getSendController().add_sending(obj, true, false, icallback_sendingadded);
+					Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
+				}
+			}
+			else if(m_callback!=null && m_callback instanceof AlertController)
+			{
+				m_callback.actionPerformed(new ActionEvent(sendings_found, ActionEvent.ACTION_PERFORMED, e.getActionCommand()));
 			}
 		}
 		else if("act_shape_parsing_complete".equals(e.getActionCommand()))
@@ -387,22 +408,15 @@ public class ImportPolygon implements ActionListener {
 				for(int i=0; i < imp.polylist.size(); i++)
 				{
 					PolygonStruct p = (PolygonStruct)imp.polylist.get(i);
-					//SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.NAVIGATION);
-					//obj.get_sendproperties().set_shapestruct(p);
 					m_shapes_found.add(p);
-					//m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
-					//SendObject obj = new SendObject()
-					//ArrayList<SendObject> sendings_found = m_sendings_found;
 				}
-				//if(m_callback!=null)
-				//	m_callback.actionPerformed(new ActionEvent(m_shapes_found.toArray(), ActionEvent.ACTION_PERFORMED, "act_sosi_parsing_complete"));
 				if(m_callback!=null)
 				{
 					for(int i=0; i < m_shapes_found.size(); i++)
 					{
 						SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 						obj.get_sendproperties().set_shapestruct(m_shapes_found.get(i));
-						obj.get_sendproperties().set_sendingname("Imported polygon " + i, "");
+						obj.get_sendproperties().set_sendingname(m_shapes_found.get(i).shapeName, "");
 						m_sendings_found.add(obj);
 					}
 				
@@ -433,18 +447,19 @@ public class ImportPolygon implements ActionListener {
 							
 							for(int i=0; i < m_shapes_found.size(); i++)
 							{
-								if(i==0)
+								/*if(i==0)
 								{
 									m_callback.actionPerformed(new ActionEvent(m_shapes_found.get(i), ActionEvent.ACTION_PERFORMED, "act_set_shape"));
 									PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().set_sendingname("Imported polygon " + i, "");
 								}
-								else
+								else*/
 								{
 									SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 									obj.get_sendproperties().set_shapestruct(m_shapes_found.get(i));
 									obj.get_sendproperties().set_sendingname("Imported polygon " + i, "");
 									//PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
-									PAS.get_pas().get_sendcontroller().add_sending(obj);
+									//PAS.get_pas().get_sendcontroller().add_sending(obj, true, false);
+									Variables.getSendController().add_sending(obj, true, false);
 								}
 			
 							}

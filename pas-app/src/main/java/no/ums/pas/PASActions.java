@@ -153,11 +153,10 @@ public class PASActions implements ActionListener {
 		else if("act_center_all_polygon_sendings".equals(e.getActionCommand())) {
 			try {
 				PAS.get_pas().get_drawthread().set_suspended(true);
-				SendObject obj;
+				/*SendObject obj;
 				ArrayList<ShapeStruct> polygons = new ArrayList<ShapeStruct>();
 				for(int i=0; i < PAS.get_pas().get_sendcontroller().get_sendings().size(); i++) {
 					obj = (SendObject)PAS.get_pas().get_sendcontroller().get_sendings().get(i);
-					//obj.get_sendproperties().typecast_poly().get_polygon();
 					polygons.add(obj.get_sendproperties().get_shapestruct());
 				}
 				try {
@@ -167,6 +166,25 @@ public class PASActions implements ActionListener {
 				} catch(Exception err) {
 					
 				}
+				finally
+				{
+					PAS.get_pas().get_drawthread().set_suspended(false);
+				}*/
+				NavStruct nav_total = new NavStruct();
+				for(SendObject so : Variables.getSendController().get_sendings())
+				{
+					ShapeStruct ss = so.get_sendproperties().get_shapestruct();
+					NavStruct nav = ss.calc_bounds();
+					if(nav!=null && ss.hasValidBounds())
+					{
+						nav_total = nav_total.appendTo(nav);
+					}
+				}
+				if(nav_total.isSet())
+				{
+					actionPerformed(new ActionEvent(nav_total, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));						
+				}
+
 			} catch(Exception err) {
 				System.out.println(err.getMessage());
 				err.printStackTrace();
@@ -361,7 +379,7 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_add_sending".equals(e.getActionCommand())) {
 			if(e.getSource().getClass().equals(SendObject.class)) {
-				PAS.get_pas().get_sendcontroller().add_sending((SendObject)e.getSource());
+				PAS.get_pas().get_sendcontroller().add_sending((SendObject)e.getSource(), false);
 			}
 		}
 		else if("act_exec_snapsending".equals(e.getActionCommand())) {
@@ -395,7 +413,7 @@ public class PASActions implements ActionListener {
 			ArrayList<SendObject> sendings_found = (ArrayList<SendObject>)e.getSource();
 			for(int i=0; i < sendings_found.size(); i++) {
 				SendObject obj = (SendObject)sendings_found.get(i);
-				PAS.get_pas().get_sendcontroller().add_sending(obj);
+				PAS.get_pas().get_sendcontroller().add_sending(obj, true, false);
 			}
 		}
 		else if("act_project_saved".equals(e.getActionCommand())) {
