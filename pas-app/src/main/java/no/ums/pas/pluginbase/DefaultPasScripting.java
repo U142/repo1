@@ -37,6 +37,7 @@ import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSDeleteStatus;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
+import no.ums.pas.core.ws.vars;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.Localization;
@@ -54,7 +55,10 @@ import no.ums.pas.send.SendPropertiesGIS;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
+import no.ums.ws.common.PASVERSION;
 import no.ums.ws.common.USYSTEMMESSAGES;
+import no.ums.ws.pas.Pasws;
+
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
 
@@ -70,6 +74,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -796,32 +801,50 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public boolean onHelpAbout() {
         final StringWriter aboutContent = new StringWriter();
         final PrintWriter about = new PrintWriter(aboutContent);
+        new SwingWorker() {
+            PASVERSION wsVersion;
+			@Override
+			protected Object doInBackground() throws Exception {
+				//URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
+				//QName service = new QName("http://ums.no/ws/pas/", "pasws");
+				//wsVersion = new Pasws(wsdl, service).getPaswsSoap12().getVersionNumber();
+		        return Boolean.TRUE;
+			}
 
-        about.println(Localization.l("common_aboutbox_content"));
-        about.println();
-        about.println();
-//        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
-//        about.printf("Specification version: %s\n", VersionInfo.getInstance().SPECIFICATION_VERSION);
-        about.printf("Version: %s\n", VersionInfo.INSTANCE.buildVersion);
-//        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
-//        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
-        about.printf("Revision: %s (b%s)\n", VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
-
-        //timestampformat = yyyymmdd-hhmm
-        String ts = (VersionInfo.INSTANCE.buildTimestamp.length()==13 ? VersionInfo.INSTANCE.buildTimestamp : null);
-        if(ts!=null)
-        {     	
-	        Calendar calendar = Calendar.getInstance();
-	        calendar.set(Integer.parseInt(ts.substring(0, 4)),
-	        			Integer.parseInt(ts.substring(4, 6))-1, //month is 0-based
-	        			Integer.parseInt(ts.substring(6, 8)), 
-	        			Integer.parseInt(ts.substring(9, 11)),
-	        			Integer.parseInt(ts.substring(11, 13)));
-	        about.printf("Created: %s\n", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
-        }
-	    about.close();
-
-        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), Localization.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
+			@Override
+			protected void done() {
+		        about.println(Localization.l("common_aboutbox_content"));
+		        about.println();
+		        about.println();
+//		        about.printf("Implementation version: %s\n", VersionInfo.getInstance().IMPLEMENTATION_VERSION);
+//		        about.printf("Specification version: %s\n", VersionInfo.getInstance().SPECIFICATION_VERSION);
+		        about.printf("Version: %s\n", VersionInfo.INSTANCE.buildVersion);
+//		        about.printf("Build number: %s\n", VersionInfo.INSTANCE.buildNumber);
+//		        about.printf("Build user: %s\n", VersionInfo.getInstance().buildUser);
+		        about.printf("Revision: %s (b%s)\n", VersionInfo.INSTANCE.revisionNumber, VersionInfo.INSTANCE.buildNumber);
+		        //if(wsVersion!=null)
+		        //	about.printf("Web Service Version: %d.%d.%d\n", wsVersion.getMajor(), wsVersion.getMinor(), wsVersion.getBuild());
+		        //else
+		        //	about.print("Web Service Version: Unknown / Offline");
+		        //timestampformat = yyyymmdd-hhmm
+		        String ts = (VersionInfo.INSTANCE.buildTimestamp.length()==13 ? VersionInfo.INSTANCE.buildTimestamp : null);
+		        if(ts!=null)
+		        {     	
+			        Calendar calendar = Calendar.getInstance();
+			        calendar.set(Integer.parseInt(ts.substring(0, 4)),
+			        			Integer.parseInt(ts.substring(4, 6))-1, //month is 0-based
+			        			Integer.parseInt(ts.substring(6, 8)), 
+			        			Integer.parseInt(ts.substring(9, 11)),
+			        			Integer.parseInt(ts.substring(11, 13)));
+			        about.printf("Created: %s\n", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(calendar.getTime()));
+		        }
+			    about.close();
+		        JOptionPane.showMessageDialog(PAS.get_pas(), aboutContent.toString(), Localization.l("common_aboutbox_heading"), JOptionPane.INFORMATION_MESSAGE);
+				super.done();
+			}
+        	
+		}.execute();
+        
 		return true;
 	}
 
