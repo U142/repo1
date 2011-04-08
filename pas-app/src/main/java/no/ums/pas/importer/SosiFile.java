@@ -532,25 +532,17 @@ public class SosiFile extends Object {
 							try {
 								String s = obj.data().get(1).toString();
 								int n_kurvenr = new Integer(s.substring(0, s.length()-1)).intValue();
-								//SendObject sending = PAS.get_pas().get_sendcontroller().create_new_sending();
-								//get_callback().actionPerformed(new ActionEvent())
-								//SendObject sendobj = new SendObject(PAS.get_pas());
 								get_flater().add_flate(n_kurvenr);
 								m_sendobj = new SendObject("Imported kurve " + n_kurvenr, SendProperties.SENDING_TYPE_POLYGON_, n_kurvenr, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
-								//set_callback(sendobj.get_sendproperties().get_toolbar().get_import_callback());
 								int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(n_kurvenr);
 								if(n_flate==-1) {
 									//FLATE information not yet registrered
 								}
 								System.out.println("Found flate " + n_flate + " for curve " + n_kurvenr);
 									
-								//get_flater().get_current_flate().m_polygon = new PolygonStruct(PAS.get_pas().get_mappane().get_dimension());
-								//m_sendobj.get_sendproperties().typecast_poly().set_adrinfo(get_flater().get_current_flate().get_polygon());
 								m_sendobj.get_sendproperties().set_shapestruct((PolygonStruct)get_flater().get_current_flate().get_polygon());
 								m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
 								get_callback().actionPerformed(new ActionEvent(m_sendobj, ActionEvent.ACTION_PERFORMED, "act_importsending_found"));
-								//ActionFileLoaded event = new ActionFileLoaded(get_object(), ActionEvent.ACTION_PERFORMED, get_action(), ImportPolygon.MIME_TYPE_SOSI_);		
-								//get_callback().actionPerformed(event);		
 							 
 								b_expectcoor = false;
 								b_coorsadded = false;
@@ -561,7 +553,6 @@ public class SosiFile extends Object {
 								Error.getError().addError("SosiFile","Exception in traverse",err,1);
 								return false;
 							}
-							//m_bounding = new NavStruct();
 						}
 						b_kurve = true;
 						n_kurvecount++;
@@ -602,6 +593,11 @@ public class SosiFile extends Object {
 	}
 	
 	public void callback() {
+		for(FlateFields ff : get_flater())
+		{
+			if(ff.get_polygon()!=null)
+				ff.get_polygon().finalizeShape();
+		}
 		m_parser.get_callback().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_sosi_parsing_complete"));
 	}
 	/*
@@ -634,7 +630,7 @@ public class SosiFile extends Object {
 	private FlateArray m_arr_flater = new FlateArray();
 	public FlateArray get_flater() { return m_arr_flater; }
 	
-	public class FlateArray extends ArrayList<Object> {
+	public class FlateArray extends ArrayList<FlateFields> {
 		public static final long serialVersionUID = 1;
 		private int m_n_current_index = -1;
 
@@ -743,11 +739,11 @@ public class SosiFile extends Object {
 	public void add_polypoint(double x, double y, int COORSYS) {
 		switch(COORSYS) {
 			case COORSYS_LL_:
-				get_flater().get_current_flate().get_polygon().add_coor(new Double(x), new Double(y));
+				get_flater().get_current_flate().get_polygon().add_coor(new Double(x), new Double(y), true, false);
 				break;
 			case COORSYS_UTM_:
 				CoorConverter.LLCoor ll = new CoorConverter().UTM2LL(get_ellipsoid(), x, y, get_utmzone());
-				get_flater().get_current_flate().get_polygon().add_coor(new Double(ll.get_lon()), new Double(ll.get_lat()));
+				get_flater().get_current_flate().get_polygon().add_coor(new Double(ll.get_lon()), new Double(ll.get_lat()), true, false);
 				//PAS.get_pas().add_event("lon = " + ll.get_lon() + "  lat = " + ll.get_lat());
 				break;
 		}
