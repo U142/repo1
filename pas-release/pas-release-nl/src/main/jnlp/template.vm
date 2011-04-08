@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+">
+<jnlp spec="1.0+" codebase="$jnlp_codebase_url" href="nlalert.jnlp">
   <information>
     <title>#if($project.Name)$project.Name#end</title>
     <vendor>#if($project.Organization.Name)$project.Organization.Name#end<vendor/>
