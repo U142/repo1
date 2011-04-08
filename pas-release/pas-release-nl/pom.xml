@@ -9,7 +9,7 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     <artifactId>pas-release-nl</artifactId>
-    <name>PAS - Release Netherlands</name>
+    <name>NLAlert BETA</name>
     <description>PAS</description>
     <properties>
         <jnlp.filename>NLAlert.${version}.jnlp</jnlp.filename>
