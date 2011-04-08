@@ -23,8 +23,8 @@
   <application-desc main-class="$mainClass">
     <argument>-cUMS</argument>
     <argument>-shttps://secure.ums2.no/PAS/</argument>
-    <argument>-whttps://secure.ums2.no/PAS/ws_NLAlert.1.01/WS/</argument>
+    <argument>-whttps://secure.ums2.no/PAS/ws_NLAlert/WS/</argument>
     <argument>-ahttp://94.228.135.15/MapSearchService/</argument>
-    <argument>-mhttp://94.228.135.8/mapguide2011/mapagent/mapagent.fcgi;image/png;BurgerAlert/Layers/TOP250Raster,BurgerAlert/Layers/Veiligheidsregios;28992</argument>
+    <argument>-mdefault</argument>
   </application-desc>
 </jnlp>
