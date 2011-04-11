@@ -16,6 +16,8 @@ public class RadioItemList extends CheckItemList {
 	public void action(ActionEvent e) {
 		get_pas().get_mainmenu().actionPerformed(e);
 	}
+	
+	
 	/*public void set_default(CheckItem item) {
 	}*/
 }

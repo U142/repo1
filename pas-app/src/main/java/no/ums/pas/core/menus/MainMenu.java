@@ -1,6 +1,7 @@
 package no.ums.pas.core.menus;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults.AdressTblListener;
 import no.ums.pas.core.mainui.address_search.AddressSearchCtrl;
@@ -529,7 +530,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			}
 			//get_selectmenu().get_bar().m_item_departments_checklist.set_default(new CheckItem(PAS.get_pas().get_userinfo().get_current_department().toString(), 
 			//PAS.get_pas().get_userinfo().get_current_department(),true));
-			get_selectmenu().get_bar().updateDeptSelection(true);
+			//get_selectmenu().get_bar().updateDeptSelection(true);
+			get_selectmenu().get_bar().setDepartment(Variables.getUserInfo().get_current_department());
 			//System.out.print(get_selectmenu().get_bar().m_item_departments_checklist.toString());
 			
 		}

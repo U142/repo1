@@ -3,6 +3,8 @@ package no.ums.pas.core.menus;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
+import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.menus.defines.RadioItemList;
 import no.ums.pas.localization.Localization;
@@ -87,40 +89,35 @@ public class MainSelectMenu extends JPanel implements ActionListener, ComponentL
 
             m_item_status_updates = new JMenu(Localization.l("mainmenu_status_updates"));
 			
-			updateDeptSelection(false);
+			//updateDeptSelection(false);
+            initDeptartmentMenu();
 
 			init();
 		}
 		
-		public void updateDeptSelection(boolean current_dept) {
-			if(m_item_departments_checklist != null)
-				m_item_departments_checklist.clear();
-			if(m_menu_departments != null)
-				m_menu_departments.removeAll();
+		public void initDeptartmentMenu() {
 			m_item_departments_check = new CheckItem[PAS.get_pas().get_userinfo().get_departments().size()];
-			for(int i=0; i < PAS.get_pas().get_userinfo().get_departments().size(); i++) {
-				try
-				{
-					if(current_dept) {
-						m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
-								PAS.get_pas().get_userinfo().get_departments().get(i),
-								PAS.get_pas().get_userinfo().get_departments().get(i).equals(PAS.get_pas().get_userinfo().get_current_department()) ? true : false);//(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).isDefaultDept() ? true : false));
-					}
-					else {
-						m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
-																PAS.get_pas().get_userinfo().get_departments().get(i),
-																PAS.get_pas().get_userinfo().get_departments().get(i).equals(PAS.get_pas().get_userinfo().get_default_dept()) ? true : false);//(((DeptInfo)PAS.get_pas().get_userinfo().get_departments().get(i)).isDefaultDept() ? true : false));
-					}
-				}
-				catch(Exception e)
-				{
-					m_item_departments_check[i] = new CheckItem(PAS.get_pas().get_userinfo().get_departments().get(i).toString(), 
-							PAS.get_pas().get_userinfo().get_departments().get(i),
-							false);			
-				}
+			int iCount = -1;
+			for(DeptInfo di : Variables.getUserInfo().get_departments())
+			{
+				m_item_departments_check[++iCount] = new CheckItem(di.toString(), 
+						di,
+						di.equals(PAS.get_pas().get_userinfo().get_default_dept()) ? true : false);				
 			}
 			m_item_departments_checklist = new RadioItemList(get_pas(), m_item_departments_check, 0, 
-															m_menu_departments, m_actionlistener, "act_change_department");	
+					m_menu_departments, m_actionlistener, "act_change_department");		
+		}
+		
+		public void setDepartment(DeptInfo deptinfo)
+		{
+			for(CheckItem ci : m_item_departments_checklist)
+			{
+				if(ci.get_value() instanceof DeptInfo && ci.get_value().equals(deptinfo))
+				{
+					ci.setSelected(true);
+					break;
+				}
+			}
 		}
 
 		public void showHouseEditor(boolean b)

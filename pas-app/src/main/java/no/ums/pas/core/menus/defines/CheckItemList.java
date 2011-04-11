@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 
-public abstract class CheckItemList extends ArrayList<Object> implements ItemListener, ActionListener {
+public abstract class CheckItemList extends ArrayList<CheckItem> implements ItemListener, ActionListener {
 	private ButtonGroup m_group;
 	private ButtonGroup get_group() { return m_group; }
 	private Object m_selected_value = null;
@@ -66,9 +66,9 @@ public abstract class CheckItemList extends ArrayList<Object> implements ItemLis
 				current.addActionListener(this);
 		}
 	}	
-	void add(CheckItem item) {
+	/*void add(CheckItem item) {
 		super.add((Object)item);
-	}
+	}*/
 	protected void select(int n_index) {
 		
 	}
