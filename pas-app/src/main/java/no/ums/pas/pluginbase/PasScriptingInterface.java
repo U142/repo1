@@ -434,6 +434,8 @@ public interface PasScriptingInterface {
     boolean onOpenProject(Project project, long nFromNewRefno);
 	
     boolean onCloseProject();
+    
+    boolean onStopStatusUpdates();
 
     int onInvokeProject();
 

@@ -378,7 +378,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         final boolean enableSending = pas.get_rightsmanagement().cansend() || pas.get_rightsmanagement().cansimulate();
         FileMenuActions.NEW_SENDING.setEnabled(enableSending);
         FileMenuActions.OPEN_PROJECT.setEnabled(enableSending);
-        FileMenuActions.CLOSE_PROJECT.setEnabled(enableSending);
+        FileMenuActions.CLOSE_PROJECT.setEnabled(PAS.get_pas().get_current_project()!=null);
         
 		if(!enableSending) {
             pas.close_active_project(true, true);
@@ -1140,8 +1140,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		if(shapes_to_paint.size()==0)
 			return false;
 		NavStruct nav = CommonFunc.calc_bounds(shapes_to_paint.values().toArray());
-		nav = CommonFunc.navPadding(nav, 0.01f);
-		onMapGotoNavigation(nav);
+		if(nav!=null)
+		{
+			nav = CommonFunc.navPadding(nav, 0.01f);
+			onMapGotoNavigation(nav);
+		}
 		return true;
 	}
 
@@ -1151,8 +1154,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		if(s==null)
 			return false;
 		NavStruct nav = s.calc_bounds();
-		nav = CommonFunc.navPadding(nav, 0.01f);
-		onMapGotoNavigation(nav);
+		if(nav!=null)
+		{
+			nav = CommonFunc.navPadding(nav, 0.01f);
+			onMapGotoNavigation(nav);
+		}
 		return true;
 	}
 
@@ -1266,6 +1272,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		PAS.get_pas().get_sendcontroller().remove_all_sendings();
 		PAS.get_pas().get_mainmenu().get_selectmenu().get_bar().showHouseSelect(false);
 		return true;
+	}
+
+	@Override
+	public boolean onStopStatusUpdates() {
+		return false;
 	}
 
 	@Override

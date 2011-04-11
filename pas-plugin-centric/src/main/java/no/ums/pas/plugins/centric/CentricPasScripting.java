@@ -284,6 +284,11 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
+	public boolean onHelpAbout() {
+		return super.onHelpAbout();
+	}
+
+	@Override
     public boolean onAddSendOptionToolbar(SendOptionToolbar toolbar) {
         //CentricSendOptionToolbar ctoolbar = new CentricSendOptionToolbar(new SendObject(PAS.get_pas(),PAS.get_pas().get_pasactionlistener()),PAS.get_pas().get_pasactionlistener(),toolbar.get_sendingid());
         toolbar.show_buttons(
@@ -1371,7 +1376,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onCloseProject() {
         try {
-            ((CentricStatusController) PAS.get_pas().get_statuscontroller()).stopUpdates();
+            ((CentricStatusController) Variables.getStatusController()).stopUpdates();
             PAS.pasplugin.clearShapesToPaint();
             PAS.get_pas().kickRepaint();
             ((CentricEastContent) PAS.get_pas().get_eastcontent()).remove_tab(CentricEastContent.PANEL_CENTRICSTATUS_);
@@ -1393,6 +1398,12 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
     @Override
+	public boolean onStopStatusUpdates() {
+        ((CentricStatusController) Variables.getStatusController()).stopUpdates();
+		return super.onStopStatusUpdates();
+	}
+
+	@Override
     public boolean onOpenProject(Project project, long nFromNewRefno) {
         try {
             // Does the same thing as after sending a message

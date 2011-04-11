@@ -88,13 +88,14 @@ public class CentricStatusController extends StatusController {
 				
 				//m_centricstatus.set_cbsendingresponse(res);
 				m_centricstatus.getCBStatus();
+				System.out.println("CentricStatusControl update...");
 				//System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
 			}
 			else
 			{
 				System.out.println("CentricStatusControl busy...");
 			}
-			m_timer.setDelay(m_timer.getRecurringDelay());
+			//m_timer.setDelay(m_timer.getRecurringDelay());
 		}
 	};
 	protected class CentricStatusTimer extends Timer
@@ -104,7 +105,7 @@ public class CentricStatusController extends StatusController {
 		int recurring_delay = 10000;
 		public CentricStatusTimer(int initial_delay, int recurring_delay)
 		{
-			super(initial_delay, taskPerformer);
+			super(recurring_delay, taskPerformer);
 			this.recurring_delay = recurring_delay;
 		}
 	}
@@ -126,6 +127,8 @@ public class CentricStatusController extends StatusController {
 				int initial_delay = 1; //milliseconds
 				int recurring_delay = 10000;
 				m_timer = new CentricStatusTimer(initial_delay, recurring_delay);
+				taskPerformer.actionPerformed(null);
+				m_timer.setDelay(recurring_delay);
 				m_timer.start();
 			}
 		}
