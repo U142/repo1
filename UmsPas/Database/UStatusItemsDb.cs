@@ -337,6 +337,13 @@ namespace com.ums.PAS.Database
                             shape = UShape.Deserialize(rs_poly.GetString(0), "UMunicipalShapeNoNS");
                         }
                     }
+                    else if (shape.GetType().Equals(typeof(UPolygon)))
+                    {
+                        if (shape.poly().m_array_polypoints.Count == 0)
+                        {
+                            shape = UShape.Deserialize(rs_poly.GetString(0), "UPolygonNoNS");
+                        }
+                    }
                 }
             }
             else

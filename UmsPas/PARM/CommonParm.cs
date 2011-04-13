@@ -6,11 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using com.ums.PAS.Database;
 using System.Xml;
-using System.Text;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using System.IO;
-using System.Collections.Generic;
 
 
 namespace com.ums.UmsParm
@@ -265,7 +263,11 @@ namespace com.ums.UmsParm
 
         public static UShape Deserialize(String xml, String forced_type)
         {
-            if (forced_type.Equals("UPolygon"))
+            if (forced_type.Equals("UPolygonNoNS"))
+            {
+                return com.ums.UmsParm.compatability.UPolygon.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UPolygon"))
             {
                 return UPolygon.Deserialize(xml);
             }
