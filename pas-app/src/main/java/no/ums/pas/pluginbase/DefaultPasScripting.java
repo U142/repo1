@@ -182,8 +182,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom_to_world(), menu.m_gridconst);
 		
-		menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(menu.get_combo_mapsite(), menu.m_gridconst);
+		//menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		//menu.add(menu.get_combo_mapsite(), menu.m_gridconst);
 		return true;
 	}
 
