@@ -263,23 +263,64 @@ namespace com.ums.UmsParm
             return xml;
         }
 
+        public static UShape Deserialize(String xml, String forced_type)
+        {
+            if (forced_type.Equals("UPolygon"))
+            {
+                return UPolygon.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UPLMN"))
+            {
+                return UPLMN.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UEllipseNoNS"))
+            {
+                return com.ums.UmsParm.compatability.UEllipse.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UEllipse"))
+            {
+                return UEllipse.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UGISNoNS"))
+            {
+                return com.ums.UmsParm.compatability.UGIS.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UGIS"))
+            {
+                return UGIS.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UMunicipalShapeNoNS"))
+            {
+                return com.ums.UmsParm.compatability.UMunicipalShape.Deserialize(xml);
+            }
+            else if (forced_type.Equals("UMunicipalShape"))
+            {
+                return UMunicipalShape.Deserialize(xml);
+            }
+            return null;
+        }
+
         public static UShape Deserialize(String xml)
         {
             if (xml.IndexOf("UPolygon") >= 0)
             {
-                return UPolygon.Deserialize(xml);
+                return Deserialize(xml, "UPolygon");
             }
             else if (xml.IndexOf("UPLMN") >= 0)
             {
-                return UPLMN.Deserialize(xml);
+                return Deserialize(xml, "UPLMN");
             }
             else if (xml.IndexOf("UEllipse") >= 0)
             {
-                return UEllipse.Deserialize(xml);
+                return Deserialize(xml, "UEllipse");
             }
             else if (xml.IndexOf("UGIS") >= 0)
             {
-                return UGIS.Deserialize(xml);
+                return Deserialize(xml, "UGIS");
+            }
+            else if (xml.IndexOf("UMunicipalShape") >= 0)
+            {
+                return Deserialize(xml, "UMunicipalShape");
             }
             return null;
         }
@@ -718,6 +759,23 @@ namespace com.ums.UmsParm
             throw new NotImplementedException();
         }
 
+        public static UMunicipalShape Deserialize(String xml)
+        {
+            UMunicipalShape cob = new UMunicipalShape();
+            StringReader read = new StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(cob.GetType());
+            XmlReader reader = new XmlTextReader(read);
+            try
+            {
+                cob = (UMunicipalShape)serializer.Deserialize(reader);
+                return cob;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
@@ -748,6 +806,8 @@ namespace com.ums.UmsParm
     }
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
+    [XmlInclude(typeof(UGisRecord))]
+    [XmlInclude(typeof(UMapBounds))]
     public class UGIS : UShape
     {
         public int GetInabitantCount()
@@ -765,7 +825,9 @@ namespace com.ums.UmsParm
         {
             m_n_linecount = n;
         }
+
         public List<UGisRecord> m_gis = new List<UGisRecord>();
+
         public UMapBounds m_bounds = null;
         public void SetBounds(UMapBounds b)
         {
@@ -965,15 +1027,20 @@ namespace com.ums.UmsParm
             
     }
 
-    [XmlType(Namespace="http://ums.no/ws/common/parm")]
+
+
+    [XmlType(Namespace = "http://ums.no/ws/common/parm")]
     public class UEllipse : UShape
     {
-        public double lon, lat;
-        public double x, y;
+        public double lon;
+        public double lat;
+        public double x;
+        public double y;
         public UEllipse()
             : base()
         {
         }
+
         public void setCenter(double lon, double lat)
         {
             this.lon = lon;
@@ -1265,6 +1332,7 @@ namespace com.ums.UmsParm
     }
 
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
+    [XmlInclude(typeof(UPolypoint))]
     public class UPolygon : UShape
     {
         public UBoundingRect CalcBounds()
@@ -1344,8 +1412,9 @@ namespace com.ums.UmsParm
                 cob = (UPolygon)serializer.Deserialize(reader);
                 return cob;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                String s = e.Message;
                 throw;
             }
         }
@@ -1366,7 +1435,6 @@ namespace com.ums.UmsParm
             return xml;
         }
 
-        [XmlElement("polypoint")] 
         public List<UPolypoint> m_array_polypoints;
         public List<UPolypoint> getPolygon() { return m_array_polypoints; }
         public long getSize() { return m_array_polypoints.Count; }

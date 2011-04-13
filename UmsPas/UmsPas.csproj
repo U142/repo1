@@ -78,6 +78,7 @@
     <Compile Include="Maps\UMaps.cs" />
     <Compile Include="MessageLib\UMessageLib.cs" />
     <Compile Include="PARM\CommonParm.cs" />
+    <Compile Include="PARM\compatability\CommonParmCompatability.cs" />
     <Compile Include="PARM\ParmDb.cs" />
     <Compile Include="PARM\ParmGenerateSending.cs" />
     <Compile Include="PARM\UXmlAlert.cs" />
@@ -110,6 +111,7 @@
       <Name>ZipLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

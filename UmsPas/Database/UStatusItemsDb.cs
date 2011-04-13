@@ -314,7 +314,30 @@ namespace com.ums.PAS.Database
             {
                 shape = UShape.Deserialize(rs_poly.GetString(0));
                 if (shape != null)
+                {
                     ret = true;
+                    if(shape.GetType().Equals(typeof(UEllipse)))
+                    {
+                        if(shape.ellipse().lon==0)
+                        {
+                            shape = UShape.Deserialize(rs_poly.GetString(0), "UEllipseNoNS");
+                        }
+                    }
+                    else if (shape.GetType().Equals(typeof(UGIS)))
+                    {
+                        if (shape.gis().m_bounds == null)
+                        {
+                            shape = UShape.Deserialize(rs_poly.GetString(0), "UGISNoNS");
+                        }
+                    }
+                    else if (shape.GetType().Equals(typeof(UMunicipalShape)))
+                    {
+                        if (shape.municipal().m_bounds == null)
+                        {
+                            shape = UShape.Deserialize(rs_poly.GetString(0), "UMunicipalShapeNoNS");
+                        }
+                    }
+                }
             }
             else
             {

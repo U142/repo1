@@ -210,13 +210,36 @@ namespace com.ums.PAS.Status
                     {
                         if (m_db.ShapeFromDb(ref mdv, ref shape))
                         {
+
                         }
-                        /*else if (ParseMapFile(ref mdv, ref bounding, ref shape))
+                        //check validity
+                        if (shape == null)
                         {
-                        }*/
+                            ParseMapFile(ref mdv, ref bounding, ref shape);
+                        }
+                        else //grab bounds
+                        {
+                            if (shape.GetType().Equals(typeof(UGIS)) && shape.gis().m_bounds!=null)
+                            {
+                                bounding = new UBoundingRect();
+                                bounding._left = shape.gis().m_bounds.l_bo;
+                                bounding._right = shape.gis().m_bounds.r_bo;
+                                bounding._top = shape.gis().m_bounds.u_bo;
+                                bounding._bottom = shape.gis().m_bounds.b_bo;
+                            }
+                            else if (shape.GetType().Equals(typeof(UMunicipalShape)) && shape.municipal().m_bounds!=null)
+                            {
+                                bounding = new UBoundingRect();
+                                bounding._left = shape.municipal().m_bounds.l_bo;
+                                bounding._right = shape.municipal().m_bounds.r_bo;
+                                bounding._top = shape.municipal().m_bounds.u_bo;
+                                bounding._bottom = shape.municipal().m_bounds.b_bo;
+                            }
+                        }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        ULog.error(mdv.l_refno, "Error deserializing statusshape from PASHAPE", e.Message);
                     }
                     try
                     {
@@ -254,19 +277,22 @@ namespace com.ums.PAS.Status
                                 break;
                             case 4: //gemini
                                 {
+                                    outxml.insertStartElement("BOUNDS");
                                     try
                                     {
-                                        outxml.insertStartElement("BOUNDS");
                                         outxml.insertAttribute("lbo", shape.gis().m_bounds.l_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._left.ToString(UCommon.UGlobalizationInfo));
                                         outxml.insertAttribute("rbo", shape.gis().m_bounds.r_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._right.ToString(UCommon.UGlobalizationInfo));
                                         outxml.insertAttribute("ubo", shape.gis().m_bounds.u_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._top.ToString(UCommon.UGlobalizationInfo));
                                         outxml.insertAttribute("bbo", shape.gis().m_bounds.b_bo.ToString(UCommon.UGlobalizationInfo)); //bounding._bottom.ToString(UCommon.UGlobalizationInfo));
-                                        outxml.insertEndElement();
                                     }
                                     catch (Exception e)
                                     {
-
+                                        outxml.insertAttribute("lbo", "-9999"); //bounding._left.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("rbo", "-9999"); //bounding._right.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("ubo", "-9999"); //bounding._top.ToString(UCommon.UGlobalizationInfo));
+                                        outxml.insertAttribute("bbo", "-9999"); //bounding._bottom.ToString(UCommon.UGlobalizationInfo));
                                     }
+                                    outxml.insertEndElement();
                                 }
                                 break;
                             case 5: //TAS country
@@ -840,6 +866,10 @@ namespace com.ums.PAS.Status
                             {
                                 break;
                             }
+                            if (str == null)
+                                break;
+                            if(str.Trim().Length == 0)
+                                continue;
                             String[] p = str.Split('\t');
                             if (p.Length >= 2)
                             {
