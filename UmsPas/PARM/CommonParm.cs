@@ -1435,6 +1435,7 @@ namespace com.ums.UmsParm
             return xml;
         }
 
+        [XmlElement("polypoint")]
         public List<UPolypoint> m_array_polypoints;
         public List<UPolypoint> getPolygon() { return m_array_polypoints; }
         public long getSize() { return m_array_polypoints.Count; }
