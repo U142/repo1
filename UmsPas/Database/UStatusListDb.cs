@@ -207,6 +207,7 @@ namespace com.ums.PAS.Database
                         item.n_project_owner_deptpk = rs.GetInt32(19);
                         item.n_project_owner_userpk = rs.GetInt32(20);
                         item.b_marked_as_cancelled = rs.GetInt32(21) <= 0 ? false : true;
+                        item.n_messagetextlength = rs.GetInt32(22);
                         res.addLine(ref item);
                     }
                     catch (Exception e)
