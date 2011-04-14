@@ -1,20 +1,21 @@
 package no.ums.pas.core.ws;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.xml.namespace.QName;
+
 import no.ums.pas.PAS;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.common.UDATAFILTER;
 import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.common.UDeleteStatusResponse;
 import no.ums.ws.pas.status.PasStatus;
 import no.ums.ws.pas.status.UStatusListItem;
 import no.ums.ws.pas.status.UStatusListResults;
-
-import javax.xml.namespace.QName;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.ArrayList;
-//import no.ums.ws.pas.*;
 
 public class WSGetStatusList extends WSThread
 {
@@ -61,7 +62,7 @@ public class WSGetStatusList extends WSThread
                     item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
                     item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
                     Long.toString(item.getNUpdatetimestamp()), item.getNSimulation(),
-                    item.getNProjectOwnerDeptpk(), item.getNProjectOwnerUserpk(), item.isBMarkedAsCancelled());
+                    item.getNProjectOwnerDeptpk(), item.getNProjectOwnerUserpk(), item.isBMarkedAsCancelled(), item.getNMessagetextlength());
             m_arr_statusobjects.add(obj);
         }
 	}

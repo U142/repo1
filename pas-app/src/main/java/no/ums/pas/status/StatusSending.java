@@ -1592,6 +1592,8 @@ public class StatusSending extends Object {
         private StdTextLabel m_lbl_addresstypes = new StdTextLabel(Localization.l("common_addresstypes") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_queuestatus  = new StdTextLabel("Queue status:" , lbl_width, 11, false);
 		private StdTextLabel m_lbl_items	= new StdTextLabel(Localization.l("common_items") + ":", lbl_width, 11, false);
+		private StdTextLabel m_lbl_sms_recipients = new StdTextLabel(Localization.l("common_sms_recipients") + ":", lbl_width, 11, false);
+		private StdTextLabel m_lbl_sms_total = new StdTextLabel(Localization.l("common_sms_total") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_proc		= new StdTextLabel(Localization.l("common_processed") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_alloc	= new StdTextLabel(Localization.l("common_allocated") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_maxalloc = new StdTextLabel(Localization.l("common_maxchannels") + ":", lbl_width, 11, false);
@@ -1626,6 +1628,8 @@ public class StatusSending extends Object {
 		private StdTextLabel m_txt_addresstypes = new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_queuestatus  = new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_items	= new StdTextLabel("", 250, 11, false);
+		private StdTextLabel m_txt_sms_recipients = new StdTextLabel("", 250, 11, false);
+		private StdTextLabel m_txt_sms_total = new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_proc		= new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_alloc	= new StdTextLabel("", 250, 11, false);
 		private StdTextLabel m_txt_maxalloc = new StdTextLabel("", 250, 11, false);
@@ -1948,6 +1952,16 @@ public class StatusSending extends Object {
 				
 			m_txt_status.setText(TextFormat.get_statustext_from_code(get_sendingstatus(), get_altjmp(), isMarkedAsCancelled()));
 			m_txt_queuestatus.setText("");
+			
+			if(get_type() == 2) { // SMS
+				int part = 1;
+				if(no.ums.pas.ums.tools.Utils.get_gsmsize(get_statussending().get_sms_message_text())>160)
+					part = (int)Math.ceil((double)(no.ums.pas.ums.tools.Utils.get_gsmsize(get_statussending().get_sms_message_text())/(double)(160-8)));
+ 
+				m_txt_sms_recipients.setText(new Integer(part).toString());
+				m_txt_sms_total.setText(new Integer((get_totitem() * part)).toString());
+			}
+			
 			m_txt_items.setText(new Integer(get_totitem()).toString());
 			m_txt_proc.setText(new Integer(get_proc()).toString());
 			m_txt_alloc.setText(new Integer(get_alloc()).toString());
@@ -2149,6 +2163,18 @@ public class StatusSending extends Object {
 			add(m_lbl_proc, m_gridconst);
 			set_gridconst(text_1_x, get_panel(), 6, 1);
 			add(m_txt_proc, m_gridconst);
+			
+			if(get_type() == 2) { // SMS
+				set_gridconst(0, inc_panels(), text_1_x, 1);
+				add(m_lbl_sms_recipients, m_gridconst);
+				set_gridconst(text_1_x, get_panel(), 6, 1);
+				add(m_txt_sms_recipients, m_gridconst);
+				
+				set_gridconst(0, inc_panels(), text_1_x, 1);
+				add(m_lbl_sms_total, m_gridconst);
+				set_gridconst(text_1_x, get_panel(), 6, 1);
+				add(m_txt_sms_total, m_gridconst);
+			}
 			
 			set_gridconst(0, inc_panels(), text_1_x, 1);
 			add(m_lbl_oadc, m_gridconst);

@@ -18,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public final class Utils {
@@ -225,5 +227,15 @@ public final class Utils {
         }
         return hex.toString();
     }
+    
+    static final Pattern GSM_Alphabet_Regex = Pattern.compile("[|^{}\\[\\]~\\\\]");
+	
+	public static int get_gsmsize(String text) {
+		Matcher m = GSM_Alphabet_Regex.matcher(text);
+		int ext = 0;
+		while(m.find() == true)
+			++ext;
+		return text.length()+ext;
+	}
 
 }

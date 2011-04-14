@@ -11,6 +11,7 @@ import no.ums.pas.localization.Localization;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
+import no.ums.pas.ums.tools.Utils;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +23,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -138,19 +141,31 @@ public class SearchPanelStatusList extends SearchPanelResults {
 		for(int i=0; i < arr_statuslist.size(); i++) {
 			StatusListObject obj = (StatusListObject)arr_statuslist.get(i);
 			JButton del = new JButton(ImageFetcher.getIcon("delete_24.png"));
+			int messagelength = 1;
+			String totalitems = Integer.toString(obj.get_totitem());
+			Integer.toString(obj.get_totitem());
+			
+			if(obj.get_type() == 2) {// SMS for å vise antall(faktisk antall sms)
+				StringBuffer sb = new StringBuffer();
+				sb.append(obj.get_totitem());
+				sb.append(" (" + Integer.toString(obj.get_totitem() * (int)Math.ceil((double)(obj.get_messagetextlength()/(double)(152)))) + ")");
+				totalitems = sb.toString();
+			}
+			
 			Object sz_visible[] = { 
-					obj.get_project().get_projectname(), 
-					obj.get_deptid(), 
-					obj.get_refno(), 
-					obj.getChannel(), 
-					obj.getSimulationText(), 
-					Integer.toString(obj.get_totitem()), 
-					obj.get_groupdesc(),
-					TextFormat.format_date(obj.get_createdate()), 
-					TextFormat.format_time(obj.get_createtime(),4), 
-					obj, 
-					obj.getStatusText(), 
-					obj};
+				obj.get_project().get_projectname(), 
+				obj.get_deptid(), 
+				obj.get_refno(), 
+				obj.getChannel(), 
+				obj.getSimulationText(), 
+				totalitems, 
+				obj.get_groupdesc(),
+				TextFormat.format_date(obj.get_createdate()), 
+				TextFormat.format_time(obj.get_createtime(),4), 
+				obj, 
+				obj.getStatusText(), 
+				obj};
+			
 			this.insert_row(sz_visible, -1, false);
 		}
 		this.get_tablelist().fireTableDataChanged();
