@@ -36,7 +36,7 @@ namespace com.ums.PAS.Status
         public int n_project_owner_deptpk;
         public int n_project_owner_userpk;
         public Boolean b_marked_as_cancelled;
-        public int n_messagetextlength;
+        public string sz_messagetext;
     }
 
     /*search class*/
