@@ -62,7 +62,7 @@ public class WSGetStatusList extends WSThread
                     item.getNSendingstatus(), item.getNGroup(), item.getNType(), item.getNDeptpk(),
                     item.getSzDeptid(), Long.toString(item.getNProjectpk()), item.getSzProjectname(), Long.toString(item.getNCreatetimestamp()),
                     Long.toString(item.getNUpdatetimestamp()), item.getNSimulation(),
-                    item.getNProjectOwnerDeptpk(), item.getNProjectOwnerUserpk(), item.isBMarkedAsCancelled(), item.getNMessagetextlength());
+                    item.getNProjectOwnerDeptpk(), item.getNProjectOwnerUserpk(), item.isBMarkedAsCancelled(), item.getSzMessagetext());
             m_arr_statusobjects.add(obj);
         }
 	}

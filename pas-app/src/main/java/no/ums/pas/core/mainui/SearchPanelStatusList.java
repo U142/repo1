@@ -148,7 +148,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 			if(obj.get_type() == 2) {// SMS for å vise antall(faktisk antall sms)
 				StringBuffer sb = new StringBuffer();
 				sb.append(obj.get_totitem());
-				sb.append(" (" + Integer.toString(obj.get_totitem() * (int)Math.ceil((double)(obj.get_messagetextlength()/(double)(152)))) + ")");
+				sb.append(" (" + Integer.toString(obj.get_totitem() * (int)Math.ceil((double)(Utils.get_gsmsize(obj.get_messagetext())/(double)(152)))) + ")");
 				totalitems = sb.toString();
 			}
 			

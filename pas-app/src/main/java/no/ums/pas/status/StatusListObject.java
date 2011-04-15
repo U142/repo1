@@ -27,7 +27,7 @@ public class StatusListObject extends Object implements TooltipItem {
 	private String m_sz_deptid;
 	private int m_n_simulation;
 	private boolean m_b_marked_as_cancelled;
-	private int m_n_messagetextlength;
+	private String m_sz_messagetext;
 	
 	public Project get_project() { return m_project; }
 	public int get_refno() { return m_n_refno; }
@@ -45,7 +45,7 @@ public class StatusListObject extends Object implements TooltipItem {
 	public String toString() { return get_sendingname(); }//return new Integer(get_refno()).toString(); }
 	public int get_simulation() { return m_n_simulation; }
 	public boolean isMarkedAsCancelled() { return m_b_marked_as_cancelled; }
-	public int get_messagetextlength() { return m_n_messagetextlength; }
+	public String get_messagetext() { return m_sz_messagetext; }
 	
 	public String getChannel()
 	{
@@ -97,7 +97,7 @@ public class StatusListObject extends Object implements TooltipItem {
 	public StatusListObject(int n_refno, int n_sendingtype, int n_totitem, int  n_altjmp, int n_createdate, int n_createtime, 
 			 String sz_sendingname, int n_sendingstatus, int n_group, int n_type, int n_deptpk, String sz_deptid, String sz_projectpk,
 			 String sz_projectname, String sz_createtimestamp, String sz_updatetimestamp, int simulation, 
-			 int n_project_owner_deptpk, int n_project_owner_userpk, boolean bMarkedAsCancelled, int n_messagetextlength)
+			 int n_project_owner_deptpk, int n_project_owner_userpk, boolean bMarkedAsCancelled, String sz_messagetext)
 	{
 		m_n_refno	= n_refno;
 		m_n_sendingtype	= n_sendingtype;
@@ -120,7 +120,7 @@ public class StatusListObject extends Object implements TooltipItem {
 		get_project().set_saved();
 		get_project().setOwnerDeptpk(n_project_owner_deptpk);
 		get_project().setOwnerUserpk(n_project_owner_userpk);
-		m_n_messagetextlength = n_messagetextlength;
+		m_sz_messagetext = sz_messagetext;
 	}
 	public StatusListObject(String [] sz_values)
 	{
@@ -129,7 +129,7 @@ public class StatusListObject extends Object implements TooltipItem {
 				sz_values[6], new Integer(sz_values[7]).intValue(), new Integer(sz_values[8]).intValue(), 
 				new Integer(sz_values[9]).intValue(), new Integer(sz_values[10]).intValue(), sz_values[11], sz_values[12],
 				sz_values[13], sz_values[14], sz_values[15], Integer.valueOf(sz_values[16]),
-				Integer.valueOf(sz_values[17]), Integer.valueOf(sz_values[18]), Boolean.valueOf(sz_values[19]), Integer.valueOf(sz_values[20]));
+				Integer.valueOf(sz_values[17]), Integer.valueOf(sz_values[18]), Boolean.valueOf(sz_values[19]), sz_values[20]);
 		/*m_n_refno	= new Integer(sz_values[0]).intValue();
 		m_n_sendingtype	= new Integer(sz_values[1]).intValue();
 		m_n_totitem	= new Integer(sz_values[2]).intValue();
