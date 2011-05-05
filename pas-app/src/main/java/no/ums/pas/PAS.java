@@ -404,7 +404,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setOverrideCompId(String s) { PAS_OVERRIDE_COMPID = s; }
 	public void setOverrideUserId(String s) { PAS_OVERRIDE_USERID = s; }
 	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }
-	public void setAddressSeachUrl(String s) { ADDRESSSEARCH_URL = s; }
+	public void setAddressSeachUrl(String s) { 
+		ADDRESSSEARCH_URL = s;
+		System.out.println("Address Search URL = " + ADDRESSSEARCH_URL);
+	}
 	public void setVB4Url(String s) { VB4_URL = s; }
 	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
 	public String getVB4Url() { return VB4_URL; }

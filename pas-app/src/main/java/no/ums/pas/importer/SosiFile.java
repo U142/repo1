@@ -274,7 +274,7 @@ public class SosiFile extends Object {
 					System.out.println(sz_param1 + " " + sz_param2);
 					if(get_coorsystype()==COORSYS_UTM_)
 					{
-						CoorConverter.LLCoor max = new CoorConverter().UTM2LL(23, new Double(sz_param1).doubleValue(), new Double(sz_param2).doubleValue(), "32V");
+						CoorConverter.LLCoor max = new CoorConverter().UTM2LL(23, new Double(sz_param1).doubleValue(), new Double(sz_param2).doubleValue(), get_utmzone());
 						get_bounding()._rbo = max.get_lon();
 						get_bounding()._bbo = max.get_lat();
 					}
@@ -359,6 +359,8 @@ public class SosiFile extends Object {
 				//PAS.get_pas().add_event(data.get(0).toString() + " " + data.get(1).toString());
 				double d_x, d_y;
 				try {
+					if(data.get(0).startsWith("!") || data.get(1).startsWith("!")) //comment
+						break;
 					d_x = get_origin().x + (new Double(data.get(0).toString()).doubleValue()) * get_units();
 					d_y = get_origin().y + (new Double(data.get(1).toString()).doubleValue()) * get_units();
 					//PAS.get_pas().add_event("d_x = " + d_x + "  d_y = " + d_y);

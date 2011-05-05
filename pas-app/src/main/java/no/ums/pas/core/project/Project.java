@@ -44,16 +44,27 @@ public class Project extends Object implements TooltipItem {
 	private int m_n_updatetime = 0;
 	private boolean m_b_issaved = false;
 	public void setMayOrNotBeDeleted() { 
-		//check if user have 2+ in status rights in owner department
+		//check if user have 3+ in status rights in owner department
+		boolean b_continue = false;
 		for(DeptInfo di : Variables.getUserInfo().get_departments())
 		{
 			if(di.get_deptpk()==getOwnerDeptpk())
 			{
-				if(di.get_userprofile().get_status()<2)
+				if(di.get_userprofile().get_status()<3)
 				{
 					may_be_deleted = UDeleteStatusResponse.PROJECT_USER_RESTRICTED;
+					return;
+				}
+				else
+				{
+					b_continue = true; //we know the user have rights to delete
 				}
 			}
+		}
+		if(!b_continue)
+		{
+			may_be_deleted = UDeleteStatusResponse.PROJECT_USER_RESTRICTED;
+			return;
 		}
 		//check if all sendings are complete AND user have delete-access to them all
 		for(StatusListObject slo : get_status_sendings())

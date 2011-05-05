@@ -207,18 +207,26 @@ public class StatusListObject extends Object implements TooltipItem {
 	
 	public UDeleteStatusResponse statusMayBeDeleted()
 	{
-		//check if user is member of dept and that membership allows to delete (status>=2)
+		//check if user is member of dept and that membership allows to delete (status>=3)
+		boolean b_continue = false;
 		for(DeptInfo di : Variables.getUserInfo().get_departments())
 		{
 			if(di.get_deptpk()==get_deptpk())
 			{
-				if(di.get_userprofile().get_status()<2)
+				if(di.get_userprofile().get_status()<3)
 				{
 					return UDeleteStatusResponse.FAILED_USER_RESTRICTED;
 				}
+				else
+				{
+					b_continue = true; //the user have rights to delete
+				}
 			}
 		}
-		
+		if(!b_continue)
+		{
+			return UDeleteStatusResponse.FAILED_USER_RESTRICTED;
+		}
 		return (HasFinalStatus() ? UDeleteStatusResponse.OK : UDeleteStatusResponse.FAILED_SENDING_STILL_ACTIVE);
 	}
 	@Override
