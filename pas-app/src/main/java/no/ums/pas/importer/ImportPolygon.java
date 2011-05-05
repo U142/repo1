@@ -412,6 +412,8 @@ public class ImportPolygon implements ActionListener {
 				}
 				if(m_callback!=null)
 				{
+					Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
+
 					for(int i=0; i < m_shapes_found.size(); i++)
 					{
 						SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());

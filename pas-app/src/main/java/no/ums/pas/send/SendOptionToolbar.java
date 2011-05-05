@@ -1483,7 +1483,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else if("act_sosi_parsing_complete".equals(e.getActionCommand())) {
 			@SuppressWarnings("unchecked")
 			List<SendObject> sendings_found = (List<SendObject>)e.getSource();
-			final int wait_for_sendings = sendings_found.size()-1; //dont wait for the first one
+			final int wait_for_sendings = sendings_found.size(); //dont wait for the first one
 			ISendingAdded icallback_sendingadded = new ISendingAdded() {
 				int sendings = 0;
 				@Override
@@ -1505,13 +1505,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				{
 					obj.get_sendproperties().set_sendingname("Unknown Sendingname", "");
 				}
-				if(i==0)
+				/*if(i==0)
 				{
 					this.get_parent().get_sendproperties().set_shapestruct(obj.get_sendproperties().get_shapestruct());
 					set_sendingtype();
 					this.get_parent().get_sendproperties().set_sendingname(obj.get_sendproperties().get_sendingname(), "");
 				}
-				else
+				else*/
 				{
 					Variables.getSendController().add_sending(obj, true, false, icallback_sendingadded);
 				}
