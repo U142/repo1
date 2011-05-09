@@ -18,6 +18,7 @@ class PreviewOptions extends DefaultPanel {
 	JCheckBox m_check_firstline_columnnames;
 	JComboBox m_cbx_encoding;
 	JLabel m_lbl_encoding;
+	JLabel m_lbl_requirements;
 	JButton m_btn_fetch;
 	JButton m_btn_finish;
 	boolean m_b_is_alert = false;
@@ -27,7 +28,7 @@ class PreviewOptions extends DefaultPanel {
 		m_b_is_alert = bIsAlert;
 		m_parent = parent;
 		init();
-		setPreferredSize(new Dimension(300, 50));
+		setPreferredSize(new Dimension(300, 60));
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_first_row_has_columnnames".equals(e.getActionCommand())) {
@@ -64,6 +65,8 @@ class PreviewOptions extends DefaultPanel {
 		add(m_cbx_encoding, get_gridconst());
 		set_gridconst(1, 0, 1, 1);
 		add(m_btn_fetch, get_gridconst());
+		set_gridconst(0, 2, 2, 1);
+		add(m_lbl_requirements, get_gridconst());
 		set_gridconst(3, 0, 1, 1);
 		add(m_btn_finish, get_gridconst());
 	}
@@ -82,6 +85,7 @@ class PreviewOptions extends DefaultPanel {
 		m_btn_finish.setActionCommand("act_gis_finish");
 		m_btn_finish.addActionListener(this);
 		m_btn_finish.setVisible(m_b_is_alert);
+		m_lbl_requirements = new JLabel(Localization.l("importpreview_please_specify"));
 		add_controls();
 	}
 }
