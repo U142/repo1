@@ -591,20 +591,21 @@ public class PASActions implements ActionListener {
 					actionPerformed(new ActionEvent(PAS.get_pas().get_userinfo().get_current_department().get_nav_init(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			}*/
 			// Sets the departments default map if it is not the default department for the user 
-			if(PAS.get_pas().get_userinfo().get_default_dept().get_deptpk() == PAS.get_pas().get_userinfo().get_current_department().get_deptpk())
-				PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
-			else {
+			//if(PAS.get_pas().get_userinfo().get_default_dept().get_deptpk() == PAS.get_pas().get_userinfo().get_current_department().get_deptpk())
+			//	PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), PAS.get_pas().get_userinfo());
+			//else {
 				try {
 					UserInfo ui = (UserInfo)PAS.get_pas().get_userinfo().clone();
+					//UserInfo ui = PAS.get_pas().get_userinfo();
 					ui.set_nav_init(PAS.get_pas().get_userinfo().get_current_department().get_nav_init());
 					PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), ui);
 				}
-				catch(CloneNotSupportedException ce) {
-					
+				catch(Exception err) {
+					err.printStackTrace();
 				}
 				
-			}
-			PAS.get_pas().get_mappane().load_map(false);
+			//}
+			PAS.get_pas().get_mappane().load_map(true);
 			/*
 			// Denne skal oppdatere weatherdata
 			try

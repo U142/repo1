@@ -37,6 +37,7 @@ public class DeptInfo extends Object {
 	public String get_deptid() { return m_sz_deptid; }
 	public String get_stdcc() { return m_sz_stdcc; }
 	public NavStruct get_nav_init() { return m_nav_init; }
+	public void set_nav_init(NavStruct nav) { m_nav_init = nav; } 
 	public boolean isDefaultDept() { return m_b_default_dept; }
 	public int get_deptpri() { return m_n_deptpri; }
 	public int get_maxalloc() { return m_n_maxalloc; }

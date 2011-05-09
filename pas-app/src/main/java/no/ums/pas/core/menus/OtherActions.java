@@ -188,11 +188,15 @@ public interface OtherActions {
 				switch(new Pasws(wsdl, service).getPaswsSoap12().updateMapBounds(logon, bounds))
 				{
 				case OK:
-					NavStruct nav = new NavStruct(Variables.getNavigation().get_lbo(),
-							Variables.getNavigation().get_rbo(),
-							Variables.getNavigation().get_ubo(),
-							Variables.getNavigation().get_bbo());
+					NavStruct nav = new NavStruct(
+							bounds.getLBo(),
+							bounds.getRBo(),
+							bounds.getUBo(),
+							bounds.getBBo()
+							);
 					Variables.getUserInfo().set_nav_init(nav);
+					PAS.get_pas().get_userinfo().set_nav_init(nav);
+					Variables.getUserInfo().get_current_department().set_nav_init(nav);
 					break;
 				case FAILED:
 					JOptionPane.showMessageDialog(PAS.get_pas().get_mainmenu(), "Set default map failed", PAS.l("common_error"), JOptionPane.ERROR_MESSAGE);
