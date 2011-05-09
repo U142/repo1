@@ -39,6 +39,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -154,6 +156,15 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
             						new int [] { 100, 200, 150, 75, 75, 32});
 			init_controls();
 			
+			m_txt_projectname.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					super.keyTyped(e);
+					projectNameValid(false);
+				}
+				
+			});
+			
 			add_controls();
 			init();
 			
@@ -176,20 +187,34 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
         public void start() {
             new WSGetStatusList(this).start();
         }
+        
+        protected boolean projectNameValid(boolean bInvokeErrorText)
+        {
+        	if(m_txt_projectname.getText().length() > 0)
+        	{
+        		m_lbl_errormsg.setText("");
+        		return true;
+        	}
+        	if(bInvokeErrorText)
+        	{
+        		m_lbl_errormsg.setText(Localization.l("projectdlg_project_entername"));
+        	}
+    		return false;
+        }
 
 		public void actionPerformed(ActionEvent e) {
 			if("act_save".equals(e.getActionCommand())) {
 				// For å unngå dobbeltlagring ved ninjaklikking fra support
-				get_projectpanel().m_btn_save.setEnabled(false);
-				get_projectpanel().m_btn_cancel.setEnabled(false);
-				setSelectedAction(ACT_PROJECTDLG_SAVE);
-				if(m_txt_projectname.getText().length() > 0) {
+				if(projectNameValid(true)) {
+					get_projectpanel().m_btn_save.setEnabled(false);
+					get_projectpanel().m_btn_cancel.setEnabled(false);
+					setSelectedAction(ACT_PROJECTDLG_SAVE);
 					get_project().set_projectname(m_txt_projectname.getText());
 					save();
 				}
 				else {
-                    m_lbl_errormsg.setText(Localization.l("projectdlg_project_entername"));
-                }				
+					setSelectedAction(ACT_PROJECTDLG_CANCEL);
+				}				
 					
 			}
 			else if("act_cancel".equals(e.getActionCommand())) {

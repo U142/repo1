@@ -37,8 +37,10 @@ public interface FileMenuActions {
         @Override
         public void actionPerformed(ActionEvent e) {
 			try {
-                PAS.get_pas().get_sendcontroller().create_new_sending(null, true);
-			    PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+                if(PAS.get_pas().get_sendcontroller().create_new_sending(null, true)!=null)
+                {
+                	//PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+                }
 				if(PAS.get_pas().get_parmcontroller()!=null) {
 					//PAS.get_pas().get_parmcontroller().clearDrawQueue();
 					//PAS.get_pas().get_parmcontroller().setFilled(null);
