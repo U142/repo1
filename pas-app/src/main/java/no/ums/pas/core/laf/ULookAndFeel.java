@@ -202,7 +202,11 @@ public class ULookAndFeel
 	
 	public interface TabCallback
 	{
-		public void CloseButtonClicked(JComponent c);
+		/**
+		 * @param c
+		 * @return true if callback has removed all components already, false will make the tabbed-pane to remove it all
+		 */
+		public boolean CloseButtonClicked(JComponent c);
 		public void CloseButtonHot(JComponent c);
 	}
 
@@ -277,11 +281,15 @@ public class ULookAndFeel
 					JComponent c = (JComponent)tabPane.getComponentAt(index);
 					UpdateFlag(c, ULookAndFeel.TABBEDPANE_CLOSEBUTTON_HOT, Boolean.FALSE);
 					UpdateFlag(null, ULookAndFeel.TABBEDPANE_ONE_CLOSEBUTTON_IS_HOT, Boolean.FALSE);
-					callback.CloseButtonClicked(c);
-					if(UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getTabComponentAt(index)!=null)
+					boolean bUiHandled = callback.CloseButtonClicked(c);
+					if(!bUiHandled && UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getTabComponentAt(index)!=null)
+					{
 						UTabbedPaneUI.this.tabPane.removeTabAt(index);
-					else if(UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getComponentAt(index)!=null)
+					}
+					else if(!bUiHandled && UTabbedPaneUI.this.tabPane.getTabCount()>index && UTabbedPaneUI.this.tabPane.getComponentAt(index)!=null)
+					{
 						UTabbedPaneUI.this.tabPane.removeTabAt(index);
+					}
 				}
 				super.mouseReleased(e);
 			}

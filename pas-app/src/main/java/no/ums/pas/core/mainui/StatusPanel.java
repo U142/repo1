@@ -261,8 +261,8 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		m_tab = new JTabbedPane();
 		m_tab.setUI(ULookAndFeel.newUTabbedPaneUI(m_tab, new ULookAndFeel.TabCallback() {
 			@Override
-			public void CloseButtonClicked(JComponent c) {
-				
+			public boolean CloseButtonClicked(JComponent c) {
+				return false;
 			}
 
 			@Override

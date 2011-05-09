@@ -122,15 +122,17 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 				m_tabbedpane = new EastTabbedPane();
 				m_tabbedpane.setUI(ULookAndFeel.newUTabbedPaneUI(m_tabbedpane, new ULookAndFeel.TabCallback() {					
 					@Override
-					public void CloseButtonClicked(JComponent c) {
+					public boolean CloseButtonClicked(JComponent c) {
 						if(c instanceof HouseEditorDlg)
 						{
 							Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
 							PAS.get_pas().get_mainmenu().reset_buttons_foreground();
+							return false;
 						}
 						else if(c instanceof StatusPanel)
 						{
 							//PAS.get_pas().close_active_project(true, true);
+							return false;
 						}
 						else if(c instanceof ParmPanel)
 						{
@@ -140,6 +142,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 									m_tabbedpane.setSelectedComponent(get_infopanel());
 									PAS.pasplugin.onCloseParm();									
 								}
+								return false;
 							//});
 						}
 						else if(c.equals(m_sendingpanel))
@@ -152,10 +155,12 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 									m_tabbedpane.setSelectedComponent(get_infopanel());
 									PAS.get_pas().close_active_project(false, true, false);	
 									PAS.pasplugin.onCloseProject();
+									return true;
 								}
 							//});
 							//m_statuspanel = null;
 						}
+						return false;
 					}
 
 					@Override
