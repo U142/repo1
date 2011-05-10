@@ -173,13 +173,15 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		menu.set_gridconst(1, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom(), menu.m_gridconst);
 		menu.set_gridconst(2, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(menu.get_btn_search(), menu.m_gridconst);
+		menu.add(menu.get_btn_navigate_home(), menu.m_gridconst);
 		menu.set_gridconst(3, 1, 1, 1, GridBagConstraints.NORTHWEST);
-		menu.add(menu.get_btn_houseeditor(), menu.m_gridconst);
+		menu.add(menu.get_btn_search(), menu.m_gridconst);
 		menu.set_gridconst(4, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.add(menu.get_btn_houseeditor(), menu.m_gridconst);
+		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_showhousedetails(), menu.m_gridconst);
 		menu.get_selectmenu().get_bar().showHouseSelect(false);
-		menu.set_gridconst(5, 1, 1, 1, GridBagConstraints.NORTHWEST);
+		menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);
 		menu.add(menu.get_btn_zoom_to_world(), menu.m_gridconst);
 		
 		//menu.set_gridconst(6, 1, 1, 1, GridBagConstraints.NORTHWEST);

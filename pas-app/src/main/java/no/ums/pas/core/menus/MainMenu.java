@@ -61,6 +61,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	private JButton		m_btn_houseeditor;
 	private JButton		m_btn_showhousedetails;
 	private JButton		m_btn_zoom_to_world;
+	private JButton		m_btn_navigate_home;
 	private ButtonGroup m_group_navigation;
 	private MapSiteCombo m_combo_mapsite;
 	//private SearchFrame m_searchframe = null;
@@ -90,6 +91,10 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	public JButton get_btn_zoom_to_world()
 	{
 		return m_btn_zoom_to_world;
+	}
+	public JButton get_btn_navigate_home()
+	{
+		return m_btn_navigate_home;
 	}
 	public ButtonGroup get_btn_group_navigation()
 	{
@@ -223,6 +228,14 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_group_navigation.add(m_btn_pan);
 	        m_group_navigation.add(m_btn_zoom);
 	        //m_btn_zoom.setFont(PAS.f().getMenuFont());
+	        
+	        m_btn_navigate_home = new JButton(NavigateActions.MAP_GOTO_HOME);
+	        m_btn_navigate_home.setVerticalTextPosition(AbstractButton.CENTER);
+	        m_btn_navigate_home.setHorizontalTextPosition(AbstractButton.LEFT);
+	        m_btn_navigate_home.setMnemonic('z');
+	        m_btn_navigate_home.setActionCommand(ENABLE);
+	        m_btn_navigate_home.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));	
+	        
 
 	        m_btn_search = new JButton(NavigateActions.SEARCH);
 	        m_btn_search.setVerticalTextPosition(AbstractButton.CENTER);
