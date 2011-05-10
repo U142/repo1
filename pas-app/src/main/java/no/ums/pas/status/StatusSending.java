@@ -629,6 +629,36 @@ public class StatusSending extends Object {
 	private boolean cancelRequestSent = false;
 	
 	
+	public String get_sz_sendingname() {
+		return _sz_sendingname;
+	}
+	public void set_sz_sendingname(String _sz_sendingname) {
+		this._sz_sendingname = _sz_sendingname;
+	}
+	public int get_n_refno() {
+		return _n_refno;
+	}
+	public void set_n_refno(int _n_refno) {
+		this._n_refno = _n_refno;
+	}
+	public int get_n_group() {
+		return _n_group;
+	}
+	public void set_n_group(int _n_group) {
+		this._n_group = _n_group;
+	}
+	public int get_n_type() {
+		return _n_type;
+	}
+	public void set_n_type(int _n_type) {
+		this._n_type = _n_type;
+	}
+	public boolean is_b_marked_as_cancelled() {
+		return _b_marked_as_cancelled;
+	}
+	public void set_b_marked_as_cancelled(boolean _b_marked_as_cancelled) {
+		this._b_marked_as_cancelled = _b_marked_as_cancelled;
+	}
 	public boolean isCancelRequestSent() {
 		return cancelRequestSent;
 	}
@@ -733,6 +763,27 @@ public class StatusSending extends Object {
 	
 	
 	public void setProjectpk(String sz_projectpk) { m_sz_projectpk = sz_projectpk; }
+	
+	public boolean HasFinalStatus()
+	{
+		boolean b_ret = false;
+		switch(get_type())
+		{
+		case 1: //voice
+		case 2: //sms
+		case 3: //email
+			if(get_sendingstatus() < 0 || get_sendingstatus()>=7)
+				b_ret = true;
+			break;
+		case 4: //lba
+		case 5: //tas
+			b_ret = LBASEND.HasFinalStatus(get_sendingstatus());
+			break;
+		}
+		return b_ret;
+	}
+	
+	
 	public int get_sendingtype() {
 		int n = -1;
 		switch(get_group()) {
@@ -2081,26 +2132,71 @@ public class StatusSending extends Object {
 			}
 			else if("act_kill_sending".equals(e.getActionCommand()))
 			{
-				setCancelRequestSent(true);
-				m_btn_kill.setEnabled(false);
-				new WSCancelSending(get_refno(), new ICallback() {
-					@Override
-					public void onFinished(UCancelSendingResponse response) {
-						switch(response.getResponse())
-						{
-						case OK:
-							m_btn_kill.setEnabled(false);
-							break;
-						case ALREADY_MARKED_AS_CANCELLED:
-						case ERROR:
-						case FAILED_USER_RESTRICTED:
-							JOptionPane.showMessageDialog(m_btn_kill, Localization.l("Failed to kill sending") + "\n" + response.getResponse().toString(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
-							m_btn_kill.setEnabled(true);
-							break;
-						}
-						setCancelRequestSent(false);
+				
+				//ask first
+				StringBuilder szAsk = new StringBuilder();
+				szAsk.append("<html>");
+				szAsk.append("<font color=red>");
+				szAsk.append(String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type())));
+				szAsk.append("</font>");
+				szAsk.append("<br>");
+				szAsk.append("<table>");
+				szAsk.append("<tr><td>");
+				szAsk.append(get_refno());
+				szAsk.append("</td><td>");
+				szAsk.append(StatusListObject.getChannel(get_type()));
+				szAsk.append("</td><td>");
+				szAsk.append(String.format("\"%s\"", get_sendingname()));
+				szAsk.append("</td></tr>");
+				szAsk.append("</table>");
+				
+				//test if there are more active sendings in this project
+				if(!Variables.getStatusController().allSendingsFinished(StatusSending.this))
+				{
+					szAsk.append("<br><br>");
+					szAsk.append("<font color=red>");
+					szAsk.append(Localization.l("common_kill_sending_still_active_channels"));
+					szAsk.append("</font>");
+					szAsk.append("<br>");
+					szAsk.append("<table>");
+					for(StatusSending ss : Variables.getStatusController().getNonFinalSendings(StatusSending.this))
+					{
+						szAsk.append("<tr><td>");
+						szAsk.append(ss.get_refno());
+						szAsk.append("</td><td>");
+						szAsk.append(StatusListObject.getChannel(ss.get_type()));
+						szAsk.append("</td><td>");
+						szAsk.append(String.format("\"%s\"", ss.get_sendingname()));
+						szAsk.append("</td></tr>");
 					}
-				}).execute();
+					szAsk.append("</table>");
+				}
+				szAsk.append("</html>");
+				
+				if(JOptionPane.showConfirmDialog(this, szAsk, Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+				{
+					setCancelRequestSent(true);
+					m_btn_kill.setEnabled(false);
+
+					new WSCancelSending(get_refno(), new ICallback() {
+						@Override
+						public void onFinished(UCancelSendingResponse response) {
+							switch(response.getResponse())
+							{
+							case OK:
+								m_btn_kill.setEnabled(false);
+								break;
+							case ALREADY_MARKED_AS_CANCELLED:
+							case ERROR:
+							case FAILED_USER_RESTRICTED:
+								JOptionPane.showMessageDialog(m_btn_kill, Localization.l("common_kill_sending_failed") + "\n" + response.getResponse().toString(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+								m_btn_kill.setEnabled(true);
+								break;
+							}
+							setCancelRequestSent(false);
+						}
+					}).execute();
+				}
 			}
 		}
 		public void add_controls() {

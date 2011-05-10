@@ -1209,6 +1209,7 @@ public class MainController implements ActionListener, TreeModelListener,
 							setDrawMode(null);
 						}
 						else 
+						{
 							if(JOptionPane.showConfirmDialog(gui,"One or more alerts not saved, do you want to save?","Alert not saved",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								try {
 									updXml.readXML();
@@ -1216,7 +1217,7 @@ public class MainController implements ActionListener, TreeModelListener,
 									Error.getError().addError("MainController","Exception saving alert",ex,Error.SEVERITY_ERROR);
 								}
 							}
-					
+						}
 					} else if(o.getClass().equals(AlertVO.class)) {
 						alert = (AlertVO)o;
 						if(alertSaved(alert))

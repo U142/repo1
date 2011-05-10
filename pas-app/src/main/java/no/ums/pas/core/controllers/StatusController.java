@@ -44,6 +44,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -102,6 +103,33 @@ public class StatusController extends Controller implements ActionListener {
 	public StatusSendingList get_sendinglist() {
 		return m_sendings;
 	}
+	
+	public List<StatusSending> getNonFinalSendings() {
+		return getNonFinalSendings(null);
+	}
+	
+	public List<StatusSending> getNonFinalSendings(StatusSending except)
+	{
+		List<StatusSending> ret = new ArrayList<StatusSending>();
+		for(StatusSending ss : m_sendings)
+		{
+			if(!ss.HasFinalStatus() && (except==null || !except.equals(ss)))
+			{
+				ret.add(ss);
+			}
+		}
+		return ret;		
+	}
+	
+	public boolean allSendingsFinished() {
+		return getNonFinalSendings().size() <= 0;
+	}
+	public boolean allSendingsFinished(StatusSending except)
+	{
+		return getNonFinalSendings(except).size() <= 0;
+	}
+	
+	
 
 	// private int m_n_autoupdate_seconds = 5;
 	private int m_n_max_item = 0;

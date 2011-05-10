@@ -586,7 +586,9 @@ public class WSGetStatusItems extends WSThread
 							
 					}
 					if(shapeStruct!=null)
+					{
 						shapeStruct.shapeName = Localization.l("common_refno") + " " + sending.get_refno();
+					}
 					try {
 						//System.out.println("sending " + sending.get_refno() + " with " + sending.get_polygon().get_size() + " points");
 						get_callback().actionPerformed(new ActionEvent(sending, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
@@ -1024,6 +1026,7 @@ public class WSGetStatusItems extends WSThread
 	}
 	private void fire_update_complete() {
 		if(PAS.get_pas().get_statuscontroller()!=null && PAS.get_pas().get_statuscontroller().isOpen())
+		//if(PAS.get_pas().get_statuscontroller()!=null)
 		{
 			PAS.get_pas().get_statuscontroller().status_update();
 		}

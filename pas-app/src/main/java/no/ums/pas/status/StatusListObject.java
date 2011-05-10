@@ -47,24 +47,29 @@ public class StatusListObject extends Object implements TooltipItem {
 	public boolean isMarkedAsCancelled() { return m_b_marked_as_cancelled; }
 	public String get_messagetext() { return m_sz_messagetext; }
 	
-	public String getChannel()
+	public static String getChannel(int type)
 	{
-		if(get_type()==1) {
+		if(type==1) {
             return Localization.l("main_status_channel_voice");
         }
-		else if(get_type()==2) {
+		else if(type==2) {
             return Localization.l("main_status_channel_sms");
         }
-		else if(get_type()==3) {
+		else if(type==3) {
 			return Localization.l("main_status_channel_email");
 		}
-		else if(get_type()==4) {
+		else if(type==4) {
             return Localization.l("main_status_channel_lba");
         }
-		else if(get_type()==5) {
+		else if(type==5) {
             return Localization.l("main_status_channel_tas");
         }
-		return "Unknown";
+		return "Unknown";		
+	}
+	
+	public String getChannel()
+	{
+		return getChannel(get_type());
 	}
 	public String getSimulationText()
 	{
