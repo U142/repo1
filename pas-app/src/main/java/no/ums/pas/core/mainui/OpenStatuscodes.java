@@ -132,6 +132,12 @@ public class OpenStatuscodes extends SearchPanelResults {
 		for(int i=0; i < get_statusframe().get_controller().get_statuscodes().size(); i++)
 		{
 			current = get_statusframe().get_controller().get_statuscodes()._get(i);
+			boolean visible = false;
+			for(int j=0;j<this.get_table().getRowCount();j++) {
+				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code())
+					visible = (Boolean)this.get_table().getValueAt(j, 3);
+			}
+			current.set_visible(visible);
 			try {
 				int hits = 0;
 				if(!current.get_reserved()) {
@@ -161,10 +167,11 @@ public class OpenStatuscodes extends SearchPanelResults {
 					}
 				}
 				if(current.get_current_count() < 1 /*&& get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() != 0*/) {
-					current.set_color(Color.WHITE);
+					current.set_visible(false);
 					remove_row(current);
 					current.set_removedfromlist();
 				}
+				get_pas().get_statuscontroller().show_statuscode(current.get_code(), current.get_visible());
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
