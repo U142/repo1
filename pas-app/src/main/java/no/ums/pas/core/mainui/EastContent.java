@@ -16,6 +16,7 @@ import org.jvnet.substance.theme.SubstanceTheme;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -153,8 +154,11 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 								{
 									//remove_tab(PANEL_STATUS_LIST);
 									m_tabbedpane.setSelectedComponent(get_infopanel());
-									PAS.get_pas().close_active_project(false, true, false);	
-									PAS.pasplugin.onCloseProject();
+									int answer = PAS.get_pas().close_active_project(false, true, false);	
+									if(answer==JOptionPane.YES_OPTION)
+									{
+										PAS.pasplugin.onCloseProject();
+									}
 									return true;
 								}
 							//});
