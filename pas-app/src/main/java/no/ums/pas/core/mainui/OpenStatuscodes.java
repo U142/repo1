@@ -5,6 +5,7 @@ import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.defines.TblCellColor;
 import no.ums.pas.core.popupmenus.PUStatusList;
+import no.ums.pas.send.SendProperties;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusItemObject;
 import no.ums.pas.status.StatusSending;
@@ -132,7 +133,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 		for(int i=0; i < get_statusframe().get_controller().get_statuscodes().size(); i++)
 		{
 			current = get_statusframe().get_controller().get_statuscodes()._get(i);
-			boolean visible = false;
+			boolean visible = true;
 			for(int j=0;j<this.get_table().getRowCount();j++) {
 				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code())
 					visible = (Boolean)this.get_table().getValueAt(j, 3);
@@ -165,8 +166,10 @@ public class OpenStatuscodes extends SearchPanelResults {
 						setValueAt(hits, n_row, n_col_hits);
 						setValueAt(current.get_color(), n_row, n_col_color);
 					}
-				}
-				if(current.get_current_count() < 1 /*&& get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedIndex() != 0*/) {
+				}									  
+				if(current.get_current_count() < 1
+				|| (m_filter != null && (m_filter.hasLBA() || m_filter.get_sendingtype() == 5) && current.get_code() < -1000) // Dette fjerner queue og sending dersom LBA er valgt
+				|| (m_filter.get_percentage() == (float)100 && current.get_code() < -1000)) { // Dette fjerner queue og sending dersom filteret er på en sending som er 100 prosent
 					current.set_visible(false);
 					remove_row(current);
 					current.set_removedfromlist();
