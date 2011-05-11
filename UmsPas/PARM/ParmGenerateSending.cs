@@ -879,7 +879,6 @@ namespace com.ums.UmsParm
                     smssending.setRefno(smssendinginfo.l_refno, ref project);
                     /*
                      * if this is a resend, then reorganize resend statuscodes
-                     * 
                      */
                     smssending.createShape(ref sending);
                     String schedtime_minutes = sending.n_schedtime.ToString();

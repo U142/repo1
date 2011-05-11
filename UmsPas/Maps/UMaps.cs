@@ -270,7 +270,7 @@ namespace com.ums.PAS.Maps
         }
         public override UPASMap getMap()
         {
-            String sz_request = String.Format(UCommon.UGlobalizationInfo,
+           String sz_request = String.Format(UCommon.UGlobalizationInfo,
                                 "https://api.fleximap.com/servlet/FlexiMap?" +
                                 "OID={0}_{1}" +
                                 "&UID={2}" + 

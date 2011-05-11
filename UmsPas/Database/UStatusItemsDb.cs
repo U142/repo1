@@ -114,7 +114,11 @@ namespace com.ums.PAS.Database
             c.sz_status = "SMS Failed";
             c.b_userdef_text = true;
             ret.Add(c);
-
+            c = new UStatusCode();
+            c.n_status = 8003;
+            c.sz_status = "SMS Cancelled";
+            c.b_userdef_text = true;
+            ret.Add(c);
             return ret;
         }
 
@@ -686,6 +690,13 @@ namespace com.ums.PAS.Database
                     item.n_refno = rs.GetInt32(15);
                     item.n_ldate = rs.GetInt32(16);
                     item.n_ltime = rs.GetInt32(17);
+                    //for SMS, real statuscode is stored in n_tries. n_status contains l_dst [0,1,2]. 
+                    //If n_dst=2 (failed) and real status is -100, then this message is cancelled
+                    //this is marked as 8003 to the client (SMS cancelled)
+                    if (item.n_status == 8002 && item.n_tries == -100)
+                    {
+                        item.n_status = 8003;
+                    }
                     ret.Add(item);
                 }
                 rs.Close();

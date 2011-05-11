@@ -949,6 +949,11 @@ namespace com.ums.UmsParm
                     //SMS Specific - resend of sms is based on l_dst=[0,1,2]
                     if (resend_status[i] >= 8000 && resend_status[i] <= 8002)
                         resend_status[i] = resend_status[i] - 8000;
+                    //if sms is cancelled (dst=2 and status=-100), PAS ui will receive stats with statuscode 8003.
+                    //send -100 to BCP, bcp will check if statusline is != [0,1,2]. If so, it will use
+                    //l_dst=2 and l_status=[specified]. In this case -100.
+                    else if (resend_status[i] == 8003)
+                        resend_status[i] = -100;
 
                     if (sz_header == "TR")
                     {
