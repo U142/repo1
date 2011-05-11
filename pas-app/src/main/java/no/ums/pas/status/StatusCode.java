@@ -89,6 +89,8 @@ public class StatusCode extends Object implements Comparable {
 	public StatusCode(int n_code, String sz_status, boolean b_reserved, int n_count, boolean b_isuserdefined) {
 		m_n_code = n_code;
 		m_sz_status = sz_status;
+		if(b_reserved)
+			System.out.println("is reserved");
 		m_b_reserved = b_reserved;
 		m_n_current_count = n_count;
 		m_b_isuserdefined = b_isuserdefined;

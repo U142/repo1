@@ -396,9 +396,19 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 								m_addresspanel,
                     Localization.l("main_sending_address_overview_tooltip"));
 		}
+		// Vi skal kun ha med voice dersom statuskoden er under 8000
+		int low = 100000;
+		for(int i=0;i<m_resendpanel.get_statuscodes().get_tablelist().getRowCount();i++)
+		{
+			StatusCode statuscode = (StatusCode)m_resendpanel.get_statuscodes().get_tablelist().getValueAt(i, 0);
+			if(statuscode.get_code() < low)
+				low = statuscode.get_code();
+		}
+		if(low < 8000) {
         m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
 							m_settings,
                 Localization.l("main_sending_settings_tooltip"));
+		}
 		int tmp = obj.get_sendproperties().get_addresstypes();
 		if(hasSMS(tmp))
 		{
@@ -505,7 +515,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 	}
 	public void add_filepanes() {
 		SoundFile file;
-		if(hasVoice(get_sendobject().get_sendproperties().get_addresstypes()))
+		if(hasVoice(get_sendobject().get_sendproperties().get_addresstypes()) && m_tabbedpane.indexOfComponent(m_settings) > -1)
 		{
 			for(int i=0; i < m_settings.get_current_profile().get_soundfiles().size(); i++) {
 				try {
@@ -651,7 +661,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		} else if("act_adrcount".equals(e.getActionCommand())) {
 			m_btn_next.setEnabled(false);
             m_loader.start_progress(0, Localization.l("main_sending_address_count"));
-			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), false);
+			if(m_tabbedpane.indexOfComponent(m_settings) != -1)
+				m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), false);
 			if(m_addresspanel!=null)
 				m_addresspanel.exec_adrcount(); //wait for this to finish before downloading settings
 			else
@@ -665,7 +676,8 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			get_loader().get_progress().setIndeterminate(false);
             get_loader().set_starttext(Localization.l("common_finished"));
 			m_btn_next.setEnabled(true);
-			m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), true);
+			if(m_tabbedpane.indexOfComponent(m_settings) > -1)
+				m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_settings), true);
 			init_values();
 			if(m_resendpanel != null)
 				m_resendpanel.get_statuscodes().get_table().setEnabled(true);
