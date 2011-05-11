@@ -169,7 +169,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 				}									  
 				if(current.get_current_count() < 1
 				|| (m_filter != null && (m_filter.hasLBA() || m_filter.get_sendingtype() == 5) && current.get_code() < -1000) // Dette fjerner queue og sending dersom LBA er valgt
-				|| (m_filter.get_percentage() == (float)100 && current.get_code() < -1000)) { // Dette fjerner queue og sending dersom filteret er på en sending som er 100 prosent
+				|| (m_filter != null && (m_filter.get_percentage() == (float)100 && current.get_code() < -1000))) { // Dette fjerner queue og sending dersom filteret er på en sending som er 100 prosent
 					current.set_visible(false);
 					remove_row(current);
 					current.set_removedfromlist();
