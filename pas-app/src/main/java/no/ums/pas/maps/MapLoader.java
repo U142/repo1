@@ -8,6 +8,7 @@ import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.CoorConverter.RdCoordinate;
+import no.ums.pas.ums.tools.CoorConverter.UTMCoor;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.ws.pas.ObjectFactory;
 import no.ums.ws.pas.Pasws;
@@ -428,10 +429,12 @@ public class MapLoader {
 			 }
 			 //n_epsg = 28992;
 			 //4326
-			 
 			 String epsg = "EPSG:";
 			 epsg += Variables.getSettings().getWmsEpsg();
 			 
+			 //tmp - set epsg to UTM
+			 //n_epsg = 32632;
+			 //epsg = "EPSG:32632";
 			 
 			 request.setSRS(epsg);
 			 //request.setFormat("image/png");
@@ -468,6 +471,7 @@ public class MapLoader {
 			 n_ubo = nav._ubo;
 			 n_bbo = nav._bbo;
 			 
+			 CoorConverter converter = new CoorConverter();
 			 switch(n_epsg)
 			 {
 			 case 4326: //lon/lat
@@ -479,7 +483,6 @@ public class MapLoader {
 				 n_ubo = uleft.f_easting;
 				 n_rbo = lright.f_northing;
 				 n_bbo = lright.f_easting;*/
-				 CoorConverter converter = new CoorConverter();
 				 //RdCoordinate rd1 = converter.wgs842rd_(converter.new WGS84Coordinate(n_ubo, n_lbo));
 				 //RdCoordinate rd2 = converter.wgs842rd_(converter.new WGS84Coordinate(n_bbo, n_rbo));
 				 double mid_lr = (n_rbo + n_lbo) / 2.0;
@@ -493,6 +496,15 @@ public class MapLoader {
 				 n_rbo = right.x;
 				 n_bbo = bottom.y;
 				 n_ubo = upper.y;
+				 break;
+			 case 32632: //UTM Zone 32N
+			 case 32633: //UTM zone 33N
+				 UTMCoor ul = converter.LL2UTM(23, n_ubo, n_lbo);
+				 UTMCoor lr = converter.LL2UTM(23, n_bbo, n_rbo);
+				 n_lbo = Math.round(ul.f_easting);
+				 n_rbo = Math.round(lr.f_easting);
+				 n_ubo = Math.round(ul.f_northing);
+				 n_bbo = Math.round(lr.f_northing);
 				 break;
 			 }
 			 
