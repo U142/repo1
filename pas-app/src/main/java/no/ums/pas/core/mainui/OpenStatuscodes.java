@@ -12,9 +12,11 @@ import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.colorpicker.ColorPickerTable;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.undo.UndoManager;
@@ -64,6 +66,8 @@ public class OpenStatuscodes extends SearchPanelResults {
 		super.SetRowClass(0, new StatusCodeRenderer());
 		super.SetRowClass(1, new StatusCodeRenderer());
 		super.SetRowClass(2, new StatusCodeRenderer());
+		super.SetRowClass(3, new StatusCodeRenderer());
+		super.SetRowClass(4, new StatusCodeRenderer());
 		//super.SetRowClass(3, new StatusCodeRenderer());
 		//super.SetRowClass(4, new StatusCodeRenderer());
 		super.SetRowClass(5, new TblCellColor());
@@ -74,6 +78,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 	public class StatusCodeRenderer extends JLabel implements TableCellRenderer
 	{
 		public static final long serialVersionUID = 1;
+		public JCheckBox chk = new JCheckBox();
 		//DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
 		public StatusCodeRenderer()
 		{
@@ -85,41 +90,41 @@ public class OpenStatuscodes extends SearchPanelResults {
 				int column) {
 			StatusCode code = (StatusCode)sorter.getRowContent(row)[0];
 			this.setOpaque(true);
+
 			if(isSelected)
 			{
-				this.setBackground(m_tbl.getSelectionBackground());
-				this.setForeground(m_tbl.getSelectionForeground());
+				this.setBackground(DEFAULT_SELECTION_COLOR);
+				this.setForeground(FOREGROUND_SELECTION_COLOR);
 				//this.setForeground(new java.awt.Color(255,0,0));
 			}
 			else
 			{
-				this.setBackground(m_tbl.getBackground());
-				this.setForeground(m_tbl.getForeground());
+				//this.setBackground(m_tbl.getBackground());
+				//this.setForeground(m_tbl.getForeground());
 			}
-			this.setText(value.toString());
-			if(code.isUserDefined())
+			if(value instanceof Boolean) //checkbox
 			{
-				//FontSet this.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 11));
+				if(code.get_code()>=-1002 && code.get_code()<=-1000)
+				{
+					this.setText("");
+				}
+				else
+				{
+					chk.setSelected((Boolean)value);
+					chk.setAlignmentX(Component.CENTER_ALIGNMENT);
+					chk.setHorizontalAlignment(SwingConstants.CENTER);
+					return chk;
+				}
 			}
 			else
-			{
-				//FontSet if(code.get_code()<0)
-					//FontSet this.setFont(new java.awt.Font("Arial", java.awt.Font.ITALIC, 11));
-				//FontSet else
-					//FontSet this.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 11));
-				
+			{			
+				this.setText(value.toString());
 			}
 			return this;
 		}
 	}
 
-    /*public void set_custom_cellrenderer(TableColumn column, int n_col)
-    {
-    	if(n_col==5)
-    	{
-    		column.setCellRenderer(new TblCellColor());
-    	}
-    }	*/
+
 	public boolean is_cell_editable(int row, int col) {
 		return is_cell_editable(col);
 	}	
@@ -142,7 +147,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code()) {
 					visible = (Boolean)this.get_table().getValueAt(j, 3);
 					if(current.get_code() <= -1000 && current.get_code() >= -1002) {
-						visible = false;
+						visible = true;
 						setValueAt(false, j, 3);
 						//set_cell_editable(3, false);
 					}
@@ -159,6 +164,12 @@ public class OpenStatuscodes extends SearchPanelResults {
 				}
 				else
 					hits = current.get_current_count();
+				Object colType = null;
+				if(current.get_code()<=-1000 && current.get_code()>=-1002)
+				{ 
+					colType = "";
+				}
+
 				if(!current.get_addedtolist()) {
 					Color col;
 					
@@ -194,7 +205,9 @@ public class OpenStatuscodes extends SearchPanelResults {
 						col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
 						*/
 					current.set_color( col );
-					insert_row(new Object[] { current, current.get_status(), hits, true, false, col }, -1);
+					Object visibleType = new Boolean(true);
+					Object animType = new Boolean(false);
+					insert_row(new Object[] { current, current.get_status(), hits, visibleType, animType, (colType!=null ? "" : col)}, -1);
 					current.set_addedtolist();
 				}
 				else { //update text and count
@@ -202,7 +215,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 					if(n_row>=0) {
 						setValueAt(current.get_status(), n_row, n_col_text);
 						setValueAt(hits, n_row, n_col_hits);
-						setValueAt(current.get_color(), n_row, n_col_color);
+						setValueAt((colType!=null ? "" : current.get_color()), n_row, n_col_color);
 					}
 				}									  
 				if(current.get_current_count() < 1
@@ -260,25 +273,28 @@ public class OpenStatuscodes extends SearchPanelResults {
 	}
 	protected void onMouseLClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
-		Boolean b_show = (Boolean)this.get_table().getValueAt(n_row, 3);
-		//int n_code = new Integer((String)rowcontent[n_col_code]).intValue();
-		int n_code = ((StatusCode)rowcontent[n_col_code]).get_code();
-		
-		try
+		if(this.get_table().getValueAt(n_row, 3) instanceof Boolean)
 		{
-			Boolean b_alert = (Boolean)get_table().getValueAt(n_row, 4);
-			get_pas().get_statuscontroller().activate_alertborder(n_code, b_alert.booleanValue());
-			get_pas().get_statuscontroller().show_statuscode(n_code, b_show.booleanValue());
-		}
-		catch(Exception e)
-		{
+			Boolean b_show = (Boolean)this.get_table().getValueAt(n_row, 3);
+			//int n_code = new Integer((String)rowcontent[n_col_code]).intValue();
+			int n_code = ((StatusCode)rowcontent[n_col_code]).get_code();
 			
+			try
+			{
+				Boolean b_alert = (Boolean)get_table().getValueAt(n_row, 4);
+				get_pas().get_statuscontroller().activate_alertborder(n_code, b_alert.booleanValue());
+				get_pas().get_statuscontroller().show_statuscode(n_code, b_show.booleanValue());
+			}
+			catch(Exception e)
+			{
+				
+			}
+			PAS.get_pas().kickRepaint();
 		}
-		PAS.get_pas().kickRepaint();
 	}
 	protected void onMouseLDblClick(int n_row, int n_col, Object [] rowcontent, Point p)
 	{
-		if(n_col == n_col_color) {
+		if(n_col == n_col_color && get_table().getValueAt(n_row, 5) instanceof Color) {
 			//int n_code = new Integer((String)rowcontent[n_col_code]).intValue();
 			//ColorPickerTable pick = new ColorPickerTable(get_pas(), "Select Color", p, (Color)get_tablelist().getValueAt(n_row, 5), this, get_tablelist(), new Integer(n_code), n_row);
 			ColorPickerTable pick = new ColorPickerTable(get_pas(), "Select Color", p, (Color)get_table().getValueAt(n_row, 5), this, get_table(), (StatusCode)get_table().getValueAt(n_row, 0), n_row);
