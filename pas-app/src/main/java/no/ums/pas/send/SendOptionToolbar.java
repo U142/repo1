@@ -749,7 +749,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//this.setOrientation(JToolBar.HORIZONTAL);
 		//setLayout((m_gridbag = new GridBagLayout()));
 		setLayout(this.getLayout());
-		PAS.get_pas().get_mappane().addActionListener(this);
+		if(PAS.get_pas()!=null)
+		{
+			PAS.get_pas().get_mappane().addActionListener(this);
+		}
 		//m_gridbag = this;
 		//setLayout(this);
 		//this.setFloatable(false);
