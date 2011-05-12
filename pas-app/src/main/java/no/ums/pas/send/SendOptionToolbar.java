@@ -1519,7 +1519,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				}
 				else*/
 				{
-					Variables.getSendController().add_sending(obj, true, false, icallback_sendingadded);
+					Variables.getSendController().add_sending(obj, false, false, icallback_sendingadded);
 				}
 					//Variables.getSendController().remove_sending(this);
 					//PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));

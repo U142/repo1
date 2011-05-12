@@ -388,11 +388,14 @@ public class ImportPolygon implements ActionListener {
 			};
 			if(m_callback!=null && m_callback instanceof SendOptionToolbar)
 			{
+				int adrtypes = ((SendOptionToolbar)m_callback).get_addresstypes();
+				Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
 				for(int i=0; i < sendings_found.size(); i++) 
 				{
 					SendObject obj = sendings_found.get(i);
-					Variables.getSendController().add_sending(obj, true, false, icallback_sendingadded);
-					Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
+					Variables.getSendController().add_sending(obj, false, false, icallback_sendingadded);
+					obj.get_toolbar().set_addresstypes(adrtypes);
+					obj.get_toolbar().initSelections();
 				}
 			}
 			else if(m_callback!=null && m_callback instanceof AlertController)
@@ -412,6 +415,7 @@ public class ImportPolygon implements ActionListener {
 				}
 				if(m_callback!=null)
 				{
+					int adrtypes = ((SendOptionToolbar)m_callback).get_addresstypes();
 					Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
 
 					for(int i=0; i < m_shapes_found.size(); i++)
@@ -419,6 +423,8 @@ public class ImportPolygon implements ActionListener {
 						SendObject obj = new SendObject("Imported polygon", SendProperties.SENDING_TYPE_POLYGON_, i, PAS.get_pas().get_sendcontroller(), Variables.getNavigation());
 						obj.get_sendproperties().set_shapestruct(m_shapes_found.get(i));
 						obj.get_sendproperties().set_sendingname(m_shapes_found.get(i).shapeName, "");
+						obj.get_toolbar().set_addresstypes(adrtypes);
+						obj.get_toolbar().initSelections();
 						m_sendings_found.add(obj);
 					}
 				

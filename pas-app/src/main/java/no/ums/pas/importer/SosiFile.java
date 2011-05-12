@@ -17,6 +17,9 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
 
 
 
@@ -123,6 +126,7 @@ public class SosiFile extends Object {
 	public SosiField [] fields() { return m_sosifields; }
 	private SosiParser m_parser;
 	private SendObject m_sendobj;
+	private Hashtable<Integer, SendObject> hashSendings = new Hashtable<Integer, SendObject>(); 
 	
 	protected boolean set_value(int n_fieldid, ArrayList<String> data) {
 		try {
@@ -529,6 +533,18 @@ public class SosiFile extends Object {
 						b_kurve = false;
 						b_expectcoor = false;
 					}
+					if(obj.id() == 22) //a new flate is found and refering to a kurve. check if kurve is already made
+					{
+						String data = obj.data().get(1);
+						Integer kurve = Integer.parseInt(data.substring(1));
+						if(hashSendings.containsKey(kurve))
+						{
+							int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(kurve);
+							hashSendings.get(kurve).get_sendproperties().set_sendingname(
+									get_flater().get_current_flate().get_name(), 
+									getFlateInformation(n_flate));
+						}
+					}
 					if(obj.id() == 13) {
 						if(n_kurvecount >= 0) { //new
 							try {
@@ -539,11 +555,13 @@ public class SosiFile extends Object {
 								int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(n_kurvenr);
 								if(n_flate==-1) {
 									//FLATE information not yet registrered
+									System.out.println("FLATE information not yet registrered");
 								}
 								System.out.println("Found flate " + n_flate + " for curve " + n_kurvenr);
 									
 								m_sendobj.get_sendproperties().set_shapestruct((PolygonStruct)get_flater().get_current_flate().get_polygon());
 								m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
+								hashSendings.put(n_kurvenr, m_sendobj);
 								get_callback().actionPerformed(new ActionEvent(m_sendobj, ActionEvent.ACTION_PERFORMED, "act_importsending_found"));
 							 
 								b_expectcoor = false;
