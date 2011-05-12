@@ -15,7 +15,10 @@ import no.ums.pas.ums.tools.colorpicker.ColorPickerTable;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.undo.UndoManager;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -134,11 +137,20 @@ public class OpenStatuscodes extends SearchPanelResults {
 		{
 			current = get_statusframe().get_controller().get_statuscodes()._get(i);
 			boolean visible = true;
+			boolean animated = true;
 			for(int j=0;j<this.get_table().getRowCount();j++) {
-				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code())
+				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code()) {
 					visible = (Boolean)this.get_table().getValueAt(j, 3);
+					if(current.get_code() <= -1000 && current.get_code() >= -1002) {
+						visible = false;
+						setValueAt(false, j, 3);
+						//set_cell_editable(3, false);
+					}
+						
+				}
 			}
 			current.set_visible(visible);
+			
 			try {
 				int hits = 0;
 				if(!current.get_reserved()) {
@@ -149,12 +161,38 @@ public class OpenStatuscodes extends SearchPanelResults {
 					hits = current.get_current_count();
 				if(!current.get_addedtolist()) {
 					Color col;
+					
+					switch(current.get_code()) {
+						case 0:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						case 2:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						case 168:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						case 169:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						case 8000:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						case 8002:
+							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
+							break;
+						default:
+							col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
+							break;
+					}
+					/*
 					if(!current.isUserDefined())
 					{
 						col = Color.black;
 					}
 					else
 						col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
+						*/
 					current.set_color( col );
 					insert_row(new Object[] { current, current.get_status(), hits, true, false, col }, -1);
 					current.set_addedtolist();
@@ -269,5 +307,5 @@ public class OpenStatuscodes extends SearchPanelResults {
 	void onDownloadFinished()
 	{
 		
-	}	
+	}
 }

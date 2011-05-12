@@ -29,6 +29,15 @@ public class UIParamLoader extends ClassLoader
             defaults.put("OptionPane.noButtonText", Localization.l("common_no"));
             defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
             defaults.put("OptionPane.yesButtonText", Localization.l("common_yes"));
+            
+            // Status color codes
+            defaults.put("statuscodecolor.0", 		"FFFFFF");
+            defaults.put("statuscodecolor.2", 		"FF0000");
+            defaults.put("statuscodecolor.168", 	"FFFF00");
+            defaults.put("statuscodecolor.169", 	"009003");
+            defaults.put("statuscodecolor.8000", 	"0000FF");
+            defaults.put("statuscodecolor.8002", 	"FF00FF");
+            
 			/*
 			 * List defaults
 			 * 
