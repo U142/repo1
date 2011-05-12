@@ -16,6 +16,7 @@ import no.ums.pas.sound.SoundlibFile;
 import no.ums.pas.status.StatusCode;
 import no.ums.pas.status.StatusCodeList;
 import no.ums.pas.status.StatusItemObject;
+import no.ums.pas.status.StatusSending.ResendPanel;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -398,13 +399,15 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		}
 		// Vi skal kun ha med voice dersom statuskoden er under 8000
 		int low = 100000;
-		for(int i=0;i<m_resendpanel.get_statuscodes().get_tablelist().getRowCount();i++)
-		{
-			StatusCode statuscode = (StatusCode)m_resendpanel.get_statuscodes().get_tablelist().getValueAt(i, 0);
-			if(statuscode.get_code() < low)
-				low = statuscode.get_code();
+		if(m_resendpanel != null) {
+			for(int i=0;i<m_resendpanel.get_statuscodes().get_tablelist().getRowCount();i++)
+			{
+				StatusCode statuscode = (StatusCode)m_resendpanel.get_statuscodes().get_tablelist().getValueAt(i, 0);
+				if(statuscode.get_code() < low)
+					low = statuscode.get_code();
+			}
 		}
-		if(low < 8000) {
+		if(m_resendpanel == null || low < 8000) {
         m_tabbedpane.addTab(Localization.l("main_sending_settings"), null,
 							m_settings,
                 Localization.l("main_sending_settings_tooltip"));
@@ -430,6 +433,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		m_tabbedpane.setEnabledAt(m_tabbedpane.indexOfComponent(m_send), false);
 		//m_tabbedpane.setEnabledAt(1, false);
 		m_tabbedpane.setEnabledAt(2, false);
+
 
         m_btn_next = new JButton(Localization.l("common_wizard_next"));
         m_btn_back = new JButton(Localization.l("common_wizard_back"));
