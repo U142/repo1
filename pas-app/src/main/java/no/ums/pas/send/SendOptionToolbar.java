@@ -14,6 +14,7 @@ import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -748,6 +749,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//this.setOrientation(JToolBar.HORIZONTAL);
 		//setLayout((m_gridbag = new GridBagLayout()));
 		setLayout(this.getLayout());
+		PAS.get_pas().get_mappane().addActionListener(this);
 		//m_gridbag = this;
 		//setLayout(this);
 		//this.setFloatable(false);
@@ -1361,6 +1363,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	}
 	
 	public synchronized void actionPerformed(ActionEvent e) {
+		
 		if("act_open_colorpicker".equals(e.getActionCommand())) {
 			m_colorpicker = new SendingColorPicker("Color",
 					new Point(0,0), get_parent().get_sendproperties().get_shapestruct().get_fill_color(), this);			
@@ -1655,6 +1658,49 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			else if(!this.getIsAlert())
 				m_gis_preview.setVisible(true);
 		}
+		
+		// Hengelåsen skal være visuelt og praktisk deaktivert frem til område og kanal er valgt 
+		
+		if("act_add_polypoint".equals(e.getActionCommand()) || "act_rem_polypoint".equals(e.getActionCommand()))
+		{
+			try
+			{
+				PolygonStruct poly = PAS.get_pas().get_mappane().get_active_shape().typecast_polygon();
+				if(poly.get_size()>2)
+				{
+					m_btn_finalize.setEnabled(true);
+				}
+				else
+					m_btn_finalize.setEnabled(false);
+			}
+			catch(Exception err)
+			{
+				
+			}
+		}
+		if("act_set_ellipse_corner".equals(e.getActionCommand())) {
+			try {
+				EllipseStruct ellipse = PAS.get_pas().get_mappane().get_active_shape().typecast_ellipse();
+				if(ellipse.get_center() != null && ellipse.get_corner() != null) {
+					m_btn_finalize.setEnabled(true);
+				}
+				else
+					m_btn_finalize.setEnabled(false);
+					
+			} catch(Exception err) {
+				
+			}
+		}
+		if("act_sendingtype_ellipse".equals(e.getActionCommand()) || "act_sendingtype_polygon".equals(e.getActionCommand())) {
+			m_btn_finalize.setEnabled(false);
+		}
+		
+		if(get_parent() != null && (!get_parent().get_sendproperties().can_lock() || get_parent().get_sendproperties().get_addresstypes() == 0)) {
+			m_btn_finalize.setEnabled(false);
+		}
+		else
+			m_btn_finalize.setEnabled(true);
+		
 	}
 	public void set_sendingname(String sz_name, String sz_description) {
 		m_txt_sendname.setText(sz_name);
