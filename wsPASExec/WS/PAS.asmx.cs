@@ -451,7 +451,7 @@ namespace com.ums.ws.pas
         {
             try
             {
-                AddressInfo adr = Global.AdrIndex.FindClosestAddressFromPoint(p);
+                /*AddressInfo adr = Global.AdrIndex.FindClosestAddressFromPoint(p);
                 UGabResultFromPoint res = new UGabResultFromPoint();
                 if (adr != null)
                 {
@@ -463,8 +463,8 @@ namespace com.ums.ws.pas
                     res.region = adr.ZipName;
                     res.no = adr.HouseId;
                 }
-                return res;
-                //return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
+                return res;*/
+                return (UGabResultFromPoint)new UGabFromPoint(ref logon, ref p).Find();
             }
             catch (Exception)
             {
