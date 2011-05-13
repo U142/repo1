@@ -75,6 +75,11 @@ public class StdTextArea extends JTextField// JTextArea
 	public void init(boolean bIsHeading) {
 		init(bIsHeading, 12, false);
 	}
+	public StdTextArea(boolean bIsHeading, boolean bBold, int nWidth)
+	{
+		m_dim = new Dimension(nWidth, new JTextField().getPreferredSize().height);
+		init(bIsHeading, 0, bBold);
+	}
 	public void init(boolean bIsHeading, int n_fontsize, boolean b_bold)
 	{
 		//FontSet this.setFont(new Font("Arial", (!b_bold ? Font.PLAIN : Font.BOLD), n_fontsize));

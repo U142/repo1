@@ -85,7 +85,10 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 			add(m_tab, BorderLayout.CENTER);
 		} else */{
 			//m_info = PAS.get_pas().get_eastcontent().get_infopanel();
-			add(m_info.m_txt_housedownload_progress, BorderLayout.NORTH);
+			if(m_info!=null)
+			{
+				add(m_info.m_txt_housedownload_progress, BorderLayout.NORTH);
+			}
 			add(m_tab, BorderLayout.CENTER);
 		}
 		init();

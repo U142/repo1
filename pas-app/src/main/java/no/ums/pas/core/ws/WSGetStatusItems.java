@@ -950,6 +950,16 @@ public class WSGetStatusItems extends WSThread
         fire_event(new ActionEvent(new StatusCode(-1001, Localization.l("common_queue") + " (" + Localization.l("common_queue") + ")", true, get_queue(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
         fire_event(new ActionEvent(new StatusCode(-1002, Localization.l("common_sending") + " (" + Localization.l("common_sending") + ")", true, get_sending(), false), ActionEvent.ACTION_PERFORMED, "act_insert_statuscode"));
 		
+        /*
+         * 
+         * SMS statuscodes will be based on l_dst + 8000 and cancelled.
+         * sent ok = 8000
+         * await   = 8001
+         * failed  = 8002
+         * cancelled=8003
+         * 
+         */
+        
 		for(int n_items=0; n_items < list_codes.getLength(); n_items++)
 		{
 			node_item = list_codes.item(n_items);
