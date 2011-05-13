@@ -198,6 +198,13 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				Error.getError().addError("HouseMovePanel","Exception in actionPerformed: act_coor_assignment",err,1);
 			}*/
 			Inhabitant inhab = new Inhabitant();
+			try {
+				inhab = m_current_inhabitant.clone();
+			} catch(Exception ex) {
+				System.out.println(ex.getMessage());
+				ex.printStackTrace();
+				Error.getError().addError("HouseMovePanel","Exception in delete_row",ex,1);
+			}
 			inhab.set_kondmid(m_current_inhabitant.get_kondmid());
 			inhab.set_deptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 			inhab.set_lon(m_current_position.get_lon());
