@@ -87,6 +87,10 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	
 	public void setLoading(final boolean b)
 	{
+		if(b)
+		{
+			setNoResults(false);
+		}
 		b_loading = b;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
