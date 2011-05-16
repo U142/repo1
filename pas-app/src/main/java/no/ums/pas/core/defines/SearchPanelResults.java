@@ -273,7 +273,8 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     			m_lbl_no_results.setVerticalAlignment(SwingConstants.CENTER);
     			m_lbl_no_results.setFont(m_lbl_no_results.getFont().deriveFont(25.0f));
     			m_lbl_no_results.setVisible(false);
-
+    			m_lbl_no_results.setOpaque(false);
+    			m_lbl_no_results.setForeground(new Color(0,0,0,100));    			
 	        }
 	        catch(Exception e) { }
 	        try
