@@ -16,6 +16,13 @@ public abstract class BaseAction implements Action {
     private boolean enabled = true;
     private final Map<String, Object> values = Maps.newHashMap();
 
+    protected BaseAction() {
+    }
+
+    protected BaseAction(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public final Object getValue(String key) {
         return key.equals(NAME) ? getName() : values.get(key);
@@ -55,6 +62,14 @@ public abstract class BaseAction implements Action {
 
     public final void setSelected(boolean selected) {
         putValue(SELECTED_KEY, selected);
+    }
+
+    public final String getShortDescription() {
+        return (String) getValue(SHORT_DESCRIPTION);
+    }
+
+    public final void setShortDescription(String text) {
+        putValue(SHORT_DESCRIPTION, text);
     }
 
     @Override

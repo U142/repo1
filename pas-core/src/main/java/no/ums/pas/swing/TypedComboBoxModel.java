@@ -1,7 +1,10 @@
 package no.ums.pas.swing;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import org.jdesktop.beansbinding.Converter;
 
+import javax.annotation.Nullable;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ListDataListener;
@@ -10,7 +13,7 @@ import java.util.Iterator;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public abstract class TypedComboBoxModel<K, V> extends Converter<K, V> implements ComboBoxModel, TypedListModel<V> {
+public abstract class TypedComboBoxModel<K, V> extends Converter<K, V> implements TypedListModel<V> {
 
     private final DefaultComboBoxModel delegate = new DefaultComboBoxModel();
 
@@ -77,8 +80,23 @@ public abstract class TypedComboBoxModel<K, V> extends Converter<K, V> implement
     }
 
     @Override
-    public Object getSelectedItem() {
+    public V getSelectedItem() {
         return convertForward((K) delegate.getSelectedItem());
+    }
+
+    @Override
+    public int indexOf(final V value) {
+        return Iterables.indexOf(this, new Predicate<V>() {
+            @Override
+            public boolean apply(@Nullable V input) {
+                return input == value;
+            }
+        });
+    }
+
+    @Override
+    public boolean contains(V value) {
+        return Iterables.contains(this, value);
     }
 
     @Override

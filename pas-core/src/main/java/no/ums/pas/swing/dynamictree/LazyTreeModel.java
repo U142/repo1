@@ -28,7 +28,7 @@ import java.util.concurrent.Future;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener {
+public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener, TreeNodeFactory.ExpireNotifier<T> {
 
     private static final Log log = UmsLog.getLogger(LazyTreeModel.class);
 
@@ -69,6 +69,7 @@ public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener
         this.root = createNode(rootValue);
         this.delegate = new DefaultTreeModel(root);
         populateNode(root);
+        factory.setExpireNotifier(this);
     }
 
     public TreePath getPathTo(T value) {
@@ -78,10 +79,13 @@ public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener
         return null;
     }
 
+    @Override
     public void expired(final T value) {
         if (nodeMap.containsKey(factory.identity(value))) {
             LazyTreeNode lazyTreeNode = nodeMap.get(factory.identity(value));
+            lazyTreeNode.initObject = null;
             lazyTreeNode.setUserObject(value);
+            delegate.nodeChanged(lazyTreeNode);
             if (!lazyTreeNode.isLeaf()) {
                 populateNode(lazyTreeNode);
             }
@@ -103,7 +107,11 @@ public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener
 
     @SuppressWarnings("unchecked")
     public T getNodeValue(Object node) {
-        return ((LazyTreeNode) node).getUserObject();
+        return (node == null) ? null : ((LazyTreeNode) node).getUserObject();
+    }
+
+    public T getPathValue(TreePath path) {
+        return (path == null) ? null : ((LazyTreeNode) path.getLastPathComponent()).getUserObject();
     }
 
     @Override
@@ -116,12 +124,25 @@ public final class LazyTreeModel<T> implements TreeModel, TreeWillExpandListener
     private void populateNode(LazyTreeNode node) {
         if (node.initObject != node.getUserObject()) {
             synchronized (root) {
-                while (node.getChildCount() > 0) {
-                    delegate.removeNodeFromParent(node.getChildAt(node.getChildCount()-1));
-                }
                 if (!node.isLeaf()) {
+                    int index = 0;
+                    // The logic in this block ensures that we only add objects and remove nodes
+                    // if the order or content changes.
                     for (T child : factory.getChildren(node.getUserObject())) {
-                        delegate.insertNodeInto(createNode(child), node, node.getChildCount());
+                        Object childId = factory.identity(child);
+                        // Remove nodes until there are none left, or index points at a node with the
+                        // same identifier as the child from the children iterable
+                        while (index < node.getChildCount() && !childId.equals(factory.identity(node.getChildAt(index).getUserObject()))) {
+                            delegate.removeNodeFromParent(node.getChildAt(index));
+                        }
+                        // We are adding beyond the end of the nodes children
+                        if (index >= node.getChildCount()) {
+                            delegate.insertNodeInto(createNode(child), node, node.getChildCount());
+                        }
+                        index++;
+                    }
+                    while (node.getChildCount() > index) {
+                        delegate.removeNodeFromParent(node.getChildAt(node.getChildCount()-1));
                     }
                 }
                 node.initObject = node.getUserObject();

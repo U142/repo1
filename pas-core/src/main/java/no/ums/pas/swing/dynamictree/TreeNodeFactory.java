@@ -9,6 +9,20 @@ import java.util.concurrent.Future;
 public interface TreeNodeFactory<T> {
 
     /**
+     * Interface used to notify the model that an object has expired.
+     *
+     * An instance of this is always set on a TreeNodeFactory that gets bound
+     * to a model, so the factory can notify back when any object is expired.
+     *
+     * @param <T> type of objects accepted
+     */
+    interface ExpireNotifier<T> {
+        void expired(final T value);
+    }
+
+    void setExpireNotifier(ExpireNotifier<T> notifier);
+
+    /**
      * Returns the identity for this value.
      *
      * The identity must correctly implement equals and hashcode, and it must be unique
