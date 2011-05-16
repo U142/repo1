@@ -111,7 +111,7 @@ public class MapPanel extends JPanel implements ActionListener {
 
 		actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 		// m_mapframe.set_mode(MapFrame.MAP_MODE_ZOOM);
-		m_mapframe.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+		m_mapframe.set_mode(MapFrame.MapMode.SENDING_POLY);
 	}
 	
 	public ActionEvent get_callback() {
@@ -151,9 +151,9 @@ public class MapPanel extends JPanel implements ActionListener {
 		}
 
 		else if (e.getSource() == btn1) { // ToolBar zoom
-			m_mapframe.set_mode(MapFrame.MAP_MODE_ZOOM);
+			m_mapframe.set_mode(MapFrame.MapMode.ZOOM);
 		} else if (e.getSource() == btn2) { // Toolbar draw
-			m_mapframe.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+			m_mapframe.set_mode(MapFrame.MapMode.SENDING_POLY);
 		} else if (e.getSource() == btn3) { // Toolbar clear
 			System.out.println(m_shape.typecast_polygon().get_size());
 			clear();
@@ -190,8 +190,8 @@ public class MapPanel extends JPanel implements ActionListener {
 			super(c, n_pri, n_x, n_y);
 		}
 
-		public void draw_layers() {
-			super.draw_layers();
+		public void draw_layers(Graphics g) {
+			super.draw_layers(g);
 			//if(m_polygon!=null)
 			m_shape.typecast_polygon().draw(get_gfxbuffer(),m_nav, false, false, true, getMousePos());
 			Iterator it = m_shapes.iterator();
@@ -235,7 +235,7 @@ public class MapPanel extends JPanel implements ActionListener {
 	
 	public void drawLayers(){
 		DrawPoly dp = (DrawPoly)m_draw;
-		dp.draw_layers();
+		dp.draw_layers(getGraphics());
 	}
 	public Draw getDrawThread() {
 		return m_draw;

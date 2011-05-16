@@ -1637,7 +1637,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSTATUS_);
 			//((CentricEastContent)PAS.get_pas().get_eastcontent()).flip_to(CentricEastContent.PANEL_CENTRICSEND_);
 			Variables.getMapFrame().set_active_shape(null);
-			Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+			Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
 			autoClickButton(m_btn_reset);
 		}
 	}

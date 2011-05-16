@@ -180,21 +180,21 @@ public class MapApplet extends JApplet implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
+				m_mappane.set_mode(MapFrame.MapMode.ZOOM);
 				//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}});
 		
 		btn_pan.addActionListener( new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				m_mappane.set_mode(MapFrame.MAP_MODE_PAN);
+				m_mappane.set_mode(MapFrame.MapMode.PAN);
 				//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}});
 		
 		btn_draw.addActionListener( new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 			if(e.getSource().getClass().equals(JButton.class)){
-				m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+				m_mappane.set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
 				if(Variables.getSendController().get_activesending() == null) {
 					SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 					Variables.getSendController().set_activesending(so);
@@ -254,7 +254,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//m_drawthread.setNeedRepaint();
 		//JOptionPane.showMessageDialog(this, "Is succes: " + m_drawthread.isImgpaintSuccess());
 		m_mappane.addActionListener(this);
-		m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
+		m_mappane.set_mode(MapFrame.MapMode.ZOOM);
 		//m_mappane.SetIsLoading(false, "map");
 		//put("38");
 	}
@@ -469,11 +469,11 @@ public class MapApplet extends JApplet implements ActionListener {
 				try {
 					switch(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_sendingtype()) {
 						case SendProperties.SENDING_TYPE_POLYGON_:
-							m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+							m_mappane.set_mode(MapFrame.MapMode.SENDING_POLY);
 							m_mappane.actionPerformed(new ActionEvent(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 							break;
 						case SendProperties.SENDING_TYPE_CIRCLE_:
-							m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE);
+							m_mappane.set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
 							m_mappane.actionPerformed(new ActionEvent(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 							break;
 						case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
@@ -495,11 +495,11 @@ public class MapApplet extends JApplet implements ActionListener {
 			else if("act_activate_parm_drawmode".equals(e.getActionCommand())) {
 				ShapeStruct s = (ShapeStruct)e.getSource();
 				if(s.getClass().equals(PolygonStruct.class))
-					m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+					m_mappane.set_mode(MapFrame.MapMode.SENDING_POLY);
 				else if(s.getClass().equals(EllipseStruct.class))
-					m_mappane.set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE);
+					m_mappane.set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
 				else if(s.getClass().equals(UnknownShape.class))
-					m_mappane.set_mode(MapFrame.MAP_MODE_ASSIGN_EPICENTRE);
+					m_mappane.set_mode(MapFrame.MapMode.ASSIGN_EPICENTRE);
 				m_mappane.actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 			}
 			else if("act_mousemoved".equals(e.getActionCommand())) {
@@ -593,16 +593,16 @@ public class MapApplet extends JApplet implements ActionListener {
 			}
 			else if("act_ready_for_coor_assignment_private".equals(e.getActionCommand())) {
 				m_mappane.setCurrentInhabitant((Inhabitant)e.getSource());
-				m_mappane.set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+				m_mappane.set_mode(MapFrame.MapMode.HOUSEEDITOR);
 				m_mappane.set_submode(MapFrame.MAP_HOUSEEDITOR_SET_PRIVATE_COOR);
 			}
 			else if("act_ready_for_coor_assignment_company".equals(e.getActionCommand())) {
 				m_mappane.setCurrentInhabitant((Inhabitant)e.getSource());
-				m_mappane.set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+				m_mappane.set_mode(MapFrame.MapMode.HOUSEEDITOR);
 				m_mappane.set_submode(MapFrame.MAP_HOUSEEDITOR_SET_COMPANY_COOR);			
 			}
 			else if("act_houseeditor_setcoor_none".equals(e.getActionCommand())) {
-				m_mappane.set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+				m_mappane.set_mode(MapFrame.MapMode.HOUSEEDITOR);
 				m_mappane.set_submode(MapFrame.MAP_HOUSEEDITOR_SET_COOR_NONE);
 			}
 			else if("act_close_houseeditor".equals(e.getActionCommand())) {
@@ -692,7 +692,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			sp.get_shapestruct().setHidden(false);
 		sp.get_shapestruct().set_fill_color(Color.BLUE);
 		Variables.getMapFrame().actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
-		Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+		Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
 
 		//Variables.MAPPANE.setAllOverlaysDirty();
 		//Variables.DRAW.setNeedRepaint();
@@ -755,14 +755,14 @@ public class MapApplet extends JApplet implements ActionListener {
 		//set restriction shape
 	}
 	public void pan() {
-		m_mappane.set_mode(MapFrame.MAP_MODE_PAN);
+		m_mappane.set_mode(MapFrame.MapMode.PAN);
 		//m_mappane.actionPerformed(new ActionEvent(sp.get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 	}
 	public void zoom() {
-		m_mappane.set_mode(MapFrame.MAP_MODE_ZOOM);
+		m_mappane.set_mode(MapFrame.MapMode.ZOOM);
 	}
 	public void draw() {
-		m_mappane.set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+		m_mappane.set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
 		if(Variables.getSendController().get_activesending() == null) {
 			SendObject so = new SendObject("New sending", SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_, 0, this, m_navigation);
 			Variables.getSendController().set_activesending(so);

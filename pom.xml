@@ -11,6 +11,7 @@
         <module>ums-log</module>
         <module>pas-app</module>
         <module>pas-core</module>
+        <module>ums-map</module>
         <module>pas-lang</module>
         <module>pas-icons</module>
         <module>pas-plugin-centric</module>
@@ -77,6 +78,11 @@
             <dependency>
                 <groupId>no.ums</groupId>
                 <artifactId>ums-log</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.ums</groupId>
+                <artifactId>ums-map</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>

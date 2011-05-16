@@ -1,9 +1,12 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.LonLat;
+import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.ws.common.UMapPoint;
+import sun.security.util.Password;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,21 +16,7 @@ import java.awt.event.ActionListener;
 
 
 public class Navigation {
-	/*public class NavStruct {
-		public double _lbo, _rbo, _ubo, _bbo;
-		NavStruct(double lbo, double rbo, double ubo, double bbo)
-		{
-			_lbo = lbo; _rbo = rbo; _ubo = ubo; _bbo = bbo;
-		}
-		NavStruct() {
-			this(-9999, -9999, -9999, -9999);
-		}
-		public String toString() {
-			return "lbo=" + _lbo + " ubo=" + _ubo + " rbo=" + _rbo + " bbo=" + _bbo;
-		}
-		
-	}*/
-	
+
 	public enum NAVIGATION_GESTURE
 	{
 		UNKNOWN,
@@ -147,7 +136,7 @@ public class Navigation {
 		if(test._rbo < m_f_lbo || test._lbo > m_f_rbo || test._ubo < m_f_bbo || test._bbo > m_f_ubo)
 			return false;
 		return true;
-		
+
 	}
 	
 	public boolean bboxEntirelyVisible(NavStruct test) {
@@ -169,7 +158,7 @@ public class Navigation {
 			NAVIGATION_GESTURE gesture)
 	{
 
-		//if(Math.abs(lbo)>=180 || Math.abs(rbo)>=180 || Math.abs(ubo)>
+        //if(Math.abs(lbo)>=180 || Math.abs(rbo)>=180 || Math.abs(ubo)>
 		if(Math.abs(lbo)>180)
 			lbo = 180 * Math.signum(lbo);
 		if(Math.abs(rbo)>180)
@@ -198,34 +187,63 @@ public class Navigation {
 			ubo = bbo;
 			bbo = tmp;
 		}
-		if(b_check_zoom_level)
 		{
-			NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
-			//Dimension dim = getDimensionFromBounds(nav);
-			//if(too_small(nav))
-			
-			{
-				//setNavigation(calcMinBounds(nav));
-				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, Variables.getMapFrame().get_dimension());
-				NavStruct newnav = calcMinBounds(nav, gesture);
-				//if(newnav.equals(nav))
-				if(newnav!=null)
-				{
-					m_f_nav_lbo = newnav._lbo; m_f_nav_rbo = newnav._rbo; m_f_nav_ubo = newnav._ubo; m_f_nav_bbo = newnav._bbo;
-					return true;
-				}
-				else
-					return false;
-				//else
-				//	return false;
-			}
-				//exec_zoom_in(dim, dim);
+			lbo-=0.001;
+			rbo+=0.001;
+			ubo+=0.001;
+			bbo-=0.001;
 		}
-		else
+		if(lbo>rbo) //switch
 		{
-			m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
-			return true;
+			double tmp = lbo;
+			lbo = rbo;
+			rbo = tmp;
 		}
+		if(ubo<bbo)
+		{
+			double tmp = ubo;
+			ubo = bbo;
+			bbo = tmp;
+		}
+        final TileLookup.BoundsMatch bounds = PAS.get_pas().get_mappane().getTileLookup().getBestMatch(new LonLat(lbo, ubo), new LonLat(rbo, bbo), m_dimension);
+        m_f_nav_lbo = bounds.getTopLeft().getLon();
+        m_f_nav_rbo = bounds.getBottomRight().getLon();
+        m_f_nav_ubo = bounds.getTopLeft().getLat();
+        m_f_nav_bbo = bounds.getBottomRight().getLat();
+
+        PAS.get_pas().get_mappane().getMapModel().setTopLeft(bounds.getTopLeft());
+        PAS.get_pas().get_mappane().getMapModel().setZoom(bounds.getZoom());
+
+        return true;
+//
+//		if(b_check_zoom_level)
+//		{
+//			NavStruct nav = new NavStruct(lbo, rbo, ubo, bbo);
+//			//Dimension dim = getDimensionFromBounds(nav);
+//			//if(too_small(nav))
+//
+//			{
+//				//setNavigation(calcMinBounds(nav));
+//				nav = preserve_aspect(nav._lbo, nav._rbo, nav._ubo, nav._bbo, Variables.getMapFrame().get_dimension());
+//				NavStruct newnav = calcMinBounds(nav, gesture);
+//				//if(newnav.equals(nav))
+//				if(newnav!=null)
+//				{
+//					m_f_nav_lbo = newnav._lbo; m_f_nav_rbo = newnav._rbo; m_f_nav_ubo = newnav._ubo; m_f_nav_bbo = newnav._bbo;
+//					return true;
+//				}
+//				else
+//					return false;
+//				//else
+//				//	return false;
+//			}
+//				//exec_zoom_in(dim, dim);
+//		}
+//		else
+//		{
+//			m_f_nav_lbo = lbo; m_f_nav_rbo = rbo; m_f_nav_ubo = ubo; m_f_nav_bbo = bbo;
+//			return true;
+//		}
 		//load_map();
 
 	}
@@ -270,31 +288,8 @@ public class Navigation {
 	{
 		load_map();
 	}
-	
-	public Dimension getDimensionFromBounds(NavStruct nav) {		
-		double x;
-		double y;
-		x = (nav._rbo + nav._lbo) / 2;
-		y = (nav._ubo + nav._bbo) / 2;
-		
-		return coor_to_screen(x,y,false);
-	}
-	
-	public boolean too_small(NavStruct nav) {
-		int n_minzoom = PAS.pasplugin.getMinMapDimensions().width;
 
-		//MapPoint mp1 = new MapPoint(Variables.NAVIGATION, new MapPointLL(nav._rbo, nav._ubo));
-		//MapPoint mp2 = new MapPoint(Variables.NAVIGATION, new MapPointLL(nav._lbo, nav._bbo));
-		MapPoint mp1 = new MapPoint(Variables.getNavigation(), new MapPointLL(nav._rbo, nav._ubo));
-		MapPoint mp2 = new MapPoint(Variables.getNavigation(), new MapPointLL(nav._lbo, nav._ubo));
-		double dist = calc_distance(mp1, mp2);
-		if(dist > n_minzoom)
-			return true;
-		else
-			return false;
-	}
-	
-	protected NavStruct calcMinBounds(NavStruct nav, NAVIGATION_GESTURE gesture) {
+    protected NavStruct calcMinBounds(NavStruct nav, NAVIGATION_GESTURE gesture) {
 		NavStruct newnav = new NavStruct();
 		int n_minzoom;
 
@@ -562,7 +557,7 @@ public class Navigation {
 	{
 		return Math.abs((lat2-lat1)*30.92*3600);
 	}
-	
+
 	public synchronized long calc_distance(MapPoint p1, MapPoint p2) {
 		return calc_distance(p1.get_mappointpix(), p2.get_mappointpix());
 	}
@@ -618,22 +613,17 @@ public class Navigation {
 		return new MapPointLL(pix_x * get_widthprpix().doubleValue(), pix_y * get_heightprpix().doubleValue());
 	}
 	
-	public double calc_centerpoint_x(int x) { return m_f_lbo.doubleValue() + x * m_f_widthprpix.doubleValue(); }
-	public double calc_centerpoint_y(int y) { return m_f_bbo.doubleValue() + (m_dimension.height - y) * m_f_heightprpix.doubleValue(); }
+	public double calc_centerpoint_x(int x) { return m_f_lbo + x * m_f_widthprpix; }
+	public double calc_centerpoint_y(int y) { return m_f_bbo + (m_dimension.height - y) * m_f_heightprpix; }
 	
 	/** <b>ONLY to be called from load_map</b>*/
-	public synchronized void setHeaderBounds(float lbo, float rbo, float ubo, float bbo)
-	{
-		m_f_lbo = (double)lbo;
-		m_f_rbo = (double)rbo;
-		m_f_ubo = (double)ubo;
-		m_f_bbo = (double)bbo;
-		calc();
-		m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_download_houses"));
-	}
-	/** <b>ONLY to be called from load_map</b>*/
 	public synchronized void setHeaderBounds(double lbo, double rbo, double ubo, double bbo) {
-		setHeaderBounds((float)lbo, (float)rbo, (float)ubo, (float)bbo);
+        m_f_lbo = lbo;
+        m_f_rbo = rbo;
+        m_f_ubo = ubo;
+        m_f_bbo = bbo;
+        calc();
+//        m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_download_houses"));
 	}
 	
 	/** <b>ONLY to be called from load_map</b>*/
@@ -650,7 +640,7 @@ public class Navigation {
 		m_f_ubo = f_u;
 		m_f_bbo = f_b;
 		calc();
-		m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_download_houses"));
+//		m_callback.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_download_houses"));
 		//m_pas.add_event("set_neednewcoors(true);");
 		//m_pas.download_houses();
 		/*m_pas.get_housecontroller().start_download(true);
@@ -664,8 +654,8 @@ public class Navigation {
 	}	
 	public void calc_prpix()
 	{
-		m_f_widthprpix = new Double((m_f_rbo.doubleValue() - m_f_lbo.doubleValue()) / m_dimension.width);
-		m_f_heightprpix= new Double((m_f_ubo.doubleValue() - m_f_bbo.doubleValue()) / m_dimension.height);
+		m_f_widthprpix = (m_f_rbo - m_f_lbo) / m_dimension.width;
+		m_f_heightprpix= (m_f_ubo - m_f_bbo) / m_dimension.height;
 	}
 	public void calc_mapmeters()
 	{

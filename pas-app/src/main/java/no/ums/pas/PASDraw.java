@@ -1,6 +1,7 @@
 package no.ums.pas;
 
 import java.awt.Component;
+import java.awt.Graphics;
 
 
 public class PASDraw extends Draw {
@@ -25,10 +26,10 @@ public class PASDraw extends Draw {
 			
 		}
 	}
-	protected void draw_layers() {
+	public void draw_layers(Graphics g) {
 		if(PAS.get_pas()!=null) // Because of MapApplet for admin interface
 			PAS.pasplugin.onMapDrawLayers(PAS.get_pas().get_navigation(), m_gfx_buffer, PAS.get_pas());
-		super.draw_layers();
+		super.draw_layers(g);
 	}
 	protected void map_repaint() {
 		//get_pas().get_mappane().repaint();

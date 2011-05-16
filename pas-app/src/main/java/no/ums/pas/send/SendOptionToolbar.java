@@ -14,6 +14,7 @@ import no.ums.pas.importer.SosiFile;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Municipal;
@@ -1613,7 +1614,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				get_parent().set_type(SendProperties.SENDING_TYPE_POLYGON_);
 				get_parent().get_sendproperties().typecast_poly();	
 				
-				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+				get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 				
 				resetMunicipals();
@@ -1626,7 +1627,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			try
 			{
 				get_parent().set_type(SendProperties.SENDING_TYPE_CIRCLE_);
-				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MAP_MODE_SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MapMode.SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 				//if(get_callback()!=null)
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 				resetMunicipals();
@@ -1637,7 +1638,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			try
 			{
 				get_parent().set_type(SendProperties.SENDING_TYPE_POLYGONAL_ELLIPSE_);
-				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+				get_callback().actionPerformed(new ActionEvent(no.ums.pas.maps.MapFrame.MapMode.SENDING_ELLIPSE_POLYGON, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 				//if(get_callback()!=null)
 				get_callback().actionPerformed(new ActionEvent(get_parent().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 				resetMunicipals();				

@@ -127,7 +127,7 @@ public class SendObject extends Object {
 			m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
 			if(tmp!=null)
 				m_sendproperties.CopyCommons(tmp);
-			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
 			System.out.println("SendingType=Gemini streetcode");
@@ -141,7 +141,7 @@ public class SendObject extends Object {
 					m_sendproperties.CopyCommons(tmp);
 			} catch(Exception e) {
 			}
-			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_CIRCLE_:
 			System.out.println("SendingType=Ellipse");
@@ -150,7 +150,7 @@ public class SendObject extends Object {
 			m_sendproperties = new SendPropertiesEllipse(new EllipseStruct(), m_toolbar, m_default_color);
 			if(tmp!=null)
 				m_sendproperties.CopyCommons(tmp);
-			get_callback().actionPerformed(new ActionEvent(MapFrame.MAP_MODE_SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_MUNICIPAL_:
 			System.out.println("SendingType=Municipal");
@@ -224,8 +224,7 @@ public class SendObject extends Object {
 		//PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ZOOM);
 		//PAS.get_pas().get_mainmenu().set_pan();
 		//PAS.get_pas().kickRepaint();
-		Integer n_mode = MapFrame.MAP_MODE_PAN;
-		get_callback().actionPerformed(new ActionEvent(n_mode, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
+		get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.PAN, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 		
 		return true;
 	}

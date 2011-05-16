@@ -1101,7 +1101,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			p.get_mappane().draw_adredit(g);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
 		try {
-			if(p.get_mappane().get_mode()==MapFrame.MAP_MODE_HOUSEEDITOR_) {
+			if(p.get_mappane().get_mode()==MapFrame.MapMode.HOUSEEDITOR) {
 				switch(p.get_mappane().get_submode()) {
 					case MapFrame.MAP_HOUSEEDITOR_SET_PRIVATE_COOR:
 					case MapFrame.MAP_HOUSEEDITOR_SET_COMPANY_COOR:

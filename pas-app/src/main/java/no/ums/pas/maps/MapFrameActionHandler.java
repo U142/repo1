@@ -159,20 +159,20 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				if(b_down)
 				{
 					hot_keys.put(HOTKEYS.CTRL, true);
-					if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_POLY ||
-						get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE ||
-						get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON ||
-						get_mappane().get_mode() == MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA)
+					if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
+						get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE ||
+						get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON ||
+						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA)
 					{
 						
 					}
-					else if(get_mappane().get_mode() != MapFrame.MAP_MODE_HOUSESELECT)
+					else if(get_mappane().get_mode() != MapFrame.MapMode.HOUSESELECT)
 						addAction("act_toggle_houseselect", new ActionHouseSelect(true, true));
 						//PAS.get_pas().get_mainmenu().toggle_houseselect(true, true);
 				}
 				else
 				{
-					if(get_mappane().get_mode() == MapFrame.MAP_MODE_HOUSESELECT)
+					if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
 						addAction("act_toggle_houseselect", new ActionHouseSelect(false, true));
 					hot_keys.put(HOTKEYS.CTRL, false);
 				}
@@ -244,8 +244,8 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				break;
 			case KeyEvent.VK_DELETE:
 				if(b_down) {
-					if(get_mappane().get_mode()==MapFrame.MAP_MODE_SENDING_POLY ||
-						get_mappane().get_mode()==MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA) {
+					if(get_mappane().get_mode()== MapFrame.MapMode.SENDING_POLY ||
+						get_mappane().get_mode()== MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 						//ActionEvent action = new ActionEvent(new String(""), ActionEvent.ACTION_PERFORMED, "act_rem_polypoint");
 						//PAS.get_pas().get_sendcontroller().actionPerformed(action);
 						addAction("act_rem_polypoint", new String(""));
@@ -344,7 +344,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			get_mappane().set_mouseoverhouse(null);
 		switch(get_mappane().get_mode())
 		{
-			case MapFrame.MAP_MODE_PAN_BY_DRAG:
+			case PAN_BY_DRAG:
 				setCursorPos(e.getX(), e.getY());
 				if(get_isdragging())
 				{
@@ -355,7 +355,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				}
 				//setMouseupPos(e.getX(), e.getY());
 				break;
-			case MapFrame.MAP_MODE_ZOOM:
+			case ZOOM:
 				setCursorPos(e.getX(), e.getY());
 				if(get_isdragging()) {
 					//get_mappane().get_drawthread().setRepaint(get_mappane().get_mapimage());
@@ -363,26 +363,26 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				}
 					//PAS.get_pas().kickRepaint();
 				break;
-			case MapFrame.MAP_MODE_HOUSESELECT:
+			case HOUSESELECT:
 				
 				break;
-			case MapFrame.MAP_MODE_SENDING_POLY:
+			case SENDING_POLY:
 				if(get_enable_snap()) {
 					//check_snap(e);
 					//execMouseOver(e);
 				}
 				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
 				break;
-			case MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA:
+			case PAINT_RESTRICTIONAREA:
 				checkSendingRestriction(false, RESTRICTION_MODE.FORCE_OUTSIDE, -1);
 				break;
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON:
+			case SENDING_ELLIPSE_POLYGON:
 				if(get_isdragging())
 					checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
 				break;
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE:
+			case SENDING_ELLIPSE:
 				break;
-			case MapFrame.MAP_MODE_OBJECT_MOVE:
+			case OBJECT_MOVE:
 				try {
 					if(get_mappane().get_current_object()!=null) {
 						MapPoint mp = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));					
@@ -392,20 +392,10 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					//PAS.get_pas().add_event("Error: " + err.getMessage(), err);
 					Error.getError().addError("MapFrameActionHandler","Exception in mouseMoved",err,1);
 				}
-				//check_snap(e);
-                //			m_mapimg = img;
-                //if(m_b_needrepaint==0)
-                //m_b_needrepaint ++;
                 break;
-			case MapFrame.MAP_MODE_HOUSEEDITOR_:
-				//execMouseOver(e);
-				//check_snap(e);
-				break;
 		}
 		try {
-			//addAction("act_mousemoved", new Point(e.getX(), e.getY()));
 			mouse_move(e);
-			//System.out.println("act_mousemoved");
 		} catch(Exception err) {
 			/*System.out.println(err.getMessage());
 			err.printStackTrace();
@@ -522,7 +512,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				{
 					return false;
 				}
-				if(get_mappane().get_mode()==MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON)
+				if(get_mappane().get_mode()== MapFrame.MapMode.SENDING_ELLIPSE_POLYGON)
 				{
 					current_polygon.ellipseToRestrictionlines(list.get(i).typecast_polygon());
 					return true;
@@ -687,9 +677,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			if(!get_isdragging()) {
 				switch(get_mappane().get_mode())
 				{
-				case MapFrame.MAP_MODE_PAN:
-				case MapFrame.MAP_MODE_PAN_BY_DRAG:
-				case MapFrame.MAP_MODE_ZOOM:
+				case PAN:
+				case PAN_BY_DRAG:
+				case ZOOM:
 					execMouseOver(e);
 					break;
 				}
@@ -697,11 +687,11 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 			//only repaint if
 			switch(get_mappane().get_mode())
 			{
-			case MapFrame.MAP_MODE_SENDING_POLY:
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE:
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON:
-			case MapFrame.MAP_MODE_OBJECT_MOVE:
-			case MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA:
+			case SENDING_POLY:
+			case SENDING_ELLIPSE:
+			case SENDING_ELLIPSE_POLYGON:
+			case OBJECT_MOVE:
+			case PAINT_RESTRICTIONAREA:
 				PAS.get_pas().kickRepaint();
 				break;
 			}
@@ -757,7 +747,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	{
 		switch(get_mappane().get_mode())
 		{
-			case MapFrame.MAP_MODE_ZOOM:
+			case ZOOM:
 			//case MapFrame.MAP_MODE_SENDING_ELLIPSE:
 				setCursorPos(e.getX(), e.getY());
 				if(get_isdragging()) {
@@ -768,7 +758,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					//get_mappane().get_drawthread().setRepaint(get_mappane().get_mapimage());
 				}
 				break;
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE:
+			case SENDING_ELLIPSE:
 				if(get_isdragging()) {
 					try {
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -780,7 +770,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 				}
 				break;
-			case MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON:
+			case SENDING_ELLIPSE_POLYGON:
 				if(get_isdragging()) {
 					try {
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -797,7 +787,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 				}
 				break;
-			case MapFrame.MAP_MODE_PAN_BY_DRAG:
+			case PAN_BY_DRAG:
 				setCursorPos(e.getX(), e.getY());
 				if(get_isdragging())
 				{
@@ -818,7 +808,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		{
 			case MouseEvent.BUTTON1:
 				setMousedownPos(e.getX(), e.getY());
-				if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAN) {
+				if(get_mappane().get_mode() == MapFrame.MapMode.PAN) {
 					try
 					{
 						get_mappane().get_navigation().exec_pan(getMousedownPos());
@@ -830,7 +820,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						
 					}
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAN_BY_DRAG) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.PAN_BY_DRAG) {
 					try
 					{
 						set_isdragging(true);
@@ -840,13 +830,13 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						
 					}
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
 					set_isdragging(true); //m_b_isdragging = true;
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_HOUSESELECT)
+				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSESELECT)
 					addAction("act_search_houses", new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY())).get_mappointll());//new Dimension(e.getX(), e.getY()));
 					//PAS.get_pas().get_statuscontroller().search_houses(new Dimension(e.getX(), e.getY()));
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_POLY) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1))
 					{
@@ -871,7 +861,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					}
 					
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					if(checkSendingRestriction(true, RESTRICTION_MODE.FORCE_OUTSIDE, -1))
 					{
@@ -896,7 +886,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					else
 						PAS.get_pas().kickRepaint();					
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE) {
 					try {
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 						addAction("act_set_ellipse_center", p);
@@ -907,7 +897,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						Error.getError().addError("MapFrameActionHandler","Exception in mousePressed",err,1);
 					}
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON)
+				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON)
 				{
 					try {
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -919,14 +909,14 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 						
 					}
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_OBJECT_MOVE) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.OBJECT_MOVE) {
 					//release object
 					get_mappane().get_current_object().setMoving(false);
 					get_mappane().set_current_object(null);
 					get_mappane().set_prev_mode();
 					//get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);					
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_HOUSEEDITOR_) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.HOUSEEDITOR) {
 					//new or edit object
 					MapPoint p;
 					this.check_snap(e);
@@ -945,19 +935,19 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					get_mappane().set_adredit(p.get_mappointll());
 					PAS.get_pas().kickRepaint();
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_ASSIGN_EPICENTRE) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE) {
 					MapPoint p;
 					if(get_mappane().get_active_shape() != null) {
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 						get_mappane().get_active_shape().set_epicentre(p);
 					}
 					get_mappane().set_prev_mode();
-					if(get_mappane().get_mode() == MapFrame.MAP_MODE_ASSIGN_EPICENTRE
-							|| get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_POLY
-							|| get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE
-							|| get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON
-							|| get_mappane().get_mode() == MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA)
-						get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+					if(get_mappane().get_mode() == MapFrame.MapMode.ASSIGN_EPICENTRE
+                            || get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY
+                            || get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE
+                            || get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON
+                            || get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA)
+						get_mappane().set_mode(MapFrame.MapMode.PAN);
 				}
 				break;
 			case MouseEvent.BUTTON2:
@@ -965,12 +955,12 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 				setMousedownPos(e.getX(), e.getY());
 				this.killMouseOver();
 				check_snap(e); //when pressed, always check snap right away
-				if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM) {
+				if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
 					get_mappane().get_navigation().exec_zoom_out(getMousedownPos());
 					if(get_mappane().m_overlays!=null)
 						updateOverlay();
-				} else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_POLY ||
-						get_mappane().get_mode() == MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA) {
+				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
+						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 					addAction("act_mouse_rightclick", p);
 					//ActionEvent action = new ActionEvent(p, ActionEvent.ACTION_PERFORMED, "act_mouse_rightclick");
@@ -986,7 +976,7 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 		{
 			case MouseEvent.BUTTON1:
 				setMouseupPos(e.getX(), e.getY());
-				if(get_mappane().get_mode() == MapFrame.MAP_MODE_ZOOM)
+				if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM)
 				{
 					if(Variables.getSettings().getZoomFromCenter())
 					{
@@ -1016,14 +1006,15 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 					//if(get_mappane().m_overlays!=null)
 						//updateOverlay();
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE) {
 					//set_isdragging(false);
 					addAction("act_set_ellipse_complete", this);
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_ELLIPSE_POLYGON) {
 					checkSendingRestriction(true, RESTRICTION_MODE.FORCE_INSIDE, -1);
 				}
-				else if(get_mappane().get_mode() == MapFrame.MAP_MODE_PAN_BY_DRAG) {
+				else if(get_mappane().get_mode() == MapFrame.MapMode.PAN_BY_DRAG && false) {
+
 					MapPointLL ll = Variables.getNavigation().pix_to_ll(getPanDragPoint().get_x(), getPanDragPoint().get_y());
 					NavStruct nav = new NavStruct();
 					nav._ubo = Variables.getNavigation().getHeaderUBO() + ll.get_lat();

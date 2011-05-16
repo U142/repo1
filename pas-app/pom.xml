@@ -32,6 +32,10 @@
             <groupId>no.ums</groupId>
             <artifactId>pas-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>ums-map</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.ums.ws</groupId>

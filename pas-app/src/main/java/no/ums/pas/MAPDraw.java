@@ -10,6 +10,7 @@ import no.ums.pas.send.SendController;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.util.List;
 
 public class MAPDraw extends Draw {
@@ -70,7 +71,7 @@ public class MAPDraw extends Draw {
 			get_pas().get_eastcontent().get_taspanel().calc_coortopix();
 		super.calc_new_coors();
 	}*/
-	protected void draw_layers() {
+    public void draw_layers(Graphics g) {
 		try
 		{
 			
@@ -105,7 +106,7 @@ public class MAPDraw extends Draw {
 			m_mappane.draw_adredit(m_gfx_buffer);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }
 		try {
-			if(m_mappane.get_mode()==MapFrame.MAP_MODE_HOUSEEDITOR_) {
+			if(m_mappane.get_mode()==MapFrame.MapMode.HOUSEEDITOR) {
 				switch(m_mappane.get_submode()) {
 					case MapFrame.MAP_HOUSEEDITOR_SET_PRIVATE_COOR:
 					case MapFrame.MAP_HOUSEEDITOR_SET_COMPANY_COOR:
@@ -115,7 +116,7 @@ public class MAPDraw extends Draw {
 						
 			}
 		} catch(Exception e) { }
-		super.draw_layers();
+		super.draw_layers(g);
 	}
 	protected void calc_new_coors() {
 				

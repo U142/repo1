@@ -30,8 +30,8 @@ public class EllipseStruct extends ShapeStruct {
 		m_border_color = border_color;	
 	}
 	public EllipseStruct() {
-		set_fill_color(new Color((float)0.0, (float)0.0, (float)1.0, (float)0.2));
-		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
+		set_fill_color(new Color(0.0f, 0.0f, 1.0f, 0.2f));
+		m_border_color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 	
 	

@@ -219,7 +219,7 @@ public class SendController implements ActionListener {
 		}
 		get_sendings().clear();
 		PAS.get_pas().get_mappane().set_active_shape(null);
-		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+		PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 	}
 	public void remove_sending(final SendOptionToolbar with_toolbar)
 	{
@@ -240,7 +240,7 @@ public class SendController implements ActionListener {
 					get_sendings().remove(so);
 				}
 				PAS.get_pas().get_mappane().set_active_shape(null);
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);				
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 			}
 		});
 	}
@@ -530,7 +530,7 @@ public class SendController implements ActionListener {
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_new_sending".equals(e.getActionCommand())) {
 			create_new_sending();
-			get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+			get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 		}
 		else if("act_resend".equals(e.getActionCommand())) {
 			StatusSending sending = (StatusSending)e.getSource();
@@ -579,7 +579,7 @@ public class SendController implements ActionListener {
 			PAS.get_pas().add_event("act_gis_imported_eof", null);
 		}
 		else if("act_set_mappane_mode".equals(e.getActionCommand())) {
-			PAS.get_pas().get_mappane().set_mode(((Integer)e.getSource()).intValue());
+			PAS.get_pas().get_mappane().set_mode((MapFrame.MapMode) e.getSource());
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_set_addresstypes".equals(e.getActionCommand())) {

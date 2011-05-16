@@ -350,7 +350,7 @@ import java.awt.image.ImageObserver;
 					}
 					
 					//m_b_needrepaint = false;
-					draw_layers();
+					draw_layers(m_gfx_buffer);
 					map_repaint();						
 				}
 				setPainted();
@@ -367,7 +367,7 @@ import java.awt.image.ImageObserver;
 		protected void calc_new_coors() {
 			set_neednewcoors(false);
 		}
-		protected void draw_layers() {
+		public void draw_layers(Graphics g) {
 			if(get_mappane()!=null)
 				get_mappane().drawOnEvents(m_gfx_buffer);
 			//m_b_needrepaint --;

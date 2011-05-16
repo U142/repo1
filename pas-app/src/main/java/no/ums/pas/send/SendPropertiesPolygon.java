@@ -182,7 +182,7 @@ public class SendPropertiesPolygon extends SendProperties {
 			return;
 		if(lastpoint==null || _get_shapestruct().get_size() < 1)
 			return;
-		if(get_pas().get_mappane().get_mode()==MapFrame.MAP_MODE_SENDING_POLY) {
+		if(get_pas().get_mappane().get_mode()== MapFrame.MapMode.SENDING_POLY) {
 			try {
 				MapPointPix p1 = new MapPointPix(get_shapestruct().typecast_polygon().get_pix_int_x()[_get_shapestruct().get_size()-1], _get_shapestruct().get_pix_int_y()[_get_shapestruct().get_size()-1]);
 				MapPointPix p2 = new MapPointPix(lastpoint.x, lastpoint.y);

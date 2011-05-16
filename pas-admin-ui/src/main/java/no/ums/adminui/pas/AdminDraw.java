@@ -33,7 +33,7 @@ public class AdminDraw extends PASDraw {
 	}
 
 	@Override
-	protected void draw_layers() {
+    public void draw_layers(Graphics g) {
 		DeptArray da = Variables.getUserInfo().get_departments();
 		for(int i=0; i < da.size(); i++) {
 			DeptInfo di = (DeptInfo)da.get(i);
@@ -57,7 +57,7 @@ public class AdminDraw extends PASDraw {
 			super.get_mappane().drawOnEvents(Variables.MAPPANE.getGraphics());
 		}*/
 		
-		super.draw_layers();
+		super.draw_layers(g);
 	}
 
 	@Override

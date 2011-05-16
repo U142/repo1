@@ -1,5 +1,7 @@
 package no.ums.pas.maps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
@@ -44,6 +46,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapLoader {
+
+    private static final Log log = UmsLog.getLogger(MapLoader.class);
+
 	Image m_img_load = null;
 	MediaTracker m_mtracker;
 	MapFrame m_mappane;
@@ -441,12 +446,11 @@ public class MapLoader {
 			 request.setFormat(Variables.getSettings().getSelectedWmsFormat());
 			 
 			 m_selected_layers.clear(); //remove
-			 
-			 /*for(int i=0; i < layers.length; i++) 
-			 {
-				 if(Variables.getSettings().getSelectedWmsLayers().contains(layers[i].getName()))
-					 m_selected_layers.add(layers[i]);
-			 }*/
+
+            for (Layer layer : layers) {
+                if (Variables.getSettings().getSelectedWmsLayers().contains(layer.getName()))
+                    m_selected_layers.add(layer);
+			 }
 			 for(String sellayer : Variables.getSettings().getSelectedWmsLayers())
 			 {
 				 for(Layer layer : layers) {
@@ -456,13 +460,10 @@ public class MapLoader {
 						 request.addLayer(layer);
 					 }
 				 }
-			 }
+            }
 			 
 			 //for(int i=m_selected_layers.size()-1; i >= 0 ; i--)
 			 /*for(int i=0; i < m_selected_layers.size(); i++)
-			 //for(int i=13; i <m_selected_layers.size() ; i++)
-			 {
-				 request.addLayer(m_selected_layers.get(i));
 			 }*/
 
 			 NavStruct nav = no.ums.pas.maps.defines.Navigation.preserve_aspect(n_lbo, n_rbo, n_ubo, n_bbo, dim);
@@ -477,14 +478,6 @@ public class MapLoader {
 			 case 4326: //lon/lat
 				 break;
 			 case 28992: //Amersfoort / RD New
-				 /*UTMCoor uleft = new CoorConverter().wgs84_to_rd(n_ubo, n_lbo);
-				 UTMCoor lright = new CoorConverter().wgs84_to_rd(n_bbo, n_rbo);
-				 n_lbo = uleft.f_northing;
-				 n_ubo = uleft.f_easting;
-				 n_rbo = lright.f_northing;
-				 n_bbo = lright.f_easting;*/
-				 //RdCoordinate rd1 = converter.wgs842rd_(converter.new WGS84Coordinate(n_ubo, n_lbo));
-				 //RdCoordinate rd2 = converter.wgs842rd_(converter.new WGS84Coordinate(n_bbo, n_rbo));
 				 double mid_lr = (n_rbo + n_lbo) / 2.0;
 				 double mid_ub = (n_ubo + n_bbo) / 2.0;
 				 RdCoordinate left = converter.wgs842rd_(converter.new WGS84Coordinate(n_lbo, mid_ub));
@@ -524,18 +517,17 @@ public class MapLoader {
 					tracker.waitForID(0, m_n_wait_for_mediatracker_ms);
 					//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 					if (tracker.isErrorAny()) {
-						System.out.println("Error loading overlay image ");
-                        Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
+                        log.warn("Error loading overlay image");
 						setErrorMsg("Error loading map into media tracker");
-						m_img_load = null;;
+						m_img_load = null;
 					}
 				} catch (Exception ex) { 
 					//ex.printStackTrace();
 					b_error = true;
 					m_img_load =  null;
 					setErrorMsg(ex.getMessage());
-                    Error.getError().addError(Localization.l("common_error"), "An error occured communicating with the WMS server", ex, Error.SEVERITY_ERROR);
-					
+                    log.error("An error occured communicating with the WMS server", ex);
+
 				}
 
 				Variables.getNavigation().setHeaderBounds(nav._lbo, nav._rbo, nav._ubo, nav._bbo);
@@ -547,22 +539,17 @@ public class MapLoader {
 				if(m_retry==null)
 					m_retry = new AutoLoadRetry(info);
 			}
-			else
-			{
-			}
 			b_loading_mapimage = false;
 
 		}
 		catch(Exception e)
 		{
-			//m_retry = null;
+			log.error("Failed to load map from wms", e);
 			if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
-			
 			setErrorMsg(e.getMessage());
 			Variables.getNavigation().setHeaderBounds(n_lbo, n_rbo, n_ubo, n_bbo);
 			m_img_load =  null;
-			e.printStackTrace();
 			if(m_retry==null)
 				m_retry = new AutoLoadRetry(info);
 			b_loading_mapimage = false;
@@ -626,7 +613,7 @@ public class MapLoader {
 						//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 						if (tracker.isErrorAny()) {
 							System.out.println("Error loading overlay image ");
-                            Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
+                            log.error(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 							setErrorMsg("Error loading map into media tracker");
 							m_img_load = null;;
 						}
@@ -634,7 +621,7 @@ public class MapLoader {
 						//ex.printStackTrace();
 						b_error = true;
 						m_img_load =  null;
-						ex.printStackTrace();
+						log.error("Failed to load map", ex);
 						setErrorMsg(ex.getMessage());
 						
 					}
@@ -643,14 +630,12 @@ public class MapLoader {
 				{
 					b_error = true;
 					m_img_load =  null;
-					setErrorMsg(e.getMessage());
-					//System.out.println(e.getMessage());
-					//Error.getError().addError("Error", "Error loading map", e, 1);
+                    log.error("Failed to load map", e);
 				}
 				
 			} catch(Exception e) {
 				b_error = true;
-				setErrorMsg(e.getMessage());
+				log.error("Failed to load map", e);
 				/*System.out.println(m_httpreq.get_last_error());
 				//System.out.println("Error " + e.getMessage());
 				System.out.println(e.getMessage());
@@ -665,8 +650,7 @@ public class MapLoader {
 			}*/
 		} catch(Exception e) {
 			setErrorMsg(e.getMessage());
-			//System.out.println("Image load_map() failed " + e.getMessage());
-			//Error.getError().addError("MapLoader","Exception in load_map",e,1);
+			log.error("Failed to load map", e);
 			m_img_load =  null;
 		}
 

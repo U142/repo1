@@ -1038,7 +1038,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					addShapeToDrawQueue(ushape);
 				}
 				setFilled(null); // Bruker denne for å fjerne activeshape
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 				}
 			else if (e.getSource() == eventCtrl.getGui().getActionPanel().getBtnSave()) {
 				// Is it new or edit?
@@ -1114,7 +1114,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					addShapeToDrawQueue(this.object.getM_shape());
 				}
 				PAS.get_pas().get_mappane().set_active_shape(null);
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 			} else if (e.getSource() == objectCtrl.getGui().getActionPanel().getBtnSave()) {
 				// Check if this is root or an object folder
 				boolean wrongType = false;
@@ -1180,7 +1180,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						// Her skal den i teorien fjerne drawmode og vise polygonet på vanlig måte
 						addShapeToDrawQueue(this.object.getM_shape());
 						PAS.get_pas().get_parmcontroller().setFilled(null);
-						PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+						PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 						getUpdateXML().saveProject();
 					}
 				}

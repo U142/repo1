@@ -27,7 +27,7 @@ public interface NavigateActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-            PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ZOOM);
+            PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.ZOOM);
 		    PAS.get_pas().get_mainmenu().reset_buttons_foreground();
         }
     };

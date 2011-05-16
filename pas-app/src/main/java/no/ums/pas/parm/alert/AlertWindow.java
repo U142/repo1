@@ -885,7 +885,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 			m_alert_send = null;
 			m_alert_settings = null;
 			//PAS.get_pas().get_mappane().set_prev_mode();
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN);
 		}
 	}
 	public void windowClosing(WindowEvent e) { }

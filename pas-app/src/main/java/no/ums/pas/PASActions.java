@@ -271,15 +271,15 @@ public class PASActions implements ActionListener {
 			try {
 				switch(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_sendingtype()) {
 					case SendProperties.SENDING_TYPE_POLYGON_:
-						PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+						PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 						PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 						break;
 					case SendProperties.SENDING_TYPE_PAINT_RESTRICTION_AREA_:
-						PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAINT_RESTRICTIONAREA);
+						PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAINT_RESTRICTIONAREA);
 						PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 						break;
 					case SendProperties.SENDING_TYPE_CIRCLE_:
-						PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE);
+						PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
 						PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct(), ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 						break;
 					case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
@@ -301,11 +301,11 @@ public class PASActions implements ActionListener {
 		else if("act_activate_parm_drawmode".equals(e.getActionCommand())) {
 			ShapeStruct s = (ShapeStruct)e.getSource();
 			if(s.getClass().equals(PolygonStruct.class))
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 			else if(s.getClass().equals(EllipseStruct.class))
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_ELLIPSE);
 			else if(s.getClass().equals(UnknownShape.class))
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_ASSIGN_EPICENTRE);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.ASSIGN_EPICENTRE);
 			PAS.get_pas().get_mappane().actionPerformed(new ActionEvent(s, ActionEvent.ACTION_PERFORMED, "act_set_active_shape"));
 		}
 		else if("act_mousemoved".equals(e.getActionCommand())) {
@@ -487,21 +487,21 @@ public class PASActions implements ActionListener {
 			PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_HOUSEEDITOR_);
 		}
 		else if("act_houseeditor_newadr".equals(e.getActionCommand())) {
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);
 			PAS.get_pas().get_mappane().set_submode(MapFrame.MAP_HOUSEEDITOR_SET_NEWPOS);
 		}
 		else if("act_ready_for_coor_assignment_private".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().setCurrentInhabitant((Inhabitant)e.getSource());
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);
 			PAS.get_pas().get_mappane().set_submode(MapFrame.MAP_HOUSEEDITOR_SET_PRIVATE_COOR);
 		}
 		else if("act_ready_for_coor_assignment_company".equals(e.getActionCommand())) {
 			PAS.get_pas().get_mappane().setCurrentInhabitant((Inhabitant)e.getSource());
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);
 			PAS.get_pas().get_mappane().set_submode(MapFrame.MAP_HOUSEEDITOR_SET_COMPANY_COOR);			
 		}
 		else if("act_houseeditor_setcoor_none".equals(e.getActionCommand())) {
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);
 			PAS.get_pas().get_mappane().set_submode(MapFrame.MAP_HOUSEEDITOR_SET_COOR_NONE);
 		}
 		else if("act_close_houseeditor".equals(e.getActionCommand())) {

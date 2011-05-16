@@ -104,24 +104,8 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	{
 		return m_combo_mapsite;
 	}
-	
-	public void clickMapMode(int mapmode, boolean b)
-	{
-		switch(mapmode)
-		{
-		case MapFrame.MAP_MODE_PAN:
-		case MapFrame.MAP_MODE_PAN_BY_DRAG:
-			m_btn_pan.setSelected(b);
-			m_btn_zoom.setSelected(!b);
-			break;
-		case MapFrame.MAP_MODE_ZOOM:
-			m_btn_zoom.setSelected(b);
-			m_btn_pan.setSelected(!b);
-			break;
-		}
-	}
-	
-	public void enable_mapsite(boolean enable) { m_combo_mapsite.setVisible(enable); }
+
+    public void enable_mapsite(boolean enable) { m_combo_mapsite.setVisible(enable); }
 	
 	public void setHouseeditorEnabled(boolean b) {
 		m_btn_houseeditor.setEnabled(b);
@@ -214,20 +198,16 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_btn_pan.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_pan.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_pan.setMnemonic('p');
-	        m_btn_pan.setActionCommand(ENABLE);
 	        m_btn_pan.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));
-	        //m_btn_pan.setFont(PAS.f().getMenuFont());
 
-	        
+
 	        m_btn_zoom = new JButton(NavigateActions.ZOOM);
 	        m_btn_zoom.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_zoom.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_zoom.setMnemonic('z');
-	        m_btn_zoom.setActionCommand(ENABLE);
-	        m_btn_zoom.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));	
+	        m_btn_zoom.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));
 	        m_group_navigation.add(m_btn_pan);
 	        m_group_navigation.add(m_btn_zoom);
-	        //m_btn_zoom.setFont(PAS.f().getMenuFont());
 	        
 	        m_btn_navigate_home = new JButton(NavigateActions.MAP_GOTO_HOME);
 	        m_btn_navigate_home.setVerticalTextPosition(AbstractButton.CENTER);
@@ -241,8 +221,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	        m_btn_search.setVerticalTextPosition(AbstractButton.CENTER);
 	        m_btn_search.setHorizontalTextPosition(AbstractButton.LEFT);
 	        m_btn_search.setMnemonic('s');
-	        m_btn_search.setActionCommand(ENABLE);
-	        m_btn_search.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));	
+	        m_btn_search.setPreferredSize(new Dimension(BTN_SIZE_WIDTH, BTN_SIZE_HEIGHT));
 	        //m_btn_search.setFont(PAS.f().getMenuFont());
 
         m_btn_houseeditor = new JButton(Localization.l("mainmenu_house_editor"));
@@ -349,7 +328,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 	public void set_pan()
 	{
 		PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.HAND_CURSOR)); //setCursor(new Cursor(Cursor.HAND_CURSOR));
-		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_PAN_BY_DRAG);
+		PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.PAN_BY_DRAG);
 		reset_buttons_foreground();
 		//change_buttoncolor(m_btn_pan, true);
 	}
@@ -377,28 +356,28 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		
 		switch(PAS.get_pas().get_mappane().get_mode())
 		{
-			case MapFrame.MAP_MODE_PAN:
+			case PAN:
 				m_btn_pan.setSelected(true);
-			case MapFrame.MAP_MODE_PAN_BY_DRAG:
+			case PAN_BY_DRAG:
 				change_buttoncolor(m_btn_pan, true);
 				m_btn_pan.setSelected(true);
 				break;
-			case MapFrame.MAP_MODE_ZOOM:
+			case ZOOM:
 				change_buttoncolor(m_btn_zoom, true);
 				m_btn_zoom.setSelected(true);
 				break;
-			case MapFrame.MAP_MODE_HOUSESELECT:
+			case HOUSESELECT:
 				change_buttoncolor(m_btn_showhousedetails, true);
 				m_btn_showhousedetails.setSelected(true);
 				break;
-			case MapFrame.MAP_MODE_HOUSEEDITOR_:
+			case HOUSEEDITOR:
 				change_buttoncolor(m_btn_houseeditor, true);
 				m_btn_houseeditor.setSelected(true);
 				break;
 		}
 	}
 	private void set_houseeditor(String sz_command) {
-		PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSEEDITOR_);
+		PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSEEDITOR);
 		PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_enable_houseeditor"));
 		reset_buttons_foreground();
 	}
@@ -426,7 +405,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		//get_pas().add_event("Houseselect activate=" + b_activate);
 		if(b_activate)
 		{
-			PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_HOUSESELECT);
+			PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.HOUSESELECT);
 		}	
 		else
 		{
@@ -482,7 +461,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			//m_pas.get_mappane().set_cursor(new Cursor(Cursor.CUSTOM_CURSOR));
 			try {
 				//PAS.get_pas().get_mappane().set_cursor(m_cursor_draw);
-				PAS.get_pas().get_mappane().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+				PAS.get_pas().get_mappane().set_mode(MapFrame.MapMode.SENDING_POLY);
 			} catch(Exception err) {
 				PAS.get_pas().add_event("Error set_cursor() " + err.getMessage(), null);
 				Error.getError().addError("MainMenu","Exception in actionPerformed",err,1);
@@ -625,5 +604,19 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 			PAS.get_pas().get_mappane().set_cursor(new Cursor(Cursor.DEFAULT_CURSOR));	
 		}
 	}
+
+    public void clickMapMode(MapFrame.MapMode mapmode, boolean b) {
+        switch (mapmode) {
+            case PAN:
+            case PAN_BY_DRAG:
+                m_btn_pan.setSelected(b);
+                m_btn_zoom.setSelected(!b);
+                break;
+            case ZOOM:
+                m_btn_zoom.setSelected(b);
+                m_btn_pan.setSelected(!b);
+                break;
+        }
+    }
 
 }

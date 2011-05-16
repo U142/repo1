@@ -193,7 +193,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu_btn_draw_polygon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Variables.getMapFrame().set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
-                Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_SENDING_POLY);
+                Variables.getMapFrame().set_mode(MapFrame.MapMode.SENDING_POLY);
                 PAS.get_pas().repaint();
             }
         });
@@ -206,7 +206,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu_btn_draw_ellipse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Variables.getMapFrame().set_active_shape(new PolygonStruct(ShapeStruct.DETAILMODE.SHOW_POLYGON_FULL, 100000.0));
-                Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_SENDING_ELLIPSE_POLYGON);
+                Variables.getMapFrame().set_mode(MapFrame.MapMode.SENDING_ELLIPSE_POLYGON);
                 PAS.get_pas().repaint();
             }
         });
@@ -217,7 +217,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         menu_btn_draw_plmn.setPreferredSize(new Dimension(MainMenu.BTN_SIZE_WIDTH, MainMenu.BTN_SIZE_HEIGHT));
         menu_btn_draw_plmn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+                Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
                 Variables.getMapFrame().set_active_shape(new PLMNShape());
                 PAS.get_pas().repaint();
             }
@@ -1479,7 +1479,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             case CentricEastContent.PANEL_CENTRICSTATUS_:
                 if (Variables.getMapFrame().get_active_shape() != null)
                     Variables.getMapFrame().get_active_shape().setEditable(false);
-                Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+                Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
                 enableSendButtons(false);
                 break;
         }
@@ -1506,7 +1506,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     public boolean onLockSending(SendOptionToolbar toolbar, boolean bLock) {
         CentricVariables.getCentric_send().lockSending(bLock);
         if (bLock)
-            Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+            Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
         else
             Variables.getMapFrame().set_prev_paintmode();
         enableSendButtons(!bLock);

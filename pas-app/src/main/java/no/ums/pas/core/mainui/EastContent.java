@@ -126,7 +126,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					public boolean CloseButtonClicked(JComponent c) {
 						if(c instanceof HouseEditorDlg)
 						{
-							Variables.getMapFrame().set_mode(MapFrame.MAP_MODE_PAN);
+							Variables.getMapFrame().set_mode(MapFrame.MapMode.PAN);
 							PAS.get_pas().get_mainmenu().reset_buttons_foreground();
 							return false;
 						}
