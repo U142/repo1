@@ -1,6 +1,5 @@
 package no.ums.pas.parm.voobjects;
 
-import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
 import no.ums.pas.localization.Localization;
@@ -13,23 +12,9 @@ import no.ums.pas.send.SendProperties;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
 
 public class AlertVO extends ParmVO implements Cloneable {
