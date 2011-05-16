@@ -81,6 +81,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	
 	
 	StdTextLabel lbl_loading = new StdTextLabel("");
+    private JLabel m_lbl_no_results = new JLabel(PAS.l("common_search_no_results"));
 	boolean b_loading = false;
 	ImageIcon ico = null;
 	
@@ -102,6 +103,15 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		else
 			remove(lbl_loading);*/
 		
+	}
+	
+	public void setNoResults(final boolean b)
+	{
+		if(b)
+		{
+			setLoading(false);
+		}
+		m_lbl_no_results.setVisible(b);
 	}
 	
 	public void CreateOnMouseOver()
@@ -255,6 +265,11 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	        	ico = ImageLoader.load_icon("bigrotation2.gif");
     			lbl_loading.setIcon(ico);
     			lbl_loading.setPreferredSize(new Dimension(ico.getIconWidth(), ico.getIconHeight()));
+    			m_lbl_no_results.setHorizontalAlignment(SwingConstants.CENTER);
+    			m_lbl_no_results.setVerticalAlignment(SwingConstants.CENTER);
+    			m_lbl_no_results.setFont(m_lbl_no_results.getFont().deriveFont(25.0f));
+    			m_lbl_no_results.setVisible(false);
+
 	        }
 	        catch(Exception e) { }
 	        try
@@ -268,12 +283,13 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		        
 		        add(layer);
 		        
-		        layer.add(scrollPane, 1);//, get_gridconst());
+		        layer.add(scrollPane, 1,0);//, get_gridconst());
 		        //scrollPane.setBounds(0, 0, 300, 200);
 		        //add(lbl_loading, new Integer(1));
 		        //add(lbl_loading, BorderLayout.WEST);
 		        //lbl_loading.setVisible(false);
-		        layer.add(lbl_loading, 2);
+		        layer.add(lbl_loading, 2,0);
+		        layer.add(m_lbl_no_results, 3, 0);
 		        m_tbl_list.initialize();
 		        setLoading(false);
 		        
@@ -958,6 +974,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		scrollPane.setSize(layer.getWidth(), layer.getHeight());
 		int x = ico.getIconWidth(); int y = ico.getIconHeight();
 		lbl_loading.setBounds(layer.getWidth()/2-x/2, layer.getHeight()/2-y/2, x, y);
+		m_lbl_no_results.setSize(new Dimension(layer.getWidth(), layer.getHeight()));
 	}
 
 	@Override

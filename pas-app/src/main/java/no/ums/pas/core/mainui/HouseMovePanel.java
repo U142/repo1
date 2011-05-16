@@ -10,6 +10,7 @@ import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.ws.WSHouseByQuality;
 import no.ums.pas.core.ws.WSHouseEditor;
 import no.ums.pas.core.ws.WSHouseEditor.SaveGABResult;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.MapPoint;
@@ -28,6 +29,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -51,7 +54,6 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
     private JCheckBox m_chk_mobile	= new JCheckBox(Localization.l("common_adr_mobile"), true);
     private JButton m_btn_export = new JButton(Localization.l("common_export"));
     private HouseInhabitantsList m_list;
-    private JLabel m_lbl_no_results = new JLabel(PAS.l("common_no_results"));
 	//private XMLHouses m_xml;
 	//protected XMLHouses get_xml() { return m_xml; }
 	private WSHouseByQuality m_xml;
@@ -93,7 +95,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 		//m_lbl_heading.setPreferredSize(new Dimension(getWidth(), m_lbl_heading.getHeight()));
 		//m_list.setPreferredSize(new Dimension(getWidth(), m_list.getHeight()));
 		//m_lbl_heading.setPreferredSize(new Dimension(getWidth()-100, getHeight()));
-		
+
 		//m_list.setPreferredSize(new Dimension(getWidth()-100, getHeight()-400));
 		int height = getHeight();
 		m_list.setPreferredSize(new Dimension(getWidth(), height-400));
@@ -269,13 +271,12 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 		add(m_chk_company, m_gridconst);
 		//set_gridconst(5, get_panel(), 1, 1);
 		//add(m_chk_mobile, m_gridconst);
+		
 		set_gridconst(0, inc_panels(), 6, 1);
 		add(m_list, m_gridconst);
-		set_gridconst(0, get_panel(), 6, 1);
-		add(m_lbl_no_results, m_gridconst);
+
 		set_gridconst(0, inc_panels(), 6, 1);
 		add(m_btn_export, m_gridconst);
-		m_list.set_no_results(true);
 		init();
 	}
 	public void init() {
@@ -308,10 +309,6 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 			m_icon_company= ImageLoader.load_icon("inhab_company.png");
 		}
 		
-		public void set_no_results(boolean bNoResults)
-		{
-			m_lbl_no_results.setVisible(bNoResults);
-		}
 		
 		public void insert_row(Inhabitant inhab) {
 			Object icon = null;
@@ -388,7 +385,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 					Error.getError().addError("HouseMovePanel","Exception in start_search",e,1);
 				}
 			}
-			set_no_results(m_inhabitants.size()==0);
+			setNoResults(m_inhabitants.size()==0);
 		}
 		public void valuesChanged() {
 			
