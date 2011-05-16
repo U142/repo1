@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.jdesktop.beansbinding.impl.ListenerHandle;
 
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * This class represents a property path on an arbitrary object.
@@ -12,9 +13,13 @@ import java.beans.PropertyChangeListener;
  *
  * @author Ståle Undheim <su@ums.no>
  */
-public class BeanProperty<BT, PT> {
+public class BeanProperty<BT, PT> implements Property<BT, PT> {
     public static <BT, PT> BeanProperty<BT, PT> create(String text) {
         return new BeanProperty<BT, PT>(text);
+    }
+
+    public static void addPropertyChangeListener(String property, Object model, PropertyChangeListener listener) {
+        create(property).addPropertyChangeListener(model, listener);
     }
 
     /**
@@ -38,7 +43,7 @@ public class BeanProperty<BT, PT> {
     }
 
     public void write(BT target, PT value) {
-        if (!ListenerHandle.THREAD_STACK_VISITED.get().containsKey(target) && !Objects.equal(value, read(target))) {
+        if (!ListenerHandle.THREAD_STACK_VISITED.get().containsKey(target)) {
             getPathAccessor(target).setValue(target, value);
         }
     }
@@ -52,7 +57,9 @@ public class BeanProperty<BT, PT> {
     }
 
     private PathAccessor<BT, PT> getPathAccessor(BT target) {
-        return cache.getAccessor((Class<BT>) target.getClass(), propertyName);
+        @SuppressWarnings("unchecked")
+        final Class<BT> targetClass = (Class<BT>) target.getClass();
+        return cache.getAccessor(targetClass, propertyName);
     }
 
     @Override
@@ -60,5 +67,17 @@ public class BeanProperty<BT, PT> {
         return "BeanProperty{" + propertyName + '}';
     }
 
+    public Class<? extends PT> getType(BT model) {
+        return getPathAccessor(model).getValueType();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <X extends PT> BeanProperty<BT, X> castValue() {
+        return (BeanProperty<BT, X>) this;
+    }
+
+    public String describe(BT target) {
+        return getPathAccessor(target).toString();
+    }
 }
 

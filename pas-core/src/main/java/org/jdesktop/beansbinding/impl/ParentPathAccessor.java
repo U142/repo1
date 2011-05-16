@@ -55,7 +55,10 @@ public class ParentPathAccessor<P, T, V> extends AbstractPathAccessor<P, V> {
 
     @Override
     public void setValue(P instance, V value) {
-        child.setValue(parent.getValue(instance), value);
+        final T targetInstance = parent.getValue(instance);
+        if (targetInstance != null) {
+            child.setValue(targetInstance, value);
+        }
     }
 
     @Override

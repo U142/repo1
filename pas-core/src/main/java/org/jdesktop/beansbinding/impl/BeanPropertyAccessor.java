@@ -49,7 +49,7 @@ public interface BeanPropertyAccessor {
         @SuppressWarnings("unchecked")
         public <T> T read(Object instance) {
             try {
-                return (T) readImpl(getter, name, instance);
+                return (instance == null) ? null : (T) readImpl(getter, name, instance);
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Failed to read property " + name.getFullName() + " by invoking " + getter + " on " + instance, e);
             } catch (InvocationTargetException e) {
@@ -67,11 +67,11 @@ public interface BeanPropertyAccessor {
                     writeImpl(setter, name, instance, value);
                 }
             } catch (IllegalAccessException e) {
-                throw new IllegalStateException("Failed to write property " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance, e);
+                throw new IllegalStateException("Failed to write value " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance.getClass().getSimpleName(), e);
             } catch (InvocationTargetException e) {
-                throw new IllegalStateException("Failed to write property " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance, e);
+                throw new IllegalStateException("Failed to write value " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance.getClass().getSimpleName(), e);
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Failed to write value " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance, e);
+                throw new IllegalArgumentException("Failed to write value " + value + " on property " + name.getFullName() + " by invoking " + setter + " on " + instance.getClass().getSimpleName(), e);
             }
         }
 
@@ -83,7 +83,7 @@ public interface BeanPropertyAccessor {
     class Factory {
         public static BeanPropertyAccessor of(final BeanPropertyName name, final Class<?> fromType) {
             final Method getter = Preconditions.checkNotNull(findGetter(fromType, name), "No getter on " + fromType + " for " + name.getName());
-            final Method setter = findSetter(fromType, name);
+            final Method setter = findSetter(fromType, getter.getReturnType(), name);
 
             if (name.getIndex() > 0) {
                 return new Abstract(name, getter, setter) {
@@ -128,11 +128,12 @@ public interface BeanPropertyAccessor {
             }
         }
 
-        private static Method findSetter(Class<?> fromType, BeanPropertyName name) {
+        private static Method findSetter(Class<?> fromType, Class<?> paramType, BeanPropertyName name) {
             int argLength = (name.getIndex() > 0) ? 2 : 1;
             String namePostfix = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, name.getName());
             for (Method method : fromType.getMethods()) {
-                if (method.getName().equals("set" + namePostfix) && method.getParameterTypes().length == argLength) {
+                Class<?>[] params = method.getParameterTypes();
+                if (method.getName().equals("set" + namePostfix) && params.length == argLength && params[params.length-1].isAssignableFrom(paramType)) {
                     return method;
                 }
             }

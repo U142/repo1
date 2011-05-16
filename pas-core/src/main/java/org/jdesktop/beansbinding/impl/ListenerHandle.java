@@ -1,5 +1,8 @@
 package org.jdesktop.beansbinding.impl;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -40,61 +43,4 @@ public interface ListenerHandle<T> {
      */
     ListenerHandle<T> changeListenTarget(T value);
 
-    static class PropertyListenerHandle<T> implements ListenerHandle<T> {
-
-        private final PropertyChangeListener listener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                THREAD_STACK_VISITED.get().put(current, null);
-                try {
-                    delegate.propertyChange(evt);
-                } finally {
-                    THREAD_STACK_VISITED.get().remove(current);
-                }
-            }
-
-            @Override
-            public String toString() {
-                return "Change on [" + propertyName + "] for [" + current + "] -> " + delegate;
-            }
-        };
-
-        private T current;
-        private final String propertyName;
-        private final PropertyChangeListener delegate;
-
-        PropertyListenerHandle(T target, String propertyName, PropertyChangeListener delegate) {
-            this.propertyName = propertyName;
-            this.delegate = delegate;
-            changeListenTarget(target);
-        }
-
-        @Override
-        public ListenerHandle<T> changeListenTarget(T value) {
-            if (current != null) {
-                try {
-                    current.getClass().getMethod("removePropertyChangeListener", String.class, PropertyChangeListener.class).invoke(current, propertyName, listener);
-                } catch (IllegalAccessException e) {
-                    throw new IllegalStateException("Failed to un-bind property " + propertyName + " on " + current, e);
-                } catch (InvocationTargetException e) {
-                    throw new IllegalStateException("Failed to un-bind property " + propertyName + " on " + current, e);
-                } catch (NoSuchMethodException e) {
-                    throw new IllegalStateException("Failed to un-bind property " + propertyName + " on " + current, e);
-                }
-            }
-            current = value;
-            if (current != null) {
-                try {
-                    current.getClass().getMethod("addPropertyChangeListener", String.class, PropertyChangeListener.class).invoke(current, propertyName, listener);
-                } catch (IllegalAccessException e) {
-                    throw new IllegalStateException("Failed to bind property " + propertyName + " on " + current, e);
-                } catch (InvocationTargetException e) {
-                    throw new IllegalStateException("Failed to bind property " + propertyName + " on " + current, e);
-                } catch (NoSuchMethodException e) {
-                    throw new IllegalStateException("Failed to bind property " + propertyName + " on " + current, e);
-                }
-            }
-            return this;
-        }
-    }
 }

@@ -39,7 +39,7 @@ class PathAbstractButtonSelected extends AbstractCustomListenerPath<AbstractButt
 
     @Override
     public void setValue(AbstractButton instance, Boolean value) {
-        instance.setSelected(value);
+        instance.setSelected(value == null ? false : value);
     }
 
     @Override

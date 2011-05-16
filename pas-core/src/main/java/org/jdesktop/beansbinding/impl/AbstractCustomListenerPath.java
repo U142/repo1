@@ -20,7 +20,7 @@ abstract class AbstractCustomListenerPath<SRC, LST, VAL> extends AbstractPathAcc
 
     @Override
     public ListenerHandle<SRC> addPropertyChangeListener(SRC instance, PropertyChangeListener listener) {
-        return new AbstractListenerHandle<SRC, LST, VAL>(this, instance, listener) {
+        return new AbstractListenerHandle<SRC, LST, VAL>(this, listener) {
             @Override
             protected LST createListener() {
                 return AbstractCustomListenerPath.this.createListener(this);
@@ -35,7 +35,7 @@ abstract class AbstractCustomListenerPath<SRC, LST, VAL> extends AbstractPathAcc
             protected void addListener(SRC current, LST listener) {
                 AbstractCustomListenerPath.this.addListener(current, listener);
             }
-        };
+        }.changeListenTarget(instance);
     }
 
     protected abstract LST createListener(UpdateHandle updateHandle);
@@ -43,7 +43,6 @@ abstract class AbstractCustomListenerPath<SRC, LST, VAL> extends AbstractPathAcc
     protected abstract void addListener(SRC current, LST listener);
 
     protected abstract void removeListener(SRC current, LST listener);
-
 
     static abstract class AbstractListenerHandle<SRC, LST, VAL> implements ListenerHandle<SRC>, UpdateHandle {
 
@@ -53,12 +52,10 @@ abstract class AbstractCustomListenerPath<SRC, LST, VAL> extends AbstractPathAcc
         private final PropertyChangeListener propertyChangeListener;
         private final PathAccessor<SRC, VAL> accessor;
 
-        protected AbstractListenerHandle(PathAccessor<SRC, VAL> accessor, SRC instance, PropertyChangeListener propertyChangeListener) {
+        protected AbstractListenerHandle(PathAccessor<SRC, VAL> accessor, PropertyChangeListener propertyChangeListener) {
             this.accessor = accessor;
             this.propertyChangeListener = propertyChangeListener;
             listener = createListener();
-            currentValue = (instance == null) ? null : accessor.getValue(instance);
-            changeListenTarget(instance);
         }
 
         protected abstract LST createListener();
@@ -73,6 +70,7 @@ abstract class AbstractCustomListenerPath<SRC, LST, VAL> extends AbstractPathAcc
                 removeListener(current, listener);
             }
             current = value;
+            currentValue = (current == null) ? null : accessor.getValue(current);
             if (current != null) {
                 addListener(current, listener);
             }

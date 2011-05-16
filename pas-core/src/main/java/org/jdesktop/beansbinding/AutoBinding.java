@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class AutoBinding {
+public class AutoBinding<SS, SV, TS, TV> extends Binding<SS, SV, TS, TV> {
 
     public static enum UpdateStrategy {
         READ_ONCE {
@@ -18,12 +18,17 @@ public class AutoBinding {
                 Preconditions.checkNotNull(converter, "Converter cannot be null");
                 assertValid(src,  srcProp, target, targetProp);
                 SV read = (src == null) ? nullValue : srcProp.read(src);
-                targetProp.write(target, converter.convertForward(read));
+                try {
+                    targetProp.write(target, converter.convertForward(read));
+                }
+                catch (RuntimeException e) {
+                    throw new IllegalStateException("Failed to bind from "+srcProp.describe(src)+" to "+targetProp.describe(target), e);
+                }
             }
 
             @Override
             public <SB, SV, TB, TV> void assertValid(SB src, BeanProperty<SB, SV> srcProp, TB target, BeanProperty<TB, TV> targetProp) {
-                Preconditions.checkArgument(targetProp.isWriteableOn(target), "Cannot write to "+targetProp+" on "+target);
+                Preconditions.checkArgument(targetProp.isWriteableOn(target), "Target: %s is not writeable, cannot bind from %s", targetProp.describe(target), srcProp.describe(src));
             }
         },
         READ {
@@ -71,11 +76,15 @@ public class AutoBinding {
             @Override
             public <SB, SV, TB, TV> void assertValid(SB src, BeanProperty<SB, SV> srcProp, TB target, BeanProperty<TB, TV> targetProp) {
                 READ.assertValid(src, srcProp, target, targetProp);
-                Preconditions.checkArgument(srcProp.isWriteableOn(src), "Cannot write to "+srcProp+" on "+src);
+                Preconditions.checkArgument(srcProp.isWriteableOn(src), "Source: %s is not writeable, cannot bind from %s", srcProp.describe(src), targetProp.describe(target));
             }
         };
 
         public abstract <SB, SV, TB, TV> void bind(SB src, BeanProperty<SB, SV> srcProp, SV nullValue, TB target, BeanProperty<TB, TV> targetProp, Converter<SV, TV> converter);
         public abstract <SB, SV, TB, TV> void assertValid(SB src, BeanProperty<SB, SV> srcProp, TB target, BeanProperty<TB, TV> targetProp);
+    }
+
+    public AutoBinding(UpdateStrategy strategy, SS src, BeanProperty<SS, SV> srcProp, TS target, BeanProperty<TS, TV> targetProp) {
+        super(strategy, src, srcProp, target, targetProp);
     }
 }

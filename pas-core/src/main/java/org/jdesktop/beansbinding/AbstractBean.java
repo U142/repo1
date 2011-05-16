@@ -28,4 +28,8 @@ public class AbstractBean {
         prop.firePropertyChange(key, oldValue, newValue);
     }
 
+    public void firePropertyChange(String key, Object oldValue, Object newValue) {
+        prop.firePropertyChange(key, oldValue, newValue);
+    }
+
 }
