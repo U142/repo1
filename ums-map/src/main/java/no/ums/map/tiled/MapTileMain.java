@@ -23,13 +23,12 @@ public class MapTileMain {
                 final  TestFrame mainFrame = new TestFrame();
                 mainFrame.getMapComponent1().getModel().setTopLeft(new LonLat(5, 58));
                 mainFrame.getMapComponent1().getModel().setZoom(4);
-//                mainFrame.getMapComponent1().getModel().setBounds(new MapBounds(5, 58, 10, 60));
-                final TileCacheOsm osmTileCache = new TileCacheOsm();
-                final TileCacheGoogle googleTileCache = new TileCacheGoogle();
-                final TileCacheLocal localTileCache = new TileCacheLocal(tiles2);
-                final TileCachePas pas = new TileCachePas();
+//                final TileCacheOsm osmTileCache = new TileCacheOsm();
+//                final TileCacheGoogle googleTileCache = new TileCacheGoogle();
+//                final TileCacheLocal localTileCache = new TileCacheLocal(tiles2);
+//                final TileCachePas pas = new TileCachePas();
                 final TileCacheFleximap fleximap = new TileCacheFleximap();
-                final TileCacheWms wms = new TileCacheWms("http", "www.webatlas.no", "/wms-UMs", "1.1.1", "image/png", "ortofoto");
+//                final TileCacheWms wms = new TileCacheWms("http", "www.webatlas.no", "/wms-UMs", "1.1.1", "image/png", "ortofoto");
                 mainFrame.getMapComponent1().setTileLookup(new TileLookupImpl(fleximap));
                 mainFrame.getMapComponent1().addMouseMotionListener(new MouseAdapter() {
                     @Override
