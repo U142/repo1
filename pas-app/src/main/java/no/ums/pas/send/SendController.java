@@ -196,6 +196,14 @@ public class SendController implements ActionListener {
 	}
 	//private Send m_sendsetup;
 	private ArrayList<SendObject> m_sendings;
+	public boolean hasAlerts() {
+		boolean hasSending = false;
+		for(int i=0;m_sendings.size()>i;i++) {
+			if(m_sendings.get(i).get_sendproperties().get_refno() == 0)
+				hasSending = true;
+		}
+		return hasSending;
+	}
 	public PAS get_pas() { return m_pas; }
 	public ArrayList<SendObject> get_sendings() { return m_sendings; }
 	private int m_n_activesending_number = -1;
