@@ -1057,6 +1057,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 					boolean bEdit = p.get_mappane().isInPaintMode() && so.get_sendproperties().get_shapestruct().equals(p.get_mappane().get_active_shape());
 					if(so.get_sendproperties() instanceof SendPropertiesGIS)
 					{
+						so.get_sendproperties().calc_coortopix();
 						so.draw(g, Variables.getMapFrame().get_current_mousepos());
 					}
 					else
