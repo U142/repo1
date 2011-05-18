@@ -733,6 +733,7 @@ public class StatusController extends Controller implements ActionListener {
 		if (get_houses() != null && get_houses().is_housesready())// &&
 																	// get_houses().is_housesready())
 		{
+			get_houses().calcHouseCoords();
 			set_visibility();
 			get_houses().draw_houses(gfx, get_alertborder(),
 					PAS.get_pas().get_mapproperties().get_border_activated(),

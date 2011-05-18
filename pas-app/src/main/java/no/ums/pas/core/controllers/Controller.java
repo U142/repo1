@@ -158,7 +158,7 @@ public abstract class Controller implements ActionListener {
 				current = (HouseItem)get_houses().get_houses().get(i);
 				
 				//current.set_selected(false);
-				if(current.get_screencoords() != null && current.get_visible()) {
+				if(current!=null && current.get_screencoords() != null && current.get_visible()) {
 					n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
 					if(dim.width >= (current.get_screencoords().width - n_radius) && dim.width <= (current.get_screencoords().width + n_radius) &&
 					   dim.height >= (current.get_screencoords().height - n_radius) && dim.height <= (current.get_screencoords().height + n_radius)) { //user click inside house-area
