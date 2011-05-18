@@ -1,5 +1,8 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.LonLat;
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.BasicStroke;
@@ -8,7 +11,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
 
@@ -79,69 +81,48 @@ public class EllipseStruct extends ShapeStruct {
 	}
 	@Override
 	public boolean can_lock(List<ShapeStruct> restrictionShapes) {
-		if(m_p_center != null && m_p_corner != null)
-			return true;
-		return false;
-	}
+        return m_p_center != null && m_p_corner != null;
+    }
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {		
-		draw(g, nav, bDashed, bFinalized, bEditmode, p, bBorder,bFill, nPenSize, bPaintShapeName, false);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName) {
+		draw(g, mapModel, zoomLookup, bDashed, bFinalized, bEditmode, p, bBorder,bFill, nPenSize, bPaintShapeName, false);
 	}
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName,
-			boolean bHasFocus) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
 		Graphics2D g2d = (Graphics2D)g;
-		calc_coortopix(nav);
-		Stroke stroke_revert = g2d.getStroke();
-		try {
-			if(get_center()!=null && m_ellipseshape!=null) {
-				if(true) {
-					g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
-					g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
-					g2d.drawLine((get_center().get_x() - get_diameter_width_pix()/2), (get_center().get_y() + get_diameter_height_pix()/2), (get_center().get_x() + get_diameter_width_pix()/2), (get_center().get_y() + get_diameter_height_pix()/2));
-					g2d.drawLine((get_center().get_x() + get_diameter_width_pix()/2), (get_center().get_y() + get_diameter_height_pix()/2), (get_center().get_x() + get_diameter_width_pix()/2), (get_center().get_y() - get_diameter_height_pix()/2));
-					//FontSet g2d.setFont(new Font("Arial", Font.BOLD, 11));
-					String sz_width = m_n_diameter_width_meters + "m";
-					String sz_height= m_n_diameter_height_meters + "m";
-					g2d.drawString(sz_height, (get_center().get_x() + get_diameter_width_pix()/2) + 5, get_center().get_y());
-					g2d.drawString(sz_width,get_center().get_x(), (get_center().get_y() + get_diameter_height_pix()/2) + 17);
-				}
-				if(bDashed)
-					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
-				else
-					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-				
-				if(bDashed)
-					g2d.setPaint(m_tex_paint);
-				else
-					g2d.setColor(get_fill_color());
-				g2d.fill(m_ellipseshape);
-				g2d.setColor(get_border_color());
-				g2d.draw(m_ellipseshape);
-				g2d.setStroke(stroke_revert);
-				if(bPaintShapeName)
-				{
-					super.paintShapeName(g, bEditmode, bHasFocus);
-				}
-			}
-		} catch(Exception e) {
-			g2d.setStroke(stroke_revert);
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			Error.getError().addError("SendPropertiesEllipse","Exception in draw",e,1);
-		}
-		super.draw_epicentre(g);
+        if(get_center()!=null && m_ellipseshape!=null) {
+            g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
+
+            final LonLat centerLL = new LonLat(get_center().get_lon(), get_center().get_lat());
+            final Point offset = zoomLookup.getPoint(mapModel.getTopLeft());
+            final Point center = zoomLookup.getPoint(centerLL);
+            final Point corner = zoomLookup.getPoint(new LonLat(get_corner().get_lon(), get_corner().get_lat()));
+            final int w = Math.abs(corner.x - center.x) * 2;
+            final int h = Math.abs(corner.y - center.y) * 2;
+
+            g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{3.0f}, 0.0f));
+            g2d.drawLine(center.x-offset.x - w/2, center.y-offset.y + h/2, center.x-offset.x + w/2, center.y-offset.y + h/2);
+            g2d.drawLine(center.x-offset.x + w/2, center.y-offset.y + h/2, center.x-offset.x + w/2, center.y-offset.y - h/2);
+
+            double width = zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x + w, corner.y));
+            double height= zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x, corner.y + h));
+            g2d.drawString(String.format("%.2fm", width), (center.x-offset.x + w/2) + 5, center.y-offset.y);
+            g2d.drawString(String.format("%.2fm", height),center.x-offset.x, center.y-offset.y + h/2 + 17);
+
+            final Ellipse2D.Double ellipse = new Ellipse2D.Double(center.x - offset.x - w/2, center.y - offset.y - h/2, w, h);
+            drawShape(g2d, ellipse, nPenSize, bDashed, bFill, bBorder, bPaintShapeName, bHasFocus);
+        }
+		super.draw_epicentre(g, zoomLookup, mapModel);
 	}
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_active, boolean b_islocked) {
-		draw(g, nav, !b_active, (!b_islocked && b_active ? false : true), true, null);
-	}
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_details, Point mousepos) {
-		draw(g, nav, !b_finalized, b_finalized, true, null, true, true, 1, false);
+
+    public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed, boolean b_finalized, boolean b_details, Point mousepos) {
+		draw(g, mapModel, zoomLookup, !b_finalized, b_finalized, true, null, true, true, 1, false);
 	}
 	public void set_ellipse(Navigation nav, MapPoint p_center, MapPoint p_corner) {
 		m_p_center = p_center;

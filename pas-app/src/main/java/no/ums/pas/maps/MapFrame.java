@@ -13,6 +13,7 @@ import no.ums.map.tiled.TileData;
 import no.ums.map.tiled.TileInfo;
 import no.ums.map.tiled.TileLookup;
 import no.ums.map.tiled.TileLookupImpl;
+import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.Draw;
 import no.ums.pas.PAS;
@@ -52,7 +53,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.SystemColor;
@@ -63,7 +63,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -995,6 +994,9 @@ public class MapFrame extends JPanel implements ActionListener {
         }
     }
 
+    public ZoomLookup getZoomLookup() {
+        return getTileLookup().getZoomLookup(getMapModel().getZoom());
+    }
 
     public Image get_mapimage() {
         return m_img_onscreen;
@@ -1089,7 +1091,7 @@ public class MapFrame extends JPanel implements ActionListener {
             else
                 kickRepaint();
         } else if ("act_moveat_polypoint".equals(e.getActionCommand())) {
-            get_active_shape().typecast_polygon().move_at(get_current_snappoint().get_polyindex());
+            get_active_shape().typecast_polygon().move_at();
             set_mode_objectmove(get_current_snappoint());
         } else if ("act_reverse_polypoints".equals(e.getActionCommand())) {
             get_active_shape().typecast_polygon().reverse_coor_order();

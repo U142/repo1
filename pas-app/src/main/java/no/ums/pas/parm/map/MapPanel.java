@@ -3,7 +3,6 @@ package no.ums.pas.parm.map;
 import no.ums.pas.Draw;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapitemProperties;
 import no.ums.pas.maps.defines.NavStruct;
@@ -193,24 +192,22 @@ public class MapPanel extends JPanel implements ActionListener {
 		public void draw_layers(Graphics g) {
 			super.draw_layers(g);
 			//if(m_polygon!=null)
-			m_shape.typecast_polygon().draw(get_gfxbuffer(),m_nav, false, false, true, getMousePos());
+			m_shape.typecast_polygon().draw(get_gfxbuffer(), get_mapframe().getMapModel(), get_mapframe().getZoomLookup(), false, false, true, getMousePos());
 			Iterator it = m_shapes.iterator();
 			while(it.hasNext()) {
 				PolygonStruct poly = (PolygonStruct)it.next();
-				poly.draw(get_gfxbuffer(), m_nav, true, true, false, getMousePos());
+				poly.draw(get_gfxbuffer(), get_mapframe().getMapModel(), get_mapframe().getZoomLookup(), true, true, false, getMousePos());
 			}
 		}
 	}
 
 	public void updateShape(ShapeStruct shape) {
-		if(shape==null)
-			return;
-		if(shape.getClass().equals(PolygonStruct.class)) {
+		if(shape instanceof PolygonStruct) {
 			try {
-				PolygonStruct polygon = shape.typecast_polygon();
+				PolygonStruct polygon = (PolygonStruct) shape;
 				for (int i = 0; i < polygon.get_size(); i++) {
-					Double lat = (Double) polygon.get_coors_lat().get(i);
-					Double lon = (Double) polygon.get_coors_lon().get(i);
+					Double lat = polygon.get_coors_lat().get(i);
+					Double lon = polygon.get_coors_lon().get(i);
 					this.m_shape.typecast_polygon().add_coor(lon,lat);
 				}
 				Color test = polygon.get_fill_color();
@@ -218,7 +215,6 @@ public class MapPanel extends JPanel implements ActionListener {
 			} catch (NullPointerException e) {
 				System.out.println(e.getMessage());
 			}
-		} else if(shape.getClass().equals(EllipseStruct.class)) {
 		}
 	}
 

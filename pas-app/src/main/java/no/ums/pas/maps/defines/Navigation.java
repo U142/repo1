@@ -662,9 +662,9 @@ public class Navigation {
 		//double y1r = m_f_bbo.doubleValue() * Math.PI * 2 / 360;
 		double y1r = 0;
 		if(m_f_bbo>0 && m_f_ubo>0)
-			y1r = m_f_bbo.doubleValue() * Math.PI * 2 / 360;
+			y1r = m_f_bbo * Math.PI * 2 / 360;
 		else if(m_f_bbo<0 && m_f_ubo<0)
-			y1r = m_f_ubo.doubleValue() * Math.PI * 2 / 360;
+			y1r = m_f_ubo * Math.PI * 2 / 360;
 		m_f_mapwidthmeters = new Double((m_f_rbo.doubleValue() - m_f_lbo.doubleValue()) * 3600 * 30.92 * Math.cos(y1r));
 		//System.out.println(m_f_mapwidthmeters);
 		m_f_mapheightmeters= new Double((m_f_ubo.doubleValue() - m_f_bbo.doubleValue()) * 3600 * 30.92);

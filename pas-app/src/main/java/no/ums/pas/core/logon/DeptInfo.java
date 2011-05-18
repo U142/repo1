@@ -1,6 +1,7 @@
 package no.ums.pas.core.logon;
 
 
+import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.Navigation;
@@ -57,7 +58,7 @@ public class DeptInfo extends Object {
 			try
 			{
 				//if(n.bboxOverlap(get_restriction_shapes().get(i).getFullBBox()))
-				get_restriction_shapes().get(i).draw(g, n, false, true, false, null, true, false, 1, true);
+				get_restriction_shapes().get(i).draw(g, PAS.get_pas().get_mappane().getMapModel(), PAS.get_pas().get_mappane().getZoomLookup(), false, true, false, null, true, false, 1, true);
 			}
 			catch(Exception e)
 			{

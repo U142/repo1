@@ -3,8 +3,6 @@ package no.ums.pas.send;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
-import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.MapPointPix;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -16,7 +14,6 @@ import no.ums.ws.common.UMapPoint;
 import no.ums.ws.common.parm.ArrayOfUMapPoint;
 import no.ums.ws.common.parm.UPOLYGONSENDING;
 import no.ums.ws.parm.ExecResponse;
-import no.ums.ws.parm.ObjectFactory;
 import no.ums.ws.parm.Parmws;
 
 import javax.xml.namespace.QName;
@@ -166,9 +163,9 @@ public class SendPropertiesPolygon extends SendProperties {
 		if(get_shapestruct()==null)
 			return;
 		if(PAS.get_pas() != null)
-			get_shapestruct().draw(g, get_pas().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint, true, true, 1, true, !b_drawmode);
+			get_shapestruct().draw(g, get_pas().get_mappane().getMapModel(), get_pas().get_mappane().getZoomLookup(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint, true, true, 1, true, !b_drawmode);
 		else
-			get_shapestruct().draw(g, get_toolbar().get_parent().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
+			get_shapestruct().draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
 		if(get_toolbar().get_parent().isActive()) {
 			/*try {
 				draw_last_line(g);
@@ -177,26 +174,8 @@ public class SendPropertiesPolygon extends SendProperties {
 			}*/
 		}
 	}
-	void draw_last_line(Graphics g, Point lastpoint) {
-		if(get_pas()==null || get_shapestruct()==null || lastpoint==null || get_pas().get_navigation()==null)
-			return;
-		if(lastpoint==null || _get_shapestruct().get_size() < 1)
-			return;
-		if(get_pas().get_mappane().get_mode()== MapFrame.MapMode.SENDING_POLY) {
-			try {
-				MapPointPix p1 = new MapPointPix(get_shapestruct().typecast_polygon().get_pix_int_x()[_get_shapestruct().get_size()-1], _get_shapestruct().get_pix_int_y()[_get_shapestruct().get_size()-1]);
-				MapPointPix p2 = new MapPointPix(lastpoint.x, lastpoint.y);
-				long n_dist = get_pas().get_navigation().calc_distance(p1, p2);
-				String sz_distance = n_dist + "m";
-				g.setColor(new Color((float)0.2, (float)0.2, (float)0.2, (float)1.0));
-				g.drawLine(_get_shapestruct().get_pix_int_x()[_get_shapestruct().get_size()-1], _get_shapestruct().get_pix_int_y()[_get_shapestruct().get_size()-1], lastpoint.x, lastpoint.y);
-				g.drawString(sz_distance, lastpoint.x + 10, lastpoint.y);
-			} catch(Exception e) {
-				Error.getError().addError("SendPropertiesPolygon","Exception in draw_last_line",e,1);
-			}
-		}
-	}
-	public boolean goto_area() {
+
+    public boolean goto_area() {
 		NavStruct nav = get_shapestruct().calc_bounds();
 		if(nav==null)
 			return false;
@@ -210,7 +189,7 @@ public class SendPropertiesPolygon extends SendProperties {
 		_get_shapestruct().remove_at(at.get_polyindex());
 	}
 	public void move_at(PolySnapStruct at) {
-		_get_shapestruct().move_at(at.get_polyindex());
+		_get_shapestruct().move_at();
 	}
 	public void reverse_polypoints() {
 		_get_shapestruct().reverse_coor_order();

@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.core.Variables;
 import no.ums.pas.localization.Localization;
 
@@ -52,9 +54,9 @@ public class PLMNShape extends ShapeStruct
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int pensize, boolean bPaintShapeName) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int pensize, boolean bPaintShapeName) {
 		if(m_b_hidden)
 			return;
 		Graphics2D g2d = (Graphics2D)g;
@@ -102,9 +104,9 @@ public class PLMNShape extends ShapeStruct
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p) {
-		draw(g, nav, bDashed, bFinalized, bEditmode, p, false, false, 1, false);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p) {
+		draw(g, mapModel, zoomLookup, bDashed, bFinalized, bEditmode, p, false, false, 1, false);
 	}
 
 	@Override
@@ -124,10 +126,10 @@ public class PLMNShape extends ShapeStruct
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean b_dashed,
-			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
-			boolean b_fill, int pensize, boolean bPaintShapeName,
-			boolean bHasFocus) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed,
+                     boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+                     boolean b_fill, int pensize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
 		// TODO Auto-generated method stub
 		
 	}

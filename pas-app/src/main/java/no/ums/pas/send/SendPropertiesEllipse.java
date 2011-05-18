@@ -81,7 +81,7 @@ public class SendPropertiesEllipse extends SendProperties {
 	public void draw(Graphics g, boolean b_dashed, boolean b_drawmode, Point lastpoint) {
 		if(get_shapestruct()==null)
 			return;
-		get_shapestruct().draw(g, get_pas().get_navigation(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
+		get_shapestruct().draw(g, get_pas().get_mappane().getMapModel(), get_pas().get_mappane().getZoomLookup(), b_dashed, b_drawmode, get_toolbar().get_parent().isActive(), lastpoint);
 	}	
 
 	public boolean goto_area() {

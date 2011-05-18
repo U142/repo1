@@ -1,49 +1,27 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.LonLat;
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.errorhandling.Error;
-import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.pas.ums.tools.Utils;
 
-import javax.swing.UIManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
-
-
-/*class PolyPoint extends Object {
-	double m_coor_lon;
-	double m_coor_lat;
-	int m_scr_x;
-	int m_scr_y;
-	public double get_lon() { return m_coor_lon; }
-	public double get_lat() { return m_coor_lat; }
-	public int get_scrx() { return m_scr_x; }
-	public int get_scry() { return m_scr_y; }
-	PolyPoint(double lon, double lat) {
-		m_coor_lon = lon;
-		m_coor_lat = lat;
-	}
-	PolyPoint(int x, int y) {
-		m_scr_x = x;
-		m_scr_y = y;
-	}
-}*/
- 
 public class PolygonStruct extends ShapeStruct {
-	
-	enum PolyType {
+
+    enum PolyType {
 		NORMAL,
 		ELLIPSE_PARENT,
 		ELLIPSE_RECALCULATED,
@@ -58,28 +36,20 @@ public class PolygonStruct extends ShapeStruct {
 	private Hashtable<Integer, String> hash_coors_added = new Hashtable<Integer, String>(); 
 	private int [] m_int_x;
 	private int [] m_int_y;
-	private int [] m_show_int_x, m_show_int_y;
-//	private int [] m_simplified_int_x, m_simplified_int_y;
-	private boolean m_b_needcoortopix = true;
-	
-	private List<MapPointLL> illegal_intersects = new ArrayList<MapPointLL>();
-	private Object b_generating_illegal_intersects = new Object();
-	
-	
-	private Dimension m_dim_mapsize;
+
+    private Dimension m_dim_mapsize;
 	public Dimension get_mapsize() { return m_dim_mapsize; }
 	
-	public PolygonStruct()
-	{
+	public PolygonStruct() {
 		this(DETAILMODE.SHOW_POLYGON_FULL, 10000.0);
 	}
 	
-	public PolygonStruct(DETAILMODE mode, double precision)
-	{
+	public PolygonStruct(DETAILMODE mode, double precision) {
 		this(new Dimension());
 		setDetailMode(mode);
 		POINT_PRECISION = precision;
 	}
+
 	public PolygonStruct(Dimension dim_mapsize) {
 		set_fill_color(new Color((float)0.0, (float)0.0, (float)1.0, (float)0.2));
 		m_border_color = new Color((float)0.0, (float)0.0, (float)0.0, (float)1.0);
@@ -109,111 +79,55 @@ public class PolygonStruct extends ShapeStruct {
 		shapeName = "POLY";
 		
 	}
-	
-	public MapPointLL getPoint(int n)
-	{
-		if(m_coor_lon.size()-1 < n)
-			return null;
-		return new MapPointLL(m_coor_lon.get(n), m_coor_lat.get(n), m_coor_pointref.get(n));		
-	}
-	
-	public MapPointLL getLastPoint()
-	{
-		if(m_coor_lon.size()>0)
-		{
+
+    public MapPointLL getLastPoint() {
+		if(m_coor_lon.size()>0) {
 			return new MapPointLL(m_coor_lon.get(m_coor_lon.size()-1), m_coor_lat.get(m_coor_lat.size()-1), m_coor_pointref.get(m_coor_pointref.size()-1));
 		}
 		return null;
 	}
-	public MapPointLL getFirstPoint()
-	{
-		if(m_coor_lon.size()>0)
-		{
+	public MapPointLL getFirstPoint() {
+		if(m_coor_lon.size()>0) {
 			return new MapPointLL(m_coor_lon.get(0), m_coor_lat.get(0), m_coor_pointref.get(0));
 		}
 		return null;
 	}
-	public boolean getIsAdded(int n)
-	{
-		return m_b_isadded.get(n);
-	}
-	public void setPointIsAdded(int n, boolean b)
-	{
-		m_b_isadded.set(n, b);
-	}
-	
-	@Override
+
+    @Override
 	protected void calc_area_sqm() {
 		double sqm = 0;
 		m_f_area_sqm = 0;
-		if(get_size()<3)
-		{
+		if(get_size()<3) {
 			m_f_area_sqm = 0;
 			return;
 		}
 		
-		for(int i=0; i < get_size(); i++)
-		{
+		for(int i=0; i < get_size(); i++) {
 			int next = ((i+1) % get_size());
-			//sqm += 0.5 * (get_coor_lon(i)*get_coor_lat(next) - get_coor_lon(idx))
-			CoorConverter conv = new CoorConverter();
-			double north1 = 0, east1 = 0, north2 = 0, east2 = 0;
-			/*UTMCoor utm1 = conv.LL2UTM(23, get_coor_lat(i), get_coor_lon(i), north1, east1, "", 0);
-			UTMCoor utm2 = conv.LL2UTM(23, get_coor_lat(next), get_coor_lon(next), north2, east2, "", 0);
-			sqm += 0.5 * (utm1.f_easting*utm2.f_northing - utm2.f_easting*utm1.f_northing);*/
-			double cos_lat = Math.cos(CoorConverter.deg2rad*get_coor_lat(i));
 			sqm += (get_coor_lon(i)*get_coor_lat(next) - get_coor_lon(next)*get_coor_lat(i));
 		}
 		sqm /= 2.0;
 		m_f_area_sqm = sqm;
-		
-		/*
-		for(int i=0; i < get_size(); i++)
-		{
-			int next = ((i+1) % get_size());
-			MapPointLL ll1 = new MapPointLL(get_coor_lon(i), get_coor_lat(i));
-			MapPointLL ll2 = new MapPointLL(get_coor_lon(next), get_coor_lat(next));
-			MapPoint mp1 = new MapPoint(PAS.Variables.NAVIGATION, ll1);
-			MapPoint mp2 = new MapPoint(PAS.Variables.NAVIGATION, ll2);
-			//sqm += mp1.get_x()*mp2.get_y() - mp2.get_x()*mp1.get_y();
-			sqm += ll1.get_lon()*ll2.get_lat() - ll2.get_lon()*ll1.get_lat() * 30.92;
-		}
-		sqm/=2;
-		m_f_area_sqm = Math.round(Math.abs(sqm));*/
+
 	}
 
-	public List<MapPointLL> LastLineIntersect(MapPointLL mouse)
-	{
-		List<MapPointLL> ret = new ArrayList<MapPointLL>();
-		if(m_coor_lon.size()>=2)
-		{
-			MapPointLL lastpoint = new MapPointLL(m_coor_lon.get(m_coor_lon.size()-1), m_coor_lat.get(m_coor_lat.size()-1), m_coor_pointref.size()-1);
-			return LineIntersect(lastpoint, mouse, false);
-		}
-		return ret;
+    public double distanceBetweenPoints(MapPointLL p1, MapPointLL p2) {
+        return Math.sqrt( Math.pow((Math.abs(p1.get_lat() - p2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - p2.get_lon()) * 3600 * 30.92 * Math.cos(p2.get_lat()) ),2) );
 	}
 	
-	public double distanceBetweenPoints(MapPointLL p1, MapPointLL p2)
-	{
-		double dist = Math.sqrt( Math.pow((Math.abs(p1.get_lat() - p2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - p2.get_lon()) * 3600 * 30.92 * Math.cos(p2.get_lat()) ),2) );
-		return dist;
-	}
-	
-	public MapPointLL findNearestPolypoint(MapPointLL p1)
-	{
+	public MapPointLL findNearestPolypoint(MapPointLL p1) {
 		if(m_coor_lat.size()==0)
 			return null;
 		//check distance to all points and return the closest one
 		MapPointLL ret = new MapPointLL(0,0);
 		int closest_index = 0;
 		double closest = 0;
-		for(int i=0; i < m_coor_lon.size(); i++)
-		{
+		for(int i=0; i < m_coor_lon.size(); i++) {
 			double dist = Math.sqrt( Math.pow((Math.abs(p1.get_lat() - m_coor_lat.get(i)) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - m_coor_lon.get(i)) * 3600 * 30.92 * Math.cos(m_coor_lat.get(i)) ),2) );
-			if(i==0)
-				closest = dist;
-			if(dist<closest)
-			{
+			if(i==0) {
+                closest = dist;
+            }
+			if(dist<closest) {
 				closest = dist;
 				closest_index = i;
 			}
@@ -225,57 +139,16 @@ public class PolygonStruct extends ShapeStruct {
 		ret.setMeasurementReference(closest);
 		return ret;
 	}
-	
-	public MapPointPix findNearestPolypoint(MapPointPix p1)
-	{
-		if(m_int_x == null || m_int_x.length==0)
-			return null;
-		MapPointPix ret = new MapPointPix(0, 0);
-		int closest_index = 0;
-		double closest = 0;
-		for(int i=0; i < m_int_x.length; i++)
-		{
-			double dist = Math.sqrt( Math.pow((Math.abs(p1.get_y() - m_int_y[i]) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_x() - m_int_x[i]) * 3600 * 30.92 * Math.cos(m_int_y[i]) ),2) );
-			if(i==0)
-				closest = dist;
-			if(dist<closest)
-			{
-				closest = dist;
-				closest_index = i;
-			}
-		}
-		ret.set_x(m_int_x[closest_index]);
-		ret.set_y(m_int_y[closest_index]);
-		return ret;
-	}
-	
-	public boolean FollowRestrictionLines(MapPointLL reference_point, MapPointLL p1, MapPointLL p2, PolygonStruct restrict,
-			boolean add_first_point, boolean add_last_point, boolean b_force_follow_border)
-	{
+
+    public boolean FollowRestrictionLines(MapPointLL reference_point, MapPointLL p1, MapPointLL p2, PolygonStruct restrict,
+			boolean add_first_point, boolean add_last_point, boolean b_force_follow_border) {
 		int startat = p1.getPointReference();
 		int stopat = p2.getPointReference();
-		
 		
 		//test - measure distance from start to stop and choose the shortest one
 		float dist1 = 0;
 		float dist2 = 0;
-		int test = (startat<=stopat ? startat : stopat);
-		/*for(int xx = (startat<=stopat ? startat : stopat); xx < (startat<=stopat ? stopat : startat); xx++)
-		{
-			int n_1 = (xx % restrict.get_size());
-			int n_2 = ((xx+1) % restrict.get_size());
-			MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
-			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-			dist1 += Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
-		}
-		for(int xx = (stopat<=startat ? stopat : startat); xx > (stopat>=startat ? startat : stopat); xx--)
-		{
-			int n_1 = (xx % restrict.get_size());
-			int n_2 = ((xx-1) % restrict.get_size());
-			MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
-			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-			dist2 += Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
-		}*/
+
 		int xx = startat;
 		while(1==1)
 		{
@@ -296,27 +169,19 @@ public class PolygonStruct extends ShapeStruct {
 			int n_2 = ((xx+1) % restrict.get_size());
 			MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
 			MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-			dist2 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
+			dist2 += distanceBetweenPoints(mp1, mp2);
 			xx = Math.abs(((xx+1) % restrict.get_size()));
 			if(xx==startat)
 				break;	
 		}
-		int iterations = 0;
-		int dir = 1+1-1;
+		int iterations;
+		int dir;
 
 		int _start = startat;
 		int _stop = stopat;
-		/*if(dist1>dist2)
-		{
-			int tmp = _stop;
-			_stop=_start;
-			_start = tmp;
-		}*/
-		
-		if(_start>_stop)
-		{
+
+		if(_start>_stop) {
 			iterations = restrict.get_size() - _start + _stop;
-			//iterations = Math.abs(_start - _stop);
 		}
 		else
 			iterations = Math.abs(_stop - _start);
@@ -324,13 +189,11 @@ public class PolygonStruct extends ShapeStruct {
 		int it = _start;
 		int count = 0;
 		int modulus = restrict.get_size()-1;
-		if(b_force_follow_border)
-		{
+		if(b_force_follow_border) {
 			//walk 1. way
 			while(true)
 			{
 				int n_1 = (it % modulus);
-				//int n_2 = ((it + (_stop<_start ? -1 : 1)) % restrict.get_size());
 				int n_2 = ((it+1) % modulus);
 				if(n_1<0)
 					n_1 = restrict.get_size()-1;
@@ -338,28 +201,17 @@ public class PolygonStruct extends ShapeStruct {
 					n_2 = restrict.get_size()-1;
 				MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
 				MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-				dist1 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
-	
-				/*if(_stop<_start)
-					it--;
-				else
-					it++;*/
+				dist1 += distanceBetweenPoints(mp1, mp2);
 				it++;
 				count++;
 				if(count>=iterations)
 					break;
 			}
 			
-			
-			//walk 2. way
-			//_start = stopat;
-			//_stop = startat;
-			if(_start>_stop)
-			{
+			if(_start>_stop) {
 				iterations = Math.abs(_start - _stop);
 			}
-			else
-			{
+			else {
 				iterations = restrict.get_size() - _stop + _start;
 			}
 			it = _start;
@@ -375,67 +227,38 @@ public class PolygonStruct extends ShapeStruct {
 					n_2 = restrict.get_size()+n_2;
 				MapPointLL mp1 = new MapPointLL(restrict.get_coor_lon(n_1), restrict.get_coor_lat(n_1));
 				MapPointLL mp2 = new MapPointLL(restrict.get_coor_lon(n_2), restrict.get_coor_lat(n_2));
-				dist2 += distanceBetweenPoints(mp1, mp2);//Math.sqrt( Math.pow((Math.abs(mp1.get_lat() - mp2.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(mp1.get_lon() - mp2.get_lon()) * 3600 * 30.92 * Math.cos(mp2.get_lat()) ),2) );
-	
-				/*if(_stop<_start)
-					it--;
-				else
-					it++;*/
+				dist2 += distanceBetweenPoints(mp1, mp2);
+
 				it--;
 				count++;
 				if(count>=iterations)
 					break;
 			}
-			if(dist1>dist2)
-			{
+			if(dist1>dist2) {
 				dir = -1;
-				//_start = stopat;
-				//_stop = startat;
 			}
-			else
-			{
+			else {
 				dir = 1;
-				//_start = startat;
-				//_stop = stopat;
 			}
 			System.out.println("dist1 = " + dist1 + " dist2 = " + dist2);
 		}
 		else
 		{
-			double distp1 = distanceBetweenPoints(p1, reference_point);//Math.sqrt( Math.pow((Math.abs(p1.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
-			double distp2 = distanceBetweenPoints(p2, reference_point);//Math.sqrt( Math.pow((Math.abs(p2.get_lat() - reference_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p2.get_lon() - reference_point.get_lon()) * 3600 * 30.92 * Math.cos(reference_point.get_lat()) ),2) );
-			if(distp1<distp2)
-			{
+			double distp1 = distanceBetweenPoints(p1, reference_point);
+			double distp2 = distanceBetweenPoints(p2, reference_point);
+			if(distp1<distp2) {
 				startat = p2.getPointReference();
 				stopat  = p1.getPointReference();
 			}
-			if(dist1>dist2)
-			{
+			if(dist1>dist2) {
 				dir = -1;
-				//_start = stopat;
-				//_stop = startat;
-			}
-			else
-			{
+			} else {
 				dir = 1;
-				//_start = startat;
-				//_stop = stopat;
 			}
-
-			//not force to follow border all over, only where there are restrictions
-			/*if(startat>stopat)
-				dir = -1;
-			else
-				dir = 1;*/
 		}
 		_start = startat;
 		_stop = stopat;
-		
-		/*if(dist1>dist2)
-		{
-			startat = p2.getPointReference();
-			stopat  = p1.getPointReference();
-		}*/
+
 		if(_start>_stop && dir>0)
 			iterations = restrict.get_size() - _start + _stop;
 		else if(_start<_stop && dir<0)
@@ -447,15 +270,12 @@ public class PolygonStruct extends ShapeStruct {
 
 		if(add_first_point)
 		{
-			//this.add_coor((_start<_stop ? p1.get_lon() : p2.get_lon()), (_start<_stop ? p1.get_lat() : p2.get_lat()));
 			this.add_coor(p1.get_lon(), p1.get_lat());
 		}
 
 		count = 0;
 		it = _start;
 		it += dir*(add_first_point && dir>0 ? 1 : 0);
-		//iterations += dir*(add_first_point && dir<0 ? 0 : 0);
-		//iterations -=Math.abs(dir);
 		while(true)
 		{
 			int n_1 = (it % restrict.get_size());
@@ -469,34 +289,11 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		if(add_last_point)
 		{
-			//this.add_coor((_start<_stop ? p2.get_lon() : p1.get_lon()), (_start<_stop ? p2.get_lat() : p1.get_lat()));
 			this.add_coor(p2.get_lon(), p2.get_lat(), true, POINT_PRECISION, true);
 		}
 		else
 			this.finalizeShape();
-		
-		/*if(startat<stopat)
-		{
-			if(add_first_point)
-				this.add_coor(p1.get_lon(), p1.get_lat());
-			for(int i=startat+(add_first_point ? 1 : 1); i < stopat+(add_first_point ? 1 : 1); i++)
-			{
-				this.add_coor(restrict.get_coor_lon(i), restrict.get_coor_lat(i));
-			}
-			if(add_last_point)
-				this.add_coor(p2.get_lon(), p2.get_lat());
-		}
-		else
-		{
-			if(add_first_point)
-				this.add_coor(p2.get_lon(), p2.get_lat());
-			for(int i=startat+(add_last_point ? 0 : -1); i+(add_last_point ? 0 : 1) > stopat; i--)
-			{
-				this.add_coor(restrict.get_coor_lon(i), restrict.get_coor_lat(i));
-			}
-			if(add_last_point)
-				this.add_coor(p1.get_lon(), p1.get_lat());
-		}*/
+
 		return true;
 	}
 	/**
@@ -538,12 +335,6 @@ public class PolygonStruct extends ShapeStruct {
 				if( (Math.abs(intersect.get_lat()-p1.get_lat())<epsilon && Math.abs(intersect.get_lon()-p1.get_lon())<epsilon) || 
 						(Math.abs(intersect.get_lat()-p2.get_lat())<epsilon && Math.abs(intersect.get_lon()-p2.get_lon())<epsilon) )
 				{
-					/*MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
-					boolean b_midpoint_inside = this.pointInsideShape(midpoint);
-					if(!b_midpoint_inside)
-					{
-						DOINTERSECT = CommonFunc.DONT_INTERSECT;
-					}*/
 					DOINTERSECT = CommonFunc.DONT_INTERSECT;
 				}
 			}
@@ -666,8 +457,7 @@ public class PolygonStruct extends ShapeStruct {
 		hash_coors_added.put(index, id);
 		if(auto_finalize)
 			finalizeShape();
-		return;
-	}
+    }
 	public void set_activepoint(PolySnapStruct at) {
 		//at.get_polyindex() set this as last point
 		ArrayList<Double> lat = new ArrayList<Double>(get_coors_lat().size());
@@ -685,7 +475,7 @@ public class PolygonStruct extends ShapeStruct {
 	}
 	public PolySnapStruct snap_to_point(Point p1, int n_max_distance, boolean b_current,
 			Dimension dim_map, Navigation nav) {
-		Point p2 = null;
+		Point p2;
 		PolySnapStruct snapat = null;
 		long n_distance = 0;
 		if(get_pix_int_x()==null || get_pix_int_y()==null)
@@ -701,8 +491,6 @@ public class PolygonStruct extends ShapeStruct {
 					return snapat; //prioritize active sending
 				}
 			}
-			else
-				continue;
 		}
 		return snapat;
 	}
@@ -737,40 +525,18 @@ public class PolygonStruct extends ShapeStruct {
 			finalizeShape();
 		}
 	}
-	public void move_at(int n_index) {
+	public void move_at() {
 		
 	}
 	public void set_at(int n_index, double lon, double lat) {
-		m_coor_lon.set(n_index, new Double(lon));
-		m_coor_lat.set(n_index, new Double(lat));
+		m_coor_lon.set(n_index, lon);
+		m_coor_lat.set(n_index, lat);
 		hash_coors_added.put(n_index, lon+"_"+lat);
 		finalizeShape();
 	}
 	public NavStruct calc_bounds() {
-		ArrayList<Double> arr_use_lon = null, arr_use_lat = null;
-		/*switch(this.m_n_current_show_mode) {
-		case SHOW_POLYGON_FULL:
-			arr_use_lon = m_coor_lon;
-			arr_use_lat = m_coor_lat;
-			break;
-		case SHOW_POLYGON_SIMPLIFIED_PRMETERS:
-		case SHOW_POLYGON_SIMPLIFIED_PRPIXELS:
-			if(m_coor_show_lon!=null && m_coor_show_lat!=null) {
-				arr_use_lon = m_coor_show_lon;
-				arr_use_lat = m_coor_show_lat;
-			} else {
-				arr_use_lon = m_coor_lon;
-				arr_use_lat = m_coor_lat;				
-			}
-			break;
-		}*/
-		arr_use_lon = m_coor_lon;
-		arr_use_lat = m_coor_lat;
-		
-		//arr_use_lon = m_coor_lon;
-		//arr_use_lat = m_coor_lat;
-		double lbo = 9999, rbo = -9999, ubo = -9999, bbo = 9999;
-		if(arr_use_lon.size() == 0)
+        double lbo = 9999, rbo = -9999, ubo = -9999, bbo = 9999;
+		if(m_coor_lon.size() == 0)
 			return null;
 		double lon=0, lat=0;
 		double next_lon = 0, next_lat = 0;
@@ -779,8 +545,8 @@ public class PolygonStruct extends ShapeStruct {
 		for(int i=0; i < m_coor_lon.size(); i++) {
 			/*if(lon == ((Double)arr_use_lon.get(i)).doubleValue() && lat == ((Double)arr_use_lat.get(i)).doubleValue())
 				System.out.println("break");*/
-			lon = ((Double)m_coor_lon.get(i)).doubleValue();
-			lat = ((Double)m_coor_lat.get(i)).doubleValue();
+			lon = m_coor_lon.get(i);
+			lat = m_coor_lat.get(i);
 			if(lon >= rbo)
 				rbo = lon;
 			if(lon <= lbo)
@@ -794,7 +560,6 @@ public class PolygonStruct extends ShapeStruct {
 			next_lat = m_coor_lat.get(((i+1) % get_size()));
 			total_lon += ((lon+next_lon)*(lon*next_lat-next_lon*lat));
 			total_lat += ((lat+next_lat)*(lon*next_lat-next_lon*lat));
-			//System.out.println("BBO: " + bbo + " RBO: " + rbo + " LBO: " + lbo + " UBO: " + ubo +  " LON: " + lon + " LAT: " + lat + " p: " + (i+1));
 		}
 		calc_area_sqm();
 		total_lon *= 1/(6*m_f_area_sqm);
@@ -806,9 +571,6 @@ public class PolygonStruct extends ShapeStruct {
 		return nav;
 	}
 	public void rem_last_coor() {
-		/*m_coor_lon.remove(m_coor_lon.size() - 1);
-		m_coor_lat.remove(m_coor_lat.size() - 1);
-		PAS.get_pas().add_event("Last coor deleted");*/
 		remove_at(this.get_size()-1);
 	}
 	public void calc_coortopix(Navigation nav) {
@@ -823,14 +585,12 @@ public class PolygonStruct extends ShapeStruct {
 			m_int_y = new int[get_coors_lon().size()];
 			for(int i=0; i < get_coors_lat().size(); i++)
 			{
-				screen = new Dimension(nav.coor_to_screen( ((Double)get_coors_lon().get(i)).doubleValue(), 
-										    ((Double)get_coors_lat().get(i)).doubleValue(),
+				screen = new Dimension(nav.coor_to_screen(get_coors_lon().get(i),
+                        get_coors_lat().get(i),
 										    false));
 				m_int_x[i] = screen.width;
 				m_int_y[i] = screen.height;
 			}
-			//Variables.DRAW.set_neednewcoors(true);
-			//PAS.get_pas().kickRepaint();
 		}
 		catch(Exception e)
 		{
@@ -843,8 +603,7 @@ public class PolygonStruct extends ShapeStruct {
 			calc_bounds();
 			screen = new Dimension(nav.coor_to_screen(m_center.get_lon(), m_center.get_lat(), false));
 			m_center_pix.set(screen);
-			m_b_needcoortopix = false;
-		}
+        }
 		catch(Exception e)
 		{
 			
@@ -895,13 +654,10 @@ public class PolygonStruct extends ShapeStruct {
 	
 	boolean m_b_recalcing = false;
 	public void calc_show_coortopix(Navigation nav) {
-		if(m_int_x.length <= 0)
-			return;
+		if(m_int_x.length <= 0) {
+            return;
+        }
 		try {
-			/*if(m_int_x.length < 10) {
-				m_show_int_x = m_int_x;
-				m_show_int_y = m_int_y;
-			}*/
 			if(m_coor_show_lon!=null)
 				m_coor_show_lon.clear();
 			if(m_coor_show_lat!=null)
@@ -945,62 +701,38 @@ public class PolygonStruct extends ShapeStruct {
 			if(m_int_x.length>1) {
 				indexbuffer.add(i + 1);
 			}
-			m_show_int_x = new int[indexbuffer.size()];
-			m_show_int_y = new int[indexbuffer.size()];
+            int[] m_show_int_x = new int[indexbuffer.size()];
+            int[] m_show_int_y = new int[indexbuffer.size()];
 			m_coor_show_lon = new ArrayList<Double>(indexbuffer.size());
 			m_coor_show_lat = new ArrayList<Double>(indexbuffer.size());
 	
 			for(i=0; i < indexbuffer.size(); i++) {
 				m_show_int_x[i] = m_int_x[indexbuffer.get(i)];
 				m_show_int_y[i] = m_int_y[indexbuffer.get(i)];
-				//if(i < indexbuffer.size() - 1) 
-				{
-					m_coor_show_lon.add(this.get_coors_lon().get(indexbuffer.get(i)));
-					m_coor_show_lat.add(this.get_coors_lat().get(indexbuffer.get(i)));
-				}
+                m_coor_show_lon.add(this.get_coors_lon().get(indexbuffer.get(i)));
+                m_coor_show_lat.add(this.get_coors_lat().get(indexbuffer.get(i)));
 			}
-			/*if(m_coor_show_lon.size()>0) {
-				m_coor_show_lon.add(new Double(((Double)m_coor_show_lon.get(0)).doubleValue()));
-				m_coor_show_lat.add(new Double(((Double)m_coor_show_lat.get(0)).doubleValue()));
-			}*/
-			/*if(m_int_x.length>1) {
-				m_coor_show_lon.add((Double)this.get_coors_lon().get(((Integer)indexbuffer.get(0)).intValue()));
-				m_coor_show_lat.add((Double)this.get_coors_lat().get(((Integer)indexbuffer.get(0)).intValue()));
-			}*/
-
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally {
-			//m_b_recalcing = false;
 		}
-	}
+    }
 
-	public boolean need_coortopix() { return m_b_needcoortopix; }
-	public void set_needcoortopix() { m_b_needcoortopix = true; }
-	
-	public ArrayList<Double> get_coors_lon() { return m_coor_lon; }
+    public ArrayList<Double> get_coors_lon() { return m_coor_lon; }
 	public ArrayList<Double> get_coors_lat() { return m_coor_lat; }
 	public ArrayList<Double> get_coors_show_lon() { return m_coor_show_lon; }
 	public ArrayList<Double> get_coors_show_lat() { return m_coor_show_lat; }
 	public ArrayList<Integer> get_coors_pointref() { return m_coor_pointref; } 
 	public int [] get_pix_int_x() { return m_int_x; }
 	public int [] get_pix_int_y() { return m_int_y; }
-	public int [] get_show_pix_int_x() { return m_show_int_x; }
-	public int [] get_show_pix_int_y() { return m_show_int_y; }
-	public int get_size() { return get_coors_lat().size(); }
+
+    public int get_size() { return get_coors_lat().size(); }
 	public int get_ellipse_size() { return m_ellipse_coor_lat.size(); }
 	public int get_show_size() { return get_coors_show_lon().size(); }//get_show_pix_int_x().length; }
 	public double get_coor_lon(int idx) {
-		if(get_coors_lon().size()>idx)
-			return ((Double)get_coors_lon().get(idx)).doubleValue();
-		else
-			return 0.0;
+        return get_coors_lon().size() > idx ? get_coors_lon().get(idx) : 0.0;
 	}
 	public double get_coor_lat(int idx) {
-		if(get_coors_lat().size()>idx)
-			return ((Double)get_coors_lat().get(idx)).doubleValue();
-		else
-			return 0.0;
+        return get_coors_lat().size() > idx ? get_coors_lat().get(idx) : 0.0;
 	}
 	public double get_ellipse_coor_lon(int idx) {
 		return m_ellipse_coor_lon.get(idx);
@@ -1008,259 +740,95 @@ public class PolygonStruct extends ShapeStruct {
 	public double get_ellipse_coor_lat(int idx) {
 		return m_ellipse_coor_lat.get(idx);
 	}
-	
-	public boolean is_filled() { 
-		if(m_int_x != null && m_int_y != null)
-			return ((m_int_x.length == m_int_y.length && m_int_x.length > 0) ? true : false);
-		return false;
-	}
 
-	public void draw_first_line(Navigation nav, Graphics g, Point p) {
-		if(get_size()>1) {
-			try {
-				MapPointPix p1 = new MapPointPix(get_pix_int_x()[0], get_pix_int_y()[0]);
-				MapPointPix p2 = new MapPointPix(p.x, p.y);
-				Long n_dist = nav.calc_distance(p1, p2);
-				String sz_distance = n_dist + "m";
-				g.setColor(new Color((float)0.2, (float)0.2, (float)0.2, (float)1.0));
-				Graphics2D g2d = (Graphics2D)g;
-				float [] Dashes = {5.0F, 20.0F, 5.0F, 20.0F};
-				BasicStroke bs = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, Dashes, 0.F);
-				Stroke oldstroke = g2d.getStroke();
-				g2d.setStroke(bs);
-				g.drawLine(get_pix_int_x()[0], get_pix_int_y()[0], p.x, p.y);
-				g2d.setStroke(oldstroke);
-				//g.drawString(sz_distance, p.x + 10, p.y+10);
-			} catch(Exception e) {
-				Error.getError().addError("PolyStruct","Exception in draw_last_line",e,1);
-			}
-		}		
-	}
-	
-	public void draw_last_line(Navigation nav, Graphics g, Point p) {
-		if(get_size()>0) {
-			try {
-				MapPointPix p1 = new MapPointPix(get_pix_int_x()[get_size()-1], get_pix_int_y()[get_size()-1]);
-				MapPointPix p2 = new MapPointPix(p.x, p.y);
-				Long n_dist = new Long(nav.calc_distance(p1, p2));				
-				String sz_distance = n_dist.longValue() + "m";
-				g.setColor(new Color((float)0.2, (float)0.2, (float)0.2, (float)1.0));
-				g.drawLine(get_pix_int_x()[get_size()-1], get_pix_int_y()[get_size()-1], p.x, p.y);
-				g.drawString(sz_distance, p.x + 10, p.y+10);
-			} catch(Exception e) {
-				Error.getError().addError("PolyStruct","Exception in draw_last_line",e,1);
-			}
-		}
-	}
+    private LonLat getLonLat(int index) {
+        return new LonLat(get_coor_lon(index), get_coor_lat(index));
+    }
+
+    private void drawEditLines(Graphics2D g, ZoomLookup zoomLookup, Point topLeft, Point editPoint) {
+        if (get_size() > 0) {
+            final LonLat pointLonLat = zoomLookup.getLonLat(topLeft.x + editPoint.x, topLeft.y + editPoint.y);
+            final LonLat lastLonLat = getLonLat(get_size() - 1);
+            final Point lastPoint = zoomLookup.getPoint(lastLonLat);
+            final String distToEnd = String.format("%.2fm", pointLonLat.distanceToInM(lastLonLat));
+
+            g.setColor(new Color(0.2f, 0.2f, 0.2f, 1.0f));
+            g.drawLine(lastPoint.x-topLeft.x, lastPoint.y-topLeft.y, editPoint.x, editPoint.y);
+            g.drawString(distToEnd, editPoint.x + 10, editPoint.y+10);
+            if (get_size() > 1) {
+                float [] Dashes = {5.0F, 20.0F, 5.0F, 20.0F};
+                g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, Dashes, 0.F));
+                final Point firstPoint = zoomLookup.getPoint(getLonLat(0));
+                g.drawLine(firstPoint.x - topLeft.x, firstPoint.y - topLeft.y, editPoint.x, editPoint.y);
+            }
+        }
+    }
 	
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName,
-			boolean bHasFocus) {
-		if(m_b_recalcing || isHidden())
-			return;
-		if(!nav.bboxOverlap(getFullBBox()))
-			return;
-		//calc_coortopix(nav);
-		if(bEditmode)
-		{
-			if(ellipse_polygon!=null)
-			{
-				ellipse_polygon.draw(g, nav, true, true, true, p, bBorder, false, 1, false);
-				//return;
-			}
-			else
-			{
-				//System.out.println("not ell");
-			}
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
+		if(m_b_recalcing || isHidden()) {
+            return;
+        }
+		if(bEditmode && ellipse_polygon!=null) {
+            ellipse_polygon.draw(g, mapModel, zoomLookup, true, true, true, p, bBorder, false, 1, false);
 		}
 		
-		Color col_dot = new Color(get_fill_color().getRed(), get_fill_color().getGreen(), get_fill_color().getBlue());
-		Graphics2D g2d = null;
-		g2d = (Graphics2D)g;
-		Stroke stroke_revert = null;
-		int use_array_x[];
-		int use_array_y[];
-		int use_size = 1;
+		Graphics2D g2d = (Graphics2D)g;
 		if(get_size() >= 2) {
 			try {
-				if(!bFinalized) {
-					use_array_x = get_pix_int_x();
-					use_array_y = get_pix_int_y();
-					use_size = get_size();
-					//System.out.println("Edit mode, polygon points=" + get_size());
-				} else {
-					use_array_x = get_show_pix_int_x();
-					use_array_y = get_show_pix_int_y();
-					try
-					{
-						use_size = get_show_size();
-					}
-					catch(Exception e)
-					{
-						
-					}
-					//System.out.println("Non-edit mode, polygon points=" + get_show_size());
-				}
-				//System.out.println("Polypoints = " + m_int_x.length + " Visible = " + use_array_x.length);
 
-				stroke_revert = g2d.getStroke();
-				//g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-				if(bDashed)
-					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 30.0f, new float[]{ 3.0f,3.0f }, 0.0f));
-				else
-					g2d.setStroke(new BasicStroke(nPenSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-				
-				//g2d.setXORMode(Color.black);
-				//g2d.setColor(get_fill_color());
-				//g2d.setPaint(new java.awt.GradientPaint(0, 0, get_fill_color(), 10, 10, get_border_color()));
-				if(bDashed) {
-					/*int h = 6;
-					Rectangle rek=new Rectangle(0,0,h,h);
-					BufferedImage b = skravering(h, rek, get_fill_color(), new Color(0.0f, 0.0f, 0.0f, 0.0f));
-					TexturePaint tp = new TexturePaint(b,rek);*/
-					g2d.setPaint(m_tex_paint);
-				} else
-					g2d.setColor(get_fill_color());
-				if(bFill)
-					g2d.fillPolygon(use_array_x, use_array_y, use_size);
-				g2d.setColor(col_dot);
-				if(bBorder)
-					g2d.drawPolygon(use_array_x, use_array_y, use_size);
-				int n_size = 6;
-				int n_dual = 6*2;
-				int n_use;
-				/*if(bEditmode && !bFinalized) {
-					for(int i=0; i < use_array_x.length; i++) {
-						if(use_array_x[i] >= 0 && use_array_x[i] <= get_mapsize().width &&
-								use_array_y[i] >= 0 && use_array_y[i] <= get_mapsize().height) {
-							g2d.setColor(col_dot);	
-							if((i==0 || i==use_array_x.length-1) && !bFinalized) n_use = n_dual; else n_use = n_size;
-							g2d.fillOval(use_array_x[i] - n_use/2, use_array_y[i] - n_use/2, n_use, n_use);
-							g2d.setColor(get_border_color());
-							g2d.drawOval(use_array_x[i] - n_use/2, use_array_y[i] - n_use/2, n_use, n_use);
-						}
-					}
-				}*/
-				g2d.setStroke(stroke_revert);
-				
-				
-				/*if(!bEditmode && !bPaintShapeName)
-				{
-					//paint point numbers
-					Font f1 = new Font("Arial", Font.PLAIN, 14);
-					Font fOldFont = g.getFont();
-					g.setFont(f1);
-					for(int i=0; i < use_size; i+=10)
-					{
-						Color oldCol = g.getColor();
-						g.setColor(Color.red);
-						g.drawString(""+i, use_array_x[i], use_array_y[i]);
-						g.setColor(oldCol);
-					}
-					g.setFont(fOldFont);
-				}*/
+                final Path2D path = new Path2D.Double();
+                final Point topLeft = zoomLookup.getPoint(mapModel.getTopLeft());
+                Point lastPoint = null;
+                for (int i=0; i<get_size(); i++) {
+                    final Point lineTo = zoomLookup.getPoint(new LonLat(get_coor_lon(i), get_coor_lat(i)));
+                    if (lastPoint == null) {
+                        lastPoint = lineTo;
+                        path.moveTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
+                    } else if (lineTo.x != lastPoint.x && lineTo.y != lastPoint.y) {
+                        lastPoint = lineTo;
+                        path.lineTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
+                    }
+                }
+                if (g.getClipBounds().intersects(path.getBounds())) {
+                    if (!bEditmode) {
+                        path.closePath();
+                    }
+                    else if(!bFinalized && Variables.getMapFrame().getMouseInsideCanvas() && !isElliptical()) {
+                        drawEditLines(g2d, zoomLookup, topLeft, p);
+                    }
+
+                    drawShape(g2d, path, nPenSize, bDashed, bFill, bBorder, bPaintShapeName, bHasFocus);
+                }
 			} catch(Exception e) {
-				try {
-					g2d.setStroke(stroke_revert);
-				} catch(Exception rev) { Error.getError().addError("PolyStruct","Exception in draw",rev,1); }
 				Error.getError().addError("PolyStruct","Exception in draw",e,1);
 			}
-		}	
-		if(bEditmode && !bFinalized && Variables.getMapFrame().getMouseInsideCanvas() && !isElliptical()) {
-			draw_last_line(nav, g, p);
-			draw_first_line(nav, g, p);
 		}
 
-		//synchronized (b_generating_illegal_intersects) 
-		{
-			if(bEditmode && !bFinalized && !isElliptical())
-			{
-				Stroke oldStroke = g2d.getStroke();
-				g2d.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));//, 1.0f, new float[]{ 1.0f,1.0f }, 0.0f));
-				Color gOldColor = g2d.getColor();
-				g2d.setColor(Color.red);
-				for(int i=0; i < illegal_intersects.size(); i++)
-				{
-					MapPointLL ll = illegal_intersects.get(i);
-					MapPoint point = new MapPoint(Variables.getNavigation(), ll);
-					int w = 4;
-					g2d.fillOval(point.get_x()-w, point.get_y()-w, w*2, w*2);
-					if(((i+1) % 2) == 0 && i>0)
-					{
-						MapPointLL ll_prev = illegal_intersects.get(i-1);
-						MapPoint point_prev = new MapPoint(Variables.getNavigation(), ll_prev);
-						g2d.drawLine(point.get_x(), point.get_y(), point_prev.get_x(), point_prev.get_y());
-					}
-				}
-				g2d.setStroke(oldStroke);
-				g2d.setColor(gOldColor);
-			}
-		}
-		/*if(isElliptical()) //paint helper-lines
-		{
-			int n_diameter_x = (m_p_corner.get_x() - m_p_center.get_x()) * 2;
-			int n_diameter_y = (m_p_corner.get_y() - m_p_center.get_y()) * 2;
-			float m_n_diameter_width_pix   	= Math.abs(m_p_corner.get_x() - m_p_center.get_x()) * 2;
-			float m_n_diameter_height_pix		= Math.abs(m_p_corner.get_y() - m_p_center.get_y()) * 2;
-			//double m_n_diameter_width_meters	= nav.calc_distance(m_p_center.get_x(), m_p_center.get_y(), m_p_corner.get_x(), m_p_center.get_y())*2;
-			//double m_n_diameter_height_meters	= nav.calc_distance(m_p_center.get_x(), m_p_center.get_y(), m_p_center.get_x(), m_p_corner.get_y())*2;
-			double m_n_diameter_width_meters = Math.abs(nav.distance_xy_M(m_p_center.get_lon(), m_p_center.get_lat(), m_p_corner.get_lon(), m_p_center.get_lat()).x * 2);
-			double m_n_diameter_height_meters = Math.abs(nav.distance_xy_M(m_p_center.get_lon(), m_p_center.get_lat(), m_p_center.get_lon(), m_p_corner.get_lat()).y * 2);
-			
-			g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
-			g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 3.0f, new float[]{ 3.0f }, 0.0f));
-			g2d.drawLine((int)(m_p_center.get_x() - m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2), (int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2));
-			g2d.drawLine((int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() + m_n_diameter_height_pix/2), (int)(m_p_center.get_x() + m_n_diameter_width_pix/2), (int)(m_p_center.get_y() - m_n_diameter_height_pix/2));
-			//FontSet g2d.setFont(new Font("Arial", Font.BOLD, 11));
-			String sz_width = Math.round(m_n_diameter_width_meters) + "m";
-			String sz_height= Math.round(m_n_diameter_height_meters) + "m";
-			g2d.drawString(sz_height, (m_p_center.get_x() + m_n_diameter_width_pix/2) + 5, m_p_center.get_y());
-			g2d.drawString(sz_width,m_p_center.get_x(), (m_p_center.get_y() + m_n_diameter_height_pix/2) + 17);
-			
-		}*/
-		//if(get_size()>0)
-		//	g.drawString(get_area_sqm()+"m2", get_pix_int_x()[0], get_pix_int_y()[0]);
-		//paint shape name
-		if(bPaintShapeName)
-		{					
-			super.paintShapeName(g, bEditmode, bHasFocus);
-		}
-
-		super.draw_epicentre(g);
+		super.draw_epicentre(g, zoomLookup, mapModel);
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {
-		draw(g, nav, bDashed, bFinalized, bEditmode, p, bBorder, bFill, nPenSize, bPaintShapeName, false);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName) {
+		draw(g, mapModel, zoomLookup, bDashed, bFinalized, bEditmode, p, bBorder, bFill, nPenSize, bPaintShapeName, false);
 	}
 
 	
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
-		draw(g, nav, b_dashed, b_finalized, b_editmode, p, true, true, 1, false);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
+		draw(g, mapModel, zoomLookup, b_dashed, b_finalized, b_editmode, p, true, true, 1, false);
 	}
 	
 	protected void updateCanLock(List<ShapeStruct> restrictionShapes)
 	{
 		if(getPolyType()==PolyType.ELLIPSE_PARENT)
 		{
-		
-		
 			if(m_p_center!=null && m_p_corner!=null && m_p_center.get_x()!=m_p_corner.get_x() && m_p_center.get_y()!=m_p_corner.get_y())
 			{
-				/*if(restrictionShapes.size()>0)
-				{
-					//also check if all points are inside poly and no polyline crosses restriction area
-					PolygonStruct restriction = (PolygonStruct)restrictionShapes.get(0);
-					MapPointLL p1 = getLastPoint();
-					MapPointLL p2 = getFirstPoint();
-					List<MapPointLL> intersects = restriction.LineIntersect(p1, p2, 0);
-					if(intersects.size()>0)
-						return false;
-				}*/
 				if(get_size()>3)
 				{
 					setCanLock(true);
@@ -1284,27 +852,7 @@ public class PolygonStruct extends ShapeStruct {
 						setCanLock(false);
 						return;
 					}
-						//return false;
-					
-					//p1 = getPoint(getPoint(n))
-					/*synchronized (b_generating_illegal_intersects) {
-						illegal_intersects.clear();
-						for(int i=1; i <= get_size(); i++)
-						{
-							int np1 = ((i-1) % get_size());
-							int np2 = (i % get_size());
-							p1 = getPoint(np1);
-							p2 = getPoint(np2);
-							intersects = restriction.LineIntersect(p1, p2, 0, true);
-							illegal_intersects.addAll(intersects);
-						}
-						if(illegal_intersects.size()>0)
-						{
-							setCanLock(false);
-							return;
-						}
-					}*/
-					
+
 					MapPointLL midpoint = new MapPointLL((p2.get_lon()+p1.get_lon())/2.0, (p2.get_lat()+p1.get_lat())/2.0);
 					boolean b_midpoint_inside = restriction.pointInsideShape(midpoint);
 					if(!b_midpoint_inside)
@@ -1319,8 +867,6 @@ public class PolygonStruct extends ShapeStruct {
 			}
 		}
 		setCanLock(false);
-		return;
-
 	}
 	
 	@Override
@@ -1371,13 +917,6 @@ public class PolygonStruct extends ShapeStruct {
 	public boolean isElliptical()
 	{
 		return (ellipse_polygon!=null ? true : false);
-		/*switch(getPolyType())
-		{
-		case ELLIPSE_PARENT:
-		case ELLIPSE_RECALCULATED:
-			return true;
-		}
-		return false;*/
 	}
 	PolygonStruct ellipse_polygon = null;
 	public void recalc_shape(Navigation nav)
@@ -1405,8 +944,7 @@ public class PolygonStruct extends ShapeStruct {
 		//System.out.println("points="+m_ellipse_coor_lat.size());
 		ellipse_polygon.set_border_color(this.get_border_color());
 		ellipse_polygon.set_fill_color(this.get_fill_color());
-		this.m_b_needcoortopix = true;
-		m_b_recalcing = false;
+        m_b_recalcing = false;
 	}
 	
 	public enum POLY_FOLLOW_RESTRICT
@@ -1927,61 +1465,7 @@ public class PolygonStruct extends ShapeStruct {
 		this.m_coor_lat = newpoly.m_coor_lat;
 		this.m_coor_lon = newpoly.m_coor_lon;
 		this.m_coor_pointref = newpoly.m_coor_pointref;
-		this.m_b_needcoortopix = true;
-		calc_coortopix(Variables.getNavigation());
-
-		/*int int_mod = 10000;
-		Polygon javapoly = new Polygon();
-		Polygon javarestrict = new Polygon();
-		int c;
-		for(c = 0; c < get_ellipse_size(); c++)
-		{
-			int x = (int)(get_ellipse_coor_lon(c % get_size())*int_mod);
-			int y = (int)(get_ellipse_coor_lat(c % get_size())*int_mod);
-			javapoly.addPoint(x, y);
-		}
-		for(c = 0; c < restrict.get_size(); c++)
-		{
-			int x = (int)(restrict.get_coor_lon(c % restrict.get_size())*int_mod);
-			int y = (int)(restrict.get_coor_lat(c % restrict.get_size())*int_mod);
-			javarestrict.addPoint(x, y);
-		}
-
-		Area ellipse_area = new Area(javapoly);
-		Area restrict_area = new Area(javarestrict);
-		restrict_area.intersect(ellipse_area);
-			
-
-		PathIterator it = restrict_area.getPathIterator(new AffineTransform());
-		//PolygonStruct combined_shapestruct = new PolygonStruct(null, Color.black, new Color(0,0,0,0));
-		int point_count = 0;
-		while(it!=null)
-		{
-			double [] coors = new double[2];
-			try
-			{
-				int pi = it.currentSegment(coors);
-				if(pi==PathIterator.SEG_CLOSE)
-					break;
-				if(pi==PathIterator.SEG_LINETO)
-				{
-				}
-				else if(pi==PathIterator.SEG_MOVETO)
-				{
-				}
-				this.add_coor(coors[0]/int_mod, coors[1]/int_mod);
-				point_count++;
-			}
-			catch(Exception e)
-			{
-				break;
-			}
-		
-			it.next();
-		}
-		this.m_b_needcoortopix = true;
-		calc_coortopix(PAS.Variables.NAVIGATION);*/
-
+        calc_coortopix(Variables.getNavigation());
 	}
 	
 	

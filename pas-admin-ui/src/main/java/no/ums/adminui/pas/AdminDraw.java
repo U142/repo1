@@ -43,7 +43,7 @@ public class AdminDraw extends PASDraw {
 		for(int j=0; j < list.size(); j++)
 		{
 			list.get(j).set_fill_color(Color.black);
-			list.get(j).draw(get_offscreen(), Variables.getNavigation(), false, true, false, null, true, true, 1, false);
+			list.get(j).draw(get_offscreen(), Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, true, false, null, true, true, 1, false);
 		}
 		if(Variables.getSendController().get_activesending() != null)
 			Variables.getSendController().get_activesending().get_sendproperties().draw(get_offscreen(), new Point(Variables.getMapFrame().get_current_mousepos().x, Variables.getMapFrame().get_current_mousepos().y));

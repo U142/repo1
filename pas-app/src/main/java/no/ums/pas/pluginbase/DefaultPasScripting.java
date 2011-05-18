@@ -3,7 +3,6 @@ package no.ums.pas.pluginbase;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.pas.Installer;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
@@ -31,13 +30,11 @@ import no.ums.pas.core.menus.StatusActions;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
-import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.core.ws.WSDeleteProject;
 import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 import no.ums.pas.core.ws.WSDeleteStatus;
 import no.ums.pas.core.ws.WSGetSystemMessages;
 import no.ums.pas.core.ws.WSPowerup;
-import no.ums.pas.core.ws.vars;
 import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.core.ws.WSThread.WSRESULTCODE;
 import no.ums.pas.localization.Localization;
@@ -57,7 +54,6 @@ import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.versioning.VersionInfo;
 import no.ums.ws.common.PASVERSION;
 import no.ums.ws.common.USYSTEMMESSAGES;
-import no.ums.ws.pas.Pasws;
 
 import org.geotools.data.ows.Layer;
 import org.jvnet.substance.SubstanceLookAndFeel;
@@ -74,7 +70,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -82,17 +77,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1031,7 +1023,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
             }
 			List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
             for (ShapeStruct aList : list) {
-                aList.draw(g, nav, false, true, false, null, true, true, 2, false);
+                aList.draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
             }
 
 		}
@@ -1070,7 +1062,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 					else
 					{
 						so.get_sendproperties().get_shapestruct().draw(
-								g, nav, !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);						
+								g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), !bEdit, !bEdit, bEdit, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, true, bEdit);
 					}
 				}
 			}
@@ -1089,7 +1081,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		Enumeration<ShapeStruct> en = getShapesToPaint().elements();
 		while(en.hasMoreElements())
 		{
-			en.nextElement().draw(g, nav, true, true, false, null, true, true, 1, false);
+			en.nextElement().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), true, true, false, null, true, true, 1, false);
 		}			
 
 		if(ViewOptions.TOGGLE_HOUSES.isSelected())

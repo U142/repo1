@@ -1,5 +1,8 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -43,15 +46,15 @@ public class PointStruct extends ShapeStruct
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int pensize, boolean bPaintShapeName) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int pensize, boolean bPaintShapeName) {
 		
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p) {		
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p) {
 	}
 
 	@Override
@@ -71,10 +74,10 @@ public class PointStruct extends ShapeStruct
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean b_dashed,
-			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
-			boolean b_fill, int pensize, boolean bPaintShapeName,
-			boolean bHasFocus) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed,
+                     boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+                     boolean b_fill, int pensize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
 		// TODO Auto-generated method stub
 		
 	}

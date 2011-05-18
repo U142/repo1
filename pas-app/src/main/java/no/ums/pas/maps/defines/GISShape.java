@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
 import no.ums.pas.importer.gis.GISList;
 
 import java.awt.Color;
@@ -78,25 +80,25 @@ public class GISShape extends ShapeStruct {
 		super.create_texpaint(h);
 	}
 
-	protected void draw_epicentre(Graphics g) {
-		super.draw_epicentre(g);
+	protected void draw_epicentre(Graphics g, ZoomLookup zoomLookoup, MapModel mapModel) {
+		super.draw_epicentre(g, zoomLookoup, mapModel);
 	}
 
-	public void draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p) {
 		
 	}
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName) {
 		
 	}
 
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean b_dashed,
-			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
-			boolean b_fill, int pensize, boolean bPaintShapeName,
-			boolean bHasFocus) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed,
+                     boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+                     boolean b_fill, int pensize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
 		
 	}
 

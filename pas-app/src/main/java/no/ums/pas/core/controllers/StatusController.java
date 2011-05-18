@@ -721,7 +721,7 @@ public class StatusController extends Controller implements ActionListener {
 						.get_shape();
 				if (ViewOptions.TOGGLE_POLYGON.isSelected()) {
 					try {
-						shape.draw(gfx, Variables.getNavigation(), false,
+						shape.draw(gfx, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false,
 								true, false, null, true, true, 1, false);
 					} catch (Exception e) {
                         log.warn("Failed to update drawing", e);

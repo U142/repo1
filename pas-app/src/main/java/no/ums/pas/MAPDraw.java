@@ -86,7 +86,7 @@ public class MAPDraw extends Draw {
 			List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
 			for(int i=0; i < list.size(); i++)
 			{
-				list.get(i).draw(m_gfx_buffer, Variables.getNavigation(), false, true, false, null, true, true, 1, false);
+				list.get(i).draw(m_gfx_buffer, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, true, false, null, true, true, 1, false);
 			}
 
 		}

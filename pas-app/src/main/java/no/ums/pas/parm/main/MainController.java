@@ -495,25 +495,16 @@ public class MainController implements ActionListener, TreeModelListener,
 			List<UPolypoint> points = new ArrayList<UPolypoint>();
 			PolygonStruct p = (PolygonStruct)this.object.getM_shape();
 			double lon, lat;
-			/*for(int i=0; i < (p.get_show_size()); i++) {
-				lon = ( Math.round(((Double)p.get_coors_show_lon().get(i)).floatValue() * 1000000.0)) / 1000000.0;
-				lat = ( Math.round(((Double)p.get_coors_show_lat().get(i)).floatValue() * 1000000.0)) / 1000000.0;
-				UPolypoint point = new UPolypoint();
-				point.setLat(lat);
-				point.setLon(lon);
-				points.getUPolypoint().add(point);
-			}*/
 			if(p!= null) {
 				for(int i=0; i < p.get_size(); i++)
 				{
-					lon = ( Math.round(((Double)p.get_coors_lon().get(i)).doubleValue() * 1000000.0)) / 1000000.0;
-					lat = ( Math.round(((Double)p.get_coors_lat().get(i)).doubleValue() * 1000000.0)) / 1000000.0;
+					lon = ( Math.round(p.get_coors_lon().get(i) * 1000000.0)) / 1000000.0;
+					lat = ( Math.round(p.get_coors_lat().get(i) * 1000000.0)) / 1000000.0;
 					UPolypoint point = new UPolypoint();
 					point.setLat(lat);
 					point.setLon(lon);
 					points.add(point);
 				}
-				//polygon.setMArrayPolypoints(points);
 				polygon.getPolypoint().addAll(points);
 
 				polygon.setColAlpha(p.get_fill_color().getAlpha());

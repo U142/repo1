@@ -1,5 +1,8 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.map.tiled.ZoomLookup;
+import no.ums.map.tiled.component.MapModel;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -12,13 +15,13 @@ public class UnknownShape extends ShapeStruct {
 	public PolySnapStruct snap_to_point(Point p, int i, boolean b, Dimension d, Navigation n) {
 		return null;
 	}
-	public void draw(Graphics g, Navigation n, boolean b1, boolean b2, boolean b3, Point p) {
-		draw_epicentre(g);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b1, boolean b2, boolean b3, Point p) {
+		draw_epicentre(g, zoomLookup, mapModel);
 	}
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean bDashed,
-			boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
-			boolean bFill, int nPenSize, boolean bPaintShapeName) {
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean bDashed,
+                     boolean bFinalized, boolean bEditmode, Point p, boolean bBorder,
+                     boolean bFill, int nPenSize, boolean bPaintShapeName) {
 		
 	}
 
@@ -51,11 +54,11 @@ public class UnknownShape extends ShapeStruct {
 		
 	}
 	@Override
-	public void draw(Graphics g, Navigation nav, boolean b_dashed,
-			boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
-			boolean b_fill, int pensize, boolean bPaintShapeName,
-			boolean bHasFocus) {
-		draw(g, nav, false, false, false, null);
+	public void draw(Graphics g, MapModel mapModel, ZoomLookup zoomLookup, boolean b_dashed,
+                     boolean b_finalized, boolean b_editmode, Point p, boolean b_border,
+                     boolean b_fill, int pensize, boolean bPaintShapeName,
+                     boolean bHasFocus) {
+		draw(g, mapModel, zoomLookup, false, false, false, null);
 	}
 
 }

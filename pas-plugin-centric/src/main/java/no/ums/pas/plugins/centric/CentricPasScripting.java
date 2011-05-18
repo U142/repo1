@@ -1264,7 +1264,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             }
             List<ShapeStruct> list = p.get_userinfo().get_departments().get_combined_restriction_shape();
             for (int i = 0; i < list.size(); i++) {
-                list.get(i).draw(g, nav, false, true, false, null, true, true, 2, false);
+                list.get(i).draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, false);
             }
 
         } catch (Exception e) {
@@ -1276,7 +1276,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             try {
                 Enumeration<ShapeStruct> en = getShapesToPaint().elements();
                 while (en.hasMoreElements()) {
-                    en.nextElement().draw(g, nav, false, true, false, null, true, true, 2, true);
+                    en.nextElement().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, true);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1288,7 +1288,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             try {
                 boolean b_finalized = !p.get_mappane().get_active_shape().isEditable();
                 boolean b_editmode = PAS.get_pas().get_mappane().isInPaintMode();
-                p.get_mappane().get_active_shape().draw(g, nav, false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
+                p.get_mappane().get_active_shape().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, b_finalized, b_editmode, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 1, false);
             } catch (Exception e) {
             }
         }

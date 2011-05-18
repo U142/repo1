@@ -211,7 +211,6 @@ public class MapApplet extends JApplet implements ActionListener {
 		
 		btn_put.addActionListener( new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				Variables.getMapFrame().get_active_shape();
 				UPolygon shape = new UPolygon();
 				PolygonStruct polygon = Variables.getMapFrame().get_active_shape().typecast_polygon();

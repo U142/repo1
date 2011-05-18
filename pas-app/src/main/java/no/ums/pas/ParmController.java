@@ -12,7 +12,6 @@ import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.parm.voobjects.ObjectVO;
-import no.ums.pas.parm.voobjects.ParmVO;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.Dimension;
@@ -110,52 +109,27 @@ public class ParmController extends MainController {
 		
 	}
 	public void drawLayers(Graphics g) {
-		long n_start = System.currentTimeMillis();
 		try {
-			Iterator it = get_shapelist().iterator();
-			while(it.hasNext()) {
-				ShapeStruct s = (ShapeStruct)it.next();
-				if(s!=null) {
-					try {
-						if(getAlertController()==null || !s.equals(getAlertController().get_m_edit_shape_original()) ||
-								s.equals(getAlertController().get_m_edit_shape())) //get_shape())) {
-							if(getMapNavigation().bboxOverlap(s.getFullBBox()))
-							{
-								boolean b_focus = false;
-								//if(getSelectedObject()!=null && getSelectedObject() instanceof AlertVO)
-								//	b_focus = ((AlertVO)getSelectedObject()).getShape().equals(s);
-								//if(getSelectedObject()!=null)
-								{
-									//ParmVO pvo = getSelectedObject();
-									//if(pvo instanceof AlertVO)
-									{
-										ShapeStruct selectedShape = getSelectedObject()==null ? null : ((AlertVO)getSelectedObject()).getShape();
-										b_focus = selectedShape==s;
-										s.draw(g, getMapNavigation(), !b_focus, true, false, null, true, true, 1, true, b_focus);
-									}
-								}
-							}
-						}
-					catch(Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+            if (getAlertController() != null) {
+                final ShapeStruct originalShape = getAlertController().get_m_edit_shape_original();
+                final ShapeStruct editShape = getAlertController().get_m_edit_shape();
+                for (ShapeStruct shapeStruct : get_shapelist()) {
+                    if (shapeStruct != null
+                            && (!shapeStruct.equals(originalShape) || shapeStruct.equals(editShape))
+                            && getMapNavigation().bboxOverlap(shapeStruct.getFullBBox())) {
+                        ShapeStruct selectedShape = getSelectedObject() == null ? null : ((AlertVO) getSelectedObject()).getShape();
+                        boolean b_focus = selectedShape == shapeStruct;
+                        shapeStruct.draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), !b_focus, true, false, null, true, true, 1, true, b_focus);
+                    }
+                }
+            }
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
 			Error.getError().addError("ParmController","Exception in drawLayers",e,1);
 		}
 		// Bruker updatePolygon for å sette til editerbar, funket ikke helt
 		if(get_shape()!=null) {
-			get_shape().draw(g, Variables.getNavigation(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 2, false);
+			get_shape().draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, false, true, PAS.get_pas().get_mappane().get_current_mousepos(), true, true, 2, false);
 		}
-		if(get_shape_filled()!=null && get_shape()==null) {
-			//get_shape_filled().draw(g, getMapNavigation(), false, false, false, PAS.get_pas().get_mappane().get_current_mousepos());
-		}
-		long n_stop = System.currentTimeMillis();
-		//System.out.println("drawLayers in " + (n_stop-n_start) + "msecs");
-			
 	}
 	
 	public void calc_coortopix() {

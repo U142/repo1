@@ -234,7 +234,7 @@ public class MapFrameAdmin extends MapFrame {
 		
 		try
 		{
-			get_active_shape().draw(gfx, Variables.getNavigation(), false, true, false, null, true, true, 1, false);
+			get_active_shape().draw(gfx, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, true, false, null, true, true, 1, false);
 			m_gfx = gfx;
 		}
 		catch(Exception e) {
