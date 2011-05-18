@@ -44,7 +44,7 @@ public interface StatusActions {
         }
     };
 
-    UmsAction MANUAL_UPDATE = new UmsAction("mainmenu_status_updates_manual", false) {
+    UmsAction MANUAL_UPDATE = new UmsAction("mainmenu_status_updates_manual", true, false) {
         @Override
         public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -56,7 +56,7 @@ public interface StatusActions {
         }
     };
 
-    UmsAction AUTOMATIC_UPDATE = new UmsAction("mainmenu_status_updates_every", true) {
+    UmsAction AUTOMATIC_UPDATE = new UmsAction("mainmenu_status_updates_every", true, true) {
         @Override
         public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(new Runnable() {

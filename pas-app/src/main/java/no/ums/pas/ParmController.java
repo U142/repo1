@@ -7,6 +7,7 @@ import no.ums.pas.maps.defines.CommonFunc;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.parm.alert.AlertController;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.main.MainController;
 import no.ums.pas.parm.voobjects.AlertVO;
@@ -109,18 +110,17 @@ public class ParmController extends MainController {
 		
 	}
 	public void drawLayers(Graphics g) {
-		try {
-            if (getAlertController() != null) {
-                final ShapeStruct originalShape = getAlertController().get_m_edit_shape_original();
-                final ShapeStruct editShape = getAlertController().get_m_edit_shape();
-                for (ShapeStruct shapeStruct : get_shapelist()) {
-                    if (shapeStruct != null
-                            && (!shapeStruct.equals(originalShape) || shapeStruct.equals(editShape))
-                            && getMapNavigation().bboxOverlap(shapeStruct.getFullBBox())) {
-                        ShapeStruct selectedShape = getSelectedObject() == null ? null : ((AlertVO) getSelectedObject()).getShape();
-                        boolean b_focus = selectedShape == shapeStruct;
-                        shapeStruct.draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), !b_focus, true, false, null, true, true, 1, true, b_focus);
-                    }
+		try {				
+			AlertController ac = getAlertController();
+            final ShapeStruct originalShape = ac != null ? ac.get_m_edit_shape_original() : null;
+            final ShapeStruct editShape = ac !=null ? ac.get_m_edit_shape() : null;
+            for (ShapeStruct shapeStruct : get_shapelist()) {
+                if (shapeStruct != null
+                        && (!shapeStruct.equals(originalShape) || shapeStruct.equals(editShape))
+                        && getMapNavigation().bboxOverlap(shapeStruct.getFullBBox())) {
+                    ShapeStruct selectedShape = getSelectedObject() == null ? null : ((AlertVO) getSelectedObject()).getShape();
+                    boolean b_focus = selectedShape == shapeStruct;
+                    shapeStruct.draw(g, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), !b_focus, true, false, null, true, true, 1, true, b_focus);
                 }
             }
 		} catch(Exception e) {
