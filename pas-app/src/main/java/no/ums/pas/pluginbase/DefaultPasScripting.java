@@ -1085,7 +1085,10 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}			
 
 		if(ViewOptions.TOGGLE_HOUSES.isSelected())
+		{
+			p.get_housecontroller().calcHouseCoords();
 			p.get_housecontroller().drawItems(g);
+		}
 		try {
 			p.get_mappane().draw_pinpoint(g);
 		} catch(Exception e) { Error.getError().addError("PASDraw","Exception in draw_layers",e,1); }

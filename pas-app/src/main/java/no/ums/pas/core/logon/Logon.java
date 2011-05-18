@@ -299,7 +299,14 @@ public class Logon implements ActionListener {
 																n.getSzLocation(),n.isFSuccess());
 					PAS.get_pas().add_event("NS Added: " + temp.get_domain(), null);
 				}
-				dlg.fillNSInfo();
+				try
+				{
+					dlg.fillNSInfo();
+				}
+				catch(Exception err)
+				{
+					err.printStackTrace();
+				}
 			}
 			b_results_ready = true;
 		}

@@ -174,6 +174,10 @@ public class MapFrame extends JPanel implements ActionListener {
         mapModel.addPropertyChangeListener("zoom", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+            	if(mapModel.getZoom()>=17)
+            	{
+            		PAS.get_pas().download_houses();            		
+            	}
                 kickRepaint();
             }
         });

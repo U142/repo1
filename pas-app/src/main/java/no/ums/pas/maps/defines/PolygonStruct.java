@@ -777,7 +777,7 @@ public class PolygonStruct extends ShapeStruct {
 		}
 		
 		Graphics2D g2d = (Graphics2D)g;
-		if(get_size() >= 2) {
+		if(get_size() >= 1) {
 			try {
 
                 final Path2D path = new Path2D.Double();
@@ -793,12 +793,12 @@ public class PolygonStruct extends ShapeStruct {
                         path.lineTo(lineTo.x - topLeft.x, lineTo.y - topLeft.y);
                     }
                 }
+                if(!bFinalized && Variables.getMapFrame().getMouseInsideCanvas() && !isElliptical()) {
+                    drawEditLines(g2d, zoomLookup, topLeft, p);
+                }
                 if (g.getClipBounds().intersects(path.getBounds())) {
                     if (!bEditmode) {
                         path.closePath();
-                    }
-                    else if(!bFinalized && Variables.getMapFrame().getMouseInsideCanvas() && !isElliptical()) {
-                        drawEditLines(g2d, zoomLookup, topLeft, p);
                     }
 
                     drawShape(g2d, path, nPenSize, bDashed, bFill, bBorder, bPaintShapeName, bHasFocus);
