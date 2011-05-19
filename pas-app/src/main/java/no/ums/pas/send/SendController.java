@@ -10,6 +10,7 @@ import no.ums.pas.core.mainui.LoadingFrame;
 import no.ums.pas.core.menus.defines.CheckItem;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.core.project.ProjectDlg;
+import no.ums.pas.core.ws.WSFillLogoninfo;
 import no.ums.pas.core.ws.WSProgressPoller;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
@@ -1037,9 +1038,11 @@ public class SendController implements ActionListener {
 				b = soap.post(sz_execute_asmx, new String(pass.getPassword()), "0", "0");
 				res = soap.getResults();*/
 				progress.start();
-				ExecResponse ar = myService.getParmwsSoap12().execEventV2(Long.parseLong(a.getEventPk().substring(1)), ui.get_comppk(), ui.get_current_department().get_deptpk(), Long.parseLong(ui.get_userpk()), 
-						ui.get_compid(), ui.get_userid(), ui.get_current_department().get_deptid(), 
-						new String(pass.getPassword()), sz_function, "0", "0");
+				ULOGONINFO logoninfo = new ULOGONINFO();
+				
+				WSFillLogoninfo.fill(logoninfo, Variables.getUserInfo());
+				
+				ExecResponse ar = myService.getParmwsSoap12().execEventV3(Long.parseLong(a.getEventPk().substring(1)), logoninfo, sz_function, "0", "0");
 				res = new SoapExecAlert("0", "0", null).newSnapAlertResult();
 				res.l_execpk = ar.getLExecpk();
 				//res.l_projectpk = ar.getLProjectpk();
