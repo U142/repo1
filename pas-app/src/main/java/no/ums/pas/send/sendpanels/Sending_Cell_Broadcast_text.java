@@ -328,6 +328,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_txt_oadc_text = new StdTextArea(PAS.get_pas().get_userinfo().get_default_oadc(), false);
 		m_txt_oadc_text.setPreferredSize(new Dimension(200, 20));
 		m_txt_oadc_text.addKeyListener(this);
+		m_txt_oadc_text.setStringLengthLimit(11);
+		m_txt_oadc_text.setRegexpValidation(StdTextArea.REGEXP_SMS_OADC);
 		m_combo_templates.setPreferredSize(new Dimension(200, 20));
 		//m_combo_templates.addActionListener(this); Is now added in Sending_Settings populate_smstemplates to avoid action performed when downloading
 		m_combo_templates.setActionCommand("act_smstemplate_changed");

@@ -63,6 +63,7 @@ public class StdIntegerArea extends StdTextArea {
 	final static String float_regexp = "^[-+]?\\d*\\.?\\d*$";
 	protected String badchars;
 	
+	@Override
 	public void processKeyEvent(KeyEvent ev) {
 		String oldText = getText();
 		char c = ev.getKeyChar();

@@ -2,9 +2,35 @@ package no.ums.pas.ums.tools;
 
 import javax.swing.JTextField;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.util.regex.Pattern;
 
 public class StdTextArea extends JTextField// JTextArea
 {
+	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9 _]*$";
+	
+	
+	private String regexpValidation = null;
+	private int stringLengthLimit = 0;
+	private Pattern regexpPattern = null;
+	
+	public String getRegexpValidation() {
+		return regexpValidation;
+	}
+
+	public void setRegexpValidation(String regexpValidation) {
+		this.regexpValidation = regexpValidation;
+		regexpPattern = Pattern.compile(getRegexpValidation());
+	}
+
+	public int getStringLengthLimit() {
+		return stringLengthLimit;
+	}
+
+	public void setStringLengthLimit(int stringLengthLimit) {
+		this.stringLengthLimit = stringLengthLimit;
+	}
+
 	@Override
 	public void copy() {
 		if(b_enable_copy)
@@ -107,4 +133,38 @@ public class StdTextArea extends JTextField// JTextArea
 			//this.setBorder(new Border());
 		}
 	}
+
+	@Override
+	protected void processKeyEvent(KeyEvent e) {
+		if(regexpPattern==null && getStringLengthLimit()<=0)
+		{
+			super.processKeyEvent(e);
+			return;
+		}
+		String oldText = getText();
+		int i = e.getKeyCode();
+		//check for system chars. arrows, backspace, home, end, insert, delete
+		if(i==37 || i==39 || i==40 || i==38 || i==35 || i==36 || i==127 || i == 8)
+		{
+			super.processKeyEvent(e);
+			return;
+		}
+		if(getStringLengthLimit()>0) //check for string length
+		{
+			if(this.getText().length()>=getStringLengthLimit())
+				return;
+		}
+		super.processKeyEvent(e);
+		
+		String newText = getText();
+		if(regexpPattern!=null) //check for valid chars
+		{
+			if(!regexpPattern.matcher(newText).find())
+			{
+				setText(oldText);
+			}
+		}
+	}
+	
+	
 }
