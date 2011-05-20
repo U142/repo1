@@ -1141,7 +1141,7 @@ public class XmlReader {
 				Error.getError().addError("XmlReader","ZipException in getXmlFromZip",ze,1);
 				throw new ParmException("XmlReader:Error while reading from zip file;");*/
 			} catch (IOException io) {
-				Error.getError().addError("XmlReader","IOException in getXmlFromZip",io,1);
+				Error.getError().addError("XmlReader","IOException in getXmlFromZip",io,Error.SEVERITY_INFORMATION);
 				resetXMLFile();
 			} finally {
 				try {
@@ -1149,7 +1149,7 @@ public class XmlReader {
 						zip.close();
 					}
 				} catch (IOException ioe) {
-					Error.getError().addError("XmlReader","IOException in getXmlFromZip",ioe,1);
+					Error.getError().addError("XmlReader","IOException in getXmlFromZip",ioe, Error.SEVERITY_INFORMATION);
 					xmlfile.delete(); // If error delete the file
 					System.out.println("Error while closing filestream: " + ioe.getMessage());
 				}
