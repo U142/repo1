@@ -45,7 +45,11 @@ public interface NavigateActions {
     Action MAP_GOTO_HOME = new UmsAction("common_navigate_home") {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Variables.getNavigation().setNavigation(Variables.getUserInfo().get_nav_init());
+			if(Variables.getUserInfo().get_current_department().get_nav_init() != null)
+				Variables.getNavigation().setNavigation(Variables.getUserInfo().get_current_department().get_nav_init());
+			else
+				Variables.getNavigation().setNavigation(Variables.getUserInfo().get_nav_init());
+			
 			PAS.get_pas().get_mappane().load_map(true);
 		}
     };
