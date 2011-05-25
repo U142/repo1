@@ -827,7 +827,21 @@ namespace com.ums.UmsParm
                     UTASSENDING s = (UTASSENDING)sending;
                     
                     db.InjectTASLanguages(ref s);
-                    db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(sending.n_scheddate.ToString(), sending.n_schedtime.ToString()));
+
+                    String schedtime_minutes = sending.n_schedtime.ToString();
+                    String scheddate = sending.n_scheddate.ToString();
+                    if (sending.n_scheddate == -1 || sending.n_schedtime == -1)
+                    {
+                        String datetime = db.getDbClock().ToString();
+                        scheddate = datetime.Substring(0, 8);
+                        schedtime_minutes = datetime.Substring(8);
+                    }
+                    else
+                    {
+                        schedtime_minutes += "00"; //add seconds
+                    }
+
+                    db.FillSendingInfo(ref logoninfo, ref sending, ref tassendinginfo, new UDATETIME(scheddate, schedtime_minutes));
                     tassending.setSendingInfo(ref tassendinginfo);
                     tassending.m_sendinginfo.l_type = 5;
                     tassending.AllowResponse = ((UTASSENDING)sending).b_allow_response;

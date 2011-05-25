@@ -152,8 +152,11 @@ namespace com.ums.PAS.Database
                     sending.sz_operator = rs.GetString(10);
                     sending.l_type = rs.GetInt32(11);
                     sending.l_created_ts = rs.GetInt64(12);
-                    sending.l_started_ts = rs.GetInt64(13);
-                    sending.l_expires_ts = rs.GetInt64(14);
+                    try { sending.l_started_ts = rs.GetInt64(13); } // Denne er litt dirty fix, men l_create_ts, l_started_ts og l_expires_ts er samme type felt,
+                    catch (Exception e) { sending.l_started_ts = 0; } // men tryner selv om det er verdi (0). Kan være min lokale db driver
+                    try { sending.l_expires_ts = rs.GetInt64(14); }
+                    catch(Exception e) { sending.l_expires_ts = 0; }
+                    
                     operatorlink.Add(sending.l_operator, n_index); //add operator as key and an index to the List as value
                     ret.Add(sending);
                     n_index++;
