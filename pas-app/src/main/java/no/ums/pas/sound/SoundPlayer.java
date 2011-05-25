@@ -94,7 +94,7 @@ public class SoundPlayer {
 		}
 		else {
 	  		//AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
-	  		AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false);
+	  		AudioFormat audioFormat = SoundRecorder.AUDIOFORMAT;//new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false);
 			ain = AudioSystem.getAudioInputStream(is);
 			//audioFormat = AudioSystem.getAudioFileFormat(ain).getFormat();
 	        info = new DataLine.Info(Clip.class,audioFormat);

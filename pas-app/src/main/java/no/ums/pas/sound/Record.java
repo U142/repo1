@@ -30,10 +30,13 @@ public class Record {
 		{
 			SoundRecorder.InitTargetDataLine(format);
 		}
+		catch(IllegalArgumentException e)
+		{
+			throw e;
+		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Unable to get AudioLine", Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
         	throw e;
 		}
 		m_sz_path = sz_path;

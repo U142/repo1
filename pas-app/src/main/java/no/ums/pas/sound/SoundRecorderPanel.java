@@ -11,6 +11,7 @@ import no.ums.pas.ums.tools.StdTextLabel;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -99,9 +100,14 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		//m_controller = controller;
 		init();
 		setVisible(true);
-		SoundRecorder.LINE_AVAILABLE = true;
+		//SoundRecorder.LINE_AVAILABLE = true;
 		try {
 			m_rec = new Record(sz_storagepath/*controller*/, RECTYPE, f, format);
+		}
+		catch(IllegalArgumentException e)
+		{
+            JOptionPane.showMessageDialog(null, e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            this.setEnabled(false);
 		}
 		catch(Exception e)
 		{
@@ -113,8 +119,14 @@ public class SoundRecorderPanel extends DefaultPanel  {
 			
 		
 		m_txt_seconds.set_width(90);
-		m_txt_sampleinfo.setPreferredSize(new Dimension(350,20));
-        m_txt_sampleinfo.setText(Localization.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + Localization.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + Localization.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")));
+		m_txt_sampleinfo.setPreferredSize(new Dimension(350,60));
+        //m_txt_sampleinfo.setText(Localization.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + Localization.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + Localization.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")));
+        m_txt_sampleinfo.setText("<html>" + Localization.l("sound_panel_recorder_samplerate") + ": " + 
+        						(int)SoundRecorder.AUDIOFORMAT.getSampleRate() + "<br>" + 
+        						Localization.l("sound_panel_recorder_samplesize") + ": " + 
+        						SoundRecorder.AUDIOFORMAT.getSampleSizeInBits() + "bit<br>" + 
+        						Localization.l("sound_panel_recorder_channels") + ": " + 
+        						(SoundRecorder.AUDIOFORMAT.getChannels()==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")) + "</html>");
 		
 		if(b_line_ok) {
 			m_btn_play.setEnabled(true);

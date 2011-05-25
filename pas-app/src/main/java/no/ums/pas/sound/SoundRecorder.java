@@ -2,11 +2,15 @@ package no.ums.pas.sound;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.DataLine.Info;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,15 +37,34 @@ public class SoundRecorder extends Thread {
     	if(AUDIOLINE==null && LINE_AVAILABLE)
     	{
     		AUDIOFORMAT = audioFormat;
-	        DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
+    		
+    		AudioFormat [] formatsToTest = new AudioFormat [] {
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false),
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000.0F, 16, 1, 2, 8000.0F, false),
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false),    				
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false),    				
+    		};
+    		//audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
 	        try
 	        {
-	        	AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);
-	        	return (LINE_AVAILABLE = true);
+	        	for(AudioFormat f : formatsToTest)
+	        	{
+	        		DataLine.Info info = new DataLine.Info(TargetDataLine.class, f);
+	        		if(AudioSystem.isLineSupported(info))
+	        		{
+	        			AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);//AudioSystem.getLine(info);
+	        			AUDIOFORMAT = f;
+			        	return (LINE_AVAILABLE = true);
+	        		}
+	        	}
+	        	LINE_AVAILABLE = false;
+	        	AUDIOLINE = null;
+	        	throw new IllegalArgumentException("No compatible audio line found");
 	        }
 	        catch(Exception e)
 	        {
 	        	LINE_AVAILABLE = false;
+	        	AUDIOLINE = null;
 	        	throw e;
 	        }
 	        finally
@@ -49,7 +72,7 @@ public class SoundRecorder extends Thread {
 	        	
 	        }
     	}
-    	return true;
+    	return false;
     }
     
     private AudioFileFormat.Type m_targetType;
@@ -173,7 +196,7 @@ public class SoundRecorder extends Thread {
 
         m_f_stoprecording = false;
         try {
-            audioFormat = format;
+            audioFormat = AUDIOFORMAT;
         } catch (Exception e) {
             m_b_haserror = true;
             e.printStackTrace();
