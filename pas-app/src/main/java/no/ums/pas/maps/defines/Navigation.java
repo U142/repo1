@@ -398,7 +398,7 @@ public class Navigation {
 		{
 			f_delta_x = (m_f_rbo - m_f_lbo) * Variables.MAPZOOMSPEED;
 			f_delta_y = (m_f_ubo - m_f_bbo) * Variables.MAPZOOMSPEED;
-		}
+		} 
 		else //manual zoom
 		{
 			int wZoomRect = Math.abs(dim_start.width - dim_stop.width);
