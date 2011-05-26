@@ -183,10 +183,18 @@ public class SearchPanelStatusList extends SearchPanelResults {
 				try
 				{
 					m_statusframe.setVisible(false);
-					PAS.pasplugin.onCloseProject();
-					PAS.get_pas().close_active_project(true, false);
-					PAS.pasplugin.onOpenProject(proj.get_project(), -1);
-					get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), proj.get_project().get_projectpk(), n_refno, true /*init*/);
+					//PAS.pasplugin.onCloseProject();
+					PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+						
+						@Override
+						public void Complete(boolean bStatusClosed) {
+							if(bStatusClosed)
+							{
+								PAS.pasplugin.onOpenProject(proj.get_project(), -1);
+								get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), proj.get_project().get_projectpk(), n_refno, true /*init*/);							
+							}
+						}
+					});
 				}
 				catch(Exception e)
 				{
@@ -202,13 +210,21 @@ public class SearchPanelStatusList extends SearchPanelResults {
 			{
 				try
 				{
-					m_statusframe.setVisible(false);
-					PAS.pasplugin.onCloseProject();
-					PAS.get_pas().close_active_project(true, false);
-					Project proj = new Project();
-					proj.set_projectpk(sz_projectpk);
-					PAS.pasplugin.onOpenProject(proj, -1);
-					get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), (b_project ? sz_projectpk : "-1"), n_refno, true /*init*/);
+					PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+						
+						@Override
+						public void Complete(boolean bStatusClosed) {
+							if(bStatusClosed)
+							{
+								m_statusframe.setVisible(false);
+								//PAS.pasplugin.onCloseProject();
+								Project proj = new Project();
+								proj.set_projectpk(sz_projectpk);
+								PAS.pasplugin.onOpenProject(proj, -1);
+								get_statusframe().get_controller().retrieve_statusitems(get_statusframe(), (b_project ? sz_projectpk : "-1"), n_refno, true /*init*/);
+							}							
+						}
+					});
 				}
 				catch(Exception e)
 				{

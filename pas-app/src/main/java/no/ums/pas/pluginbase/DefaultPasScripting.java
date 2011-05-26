@@ -375,7 +375,13 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         FileMenuActions.CLOSE_PROJECT.setEnabled(PAS.get_pas().get_current_project()!=null);
         
 		if(!enableSending) {
-            pas.close_active_project(true, true);
+            pas.askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+				
+				@Override
+				public void Complete(boolean bStatusClosed) {
+					
+				}
+			});
 		}
 		switch(pas.get_userinfo().get_current_department().get_pas_rights())
 		{
@@ -1286,8 +1292,12 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	}
 
 	public int onInvokeProject() {
-		return PAS.get_pas().close_active_project(true, true);
-		//return JOptionPane.YES_OPTION;
+		return PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+			@Override
+			public void Complete(boolean bStatusClosed) {
+				
+			}
+		});
 	}
 
 

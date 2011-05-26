@@ -517,10 +517,10 @@ public class StatusController extends Controller implements ActionListener {
 		if(isOpen())
 		{
 			set_lastupdate();
-			set_updates_in_progress(false);
 			PAS.get_pas().get_eastcontent().get_statuspanel()
 					.updateMainStatusStatistics();
 		}
+		set_updates_in_progress(false);
 	}
 
 	public synchronized void set_statuscolor(int n_status, Color col) {

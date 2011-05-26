@@ -154,11 +154,14 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 								{
 									//remove_tab(PANEL_STATUS_LIST);
 									m_tabbedpane.setSelectedComponent(get_infopanel());
-									int answer = PAS.get_pas().close_active_project(false, true, false);	
-									if(answer==JOptionPane.YES_OPTION)
-									{
-										PAS.pasplugin.onCloseProject();
-									}
+									PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+										
+										@Override
+										public void Complete(boolean bStatusClosed) {
+											// TODO Auto-generated method stub
+											
+										}
+									});
 									return true;
 								}
 							//});

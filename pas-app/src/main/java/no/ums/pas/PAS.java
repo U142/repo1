@@ -1654,7 +1654,8 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public int invoke_project(boolean bNewSending) {
         System.out.println(Localization.l("project_ask_new_project"));
 
-		int answer = PAS.pasplugin.onInvokeProject();
+		//int answer = PAS.pasplugin.onInvokeProject();
+        int answer = JOptionPane.YES_OPTION;
 		if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CLOSED_OPTION || answer == JOptionPane.CANCEL_OPTION)
 			return ProjectDlg.ACT_PROJECTDLG_CANCEL;
 		else {
@@ -1681,18 +1682,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			
 			if(get_eastcontent().get_taspanel() != null && this.m_current_project != null) {
-				PAS.get_pas().close_active_project(true, true);
-				while(get_current_project() != null)
-				{
-					try
-					{
-						Thread.sleep(20);
-					}
-					catch(Exception e)
-					{
+				PAS.get_pas().askAndCloseActiveProject(new IAskCloseStatusComplete() {
+					
+					@Override
+					public void Complete(boolean bStatusClosed) {
 						
 					}
-				}
+				});
 			}
 				
 		}
@@ -1706,71 +1702,82 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
         if(JOptionPane.showConfirmDialog(PAS.get_pas(), Localization.l("project_ask_continue_current_project"), Localization.l("main_tas_panel_new_message"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 			return true;
 		else {
-			PAS.get_pas().close_active_project(true, true);
+			PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+				
+				@Override
+				public void Complete(boolean bStatusClosed) {
+					
+				}
+			});
 			//ProjectDlg dlg = new ProjectDlg(this, PAS.get_pas().get_pasactionlistener(), "act_project_saved", true);
 			//dlg.setVisible(true);
-			while(get_current_project() != null)
-				;
+			//while(get_current_project() != null)
+			//	;
 			return false;
 		}
 	}
 	
-	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui)
+	public int askAndCloseActiveProject(IAskCloseStatusComplete callback)
 	{
-		return close_active_project(b_wait_for_close, b_close_all_gui, true);
+		int ret_answer = JOptionPane.YES_OPTION;
+		boolean b_status_is_open = (m_statuscontroller.isOpen() || m_statuscontroller.get_sendinglist().size() > 0) || (m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()); 
+		if(b_status_is_open) {
+			boolean b_ask = m_sendcontroller.hasAlerts();
+            ret_answer = b_ask ? JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION) : JOptionPane.YES_OPTION;
+		}
+		close_active_project(callback, ret_answer);
+		return ret_answer;
 	}
 	
-	public int close_active_project(boolean b_wait_for_close, boolean b_close_all_gui, boolean b_ask) {
+	public interface IAskCloseStatusComplete
+	{
+		public void Complete(boolean bStatusClosed);
+	}
+	
+	private int close_active_project(IAskCloseStatusComplete callback, int answer) {
 		try
 		{
-			int ret_answer = 0;
 			WaitForStatusThread thread = null;
-            boolean b_confirmed_close = true;
 
-            boolean b_status_is_open = (m_statuscontroller.isOpen() || m_statuscontroller.get_sendinglist().size() > 0) || (m_sendcontroller.get_sendings().size() > 0 && m_sendcontroller.get_activesending().get_sendproperties().get_projectpk() != PAS.get_pas().get_current_project().get_projectpk()); 
-			if(b_status_is_open) {
-				b_ask = m_sendcontroller.hasAlerts();
-                ret_answer = b_ask ? JOptionPane.showConfirmDialog(PAS.get_pas(), String.format(Localization.l("project_close_warning"), (m_current_project!=null ? m_current_project.get_projectname() : "No project")), Localization.l("project_close"), JOptionPane.YES_NO_OPTION) : JOptionPane.YES_OPTION;
-				if(ret_answer == JOptionPane.YES_OPTION)
-				{
-					Variables.setStatusController(m_statuscontroller);
-					Variables.getStatusController().setClosed();
-
-					get_mappane().resetAllOverlays();
-					System.out.println("Close project");
-		            StatusActions.EXPORT.setEnabled(false);
-					thread = new WaitForStatusThread(b_close_all_gui);
-				}
-				else
-				{
-					b_confirmed_close = false;
-					return ret_answer;
-				}
+			if(answer == JOptionPane.YES_OPTION)
+			{
+				Variables.getStatusController().setClosed();
+				get_mappane().resetAllOverlays();
+				System.out.println("Close project");
+	            StatusActions.EXPORT.setEnabled(false);
+				thread = new WaitForStatusThread(true, callback);
 			}
 			else
 			{
-				b_wait_for_close = false;
-				thread = new WaitForStatusThread(b_close_all_gui);
+				callback.Complete(false);
+				return answer;
 			}
+
 			PAS.pasplugin.onStopStatusUpdates();
 			//else
 			//	thread = new WaitForStatusThread(b_close_all_gui);
 			if(thread!=null)
 			{
-				thread.doInBackground();
-				thread.done();
+				//thread.doInBackground();
+				//thread.done();
+				thread.execute();
 			}
-			if(thread!=null && b_wait_for_close)
+			/*while(!thread.isDone())
+			{
+				System.out.println("Waiting for status thread");
+				Thread.sleep(100);
+			}*/
+			if(thread!=null)
 			{
 				//thread.waitToFinish();
 			}
-			if(b_close_all_gui && b_confirmed_close)
+			/*if(b_close_all_gui && b_confirmed_close)
 				PAS.pasplugin.onCloseProject();
 			PAS.get_pas().get_sendcontroller().reset_send_id(); // Resets the send id, alerts in a new project should now start from beginning
 			Variables.setStatusController(null);
 			m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
-			return ret_answer;
+			Variables.setStatusController(PAS.get_pas().m_statuscontroller);*/
+			return answer;
 		}
 		catch(Exception e)
 		{
@@ -1778,20 +1785,23 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 	}
 	
+	
 	class WaitForStatusThread extends SwingWorker {
 		boolean b_running = false;
 		boolean b_close_all = false;
-		WaitForStatusThread(boolean close_all) {
+		IAskCloseStatusComplete callback;
+		WaitForStatusThread(boolean close_all, IAskCloseStatusComplete callback) {
 			//super("WaitForStatus Thread");
 			super();
+			this.callback = callback;
 			b_running = true;
 			b_close_all = close_all;
 		}
 		@Override
 		protected Object doInBackground() throws Exception {
-			final Timeout time = new Timeout(10, 50);
+			final Timeout time = new Timeout(10, 200);
             get_mappane().SetIsLoading(true, Localization.l("main_status_closing"));
-			while(get_statuscontroller().isOpen() && get_statuscontroller().get_updates_in_progress() && !time.timer_exceeded()) {
+			while(Variables.getStatusController().get_updates_in_progress() && !time.timer_exceeded()) {
 				try { 
 					Thread.sleep(time.get_msec_interval()); 
 				} 
@@ -1802,22 +1812,26 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		@Override
 		protected void done() {
-			super.done();
 			if(b_close_all)
 			{
 				get_sendcontroller().resetActiveProject();
 				get_eastcontent().setIndexZero();
 				get_eastcontent().remove_tab(EastContent.PANEL_STATUS_LIST);
 				get_eastcontent().remove_tab(EastContent.PANEL_SENDING_);
-				m_statuscontroller = PAS.pasplugin.onCreateStatusController();
-				Variables.setStatusController(PAS.get_pas().m_statuscontroller);
+				//m_statuscontroller = PAS.pasplugin.onCreateStatusController();
+				//Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 				Variables.getStatusController().set_autoupdate(false);
 				//setTitle(m_sz_maintitle  + "        " + PAS.l("projectdlg_project")+ " - " + PAS.l("projectdlg_no_project"));
 				PAS.pasplugin.onSetAppTitle(PAS.this, "", get_userinfo());
+				Variables.setStatusController(PAS.pasplugin.onCreateStatusController());
+				m_statuscontroller = Variables.getStatusController();
+				PAS.pasplugin.onCloseProject();
 				m_current_project = null;
 			}
 			get_mappane().SetIsLoading(false, "");	
 			b_running = false;
+			super.done();
+			callback.Complete(true);
 		}
 		public void waitToFinish()
 		{

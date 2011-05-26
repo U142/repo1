@@ -429,7 +429,10 @@ public class PASActions implements ActionListener {
 			PAS.get_pas().m_statuscontroller = PAS.pasplugin.onCreateStatusController();
 			Variables.setStatusController(PAS.get_pas().m_statuscontroller);
 			PAS.get_pas().get_eastcontent().reloadStatusPanel(false);
-			PAS.get_pas().get_sendcontroller().resetActiveProject();
+			if(!PAS.get_pas().get_keep_sendings())
+			{
+				PAS.get_pas().get_sendcontroller().resetActiveProject();
+			}
 			PAS.get_pas().set_keep_sendings(false);
 			System.out.println("Project Opened");
 			Project source = (Project)e.getSource();
@@ -442,6 +445,7 @@ public class PASActions implements ActionListener {
 				if(!PAS.get_pas().get_current_project().get_projectpk().equals(PAS.get_pas().get_statuscontroller().get_current_projectpk()))
 				{
                     //PAS.get_pas().close_active_project(true, false);
+					PAS.get_pas().set_keep_sendings(true);
                     PAS.pasplugin.onOpenProject(PAS.get_pas().get_current_project(), -1);
                     PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas(), PAS.get_pas().get_current_project().get_projectpk(), -1, true);
 				}

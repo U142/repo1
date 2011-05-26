@@ -67,7 +67,13 @@ public interface FileMenuActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            PAS.get_pas().close_active_project(true, true);
+            PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+				
+				@Override
+				public void Complete(boolean bStatusClosed) {
+					
+				}
+			});
         }
     };
 

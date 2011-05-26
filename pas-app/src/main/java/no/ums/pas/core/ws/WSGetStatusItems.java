@@ -1038,8 +1038,8 @@ public class WSGetStatusItems extends WSThread
 		if(PAS.get_pas().get_statuscontroller()!=null && PAS.get_pas().get_statuscontroller().isOpen())
 		//if(PAS.get_pas().get_statuscontroller()!=null)
 		{
-			PAS.get_pas().get_statuscontroller().status_update();
 		}
+		PAS.get_pas().get_statuscontroller().status_update();
 	}
 	private void fire_set_itemfilter(Integer i) {
 		PAS.get_pas().get_statuscontroller().set_item_filter(i.intValue());

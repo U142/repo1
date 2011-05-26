@@ -1137,16 +1137,42 @@ public class SendController implements ActionListener {
 			{
 				public void run()
 				{	
-					PAS.get_pas().close_active_project(true, false);
-					Project p = new Project();
-					p.set_projectpk(res.getProjectpk());
-					PAS.pasplugin.onOpenProject(p, -1);
-					PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true /*init*/);
+					//only ask for closing the project if the project identity has changed
+					//if(!PAS.get_pas().get_current_project().get_projectpk().equals(res.getProjectpk()))
+					{
+						PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
+						
+							@Override
+							public void Complete(boolean bStatusClosed) {
+								if(bStatusClosed)
+								{
+									Project p = new Project();
+									p.set_projectpk(res.getProjectpk());
+									PAS.pasplugin.onOpenProject(p, -1);
+									PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true /*init*/);
+									if(get_activesending()!=null)
+										get_activesending().get_sendwindow().close();
+								}							
+							}
+						});
+					}
+					/*else
+					{
+						if(!Variables.getStatusController().isOpen())
+						{
+							PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true);						
+						}
+						else
+						{
+							PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_STATUS_LIST);
+						}
+						if(get_activesending()!=null)
+							get_activesending().get_sendwindow().close();
+					}*/
 				}
 			}.start();
 			
 			//get_activesending().get_sendwindow().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,"act_finish"));
-			get_activesending().get_sendwindow().dispose();
 						
 		}
 		catch(Exception e)

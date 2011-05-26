@@ -375,7 +375,14 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		get_tablelist().insert_component_row(data, n_index);
 	}
 	public void remove_row(Object data) {
-		get_tablelist().remove_row(data);
+		try
+		{
+			get_tablelist().remove_row(data);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	public void edit_row(Object [] data, int n_index, boolean [] update_cols) {
 		int x = m_tbl.getSelectedRow();
