@@ -119,13 +119,14 @@ public class SoundRecorderPanel extends DefaultPanel  {
 			
 		
 		m_txt_seconds.set_width(90);
-		m_txt_sampleinfo.setPreferredSize(new Dimension(350,60));
+		m_txt_sampleinfo.setPreferredSize(new Dimension(350,30));
         //m_txt_sampleinfo.setText(Localization.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + Localization.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + Localization.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")));
-        m_txt_sampleinfo.setText("<html>" + Localization.l("sound_panel_recorder_samplerate") + ": " + 
-        						(int)SoundRecorder.AUDIOFORMAT.getSampleRate() + "<br>" + 
-        						Localization.l("sound_panel_recorder_samplesize") + ": " + 
-        						SoundRecorder.AUDIOFORMAT.getSampleSizeInBits() + "bit<br>" + 
-        						Localization.l("sound_panel_recorder_channels") + ": " + 
+        m_txt_sampleinfo.setText("<html>" + 
+        		Localization.l("sound_panel_recorder_samplerate") + ": " + 
+        						(int)SoundRecorder.AUDIOFORMAT.getSampleRate() + "Hz " + 
+        						//Localization.l("sound_panel_recorder_samplesize") + ": " + 
+        						SoundRecorder.AUDIOFORMAT.getSampleSizeInBits() + "bit " + 
+        						//Localization.l("sound_panel_recorder_channels") + ": " + 
         						(SoundRecorder.AUDIOFORMAT.getChannels()==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")) + "</html>");
 		
 		if(b_line_ok) {
