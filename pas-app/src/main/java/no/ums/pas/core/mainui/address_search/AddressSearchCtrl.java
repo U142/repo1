@@ -50,7 +50,6 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 
 	@Override
 	public boolean onSearch(AddressSearchModel m) {
-		System.out.println("User clicked search");
 		//kjør ws
 		AdrSearchThread ws = new AdrSearchThread(m, this, 1);
 		ws.run();
@@ -117,14 +116,28 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	
 	@Override
 	public boolean onAddressSelect(AddressSearchListItem s) {
-		System.out.println("User select");
 		String sz_lon, sz_lat;
 		sz_lon = String.valueOf(s.getLat());
 		sz_lat = String.valueOf(s.getLon());
-		//get_pas().get_navigation().exec_adrsearch(new Double(sz_lat).doubleValue(), new Double(sz_lon).doubleValue(), m_f_zoom);
 		MapPointLL center = new MapPointLL(new Double(sz_lat).doubleValue(), new Double(sz_lon).doubleValue());
+		int zoomLevel = 100;
+		switch(s.getType())
+		{
+		case HOUSE:
+			zoomLevel = 100;
+			break;
+		case STREET:
+			zoomLevel = 400;
+			break;
+		case POST:
+			zoomLevel = 1500;
+			break;
+		case REGION:
+			zoomLevel = 5000;
+			break;
+		}
 		PAS.get_pas().get_pasactionlistener().actionPerformed(new ActionEvent(center, ActionEvent.ACTION_PERFORMED, "act_set_pinpoint"));
-		PAS.get_pas().get_pasactionlistener().actionPerformed(new ActionEvent(new NavPoint(new Double(sz_lat).doubleValue(), new Double(sz_lon).doubleValue(), 1500), ActionEvent.ACTION_PERFORMED, "act_map_goto_point"));
+		PAS.get_pas().get_pasactionlistener().actionPerformed(new ActionEvent(new NavPoint(new Double(sz_lat).doubleValue(), new Double(sz_lon).doubleValue(), zoomLevel), ActionEvent.ACTION_PERFORMED, "act_map_goto_point"));
 		return false;
 	}
 	@Override

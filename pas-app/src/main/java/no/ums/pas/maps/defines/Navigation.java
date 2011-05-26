@@ -188,10 +188,10 @@ public class Navigation {
 			bbo = tmp;
 		}
 		{
-			lbo-=0.001;
-			rbo+=0.001;
-			ubo+=0.001;
-			bbo-=0.001;
+			//lbo-=0.001;
+			//rbo+=0.001;
+			//ubo+=0.001;
+			//bbo-=0.001;
 		}
 		if(lbo>rbo) //switch
 		{
@@ -210,7 +210,13 @@ public class Navigation {
         m_f_nav_rbo = bounds.getBottomRight().getLon();
         m_f_nav_ubo = bounds.getTopLeft().getLat();
         m_f_nav_bbo = bounds.getBottomRight().getLat();
-
+        
+        m_f_lbo = m_f_nav_lbo;
+        m_f_rbo = m_f_nav_rbo;
+        m_f_ubo = m_f_nav_rbo;
+        m_f_bbo = m_f_nav_bbo;
+        calc_prpix();
+        calc_mapmeters();
         PAS.get_pas().get_mappane().getMapModel().setTopLeft(bounds.getTopLeft());
         PAS.get_pas().get_mappane().getMapModel().setZoom(bounds.getZoom());
 
@@ -392,6 +398,13 @@ public class Navigation {
 		{
 			f_delta_x = (m_f_rbo - m_f_lbo) * Variables.MAPZOOMSPEED;
 			f_delta_y = (m_f_ubo - m_f_bbo) * Variables.MAPZOOMSPEED;
+		}
+		else //manual zoom
+		{
+			int wZoomRect = Math.abs(dim_start.width - dim_stop.width);
+			int hZoomRect = Math.abs(dim_start.height - dim_stop.height);
+			f_delta_x = wZoomRect * m_f_widthprpix / 2.0;
+			f_delta_y = hZoomRect * m_f_heightprpix / 2.0;
 		}
 		
 		double lbo, rbo, ubo, bbo;

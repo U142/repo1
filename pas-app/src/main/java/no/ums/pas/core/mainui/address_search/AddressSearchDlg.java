@@ -110,8 +110,16 @@ public class AddressSearchDlg extends JFrame {
 		private float hit;
 		private String adr;
 		private String region;
-		private float lon;
-		private float lat;
+		private double lon;
+		private double lat;
+		private GABTYPE type;
+		
+		public GABTYPE getType() {
+			return type;
+		}
+		public void setType(GABTYPE type) {
+			this.type = type;
+		}
 		public float getHit() {
 			return hit;
 		}
@@ -130,17 +138,22 @@ public class AddressSearchDlg extends JFrame {
 		public void setRegion(String region) {
 			this.region = region;
 		}
-		public float getLon() {
+		public double getLon() {
 			return lon;
 		}
-		public void setLon(float lon) {
+		public void setLon(double lon) {
 			this.lon = lon;
 		}
-		public float getLat() {
+		public double getLat() {
 			return lat;
 		}
-		public void setLat(float lat) {
+		public void setLat(double lat) {
 			this.lat = lat;
+		}
+		
+		public String toString()
+		{
+			return getAdr();
 		}
 		
 		public Object [] toArray()
@@ -173,11 +186,18 @@ public class AddressSearchDlg extends JFrame {
 			for(int i=dtm.getRowCount()-1;i>=0;i--)
 				((DefaultTableModel)tblResults.getModel()).removeRow(i);
 		}
-		java.util.Iterator it = results.getList().getUGabResult().iterator();
+		java.util.Iterator<UGabResult> it = results.getList().getUGabResult().iterator();
 		while(it.hasNext())
-		{
-			UGabResult result = (UGabResult)it.next();
-			System.out.println("Resulttype="+result.getType().toString());
+		{			
+			UGabResult result = it.next();
+			AddressSearchListItem li = new AddressSearchListItem();
+			li.setAdr(result.getName());
+			li.setHit(result.getMatch());
+			li.setLat(result.getLat());
+			li.setLon(result.getLon());
+			li.setRegion(result.getRegion());
+			li.setType(result.getType());
+
 			TableColumnModel tcm = tblResults.getColumnModel();
 			if(result.getType().equals(GABTYPE.HOUSE))
 			{
@@ -204,7 +224,8 @@ public class AddressSearchDlg extends JFrame {
 			tblResults.getColumnModel().getColumn(4).setHeaderValue(Localization.l("common_lat"));
 			tblResults.getTableHeader().repaint();
 			
-			Object[] obj_insert = { result.getMatch(), result.getName(), result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
+			//Object[] obj_insert = { result.getMatch(), result.getName(), result.getRegion(), new Float(result.getLon()).toString(), new Float(result.getLat()).toString() }; //, m_icon_goto };
+			Object [] obj_insert = { li.getHit(), li, li.getRegion(), li.getLon(), li.getLat() };
 			//list.getModel().insert_row(obj_insert, -1);
 			((DefaultTableModel)tblResults.getModel()).addRow(obj_insert);
 		}
@@ -222,11 +243,12 @@ public class AddressSearchDlg extends JFrame {
 		if(e.getClickCount()>=2)
 		{
 			int selRow = tblResults.getSelectedRow();
-			AddressSearchListItem sel = new AddressSearchListItem();
-			sel.hit = (Float)tblResults.getValueAt(selRow, 0);
-			sel.lon = Float.parseFloat(tblResults.getValueAt(selRow, 3).toString());
-			sel.lat = Float.parseFloat(tblResults.getValueAt(selRow, 4).toString());
-			callback.onAddressSelect(sel);
+			//AddressSearchListItem sel = new AddressSearchListItem();
+			//sel.hit = (Float)tblResults.getValueAt(selRow, 0);
+			//sel.lon = Float.parseFloat(tblResults.getValueAt(selRow, 3).toString());
+			//sel.lat = Float.parseFloat(tblResults.getValueAt(selRow, 4).toString());
+			
+			callback.onAddressSelect((AddressSearchListItem)tblResults.getValueAt(selRow, 1));
 		}
 	}
 
