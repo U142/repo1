@@ -127,7 +127,7 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 			zoomLevel = 100;
 			break;
 		case STREET:
-			zoomLevel = 400;
+			zoomLevel = 400; 
 			break;
 		case POST:
 			zoomLevel = 1500;
