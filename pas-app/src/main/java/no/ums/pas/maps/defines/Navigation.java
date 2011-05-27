@@ -9,6 +9,7 @@ import no.ums.ws.common.UMapPoint;
 import sun.security.util.Password;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -531,7 +532,8 @@ public class Navigation extends AbstractBean{
 	
 	public void exec_pan(Dimension dim_start)
 	{
-		double f_centerpoint_x, f_centerpoint_y;
+		double lbo, rbo, ubo, bbo;
+		/*double f_centerpoint_x, f_centerpoint_y;
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
 		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
 		double f_delta_x, f_delta_y;
@@ -541,8 +543,19 @@ public class Navigation extends AbstractBean{
 		lbo = f_centerpoint_x - f_delta_x / 2;
 		rbo = f_centerpoint_x + f_delta_x / 2;
 		ubo = f_centerpoint_y + f_delta_y / 2;
-		bbo = f_centerpoint_y - f_delta_y / 2;
-		setNavigation(lbo, rbo, ubo, bbo);
+		bbo = f_centerpoint_y - f_delta_y / 2;*/
+		Point centerPoint = new Point(Variables.getMapFrame().getWidth()/2, Variables.getMapFrame().getHeight()/2);
+		Point delta = new Point(dim_start.width - centerPoint.x, dim_start.height - centerPoint.y);
+		Point.Double dDelta = new Point.Double((m_f_rbo - m_f_lbo) / 2.9, (m_f_ubo - m_f_bbo) / 2.9);
+		Point.Double dCenter = new Point.Double((m_f_lbo + m_f_rbo) / 2.0, (m_f_ubo + m_f_bbo) / 2.0);
+		Point.Double dNewCenter = new Point.Double(dCenter.x + delta.x * m_f_widthprpix, dCenter.y - delta.y * m_f_heightprpix);
+		lbo = dNewCenter.x - dDelta.x;
+		rbo = dNewCenter.x + dDelta.x;
+		ubo = dNewCenter.y + dDelta.y;
+		bbo = dNewCenter.y - dDelta.y;
+		
+		
+		setNavigation(new NavStruct(lbo, rbo, ubo, bbo), false, NAVIGATION_GESTURE.PAN);
 		load_map();
 	}
 	public void exec_adrsearch(double f_lon, double f_lat, double f_zoom)
@@ -629,7 +642,7 @@ public class Navigation extends AbstractBean{
 	}
 	
 	public double calc_centerpoint_x(int x) { return m_f_lbo + x * m_f_widthprpix; }
-	public double calc_centerpoint_y(int y) { return m_f_bbo + (m_dimension.height - y) * m_f_heightprpix; }
+	public double calc_centerpoint_y(int y) { return m_f_ubo - y * m_f_heightprpix; }//m_f_bbo + (m_dimension.height - y) * m_f_heightprpix; }
 	
 	/** <b>ONLY to be called from load_map</b>*/
 	public synchronized void setHeaderBounds(double lbo, double rbo, double ubo, double bbo) {
