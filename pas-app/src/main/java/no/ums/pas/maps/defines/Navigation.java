@@ -12,10 +12,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.jdesktop.beansbinding.AbstractBean;
+
 //import PAS.*;
 
 
-public class Navigation {
+public class Navigation extends AbstractBean{
 
 	public enum NAVIGATION_GESTURE
 	{
@@ -681,8 +683,26 @@ public class Navigation {
 		m_f_mapwidthmeters = new Double((m_f_rbo.doubleValue() - m_f_lbo.doubleValue()) * 3600 * 30.92 * Math.cos(y1r));
 		//System.out.println(m_f_mapwidthmeters);
 		m_f_mapheightmeters= new Double((m_f_ubo.doubleValue() - m_f_bbo.doubleValue()) * 3600 * 30.92);
+		
+		update("mapMetersChanged", false, true); //signal a change
 		//m_pas.get_mapproperties().set_zoom(m_f_mapwidthmeters.intValue());
 		set_zoom();
+	}
+	public Double getM_f_mapwidthmeters() {
+		return m_f_mapwidthmeters;
+	}
+	public void setM_f_mapwidthmeters(Double m_f_mapwidthmeters) {
+		Double oldValue = m_f_mapwidthmeters;
+		this.m_f_mapwidthmeters = m_f_mapwidthmeters;
+		update("mapWidthMeters", oldValue, m_f_mapwidthmeters);
+	}
+	public Double getM_f_mapheightmeters() {
+		return m_f_mapheightmeters;
+	}
+	public void setM_f_mapheightmeters(Double m_f_mapheightmeters) {
+		Double oldValue = m_f_mapheightmeters;
+		this.m_f_mapheightmeters = m_f_mapheightmeters;
+		update("mapHeightMeters", oldValue, m_f_mapheightmeters);
 	}
 	public static synchronized MapPointF distance_xy_M(double lbo, double rbo, double ubo, double bbo)
 	{

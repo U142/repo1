@@ -38,6 +38,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 //import Core.WebData.XMLWeatherData;
 
@@ -206,14 +208,6 @@ public class InfoPanel extends GeneralPanel {
 	public InfoPanel(Dimension dim) {
 		super(dim);
 		this.setBorder(null);
-		// sp = new
-		// JScrollPane(infocont,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-		// JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		// sp.setBorder(null);
-		// JScrollPane sp = new JScrollPane(m_infopanel, JScrollPane.);
-		// sp.setPreferredSize(new Dimension(PAS.get_pas().get_eastwidth(),
-		// 300));
-		// doInit();
 		addComponentListener(this);
 
 	}
@@ -368,22 +362,6 @@ public class InfoPanel extends GeneralPanel {
 		m_lbl_adrdatabase_output = new StdTextLabel("", true, 140, 170);
 		m_lbl_adrdatabase_municipals = new StdTextLabel("", true, 140, 170);
 
-		// FontSet m_lbl_xy.setFont(f1);
-		// FontSet m_lbl_coor.setFont(f1);
-		// FontSet m_lbl_coor_dec.setFont(f1);
-		// FontSet m_lbl_utm.setFont(f1);
-		// FontSet m_lbl_mapdimpix.setFont(f1);
-		// FontSet m_lbl_mapdimmeters.setFont(f1);
-		// FontSet m_lbl_housesdownload.setFont(f1);
-
-		/*
-		 * m_lbl_adrdatabase_output.set_height(300);
-		 * m_lbl_adrdatabase_output.set_width(100);
-		 * m_lbl_adrdatabase_output.init(false);
-		 * m_lbl_adrdatabase_output.revalidate();
-		 */
-		// m_lbl_adrdatabase_output.setPreferredSize(new Dimension(150, 200));
-		// m_lbl_adrdatabase_output.setSize(new Dimension(150, 200));
 	}
 
 	abstract class BoxPanel extends JPanel {
@@ -597,10 +575,13 @@ public class InfoPanel extends GeneralPanel {
 			set_gridconst(1, get_panel(), 1, 1);
 			add(m_txt_housesdownload, m_gridconst);
 
-			/*
-			 * add(rowll); add(rowlldec); add(rowutm); add(dimpix);
-			 * add(dimmeters); add(housesdownload);
-			 */
+			Variables.getNavigation().addPropertyChangeListener("mapMetersChanged", new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					set_mapdimmeters(Variables.getNavigation().get_mapwidthmeters().intValue(), 
+							Variables.getNavigation().get_mapheightmeters().intValue());
+				}
+			});
 
 		}
 
