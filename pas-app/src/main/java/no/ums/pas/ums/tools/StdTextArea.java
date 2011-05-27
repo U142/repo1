@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class StdTextArea extends JTextField// JTextArea
 {
-	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9 _]*$";
+	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9_]*$";
 	
 	
 	private String regexpValidation = null;
