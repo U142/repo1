@@ -17,9 +17,11 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.SystemColor;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
@@ -225,6 +227,8 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 
     protected void drawShape(Graphics2D g2d, Shape shape, int penSize, boolean dashed, boolean fill, boolean border, boolean showName, boolean focused) {
         Color col_dot = new Color(get_fill_color().getRed(), get_fill_color().getGreen(), get_fill_color().getBlue());
+        Stroke oldStroke = g2d.getStroke();
+        Paint oldPaint = g2d.getPaint();
         if (dashed) {
             g2d.setStroke(new BasicStroke(penSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 30.0f, new float[]{3.0f, 3.0f}, 0.0f));
             g2d.setPaint(m_tex_paint);
@@ -242,6 +246,8 @@ public abstract class ShapeStruct extends Object implements Cloneable {
         if (showName) {
             paintShapeName(g2d, new Point((int) shape.getBounds().getCenterX(), (int) shape.getBounds().getCenterY()), focused);
         }
+        g2d.setStroke(oldStroke);
+        g2d.setPaint(oldPaint);
     }
 
 	public abstract NavStruct calc_bounds();
