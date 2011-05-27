@@ -107,7 +107,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 		{
 			StatusListObject slo = ((StatusListObject)rowcontent[DELETE_COLUMN]);
 			if(rowcontent[DELETE_COLUMN] instanceof StatusListObject &&
-					slo.statusMayBeDeleted()==UDeleteStatusResponse.OK && JOptionPane.showConfirmDialog(this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
+					slo.statusMayBeDeleted()==UDeleteStatusResponse.OK && JOptionPane.showConfirmDialog(this, Localization.l("main_status_delete_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
 			{
 				System.out.println("Delete status");
 				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[DELETE_COLUMN]).get_refno(),

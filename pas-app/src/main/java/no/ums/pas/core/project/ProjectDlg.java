@@ -402,7 +402,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 						Project proj = (Project)rowcontent[0];
 						if(proj.canProjectBeDeleted()==UDeleteStatusResponse.OK)
 						{
-							if(JOptionPane.showConfirmDialog(ProjectDlg.this, Localization.l("common_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
+							if(JOptionPane.showConfirmDialog(ProjectDlg.this, Localization.l("main_project_delte_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
 							{
 								PAS.pasplugin.onDeleteProject(Long.valueOf(proj.get_projectpk()), new IDeleteProject() {
 									@Override
