@@ -1533,9 +1533,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	public void download_houses() {
 		boolean b_width_exceeded = false;
-		if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
+		/*if(get_navigation().get_mapwidthmeters().intValue() > get_housecontroller().get_max_meters_width()) {
 			b_width_exceeded = true;
-		}
+		}*/
+		int zoomLevel = Variables.getMapFrame().getMapModel().getZoom();
+		b_width_exceeded = zoomLevel<=16;
+		
 		if(!ViewOptions.TOGGLE_HOUSES.isSelected()) {
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_DISABLED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 		} else if(b_width_exceeded) {
@@ -1545,8 +1548,9 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 			pasplugin.onDownloadHouses(get_housecontroller());
 		}
+		get_housecontroller().set_visibility(!b_width_exceeded);
 
-		get_drawthread().set_neednewcoors(true);
+		//get_drawthread().set_neednewcoors(true);
 		PAS.get_pas().kickRepaint();
 	}
 	public void printStackTrace(StackTraceElement [] ste) {

@@ -31,12 +31,20 @@ public class HouseController extends Controller {
 	
 	private NavStruct m_nav;	
 	private NavStruct get_nav() { return m_nav; }
+	private boolean bShow = true;
+	
 	//private XMLHouses m_xml;
 	//private XMLHouses get_xml() { return m_xml; }
 	//private HTTPReq m_http_req;
 	//public HTTPReq get_http_req() { return m_http_req; }
 	//1=private, 2=company, 4=mobile, 8=fax
 	
+	public boolean isShow() {
+		return bShow;
+	}
+	private void setShow(boolean bShow) {
+		this.bShow = bShow;
+	}
 	private int m_n_max_meters_width = 1000;
 	public int get_max_meters_width() { return m_n_max_meters_width; }
 	public void set_max_meters_width(int n_meters) { m_n_max_meters_width = n_meters; }
@@ -186,8 +194,14 @@ public class HouseController extends Controller {
 		}
 		super.actionPerformed(e);
 	}
+	
+	@Override
 	public void set_visibility() {
-		get_houses().set_visible(true);
+		set_visibility(true);
+	}
+	public void set_visibility(boolean b) {
+		setShow(b);
+		get_houses().set_visible(b);
 	}
 	public void calcHouseCoords()
 	{
@@ -199,18 +213,24 @@ public class HouseController extends Controller {
 	}
 	public void drawItems(Graphics gfx)
 	{
-		if(get_houses()!=null)// && get_houses().is_housesready())
+		if(isShow())
 		{
-			if(get_houses().get_houses()==null)
-				return;
-			set_visibility();
-			get_houses().draw_houses(gfx, 0, PAS.get_pas().get_mapproperties().get_border_activated(), PAS.get_pas().get_mapproperties().get_showtext(),
-					PAS.get_pas().get_mapproperties().get_fontsize(), ADR_TYPES_SHOW_, null);
+			if(get_houses()!=null)
+			{
+				if(get_houses().get_houses()==null)
+					return;
+				set_visibility();
+				get_houses().draw_houses(gfx, 0, PAS.get_pas().get_mapproperties().get_border_activated(), PAS.get_pas().get_mapproperties().get_showtext(),
+						PAS.get_pas().get_mapproperties().get_fontsize(), ADR_TYPES_SHOW_, null);
+			}
 		}
 	}
 	public void check_mouseover(int x, int y) {
-		if(ViewOptions.TOGGLE_HOUSES.isSelected())
-			find_houses_bypix(new Dimension(x, y));
+		if(isShow())
+		{
+			if(ViewOptions.TOGGLE_HOUSES.isSelected())
+				find_houses_bypix(new Dimension(x, y));
+		}
 	}
 	
 }

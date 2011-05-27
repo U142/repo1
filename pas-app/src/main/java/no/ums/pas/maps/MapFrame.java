@@ -180,32 +180,48 @@ public class MapFrame extends JPanel implements ActionListener {
     
     public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap) {
         super();
-        
+        m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
+
         mapModel.addPropertyChangeListener("zoom", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
     			navigationChanged();
-            	if(mapModel.getZoom()>=17)
+            	//if(mapModel.getZoom()>=17)
             	{
+        			PAS.get_pas().download_houses();            		
             	}
-                kickRepaint();
+            	//else
+            	{
+            		
+            	}
+            	PAS.get_pas().kickRepaint();
             }
         });
         mapModel.addPropertyChangeListener("topLeft", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
     			navigationChanged();
-    			System.out.println("topLeft changed");
-        		System.out.println("zoom="+mapModel.getZoom());
-            	if(mapModel.getZoom()>=17)
-            	{
-            		if(!m_actionhandler.get_isdragging()) //wait until dragging is finished
-            			PAS.get_pas().download_houses();            		
-            	}
-                kickRepaint();
+            	PAS.get_pas().kickRepaint();
             }
         });
-        
+        get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+		        //download houses when user stops dragging
+				System.out.println("dragging set to " + get_actionhandler().get_isdragging());
+				switch(get_mode())
+				{
+				case PAN:
+				case PAN_BY_DRAG:
+					if(!get_actionhandler().get_isdragging())
+					{
+            			PAS.get_pas().download_houses();						
+					}
+					break;
+				}
+			}
+		});
+
 
         setPreferredSize(new Dimension(100, 100));
         setLayout(new BorderLayout());
@@ -217,7 +233,6 @@ public class MapFrame extends JPanel implements ActionListener {
         m_n_mapsite = 0;
         //this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         this.setBackground(Color.WHITE);
-        m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
         m_dimension = new Dimension(n_width, n_height);
         setSize(m_dimension.width, m_dimension.height);
         m_maploader = new MapLoader(this);

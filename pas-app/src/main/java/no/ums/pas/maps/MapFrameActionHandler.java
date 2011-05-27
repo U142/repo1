@@ -20,6 +20,9 @@ import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.SwingUtilities;
+
+import org.jdesktop.beansbinding.AbstractBean;
+
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -39,7 +42,7 @@ import java.util.List;
 
 
 
-public class MapFrameActionHandler implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
+public class MapFrameActionHandler extends AbstractBean implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
     //private static final Log logger = UmsLog.getLogger(MapFrameActionHandler.class);
 
     public class ActionHouseSelect extends Object {
@@ -111,7 +114,9 @@ public class MapFrameActionHandler implements ActionListener, MouseListener, Mou
 	}
 	
 	private void set_isdragging(boolean b) { 
+		boolean bOldValue = get_isdragging();
 		m_b_isdragging = b;
+		update("dragging", bOldValue, b);
 	}
 	public boolean get_isdragging() { return m_b_isdragging; }
 	
