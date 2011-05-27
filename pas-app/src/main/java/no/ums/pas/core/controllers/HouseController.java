@@ -99,33 +99,8 @@ public class HouseController extends Controller {
 		return ((ADR_TYPES_SHOW_ & n_type) == n_type);
 	}
 	public void start_download(boolean b) {
-		/*if(get_http_req().get_running()) {
-			PAS.get_pas().add_event("Interrupting house download...", null);
-			get_http_req().set_interrupted();
-			Timeout time = new Timeout(2, 20);
-			while(get_http_req().get_running()) {
-				try {
-					Thread.sleep(time.get_msec_interval());
-					time.inc_timer();
-					if(time.timer_exceeded()) {
-						System.out.println("Housecontroller wait timed out");
-						return;
-					}
-				} catch(InterruptedException e) { 
-					PAS.get_pas().add_event("Waiting for stream to close", e);
-				}
-			}
-			get_http_req().m_b_interrupted = false;
-		}*/
 		create_filter();
-		//if(Variables.NAVIGATION.get_mapwidthmeters().intValue() > get_max_meters_width()) {
-			//PAS.get_pas().add_event("House visibility exceeded - " + get_max_meters_width() + " / " + Variables.NAVIGATION.get_mapwidthmeters().intValue(), null);
 		set_visibility_change(true);
-		//	return;
-		//}
-		//String sz_url = "PAS_gethouses_zipped.asp?l_companypk=" + PAS.get_pas().get_userinfo().get_comppk() + "&lbo=" + get_nav()._lbo + "&rbo=" + get_nav()._rbo + "&ubo=" + get_nav()._ubo + "&bbo=" + get_nav()._bbo;
-		//m_xml = new XMLHouses(Thread.MAX_PRIORITY, PAS.get_pas(), sz_url, null, new HTTPReq(PAS.get_pas().get_sitename())/*m_http_req*/, this);
-		//get_xml().start();
 		UMapAddressParams searchparams = new UMapAddressParams();
 		ULOGONINFO logoninfo = new ULOGONINFO();
 		searchparams.setLBo((float)get_nav()._lbo);
@@ -136,9 +111,7 @@ public class HouseController extends Controller {
 		logoninfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		try
 		{
-			//"https://secure.ums2.no/vb4utv/ExecAlert/WS/PAS.asmx?WSDL"
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL");
-			//URL wsdl = new URL("http://localhost/WS/PAS.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
 			
 			UAddressList list = new Pasws(wsdl, service).getPaswsSoap12().getAddressList(searchparams, logoninfo);
@@ -147,8 +120,6 @@ public class HouseController extends Controller {
 			while(it.hasNext())
 			{
 				UAddress a = (UAddress)it.next();
-				//int n = new Long(a.getImportid()).intValue();
-				//System.out.println("Customadr = " + n);
 				Inhabitant inhab = new Inhabitant(); //a.getKondmid(), a.getName(), a.getAddress(), a.getHouseno(), );
 				inhab.init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
 							a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
@@ -156,9 +127,7 @@ public class HouseController extends Controller {
 							new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
 				outlist.add(inhab);
 			}
-			
-			
-			//this.actionPerformed(new ActionEvent(outlist, ActionEvent.ACTION_PERFORMED, "act_download_finished"));
+						
 			m_items = outlist;
 			m_houses.sort_houses(get_items(), false);
 			PAS.get_pas().get_drawthread().set_neednewcoors(true);

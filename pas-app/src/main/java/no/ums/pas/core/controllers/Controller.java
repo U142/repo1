@@ -143,7 +143,7 @@ public abstract class Controller implements ActionListener {
 		ArrayList <Object>arr_temp = new ArrayList<Object>();
 		ArrayList <Object>arr_temp_houses = new ArrayList<Object>();
 		
-		if(get_houses()!=null) {
+		if(get_houses()!=null && get_houses().is_housesready()) {
 			/*while(1==1) {
 				if(get_houses().is_housesready())
 					break;
@@ -154,38 +154,33 @@ public abstract class Controller implements ActionListener {
 			int n_count = 0;
 			int n_total_inhabitants = 0;
 			Object [] data;
-			for(int i=0; i < get_houses().size(); i++) {
-				current = (HouseItem)get_houses().get_houses().get(i);
-				
-				//current.set_selected(false);
-				if(current!=null && current.get_screencoords() != null && current.get_visible()) {
-					n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
-					if(dim.width >= (current.get_screencoords().width - n_radius) && dim.width <= (current.get_screencoords().width + n_radius) &&
-					   dim.height >= (current.get_screencoords().height - n_radius) && dim.height <= (current.get_screencoords().height + n_radius)) { //user click inside house-area
-						Inhabitant obj_inhab;
-						current.set_armed(true);
-						arr_temp_houses.add(current);
-						for(int inhab=0; inhab < current.get_inhabitants().size(); inhab++) {
-							obj_inhab = (Inhabitant)current.get_itemfromhouse(inhab);
-							if(obj_inhab!=null)  {
-								//if((ADR_TYPES_SHOW_ & obj_inhab.get_adrtype()) == obj_inhab.get_adrtype()) {
-								//if((obj_inhab.get_adrtype() & ADR_TYPES_SHOW_) != 0) {
-									/*if(!obj_inhab.get_number().equals("") || !obj_inhab.get_mobile().equals("")) {
-										arr_temp.add(obj_inhab);
-										n_count++;
-									}*/
-								arr_temp.add(obj_inhab);
-								n_count++;
-								//}
+			try
+			{
+				for(int i=0; i < get_houses().size(); i++) {
+					current = (HouseItem)get_houses().get_houses().get(i);				
+					if(current!=null && current.get_screencoords() != null && current.get_visible()) {
+						n_radius = PAS.get_pas().get_mapproperties().get_pixradius();
+						if(dim.width >= (current.get_screencoords().width - n_radius) && dim.width <= (current.get_screencoords().width + n_radius) &&
+						   dim.height >= (current.get_screencoords().height - n_radius) && dim.height <= (current.get_screencoords().height + n_radius)) { //user click inside house-area
+							Inhabitant obj_inhab;
+							current.set_armed(true);
+							arr_temp_houses.add(current);
+							for(int inhab=0; inhab < current.get_inhabitants().size(); inhab++) {
+								obj_inhab = (Inhabitant)current.get_itemfromhouse(inhab);
+								if(obj_inhab!=null)  {
+									arr_temp.add(obj_inhab);
+									n_count++;
+								}
 							}
 						}
-						//get_pas().add_event("found house with" + current.get_inhabitantcount() + " inhabitants");
-						//if(!current.get_isselected())
-						//	current.set_selected(true);
+						else
+							current.set_armed(false);
 					}
-					else
-						current.set_armed(false);
 				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
 			if(n_count > 0) {
 				b_draw_inhabitant_details = true;

@@ -40,7 +40,6 @@ import no.ums.pas.maps.defines.UMSMapObject;
 import no.ums.pas.ums.tools.PrintCtrl;
 import org.geotools.data.wms.WebMapServer;
 import org.geotools.ows.ServiceException;
-import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -169,14 +168,25 @@ public class MapFrame extends JPanel implements ActionListener {
 
     private final MapModel mapModel = new MapModel();
 
+    private void navigationChanged()
+    {
+        final TileLookup tileLookup = getTileLookup();
+        final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
+        final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
+        get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
+        Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
+    }
+
+    
     public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap) {
         super();
+        
         mapModel.addPropertyChangeListener("zoom", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+    			navigationChanged();
             	if(mapModel.getZoom()>=17)
             	{
-            		PAS.get_pas().download_houses();            		
             	}
                 kickRepaint();
             }
@@ -184,9 +194,18 @@ public class MapFrame extends JPanel implements ActionListener {
         mapModel.addPropertyChangeListener("topLeft", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+    			navigationChanged();
+    			System.out.println("topLeft changed");
+        		System.out.println("zoom="+mapModel.getZoom());
+            	if(mapModel.getZoom()>=17)
+            	{
+            		if(!m_actionhandler.get_isdragging()) //wait until dragging is finished
+            			PAS.get_pas().download_houses();            		
+            	}
                 kickRepaint();
             }
         });
+        
 
         setPreferredSize(new Dimension(100, 100));
         setLayout(new BorderLayout());
@@ -535,8 +554,7 @@ public class MapFrame extends JPanel implements ActionListener {
 
         tip.setBackground(c1);
 
-        //Substance 3.3
-        tip.setForeground(SubstanceLookAndFeel.getActiveColorScheme().getForegroundColor());
+        tip.setForeground(SystemColor.textText);
 
         m_tooltip = tip;
         return tip;
@@ -676,9 +694,8 @@ public class MapFrame extends JPanel implements ActionListener {
         int scale = 1;
         int imgw = img_loader_snake.getWidth(null);
         int imgh = img_loader_snake.getHeight(null);
-        //Substance 3.3
-        Color c1 = SubstanceLookAndFeel.getTheme().getDefaultColorScheme().getUltraDarkColor();
-        Color c2 = SubstanceLookAndFeel.getTheme().getDefaultColorScheme().getLightColor();
+        Color c1 = SystemColor.controlDkShadow;
+        Color c2 = SystemColor.controlLtHighlight;
 
         gfx.setColor(new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 160));
 

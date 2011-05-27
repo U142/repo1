@@ -1544,7 +1544,6 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		if(ViewOptions.TOGGLE_HOUSES.isSelected() && !b_width_exceeded) {
 			actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 			pasplugin.onDownloadHouses(get_housecontroller());
-			//get_housecontroller().start_download(true);
 		}
 
 		get_drawthread().set_neednewcoors(true);
