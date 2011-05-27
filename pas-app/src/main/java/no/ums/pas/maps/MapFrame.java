@@ -62,6 +62,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -920,6 +921,13 @@ public class MapFrame extends JPanel implements ActionListener {
 
     private final List<Future<?>> pendingDownloads = new ArrayList<Future<?>>();
 
+    public void paintToImage(BufferedImage b)
+    {
+    	Graphics g = b.getGraphics();
+		g.setClip(0, 0, getWidth(), getHeight());
+		paintComponent(g);
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

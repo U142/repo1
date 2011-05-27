@@ -52,7 +52,7 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 	public boolean onSearch(AddressSearchModel m) {
 		//kjør ws
 		AdrSearchThread ws = new AdrSearchThread(m, this, 1);
-		ws.run();
+		ws.start();
 		return false;
 	}
 
@@ -67,23 +67,20 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 			this.m = m;
 			this.setPriority(n_pri);
 		}
-		private void started() { 
-			m_b_issearching = true; 
-			//setLoading(true);
+		
+		private void isRunning(boolean b)
+		{
+			m_b_issearching = b; 
+			getDlg().getBtnSearch().setEnabled(!b);			
 		}
-		private void stopped() 
-		{ 
-			m_b_issearching = false; 
-			//setLoading(false);
-			//get_searchframe().get_searchpanelvals().search_stopped();	
-		}
+		
 		public boolean get_issearching() { return m_b_issearching; }
 		
 		@Override
 		public void call() throws Exception
 		{
 			
-			started();
+			isRunning(true);
 			try
 			{	
 				UGabSearchResultList response = PAS.pasplugin.getAddressSearch().onExecSearch(m.getAddress(),m.getHouse(), m.getPostno(), m.getPlace(), m.getRegion(), (AddressSearchCountry)m.getCountry());
@@ -96,7 +93,7 @@ public class AddressSearchCtrl implements IAddressSearch, ActionListener {
 			}
 			finally
 			{				
-				stopped();
+				isRunning(false);
 			}
 		}
 		@Override

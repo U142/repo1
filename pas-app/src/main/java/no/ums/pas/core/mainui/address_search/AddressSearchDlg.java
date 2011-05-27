@@ -25,6 +25,8 @@ import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
  * @author User #3
  */
 public class AddressSearchDlg extends JFrame {
+	
+	
 	private IAddressSearch callback;
 	public AddressSearchDlg(IAddressSearch callback, JComponent parent) {
 		this.callback = callback;
@@ -250,6 +252,10 @@ public class AddressSearchDlg extends JFrame {
 			
 			callback.onAddressSelect((AddressSearchListItem)tblResults.getValueAt(selRow, 1));
 		}
+	}
+
+	public JButton getBtnSearch() {
+		return btnSearch;
 	}
 
 	private void initComponents() {

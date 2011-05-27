@@ -47,6 +47,7 @@ import no.ums.pas.send.SendObject;
 import no.ums.pas.sound.SoundRecorder;
 import no.ums.pas.status.LBASEND;
 import no.ums.pas.ums.errorhandling.Error;
+import no.ums.pas.ums.tools.PrintCtrl;
 import no.ums.pas.ums.tools.Timeout;
 import no.ums.pas.ums.tools.UMSSecurity;
 import no.ums.pas.ums.tools.UMSSecurity.UMSPermission;
@@ -62,6 +63,7 @@ import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
@@ -82,6 +84,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -518,7 +521,13 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void save_map() {
 		get_drawthread().set_suspended(true);
 		try {
-			get_mappane().save_map(get_drawthread().get_buff_image());
+			//get_mappane().save_map(get_mappane().get_image()); //get_drawthread().get_buff_image());
+
+			BufferedImage img = new BufferedImage(get_mappane().getWidth(), get_mappane().getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics g = img.getGraphics();
+			
+			get_mappane().paintToImage(img);
+	        PrintCtrl.printComponentToFile(img, null);
 		} catch(Exception e) {
 			
 		} finally {
