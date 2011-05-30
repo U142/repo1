@@ -6,6 +6,8 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.ToolTipManager;
 
+import no.ums.pas.localization.Localization;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
@@ -17,57 +19,98 @@ import java.util.regex.Pattern;
 public class StdTextArea extends JTextField// JTextArea
 {
 	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9_]*$";
+	
+	public static final String REGEX_GSM7 = "[^[a-zA-Z0-9 " + "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E" + "\\.\\_\\@\\£\\$\\¥\\è\\é\\ù\\ì\\ò\\Ç\\Ø\\ø\\Å\\å\\Æ\\æ\\ß\\É\\Ä\\Ö\\Ñ\\Ü\\§\\¿\\ä\\ö\\ñ\\ü\\à\\+\\,\\/\\:\\;\\<\\=\\>\\?\\¡\\|\\^\\{\\}\\*\\!\\#\\€\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"\\~\\-]]";	
+	//public static final String REGEX_GSM7 = "[^[a-zA-Z0-9 " + "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E" + "._@£$¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà+,/:;<=>?¡|^{}*!#€%&'()\r\n\\[]\"~-]]";	
+
 	private boolean bUseRegexpTooltip = false;
 	
 	private String getTooltipTextBasedOnRegexp()
 	{
-		String tooltip = "<b>Valid input</b><br>";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<b>");
+		sb.append(Localization.l("common_valid_input"));
+		sb.append("</b><br>");
 		if(regexpPattern!=null)
 		{
-			int start = REGEXP_SMS_OADC.indexOf("[");
-			int end = REGEXP_SMS_OADC.indexOf("]");
-			String s = REGEXP_SMS_OADC.substring(start+1, end);
+			int start = regexpValidation.indexOf("[");
+			int end = regexpValidation.lastIndexOf("]");
+			String s = regexpValidation.substring(start+1, end);
 			if(start>=0 && end>=0)
 			{
 				//tooltip = s;
 				boolean bRange = false;
+				boolean bEscaped = false;
 				for(char c : s.toCharArray())
 				{
-					if(c=='-') //a range found
+					if(c=='\\' && !bEscaped)
+					{
+						//ignore
+						bEscaped = true;
+						continue;
+					}
+					else if(c=='\\' && bEscaped)
+					{
+						sb.append(" \\ ");
+						bEscaped = false;
+					}
+					else if(c=='\r')
+					{
+						sb.append(" CR ");
+					}
+					else if(c=='\n')
+					{
+						sb.append(" LF ");
+					}
+					else if(c=='^' && !bEscaped)
+					{
+						//ignore
+					}
+					else if(c=='^' && bEscaped)
+					{
+						System.out.println("break");
+						sb.append(" " + c + " ");
+						bEscaped = false;
+					}
+					else if(c=='[' && !bEscaped)
+					{
+						//ignore
+					}
+					else if(c==']' && !bEscaped)
+					{
+						//ignore
+					}
+					else if(c=='-' && !bEscaped) //a range found
 					{
 						bRange = true;
-						tooltip += " to ";
+						sb.append(" ");
+						sb.append(Localization.l("common_to"));
+						sb.append(" ");
 						continue;
 					}
 					else if(bRange)
 					{
-						tooltip += "\"" + c + "\"" + "<br> ";
+						sb.append(c + "<br> ");
 						bRange = false;
+						bEscaped = false;
 					}
 					else
 					{
-						tooltip += "\"" + c + "\"";
+						sb.append(c + " ");
 						bRange = false;
+						bEscaped = false;
 					}
 				}
-				//setToolTipText(s);
 			}
 		}
-		return tooltip;
+		return sb.toString();
 	}
 	
 	@Override
 	public String getToolTipText(MouseEvent event) {
 		if(!bUseRegexpTooltip)
-			return super.getToolTipText();
-		String s = "<html>";
-		s += getTooltipTextBasedOnRegexp();		
-		if(stringLengthLimit>0)
-		{
-			s += "<br><br><b>Max length</b><br>" + stringLengthLimit;
-		}
-		s+="</html>";
-		return s;
+			return super.getToolTipText(event);
+		return createToolTipText();
 	}
 
 	private String regexpValidation = null;
@@ -80,14 +123,24 @@ public class StdTextArea extends JTextField// JTextArea
 	
 	JToolTip tooltip = null;
 	Popup m_popup;
+		
 	
-	@Override
-	public JToolTip createToolTip()
+	public String createToolTipText()
 	{
-		tooltip = super.createToolTip();
-		return tooltip;
+		if(!bUseRegexpTooltip)
+			return super.getToolTipText();
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		sb.append(getTooltipTextBasedOnRegexp());
+		if(stringLengthLimit>0)
+		{
+			sb.append("<br><br><b>");
+			sb.append(Localization.l("common_max_length"));
+			sb.append("</b>&nbsp;" + stringLengthLimit);
+		}
+		sb.append("</html>");
+		return sb.toString();
 	}
-
 	
 	public void setRegexpValidation(String regexpValidation, boolean bSetAsTooltip) {
 		this.regexpValidation = regexpValidation;
@@ -95,29 +148,27 @@ public class StdTextArea extends JTextField// JTextArea
 		bUseRegexpTooltip = bSetAsTooltip;
 		if(bUseRegexpTooltip)
 		{
-			super.setToolTipText("");
+			final String tip = createToolTipText();
 			StdTextArea.this.addFocusListener(new FocusListener() {
 				
 				@Override
 				public void focusLost(FocusEvent e) {
-					//StdTextArea.this.tooltip.setVisible(false);					
+					if(m_popup!=null)
+						m_popup.hide();
 				}
 				
 				@Override
 				public void focusGained(FocusEvent e) {
 					if(tooltip==null)
 					{
-						createToolTip();
+						tooltip = new JToolTip();
 					}
+					tooltip.setTipText(tip);
 					m_popup = PopupFactory.getSharedInstance().getPopup(StdTextArea.this, 
 							tooltip, 
 							StdTextArea.this.getLocationOnScreen().x, 
-							StdTextArea.this.getLocationOnScreen().y+20);
+							StdTextArea.this.getLocationOnScreen().y+StdTextArea.this.getHeight());
 					m_popup.show();
-					//tooltip.setTipText(getToolTipText());
-					//tooltip.setBounds(StdTextArea.this.getBounds().x, StdTextArea.this.getBounds().y, 100, 100);
-					//System.out.println("tip");
-					//tooltip.setVisible(true);
 				}
 			});
 		}
