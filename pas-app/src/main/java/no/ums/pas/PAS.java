@@ -1044,7 +1044,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			//System.out.println("Saving Language settings");
 		}
 		pasplugin.onShowMainWindow();
-		pasplugin.onStartSystemMessageThread(this.get_pasactionlistener(), 5000);
+		pasplugin.onStartSystemMessageThread(this.get_pasactionlistener(), 1000 * pasplugin.getSystemMessagesPollInterval());
 	}
 	/*public void setAppTitle(String s)
 	{

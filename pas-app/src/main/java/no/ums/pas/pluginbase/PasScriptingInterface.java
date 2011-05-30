@@ -317,6 +317,11 @@ public interface PasScriptingInterface {
     boolean onStartSystemMessageThread(ActionListener callback, int n_interval_msec);
 	
     /**
+     * @return Number of seconds between system messages poll
+     */
+    int getSystemMessagesPollInterval();
+    
+    /**
      * Function that's called on interval from SystemMessageThread
      * @param callback To notify and send a list of system messages to the specified actionlistener
      * @return

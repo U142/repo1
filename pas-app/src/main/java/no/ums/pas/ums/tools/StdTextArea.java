@@ -1,15 +1,75 @@
 package no.ums.pas.ums.tools;
 
 import javax.swing.JTextField;
+import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.ToolTipManager;
+
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 
 public class StdTextArea extends JTextField// JTextArea
 {
 	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9_]*$";
+	private boolean bUseRegexpTooltip = false;
 	
+	private String getTooltipTextBasedOnRegexp()
+	{
+		String tooltip = "<b>Valid input</b><br>";
+		if(regexpPattern!=null)
+		{
+			int start = REGEXP_SMS_OADC.indexOf("[");
+			int end = REGEXP_SMS_OADC.indexOf("]");
+			String s = REGEXP_SMS_OADC.substring(start+1, end);
+			if(start>=0 && end>=0)
+			{
+				//tooltip = s;
+				boolean bRange = false;
+				for(char c : s.toCharArray())
+				{
+					if(c=='-') //a range found
+					{
+						bRange = true;
+						tooltip += " to ";
+						continue;
+					}
+					else if(bRange)
+					{
+						tooltip += "\"" + c + "\"" + "<br> ";
+						bRange = false;
+					}
+					else
+					{
+						tooltip += "\"" + c + "\"";
+						bRange = false;
+					}
+				}
+				//setToolTipText(s);
+			}
+		}
+		return tooltip;
+	}
 	
+	@Override
+	public String getToolTipText(MouseEvent event) {
+		if(!bUseRegexpTooltip)
+			return super.getToolTipText();
+		String s = "<html>";
+		s += getTooltipTextBasedOnRegexp();		
+		if(stringLengthLimit>0)
+		{
+			s += "<br><br><b>Max length</b><br>" + stringLengthLimit;
+		}
+		s+="</html>";
+		return s;
+	}
+
 	private String regexpValidation = null;
 	private int stringLengthLimit = 0;
 	private Pattern regexpPattern = null;
@@ -17,10 +77,54 @@ public class StdTextArea extends JTextField// JTextArea
 	public String getRegexpValidation() {
 		return regexpValidation;
 	}
+	
+	JToolTip tooltip = null;
+	Popup m_popup;
+	
+	@Override
+	public JToolTip createToolTip()
+	{
+		tooltip = super.createToolTip();
+		return tooltip;
+	}
+
+	
+	public void setRegexpValidation(String regexpValidation, boolean bSetAsTooltip) {
+		this.regexpValidation = regexpValidation;
+		regexpPattern = Pattern.compile(getRegexpValidation());	
+		bUseRegexpTooltip = bSetAsTooltip;
+		if(bUseRegexpTooltip)
+		{
+			super.setToolTipText("");
+			StdTextArea.this.addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusLost(FocusEvent e) {
+					//StdTextArea.this.tooltip.setVisible(false);					
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					if(tooltip==null)
+					{
+						createToolTip();
+					}
+					m_popup = PopupFactory.getSharedInstance().getPopup(StdTextArea.this, 
+							tooltip, 
+							StdTextArea.this.getLocationOnScreen().x, 
+							StdTextArea.this.getLocationOnScreen().y+20);
+					m_popup.show();
+					//tooltip.setTipText(getToolTipText());
+					//tooltip.setBounds(StdTextArea.this.getBounds().x, StdTextArea.this.getBounds().y, 100, 100);
+					//System.out.println("tip");
+					//tooltip.setVisible(true);
+				}
+			});
+		}
+	}
 
 	public void setRegexpValidation(String regexpValidation) {
-		this.regexpValidation = regexpValidation;
-		regexpPattern = Pattern.compile(getRegexpValidation());
+		setRegexpValidation(regexpValidation, false);
 	}
 
 	public int getStringLengthLimit() {

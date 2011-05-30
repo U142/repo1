@@ -319,7 +319,13 @@ public class CentricPasScripting extends DefaultPasScripting {
     }
 
 
-    class SystemMessagesPanel extends DefaultPanel implements ComponentListener {
+    @Override
+	public int getSystemMessagesPollInterval() {
+		return 5;
+	}
+
+
+	class SystemMessagesPanel extends DefaultPanel implements ComponentListener {
 
         class UMSListModel extends DefaultListModel {
             public void sort() {

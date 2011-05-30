@@ -759,6 +759,11 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 
 	@Override
+	public int getSystemMessagesPollInterval() {
+		return 60;
+	}
+
+	@Override
 	public boolean onStartSystemMessageThread(final ActionListener callback, final int n_interval_msec) {
 		new Thread("PAS System Messages") {
 			public void run()
@@ -772,7 +777,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 					}
 					catch(Exception e)
 					{
-						
+						e.printStackTrace();
 					}
 				}
 			}
