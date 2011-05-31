@@ -360,27 +360,18 @@ public class Houses {
 		
 		if(arraylist==null)
 			return;
-		//if(get_controller().get_visibility_change())
-		{
-			//get_controller().set_visibility();
-		}
 
 		HouseItem current;
-//		boolean b_show = false;
 		int n_houses = 0;
 		for(int i=0; i < arraylist.size(); i++)
 		{
 			current = (HouseItem)arraylist.get(i);
 			//check visible statuscodes
-			//PAS.get_pas().add_event(current.HAS_INHABITANT_TYPES_ + " & " + n_addresstypes + " = " + (current.HAS_INHABITANT_TYPES_ & n_addresstypes));
 			if(current.get_screencoords() != null && current.get_visible())// && (current.HAS_INHABITANT_TYPES_ & n_addresstypes)>0)
 			{
-				//get_pas().add_event("drawItems: " + ((HouseItem)get_houses().get_houses().get(i)).get_screencoords().width);
 				drawItem(current, gfx, Math.min(15, PAS.get_pas().get_mapproperties().get_pixradius() + (int)(1+current.getJoinedHouses()*0.1)), b_border, n_alertborder, 
 						 b_showtext, n_fontsize, n_addresstypes, col_override);
 				n_houses++;
-				//n_totalvisiblehouses++;
-				//n_totalvisiblestatusitems+=current.get_inhabitantcount();
 			}
 		}
 	}
@@ -411,9 +402,14 @@ public class Houses {
 			gfx.setColor(Color.black);
 			Graphics2D gfx2d = (Graphics2D)gfx;
 			Stroke revertStroke = gfx2d.getStroke();
+			Stroke singleStroke = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 			Stroke dualstroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 			if(house.get_armed()) {				
 				gfx2d.setStroke(dualstroke);
+			}
+			else
+			{
+				gfx2d.setStroke(singleStroke);
 			}
 			if(b_border)
 				gfx.drawOval(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
