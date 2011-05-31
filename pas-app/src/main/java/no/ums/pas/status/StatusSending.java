@@ -203,7 +203,7 @@ public class StatusSending extends Object {
 	{
 		String sz_newtext = "<html><font style=\"font-size:9px;\">" + _sz_sendingname + "&nbsp;&nbsp;&nbsp;<b>" + sz + "</font></b></html>"; //font-face:Arial; 
 		String sz_text = m_sendingname_label.getText();
-		if(sz_text.compareTo(sz_newtext)!=0)
+		//if(sz_text.compareTo(sz_newtext)!=0)
 		{
 			m_sendingname_label.setText(sz_newtext);
 			m_sendingname_label.revalidate();

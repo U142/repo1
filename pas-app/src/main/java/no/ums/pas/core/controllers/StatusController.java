@@ -242,8 +242,8 @@ public class StatusController extends Controller implements ActionListener {
 			StatusCode code = (StatusCode) e.getSource();
 			if (m_statuscodes != null)
 				m_statuscodes._add(code);
-			else
-				System.out.println("Don't do anything");
+			//else
+			//	System.out.println("Don't do anything");
 		} else if ("act_init_status".equals(e.getActionCommand())) {
 			init_arrays();
 		}

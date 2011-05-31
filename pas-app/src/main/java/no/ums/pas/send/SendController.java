@@ -1101,7 +1101,9 @@ public class SendController implements ActionListener {
 					}
 					else {
                         if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), Localization.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
+                        {
                             openStatus(res);
+                        }
                         else if(b_openstatus_question && answer==JOptionPane.NO_OPTION)
                         {
                             try
@@ -1138,7 +1140,7 @@ public class SendController implements ActionListener {
 				public void run()
 				{	
 					//only ask for closing the project if the project identity has changed
-					//if(!PAS.get_pas().get_current_project().get_projectpk().equals(res.getProjectpk()))
+					if(!PAS.get_pas().get_current_project().get_projectpk().equals(res.getProjectpk()))
 					{
 						PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
 						
@@ -1156,19 +1158,19 @@ public class SendController implements ActionListener {
 							}
 						});
 					}
-					/*else
+					else
 					{
-						if(!Variables.getStatusController().isOpen())
+						/*if(!Variables.getStatusController().isOpen())
 						{
 							PAS.get_pas().get_statuscontroller().retrieve_statusitems(PAS.get_pas().get_statuscontroller().get_statusframe(), res.getProjectpk(), -1, true);						
 						}
-						else
+						else*/
 						{
 							PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_STATUS_LIST);
 						}
 						if(get_activesending()!=null)
 							get_activesending().get_sendwindow().close();
-					}*/
+					}
 				}
 			}.start();
 			

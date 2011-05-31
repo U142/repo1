@@ -471,107 +471,83 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 	
 	public void actionPerformed(ActionEvent e) {
 		if("act_add_sending".equals(e.getActionCommand())) { //when a new sending is added to StatusSendingList in StatusController
-			StatusSending sending = (StatusSending)e.getSource();
-			javax.swing.ImageIcon ico = null;
+			final StatusSending sending = (StatusSending)e.getSource();
+			ImageIcon ico = null;
 			String s_channel = "";
 			
 			switch(sending.get_type())
 			{
-			case 1: //voice
-				{
+				case 1: //voice
 					ico = ImageLoader.load_icon("sound_18.png");
                     s_channel = Localization.l("main_status_channel_voice") + " ";
-				}
-				break;
-			case 2: //SMS
-				ico = ImageLoader.load_icon("text_18.png");
-                s_channel = Localization.l("main_status_channel_sms") + " ";
-				break;
-			case 3: //e-MAIL
-				break;
-			case 4: //LBA
-				ico = ImageLoader.load_icon("lba_18.png");
-                s_channel = Localization.l("main_status_channel_lba") + " ";
-				break;
-			case 5: //TAS
-				ico = ImageLoader.load_icon("tas_18.png");
-                s_channel = Localization.l("main_status_channel_tas") + " ";
-				break;
-			case 6: //PA
-				ico = ImageLoader.load_icon("text_18.png");
-				s_channel = "PA Centric";			}
-			
+					break;
+				case 2: //SMS
+					ico = ImageLoader.load_icon("text_18.png");
+	                s_channel = Localization.l("main_status_channel_sms") + " ";
+					break;
+				case 3: //e-MAIL
+					break;
+				case 4: //LBA
+					ico = ImageLoader.load_icon("lba_18.png");
+	                s_channel = Localization.l("main_status_channel_lba") + " ";
+					break;
+				case 5: //TAS
+					ico = ImageLoader.load_icon("tas_18.png");
+	                s_channel = Localization.l("main_status_channel_tas") + " ";
+					break;
+				case 6: //PA
+					ico = ImageLoader.load_icon("text_18.png");
+					s_channel = "PA Centric";
+					break;
+			}
+		
 			//m_tab.addTab("PATest", ico, sending.get_uipanel(), "jalla");
 			
 			if(sending.get_type()==0 || sending.get_type()==1 || sending.get_type()==2 || sending.get_type()==4 || sending.get_type()==5)
-				
+			{
 				sending.getTotalSendingnameLabel().setIcon(ico);
-            String tip = "<html><font face=Arial size=4><b>" + Localization.l("main_status_for_refno") + " " + sending.get_refno() + "</b></font>";
-				tip += "<br><font face=Arial size=4>\"" + sending.get_sendingname() + "\"</font>";
-				if(sending.get_type()==2) //sms
+			}
+            final StringBuilder tip = new StringBuilder();
+            tip.append("<html><font face=Arial size=4><b>" + Localization.l("main_status_for_refno") + " " + sending.get_refno() + "</b></font>");
+            tip.append("<br><font face=Arial size=4>\"" + sending.get_sendingname() + "\"</font>");
+			if(sending.get_type()==2) //sms
+			{
+				String temp = sending.get_sms_message_text();
+				temp = temp.replaceAll("\n", "<br>");
+				String msgtext = "";
+				String [] words = temp.split(" ");
+				for(int i=0; i < words.length; i++)
 				{
-					String temp = sending.get_sms_message_text();
-					temp = temp.replaceAll("\n", "<br>");
-					String msgtext = "";
-					String [] words = temp.split(" ");
-					for(int i=0; i < words.length; i++)
-					{
-						if((i % 10) == 0)
-							msgtext += "<br>";
-						msgtext += words[i] + " ";
-					}//<img src=\"file:PASIcons/text_18.png\">
-                    tip += "<br><br><b><font face=Arial size=3>" + Localization.l("main_status_sms_content") + "</font></b><hr noshade><br><font face=Arial size=3><b>" + sending.get_oadc()+ "</b></font><br><font face=Arial size=3><table wrap=hard><tr><td><b>" + msgtext + "</b></td></tr></table><br>&nbsp;</font>";
-				}
-				tip+="</html>";
-				m_tab.addTab(sending.get_sendingname(), ico,
-							sending.get_uipanel(),
-							tip);
-							//"Status for refno " + sending.get_refno());
-				//search for the newly added tab
-				for(int i=0; i < m_tab.getTabCount(); i++)
+					if((i % 10) == 0)
+						msgtext += "<br>";
+					msgtext += words[i] + " ";
+				}//<img src=\"file:PASIcons/text_18.png\">
+				tip.append("<br><br><b><font face=Arial size=3>" + Localization.l("main_status_sms_content") + "</font></b><hr noshade><br><font face=Arial size=3><b>" + sending.get_oadc()+ "</b></font><br><font face=Arial size=3><table wrap=hard><tr><td><b>" + msgtext + "</b></td></tr></table><br>&nbsp;</font>");
+			}
+			tip.append("</html>");
+			
+			final ImageIcon icoUse = ico;
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run()
 				{
-					Component c = m_tab.getComponent(i);
-					
-					//SwingUtilities.invokeLater(new Runnable() {
-					//	public void run()
-					//	{
-							if(c.equals(sending.get_uipanel()))
-							{
-								//tmp.getTotalSendingnameLabel().setIcon(tmpico);
-								m_tab.setTabComponentAt(i, sending.getTotalSendingnameLabel());
-								m_tab.setIconAt(i, ico);
-								//break;
-							}							
-					//	}
-					//});
-					/*try
+					m_tab.addTab(sending.get_sendingname(), icoUse,
+								sending.get_uipanel(),
+								tip.toString());
+					//search for the newly added tab
+					int idxOfNewTab = m_tab.indexOfComponent(sending.get_uipanel());
+					if(idxOfNewTab>=0)
 					{
-						StatusSendingUI tmp = (StatusSendingUI)m_tab.getComponent(i);
-						if(tmp.get_status_sending().get_refno()==sending.get_refno())
-						{
-							sending.getTotalSendingnameLabel().setIcon(ico);
-							m_tab.setTabComponentAt(i, sending.getTotalSendingnameLabel());							
-						}
+						Component c = m_tab.getComponent(idxOfNewTab);
+						m_tab.setTabComponentAt(idxOfNewTab, sending.getTotalSendingnameLabel());
+						m_tab.setIconAt(idxOfNewTab, icoUse);
 					}
-					catch(Exception err)
-					{
-						
-					}*/
+		            m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { Localization.l("main_status_filter") + ":", icoUse, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
 				}
-				/*switch(sending.get_type())
-				{
-				case 1: //voice
-					ico = ImageLoader.load_icon("sound_24.gif");
-					break;
-				case 2: //SMS
-					ico = ImageLoader.load_icon("text_24.gif");
-					break;
-				}*/
-            m_combo_voice_filter.addItem(new ComboRow(sending, new Object [] { Localization.l("main_status_filter") + ":", ico, sending.getSendingnameLabel(), sending.getProcessedAndTotalLabel(), sending.getCompletionPercentLabel() } ));
+			});
 				
 			try
 			{
-				m_tab.setTabComponentAt(++n_componentcount, sending.getTotalSendingnameLabel());
+				//m_tab.setTabComponentAt(++n_componentcount, sending.getTotalSendingnameLabel());
 				if(get_statuscodeframe().get_controller().get_sendinglist().size()>1)
 					m_main.add_voice_filter_combo();
 			}

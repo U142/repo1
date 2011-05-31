@@ -1,6 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.LightPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.core.ws.WSSendSettings;
@@ -751,7 +752,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("LIVE")) {
 					m_send.actionPerformed(e);
 					frame.dispose();
-					PAS.get_pas().get_eastcontent().get_sendingpanel().remove(m_sendobject.get_toolbar());
+					Variables.getSendController().remove_sending(m_sendobject.get_toolbar());
 				}
 				else {
 					if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("LIVE")) {
@@ -830,8 +831,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					if(cr == JOptionPane.YES_OPTION && confirm.getText().equals("SIMULATE")) {
 						frame.dispose();
 						m_send.actionPerformed(e);
-						PAS.get_pas().get_eastcontent().get_sendingpanel().remove(m_sendobject.get_toolbar());
-						//this.close();
+						Variables.getSendController().remove_sending(m_sendobject.get_toolbar());
 					}
 					else {
 						if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("SIMULATE")) {
