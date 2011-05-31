@@ -101,7 +101,10 @@ namespace UMSAlertiX
 
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                {
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+                    else if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 2) execMode = ExecuteMode.SILENT;
+                }
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null) // optional
                 {
@@ -411,7 +414,11 @@ namespace UMSAlertiX
 
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                {
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+                    else if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 2) execMode = ExecuteMode.SILENT;
+                }
+                //if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
                 {
@@ -651,7 +658,11 @@ namespace UMSAlertiX
 
                 // The rest of the fields aren't required for sending and can default if missing
                 if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+                {
                     if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+                    else if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 2) execMode = ExecuteMode.SILENT;
+                }
+                //if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
 
                 if (oDoc.SelectSingleNode("LBA").SelectSingleNode("additionalsubscribers") != null)
                 {
@@ -791,7 +802,14 @@ namespace UMSAlertiX
             ExecuteMode execMode = ExecuteMode.SIMULATE;
 
             idJob.value = oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("sz_jobid").Value;
-            if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+
+            if (oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation") != null) // defaults to SIMULATE if null
+            {
+                //if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+                if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 0) execMode = ExecuteMode.LIVE;
+                else if (Convert.ToInt16(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("f_simulation").Value) == 2) execMode = ExecuteMode.SILENT;
+            }
+
             lRefNo = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_refno").Value);
             lOperator = Convert.ToInt32(oDoc.SelectSingleNode("LBA").Attributes.GetNamedItem("l_operator").Value);
 
