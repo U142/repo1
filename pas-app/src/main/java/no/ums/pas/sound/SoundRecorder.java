@@ -11,6 +11,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
 import javax.sound.sampled.TargetDataLine;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,12 +35,14 @@ public class SoundRecorder extends Thread {
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
     	throws Exception
     {
-    	if(AUDIOLINE==null && LINE_AVAILABLE)
+    	//if(AUDIOLINE==null && LINE_AVAILABLE)
     	{
     		AUDIOFORMAT = audioFormat;
     		
     		AudioFormat [] formatsToTest = new AudioFormat [] {
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false),
+    				new AudioFormat(8000.0F, 16, 1, true, false),
+    				new AudioFormat(8000.0F, 8, 1, true, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000.0F, 16, 1, 2, 8000.0F, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false),    				
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false),    				
@@ -52,7 +55,7 @@ public class SoundRecorder extends Thread {
 	        		DataLine.Info info = new DataLine.Info(TargetDataLine.class, f);
 	        		if(AudioSystem.isLineSupported(info))
 	        		{
-	        			AUDIOLINE = (TargetDataLine) AudioSystem.getLine(info);//AudioSystem.getLine(info);
+	        			AUDIOLINE = (TargetDataLine)AudioSystem.getLine(info);
 	        			AUDIOFORMAT = f;
 			        	return (LINE_AVAILABLE = true);
 	        		}
@@ -72,7 +75,7 @@ public class SoundRecorder extends Thread {
 	        	
 	        }
     	}
-    	return false;
+    	//return false;
     }
     
     private AudioFileFormat.Type m_targetType;
