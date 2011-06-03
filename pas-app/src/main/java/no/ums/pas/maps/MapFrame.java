@@ -190,6 +190,7 @@ public class MapFrame extends JPanel implements ActionListener {
             	//if(mapModel.getZoom()>=17)
             	{
         			PAS.get_pas().download_houses();            		
+                    PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
             	}
             	//else
             	{
@@ -217,6 +218,7 @@ public class MapFrame extends JPanel implements ActionListener {
 					if(!get_actionhandler().get_isdragging())
 					{
             			PAS.get_pas().download_houses();						
+                        PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
 					}
 					break;
 				}
@@ -957,7 +959,6 @@ public class MapFrame extends JPanel implements ActionListener {
             }
             PAS.get_pas().get_drawthread().draw_layers(g);
             drawOnEvents(g);
-            PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, this);
         } catch (Exception e) {
             log.error("Failed to draw map", e);
         }
