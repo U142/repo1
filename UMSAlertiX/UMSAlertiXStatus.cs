@@ -65,7 +65,7 @@ namespace UMSAlertiX
                         lOperator = rsJobs.GetInt32(2);
                         lStatus = rsJobs.GetInt32(3);
                         //Console.WriteLine("Checking refno={0} job={1} operator={2} status={3}", lRefNo.ToString(), idJob.value, lOperator.ToString(), lStatus.ToString());
-
+                        
                         Operator op = oController.GetOperator(lOperator);
 
                         aStatus.Url = op.sz_url + oController.statusapi; // "http://lbv.netcom.no:8080/alertix/StatusApi";
@@ -162,7 +162,7 @@ namespace UMSAlertiX
 
         public void UpdateCCStatus() // updates jobs with country code status
         {
-            string szJobQuery = "SELECT l_refno, sz_jobid, l_operator FROM LBASEND where l_status=340 or l_status=310";
+            string szJobQuery = "SELECT l_refno, sz_jobid, l_operator, l_expires_ts FROM LBASEND where l_status=340 or l_status=310";
 
             OdbcConnection dbConn = new OdbcConnection(oController.dsn);
             OdbcCommand cmdJobs = new OdbcCommand(szJobQuery, dbConn);
@@ -181,12 +181,20 @@ namespace UMSAlertiX
                 {
                     if (!(rsJobs.IsDBNull(0) || rsJobs.IsDBNull(1) || rsJobs.IsDBNull(2)))
                     {
+                        DateTime expires_ts = new DateTime();
+                        bool bExpired = false;
+
                         lRefNo = rsJobs.GetInt32(0);
                         idJob.value = rsJobs.GetString(1);
                         lOperator = rsJobs.GetInt32(2);
+                        if (!rsJobs.IsDBNull(3))
+                            if (DateTime.TryParseExact(rsJobs.GetDecimal(3).ToString(), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out expires_ts))
+                                if (expires_ts < DateTime.Now)
+                                    bExpired = true;
+
                         //Console.WriteLine("Checking status for refno={0} jobid={1} operator={2}", lRefNo.ToString(), idJob.value, lOperator.ToString());
 
-                        UpdateCCStatus(idJob, lRefNo, lOperator);
+                        UpdateCCStatus(idJob, lRefNo, lOperator, bExpired);
                     }
                 }
                 rsJobs.Close();
@@ -203,6 +211,11 @@ namespace UMSAlertiX
         }
 
         private bool UpdateCCStatus(JobId idJob, int lRefNo, int lOperator)
+        {
+            return UpdateCCStatus(idJob, lRefNo, lOperator, false);
+        }
+
+        private bool UpdateCCStatus(JobId idJob, int lRefNo, int lOperator, bool bExpired)
         {
             StatusApi aStatus = new StatusApi();
             CountryCodeAlertStatusResponse aStatusResponse = new CountryCodeAlertStatusResponse();
@@ -266,9 +279,19 @@ namespace UMSAlertiX
                     ccFailed = ccStatus.deliveryFailed + ccStatus.submissionFailed;
                     ccUnknown = ccStatus.deliveryUnknown;
 
-                    ccSubmitted = ccStatus.submitted;
-                    ccQueued = ccStatus.queued;
-
+                    if (bExpired)
+                    {
+                        ccExpired += ccStatus.submitted;
+                        ccExpired += ccStatus.queued;
+                        ccSubmitted = 0;
+                        ccQueued = 0;
+                    }
+                    else
+                    {
+                        ccSubmitted = ccStatus.submitted;
+                        ccQueued = ccStatus.queued;
+                    }
+                    
                     ccSubscribers = ccStatus.subscribersCount;
                     lCountSub += ccSubscribers;
                     lProc += ccDelivered + ccExpired + ccFailed + ccUnknown;
@@ -276,12 +299,12 @@ namespace UMSAlertiX
                     lRetVal = oController.ExecDB("sp_upd_status_lba_cc " + lRefNo.ToString() + ", " + lOperator.ToString() + ", " + cc.ToString() + ", " + ccDelivered.ToString() + ", " + ccExpired.ToString() + ", " + ccFailed.ToString() + ", " + ccUnknown.ToString() + ", " + ccSubmitted.ToString() + ", " + ccQueued.ToString() + ", " + ccSubscribers.ToString(), oController.dsn);
                 }
 
-                if (lProc == lItems && lStatus == 340 && lItems>0) // done sending
+                if (lProc == lItems && lStatus == 340 && lItems > 0) // done sending
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Status done (" + lItems.ToString() + " recipients)");
                     lRetVal = oController.ExecDB("UPDATE LBASEND set l_items=" + lItems.ToString() + ", l_proc=" + lProc.ToString() + ", l_status=1000 WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + lOperator.ToString(), oController.dsn);
                 }
-                else if (lItems == lCountSub && lStatus == 310 && lItems>0) // got all ccode statuses from prepared sending (skip those with 0 items)
+                else if (lItems == lCountSub && lStatus == 310 && lItems > 0) // got all ccode statuses from prepared sending (skip those with 0 items)
                 {
                     oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Got all cc for prepared sending (" + lItems.ToString() + " recipients)");
                     lRetVal = oController.ExecDB("UPDATE LBASEND set l_status=311 WHERE l_refno=" + lRefNo.ToString() + " AND l_status=310 AND l_operator=" + lOperator.ToString(), oController.dsn);

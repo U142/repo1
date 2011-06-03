@@ -284,7 +284,13 @@ namespace UMSAlertiX
 
                         if (aResponse.successful)
                         {
-                            szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            // Set expired, og started hvis lRequestType = 0
+                            //szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code.ToString() + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            if (lRequestType == 0)
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_started_ts=" + DateTime.Now.ToString("yyyyMMddHHmmss") + ", l_expires_ts=" + msgAlert.expiryTime.ToString("yyyyMMddHHmmss") + ", l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            else
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_expires_ts=" + msgAlert.expiryTime.ToString("yyyyMMddHHmmss") + ", l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            
                             oController.ExecDB(szUpdateSQL, oController.dsn);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
                         }
@@ -848,7 +854,8 @@ namespace UMSAlertiX
                 aResponse = aAlert.executePreparedAlert(idJob, execMode);
                 if (aResponse.successful)
                 {
-                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                    szUpdateSQL = "UPDATE LBASEND SET l_status=340, l_started_ts=" + DateTime.Now.ToString("yyyyMMddHHmmss") + ", l_response=" + aResponse.code + " WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+
                     lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                     oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Executed (res=" + aResponse.code.ToString() + ") (job=" + idJob.value + ")");
                 }
@@ -1021,7 +1028,12 @@ namespace UMSAlertiX
 
                         if (aResponse.successful)
                         {
-                            szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            // Set expired, og started hvis lRequestType = 0
+                            if (lRequestType == 0)
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_started_ts=" + DateTime.Now.ToString("yyyyMMddHHmmss") + ", l_expires_ts=" + msgAlert.expiryTime.ToString("yyyyMMddHHmmss") + ", l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            else
+                                szUpdateSQL = "UPDATE LBASEND SET l_status=300, l_expires_ts=" + msgAlert.expiryTime.ToString("yyyyMMddHHmmss") + ", l_response=" + aResponse.code + ", sz_jobid='" + aResponse.jobId.value + "' WHERE l_refno=" + lRefNo.ToString() + " AND l_operator=" + op.l_operator.ToString();
+                            
                             lRetval = oController.ExecDB(szUpdateSQL, oController.dsn);
                             oController.log.WriteLog(lRefNo.ToString() + " (" + op.sz_operatorname + ") Delivered (res=" + aResponse.code.ToString() + ") (job=" + aResponse.jobId.value + ")");
                         }
