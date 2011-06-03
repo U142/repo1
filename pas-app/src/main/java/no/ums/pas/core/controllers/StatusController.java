@@ -798,11 +798,16 @@ public class StatusController extends Controller implements ActionListener {
 	}
 
 	public void refresh_search_houses() {
-		if (PAS.get_pas().get_inhabitantframe().isVisible()) {
-			search_houses(n_search_status, b_search_all, dim_screen_coor_search);
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				if (PAS.get_pas().get_inhabitantframe().isVisible()) {
+					search_houses(n_search_status, b_search_all, dim_screen_coor_search);
+				}
+			}
+		});
 	}
-
+			
 	private int n_search_status = -99999;
 	public int get_n_search_status() { return n_search_status; }
 	private boolean b_search_all = false;
