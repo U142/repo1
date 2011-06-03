@@ -81,7 +81,32 @@ public class HouseItem extends Object {
 		set_active_color(Color.WHITE);
 	}
 	public void set_visible(boolean b_visible) { m_b_visible = b_visible; }
-	public boolean isVisible() { return m_b_visible; }
+	public boolean isVisible() {
+		boolean ret = m_b_visible;
+		try
+		{
+			int filter_refno = ((StatusSending)((ComboRow)PAS.get_pas().get_eastcontent().get_statuspanel().get_combo_filter().getSelectedItem()).getId()).get_refno();
+			for(int i=0;i<m_subitems.size();++i)  {
+				if(m_subitems.get(i) instanceof StatusItemObject)
+				{
+					if(filter_refno == ((StatusItemObject)m_subitems.get(i)).get_refno())
+					{
+						ret = true && m_b_visible;
+						return ret;
+					}
+				}
+				else
+					return m_b_visible;
+			}
+			ret = false;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return ret; 
+	}
 	
 	public boolean get_visible() { 
 		int filter_refno = -1;
