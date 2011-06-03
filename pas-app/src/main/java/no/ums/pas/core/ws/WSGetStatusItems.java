@@ -10,6 +10,7 @@ import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.MunicipalStruct;
+import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.maps.defines.TasStruct;
@@ -862,15 +863,15 @@ public class WSGetStatusItems extends WSThread
 		NamedNodeMap nnm_items;
 		NodeList list_items = current.getChildNodes();
 		String[] sz_values;
-		/*try {
-			NavStruct nav_init = new NavStruct(new Double(node_lbo.getNodeValue()).doubleValue(), new Double(node_rbo.getNodeValue()).doubleValue(),
+		try {
+			/*NavStruct nav_init = new NavStruct(new Double(node_lbo.getNodeValue()).doubleValue(), new Double(node_rbo.getNodeValue()).doubleValue(),
 					   new Double(node_ubo.getNodeValue()).doubleValue(), new Double(node_bbo.getNodeValue()).doubleValue());
-			get_callback().actionPerformed(new ActionEvent(nav_init, ActionEvent.ACTION_PERFORMED, "act_set_nav_init"));
+			get_callback().actionPerformed(new ActionEvent(nav_init, ActionEvent.ACTION_PERFORMED, "act_set_nav_init"));*/
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
-		}*/
+		}
 
 	
 			/*parse items*/

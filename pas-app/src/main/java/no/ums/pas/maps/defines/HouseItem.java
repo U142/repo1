@@ -81,6 +81,8 @@ public class HouseItem extends Object {
 		set_active_color(Color.WHITE);
 	}
 	public void set_visible(boolean b_visible) { m_b_visible = b_visible; }
+	public boolean isVisible() { return m_b_visible; }
+	
 	public boolean get_visible() { 
 		int filter_refno = -1;
 		

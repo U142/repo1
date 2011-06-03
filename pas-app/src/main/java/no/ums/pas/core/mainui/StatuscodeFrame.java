@@ -66,6 +66,7 @@ public class StatuscodeFrame extends JPanel implements ComponentListener{ //JFra
 				try
 				{
 					get_panel().start_search(m_filter);
+					PAS.get_pas().kickRepaint();
 				}
 				catch(Exception e)
 				{

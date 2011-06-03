@@ -26,6 +26,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 
 public class OpenStatuscodes extends SearchPanelResults {
@@ -132,6 +134,10 @@ public class OpenStatuscodes extends SearchPanelResults {
 		m_filter = filter;
 		start_search();
 	}
+	
+	Hashtable<StatusCode, Boolean> hashStatusCodesShow = new Hashtable<StatusCode, Boolean>();
+	
+	
     protected synchronized void start_search()
 	{
 		pushSelection();
@@ -142,6 +148,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 		{
 			current = get_statusframe().get_controller().get_statuscodes()._get(i);
 			boolean visible = true;
+			boolean visibleInList = false;
 			boolean animated = true;
 			for(int j=0;j<this.get_table().getRowCount();j++) {
 				if(((StatusCode)this.get_table().getValueAt(j, 0)).get_code() == current.get_code()) {
@@ -151,9 +158,10 @@ public class OpenStatuscodes extends SearchPanelResults {
 						setValueAt(false, j, 3);
 						//set_cell_editable(3, false);
 					}
-						
+					visibleInList = true;
 				}
 			}
+			visible = isStatusVisibleChecked(current);
 			current.set_visible(visible);
 			
 			try {
@@ -205,7 +213,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 						col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
 						*/
 					current.set_color( col );
-					Object visibleType = new Boolean(true);
+					Object visibleType = new Boolean(visible);
 					Object animType = new Boolean(false);
 					insert_row(new Object[] { current, current.get_status(), hits, visibleType, animType, (colType!=null ? "" : col)}, -1);
 					current.set_addedtolist();
@@ -219,8 +227,8 @@ public class OpenStatuscodes extends SearchPanelResults {
 					}
 				}									  
 				if(current.get_current_count() < 1
-				|| (m_filter != null && (m_filter.hasLBA() || m_filter.get_sendingtype() == 5) && current.get_code() < -1000) // Dette fjerner queue og sending dersom LBA er valgt
-				|| (m_filter != null && (m_filter.get_percentage() == (float)100 && current.get_code() < -1000))) { // Dette fjerner queue og sending dersom filteret er på en sending som er 100 prosent
+						|| (m_filter != null && (m_filter.hasLBA() || m_filter.get_sendingtype() == 5) && current.get_code() < -1000) // Dette fjerner queue og sending dersom LBA er valgt
+						|| (m_filter != null && (m_filter.get_percentage() == (float)100 && current.get_code() < -1000))) { // Dette fjerner queue og sending dersom filteret er på en sending som er 100 prosent
 					current.set_visible(false);
 					remove_row(current);
 					current.set_removedfromlist();
@@ -236,6 +244,14 @@ public class OpenStatuscodes extends SearchPanelResults {
 		get_pas().get_statuscontroller().refresh_search_houses();
 		popSelection();
 	}
+    
+    private boolean isStatusVisibleChecked(StatusCode code)
+    {
+    	if(!hashStatusCodesShow.containsKey(code))
+    		hashStatusCodesShow.put(code, true); //a new statuscode should always be true
+		return hashStatusCodesShow.get(code);
+    }
+    
     public int find(int n_col, int code) {
     	for(int i=0; i < m_tbl_list.getRowCount(); i++) {
     		int n_temp = -1;
@@ -276,8 +292,9 @@ public class OpenStatuscodes extends SearchPanelResults {
 		if(this.get_table().getValueAt(n_row, 3) instanceof Boolean)
 		{
 			Boolean b_show = (Boolean)this.get_table().getValueAt(n_row, 3);
-			//int n_code = new Integer((String)rowcontent[n_col_code]).intValue();
-			int n_code = ((StatusCode)rowcontent[n_col_code]).get_code();
+			StatusCode code = (StatusCode)rowcontent[n_col_code];
+			int n_code = code.get_code();
+			hashStatusCodesShow.put(code, b_show);
 			
 			try
 			{
