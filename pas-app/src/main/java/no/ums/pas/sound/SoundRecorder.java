@@ -43,6 +43,7 @@ public class SoundRecorder extends Thread {
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false),
     				new AudioFormat(8000.0F, 16, 1, true, false),
     				new AudioFormat(8000.0F, 8, 1, true, false),
+    				new AudioFormat(8000.0F, 8, 1, false, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000.0F, 16, 1, 2, 8000.0F, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false),    				
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false),    				
