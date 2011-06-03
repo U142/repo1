@@ -35,7 +35,7 @@ public class SoundRecorder extends Thread {
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
     	throws Exception
     {
-    	//if(AUDIOLINE==null && LINE_AVAILABLE)
+    	if(AUDIOLINE==null && LINE_AVAILABLE)
     	{
     		AUDIOFORMAT = audioFormat;
     		
@@ -75,7 +75,7 @@ public class SoundRecorder extends Thread {
 	        	
 	        }
     	}
-    	//return false;
+    	return false;
     }
     
     private AudioFileFormat.Type m_targetType;
