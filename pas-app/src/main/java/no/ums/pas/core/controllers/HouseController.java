@@ -118,29 +118,15 @@ public class HouseController extends Controller {
 	public void start_download(final boolean b) {
 		create_filter();
 		set_visibility_change(true);
-		UMapAddressParams searchparams = new UMapAddressParams();
-		ULOGONINFO logoninfo = new ULOGONINFO();
-		searchparams.setLBo((float)get_nav()._lbo);
-		searchparams.setRBo((float)get_nav()._rbo);
-		searchparams.setUBo((float)get_nav()._ubo);
-		searchparams.setBBo((float)get_nav()._bbo);
-		logoninfo.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
-		logoninfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		try
 		{
-            ArrayList<Object> outlist = new ArrayList<Object>(0);
+            m_items = new ArrayList<Object>();
             for (final Point point : stdZoom.getTiles(new LonLat(get_nav()._lbo, get_nav()._ubo), new LonLat(get_nav()._rbo, get_nav()._bbo))) {
                 for (UAddress a : cache.getHouseInfos(stdZoom.getZoomLevel(), point.y, point.x)) {
-                    Inhabitant inhab = new Inhabitant(); //a.getKondmid(), a.getName(), a.getAddress(), a.getHouseno(), );
-                    inhab.init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
-                                a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
-                                a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
-                                new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
-                    outlist.add(inhab);
+                    m_items.add(new Inhabitant(a));
                 }
             }
 
-			m_items = outlist;
 			m_houses.sort_houses(get_items(), false);
 			PAS.get_pas().get_drawthread().set_neednewcoors(true);
 			set_visibility_change(true);
@@ -149,11 +135,7 @@ public class HouseController extends Controller {
 		catch(Exception e)
 		{
 			no.ums.pas.ums.errorhandling.Error.getError().addError("Error", "House download", e, 1);
-			return;
 		}
-		
-		
-		
 	}
 	
 	protected void downloadFinished() 

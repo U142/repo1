@@ -1,14 +1,15 @@
 package no.ums.pas.maps.defines;
 
 import no.ums.pas.send.SendController;
+import no.ums.ws.pas.UAddress;
 
 /*
 String[] sz_itemattr = { "dmid", "name", "adr", "no", "lt", "post", "area", "reg", "bday", "pno", 
 						 "lon", "lat", "gno", "bno" };
 **/
 public class Inhabitant extends InhabitantBasics implements Cloneable {
-	
-	@Override
+
+    @Override
 	public Inhabitant clone() throws CloneNotSupportedException
 	{
 		return (Inhabitant)super.clone();
@@ -65,6 +66,15 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		 sz_region, sz_birthday, sz_number, sz_mobile, f_lon, f_lat, n_gnumber, n_bnumber, n_adrtype, n_deptpk, 
 		 n_streetid, sz_quality, n_hasfixed, n_hasmobile);
 	}
+
+
+    public Inhabitant(UAddress a) {
+        init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
+                    a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
+                    a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
+                    new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
+    }
+
 	public String toString() {
 		return get_adrname();
 	}
