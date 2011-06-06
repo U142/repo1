@@ -1,9 +1,13 @@
 package no.ums.pas.core.controllers;
 
+import no.ums.map.tiled.LonLat;
+import no.ums.map.tiled.ZoomLookup;
 import no.ums.pas.PAS;
+import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.pas.core.ws.vars;
+import no.ums.pas.maps.HouseDownloadCache;
 import no.ums.pas.maps.defines.Houses;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.NavStruct;
@@ -17,6 +21,7 @@ import no.ums.ws.pas.UMapAddressParams;
 import javax.xml.namespace.QName;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
@@ -106,7 +111,11 @@ public class HouseController extends Controller {
 	public boolean show_adrtype(int n_type) {
 		return ((ADR_TYPES_SHOW_ & n_type) == n_type);
 	}
-	public void start_download(boolean b) {
+
+    private final ZoomLookup stdZoom = new ZoomLookup(17, 256);
+    private final HouseDownloadCache cache = new HouseDownloadCache();
+
+	public void start_download(final boolean b) {
 		create_filter();
 		set_visibility_change(true);
 		UMapAddressParams searchparams = new UMapAddressParams();
@@ -119,29 +128,23 @@ public class HouseController extends Controller {
 		logoninfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
 		try
 		{
-			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/PAS.asmx?WSDL");
-			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			
-			UAddressList list = new Pasws(wsdl, service).getPaswsSoap12().getAddressList(searchparams, logoninfo);
-			ArrayList<Object> outlist = new ArrayList<Object>(0);
-			Iterator<UAddress> it = list.getList().getUAddress().iterator();
-			while(it.hasNext())
-			{
-				UAddress a = (UAddress)it.next();
-				Inhabitant inhab = new Inhabitant(); //a.getKondmid(), a.getName(), a.getAddress(), a.getHouseno(), );
-				inhab.init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
-							a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
-							a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
-							new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
-				outlist.add(inhab);
-			}
-						
+            ArrayList<Object> outlist = new ArrayList<Object>(0);
+            for (final Point point : stdZoom.getTiles(new LonLat(get_nav()._lbo, get_nav()._ubo), new LonLat(get_nav()._rbo, get_nav()._bbo))) {
+                for (UAddress a : cache.getHouseInfos(stdZoom.getZoomLevel(), point.y, point.x)) {
+                    Inhabitant inhab = new Inhabitant(); //a.getKondmid(), a.getName(), a.getAddress(), a.getHouseno(), );
+                    inhab.init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
+                                a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
+                                a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
+                                new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
+                    outlist.add(inhab);
+                }
+            }
+
 			m_items = outlist;
 			m_houses.sort_houses(get_items(), false);
 			PAS.get_pas().get_drawthread().set_neednewcoors(true);
 			set_visibility_change(true);
 			PAS.get_pas().actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_FINISHED_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
-
 		}
 		catch(Exception e)
 		{
