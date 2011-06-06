@@ -7,67 +7,16 @@ import javax.annotation.Nullable;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
-import java.lang.Math;import java.lang.Object;import java.lang.Override;import java.lang.String;import java.lang.StringBuilder;import java.util.Map;
+import java.lang.Math;
+import java.lang.Override;
+import java.util.Map;
 
 /**
  * @author Ståle Undheim <su@ums.no>
  */
 public abstract class AbstractTileCache {
 
-
-
-    public static final class Cell {
-        private final int zoom;
-        private final int column;
-        private final int row;
-
-        public Cell(int zoom, int row, int column) {
-            this.zoom = zoom;
-            this.column = column;
-            this.row = row;
-        }
-
-        public int getZoom() {
-            return zoom;
-        }
-
-        public int getColumn() {
-            return column;
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Cell cell = (Cell) o;
-
-            return column == cell.column && row == cell.row && zoom == cell.zoom;
-
-        }
-
-        @Override
-        public int hashCode() {
-            return 31 * (31 * zoom + column) + row;
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("Cell");
-            sb.append("{zoom=").append(zoom);
-            sb.append(", column=").append(column);
-            sb.append(", row=").append(row);
-            sb.append('}');
-            return sb.toString();
-        }
-    }
-
-    private final Map<Cell, Image> cache;
+    private final Map<TileCell, Image> cache;
 
     private final int maxZoom;
     private final ZoomLookup[] zoomLookups;
@@ -81,15 +30,15 @@ public abstract class AbstractTileCache {
             zoomLookups[i] = new ZoomLookup(i, tileSize);
         }
 
-        cache = new MapMaker().softValues().makeComputingMap(new Function<Cell, Image>() {
+        cache = new MapMaker().softValues().makeComputingMap(new Function<TileCell, Image>() {
             @Override
-            public Image apply(@Nullable Cell input) {
+            public Image apply(@Nullable TileCell input) {
                 return getImage(input);
             }
         });
     }
 
-    protected abstract Image getImage(Cell input);
+    protected abstract Image getImage(TileCell input);
 
     public int getTileSize() {
         return tileSize;
@@ -104,7 +53,7 @@ public abstract class AbstractTileCache {
     }
 
     public Image render(int zoom, int row, int column) {
-        return cache.get(new Cell(zoom, row, column));
+        return cache.get(new TileCell(zoom, row, column));
     }
 
     public boolean exists(TileData tile) {
@@ -112,7 +61,7 @@ public abstract class AbstractTileCache {
     }
 
     public boolean exists(int zoom, int row, int column) {
-        return cache.containsKey(new Cell(zoom, row, column));
+        return cache.containsKey(new TileCell(zoom, row, column));
     }
 
     public TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size) {

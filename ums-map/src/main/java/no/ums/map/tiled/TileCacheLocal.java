@@ -21,7 +21,7 @@ public class TileCacheLocal extends AbstractTileCache {
     }
 
     @Override
-    protected Image getImage(Cell tile) {
+    protected Image getImage(TileCell tile) {
         if (getFile(tile).exists()) {
             return readImage(getFile(tile));
         }
@@ -47,7 +47,7 @@ public class TileCacheLocal extends AbstractTileCache {
         }
     }
 
-    private File getFile(Cell tile) {
+    private File getFile(TileCell tile) {
         return getFile(base, tile.getZoom(), tile.getRow(), tile.getColumn());
     }
 

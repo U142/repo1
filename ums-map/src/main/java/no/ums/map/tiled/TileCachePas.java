@@ -19,7 +19,7 @@ public class TileCachePas extends AbstractTileCache {
     }
 
     @Override
-    protected Image getImage(Cell input) {
+    protected Image getImage(TileCell input) {
         // https://api.fleximap.com/servlet/FlexiMap?
                 // OID=UMS_TEST&
                 // UID=UMS&

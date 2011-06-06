@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -20,7 +19,7 @@ public abstract class AbstractTileCacheUri extends AbstractTileCache {
     }
 
     @Override
-    protected Image getImage(Cell input) {
+    protected Image getImage(TileCell input) {
         final URI uri = createUri(input.getZoom(), input.getRow(), input.getColumn());
         try {
             final URL url = uri.toURL();

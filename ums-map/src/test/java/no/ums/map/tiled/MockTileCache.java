@@ -13,7 +13,7 @@ public class MockTileCache extends AbstractTileCache {
     }
 
     @Override
-    protected Image getImage(Cell input) {
+    protected Image getImage(TileCell input) {
         return new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
     }
 }
