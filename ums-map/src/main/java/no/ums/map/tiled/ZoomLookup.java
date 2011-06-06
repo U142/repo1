@@ -45,6 +45,15 @@ public class ZoomLookup {
         return tiles;
     }
 
+    public LonLat getTopLeft(int row, int column) {
+        return getLonLat(column*tileSize, row*tileSize);
+    }
+
+    public LonLat getBottomRight(int row, int column) {
+        return getLonLat(column*tileSize+tileSize-1, row*tileSize+tileSize-1);
+    }
+
+
     public Point getPoint(LonLat ll) {
         int e = (int) Math.round(maxPos/2 + ll.getLon() * bc);
         double f = Math.min(Math.max(Math.sin(DEG_TO_RAD * ll.getLat()), -0.9999), 0.9999);
