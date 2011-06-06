@@ -37,19 +37,22 @@ public class SoundRecorder extends Thread {
     protected static boolean LINE_AVAILABLE = true;
     
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
-    	//throws Exception
+    	throws Exception
     {
+    	AUDIOFORMAT = audioFormat;
     	if(AUDIOLINE==null && LINE_AVAILABLE)
     	{    		
     		AudioFormat [] formatsToTest = new AudioFormat [] {
-    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, true),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false),
     				new AudioFormat(8000.0F, 8, 1, true, false),
     				new AudioFormat(8000.0F, 16, 1, true, false),
     				new AudioFormat(8000.0F, 8, 1, false, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000.0F, 16, 1, 2, 8000.0F, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false),    				
-    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false),    				
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false),   
+    				//big endians
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, true),
+    				new AudioFormat(8000.0F, 8, 1, false, true),
     		}; 
     		//audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
 	        try
@@ -57,11 +60,11 @@ public class SoundRecorder extends Thread {
 	        	for(AudioFormat f : formatsToTest)
 	        	{
 	        		DataLine.Info info = new DataLine.Info(TargetDataLine.class, f);
+        			AUDIOFORMAT = f;
 	        		//if(AudioSystem.isLineSupported(info))
 	        		try
 	        		{
 	        			AUDIOLINE = (TargetDataLine)AudioSystem.getLine(info);
-	        			AUDIOFORMAT = f;
 			        	return (LINE_AVAILABLE = true);
 	        		}
 	        		catch(Exception e)
@@ -72,14 +75,14 @@ public class SoundRecorder extends Thread {
 	        	}
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	//throw new IllegalArgumentException("No compatible audio line found");
+	        	throw new IllegalArgumentException("No compatible audio line found");
 	        }
 	        catch(Exception err)
 	        {
 	        	err.printStackTrace();
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	//throw err;
+	        	throw err;
 	        }
 	        finally
 	        {

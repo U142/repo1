@@ -106,7 +106,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		}
 		catch(IllegalArgumentException e)
 		{
-            JOptionPane.showMessageDialog(null, e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this.getRootPane(), e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
             this.setEnabled(false);
 		}
 		catch(Exception e)
