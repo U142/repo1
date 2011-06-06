@@ -1,9 +1,11 @@
 package no.ums.pas.maps.defines;
 
+import com.google.common.base.Preconditions;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.tools.Timeout;
 
+import javax.annotation.Nonnull;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -99,9 +101,9 @@ public class Houses {
 		
 	}
 	
-	private void add_house(HouseItem house)
+	private void add_house(@Nonnull HouseItem house)
 	{
-		m_houses.add(house);
+		m_houses.add(Preconditions.checkNotNull(house, "house cannot be null"));
 	}
 	public void update_statuscolor(int n_code, Color col)
 	{
@@ -293,6 +295,7 @@ public class Houses {
 		for(int i=0; i < get_houses().size(); i++)
 		{
 			current = get_houses().get(i);
+            if (current == null) continue;
 			Dimension p = Variables.getNavigation().coor_to_screen(current.get_lon(), current.get_lat(), true);
 			current.set_screencoords(p);
 			
