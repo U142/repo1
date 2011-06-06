@@ -27,22 +27,25 @@ public class SoundRecorder extends Thread {
     public static final int RECTYPE_OUTPUTSTREAM = 2;
     private static String vocTempPath;
 
+    public float getMicLevel()
+    {
+    	return AUDIOLINE.getLevel();
+    }
 
     protected static TargetDataLine AUDIOLINE = null;
     protected static AudioFormat AUDIOFORMAT = null;
     protected static boolean LINE_AVAILABLE = true;
     
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
-    	throws Exception
+    	//throws Exception
     {
     	if(AUDIOLINE==null && LINE_AVAILABLE)
-    	{
-    		AUDIOFORMAT = audioFormat;
-    		
+    	{    		
     		AudioFormat [] formatsToTest = new AudioFormat [] {
+    				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, true),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false),
-    				new AudioFormat(8000.0F, 16, 1, true, false),
     				new AudioFormat(8000.0F, 8, 1, true, false),
+    				new AudioFormat(8000.0F, 16, 1, true, false),
     				new AudioFormat(8000.0F, 8, 1, false, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000.0F, 16, 1, 2, 8000.0F, false),
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false),    				
@@ -54,22 +57,29 @@ public class SoundRecorder extends Thread {
 	        	for(AudioFormat f : formatsToTest)
 	        	{
 	        		DataLine.Info info = new DataLine.Info(TargetDataLine.class, f);
-	        		if(AudioSystem.isLineSupported(info))
+	        		//if(AudioSystem.isLineSupported(info))
+	        		try
 	        		{
 	        			AUDIOLINE = (TargetDataLine)AudioSystem.getLine(info);
 	        			AUDIOFORMAT = f;
 			        	return (LINE_AVAILABLE = true);
 	        		}
+	        		catch(Exception e)
+	        		{
+	        			e.printStackTrace();
+	        			System.out.println(e.getMessage());
+	        		}
 	        	}
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	throw new IllegalArgumentException("No compatible audio line found");
+	        	//throw new IllegalArgumentException("No compatible audio line found");
 	        }
-	        catch(Exception e)
+	        catch(Exception err)
 	        {
+	        	err.printStackTrace();
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	throw e;
+	        	//throw err;
 	        }
 	        finally
 	        {
@@ -253,7 +263,7 @@ public class SoundRecorder extends Thread {
 
     public void init_oscilliator() {
         if (m_osc_callback != null)
-            m_osc_callback.actionPerformed(new ActionEvent(new OscillatorProperties(1000.0F, 0.7F, audioFormat), ActionEvent.ACTION_PERFORMED, "act_oscillator_init"));
+            m_osc_callback.actionPerformed(new ActionEvent(new OscillatorProperties(AUDIOLINE, 1000.0F, 0.7F, audioFormat), ActionEvent.ACTION_PERFORMED, "act_oscillator_init"));
     }
 
     class LineReader implements LineListener {
@@ -320,16 +330,12 @@ public class SoundRecorder extends Thread {
         	SoundRecorder.InitTargetDataLine(audioFormat);
             if(AUDIOLINE!=null)
             {
-        		//AUDIOLINE = null;
-        		//Mixer.Info[] lines = AudioSystem.getMixerInfo();
-    			//AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 1, 2, 44100.0F, false);
     			try
     			{
-    				//InitTargetDataLine(audioFormat);
     				if(!AUDIOLINE.isOpen())
     				{
-    					//AUDIOLINE.open();
-                    	AUDIOLINE.open(AUDIOFORMAT);
+    					AUDIOLINE.open();
+                    	//AUDIOLINE.open(AUDIOFORMAT);
                     	System.out.println("Audioline opened");
     				}
     				//if(!AUDIOLINE.isActive())

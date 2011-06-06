@@ -1042,7 +1042,7 @@ public class SendController implements ActionListener {
 				
 				WSFillLogoninfo.fill(logoninfo, Variables.getUserInfo());
 				
-				ExecResponse ar = myService.getParmwsSoap12().execEventV4(Long.parseLong(a.getEventPk().substring(1)), logoninfo, sz_function, "0", "0");
+				ExecResponse ar = myService.getParmwsSoap12().execEventV3(Long.parseLong(a.getEventPk().substring(1)), logoninfo, sz_function, "0", "0");
 				res = new SoapExecAlert("0", "0", null).newSnapAlertResult();
 				res.l_execpk = ar.getLExecpk();
 				//res.l_projectpk = ar.getLProjectpk();

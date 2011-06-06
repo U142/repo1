@@ -1,6 +1,8 @@
 package no.ums.pas.sound;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
+import javax.sound.sampled.TargetDataLine;
 import javax.swing.JProgressBar;
 
 
@@ -25,15 +27,18 @@ public class Oscillator
 	JProgressBar m_ampl ;
 	int m_n_oscilliate_update;
 	int m_n_oscilliate_max;
+	TargetDataLine dataLine;
 	public JProgressBar get_ampl() { return m_ampl; }
 	
 	public Oscillator(
+			TargetDataLine dataLine,
 			  float fSignalFrequency,
 			  float fAmplitude,
 			  AudioFormat audioFormat,
 			  int oscilliate_max,
 			  int oscilliate_update)
 	{
+		this.dataLine = dataLine;
 		m_n_oscilliate_max = oscilliate_max;
 		m_format = audioFormat;
 		m_n_oscilliate_update = oscilliate_update;
@@ -64,80 +69,16 @@ public class Oscillator
 		
 		// length of one period in frames
 		int nBufferLength = nPeriodLengthInFrames * getFormat().getFrameSize();
-		//m_abData = new byte[nBufferLength];
-		//for (int nFrame = 0; nFrame < nPeriodLengthInFrames; nFrame++)
 		for (int nFrame = 0; nFrame*getFormat().getFrameSize() < lLength; nFrame+=getFormat().getFrameSize())//=getFormat().getFrameSize())
 		{
-			/**	The relative position inside the period
-				of the waveform. 0.0 = beginning, 1.0 = end
-			*/
-			/*float	fPeriodPosition = (float) nFrame / (float) nPeriodLengthInFrames;
-			float	fValue = 0;
-			switch (nWaveformType)
-			{
-			case WAVEFORM_SINE:
-				fValue = (float) Math.sin(fPeriodPosition * 2.0 * Math.PI);
-				break;
-
-			case WAVEFORM_SQUARE:
-				fValue = (fPeriodPosition < 0.5F) ? 1.0F : -1.0F;
-				break;
-
-			case WAVEFORM_TRIANGLE:
-				if (fPeriodPosition < 0.25F)
-				{
-					fValue = 4.0F * fPeriodPosition;
-				}
-				else if (fPeriodPosition < 0.75F)
-				{
-					fValue = -4.0F * (fPeriodPosition - 0.5F);
-				}
-				else
-				{
-					fValue = 4.0F * (fPeriodPosition - 1.0F);
-				}
-				break;
-
-			case WAVEFORM_SAWTOOTH:
-				if (fPeriodPosition < 0.5F)
-				{
-					fValue = 2.0F * fPeriodPosition;
-				}
-				else
-				{
-					fValue = 2.0F * (fPeriodPosition - 1.0F);
-				}
-				break;
-			}
-			int	nValue = Math.round(fValue * fAmplitude);*/
-			int nBaseAddr = (nFrame);// * getFormat().getFrameSize();
-			// this is for 16 bit stereo, little endian
-			/*m_ret[0] = (byte) (m_abData[nBaseAddr + 0] * nValue & 0xFF);
-			m_ret[1] = (byte) (m_abData[nBaseAddr + 1] * (nValue >>> 8) & 0xFF);
-			m_ret[2] = (byte) (m_abData[nBaseAddr + 2] * nValue & 0xFF);
-			m_ret[3] = (byte) (m_abData[nBaseAddr + 3] * (nValue >>> 8) & 0xFF);
-
-			(m_abData[nBaseAddr + 0] + fValue);
-			(m_abData[nBaseAddr + 1] + fValue);
-			(m_abData[nBaseAddr + 2] + fValue);
-			(m_abData[nBaseAddr + 3] + fValue);
-		*/
-			//m_ampl.setValue(getShort(m_abData[nBaseAddr + 0], m_abData[nBaseAddr + 1]) + getShort(m_abData[nBaseAddr + 2],m_abData[nBaseAddr + 3]));
-			//f_total += Math.abs(getShort(m_abData[nBaseAddr + 0], m_abData[nBaseAddr + 1]));// + getShort(m_abData[nBaseAddr + 2],m_abData[nBaseAddr + 3]));
-			double [] d_strength = frameToSignedDoubles(m_abData, 1);
-			/*if(d_strength[0] > 0.2)
-				System.out.println(d_strength[0]);*/
-			f_total += (float)((Math.abs(d_strength[0])) * m_n_oscilliate_max * 20); //+ d_strength[1]) * m_n_oscilliate_max;
+			double [] d_strength = frameToSignedDoubles(m_abData, m_format.getChannels());
+			f_total += (float)((Math.abs(d_strength[0])) ); //+ d_strength[1]) * m_n_oscilliate_max;
 			f_samples++;
-			//System.out.println(m_ret[0] + " " + m_ret[1] + " " + m_ret[2] + " " + m_ret[3]);
-			//System.out.println(getShort(m_abData[nBaseAddr + 1], m_abData[nBaseAddr + 0]) + " " + getShort(m_abData[nBaseAddr + 3],m_abData[nBaseAddr + 2]));
-			//System.out.println(getShort(m_ret[0], m_ret[1]) + " " + getShort(m_ret[2],m_ret[3]));
 		}
 		long n_tick = System.currentTimeMillis();
 		if(n_tick - n_lastoscupd > m_n_oscilliate_update) {
 			n_lastoscupd = n_tick;
-			m_ampl.setValue((int)(f_total / f_samples));
-			//System.out.println((int)(f_total / f_samples));
+			m_ampl.setValue((int)(f_total * m_n_oscilliate_max / f_samples));
 			f_total = 0;
 			f_samples = 0;
 		}
@@ -158,8 +99,50 @@ public class Oscillator
 	
 	public double[] frameToSignedDoubles(byte[] b, int n_channels) {
 		double[] d = new double[n_channels];
-		for (int cc = 0; cc < n_channels; cc++) {
-			d[cc] = (b[cc*2+1]*256 + (b[cc*2] & 0xFF))/32678.0;
+		boolean littleEndian = !m_format.isBigEndian();
+		double peak = 0;
+		int ampl = 8;
+		boolean bIsSigned = m_format.getEncoding()==Encoding.PCM_SIGNED;
+		if(m_format.getSampleSizeInBits()==8)
+		{
+			for(int i=0; i < b.length-1; i++)
+			{
+				double sample = 128-Math.abs(b[i]);//Math.abs(128.0 + b[i]);
+				if(sample>peak)
+					peak = sample;
+			}
+			d[0] = peak / (256.0/ampl); //peak/(1<<8);
+		}
+		else if(m_format.getSampleSizeInBits()==16)
+		{
+
+			for(int i=0; i < b.length-1; i+=2)
+			{
+				//double sample = 128-Math.abs(b[i]);//Math.abs(128.0 + b[i]);
+				//if(sample>peak)
+				//	peak = sample;
+				int low = b[i];
+				int high = b[i+1];
+				int sample = (littleEndian ? (high << 8) + (low & 0x00ff) : (low << 8) + (high & 0x00ff));
+				if(sample>peak)
+					peak = sample;
+			}
+			d[0] = peak / (65536.0 / ampl); //peak/(1<<8);
+
+			/*if(littleEndian)
+			{
+				//d[cc] = (b[cc*2]*256 + (b[cc*2+1])) / 65536.0;
+				d[cc] = 128+getShort(b[cc*2], b[cc*2+1]);
+				int sValue = (b[cc] + b[cc+1] << 8);
+				d[cc] = sValue / 65536.0;
+				d[cc] = (b[cc*2]*256 + (b[cc*2+1] & 0xFF))/65536.0;
+				d[cc] = (b[cc*2] & 0xFF + (b[cc*2+1] * 256))/65536.0;
+			}
+			else
+			{
+				d[cc] = getShort(b[cc*2+1], b[cc*2]);
+				
+			}*/
 		}
 		return d;
 	}	

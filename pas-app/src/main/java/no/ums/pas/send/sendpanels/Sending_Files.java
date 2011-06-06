@@ -201,7 +201,7 @@ public class Sending_Files extends DefaultPanel {
 			if(m_oscillator==null) {
 				try {
 					OscillatorProperties prop = (OscillatorProperties)e.getSource();
-					m_oscillator = new Oscillator(prop.getSignalFrequency(), prop.getAmplitude(), prop.getAudioFormat(),500, 100);
+					m_oscillator = new Oscillator(prop.getDataLine(), prop.getSignalFrequency(), prop.getAmplitude(), prop.getAudioFormat(),500, 100);
 					m_rec.getMixer().setOscillator(m_oscillator.get_ampl());   
 					
 				} catch(Exception err) {
