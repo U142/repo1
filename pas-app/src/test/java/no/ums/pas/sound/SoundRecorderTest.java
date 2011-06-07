@@ -13,8 +13,16 @@ import javax.sound.sampled.Port;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.Port.Info;
 
+import org.junit.Test;
+
 public class SoundRecorderTest {
 
+	@Test
+	public void testNothing()
+	{
+		
+	}
+	
 	/**
 	 * @param args
 	 */
