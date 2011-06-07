@@ -1,5 +1,7 @@
 package no.ums.pas.core.controllers;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.pas.PAS;
@@ -33,7 +35,9 @@ public class HouseController extends Controller {
 	public static final int HOUSE_DOWNLOAD_FINISHED_	= 2;
 	public static final int HOUSE_DOWNLOAD_NO_			= 4;
 	public static final int HOUSE_DOWNLOAD_DISABLED_	= 8;
-	
+
+    private static final Log log = UmsLog.getLogger(HouseController.class);
+
 	private NavStruct m_nav;	
 	private NavStruct get_nav() { return m_nav; }
 	private boolean bShow = true;

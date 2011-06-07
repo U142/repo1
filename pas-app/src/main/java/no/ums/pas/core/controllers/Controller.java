@@ -10,6 +10,8 @@
 
 package no.ums.pas.core.controllers;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.Houses;
@@ -28,7 +30,9 @@ import java.util.Calendar;
 
 
 public abstract class Controller implements ActionListener {
-	
+
+    private static final Log log = UmsLog.getLogger(Controller.class);
+
 	/*public static final int ADR_TYPES_PRIVATE_ = 1;
 	public static final int ADR_TYPES_COMPANY_ = 2;
 	public static final int ADR_TYPES_MOBILE_  = 4;
@@ -180,6 +184,7 @@ public abstract class Controller implements ActionListener {
 			}
 			catch(Exception e)
 			{
+                log.error("Error when finding house for pos x: %d y: %d", dim.width, dim.height, e);
 				e.printStackTrace();
 			}
 			if(n_count > 0) {
