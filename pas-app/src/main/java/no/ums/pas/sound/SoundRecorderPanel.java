@@ -1,5 +1,7 @@
 package no.ums.pas.sound;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
@@ -16,6 +18,9 @@ import javax.swing.JSlider;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -27,6 +32,7 @@ import javax.swing.Timer;
 
 
 public class SoundRecorderPanel extends DefaultPanel  {
+	private static final Log log = UmsLog.getLogger(SoundRecorderPanel.class);
 	public static final long serialVersionUID = 1;
 	public static final int MODE_INIT_ = 0;
     public static final int MODE_PLAY_ = 1;
@@ -107,6 +113,13 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		catch(IllegalArgumentException e)
 		{
             JOptionPane.showMessageDialog(this.getRootPane(), e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            MixerLinesController controller = new MixerLinesController();
+            String soundBoard = controller.queryMixersAndLines();
+            log.error(e.getMessage());
+            log.error(soundBoard);
+        	new MixerLinesView(null, controller).showDlg();
+        	Transferable str = new StringSelection(soundBoard);
+        	Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
             this.setEnabled(false);
 		}
 		catch(Exception e)

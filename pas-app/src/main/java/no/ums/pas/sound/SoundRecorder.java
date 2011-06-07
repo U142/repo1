@@ -13,6 +13,10 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.Port;
 import javax.sound.sampled.TargetDataLine;
+
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -23,6 +27,7 @@ import java.io.OutputStream;
 
 
 public class SoundRecorder extends Thread {
+	private static final Log log = UmsLog.getLogger(SoundRecorder.class);
     public static final int RECTYPE_FILE = 1;
     public static final int RECTYPE_OUTPUTSTREAM = 2;
     private static String vocTempPath;
@@ -35,6 +40,9 @@ public class SoundRecorder extends Thread {
     protected static TargetDataLine AUDIOLINE = null;
     protected static AudioFormat AUDIOFORMAT = null;
     protected static boolean LINE_AVAILABLE = true;
+    
+
+    
     
     public static boolean InitTargetDataLine(AudioFormat audioFormat)
     	throws Exception
@@ -53,6 +61,7 @@ public class SoundRecorder extends Thread {
     				//big endians
     				new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, true),
     				new AudioFormat(8000.0F, 8, 1, false, true),
+    				
     		}; 
     		//audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
 	        try
@@ -71,6 +80,7 @@ public class SoundRecorder extends Thread {
 	        		{
 	        			e.printStackTrace();
 	        			System.out.println(e.getMessage());
+	        			log.warn(e.getMessage());
 	        		}
 	        	}
 	        	LINE_AVAILABLE = false;
