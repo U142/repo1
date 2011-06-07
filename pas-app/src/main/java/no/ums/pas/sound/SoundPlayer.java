@@ -1,8 +1,11 @@
 package no.ums.pas.sound;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextLabel;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,6 +28,8 @@ import java.nio.ByteBuffer;
 
 
 public class SoundPlayer {
+	private static final Log log = UmsLog.getLogger(SoundPlayer.class);
+	
 	String m_sz_filename;
 	Clip clip;
 	boolean playing = false;
@@ -87,37 +92,58 @@ public class SoundPlayer {
 	    // of cumbersome.  The following lines do what we need.
 		AudioInputStream ain;
         DataLine.Info info;
+  		AudioFormat audioFormat = SoundRecorder.AUDIOFORMAT;
 		if(f!=null && f.exists()) {
 			ain = AudioSystem.getAudioInputStream(f);
-	        info =
-	            new DataLine.Info(Clip.class,ain.getFormat( ));
+			audioFormat = ain.getFormat();
+	        info = new DataLine.Info(Clip.class, audioFormat);
 		}
 		else {
-	  		//AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
-	  		AudioFormat audioFormat = SoundRecorder.AUDIOFORMAT;//new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 22050.0F, 16, 1, 2, 22050.0F, false);
-			ain = AudioSystem.getAudioInputStream(is);
-			//audioFormat = AudioSystem.getAudioFileFormat(ain).getFormat();
-	        info = new DataLine.Info(Clip.class,audioFormat);
+	  		ain = AudioSystem.getAudioInputStream(is);
+	  		audioFormat = ain.getFormat();
+	        info = new DataLine.Info(Clip.class, audioFormat);
+	  		if(!AudioSystem.isLineSupported(info))
+	  		{
+	  			System.out.println(ain.getFormat().toString() + " not supported");
+	  		}
 		}
 	    try {
 	        clip = (Clip) AudioSystem.getLine(info);
-	    	//clip = (Clip)SoundRecorder.AUDIOLINE;
 	        clip.open(ain);
-	        //AudioSystem.
+	    	m_panel.setEnabled(true);
+	    	m_panel.setAudioFormatText(audioFormat);
+	    }
+	    catch(Exception e)
+	    {
+	    	m_panel.setEnabled(false);
+	        StringBuilder sb = new StringBuilder();
+	        m_panel.setAudioFormatText_Error("Unable to playback audio-clip, format not supported");
+	        sb.append("Unable to playback audio-clip, format not supported");
+	        sb.append("\n");
+	        sb.append("\tEncoding   = " + audioFormat.getEncoding() + "\n");
+	        sb.append("\tChannels   = " + audioFormat.getChannels() + "\n");
+	        sb.append("\tFrameRate  = " + audioFormat.getFrameRate() + "\n");
+	        sb.append("\tFrameSize  = " + audioFormat.getFrameSize() + "\n");
+	        sb.append("\tSampleRate = " + audioFormat.getSampleRate() + "\n");
+	        sb.append("\tSampleBits = " + audioFormat.getSampleSizeInBits() + "\n");
+	        sb.append("\tBigEndian  = " + audioFormat.isBigEndian() + "\n");
+	        log.error(sb.toString());	    	
 	    }
 	    finally { // We're done with the input stream.
 	        ain.close( );
 	    }
 	    // Get the clip length in microseconds and convert to milliseconds
 	    audioLength = (int)(clip.getMicrosecondLength( )/1000);
-	
+	    final int audioLen = audioLength;
 	    if(progress!=null)
 	    {
 		    progress.setMaximum(audioLength);
 		    // Whenever the slider value changes, first update the time label.
 		    // Next, if we're not already at the new position, skip to it.
 		    if(changelistener!=null)
+		    {
 		    	progress.removeChangeListener(changelistener);
+		    }
 		    progress.addChangeListener(changelistener = new ChangeListener( ) {
 		            public void stateChanged(ChangeEvent e) {
 		                int value = progress.getValue( );
@@ -125,7 +151,7 @@ public class SoundPlayer {
 		                
 		                //set_timer(value/1000 + "." + (value%1000)/100);
 		                //set_timer(String.format("%s / %s", value/1000 + "." + (value%1000)/100, audioLength/1000 + "." + (audioLength%1000)/100));
-		                updateTimer(value, audioLength);
+		                updateTimer(value, audioLen);
 		                // If we're not already there, skip there.
 		                if (value != audioPosition) skip(value);
 		            }

@@ -39,8 +39,8 @@ public class SoundLibraryPanel extends DefaultPanel {
         get_parent().set_comstatus(Localization.l("sound_file_type_download_from_lib"));
         get_parent().get_loader().start_progress(0, Localization.l("common_downloading"));
 	}
-	public void stop_progress() {
-		get_playpanel().enable_player(true);
+	public void stop_progress(boolean fileOk) {
+		get_playpanel().enable_player(fileOk);
 		get_parent().reset_comstatus();
 		get_parent().get_loader().reset_progress();
 	}	
@@ -65,7 +65,9 @@ public class SoundLibraryPanel extends DefaultPanel {
 			try {
 				SoundlibFileWav f = (SoundlibFileWav)e.getSource();
 				if(f.m_f.exists())
+				{
 					m_playpanel.initialize_player(f.get_file().getPath(), true);
+				}
 				else {
 					URL url = new URL(PAS.get_pas().getVB4Url() + "/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
 					URLConnection urlConn = url.openConnection();
@@ -73,11 +75,14 @@ public class SoundLibraryPanel extends DefaultPanel {
                     
 					ByteBuffer bb = ByteBuffer.wrap(ByteStreams.toByteArray(urlConn.getInputStream()));
 					m_playpanel.initialize_player(bb, true);
+	    			stop_progress(true);
 				}
 					
 			} catch(Exception err) {
-                Error.getError().addError(Localization.l("common_error"),"Exception in actionPerformed",err,1);}
-			stop_progress();
+    			stop_progress(false);
+    			m_playpanel.setAudioFormatText_Error("File is not available on server");
+                Error.getError().addError(Localization.l("common_error"),"Exception in actionPerformed",err,1);
+            }
 		}
 	}
 	

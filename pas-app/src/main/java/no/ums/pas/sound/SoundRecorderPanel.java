@@ -117,9 +117,9 @@ public class SoundRecorderPanel extends DefaultPanel  {
             String soundBoard = controller.queryMixersAndLines();
             log.error(e.getMessage());
             log.error(soundBoard);
-        	new MixerLinesView(null, controller).showDlg();
-        	Transferable str = new StringSelection(soundBoard);
-        	Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+        	//new MixerLinesView(null, controller).showDlg();
+        	//Transferable str = new StringSelection(soundBoard);
+        	//Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
             this.setEnabled(false);
 		}
 		catch(Exception e)
@@ -133,14 +133,8 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		
 		m_txt_seconds.set_width(90);
 		m_txt_sampleinfo.setPreferredSize(new Dimension(350,30));
-        //m_txt_sampleinfo.setText(Localization.l("sound_panel_recorder_samplerate") + " " + (int)f_samplerate + Localization.l("sound_panel_recorder_samplesize") + " " + n_bits + "bit " + Localization.l("sound_panel_recorder_channels") + " " + (n_channels==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")));
-        m_txt_sampleinfo.setText("<html>" + 
-        		Localization.l("sound_panel_recorder_samplerate") + ": " + 
-        						(int)SoundRecorder.AUDIOFORMAT.getSampleRate() + "Hz " + 
-        						//Localization.l("sound_panel_recorder_samplesize") + ": " + 
-        						SoundRecorder.AUDIOFORMAT.getSampleSizeInBits() + "bit " + 
-        						//Localization.l("sound_panel_recorder_channels") + ": " + 
-        						(SoundRecorder.AUDIOFORMAT.getChannels()==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")) + "</html>");
+
+		setAudioFormatText(SoundRecorder.AUDIOFORMAT);
 		
 		if(b_line_ok) {
 			m_btn_play.setEnabled(true);
@@ -151,6 +145,22 @@ public class SoundRecorderPanel extends DefaultPanel  {
 			m_btn_record.setEnabled(false);
 		}
 		this.addComponentListener(this);
+	}
+	
+	public void setAudioFormatText(AudioFormat af)
+	{
+        m_txt_sampleinfo.setText("<html>" + 
+        		Localization.l("sound_panel_recorder_samplerate") + ": " + 
+        						(int)af.getSampleRate() + "Hz " + 
+        						//Localization.l("sound_panel_recorder_samplesize") + ": " + 
+        						af.getSampleSizeInBits() + "bit " + 
+        						//Localization.l("sound_panel_recorder_channels") + ": " + 
+        						(af.getChannels()==1 ? Localization.l("sound_panel_recorder_mono") : Localization.l("sound_panel_recorder_stereo")) + "</html>");		
+	}
+	
+	public void setAudioFormatText_Error(String s)
+	{
+		m_txt_sampleinfo.setText("<html><font color=red>" + s + "</font></html>");
 	}
 /*	public SoundRecorderPanel(ActionListener f, SendWindow parent) {
 		this(f);
