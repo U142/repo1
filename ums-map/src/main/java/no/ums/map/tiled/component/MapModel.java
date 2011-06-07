@@ -17,7 +17,7 @@ public class MapModel {
     private String layer;
     private boolean navigationEnabled = true;
     private int zoom = 1;
-    private LonLat topLeft;
+    private LonLat topLeft = new LonLat(0, 0);
 
     public LonLat getTopLeft() {
         return topLeft;
