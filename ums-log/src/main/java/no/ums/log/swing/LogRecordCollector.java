@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -66,23 +67,31 @@ public class LogRecordCollector extends Handler {
         String id = "";
         final List<LogRecord> allRecords = MODEL.getAllRecords();
         int lastThrowable = allRecords.size();
-        while (lastThrowable > 1 && allRecords.get(lastThrowable-1).getLevel().intValue() < Level.SEVERE.intValue()) {
+        while (lastThrowable > 0 && allRecords.get(lastThrowable-1).getLevel().intValue() < Level.SEVERE.intValue()) {
             lastThrowable--;
         }
+        // If there are no severe messages, include all log statements
+        if (lastThrowable == 0) {
+            lastThrowable = allRecords.size();
+        }
+        final long startTime = allRecords.get(lastThrowable - 1).getMillis() - TimeUnit.SECONDS.toMillis(10);
         for (LogRecord logRecord : allRecords.subList(0, lastThrowable)) {
-            pw.printf("%s %-6s %s\n\t%s\n", df.format(new Date(logRecord.getMillis())), logRecord.getLevel(), logRecord.getLoggerName(), logRecord.getMessage());
-            final Throwable throwable = logRecord.getThrown();
-            if (throwable != null) {
-                throwable.printStackTrace(pw);
-                final CRC32 crc32 = new CRC32();
-                final StackTraceElement[] stackTrace = throwable.getStackTrace();
-                for (int i=0; i<Math.min(5, stackTrace.length); i++) {
-                    crc32.update(stackTrace[i].getClassName().getBytes(Charsets.UTF_8));
-                    crc32.update(stackTrace[i].getMethodName().getBytes(Charsets.UTF_8));
-                    crc32.update(stackTrace[i].getLineNumber());
-                }
-                id = Integer.toString((int) crc32.getValue(), Character.MAX_RADIX);
+            // Only include logging statements from the last 10 seconds
+            if (logRecord.getMillis() > startTime) {
+                pw.printf("%s %-6s %s\n\t%s\n", df.format(new Date(logRecord.getMillis())), logRecord.getLevel(), logRecord.getLoggerName(), logRecord.getMessage());
+                final Throwable throwable = logRecord.getThrown();
+                if (throwable != null) {
+                    throwable.printStackTrace(pw);
+                    final CRC32 crc32 = new CRC32();
+                    final StackTraceElement[] stackTrace = throwable.getStackTrace();
+                    for (int i=0; i<Math.min(5, stackTrace.length); i++) {
+                        crc32.update(stackTrace[i].getClassName().getBytes(Charsets.UTF_8));
+                        crc32.update(stackTrace[i].getMethodName().getBytes(Charsets.UTF_8));
+                        crc32.update(stackTrace[i].getLineNumber());
+                    }
+                    id = Integer.toString((int) crc32.getValue(), Character.MAX_RADIX);
 
+                }
             }
         }
         pw.close();
