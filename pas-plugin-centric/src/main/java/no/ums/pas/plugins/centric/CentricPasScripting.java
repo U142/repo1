@@ -1,6 +1,7 @@
 package no.ums.pas.plugins.centric;
 
 import no.ums.pas.PAS;
+import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.controllers.StatusController;
@@ -1543,7 +1544,9 @@ public class CentricPasScripting extends DefaultPasScripting {
         newaccount.set_port(25);
         List<String> arr_adr = new ArrayList<String>();
         arr_adr.add("mh@ums.no");
-        new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concatErrorlist, callback).start();
+
+        final Smtp smtp = new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concatErrorlist, callback);
+        PasApplication.getInstance().getExecutor().submit(smtp);
         //new MailCtrl(newaccount.get_helo(), newaccount.get_mailserver(), newaccount.get_port(), newaccount.get_displayname(), newaccount.get_mailaddress(), arr_adr, callback, "PAS error", concatErrorlist);
         return arr_adr;
     }
