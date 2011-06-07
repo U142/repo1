@@ -64,7 +64,6 @@ public class LogRecordCollector extends Handler {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        String id = "";
         final List<LogRecord> allRecords = MODEL.getAllRecords();
         int lastThrowable = allRecords.size();
         while (lastThrowable > 0 && allRecords.get(lastThrowable-1).getLevel().intValue() < Level.SEVERE.intValue()) {
@@ -74,7 +73,21 @@ public class LogRecordCollector extends Handler {
         if (lastThrowable == 0) {
             lastThrowable = allRecords.size();
         }
-        final long startTime = allRecords.get(lastThrowable - 1).getMillis() - TimeUnit.SECONDS.toMillis(10);
+        final LogRecord lastRecord = allRecords.get(lastThrowable - 1);
+        final long startTime = lastRecord.getMillis() - TimeUnit.SECONDS.toMillis(10);
+        final String id;
+        if (lastRecord.getThrown() != null) {
+            final CRC32 crc32 = new CRC32();
+            final StackTraceElement[] stackTrace = lastRecord.getThrown().getStackTrace();
+            for (int i=0; i<Math.min(5, stackTrace.length); i++) {
+                crc32.update(stackTrace[i].getClassName().getBytes(Charsets.UTF_8));
+                crc32.update(stackTrace[i].getMethodName().getBytes(Charsets.UTF_8));
+                crc32.update(stackTrace[i].getLineNumber());
+            }
+            id = Integer.toString((int) crc32.getValue(), Character.MAX_RADIX);
+        } else {
+            id = "";
+        }
         for (LogRecord logRecord : allRecords.subList(0, lastThrowable)) {
             // Only include logging statements from the last 10 seconds
             if (logRecord.getMillis() > startTime) {
@@ -82,15 +95,6 @@ public class LogRecordCollector extends Handler {
                 final Throwable throwable = logRecord.getThrown();
                 if (throwable != null) {
                     throwable.printStackTrace(pw);
-                    final CRC32 crc32 = new CRC32();
-                    final StackTraceElement[] stackTrace = throwable.getStackTrace();
-                    for (int i=0; i<Math.min(5, stackTrace.length); i++) {
-                        crc32.update(stackTrace[i].getClassName().getBytes(Charsets.UTF_8));
-                        crc32.update(stackTrace[i].getMethodName().getBytes(Charsets.UTF_8));
-                        crc32.update(stackTrace[i].getLineNumber());
-                    }
-                    id = Integer.toString((int) crc32.getValue(), Character.MAX_RADIX);
-
                 }
             }
         }
