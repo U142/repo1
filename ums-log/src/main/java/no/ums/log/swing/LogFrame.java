@@ -74,6 +74,18 @@ public class LogFrame extends javax.swing.JFrame {
     private boolean scrollEnabled = true;
 
     /** Creates new form LogFrame2 */
+    private void windowClosed() {
+        LogRecordCollector.MODEL.clear();
+    }
+
+    private void btnSendMailActionPerformed() {
+        LogRecordCollector.sendMail();
+    }
+
+    private void btnClearActionPerformed() {
+        LogRecordCollector.MODEL.clear();
+    }
+
     public LogFrame() {
         initComponents();
         jComboBox1.setRenderer(new ListCellRenderer() {
@@ -142,20 +154,28 @@ public class LogFrame extends javax.swing.JFrame {
         jPanel2 = new JPanel();
         jScrollPane1 = new JScrollPane();
         jList1 = new JList();
-        closeButton = new JButton();
-        saveButton = new JButton();
+        btnClose = new JButton();
+        btnSave = new JButton();
         filterLabel = new JLabel();
         jComboBox1 = new JComboBox();
+        btnSendMail = new JButton();
+        btnClear = new JButton();
         logRecordDetail1 = new LogRecordDetail();
 
         //======== this ========
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                LogFrame.this.windowClosed();
+            }
+        });
         Container contentPane = getContentPane();
 
         //======== jSplitPane1 ========
         {
             jSplitPane1.setBorder(new EtchedBorder());
-            jSplitPane1.setDividerLocation(400);
+            jSplitPane1.setDividerLocation(500);
             jSplitPane1.setResizeWeight(1.0);
 
             //======== jPanel2 ========
@@ -180,18 +200,18 @@ public class LogFrame extends javax.swing.JFrame {
                     jScrollPane1.setViewportView(jList1);
                 }
 
-                //---- closeButton ----
-                closeButton.setText("Close");
-                closeButton.addActionListener(new ActionListener() {
+                //---- btnClose ----
+                btnClose.setText("Close");
+                btnClose.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         closeButtonActionPerformed(e);
                     }
                 });
 
-                //---- saveButton ----
-                saveButton.setText("Save");
-                saveButton.addActionListener(new ActionListener() {
+                //---- btnSave ----
+                btnSave.setText("Save");
+                btnSave.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         saveButtonActionPerformed(e);
@@ -209,6 +229,24 @@ public class LogFrame extends javax.swing.JFrame {
                     }
                 });
 
+                //---- btnSendMail ----
+                btnSendMail.setText("Send Mail");
+                btnSendMail.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        btnSendMailActionPerformed();
+                    }
+                });
+
+                //---- btnClear ----
+                btnClear.setText("Clear");
+                btnClear.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        btnClearActionPerformed();
+                    }
+                });
+
                 GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
                 jPanel2.setLayout(jPanel2Layout);
                 jPanel2Layout.setHorizontalGroup(
@@ -218,23 +256,29 @@ public class LogFrame extends javax.swing.JFrame {
                             .addComponent(filterLabel)
                             .addGap(18, 18, 18)
                             .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
-                            .addComponent(saveButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                            .addComponent(btnClear)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(closeButton)
+                            .addComponent(btnSendMail)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnSave)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnClose)
                             .addContainerGap())
-                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                 );
                 jPanel2Layout.setVerticalGroup(
                     jPanel2Layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(closeButton)
-                                .addComponent(saveButton)
+                                .addComponent(btnClose)
+                                .addComponent(btnSave)
                                 .addComponent(filterLabel)
-                                .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnSendMail)
+                                .addComponent(btnClear))
                             .addContainerGap())
                 );
             }
@@ -246,11 +290,11 @@ public class LogFrame extends javax.swing.JFrame {
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addComponent(jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE)
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
-                .addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -304,7 +348,7 @@ public class LogFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        LogRecordCollector.install();
+        LogRecordCollector.install(null);
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));
@@ -341,16 +385,22 @@ public class LogFrame extends javax.swing.JFrame {
         });
     }
 
+    public static LogFrame getInstance() {
+        return Holder.INSTANCE;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JSplitPane jSplitPane1;
     private JPanel jPanel2;
     private JScrollPane jScrollPane1;
     private JList jList1;
-    private JButton closeButton;
-    private JButton saveButton;
+    private JButton btnClose;
+    private JButton btnSave;
     private JLabel filterLabel;
     private JComboBox jComboBox1;
+    private JButton btnSendMail;
+    private JButton btnClear;
     private LogRecordDetail logRecordDetail1;
     // End of variables declaration//GEN-END:variables
 }
