@@ -6,6 +6,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileCell;
 import no.ums.map.tiled.ZoomLookup;
@@ -29,6 +31,7 @@ import java.util.concurrent.ConcurrentMap;
 public class HouseDownloadCache {
 
     private static final List<UAddress> EMPTY = Collections.emptyList();
+    private static final Log log = UmsLog.getLogger(HouseDownloadCache.class);
 
     public static class HouseInfo {
         private final LonLat pos;
@@ -60,6 +63,7 @@ public class HouseDownloadCache {
             if (tileCell.getZoom() < MIN_ZOOM || tileCell.getZoom() > MAX_ZOOM) {
                 return EMPTY;
             }
+            log.debug("Downloading Cell, zoom: %d, row: %d, column: %d", tileCell.getZoom(), tileCell.getRow(), tileCell.getColumn());
             final LonLat topLeft = zoomLookups[tileCell.getZoom()].getTopLeft(tileCell.getRow(), tileCell.getColumn());
             final LonLat bottomRight = zoomLookups[tileCell.getZoom()].getBottomRight(tileCell.getRow(), tileCell.getColumn());
 
@@ -85,7 +89,6 @@ public class HouseDownloadCache {
             mapAddressParams.setBBo(bottomRight.getLat());
             logonInfo.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
             logonInfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
-
             final UAddressList addressList = PasApplication.getInstance().getPaswsSoap().getAddressList(mapAddressParams, logonInfo);
             return addressList.getList().getUAddress();
         }

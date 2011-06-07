@@ -1,6 +1,8 @@
 package no.ums.pas.maps.defines;
 
 import com.google.common.base.Preconditions;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.tools.Timeout;
@@ -25,6 +27,9 @@ import java.util.Hashtable;
  * Contains a list of HouseItem. Parses an inhabitantlist to make a distinct list of coordinates.
  */
 public class Houses {
+
+    private static final Log log = UmsLog.getLogger(Houses.class);
+
 	private NavStruct m_bounds = null;
 	private ArrayList<HouseItem> m_houses = null;
 	private ArrayList<HouseItem> m_houses_paint = null;
@@ -295,7 +300,10 @@ public class Houses {
 		for(int i=0; i < get_houses().size(); i++)
 		{
 			current = get_houses().get(i);
-            if (current == null) continue;
+            if (current == null) {
+                log.error("Encountered null house at index "+i, new Exception("Test stack trace"));
+                continue;
+            }
 			Dimension p = Variables.getNavigation().coor_to_screen(current.get_lon(), current.get_lat(), true);
 			current.set_screencoords(p);
 			
