@@ -16,6 +16,10 @@ public class LogRecordModel extends AbstractListModel {
 
     private Level level = Level.SEVERE;
 
+    public List<LogRecord> getAllRecords() {
+        return new ArrayList<LogRecord>(content);
+    }
+
     @Override
     public int getSize() {
         return filteredList.size();
@@ -41,15 +45,19 @@ public class LogRecordModel extends AbstractListModel {
     void setLevel(Level level) {
         if (!this.level.equals(level)) {
             this.level = level;
-            int size = filteredList.size();
-            filteredList.clear();
-            if (size > 0) {
-                fireIntervalRemoved(this, 0, size - 1);
-            }
-            // Copy content to avoid concurrent modification exception.
-            for (LogRecord record : content.toArray(new LogRecord[content.size()])) {
-                internalAdd(record);
-            }
+            refresh();
+        }
+    }
+
+    private void refresh() {
+        int size = filteredList.size();
+        filteredList.clear();
+        if (size > 0) {
+            fireIntervalRemoved(this, 0, size - 1);
+        }
+        // Copy content to avoid concurrent modification exception.
+        for (LogRecord record : content.toArray(new LogRecord[content.size()])) {
+            internalAdd(record);
         }
     }
 
@@ -61,4 +69,8 @@ public class LogRecordModel extends AbstractListModel {
         return index < filteredList.size() && filteredList.get(index).getLevel().intValue() >= level1.intValue();
     }
 
+    public void clear() {
+        content.clear();
+        refresh();
+    }
 }
