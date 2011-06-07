@@ -623,7 +623,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		arr_adr.add("mh@ums.no");
 		//arr_adr.add("sa@ums.no");		
 		//new MailCtrl(account.get_helo(),account.get_mailserver(),account.get_port(),account.get_displayname(),account.get_mailaddress(),arr_adr, callback,"PAS error", concat_errorlist);
-		new Smtp(account.get_helo(), account.get_mailserver(), account.get_displayname(), arr_adr, "PAS error report", concat_errorlist, callback).start();
+        final Smtp smtp = new Smtp(account.get_helo(), account.get_mailserver(), account.get_mailaddress(), arr_adr, "PAS error report", concat_errorlist, callback);
+        PasApplication.getInstance().getExecutor().submit(smtp);
 		return arr_adr;
 	}
 

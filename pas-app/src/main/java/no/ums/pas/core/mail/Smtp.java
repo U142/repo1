@@ -1,12 +1,21 @@
 package no.ums.pas.core.mail;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.Properties;
 
-public class Smtp extends Thread
+public class Smtp implements Runnable
 {
 	public interface smtp_callback
 	{
@@ -35,6 +44,7 @@ public class Smtp extends Thread
 	public Smtp(String helo, String server,String tFrom,List<String> tTo,String sub,String sendData, smtp_callback callback)
 	{
 		mailServerHost = server;
+        subject = sub;
 		mailLock=this; // Thread Monitor passed constructor later. Default this Monitor.
 		from = tFrom;
 		to   = tTo;
@@ -88,10 +98,38 @@ public class Smtp extends Thread
 	     // We are closing so see ya later anyway
 	   }
 	}
-	
-	public void send()
+
+    @Override
+	public void run()
 	{
-	   if(!open())          //Yikes! get out of here.
+        // JavaMail kode
+//        try {
+//            final Properties props = new Properties();
+//            props.put("mail.smtp.host", mailServerHost);
+//            Session session = Session.getDefaultInstance(props);
+//            session.setDebug(true);
+//
+//            final MimeMultipart content = new MimeMultipart();
+//            final MimeBodyPart body = new MimeBodyPart();
+//            body.setText(mailData);
+//            content.addBodyPart(body);
+//
+//            Message msg = new MimeMessage(session);
+//            msg.setFrom(new InternetAddress(from));
+//
+//            for (String rcpt : to) {
+//                msg.addRecipient(Message.RecipientType.TO, new InternetAddress(rcpt));
+//            }
+//
+//            msg.setSubject(subject);
+//            msg.setContent(content);
+//
+//            Transport.send(msg);
+//        } catch (MessagingException e) {
+//            callback.failed(e.getMessage());
+//        }
+
+        if(!open())          //Yikes! get out of here.
 	      return;     
 	   try
 	   {
