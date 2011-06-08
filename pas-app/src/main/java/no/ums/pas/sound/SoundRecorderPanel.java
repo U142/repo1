@@ -11,6 +11,17 @@ import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextLabel;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
+import javax.sound.sampled.CompoundControl;
+import javax.sound.sampled.Control;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.FloatControl.Type;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
+import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.DataLine.Info;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -108,15 +119,18 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		setVisible(true);
 		//SoundRecorder.LINE_AVAILABLE = true;
 		try {
+
+
 			m_rec = new Record(sz_storagepath/*controller*/, RECTYPE, f, format);
 		}
 		catch(IllegalArgumentException e)
 		{
-            JOptionPane.showMessageDialog(this.getRootPane(), e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(this.getRootPane(), e.getMessage(), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
             MixerLinesController controller = new MixerLinesController();
             String soundBoard = controller.queryMixersAndLines();
-            log.error(e.getMessage());
-            log.error(soundBoard);
+            log.warn(e.getMessage());
+            log.warn(soundBoard);
+            setAudioFormatText_Error(e.getMessage());
         	//new MixerLinesView(null, controller).showDlg();
         	//Transferable str = new StringSelection(soundBoard);
         	//Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
@@ -134,11 +148,11 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		m_txt_seconds.set_width(90);
 		m_txt_sampleinfo.setPreferredSize(new Dimension(350,30));
 
-		setAudioFormatText(SoundRecorder.AUDIOFORMAT);
 		
 		if(b_line_ok) {
 			m_btn_play.setEnabled(true);
 			m_btn_record.setEnabled(true);
+			setAudioFormatText(SoundRecorder.AUDIOFORMAT);
 		}
 		else {
 			m_btn_play.setEnabled(false);

@@ -45,7 +45,7 @@ public class SoundLibraryPanel extends DefaultPanel {
         get_parent().get_loader().start_progress(0, Localization.l("common_downloading"));
 	}
 	public void stop_progress(boolean fileOk) {
-		get_playpanel().enable_player(fileOk);
+		//get_playpanel().m_btn_play.setEnabled(fileOk);
 		get_parent().reset_comstatus();
 		get_parent().get_loader().reset_progress();
 	}	
@@ -77,10 +77,24 @@ public class SoundLibraryPanel extends DefaultPanel {
 					URL url = new URL(PAS.get_pas().getVB4Url() + "/bbmessages/" + PAS.get_pas().get_userinfo().get_current_department().get_deptpk() + "/" + f.get_file().getName());
 					URLConnection urlConn = url.openConnection();
 					urlConn.setUseCaches(false);
-                    
-					ByteBuffer bb = ByteBuffer.wrap(ByteStreams.toByteArray(urlConn.getInputStream()));
+					ByteBuffer bb = null;
+					boolean bFailed = false;
+					Exception ex = null;
+					try
+					{
+						bb = ByteBuffer.wrap(ByteStreams.toByteArray(urlConn.getInputStream()));
+					}
+					catch(Exception err)
+					{
+						bFailed = true;
+						ex = err;
+					}
 					m_playpanel.initialize_player(bb, true);
-	    			stop_progress(true);
+	    			stop_progress(bb!=null);
+	    			if(bFailed)
+	    			{
+	    				throw ex;
+	    			}
 				}
 					
 			} catch(Exception err) {

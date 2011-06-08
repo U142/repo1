@@ -85,7 +85,7 @@ public class SoundRecorder extends Thread {
 	        	}
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	throw new IllegalArgumentException("No compatible audio line found");
+	        	throw new IllegalArgumentException("No microphone lines found");
 	        }
 	        catch(Exception err)
 	        {

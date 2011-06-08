@@ -28,9 +28,8 @@ import java.nio.ByteBuffer;
 
 
 public class SoundPlayer {
-
-    private static final Log log = UmsLog.getLogger(SoundPlayer.class);
-
+	private static final Log log = UmsLog.getLogger(SoundPlayer.class);
+	
 	String m_sz_filename;
 	Clip clip;
 	boolean playing = false;
@@ -58,7 +57,7 @@ public class SoundPlayer {
 					
 		} catch(Exception e) {
 			//Error.getError().addError("SoundPlayer","Exception in SoundPlayer",e,1);
-			log.warn(e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}	
 	public SoundPlayer(/*ByteArrayOutputStream os*/ByteBuffer buf, JSlider slider, SoundRecorderPanel rec_panel, 
@@ -66,14 +65,20 @@ public class SoundPlayer {
 		m_txt_seconds = txt_seconds;
 		progress = slider;
 		m_panel = rec_panel;
-		try {
-			//HttpPostForm.newInputStream();
-			//PipedInputStream pis = new PipedInputStream(os);
-			ByteArrayInputStream is = new ByteArrayInputStream(buf.array());
-			//ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+		ByteArrayInputStream is = null;
+		if(buf!=null)
+		{
+			is = new ByteArrayInputStream(buf.array());
+		}
+		try
+		{
 			player_ctrl = new SoundPlayer(null, is, slider, rec_panel, txt_seconds);
 		} catch(Exception e) {
 			log.warn(e.getMessage(), e);
+		}
+		catch(Exception e)
+		{
+			
 		}
 	}
 	void set_timer(String sz_time) {
@@ -91,59 +96,95 @@ public class SoundPlayer {
 		m_panel = rec_panel;
 	    // Getting a Clip object for a file of sampled audio data is kind
 	    // of cumbersome.  The following lines do what we need.
-		AudioInputStream ain;
-        DataLine.Info info;
+		boolean bValidAudioInputStream = false;
+		AudioInputStream ain = null;
+        DataLine.Info info = null;
   		AudioFormat audioFormat = SoundRecorder.AUDIOFORMAT;
 		if(f!=null && f.exists()) {
-			ain = AudioSystem.getAudioInputStream(f);
-			audioFormat = ain.getFormat();
-	        info = new DataLine.Info(Clip.class, audioFormat);
+			try
+			{
+				ain = AudioSystem.getAudioInputStream(f);
+				audioFormat = ain.getFormat();
+		        info = new DataLine.Info(Clip.class, audioFormat);
+		        bValidAudioInputStream = true;
+			}
+			catch(Exception e)
+			{
+				log.error(e.getMessage()!=null ? e.getMessage() : "IOException opening file " + f.getPath());							
+			}
 		}
-		else {
-	  		ain = AudioSystem.getAudioInputStream(is);
-	  		audioFormat = ain.getFormat();
-	        info = new DataLine.Info(Clip.class, audioFormat);
+		else if(is!=null){
+			try
+			{
+		  		ain = AudioSystem.getAudioInputStream(is);
+		  		audioFormat = ain.getFormat();
+		        info = new DataLine.Info(Clip.class, audioFormat);
+		        bValidAudioInputStream = true;
+			}
+			catch(Exception e)
+			{
+				log.error(e.getMessage()!=null ? e.getMessage() : "IOException opening file " + f.getPath());							
+			}
+		}
+		if(ain!=null)
+		{
 	  		if(!AudioSystem.isLineSupported(info))
 	  		{
-	  			System.out.println(ain.getFormat().toString() + " not supported");
+	  			log.warn(ain.getFormat().toString() + " not supported");
+		        m_panel.m_btn_play.setEnabled(false);
 	  		}
+		    try {
+		        clip = (Clip) AudioSystem.getLine(info);
+		        clip.open(ain);
+		        m_panel.enable_player(true);
+		        m_panel.m_btn_play.setEnabled(true);
+		    	m_panel.setAudioFormatText(audioFormat);
+		    }
+		    catch(Exception e)
+		    {
+		    	m_panel.setEnabled(false);
+		        StringBuilder sb = new StringBuilder();
+		        m_panel.setAudioFormatText_Error("Unable to playback audio-clip, format not supported");
+		        sb.append("Unable to playback audio-clip, format not supported");
+		        sb.append("\n");
+		        sb.append("\tEncoding   = " + audioFormat.getEncoding() + "\n");
+		        sb.append("\tChannels   = " + audioFormat.getChannels() + "\n");
+		        sb.append("\tFrameRate  = " + audioFormat.getFrameRate() + "\n");
+		        sb.append("\tFrameSize  = " + audioFormat.getFrameSize() + "\n");
+		        sb.append("\tSampleRate = " + audioFormat.getSampleRate() + "\n");
+		        sb.append("\tSampleBits = " + audioFormat.getSampleSizeInBits() + "\n");
+		        sb.append("\tBigEndian  = " + audioFormat.isBigEndian() + "\n");
+		        log.error(sb.toString());	    	
+		    }
+		    finally { // We're done with the input stream.
+		        ain.close( );
+		    }
 		}
-	    try {
-	        clip = (Clip) AudioSystem.getLine(info);
-	        clip.open(ain);
-	    	m_panel.setEnabled(true);
-	    	m_panel.setAudioFormatText(audioFormat);
-	    }
-	    catch(Exception e)
-	    {
-	    	m_panel.setEnabled(false);
-	        StringBuilder sb = new StringBuilder();
-	        m_panel.setAudioFormatText_Error("Unable to playback audio-clip, format not supported");
-	        sb.append("Unable to playback audio-clip, format not supported");
-	        sb.append("\n");
-	        sb.append("\tEncoding   = " + audioFormat.getEncoding() + "\n");
-	        sb.append("\tChannels   = " + audioFormat.getChannels() + "\n");
-	        sb.append("\tFrameRate  = " + audioFormat.getFrameRate() + "\n");
-	        sb.append("\tFrameSize  = " + audioFormat.getFrameSize() + "\n");
-	        sb.append("\tSampleRate = " + audioFormat.getSampleRate() + "\n");
-	        sb.append("\tSampleBits = " + audioFormat.getSampleSizeInBits() + "\n");
-	        sb.append("\tBigEndian  = " + audioFormat.isBigEndian() + "\n");
-	        log.error(sb.toString());	    	
-	    }
-	    finally { // We're done with the input stream.
-	        ain.close( );
-	    }
+		else
+		{
+			m_panel.m_btn_play.setEnabled(false);
+		}
 	    // Get the clip length in microseconds and convert to milliseconds
-	    audioLength = (int)(clip.getMicrosecondLength( )/1000);
+	    if(clip!=null)
+	    {
+	    	audioLength = (int)(clip.getMicrosecondLength( )/1000);
+	    }
+	    else
+	    {
+	    	audioLength = 0;
+	    }
 	    final int audioLen = audioLength;
 	    if(progress!=null)
 	    {
 		    progress.setMaximum(audioLength);
 		    // Whenever the slider value changes, first update the time label.
 		    // Next, if we're not already at the new position, skip to it.
-		    if(changelistener!=null)
+		    //if(changelistener!=null)
 		    {
-		    	progress.removeChangeListener(changelistener);
+		    	for(ChangeListener cl : progress.getChangeListeners())
+		    	{
+		    		progress.removeChangeListener(cl);
+		    	}
 		    }
 		    progress.addChangeListener(changelistener = new ChangeListener( ) {
 		            public void stateChanged(ChangeEvent e) {
@@ -174,38 +215,50 @@ public class SoundPlayer {
     
     /** Start playing the sound at the current position */
     public void play( ) {
-        clip.start( );
-        timer.start( );
-        //play.setText("Stop");
-        playing = true;
+    	if(clip!=null)
+    	{
+	        clip.start( );
+	        timer.start( );
+	        //play.setText("Stop");
+	        playing = true;
+    	}
     }
 
     /** Stop playing the sound, but retain the current position */
     public void stop( ) {
-        timer.stop( );
-        clip.stop( );
-        //play.setText("Play");
-        playing = false;
+    	if(clip!=null)
+    	{
+	        timer.stop( );
+	        clip.stop( );
+	        //play.setText("Play");
+	        playing = false;
+    	}
     }
 
     /** Stop playing the sound and reset the position to 0 */
     public void reset( ) {
         stop( );
-        clip.setMicrosecondPosition(0);
-        audioPosition = 0; 
-        if(progress!=null)
-        	progress.setValue(0);
-        //btn_play.setText("Play");
-        //btn_play.setIcon(SoundRecorderPanel.MODE_PAUSE_);
-        if(m_panel!=null)
-        	m_panel.set_mode(SoundRecorderPanel.MODE_PAUSE_);
+        if(clip!=null)
+        {
+	        clip.setMicrosecondPosition(0);
+	        audioPosition = 0; 
+	        if(progress!=null)
+	        	progress.setValue(0);
+	        //btn_play.setText("Play");
+	        //btn_play.setIcon(SoundRecorderPanel.MODE_PAUSE_);
+	        if(m_panel!=null)
+	        	m_panel.set_mode(SoundRecorderPanel.MODE_PAUSE_);
+        }
     }
 
     /** Skip to the specified position */
     public void skip(int position) { // Called when user drags the slider
         if (position < 0 || position > audioLength) return;
         audioPosition = position;
-        clip.setMicrosecondPosition(position * 1000);
+        if(clip!=null)
+        {
+        	clip.setMicrosecondPosition(position * 1000);
+        }
         progress.setValue(position); // in case skip( ) is called from outside
     }
 
