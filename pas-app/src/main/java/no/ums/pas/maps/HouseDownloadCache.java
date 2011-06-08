@@ -50,7 +50,6 @@ public class HouseDownloadCache {
             if (tileCell.getZoom() < MIN_ZOOM || tileCell.getZoom() > MAX_ZOOM) {
                 return EMPTY;
             }
-            log.debug("Downloading Cell, zoom: %d, row: %d, column: %d", tileCell.getZoom(), tileCell.getRow(), tileCell.getColumn());
             final LonLat topLeft = zoomLookups[tileCell.getZoom()].getTopLeft(tileCell.getRow(), tileCell.getColumn());
             final LonLat bottomRight = zoomLookups[tileCell.getZoom()].getBottomRight(tileCell.getRow(), tileCell.getColumn());
 
@@ -76,6 +75,7 @@ public class HouseDownloadCache {
             mapAddressParams.setBBo(bottomRight.getLat());
             logonInfo.setSzStdcc(PAS.get_pas().get_userinfo().get_current_department().get_stdcc());
             logonInfo.setLDeptpk(PAS.get_pas().get_userinfo().get_current_department().get_deptpk());
+            log.trace("Downloading Cell, zoom: %d, row: %d, column: %d", tileCell.getZoom(), tileCell.getRow(), tileCell.getColumn());
             final UAddressList addressList = PasApplication.getInstance().getPaswsSoap().getAddressList(mapAddressParams, logonInfo);
             return addressList.getList().getUAddress();
         }
