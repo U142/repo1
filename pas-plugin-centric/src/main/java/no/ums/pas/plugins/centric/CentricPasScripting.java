@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
 import no.ums.pas.core.Variables;
@@ -48,6 +50,9 @@ import java.util.List;
 
 
 public class CentricPasScripting extends DefaultPasScripting {
+
+    private static final Log log = UmsLog.getLogger(CentricPasScripting.class);
+
     WMSLayerSelectorPanel wms_layer_selector = new WMSLayerSelectorPanel();
 
     MenuTimer m_menutimer = new MenuTimer();
@@ -91,7 +96,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public void startPlugin() {
         super.startPlugin();
-        System.out.println("CentricPasScripting loaded");
+        log.debug("CentricPasScripting loaded");
     }
 
     @Override
@@ -106,8 +111,8 @@ public class CentricPasScripting extends DefaultPasScripting {
 
     @Override
     protected void setSubPluginNames() {
-        System.out.println("***Using Plugins (CentricPasScripting)***");
-        System.out.println((this.plugin_AddressSearch = "no.ums.pas.plugins.centric.CentricAddressSearch"));
+        log.debug("***Using Plugins (CentricPasScripting)***");
+        log.debug((this.plugin_AddressSearch = "no.ums.pas.plugins.centric.CentricAddressSearch"));
     }
 
     @Override
@@ -115,10 +120,10 @@ public class CentricPasScripting extends DefaultPasScripting {
         super.onBeforeLogon();
         boolean b = new DisclaimerDialog().isConfirmed();
         if (!b) {
-            System.out.println("User denied Disclaimer");
+            log.debug("User denied Disclaimer");
             System.exit(0);
         }
-        System.out.println("User accepted Disclaimer");
+        log.debug("User accepted Disclaimer");
         return b;
     }
 
@@ -141,7 +146,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                       while(true)
                       {
                           Thread.sleep(10000);
-                          System.out.println("TRALLALA");
+                          log.debug("TRALLALA");
                       }
                   }
                   catch(Exception e)
@@ -358,7 +363,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                 for (int i = 0; i < list.length; i++) {
                     UBBNEWS bbn = (UBBNEWS) list[i];
                     this.setElementAt(bbn, i);
-                    //System.out.println("setElementAt " + i + " " + bbn.getLNewspk());
+                    //log.debug("setElementAt " + i + " " + bbn.getLNewspk());
                     recordset.put(genHashKey(bbn), bbn);
                 }
             }
@@ -368,7 +373,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             public void handleMessage(UBBNEWS b) {
                 if (b.getFActive() >= 1) //insert/update
                 {
-                    //System.out.println("newspk="+b.getLNewspk());
+                    //log.debug("newspk="+b.getLNewspk());
                     if (recordset.containsKey(genHashKey(b))) {
                         update(b);
                     } else {
@@ -400,7 +405,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                     super.remove(index);
                     if (recordset.containsKey(genHashKey(b))) {
                         recordset.remove(genHashKey(b));
-                        System.out.println("newspk " + b.getLNewspk() + " removed");
+                        log.debug("newspk " + b.getLNewspk() + " removed");
                     }
                 }
             }
@@ -410,7 +415,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                 int index = super.indexOf(original);
                 if (index >= 0) {
                     super.set(index, b);
-                    System.out.println("newspk " + b.getLNewspk() + " updated");
+                    log.debug("newspk " + b.getLNewspk() + " updated");
                     recordset.put(genHashKey(b), b);
                 }
             }
@@ -428,19 +433,19 @@ public class CentricPasScripting extends DefaultPasScripting {
                             {
                                 super.set(n, news);
                                 recordset.put(((UBBNEWS)arg1).getLNewspk(), arg1);
-                                System.out.println("newspk " + original.getLNewspk() + " updated");
+                                log.debug("newspk " + original.getLNewspk() + " updated");
                             }
                             else
                             {
                                 //to be deleted
                                 super.remove(n);
                                 recordset.remove(original.getLNewspk());
-                                System.out.println("newspk " + original.getLNewspk() + " deleted");
+                                log.debug("newspk " + original.getLNewspk() + " deleted");
                             }
                         }
                         else
                         {
-                            System.out.println("news " + original + " not found in list");
+                            log.debug("news " + original + " not found in list");
                         }
                     }
                     else*/
@@ -448,7 +453,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                     recordset.put(genHashKey((UBBNEWS) arg1), arg1);
                     //list.getDefaultModel().add(arg0, arg1);
                     super.add(arg0, arg1);
-                    System.out.println("newspk " + ((UBBNEWS) arg1).getLNewspk() + " inserted");
+                    log.debug("newspk " + ((UBBNEWS) arg1).getLNewspk() + " inserted");
                 }
             }
 
@@ -805,7 +810,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onAddPASComponents(final PAS p) {
 
-        System.out.println("onAddPASComponents");
+        log.debug("onAddPASComponents");
 
         /*centerpane.set_gridconst(0, centerpane.inc_panels(), 1, 1, GridBagConstraints.CENTER);
           centerpane.add(systemmessagepanel, centerpane.get_gridconst());
@@ -858,21 +863,21 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onStartParm() {
         //return super.onStartParm();
-        System.out.println("onStartParm - PARM is invalid in this plugin");
+        log.debug("onStartParm - PARM is invalid in this plugin");
         return false;
     }
 
     @Override
     public boolean onCloseParm() {
         //return super.onCloseParm();
-        System.out.println("onCloseParm - PARM is invalid in this plugin");
+        log.debug("onCloseParm - PARM is invalid in this plugin");
         return false;
     }
 
     @Override
     public boolean onRefreshParm() {
         //return super.onRefreshParm();
-        System.out.println("onRefreshParm - PARM is invalid in this plugin");
+        log.debug("onRefreshParm - PARM is invalid in this plugin");
         return false;
     }
 
@@ -887,7 +892,7 @@ public class CentricPasScripting extends DefaultPasScripting {
     @Override
     public boolean onSetAppTitle(PAS pas, String s, UserInfo userinfo) {
 //        boolean trainingmode = IsInTrainingMode(userinfo);
-        System.out.println("onSetAppTitle");
+        log.debug("onSetAppTitle");
         String maintitle = Localization.l("common_app_title");
         CentricStatusController sc = (CentricStatusController) PAS.get_pas().get_statuscontroller();
         if (sc != null) {
@@ -971,7 +976,7 @@ public class CentricPasScripting extends DefaultPasScripting {
         }
         try {//default to crossplatform LAF
 
-            System.out.println("Loading cross platform LAF");
+            log.debug("Loading cross platform LAF");
             Class cl = classloader.loadClass(UIManager.getCrossPlatformLookAndFeelClassName());
             LookAndFeel laf = (LookAndFeel) cl.newInstance();
             UIManager.setLookAndFeel(laf);

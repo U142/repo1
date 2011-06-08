@@ -1,7 +1,12 @@
 package no.ums.pas.parm.map;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 public class MapController {
-	
+
+    private static final Log log = UmsLog.getLogger(MapController.class);
+
 	private MapPanel m_map;
 	
 	public MapController(String[] args) {
@@ -16,7 +21,7 @@ public class MapController {
 			}
 		}
 		sz_sitename = "http://vb4utv/";
-		System.out.println("Using site: " + sz_sitename);
+		log.debug("Using site: " + sz_sitename);
 		m_map = new MapPanel(sz_sitename);
 		m_map.exec();
 	}

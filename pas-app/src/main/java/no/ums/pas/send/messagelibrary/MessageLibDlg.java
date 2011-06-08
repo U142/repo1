@@ -1,5 +1,7 @@
 package no.ums.pas.send.messagelibrary;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.ws.common.UBBMESSAGE;
@@ -19,6 +21,8 @@ import java.awt.event.ComponentListener;
 
 public class MessageLibDlg extends JDialog implements ComponentListener, ActionListener
 {
+    private static final Log log = UmsLog.getLogger(MessageLibDlg.class);
+
 	public static final String ACT_MESSAGE_SELECTED = "act_message_selected";
 	public static final String ACT_MESSAGE_SELECTION_CANCELLED = "act_message_selection_cancelled";
 	MessageLibPanel panel;
@@ -72,7 +76,7 @@ public class MessageLibDlg extends JDialog implements ComponentListener, ActionL
 		PAS.get_pas().get_settings().setMessageLibExplodedNodes(panel.treepanel.tree.getExplodedNodes());
 		panel.setVisible(false);
 		panel.Stop();
-		System.out.println("Updater stopped");
+		log.debug("Updater stopped");
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.localization.Localization;
@@ -14,6 +16,8 @@ import java.util.List;
 
 
 public class UserInfo extends Object implements Cloneable {
+
+    private static final Log log = UmsLog.getLogger(UserInfo.class);
 	
 	public enum SESSION_INACTIVE_REASON 
 	{

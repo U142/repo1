@@ -1,6 +1,8 @@
 package no.ums.pas.send;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -65,7 +67,9 @@ import java.util.List;
 
 
 public class SendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener {
-	
+
+    private static final Log log = UmsLog.getLogger(SendOptionToolbar.class);
+
 	public static final int SIZE_TXT			= 260;
 	public static final int SIZE_BUTTON_ICON	= 21;
 	public static final int SIZE_BUTTON_SMALL	= 25;
@@ -636,7 +640,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		if(m_btn_adrtypes_nofax.isSelected()) TYPES |= m_btn_adrtypes_nofax.get_adrtype();
 		TYPES = customizeSelections(TYPES);
 		set_addresstypes(TYPES);
-		System.out.println("Addresstypes = " + TYPES);
+		log.debug("Addresstypes = " + TYPES);
 
 		
 	}
@@ -1032,7 +1036,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_btn_adrtypes_cell_broadcast_voice.setSelected(false);
 		m_btn_adrtypes_nofax.setSelected(false);
 		
-		//System.out.println(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_cellbroadcast_rights());
+		//log.debug(PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_cellbroadcast_rights());
 		if(PAS.get_pas() != null && !PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management().cell_broadcast())
 			show_buttons(SendOptionToolbar.BTN_CELL_BROADCAST_,false);
 		
@@ -1352,7 +1356,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		//ActionEvent e = new ActionEvent(get_parent(), ActionEvent.ACTION_PERFORMED, "act_activate_sending");
 		//actionPerformed(e);
 		if(!get_parent().get_sendproperties().getClass().equals(SendPropertiesGIS.class)) {
-			System.out.println(m_radio_activate.getActionCommand());
+			log.debug(m_radio_activate.getActionCommand());
 			//m_radio_activate.doClick();
 		}
 	}
@@ -1393,7 +1397,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			try {
 				//this.gen_addresstypes();
 				
-				System.out.println("Addressfilter: " + this.get_addresstypes());
+				log.debug("Addressfilter: " + this.get_addresstypes());
 				e.setSource(get_parent());
 				//e.setSource(this);
 				switch(get_parent().get_sendproperties().get_sendingtype()) {
@@ -1462,7 +1466,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			get_callback().actionPerformed(e);
 		}
 		else if("act_find_sending".equals(e.getActionCommand())) {
-			System.out.println("SendOptionToolbar.act_find_sending");
+			log.debug("SendOptionToolbar.act_find_sending");
 			get_parent().goto_area();
 		}
 		else if("act_lock".equals(e.getActionCommand())) {
@@ -1524,13 +1528,13 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				}
 					//Variables.getSendController().remove_sending(this);
 					//PAS.get_pas().actionPerformed(new ActionEvent(obj, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
-				System.out.println("Adding sending " + obj.get_sendproperties().get_sendingname());
+				log.debug("Adding sending " + obj.get_sendproperties().get_sendingname());
 			
 			}
 			try {
 				//PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("ImportPolygon","Exception in actionPerformed",err,1);
 			}
@@ -1562,7 +1566,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				String sz_description = sosi.toString();
 				get_parent().get_sendproperties().set_sendingname((sosi.get_flater().get_current_flate().get_name().length() > 0 ? sosi.get_flater().get_current_flate().get_name() : sosi.get_flater().get_current_flate().get_objecttype()), sz_description);
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
 			}
@@ -1604,7 +1608,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 					} catch(Exception err) {
 						
 					}
-					System.out.println("SendOptionToolbar: " + list.size() + " lines");
+					log.debug("SendOptionToolbar: " + list.size() + " lines");
 				}
 			});
 		}

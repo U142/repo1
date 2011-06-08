@@ -1,5 +1,7 @@
 package no.ums.pas.importer;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.event.ActionEvent;
@@ -16,6 +18,9 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public abstract class FileParser extends Thread {
+
+    private static final Log log = UmsLog.getLogger(FileParser.class);
+    
 	int m_n_current_pos = 0;
 	protected String m_sz;
 	public String data() { return m_sz; }
@@ -132,13 +137,13 @@ public abstract class FileParser extends Thread {
 				try {
 					parse();
 				} catch(Exception e1) {
-					System.out.println(e1.getMessage());
+					log.debug(e1.getMessage());
 					e1.printStackTrace();
 					Error.getError().addError("FileParser","Exception in run",e1,1);
 				}
 			}
 		} catch(Exception e2) {
-			System.out.println(e2.getMessage());
+			log.debug(e2.getMessage());
 			e2.printStackTrace();
 			Error.getError().addError("FileParser","Exception in run",e2,1);
 		}
@@ -148,7 +153,7 @@ public abstract class FileParser extends Thread {
 			ActionFileLoaded event = new ActionFileLoaded(m_object, ActionEvent.ACTION_PERFORMED, m_action, ImportPolygon.MIME_TYPE_SOSI_);		
 			m_callback.actionPerformed(event);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}
@@ -156,7 +161,7 @@ public abstract class FileParser extends Thread {
 			ActionEvent eof = new ActionEvent(get_object(), ActionEvent.ACTION_PERFORMED, get_action_eof());
 			get_callback().actionPerformed(eof);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}

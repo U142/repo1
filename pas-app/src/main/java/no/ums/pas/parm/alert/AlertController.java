@@ -1,6 +1,8 @@
 package no.ums.pas.parm.alert;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.Area;
@@ -36,6 +38,8 @@ import java.util.List;
 
 
 public class AlertController implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(AlertController.class);
 
 	private AlertGUI gui;
 	private AlertVO alert;
@@ -95,12 +99,12 @@ public class AlertController implements ActionListener {
 	//command input from SendOptionToolbar
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_sendingtype_polygon".equals(e.getActionCommand())) {
-			System.out.println("Sendingtype polygon");
+			log.debug("Sendingtype polygon");
 			m_edit_shape = (new PolygonStruct(main.getMapNavigation().getDimension()));
 			PAS.get_pas().get_mappane().set_active_shape(m_edit_shape);
 		}
 		else if("act_sendingtype_ellipse".equals(e.getActionCommand())) {
-			System.out.println("Sendingtype ellipse");			
+			log.debug("Sendingtype ellipse");			
 			m_edit_shape = (new EllipseStruct());
 			PAS.get_pas().get_mappane().set_active_shape(m_edit_shape);
 		}
@@ -143,7 +147,7 @@ public class AlertController implements ActionListener {
 			//PAS.get_pas().get_mappane().set_active_shape(m_edit_shape = (ShapeStruct)e.getSource());
 			//PAS.get_pas().actionPerformed(new ActionEvent(m_edit_shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			//sendObj.get_sendproperties().goto_area();
-			System.out.println("SendOptionToolbar: " + list.size() + " lines");
+			log.debug("SendOptionToolbar: " + list.size() + " lines");
 		}
 		else if("act_sending_selected".equals(e.getActionCommand())) {
 			try {
@@ -247,7 +251,7 @@ public class AlertController implements ActionListener {
 				m_edit_shape_original = alert.getM_shape();
 				m_edit_shape_original.shapeName = alert.getName();
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("AlertController","Exception in editAlert",e,1);
 			}
@@ -340,7 +344,7 @@ public class AlertController implements ActionListener {
 		alert.setSMSOadc(parent.get_sms_broadcast_text().get_txt_oadc_text().getText());
 		// Need to do something about expiry
 		
-		// System.out.println("adressetype value " +
+		// log.debug("adressetype value " +
 		// this.getPanelToolbar().get_addresstypes() +" set");
 		
 		//m_edit_polygon.set_fill_color(toolbarPanel.get_colorpicker().get_selected_color());

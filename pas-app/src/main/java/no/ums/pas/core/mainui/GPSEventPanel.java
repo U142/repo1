@@ -40,12 +40,12 @@ public class GPSEventPanel extends DefaultPanel implements ComponentListener {
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		//System.out.println(getWidth() + ", " + getHeight());
+		//log.debug(getWidth() + ", " + getHeight());
 		m_events.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		revalidate();
 	}
 	public void fill(GPSEventList list) {
-		//System.out.println("Fill GPSEvent");
+		//log.debug("Fill GPSEvent");
 		m_events.start_search();
 	}
 	public void componentShown(ComponentEvent e) { }
@@ -90,7 +90,7 @@ class GPSEvents extends SearchPanelResults implements ComponentListener {
 		GPSEventList list = PAS.get_pas().get_gpscontroller().get_gpsevents();
 		GPSEvent event;
 		Object [] data;
-		//System.out.println("listsize="+list.size());
+		//log.debug("listsize="+list.size());
 		String sz_obj;
 		for(int i=get_last_index(); i < list.size(); i++) {
 			event = (GPSEvent)list.get(i);

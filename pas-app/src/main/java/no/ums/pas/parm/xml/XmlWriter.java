@@ -1,5 +1,7 @@
 package no.ums.pas.parm.xml;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -71,6 +73,7 @@ import java.util.zip.ZipOutputStream;
 
 
 public class XmlWriter {
+    private static final Log log = UmsLog.getLogger(XmlWriter.class);
 	private String XMLFilePath = "parmxml.zip";
 	
 	private final String strCategory = "pacategory";
@@ -107,7 +110,7 @@ public class XmlWriter {
 				rootTimestamp = "0";
 		}
 		catch(Exception e){
-			System.out.println("Feilet med å lese timestamp fra parmxml: " + e.getMessage());
+			log.debug("Feilet med å lese timestamp fra parmxml: " + e.getMessage());
 			returnValue = -1;
 		}*/
 		
@@ -167,7 +170,7 @@ public class XmlWriter {
 				rootTimestamp = "0";
 		}
 		catch(Exception e){
-			System.out.println("Fant ikke rootTimestamp: " + e.getMessage());
+			log.debug("Fant ikke rootTimestamp: " + e.getMessage());
 		}*/
 		
 		if(filename.equals(""))
@@ -454,7 +457,7 @@ public class XmlWriter {
 			
 		} catch (Exception e) {
 			returnValue = -1;
-			System.out.println("Feilmelding: " + e.getMessage());
+			log.debug("Feilmelding: " + e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("XmlWriter","Exception in writer",e,1);
 		}
@@ -880,7 +883,7 @@ public class XmlWriter {
 			
 		} catch (ParserConfigurationException pce) {
 			returnValue = -1;
-			System.out.println("Feil i checkXMLFile: ParserConfigurationException-->" + pce.getMessage());
+			log.debug("Feil i checkXMLFile: ParserConfigurationException-->" + pce.getMessage());
 			Error.getError().addError("XmlWriter","ParserConfigurationException in getXmlDocument",pce,1);
 		}
 		writeXMLFile(xmlDoc, StorageController.StorageElements.get_path(StorageController.PATH_PARM_) + "cbtemp.xml");
@@ -1006,7 +1009,7 @@ public class XmlWriter {
 			try {
 				ellipse = obj.getM_shape().typecast_ellipse();
 			} catch(Exception e) {
-				System.out.println("Feil med alert.getM_shape().typecast_ellipse();");
+				log.debug("Feil med alert.getM_shape().typecast_ellipse();");
 				e.printStackTrace();
 			}
 			if(obj.getOperation()!=null && obj.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
@@ -1124,19 +1127,19 @@ public class XmlWriter {
 			}
 			catch(ZipException ze){
 				Error.getError().addError("XmlWriter","ZipException in getXmlDocument",ze,1);
-				System.out.println("XMLWriter - getXMLDocument: ZipException - " + ze.getMessage());
+				log.debug("XMLWriter - getXMLDocument: ZipException - " + ze.getMessage());
 			}
 			catch(IOException ioe){
 				Error.getError().addError("XmlWriter","IOException in getXmlDocument",ioe,1);
-				System.out.println("XMLWriter - getXMLDocument: IOException - " + ioe.getMessage());
+				log.debug("XMLWriter - getXMLDocument: IOException - " + ioe.getMessage());
 			}
 			catch(ParserConfigurationException pce){
 				Error.getError().addError("XmlWriter","ParserConfigurationException in getXmlDocument",pce,1);
-				System.out.println("XMLWriter - getXMLDocument: ParserConfigurationException - " + pce.getMessage());
+				log.debug("XMLWriter - getXMLDocument: ParserConfigurationException - " + pce.getMessage());
 			}
 			catch(SAXException saxe){
 				Error.getError().addError("XmlWriter","SAXException in getXmlDocument",saxe,1);
-				System.out.println("XMLWriter - getXMLDocument: SAXException - " + saxe.getMessage());
+				log.debug("XMLWriter - getXMLDocument: SAXException - " + saxe.getMessage());
 			}
 			catch(IllegalArgumentException iae) {
 				iae.printStackTrace();
@@ -1150,7 +1153,7 @@ public class XmlWriter {
 					xmlDoc = db.newDocument();
 				} catch (ParserConfigurationException pce) {
 					returnValue = -1;
-					System.out.println("Feil i checkXMLFile: ParserConfigurationException-->" + pce.getMessage());
+					log.debug("Feil i checkXMLFile: ParserConfigurationException-->" + pce.getMessage());
 					Error.getError().addError("XmlWriter","ParserConfigurationException in getXmlDocument",pce,1);
 				}
 			}
@@ -1261,7 +1264,7 @@ public class XmlWriter {
 				}
 			}	
 			catch(Exception e){
-				System.out.println("XMLWriter: " + e.getMessage());
+				log.debug("XMLWriter: " + e.getMessage());
 				Error.getError().addError("XmlWriter","Exception in deleteObject",e,1);
 			}	
 		}
@@ -1313,18 +1316,18 @@ public class XmlWriter {
 			file = null;
 		}
 		catch(TransformerConfigurationException tce){
-			System.out.println("XMLWriter: TransformerConfigurationException --> " + tce.getMessage());
+			log.debug("XMLWriter: TransformerConfigurationException --> " + tce.getMessage());
 			Error.getError().addError("XmlWriter","TransformerConfigurationException in writeXMLFile",tce,1);
 			returnValue = -1;
 		}
 		catch(TransformerException te){
 			Error.getError().addError("XmlWriter","TransformerException in writeXMLFile",te,1);
-			System.out.println("XMLWriter: TransformerException --> " + te.getMessage());
+			log.debug("XMLWriter: TransformerException --> " + te.getMessage());
 			returnValue = -1;
 		}
 		catch(FileNotFoundException fnfe){
 			Error.getError().addError("XmlWriter","FileNotFoundException in writeXMLFile",fnfe,1);
-			System.out.println("XMLWriter: FileNotFoundException --> " + fnfe.getMessage());
+			log.debug("XMLWriter: FileNotFoundException --> " + fnfe.getMessage());
 			//fnfe.printStackTrace();
 			returnValue = -1;
 		}
@@ -1335,7 +1338,7 @@ public class XmlWriter {
 		}
 		catch(Exception e){
 			Error.getError().addError("XmlWriter","Exception in writeXMLFile",e,1);
-			System.out.println("XmlWriter: Exception --> " + e.getMessage());
+			log.debug("XmlWriter: Exception --> " + e.getMessage());
 			returnValue = -1;
 		}
 	}
@@ -1354,7 +1357,7 @@ public class XmlWriter {
 //			}
 //		}
 //		catch(Exception e){
-//			System.out.println("Exception: XmlWriter -- unzipXmlFile" + e.getMessage());
+//			log.debug("Exception: XmlWriter -- unzipXmlFile" + e.getMessage());
 //		}
 //	}
 	
@@ -1412,12 +1415,12 @@ public class XmlWriter {
 		}
 		catch(ZipException ze){
 			Error.getError().addError("XmlWriter","ZipException in zipXMLFile",ze,1);
-			System.out.println("XMLWriter: ZipException --> " + ze.getMessage());
+			log.debug("XMLWriter: ZipException --> " + ze.getMessage());
 			returnValue = -1;
 		}
 		catch(FileNotFoundException fe){
 			Error.getError().addError("XmlWriter","FileNotFoundException in zipXMLFile",fe,1);
-			System.out.println("XMLWriter: zipXmlFile -->" + fe.getMessage());
+			log.debug("XMLWriter: zipXmlFile -->" + fe.getMessage());
 		}
 		catch(IOException ioe){
 			Error.getError().addError("XmlWriter","IOException in zipXMLFile",ioe,1);
@@ -1508,7 +1511,7 @@ public class XmlWriter {
 			int i=0;
 			while(i < nl.getLength()){
 				element = (Element)nl.item(i);
-				//System.out.println("if(" + Integer.parseInt(element.getAttribute(pk)) + " != " + objPk + ")");
+				//log.debug("if(" + Integer.parseInt(element.getAttribute(pk)) + " != " + objPk + ")");
 				if(element.getAttribute(pk_tag).compareTo(objPk) == 0)
 					break; // Hvis den kommer inn her så eksisterer elementet fra før med samme pk
 				element = null;
@@ -2149,7 +2152,7 @@ public class XmlWriter {
 		
 		// Hvis noden er fjernet er det ikke mye vits å gjøre dette
 		if(!remove && gislist != null){
-			System.out.println(obj.toString() + " Gislist size: " + gislist.size());
+			log.debug(obj.toString() + " Gislist size: " + gislist.size());
 			//int children = 0;
 			if(alertnode.hasChildNodes())
 				while(alertnode.getLastChild()!= null) {
@@ -2157,7 +2160,7 @@ public class XmlWriter {
 					//children++;
 				}
 
-			//System.out.println("Removed " + children + " children");
+			//log.debug("Removed " + children + " children");
 			
 			for(int i=0;i<gislist.size();i++) {
 				GISRecord gis = (GISRecord)gislist.get(i);

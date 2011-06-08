@@ -1,5 +1,7 @@
 package no.ums.pas.pluginbase;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.ws.common.USYSTEMMESSAGES;
 
 import javax.swing.UIDefaults;
@@ -10,6 +12,8 @@ import javax.swing.UIDefaults;
  * Abstract class for changing PAS behaviour
  */
 public abstract class AbstractPasScriptingInterface implements PasScriptingInterface {
+
+    private static final Log log = UmsLog.getLogger(AbstractPasScriptingInterface.class);
 
 	protected OperatingSystem operatingSystem;
 	protected UIDefaults uidefaults_initial;
@@ -46,7 +50,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 
     @Override
     public void startPlugin() {
-        System.out.println("Starting PasScriptingInterface:"+getClass().getSimpleName());
+        log.debug("Starting PasScriptingInterface:"+getClass().getSimpleName());
         setSubPluginNames();
         initSubPlugins();
         _OSLookup();
@@ -56,8 +60,8 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 	 * Sets the default plugin-class-names. If other plugins are to be used, this function should be overridden
 	 */
 	protected void setSubPluginNames() {
-		System.out.println("***Using Plugins***");
-		System.out.println((this.plugin_AddressSearch = "no.ums.pas.pluginbase.defaults.DefaultAddressSearch"));
+		log.debug("***Using Plugins***");
+		log.debug((this.plugin_AddressSearch = "no.ums.pas.pluginbase.defaults.DefaultAddressSearch"));
 	}
 
 	private void _OSLookup() {
@@ -70,7 +74,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 			operatingSystem = OperatingSystem.UNIX;
 		else
 			operatingSystem = OperatingSystem.WIN;
-		System.out.println("Operating System: "+os);
+		log.debug("Operating System: "+os);
 	}
 	
 	/**
@@ -80,7 +84,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 	 */
 	public boolean onLoadSecurityManager()
 	{
-		System.out.println("onLoadSecurityManager");
+		log.debug("onLoadSecurityManager");
 		try
 		{
 			System.setSecurityManager(null);

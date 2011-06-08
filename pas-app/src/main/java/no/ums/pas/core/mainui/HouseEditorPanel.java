@@ -1,6 +1,8 @@
 package no.ums.pas.core.mainui;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -36,6 +38,9 @@ import java.util.ArrayList;
 
 
 public class HouseEditorPanel extends DefaultPanel implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(HouseEditorPanel.class);
+
 	public static final long serialVersionUID = 1;
 	class IconRadio extends JRadioButton {
 		public static final long serialVersionUID = 1;
@@ -92,7 +97,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		//System.out.println("resize: " + getWidth() + ", " + m_inhablist.getHeight());
+		//log.debug("resize: " + getWidth() + ", " + m_inhablist.getHeight());
 		//m_lbl_houseinfo.setPreferredSize(new Dimension(getWidth(), m_lbl_houseinfo.getHeight()));
 		//m_inhablist.setMinimumSize(new Dimension(getWidth(), 100));
 		//m_inhablist.setMaximumSize(new Dimension(getWidth(), 1000));
@@ -129,7 +134,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				else
 					m_radio_private.doClick();
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("HouseEditorPanel","Exception in fill_form",e,1);
 			}
@@ -291,7 +296,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					fill_form(null);
 					m_callback.actionPerformed(e);
 				} catch(Exception err) {
-					System.out.println(err.getMessage());
+					log.debug(err.getMessage());
 					err.printStackTrace();
 					Error.getError().addError("HouseEditorPanel","Exception in actionPerformed: act_save_complete",err,1);
 				}
@@ -333,7 +338,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			new XMLSaveGAB(null, form, PAS.get_pas().get_sitename(), this, "act_delete_inhabitant_complete", null).start();*/
 			
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("HouseEditorPanel","Exception in delete_inhabitant",e,1);
 		}
@@ -410,7 +415,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			m_inhabitant.set_region(sz_municipalid);
 			
 			sz_birthday = m_inhabitant.get_birthday();
-			System.out.println(sz_birthday);
+			log.debug(sz_birthday);
 
 			/*HttpPostForm form = new HttpPostForm(PAS.get_pas().get_sitename() + "PAS_gab_save.asp");
 			form.setParameter("sz_operation", sz_operation);
@@ -441,7 +446,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			
 			return true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("HouseEditorPanel","Exception in save",e,1);
 		}
@@ -598,7 +603,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				Object data [] = new Object[] { inhabtype, inhab, inhab.get_postaddr(), inhab.get_postno(), inhab.get_postarea(), inhab.get_number(), inhab.get_mobile(), icon };
 				super.insert_row(data, 0);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("HouseEditorPanel","Exception in insert_row",e,1);
 			}
@@ -613,7 +618,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					actionPerformed(new ActionEvent(i, ActionEvent.ACTION_PERFORMED, "act_delete_inhabitant"));
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("HouseEditorPanel","Exception in onMouseClick",e,1);
 			}
@@ -625,7 +630,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					fill_form(i);
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();	
 				Error.getError().addError("HouseEditorPanel","Exception in onMouseLDblClick",e,1);
 			}
@@ -651,7 +656,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 						}
 					}
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("HouseEditorPanel","Exception in start_search",e,1);
 				}

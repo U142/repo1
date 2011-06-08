@@ -1,5 +1,7 @@
 package no.ums.pas.core.project;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -49,6 +51,9 @@ import no.ums.pas.core.ws.WSDeleteProject.IDeleteProject;
 //import Core.MainUI.*;
 
 public class ProjectDlg extends JDialog implements ComponentListener, WindowListener {
+
+    private static final Log log = UmsLog.getLogger(ProjectDlg.class);
+
 	public static final long serialVersionUID = 1;
 	public static final int ACT_PROJECTDLG_CLOSE = 1;
 	public static final int ACT_PROJECTDLG_OPEN  = 2;
@@ -123,7 +128,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			
 			//will return download finished to this dialogs panel actionhandler
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 	}

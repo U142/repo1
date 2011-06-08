@@ -1,5 +1,7 @@
 package no.ums.pas.core.webdata;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.HttpPostForm;
@@ -15,6 +17,8 @@ import java.io.InputStream;
 
 public abstract class XMLThread extends Thread
 {
+    private static final Log log = UmsLog.getLogger(XMLThread.class);
+
 	boolean m_b_zipped = false;
 	boolean m_b_issearching;
 	private LoadingFrame m_loadingframe = null;
@@ -109,10 +113,10 @@ public abstract class XMLThread extends Thread
 					m_form.setParameter("xcpk", Integer.toString(PAS.get_pas().get_userinfo().get_comppk()));
 				}
 				m_is = m_form.post();
-				//System.out.println(new BufferedReader(new InputStreamReader(m_is)).readLine());
+				//log.debug(new BufferedReader(new InputStreamReader(m_is)).readLine());
 			} catch(Exception e) {
 				m_n_httpcode = 500;
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("XMLThread","Exception in run",e,1);
 				onDownloadFinishedFailed();
@@ -132,7 +136,7 @@ public abstract class XMLThread extends Thread
 				}
 			} catch(Exception e) {
 				m_n_httpcode = 500;
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("XMLThread","Exception in run",e,1);
 				onDownloadFinishedFailed();
@@ -157,7 +161,7 @@ public abstract class XMLThread extends Thread
 				return;
 			}
 			if(get_http().session_reconnected())
-				System.out.println("Session ended, you were automatically reconnected");
+				log.debug("Session ended, you were automatically reconnected");
 				//javax.swing.JOptionPane.showMessageDialog(null, "Session ended, you were automatically reconnected");
 		}
 		else {
@@ -169,7 +173,7 @@ public abstract class XMLThread extends Thread
 				return;
 			}
 			if(get_http().session_reconnected())
-				System.out.println("Session ended, you were automatically reconnected");				
+				log.debug("Session ended, you were automatically reconnected");				
 				//javax.swing.JOptionPane.showMessageDialog(null, "Session ended, you were automatically reconnected");
 		}
 		//if(m_file_path != null)
@@ -198,12 +202,12 @@ public abstract class XMLThread extends Thread
 				try {
 					PAS.get_pas().get_drawthread().set_suspended(false);
 				} catch(Exception e2) {
-					System.out.println(e2.getMessage());
+					log.debug(e2.getMessage());
 					e2.printStackTrace();
 					Error.getError().addError("XMLThread","Exception in run",e2,1);
 				}
 				//PAS.get_pas().add_event("", e);
-				System.out.println(e1.getMessage());
+				log.debug(e1.getMessage());
 				e1.printStackTrace();
 			}
 		}

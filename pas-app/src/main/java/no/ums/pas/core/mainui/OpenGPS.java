@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUGPSList;
@@ -21,6 +23,9 @@ import java.awt.event.ComponentListener;
 
 
 public class OpenGPS extends SearchPanelResults implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(OpenGPS.class);
+
 	public static final long serialVersionUID = 1;
 	private PAS m_pas;
 	private GPSFrame m_frame;
@@ -76,7 +81,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		//System.out.println("OpenGPS resized");
+		//log.debug("OpenGPS resized");
 		//setPreferredSize(new Dimension(getWidth(), getHeight()));
 		revalidate();
 	}
@@ -201,7 +206,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 							n_success ++;
 							current.set_added_to_list();
 						} catch(Exception e) {
-							System.out.println(e.getMessage());
+							log.debug(e.getMessage());
 							e.printStackTrace();
 							Error.getError().addError("OpenGPS","Exception in start_search",e,1);
 						}
@@ -210,7 +215,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 				else
 					set_rowvalues(current);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("OpenGPS","Exception in start_search",e,1);
 			}

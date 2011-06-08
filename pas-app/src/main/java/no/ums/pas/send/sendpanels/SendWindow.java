@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.LightPanel;
@@ -50,6 +52,7 @@ import java.util.Calendar;
 
 public class SendWindow extends JDialog implements ActionListener, ChangeListener, WindowListener {
 	public static final long serialVersionUID = 1;
+    private static final Log log = UmsLog.getLogger(SendWindow.class);
 
 	SendController m_sendcontroller;
 	public SendController get_sendcontroller() { return m_sendcontroller; }
@@ -758,7 +761,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					if(cr == JOptionPane.YES_OPTION && !confirm.getText().equals("LIVE")) {
                         JOptionPane.showMessageDialog(frame, String.format(Localization.l("quicksend_alert_dlg_confirm_err"), confirm.getText(), "LIVE"));
                     }
-					System.out.println("Sending aborted");
+					log.debug("Sending aborted");
 					frame.dispose();
 				}
 				
@@ -796,7 +799,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						int count = 0;
 						ArrayList<Object> statuslist = m_resendpanel.get_checked();
 						if(statuslist.size() == 0)
-							System.out.println("Statuslisten er 0");
+							log.debug("Statuslisten er 0");
 						//ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
 						for(int j=0;j<statuslist.size();j++) {
 							Object[] obj = (Object[])statuslist.get(j);
@@ -839,7 +842,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
                         }
 							
 						frame.dispose();
-						System.out.println("Sending aborted");
+						log.debug("Sending aborted");
 					}
 				}
 			}
@@ -874,7 +877,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 						int count = 0;
 						ArrayList<Object> statuslist = m_resendpanel.get_checked();
 						if(statuslist.size() == 0)
-							System.out.println("Statuslisten er 0");
+							log.debug("Statuslisten er 0");
 						//ArrayList<Object> ting = PAS.get_pas().get_statuscontroller().get_items();
 						for(int j=0;j<statuslist.size();j++) {
 							Object[] obj = (Object[])statuslist.get(j);
@@ -917,7 +920,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
                         }
 							
 						frame.dispose();
-						System.out.println("Sending aborted");
+						log.debug("Sending aborted");
 					}
 				}
 			}
@@ -978,7 +981,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 					m_settings.set_selected_oadc(get_sendobject().get_sendproperties().get_oadc_number());
 			}
 			/*if(get_sendobject().get_sendproperties().get_profilepk() > -1) {
-				System.out.println("SendWindow has the profilepk: " + get_sendobject().get_sendproperties().get_profilepk());
+				log.debug("SendWindow has the profilepk: " + get_sendobject().get_sendproperties().get_profilepk());
 				if(m_settings.set_selected_profile(get_sendobject().get_sendproperties().get_profilepk())==-1)
 					get_sendobject().get_sendproperties().set_profilepk(0);
 			}*/
@@ -1038,7 +1041,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 				!m_cell_broadcast_text_panel.defaultLanguage()) {
 			/*
 			int index = -1;
-			System.out.println("Selected index: " + m_tabbedpane.getSelectedIndex());
+			log.debug("Selected index: " + m_tabbedpane.getSelectedIndex());
 			for(int i=0;i<m_tabbedpane.getTabCount();i++) {
 				if(m_tabbedpane.getComponent(i).equals(m_cell_broadcast_text_panel))
 					index = i;

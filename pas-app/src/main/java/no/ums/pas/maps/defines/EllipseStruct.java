@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
@@ -15,6 +17,9 @@ import java.awt.geom.Ellipse2D;
 import java.util.List;
 
 public class EllipseStruct extends ShapeStruct {
+
+    private static final Log log = UmsLog.getLogger(EllipseStruct.class);
+
 	private MapPoint m_p_center = null;
 	private MapPoint m_p_corner = null;
 	private Ellipse2D m_ellipseshape = null;
@@ -74,7 +79,7 @@ public class EllipseStruct extends ShapeStruct {
 			m_n_diameter_width_pix   	= Math.abs(get_corner().get_x() - get_center().get_x()) * 2;
 			m_n_diameter_height_pix		= Math.abs(get_corner().get_y() - get_center().get_y()) * 2;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SendPropertiesEllipse","Exception in calc_diameters",e,1);
 		}
@@ -152,7 +157,7 @@ public class EllipseStruct extends ShapeStruct {
 				calc_diameters(nav);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SendPropertiesEllipse","Exception in recalc_shape",e,1);
 		}
@@ -183,7 +188,7 @@ public class EllipseStruct extends ShapeStruct {
 				nav = new NavStruct(_lbo, _rbo, _ubo, _bbo);
 				m_bounds = nav;
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();				
 				Error.getError().addError("SendPropertiesEllipse","Exception in calc_bounds",e,1);
 			}

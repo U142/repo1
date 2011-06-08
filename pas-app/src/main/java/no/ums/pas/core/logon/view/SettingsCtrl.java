@@ -134,13 +134,13 @@ public class SettingsCtrl implements ISettingsUpdate {
 
 	@Override
 	public void onCancel() {
-		System.out.println("Cancel");
+		log.debug("Cancel");
 		dlg.setVisible(false);
 	}
 
 	@Override
 	public void onOk(WmsLayerTree tree, SettingsModel model) {
-		System.out.println("Save");
+		log.debug("Save");
 		
 		no.ums.pas.core.logon.Settings s = Variables.getSettings();
 		MailAccount ma = PAS.get_pas().get_userinfo().get_mailaccount();
@@ -207,7 +207,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 	@Override
 	public void onOpenWmsSite(final WmsLayerTree tree, final String wmsUrl, final String wmsUser,
 			final String wmsPassword, final JComboBox imageformats) {
-		System.out.println("onOpenWmsSite");
+		log.debug("onOpenWmsSite");
 		new SwingWorker<DefaultTreeModel, List<Layer>>() {
 			List<Layer> layers;
 			no.ums.pas.core.logon.Settings s = PAS.get_pas().get_settings();
@@ -265,7 +265,7 @@ public class SettingsCtrl implements ISettingsUpdate {
 
 	@Override
 	public void onWmsLayerSelect(WmsLayerTree tree, TreeSelectionEvent e) {
-		System.out.println("onWmsLayerSelect");
+		log.debug("onWmsLayerSelect");
 		
 	}
 

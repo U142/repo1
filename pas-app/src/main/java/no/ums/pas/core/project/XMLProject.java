@@ -1,5 +1,7 @@
 package no.ums.pas.core.project;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.dataexchange.HttpPostForm;
 import no.ums.pas.core.mainui.LoadingPanel;
@@ -16,6 +18,9 @@ import java.awt.event.ActionListener;
 
 
 public class XMLProject extends XMLThread {
+
+    private static final Log log = UmsLog.getLogger(XMLProject.class);
+
 	private Project m_project = new Project();
 	protected Project get_project() { return m_project; }
 	
@@ -29,21 +34,21 @@ public class XMLProject extends XMLThread {
 	public void parseDoc(Document doc) {
 		String sz_projectpk, sz_name, sz_createtimestamp, sz_updatetimestamp;
 		if(doc==null) {
-			System.out.println("doc==null");
+			log.debug("doc==null");
 			return;
 		}
 		NodeList list_itemlist = doc.getElementsByTagName("PROJECT");
 		if (list_itemlist == null) {
-			System.out.println("XMLProject.parseDoc() - list_itemlist == null");
+			log.debug("XMLProject.parseDoc() - list_itemlist == null");
 			return;
 		}
 		Node current = list_itemlist.item(0);
 		if(current == null) {
-			System.out.println("XMLProject.parseDoc() - current == null");
+			log.debug("XMLProject.parseDoc() - current == null");
 		}
 		NamedNodeMap nnm_itemlist = (current == null) ? null : current.getAttributes();
 		if(nnm_itemlist == null) {
-			System.out.println("XMLProject.parseDoc() - nnm_itemlist == null");
+			log.debug("XMLProject.parseDoc() - nnm_itemlist == null");
 		}
         else {
             try {
@@ -56,10 +61,10 @@ public class XMLProject extends XMLThread {
                 sz_createtimestamp = node_createtimestamp.getNodeValue();
                 sz_updatetimestamp = node_updatetimestamp.getNodeValue();
 
-                System.out.println("Projectpk = " + sz_projectpk);
-                System.out.println("Name = " + sz_name);
-                System.out.println("ctime = " + sz_createtimestamp);
-                System.out.println("utime = " + sz_updatetimestamp);
+                log.debug("Projectpk = " + sz_projectpk);
+                log.debug("Name = " + sz_name);
+                log.debug("ctime = " + sz_createtimestamp);
+                log.debug("utime = " + sz_updatetimestamp);
 
                 m_project.set_projectpk(sz_projectpk);
                 m_project.set_projectname(sz_name);
@@ -67,9 +72,9 @@ public class XMLProject extends XMLThread {
                 m_project.set_updatetimestamp(sz_updatetimestamp);
                 m_project.set_saved();
 
-                System.out.println("Project set");
+                log.debug("Project set");
             } catch(Exception e) {
-                System.out.println(e.getMessage());
+                log.debug(e.getMessage());
                 e.printStackTrace();
                 Error.getError().addError("XMLProject","Exception in parseDoc",e,1);
             }
@@ -83,7 +88,7 @@ public class XMLProject extends XMLThread {
 			ActionEvent e = new ActionEvent(get_project(), ActionEvent.ACTION_PERFORMED, get_callback_action());
 			get_callback().actionPerformed(e);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("XMLProject","Exception in onDownloadFinished",e,1);
 		}

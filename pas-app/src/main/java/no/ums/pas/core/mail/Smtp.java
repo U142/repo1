@@ -1,5 +1,8 @@
 package no.ums.pas.core.mail;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -8,6 +11,9 @@ import java.util.List;
 
 public class Smtp implements Runnable
 {
+
+    private static final Log log = UmsLog.getLogger(Smtp.class);
+
 	public interface smtp_callback
 	{
 		public void finished();
@@ -68,14 +74,14 @@ public class Smtp implements Runnable
 	         close("Mail Socket Error");
 	         return false;
 	      }
-	      System.out.println("Connected to "+mailServerHost);
+	      log.debug("Connected to " + mailServerHost);
 	      return true;
 	   }
 	}
 	public void close(String msg)
 	{
 	          //try to close the sockets
-	   System.out.println("Close("+msg+")");
+	   log.debug("Close(" + msg + ")");
 	   try
 	   {
 	      outputStream.println("quit");
@@ -85,7 +91,7 @@ public class Smtp implements Runnable
 	   }
 	   catch(Exception e)
 	   {
-	      System.out.println("Close() Exception");
+	      log.debug("Close() Exception");
 	     // We are closing so see ya later anyway
 	   }
 	}

@@ -43,7 +43,7 @@ public class Sending_Files extends DefaultPanel {
 			m_rec.get_recorder().get_recorder().startRecording();
 		else
 		{
-			System.out.println("rec is null, cannot start recording");
+			log.debug("rec is null, cannot start recording");
 		}*/
 		super.componentShown(e);
 	}

@@ -192,7 +192,7 @@ public class CustomRenderer extends DefaultTreeCellRenderer { //SubstanceDefault
 		
 		if (!path.equals("default non-working path, object")) {
 //				icon = new ImageIcon();
-				//System.out.println("Path: " + path);
+				//log.debug("Path: " + path);
 				icon = ImageLoader.load_icon(path);
 		        Image test = icon.getImage().getScaledInstance(32,32,Image.SCALE_SMOOTH);
 		        icon.setImage(test);

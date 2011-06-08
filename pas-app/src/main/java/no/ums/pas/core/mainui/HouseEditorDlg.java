@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
@@ -24,6 +26,10 @@ import java.util.ArrayList;
 
 
 public class HouseEditorDlg extends DefaultPanel implements ChangeListener, ComponentListener { // implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(HouseEditorDlg.class);
+    
+
 	public static final long serialVersionUID = 1;
 	private JTabbedPane m_tab;
 	private HouseEditorPanel m_panel;
@@ -50,7 +56,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 			this.setResizable(false);
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}*/
 		
@@ -72,7 +78,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) {
-		//System.out.println("resize: " + getWidth() + ", " + m_inhablist.getHeight());
+		//log.debug("resize: " + getWidth() + ", " + m_inhablist.getHeight());
 		//this.setPreferredSize(new );
 		m_panel.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		m_move.setPreferredSize(new Dimension(getWidth(), getHeight()));
@@ -134,7 +140,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 		}
 		else if("act_ready_for_coor_assignment".equals(e.getActionCommand())) {
 			int n_adrtype = ((Inhabitant)e.getSource()).get_inhabitanttype();
-			System.out.println("Ready for coor assignment for adrtype = " + n_adrtype);
+			log.debug("Ready for coor assignment for adrtype = " + n_adrtype);
 			ActionEvent action = null;
 			/*switch(n_adrtype) {
 				case Controller.ADR_TYPES_PRIVATE_:
@@ -161,7 +167,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 	
 	public void stateChanged(ChangeEvent e) {
 		JTabbedPane pane = (JTabbedPane)e.getSource();
-		//System.out.println("Selected component " + pane.getSelectedIndex());
+		//log.debug("Selected component " + pane.getSelectedIndex());
 		if(pane.getSelectedComponent()==m_move) {
 			m_move.set_focus();
 			m_callback.actionPerformed(new ActionEvent(e, ActionEvent.ACTION_PERFORMED, "act_houseeditor_setcoor_none"));

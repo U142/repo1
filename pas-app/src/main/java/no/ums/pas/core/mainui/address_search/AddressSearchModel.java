@@ -2,11 +2,16 @@ package no.ums.pas.core.mainui.address_search;
 
 import java.util.List;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
 
 import org.jdesktop.beansbinding.AbstractBean;
 
 public class AddressSearchModel extends AbstractBean {
+
+    private static final Log log = UmsLog.getLogger(AddressSearchModel.class);
+
 	private String Address;
 	private String House;
 	private String Postno;
@@ -64,7 +69,7 @@ public class AddressSearchModel extends AbstractBean {
 			Object oldValue = this.Country;
 			Country = country;
 			update("Country", oldValue, country);
-			System.out.println(country + " " + ((AddressSearchCountry)country).n_cc);
+			log.debug(country + " " + ((AddressSearchCountry)country).n_cc);
 		}
 	}
 	

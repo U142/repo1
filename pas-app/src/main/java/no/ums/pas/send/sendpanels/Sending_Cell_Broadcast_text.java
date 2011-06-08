@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -75,11 +77,13 @@ import java.util.regex.Pattern;
 
 public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionListener, KeyListener, ItemListener, ComponentListener, FocusListener {
 
+    private static final Log log = UmsLog.getLogger(Sending_Cell_Broadcast_text.class);
+
     // act_new_project
     Action SET_DEFAULT_OADC = new UmsAction("main_sending_set_default_oadc") {
         @Override
         public void actionPerformed(ActionEvent e) {
-        	System.out.println("Set default OADC");
+        	log.debug("Set default OADC");
         	String oadc = get_txt_oadc_text().getText().trim();
         	//if(oadc.length()>0)
         	{
@@ -849,7 +853,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		while(m.find() == true)
 			++ext;
 			*/
-		//System.out.println("Extended chars = " + ext);
+		//log.debug("Extended chars = " + ext);
 
         activeLabel.setText("(" + get_gsmsize(text) + " " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
 		if(this.getClass().equals(Sending_Cell_Broadcast_text.class) || this.getClass().equals(Sending_SMS_Broadcast_text.class)) {
@@ -1084,7 +1088,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		});	*/	
 	}	
 	public void componentResized(ComponentEvent e) {
-		/*System.out.println(getWidth() + " " + getHeight());
+		/*log.debug(getWidth() + " " + getHeight());
 		this.setSize(getWidth() - 10, getHeight()-10);
 		m_panel_area.setSize(getWidth()- 20, (getHeight()-20)/2);
 		m_panel_messages.setSize(getWidth()- 20, (getHeight()-20)/2);

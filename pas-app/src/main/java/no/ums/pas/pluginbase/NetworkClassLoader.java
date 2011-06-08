@@ -1,6 +1,8 @@
 package no.ums.pas.pluginbase;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.pluginbase.PluginLoader.FILETYPE;
 
 import java.io.ByteArrayOutputStream;
@@ -10,6 +12,9 @@ import java.net.URLClassLoader;
 
 
 public class NetworkClassLoader extends ClassLoader {
+
+    private static final Log log = UmsLog.getLogger(NetworkClassLoader.class);
+
 	String filename;
 	String classname;
 	String host;
@@ -52,7 +57,7 @@ public class NetworkClassLoader extends ClassLoader {
 			try
 			{
 				URL url = new URL(host + "/" + filename);
-				System.out.println("Loading plugin " + url.toString());
+				log.debug("Loading plugin " + url.toString());
 				URLClassLoader loader = new URLClassLoader(new URL [] { url }, this.getClass().getClassLoader());
 				Class<AbstractPasScriptingInterface> classToLoad = (Class<AbstractPasScriptingInterface>)Class.forName(classname, true, loader);
 				return classToLoad;

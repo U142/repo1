@@ -1,5 +1,7 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.UnknownShape;
 
 import java.awt.datatransfer.DataFlavor;
@@ -7,7 +9,9 @@ import java.util.ArrayList;
 
 
 public class EventVO extends ParmVO implements Cloneable {
-	
+
+    private static final Log log = UmsLog.getLogger(EventVO.class);
+
 	@Override
 	public EventVO clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
@@ -166,13 +170,13 @@ public class EventVO extends ParmVO implements Cloneable {
 		if(!alertListe.contains(ao))
 			alertListe.add(ao);
 		else
-			System.out.println("Alert already exists!");
+			log.debug("Alert already exists!");
 	}
 	public void removeAlerts(AlertVO ao){
 		if(alertListe.contains(ao))
 			alertListe.remove(ao);
 		else
-			System.out.println("Alert does not exist!");
+			log.debug("Alert does not exist!");
 	}
 	public String toString(){
 		return name;

@@ -93,14 +93,14 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		try {
 			m_mixer = new SoundMixerPanel();
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		m_callback = f;
 		//m_controller = controller;
@@ -126,7 +126,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		{
 			//unable to get recording line
 			this.setEnabled(false);
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		b_line_ok = SoundRecorder.LINE_AVAILABLE;
 			

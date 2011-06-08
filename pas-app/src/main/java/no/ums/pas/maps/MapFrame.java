@@ -210,7 +210,7 @@ public class MapFrame extends JPanel implements ActionListener {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 		        //download houses when user stops dragging
-				System.out.println("dragging set to " + get_actionhandler().get_isdragging());
+				log.debug("dragging set to " + get_actionhandler().get_isdragging());
 				switch(get_mode())
 				{
 				case PAN:
@@ -467,7 +467,7 @@ public class MapFrame extends JPanel implements ActionListener {
             }
             m_overlays.clear();
             m_overlays = null;
-            System.out.println("Overlays reset");
+            log.debug("Overlays reset");
         }
     }
 
@@ -823,7 +823,7 @@ public class MapFrame extends JPanel implements ActionListener {
     public void load_map() {
         //m_img_loading.flush();
 
-        System.out.println("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
+        log.debug("Loading map " + PAS.get_pas().get_settings().getMapServer().name());
         PAS.pasplugin.onBeforeLoadMap(PAS.get_pas().get_settings());
         PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer() == MAPSERVER.DEFAULT ? true : false));
         if (m_maploader.IsLoadingMapImage())
@@ -849,7 +849,7 @@ public class MapFrame extends JPanel implements ActionListener {
                 start_gsm_coverage_loader();
             }
         } catch (Exception e) {
-            //System.out.println("Error loading map " + e.getMessage());
+            //log.debug("Error loading map " + e.getMessage());
             //Error.getError().addError("MapFrame","Exception in load_map",e,1);
             e.printStackTrace();
             PAS.pasplugin.onMapLoadFailed(this.get_maploader());
@@ -869,7 +869,7 @@ public class MapFrame extends JPanel implements ActionListener {
         try {
             prepareImage(m_img_onscreen, null); //get_drawthread());
         } catch (Exception e) {
-            //System.out.println("prepareImage " + e.getMessage());
+            //log.debug("prepareImage " + e.getMessage());
             //Error.getError().addError("MapFrame","Exception in load_map",e,1);
         }
         try {
@@ -877,7 +877,7 @@ public class MapFrame extends JPanel implements ActionListener {
         } catch (Exception e) {
             //Error.getError().addError("MapFrame","Exception in load_map",e,1);
         }
-        //System.out.println("KICKREPAINT");
+        //log.debug("KICKREPAINT");
         PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), Variables.getNavigation(), this);
         PAS.get_pas().kickRepaint();
 
@@ -1080,7 +1080,7 @@ public class MapFrame extends JPanel implements ActionListener {
     @Override
     public void update(Graphics g) {
         super.update(g);
-        System.out.println("!!!!!!!!!!UPDATE!!!!!!!!!!!!!");
+        log.debug("!!!!!!!!!!UPDATE!!!!!!!!!!!!!");
         paint(g);
     }
 

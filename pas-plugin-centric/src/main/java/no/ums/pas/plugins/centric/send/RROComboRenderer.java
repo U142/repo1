@@ -1,6 +1,8 @@
 package no.ums.pas.plugins.centric.send;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.ws.common.cb.CBMESSAGEFIELDSBASE;
 
 import javax.swing.*;
@@ -8,6 +10,8 @@ import java.awt.*;
 
 public class RROComboRenderer extends DefaultListCellRenderer
 {
+    private static final Log log = UmsLog.getLogger(RROComboRenderer.class);
+
 	protected JComboBox combo;
 	JLabel lbl = new JLabel("");
 	public RROComboRenderer(JComboBox c)
@@ -57,7 +61,7 @@ public class RROComboRenderer extends DefaultListCellRenderer
         }
         else
         {
-        	System.out.println("not combo");
+        	log.debug("not combo");
         }
         return this; 
     } 

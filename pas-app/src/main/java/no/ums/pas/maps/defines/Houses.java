@@ -1,11 +1,13 @@
 package no.ums.pas.maps.defines;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ComparisonChain;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.tools.Timeout;
+import no.ums.pas.ums.tools.Utils;
 
 import javax.annotation.Nonnull;
 import java.awt.BasicStroke;
@@ -74,20 +76,23 @@ public class Houses {
 	{
 		public final int compare ( Object a, Object b ) /*objects of type StatusItemObject*/
 		{
-			InhabitantBasics obj1 = (InhabitantBasics)a;
-			InhabitantBasics obj2 = (InhabitantBasics)b;
-			/*if(obj1.get_lat() > obj2.get_lat() || obj1.get_lon() > obj2.get_lon())
-				return 1;
-			else if(obj1.get_lat() == obj2.get_lat() && obj1.get_lon() == obj2.get_lon())
-				return 0;
-			else
-				return -1;*/
-			if(obj1.get_lat() > obj2.get_lat())
-				return 1;
-			else if(obj1.get_lat() == obj2.get_lat())
-				return 0;
-			else
-				return -1;
+            if (a == b) {
+                return 0;
+            }
+            else if (a == null) {
+                return 1;
+            }
+            else if (b == null) {
+                return -1;
+            }
+
+            InhabitantBasics obj1 = (InhabitantBasics)a;
+            InhabitantBasics obj2 = (InhabitantBasics)b;
+            return ComparisonChain
+                    .start()
+                    .compare(obj1.get_lat(), obj2.get_lat())
+                    .compare(obj1.get_lon(), obj2.get_lon())
+                    .result();
 		}
 	}
 	public class Compare_lon implements Comparator<Object>
@@ -246,7 +251,7 @@ public class Houses {
 				m_fullbounds = m_bounds;
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		double f_prev_lon = 0.0;

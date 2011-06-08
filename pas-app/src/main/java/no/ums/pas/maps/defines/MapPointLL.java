@@ -1,6 +1,12 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 public class MapPointLL implements Comparable<MapPointLL> {
+
+    private static final Log log = UmsLog.getLogger(MapPointLL.class);
+
 	private int m_point_reference;
 	private double m_measurement_reference;
 	private MapPointLL m_degree_distance = null;
@@ -70,7 +76,7 @@ public class MapPointLL implements Comparable<MapPointLL> {
 		try {
 			return (double)(Math.round(get_lon() * 10000)) / 10000 + ", " + (double)(Math.round(get_lat() * 10000)) / 10000;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		return "No Point";

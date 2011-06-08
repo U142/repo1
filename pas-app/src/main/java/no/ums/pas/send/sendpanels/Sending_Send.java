@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.ws.vars;
@@ -31,6 +33,9 @@ import java.util.ArrayList;
  * verify data and execute sending
  */
 public class Sending_Send extends DefaultPanel {
+
+    private static final Log log = UmsLog.getLogger(Sending_Send.class);
+
 	public static final long serialVersionUID = 1;
 	public static final int INDICATOR_RED_ = 0;
 	public static final int INDICATOR_YELLOW_ = 1;
@@ -341,7 +346,7 @@ public class Sending_Send extends DefaultPanel {
                         parent.set_comstatus(Localization.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
 					}
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("Sending_Send","Exception in upload_wavfiles",e,1);
 					return false;
@@ -435,7 +440,7 @@ public class Sending_Send extends DefaultPanel {
                 parent.set_comstatus(Localization.l("main_sending_error_retrieving_refno"));
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("Sending_Send","Exception in retrieve_refno",e,1);
 		}

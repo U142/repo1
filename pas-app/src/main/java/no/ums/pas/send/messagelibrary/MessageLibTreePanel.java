@@ -1,5 +1,7 @@
 package no.ums.pas.send.messagelibrary;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.TreeRenderer;
@@ -52,6 +54,8 @@ import java.util.Vector;
 
 public class MessageLibTreePanel extends DefaultPanel
 {
+    private static final Log log = UmsLog.getLogger(MessageLibTreePanel.class);
+
 	public static final int MESSAGELIB_UPDATE_INTERVAL = 10;
 	
 	TREEMODE mode;
@@ -208,7 +212,7 @@ public class MessageLibTreePanel extends DefaultPanel
 		//tree.setPreferredSize(new Dimension(getWidth()-10, getHeight()-10));
 		int w = getWidth();
 		int h = getHeight();
-		System.out.println(w + " " + h);
+		log.debug(w + " " + h);
 		pane.setPreferredSize(new Dimension(w, h));
 		tree.getTreeRenderer().setTotalWidth(getWidth());
 		this.revalidate();
@@ -256,7 +260,7 @@ public class MessageLibTreePanel extends DefaultPanel
 				}
 				catch(Exception e)
 				{
-					//System.out.println("Could not expand treepath for pk=" + pk);
+					//log.debug("Could not expand treepath for pk=" + pk);
 				}
 			}
 		}
@@ -622,7 +626,7 @@ public class MessageLibTreePanel extends DefaultPanel
 						}
 						else
 						{
-							System.out.println("MessageLibTree - own update received");
+							log.debug("MessageLibTree - own update received");
 						}
 					}
 					else
@@ -710,7 +714,7 @@ public class MessageLibTreePanel extends DefaultPanel
 					err.printStackTrace();
 				}
 				tree.signalDownloadFinished();
-				System.out.println("Messagelib timestamp=" + n_server_timestamp);				
+				log.debug("Messagelib timestamp=" + n_server_timestamp);				
 			}
 		}
 		

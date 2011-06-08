@@ -1,5 +1,7 @@
 package no.ums.pas.parm.alert;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.sendpanels.Sending_Send;
@@ -23,6 +25,9 @@ import java.util.ArrayList;
  * verify data and execute sending
  */
 public class Sending_Send_Parm_Alert extends Sending_Send {
+
+    private static final Log log = UmsLog.getLogger(Sending_Send_Parm_Alert.class);
+
 	public static final long serialVersionUID = 1;
 		
 	public int get_refno() { return m_n_refno; }
@@ -192,7 +197,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 						set_filestatus(i, INDICATOR_GREEN_);
                     parent.set_comstatus(Localization.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
                     Error.getError().addError(Localization.l("common_error"),"Sending_Send Exception in upload_wavfiles",e,1);
 				}
@@ -256,7 +261,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 			if(!b)
 				parent.set_comstatus("Failed to retrieve refno...");
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("Sending_Send","Exception in retrieve_refno",e,1);
 		}

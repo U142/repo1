@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.io.File;
@@ -7,6 +9,9 @@ import java.io.FileWriter;
 
 
 public class GISWriter {
+    
+    private static final Log log = UmsLog.getLogger(GISWriter.class);
+
 	//protected File m_f1;
 	protected File m_file_out;
 	protected LineData m_linedata;
@@ -68,7 +73,7 @@ public class GISWriter {
 			write.close();
 			return get_umsgis_file();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("GISWriter","Exception in convert",e,1);
 		}
@@ -78,7 +83,7 @@ public class GISWriter {
 		try {
 			w.write(c1 + "\t" + c2 + "\t" + c3 + "\t" + c4 + "\t" + c5 + "\t" + c6 + "\r\n");
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("GISWriter","Exception in write_line",e,1);
 		}

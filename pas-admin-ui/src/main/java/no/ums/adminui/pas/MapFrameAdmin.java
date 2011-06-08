@@ -99,7 +99,7 @@ public class MapFrameAdmin extends MapFrame {
 				start_gsm_coverage_loader();
 			}
 		} catch(Exception e) {
-			//System.out.println("Error loading map " + e.getMessage());
+			//log.debug("Error loading map " + e.getMessage());
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
 		}
 		try
@@ -121,7 +121,7 @@ public class MapFrameAdmin extends MapFrame {
 		try {
 			prepareImage(m_img_onscreen, null); //get_drawthread());
 		} catch(Exception e) {
-			//System.out.println("prepareImage " + e.getMessage());
+			//log.debug("prepareImage " + e.getMessage());
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
 		}
 		try {
@@ -129,7 +129,7 @@ public class MapFrameAdmin extends MapFrame {
 		} catch(Exception e) {
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);
 		}
-		//System.out.println("KICKREPAINT");
+		//log.debug("KICKREPAINT");
 		kickRepaint();
 		
 	}

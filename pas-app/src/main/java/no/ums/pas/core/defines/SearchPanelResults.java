@@ -1,6 +1,8 @@
 package no.ums.pas.core.defines;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.localization.Localization;
@@ -62,6 +64,9 @@ import java.util.ArrayList;
 
 public abstract class SearchPanelResults extends JPanel implements ComponentListener, TableModelListener //JPanel 
 {
+
+    private static final Log log = UmsLog.getLogger(SearchPanelResults.class);
+
 	/*@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -348,7 +353,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	protected abstract void onMouseRDblClick(int n_row, int n_col, Object [] rowcontent, Point p);
 	protected abstract void valuesChanged();
 	public void sort(int n_col) {
-		//System.out.println("sort by column " + n_col);
+		//log.debug("sort by column " + n_col);
 		sorter.setSortingStatus(n_col, TableSorter.ASCENDING);
 	}
 	
@@ -501,7 +506,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     			if(expect.cast(o).equals(expect.cast(m_tbl_list.getValueAt(i, n_col)))) 
     				return i;
     		} catch(Exception e) {
-    			/*System.out.println(e.getMessage());
+    			/*log.debug(e.getMessage());
     			e.printStackTrace();
     			Error.getError().addError("SearchPanelResults","Exception in find",e,1);*/
     		}
@@ -536,7 +541,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	            		((ArrayList<Object>)m_tbl_list.m_data[x]).remove(i);
 	            		m_tbl_list.fireTableRowsDeleted(i, i);
             		} catch(Exception e) {
-            			System.out.println(e.getMessage());
+            			log.debug(e.getMessage());
             			e.printStackTrace();
             			Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
             		}
@@ -548,7 +553,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     		}
     		return false;
     	} catch(Exception e) {
-    		System.out.println(e.getMessage());
+    		log.debug(e.getMessage());
     		e.printStackTrace();
     		Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
     	}
@@ -982,7 +987,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		{
 			return;
 		}
-		//System.out.println(layer.getWidth() + " " + layer.getHeight());
+		//log.debug(layer.getWidth() + " " + layer.getHeight());
 		scrollPane.setSize(layer.getWidth(), layer.getHeight());
 		int x = ico.getIconWidth(); int y = ico.getIconHeight();
 		lbl_loading.setBounds(layer.getWidth()/2-x/2, layer.getHeight()/2-y/2, x, y);

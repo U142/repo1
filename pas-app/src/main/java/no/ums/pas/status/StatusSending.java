@@ -2,6 +2,8 @@ package no.ums.pas.status;
 
 
 import com.google.common.base.Supplier;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -89,7 +91,7 @@ public class StatusSending extends Object {
 			info->_n_totitem, info->_n_processed, info->_n_altjmp, info->_n_alloc, info->_n_maxalloc);*/
 	
 
-	
+    private static final Log log = UmsLog.getLogger(StatusSending.class);
 	
 	protected StatusSending m_this;
 	protected VoicePanel VOICEPANEL;
@@ -337,7 +339,7 @@ public class StatusSending extends Object {
 			lba.hist_cell = m_lba_by_operator.get(i).hist_cell;
 
 		}
-		//System.out.println("Worst operator status for refno="+lba.n_parentrefno+": "+lba.n_status);
+		//log.debug("Worst operator status for refno="+lba.n_parentrefno+": "+lba.n_status);
 		lba.hist_cc = CalcTotalsByCC();
 		lba.send_ts = MergeLbaTimestamps();
 		//CalcTotalsByCells();
@@ -569,14 +571,14 @@ public class StatusSending extends Object {
 	public MunicipalStruct get_municipal() { return (MunicipalStruct)m_shape; }
 	public void set_shape(ShapeStruct s) { 
 		/*if(s.shapeID != 0)
-			System.out.println("Break");
+			log.debug("Break");
 		
 		if(s.shapeID == ShapeStruct.SHAPE_POLYGON)
 		{
 			double lon=0,lat=0;
 			for(int i=0;i<((PolygonStruct)s).get_coors_lat().size();++i) {
 				if(lon == ((PolygonStruct)s).get_coors_lon().get(i) && lat == ((PolygonStruct)s).get_coors_lat().get(i));
-					System.out.println("Break");
+					log.debug("Break");
 				lon = ((PolygonStruct)s).get_coors_lon().get(i);
 				lat = ((PolygonStruct)s).get_coors_lat().get(i);
 			}
@@ -892,7 +894,7 @@ public class StatusSending extends Object {
 						
 					}
 					m_filter_status_by_operator = operator.intValue();
-					System.out.println("Filter by operator " + m_filter_status_by_operator);
+					log.debug("Filter by operator " + m_filter_status_by_operator);
 					CalcLbaTotalsFromOperators();
 					update_ui();
 					//MergeLbaTimestamps();
@@ -1363,7 +1365,7 @@ public class StatusSending extends Object {
 				//CANCEL
 				if(getLBA()!=null)// && beforeConfirmOrCancelLba(false))
 				{
-					System.out.println("Cancel LBA");
+					log.debug("Cancel LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, false);
 				}
 				
@@ -1372,7 +1374,7 @@ public class StatusSending extends Object {
 				//CONFIRM
 				if(getLBA()!=null)// && beforeConfirmOrCancelLba(true))
 				{
-					System.out.println("Confirm LBA");
+					log.debug("Confirm LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, true);
 				}
 				
@@ -1397,7 +1399,7 @@ public class StatusSending extends Object {
 					}
 					if(jobid.length()>0)
 					{
-						System.out.println("Loading GSM overlay for job="+jobid+" (" + sz_operator + ")");
+						log.debug("Loading GSM overlay for job=" + jobid + " (" + sz_operator + ")");
 						PAS.get_pas().get_mappane().showAllOverlays(1, chk.isSelected(), jobid, chk, sz_operator);
 					}
 					else {
@@ -1428,7 +1430,7 @@ public class StatusSending extends Object {
 						}
 					}
 					
-					System.out.println("Loading UMTS overlay for job="+jobid+" (" + sz_operator + ")");
+					log.debug("Loading UMTS overlay for job=" + jobid + " (" + sz_operator + ")");
 					PAS.get_pas().get_mappane().showAllOverlays(4, chk.isSelected(), jobid, chk, sz_operator);				
 				}
 				catch(Exception err)
@@ -1443,7 +1445,7 @@ public class StatusSending extends Object {
 					LBALanguageMenuItem item = (LBALanguageMenuItem)e.getSource();
 					StringSelection text = new StringSelection(item.getLanguage().getSzText());
 					Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
-					System.out.println(item.getLanguage().getSzName());
+					log.debug(item.getLanguage().getSzName());
 					clip.setContents(text, text);
 				}
 				catch(Exception err){
@@ -2103,7 +2105,7 @@ public class StatusSending extends Object {
 					m_b_allocset = true;
 					get_sendinglist().set_maxalloc("-1", get_refno(), n_maxalloc, this);
 				} catch(Exception err) {
-					System.out.println(err.getMessage());
+					log.debug(err.getMessage());
 					err.printStackTrace();
 					Error.getError().addError("StatusSending","Exception in actionPerformed",err,1);
 				}

@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
@@ -27,6 +29,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 public class PreviewPanel extends DefaultPanel implements ComponentListener, ChangeListener {
+
+    private static final Log log = UmsLog.getLogger(PreviewPanel.class);
+
 	public static final long serialVersionUID = 1;
 	private PreviewList m_previewlist;
 	public PreviewList get_previewlist() { return m_previewlist; } 
@@ -111,7 +116,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			int n_col_namefilter2 = get_previewlist().get_column_bytype(PreviewList.ComboField.FIELDID_NAMEFILTER_INCLUSIVE_2);
 			int n_skiplines		= (get_previewlist().isFirstlineHeading() ? 1 : 0);
 			String sz_separator = get_previewlist().get_gis().get_parser().get_separator();
-			System.out.println(n_col_municipal + " " + n_col_streetid + " " + n_col_houseno + " " + n_col_letter + " (skip:" + n_skiplines + " sep:" + sz_separator + ")");
+			log.debug(n_col_municipal + " " + n_col_streetid + " " + n_col_houseno + " " + n_col_letter + " (skip:" + n_skiplines + " sep:" + sz_separator + ")");
 			try {
 				String sz_sitename;
 				try {
@@ -153,7 +158,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 				
 				
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
 			}
@@ -191,13 +196,13 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 				gis.start();
 				
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
 			}
 		}
 		else if("act_gis_imported".equals(e.getActionCommand())) {
-			System.out.println("GIS Download complete");
+			log.debug("GIS Download complete");
 			final ActionEvent e2 = e;
 			boolean b_dofill_results = false;
 			if(get_resultpanel() == null)
@@ -236,9 +241,9 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 							{
 								err.printStackTrace();
 								if(m_sendobject == null)
-									System.out.println("Error on GIS Import: m_sendobject was null " + err.getMessage() + " \n" + err.getStackTrace().toString());
+									log.debug("Error on GIS Import: m_sendobject was null " + err.getMessage() + " \n" + err.getStackTrace().toString());
 								else
-									System.out.println("Error on GIS Import: " + err.getMessage() + " \n" + err.getStackTrace().toString());
+									log.debug("Error on GIS Import: " + err.getMessage() + " \n" + err.getStackTrace().toString());
 							}
 						}
 					}
@@ -340,7 +345,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 	}
 	
 	public File create_umsgisfile(String filename, LineData linedata, int n_mun, int n_str, int n_hou, int n_let, int n_skip, int n_namefilter1, int n_namefilter2, String sz_sep) {
-		System.out.println(filename);
+		log.debug(filename);
 		File f_ums;
 		try {
 			f_ums = new File(no.ums.pas.core.storage.StorageController.StorageElements.get_path(StorageController.PATH_GISIMPORT_) + filename);
@@ -353,7 +358,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			GISWriter writer = new GISWriter(linedata, f_ums);
 			return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("PreviewPanel","Exception in create_umsgisfile",e,1);
 		}

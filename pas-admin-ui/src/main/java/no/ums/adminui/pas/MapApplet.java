@@ -383,7 +383,7 @@ public class MapApplet extends JApplet implements ActionListener {
 						
 					}
 				} catch(Exception err) {
-					System.out.println(err.getMessage());
+					log.debug(err.getMessage());
 					err.printStackTrace();
 					log.error("Error centering all polygon sendings", err);
 				}
@@ -436,7 +436,7 @@ public class MapApplet extends JApplet implements ActionListener {
 									m_mappane.get_actionhandler().mouseMoved(mouseevent);
 									m_mappane.set_current_snappoint(p);
 								} catch(Exception err) {
-									System.out.println(err.getMessage());
+									log.debug(err.getMessage());
 									err.printStackTrace();
 									Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 								}
@@ -445,7 +445,7 @@ public class MapApplet extends JApplet implements ActionListener {
 								m_mappane.set_current_snappoint(null);
 							}
 						} catch(Exception err) {
-							System.out.println(err.getMessage());
+							log.debug(err.getMessage());
 							err.printStackTrace();
 							Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 						}	
@@ -483,7 +483,7 @@ public class MapApplet extends JApplet implements ActionListener {
 							break;
 					}
 				} catch(Exception err) {
-					System.out.println(err.getMessage());
+					log.debug(err.getMessage());
 					err.printStackTrace();
 					log.error("Error activating drawmode", err);
 				}
@@ -586,7 +586,7 @@ public class MapApplet extends JApplet implements ActionListener {
 					PAS.get_pas().get_sendcontroller().resetActiveProject();
 				}
 				PAS.get_pas().set_keep_sendings(false);
-				System.out.println("Project saved");
+				log.debug("Project saved");
 				Project source = (Project)e.getSource();
 				PAS.get_pas().activateProject(source);
 			}
@@ -612,10 +612,10 @@ public class MapApplet extends JApplet implements ActionListener {
 				PAS.get_pas().get_eastcontent().get_houseeditor().reinit((MapPoint)e.getSource(), m_mappane.get_mouseoverhouse());			
 			}
 			else if("act_maildelivery_success".equals(e.getActionCommand())) {
-				System.out.println("MailCtrl reported success (Code: " + (Integer)e.getSource() + ")");
+				log.debug("MailCtrl reported success (Code: " + (Integer)e.getSource() + ")");
 			}
 			else if("act_maildelivery_failed".equals(e.getActionCommand())) {
-				System.out.println("MailCtrl reported failure (Error: " + (Integer)e.getSource() + ")");
+				log.debug("MailCtrl reported failure (Error: " + (Integer)e.getSource() + ")");
 			}
 			else if("act_messagelib".equals(e.getActionCommand()))
 			{

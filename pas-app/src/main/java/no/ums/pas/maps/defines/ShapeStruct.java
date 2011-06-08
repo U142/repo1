@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
@@ -30,6 +32,9 @@ import java.util.List;
 
 
 public abstract class ShapeStruct extends Object implements Cloneable {
+
+
+    private static final Log log = UmsLog.getLogger(ShapeStruct.class);
 	
 	public static final int SHAPE_UNKNOWN = -1;
 	public static final int SHAPE_ELLIPSE = 0;
@@ -77,7 +82,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 	public void setEditable(boolean b)
 	{
 		m_b_editable = b;
-		System.out.println("Shape setEditable="+m_b_editable);
+		log.debug("Shape setEditable="+m_b_editable);
 	}
 	
 	/**
@@ -265,7 +270,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 			m_fill_color = new Color(comp[0], comp[1], comp[2], (float)0.2);
 			create_texpaint(6);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("ShapeStruct","Exception in set_fill_color",e,1);
 		}

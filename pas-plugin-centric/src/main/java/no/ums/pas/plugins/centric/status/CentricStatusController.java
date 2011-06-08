@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric.status;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.plugins.centric.CentricEastContent;
@@ -11,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CentricStatusController extends StatusController { 
-	
+
+    private static final Log log = UmsLog.getLogger(CentricStatusController.class);
+
 	public CentricStatus getOpenedStatus() { 
 		if(m_centricstatus!=null)
 		{
@@ -47,7 +51,7 @@ public class CentricStatusController extends StatusController {
 		{
 			m_centricstatus.setClosed();
 			m_timer.stop();
-			System.out.println("Status updates stopped");
+			log.debug("Status updates stopped");
 		}
 		return true;
 	}
@@ -88,12 +92,12 @@ public class CentricStatusController extends StatusController {
 				
 				//m_centricstatus.set_cbsendingresponse(res);
 				m_centricstatus.getCBStatus();
-				System.out.println("CentricStatusControl update...");
-				//System.out.println("CentricStatusControl updates - timer="+m_timer.toString());
+				log.debug("CentricStatusControl update...");
+				//log.debug("CentricStatusControl updates - timer="+m_timer.toString());
 			}
 			else
 			{
-				System.out.println("CentricStatusControl busy...");
+				log.debug("CentricStatusControl busy...");
 			}
 			//m_timer.setDelay(m_timer.getRecurringDelay());
 		}
@@ -114,7 +118,7 @@ public class CentricStatusController extends StatusController {
 		if(m_timer!=null)
 		{
 			m_timer.setDelay(1);
-			System.out.println("Forced Quick Status Update");
+			log.debug("Forced Quick Status Update");
 		}
 	}
 

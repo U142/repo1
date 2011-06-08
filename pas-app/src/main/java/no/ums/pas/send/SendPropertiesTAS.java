@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
@@ -32,6 +34,8 @@ import java.util.List;
 
 public class SendPropertiesTAS extends SendProperties
 {
+    private static final Log log = UmsLog.getLogger(SendPropertiesTAS.class);
+
 	List<ULBACOUNTRY> m_country = null;
 	List<USMSINSTATS> m_smsinstats = null;
 	boolean m_b_allow_resonse = false;
@@ -124,7 +128,7 @@ public class SendPropertiesTAS extends SendProperties
 			else {
 				tas.setBResend(true);
 			}
-			System.out.println("TAS objid før populate common: " + System.identityHashCode(this));
+			log.debug("TAS objid før populate common: " + System.identityHashCode(this));
 			populate_common(tas, logon, bounds);
 			
 			/*ArrayOfUMapPoint points;

@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 
 import javax.swing.JFrame;
@@ -9,6 +11,9 @@ import java.awt.Frame;
 
 
 public class SendOptionDlg extends JFrame {
+
+    private static final Log log = UmsLog.getLogger(SendOptionDlg.class);
+
 	public static final long serialVersionUID = 1;
 	private PAS m_pas;
 	private PAS get_pas() { return m_pas; }
@@ -34,7 +39,7 @@ public class SendOptionDlg extends JFrame {
 			setAlwaysOnTop(true);
 		} catch(Exception e) {
 			//get_pas().add_event("Error: " + e.getMessage(), e);
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		setVisible(true);

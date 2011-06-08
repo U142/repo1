@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.send.BBProfile;
 import no.ums.pas.send.BBSchedProfile;
@@ -30,6 +32,9 @@ import java.util.zip.ZipInputStream;
 
 public class WSSendSettings extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSSendSettings.class);
+
 	ArrayList<BBProfile> m_profiles;
 	public ArrayList<BBProfile> get_profiles() { return m_profiles; }
 	ArrayList<OADC> m_oadcnumbers;
@@ -64,15 +69,15 @@ public class WSSendSettings extends WSThread
 			URL wsdl = new URL(vars.WSDL_PAS); //PAS.get_pas().get_sitename() + "/ExecAlert/WS/Pas.asmx?WSDL");
 			//URL wsdl = new URL("http://localhost/WS/Pas.asmx?WSDL");
 			QName service = new QName("http://ums.no/ws/pas/", "pasws");
-			System.out.println("Sending request");
+			log.debug("Sending request");
 			ByteArrayInputStream zip_data = new ByteArrayInputStream(new Pasws(wsdl, service).getPaswsSoap12().getSendSettings(logon));
-			System.out.println("Got response");
+			log.debug("Got response");
 			ZipInputStream zis = new ZipInputStream(zip_data);
-			System.out.println("Unziping response");
+			log.debug("Unziping response");
 			zis.getNextEntry();
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(zis);
-			System.out.println("Building document");
+			log.debug("Building document");
 			parseDoc(doc);
 
 		}
@@ -132,7 +137,7 @@ public class WSSendSettings extends WSThread
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null) {
-				System.out.println("ERROR: XMLSendSettings.nnm_items==null <PROFILE> (" + n_items + ") " + node_item.getNodeName());
+				log.debug("ERROR: XMLSendSettings.nnm_items==null <PROFILE> (" + n_items + ") " + node_item.getNodeName());
 				continue;
 			}
 			sz_values = new String[sz_itemattr.length];
@@ -148,7 +153,7 @@ public class WSSendSettings extends WSThread
 				bbprofile = new BBProfile(sz_values);
 				get_profiles().add(bbprofile);
 			} catch(Exception e) { 
-				//System.out.println(e.getMessage());
+				//log.debug(e.getMessage());
 				//e.printStackTrace();
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
@@ -164,7 +169,7 @@ public class WSSendSettings extends WSThread
 				node_item = list_files.item(n_files);
 				nnm_items = node_item.getAttributes();
 				if(nnm_items==null) {
-					//System.out.println("ERROR: XMLSendSettings.nnm_items==null <FILE> (profile=" + bbprofile.get_profilepk() + ")");
+					//log.debug("ERROR: XMLSendSettings.nnm_items==null <FILE> (profile=" + bbprofile.get_profilepk() + ")");
 					continue;
 				}
 				sz_values = new String[sz_itemattr.length];
@@ -179,7 +184,7 @@ public class WSSendSettings extends WSThread
 				try {
 					bbprofile.add_soundfile(new SoundFile(sz_values));
 				} catch(Exception e) {
-					//System.out.println(e.getMessage());
+					//log.debug(e.getMessage());
 					//e.printStackTrace();
 					Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 					continue;
@@ -197,7 +202,7 @@ public class WSSendSettings extends WSThread
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null) {
-				//System.out.println("ERROR: XMLSendSettings.nnm_items==null <OADC> (" + n_items + ") " + node_item.getNodeName());
+				//log.debug("ERROR: XMLSendSettings.nnm_items==null <OADC> (" + n_items + ") " + node_item.getNodeName());
 				continue;
 			}
 			sz_values = new String[sz_itemattr.length];
@@ -213,7 +218,7 @@ public class WSSendSettings extends WSThread
 				oadc = new OADC(sz_values);
 				get_oadcnumbers().add(oadc);
 			} catch(Exception e) { 
-				//System.out.println(e.getMessage());
+				//log.debug(e.getMessage());
 				//e.printStackTrace();
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
@@ -229,7 +234,7 @@ public class WSSendSettings extends WSThread
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null) {
-				//System.out.println("ERROR: XMLSendSettings.nnm_items==null <OADC> (" + n_items + ") " + node_item.getNodeName());
+				//log.debug("ERROR: XMLSendSettings.nnm_items==null <OADC> (" + n_items + ") " + node_item.getNodeName());
 				continue;
 			}
 			sz_values = new String[sz_itemattr.length];
@@ -259,7 +264,7 @@ public class WSSendSettings extends WSThread
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null) {
-				//System.out.println("ERROR: XMLSendSettings.nnm_items==null <TTSLANG> (" + n_items + ") " + node_item.getNodeName());
+				//log.debug("ERROR: XMLSendSettings.nnm_items==null <TTSLANG> (" + n_items + ") " + node_item.getNodeName());
 				continue;
 			}
 			sz_values = new String[sz_itemattr.length];
@@ -275,7 +280,7 @@ public class WSSendSettings extends WSThread
 				lang = new TTSLang(sz_values);
 				get_ttslang().add(lang);
 			} catch(Exception e) { 
-				//System.out.println(e.getMessage());
+				//log.debug(e.getMessage());
 				//e.printStackTrace();
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
@@ -296,7 +301,7 @@ public class WSSendSettings extends WSThread
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null) {
-				System.out.println("ERROR: XMLSendSettings.nnm_items==null <SERVERFILE> (" + n_items + ") " + node_item.getNodeName());
+				log.debug("ERROR: XMLSendSettings.nnm_items==null <SERVERFILE> (" + n_items + ") " + node_item.getNodeName());
 				continue;
 			}
 			sz_values = new String[sz_itemattr.length];
@@ -323,7 +328,7 @@ public class WSSendSettings extends WSThread
 					get_smstemplatelib().add(file);
 				}
 			} catch(Exception e) { 
-				//System.out.println(e.getMessage());
+				//log.debug(e.getMessage());
 				//e.printStackTrace();
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;

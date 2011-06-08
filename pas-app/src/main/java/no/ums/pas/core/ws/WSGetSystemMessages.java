@@ -57,7 +57,7 @@ public class WSGetSystemMessages extends WSThread
 
 	@Override
 	public void onDownloadFinished() {
-		//System.out.println("System messages downloaded");
+		//log.debug("System messages downloaded");
 	}
 	
 }

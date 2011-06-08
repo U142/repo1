@@ -1,5 +1,7 @@
 package no.ums.pas.core.menus;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -48,6 +50,8 @@ class MapSiteCombo extends JComboBox {
 
 public class MainMenu extends DefaultPanel implements ComponentListener //implements ActionListener //, EventListener //MenuListener //, EventListener
 {
+    private static final Log log = UmsLog.getLogger(MainMenu.class);
+
 	public static final long serialVersionUID = 1;
 	protected Color INACTIVE_COLOR;
 	
@@ -183,7 +187,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		m_selectmenu.revalidate();
 		//m_selectmenu.setPreferredSize(new Dimension(getWidth(), 18));
 		//m_selectmenu.get_bar().setPreferredSize(new Dimension(getWidth(), 18));
-		//System.out.println("Menu resized to " + getWidth() + ", " + getHeight());
+		//log.debug("Menu resized to " + getWidth() + ", " + getHeight());
 	}
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
@@ -473,7 +477,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 					//PAS.get_pas().get_parmcontroller().setFilled(null);
 				}
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("MainMenu","Exception in actionPerformed",err,1);
 			}
@@ -501,12 +505,12 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 		else if("act_change_department".equals(e.getActionCommand())) {
 			if(PAS.get_pas().get_sendcontroller().get_sendings().size() > 0) {
                 Object[] options = {Localization.l("common_discard_sendings"), Localization.l("common_keep_sendings")};
-	//			System.out.println(JOptionPane.showInputDialog(PAS.get_pas(), "Do you want to close current project <" + m_current_project.get_projectname() + ">", "New project", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]));
+	//			log.debug(JOptionPane.showInputDialog(PAS.get_pas(), "Do you want to close current project <" + m_current_project.get_projectname() + ">", "New project", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]));
                 Object input = JOptionPane.showInputDialog(PAS.get_pas(), Localization.l("mainmenu_department_onchange"), Localization.l("mainmenu_department_change"), JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 				if(input != null) {
                     if(input.equals(Localization.l("common_keep_sendings"))) {
 						PAS.get_pas().set_keep_sendings(true);
-						System.out.println("m_keep_sendings=" + PAS.get_pas().get_keep_sendings());
+						log.debug("m_keep_sendings=" + PAS.get_pas().get_keep_sendings());
 					}
 					PAS.get_pas().actionPerformed(e);
 				}

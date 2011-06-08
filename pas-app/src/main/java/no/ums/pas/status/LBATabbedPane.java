@@ -159,14 +159,14 @@ public class LBATabbedPane extends JTabbedPane implements ComponentListener, Cha
 				{
 					if(m_tab_hash.get(operator).equals(tab))
 					{
-						//System.out.println("Show operator " + operator);
+						//log.debug("Show operator " + operator);
 						break;
 					}
 				}
 			}
 		}
 		/*if(operator==-1)
-			System.out.println("Show all operators");*/
+			log.debug("Show all operators");*/
 		if(callback!=null)
 			//ask StatusSending to filter LBA status information
 			callback.actionPerformed(new ActionEvent(new Integer(operator), ActionEvent.ACTION_PERFORMED, "act_lba_filter_by_operator"));

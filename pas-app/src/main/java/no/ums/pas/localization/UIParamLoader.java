@@ -1,5 +1,7 @@
 package no.ums.pas.localization;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ums.errorhandling.Error;
 import org.opengis.parameter.ParameterNotFoundException;
@@ -18,13 +20,15 @@ import java.util.Properties;
 
 public class UIParamLoader extends ClassLoader
 {
+    private static final Log log = UmsLog.getLogger(UIParamLoader.class);
+
 	protected static boolean parseParams(Properties b)
 	{
 		try
 		{
 			UIDefaults defaults = UIManager.getDefaults();
 
-            System.out.println(Localization.l("common_yes"));
+            log.debug(Localization.l("common_yes"));
             defaults.put("OptionPane.cancelButtonText", Localization.l("common_cancel"));
             defaults.put("OptionPane.noButtonText", Localization.l("common_no"));
             defaults.put("OptionPane.okButtonText", Localization.l("common_ok"));
@@ -44,7 +48,7 @@ public class UIParamLoader extends ClassLoader
 			 * Enumeration<Object> def_el = defaults.keys();
 			while(def_el.hasMoreElements())
 			{
-				System.out.println(def_el.nextElement().toString());
+				log.debug(def_el.nextElement().toString());
 			}*/
 			
 			Enumeration<Object> keys = b.keys(); //b.getKeys();
@@ -52,7 +56,7 @@ public class UIParamLoader extends ClassLoader
 			{
 				String key = (String)keys.nextElement();
 				if(key.equals("ULookAndFeel.UAttentionController.INCREMENT"))
-					System.out.println("break");
+					log.debug("break");
 				try
 				{
 					//String value = b.getString(key);

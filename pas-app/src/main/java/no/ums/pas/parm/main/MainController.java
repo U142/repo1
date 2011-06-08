@@ -1,5 +1,7 @@
 package no.ums.pas.parm.main;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -95,6 +97,8 @@ import java.util.Set;
 public class MainController implements ActionListener, TreeModelListener,
 		TreeSelectionListener {
 
+    private static final Log log = UmsLog.getLogger(MainController.class);
+
 	private MainGUI gui;
 	private TreeController treeCtrl = new TreeController(this);
 	public TreeController getTreeCtrl() { return treeCtrl; }
@@ -175,7 +179,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		try {
 			treeCtrl.initiateTree(this.getAllElementsFromXmlFile(), false);
 		} catch(Exception e){
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			//Error.getError().addError("MainController","Exception in initGUI",e,1);
 		}
@@ -335,7 +339,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				}
 			}.start();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 				
 		updXml.endSession();
@@ -345,7 +349,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				Thread.sleep(10);
 				n_count++;
 				//monitor.setProgress(n_count);
-				//System.out.println("n_count = " + n_count);
+				//log.debug("n_count = " + n_count);
 			} catch(Exception e) {
 				//Error.getError().addError("MainController","Exception in endSession",e,1);
 			}
@@ -364,7 +368,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					obj.wait(20000);
 				}
 			} catch(InterruptedException e) {
-				System.out.println("isUpdateXMLReady() interrupted");
+				log.debug("isUpdateXMLReady() interrupted");
 			}
 		}
 		//while(!(getUpdateXML().getState()).equals(Thread.State.TIMED_WAITING) || !timer.timer_exceeded()
@@ -378,7 +382,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			}
 			//timer.inc_timer();
 		}*/
-		//System.out.println("Waited " + timer.get_waited() + "seconds");
+		//log.debug("Waited " + timer.get_waited() + "seconds");
 		return true;
 	}
 	// Execute Event Web Service
@@ -985,7 +989,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					DefaultMutableTreeNode node = findNodeByPk(alert.getAlertpk());
 					if(node!=null)
 					{
-						System.out.println("Node = " + node);
+						log.debug("Node = " + node);
 						node.setUserObject(alert);
 					}
 					
@@ -998,7 +1002,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				DefaultMutableTreeNode editNode = (DefaultMutableTreeNode) treeCtrl.getSelPath().getLastPathComponent();
 				this.treeCtrl.getGui().getTreeModel().reload(editNode);
 			}
-			System.out.println("Address-types: " + this.alertCtrl.getPanelToolbar().get_addresstypes());
+			log.debug("Address-types: " + this.alertCtrl.getPanelToolbar().get_addresstypes());
 //					alertCtrl.getGui().dispose();
 
 			//PAS.pasplugin.removeShapeToPaint(this.alert.getM_shape());
@@ -1068,8 +1072,8 @@ public class MainController implements ActionListener, TreeModelListener,
 	
 						if (this.event.getOperation().equals("insert") && this.eventCtrl.isToObjectList()) {
 							try {
-								System.out.println("EventParentPK: " + event.getParentpk());
-								System.out.println("ParentPK: " + ((ObjectVO)parent.getUserObject()).getPk());
+								log.debug("EventParentPK: " + event.getParentpk());
+								log.debug("ParentPK: " + ((ObjectVO) parent.getUserObject()).getPk());
 								DefaultMutableTreeNode selectedNode = this.treeCtrl.addParentToTree(event, parent);
 								// select the new node (leaf).
 								TreePath path = new TreePath(selectedNode.getPath());
@@ -1363,7 +1367,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			w.setRootTimestamp(r.getRootTimestamp());
 		}
 		catch(Exception e){
-			System.out.println("Feil i addToXml" + e.getMessage());
+			log.debug("Feil i addToXml" + e.getMessage());
 			Error.getError().addError("MainController","Exception in addToXml",e,1);
 		}
 		// Må sende med alle objektene som skal slettes
@@ -1431,13 +1435,13 @@ public class MainController implements ActionListener, TreeModelListener,
 			if (c == null)
 				throw new ParmException("collection param. is null");
 			else if (c.size() == 0)
-				System.out.println("Updating... no new elements!");
+				log.debug("Updating... no new elements!");
 
 			if (c.size() > 0 && c != null) {
 				//xmlreader.sortListAscending((ArrayList) c);
 				ListSorter ls = new ListSorter();
 				Collections.sort((ArrayList<Object>)c,ls);
-				System.out.println("Updating... " + c.size() + " new elements!");
+				log.debug("Updating... " + c.size() + " new elements!");
 				updatedObjects = (ArrayList<Object>) c;
 				Object o;
 				DefaultMutableTreeNode wantedNode = null;
@@ -1501,7 +1505,7 @@ public class MainController implements ActionListener, TreeModelListener,
 									break;
 								}
 							}
-							System.out.println("parent is " + parent);
+							log.debug("parent is " + parent);
 							DefaultMutableTreeNode parentNode = getParentNode(
 									parent, this.treeCtrl.getGui().getTree());
 							this.treeCtrl.addParentToTree(oVO, parentNode);
@@ -1509,7 +1513,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						
 					} else if (o.getClass().equals(EventVO.class)) {
 						EventVO eVO = (EventVO) updatedObjects.get(i);
-						System.out.println(eVO);
+						log.debug(eVO);
 
 						String tempPk = eVO.getTempPk();
 						if(tempPk==null)
@@ -1570,7 +1574,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						}
 					} else if (o.getClass().equals(AlertVO.class)) {
 						AlertVO aVO = (AlertVO) updatedObjects.get(i);
-						System.out.println(aVO);
+						log.debug(aVO);
 
 						String tempPk = aVO.getTempPk();
 						if(tempPk==null)
@@ -1602,7 +1606,7 @@ public class MainController implements ActionListener, TreeModelListener,
 								} // Var kommentert ut
 								if(!event.getAlertListe().contains(o))
 								{
-									System.out.println("contains");
+									log.debug("contains");
 									event.addAlerts((AlertVO)o);
 								}
 								else
@@ -1833,7 +1837,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(avo.getM_shape());
 				}
 				
-				System.out.println("Event = " + event.getName() + " " + event.getAlertListe().size());
+				log.debug("Event = " + event.getName() + " " + event.getAlertListe().size());
 				//showAlertShape(event);
 			}
 			// register the event invoker with map-panel..
@@ -1910,7 +1914,7 @@ public class MainController implements ActionListener, TreeModelListener,
 						
 				addShapeToDrawQueue(p);
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("MainController","Exception in showAlertPolygon",err,1);
 			}
@@ -2016,7 +2020,7 @@ public class MainController implements ActionListener, TreeModelListener,
 	public void treeNodesRemoved(TreeModelEvent e) {
 //		DefaultMutableTreeNode[] parentList = (DefaultMutableTreeNode[]) e.getPath();
 //		DefaultMutableTreeNode parent = parentList[0];
-//		System.out.println("Deleted node parent: " + parent.getUserObject());
+//		log.debug("Deleted node parent: " + parent.getUserObject());
 	}
 
 	public void treeStructureChanged(TreeModelEvent e) {

@@ -79,7 +79,7 @@ public class SoundRecorder extends Thread {
 	        		catch(Exception e)
 	        		{
 	        			e.printStackTrace();
-	        			System.out.println(e.getMessage());
+	        			log.debug(e.getMessage());
 	        			log.warn(e.getMessage());
 	        		}
 	        	}
@@ -238,7 +238,7 @@ public class SoundRecorder extends Thread {
         //targetDataLine = null;
         if (RECTYPE == RECTYPE_FILE) {
             try {
-                System.out.println(getVocTempPath());
+                log.debug(getVocTempPath());
                 m_outputFile = File.createTempFile("voc", "", new File(getVocTempPath()));
                 m_sz_filename = m_outputFile.getName();
             } catch (IOException e) {
@@ -339,7 +339,7 @@ public class SoundRecorder extends Thread {
     public void startRecording() {
         try {
         	//if(AUDIOLINE==null)
-        	System.out.println("startRecording");
+        	log.debug("startRecording");
         	SoundRecorder.InitTargetDataLine(audioFormat);
             if(AUDIOLINE!=null)
             {
@@ -349,12 +349,12 @@ public class SoundRecorder extends Thread {
     				{
     					AUDIOLINE.open();
                     	//AUDIOLINE.open(AUDIOFORMAT);
-                    	System.out.println("Audioline opened");
+                    	log.debug("Audioline opened");
     				}
     				//if(!AUDIOLINE.isActive())
     				{
     					AUDIOLINE.start();
-    					System.out.println("Audioline started");
+    					log.debug("Audioline started");
     				}
                     AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
                     //if(m_recorder_thread==null || !m_recorder_thread.isAlive())
@@ -372,7 +372,7 @@ public class SoundRecorder extends Thread {
                         m_recorder_thread.audioFormat = audioFormat;
                         //m_recorder_thread.setDaemon(true);
                         m_recorder_thread.start();        
-                        System.out.println("Audio recorder thread started");
+                        log.debug("Audio recorder thread started");
                     }
                     if(m_recorder_thread!=null)
                     	m_recorder_thread.m_osc_callback = m_osc_callback;
@@ -405,7 +405,7 @@ public class SoundRecorder extends Thread {
     		AUDIOLINE.stop();
         	if(m_recorder_thread!=null)
         	{
-            	System.out.println("Audioline closed and stopped");
+            	log.debug("Audioline closed and stopped");
                 m_recorder_thread.stopRecording();
         		m_recorder_thread.interrupt();
         		//m_recorder_thread.interrupt();
@@ -430,12 +430,12 @@ public class SoundRecorder extends Thread {
         	if(AUDIOLINE.isActive())
         	{
         		AUDIOLINE.stop();
-            	System.out.println("Audioline stopped");
+            	log.debug("Audioline stopped");
         	}
         	if(AUDIOLINE.isOpen())
         	{
         		AUDIOLINE.close();
-            	System.out.println("Audioline closed");
+            	log.debug("Audioline closed");
         	}
         }
         //m_line.removeLineListener(m_linereader);
@@ -462,15 +462,15 @@ public class SoundRecorder extends Thread {
                 {
                 	Thread.sleep(inc);
                 	curtime+=inc;
-                	System.out.println("Waiting for Audioline (AUDIOLINE=" + AUDIOLINE + ")");
+                	log.debug("Waiting for Audioline (AUDIOLINE=" + AUDIOLINE + ")");
                 }
                 if(AUDIOLINE.isActive())
-                	System.out.println("Audioline active (AUDIOLINE=" + AUDIOLINE + ")");
+                	log.debug("Audioline active (AUDIOLINE=" + AUDIOLINE + ")");
                 while (!this.isFinalized())//m_f_stoprecording)
                 {
                 	if(recording)
                 	{
-                		//System.out.println(this.toString());
+                		//log.debug(this.toString());
                 		try
                 		{
                 			//if(AUDIOLINE!=null && AUDIOLINE.isActive())
@@ -488,14 +488,14 @@ public class SoundRecorder extends Thread {
                 			}
                 			//else
                 			{
-                				//System.out.println("Error - AUDIOLINE="+AUDIOLINE);
+                				//log.debug("Error - AUDIOLINE="+AUDIOLINE);
                 				//Thread.sleep(1000);
                 			}
                 			Thread.sleep(1);
                 		}
                 		catch(InterruptedException e)
                 		{
-                			System.out.println("Interrupted");
+                			log.debug("Interrupted");
                 			break;
                 		}
                 		catch(Exception e)
@@ -506,7 +506,7 @@ public class SoundRecorder extends Thread {
                 }
                 //AUDIOLINE.stop();
                 //AUDIOLINE.close();
-                System.out.println("Recording thread quit");
+                log.debug("Recording thread quit");
 
 
                 recording = false;
@@ -531,14 +531,14 @@ public class SoundRecorder extends Thread {
             e.printStackTrace();
         }
         byte[] abData = m_outputstream.toByteArray();
-        System.out.println(abData.length + " bytes written");
+        log.debug(abData.length + " bytes written");
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(abData);
         AudioInputStream audioInputStream = new AudioInputStream(byteArrayInputStream, audioFormat, abData.length / audioFormat.getFrameSize());
         try {
             m_outputstream = new ByteArrayOutputStream();
-            System.out.println("Writing");
+            log.debug("Writing");
             AudioSystem.write(audioInputStream, m_targetType, m_outputstream);
-            System.out.println("End writing");
+            log.debug("End writing");
             m_outputstream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -558,11 +558,11 @@ public class SoundRecorder extends Thread {
     }
 
     private static void out(String strMessage) {
-        System.out.println(strMessage);
+        log.debug(strMessage);
     }
 
     private static void out() {
-        System.out.println();
+
     }
 }
 

@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -20,6 +22,9 @@ import java.awt.event.ActionListener;
 
 
 public class SendObject extends Object {
+
+    private static final Log log = UmsLog.getLogger(SendObject.class);
+
 	//PAS m_pas = null;
 	//private PAS get_pas() { return m_pas; }
 	String m_sz_name;
@@ -121,7 +126,7 @@ public class SendObject extends Object {
 		SendProperties tmp = null;
 		switch(n_type) {
 		case SendProperties.SENDING_TYPE_POLYGON_:
-			System.out.println("SendingType=Polygon");
+			log.debug("SendingType=Polygon");
 			if(m_sendproperties!=null)
 				tmp = m_sendproperties;
 			m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
@@ -130,7 +135,7 @@ public class SendObject extends Object {
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_GEMINI_STREETCODE_:
-			System.out.println("SendingType=Gemini streetcode");
+			log.debug("SendingType=Gemini streetcode");
 			try {
 				if(m_sendproperties!=null)
 					tmp = m_sendproperties;
@@ -144,7 +149,7 @@ public class SendObject extends Object {
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_POLY, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_CIRCLE_:
-			System.out.println("SendingType=Ellipse");
+			log.debug("SendingType=Ellipse");
 			if(m_sendproperties!=null)
 				tmp = m_sendproperties;
 			m_sendproperties = new SendPropertiesEllipse(new EllipseStruct(), m_toolbar, m_default_color);
@@ -153,7 +158,7 @@ public class SendObject extends Object {
 			get_callback().actionPerformed(new ActionEvent(MapFrame.MapMode.SENDING_ELLIPSE, ActionEvent.ACTION_PERFORMED, "act_set_mappane_mode"));
 			break;
 		case SendProperties.SENDING_TYPE_MUNICIPAL_:
-			System.out.println("SendingType=Municipal");
+			log.debug("SendingType=Municipal");
 			
 			if(m_sendproperties!=null && m_sendproperties.getClass().equals(SendPropertiesMunicipal.class))
 			{
@@ -171,7 +176,7 @@ public class SendObject extends Object {
 			break;
 		case SendProperties.SENDING_TYPE_TAS_COUNTRY_:
 			{
-				System.out.println("SendingType=TAS Country");
+				log.debug("SendingType=TAS Country");
 				//m_sendproperties = new SendPropertiesPolygon(new PolygonStruct(get_navigation().getDimension()), m_toolbar, new Col(m_default_color));
 				m_sendproperties = new SendPropertiesTAS(m_toolbar);
 				
@@ -206,7 +211,7 @@ public class SendObject extends Object {
 	}
 	public void goto_area() {
 		//if(!get_sendproperties().goto_area())
-		System.out.println("SendObject.goto_area()");
+		log.debug("SendObject.goto_area()");
 		get_sendproperties().goto_area();
 			//PAS.get_pas().add_event("Could not execute goto_area()", null);
 	}

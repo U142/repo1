@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools.calendarutils;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.ums.tools.calendarutils.DateTimePicker.DatePicker.DayPanel.DayButton;
@@ -29,6 +31,9 @@ import java.util.Calendar;
 
 
 public class DateTimePicker extends DefaultPanel {
+
+    private static final Log log = UmsLog.getLogger(DateTimePicker.class);
+
 	public static final long serialVersionUID = 1;
 	DatePicker m_datepicker;
 	ActionListener callback;
@@ -239,9 +244,9 @@ public class DateTimePicker extends DefaultPanel {
 		public void maskDates(MASK_DATES mask)
 		{
 			//if current date>filterdate then set current date=filterdate
-			//System.out.println("Current = " + DateFormat.getInstance().format(m_calendar.getTime()) + " Compare=" + DateFormat.getInstance().format(mask_dates_after.getTime()));
+			//log.debug("Current = " + DateFormat.getInstance().format(m_calendar.getTime()) + " Compare=" + DateFormat.getInstance().format(mask_dates_after.getTime()));
 			//if(m_calendar.before(mask_dates_after))
-			System.out.println("Current=" + get_date() + " compare=" + mask_dates_after);
+			log.debug("Current=" + get_date() + " compare=" + mask_dates_after);
 			
 			//make sure from and to dates are equal if there's a logic mismatch
 			/*if((mask==MASK_DATES.AFTER && get_date()>mask_dates_after) || mask==MASK_DATES.BEFORE && get_date()<mask_dates_after)

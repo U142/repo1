@@ -1,5 +1,7 @@
 package no.ums.pas.parm.alert;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.core.Variables;
@@ -49,7 +51,7 @@ import java.awt.event.WindowListener;
 
 public class AlertWindow extends SendWindow implements ActionListener, ChangeListener, WindowListener {
 	public static final long serialVersionUID = 1;
-	
+    private static final Log log = UmsLog.getLogger(AlertWindow.class);
 	//private String m_sz_sendingid;
 	//public String get_sendingid() { return m_sz_sendingid; }
 	private AlertController m_alert;
@@ -596,7 +598,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 
 				for(int i=m_tabbedpane.indexOfComponent(m_sms_broadcast_text_panel);i<m_tabbedpane.getTabCount();i++) {
 					m_tabbedpane.setEnabledAt(i, false);
-					System.out.println("sms skal være disabled");
+					log.debug("sms skal være disabled");
 				}
 				
 			}
@@ -813,7 +815,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 				try {
 					m_edit_shape = (ShapeStruct)m_alert.getAlert().getM_shape().clone();
 				} catch(Exception ex) {
-					System.out.println(ex.getMessage());
+					log.debug(ex.getMessage());
 					ex.printStackTrace();
 					Error.getError().addError("AlertController","Exception in editAlert",ex,1);
 				}

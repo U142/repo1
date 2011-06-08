@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.localization.Localization;
@@ -17,6 +19,9 @@ import java.util.ArrayList;
 
 
 public class Sending_AddressResend extends Sending_AddressPanel implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(Sending_AddressResend.class);
+
 	public static final long serialVersionUID = 1;
 	
 	private StatusCodeList m_statuscodes;
@@ -98,11 +103,11 @@ public class Sending_AddressResend extends Sending_AddressPanel implements Compo
 				StatusCode item = (StatusCode)row[m_n_objectcolumn];
 				try {
 					if(((Boolean)row[n_col]).booleanValue()) {
-						System.out.println("Checked status " + item.get_code());
+						log.debug("Checked status " + item.get_code());
 						parent.get_sendobject().get_sendproperties().addResendStatus(item);
 					}
 					else {
-						System.out.println("UnChecked status " + item.get_code());
+						log.debug("UnChecked status " + item.get_code());
 						parent.get_sendobject().get_sendproperties().remResendStatus(item);
 					}
 				} catch(Exception e) {

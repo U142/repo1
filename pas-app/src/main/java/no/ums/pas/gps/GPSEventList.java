@@ -1,8 +1,14 @@
 package no.ums.pas.gps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.util.ArrayList;
 
 public class GPSEventList extends ArrayList<GPSEvent> {
+
+    private static final Log log = UmsLog.getLogger(GPSEventList.class);
+
 	public static final long serialVersionUID = 1;
 	
 	private String m_sz_eventpk_filter = "0";
@@ -29,12 +35,12 @@ public class GPSEventList extends ArrayList<GPSEvent> {
 								sz_param1, sz_param2, sz_sparam1, sz_sparam2, sz_answered,
 								sz_pri, sz_date, sz_time, sz_updatedate, sz_updatetime,
 								sz_msgpk);
-			System.out.println("new GPSevent added");
+			log.debug("new GPSevent added");
 			super.add(event);
 			set_eventpk_filter(event.get_eventpk());
 			return event;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		return event;

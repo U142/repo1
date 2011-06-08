@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -37,7 +39,9 @@ import no.ums.ws.common.UDeleteStatusResponse;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {
-	
+
+    private static final Log log = UmsLog.getLogger(SearchPanelStatusList.class);
+
 	public static final long serialVersionUID = 1;
 
 	private PAS m_pas;
@@ -109,7 +113,7 @@ public class SearchPanelStatusList extends SearchPanelResults {
 			if(rowcontent[DELETE_COLUMN] instanceof StatusListObject &&
 					slo.statusMayBeDeleted()==UDeleteStatusResponse.OK && JOptionPane.showConfirmDialog(this, Localization.l("main_status_delete_are_you_sure"), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)
 			{
-				System.out.println("Delete status");
+				log.debug("Delete status");
 				PAS.pasplugin.onDeleteStatus((long)((StatusListObject)rowcontent[DELETE_COLUMN]).get_refno(),
 						new IDeleteStatus() {	
 							@Override

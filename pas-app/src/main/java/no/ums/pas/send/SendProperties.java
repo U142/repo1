@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.Area;
 import no.ums.pas.cellbroadcast.CBMessage;
@@ -47,6 +49,9 @@ import java.util.Set;
 
 
 public abstract class SendProperties extends Object {
+
+    private static final Log log = UmsLog.getLogger(SendProperties.class);
+
 	public static final int SENDING_TYPE_POLYGON_ = 0;
 	public static final int SENDING_TYPE_HOUSESELECT_ = 1;
 	public static final int SENDING_TYPE_SQUARE_ = 2;
@@ -435,10 +440,10 @@ public abstract class SendProperties extends Object {
                 resendStatus.getLong().add((long) statusCode.get_code());
             }
 		}
-		//System.out.println("TAS i sendproperties objid: " + System.identityHashCode(this));
+		//log.debug("TAS i sendproperties objid: " + System.identityHashCode(this));
 		
 		if(resendStatus.getLong().size() == 0)
-			System.out.println("No statuscodes");
+			log.debug("No statuscodes");
 		
 		s.setResendStatuscodes(resendStatus);
 		

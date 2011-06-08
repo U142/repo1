@@ -1,5 +1,7 @@
 package no.ums.pas.parm.object;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmController;
 import no.ums.pas.localization.Localization;
@@ -25,6 +27,8 @@ import java.util.Set;
 
 
 public class ObjectController {
+
+    private static final Log log = UmsLog.getLogger(ObjectController.class);
 
 	private ObjectGUI gui;
 	private CategoryVO category;
@@ -93,7 +97,7 @@ public class ObjectController {
 			try {
 				m_edit_polygon = (PolygonStruct)object.getM_shape().clone();
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("ObjectController","Exception in editObject",e,1);
 			}

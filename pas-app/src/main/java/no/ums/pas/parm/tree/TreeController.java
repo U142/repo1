@@ -1,6 +1,8 @@
 package no.ums.pas.parm.tree;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -40,6 +42,8 @@ import java.util.Iterator;
 // Se jeg har fått en blå balongi!
 
 public class TreeController {
+
+    private static final Log log = UmsLog.getLogger(TreeController.class);
 
 	private TreeGUI gui;
 
@@ -87,7 +91,7 @@ public class TreeController {
 		 * TreeCellRenderer) { DefaultTreeCellRenderer dtcr =
 		 * (DefaultTreeCellRenderer)cr;
 		 *  // Set the various colors Color c = dtcr.getBackground();
-		 * System.out.println("Transparancy: " + c.getTransparency());
+		 * log.debug("Transparancy: " + c.getTransparency());
 		 * dtcr.setBackgroundSelectionColor(null);
 		 * dtcr.setBackgroundNonSelectionColor(new
 		 * Color(255,255,255,Color.TRANSLUCENT)); dtcr.setBackground(null);
@@ -103,7 +107,7 @@ public class TreeController {
 
 			// Set the various colors
 			// Color c = dtcr.getBackground();
-			// System.out.println("Transparancy: " + c.getTransparency());
+			// log.debug("Transparancy: " + c.getTransparency());
 			// dtcr.setBackgroundSelectionColor(null);
 			// dtcr.setBackgroundNonSelectionColor(new
 			// Color(255,255,255,Color.TRANSLUCENT));
@@ -153,7 +157,7 @@ public class TreeController {
 			DefaultMutableTreeNode parentNode) throws ParmException {
 		// if (parentNode == null) throw new
 		// IllegalArgumentException("parentNode in addParentToTree is null");
-		// System.out.println("addParentToTree(" + o.toString() + ") start");
+		// log.debug("addParentToTree(" + o.toString() + ") start");
 
 		if (o.getClass().equals(ObjectVO.class)) { // Object is of class
 													// ObjectVO
@@ -205,7 +209,7 @@ public class TreeController {
 			// checking if the object contains other objects:
 			if (newObject.getAlertListe() == null
 					|| newObject.getAlertListe().isEmpty())
-				System.out.println(newObject.toString()
+				log.debug(newObject.toString()
 						+ " has no children. Goodly. :P");
 			else
 				addChildrenToTree(newRootFolder);
@@ -263,7 +267,7 @@ public class TreeController {
 	private void addChildrenToTree(DefaultMutableTreeNode parentNode)
 			throws ParmException { // method runs only if parent object
 		// contains a list of objects.
-		// System.out.println("addChildrenToTree("
+		// log.debug("addChildrenToTree("
 		// + parentNode.getUserObject().toString() + ") start");
 
 		Object parentObject = parentNode.getUserObject();
@@ -351,7 +355,7 @@ public class TreeController {
 				selPath = gui.getTree().getPathForLocation(e.getX(), e.getY());
 
 				if (selRow != -1) {
-					System.out.println("selRow: " + selRow);
+					log.debug("selRow: " + selRow);
 					gui.getEdit().setEnabled(true);
 					gui.getDelete().setEnabled(true);
 
@@ -596,7 +600,7 @@ public class TreeController {
 					gui.getSnapSimulation().setEnabled(false);
 					gui.getSnapTest().setEnabled(false);
 					gui.getTools().setEnabled(false);
-					System.out.println("if user right-clicks on nothing");
+					log.debug("if user right-clicks on nothing");
 				}
 				// gui.invalidate();
 				// gui.validate();

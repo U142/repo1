@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.ParmPanel;
 import no.ums.pas.cellbroadcast.CountryCodes;
@@ -47,6 +49,9 @@ import java.awt.event.MouseEvent;
 
 
 public class EastContent extends JPanel implements ActionListener, ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(EastContent.class);
+
 	public static final long serialVersionUID = 1;
 	public static final int PANEL_INFO_ = 1;
 	public static final int PANEL_GPS_LIST_ = 2;
@@ -249,7 +254,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		{
 			CURRENT_PANEL = PANEL_HOUSEEDITOR_;
 		}
-		System.out.println("Current panel = " + CURRENT_PANEL);
+		log.debug("Current panel = " + CURRENT_PANEL);
 		PAS.pasplugin.onEastContentTabClicked(EastContent.this, m_tabbedpane);		
 	}
 	
@@ -404,7 +409,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					UTabbedPaneUI tpa = (UTabbedPaneUI)ui;
 					Rectangle rect = tpa.calcIconRect(selectedTabIndex);
 					if(rect.contains(mouseEvent.getX(), mouseEvent.getY())) {
-						System.out.println("mouseover");
+						log.debug("mouseover");
 						this.removeTabAt(selectedTabIndex);
 					}
 				}
@@ -465,7 +470,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) {
-		System.out.println("test");
+		log.debug("test");
 	}	
 	public void resize(Dimension d) {
 		if(d.height<=0 || d.width<=0)
@@ -571,7 +576,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 					break;
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("EastContent","Exception in flip_to",e,1);
 		}
@@ -802,23 +807,26 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 
 
 class CloseTpUI extends BasicTabbedPaneUI {
+
+    private static final Log log = UmsLog.getLogger(CloseTpUI.class);
+
 	public static ImageIcon m_icon_close = null;
 	CloseTpUI() {
 		super();
 	}
 	public void update(Graphics g, JComponent c) {
-		System.out.println("update");
+		log.debug("update");
 		super.update(g, c);
 	}
 	public void paint(Graphics g, JComponent c) {
 		super.paint(g, c);
 	}
 	protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
-		System.out.println("calculateTabWidth");
+		log.debug("calculateTabWidth");
 		return super.calculateTabWidth(tabPlacement, tabIndex, metrics) + 20;
 	}
 	protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects, int tabIndex, Rectangle iconRect, Rectangle textRect){
-		System.out.println("paintTab");
+		log.debug("paintTab");
 		super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
 		Rectangle tabRect = rects[tabIndex]; //the black rectangle
 		int selectedIndex = tabPane.getSelectedIndex();
@@ -834,7 +842,7 @@ class CloseTpUI extends BasicTabbedPaneUI {
 		paintCloseIcon(g, dx, dy, isOver);
 	}
 	protected void paintCloseIcon(Graphics g, int x, int y, boolean bIsOver) {
-		System.out.println("paintCloseIcon");
+		log.debug("paintCloseIcon");
 		try {
 			if(m_icon_close!=null)
 				this.paintIcon(g, x, y, m_icon_close, new Rectangle(16,16), true);

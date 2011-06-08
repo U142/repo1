@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric.status;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -28,6 +30,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class CentricMessageStatus extends DefaultPanel implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(CentricMessageStatus.class);
 
 	/**
 	 *
@@ -161,7 +165,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 							final_tp.setToolTipTextAt(n, final_tooltip);
 						}
 						else
-							System.out.println("Component " + final_cms + " not found");
+							log.debug("Component " + final_cms + " not found");
 					}
 				});
 			}

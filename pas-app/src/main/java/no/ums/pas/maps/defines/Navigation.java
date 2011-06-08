@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
@@ -19,6 +21,8 @@ import org.jdesktop.beansbinding.AbstractBean;
 
 
 public class Navigation extends AbstractBean{
+
+    private static final Log log = UmsLog.getLogger(Navigation.class);
 
 	public enum NAVIGATION_GESTURE
 	{
@@ -381,7 +385,7 @@ public class Navigation extends AbstractBean{
 
 		double d_deltax = Math.abs(dim_stop.width-dim_start.width);
 		double d_dist = calc_distance(0, 0, (int)d_deltax, 0);
-		System.out.println(d_dist);
+		log.debug(d_dist);
 		f_centerpoint_x = calc_centerpoint_x(dim_start.width);
 		f_centerpoint_y = calc_centerpoint_y(dim_start.height);
 		
@@ -694,7 +698,7 @@ public class Navigation extends AbstractBean{
 		else if(m_f_bbo<0 && m_f_ubo<0)
 			y1r = m_f_ubo * Math.PI * 2 / 360;
 		m_f_mapwidthmeters = new Double((m_f_rbo.doubleValue() - m_f_lbo.doubleValue()) * 3600 * 30.92 * Math.cos(y1r));
-		//System.out.println(m_f_mapwidthmeters);
+		//log.debug(m_f_mapwidthmeters);
 		m_f_mapheightmeters= new Double((m_f_ubo.doubleValue() - m_f_bbo.doubleValue()) * 3600 * 30.92);
 		
 		update("mapMetersChanged", false, true); //signal a change
@@ -752,7 +756,7 @@ public class Navigation extends AbstractBean{
 		NavStruct r = new NavStruct();
 		MapPointF distance = distance_xy_M(lbo, rbo, ubo, bbo);
 		MapPointF aspect = new MapPointF(distance.x / d.width, distance.y / d.height);
-		//System.out.println("Aspect: " + aspect);
+		//log.debug("Aspect: " + aspect);
 		if(aspect.x > aspect.y)
 		{
 			/*

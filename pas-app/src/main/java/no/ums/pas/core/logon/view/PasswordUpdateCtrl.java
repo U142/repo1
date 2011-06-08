@@ -83,7 +83,7 @@ public class PasswordUpdateCtrl implements PasswordUpdateComplete {
 
 	@Override
 	public void onCancel(PasswordUpdateModel bean) {
-		System.out.println("user clicked cancel");
+		log.debug("user clicked cancel");
 		dlg.setVisible(false);
 	}
 

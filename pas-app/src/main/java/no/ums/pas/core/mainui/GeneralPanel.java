@@ -55,7 +55,7 @@ public abstract class GeneralPanel extends DefaultPanel {
 		}
 	}
 	protected void update_ui(MapPoint p) {
-		//System.out.println("GeneralPanel.update_ui()");
+		//log.debug("GeneralPanel.update_ui()");
 	}
 
 }

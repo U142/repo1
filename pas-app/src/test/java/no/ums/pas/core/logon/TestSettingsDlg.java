@@ -5,6 +5,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.event.TreeSelectionEvent;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.view.Settings;
 import no.ums.pas.core.logon.view.Settings.ISettingsUpdate;
@@ -13,6 +15,7 @@ import no.ums.pas.core.logon.view.SettingsModel;
 import org.junit.Test;
 
 public class TestSettingsDlg {
+
 	@Test
 	public void testOpenDialog()
 	{

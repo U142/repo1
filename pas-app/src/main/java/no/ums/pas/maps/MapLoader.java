@@ -165,9 +165,9 @@ public class MapLoader {
 					try {
 						long start = System.currentTimeMillis();
 						tracker.waitForID(0, m_n_wait_for_mediatracker_ms);
-						//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
+						//log.debug("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 						if (tracker.isErrorAny()) {
-							System.out.println("Error loading overlay image ");
+							log.debug("Error loading overlay image ");
                             Error.getError().addError(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 							b_loading_overlay_in_progress = false;
 							return null;
@@ -260,7 +260,7 @@ public class MapLoader {
 			}
 			catch(Exception e)
 			{
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
                 Error.getError().addError(Localization.l("common_error"), e.toString(), e, 1);
 			}
 
@@ -312,11 +312,11 @@ public class MapLoader {
 			wmstest = new WebMapServer(url);
 			capabilitiestest = wmstest.getCapabilities();
 			// Layer[] layers = WMSUtils.getNamedLayers(capabilitiestest);
-			System.out.println(wmstest.getInfo().getTitle());
-			System.out.println(wmstest.getInfo().getDescription());
-			System.out.println("WMS Version " + capabilitiestest.getVersion());
+			log.debug(wmstest.getInfo().getTitle());
+			log.debug(wmstest.getInfo().getDescription());
+			log.debug("WMS Version " + capabilitiestest.getVersion());
 			//List<Style> styles = capabilitiestest.getLayer().getStyles();
-			//System.out.println(styles);
+			//log.debug(styles);
 			m_wms_formats = wmstest.getCapabilities().getRequest().getGetMap().getFormats();//capabilitiestest.getRequest().getGetLegendGraphic().getFormats();
 			
 		}
@@ -406,9 +406,9 @@ public class MapLoader {
 			request =  wms.createGetMapRequest();
 			if(capabilities==null || !m_sz_wms_url.equals(sz_wms_url))
 				capabilities = wms.getCapabilities();
-			//System.out.println(wms.getInfo().getTitle());
-			//System.out.println(wms.getInfo().getDescription());
-			//System.out.println("WMS Version " + capabilities.getVersion());
+			//log.debug(wms.getInfo().getTitle());
+			//log.debug(wms.getInfo().getDescription());
+			//log.debug("WMS Version " + capabilities.getVersion());
 			m_sz_wms_url = sz_wms_url;
 			
 
@@ -504,7 +504,7 @@ public class MapLoader {
 			 
 			 request.setBBox(n_lbo + ","+n_bbo+","+n_rbo+","+n_ubo);
 
-			 System.out.println(request.getFinalURL());
+			 log.debug(request.getFinalURL());
 			 
 			 GetMapResponse response =  wms.issueRequest(request);
 			 //BufferedReader in = new BufferedReader(new InputStreamReader(response.getInputStream()));
@@ -515,7 +515,7 @@ public class MapLoader {
 				try {
 					long start = System.currentTimeMillis();
 					tracker.waitForID(0, m_n_wait_for_mediatracker_ms);
-					//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
+					//log.debug("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 					if (tracker.isErrorAny()) {
                         log.warn("Error loading overlay image");
 						setErrorMsg("Error loading map into media tracker");
@@ -610,9 +610,9 @@ public class MapLoader {
 					try {
 						long start = System.currentTimeMillis();
 						tracker.waitForID(0, m_n_wait_for_mediatracker_ms);
-						//System.out.println("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
+						//log.debug("Waited " + (System.currentTimeMillis()-start) + " millisecs for image");
 						if (tracker.isErrorAny()) {
-							System.out.println("Error loading overlay image ");
+							log.debug("Error loading overlay image ");
                             log.error(Localization.l("common_error"), "Error loading overlay image", new Exception(), Error.SEVERITY_ERROR);
 							setErrorMsg("Error loading map into media tracker");
 							m_img_load = null;;
@@ -636,9 +636,9 @@ public class MapLoader {
 			} catch(Exception e) {
 				b_error = true;
 				log.error("Failed to load map", e);
-				/*System.out.println(m_httpreq.get_last_error());
-				//System.out.println("Error " + e.getMessage());
-				System.out.println(e.getMessage());
+				/*log.debug(m_httpreq.get_last_error());
+				//log.debug("Error " + e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("MapLoader","Exception in load_map",e,1);*/
 				m_img_load =  null;
@@ -723,11 +723,11 @@ public class MapLoader {
 		m_img_load = PAS.get_pas().retrieve_map(s_url); //image-loader in JApplet
 		if(m_img_load==null)
 		{
-			System.out.println("Failed to load map");
+			log.debug("Failed to load map");
 			return null;
 		}
 		else
-			System.out.println("Map loaded");
+			log.debug("Map loaded");
 		return m_img_load;
 	}	*/
 }

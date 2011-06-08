@@ -1,5 +1,7 @@
 package no.ums.pas.parm.voobjects;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.PolygonStruct;
 
 import java.awt.datatransfer.DataFlavor;
@@ -7,6 +9,8 @@ import java.util.ArrayList;
 
 
 public class ObjectVO extends ParmVO {
+
+    private static final Log log = UmsLog.getLogger(ObjectVO.class);
 
 	private String objectPK;
 	private String deptPK;
@@ -321,27 +325,27 @@ public class ObjectVO extends ParmVO {
 		if(!list.contains(oo))
 			list.add(oo);
 		else
-			System.out.println("Object already exists!");
+			log.debug("Object already exists!");
 	}
 	
 	public void removeObjects(ObjectVO oo){
 		if(list.contains(oo))
 			list.remove(oo);
 		else
-			System.out.println("Object does not exist!");
+			log.debug("Object does not exist!");
 	}
 
 	public void addEvents(EventVO eo){
 		if(!list.contains(eo))
 			list.add(eo);
 		else
-			System.out.println("Event already exists!");
+			log.debug("Event already exists!");
 	}
 	public void removeEvents(EventVO eo){
 		if(list.contains(eo))
 			list.remove(eo);
 		else
-			System.out.println("Event does not exist!");
+			log.debug("Event does not exist!");
 	}
 	
 	public String toString() {

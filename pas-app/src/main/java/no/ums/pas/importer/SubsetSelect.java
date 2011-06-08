@@ -1,6 +1,8 @@
 package no.ums.pas.importer;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -21,6 +23,9 @@ import java.awt.event.ComponentEvent;
 /*manually select a subset from e.g. a SOSI file (FLATE)*/
 
 public class SubsetSelect extends JDialog  {
+
+    private static final Log log = UmsLog.getLogger(SubsetSelect.class);
+    
 	public static final long serialVersionUID = 1;
 
 
@@ -155,7 +160,7 @@ public class SubsetSelect extends JDialog  {
 					m_lbl_info.setText(sz_desc);
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				} catch(Exception err) {
-					System.out.println(err.getMessage());
+					log.debug(err.getMessage());
 				}
 			}
 			else if(m_shapes!=null)

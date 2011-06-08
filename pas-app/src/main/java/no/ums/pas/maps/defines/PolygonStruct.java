@@ -1,5 +1,7 @@
 package no.ums.pas.maps.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
@@ -20,6 +22,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class PolygonStruct extends ShapeStruct {
+
+    private static final Log log = UmsLog.getLogger(PolygonStruct.class);
 
     enum PolyType {
 		NORMAL,
@@ -240,7 +244,7 @@ public class PolygonStruct extends ShapeStruct {
 			else {
 				dir = 1;
 			}
-			System.out.println("dist1 = " + dist1 + " dist2 = " + dist2);
+			log.debug("dist1 = " + dist1 + " dist2 = " + dist2);
 		}
 		else
 		{
@@ -393,7 +397,7 @@ public class PolygonStruct extends ShapeStruct {
                 {
                     if (p.get_lon()*modificator <= Math.max(p1x, p2x))
                     {
-                    	//System.out.println(Math.abs(p1y - p2y) + " prec = " + 1.0d/useprecision);
+                    	//log.debug(Math.abs(p1y - p2y) + " prec = " + 1.0d/useprecision);
                     	
                         if (Math.abs(p1y - p2y) > 1.0d/useprecision)
                     	//if(p1y!=p2y)
@@ -449,7 +453,7 @@ public class PolygonStruct extends ShapeStruct {
 		if(!b_allow_duplicates && hash_coors_added.contains(id) && !isElliptical())
 			return;
 		//if(hash_coors_added.contains(id))
-		//	System.out.println("contains point");
+		//	log.debug("contains point");
 		m_coor_lon.add(dlon);
 		m_coor_lat.add(dlat);
 		m_coor_pointref.add(pointref);
@@ -544,7 +548,7 @@ public class PolygonStruct extends ShapeStruct {
 		double total_lat = 0;
 		for(int i=0; i < m_coor_lon.size(); i++) {
 			/*if(lon == ((Double)arr_use_lon.get(i)).doubleValue() && lat == ((Double)arr_use_lat.get(i)).doubleValue())
-				System.out.println("break");*/
+				log.debug("break");*/
 			lon = m_coor_lon.get(i);
 			lat = m_coor_lat.get(i);
 			if(lon >= rbo)
@@ -941,7 +945,7 @@ public class PolygonStruct extends ShapeStruct {
 				ellipse_polygon);
 		this.m_ellipse_coor_lat = ellipse_polygon.get_coors_lat();
 		this.m_ellipse_coor_lon = ellipse_polygon.get_coors_lon();
-		//System.out.println("points="+m_ellipse_coor_lat.size());
+		//log.debug("points="+m_ellipse_coor_lat.size());
 		ellipse_polygon.set_border_color(this.get_border_color());
 		ellipse_polygon.set_fill_color(this.get_fill_color());
         m_b_recalcing = false;
@@ -1065,7 +1069,7 @@ public class PolygonStruct extends ShapeStruct {
 		MapPointLL first_added_point = newpoly.getFirstPoint();
 
 		//if(newpoly.get_size()==45)
-		//	System.out.println("break");
+		//	log.debug("break");
 		if(n_ell_point==n_size && !b_cur_inside && first_added_point!=null && last_added_point!=null)
 		{
 			//newpoly.followRestrictionLines(newpoly, restrict, last_added_point.getPointReference()+1, first_added_point.getPointReference());
@@ -1206,7 +1210,7 @@ public class PolygonStruct extends ShapeStruct {
 			n_start_intersect = n_entered_polygon_at_idx;
 		List<MapPointLL> intersects = restrict.LineIntersect(current_point, next_point, n_start_intersect, false);
 		//if(intersects.size()>0)
-		//	System.out.println("break");
+		//	log.debug("break");
 		MapPointLL first_intersect = null;
 		int num_intersects = intersects.size();
 		//if(!b_point_is_a_intersection && num_intersects>0)
@@ -1217,7 +1221,7 @@ public class PolygonStruct extends ShapeStruct {
 			double epsilon = 10.0;
 			MapPointLL p1 = intersects.get(0);
 			double dist = Math.sqrt( Math.pow((Math.abs(p1.get_lat() - current_point.get_lat()) * 3600 * 30.92),2) + Math.pow((Math.abs(p1.get_lon() - current_point.get_lon()) * 3600 * 30.92 * Math.cos(current_point.get_lat()) ),2) );
-			//System.out.println("dist="+dist);
+			//log.debug("dist="+dist);
 			if(dist<epsilon && num_intersects>=1)
 			{
 				first_intersect = intersects.get(0);

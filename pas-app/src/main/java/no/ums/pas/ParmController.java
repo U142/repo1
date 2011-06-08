@@ -1,5 +1,7 @@
 package no.ums.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.storage.StorageController;
@@ -26,7 +28,9 @@ import java.util.Iterator;
 
 
 public class ParmController extends MainController {
-	
+
+    private static final Log log = UmsLog.getLogger(ParmController.class);
+
 	private ParmPanel m_parmpanel;
 	public ParmPanel get_parmpanel() { return m_parmpanel; }
 	/*protected PolygonStruct m_polygon;
@@ -47,7 +51,7 @@ public class ParmController extends MainController {
 	}
 	
 	public void createGUI() {
-		System.out.println(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
+		log.debug(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
 		try {
 			StorageController.StorageElements.create_path(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
 		} catch(IOException e) {
@@ -78,7 +82,7 @@ public class ParmController extends MainController {
 		clearDrawQueue();
 	}
 	protected void showAlertShape(EventVO e) { //to be overridden
-		System.out.println("Event shapes " + e.getAlertListe().size());
+		log.debug("Event shapes " + e.getAlertListe().size());
 		Iterator it = e.getAlertListe().iterator();
 		//clearDrawQueue();
 		while(it.hasNext()){
@@ -141,7 +145,7 @@ public class ParmController extends MainController {
 					try {
 						p.calc_coortopix(getMapNavigation());
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						log.debug(e.getMessage());
 						e.printStackTrace();
 						Error.getError().addError("ParmController","Exception in calc_coortopix",e,1);
 					}
@@ -222,7 +226,7 @@ public class ParmController extends MainController {
 						PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
@@ -257,7 +261,7 @@ public class ParmController extends MainController {
 						PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
@@ -270,7 +274,7 @@ public class ParmController extends MainController {
 						PAS.get_pas().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
@@ -284,7 +288,7 @@ public class ParmController extends MainController {
 			updateShape(s);
 		}
 		else
-			System.out.println("ShapeStruct == null");
+			log.debug("ShapeStruct == null");
 	}
 	
 	public void setFilled(ShapeStruct s) {
@@ -293,7 +297,7 @@ public class ParmController extends MainController {
 			updateShapeFilled(s);
 //		}
 //		else
-//			System.out.println("ShapeStruct == null");
+//			log.debug("ShapeStruct == null");
 	}
 	
 	public void actionPerformed(ActionEvent e) {

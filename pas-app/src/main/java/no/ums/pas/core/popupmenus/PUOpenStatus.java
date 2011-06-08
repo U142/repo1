@@ -1,6 +1,8 @@
 package no.ums.pas.core.popupmenus;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.SearchPanelStatusList;
 import no.ums.pas.localization.Localization;
@@ -14,6 +16,9 @@ import java.awt.event.ActionListener;
 
 
 public class PUOpenStatus extends PUMenu implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(PUOpenStatus.class);
+
 	public static final long serialVersionUID = 1;
 	//JMenuItem item_refno;
 	JMenuItem item_project;
@@ -46,7 +51,7 @@ public class PUOpenStatus extends PUMenu implements ActionListener {
 			}
 			item_project.setEnabled(m_b_project);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 	}
 

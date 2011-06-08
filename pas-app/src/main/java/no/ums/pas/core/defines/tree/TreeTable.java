@@ -1,5 +1,7 @@
 package no.ums.pas.core.defines.tree;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.SearchPanelResults;
 
 import javax.swing.table.TableColumn;
@@ -9,6 +11,8 @@ import java.awt.Point;
 
 public abstract class TreeTable extends SearchPanelResults
 {
+    private static final Log log = UmsLog.getLogger(TreeTable.class);
+
 	public TreeTable(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim)
 	{
 		super(sz_columns, n_width, b_editable, dim);
@@ -33,7 +37,7 @@ public abstract class TreeTable extends SearchPanelResults
 	@Override
 	protected void onMouseLDblClick(int n_row, int n_col,
 			Object[] rowcontent, Point p) {
-		System.out.println("Doubleclick");
+		log.debug("Doubleclick");
 	}
 
 	@Override

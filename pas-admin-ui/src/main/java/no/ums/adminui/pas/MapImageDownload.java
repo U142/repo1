@@ -1,5 +1,7 @@
 package no.ums.adminui.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
@@ -16,7 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MapImageDownload extends JApplet implements ActionListener {
-	
+
+    private static final Log log = UmsLog.getLogger(MapImageDownload.class);
 	/**
 	 * 
 	 */
@@ -104,8 +107,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		
 		lat = getParameter("lat");
 		lon = getParameter("lon");
-		System.out.println("lat: " + lat);
-		System.out.println("lon: " + lon);
+		log.debug("lat: " + lat);
+		log.debug("lon: " + lon);
 		
 		String[] clat = lat.split("\\|");
 		String[] clon = lon.split("\\|");
@@ -183,8 +186,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			
 			lat = getParameter("lat");
 			lon = getParameter("lon");
-			System.out.println("lat: " + lat);
-			System.out.println("lon: " + lon);
+			log.debug("lat: " + lat);
+			log.debug("lon: " + lon);
 			
 			String[] clat = lat.split("\\|");
 			String[] clon = lon.split("\\|");

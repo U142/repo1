@@ -1,5 +1,7 @@
 package no.ums.pas.core.dataexchange.soap;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.ums.errorhandling.Error;
 import org.w3c.dom.Node;
@@ -17,6 +19,9 @@ import java.net.URL;
 
 public class SoapExecEvent extends SoapExecAlert
 {
+
+    private static final Log log = UmsLog.getLogger(SoapExecEvent.class);
+
 	private String l_eventpk;
 	
 	public SoapExecEvent(String l_eventpk, String sz_sendfunction, UserInfo userinfo)
@@ -91,9 +96,9 @@ public class SoapExecEvent extends SoapExecAlert
 //	    	URL url = new URL(s_asmx);
 //	    	SOAPMessage replyMsg = connection.call(message, url);
 	    	
-//	    	System.out.println(replyMsg.getSOAPBody().getChildElements().hasNext());
+//	    	log.debug(replyMsg.getSOAPBody().getChildElements().hasNext());
 //	    	replyMsg.writeTo(System.out);
-//	    	System.out.println("");
+//	    	log.debug("");
 
 	    	//<ExecAlertResponse xmlns="http://ums.no/"><ExecAlertResult><results xmlns="" f_simulation="True" l_alertpk="1000000000000305"><project l_projectpk="1000000000000285"><alert l_alertpk="1000000000000305" l_refno="89582" result="False" text="Error creating shape file for Location Based Alert">Object reference not set to an instance of an object.</alert><alert l_alertpk="1000000000000305" l_refno="89582" result="True" text="Voice Message Sent"/></project></results></ExecAlertResult></ExecAlertResponse>
 	    	
@@ -128,7 +133,7 @@ public class SoapExecEvent extends SoapExecAlert
 		try
 		{
 	    	SOAPPart soappart = replyMsg.getSOAPPart();
-	    	System.out.println(soappart.getTextContent());
+	    	log.debug(soappart.getTextContent());
 	    	NodeList nl = soappart.getElementsByTagName("results");
 	    	if(nl.getLength()>=1)
 	    	{

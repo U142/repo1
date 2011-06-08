@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.MapPointLL;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -17,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeptArray extends ArrayList<DeptInfo> {
+
+    private static final Log log = UmsLog.getLogger(DeptArray.class);
+
 	public static final long serialVersionUID = 1;
 	public DeptInfo add(int n_deptpk, String sz_deptid, String sz_stdcc, NavStruct nav_init, boolean b_default_dept, 
 						int n_deptpri, int n_maxalloc, String sz_defaultnumber, UserProfile m_userprofile,
@@ -101,8 +106,8 @@ public class DeptArray extends ArrayList<DeptInfo> {
 				javapoly.addPoint(x, y);
 				n_total_points++;
 			}
-			System.out.println(poly.get_size() + " points in polygon");
-			//System.out.println("C = " + c);
+			log.debug(poly.get_size() + " points in polygon");
+			//log.debug("C = " + c);
 			/*if(j==1)
 				javapoly.translate(-10, -10);
 			else if(j==2)
@@ -111,9 +116,9 @@ public class DeptArray extends ArrayList<DeptInfo> {
 			Area area = new Area(javapoly);
 			combined.add(area);
 			boolean b_polygonal = combined.isPolygonal();
-			//System.out.println("Is polygonal:" + b_polygonal);
+			//log.debug("Is polygonal:" + b_polygonal);
 		}
-		System.out.println(n_total_points + " points in " + size() + " shapes");
+		log.debug(n_total_points + " points in " + size() + " shapes");
 
 		//temp
 		//test ellipse
@@ -163,7 +168,7 @@ public class DeptArray extends ArrayList<DeptInfo> {
 				//	break;
 				if(pi==PathIterator.SEG_LINETO)
 				{
-					//System.out.println("Lineto");
+					//log.debug("Lineto");
 					//combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod);
 				}
 				else if(pi==PathIterator.SEG_MOVETO)
@@ -172,7 +177,7 @@ public class DeptArray extends ArrayList<DeptInfo> {
 				}
 				if(pi==PathIterator.SEG_CLOSE)
 				{
-					System.out.println("SEG_CLOSE ("+n_total_points+")");
+					log.debug("SEG_CLOSE ("+n_total_points+")");
 					
 					//combined_shapestruct.add_coor(f_prev_moveto_x, f_prev_moveto_y);
 				}
@@ -180,14 +185,14 @@ public class DeptArray extends ArrayList<DeptInfo> {
 				{
 					f_prev_moveto_x = coors[0]/int_mod;
 					f_prev_moveto_y = coors[1]/int_mod;
-					System.out.println("SEG_MOVETO ("+n_total_points+")");
+					log.debug("SEG_MOVETO ("+n_total_points+")");
 					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true, false);
 				}
 				else
 					combined_shapestruct.add_coor(coors[0]/int_mod, coors[1]/int_mod, true, false);
 								n_total_points++;
 				point_count++;
-				//System.out.println("Lon " + coors[0]/int_mod + " Lat " + coors[1]/int_mod);
+				//log.debug("Lon " + coors[0]/int_mod + " Lat " + coors[1]/int_mod);
 			}
 			catch(Exception e)
 			{
@@ -198,7 +203,7 @@ public class DeptArray extends ArrayList<DeptInfo> {
 		
 			it.next();
 		}
-		System.out.println("Combined Pointcount = " + n_total_points);
+		log.debug("Combined Pointcount = " + n_total_points);
 		combined_shapestruct.finalizeShape();		
 		combined_shapestruct.setCurrentViewMode(DETAILMODE.SHOW_POLYGON_FULL, 0, null);
 

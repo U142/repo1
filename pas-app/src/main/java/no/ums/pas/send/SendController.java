@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.soap.SoapExecAlert;
@@ -62,6 +64,9 @@ import java.util.List;
 
 
 public class SendController implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(SendController.class);
+
 	public static final int SENDTO_NOPHONE_PRIVATE	= 1 << 0;
 	public static final int SENDTO_NOPHONE_COMPANY	= 1 << 1;
 	
@@ -422,7 +427,7 @@ public class SendController implements ActionListener {
 			}
 			m_b_ignore_project = true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			return false;
@@ -437,7 +442,7 @@ public class SendController implements ActionListener {
 				if(!CheckForProject())
 					return null;
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
                 Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			}
@@ -456,11 +461,11 @@ public class SendController implements ActionListener {
 			{
 
 			}
-			System.out.println("New sending created");
+			log.debug("New sending created");
 			return obj;
 			
 		} catch(Exception err) {
-			System.out.println(err.getMessage());
+			log.debug(err.getMessage());
 			err.printStackTrace();
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",err,1);
 			return null;
@@ -497,7 +502,7 @@ public class SendController implements ActionListener {
 					break;
 				case SendProperties.SENDING_TYPE_TAS_COUNTRY_:
 					SendPropertiesTAS tas = new SendPropertiesTAS(obj.get_toolbar());
-					System.out.println("TAS created objid: " + System.identityHashCode(tas));
+					log.debug("TAS created objid: " + System.identityHashCode(tas));
 					TasStruct ts = sending.get_shape().typecast_tas();
 					tas.set_resend(sending.get_refno());
 					obj.set_sendproperties(tas);
@@ -508,7 +513,7 @@ public class SendController implements ActionListener {
 					tas.set_sms_broadcast_oadc(sending.getLbaLanguages().get(0).getSzCbOadc()); // Eneste måten jeg fant for å hente ut oadc ved tas resend siden sending.get_oadc() bare gir N/A
 					break;
 			}
-			System.out.println(sending.get_addresstypes());
+			log.debug(sending.get_addresstypes());
 			// Få tak i gislist
 			//PAS.get_pas().get_statuscontroller().get_houses().get_houses().size();			
 			obj.get_toolbar().init_addresstypes(sending.get_resend_addresstypes());
@@ -713,7 +718,7 @@ public class SendController implements ActionListener {
 			if(!obj.get_toolbar().getClass().equals(SendOptionToolbar.class))
 				show_addresstypes(obj.get_sendproperties().get_addresstypes());
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in set_activesending",e,1);
 		}
@@ -732,7 +737,7 @@ public class SendController implements ActionListener {
 		try {
 			PAS.get_pas().get_housecontroller().show_addresstypes(n_types);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in show_addresstypes",e,1);
 		}
 	}
@@ -767,7 +772,7 @@ public class SendController implements ActionListener {
 					obj.draw(g, mousepos);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in draw_polygons",e,1);
 		}
@@ -928,9 +933,9 @@ public class SendController implements ActionListener {
 				//		ui.get_compid(), ui.get_userid(), ui.get_current_department().get_deptid(), 
 				//		new String(pass.getPassword()), sz_function, "0", "0");
 				progress.start();
-				System.out.println("AlertPK: " + a.getAlertpk().substring(1));
-				System.out.println("Logon: " + logon_exec.toString());
-				System.out.println("sz_function: " + sz_function);
+				log.debug("AlertPK: " + a.getAlertpk().substring(1));
+				log.debug("Logon: " + logon_exec.toString());
+				log.debug("sz_function: " + sz_function);
 				ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, "0", "0");
 				//ExecResponse ar = myService.getParmwsSoap12().execAlertV3(Long.parseLong(a.getAlertpk().substring(1)), logon_exec, sz_function, no.ums.pas.ums.tools.Utils.get_current_date_formatted(), Long.toString(no.ums.pas.ums.tools.Utils.get_current_datetime()).substring(8,14));
 				res = new SoapExecAlert("0", "0", null).newSnapAlertResult();
@@ -960,7 +965,7 @@ public class SendController implements ActionListener {
 			catch(Exception e)
 			{
                 no.ums.pas.ums.errorhandling.Error.getError().addError(Localization.l("common_error"), e.getMessage(), e, 1);
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				loader.setVisible(false);
 				return;
 			}
@@ -1033,7 +1038,7 @@ public class SendController implements ActionListener {
 					}
 				}
 				loader.setVisible(true);
-				/*System.out.println("SOAP = " + sz_execute_asmx);
+				/*log.debug("SOAP = " + sz_execute_asmx);
 				SoapExecEvent soap = new SoapExecEvent(a.getEventPk(), sz_function, PAS.get_pas().get_userinfo());
 				b = soap.post(sz_execute_asmx, new String(pass.getPassword()), "0", "0");
 				res = soap.getResults();*/
@@ -1057,7 +1062,7 @@ public class SendController implements ActionListener {
 			catch(Exception e)
 			{
                 no.ums.pas.ums.errorhandling.Error.getError().addError(Localization.l("common_error"), e.getMessage(), e, 1);
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				loader.setVisible(false);
 				return;
 			}

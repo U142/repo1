@@ -3,6 +3,8 @@ package no.ums.pas.sound;
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 
 import javax.sound.sampled.AudioSystem;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 public class SoundMixer implements LineListener {
 
+    private static final Log log = UmsLog.getLogger(SoundMixer.class);
     //private static final Log logger = UmsLog.getLogger(SoundMixer.class);
 
     public final int MIXER_TYPE_MIC = 0;
@@ -71,7 +74,7 @@ public class SoundMixer implements LineListener {
 	}
 	
 	public void update(LineEvent e) {
-		System.out.println("LineEvent " + e.getType());
+		log.debug("LineEvent " + e.getType());
 	}
 	
 	
@@ -80,11 +83,11 @@ public class SoundMixer implements LineListener {
 		try
 		{
 			result = AudioSystem.getMixerInfo().length > 0;
-			System.out.println(AudioSystem.getMixerInfo().length);
+			log.debug(AudioSystem.getMixerInfo().length);
 		}
 		catch (Exception e)
 		{
-			System.out.println("Could not fetch AudioSystem.getMixerInfo()");
+			log.debug("Could not fetch AudioSystem.getMixerInfo()");
 		}
 		if(!result)
 			return false;
@@ -112,7 +115,7 @@ public class SoundMixer implements LineListener {
 			error=true;
 			//JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("sound_mixer_no_mic_lines_found"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
             str_error_msg = Localization.l("sound_mixer_no_mic_lines_found");
-			System.out.println("No MIC lines found");
+			log.debug("No MIC lines found");
 			SoundRecorderPanel.b_line_ok = false;
 		}
 		try {
@@ -130,7 +133,7 @@ public class SoundMixer implements LineListener {
 			  ((BooleanControl)m_SpeakerMuteCtrl[0]).setValue(false);
 			  m_b_vol_inited = true;
 		} catch(Exception e) {
-			System.out.println("No Speaker lines found");
+			log.debug("No Speaker lines found");
 			error = true;
 			if(str_error_msg.length() > 0) {
                 str_error_msg += " & " + Localization.l("sound_mixer_no_speaker_lines_found");
@@ -156,7 +159,7 @@ public class SoundMixer implements LineListener {
 			m_HeadMuteCtrl[0] = (BooleanControl) headIn.getControl(BooleanControl.Type.MUTE);
 			((BooleanControl)m_HeadMuteCtrl[0]).setValue(false);
 		} catch(Exception e) {
-			System.out.println("No Headphone lines found");
+			log.debug("No Headphone lines found");
 		}*/
 		//setMute(m_MicMuteCtrl, true);
 
@@ -378,9 +381,9 @@ public class SoundMixer implements LineListener {
 		}
 	}
 	protected void setVolume(Control []ctl, float val) {
-		System.out.println("setVolume");
+		log.debug("setVolume");
 		for(int i=0; i < ctl.length; i++) {
-			System.out.println(ctl[i].getType().toString());
+			log.debug(ctl[i].getType().toString());
 			//if(ctl[i].getType().toString().equals("Volume")) {
 				FloatControl vol = (FloatControl) ctl[i];
 				float setVal = vol.getMinimum() + (vol.getMaximum() - vol.getMinimum()) * Volume;
@@ -413,7 +416,7 @@ public class SoundMixer implements LineListener {
                     recPortInfo);
             
             setRecControlValue(recPort);
-            System.out.println("Selected " + Zrodlo);
+            log.debug("Selected " + Zrodlo);
             
         } catch (Exception e) {
             //logger.warn("Failed to update soundmixer, Zrodlo: %s, volume: %f", Zrodlo, Volume, e);
@@ -456,7 +459,7 @@ public class SoundMixer implements LineListener {
         }
         if(ctl.getType().toString().equals("Volume")) {
             FloatControl vol = (FloatControl) ctl;
-            System.out.println(vol.getValue());
+            log.debug(vol.getValue());
             return new Integer((int)(vol.getValue()*100.0f));
         }
         return null;

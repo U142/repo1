@@ -109,7 +109,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
     @Override
     public void startPlugin() {
         super.startPlugin();
-        System.out.println("PAS_Scripting loaded");
+        log.debug("PAS_Scripting loaded");
     }
 
     @Override
@@ -290,7 +290,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
                     PAS.get_pas().waitForFirstMap();
 
                     log.debug("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000);
-                    System.out.println(String.format("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
+                    log.debug(String.format("Waited %d seconds for map to load", (System.currentTimeMillis() - start) / 1000));
                     if (PAS.get_pas().get_parmcontroller() != null) {
                         return null;
                     }
@@ -304,7 +304,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
             protected void done() {
             	if(Variables.getUserInfo().get_current_department().get_userprofile().get_parm_rights()>=1)
             	{
-            		System.out.println("Starting PARM");
+            		log.debug("Starting PARM");
 	                PAS.get_pas().init_parmcontroller();
 	                PAS.get_pas().get_parmcontroller().setExpandedNodes();
 	                PAS.get_pas().get_eastcontent().flip_to(EastContent.PANEL_PARM_);
@@ -313,7 +313,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
             	}
             	else
             	{
-            		System.out.println("No PARM righs");
+            		log.debug("No PARM righs");
             	}
             }
         }.execute();
@@ -453,7 +453,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			try
 			{
 				String laf = UIManager.getSystemLookAndFeelClassName();
-				System.out.println("Using LAF=" + laf);
+				log.debug("Using LAF=" + laf);
 				LookAndFeel oLaf = (LookAndFeel)classloader.loadClass(laf).newInstance();
 				UIManager.setLookAndFeel(oLaf);
 				//SwingUtilities.updateComponentTreeUI(this);
@@ -468,7 +468,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				try
 				{
 					String laf = UIManager.getCrossPlatformLookAndFeelClassName();
-					System.out.println("Using LAF=" + laf);
+					log.debug("Using LAF=" + laf);
 					LookAndFeel oLaf = (LookAndFeel)classloader.loadClass(laf).newInstance();
 					UIManager.setLookAndFeel(oLaf);
 					//SwingUtilities.updateComponentTreeUI(this);
@@ -861,7 +861,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onTrainingMode(boolean b) {
-		System.out.println("TrainingMode=" + b);
+		log.debug("TrainingMode=" + b);
 		return true;
 	}
 	
@@ -884,7 +884,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onCustomizeLogonDlg(LogonDialog dlg) {
-		System.out.println("onCustomizeLogonDlg");
+		log.debug("onCustomizeLogonDlg");
 		dlg.setPreferredSize(new Dimension(400, 350));
 		return true;
 	}
@@ -1235,7 +1235,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	public void onLocaleChanged(Locale from, Locale to) {
 		try
 		{
-			System.out.println("Language changed from " + from.getLanguage() + " to " + to.getLanguage());
+			log.debug("Language changed from " + from.getLanguage() + " to " + to.getLanguage());
 			UIParamLoader.loadServerUIParams();
 		}
 		catch(FileNotFoundException e)
@@ -1314,7 +1314,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onEastContentTabClicked(EastContent e, JTabbedPane pane) {
-		System.out.println("Tab: " + pane.getTitleAt(pane.getSelectedIndex()));
+		log.debug("Tab: " + pane.getTitleAt(pane.getSelectedIndex()));
 		PAS.get_pas().kickRepaint();
 		return true;
 	}
@@ -1333,14 +1333,13 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 
 	@Override
 	public boolean onDownloadHouses(final HouseController controller) {
-		new Thread("Download houses thread")
-		{
-			public void run()
-			{
+        PasApplication.getInstance().getExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
 				PAS.get_pas().actionPerformed(new ActionEvent(HouseController.HOUSE_DOWNLOAD_IN_PROGRESS_, ActionEvent.ACTION_PERFORMED, "act_download_houses_report"));
 				controller.start_download(true);
 			}
-		}.start();
+		});
 		return true;
 	}
 

@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
@@ -44,6 +46,9 @@ import java.beans.PropertyChangeListener;
 //import Core.WebData.XMLWeatherData;
 
 public class InfoPanel extends GeneralPanel {
+
+    private static final Log log = UmsLog.getLogger(InfoPanel.class);
+
 	public static final long serialVersionUID = 1;
 	BoxLayout m_boxlayout;
 
@@ -255,7 +260,7 @@ public class InfoPanel extends GeneralPanel {
 		m_lbl_userprofile_output.setText(dept.get_userprofile().get_name());
 		String db = dept.get_stdcc();
 		String municipals = "";
-		System.out.println("PAS Rights (stdcc=" + dept.get_stdcc() + ") = " + info.get_current_department().get_pas_rights());
+		log.debug("PAS Rights (stdcc=" + dept.get_stdcc() + ") = " + info.get_current_department().get_pas_rights());
 		try {
 			db = "<html>";
 			db += ""
@@ -309,14 +314,14 @@ public class InfoPanel extends GeneralPanel {
 			db += "</html>";
 		} catch (Exception e) {
 			
-			System.out.println("PAS rights failed");
+			log.debug("PAS rights failed");
 			e.printStackTrace();
 		}
 		// m_lbl_adrdatabase_output.setText(db);
 		m_lbl_adrdatabase_output.setText(db);
 		m_lbl_adrdatabase_municipals.setText(municipals);
-		System.out.println(db);
-		System.out.println(municipals);
+		log.debug(db);
+		log.debug(municipals);
 	}
 
 	protected void init_controls() {
@@ -393,13 +398,13 @@ public class InfoPanel extends GeneralPanel {
 	 * class RowXY extends BoxPanel { public static final long serialVersionUID
 	 * = 1; RowXY() { super(); } void init() { try { add(m_lbl_xy);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_xy); }
-	 * catch(Exception e) { System.out.println(e.getMessage());
+	 * catch(Exception e) { log.debug(e.getMessage());
 	 * e.printStackTrace();
 	 * Error.getError().addError("InfoPanel","Exception in RowXY",e,1); } } }
 	 * class RowLL extends BoxPanel { public static final long serialVersionUID
 	 * = 1; RowLL() { super(); } void init() { try { add(m_lbl_coor);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_coor); }
-	 * catch(Exception e) { System.out.println(e.getMessage());
+	 * catch(Exception e) { log.debug(e.getMessage());
 	 * e.printStackTrace();
 	 * Error.getError().addError("InfoPanel","Exception in RowLL",e,1); }
 	 * 
@@ -407,12 +412,12 @@ public class InfoPanel extends GeneralPanel {
 	 * serialVersionUID = 1; RowLLDec() { super(); } void init() { try {
 	 * add(m_lbl_coor_dec); add(Box.createRigidArea(new Dimension(25,0)));
 	 * add(m_txt_coor_dec); } catch(Exception e) {
-	 * System.out.println(e.getMessage()); e.printStackTrace();
+	 * log.debug(e.getMessage()); e.printStackTrace();
 	 * Error.getError().addError("InfoPanel","Exception in RowLLDec",e,1); } } }
 	 * class RowUTM extends BoxPanel { public static final long serialVersionUID
 	 * = 1; RowUTM() { super(); } void init() { try { add(m_lbl_utm);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_utm); }
-	 * catch(Exception e) { System.out.println(e.getMessage());
+	 * catch(Exception e) { log.debug(e.getMessage());
 	 * e.printStackTrace();
 	 * Error.getError().addError("InfoPanel","Exception in RowUTM",e,1); } } }
 	 */
@@ -718,7 +723,7 @@ public class InfoPanel extends GeneralPanel {
 			m_txt_xy_x.setText(Integer.toString(p.get_x()));
 			m_txt_xy_y.setText(Integer.toString(p.get_y()));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("InfoPanel", "Exception in update_ui", e,
 					1);
@@ -791,7 +796,7 @@ public class InfoPanel extends GeneralPanel {
 			// 100000 + " , " + (double)(Math.round(ll.get_lat() * 100000)) /
 			// 100000);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("InfoPanel", "Exception in update_ui", e,
 					1);
@@ -1569,7 +1574,7 @@ public class InfoPanel extends GeneralPanel {
 	 * InputStream is = form.post(); BufferedReader bis= new BufferedReader(new
 	 * InputStreamReader(is)); String line = bis.readLine(); String concated =
 	 * ""; while(line != null) { concated += line; line = bis.readLine(); }
-	 * System.out.println(concated); } catch(IOException ioe) {
+	 * log.debug(concated); } catch(IOException ioe) {
 	 * Error.getError().addError("Error during weather post", "", ioe,
 	 * Error.SEVERITY_ERROR); } }
 	 */

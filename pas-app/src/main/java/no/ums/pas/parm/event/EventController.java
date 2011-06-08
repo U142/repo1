@@ -1,6 +1,8 @@
 package no.ums.pas.parm.event;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.ShapeStruct;
@@ -23,6 +25,8 @@ import java.util.TreeSet;
 
 
 public class EventController implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(EventController.class);
 
 	private int tempPk;
 	private EventGUI gui;
@@ -74,7 +78,7 @@ public class EventController implements ActionListener {
 	}
 
 	public boolean deleteEvent(EventVO event, DefaultMutableTreeNode eventNode) {
-		System.out.println("object" + this.object);
+		log.debug("object" + this.object);
 		this.event = event;
         Object[] options = {Localization.l("common_yes"), Localization.l("common_cancel")};
 
@@ -184,7 +188,7 @@ public class EventController implements ActionListener {
 				PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(PAS.get_pas().get_mappane().get_active_shape());
 			}
 			else
-				System.out.println("Epicentre == null");
+				log.debug("Epicentre == null");
 			/*if(existInObjectList(this.event) == false) {
 				this.object.addEvents(this.event);
 			}*/

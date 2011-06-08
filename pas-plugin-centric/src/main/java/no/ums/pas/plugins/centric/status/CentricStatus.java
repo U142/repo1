@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric.status;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.Variables;
@@ -31,6 +33,7 @@ import java.util.List;
 
 public class CentricStatus extends DefaultPanel implements ComponentListener{
 
+    private static final Log log = UmsLog.getLogger(CentricStatus.class);
 	/**
 	 * 
 	 */
@@ -177,7 +180,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 			PAS.get_pas().kickRepaint();
 			if(gotoArea!=null)
 			{
-				System.out.println("goto " + gotoArea);
+				log.debug("goto " + gotoArea);
 				PAS.pasplugin.onMapGotoShapesToPaint();
 			}
 		}
@@ -206,7 +209,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 		}
 		if(gotoArea!=null)
 		{
-			System.out.println("goto " + gotoArea);
+			log.debug("goto " + gotoArea);
 			PAS.pasplugin.onMapGotoNavigation(gotoArea);
 		}
 	}
@@ -307,13 +310,13 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 				cbsreq.setLTimefilter(cbsres.getLDbTimestamp());
 				for(int i=0;i<m_status_tabbed.getComponentCount();++i)
 					m_status_tabbed.setIconAt(i, null);
-				//System.out.println("Status update complete");
+				//log.debug("Status update complete");
 				
 			}
 			else
 			{
 				//Status update failed
-				System.out.println("Status update failed");
+				log.debug("Status update failed");
 			}
 			
 			ready = true;
@@ -420,7 +423,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
                             final_tp.setTitleAt(n, final_lbl);
                             final_tp.setToolTipTextAt(n, final_tooltip);
                         } else
-                            System.out.println("Component " + final_cms + " not found");
+                            log.debug("Component " + final_cms + " not found");
                     }
                 });
             } catch (Exception e) {

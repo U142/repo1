@@ -1,11 +1,16 @@
 package no.ums.pas.entrypoint;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
 public class ExecApplet extends JApplet implements Runnable {
+
+    private static final Log log = UmsLog.getLogger(ExecApplet.class);
+
 	public static final long serialVersionUID = 1;
 	private PAS m_pas;
 	public ExecApplet() {
@@ -20,7 +25,7 @@ public class ExecApplet extends JApplet implements Runnable {
 		String sz_sitename = "https://secure.ums2.no/vb4utv/";
 		String sz_userid = "";
 		String sz_compid = "";
-		System.out.println("Using site: " + sz_sitename);
+		log.debug("Using site: " + sz_sitename);
 		m_pas = new PAS(sz_sitename, sz_userid, sz_compid, null, "", false, null, null, null, null);
 		try {
 			m_pas.setVisible(true);

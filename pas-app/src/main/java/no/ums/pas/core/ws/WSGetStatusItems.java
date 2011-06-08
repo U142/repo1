@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.project.Project;
@@ -48,6 +50,9 @@ import java.util.zip.ZipInputStream;
 
 public class WSGetStatusItems extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSGetStatusItems.class);
+
 	private long sz_projectpk;
 	private int sz_datefilter;
 	private int sz_timefilter;
@@ -81,7 +86,7 @@ public class WSGetStatusItems extends WSThread
 			}
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("WSGetStatusItems","Exception in onDownloadFinished",e,1);
 		}
@@ -243,7 +248,7 @@ public class WSGetStatusItems extends WSThread
 						catch(Exception e)
 						{
 							sz_values[n_attr] = "-1";
-							System.out.println(e.getMessage());
+							log.debug(e.getMessage());
 							e.printStackTrace();
 							Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 						}
@@ -254,7 +259,7 @@ public class WSGetStatusItems extends WSThread
 							b_hasvoice = true;
 						sending.setProjectpk(Long.toString(sz_projectpk));
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						log.debug(e.getMessage());
 						e.printStackTrace();
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 						continue;
@@ -272,14 +277,14 @@ public class WSGetStatusItems extends WSThread
 									Node node_stat = list_smsstats.item(stat);
 									if(node_stat.getNodeName().equals("SMSINSTATS"))
 									{
-										//System.out.println("SMS in stats found");
+										//log.debug("SMS in stats found");
 										NodeList list_answers = node_stat.getChildNodes();
 										for(int answ = 0; answ < list_answers.getLength(); answ++)	
 										{
 											Node node_answer = list_answers.item(answ);
 											/*if(node_answer.getNodeName().equals("ANSWER"))
 											{
-												System.out.println("Answer found");
+												log.debug("Answer found");
 											}*/
 											try
 											{
@@ -287,7 +292,7 @@ public class WSGetStatusItems extends WSThread
 												String answercode = node_answer.getAttributes().getNamedItem("l_answercode").getNodeValue();
 												String desc = node_answer.getAttributes().getNamedItem("sz_description").getNodeValue();
 												String count = node_answer.getAttributes().getNamedItem("l_count").getNodeValue();
-												//System.out.println("answer refno " + refno + " " + answercode + " " + desc);
+												//log.debug("answer refno " + refno + " " + answercode + " " + desc);
 												USMSINSTATS _smsstat = new USMSINSTATS();
 												_smsstat.setLRefno(new Integer(refno).intValue());
 												_smsstat.setLAnswercode(new Integer(answercode).intValue());
@@ -321,7 +326,7 @@ public class WSGetStatusItems extends WSThread
 								Node node_point;
 								NamedNodeMap nnm_point;
 								Double f_lon, f_lat;
-								//System.out.println("Polypoints = " + list_points.getLength());
+								//log.debug("Polypoints = " + list_points.getLength());
 								
 								for(int n_items=0; n_items < list_points.getLength(); n_items++)
 								{
@@ -344,13 +349,13 @@ public class WSGetStatusItems extends WSThread
 											f_lat = null;
 										if(f_lon!=null && f_lat!=null)
 										{
-											//System.out.println(f_lon + " , " + f_lat);
+											//log.debug(f_lon + " , " + f_lat);
 											sending.get_polygon().add_coor(f_lon, f_lat);
 										}
 									}
 									catch(Exception e)
 									{
-										System.out.println(e.getMessage());
+										log.debug(e.getMessage());
 										e.printStackTrace();
 										Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 									}
@@ -591,11 +596,11 @@ public class WSGetStatusItems extends WSThread
 						shapeStruct.shapeName = Localization.l("common_refno") + " " + sending.get_refno();
 					}
 					try {
-						//System.out.println("sending " + sending.get_refno() + " with " + sending.get_polygon().get_size() + " points");
+						//log.debug("sending " + sending.get_refno() + " with " + sending.get_polygon().get_size() + " points");
 						get_callback().actionPerformed(new ActionEvent(sending, ActionEvent.ACTION_PERFORMED, "act_add_sending"));
 						//get_pas().get_statuscontroller().add_sending(sending);
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						log.debug(e.getMessage());
 						e.printStackTrace();
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 					}
@@ -736,7 +741,7 @@ public class WSGetStatusItems extends WSThread
 										try
 										{
 											Node ccnode = list_ccodes.item(ccodes);
-											System.out.println(ccnode.getNodeName());
+											log.debug(ccnode.getNodeName());
 											NamedNodeMap nnm_ccode = ccnode.getAttributes();
 											String cc = nnm_ccode.getNamedItem("cc").getNodeValue();
 											LBACCode lbaccode = new LBACCode();
@@ -800,7 +805,7 @@ public class WSGetStatusItems extends WSThread
 							}
 							catch(Exception e)
 							{
-								System.out.println(e.getMessage());
+								log.debug(e.getMessage());
 								e.printStackTrace();
 								Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 							}							
@@ -868,7 +873,7 @@ public class WSGetStatusItems extends WSThread
 					   new Double(node_ubo.getNodeValue()).doubleValue(), new Double(node_bbo.getNodeValue()).doubleValue());
 			get_callback().actionPerformed(new ActionEvent(nav_init, ActionEvent.ACTION_PERFORMED, "act_set_nav_init"));*/
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 		}
@@ -910,7 +915,7 @@ public class WSGetStatusItems extends WSThread
 					}
 					catch(Exception e)
 					{
-						System.out.println(e.getMessage());
+						log.debug(e.getMessage());
 						e.printStackTrace();
 						//sz_values[n_attr] = new String("0");
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
@@ -923,7 +928,7 @@ public class WSGetStatusItems extends WSThread
 						m_n_max_litem = obj.get_item();
 					fire_statusitem(obj);
 				} catch(Exception e) { 
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 					return;
@@ -975,7 +980,7 @@ public class WSGetStatusItems extends WSThread
 						sz_values[n_attr] = new String(nnm_items.getNamedItem(sz_codeattr[n_attr]).getNodeValue());
 				}
 				catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 				}
@@ -986,7 +991,7 @@ public class WSGetStatusItems extends WSThread
 				//m_statuscodes.add(obj_status);
 			}
 			catch(Exception e) { 
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 			}
@@ -1053,7 +1058,7 @@ public class WSGetStatusItems extends WSThread
 				PAS.get_pas().get_statuscontroller().set_datetime_filter(t);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("XMLGetStatusItems","Exception in file_set_datetimefilter",e,1);
 		}

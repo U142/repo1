@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.send.SendOptionToolbar;
 
 import javax.swing.JScrollPane;
@@ -12,6 +14,9 @@ import java.awt.LayoutManager;
 import java.util.Hashtable;
 
 public class SendingPanel extends JScrollPane {
+
+    private static final Log log = UmsLog.getLogger(SendingPanel.class);
+    
 	public static final long serialVersionUID = 1;
 	//JScrollPane sp;
 	//public JScrollPane getScrollPane() { return sp; }
@@ -211,7 +216,7 @@ public class SendingPanel extends JScrollPane {
 		 * Not used by this class
 		 */
 		   public void removeLayoutComponent(Component comp){
-			   System.out.println("remove");
+			   log.debug("remove");
 		   }
 		//-----------------------------------------------------------------------------
 		   public String toString(){return getClass().getName()+"[vgap="+vgap+" align="+alignment+" anchor="+anchor+"]";}

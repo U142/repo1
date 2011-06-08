@@ -1,6 +1,12 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 public class ExecAlert {
+
+    private static final Log log = UmsLog.getLogger(ExecAlert.class);
+
 	public ExecAlert() {
 		
 	}
@@ -30,11 +36,11 @@ public class ExecAlert {
 				concated += line;
 				line = bis.readLine();
 			}
-			System.out.println(concated);*/
+			log.debug(concated);*/
 			
 			
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage(), e);
 		}
 		
 		

@@ -1,6 +1,8 @@
 package no.ums.pas.pluginbase.defaults;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.address_search.AddressSearchCountry;
@@ -26,12 +28,12 @@ import java.awt.event.ActionListener;
 
 public class DefaultAddressSearch implements AbstractPasScriptingInterface.AddressSearch
 {
-	
+	private static final Log log = UmsLog.getLogger(DefaultAddressSearch.class);
 	
 	@Override
 	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback)
 			throws Exception {
-		System.out.println("onCreateSearchPanelResultsAddrSearch");
+		log.debug("onCreateSearchPanelResultsAddrSearch");
         String[] sz_columns  = {Localization.l("adrsearch_dlg_hit"),
                 Localization.l("adrsearch_dlg_address"),
                 Localization.l("adrsearch_dlg_region"),
@@ -43,7 +45,7 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 
 	@Override
 	public SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception {
-		System.out.println("onCreateSearchPanelVals");
+		log.debug("onCreateSearchPanelVals");
 		return new SearchPanelVals(panel);
 	}
 
@@ -134,7 +136,7 @@ public class DefaultAddressSearch implements AbstractPasScriptingInterface.Addre
 		while(it.hasNext())
 		{
 			UGabResult result = (UGabResult)it.next();
-			System.out.println("Resulttype="+result.getType().toString());
+			log.debug("Resulttype="+result.getType().toString());
 			TableColumnModel tcm = list.getJTable().getColumnModel();
 			if(result.getType().equals(GABTYPE.HOUSE))
 			{

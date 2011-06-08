@@ -1,6 +1,8 @@
 package no.ums.pas.importer.esri;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.importer.ActionFileLoaded;
 import no.ums.pas.importer.FileParser;
 import no.ums.pas.importer.ImportPolygon;
@@ -29,6 +31,8 @@ import java.util.List;
 
 public class ShapeImporter extends FileParser
 {
+    private static final Log log = UmsLog.getLogger(ShapeImporter.class);
+
 	@Override
 	public boolean create_values() {
 		return false;
@@ -72,7 +76,7 @@ public class ShapeImporter extends FileParser
 			{
 				String s = dbf.getHeader().getFieldName(i);
 				dbf_fields.add(s);
-				System.out.println("Field" + i + "=" + s);
+				log.debug("Field" + i + "=" + s);
 			}
 			while(dbf.hasNext())
 			{
@@ -86,7 +90,7 @@ public class ShapeImporter extends FileParser
 				}
 				dbf_content.add(fields);
 				dbf_strings.add(output);
-				System.out.println(output);
+				log.debug(output);
 			}
 			dbf.close();
 		}
@@ -98,12 +102,12 @@ public class ShapeImporter extends FileParser
 		{
 			GeometryFactory fact = new GeometryFactory();
 			String projection_code = (ref!=null ? ref.getName().getCode() : "lonlat");
-			System.out.println("Projection = " + projection_code);
+			log.debug("Projection = " + projection_code);
 			/*IndexFile indexfile = new IndexFile(shp, true);
 			for(int i=0; i < indexfile.getRecordCount(); i++)
 			{
 				int n_contentlength = indexfile.getContentLength(i);
-				System.out.println("" + n_contentlength);
+				log.debug("" + n_contentlength);
 			}*/
 
 			org.geotools.data.shapefile.shp.ShapefileReader shape = new org.geotools.data.shapefile.shp.ShapefileReader(shp, false, false, fact);
@@ -332,7 +336,7 @@ public class ShapeImporter extends FileParser
 			ActionFileLoaded event = new ActionFileLoaded(m_object, ActionEvent.ACTION_PERFORMED, "act_shape_parsing_complete", ImportPolygon.MIME_TYPE_SHP_);		
 			m_callback.actionPerformed(event);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}
@@ -340,7 +344,7 @@ public class ShapeImporter extends FileParser
 			ActionEvent eof = new ActionEvent(get_object(), ActionEvent.ACTION_PERFORMED, get_action_eof());
 			get_callback().actionPerformed(eof);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}		

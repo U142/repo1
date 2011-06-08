@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -31,6 +33,9 @@ import java.util.Hashtable;
 
 
 public class OpenStatuscodes extends SearchPanelResults {
+
+    private static final Log log = UmsLog.getLogger(OpenStatuscodes.class);
+
 	public static final long serialVersionUID = 1;
 	private PAS m_pas;
 	private StatuscodeFrame m_statusframe;
@@ -235,7 +240,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 				}
 				get_pas().get_statuscontroller().show_statuscode(current.get_code(), current.get_visible());
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("OpenStatuscodes","Exception in start_search",e,1);
 			}
@@ -328,7 +333,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 			get_popup_statuslist().pop(this.m_tbl, p);
 			//get_pas().add_event("Rightclick: open popup menu");
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("OpenStatuscodes","Exception in onMouseRClick",e,1);
 		}

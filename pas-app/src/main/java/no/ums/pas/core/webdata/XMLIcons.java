@@ -1,5 +1,7 @@
 package no.ums.pas.core.webdata;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 
 
 public class XMLIcons extends XMLThread {
+
+    private static final Log log = UmsLog.getLogger(XMLIcons.class);
+
 	DefaultPanel m_parent;
 	public XMLIcons(PAS pas, String sz_url, DefaultPanel parent, HTTPReq http_req) {
 		super(Thread.NORM_PRIORITY, pas, sz_url, null, null, "Loading icons...", false, http_req);
@@ -90,7 +95,7 @@ public class XMLIcons extends XMLThread {
 				String sz_temp = new String();
 				for(int z=0; z<sz_itemattr.length; z++)
 					sz_temp += ", " + new String(nnm_items.getNamedItem(sz_itemattr[z]).getNodeValue());
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("XMLIcons","Exception in parseDoc",e,1);
 				continue;

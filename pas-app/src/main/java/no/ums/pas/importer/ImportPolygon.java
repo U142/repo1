@@ -326,7 +326,7 @@ public class ImportPolygon implements ActionListener {
 			sosi.parse(f, this, m_action);
 			return sosi;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("ImportPolygon","Exception in parse_sosi",e,1);
 		}
@@ -338,7 +338,7 @@ public class ImportPolygon implements ActionListener {
 			ShapeImporter shape = new ShapeImporter(f, this, m_action);
 			return shape;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("ImportPolygon","Exception in parse_shape",e,1);			
 		}
@@ -485,7 +485,7 @@ public class ImportPolygon implements ActionListener {
 	
 		}
 		else if("act_importsending_found".equals(e.getActionCommand())) {
-			System.out.println("Sending found");
+			log.debug("Sending found");
 			m_sendings_found.add((SendObject)e.getSource());
 		}
 	}

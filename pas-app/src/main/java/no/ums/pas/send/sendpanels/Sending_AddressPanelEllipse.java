@@ -66,10 +66,10 @@ public class Sending_AddressPanelEllipse extends Sending_AddressPanel {
 			form.setParameter("radius_x", new Float(Math.abs(ellipse.get_corner().get_lon() - ellipse.get_center().get_lon())*10000).toString());
 			form.setParameter("radius_y", new Float(Math.abs(ellipse.get_corner().get_lat() - ellipse.get_center().get_lat())*10000).toString());
 			
-			System.out.println(new Double(ellipse.get_center().get_lon()).toString());
-			System.out.println(new Double(ellipse.get_center().get_lat()).toString());
-			System.out.println(new Float(Math.abs(ellipse.get_corner().get_lon() - ellipse.get_center().get_lon())).toString());
-			System.out.println(new Float(Math.abs(ellipse.get_corner().get_lat() - ellipse.get_center().get_lat())).toString());
+			log.debug(new Double(ellipse.get_center().get_lon()).toString());
+			log.debug(new Double(ellipse.get_center().get_lat()).toString());
+			log.debug(new Float(Math.abs(ellipse.get_corner().get_lon() - ellipse.get_center().get_lon())).toString());
+			log.debug(new Float(Math.abs(ellipse.get_corner().get_lat() - ellipse.get_center().get_lat())).toString());
 			
 			get_parent().set_comstatus("Performing addresscount");
 			xml = new XMLAdrCount(form, get_url(), null, new HTTPReq(PAS.get_pas().get_sitename()), this, ADRCOUNT_CALLBACK_ACTION_);

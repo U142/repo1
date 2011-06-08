@@ -24,7 +24,7 @@ public class LineData extends Object {
 		return get(n_line).toArray();
 	}
 	public Object [] toArray(int n_line, int n_forcecolumns) {
-		//System.out.println("force = " +toArray(n_line).length);
+		//log.debug("force = " +toArray(n_line).length);
 		if(toArray(n_line).length > n_forcecolumns)
 			return toArray(n_line);
 		Object [] obj = new Object[n_forcecolumns];

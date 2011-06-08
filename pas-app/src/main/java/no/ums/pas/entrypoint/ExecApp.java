@@ -93,8 +93,8 @@ public class ExecApp {
         Object read_timeout;
         connect_timeout = System.getProperties().get("sun.net.client.defaultConnectTimeout");
         read_timeout = System.getProperties().get("sun.net.client.defaultReadTimeout");
-        System.out.println("sun.net.client.defaultConnectTimeout=" + connect_timeout);
-        System.out.println("sun.net.client.defaultReadTimeout=" + read_timeout);
+        log.debug("sun.net.client.defaultConnectTimeout=" + connect_timeout);
+        log.debug("sun.net.client.defaultReadTimeout=" + read_timeout);
         String sz_sitename = "http://vb4utv/";
         String sz_userid = null;
         String sz_compid = null;
@@ -144,7 +144,7 @@ public class ExecApp {
                         break;
                     case 'f':
                         if (arg.length() > 3) {
-                            System.out.println("auto import file=" + arg.substring(3));
+                            log.debug("auto import file=" + arg.substring(3));
                             sz_import = arg.substring(3);
                         }
                         //JOptionPane.showInputDialog(args[i].substring(2));
@@ -155,8 +155,8 @@ public class ExecApp {
         //JFrame.setDefaultLookAndFeelDecorated(true);
 
 
-        System.out.println("Using site: " + sz_sitename);
-        System.out.println("Using WS: " + sz_pasws);
+        log.debug("Using site: " + sz_sitename);
+        log.debug("Using WS: " + sz_pasws);
 
         if (ServiceManager.getServiceNames() == null) {
             sz_codebase = sz_sitename;
@@ -166,7 +166,7 @@ public class ExecApp {
                 BasicService basicService = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
                 URL url = basicService.getCodeBase();
                 sz_codebase = url.toExternalForm() + codebaseFolder;
-                System.out.println("Codebase=" + sz_codebase);
+                log.debug("Codebase=" + sz_codebase);
             } catch (UnavailableServiceException e) {
                 log.error("Failed to initialized JNLP BasicService", e);
             }

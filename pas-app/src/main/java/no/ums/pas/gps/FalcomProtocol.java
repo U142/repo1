@@ -1,9 +1,15 @@
 package no.ums.pas.gps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FalcomProtocol {
+    
+    private static final Log log = UmsLog.getLogger(FalcomProtocol.class);
+
 	private static final int STATE_WAIT_FOR_LOGON_	= 0;
 	private static final int STATE_CONNECTED_		= 1;
 	private static final int STATE_DISCONNECTED_	= 2;
@@ -80,7 +86,7 @@ public class FalcomProtocol {
 	
 	public String processInput(String theInput) {
 		String sz_output = null;
-		System.out.println(new java.util.Date().toString() + " " + get_unit().get_imei() + " - " + theInput);
+		log.debug(new java.util.Date().toString() + " " + get_unit().get_imei() + " - " + theInput);
 		
 		//check for quit first
 		try {
@@ -101,7 +107,7 @@ public class FalcomProtocol {
 				sz_output = "LOGON FAILED";
 				state = STATE_DISCONNECTED_;
 			}
-			System.out.println(sz_output);
+			log.debug(sz_output);
 		} else if(state == STATE_CONNECTED_) {
 			String sz_cmd = get_values(theInput, "=")[0];
 			if(sz_cmd.equals(INFO_DEVICE_NAME_))
@@ -123,7 +129,7 @@ public class FalcomProtocol {
 			}
 		} else if(state == STATE_IDLE_) {
 			if(theInput.indexOf(CMD_PING_) >= 0) {
-				System.out.println(get_unit().get_objectpk() + " ping");
+				log.debug(get_unit().get_objectpk() + " ping");
 			}
 			/*
 			else if(theInput.indexOf(POS_GPGLL_) >= 0) {
@@ -134,7 +140,7 @@ public class FalcomProtocol {
 						add_position(pos);
 					}
 				} catch(Exception e) {
-					System.out.println("Failed to add position " + e.getMessage());
+					log.debug("Failed to add position " + e.getMessage());
 				}
 			}
 			else if(theInput.indexOf(POS_GPVTG_) >= 0) {
@@ -157,20 +163,20 @@ public class FalcomProtocol {
 					get_unit().set_gpsfix(b);
 					set_gpsfix(get_unit());
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 				}
 			}
 			else if(theInput.indexOf(CMD_RET_BATTERY_VOLTAGE_) >= 0) {
 				String vals[] = get_values(theInput, ":");
 				try {
-					//System.out.println("\"" + new String(vals[1].trim().substring(0, vals[1].trim().length()-1).trim()) + "\"");
+					//log.debug("\"" + new String(vals[1].trim().substring(0, vals[1].trim().length()-1).trim()) + "\"");
 					Double d = new Double(new String(vals[1].trim().substring(0, vals[1].trim().length()-1).trim()));
 					get_unit().set_battery(d.doubleValue());
 					set_batteryvoltage(get_unit());
-					//System.out.println("Battery voltage=" + d);
+					//log.debug("Battery voltage=" + d);
 				} catch(Exception e) {
-					System.out.println("Error: battery voltage");
+					log.debug("Error: battery voltage");
 				}
 			}
 			else if(theInput.indexOf(CMD_RET_SUCCESS_) >= 0) {

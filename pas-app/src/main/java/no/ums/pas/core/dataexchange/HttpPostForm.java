@@ -297,7 +297,7 @@ public class HttpPostForm {
     	m_b_session_reconnect = false;
 //    InputStream is = connection.getInputStream();
 //    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-//    System.out.println(reader.read());
+//    log.debug(reader.read());
     return connection.getInputStream();
   }
   

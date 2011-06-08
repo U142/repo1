@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -41,6 +43,8 @@ import java.util.List;
 
 public class CentricSendOptionToolbar extends DefaultPanel implements ActionListener, FocusListener, 
 																	KeyListener, MouseListener {
+
+    private static final Log log = UmsLog.getLogger(CentricSendOptionToolbar.class);
 
 	int MAX_MESSAGELENGTH_PR_PAGE = 93;
 	int MAX_PAGES = 15;
@@ -154,7 +158,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 	protected void setDeptSendOnBehalfOf(DeptInfo d)
 	{
 		m_dept_send_on_behalf_of = d;
-		System.out.println("Sending owned by " + d.get_deptid());
+		log.debug("Sending owned by " + d.get_deptid());
 	}
 	
 	/**
@@ -1074,7 +1078,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_originator))
 		{
-			//System.out.println("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
+			//log.debug("idx=" + m_cbx_originator.getSelectedIndex() + " " + m_cbx_originator.getSelectedItem().toString());
 			if(m_cbx_originator.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -1090,7 +1094,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_reaction))
 		{
-			//System.out.println("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
+			//log.debug("idx=" + m_cbx_reaction.getSelectedIndex() + " " + m_cbx_reaction.getSelectedItem().toString());
 			if(m_cbx_reaction.getSelectedIndex()==-1)
 				return;
 			if(e.getActionCommand().equals("comboBoxEdited"))
@@ -1106,7 +1110,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		else if(e.getSource().equals(m_cbx_risk))
 		{
-			//System.out.println("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
+			//log.debug("idx=" + m_cbx_risk.getSelectedIndex() + " " + m_cbx_risk.getSelectedItem().toString());
 			if(e.getActionCommand().equals("comboBoxEdited"))
 			{
 				if(m_cbx_risk.getSelectedIndex()==-1)
@@ -1551,7 +1555,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 			int before = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
 			int txt_before = TextFormat.GsmStrLen(m_txt_message.getText()); //m_txt_message.getText().length();
 			int char_selection = TextFormat.GsmStrLen(c.getText().substring(c.getSelectionStart(), c.getSelectionEnd())); //c.getSelectionEnd()-c.getSelectionStart();
-			//System.out.println("c="+char_selection);
+			//log.debug("c="+char_selection);
 			boolean b = checkIfInputAllowed(e, char_selection);
 			int after = TextFormat.GsmStrLen(m_txt_preview.getText()); //m_txt_preview.getText().length();
 			//int txt_after = TextFormat.GsmStrLen(c.getText());//c.getText().length();
@@ -1582,7 +1586,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					}
 				}
 			}
-			//System.out.println("Before="+before+" After="+after);
+			//log.debug("Before="+before+" After="+after);
 		}
 		else if(e.getSource().equals(m_txt_event_name)) {
 			if(!projectOpen())
@@ -1594,7 +1598,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 				JTextComponent c = (JTextComponent)e.getSource();
 				int before = c.getText().length();
 				int char_selection = c.getSelectionEnd()-c.getSelectionStart();
-				//System.out.println("c="+char_selection);
+				//log.debug("c="+char_selection);
 				boolean b = checkIfInputAllowed(e, char_selection);
 				int after = c.getText().length() + m_txt_date_time.getText().length() + 1;
 //				int number_of_chars = after-before;

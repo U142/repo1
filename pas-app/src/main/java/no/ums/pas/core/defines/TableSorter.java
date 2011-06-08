@@ -306,7 +306,7 @@ public class TableSorter extends DefaultTableModel {
     }
 
     public Object getValueAt(int row, int column) {
-        //System.out.println("tableModel.getValueAt(modelIndex(" + row + "), " + column + ")");
+        //log.debug("tableModel.getValueAt(modelIndex(" + row + "), " + column + ")");
    		
     	//ENDRET
     	try {

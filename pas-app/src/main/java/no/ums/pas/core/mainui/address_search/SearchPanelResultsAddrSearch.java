@@ -53,7 +53,7 @@ public class SearchPanelResultsAddrSearch extends SearchPanelResults implements 
 
 	public void start_search()
 	{
-		//System.out.println("Info: inserting search row");
+		//log.debug("Info: inserting search row");
 		//m_tbl_list.insert_row(new String[] {"", "Starting searchthread", "", "0", "0"}, -1); //, ""
 		m_adrthread = new AdrSearchThread(Thread.MIN_PRIORITY);
 		m_adrthread.start();		

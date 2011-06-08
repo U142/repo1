@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -30,6 +32,8 @@ import java.io.File;
 //import java.awt.PrintCanvas;
 
 public class PrintCtrl implements Printable {
+    private static final Log log = UmsLog.getLogger(PrintCtrl.class);
+
 	Graphics m_graph;
 	//PAS m_pas;
 	Frame m_frame;
@@ -213,8 +217,8 @@ public class PrintCtrl implements Printable {
 	        	
 	        	int lineheight = g2d.getFontMetrics(g2d.getFont()).getHeight();
 	        	int pagelines = (((int)pageFormat.getHeight()-(headerHeight+80))/lineheight); // +80 is for the two linebreaks during header writing
-	        	//System.out.println("if(" + is.get_table().getRowCount() + "/" + pagelines + " < " + (pageIndex + 1) + ")");
-	        	//System.out.println("if(" + is.get_table().getRowCount()/pagelines + " < " + (pageIndex + 1) + ")");
+	        	//log.debug("if(" + is.get_table().getRowCount() + "/" + pagelines + " < " + (pageIndex + 1) + ")");
+	        	//log.debug("if(" + is.get_table().getRowCount()/pagelines + " < " + (pageIndex + 1) + ")");
 	        	if((is.get_table().getRowCount()/pagelines) < pageIndex) {
 	        		enableDoubleBuffering(componentToBePrinted);
 	        		return NO_SUCH_PAGE;
@@ -228,7 +232,7 @@ public class PrintCtrl implements Printable {
 		        		for(int j=0;j<is.get_table().getRowCount();++j)
 		        			if(columnsize[i] < is.get_table().getValueAt(j, i).toString().length()) {
 		        				columnsize[i] = is.get_table().getValueAt(j, i).toString().length();
-		        				System.out.println("Column "+i+":" + columnsize[i]);
+		        				log.debug("Column "+i+":" + columnsize[i]);
 		        			}
 		        		if(i!=0)
 		        			columnsize[i] += columnsize[i-1];
@@ -244,7 +248,7 @@ public class PrintCtrl implements Printable {
 	        		else if(i==1);
 	        		else
 	        			g2d.drawString(is.get_table().getColumnName(i),columnsize[i-1]*columnwidth,10);
-	        		System.out.println("Column "+i+":" + columnsize[i]);
+	        		log.debug("Column "+i+":" + columnsize[i]);
 	        	}
 	        	
 	        	g2d.drawLine(0, 12, pagewidth, 12);

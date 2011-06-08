@@ -1,5 +1,7 @@
 package no.ums.pas.core.defines.tree;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.tools.Timeout;
 
 import java.awt.event.ActionEvent;
@@ -9,6 +11,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TreeUpdater
 {
+
+    private static final Log log = UmsLog.getLogger(TreeUpdater.class);
+
 	public static final String LOADING_START = "act_start_loading";
 	public static final String LOADING_FINISHED = "act_loading_finished";
 	
@@ -80,7 +85,7 @@ public class TreeUpdater
                         }
                     }
 				}
-                System.out.println("Tree updater exited gracefully");
+                log.debug("Tree updater exited gracefully");
 			}
 		};
 		thread.start();

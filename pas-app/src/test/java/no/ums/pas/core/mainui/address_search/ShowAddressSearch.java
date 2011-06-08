@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import no.ums.pas.localization.Localization;
 
 public class ShowAddressSearch {
+
+
 	public static void main(String [] args)
 	{
 		Localization.INSTANCE.setLocale(new Locale("no", "NO"));

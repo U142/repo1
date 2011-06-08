@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.JComponentCellEditor;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -23,6 +25,9 @@ import java.awt.event.ComponentListener;
 
 
 class PreviewList extends DefaultPanel implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(PreviewList.class);
+
 	public static final long serialVersionUID = 1;
 	class ComboField extends Object {
 		public static final int FIELDID_EMPTY		= 0;
@@ -231,7 +236,7 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 		try {
 			m_panel = new PreviewSearchPanel(m_sz_cols, n_width, b_editable, dim);
 		} catch(Exception e) {
-			System.out.println("Error PreviewPanel " + e.getMessage());
+			log.debug("Error PreviewPanel " + e.getMessage());
 			Error.getError().addError("PreviewList","Exception in init",e,1);
 		}
 		add_controls();
@@ -249,7 +254,7 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 						m_sz_cols[i] = "N/A";
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				Error.getError().addError("PreviewList","Exception in set_columnnames",e,1);
 			}
 		} else {
@@ -278,7 +283,7 @@ class PreviewList extends DefaultPanel implements ComponentListener {
 					sz_temp = data.get_fields().get(i).toString();
 					m_field_combos[i].search_and_select(sz_temp);
 				}catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					Error.getError().addError("PreviewList","Exception in determine_cols_by_heading",e,1);
 				}
 			}

@@ -6,6 +6,8 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.ToolTipManager;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 
 import java.awt.Color;
@@ -18,6 +20,8 @@ import java.util.regex.Pattern;
 
 public class StdTextArea extends JTextField// JTextArea
 {
+    private static final Log log = UmsLog.getLogger(StdTextArea.class);
+
 	public static final String REGEXP_SMS_OADC = "^[a-zA-Z0-9_]*$";
 	
 	public static final String REGEX_GSM7 = "[^[a-zA-Z0-9 " + "\u0394\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039E" + "\\.\\_\\@\\£\\$\\¥\\è\\é\\ù\\ì\\ò\\Ç\\Ø\\ø\\Å\\å\\Æ\\æ\\ß\\É\\Ä\\Ö\\Ñ\\Ü\\§\\¿\\ä\\ö\\ñ\\ü\\à\\+\\,\\/\\:\\;\\<\\=\\>\\?\\¡\\|\\^\\{\\}\\*\\!\\#\\€\\%\\&\\'\\(\\)\r\n\\\\\\[\\]\"\\~\\-]]";	
@@ -68,7 +72,7 @@ public class StdTextArea extends JTextField// JTextArea
 					}
 					else if(c=='^' && bEscaped)
 					{
-						System.out.println("break");
+						log.debug("break");
 						sb.append(" " + c + " ");
 						bEscaped = false;
 					}

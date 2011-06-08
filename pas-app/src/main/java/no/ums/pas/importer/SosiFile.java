@@ -1,5 +1,7 @@
 package no.ums.pas.importer;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.NavStruct;
@@ -24,6 +26,9 @@ import java.util.List;
 
 
 public class SosiFile extends Object {
+
+    private static final Log log = UmsLog.getLogger(SosiFile.class);
+
 	class SosiFieldSet extends Object {
 		private int m_n_line;
 		private String m_sz_fieldname;
@@ -147,7 +152,7 @@ public class SosiFile extends Object {
 				sz_data = sz_data.trim();
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SosiFile","Exception in set_value",e,1);
 		}
@@ -242,7 +247,7 @@ public class SosiFile extends Object {
 						else
 							return false;
 					}
-					System.out.println(sz_param1 + " " + sz_param2);
+					log.debug(sz_param1 + " " + sz_param2);
 					if(get_coorsystype()==COORSYS_UTM_)
 					{
 						CoorConverter.LLCoor min = new CoorConverter().UTM2LL(23, new Double(sz_param1).doubleValue(), new Double(sz_param2).doubleValue(), get_utmzone());
@@ -255,7 +260,7 @@ public class SosiFile extends Object {
 						get_bounding()._ubo = new Double(sz_param1).doubleValue();
 					}
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
@@ -275,7 +280,7 @@ public class SosiFile extends Object {
 						else
 							return false;
 					}
-					System.out.println(sz_param1 + " " + sz_param2);
+					log.debug(sz_param1 + " " + sz_param2);
 					if(get_coorsystype()==COORSYS_UTM_)
 					{
 						CoorConverter.LLCoor max = new CoorConverter().UTM2LL(23, new Double(sz_param1).doubleValue(), new Double(sz_param2).doubleValue(), get_utmzone());
@@ -288,7 +293,7 @@ public class SosiFile extends Object {
 						get_bounding()._bbo = new Double(sz_param1).doubleValue();
 					}
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
@@ -343,7 +348,7 @@ public class SosiFile extends Object {
 				try {
 					m_arr_flater.get_current_flate().set_name(sz_data);
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
@@ -352,7 +357,7 @@ public class SosiFile extends Object {
 				try {
 					m_arr_flater.get_current_flate().set_ref(new Integer(sz_data.substring(1)).intValue());
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
@@ -378,7 +383,7 @@ public class SosiFile extends Object {
 		}
 		return true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SosiFile","Exception in set_value",e,1);
 			return false;
@@ -555,9 +560,9 @@ public class SosiFile extends Object {
 								int n_flate = m_arr_flater.set_active_flate_by_kurve_ref(n_kurvenr);
 								if(n_flate==-1) {
 									//FLATE information not yet registrered
-									System.out.println("FLATE information not yet registrered");
+									log.debug("FLATE information not yet registrered");
 								}
-								System.out.println("Found flate " + n_flate + " for curve " + n_kurvenr);
+								log.debug("Found flate " + n_flate + " for curve " + n_kurvenr);
 									
 								m_sendobj.get_sendproperties().set_shapestruct((PolygonStruct)get_flater().get_current_flate().get_polygon());
 								m_sendobj.get_sendproperties().set_sendingname(get_flater().get_current_flate().get_name(), getFlateInformation(n_flate));
@@ -568,7 +573,7 @@ public class SosiFile extends Object {
 								b_coorsadded = false;
 								n_coorstarts = 0;
 							} catch(Exception err) {
-								System.out.println(err.getMessage());
+								log.debug(err.getMessage());
 								err.printStackTrace();
 								Error.getError().addError("SosiFile","Exception in traverse",err,1);
 								return false;

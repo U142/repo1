@@ -1,5 +1,8 @@
 package no.ums.pas.gps;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -13,6 +16,9 @@ import java.util.List;
 
 
 public class SocketThread extends Thread implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(SocketThread.class);
+
 	protected Socket m_client = null;
 	public Socket get_clientsocket() { return m_client; }
 	protected BufferedReader m_in;
@@ -33,19 +39,19 @@ public class SocketThread extends Thread implements ActionListener {
 			get_writethread().interrupt();
 			super.interrupt();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	public void close_reader() {
 		try {
-			System.out.println("closing reader");
+			log.debug("closing reader");
 			m_in.close();
 		} catch(IOException e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -62,12 +68,12 @@ public class SocketThread extends Thread implements ActionListener {
 		try {
 			m_out = new PrintWriter(get_clientsocket().getOutputStream(), true);
 		} catch(IOException e) {
-			System.out.println("Error creating PrintWriter " + e.getMessage());
+			log.debug("Error creating PrintWriter " + e.getMessage());
 		}
 		try {
 			m_in = new BufferedReader(new InputStreamReader(get_clientsocket().getInputStream()));
 		} catch(IOException e) {
-			System.out.println("Error creating BufferedReader " + e.getMessage());
+			log.debug("Error creating BufferedReader " + e.getMessage());
 		}
 	}
 	
@@ -76,7 +82,7 @@ public class SocketThread extends Thread implements ActionListener {
 	}
 	public synchronized void actionPerformed(ActionEvent e) {
 		if("act_set_objectpk".equals(e.getActionCommand())) {
-			System.out.println("Objectpk " + (String)e.getSource() + " found");
+			log.debug("Objectpk " + (String)e.getSource() + " found");
 			get_protocol().get_unit().set_objectpk((String)e.getSource());
 		} 
 		else if("act_cmd_end".equals(e.getActionCommand())) {
@@ -111,7 +117,7 @@ public class SocketThread extends Thread implements ActionListener {
 		}
 		
 		public void run() {
-			System.out.println("Write thread started");
+			log.debug("Write thread started");
 			int n_timer = 0;
 			int n_sleep = 50;
 			int n_ping = 120;
@@ -128,28 +134,28 @@ public class SocketThread extends Thread implements ActionListener {
 					n_timer = 0;
 					//add_to_writequeue(new GPSCmd("PFAL,Cnf.Get,TCP.Client.Ping"));
 					//m_out.println("PFAL,TCP.Client.Ping\r");
-					//System.out.println("Ping sent");
-					//System.out.println("Keep-alive");
+					//log.debug("Ping sent");
+					//log.debug("Keep-alive");
 					//m_out.println("PFAL,Cnf.Get,Sys.GPS.Enable\r");
 				}
 				
 				if(!get_clientsocket().isConnected()) {
-					//System.out.println("Connection lost");
+					//log.debug("Connection lost");
 					set_interrupt();
 					break;
 				}
 			    if(get_protocol().isLoggingOff()) {
-			    	//System.out.println("Logging off");
+			    	//log.debug("Logging off");
 					set_interrupt();
 			    	break;
 			    }
 			    if(get_manual_logoff()) {
 			    	if(get_msgqueue().size()==0) //wait for messagequeue to clear
 				    	break;
-			    	//System.out.println("Manual logoff");
+			    	//log.debug("Manual logoff");
 			    }
 			}
-			System.out.println("Write thread stopped");
+			log.debug("Write thread stopped");
 			m_b_manual_logoff = true;
 		}
 		private void send_from_queue() {
@@ -169,16 +175,16 @@ public class SocketThread extends Thread implements ActionListener {
 			while(!m_current_cmd.get_isanswered() && m_current_cmd.get_expect_answer()) {
 				try {
 					if(m_current_cmd.isTimedOut()) {
-						System.out.println("Command " + m_current_cmd.get_cmd() + " timed out");
+						log.debug("Command " + m_current_cmd.get_cmd() + " timed out");
 						break;
 					}
 					Thread.sleep(100);
 				} catch(InterruptedException e) {
-					System.out.println("Command " + m_current_cmd.get_cmd() + " interrupted");
+					log.debug("Command " + m_current_cmd.get_cmd() + " interrupted");
 					m_current_cmd.set_interrupted();
 					//m_current_cmd = null;
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 				}
 			}
@@ -186,18 +192,18 @@ public class SocketThread extends Thread implements ActionListener {
 				if(m_current_cmd.isTimedOut())
 					get_callback().actionPerformed(new ActionEvent(m_current_cmd, ActionEvent.ACTION_PERFORMED, "act_cmd_timeout"));
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 			}
 			m_current_cmd = null;
 		}
 		private void send_cmd(String sz_cmd) {
-	    	System.out.println("OUT: " + sz_cmd + "\r");
+	    	log.debug("OUT: " + sz_cmd + "\r");
 	    	//m_out.println(sz_cmd + "\r");
 	    	try {
 	    		m_out.write(sz_cmd + "\r\n");
 	    	} catch(Exception e) {
-	    		System.out.println("Error writing to msgqueue. Closing connection.");
+	    		log.debug("Error writing to msgqueue. Closing connection.");
 	    		m_b_manual_logoff = true;
 	    	}
 	    	m_out.flush();
@@ -209,7 +215,7 @@ public class SocketThread extends Thread implements ActionListener {
 		try {
 			get_clientsocket().setKeepAlive(true);
 		} catch(Exception e) {
-			System.out.println("Could not set keepalive - " + e.getMessage());
+			log.debug("Could not set keepalive - " + e.getMessage());
 		}
 		get_writethread().start();
 		listen();
@@ -217,7 +223,7 @@ public class SocketThread extends Thread implements ActionListener {
 		try {
 			get_clientsocket().close();
 		} catch(Exception e) {
-			System.out.println("Error: Could not close connection to client");
+			log.debug("Error: Could not close connection to client");
 		}
 	}
 	
@@ -230,27 +236,27 @@ public class SocketThread extends Thread implements ActionListener {
 				try {
 					while ((inputLine = m_in.readLine()) != null) {	
 						try {
-							//System.out.println("IN : " + get_clientsocket().getInetAddress() + " - " +  inputLine);	
+							//log.debug("IN : " + get_clientsocket().getInetAddress() + " - " +  inputLine);	
 							String sz_commandtext = get_protocol().processInput(inputLine);
 							if(sz_commandtext!=null) {
 								outputLine = get_clientsocket().getInetAddress() + " - " + sz_commandtext;
-								//System.out.println("OUT: " + outputLine);
+								//log.debug("OUT: " + outputLine);
 							}
 							
 						} catch(Exception e) {
-							System.out.println("Error in parsing inputLine");
+							log.debug("Error in parsing inputLine");
 							//break;
 						}
 						if(!get_clientsocket().isConnected()) {
-							//System.out.println("Connection lost");
+							//log.debug("Connection lost");
 							break;
 						}
 					    if(get_protocol().isLoggingOff()) {
-					    	//System.out.println("Logging off");
+					    	//log.debug("Logging off");
 					    	break;
 					    }
 					    if(get_manual_logoff()) {
-					    	//System.out.println("Server removing dead thread");
+					    	//log.debug("Server removing dead thread");
 					    	sz_reason = "get_manual_logoff()";
 					    	break;
 					    }
@@ -259,10 +265,10 @@ public class SocketThread extends Thread implements ActionListener {
 					}
 					break; //inputLine == null, close connection
 				} catch(IOException e) {
-					System.out.println("Error reading, closing connection");
+					log.debug("Error reading, closing connection");
 					break;
 				} catch(Exception e) {
-					System.out.println("Buffered reader forced to close");
+					log.debug("Buffered reader forced to close");
 					logoff();
 				}
 				if(!get_clientsocket().isConnected()) {
@@ -270,26 +276,26 @@ public class SocketThread extends Thread implements ActionListener {
 					break;
 				}
 			    if(get_protocol().isLoggingOff()) {
-			    	//System.out.println("Logging off");
+			    	//log.debug("Logging off");
 					sz_reason = "get_protocol().isLoggingOff()";
 			    	break;
 			    }
 			    if(get_manual_logoff()) {
-			    	//System.out.println("Server removing dead thread");
+			    	//log.debug("Server removing dead thread");
 			    	sz_reason = "get_manual_logoff()";
 			    	break;
 			    }
 			}
 			
 		} catch(Exception e) {
-			System.out.println("Listener error " + e.getMessage());
+			log.debug("Listener error " + e.getMessage());
 		}
 		try {
 			get_clientsocket().close();
 		} catch(IOException e) {
 			
 		}
-		System.out.println("Listener stopped " + sz_reason);
+		log.debug("Listener stopped " + sz_reason);
 		get_callback().actionPerformed(new ActionEvent(get_protocol().get_unit(), ActionEvent.ACTION_PERFORMED, "act_unit_logoff"));
 		m_b_manual_logoff = true; //ensure writethread to stop
 		return true;

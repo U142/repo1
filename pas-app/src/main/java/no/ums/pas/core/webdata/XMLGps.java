@@ -1,5 +1,7 @@
 package no.ums.pas.core.webdata;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.gps.GPSCoor;
 import no.ums.pas.gps.GPSEvent;
@@ -13,6 +15,9 @@ import org.w3c.dom.NodeList;
 import javax.swing.JFrame;
 
 public class XMLGps extends XMLThread {
+
+    private static final Log log = UmsLog.getLogger(XMLGps.class);
+
 	public XMLGps(int n_pri, PAS pas, String sz_url, JFrame parent_frame)
 	{
 		super(n_pri, pas, sz_url, parent_frame, pas.get_eastcontent().get_gps_loadingpanel(), "Downloading GPS data...", true, 
@@ -139,7 +144,7 @@ public class XMLGps extends XMLThread {
 							//get_pas().add_event("dist: " + gps.get_distance_to_prev());
 						}
 					} catch(Exception e) { 
-						System.out.println(e.getMessage());
+						log.debug(e.getMessage());
 						e.printStackTrace();
 						Error.getError().addError("XMLGps","Exception in parseDoc",e,1);
 					}
@@ -198,14 +203,14 @@ public class XMLGps extends XMLThread {
 		//String[] sz_itemattr = { "l_objectpk", "sz_name", "l_comppk", "l_deptpk", "l_lon", "l_lat", "l_picturepk", "l_resourcepk", "l_unitpk", "l_timeinterval", "l_moveinterval", "l_gsmno", "l_lastdate", "l_lasttime", "l_lastspeed", "l_lastcourse", "l_lastsatellites", "l_lastasl", "l_lastbattery", "f_satfix", "sz_picname", "sz_iconfile", "sz_street", "sz_region", "l_gsmno2", "l_manufacturer", "l_usertype", "sz_imei", "sz_simid", "f_online", "l_serverport" };
 		String [] sz_itemattr = { "l_eventpk", "l_objectpk", "l_cmd", "l_dir", "l_param1", "l_param2", "sz_param1", "sz_param2", "l_answered", "l_pri", "l_date", "l_time", "l_updatedate", "l_updatetime", "l_msgpk" };
 		String[] sz_values;
-		//System.out.println("list_items.getLength() = "+ list_items.getLength());
+		//log.debug("list_items.getLength() = "+ list_items.getLength());
 		for(int n_items=0; n_items < list_items.getLength(); n_items++)
 		{
 			node_item = list_items.item(n_items);
 			nnm_items = node_item.getAttributes();
 			if(nnm_items==null)
 				continue;
-			System.out.println("attr");
+			log.debug("attr");
 			sz_values = new String[sz_itemattr.length];
 			//get_pas().add_event("length: "+ sz_itemattr.length);
 			for(int n_attr=0; n_attr < sz_itemattr.length; n_attr++)
@@ -214,7 +219,7 @@ public class XMLGps extends XMLThread {
 					sz_values[n_attr] = new String(nnm_items.getNamedItem(sz_itemattr[n_attr]).getNodeValue());
 				}
 				catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					sz_values[n_attr] = new String("");
 					Error.getError().addError("XMLGps","Exception in parseEvents",e,1);

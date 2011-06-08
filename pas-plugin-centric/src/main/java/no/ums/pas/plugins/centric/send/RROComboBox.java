@@ -14,7 +14,7 @@ public class RROComboBox extends JComboBox
 		n_chars_available = n;
 		if(this.getEditor().getItem().toString().length()==0 && n_chars_available>0)
 			n_chars_available--;
-		//System.out.println("Chars available="+n);
+		//log.debug("Chars available="+n);
 	}
 	
 	protected boolean bSelecting = true;
@@ -27,7 +27,7 @@ public class RROComboBox extends JComboBox
 	public void setSelectedItem(Object anObject) {
 //		Object curobj = this.getSelectedItem();
 		super.setSelectedItem(anObject);
-		//System.out.println("setSelectedItem="+anObject);
+		//log.debug("setSelectedItem="+anObject);
 	}
 	
 	public void updateEditor()

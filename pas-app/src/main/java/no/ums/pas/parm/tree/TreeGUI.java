@@ -1,5 +1,7 @@
 package no.ums.pas.parm.tree;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.LoadingPanel;
@@ -64,6 +66,7 @@ import java.awt.event.ComponentListener;
 
 public class TreeGUI extends DefaultPanel implements ComponentListener {
 	public static final long serialVersionUID = 1;
+    private static final Log log = UmsLog.getLogger(TreeGUI.class);
 
 	// private Container c;
 
@@ -226,11 +229,11 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		      	e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
 		}
 		public void dropActionChanged(DragSourceDragEvent e) {
-			System.out.println("dropActionChanged");
+			log.debug("dropActionChanged");
 
 		}
 		public void dragExit(DropTargetEvent arg0) {
-			System.out.println("dragExit");
+			log.debug("dragExit");
 		}
 		public void dragOver(DropTargetDragEvent dtde) {
 		    Point pt = dtde.getLocation();
@@ -357,7 +360,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 						      	main.saveChanges(dragged);
 						      	dep.removeAlerts(dragged);
 						      	dest.addAlerts(dragged);
-						      	System.out.println("Moved to parent: " + parent.getUserObject().getClass());
+						      	log.debug("Moved to parent: " + parent.getUserObject().getClass());
 				      			resetCellHighlight();
 				      			setCellHighlight(dest, false);
 				      		}
@@ -384,7 +387,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 							      	main.saveChanges(dragged);
 							      	dest.getList().add(dragged);
 							      	dep.getList().remove(dragged);
-							      	System.out.println("Moved to parent: " + parent.getUserObject().getClass());
+							      	log.debug("Moved to parent: " + parent.getUserObject().getClass());
 					    		}
 					    		else {
 					    			dtde.rejectDrop();
@@ -418,7 +421,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 							      	main.saveChanges(dragged);
 							      	dest.getList().add(dragged);
 							      	dep.getList().remove(dragged);
-							      	System.out.println("Moved to parent: " + parent.getUserObject().getClass());
+							      	log.debug("Moved to parent: " + parent.getUserObject().getClass());
 				      			} else
 				      				dtde.rejectDrop();
 				      			resetCellHighlight();

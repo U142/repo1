@@ -72,7 +72,7 @@ public class MailCtrl extends Object {
 			super(m_callback, socket);
 		}
 		protected boolean listen() {
-			System.out.println("Listener started");
+			log.debug("Listener started");
 			String inputLine;
 			try {
 				int n_returncode = -1;
@@ -80,7 +80,7 @@ public class MailCtrl extends Object {
 					try {
 						while ((inputLine = m_in.readLine()) != null) {	
 							try {
-								//System.out.println(inputLine);
+								//log.debug(inputLine);
 								try {
 									n_returncode = new Integer(inputLine.substring(0, 3)).intValue();
 									if(n_returncode!=220) { //don't do anything with logon procedure
@@ -106,35 +106,35 @@ public class MailCtrl extends Object {
 								}
 
 								/*if(.equals("220")) { //logon ok 
-									System.out.println("Logon OK");
+									log.debug("Logon OK");
 								} else {
 									
 									get_writethread().set_cmd_success(true);
 									get_writethread().set_cmd_isanswered(true);									
 								}*/
 							} catch(Exception e) {
-								System.out.println(e.getMessage());
+								log.debug(e.getMessage());
 								break;
 							}
 							if(!get_clientsocket().isConnected()) {
-								//System.out.println("Connection lost");
+								//log.debug("Connection lost");
 								break;
 							}
 						    if(get_protocol().isLoggingOff()) {
-						    	//System.out.println("Logging off");
+						    	//log.debug("Logging off");
 						    	break;
 						    }
 						    /*if(get_manual_logoff()) {
-						    	//System.out.println("Server removing dead thread");
+						    	//log.debug("Server removing dead thread");
 						    	sz_reason = "get_manual_logoff()";
 						    	break;
 						    }			*/			
 						}
 					} catch(IOException e) {
-						System.out.println("Error reading, closing connection");
+						log.debug("Error reading, closing connection");
 						break;
 					} catch(Exception e) {
-						System.out.println("Buffered reader forced to close");
+						log.debug("Buffered reader forced to close");
 						logoff();
 					}
 					if(!get_clientsocket().isConnected()) {
@@ -142,21 +142,21 @@ public class MailCtrl extends Object {
 						break;
 					}
 				    if(get_protocol().isLoggingOff()) {
-				    	//System.out.println("Logging off");
+				    	//log.debug("Logging off");
 						//sz_reason = "get_protocol().isLoggingOff()";
 				    	break;
 				    }
 				    if(get_manual_logoff()) {
-				    	//System.out.println("Server removing dead thread");
+				    	//log.debug("Server removing dead thread");
 				    	//sz_reason = "get_manual_logoff()";
 				    	break;
 				    }					
 				}
 				
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 			}
-			System.out.println("Listener stopped");
+			log.debug("Listener stopped");
 			callback();
 			return true;
 		}

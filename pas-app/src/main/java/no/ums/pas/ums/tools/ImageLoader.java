@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.swing.Icon;
@@ -12,6 +14,9 @@ import java.net.URL;
 
 
 public class ImageLoader {
+
+    private static final Log log = UmsLog.getLogger(ImageLoader.class);
+
 	/*
 	 * load external resources
 	 */
@@ -68,7 +73,7 @@ public class ImageLoader {
 		try {
 			return new ImageIcon(classloader.getResource(sz_namespace + sz_filename));
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("ImageLoader","Exception in load_icon (" + sz_filename + ")",e,1);
 			return null;

@@ -1,5 +1,8 @@
 package no.ums.pas.localization;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +14,8 @@ import java.util.regex.Pattern;
 
 public class LocalizationFinder
 {
+    private static final Log log = UmsLog.getLogger(LocalizationFinder.class);
+
 	static Pattern localePattern = Pattern.compile("(^[a-z]{2})(_([A-Z]{2})){0,1}$");
 	public static List<Locale> getAvailableLangfiles()
 	{
@@ -24,7 +29,7 @@ public class LocalizationFinder
 			ArrayList<Locale> locales = new ArrayList<Locale>();
 			String[] bundles = dir.list();
 			if(bundles!=null)
-				System.out.println("Bundles.length: " + bundles.length);
+				log.debug("Bundles.length: " + bundles.length);
 			else
 				return null;
 			for (int i = 0; i < bundles.length; i++) {
@@ -34,7 +39,7 @@ public class LocalizationFinder
 					b_at_least_one_found = true;
 				}
 			}
-			System.out.println("Found at least one language=" + b_at_least_one_found);
+			log.debug("Found at least one language=" + b_at_least_one_found);
 			return (b_at_least_one_found ? locales : null);
 		}
 		catch(Exception e)

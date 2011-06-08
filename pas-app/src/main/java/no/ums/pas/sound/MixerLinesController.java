@@ -1,5 +1,8 @@
 package no.ums.pas.sound;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -9,12 +12,14 @@ import javax.sound.sampled.Port;
 import javax.swing.JDialog;
 
 public class MixerLinesController {
-	
+
+    private static final Log log = UmsLog.getLogger(MixerLinesController.class);
+
 	protected String queryMixersAndLines()
 	{
 		StringBuilder ret = new StringBuilder();
 		
-		System.out.println("Microphone support=" + (AudioSystem.isLineSupported(Port.Info.MICROPHONE)));
+		log.debug("Microphone support=" + (AudioSystem.isLineSupported(Port.Info.MICROPHONE)));
 		ret.append("Microphone support=" + (AudioSystem.isLineSupported(Port.Info.MICROPHONE)) + "\n");
 		
 		Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();

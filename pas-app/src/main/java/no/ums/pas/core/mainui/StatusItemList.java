@@ -1,10 +1,15 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.status.StatusItemObject;
 
 import java.util.ArrayList;
 
 public class StatusItemList extends ArrayList<Object> {
+
+    private static final Log log = UmsLog.getLogger(StatusItemList.class);
+
 	public static final long serialVersionUID = 1;
 	public StatusItemList() {
 		super();
@@ -28,13 +33,13 @@ public class StatusItemList extends ArrayList<Object> {
 			else {
 				//PAS.get_pas().add_event("updated l_item " + n_item);				
 				//_get(n_item + 1).update(obj);
-				//System.out.println("Find n_item=" + n_item);
+				//log.debug("Find n_item=" + n_item);
 				//find(n_item).update(obj);
 				find.update(obj);
 			}
 				//super.set(n_item - 1, obj);
 		} catch(Exception e) { 
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -42,28 +42,28 @@ public class MailAccount {
 			Registry reg = new Registry(Registry.HKEY_CURRENT_USER, "software\\microsoft\\internet account manager");
 			if(reg.exists()) {
 				set_accountname((String)reg.getValue("default mail account"));
-				//System.out.println("MailAccount = " + m_sz_account);
+				//log.debug("MailAccount = " + m_sz_account);
 				try {
 					reg = new Registry(Registry.HKEY_CURRENT_USER, "software\\microsoft\\internet account manager\\accounts\\" + m_sz_account);
 					if(reg.exists()) {
 						set_mailserver((String)reg.getValue("SMTP Server"));
 						set_mailaddress((String)reg.getValue("SMTP Email Address"));
 						set_displayname((String)reg.getValue("SMTP Display Name"));
-						System.out.println(get_accountname());
-						System.out.println(get_mailserver());
-						System.out.println(get_displayname());
-						System.out.println(get_helo());
-						System.out.println(get_mailaddress());
+						log.debug(get_accountname());
+						log.debug(get_mailserver());
+						log.debug(get_displayname());
+						log.debug(get_helo());
+						log.debug(get_mailaddress());
 
 						return true;
 					}
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 				}
 			}
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 
 		return false;

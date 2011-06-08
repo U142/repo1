@@ -1,6 +1,8 @@
 package no.ums.pas.core.logon;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.maps.defines.NavStruct;
@@ -20,6 +22,9 @@ import java.util.List;
 
 /*struct class containing user-info*/
 public class DeptInfo extends Object {
+
+    private static final Log log = UmsLog.getLogger(DeptInfo.class);
+
 	private int m_n_deptpk;
 	private String m_sz_deptid;
 	private String m_sz_stdcc;
@@ -96,7 +101,7 @@ public class DeptInfo extends Object {
 		m_municipals = municipals;
 		m_l_pas = l_pas;
 		m_l_langpk = l_langpk;
-		System.out.println("Department=" + m_sz_deptid);
+		log.debug("Department=" + m_sz_deptid);
 		m_restriction_shapestructs = (restriction_shapes!=null ? ConvertUShapes_to_ShapeStructs(restriction_shapes.getUShape()) : null);
 	}
 	

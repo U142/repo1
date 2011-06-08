@@ -1,5 +1,7 @@
 package no.ums.pas.core.dataexchange;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.mainui.LoadingPanel;
 import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.ums.errorhandling.Error;
@@ -25,7 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.zip.ZipInputStream;
 
 public class HTTPReq {
-		
+
+    private static final Log log = UmsLog.getLogger(HTTPReq.class);
 	
 	public static final String PAS_OPERATION_ = "OP:";
 	public static final String PAS_OPERATION_DBCALL_ = "DB";
@@ -449,7 +452,7 @@ public class HTTPReq {
    					}
    					catch(Exception e) { 
    						//PAS.get_pas().add_event("getDoc()", e);
-   						System.out.println(e.getMessage());
+   						log.debug(e.getMessage());
    						e.printStackTrace();
    						Error.getError().addError("HTTPReq","Exception in create_zipstream",e,1);
    						break;
@@ -461,7 +464,7 @@ public class HTTPReq {
 
    				//InputStream in = new BufferedInputStream(new ProgressMonitorInputStream(m_pas, "Downloading...", "", 0, 1000));
    			} catch(Exception e) { 
-   				System.out.println(e.getMessage());
+   				log.debug(e.getMessage());
    				e.printStackTrace();
    				Error.getError().addError("HTTPReq","Exception in create_zipstream",e,1);
 					//PAS.get_pas().add_event("getDoc()", e);
@@ -478,13 +481,13 @@ public class HTTPReq {
 			m_current_inputstream = is;
 			if(b_zipped) {
 				//m_current_zipinputstream = (ZipInputStream)is;
-				//System.out.println("create_zipstream");
+				//log.debug("create_zipstream");
 				create_zipstream(progress);
-				//System.out.println("zipstream created");
+				//log.debug("zipstream created");
 			}
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 		}
@@ -496,7 +499,7 @@ public class HTTPReq {
 					m_current_zipinputstream.getNextEntry();
 				} catch(Exception e) {
 					doc = null;
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 					e.printStackTrace();
 					Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 				}
@@ -517,7 +520,7 @@ public class HTTPReq {
 			return doc;
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 		}
@@ -567,7 +570,7 @@ public class HTTPReq {
 					Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 				}
 				try {
-					//System.out.println();
+					//log.debug();
 					m_current_zipinputstream.getNextEntry().getName();
 					doc = db.parse(m_current_zipinputstream);
 				} catch(Exception e) {
@@ -622,7 +625,7 @@ public class HTTPReq {
 			try {
 				Document doc = getDocument(sz_url, true, false, null);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("HTTPReq","Exception in load_image",e,1);
 			}
@@ -637,7 +640,7 @@ public class HTTPReq {
 					n_read = get_current_inputstream().read(temp);
 				}
 				catch(Exception e) { 
-					System.out.println("Error reading from input-stream");
+					log.debug("Error reading from input-stream");
 					break;
 					//Error.getError().addError("HTTPReq","Exception in load_image, error reading from input-stream",e,1);
 				}
@@ -686,7 +689,7 @@ public class HTTPReq {
 			else
 				m_b_session_reconnect = false;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			m_b_session_reconnect = false;
 			Error.getError().addError("HTTPReq","Exception in get_common_headers",e,1);

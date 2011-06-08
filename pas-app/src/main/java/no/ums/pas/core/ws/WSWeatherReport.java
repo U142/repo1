@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.Pasws;
@@ -14,7 +16,9 @@ import java.awt.event.ActionListener;
 
 
 public class WSWeatherReport extends WSThread
-{	
+{
+    private static final Log log = UmsLog.getLogger(WSWeatherReport.class);
+
 	String action;
 	UWeatherSearch params;
 	UWeatherReportResults results;
@@ -96,7 +100,7 @@ public class WSWeatherReport extends WSThread
 		catch(Exception e)
 		{
 			//Error.getError().addError("Error", "An error occured when downloading weather report", e, 1);
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			throw e;
 		}
 		finally

@@ -1,5 +1,7 @@
 package no.ums.pas.tas.statistics;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.tas.statistics.TasChart.STATS_CHARTTYPE;
@@ -20,6 +22,8 @@ import java.awt.event.ActionListener;
 
 public class TasFilterPanel extends DefaultPanel
 {
+    private static final Log log = UmsLog.getLogger(TasFilterPanel.class);
+
 	/*
 	 *  XX Chart type
 	 *  XX filter.setGroupTimeunit(ULBAFILTERSTATTIMEUNIT.PER_DAY);
@@ -239,25 +243,25 @@ public class TasFilterPanel extends DefaultPanel
 		if(e.getSource().equals(combo_charttype))
 		{
 			ComboChartTypeItem sel = (ComboChartTypeItem)combo_charttype.getSelectedItem();
-			System.out.println("selected " + sel);
+			log.debug("selected " + sel);
 			callback.actionPerformed(new ActionEvent(sel.getType(), ActionEvent.ACTION_PERFORMED, ACT_CHARTTYPE_CHANGED));
 		}
 		else if(e.getSource().equals(combo_filtertimeunit))
 		{
 			ComboFilterTimeunit sel = (ComboFilterTimeunit)combo_filtertimeunit.getSelectedItem();
-			System.out.println("selected " + sel);
+			log.debug("selected " + sel);
 			callback.actionPerformed(new ActionEvent(sel.getTimeunit(), ActionEvent.ACTION_PERFORMED, ACT_GROUP_TIMEUNIT_CHANGED));			
 		}
 		else if(e.getSource().equals(combo_grouping))
 		{
 			ComboResultsGroupTimeunit sel = (ComboResultsGroupTimeunit)combo_grouping.getSelectedItem();
-			System.out.println("selected " + sel);
+			log.debug("selected " + sel);
 			callback.actionPerformed(new ActionEvent(sel.getGroup(), ActionEvent.ACTION_PERFORMED, ACT_GROUPING_CHANGED));			
 		}
 		else if(e.getSource().equals(combo_filterfunction))
 		{
 			ComboStatFunctionItem sel = (ComboStatFunctionItem)combo_filterfunction.getSelectedItem();
-			System.out.println("selected " + sel);
+			log.debug("selected " + sel);
 			callback.actionPerformed(new ActionEvent(sel.getFunction(), ActionEvent.ACTION_PERFORMED, ACT_FILTER_FUNCTION_CHANGED));	
 			switch(sel.function)
 			{
@@ -282,7 +286,7 @@ public class TasFilterPanel extends DefaultPanel
 		else if(e.getSource().equals(btn_group_by_operator))
 		{
 			JCheckBox btn = (JCheckBox)btn_group_by_operator;
-			System.out.println("selected " + btn.isSelected());
+			log.debug("selected " + btn.isSelected());
 			callback.actionPerformed(new ActionEvent(btn.isSelected(), ActionEvent.ACTION_PERFORMED, ACT_GROUP_BY_OPERATOR_CHANGED));						
 		}
 		else if("act_datetime_changed".equals(e.getActionCommand()))
@@ -290,7 +294,7 @@ public class TasFilterPanel extends DefaultPanel
 			if(e.getSource().equals(date_from))
 			{
 				Long n = new Long(date_from.get_datetime_beginning_of_day());
-				System.out.println("date from " + n);
+				log.debug("date from " + n);
 				callback.actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, ACT_TIMEFILTER_FROM_CHANGED));
 				date_to.setMaskDates(date_from.get_date(), MASK_DATES.AFTER);
 				date_from.setMaskDates(date_to.get_date(), MASK_DATES.BEFORE);
@@ -298,7 +302,7 @@ public class TasFilterPanel extends DefaultPanel
 			else if(e.getSource().equals(date_to))
 			{
 				Long n = new Long(date_to.get_datetime_ending_of_day());
-				System.out.println("date to " + n);
+				log.debug("date to " + n);
 				callback.actionPerformed(new ActionEvent(n, ActionEvent.ACTION_PERFORMED, ACT_TIMEFILTER_TO_CHANGED));				
 				date_from.setMaskDates(date_to.get_date(), MASK_DATES.BEFORE);
 				date_to.setMaskDates(date_from.get_date(), MASK_DATES.AFTER);

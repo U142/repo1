@@ -1,5 +1,7 @@
 package no.ums.pas.status;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.ws.WSMaxAlloc;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.ws.pas.UMAXALLOC;
@@ -10,6 +12,9 @@ import java.util.ArrayList;
 
 
 public class StatusSendingList extends ArrayList<StatusSending> implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(StatusSendingList.class);
+
 	public static final long serialVersionUID = 1;
 	ActionListener m_statuspanel;
 	
@@ -155,7 +160,7 @@ public class StatusSendingList extends ArrayList<StatusSending> implements Actio
 			max.setNRefno(n_refno);
 			new WSMaxAlloc(max, callback, "act_max_alloc_set").start();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("StatusSendingList","Exception in set_maxalloc",e,1);
 		}

@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.logon.view.PasswordUpdateCtrl;
 import no.ums.pas.core.logon.view.PasswordUpdateModel;
 import no.ums.pas.core.logon.view.PasswordUpdate.PasswordResult;
@@ -12,6 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PasswordUpdateCtrlTest {
+
+    private static final Log log = UmsLog.getLogger(PasswordUpdateCtrlTest.class);
+    
 	UserInfo ui = new UserInfo();
 
 	@Before

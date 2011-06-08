@@ -409,7 +409,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void setOverrideShaPassword(String s) { PAS_OVERRIDE_SHAPASSWORD = s; }
 	public void setAddressSeachUrl(String s) { 
 		ADDRESSSEARCH_URL = s;
-		System.out.println("Address Search URL = " + ADDRESSSEARCH_URL);
+		log.debug("Address Search URL = " + ADDRESSSEARCH_URL);
 	}
 	public void setVB4Url(String s) { VB4_URL = s; }
 	public void setProgramArguments(String [] a) { m_sz_program_args = a; }
@@ -443,7 +443,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		else
 			PAS_WS_SITE = sz_pasws;
 		PAS_CODEBASE = sz_codebase;
-		System.out.println("Using WS " + PAS_WS_SITE);
+		log.debug("Using WS " + PAS_WS_SITE);
 		
 		try
 		{
@@ -484,7 +484,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							URL url = new URL(val);
 							if(url.getProtocol().equals("http") || url.getProtocol().equals("https"))
 							{
-								System.out.println("AUTOIMPORT - Using url="+url);
+								log.debug("AUTOIMPORT - Using url=" + url);
 								//BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 								if(obj!=null)
 								{
@@ -601,7 +601,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			
 
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			Error.getError().addError(Localization.l("common_error"), "Error setting Look and Feel", e, Error.SEVERITY_ERROR);
 		}
 		try
@@ -683,25 +683,25 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		if(!bpathok)
 		{
 			sz_home = System.getProperty("user.home") + PASPath;
-			System.out.println("user.home=" + sz_home);
+			log.debug("user.home=" + sz_home);
 			bpathok = tryPath(sz_home);			
 		}
 		if(!bpathok)
 		{
 			sz_home = System.getenv("TEMP") + PASPath;
-			System.out.println("temp=" + sz_home);
+			log.debug("temp=" + sz_home);
 			bpathok = tryPath(sz_home);
 		}
 		if(!bpathok)
 		{
 			sz_home = System.getProperty("java.io.tmpdir") + PASPath;
-			System.out.println("java.io.tmpdir=" + sz_home);
+			log.debug("java.io.tmpdir=" + sz_home);
 			bpathok = tryPath(sz_home);
 		}
 		if(bpathok)
-			System.out.println("HOMEPATH=" + sz_home);
+			log.debug("HOMEPATH=" + sz_home);
 		else
-			System.out.println("HOMEPATH: Error, no path found for writing");
+			log.debug("HOMEPATH: Error, no path found for writing");
 		//vars.init(m_sz_sitename + "/ExecAlert/WS/");
 		vars.init(this.get_pasws());
 
@@ -869,11 +869,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					if(!logon.isLoggedOn() || logon.get_userinfo()==null) {
                         LogFrame.remove();
                         for (Frame frame : Frame.getFrames()) {
-                            System.out.println(frame);
-                            System.out.println(frame.isValid());
-                            System.out.println(frame.isVisible());
+                            log.debug(frame);
+                            log.debug(frame.isValid());
+                            log.debug(frame.isVisible());
                             frame.dispose();
-                            System.out.println(frame.isValid());
+                            log.debug(frame.isValid());
                         }
 						return; //System.exit(0);
 					}
@@ -935,7 +935,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							MailAccount account = new MailAccount();
 							get_userinfo().set_mailaccount(account);
 						} catch(Exception e) {
-							System.out.println(e.getMessage());
+							log.debug(e.getMessage());
 							e.printStackTrace();
 							Error.getError().addError(Localization.l("common_warning"), "Unable to find your default e-mail settings in registry.", 0, Error.SEVERITY_INFORMATION);
 						}
@@ -976,7 +976,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Could not create GUI\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			System.exit(0);
 		}
 
@@ -1041,7 +1041,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		if(b_save_language)
 		{
 			//this.actionPerformed(new ActionEvent(m_settings,ActionEvent.ACTION_PERFORMED,"act_save_settingsobject"));
-			//System.out.println("Saving Language settings");
+			//log.debug("Saving Language settings");
 		}
 		pasplugin.onShowMainWindow();
 		pasplugin.onStartSystemMessageThread(this.get_pasactionlistener(), 1000 * pasplugin.getSystemMessagesPollInterval());
@@ -1056,7 +1056,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	protected void afterLogon()
 	{
-		System.out.println("Logged on");
+		log.debug("Logged on");
 		pasplugin.onAfterLogon();
 
 		this.setTitle(m_sz_maintitle + " (" + String.format(Localization.l("common_logged_on_as_format"), m_userinfo.get_realname()) + ")");
@@ -1097,7 +1097,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				}
 			});
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			printStackTrace(e.getStackTrace());
 			Error.getError().addError(Localization.l("common_error"), "Error creating EastContent", e, Error.SEVERITY_ERROR);
 		}
@@ -1234,11 +1234,11 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						Thread.sleep(60000);
                         long freeMem = Runtime.getRuntime().freeMemory();
-						System.out.println("free memory=" + freeMem/1024 + "KB");
+						log.debug("free memory=" + freeMem / 1024 + "KB");
 					}
 					catch(Exception e)
 					{
-						System.out.println("Garbage Collector failed");
+						log.debug("Garbage Collector failed");
 					}
 
 				}
@@ -1315,7 +1315,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			e.printStackTrace();
 		}
-		System.out.println("waitForFirstMap exited");
+		log.debug("waitForFirstMap exited");
 	}
 	
 	private boolean m_b_hasinitedsize = false; //size read from config
@@ -1328,7 +1328,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		//this.setResizable(true);
 		int w = getWidth();
 		int h = getHeight();
-		System.out.println("Size = " + w + " " + h);
+		log.debug("Size = " + w + " " + h);
 		pasplugin.onFrameResize(this, e);
 		if(resizeWaitingTimer==null && !m_b_firstmap) //start resizing
 		{
@@ -1371,7 +1371,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	public void applyResize(boolean b_from_timer)
 	{
 
-		System.out.println("Resizing " + getWidth() + ", " + getHeight());
+		log.debug("Resizing " + getWidth() + ", " + getHeight());
 		if(getWidth()<=0 || getHeight()<=0)
 		{
 			return;
@@ -1396,7 +1396,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			int n_mapwidth = get_mappane().getWidth();
 			if(n_mapheight>2000 || n_mapwidth>2000)
 			{
-				System.out.println("Mappane size too large");
+				log.debug("Mappane size too large");
 				return;
 			}
 			if((get_mappane().getWidth()!=n_previous_mapwidth || get_mappane().getHeight() != n_previous_mapheight) && (get_mappane().getWidth() > 0 && get_mappane().getHeight()>0)) {
@@ -1413,7 +1413,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		{
 			dim_map = new Dimension(get_mappane().getWidth(), get_mappane().getHeight());
 			Dimension dim_map2 = new Dimension(get_mappane().getWidth(), get_mappane().getHeight());
-			System.out.println("  MapSize = " + dim_map.width + ", " + dim_map.height);
+			log.debug("  MapSize = " + dim_map.width + ", " + dim_map.height);
 			get_navigation().set_dimension(dim_map);
 			get_mappane().set_dimension(dim_map2);
 			get_eastcontent().revalidate();
@@ -1426,7 +1426,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			get_mainmenu().setPreferredSize(new Dimension(getWidth()-20, get_mainmenu().getWantedHeight()));
 			get_mainmenu().revalidate();
 			if(b_from_timer) {
-				System.out.println("New mapsize = " + dim_map.toString());
+				log.debug("New mapsize = " + dim_map.toString());
 				get_mappane().load_map(true);//!m_b_firstmap);
 				if(get_eastcontent() != null)
 					get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
@@ -1471,7 +1471,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 				//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-				//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+				//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 				get_mappane().repaint();
 				get_mappane().validate();
 			}
@@ -1632,7 +1632,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					{
 						
 					}
-					System.out.println("Closing PARM");		
+					log.debug("Closing PARM");		
 					try
 					{
 						get_parmcontroller().endSession(true);
@@ -1664,7 +1664,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	}
 	
 	public int invoke_project(boolean bNewSending) {
-        System.out.println(Localization.l("project_ask_new_project"));
+        log.debug(Localization.l("project_ask_new_project"));
 
 		//int answer = PAS.pasplugin.onInvokeProject();
         int answer = JOptionPane.YES_OPTION;
@@ -1684,7 +1684,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				if(input != null) {
                     if(input.equals(Localization.l("common_keep_sendings"))) {
 						m_keep_sendings = true;
-						System.out.println("m_keep_sendings=" + m_keep_sendings);
+						log.debug("m_keep_sendings=" + m_keep_sendings);
 					}
 					else
 						m_keep_sendings = false;
@@ -1755,7 +1755,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			{
 				Variables.getStatusController().setClosed();
 				get_mappane().resetAllOverlays();
-				System.out.println("Close project");
+				log.debug("Close project");
 	            StatusActions.EXPORT.setEnabled(false);
 				thread = new WaitForStatusThread(true, callback);
 			}
@@ -1776,7 +1776,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			/*while(!thread.isDone())
 			{
-				System.out.println("Waiting for status thread");
+				log.debug("Waiting for status thread");
 				Thread.sleep(100);
 			}*/
 			if(thread!=null)
@@ -1902,12 +1902,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 	
 	synchronized public void add_event(String sz_text, Exception err) { 
 		//get_southcontent().get_eventpanel().add_row(sz_text);
-		System.out.println(sz_text);
+		log.debug(sz_text);
 		if(err!=null)
 			printStackTrace(err.getStackTrace());
 	}
 	private void add_event(String sz_text) {
-		System.out.println(sz_text);
+		log.debug(sz_text);
 	}
 	public void exit_application() {
 		PAS.APP_EXIT.set(true);
@@ -1997,10 +1997,10 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		String disabled = SubstanceLookAndFeel.getTheme().getDisabledTheme().getClass().getName();
 		String def = SubstanceLookAndFeel.getTheme().getDefaultTheme().getClass().getName();
 		String watermark = SubstanceLookAndFeel.getTheme().getWatermarkTheme().getClass().getName();
-		System.out.println(active);
-		System.out.println(disabled);
-		System.out.println(def);
-		System.out.println(watermark);
+		log.debug(active);
+		log.debug(disabled);
+		log.debug(def);
+		log.debug(watermark);
 	}
 	//Substance 3.3
 	////
@@ -2011,7 +2011,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			m_settings.setThemeClassName(szname);
 			if(SubstanceLookAndFeel.getTheme().getClass().equals(UMSTheme.class))
 			{
-				System.out.println("UMSTheme");
+				log.debug("UMSTheme");
 			}
 			else
 			{

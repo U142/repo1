@@ -343,7 +343,7 @@ public class MessageEditPanel extends DefaultPanel implements ComponentListener,
 		int ext = 0;
 		while(m.find() == true)
 			++ext;
-		//System.out.println("Extended chars = " + ext);
+		//log.debug("Extended chars = " + ext);
 
         activeLabel.setText(String.format(Localization.l("main_message_library_counter"), text.length() + ext));
 		

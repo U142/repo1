@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.localization.Localization;
@@ -17,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 
 class GISPercentColouredCellRenderer extends DefaultTableCellRenderer{
+
 	public static final long serialVersionUID = 1;
    public GISPercentColouredCellRenderer() {
     }
@@ -58,6 +61,8 @@ class GISPercentColouredCellRenderer extends DefaultTableCellRenderer{
 
 
 public class GISResultPanel extends PreviewList { //SearchPanelResults {
+
+    private static final Log log = UmsLog.getLogger(GISResultPanel.class);
 
 	public static final long serialVersionUID = 1;
 	GISList m_gislist;
@@ -134,7 +139,7 @@ public class GISResultPanel extends PreviewList { //SearchPanelResults {
 			add_controls();
 			
 		} catch(Exception e) {
-			System.out.println("Error PreviewPanel " + e.getMessage());
+			log.debug("Error PreviewPanel " + e.getMessage());
 			Error.getError().addError("PreviewList","Exception in init",e,1);
 		}
 	}

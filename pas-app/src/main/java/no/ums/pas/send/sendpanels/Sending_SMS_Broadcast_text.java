@@ -197,7 +197,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 	public void keyPressed(KeyEvent e) {
 		//if(e.getKeyCode()==KeyEvent.VK_TAB)
 		//m_txt_messagetext.getHighlighter().addHighlight(p0, p1, p)
-		System.out.println("Key pressed: " + e.getKeyChar());	
+		log.debug("Key pressed: " + e.getKeyChar());	
 	}*/
 	
 

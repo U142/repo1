@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
 import no.ums.pas.maps.defines.NavStruct;
@@ -12,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GISList extends ArrayList<GISRecord> {
+
+    private static final Log log = UmsLog.getLogger(GISList.class);
+
 	public static final long serialVersionUID = 1;
 	public NavStruct m_bounds = new NavStruct();
 	public NavStruct GetBounds() { return m_bounds; }
@@ -23,7 +28,7 @@ public class GISList extends ArrayList<GISRecord> {
 			ret = new GISRecord(sz);
 			add(ret);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		return ret;

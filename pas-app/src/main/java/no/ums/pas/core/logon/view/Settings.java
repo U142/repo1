@@ -15,6 +15,8 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.*;
@@ -34,6 +36,8 @@ import org.jdesktop.beansbinding.validation.VisibleValidation;
  */
 public class Settings extends JDialog {
 
+    private static final Log log = UmsLog.getLogger(Settings.class);
+    
 	/**
 	 * 
 	 * @author Modda
@@ -297,7 +301,7 @@ public class Settings extends JDialog {
 			sot.add_addresstypes(SendController.SENDTO_USE_NOFAX_COMPANY);
 		else
 			sot.remove_addresstypes(SendController.SENDTO_USE_NOFAX_COMPANY);
-		System.out.println(sot.gen_adrtypes_text(sot.get_addresstypes(), ADRGROUPS.NOFAX));
+		log.debug(sot.gen_adrtypes_text(sot.get_addresstypes(), ADRGROUPS.NOFAX));
 		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
 	}
 

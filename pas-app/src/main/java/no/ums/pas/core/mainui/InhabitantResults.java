@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.popupmenus.PUInhabitantList;
@@ -14,6 +16,9 @@ import java.awt.event.ActionEvent;
 
 
 public class InhabitantResults extends SearchPanelResults {
+    
+    private static final Log log = UmsLog.getLogger(InhabitantResults.class);
+
 	public static final long serialVersionUID = 1;
 	private PAS m_pas;
 	private InhabitantFrame m_inhabitantframe;
@@ -61,7 +66,7 @@ public class InhabitantResults extends SearchPanelResults {
 			get_popup_list().get_actionlistener().actionPerformed(e);
 			//Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(e);
 		} catch(Exception e) { 
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("InhabitantResults","Exception in onMouseLDblClick",e,1);
 		}
@@ -73,7 +78,7 @@ public class InhabitantResults extends SearchPanelResults {
 			get_popup_list().pop(this.m_tbl, p);
 			//get_pas().add_event("Rightclick: open popup menu");
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("InhabitantResults","Exception in onMouseRClick",e,1);
 		}

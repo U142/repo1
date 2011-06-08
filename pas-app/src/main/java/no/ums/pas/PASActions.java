@@ -1,5 +1,7 @@
 package no.ums.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
@@ -43,6 +45,8 @@ import java.util.List;
 //import org.jvnet.substance.api.SubstanceSkin;
 
 public class PASActions implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(PASActions.class);
 
 	//private boolean parm_open = false;
 	
@@ -186,7 +190,7 @@ public class PASActions implements ActionListener {
 				}
 
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PAS", "Error centering all polygon sendings", err, Error.SEVERITY_ERROR);
 			}
@@ -239,7 +243,7 @@ public class PASActions implements ActionListener {
 								PAS.get_pas().get_mappane().get_actionhandler().mouseMoved(mouseevent);
 								PAS.get_pas().get_mappane().set_current_snappoint(p);
 							} catch(Exception err) {
-								System.out.println(err.getMessage());
+								log.debug(err.getMessage());
 								err.printStackTrace();
 								Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 							}
@@ -248,7 +252,7 @@ public class PASActions implements ActionListener {
 							PAS.get_pas().get_mappane().set_current_snappoint(null);
 						}
 					} catch(Exception err) {
-						System.out.println(err.getMessage());
+						log.debug(err.getMessage());
 						err.printStackTrace();
 						Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 					}	
@@ -290,7 +294,7 @@ public class PASActions implements ActionListener {
 						break;
 				}
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PAS", "Error activating drawmode", err, Error.SEVERITY_ERROR);
 			}
@@ -421,7 +425,7 @@ public class PASActions implements ActionListener {
 				PAS.get_pas().get_sendcontroller().resetActiveProject();
 			}
 			PAS.get_pas().set_keep_sendings(false);
-			System.out.println("Project saved");
+			log.debug("Project saved");
 			Project source = (Project)e.getSource();
 			PAS.get_pas().activateProject(source);
 		}
@@ -434,7 +438,7 @@ public class PASActions implements ActionListener {
 				PAS.get_pas().get_sendcontroller().resetActiveProject();
 			}
 			PAS.get_pas().set_keep_sendings(false);
-			System.out.println("Project Opened");
+			log.debug("Project Opened");
 			Project source = (Project)e.getSource();
 			PAS.get_pas().activateProject(source);	
 			PAS.get_pas().get_eastcontent().ensure_added(EastContent.PANEL_STATUS_LIST);
@@ -467,7 +471,7 @@ public class PASActions implements ActionListener {
 				//get_sendcontroller().get_activesending().get_sendproperties().typecast_ellipse().get_ellipse().set_ellipse(get_navigation(), p, p);
 				PAS.get_pas().get_mappane().actionPerformed(e);
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PAS", "Error setting ellipse center", err, Error.SEVERITY_ERROR);
 			}
@@ -479,7 +483,7 @@ public class PASActions implements ActionListener {
 				PAS.get_pas().get_mappane().actionPerformed(e);
 				PAS.get_pas().kickRepaint();
 			} catch(Exception err) {
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 				Error.getError().addError("PAS", "Error setting ellipse corner", err, Error.SEVERITY_ERROR);
 			}				
@@ -521,10 +525,10 @@ public class PASActions implements ActionListener {
             OtherActions.PARM_START.actionPerformed(new ActionEvent("", ActionEvent.ACTION_PERFORMED, "act_start_parm"));
 		}
 		else if("act_maildelivery_success".equals(e.getActionCommand())) {
-			System.out.println("MailCtrl reported success (Code: " + (Integer)e.getSource() + ")");
+			log.debug("MailCtrl reported success (Code: " + (Integer) e.getSource() + ")");
 		}
 		else if("act_maildelivery_failed".equals(e.getActionCommand())) {
-			System.out.println("MailCtrl reported failure (Error: " + (Integer)e.getSource() + ")");
+			log.debug("MailCtrl reported failure (Error: " + (Integer) e.getSource() + ")");
 		}
 		else if("act_visualsettings_downloaded".equals(e.getActionCommand())) {
 			UPASUISETTINGS ui = (UPASUISETTINGS)e.getSource();

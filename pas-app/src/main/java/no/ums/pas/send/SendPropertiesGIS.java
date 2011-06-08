@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.storage.StorageController;
@@ -32,6 +34,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class SendPropertiesGIS extends SendProperties {
+
+    private static final Log log = UmsLog.getLogger(SendPropertiesGIS.class);
+
 	private GISList m_gislist;
 	public GISList get_gislist() { return m_gislist; }
 	private Color m_col_housecolor = new Color(0, 0, 200);
@@ -98,7 +103,7 @@ public class SendPropertiesGIS extends SendProperties {
 				inhab = get_gislist().get_gisrecord(i).get_inhabitant(j);
 			}
 		}*/
-		//System.out.println("SendPropertiesGIS.draw");
+		//log.debug("SendPropertiesGIS.draw");
 		try {
 			//if(get_houses().get_houses().size()<1000)
 			{
@@ -205,7 +210,7 @@ public class SendPropertiesGIS extends SendProperties {
 		try {
 			f = File.createTempFile("send", ".ums", f_path);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -215,7 +220,7 @@ public class SendPropertiesGIS extends SendProperties {
 				return f;
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			Error.getError().addError("SendPropertiesGIS","Exception in create_addressfile",e,1);
 			e.printStackTrace();
 		}
@@ -234,7 +239,7 @@ public class SendPropertiesGIS extends SendProperties {
 					inhab = house.get_itemfromhouse(j);
 					if(inhab==null) {
 						//Error.getError().addError("Inhabitant error", "NULL inhabitant found (number " + j + ") on house number " + i, 1, 1);
-						System.out.println("NULL inhabitant found (number " + j + ") on house number " + i);
+						log.debug("NULL inhabitant found (number " + j + ") on house number " + i);
 					}
 					else if(inhab.get_kondmid().length() > 0 && inhab.get_included()) {
 						write.write("/KONDMID=" + inhab.get_kondmid() + "\r\n");
@@ -245,7 +250,7 @@ public class SendPropertiesGIS extends SendProperties {
 			write.close();
 			return true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SendPropertiesGIS","Exception in write_addressfile",e,1);
 		}

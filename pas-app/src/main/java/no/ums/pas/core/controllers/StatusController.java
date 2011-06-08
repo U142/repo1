@@ -243,7 +243,7 @@ public class StatusController extends Controller implements ActionListener {
 			if (m_statuscodes != null)
 				m_statuscodes._add(code);
 			//else
-			//	System.out.println("Don't do anything");
+			//	log.debug("Don't do anything");
 		} else if ("act_init_status".equals(e.getActionCommand())) {
 			init_arrays();
 		}
@@ -260,7 +260,7 @@ public class StatusController extends Controller implements ActionListener {
 			} catch (Exception err) {
 				Error.getError().addError("StatusController",
 						"Exception in act_add_sending", err, 1);
-				System.out.println(err.getMessage());
+				log.debug(err.getMessage());
 				err.printStackTrace();
 			}
 		} else if ("act_update_cellbroadcast".equals(e.getActionCommand())) {
@@ -902,7 +902,7 @@ public class StatusController extends Controller implements ActionListener {
 									PAS.get_pas().get_inhabitantframe()
 											.get_panel().insert_row(data, -1);
 								} catch (Exception e) {
-									System.out.println(e.getMessage());
+									log.debug(e.getMessage());
 									e.printStackTrace();
 									Error.getError().addError(
 											"StatusController",

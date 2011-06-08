@@ -1,6 +1,8 @@
 package no.ums.pas;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
 import no.ums.pas.ums.errorhandling.Error;
@@ -20,6 +22,9 @@ import java.awt.image.ImageObserver;
 
 
 	public class Draw /*extends Thread */implements ImageObserver /*, Runnable*/ {
+
+        private static final Log log = UmsLog.getLogger(Draw.class);
+
 		Dimension m_dimension;
 		boolean m_b_isrunning = false;
 		boolean m_b_stop = false;
@@ -95,7 +100,7 @@ import java.awt.image.ImageObserver;
         public void setPainted() {
 			if(m_b_needrepaint>0) 
 				m_b_needrepaint --;
-			//System.out.println("m_b_needrepaint="+m_b_needrepaint);
+			//log.debug("m_b_needrepaint="+m_b_needrepaint);
 		}
 		public MediaTracker get_tracker() { return m_tracker; }
 		public Dimension get_dimension() { return m_dimension; }
@@ -157,7 +162,7 @@ import java.awt.image.ImageObserver;
 								//set_neednewcoors(false);
 							}
 	
-							//System.out.println("Repaint");
+							//log.debug("Repaint");
 							if(m_mapimg!=null) {
 								try {
 									m_gfx_buffer.drawImage(m_mapimg, 0, 0, m_dimension.width, m_dimension.height, this);
@@ -165,13 +170,13 @@ import java.awt.image.ImageObserver;
 								} catch(Exception e) {
 									Error.getError().addError("Draw","Exception in run",e,1);
 									set_lasterror("m_gfx_buffer.drawImage failed " + e.getMessage());
-									System.out.println(get_lasterror());
+									log.debug(get_lasterror());
 									m_b_imgpaint_success = false;
 								}
 							}
 							else {
 								set_lasterror("m_mapimg == null");
-								//System.out.println(get_lasterror());
+								//log.debug(get_lasterror());
 								continue;
 							}
 							draw_layers();
@@ -184,8 +189,8 @@ import java.awt.image.ImageObserver;
 			} catch(Exception e) {
 				//set_lasterror("Error " + e.getMessage());
 				
-				//System.out.println(get_lasterror());
-				System.out.println(e.getMessage());
+				//log.debug(get_lasterror());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("Draw","Exception in run",e,1);
 			}
@@ -210,13 +215,13 @@ import java.awt.image.ImageObserver;
 								//Thread.sleep(100);
 								tracker.waitForID(0);
 								if (tracker.isErrorAny()) {
-									System.out.println("Error loading image ");
+									log.debug("Error loading image ");
 								}
 							} catch (Exception ex) { ex.printStackTrace(); }
 							*/
 							/*if(PAS.get_pas().get_mappane().getMapLoader().getMediaTracker().statusID(0, false) != MediaTracker.COMPLETE)
 							{
-								System.out.println("!!!REPAINT AGAIN!!!!");
+								log.debug("!!!REPAINT AGAIN!!!!");
 								PAS.get_pas().kickRepaint();
 								//return;
 							}*/
@@ -272,7 +277,7 @@ import java.awt.image.ImageObserver;
 						if(need_new_coors())
 						{
 							calc_new_coors();
-							//System.out.println("DRAW: Calc new coors");
+							//log.debug("DRAW: Calc new coors");
 						}
 						
 					}
@@ -321,13 +326,13 @@ import java.awt.image.ImageObserver;
 							g2d.drawString(Localization.l("common_initializing"), 20, 50);
 						}
 						else if(m_mapimg==null)
-							System.out.println("m_mapimg==null");
+							log.debug("m_mapimg==null");
 						else
-							System.out.println("None of the above");
+							log.debug("None of the above");
 						//b_firstmap = false;
 						setPainted();			
 						return;
-						//System.out.println(get_lasterror());
+						//log.debug(get_lasterror());
 					}
 					b_firstmap = false;
 					if(get_mappane().getOverlays()!=null)

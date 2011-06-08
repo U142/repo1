@@ -1,5 +1,7 @@
 package no.ums.pas.send.messagelibrary;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.UMSTree;
 import no.ums.pas.core.defines.tree.UMSTree.TREEMODE;
@@ -19,6 +21,9 @@ import java.awt.event.ComponentListener;
 
 public class MessageLibPanel extends DefaultPanel implements ComponentListener
 {
+
+    private static final Log log = UmsLog.getLogger(MessageLibPanel.class);
+
 	protected MessageLibTreePanel treepanel;
 	protected MessageEditPanel editpanel;
 	protected StdSearchArea search;
@@ -67,7 +72,7 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 			{
 				editpanel.setActiveMessage(node);
 				treepanel.tree.setSelectedNode(node);
-				System.out.println("Messagelib - update current message due to update");
+				log.debug("Messagelib - update current message due to update");
 			}
 			treepanel.tree.searchTreeNode();
 		}
@@ -83,7 +88,7 @@ public class MessageLibPanel extends DefaultPanel implements ComponentListener
 			{
 				//the active record is deleted
 				editpanel.setActiveMessage(null);
-				System.out.println("Messagelib - Reset current message selection due to deletion");
+				log.debug("Messagelib - Reset current message selection due to deletion");
 			}
 		}
 		else if(StdSearchArea.ACTION_SEARCH_CLEARED.equals(e.getActionCommand()))

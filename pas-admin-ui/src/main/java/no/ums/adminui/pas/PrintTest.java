@@ -1,5 +1,7 @@
 package no.ums.adminui.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.HTTPReq;
@@ -17,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.util.ServiceLoader;
 
 public class PrintTest extends JFrame implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(PrintTest.class);
 	/**
 	 * 
 	 */
@@ -33,7 +37,7 @@ public class PrintTest extends JFrame implements ActionListener {
 		//Variables.DRAW.create_image();
 		//Variables.MAPPANE.load_map();
 		//Variables.MAPPANE.kickRepaint();
-		System.out.println("line 93");
+		log.debug("line 93");
 		//add(Variables.MAPPANE);
 		JButton btn_save = new JButton("Save");
 		btn_save.addActionListener(this);
@@ -41,7 +45,7 @@ public class PrintTest extends JFrame implements ActionListener {
 		Container cont = getContentPane();
 		cont.setLayout(new FlowLayout());
 		cont.add(btn_save);
-		System.out.println("line 99");
+		log.debug("line 99");
 		
 		
 		Variables.setNavigation(new Navigation(this, 640, 480));

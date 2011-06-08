@@ -10,6 +10,8 @@ package no.ums.pas.core.controllers;
  *
  */
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.webdata.XMLGps;
 import no.ums.pas.gps.GPSCmd;
@@ -30,6 +32,9 @@ import java.util.Calendar;
 
 
 public class GPSController extends Controller{
+
+    private static final Log log = UmsLog.getLogger(GPSController.class);
+
 	private int m_n_trail_minutes = 10;
 	private int m_n_epsilon_meters = 15;
 	private double m_n_arrowsize = 10.0;
@@ -217,7 +222,7 @@ public class GPSController extends Controller{
 			GpsSetupReturnCode ret = (GpsSetupReturnCode)e.getSource();
 			String sz_msg = "Return value:" + ret.get_answertext() + " (" + ret.get_text() + ")";
 			//JOptionPane.showMessageDialog(PAS.get_pas(), sz_msg);
-			System.out.println(sz_msg);
+			log.debug(sz_msg);
 			if(ret.get_answercode()==GPSCmd.STATUS_FINAL_OK) {
 				this.start_download(true);
 				this.goto_object(ret.get_objectpk(), 500);

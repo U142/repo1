@@ -38,7 +38,7 @@ public class TrainingLookAndFeel extends WindowsLookAndFeel
 		for(int i=0; i < ui.size(); i++)
 		{
 			Object key = en.nextElement();
-			System.out.println("key = " + key + " value = " + ui.get(key));
+			log.debug("key = " + key + " value = " + ui.get(key));
 		}*/
 		UIManager.getDefaults().putDefaults(setMyDefaultColors());
 

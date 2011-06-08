@@ -1,6 +1,8 @@
 package no.ums.pas.sound;
 
 import com.google.common.io.ByteStreams;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -24,6 +26,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class SoundLibraryPanel extends DefaultPanel {
+
+    private static final Log log = UmsLog.getLogger(SoundLibraryPanel.class);
+
 	public static final long serialVersionUID = 1;
 	//private SendController m_controller;
 	Sending_Files m_file;
@@ -112,7 +117,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 				s.setListPriority(s.get_name().startsWith("TLF:") ? ++n_pri : 0);
 				if(s.getListPriority()>0)
 				{
-					System.out.println("type==1 pri="+ n_pri + " wav="+s.get_name());
+					log.debug("type==1 pri="+ n_pri + " wav="+s.get_name());
 					if(++n_pri_count>=3)
 						break;
 				}

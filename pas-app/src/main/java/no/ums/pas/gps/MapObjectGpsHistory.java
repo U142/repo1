@@ -61,7 +61,7 @@ public class MapObjectGpsHistory extends DefaultPanel {
 
 		protected void start_search()
 		{
-			//System.out.println("Info: inserting search row");
+			//log.debug("Info: inserting search row");
 			m_tbl_list.insert_row(new String[] {"", "Starting searchthread", "" }, -1, true); //, ""
 			m_adrthread = new SearchThread(Thread.MIN_PRIORITY);
 			m_adrthread.start();		

@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.importer.FileParser;
 
 import java.awt.event.ActionEvent;
@@ -8,6 +10,9 @@ import java.io.File;
 import java.net.URL;
 
 public class GISFile implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(GISFile.class);
+
 	public static final String [] EXPECTED_SEPARATORS_ = new String [] { "	", ";", ",", "|" };
 	private GISParser m_gisparser = null;
 	public GISParser get_parser() { return m_gisparser; }
@@ -51,7 +56,7 @@ public class GISFile implements ActionListener {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if("act_gis_imported_eof".equals(e.getActionCommand())) {
-			System.out.println("show preview");
+			log.debug("show preview");
 			show_preview();
 		}
 	}
@@ -83,7 +88,7 @@ public class GISFile implements ActionListener {
 			super(url, callback, "act_gis_imported_eof");
 		}
 		public boolean create_values() {
-			System.out.println("create_values");
+			log.debug("create_values");
 			//find separator
 			m_sz_separator = find_separator();
 			if(m_sz_separator.length()==0) {
@@ -93,9 +98,9 @@ public class GISFile implements ActionListener {
 			for(int i=0; i < lines().size(); i++) {
 				data.add_line(lines().get(i).toString());
 			}
-			//System.out.println("show_preview start");
+			//log.debug("show_preview start");
 			//show_preview();
-			//System.out.println("show_preview end");
+			//log.debug("show_preview end");
 
 			
 			return true;
@@ -120,7 +125,7 @@ public class GISFile implements ActionListener {
 					if(lines().get(lines).toString().trim().length() == 0)
 						continue; //skip line
 					n_separator_inst = find_separator_instances(lines().get(lines).toString(), EXPECTED_SEPARATORS_[i]);
-					//System.out.println("separator " + n_separator_inst);
+					//log.debug("separator " + n_separator_inst);
 					if(n_separator_inst == 0) {
 						b_possible_match = false;
 						break;

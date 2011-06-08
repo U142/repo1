@@ -167,7 +167,7 @@ public class XmlReader {
 			File file = new File(ParmConstants.resZipLocation);
 			file.delete();
 		}catch(Exception io){
-			System.out.println("Klarte ikke slette "+ParmConstants.resZipLocation+" filen!");
+			log.debug("Klarte ikke slette "+ParmConstants.resZipLocation+" filen!");
 			Error.getError().addError("XmlReader","Exception in readResponseXml",io,1);
 		}
 		return this.objectList;
@@ -265,22 +265,22 @@ public class XmlReader {
 				// was ok at the Database
 				int check = writer.updateXml(objectpk, tempPk, timestamp);
 				if (check == 0) {
-					System.out.println(objectpk
+					log.debug(objectpk
 							+ " is now updated in the local xml file!");
 					this.pkListe.add(objectpk);
 					this.tempPkListe.add(tempPk);
 				} else {
-					System.out.println(objectpk
+					log.debug(objectpk
 							+ " didnt get updated in the local xml file!");
 				}
 				check = writer.updatePolyXml(objectpk, tempPk);
 				if (check == 0) {
-					System.out.println(objectpk
+					log.debug(objectpk
 							+ " is now updated in the local xml file!");
 					this.pkListe.add(objectpk);
 					this.tempPkListe.add(tempPk);
 				} else {
-					System.out.println(objectpk
+					log.debug(objectpk
 							+ " didnt get updated in the local xml file!");
 				}
 			} else {
@@ -377,7 +377,7 @@ public class XmlReader {
 		if (this.objectList != null) {
 			this.timestamp = updateElement.getAttribute("l_timestamp");
 			writer.setRootTimestamp(this.timestamp);
-			System.out.println("PARM timestamp = " + this.timestamp);
+			log.debug("PARM timestamp = " + this.timestamp);
 			//Prøver å tømme polyxml slik at det ikke blir lagret dobbelt.
 			//writer.writeEmptyPoly(ParmConstants.polyXmlName);
 			this.writer.writeXml(this.objectList); // Her skriver den sikkert inn igjen objektene
@@ -1151,7 +1151,7 @@ public class XmlReader {
 				} catch (IOException ioe) {
 					Error.getError().addError("XmlReader","IOException in getXmlFromZip",ioe, Error.SEVERITY_INFORMATION);
 					xmlfile.delete(); // If error delete the file
-					System.out.println("Error while closing filestream: " + ioe.getMessage());
+					log.debug("Error while closing filestream: " + ioe.getMessage());
 				}
 				//PAS.get_pas().close_parm(false);
 			}
@@ -1216,7 +1216,7 @@ public class XmlReader {
 			try {
 				xmlStream.close();
 			} catch (IOException io) {
-				System.out.println("XmlReader-->updateMemObjects()"	+ io.getMessage());
+				log.debug("XmlReader-->updateMemObjects()"	+ io.getMessage());
 				Error.getError().addError("XmlReader","IOException in resetXmlStream",io,1);
 			}
 			doc = null;
@@ -1241,7 +1241,7 @@ public class XmlReader {
 				if(nl.getLength() > 0) {
 					Element child = (Element)nl.item(0);
 					account.set_displayname(child.getTextContent());
-					System.out.println(child.getTextContent());
+					log.debug(child.getTextContent());
 				}
 				
 				nl=element.getElementsByTagName("email");
@@ -1249,7 +1249,7 @@ public class XmlReader {
 				if(nl.getLength() > 0) {
 					Element child = (Element)nl.item(0);
 					account.set_mailaddress(child.getTextContent());
-					System.out.println(child.getTextContent());
+					log.debug(child.getTextContent());
 				}
 				
 				nl=element.getElementsByTagName("mailserver");
@@ -1257,7 +1257,7 @@ public class XmlReader {
 				if(nl.getLength() > 0) {
 					Element child = (Element)nl.item(0);
 					account.set_mailserver(child.getTextContent());
-					System.out.println(child.getTextContent());
+					log.debug(child.getTextContent());
 				}
 				
 				nl=element.getElementsByTagName("port");
@@ -1265,7 +1265,7 @@ public class XmlReader {
 				if(nl.getLength() > 0) {
 					Element child = (Element)nl.item(0);
 					account.set_port(Integer.parseInt(child.getTextContent()));
-					System.out.println(child.getTextContent());
+					log.debug(child.getTextContent());
 				}
 				
 				nl=element.getElementsByTagName("autodetected");
@@ -1273,7 +1273,7 @@ public class XmlReader {
 				if(nl.getLength() > 0) {
 					Element child = (Element)nl.item(0);
 					account.set_autodetected(Boolean.getBoolean(child.getTextContent()));
-					System.out.println(child.getTextContent());
+					log.debug(child.getTextContent());
 				}
 					
 			}
@@ -1283,7 +1283,7 @@ public class XmlReader {
 			if(nl.getLength() > 0) {
 				Element child = (Element)nl.item(0);
 				settings.setLbaRefresh(Integer.valueOf(child.getTextContent()));
-				System.out.println(child.getTextContent());
+				log.debug(child.getTextContent());
 			}
 			
 			
@@ -1579,7 +1579,7 @@ public class XmlReader {
 		        }
 	        }
 		} catch(Exception e) {
-			System.out.println("feil ved lesing");
+			log.debug("feil ved lesing");
 		}
 	}
 	

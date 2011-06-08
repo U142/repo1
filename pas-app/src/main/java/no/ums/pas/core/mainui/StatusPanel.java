@@ -3,6 +3,8 @@ package no.ums.pas.core.mainui;
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
@@ -42,6 +44,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class StatusPanel extends DefaultPanel implements ComponentListener, ItemListener {
+
+    private static final Log log = UmsLog.getLogger(StatusPanel.class);
+
 	public static final long serialVersionUID = 1;
     //private static final Log logger = UmsLog.getLogger(StatusPanel.class);
 
@@ -644,7 +649,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 				}
 				catch(Exception e)
 				{
-					System.out.println(e.getMessage());
+					log.debug(e.getMessage());
 				}
 			}
 		}
@@ -903,13 +908,13 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 				{
 					StatusSending s = (StatusSending)row.getId();
 					String sz_filterby = s.toString();
-                    System.out.println(Localization.l("main_status_filter_codes_by") + " " + sz_filterby);
+                    log.debug(Localization.l("main_status_filter_codes_by") + " " + sz_filterby);
 					get_statuscodeframe().setFilter(s);
 					return;
 				}
 			}
 			//assume turn off filter
-            System.out.println(Localization.l("main_status_filter_codes_disable"));
+            log.debug(Localization.l("main_status_filter_codes_disable"));
 			get_statuscodeframe().setFilter(null);
 		}
 	}

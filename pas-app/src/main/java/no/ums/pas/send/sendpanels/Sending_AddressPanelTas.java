@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSTasCount;
 import no.ums.pas.localization.Localization;
@@ -22,6 +24,8 @@ import java.util.List;
 
 public class Sending_AddressPanelTas extends Sending_AddressPanel
 {
+    private static final Log log = UmsLog.getLogger(Sending_AddressPanelTas.class);
+
 	StdTextLabel lbl_destination = new StdTextLabel(Localization.l("main_tas_destination_country"), true, 150);
 
     {
@@ -161,7 +165,7 @@ public class Sending_AddressPanelTas extends Sending_AddressPanel
 		if("act_tascount_finished".equals(e.getActionCommand()))
 		{
 			UTASREQUEST b = (UTASREQUEST)e.getSource();
-			System.out.println("TAS adrcount request sent=" + b.isBSuccess());
+			log.debug("TAS adrcount request sent=" + b.isBSuccess());
 		}
 		super.actionPerformed(e);
 	}

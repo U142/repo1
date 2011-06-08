@@ -1,5 +1,7 @@
 package no.ums.pas.parm.map;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.Draw;
 import no.ums.pas.core.dataexchange.HTTPReq;
 import no.ums.pas.maps.MapFrame;
@@ -29,6 +31,9 @@ import java.util.Iterator;
 //import java.util.logging.ConsoleHandler;
 
 public class MapPanel extends JPanel implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(MapPanel.class);
+
 	public static final long serialVersionUID = 1;
 
 	ArrayList<Object> m_shapes = new ArrayList<Object>();
@@ -136,7 +141,7 @@ public class MapPanel extends JPanel implements ActionListener {
 			// writing selected coordinates
 			coordList = m_shape.typecast_polygon().get_coors_lat();
 			for (int i = 0; i < coordList.size(); i++) {
-				System.out.println(coordList.get(i) + " coordinate " + i);
+				log.debug(coordList.get(i) + " coordinate " + i);
 			}
 			// ----------------------
 
@@ -154,7 +159,7 @@ public class MapPanel extends JPanel implements ActionListener {
 		} else if (e.getSource() == btn2) { // Toolbar draw
 			m_mapframe.set_mode(MapFrame.MapMode.SENDING_POLY);
 		} else if (e.getSource() == btn3) { // Toolbar clear
-			System.out.println(m_shape.typecast_polygon().get_size());
+			log.debug(m_shape.typecast_polygon().get_size());
 			clear();
 		}else if(e.getSource()==btn4){ //Toolbar gotTo
 			NavStruct struct = m_shape.typecast_polygon().calc_bounds();
@@ -169,11 +174,11 @@ public class MapPanel extends JPanel implements ActionListener {
 			m_shape.typecast_polygon().rem_last_coor();
 		}
 		redraw();
-		System.out.println("redraw!");
+		log.debug("redraw!");
 	}
 	
 	public void update(Graphics g) {
-		System.out.println("MapPanel.update(..)");
+		log.debug("MapPanel.update(..)");
 		paint(g);
 	}
 
@@ -213,7 +218,7 @@ public class MapPanel extends JPanel implements ActionListener {
 				Color test = polygon.get_fill_color();
 				this.m_shape.set_fill_color(test);
 			} catch (NullPointerException e) {
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 			}
 		}
 	}

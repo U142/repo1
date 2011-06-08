@@ -1,5 +1,7 @@
 package no.ums.pas.parm.threads;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.parm.constants.ParmConstants;
 import no.ums.pas.parm.exception.ParmException;
@@ -19,6 +21,9 @@ import java.util.Collection;
 
 
 public class UpdateXML extends Thread{
+
+    private static final Log log = UmsLog.getLogger(UpdateXML.class);
+
 	private String commando;
 	private String filename, polyFileName;
 	private MainController main;
@@ -65,9 +70,9 @@ public class UpdateXML extends Thread{
 		String tempfile = filename + this.hTempPk+".xml";
 		String tempPoly = polyFileName + this.hTempPk + ".xml";
 		String filename = this.filename + this.hTempPk+".zip";
-		System.out.println(filename);
+		log.debug(filename);
 		this.path = xmlWriter.writeTempXml(this.xmlReader.readTempXml(xmlWriter),ParmConstants.tempxmlLocation+filename);
-		System.out.println(path);
+		log.debug(path);
 		this.getSendXmlStream();
 		
 		this.con = new ServerCon();
@@ -186,20 +191,20 @@ public class UpdateXML extends Thread{
 						m_b_inprogress = false;
 						Thread.sleep(ParmConstants.updateSequence);
 					} catch(InterruptedException e) {
-						System.out.println("Sleep interrupted");
+						log.debug("Sleep interrupted");
 						//Error.getError().addError("UpdateXML","Exception in run",e,1);
 						//break;
 					}
 					m_b_inprogress = true;
 				}
 			}catch(ParmException pe){
-				System.out.println(pe.getMessage());
+				log.debug(pe.getMessage());
 				Error.getError().addError("UpdateXML","ParmException in run",pe,1);
 			}catch(Exception e){
 				//this.commando = "stop";
 				//this.suspend();
 				m_b_inprogress = false;
-				System.out.println(e.getMessage());
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				Error.getError().addError("UpdateXML","Exception in run",e,1);
 			}

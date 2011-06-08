@@ -1,6 +1,8 @@
 package no.ums.pas.send.sendpanels;
 
 import com.google.common.base.Supplier;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -44,6 +46,9 @@ import java.util.Collections;
  * download : profiles, oadc and schedprofiles
  */
 public class Sending_Settings extends DefaultPanel implements KeyListener {
+
+    private static final Log log = UmsLog.getLogger(Sending_Settings.class);
+
 	public static final long serialVersionUID = 1;
 
 	protected SendWindow parent = null;
@@ -297,7 +302,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		add(m_txt_sendname, m_gridconst);
 		
 		// if only cell broadcast is selected then don't show these fields
-		System.out.println("Addresstypes: " + parent.m_sendobject.get_toolbar().get_addresstypes());
+		log.debug("Addresstypes: " + parent.m_sendobject.get_toolbar().get_addresstypes());
 		if(parent.m_sendobject.get_toolbar().get_addresstypes() != 256) { // Her må jeg finne Statiske for BTN_CELLBROADCAST
 			if(parent.hasVoice(n_addrtypes)) {
 				set_gridconst(0, inc_panels(), 5, 1, GridBagConstraints.WEST);
@@ -384,7 +389,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 			
 		} else if("act_profile_changed".equals(e.getActionCommand())) {
 			m_current_profile = (BBProfile)m_combo_profiles.getSelectedItem();
-			System.out.println("Profile changed to: " + m_current_profile.toString());
+			log.debug("Profile changed to: " + m_current_profile.toString());
 			get_parent().initialize_file_panes();
 			//get_pas().add_event("selected profile: " + m_current_profile.get_profilename());
 			String n_default_sched;
@@ -510,10 +515,10 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 						BBProfile current = profiles.get(i);
 						m_combo_profiles.addItem(current);
 					}
-					//System.out.println("Trying to set profile: " + parent.m_sendobject.get_sendproperties().get_profilepk());
+					//log.debug("Trying to set profile: " + parent.m_sendobject.get_sendproperties().get_profilepk());
 					if(parent.m_sendobject != null && parent.m_sendobject.get_sendproperties() != null && parent.m_sendobject.get_sendproperties().get_profilepk() > -1) {
 						BBProfile selectedProfile = null;
-						//System.out.println("At least I'm inside");
+						//log.debug("At least I'm inside");
 						BBProfile temp = null;
 						int profilepk;
 						for(int i=0;i<m_combo_profiles.getItemCount();++i) {
@@ -524,9 +529,9 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 						}
 						if(selectedProfile != null) {
 							m_combo_profiles.setSelectedItem(selectedProfile);
-							//System.out.println("Profile set: " + selectedProfile.toString());
+							//log.debug("Profile set: " + selectedProfile.toString());
 						}
-						//System.out.println("The profile should now be: " + m_combo_profiles.getSelectedItem().toString());
+						//log.debug("The profile should now be: " + m_combo_profiles.getSelectedItem().toString());
 					}
 				}
 			});

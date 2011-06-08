@@ -3,6 +3,8 @@ package no.ums.pas.core.logon;
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.SearchPanelResults;
@@ -54,6 +56,9 @@ import org.jvnet.substance.utils.params.PropertiesFileParamReader;
 
 /*dialog box*/
 public class LogonDialog extends JFrame implements WindowListener, ComponentListener, ActionListener { //JDialog { //implements ComponentListener {
+
+    private static final Log log = UmsLog.getLogger(LogonDialog.class);
+
 	public static final long serialVersionUID = 1;
     //private static final Log logger = UmsLog.getLogger(LogonDialog.class);
     private LogonInfo m_logoninfo = null;
@@ -66,7 +71,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 		try
 		{
 			m_logon.setMaxTries(i);
-			System.out.println("set max logontries to " + i);
+			log.debug("set max logontries to " + i);
 		}
 		catch(Exception e)
 		{
@@ -187,7 +192,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 				m_panel.m_txt_userid.setText(m_logoninfo.get_userid());
 			}
 			if(m_logoninfo.get_compid().length()>0) {
-				System.out.println("Default Compid=" + m_logoninfo.get_compid());
+				log.debug("Default Compid=" + m_logoninfo.get_compid());
 				m_panel.m_txt_compid.setText(m_logoninfo.get_compid());
 			}
 		} catch(Exception e) {
@@ -382,7 +387,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 					boolean b_use = temp.equalsIgnoreCase(key);
 					if(b_use)
 					{
-						System.out.println("language " + key);
+						log.debug("language " + key);
 						m_combo_language.setSelectedItem(item);
 					}
 				}
@@ -391,9 +396,9 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			catch(Exception e)
 			{
 				e.printStackTrace();
-				System.out.println("Error");
+				log.debug("Error");
 			}
-			System.out.println("LOGON");
+			log.debug("LOGON");
 			
 		}
 		
@@ -522,7 +527,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			}
 			catch(Exception e)
 			{
-				//System.out.println(e.getMessage());
+				//log.debug(e.getMessage());
 			}
 		}
 		@Override

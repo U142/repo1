@@ -1,5 +1,7 @@
 package no.ums.pas.tas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -83,6 +85,9 @@ import java.util.Vector;
 
 
 public class TasPanel extends DefaultPanel implements ComponentListener, ItemListener, ActionListener, MouseListener {
+
+    private static final Log log = UmsLog.getLogger(TasPanel.class);
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
@@ -249,7 +254,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				if(dmtn.getUserObject().getClass().equals(ULBACOUNTRY.class))
 				{
 					ULBACOUNTRY c = (ULBACOUNTRY)dmtn.getUserObject();
-					System.out.println(c.getSzName());
+					log.debug(c.getSzName());
 					if(!Variables.getNavigation().pointVisible(c.getWeightpoint()))
 					{
 						zoomToCountry(c);
@@ -261,7 +266,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				} else if(dmtn.getUserObject().getClass().equals(ULBACONTINENT.class))
 				{
 					ULBACONTINENT c = (ULBACONTINENT)dmtn.getUserObject();
-					System.out.println(c.getSzName());
+					log.debug(c.getSzName());
 					//zoomToContinent(c);
 					//NavStruct nav = new NavStruct(c.getBounds().getLBo(), c.getBounds().getRBo(), c.getBounds().getUBo(), c.getBounds().getBBo());
 					//Variables.NAVIGATION.gotoMap(nav);
@@ -340,7 +345,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						{
 							prevhovered.b_hovered = false;
 							item.b_hovered = true;
-							System.out.println("Hover " + item.toString());
+							log.debug("Hover " + item.toString());
 							prevhovered = item;
 							PAS.get_pas().kickRepaint(prevhovered.rect);
 						}
@@ -662,7 +667,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			public void stateChanged(ChangeEvent e)
 			{
 				//f_detaillevel = (float)(slide_detaillevel.getValue()/100.0f);
-				System.out.println(f_detaillevel);
+				log.debug(f_detaillevel);
 				PAS.get_pas().kickRepaint();
 			}
 		});
@@ -783,7 +788,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		tree.revalidate();
 		this.revalidate();
 		tree.repaint();
-		//System.out.println("RESIZE w="+getWidth());
+		//log.debug("RESIZE w="+getWidth());
 		//if(searchsize>0)
 		//	btn_cancel_search.setPreferredSize(new Dimension(searchsize, searchsize));
 		super.componentResized(e);
@@ -877,7 +882,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				}*/
 				//m_updater_thread.notifyDownloadDone();
 				tree.signalDownloadFinished();
-				//System.out.println("TAS Signal download finished");
+				//log.debug("TAS Signal download finished");
 			}			
 		}
 		else if("act_cancel_search".equals(e.getActionCommand()))
@@ -975,7 +980,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				}
 				if(list.size()>0)
 				{
-					System.out.println("Request tourist count");
+					log.debug("Request tourist count");
 					new WSTasCount(this, list).start();
 				}
 			}
@@ -988,7 +993,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		else if("act_tascount_finished".equals(e.getActionCommand()))
 		{
 			UTASREQUEST req = (UTASREQUEST)e.getSource();
-			System.out.println("Count started="+req.getNRequestpk());
+			log.debug("Count started="+req.getNRequestpk());
 			try
 			{
 				UTASREQUESTRESULTS res = new UTASREQUESTRESULTS();
@@ -1004,7 +1009,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 					for(int i=0; i < req.getList().getULBACOUNTRY().size(); i++)
 					{
 						arr_countries.getULBACOUNTRY().add(req.getList().getULBACOUNTRY().get(i));
-						System.out.println("  " + req.getList().getULBACOUNTRY().get(i).getSzName());
+						log.debug("  " + req.getList().getULBACOUNTRY().get(i).getSzName());
 						
 					}
 					res.setList(arr_countries);
@@ -1619,7 +1624,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		//int mapwidth = Math.abs(Variables.NAVIGATION.get_mapwidthmeters().intValue());
 		//double modifier = Math.cos(Variables.NAVIGATION.getHeaderBBO() * CoorConverter.deg2rad);
 		double mapwidth = Variables.getNavigation().getDeltaLon();
-		System.out.println("MapWidth deg = " + mapwidth);
+		log.debug("MapWidth deg = " + mapwidth);
 		double levels [] = new double[] { 180, 90, 50, 40, 2, 1, 0.5 }; 
 		
 		if(mapwidth>levels[0]*f_detaillevel) //20000000
@@ -1695,7 +1700,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				}
 				else
 				{
-					//System.out.println("Not Visible");
+					//log.debug("Not Visible");
 					screen = null;
 					((CountryListItem)node).rect = null;
 				}
@@ -1809,7 +1814,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 									c2.getWeightpointScreen().setLat(c2.getWeightpointScreen().getLat() + movey * (c1up ? 1 : -1));
 								}
 
-								//System.out.println(c1.getSzName() + " " + c1.getWeightpointScreen().getLon() + " " + c1.getWeightpointScreen().getLat());
+								//log.debug(c1.getSzName() + " " + c1.getWeightpointScreen().getLon() + " " + c1.getWeightpointScreen().getLat());
 							}
 							/*if(item2.getClass().equals(CountryListItem.class))
 							{
@@ -1828,7 +1833,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				b_newround = false;
 			}
 		}
-		System.out.println("Iterations=" + iterations);
+		log.debug("Iterations=" + iterations);
 		
 	}
 

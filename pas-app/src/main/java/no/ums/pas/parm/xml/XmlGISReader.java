@@ -63,7 +63,7 @@ public class XmlGISReader {
 					NodeList childnodes = elPolyAlert.getChildNodes();
 					for(int j=0;j<childnodes.getLength();j++) {
 						Node node = childnodes.item(j);
-//						System.out.println(node.getAttributes());
+//						log.debug(node.getAttributes());
 						if(node.getClass().equals(DeferredElementImpl.class)) {	// Denne er litt jalla				
 							Element child = (Element)node;
 							GISRecord gisr = new GISRecord(child.getAttribute("municipal"),

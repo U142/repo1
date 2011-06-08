@@ -109,7 +109,7 @@ public abstract class UMSTree extends JTree implements ActionListener, ItemListe
 	
 	public List<UMSTreeNode> searchTreeNode(String nodeStr)
 	{
-		//System.out.println("searchTreeNode");
+		//log.debug("searchTreeNode");
 		List<UMSTreeNode> nodes = new ArrayList<UMSTreeNode>();
 		Enumeration<UMSTreeNode> en = top.breadthFirstEnumeration();
 		while(en.hasMoreElements())

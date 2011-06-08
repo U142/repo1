@@ -1,5 +1,7 @@
 package no.ums.pas.importer.gis;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.maps.defines.InhabitantBasics;
 
@@ -7,6 +9,9 @@ import java.util.ArrayList;
 
 
 public class GISRecord extends Object {
+
+    private static final Log log = UmsLog.getLogger(GISRecord.class);
+
 	private ArrayList<InhabitantBasics> m_inhabitants;
 	public ArrayList<InhabitantBasics> get_inhabitants() { return m_inhabitants; }
 	public InhabitantBasics get_inhabitant(int n) { return get_inhabitants().get(n); }
@@ -17,7 +22,7 @@ public class GISRecord extends Object {
 			get_inhabitants().add(inhab);
 			return inhab;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		return null;

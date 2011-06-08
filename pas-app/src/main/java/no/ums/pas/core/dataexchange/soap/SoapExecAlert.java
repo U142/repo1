@@ -1,5 +1,7 @@
 package no.ums.pas.core.dataexchange.soap;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.localization.Localization;
@@ -20,6 +22,8 @@ import java.util.Iterator;
 
 public class SoapExecAlert extends MiniSOAP
 {
+    private static final Log log = UmsLog.getLogger(SoapExecAlert.class);
+
 	public SnapAlertResults newSnapAlertResult() { return new SnapAlertResults(); }
 	// main results tag in xml response
 	public class SnapAlertResults
@@ -398,9 +402,9 @@ public class SoapExecAlert extends MiniSOAP
 		}
 		try
 		{
-	    	System.out.println(replyMsg.getSOAPBody().getChildElements().hasNext());
+	    	log.debug(replyMsg.getSOAPBody().getChildElements().hasNext());
 	    	replyMsg.writeTo(System.out);
-	    	System.out.println("");
+	    	log.debug("");
 	    	SOAPPart soappart = replyMsg.getSOAPPart();
 	    	NodeList nl = soappart.getElementsByTagName("results");
 	    	if(nl.getLength()==1)

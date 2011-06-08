@@ -4,6 +4,8 @@ import nl.bzk.services.nl_alert.mapsearch.BoundingBox;
 import nl.bzk.services.nl_alert.mapsearch.MapMatches;
 import nl.bzk.services.nl_alert.mapsearch.MapSearchResponse;
 import nl.bzk.services.nl_alert.mapsearch.MapSearchService;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.SearchPanelResults.TableList;
 import no.ums.pas.core.mainui.address_search.AddressSearchPanel;
@@ -25,7 +27,9 @@ import java.util.List;
 
 public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.DefaultAddressSearch
 {
-	
+
+    private static final Log log = UmsLog.getLogger(CentricAddressSearch.class);
+
 	class UGabResultListItem extends UGabResult
 	{
 
@@ -52,7 +56,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	public UGabSearchResultList onExecSearch(SearchPanelVals spr) throws Exception
 	{
 		//PluginLoader.LoadExternalJar(PAS.get_pas().get_codebase(), "NLMapSearch", "ObjectFactory");
-		System.out.println("CentricAddressSearch.onExecSearch");
+		log.debug("CentricAddressSearch.onExecSearch");
 		java.net.URL wsdl;
 		try
 		{			
@@ -124,14 +128,14 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 	
 	@Override
 	public SearchPanelVals onCreateSearchPanelVals(AddressSearchPanel panel) throws Exception {
-		System.out.println("CentricAddressSearch.onCreateSearchPanelVals");
+		log.debug("CentricAddressSearch.onCreateSearchPanelVals");
 		return new CentricSearchPanelVals(panel);
 	}
 	
 	@Override
 	public SearchPanelResultsAddrSearch onCreateSearchPanelResultsAddrSearch(AddressSearchPanel panel, ActionListener callback)
 			throws Exception {
-		System.out.println("CentricAddressSearch.onCreateSearchPanelResultsAddrSearch");
+		log.debug("CentricAddressSearch.onCreateSearchPanelResultsAddrSearch");
         String[] sz_columns  = {
                 Localization.l("adrsearch_dlg_address"),
                 Localization.l("adrsearch_dlg_region"),

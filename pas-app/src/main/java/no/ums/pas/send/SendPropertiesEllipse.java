@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
@@ -30,6 +32,8 @@ import java.net.URL;
 
 
 public class SendPropertiesEllipse extends SendProperties {
+
+    private static final Log log = UmsLog.getLogger(SendPropertiesEllipse.class);
 
 	//private EllipseStruct m_ellipse;
 	//public EllipseStruct get_ellipse() { return m_ellipse; }
@@ -90,7 +94,7 @@ public class SendPropertiesEllipse extends SendProperties {
 			get_sendobject().get_callback().actionPerformed(new ActionEvent(nav, ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 			return true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("SendPropertiesEllipse","Exception in goto_area",e,1);
 		}

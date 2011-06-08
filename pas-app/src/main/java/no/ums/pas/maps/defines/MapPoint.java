@@ -1,7 +1,13 @@
 package no.ums.pas.maps.defines;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 public class MapPoint {
+
+    private static final Log log = UmsLog.getLogger(MapPoint.class);
+
 	MapPointLL m_ll;
 	MapPointPix m_pix;
 	public int get_x() { return m_pix.get_x(); }
@@ -36,7 +42,7 @@ public class MapPoint {
 		try {
 			return (double)(Math.round(get_lon() * 100000)) / 100000 + ", " + (double)(Math.round(get_lat() * 100000)) / 100000;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 		}
 		return "No Point";

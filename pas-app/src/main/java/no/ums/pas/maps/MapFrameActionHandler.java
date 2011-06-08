@@ -3,6 +3,8 @@ package no.ums.pas.maps;
 //import no.ums.log.Log;
 //import no.ums.log.UmsLog;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
@@ -44,6 +46,8 @@ import java.util.List;
 
 public class MapFrameActionHandler extends AbstractBean implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
     //private static final Log logger = UmsLog.getLogger(MapFrameActionHandler.class);
+
+    private static final Log log = UmsLog.getLogger(MapFrameActionHandler.class);
 
     public class ActionHouseSelect extends Object {
 		public boolean _b1;
@@ -402,7 +406,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		try {
 			mouse_move(e);
 		} catch(Exception err) {
-			/*System.out.println(err.getMessage());
+			/*log.debug(err.getMessage());
 			err.printStackTrace();
 			Error.getError().addError("MapFrameActionHandler","Exception in mouseMoved",err,1);*/
 		}
@@ -453,7 +457,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		//intersects.clear();
 		intersects = new ArrayList<MapPointLL>();
 		MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(m_dim_cursorpos.width, m_dim_cursorpos.height));
-		//System.out.println("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
+		//log.debug("x = " + m_dim_cursorpos.width + " , y = " + m_dim_cursorpos.height);
 		//boolean b = PAS.get_pas().get_sendcontroller().get_activesending().get_sendproperties().get_shapestruct().pointInsideShape(p.get_mappointll());
 		//List<ShapeStruct> list = PAS.get_pas().get_userinfo().get_current_department().get_restriction_shapes();
 
@@ -634,7 +638,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					intersects.addAll(intersects_last);
 					
 					double pixel_dist = Variables.getNavigation().calc_pix_distance(nearest_point.getDegreeDistance());
-					//System.out.println(pixel_dist+"");
+					//log.debug(pixel_dist+"");
 					if(nearest_point!=null && pixel_dist < 15)
 					{
 						setPaintMode(PAINTMODE.PIN_TO_POINT);
@@ -741,7 +745,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				}
 			}*/
 		} catch(Exception err) {
-			System.out.println(err.getMessage());
+			log.debug(err.getMessage());
 			err.printStackTrace();
 			Error.getError().addError("MapFrameActionHandler","Exception in check_snap",err,1);
 		}
@@ -769,7 +773,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
 						addAction("act_set_ellipse_corner", p);
 					} catch(Exception err) {
-						System.out.println(err.getMessage());
+						log.debug(err.getMessage());
 						err.printStackTrace();
 						Error.getError().addError("MapFrameActionHandler","Exception in mouseDragged",err,1);
 					}
@@ -783,7 +787,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						if(get_isdragging())
 						{
 							checkSendingRestriction(false, RESTRICTION_MODE.FORCE_INSIDE, -1);
-							//System.out.println("Checking");
+							//log.debug("Checking");
 						}
 					}
 					catch(Exception err)
@@ -858,7 +862,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+								//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 								get_mappane().repaint();
 								get_mappane().validate();
 							}
@@ -882,7 +886,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+								//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 								get_mappane().repaint();
 								get_mappane().validate();
 							}
@@ -897,7 +901,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						addAction("act_set_ellipse_center", p);
 						set_isdragging(true);
 					} catch(Exception err) {
-						System.out.println(err.getMessage());
+						log.debug(err.getMessage());
 						err.printStackTrace();
 						Error.getError().addError("MapFrameActionHandler","Exception in mousePressed",err,1);
 					}
@@ -926,7 +930,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					MapPoint p;
 					this.check_snap(e);
 					if(get_mappane().get_mouseoverhouse() != null) {
-						//System.out.println("House found at same location with " + get_mappane().get_mouseoverhouse().get_inhabitantcount() + " inhabitants");
+						//log.debug("House found at same location with " + get_mappane().get_mouseoverhouse().get_inhabitantcount() + " inhabitants");
 						p = new MapPoint(get_mappane().get_navigation(), new MapPointLL(get_mappane().get_mouseoverhouse().get(0).get_lon(), get_mappane().get_mouseoverhouse().get(0).get_lat()));
 					}
 					else 
@@ -1002,7 +1006,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 							{
 								//get_mappane().repaint(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
 								//get_mappane().paintImmediately(0, 0, get_mappane().getWidth(), get_mappane().getHeight());
-								//System.out.println("!!!!!EXECUTING KICKREPAINT!!!!!");
+								//log.debug("!!!!!EXECUTING KICKREPAINT!!!!!");
 								get_mappane().repaint();
 								get_mappane().validate();
 							}
@@ -1027,12 +1031,12 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					nav._lbo = Variables.getNavigation().getHeaderLBO() - ll.get_lon();
 					nav._rbo = Variables.getNavigation().getHeaderRBO() - ll.get_lon();
 					
-					/*System.out.println("delta y = " + ll.get_lat());
+					/*log.debug("delta y = " + ll.get_lat());
 					double mod1 = Math.cos(CoorConverter.deg2rad * nav._bbo); //old
 					double mod2 = Math.cos(CoorConverter.deg2rad * (nav._bbo + ll.get_lat()));
 					//double modifier = Math.cos(CoorConverter.deg2rad * ll.get_lat());
 					double modifier = mod2-mod1;
-					System.out.println("modifier = " + modifier);
+					log.debug("modifier = " + modifier);
 					nav._ubo += ll.get_lat();// - ll.get_lat() * modifier;
 					nav._bbo += ll.get_lat();
 					if(ll.get_lat()>0) //up
@@ -1052,17 +1056,17 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					}*/
 					
 					/*double ydiff = (nav._ubo - nav._bbo + ll.get_lat()) / 2; //center
-					System.out.println("ydiff="+ydiff);
+					log.debug("ydiff="+ydiff);
 					double mod_for_aspect = Math.sin(CoorConverter.deg2rad * (ydiff));
 					//double mod_for_aspect = Math.sin(CoorConverter.deg2rad * nav._bbo);
-					System.out.println("mod for aspect = " + mod_for_aspect);
+					log.debug("mod for aspect = " + mod_for_aspect);
 					double xdiff = (nav._rbo - nav._lbo);
-					System.out.println("xdiff = " + xdiff * mod_for_aspect);
+					log.debug("xdiff = " + xdiff * mod_for_aspect);
 					boolean b_north_wins = true;
 					if(Math.abs(nav._bbo) > Math.abs(nav._ubo))
 						b_north_wins = false;
 					double add = ll.get_lat() * mod_for_aspect;
-					System.out.println("Add=" + add);
+					log.debug("Add=" + add);
 					if(ll.get_lat()>0)
 					{
 						//if(nav._bbo > 0)

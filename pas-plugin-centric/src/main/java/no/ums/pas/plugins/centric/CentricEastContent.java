@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.mainui.EastContent;
 import no.ums.pas.localization.Localization;
@@ -12,6 +14,9 @@ import java.awt.event.ComponentEvent;
 
 public class CentricEastContent extends EastContent
 {
+
+    private static final Log log = UmsLog.getLogger(CentricEastContent.class);
+
 	public static final int PANEL_CENTRICSTATUS_ = 9;
 	public static final int PANEL_CENTRICSEND_ = 10;
 	
@@ -136,7 +141,7 @@ public class CentricEastContent extends EastContent
 			if(not_found)
 				super.flip_to(n_leaf);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 			e.printStackTrace();
 			Error.getError().addError("EastContent","Exception in flip_to",e,1);
 		}

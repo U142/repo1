@@ -1,5 +1,7 @@
 package no.ums.pas.tas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.localization.Localization;
@@ -25,6 +27,8 @@ import java.util.List;
 
 public class TasDetailView extends DefaultPanel
 {
+    private static final Log log = UmsLog.getLogger(TasDetailView.class);
+
 	//countrycode, iso, name, continent, isonumeric, touristcount, lastupdate
 	//send show history
 	
@@ -122,7 +126,7 @@ public class TasDetailView extends DefaultPanel
 			}
 			if(m_selected_item!=null && m_selected_item.getClass().equals(CountryListItem.class))
 			{
-				System.out.println("Send TAS message");
+				log.debug("Send TAS message");
 				PAS.get_pas().actionPerformed(new ActionEvent(((CountryListItem)m_selected_item).getCountry(), ActionEvent.ACTION_PERFORMED, e.getActionCommand()));
 				sent_to_sendwindow = m_selected_item;
 			}
@@ -131,7 +135,7 @@ public class TasDetailView extends DefaultPanel
 		{
 			if(getSendList().size()>0)
 			{
-				System.out.println("Send TAS message");
+				log.debug("Send TAS message");
 				List<ULBACOUNTRY> list = new ArrayList<ULBACOUNTRY>();
 				for(int i=0; i < getSendList().size(); i++)
 					list.add(getSendList().get(i).getCountry());
@@ -154,7 +158,7 @@ public class TasDetailView extends DefaultPanel
 				//setCountry(ci);
 				m_callback.actionPerformed(new ActionEvent(ci, ActionEvent.ACTION_PERFORMED, e.getActionCommand()));	
 			}
-			System.out.println("Add to sending list");
+			log.debug("Add to sending list");
 		}
 		else if("act_remove_from_sendlist".equals(e.getActionCommand()))
 		{
@@ -171,7 +175,7 @@ public class TasDetailView extends DefaultPanel
 		}
 		else if("act_show_history".equals(e.getActionCommand()))
 		{
-			System.out.println("Show TAS history");
+			log.debug("Show TAS history");
 			List<ULBACOUNTRY> list = new ArrayList<ULBACOUNTRY>();
 			list.add(((CountryListItem)m_selected_item).getCountry());
 			//TasChart chart = new ChartOverTime(list);
@@ -215,7 +219,7 @@ public class TasDetailView extends DefaultPanel
 				UTASREQUEST req = (UTASREQUEST)e.getSource();
 				if(req.isBSuccess())
 				{
-					System.out.println("Count started="+req.getNRequestpk() + " for " + req.getList().getULBACOUNTRY().get(0).getSzName());
+					log.debug("Count started="+req.getNRequestpk() + " for " + req.getList().getULBACOUNTRY().get(0).getSzName());
 				}
 			}
 			catch(Exception err)

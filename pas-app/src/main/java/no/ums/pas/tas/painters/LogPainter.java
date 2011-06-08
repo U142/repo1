@@ -176,7 +176,7 @@ public class LogPainter
 					}
 					else
 					{
-						//System.out.println("test " + rl.GetServerAgeSec()/60);
+						//log.debug("test " + rl.GetServerAgeSec()/60);
 					}
 				}
 			}

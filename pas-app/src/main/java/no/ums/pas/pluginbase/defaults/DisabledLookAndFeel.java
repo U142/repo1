@@ -1,6 +1,8 @@
 package no.ums.pas.pluginbase.defaults;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -11,6 +13,8 @@ import java.util.Enumeration;
 public class DisabledLookAndFeel extends WindowsLookAndFeel
 {
 
+    private static final Log log = UmsLog.getLogger(DisabledLookAndFeel.class);
+
 	public DisabledLookAndFeel()
 	{
 		super();
@@ -20,7 +24,7 @@ public class DisabledLookAndFeel extends WindowsLookAndFeel
 		{
 			Object key = en.nextElement();
 			Object o = d.get(key);
-			System.out.println(key + " = " + o);
+			log.debug(key + " = " + o);
 		}
 		UIManager.getDefaults().putDefaults(setMyDefaultColors());
 	}

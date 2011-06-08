@@ -1,5 +1,7 @@
 package no.ums.pas.send;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.ws.vars;
@@ -29,6 +31,9 @@ import java.net.URL;
 //import sun.nio.cs.ext.ISCII91;
 
 public class SendPropertiesPolygon extends SendProperties {
+
+    private static final Log log = UmsLog.getLogger(SendPropertiesPolygon.class);
+
 	//private PolygonStruct m_poly;
 	//public PolygonStruct get_polygon() { return m_poly; }
 	//public void set_polygon(PolygonStruct p) { m_poly = p; } 
@@ -86,10 +91,10 @@ public class SendPropertiesPolygon extends SendProperties {
 				lon = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lon().get(i - 1) * 1000000.0)) / 1000000.0;
 				lat = (double)( Math.round((Double) _get_shapestruct().get_coors_show_lat().get(i - 1) * 1000000.0)) / 1000000.0;
 				sz_polygon_vals[i] = Double.toString(lon) + "," + Double.toString(lat);
-				System.out.println(sz_polygon_vals[i]);
+				log.debug(sz_polygon_vals[i]);
 			}
 
-			System.out.println("Points : " + _get_shapestruct().get_show_size());
+			log.debug("Points : " + _get_shapestruct().get_show_size());
 			
 		} catch(Exception e) {
 			set_last_error("ERROR SendPropertiesPolygon.create_paramvals() - " + e.getMessage());
