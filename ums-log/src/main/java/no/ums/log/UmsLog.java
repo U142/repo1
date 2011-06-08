@@ -1,9 +1,7 @@
 package no.ums.log;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.util.Properties;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Factory to create Log instances.
@@ -18,41 +16,32 @@ public class UmsLog {
         return getLogger(src.getName());
     }
 
-    public static Log getLogger(String src) {
-        final Logger log = Logger.getLogger(src);
-        return new Log() {
-            @Override
-            public void debug(String msg, Object... args) {
-                log(Level.FINE, msg, args);
-            }
-
-            @Override
-            public void info(String msg, Object... args) {
-                log(Level.INFO, msg, args);
-            }
-
-            @Override
-            public void warn(String msg, Object... args) {
-                log(Level.WARNING, msg, args);
-            }
-
-            @Override
-            public void error(String msg, Object... args) {
-                log(Level.SEVERE, msg, args);
-            }
-
-            private void log(Level level, String msg, Object[] args) {
-                if (log.isLoggable(level)) {
-                    final Object last = (args.length > 0) ? args[args.length-1] : null;
-                    if (last instanceof Throwable) {
-                        log.log(level, String.format(msg, args), (Throwable) last);
-                    } else {
-                        log.log(level, String.format(msg, args));
-                    }
-                }
-            }
-
-        };
+    public static Log getLogger(final String src) {
+        return new JavaLoggerLog(src);
     }
 
+    private static final class JavaLoggerLog extends AbstractLog<Level> {
+
+        final Logger log;
+
+        public JavaLoggerLog(String src) {
+            super(Level.FINEST, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE);
+            log = Logger.getLogger(src);
+        }
+
+        @Override
+        protected void logImpl(Level level, String message) {
+            log.log(level, message);
+        }
+
+        @Override
+        protected void logImpl(Level level, String message, Throwable throwable) {
+            log.log(level, message, throwable);
+        }
+
+        @Override
+        protected boolean isLoggable(Level level) {
+            return log.isLoggable(level);
+        }
+    }
 }

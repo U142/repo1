@@ -1,5 +1,8 @@
 package no.ums.log;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * UMS Logging facade.
  *
@@ -17,25 +20,59 @@ public interface Log {
      * @param msg Message to log
      * @param args message parameters
      */
-    public void debug(String msg, Object ... args);
+    public void debug(@Nonnull String msg, Object ... args);
+
     /**
-     * @see #debug(String, Object...)
-     * @param msg Message to log
-     * @param args message parameters
+     * This will log the to string value off the provided value
+     * @param value to log
      */
-    public void info(String msg, Object ... args);
-    /**
-     * @see #debug(String, Object...)
-     * @param msg Message to log
-     * @param args message parameters
-     */
-    public void warn(String msg, Object ... args);
+    public void debug(@Nullable Object value);
 
     /**
      * @see #debug(String, Object...)
      * @param msg Message to log
      * @param args message parameters
      */
-    public void error(String msg, Object ... args);
+    public void info(@Nonnull String msg, Object ... args);
+    /**
+     * @see #debug(Object)
+     * @param value to log
+     */
+    public void info(@Nullable Object value);
+    /**
+     * @see #debug(String, Object...)
+     * @param msg Message to log
+     * @param args message parameters
+     */
+    public void warn(@Nonnull String msg, Object ... args);
+    /**
+     * @see #debug(Object)
+     * @param value to log
+     */
+    public void warn(@Nullable Object value);
+
+    /**
+     * @see #debug(String, Object...)
+     * @param msg Message to log
+     * @param args message parameters
+     */
+    public void error(@Nonnull String msg, Object ... args);
+    /**
+     * @see #debug(Object)
+     * @param value to log
+     */
+    public void error(@Nullable Object value);
+
+    /**
+     * @see #debug(String, Object...)
+     * @param msg Message to log
+     * @param args message parameters
+     */
+    public void trace(@Nonnull String msg, Object ... args);
+    /**
+     * @see #debug(Object)
+     * @param value to log
+     */
+    public void trace(@Nullable Object value);
 
 }

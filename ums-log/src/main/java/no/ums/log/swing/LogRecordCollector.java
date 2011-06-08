@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.PrivateKey;
+import java.security.acl.Owner;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,16 +54,27 @@ public class LogRecordCollector extends Handler {
             {
                 setLevel((enableDebugLogging) ? Level.ALL : Level.WARNING);
             }
-            private final SimpleFormatter simpleFormatter = new SimpleFormatter();
-
             @Override
             public void publish(LogRecord record) {
                 if (isLoggable(record)) {
-                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-                        System.err.print(simpleFormatter.format(record));
-                    } else {
-                        System.out.print(simpleFormatter.format(record));
+                    String logger = record.getLoggerName();
+                    while (logger.length() > 25 && logger.indexOf('.') != -1) {
+                        logger = logger.substring(logger.indexOf('.')+1);
                     }
+                    String text = String.format("%1$tH:%1$tM:%1$tS,%tL %-6s [%-25s] %s", record.getMillis(), record.getLevel().getName(), logger, record.getMessage());
+
+                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                        System.err.println(text);
+                        if (record.getThrown() != null) {
+                            record.getThrown().printStackTrace(System.err);
+                        }
+                    } else {
+                        System.out.println(text);
+                        if (record.getThrown() != null) {
+                            record.getThrown().printStackTrace(System.out);
+                        }
+                    }
+
                 }
             }
 
