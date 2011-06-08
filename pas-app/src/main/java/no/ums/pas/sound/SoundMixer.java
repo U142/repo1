@@ -168,7 +168,8 @@ public class SoundMixer implements LineListener {
 	
 	public void checkError(Component window) {
 		if(error && !b_has_reported_error) {
-            JOptionPane.showMessageDialog(window, str_error_msg, Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+            //JOptionPane.showMessageDialog(window, str_error_msg, Localization.l("common_warning"), JOptionPane.WARNING_MESSAGE);
+			log.warn(str_error_msg);
 			b_has_reported_error = true;
 		}
 	}

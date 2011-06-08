@@ -86,18 +86,21 @@ public class SoundRecorderPanel extends DefaultPanel  {
 	//Sending_Files get_soundpanel() { return m_file; }
 	ActionListener m_callback;
 	SoundMixerPanel m_mixer;
+	private boolean bRequireMic = false;
+	
 	public SoundMixerPanel getMixer() { return m_mixer; }
 	public void setMixerColor(Color c) {
 		if(m_mixer!=null)
 			m_mixer.setColor(c);
 	}
 	
-	public SoundRecorderPanel(ActionListener f, String sz_storagepath, int RECTYPE) {
-		this(f, sz_storagepath, RECTYPE, 22050.0F, 16, 1);
+	public SoundRecorderPanel(ActionListener f, String sz_storagepath, int RECTYPE, boolean bRequireMic) {
+		this(f, sz_storagepath, RECTYPE, 22050.0F, 16, 1, bRequireMic);
 	}
 	
-	public SoundRecorderPanel(ActionListener f, String sz_storagepath, int RECTYPE, float f_samplerate, int n_bits, int n_channels) {
+	public SoundRecorderPanel(ActionListener f, String sz_storagepath, int RECTYPE, float f_samplerate, int n_bits, int n_channels, boolean bRequireMic) {
 		super();
+		this.bRequireMic = bRequireMic;
 		AudioFormat format = null;
 		try {
 			format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, f_samplerate, n_bits, n_channels, n_channels*2, f_samplerate, false);
@@ -121,7 +124,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		try {
 
 
-			m_rec = new Record(sz_storagepath/*controller*/, RECTYPE, f, format);
+			m_rec = new Record(sz_storagepath/*controller*/, RECTYPE, f, format, bRequireMic);
 		}
 		catch(IllegalArgumentException e)
 		{

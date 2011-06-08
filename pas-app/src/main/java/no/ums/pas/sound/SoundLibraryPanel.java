@@ -60,7 +60,7 @@ public class SoundLibraryPanel extends DefaultPanel {
 		int n_width[] = { 325 };
 		m_liblist = new SearchPanelSoundlib(PAS.get_pas(), this, sz_columns, n_width);
 		m_liblist.setPreferredSize(new Dimension(400, 250));
-		m_playpanel = new SoundRecorderPanel(file, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE);
+		m_playpanel = new SoundRecorderPanel(file, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE, false);
 		m_playpanel.disable_record();
 		add_controls();
 	}

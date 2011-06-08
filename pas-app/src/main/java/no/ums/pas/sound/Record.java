@@ -27,13 +27,18 @@ public class Record {
 	private int RECTYPE;
 	private ActionListener m_osc_callback = null;
 	AudioFormat m_audioformat;
+	boolean bMicAlreadyTested = false;
 	
-	public Record(String sz_path, int RECTYPE, ActionListener osc_callback, AudioFormat format) 
+	public Record(String sz_path, int RECTYPE, ActionListener osc_callback, AudioFormat format, boolean bRequireMic) 
 			throws Exception {
 		//m_controller = controller;
 		try
 		{
-			SoundRecorder.InitTargetDataLine(format);
+			if(!bMicAlreadyTested && bRequireMic && !SoundRecorder.InitTargetDataLine(format))
+			{
+				bMicAlreadyTested = true;
+				throw new IllegalArgumentException(Localization.l("sound_mixer_no_mic_lines_found"));
+			}
 		}
 		catch(IllegalArgumentException e)
 		{

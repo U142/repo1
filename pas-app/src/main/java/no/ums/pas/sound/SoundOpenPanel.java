@@ -42,7 +42,7 @@ public class SoundOpenPanel extends DefaultPanel {
 		m_txt_file.setPreferredSize(new Dimension(250, 20));
 		m_btn_open.setActionCommand("act_open_file");
 		m_btn_open.addActionListener(this);
-		m_play = new SoundRecorderPanel(m_soundfile, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE);
+		m_play = new SoundRecorderPanel(m_soundfile, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE, false);
 		m_play.disable_record();
 		add_controls();
 	}

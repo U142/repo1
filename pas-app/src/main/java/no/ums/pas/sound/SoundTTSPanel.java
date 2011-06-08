@@ -92,7 +92,7 @@ public class SoundTTSPanel extends DefaultPanel implements FocusListener, KeyLis
 		m_combo_txtlib.setActionCommand("act_txtlib_changed");
 		m_btn_convert.addActionListener(this);
 		m_combo_txtlib.addActionListener(this);
-		m_playpanel = new SoundRecorderPanel(file, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE);
+		m_playpanel = new SoundRecorderPanel(file, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE, false);
 		m_playpanel.disable_record();
 		m_playpanel.setPreferredSize(new Dimension(400,60));
 		add_controls();

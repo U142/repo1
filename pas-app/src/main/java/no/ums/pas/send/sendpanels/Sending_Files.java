@@ -111,7 +111,7 @@ public class Sending_Files extends DefaultPanel {
 			int y = 400; //300
 			try
 			{
-				m_rec = new SoundRecorderPanel(this, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_OUTPUTSTREAM); //, parent); //get_parent().get_sendcontroller());
+				m_rec = new SoundRecorderPanel(this, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_OUTPUTSTREAM, true); //, parent); //get_parent().get_sendcontroller());
 				m_rec.setPreferredSize(new Dimension(x, y));
 				m_rec.showMixer();
 			}

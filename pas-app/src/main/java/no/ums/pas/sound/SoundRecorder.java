@@ -16,6 +16,7 @@ import javax.sound.sampled.TargetDataLine;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.pas.localization.Localization;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,7 +86,8 @@ public class SoundRecorder extends Thread {
 	        	}
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
-	        	throw new IllegalArgumentException("No microphone lines found");
+	        	//throw new IllegalArgumentException(Localization.l("sound_mixer_no_mic_lines_found"));
+	        	return false;
 	        }
 	        catch(Exception err)
 	        {
