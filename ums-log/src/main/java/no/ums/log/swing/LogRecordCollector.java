@@ -7,15 +7,19 @@ import com.google.common.collect.Lists;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.PrivateKey;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 import java.util.zip.CRC32;
 
 /**
@@ -100,5 +104,35 @@ public class LogRecordCollector extends Handler {
         }
         pw.close();
         logMailSender.sendMail(id, sw.toString());
+    }
+
+    public static void addSystemOutLogger() {
+        // We log everything, so no need for the parent to log our messages
+        umsLog.setUseParentHandlers(false);
+        umsLog.addHandler(new Handler() {
+
+            private final SimpleFormatter simpleFormatter = new SimpleFormatter();
+
+            @Override
+            public void publish(LogRecord record) {
+                if (isLoggable(record)) {
+                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                        System.err.print(simpleFormatter.format(record));
+                    } else {
+                        System.out.print(simpleFormatter.format(record));
+                    }
+                }
+            }
+
+            @Override
+            public void flush() {
+                // Noop
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                // Noop
+            }
+        });
     }
 }

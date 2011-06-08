@@ -1,5 +1,7 @@
 package no.ums.pas.entrypoint;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.log.swing.LogFrame;
 import no.ums.log.swing.LogMailSender;
 import no.ums.log.swing.LogRecordCollector;
@@ -12,6 +14,7 @@ import no.ums.pas.pluginbase.PasScriptingInterface;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.io.PrintWriter;
@@ -22,9 +25,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-public class
-        ExecApp {
+public class ExecApp {
     public static PAS m_pas;
+
+    private static final Log log = UmsLog.getLogger(ExecApp.class);
+
 
     public static void main(String[] args) {
         //Object connect_timeout = System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", "20000") ;
@@ -98,14 +103,19 @@ public class
         System.out.println("Using site: " + sz_sitename);
         System.out.println("Using WS: " + sz_pasws);
 
-        try {
-            BasicService basicService = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
-            URL url = basicService.getCodeBase();
-            sz_codebase = url.toExternalForm() + codebaseFolder;
-            System.out.println("Codebase=" + sz_codebase);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (ServiceManager.getServiceNames() == null) {
             sz_codebase = sz_sitename;
+            LogRecordCollector.addSystemOutLogger();
+        }
+        else {
+            try {
+                BasicService basicService = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
+                URL url = basicService.getCodeBase();
+                sz_codebase = url.toExternalForm() + codebaseFolder;
+                System.out.println("Codebase=" + sz_codebase);
+            } catch (UnavailableServiceException e) {
+                log.error("Failed to initialized JNLP BasicService", e);
+            }
         }
 
 
