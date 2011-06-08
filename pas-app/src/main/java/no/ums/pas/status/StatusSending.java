@@ -1928,7 +1928,7 @@ public class StatusSending extends Object {
 							player.getPlayer().stop();
 						if(f.get_file().getPath()!=null)
 						{
-							player = new SoundPlayer(f.get_file().getPath(), null, null, null, true);
+							player = new SoundPlayer(f.get_file().getPath(), true);
 							player.getPlayer().play();
 						}
 						//player.initialize_player(f.get_file().getPath(), true);
