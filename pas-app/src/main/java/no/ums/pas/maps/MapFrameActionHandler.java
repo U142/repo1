@@ -407,7 +407,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			mouse_move(e);
 		} catch(Exception err) {
 			/*log.debug(err.getMessage());
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 			Error.getError().addError("MapFrameActionHandler","Exception in mouseMoved",err,1);*/
 		}
 		//addAction("act_checkmouseover", new Point(e.getX(), e.getY()));
@@ -746,7 +746,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 			}*/
 		} catch(Exception err) {
 			log.debug(err.getMessage());
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 			Error.getError().addError("MapFrameActionHandler","Exception in check_snap",err,1);
 		}
 		//PAS.get_pas().get_sendcontroller().actionPerformed(action);
@@ -774,7 +774,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						addAction("act_set_ellipse_corner", p);
 					} catch(Exception err) {
 						log.debug(err.getMessage());
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 						Error.getError().addError("MapFrameActionHandler","Exception in mouseDragged",err,1);
 					}
 				}
@@ -902,7 +902,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 						set_isdragging(true);
 					} catch(Exception err) {
 						log.debug(err.getMessage());
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 						Error.getError().addError("MapFrameActionHandler","Exception in mousePressed",err,1);
 					}
 				}

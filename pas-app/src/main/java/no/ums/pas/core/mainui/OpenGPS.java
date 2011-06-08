@@ -207,7 +207,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 							current.set_added_to_list();
 						} catch(Exception e) {
 							log.debug(e.getMessage());
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 							Error.getError().addError("OpenGPS","Exception in start_search",e,1);
 						}
 					}
@@ -216,7 +216,7 @@ public class OpenGPS extends SearchPanelResults implements ComponentListener {
 					set_rowvalues(current);
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("OpenGPS","Exception in start_search",e,1);
 			}
 		}		

@@ -1,5 +1,7 @@
 package no.ums.pas.parm.server;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.HttpPostForm;
 import no.ums.pas.core.logon.UserInfo;
@@ -25,6 +27,9 @@ import java.net.URL;
 //import no.ums.ws.pas.*;
 
 public class ServerCon {
+
+    private static final Log log = UmsLog.getLogger(ServerCon.class);
+
 	private HttpPostForm server;
 	private InputStream streamReturn;
 	
@@ -90,7 +95,7 @@ public class ServerCon {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("Error in Update PARM", "Error in request to server", e, 1);
 			}
 		}

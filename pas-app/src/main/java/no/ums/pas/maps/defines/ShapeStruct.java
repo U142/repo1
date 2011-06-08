@@ -271,7 +271,7 @@ public abstract class ShapeStruct extends Object implements Cloneable {
 			create_texpaint(6);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("ShapeStruct","Exception in set_fill_color",e,1);
 		}
 	}

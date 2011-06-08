@@ -72,7 +72,7 @@ public class SendPropertiesGIS extends SendProperties {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -211,7 +211,7 @@ public class SendPropertiesGIS extends SendProperties {
 			f = File.createTempFile("send", ".ums", f_path);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return null;
 		}
 		try {
@@ -222,7 +222,7 @@ public class SendPropertiesGIS extends SendProperties {
 		} catch(Exception e) {
 			log.debug(e.getMessage());
 			Error.getError().addError("SendPropertiesGIS","Exception in create_addressfile",e,1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 		return null;
@@ -251,7 +251,7 @@ public class SendPropertiesGIS extends SendProperties {
 			return true;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SendPropertiesGIS","Exception in write_addressfile",e,1);
 		}
 		return false;

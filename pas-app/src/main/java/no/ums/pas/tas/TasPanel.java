@@ -872,7 +872,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 			finally
 			{
@@ -986,7 +986,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 
 		}

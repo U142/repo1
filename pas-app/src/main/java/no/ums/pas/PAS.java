@@ -149,7 +149,7 @@ import contrib.com.jgoodies.looks.common.FontSet;
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 		
@@ -383,7 +383,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -503,7 +503,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					catch(Exception e)
 					{
 						log.error("Failed to autoimport file", e);
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 					
 				}
@@ -632,7 +632,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			
 		}
 
@@ -788,7 +788,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 		m_settings = new XmlReader().loadMapSetup(m_settings);
@@ -848,7 +848,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		boolean b_save_language = false;
 		boolean b_logon_saved_remote = false;
@@ -936,7 +936,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 							get_userinfo().set_mailaccount(account);
 						} catch(Exception e) {
 							log.debug(e.getMessage());
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 							Error.getError().addError(Localization.l("common_warning"), "Unable to find your default e-mail settings in registry.", 0, Error.SEVERITY_INFORMATION);
 						}
 						try
@@ -974,7 +974,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			JOptionPane.showMessageDialog(this, "Could not create GUI\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			log.debug(e.getMessage());
 			System.exit(0);
@@ -1012,7 +1012,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 
 		LBASEND.CreateLbaStatusHash();
@@ -1091,7 +1091,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 					}
 					catch(Exception e)
 					{
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 
 				}
@@ -1122,7 +1122,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 
 			}
@@ -1313,7 +1313,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		log.debug("waitForFirstMap exited");
 	}
@@ -1440,7 +1440,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		}
 		catch(Exception err)
 		{
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 		}
 		//kickRepaint();
 		

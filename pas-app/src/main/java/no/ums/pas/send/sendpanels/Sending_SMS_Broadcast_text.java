@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.ws.WSTasResponseNumbers;
@@ -32,7 +34,7 @@ import java.util.List;
 public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 {
 	
-
+    private static final Log log = UmsLog.getLogger(Sending_SMS_Broadcast_text.class);
 	
 	public List<UTASRESPONSENUMBER> m_responsenumbers;
 	
@@ -241,7 +243,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 				}
 			}
 			catch(Exception err){
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		else if("act_smstemplate_loaded".equals(e.getActionCommand()))
@@ -257,7 +259,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		else if("act_allow_response_toggle".equals(e.getActionCommand())) {

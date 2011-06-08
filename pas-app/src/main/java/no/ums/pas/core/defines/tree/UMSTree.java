@@ -1,5 +1,8 @@
 package no.ums.pas.core.defines.tree;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
@@ -24,6 +27,9 @@ import java.util.List;
 
 public abstract class UMSTree extends JTree implements ActionListener, ItemListener, ComponentListener, MouseListener, TreeSelectionListener
 {
+
+    private static final Log log = UmsLog.getLogger(UMSTree.class);
+
 	public enum TREEMODE
 	{
 		EDITOR,
@@ -247,7 +253,7 @@ public abstract class UMSTree extends JTree implements ActionListener, ItemListe
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -259,7 +265,7 @@ public abstract class UMSTree extends JTree implements ActionListener, ItemListe
 		}
 		catch(Exception e)
 		{
-			//e.printStackTrace();
+			//log.warn(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -285,7 +291,7 @@ public abstract class UMSTree extends JTree implements ActionListener, ItemListe
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

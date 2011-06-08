@@ -409,7 +409,7 @@ public class SendController implements ActionListener {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -428,7 +428,7 @@ public class SendController implements ActionListener {
 			m_b_ignore_project = true;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			return false;
 		}
@@ -443,7 +443,7 @@ public class SendController implements ActionListener {
 					return null;
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
                 Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",e,1);
 			}
 
@@ -466,7 +466,7 @@ public class SendController implements ActionListener {
 			
 		} catch(Exception err) {
 			log.debug(err.getMessage());
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in create_new_sending",err,1);
 			return null;
 		}
@@ -609,7 +609,7 @@ public class SendController implements ActionListener {
 					PAS.get_pas().get_housecontroller().set_addresstypes(adrtypes);
 				}
 				catch(Exception err) { 
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 			}
 			else if(e.getSource().getClass().equals(CheckItem.class))
@@ -692,14 +692,14 @@ public class SendController implements ActionListener {
 					}
 					catch(Exception e)
 					{
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			});
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -719,7 +719,7 @@ public class SendController implements ActionListener {
 				show_addresstypes(obj.get_sendproperties().get_addresstypes());
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in set_activesending",e,1);
 		}
 		if(!m_active_sending.isLocked()) {
@@ -773,7 +773,7 @@ public class SendController implements ActionListener {
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
             Error.getError().addError(Localization.l("common_error"),"SendController Exception in draw_polygons",e,1);
 		}
 	}
@@ -1117,7 +1117,7 @@ public class SendController implements ActionListener {
                             }
                             catch(Exception e)
                             {
-                                e.printStackTrace();
+                                log.warn(e.getMessage(), e);
                             }
                         }
                         else if(!b_openstatus_question) {

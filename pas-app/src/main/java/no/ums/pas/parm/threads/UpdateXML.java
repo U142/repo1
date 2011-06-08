@@ -205,7 +205,7 @@ public class UpdateXML extends Thread{
 				//this.suspend();
 				m_b_inprogress = false;
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("UpdateXML","Exception in run",e,1);
 			}
 		}

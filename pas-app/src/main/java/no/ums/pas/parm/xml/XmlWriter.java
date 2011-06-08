@@ -458,7 +458,7 @@ public class XmlWriter {
 		} catch (Exception e) {
 			returnValue = -1;
 			log.debug("Feilmelding: " + e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("XmlWriter","Exception in writer",e,1);
 		}
 		return returnValue;
@@ -1010,7 +1010,7 @@ public class XmlWriter {
 				ellipse = obj.getM_shape().typecast_ellipse();
 			} catch(Exception e) {
 				log.debug("Feil med alert.getM_shape().typecast_ellipse();");
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			if(obj.getOperation()!=null && obj.getOperation().equals("delete") && filepath.equals(ParmConstants.polyxmlLocation)){
 				if(ellipse!=null){
@@ -1142,7 +1142,7 @@ public class XmlWriter {
 				log.debug("XMLWriter - getXMLDocument: SAXException - " + saxe.getMessage());
 			}
 			catch(IllegalArgumentException iae) {
-				iae.printStackTrace();
+				log.warn(iae.getMessage(), iae);
 			}
 		}
 		else {
@@ -1306,7 +1306,7 @@ public class XmlWriter {
 			}
 			catch(TransformerException e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 
 			t = null;
@@ -1328,7 +1328,7 @@ public class XmlWriter {
 		catch(FileNotFoundException fnfe){
 			Error.getError().addError("XmlWriter","FileNotFoundException in writeXMLFile",fnfe,1);
 			log.debug("XMLWriter: FileNotFoundException --> " + fnfe.getMessage());
-			//fnfe.printStackTrace();
+			//fnflog.warn(e.getMessage(), e);
 			returnValue = -1;
 		}
 		catch(IOException ioe){
@@ -1459,13 +1459,13 @@ public class XmlWriter {
 			}
 		} catch(ZipException ze){
 			Error.getError().addError("XmlWriter","ZipException in unzipXMLFile",ze,1);
-			ze.printStackTrace();
+			log.warn(ze.getMessage(), ze);
 		} catch(FileNotFoundException fnf){
 			Error.getError().addError("XmlWriter","FileNotFoundException in unzipXMLFile",fnf,1);
-			fnf.printStackTrace();
+			log.warn(fnf.getMessage(), fnf);
 		} catch(IOException ioe){
 			Error.getError().addError("XmlWriter","IOException in unzipXMLFile",ioe,1);
-			ioe.printStackTrace();
+			log.warn(ioe.getMessage(), ioe);
 		}
 	}
 	
@@ -2027,7 +2027,7 @@ public class XmlWriter {
 			writeXMLFile(doc,StorageController.StorageElements.get_path(StorageController.PATH_HOME_) + "settings.ini");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

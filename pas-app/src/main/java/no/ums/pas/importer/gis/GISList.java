@@ -29,7 +29,7 @@ public class GISList extends ArrayList<GISRecord> {
 			add(ret);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return ret;
 	}

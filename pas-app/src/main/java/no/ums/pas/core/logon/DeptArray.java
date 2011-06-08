@@ -196,7 +196,7 @@ public class DeptArray extends ArrayList<DeptInfo> {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				break;
 				
 			}

@@ -257,7 +257,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 
 	}
@@ -1582,7 +1582,7 @@ public class CentricSendOptionToolbar extends DefaultPanel implements ActionList
 					}
 					catch(Exception err)
 					{
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 					}
 				}
 			}

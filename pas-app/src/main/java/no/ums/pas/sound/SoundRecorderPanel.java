@@ -356,7 +356,7 @@ public class SoundRecorderPanel extends DefaultPanel  {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 }

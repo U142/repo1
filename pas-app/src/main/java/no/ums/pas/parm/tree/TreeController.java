@@ -624,7 +624,7 @@ public class TreeController {
 		} catch (ClassCastException ccEx) {
 			System.out
 					.println("Feil ved konvertering til ObjectVO. Object ikke et Object");
-			ccEx.printStackTrace();
+			log.warn(ccEx.getMessage(), ccEx);
 			Error.getError().addError(Localization.l("common_error"),
 					"TreeController ClassCastException in findObject", ccEx, 1);
 		}

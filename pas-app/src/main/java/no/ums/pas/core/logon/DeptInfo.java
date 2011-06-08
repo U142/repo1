@@ -67,7 +67,7 @@ public class DeptInfo extends Object {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public class DeptInfo extends Object {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 	}

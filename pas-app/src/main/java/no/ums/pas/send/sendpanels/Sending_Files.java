@@ -1,5 +1,7 @@
 package no.ums.pas.send.sendpanels;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.storage.StorageController;
@@ -30,6 +32,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 
 public class Sending_Files extends DefaultPanel {
+
+    private static final Log log = UmsLog.getLogger(Sending_Files.class);
+
 	public static final long serialVersionUID = 1;
 	public static final int SOUNDFILE_TYPE_RECORD_	= 1;
 	public static final int SOUNDFILE_TYPE_TTS_		= 2;
@@ -112,7 +117,7 @@ public class Sending_Files extends DefaultPanel {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			try {
 				m_rec.get_recorder().get_recorder().init_oscilliator();
@@ -205,7 +210,7 @@ public class Sending_Files extends DefaultPanel {
 					m_rec.getMixer().setOscillator(m_oscillator.get_ampl());   
 					
 				} catch(Exception err) {
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 			}
 			m_oscillator.get_ampl().setVisible(true);

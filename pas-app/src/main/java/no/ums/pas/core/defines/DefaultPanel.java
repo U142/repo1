@@ -1,5 +1,7 @@
 package no.ums.pas.core.defines;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.ums.tools.StdTextLabel;
 
 import javax.swing.JPanel;
@@ -12,6 +14,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 public abstract class DefaultPanel extends JPanel implements ActionListener, ComponentListener, IWantedSizing {
+
+    private static final Log log = UmsLog.getLogger(DefaultPanel.class);
+
 	public static final int DIR_HORIZONTAL	= 0;
 	public static final int DIR_VERTICAL	= 1;
 	public static boolean ENABLE_GRID_DEBUG = false;
@@ -70,7 +75,7 @@ public abstract class DefaultPanel extends JPanel implements ActionListener, Com
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 	}

@@ -453,7 +453,7 @@ public class HTTPReq {
    					catch(Exception e) { 
    						//PAS.get_pas().add_event("getDoc()", e);
    						log.debug(e.getMessage());
-   						e.printStackTrace();
+   						log.warn(e.getMessage(), e);
    						Error.getError().addError("HTTPReq","Exception in create_zipstream",e,1);
    						break;
    					}
@@ -465,7 +465,7 @@ public class HTTPReq {
    				//InputStream in = new BufferedInputStream(new ProgressMonitorInputStream(m_pas, "Downloading...", "", 0, 1000));
    			} catch(Exception e) { 
    				log.debug(e.getMessage());
-   				e.printStackTrace();
+   				log.warn(e.getMessage(), e);
    				Error.getError().addError("HTTPReq","Exception in create_zipstream",e,1);
 					//PAS.get_pas().add_event("getDoc()", e);
    			}		
@@ -488,7 +488,7 @@ public class HTTPReq {
 		}
 		catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 		}
 		DocumentBuilder db = createNewDocumentBuilder();
@@ -500,7 +500,7 @@ public class HTTPReq {
 				} catch(Exception e) {
 					doc = null;
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 				}
 				try {
@@ -521,7 +521,7 @@ public class HTTPReq {
 		}
 		catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("HTTPReq","Exception in get_xml",e,1);
 		}
 		set_running(false);
@@ -626,7 +626,7 @@ public class HTTPReq {
 				Document doc = getDocument(sz_url, true, false, null);
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HTTPReq","Exception in load_image",e,1);
 			}
 			byte[] is = new byte[819200];
@@ -690,7 +690,7 @@ public class HTTPReq {
 				m_b_session_reconnect = false;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			m_b_session_reconnect = false;
 			Error.getError().addError("HTTPReq","Exception in get_common_headers",e,1);
 		}

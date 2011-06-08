@@ -1,9 +1,15 @@
 package no.ums.pas.ums.tools;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StdIntegerArea extends StdTextArea {
+
+    private static final Log log = UmsLog.getLogger(StdIntegerArea.class);
+
 	public static final long serialVersionUID = 1;
 	public static final int INTEGER = 1;
 	public static final int DOUBLE	= 2;
@@ -120,7 +126,7 @@ public class StdIntegerArea extends StdTextArea {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 	}

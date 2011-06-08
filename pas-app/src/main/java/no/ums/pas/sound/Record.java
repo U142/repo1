@@ -1,5 +1,7 @@
 package no.ums.pas.sound;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 
 import javax.sound.sampled.AudioFormat;
@@ -12,6 +14,9 @@ import java.nio.ByteBuffer;
 
 
 public class Record {
+
+    private static final Log log = UmsLog.getLogger(Record.class);
+
 	//private SendController m_controller;
 	private ByteBuffer m_current_bytebuffer;
 	public ByteBuffer get_bytebuffer() { return m_current_bytebuffer; }
@@ -36,7 +41,7 @@ public class Record {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
         	throw e;
 		}
 		m_sz_path = sz_path;
@@ -63,7 +68,7 @@ public class Record {
 		} catch(Exception e) {
 			//PAS.get_pas().add_event("Exception: SoundRecorder " + e.getMessage(), e);
 			//Error.getError().addError("Record","Exception in start_recording",e,1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return false;
 		}
 		return true;
@@ -83,7 +88,7 @@ public class Record {
 				is.close();
 			} catch(Exception e) {
 				//Error.getError().addError("Record","Exception in stop_recording",e,1);
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		} else {
 			//m_current_bytebuffer = get_recorder().get_outputstream();

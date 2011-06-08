@@ -184,7 +184,7 @@ public class ImportPolygon implements ActionListener {
 		catch(Exception e)
 		{
 			log.error("Error in opening import-file from URL " + url, e);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	public ImportPolygon(ActionListener callback, String action, File polygonFile) {
@@ -327,7 +327,7 @@ public class ImportPolygon implements ActionListener {
 			return sosi;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("ImportPolygon","Exception in parse_sosi",e,1);
 		}
 		return null;
@@ -339,7 +339,7 @@ public class ImportPolygon implements ActionListener {
 			return shape;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("ImportPolygon","Exception in parse_shape",e,1);			
 		}
 		return null;
@@ -480,7 +480,7 @@ public class ImportPolygon implements ActionListener {
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 	
 		}

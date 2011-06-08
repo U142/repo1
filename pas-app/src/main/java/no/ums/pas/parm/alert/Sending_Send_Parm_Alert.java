@@ -198,7 +198,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
                     parent.set_comstatus(Localization.l("main_sending_uploading_file_complete") + " - " + parent.get_files()[i].get_soundfile().get_name());
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
                     Error.getError().addError(Localization.l("common_error"),"Sending_Send Exception in upload_wavfiles",e,1);
 				}
 			}
@@ -262,7 +262,7 @@ public class Sending_Send_Parm_Alert extends Sending_Send {
 				parent.set_comstatus("Failed to retrieve refno...");
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("Sending_Send","Exception in retrieve_refno",e,1);
 		}
 		return b;

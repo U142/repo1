@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.project.Project;
 import no.ums.pas.localization.Localization;
@@ -17,6 +19,9 @@ import java.net.URL;
 
 public class WSProject extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSProject.class);
+
 	String sz_callback;
 	UPROJECTREQUEST projectrequest = null; 
 	UPROJECTRESPONSE projectresponse = null;
@@ -49,7 +54,7 @@ public class WSProject extends WSThread
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	public void call() throws Exception

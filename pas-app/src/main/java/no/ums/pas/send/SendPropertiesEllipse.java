@@ -95,7 +95,7 @@ public class SendPropertiesEllipse extends SendProperties {
 			return true;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SendPropertiesEllipse","Exception in goto_area",e,1);
 		}
 		return false;

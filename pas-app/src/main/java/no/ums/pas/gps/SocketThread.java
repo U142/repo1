@@ -40,7 +40,7 @@ public class SocketThread extends Thread implements ActionListener {
 			super.interrupt();
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	public void close_reader() {
@@ -49,10 +49,10 @@ public class SocketThread extends Thread implements ActionListener {
 			m_in.close();
 		} catch(IOException e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -185,7 +185,7 @@ public class SocketThread extends Thread implements ActionListener {
 					//m_current_cmd = null;
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 			}
 			try {
@@ -193,7 +193,7 @@ public class SocketThread extends Thread implements ActionListener {
 					get_callback().actionPerformed(new ActionEvent(m_current_cmd, ActionEvent.ACTION_PERFORMED, "act_cmd_timeout"));
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			m_current_cmd = null;
 		}

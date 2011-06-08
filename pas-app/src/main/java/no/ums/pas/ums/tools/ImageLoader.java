@@ -74,7 +74,7 @@ public class ImageLoader {
 			return new ImageIcon(classloader.getResource(sz_namespace + sz_filename));
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("ImageLoader","Exception in load_icon (" + sz_filename + ")",e,1);
 			return null;
 		}

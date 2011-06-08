@@ -96,7 +96,7 @@ public class XMLIcons extends XMLThread {
 				for(int z=0; z<sz_itemattr.length; z++)
 					sz_temp += ", " + new String(nnm_items.getNamedItem(sz_itemattr[z]).getNodeValue());
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLIcons","Exception in parseDoc",e,1);
 				continue;
 			}

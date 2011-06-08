@@ -164,7 +164,7 @@ public class FalcomProtocol {
 					set_gpsfix(get_unit());
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 			}
 			else if(theInput.indexOf(CMD_RET_BATTERY_VOLTAGE_) >= 0) {

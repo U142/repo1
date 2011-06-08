@@ -717,7 +717,7 @@ public class PolygonStruct extends ShapeStruct {
                 m_coor_show_lat.add(this.get_coors_lat().get(indexbuffer.get(i)));
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
     }
 

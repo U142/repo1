@@ -118,7 +118,7 @@ public class CentricAddressSearch extends no.ums.pas.pluginbase.defaults.Default
 		} 
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
             JOptionPane.showMessageDialog(spr, Localization.l("adrsearch_dlg_general_error"), Localization.l("common_error"), JOptionPane.ERROR_MESSAGE);
 			return new UGabSearchResultList();
 		}

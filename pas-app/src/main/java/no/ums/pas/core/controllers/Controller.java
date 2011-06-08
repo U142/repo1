@@ -185,7 +185,7 @@ public abstract class Controller implements ActionListener {
 			catch(Exception e)
 			{
                 log.error("Error when finding house for pos x: %d y: %d", dim.width, dim.height, e);
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			if(n_count > 0) {
 				b_draw_inhabitant_details = true;

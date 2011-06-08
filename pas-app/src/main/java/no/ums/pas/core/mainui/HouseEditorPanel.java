@@ -135,7 +135,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					m_radio_private.doClick();
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseEditorPanel","Exception in fill_form",e,1);
 			}
 		} else {
@@ -218,7 +218,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 				
 			}
@@ -297,7 +297,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					m_callback.actionPerformed(e);
 				} catch(Exception err) {
 					log.debug(err.getMessage());
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 					Error.getError().addError("HouseEditorPanel","Exception in actionPerformed: act_save_complete",err,1);
 				}
 			} else {
@@ -339,7 +339,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("HouseEditorPanel","Exception in delete_inhabitant",e,1);
 		}
 	}
@@ -447,7 +447,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			return true;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("HouseEditorPanel","Exception in save",e,1);
 		}
 		return false;
@@ -604,7 +604,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				super.insert_row(data, 0);
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseEditorPanel","Exception in insert_row",e,1);
 			}
 		}
@@ -619,7 +619,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseEditorPanel","Exception in onMouseClick",e,1);
 			}
 		}
@@ -631,7 +631,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();	
+				log.warn(e.getMessage(), e);	
 				Error.getError().addError("HouseEditorPanel","Exception in onMouseLDblClick",e,1);
 			}
 		}
@@ -657,7 +657,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 					}
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("HouseEditorPanel","Exception in start_search",e,1);
 				}
 			}

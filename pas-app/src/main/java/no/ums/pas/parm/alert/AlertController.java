@@ -252,7 +252,7 @@ public class AlertController implements ActionListener {
 				m_edit_shape_original.shapeName = alert.getName();
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("AlertController","Exception in editAlert",e,1);
 			}
 		}
@@ -365,7 +365,7 @@ public class AlertController implements ActionListener {
 //			try {
 //				this.alert.setM_polygon((PolygonStruct) main.getMapPolygon().clone()); //map.getM_polygon().clone());
 //			} catch (CloneNotSupportedException e) {
-//				e.printStackTrace();
+//				log.warn(e.getMessage(), e);
 //			}
 //		}
 		if (this.existInEventList(this.alert) == false) {
@@ -404,7 +404,7 @@ public class AlertController implements ActionListener {
 			createNewAlert(main.tempPK, this.event, new PolygonStruct(main.getMapSize()));/*main.getMapPolygon()*/ //main.getMap().getM_polygon());
 			main.activateAlertBtnListener();
 		} catch (Exception exception) {
-			exception.printStackTrace();
+			log.warn(exception.getMessage(), exception);
             Error.getError().addError(Localization.l("common_error"),"Exception in editAlert",exception,1);
 		}
 	}

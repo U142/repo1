@@ -315,7 +315,7 @@ public class InfoPanel extends GeneralPanel {
 		} catch (Exception e) {
 			
 			log.debug("PAS rights failed");
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		// m_lbl_adrdatabase_output.setText(db);
 		m_lbl_adrdatabase_output.setText(db);
@@ -399,26 +399,26 @@ public class InfoPanel extends GeneralPanel {
 	 * = 1; RowXY() { super(); } void init() { try { add(m_lbl_xy);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_xy); }
 	 * catch(Exception e) { log.debug(e.getMessage());
-	 * e.printStackTrace();
+	 * log.warn(e.getMessage(), e);
 	 * Error.getError().addError("InfoPanel","Exception in RowXY",e,1); } } }
 	 * class RowLL extends BoxPanel { public static final long serialVersionUID
 	 * = 1; RowLL() { super(); } void init() { try { add(m_lbl_coor);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_coor); }
 	 * catch(Exception e) { log.debug(e.getMessage());
-	 * e.printStackTrace();
+	 * log.warn(e.getMessage(), e);
 	 * Error.getError().addError("InfoPanel","Exception in RowLL",e,1); }
 	 * 
 	 * } } class RowLLDec extends BoxPanel { public static final long
 	 * serialVersionUID = 1; RowLLDec() { super(); } void init() { try {
 	 * add(m_lbl_coor_dec); add(Box.createRigidArea(new Dimension(25,0)));
 	 * add(m_txt_coor_dec); } catch(Exception e) {
-	 * log.debug(e.getMessage()); e.printStackTrace();
+	 * log.debug(e.getMessage()); log.warn(e.getMessage(), e);
 	 * Error.getError().addError("InfoPanel","Exception in RowLLDec",e,1); } } }
 	 * class RowUTM extends BoxPanel { public static final long serialVersionUID
 	 * = 1; RowUTM() { super(); } void init() { try { add(m_lbl_utm);
 	 * add(Box.createRigidArea(new Dimension(25,0))); add(m_txt_utm); }
 	 * catch(Exception e) { log.debug(e.getMessage());
-	 * e.printStackTrace();
+	 * log.warn(e.getMessage(), e);
 	 * Error.getError().addError("InfoPanel","Exception in RowUTM",e,1); } } }
 	 */
 	public class UserInfoBox extends DefaultPanel {
@@ -724,7 +724,7 @@ public class InfoPanel extends GeneralPanel {
 			m_txt_xy_y.setText(Integer.toString(p.get_y()));
 		} catch (Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("InfoPanel", "Exception in update_ui", e,
 					1);
 		}
@@ -797,7 +797,7 @@ public class InfoPanel extends GeneralPanel {
 			// 100000);
 		} catch (Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("InfoPanel", "Exception in update_ui", e,
 					1);
 		}

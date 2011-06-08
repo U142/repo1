@@ -4,6 +4,8 @@ package no.ums.pas;
 import java.io.FileOutputStream;
 import java.io.InputStream;*/
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.ums.errorhandling.Error;
 
@@ -27,6 +29,9 @@ class JNLP {
 }
 
 class Downloader extends Thread {
+    
+    private static final Log log = UmsLog.getLogger(Downloader.class);
+
 	private String m_sz_sourcefile, m_sz_destfile;
 	private boolean m_b_overwrite;
 	private boolean m_b_success = false;
@@ -94,7 +99,7 @@ class Downloader extends Thread {
 				//ut = new BufferedWriter(new FileWriter(f));
 				fos = new FileOutputStream(f);
 			} catch(Exception e) {
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				return false;
 			}
 			int c = 0;

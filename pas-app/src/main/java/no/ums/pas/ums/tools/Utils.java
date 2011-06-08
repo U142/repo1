@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.maps.defines.NavStruct;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -24,6 +26,8 @@ import java.util.regex.Pattern;
 
 
 public final class Utils {
+
+    private static final Log log = UmsLog.getLogger(Utils.class);
 
     public synchronized static Point get_dlg_location_centered(int dlg_width, int dlg_height) {
         return new Point(PAS.get_pas().get_mappane().getLocationOnScreen().x + PAS.get_pas().get_mappane().get_dimension().width / 2 - dlg_width / 2, PAS.get_pas().get_mappane().getLocationOnScreen().y /*+ PAS.get_pas().get_mappane().get_dimension().height/2 - dlg_height*/);
@@ -208,7 +212,7 @@ public final class Utils {
             	}
             	catch(Exception e)
             	{
-            		e.printStackTrace();
+            		log.warn(e.getMessage(), e);
             	}
             }
             return getHex(md.digest());

@@ -224,10 +224,10 @@ public class EventController implements ActionListener {
 		//try {
 			createEvent(this.object, main.tempPK, main.m_categories); // main.getAllCategorys()
 		/*} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("EventController","FileNotFoundException in insertEvent",e,1);
 		} catch (ParmException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("EventController","ParmException in insertEvent",e,1);
 		}*/
 		main.activateEventBtnListener();

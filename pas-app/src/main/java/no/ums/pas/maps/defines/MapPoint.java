@@ -43,7 +43,7 @@ public class MapPoint {
 			return (double)(Math.round(get_lon() * 100000)) / 100000 + ", " + (double)(Math.round(get_lat() * 100000)) / 100000;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return "No Point";
 	}

@@ -31,7 +31,7 @@ public class HttpCast {
 			throw new ParmException(ioe.getMessage());
 		} catch (Exception e) {
 			Error.getError().addError("HttpCast","Exception in send",e,1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw new ParmException(e.getMessage());
 		}
 		return in;

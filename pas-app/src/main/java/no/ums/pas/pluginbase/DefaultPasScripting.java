@@ -483,7 +483,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return null;
 
@@ -536,7 +536,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return true;
 	}
@@ -574,7 +574,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -593,7 +593,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -739,7 +739,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return true;
 	}
@@ -783,7 +783,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 					}
 					catch(Exception e)
 					{
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			}
@@ -955,7 +955,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		try
 		{
@@ -1046,7 +1046,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		if(p.get_parmcontroller()!=null && 
 				(EastContent.CURRENT_PANEL==EastContent.PANEL_PARM_ ||
@@ -1144,7 +1144,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 				p.get_eastcontent().get_taspanel().drawLog((Graphics2D)g);
 			}
 		} catch(Exception e) { 
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return true;
 	}
@@ -1240,7 +1240,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		}
 		catch(FileNotFoundException e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -1373,7 +1373,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 			Desktop.getDesktop().browse(URI.create(sb.toString()));
 		}catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return true;
 	}

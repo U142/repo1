@@ -114,7 +114,7 @@ public class SoapExecEvent extends SoapExecAlert
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("Error", "An error occured when preparing the Event Sending", e, 1);
 			return false;
 		}

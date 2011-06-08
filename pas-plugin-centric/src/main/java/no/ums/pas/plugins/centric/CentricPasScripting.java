@@ -933,7 +933,7 @@ public class CentricPasScripting extends DefaultPasScripting {
           }
           catch(Exception e)
           {
-              e.printStackTrace();
+              log.warn(e.getMessage(), e);
               return null;
           }*/
     }
@@ -972,7 +972,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                 SwingUtilities.updateComponentTreeUI(PAS.get_pas());
             return laf;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
         try {//default to crossplatform LAF
 
@@ -986,7 +986,7 @@ public class CentricPasScripting extends DefaultPasScripting {
 
             return laf;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
 
         return null;
@@ -1011,7 +1011,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             onSetInitialLookAndFeel(this.getClass().getClassLoader());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
         return true;
     }
@@ -1059,7 +1059,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             CentricVariables.getCentric_send().trainingModeChanged();
             Variables.getStatusController().trainingModeChanged();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
         PAS.get_pas().repaint();
         //onSetUserLookAndFeel(PAS.get_pas().get_settings(), PAS.get_pas().get_userinfo());
@@ -1157,7 +1157,7 @@ public class CentricPasScripting extends DefaultPasScripting {
           }
           catch(Exception e)
           {
-              e.printStackTrace();
+              log.warn(e.getMessage(), e);
           }*/
 
         /*dlg.get_logonpanel().getNSList().setVisible(false);
@@ -1242,7 +1242,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             }
             //get_pas().get_userinfo().get_current_department().CalcCoorRestrictionShapes();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
         try {
             p.get_mappane().get_active_shape().calc_coortopix(PAS.get_pas().get_navigation());
@@ -1280,7 +1280,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
 
         //only paint status shapes if in status tab
@@ -1291,7 +1291,7 @@ public class CentricPasScripting extends DefaultPasScripting {
                     en.nextElement().draw(g, p.get_mappane().getMapModel(), p.get_mappane().getZoomLookup(), false, true, false, null, true, true, 2, true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn(e.getMessage(), e);
             }
         }
 
@@ -1433,7 +1433,7 @@ public class CentricPasScripting extends DefaultPasScripting {
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             return false;
         }
     }

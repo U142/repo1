@@ -1,5 +1,8 @@
 package no.ums.pas.core.dataexchange.soap;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
@@ -10,6 +13,9 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
 public abstract class MiniSOAP {
+
+    private static final Log log = UmsLog.getLogger(MiniSOAP.class);
+
 	protected SOAPFactory soapFactory;
 	protected SOAPConnectionFactory soapConnectionFactory;
 	protected MessageFactory messageFactory = MessageFactory.newInstance();
@@ -55,7 +61,7 @@ public abstract class MiniSOAP {
 	    	hd.addHeader("Content-Type", "text/xml; charset=UTF-8");
 	      }
 	      catch (Exception e) {
-	    	  e.printStackTrace();
+	    	  log.warn(e.getMessage(), e);
 	    	  System.err.println(e);
 	    	  throw e;
 	      }

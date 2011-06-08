@@ -87,7 +87,7 @@ public class WSGetStatusItems extends WSThread
 		}
 		catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("WSGetStatusItems","Exception in onDownloadFinished",e,1);
 		}
 		finally
@@ -208,7 +208,7 @@ public class WSGetStatusItems extends WSThread
 				p.set_saved();
 				PAS.get_pas().activateProject(p);
 			} catch(Exception e) {
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 		
@@ -249,7 +249,7 @@ public class WSGetStatusItems extends WSThread
 						{
 							sz_values[n_attr] = "-1";
 							log.debug(e.getMessage());
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 							Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 						}
 					}
@@ -260,7 +260,7 @@ public class WSGetStatusItems extends WSThread
 						sending.setProjectpk(Long.toString(sz_projectpk));
 					} catch(Exception e) {
 						log.debug(e.getMessage());
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 						continue;
 					}
@@ -356,7 +356,7 @@ public class WSGetStatusItems extends WSThread
 									catch(Exception e)
 									{
 										log.debug(e.getMessage());
-										e.printStackTrace();
+										log.warn(e.getMessage(), e);
 										Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 									}
 								}
@@ -601,7 +601,7 @@ public class WSGetStatusItems extends WSThread
 						//get_pas().get_statuscontroller().add_sending(sending);
 					} catch(Exception e) {
 						log.debug(e.getMessage());
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 					}
 				}
@@ -757,7 +757,7 @@ public class WSGetStatusItems extends WSThread
 								}
 								catch(Exception e)
 								{
-									//e.printStackTrace();
+									//log.warn(e.getMessage(), e);
 								}
 							}
 						}
@@ -806,7 +806,7 @@ public class WSGetStatusItems extends WSThread
 							catch(Exception e)
 							{
 								log.debug(e.getMessage());
-								e.printStackTrace();
+								log.warn(e.getMessage(), e);
 								Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 							}							
 						}
@@ -874,7 +874,7 @@ public class WSGetStatusItems extends WSThread
 			get_callback().actionPerformed(new ActionEvent(nav_init, ActionEvent.ACTION_PERFORMED, "act_set_nav_init"));*/
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 		}
 
@@ -916,7 +916,7 @@ public class WSGetStatusItems extends WSThread
 					catch(Exception e)
 					{
 						log.debug(e.getMessage());
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						//sz_values[n_attr] = new String("0");
 						Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 					}
@@ -929,7 +929,7 @@ public class WSGetStatusItems extends WSThread
 					fire_statusitem(obj);
 				} catch(Exception e) { 
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 					return;
 				}				
@@ -981,7 +981,7 @@ public class WSGetStatusItems extends WSThread
 				}
 				catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 				}
 			}
@@ -992,7 +992,7 @@ public class WSGetStatusItems extends WSThread
 			}
 			catch(Exception e) { 
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLGetStatusItems","Exception in parseDoc",e,1);
 			}
 			
@@ -1059,7 +1059,7 @@ public class WSGetStatusItems extends WSThread
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("XMLGetStatusItems","Exception in file_set_datetimefilter",e,1);
 		}
 	}
@@ -1078,7 +1078,7 @@ public class WSGetStatusItems extends WSThread
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

@@ -98,7 +98,7 @@ public class ObjectController {
 				m_edit_polygon = (PolygonStruct)object.getM_shape().clone();
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("ObjectController","Exception in editObject",e,1);
 			}
 		}
@@ -280,7 +280,7 @@ public class ObjectController {
 				gui.getObjInfoPanel().getCbxCategory().addItem(c);
 			}
 		} catch (RuntimeException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("ObjectController","Exception in addCategoryToCombobox",e,1);
 		}
 	}

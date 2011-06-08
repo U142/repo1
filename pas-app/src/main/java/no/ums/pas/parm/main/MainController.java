@@ -180,7 +180,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			treeCtrl.initiateTree(this.getAllElementsFromXmlFile(), false);
 		} catch(Exception e){
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			//Error.getError().addError("MainController","Exception in initGUI",e,1);
 		}
 		
@@ -784,10 +784,10 @@ public class MainController implements ActionListener, TreeModelListener,
 			if (e.getActionCommand().equals("act_kick_repaint"))
 				mapRedraw();
 		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
+			log.warn(ex.getMessage(), ex);
 			Error.getError().addError("MainController","FileNotFoundException in actionPerformed - new",ex,1);
 		} catch (ParmException ex) {
-			ex.printStackTrace();
+			log.warn(ex.getMessage(), ex);
 			Error.getError().addError("MainController","Exception in actionPerformed - new",ex,1);
 		}
 
@@ -826,7 +826,7 @@ public class MainController implements ActionListener, TreeModelListener,
 										treeCtrl.getGui().getTreeModel().removeNodeFromParent(remNode);
 								}
 								catch(Exception ex) {
-									ex.printStackTrace();
+									log.warn(ex.getMessage(), ex);
 								}
 							}
 							
@@ -895,7 +895,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				}
 				
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				log.warn(ex.getMessage(), ex);
 				Error.getError().addError("MainController","Exception in actionPerformed - delete",ex,1);
 			}
 		}
@@ -942,10 +942,10 @@ public class MainController implements ActionListener, TreeModelListener,
 				}
 
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				log.warn(e1.getMessage(), e1);
 				Error.getError().addError("MainController","FileNotFoundException in actionPerformed - edit",e1,1);
 			} catch (ParmException e1) {
-				e1.printStackTrace();
+				log.warn(e1.getMessage(), e1);
 				Error.getError().addError("MainController","ParmException in actionPerformed - edit",e1,1);
 			}
 		}
@@ -994,7 +994,7 @@ public class MainController implements ActionListener, TreeModelListener,
 					}
 					
 				} catch (ParmException e1) {
-					e1.printStackTrace();
+					log.warn(e1.getMessage(), e1);
 					Error.getError().addError("MainController","Exception in actionPerformed - Alert save/cancel",e1,1);
 				}
 			//else if (this.alert.getOperation().equals("update")) {
@@ -1017,7 +1017,7 @@ public class MainController implements ActionListener, TreeModelListener,
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		
@@ -1082,7 +1082,7 @@ public class MainController implements ActionListener, TreeModelListener,
 								ObjectVO o = (ObjectVO)parent.getUserObject();
 								o.addEvents(this.event);
 							} catch (ParmException e1) {
-								e1.printStackTrace();
+								log.warn(e1.getMessage(), e1);
 								Error.getError().addError("MainController","Exception in actionPerformed - Event save/cancel",e1,1);
 							}
 						//} else if (this.event.getOperation().equals("update")) {
@@ -1161,7 +1161,7 @@ public class MainController implements ActionListener, TreeModelListener,
 									o.addObjects(this.object);
 								}
 							} catch (ParmException e1) {
-								e1.printStackTrace();
+								log.warn(e1.getMessage(), e1);
 								Error.getError().addError("MainController","Exception in actionPerformed - Object save/cancel",e1,1);
 							}
 							
@@ -1410,10 +1410,10 @@ public class MainController implements ActionListener, TreeModelListener,
 		try {
 			this.treeCtrl.initiateTree(this.getAllElementsFromXmlFile(), true);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MainController","Exception in updateTree",e,1);
 		} catch (ParmException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MainController","ParmException in updateTree",e,1);
 		}
 	}
@@ -1423,7 +1423,7 @@ public class MainController implements ActionListener, TreeModelListener,
 		try{
 			this.getAllCategorys();
 		}catch(Exception e){
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MainController","Exception in refreshTree",e,1);
 		}
 		ArrayList<Object> updatedObjects = null;
@@ -1915,7 +1915,7 @@ public class MainController implements ActionListener, TreeModelListener,
 				addShapeToDrawQueue(p);
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("MainController","Exception in showAlertPolygon",err,1);
 			}
 			// draw(Graphics g, Navigation nav, boolean b_dashed, boolean b_finalized, boolean b_editmode, Point p)
@@ -2086,10 +2086,10 @@ public class MainController implements ActionListener, TreeModelListener,
 		try {
 			new MainController(args);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MainController","Exception in main",e,1);
 		} catch (ParmException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MainController","Exception in main",e,1);
 		}
 	}*/

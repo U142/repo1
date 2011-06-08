@@ -229,7 +229,7 @@ public class CentricMessageStatus extends DefaultPanel implements ComponentListe
 				}
 				catch(Exception err)
 				{
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 				//kill.setLProjectpk()
 				//kill.setLProjectpk(lastcbstatus.get)

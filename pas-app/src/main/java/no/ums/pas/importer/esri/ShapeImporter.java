@@ -55,7 +55,7 @@ public class ShapeImporter extends FileParser
 		}
 		catch(MalformedURLException e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return;
 		}
 		try
@@ -280,7 +280,7 @@ public class ShapeImporter extends FileParser
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -337,7 +337,7 @@ public class ShapeImporter extends FileParser
 			m_callback.actionPerformed(event);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}
 		try {
@@ -345,7 +345,7 @@ public class ShapeImporter extends FileParser
 			get_callback().actionPerformed(eof);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}		
 	}

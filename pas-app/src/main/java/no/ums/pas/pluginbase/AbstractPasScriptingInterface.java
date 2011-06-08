@@ -38,7 +38,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -91,7 +91,7 @@ public abstract class AbstractPasScriptingInterface implements PasScriptingInter
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return true;
 	}

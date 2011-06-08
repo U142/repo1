@@ -67,7 +67,7 @@ public class InhabitantResults extends SearchPanelResults {
 			//Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(e);
 		} catch(Exception e) { 
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("InhabitantResults","Exception in onMouseLDblClick",e,1);
 		}
 	}
@@ -79,7 +79,7 @@ public class InhabitantResults extends SearchPanelResults {
 			//get_pas().add_event("Rightclick: open popup menu");
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("InhabitantResults","Exception in onMouseRClick",e,1);
 		}
 	}

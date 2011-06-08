@@ -579,7 +579,7 @@ public abstract class SendProperties extends Object {
 					catch(Exception e)
 					{
 						Error.getError().addError("Error parsing results", e.getLocalizedMessage(), e, 1);
-						e.printStackTrace();					
+						log.warn(e.getMessage(), e);					
 					}
 				}
 			}
@@ -591,7 +591,7 @@ public abstract class SendProperties extends Object {
 		catch(Exception e)
 		{
 			Error.getError().addError("Error parsing results", e.getLocalizedMessage(), e, 1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

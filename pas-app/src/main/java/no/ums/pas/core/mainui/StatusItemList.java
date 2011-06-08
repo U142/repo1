@@ -40,7 +40,7 @@ public class StatusItemList extends ArrayList<Object> {
 				//super.set(n_item - 1, obj);
 		} catch(Exception e) { 
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	StatusItemObject _get(int i) {

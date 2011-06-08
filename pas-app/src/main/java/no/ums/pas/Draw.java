@@ -191,7 +191,7 @@ import java.awt.image.ImageObserver;
 				
 				//log.debug(get_lasterror());
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("Draw","Exception in run",e,1);
 			}
 			m_b_isrunning = false;
@@ -217,7 +217,7 @@ import java.awt.image.ImageObserver;
 								if (tracker.isErrorAny()) {
 									log.debug("Error loading image ");
 								}
-							} catch (Exception ex) { ex.printStackTrace(); }
+							} catch (Exception ex) { log.warn(ex.getMessage(), ex); }
 							*/
 							/*if(PAS.get_pas().get_mappane().getMapLoader().getMediaTracker().statusID(0, false) != MediaTracker.COMPLETE)
 							{
@@ -271,7 +271,7 @@ import java.awt.image.ImageObserver;
 							setPainted();
 							Error.getError().addError("Draw","Exception in run",e,1);
 							set_lasterror("m_gfx_buffer.drawImage failed " + e.getMessage());
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 							m_b_imgpaint_success = false;
 						}
 						if(need_new_coors())
@@ -365,7 +365,7 @@ import java.awt.image.ImageObserver;
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			
 		}

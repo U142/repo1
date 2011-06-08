@@ -83,7 +83,7 @@ public class WSSendSettings extends WSThread
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 
@@ -103,7 +103,7 @@ public class WSSendSettings extends WSThread
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -154,7 +154,7 @@ public class WSSendSettings extends WSThread
 				get_profiles().add(bbprofile);
 			} catch(Exception e) { 
 				//log.debug(e.getMessage());
-				//e.printStackTrace();
+				//log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
 			}
@@ -185,7 +185,7 @@ public class WSSendSettings extends WSThread
 					bbprofile.add_soundfile(new SoundFile(sz_values));
 				} catch(Exception e) {
 					//log.debug(e.getMessage());
-					//e.printStackTrace();
+					//log.warn(e.getMessage(), e);
 					Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 					continue;
 				}
@@ -219,7 +219,7 @@ public class WSSendSettings extends WSThread
 				get_oadcnumbers().add(oadc);
 			} catch(Exception e) { 
 				//log.debug(e.getMessage());
-				//e.printStackTrace();
+				//log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
 			}
@@ -281,7 +281,7 @@ public class WSSendSettings extends WSThread
 				get_ttslang().add(lang);
 			} catch(Exception e) { 
 				//log.debug(e.getMessage());
-				//e.printStackTrace();
+				//log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
 			}			
@@ -329,7 +329,7 @@ public class WSSendSettings extends WSThread
 				}
 			} catch(Exception e) { 
 				//log.debug(e.getMessage());
-				//e.printStackTrace();
+				//log.warn(e.getMessage(), e);
 				Error.getError().addError("XMLSendSettings","Exception in parseDoc",e,1);
 				continue;
 			}			

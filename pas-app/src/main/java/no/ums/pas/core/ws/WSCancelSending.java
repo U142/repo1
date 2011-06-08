@@ -5,6 +5,8 @@ import java.net.URL;
 import javax.swing.SwingWorker;
 import javax.xml.namespace.QName;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.ws.common.UCancelSending;
 import no.ums.ws.common.UCancelSendingResponse;
@@ -12,6 +14,9 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.parm.Parmws;
 
 public class WSCancelSending extends SwingWorker {
+
+    private static final Log log = UmsLog.getLogger(WSCancelSending.class);
+
 	public interface ICallback
 	{
 		public void onFinished(UCancelSendingResponse response);
@@ -53,7 +58,7 @@ public class WSCancelSending extends SwingWorker {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return Boolean.TRUE;
 	}

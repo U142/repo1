@@ -1,5 +1,7 @@
 package no.ums.adminui.pas.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.ws.common.PASHAPETYPES;
@@ -14,6 +16,8 @@ import java.net.URL;
 
 
 public class WSGetRestrictionShapes extends WSThread {
+
+    private static final Log log = UmsLog.getLogger(WSGetRestrictionShapes.class);
 
 	private String action;
 	private ULOGONINFO logon;
@@ -54,7 +58,7 @@ public class WSGetRestrictionShapes extends WSThread {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 

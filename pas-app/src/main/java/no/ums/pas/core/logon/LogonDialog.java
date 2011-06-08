@@ -395,7 +395,7 @@ public class LogonDialog extends JFrame implements WindowListener, ComponentList
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				log.debug("Error");
 			}
 			log.debug("LOGON");

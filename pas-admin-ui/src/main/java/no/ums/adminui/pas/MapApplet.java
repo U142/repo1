@@ -145,7 +145,7 @@ public class MapApplet extends JApplet implements ActionListener {
 			ting.run();
 			//PAS.pasplugin = new PAS_Scripting();
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 		
@@ -384,7 +384,7 @@ public class MapApplet extends JApplet implements ActionListener {
 					}
 				} catch(Exception err) {
 					log.debug(err.getMessage());
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 					log.error("Error centering all polygon sendings", err);
 				}
 				PAS.get_pas().get_drawthread().set_suspended(false);
@@ -437,7 +437,7 @@ public class MapApplet extends JApplet implements ActionListener {
 									m_mappane.set_current_snappoint(p);
 								} catch(Exception err) {
 									log.debug(err.getMessage());
-									err.printStackTrace();
+									log.warn(err.getMessage(), err);
 									Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 								}
 								//get_pas().get_mappane().robot_movecursor(p);
@@ -446,7 +446,7 @@ public class MapApplet extends JApplet implements ActionListener {
 							}
 						} catch(Exception err) {
 							log.debug(err.getMessage());
-							err.printStackTrace();
+							log.warn(err.getMessage(), err);
 							Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 						}	
 						break;*/
@@ -484,7 +484,7 @@ public class MapApplet extends JApplet implements ActionListener {
 					}
 				} catch(Exception err) {
 					log.debug(err.getMessage());
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 					log.error("Error activating drawmode", err);
 				}
 			}

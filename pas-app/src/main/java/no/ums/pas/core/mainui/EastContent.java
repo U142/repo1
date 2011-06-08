@@ -357,7 +357,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 	}
@@ -463,7 +463,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 		}
 		catch(Exception err)
 		{
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 		}
 		//});
 	}
@@ -577,7 +577,7 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("EastContent","Exception in flip_to",e,1);
 		}
 	}

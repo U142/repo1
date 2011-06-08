@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.dataexchange.MailAccount;
@@ -53,6 +55,9 @@ import java.util.List;
 
 
 public class SettingsGUI extends JFrame implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(SettingsGUI.class);
+
 	public static final long serialVersionUID = 1;
 
 	Container c = getContentPane();
@@ -440,7 +445,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 						}
 						catch(Exception e)
 						{
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						}
 						
 						m_combo_wmsformat.removeAllItems();
@@ -470,7 +475,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		else {

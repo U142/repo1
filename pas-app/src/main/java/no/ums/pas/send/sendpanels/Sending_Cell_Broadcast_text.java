@@ -97,7 +97,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	        	}
 	        	catch(Exception err)
 	        	{
-	        		err.printStackTrace();
+	        		log.warn(err.getMessage(), err);
 	        	}
 	        	finally
 	        	{
@@ -814,7 +814,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}	
 	public ArrayList<CCode> getCCodes() {

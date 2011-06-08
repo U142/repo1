@@ -385,7 +385,7 @@ public class SoapExecAlert extends MiniSOAP
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError(Localization.l("common_error"), "An error occured when preparing the Alert Sending", e, 1);
 			return false;
 		}

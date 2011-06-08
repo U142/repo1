@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.errorhandling.Error;
@@ -10,6 +12,9 @@ import java.util.UUID;
 
 public abstract class WSThread extends Thread
 {
+
+    private static final Log log = UmsLog.getLogger(WSThread.class);
+
 	public static enum WSRESULTCODE
 	{
 		NOT_SET,
@@ -43,7 +48,7 @@ public abstract class WSThread extends Thread
 		}
 		catch(SOAPFaultException e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			boolean b = PAS.pasplugin.onSoapFaultException(PAS.get_pas().get_userinfo(), e);
 			if(!b) {
                 Error.getError().addError(Localization.l("common_error"), getErrorMessage(), e, Error.SEVERITY_ERROR);

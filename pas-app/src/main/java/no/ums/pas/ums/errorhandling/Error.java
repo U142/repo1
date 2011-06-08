@@ -201,7 +201,7 @@ public class Error implements ActionListener {
 				append = true;
 				errorLog = null;
 			} catch(IOException io){
-				io.printStackTrace();
+				log.warn(io.getMessage(), io);
 			}
 		}
 	}

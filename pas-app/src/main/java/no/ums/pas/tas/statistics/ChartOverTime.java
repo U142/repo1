@@ -1,5 +1,7 @@
 package no.ums.pas.tas.statistics;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSTasStats_Countries_Timeunit;
 import no.ums.pas.importer.csv.csvexporter;
@@ -46,6 +48,8 @@ import java.util.List;
 
 public class ChartOverTime extends TasChart implements ActionListener
 {
+    private static final Log log = UmsLog.getLogger(ChartOverTime.class);
+
 	int n_num_categories = 0;
 	int n_max_categories = 31;
 	int n_skip_categories = 1;
@@ -593,7 +597,7 @@ public class ChartOverTime extends TasChart implements ActionListener
 					}
 					catch(Exception e)
 					{
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 
 						

@@ -172,7 +172,7 @@ public class MapLoader {
 							b_loading_overlay_in_progress = false;
 							return null;
 						}
-					} catch (Exception ex) { ex.printStackTrace(); }
+					} catch (Exception ex) { log.warn(ex.getMessage(), ex); }
 					
 					
 					BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -522,7 +522,7 @@ public class MapLoader {
 						m_img_load = null;
 					}
 				} catch (Exception ex) { 
-					//ex.printStackTrace();
+					//log.warn(ex.getMessage(), ex);
 					b_error = true;
 					m_img_load =  null;
 					setErrorMsg(ex.getMessage());
@@ -618,7 +618,7 @@ public class MapLoader {
 							m_img_load = null;;
 						}
 					} catch (Exception ex) { 
-						//ex.printStackTrace();
+						//log.warn(ex.getMessage(), ex);
 						b_error = true;
 						m_img_load =  null;
 						log.error("Failed to load map", ex);
@@ -639,7 +639,7 @@ public class MapLoader {
 				/*log.debug(m_httpreq.get_last_error());
 				//log.debug("Error " + e.getMessage());
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("MapLoader","Exception in load_map",e,1);*/
 				m_img_load =  null;
 			}

@@ -1,8 +1,13 @@
 package no.ums.pas.pluginbase;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
 public class PluginLoader
 {
+    private static final Log log = UmsLog.getLogger(PluginLoader.class);
+
 	public enum FILETYPE
 	{
 		CLASS,
@@ -18,7 +23,7 @@ public class PluginLoader
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -32,7 +37,7 @@ public class PluginLoader
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 	}

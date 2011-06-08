@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.ws.common.UBBMESSAGELIST;
 import no.ums.ws.common.UBBMESSAGELISTFILTER;
@@ -13,6 +15,9 @@ import java.awt.event.ActionListener;
 
 public class WSMessageLib extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSMessageLib.class);
+
 	UBBMESSAGELIST list;
 	long n_servertimestamp = 0;
 	public WSMessageLib(ActionListener callback, long n_timestamp)
@@ -52,7 +57,7 @@ public class WSMessageLib extends WSThread
 			//Error.getError().addError(PAS.l("common_error"), "Error opening Message Library", e, Error.SEVERITY_ERROR);
 			list = new UBBMESSAGELIST();
 			list.setNServertimestamp(-1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		finally
 		{

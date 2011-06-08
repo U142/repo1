@@ -209,7 +209,7 @@ public class TasDetailView extends DefaultPanel
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		else if("act_tascount_finished".equals(e.getActionCommand()))
@@ -224,7 +224,7 @@ public class TasDetailView extends DefaultPanel
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}*/
 

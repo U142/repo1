@@ -382,7 +382,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		}
 		catch(Exception err)
 		{
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 		}
 		
 	}
@@ -748,7 +748,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 					}
 					catch(Exception err)
 					{
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 					}					
 				}
 				public void componentResized(ComponentEvent e)
@@ -877,7 +877,7 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 				
 			return null;

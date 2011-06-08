@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.dataexchange.MailAccount;
 import no.ums.pas.core.logon.Settings;
@@ -15,6 +17,8 @@ import java.net.URL;
 
 public class WSSaveUI extends WSThread
 {
+    private static final Log log = UmsLog.getLogger(WSSaveUI.class);
+
 	public WSSaveUI(ActionListener callback)
 	{
 		super(callback);
@@ -121,7 +125,7 @@ public class WSSaveUI extends WSThread
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 

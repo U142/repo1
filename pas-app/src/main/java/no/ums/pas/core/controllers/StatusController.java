@@ -261,7 +261,7 @@ public class StatusController extends Controller implements ActionListener {
 				Error.getError().addError("StatusController",
 						"Exception in act_add_sending", err, 1);
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		} else if ("act_update_cellbroadcast".equals(e.getActionCommand())) {
 			// contains an arraylist of StatusCellBroadcast objects. Each object
@@ -903,7 +903,7 @@ public class StatusController extends Controller implements ActionListener {
 											.get_panel().insert_row(data, -1);
 								} catch (Exception e) {
 									log.debug(e.getMessage());
-									e.printStackTrace();
+									log.warn(e.getMessage(), e);
 									Error.getError().addError(
 											"StatusController",
 											"Exception in search_houses", e, 1);

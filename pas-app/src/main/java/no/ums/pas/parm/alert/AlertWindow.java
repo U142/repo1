@@ -816,7 +816,7 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 					m_edit_shape = (ShapeStruct)m_alert.getAlert().getM_shape().clone();
 				} catch(Exception ex) {
 					log.debug(ex.getMessage());
-					ex.printStackTrace();
+					log.warn(ex.getMessage(), ex);
 					Error.getError().addError("AlertController","Exception in editAlert",ex,1);
 				}
 			}

@@ -1,5 +1,7 @@
 package no.ums.pas.ums.tools;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.controllers.StatusController;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.send.SendProperties;
@@ -25,6 +27,9 @@ import java.util.regex.Pattern;
 
 
 public final class TextFormat {
+
+    private static final Log log = UmsLog.getLogger(TextFormat.class);
+    
 	public synchronized static final Border CreateStdBorder(String text) {
 		/*SubstanceBorder bor = new SubstanceBorder();
 		java.awt.Color col = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
@@ -115,7 +120,7 @@ public final class TextFormat {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -164,7 +169,7 @@ public final class TextFormat {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return 0;
 		}
 	}

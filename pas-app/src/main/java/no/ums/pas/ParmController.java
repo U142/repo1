@@ -146,7 +146,7 @@ public class ParmController extends MainController {
 						p.calc_coortopix(getMapNavigation());
 					} catch(Exception e) {
 						log.debug(e.getMessage());
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						Error.getError().addError("ParmController","Exception in calc_coortopix",e,1);
 					}
 				//}
@@ -227,7 +227,7 @@ public class ParmController extends MainController {
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
 		}
@@ -262,7 +262,7 @@ public class ParmController extends MainController {
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
 		}
@@ -275,7 +275,7 @@ public class ParmController extends MainController {
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("ParmController","Exception in gotoMap",e,1);
 			}
 		}

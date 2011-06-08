@@ -300,7 +300,7 @@ public class StatusSending extends Object {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 
 	}
@@ -1913,7 +1913,7 @@ public class StatusSending extends Object {
 					}
 					catch(Exception err)
 					{
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 					}
 				}
 				else if("act_download_finished".equals(e.getActionCommand()))
@@ -1934,7 +1934,7 @@ public class StatusSending extends Object {
 					}
 					catch(Exception err)
 					{
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 					}
 					
 				}
@@ -2106,7 +2106,7 @@ public class StatusSending extends Object {
 					get_sendinglist().set_maxalloc("-1", get_refno(), n_maxalloc, this);
 				} catch(Exception err) {
 					log.debug(err.getMessage());
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 					Error.getError().addError("StatusSending","Exception in actionPerformed",err,1);
 				}
 			}

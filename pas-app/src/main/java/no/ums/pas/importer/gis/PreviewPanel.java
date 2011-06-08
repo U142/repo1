@@ -159,7 +159,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 				
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
 			}
 			
@@ -197,7 +197,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 				
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PreviewPanel","Exception in actionPerformed",err,1);
 			}
 		}
@@ -239,7 +239,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 							}
 							catch(Exception err)
 							{
-								err.printStackTrace();
+								log.warn(err.getMessage(), err);
 								if(m_sendobject == null)
 									log.debug("Error on GIS Import: m_sendobject was null " + err.getMessage() + " \n" + err.getStackTrace().toString());
 								else
@@ -254,7 +254,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 			/*else { // Dette vil bli kjørt ved autofetch_addresses
 				//m_sendobject.get_toolbar().remove(m_loader);
@@ -359,7 +359,7 @@ public class PreviewPanel extends DefaultPanel implements ComponentListener, Cha
 			return writer.convert(n_mun, n_str, n_hou, n_let, n_namefilter1, n_namefilter2, n_skip);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("PreviewPanel","Exception in create_umsgisfile",e,1);
 		}
 		return null;

@@ -252,7 +252,7 @@ public class Houses {
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		double f_prev_lon = 0.0;
 		double f_prev_lat = 0.0;

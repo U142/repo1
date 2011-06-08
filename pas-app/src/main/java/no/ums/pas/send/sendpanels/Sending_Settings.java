@@ -539,7 +539,7 @@ public class Sending_Settings extends DefaultPanel implements KeyListener {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	protected void populate_smstemplates() {

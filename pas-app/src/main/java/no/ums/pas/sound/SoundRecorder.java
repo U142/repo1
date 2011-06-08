@@ -78,7 +78,7 @@ public class SoundRecorder extends Thread {
 	        		}
 	        		catch(Exception e)
 	        		{
-	        			e.printStackTrace();
+	        			log.warn(e.getMessage(), e);
 	        			log.debug(e.getMessage());
 	        			log.warn(e.getMessage());
 	        		}
@@ -89,7 +89,7 @@ public class SoundRecorder extends Thread {
 	        }
 	        catch(Exception err)
 	        {
-	        	err.printStackTrace();
+	        	log.warn(err.getMessage(), err);
 	        	LINE_AVAILABLE = false;
 	        	AUDIOLINE = null;
 	        	throw err;
@@ -226,7 +226,7 @@ public class SoundRecorder extends Thread {
             audioFormat = AUDIOFORMAT;
         } catch (Exception e) {
             m_b_haserror = true;
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             return;
         }
         //DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat); //, 100000
@@ -242,7 +242,7 @@ public class SoundRecorder extends Thread {
                 m_outputFile = File.createTempFile("voc", "", new File(getVocTempPath()));
                 m_sz_filename = m_outputFile.getName();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn(e.getMessage(), e);
             }
         } else {
             m_outputFile = null;
@@ -255,7 +255,7 @@ public class SoundRecorder extends Thread {
             //targetDataLine.open(audioFormat);
 
         } catch (LineUnavailableException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             m_b_haserror = true;
             return;
             //PAS.get_pas().add_event("SoundRecorder.targetDataLine: " + e.getMessage(), e);
@@ -270,7 +270,7 @@ public class SoundRecorder extends Thread {
         }
         catch(Exception e)
         {
-        	e.printStackTrace();
+        	log.warn(e.getMessage(), e);
         }*/
     }
 
@@ -380,7 +380,7 @@ public class SoundRecorder extends Thread {
     			}
     			catch(Exception e)
     			{
-    				e.printStackTrace();
+    				log.warn(e.getMessage(), e);
     	            if(m_recorder_thread!=null)
     	            {
     	            	m_recorder_thread.stopRecording();
@@ -388,7 +388,7 @@ public class SoundRecorder extends Thread {
     			}
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             m_b_haserror = true;
             recording = false;
             if(m_recorder_thread!=null)
@@ -500,7 +500,7 @@ public class SoundRecorder extends Thread {
                 		}
                 		catch(Exception e)
                 		{
-                			e.printStackTrace();
+                			log.warn(e.getMessage(), e);
                 		}
                 	}
                 }
@@ -516,7 +516,7 @@ public class SoundRecorder extends Thread {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             m_b_haserror = true;
         }
     }
@@ -528,7 +528,7 @@ public class SoundRecorder extends Thread {
         	m_outputstream.flush();
         	m_outputstream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
         byte[] abData = m_outputstream.toByteArray();
         log.debug(abData.length + " bytes written");
@@ -541,7 +541,7 @@ public class SoundRecorder extends Thread {
             log.debug("End writing");
             m_outputstream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
     }
 

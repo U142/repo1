@@ -4,6 +4,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.ws.common.UDeleteStatusRequest;
 import no.ums.ws.common.UDeleteStatusResponse;
@@ -11,6 +13,8 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.status.PasStatus;
 
 public class WSDeleteStatus extends WSThread {
+
+    private static final Log log = UmsLog.getLogger(WSDeleteStatus.class);
 
 	IDeleteStatus icallback;
 	long n_refno = 0;
@@ -53,7 +57,7 @@ public class WSDeleteStatus extends WSThread {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			icallback.Complete(n_refno, UDeleteStatusResponse.ERROR);
 		}
 	}

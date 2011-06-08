@@ -621,7 +621,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}		
 	}
 	
@@ -834,7 +834,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				}
 				catch(Exception err)
 				{
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 				//TitledBorder b = (TitledBorder)getBorder();
 				//b.setTitle(m_txt_sendname.getText());
@@ -1042,7 +1042,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		
 		} catch(Exception e) {
 			//PAS.get_pas().add_event("Error in SendOptionToolbar.init(): " + e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SendOptionToolbar","Exception in init",e,1);
 		}
 		add_controls();
@@ -1406,7 +1406,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 							//get_parent().set_sendproperties(new SendPropertiesPolygon(new PolygonStruct(get_pas()), this));
 							get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "New polygon sending");
 						} catch(Exception err) {
-							err.printStackTrace();
+							log.warn(err.getMessage(), err);
 							//PAS.get_pas().add_event("ERROR New Sending : " + err.getMessage());
 							Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
 						}
@@ -1415,7 +1415,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 						try {
 							get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "New GIS sending");
 						} catch(Exception err) {
-							err.printStackTrace();
+							log.warn(err.getMessage(), err);
 							Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
 						}
 						break;
@@ -1424,7 +1424,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 							//get_parent().set_sendproperties(new SendPropertiesEllipse(this));
 							get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "New ellipse sending");
 						} catch(Exception err) {
-							err.printStackTrace();
+							log.warn(err.getMessage(), err);
 							Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
 						}
 						break;
@@ -1432,7 +1432,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 						try {
 							get_parent().get_sendproperties().set_sendingname(m_txt_sendname.getText(), "New Municipal sending");							
 						} catch(Exception err) {
-							err.printStackTrace();
+							log.warn(err.getMessage(), err);
 							Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);							
 						}
 				}
@@ -1535,7 +1535,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				//PAS.get_pas().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_center_all_polygon_sendings"));
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("ImportPolygon","Exception in actionPerformed",err,1);
 			}
 
@@ -1567,7 +1567,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				get_parent().get_sendproperties().set_sendingname((sosi.get_flater().get_current_flate().get_name().length() > 0 ? sosi.get_flater().get_current_flate().get_name() : sosi.get_flater().get_current_flate().get_objecttype()), sz_description);
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("SendOptionToolbar","Exception in actionPerformed",err,1);
 			}
 			/*ActionEvent e_lock = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_lock");

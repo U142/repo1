@@ -123,7 +123,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 			return true;
 		} catch(Exception e) {
 			log.debug(Localization.l("error_not_a_number"));
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("HouseMovePanel","Exception in checkInteger",e,1);
 		}
 		return false;		
@@ -168,7 +168,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				//get_xml().start();
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("HouseMovePanel","Exception in actionPerformed: act_search_postno",err,1);
 				lock(false);
 			}
@@ -203,7 +203,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				new XMLSaveGAB(null, form, PAS.get_pas().get_sitename(), this, "act_coor_assignment_complete", null).start();
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("HouseMovePanel","Exception in actionPerformed: act_coor_assignment",err,1);
 			}*/
 			Inhabitant inhab = new Inhabitant();
@@ -211,7 +211,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				inhab = m_current_inhabitant.clone();
 			} catch(Exception ex) {
 				log.debug(ex.getMessage());
-				ex.printStackTrace();
+				log.warn(ex.getMessage(), ex);
 				Error.getError().addError("HouseMovePanel","Exception in delete_row",ex,1);
 			}
 			inhab.set_kondmid(m_current_inhabitant.get_kondmid());
@@ -327,7 +327,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				super.insert_row(data, 0);
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseMovePanel","Exception in insert_row",e,1);
 			}
 		}
@@ -337,7 +337,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				delete_row(o, m_n_col_object, Inhabitant.class);
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseMovePanel","Exception in delete_row",e,1);
 			}
 		}
@@ -352,7 +352,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}*/
 			onMouseLDblClick(row, col, obj, p);
 		}
@@ -365,7 +365,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 				//}
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("HouseMovePanel","Exception in onMouseLDblClick",e,1);
 			}
 		}
@@ -386,7 +386,7 @@ public class HouseMovePanel extends DefaultPanel implements ComponentListener, K
 						insert_row(inhab);
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("HouseMovePanel","Exception in start_search",e,1);
 				}
 			}

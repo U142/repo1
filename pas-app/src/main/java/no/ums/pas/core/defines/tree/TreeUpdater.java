@@ -70,7 +70,7 @@ public class TreeUpdater
 					}
 					catch(Exception e) {
                         // Ignored exception, download is aborted
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					} finally {
                         downloadReady.set(true);
                     }

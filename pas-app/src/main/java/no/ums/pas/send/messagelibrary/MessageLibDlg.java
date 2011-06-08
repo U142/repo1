@@ -65,7 +65,7 @@ public class MessageLibDlg extends JDialog implements ComponentListener, ActionL
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

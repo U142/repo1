@@ -93,7 +93,7 @@ public class SendObject extends Object {
 			//PAS.get_pas().add_event("Error SendObject() : " + e.getMessage(), e);
 			//PAS.get_pas().printStackTrace(e.getStackTrace());
 			Error.getError().addError("SendObject","Exception in SendObject",e,1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		//set_type(n_type);
 		switch(n_type) {

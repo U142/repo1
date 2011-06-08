@@ -142,7 +142,7 @@ public class SoundMixer implements LineListener {
                 str_error_msg = Localization.l("sound_mixer_no_speaker_lines_found");
             }
 			//JOptionPane.showMessageDialog(PAS.get_pas(), PAS.l("sound_mixer_no_speaker_lines_found"), PAS.l("common_warning"), JOptionPane.WARNING_MESSAGE);
-			//e.printStackTrace();
+			//log.warn(e.getMessage(), e);
 			SoundRecorderPanel.b_line_ok = false;
 		}
 		/*
@@ -245,7 +245,7 @@ public class SoundMixer implements LineListener {
 	        }
             recPort.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return n_ret;
 	}

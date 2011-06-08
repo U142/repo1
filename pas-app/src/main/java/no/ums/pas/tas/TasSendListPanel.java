@@ -1,5 +1,7 @@
 package no.ums.pas.tas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.defines.tree.TreeRenderer;
 import no.ums.pas.core.defines.tree.TreeTable;
@@ -33,6 +35,8 @@ import java.util.Hashtable;
 
 public class TasSendListPanel extends DefaultPanel implements ComponentListener
 {
+    private static final Log log = UmsLog.getLogger(TasSendListPanel.class);
+
 	JScrollPane scroller;
 	CountryList list;
 	ActionListener callback;
@@ -237,7 +241,7 @@ public class TasSendListPanel extends DefaultPanel implements ComponentListener
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 

@@ -74,7 +74,7 @@ public class GISWriter {
 			return get_umsgis_file();
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("GISWriter","Exception in convert",e,1);
 		}
 		return null;
@@ -84,7 +84,7 @@ public class GISWriter {
 			w.write(c1 + "\t" + c2 + "\t" + c3 + "\t" + c4 + "\t" + c5 + "\t" + c6 + "\r\n");
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("GISWriter","Exception in write_line",e,1);
 		}
 		return false;

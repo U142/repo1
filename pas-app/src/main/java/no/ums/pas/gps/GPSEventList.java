@@ -41,7 +41,7 @@ public class GPSEventList extends ArrayList<GPSEvent> {
 			return event;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return event;
 	}

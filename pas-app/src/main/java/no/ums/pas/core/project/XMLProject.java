@@ -75,7 +75,7 @@ public class XMLProject extends XMLThread {
                 log.debug("Project set");
             } catch(Exception e) {
                 log.debug(e.getMessage());
-                e.printStackTrace();
+                log.warn(e.getMessage(), e);
                 Error.getError().addError("XMLProject","Exception in parseDoc",e,1);
             }
         }
@@ -89,7 +89,7 @@ public class XMLProject extends XMLThread {
 			get_callback().actionPerformed(e);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("XMLProject","Exception in onDownloadFinished",e,1);
 		}
 	}

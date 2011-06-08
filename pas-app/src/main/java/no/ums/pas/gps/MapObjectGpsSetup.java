@@ -170,11 +170,11 @@ public class MapObjectGpsSetup extends DefaultPanel {
 			setup.start();
 		} catch(IOException e) {
 			log.debug("MapObjectGpsSetup.post_form() IOException " + e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MapObjectGpsSetup","Exception in post_form",e,1);
 		} catch(Exception e) {
 			log.debug("MapObjectGpsSetup.post_form() Exception " + e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("MapObjectGpsSetup","Exception in post_form",e,1);
 		}*/
 	}

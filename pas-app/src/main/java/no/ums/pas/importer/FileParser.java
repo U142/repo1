@@ -49,7 +49,7 @@ public abstract class FileParser extends Thread {
 			return true;
 		} catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -138,13 +138,13 @@ public abstract class FileParser extends Thread {
 					parse();
 				} catch(Exception e1) {
 					log.debug(e1.getMessage());
-					e1.printStackTrace();
+					log.warn(e1.getMessage(), e1);
 					Error.getError().addError("FileParser","Exception in run",e1,1);
 				}
 			}
 		} catch(Exception e2) {
 			log.debug(e2.getMessage());
-			e2.printStackTrace();
+			log.warn(e2.getMessage(), e2);
 			Error.getError().addError("FileParser","Exception in run",e2,1);
 		}
 		//PAS.get_pas().get_drawthread().set_suspended(false);
@@ -154,7 +154,7 @@ public abstract class FileParser extends Thread {
 			m_callback.actionPerformed(event);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}
 		try {
@@ -162,7 +162,7 @@ public abstract class FileParser extends Thread {
 			get_callback().actionPerformed(eof);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("FileParser","Exception in run",e,1);
 		}
 

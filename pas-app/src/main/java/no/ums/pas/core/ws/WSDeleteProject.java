@@ -4,6 +4,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.ws.common.UDeleteProjectRequest;
 import no.ums.ws.common.UDeleteProjectResponse;
@@ -12,6 +14,8 @@ import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.pas.status.PasStatus;
 
 public class WSDeleteProject extends WSThread {
+
+    private static final Log log = UmsLog.getLogger(WSDeleteProject.class);
 
 	IDeleteProject icallback;
 	long projectpk;
@@ -53,7 +57,7 @@ public class WSDeleteProject extends WSThread {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			icallback.Complete(projectpk, response);
 		}
 	}

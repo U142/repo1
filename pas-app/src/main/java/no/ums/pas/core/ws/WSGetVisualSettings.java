@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.ws.common.ULOGONINFO;
 import no.ums.ws.common.parm.UPASUISETTINGS;
 import no.ums.ws.pas.Pasws;
@@ -12,6 +14,9 @@ import java.net.URL;
 
 public class WSGetVisualSettings extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSGetVisualSettings.class);
+
 	protected static UPASUISETTINGS visuals = new UPASUISETTINGS();
 	public static UPASUISETTINGS getVisuals()
 	{
@@ -50,7 +55,7 @@ public class WSGetVisualSettings extends WSThread
 		{
 			visuals = new UPASUISETTINGS();
 			visuals.setInitialized(false);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 		/*finally

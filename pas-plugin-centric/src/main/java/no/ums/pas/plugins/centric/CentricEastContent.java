@@ -142,7 +142,7 @@ public class CentricEastContent extends EastContent
 				super.flip_to(n_leaf);
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("EastContent","Exception in flip_to",e,1);
 		}
 	}

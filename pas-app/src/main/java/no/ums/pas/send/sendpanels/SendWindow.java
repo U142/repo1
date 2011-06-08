@@ -245,7 +245,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return true;
 		}
 			
@@ -261,7 +261,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return true;
 		}
 	}
@@ -1061,7 +1061,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 			}
 			catch(Exception err)
 			{
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 		}
 		else //stop recording threads if running
@@ -1148,7 +1148,7 @@ public class SendWindow extends JDialog implements ActionListener, ChangeListene
 		}
 		catch(Exception err)
 		{
-			err.printStackTrace();
+			log.warn(err.getMessage(), err);
 		}
 		m_tabbedpane.setSelectedIndex(0);
 		if(close)

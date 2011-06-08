@@ -191,7 +191,7 @@ public class PASActions implements ActionListener {
 
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PAS", "Error centering all polygon sendings", err, Error.SEVERITY_ERROR);
 			}
 			PAS.get_pas().get_drawthread().set_suspended(false);
@@ -244,7 +244,7 @@ public class PASActions implements ActionListener {
 								PAS.get_pas().get_mappane().set_current_snappoint(p);
 							} catch(Exception err) {
 								log.debug(err.getMessage());
-								err.printStackTrace();
+								log.warn(err.getMessage(), err);
 								Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 							}
 							//get_pas().get_mappane().robot_movecursor(p);
@@ -253,7 +253,7 @@ public class PASActions implements ActionListener {
 						}
 					} catch(Exception err) {
 						log.debug(err.getMessage());
-						err.printStackTrace();
+						log.warn(err.getMessage(), err);
 						Error.getError().addError("MapFrame","Exception in actionPerformed",err,1);
 					}	
 					break;*/
@@ -295,7 +295,7 @@ public class PASActions implements ActionListener {
 				}
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PAS", "Error activating drawmode", err, Error.SEVERITY_ERROR);
 			}
 		}
@@ -472,7 +472,7 @@ public class PASActions implements ActionListener {
 				PAS.get_pas().get_mappane().actionPerformed(e);
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PAS", "Error setting ellipse center", err, Error.SEVERITY_ERROR);
 			}
 			PAS.get_pas().kickRepaint();
@@ -484,7 +484,7 @@ public class PASActions implements ActionListener {
 				PAS.get_pas().kickRepaint();
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("PAS", "Error setting ellipse corner", err, Error.SEVERITY_ERROR);
 			}				
 		}
@@ -609,7 +609,7 @@ public class PASActions implements ActionListener {
 					PAS.pasplugin.onSetInitialMapBounds(Variables.getNavigation(), ui);
 				}
 				catch(Exception err) {
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 				
 			//}

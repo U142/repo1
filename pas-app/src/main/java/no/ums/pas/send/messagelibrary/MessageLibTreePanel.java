@@ -130,7 +130,7 @@ public class MessageLibTreePanel extends DefaultPanel
 			loader.hash_messages.put(node.getMessage().getNMessagepk(), node);
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -143,7 +143,7 @@ public class MessageLibTreePanel extends DefaultPanel
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -163,7 +163,7 @@ public class MessageLibTreePanel extends DefaultPanel
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
@@ -323,7 +323,7 @@ public class MessageLibTreePanel extends DefaultPanel
 					}
 					catch(Exception e)
 					{
-						//e.printStackTrace();
+						//log.warn(e.getMessage(), e);
 						return this;
 					}
 					//setBackground(new Color(0,0,0,0));
@@ -711,7 +711,7 @@ public class MessageLibTreePanel extends DefaultPanel
 				}
 				catch(Exception err)
 				{
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 				tree.signalDownloadFinished();
 				log.debug("Messagelib timestamp=" + n_server_timestamp);				

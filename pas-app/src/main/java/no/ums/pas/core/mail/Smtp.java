@@ -70,7 +70,7 @@ public class Smtp implements Runnable
 	      }
 	      catch(Exception openError)  
 	      {
-	         openError.printStackTrace();
+	         log.warn(openError.getMessage(), openError);
 	         close("Mail Socket Error");
 	         return false;
 	      }
@@ -135,7 +135,7 @@ public class Smtp implements Runnable
 	   }
 	   catch(Exception e0)
 	   {
-	      e0.printStackTrace();
+	      log.warn(e0.getMessage(), e0);
 	   }
 	   try
 	   {
@@ -209,7 +209,7 @@ public class Smtp implements Runnable
 	   }
 	   catch(Exception e)
 	   {
-	      e.printStackTrace();
+	      log.warn(e.getMessage(), e);
 	      close("send() Exception");
 	      callback.failed(e.getMessage());
 	   }

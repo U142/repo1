@@ -1,5 +1,7 @@
 package no.ums.pas;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.controllers.HouseController;
 import no.ums.pas.core.logon.DeptArray;
@@ -14,6 +16,8 @@ import java.awt.Graphics;
 import java.util.List;
 
 public class MAPDraw extends Draw {
+
+    private static final Log log = UmsLog.getLogger(MAPDraw.class);
 	
 	ParmController m_parmcontroller;
 	SendController m_sendcontroller;
@@ -92,7 +96,7 @@ public class MAPDraw extends Draw {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		if(m_parmcontroller!=null)
 			m_parmcontroller.drawLayers(m_gfx_buffer);
@@ -156,7 +160,7 @@ public class MAPDraw extends Draw {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		super.calc_new_coors();
 	}

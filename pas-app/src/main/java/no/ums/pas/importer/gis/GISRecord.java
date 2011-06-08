@@ -23,7 +23,7 @@ public class GISRecord extends Object {
 			return inhab;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return null;
 	}

@@ -386,7 +386,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	public void edit_row(Object [] data, int n_index, boolean [] update_cols) {
@@ -507,7 +507,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     				return i;
     		} catch(Exception e) {
     			/*log.debug(e.getMessage());
-    			e.printStackTrace();
+    			log.warn(e.getMessage(), e);
     			Error.getError().addError("SearchPanelResults","Exception in find",e,1);*/
     		}
     	}
@@ -527,7 +527,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     	}
     	catch(Exception e)
     	{
-    		e.printStackTrace();
+    		log.warn(e.getMessage(), e);
     	}
     	return false;
     }
@@ -542,7 +542,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 	            		m_tbl_list.fireTableRowsDeleted(i, i);
             		} catch(Exception e) {
             			log.debug(e.getMessage());
-            			e.printStackTrace();
+            			log.warn(e.getMessage(), e);
             			Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
             		}
             	}
@@ -554,7 +554,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
     		return false;
     	} catch(Exception e) {
     		log.debug(e.getMessage());
-    		e.printStackTrace();
+    		log.warn(e.getMessage(), e);
     		Error.getError().addError(Localization.l("common_error"),"Exception in delete_row",e,1);
     	}
     	return false;
@@ -630,11 +630,11 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 			exportFile = null;
 		}
 		catch(IOException ioe){
-			ioe.printStackTrace();
+			log.warn(ioe.getMessage(), ioe);
 			Error.getError().addError(Localization.l("common_error"),"IOException in exportToFile",ioe,1);
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError(Localization.l("common_error"),"Exception in exportToFile",e,1);
 		}
 	}

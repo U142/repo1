@@ -241,7 +241,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 				get_pas().get_statuscontroller().show_statuscode(current.get_code(), current.get_visible());
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 				Error.getError().addError("OpenStatuscodes","Exception in start_search",e,1);
 			}
 		}
@@ -334,7 +334,7 @@ public class OpenStatuscodes extends SearchPanelResults {
 			//get_pas().add_event("Rightclick: open popup menu");
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("OpenStatuscodes","Exception in onMouseRClick",e,1);
 		}
 

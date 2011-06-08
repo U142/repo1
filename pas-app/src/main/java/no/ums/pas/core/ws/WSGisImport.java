@@ -1,5 +1,7 @@
 package no.ums.pas.core.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.logon.UserInfo;
 import no.ums.pas.core.mainui.LoadingPanel;
@@ -21,6 +23,9 @@ import java.net.URL;
 
 public class WSGisImport extends WSThread
 {
+
+    private static final Log log = UmsLog.getLogger(WSGisImport.class);
+
 	protected class GisColumnset
 	{
 		public int COL_MUNICIPAL;
@@ -131,7 +136,7 @@ public class WSGisImport extends WSThread
 		catch(Exception e)
 		{
 			//no.ums.pas.ums.errorhandling.Error.getError().addError("Error fetching GIS import", "WSGisImport::run()", e, 1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			throw e;
 		}
 		finally

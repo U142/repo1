@@ -28,8 +28,9 @@ import java.nio.ByteBuffer;
 
 
 public class SoundPlayer {
-	private static final Log log = UmsLog.getLogger(SoundPlayer.class);
-	
+
+    private static final Log log = UmsLog.getLogger(SoundPlayer.class);
+
 	String m_sz_filename;
 	Clip clip;
 	boolean playing = false;
@@ -57,7 +58,7 @@ public class SoundPlayer {
 					
 		} catch(Exception e) {
 			//Error.getError().addError("SoundPlayer","Exception in SoundPlayer",e,1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}	
 	public SoundPlayer(/*ByteArrayOutputStream os*/ByteBuffer buf, JSlider slider, SoundRecorderPanel rec_panel, 
@@ -72,7 +73,7 @@ public class SoundPlayer {
 			//ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 			player_ctrl = new SoundPlayer(null, is, slider, rec_panel, txt_seconds);
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	void set_timer(String sz_time) {

@@ -57,7 +57,7 @@ public class HouseEditorDlg extends DefaultPanel implements ChangeListener, Comp
 		}
 		catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}*/
 		
 		m_panel = new HouseEditorPanel(this, point, house);

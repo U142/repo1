@@ -80,7 +80,7 @@ public class EllipseStruct extends ShapeStruct {
 			m_n_diameter_height_pix		= Math.abs(get_corner().get_y() - get_center().get_y()) * 2;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SendPropertiesEllipse","Exception in calc_diameters",e,1);
 		}
 	}
@@ -158,7 +158,7 @@ public class EllipseStruct extends ShapeStruct {
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SendPropertiesEllipse","Exception in recalc_shape",e,1);
 		}
 	}
@@ -189,7 +189,7 @@ public class EllipseStruct extends ShapeStruct {
 				m_bounds = nav;
 			} catch(Exception e) {
 				log.debug(e.getMessage());
-				e.printStackTrace();				
+				log.warn(e.getMessage(), e);				
 				Error.getError().addError("SendPropertiesEllipse","Exception in calc_bounds",e,1);
 			}
 		}

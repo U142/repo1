@@ -77,7 +77,7 @@ public class MapPointLL implements Comparable<MapPointLL> {
 			return (double)(Math.round(get_lon() * 10000)) / 10000 + ", " + (double)(Math.round(get_lat() * 10000)) / 10000;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		return "No Point";
 	}

@@ -467,7 +467,7 @@ public class CentricStatus extends DefaultPanel implements ComponentListener{
 							}
 							catch(Exception e)
 							{
-								e.printStackTrace();
+								log.warn(e.getMessage(), e);
 							}
 						}
 					}

@@ -40,7 +40,7 @@ public class SendOptionDlg extends JFrame {
 		} catch(Exception e) {
 			//get_pas().add_event("Error: " + e.getMessage(), e);
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		setVisible(true);
 	}

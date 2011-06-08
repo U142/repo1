@@ -172,7 +172,7 @@ public class WSProgressPoller extends Thread
 				{
 					SetFinished(); //abort
 				}
-				//e.printStackTrace();
+				//log.warn(e.getMessage(), e);
 			}
 		}
 	}

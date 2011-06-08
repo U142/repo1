@@ -440,7 +440,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		      	dtde.rejectDrop();
 		      }
 		    } catch (Exception e) {
-		      e.printStackTrace();
+		      log.warn(e.getMessage(), e);
 		      dtde.rejectDrop();
 		    }
 		    dtde.getDropTargetContext().getComponent().setCursor(Cursor.getDefaultCursor());

@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 
 import javax.swing.*;
@@ -9,6 +11,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 class DisclaimerDialog extends JDialog {
+
+    private static final Log log = UmsLog.getLogger(DisclaimerDialog.class);
+
 	private boolean b_confirmed = false;
 	public boolean isConfirmed() { return b_confirmed; }
 	public DisclaimerDialog()
@@ -39,7 +44,7 @@ class DisclaimerDialog extends JDialog {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		JLabel lbl = new JLabel(img);
 

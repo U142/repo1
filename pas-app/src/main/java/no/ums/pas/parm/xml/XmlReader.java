@@ -1073,7 +1073,7 @@ public class XmlReader {
 				//in.close();
 				out.close();
 		} catch (IOException io) {
-			io.printStackTrace();
+			log.warn(io.getMessage(), io);
 			Error.getError().addError("XmlReader","Exception in writeXmlFromStream",io,1);
 			throw new ParmException("XmlReader:There has occured a stream error;");
 		}
@@ -1200,7 +1200,7 @@ public class XmlReader {
 			throw new ParmException("XmlReader:Documentbuilder could not be created;");
 		} catch (SAXException saxe) {
 			//Error.getError().addError("XmlReader","SAXException in parseXmlDocument",saxe,1);
-			saxe.printStackTrace();
+			log.warn(saxe.getMessage(), saxe);
 			// Dette retter opp dersom xmlfilen blir korrupt
 			resetXMLFile();
 			//throw new ParmException("XmlReader:The xml document is not in a valid format;");
@@ -1547,7 +1547,7 @@ public class XmlReader {
 		}
 		catch(Exception e){
 			Error.getError().addError("XmlReader","Exception in getXML", e, 1);
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		finally {
 		}

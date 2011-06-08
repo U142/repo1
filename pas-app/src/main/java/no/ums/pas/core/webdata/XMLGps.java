@@ -145,7 +145,7 @@ public class XMLGps extends XMLThread {
 						}
 					} catch(Exception e) { 
 						log.debug(e.getMessage());
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						Error.getError().addError("XMLGps","Exception in parseDoc",e,1);
 					}
 					get_loadingpanel().inc_currentitem();
@@ -220,7 +220,7 @@ public class XMLGps extends XMLThread {
 				}
 				catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					sz_values[n_attr] = new String("");
 					Error.getError().addError("XMLGps","Exception in parseEvents",e,1);
 				}

@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.ws.WSLogon;
 import no.ums.pas.localization.Localization;
@@ -15,6 +17,9 @@ import java.util.List;
 
 /*executes dialog*/
 public class Logon implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(Logon.class);
+
 	private PAS m_pas;
 	private PAS get_pas() { return m_pas; }
 	UserInfo m_info = null;
@@ -305,7 +310,7 @@ public class Logon implements ActionListener {
 				}
 				catch(Exception err)
 				{
-					err.printStackTrace();
+					log.warn(err.getMessage(), err);
 				}
 			}
 			b_results_ready = true;

@@ -1,5 +1,7 @@
 package no.ums.pas.core.mainui.address_search;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.defines.DefaultPanel;
 
@@ -8,6 +10,9 @@ import java.awt.event.ActionEvent;
 
 public class AddressSearchPanel extends DefaultPanel
 {
+
+    private static final Log log = UmsLog.getLogger(AddressSearchPanel.class);
+
 	public AddressSearchPanel()
 	{
 		super();
@@ -36,7 +41,7 @@ public class AddressSearchPanel extends DefaultPanel
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}		
 	}
 	public void event_search()

@@ -153,7 +153,7 @@ public class SosiFile extends Object {
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SosiFile","Exception in set_value",e,1);
 		}
 		//PAS.get_pas().add_event("set_value (" + n_fieldid + ")" + data.toString());
@@ -261,7 +261,7 @@ public class SosiFile extends Object {
 					}
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
 				break;
@@ -294,7 +294,7 @@ public class SosiFile extends Object {
 					}
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
 				break;
@@ -349,7 +349,7 @@ public class SosiFile extends Object {
 					m_arr_flater.get_current_flate().set_name(sz_data);
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
 				break;
@@ -358,7 +358,7 @@ public class SosiFile extends Object {
 					m_arr_flater.get_current_flate().set_ref(new Integer(sz_data.substring(1)).intValue());
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("SosiFile","Exception in set_value",e,1);
 				}
 				break;
@@ -384,7 +384,7 @@ public class SosiFile extends Object {
 		return true;
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("SosiFile","Exception in set_value",e,1);
 			return false;
 		}
@@ -574,7 +574,7 @@ public class SosiFile extends Object {
 								n_coorstarts = 0;
 							} catch(Exception err) {
 								log.debug(err.getMessage());
-								err.printStackTrace();
+								log.warn(err.getMessage(), err);
 								Error.getError().addError("SosiFile","Exception in traverse",err,1);
 								return false;
 							}

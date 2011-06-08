@@ -1,5 +1,7 @@
 package no.ums.pas.plugins.centric.ws;
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.core.ws.WSThread;
 import no.ums.pas.core.ws.vars;
 import no.ums.ws.common.BBPROJECT;
@@ -14,6 +16,8 @@ import java.net.URL;
 
 
 public class WSCentricStatus extends WSThread {
+
+    private static final Log log = UmsLog.getLogger(WSCentricStatus.class);
 
 	private String action;
 	private CBPROJECTSTATUSREQUEST cbpreq;
@@ -59,7 +63,7 @@ public class WSCentricStatus extends WSThread {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 

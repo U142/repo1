@@ -478,7 +478,7 @@ public class MainMenu extends DefaultPanel implements ComponentListener //implem
 				}
 			} catch(Exception err) {
 				log.debug(err.getMessage());
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 				Error.getError().addError("MainMenu","Exception in actionPerformed",err,1);
 			}
 		}

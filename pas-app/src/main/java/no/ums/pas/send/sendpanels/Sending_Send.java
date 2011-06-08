@@ -347,7 +347,7 @@ public class Sending_Send extends DefaultPanel {
 					}
 				} catch(Exception e) {
 					log.debug(e.getMessage());
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 					Error.getError().addError("Sending_Send","Exception in upload_wavfiles",e,1);
 					return false;
 				}
@@ -436,12 +436,12 @@ public class Sending_Send extends DefaultPanel {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
                 parent.set_comstatus(Localization.l("main_sending_error_retrieving_refno"));
 			}
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("Sending_Send","Exception in retrieve_refno",e,1);
 		}
 		return b;

@@ -129,7 +129,7 @@ public class ProjectDlg extends JDialog implements ComponentListener, WindowList
 			//will return download finished to this dialogs panel actionhandler
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

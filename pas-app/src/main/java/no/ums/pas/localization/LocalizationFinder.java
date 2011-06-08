@@ -44,7 +44,7 @@ public class LocalizationFinder
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			return null;
 		}
 	}		

@@ -33,7 +33,7 @@ public class StatusSendingList extends ArrayList<StatusSending> implements Actio
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 	}
@@ -161,7 +161,7 @@ public class StatusSendingList extends ArrayList<StatusSending> implements Actio
 			new WSMaxAlloc(max, callback, "act_max_alloc_set").start();
 		} catch(Exception e) {
 			log.debug(e.getMessage());
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 			Error.getError().addError("StatusSendingList","Exception in set_maxalloc",e,1);
 		}
 		

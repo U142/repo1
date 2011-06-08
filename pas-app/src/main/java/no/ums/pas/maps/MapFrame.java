@@ -851,7 +851,7 @@ public class MapFrame extends JPanel implements ActionListener {
         } catch (Exception e) {
             //log.debug("Error loading map " + e.getMessage());
             //Error.getError().addError("MapFrame","Exception in load_map",e,1);
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
             PAS.pasplugin.onMapLoadFailed(this.get_maploader());
         }
         try {

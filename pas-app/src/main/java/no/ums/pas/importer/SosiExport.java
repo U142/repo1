@@ -1,6 +1,8 @@
 package no.ums.pas.importer;
 
 
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.storage.StorageController;
 import no.ums.pas.maps.defines.CommonFunc;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 
 public class SosiExport
 {
+
+    private static final Log log = UmsLog.getLogger(SosiExport.class);
+
 	private AlertVO [] alert;
 	private File file;
 	public static final String MIME_TYPE_SOSI_ = ".sos";
@@ -86,7 +91,7 @@ public class SosiExport
 				MAXNE = coor.LL2UTM(23, maxne_ll.get_lat(), maxne_ll.get_lon());
 				MINNE = coor.LL2UTM(23, minne_ll.get_lat(), minne_ll.get_lon());
 			} catch(Exception err) {
-				err.printStackTrace();
+				log.warn(err.getMessage(), err);
 			}
 			
 			switch(utmzone)
