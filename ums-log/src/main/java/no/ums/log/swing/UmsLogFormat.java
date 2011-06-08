@@ -1,7 +1,5 @@
 package no.ums.log.swing;
 
-import com.sun.xml.internal.ws.developer.SchemaValidation;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Formatter;
