@@ -1926,11 +1926,14 @@ public class StatusSending extends Object {
 						SoundlibFileWav f = (SoundlibFileWav)e.getSource();
 						if(player!=null)
 							player.getPlayer().stop();
-						player = new SoundPlayer(f.get_file().getPath(), null, null, null, true);
+						if(f.get_file().getPath()!=null)
+						{
+							player = new SoundPlayer(f.get_file().getPath(), null, null, null, true);
+							player.getPlayer().play();
+						}
 						//player.initialize_player(f.get_file().getPath(), true);
 
 						//m_playpanel.initialize_player(url, false);
-						player.getPlayer().play();
 					}
 					catch(Exception err)
 					{
