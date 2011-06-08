@@ -86,9 +86,9 @@ public abstract class AbstractLog<L> implements Log {
         if (isLoggable(level)) {
             final Object last = (args.length > 0) ? args[args.length - 1] : null;
             if (last instanceof Throwable) {
-                logImpl(level, String.format(msg, args), (Throwable) last);
+                logImpl(level, String.format(msg!=null ? msg : "<NO TEXT>", args), (Throwable) last);
             } else {
-                logImpl(level, String.format(msg, args));
+                logImpl(level, String.format(msg!=null ? msg : "<NO TEXT>", args));
             }
         }
     }

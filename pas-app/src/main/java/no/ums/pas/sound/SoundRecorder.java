@@ -101,7 +101,7 @@ public class SoundRecorder extends Thread {
 	        	
 	        }
     	}
-    	return false;
+    	return LINE_AVAILABLE;
     }
     
     private AudioFileFormat.Type m_targetType;

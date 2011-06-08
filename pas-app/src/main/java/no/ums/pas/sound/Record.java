@@ -27,7 +27,7 @@ public class Record {
 	private int RECTYPE;
 	private ActionListener m_osc_callback = null;
 	AudioFormat m_audioformat;
-	boolean bMicAlreadyTested = false;
+	static boolean bMicAlreadyTested = false;
 	
 	public Record(String sz_path, int RECTYPE, ActionListener osc_callback, AudioFormat format, boolean bRequireMic) 
 			throws Exception {
