@@ -23,7 +23,7 @@ public class LogFrameMain {
 
     public static void main(String args[]) throws IOException {
         final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        LogRecordCollector.install(null);
+        LogRecordCollector.install(null, true);
         LogFrame.install();
         log.debug("Test message");
         log.debug("Test message");

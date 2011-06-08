@@ -31,7 +31,62 @@ public class ExecApp {
     private static final Log log = UmsLog.getLogger(ExecApp.class);
 
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
+        // Enable debug logging when there are no JNLP services available
+        final boolean enableDebugLogging = ServiceManager.getServiceNames() == null;
+        // Install logging handler and frame
+        LogRecordCollector.install(new LogMailSender() {
+            @Override
+            public void sendMail(String id, String content) {
+                final StringWriter sw = new StringWriter();
+                final PrintWriter pw = new PrintWriter(sw);
+
+                final UserInfo userinfo = (PAS.get_pas() == null) ? null : PAS.get_pas().get_userinfo();
+
+                pw.printf("Error report\n");
+                pw.printf("Error id:   %s\n",id);
+                if (userinfo != null) {
+                    pw.printf("Username:   %s\n", userinfo.get_userid());
+                    pw.printf("Company:    %s\n", userinfo.get_compid());
+                    pw.printf("Department: %s\n", userinfo.get_current_department());
+                } else {
+                    pw.printf("User info:  Not logged in\n");
+                }
+                if (PAS.get_pas() != null) {
+                    pw.printf("Pas site:   %s\n",PAS.get_pas().get_pasws());
+                    pw.printf("Code base:  %s\n", PAS.get_pas().get_codebase());
+                } else {
+                    pw.println("PAS not ready yet - args:");
+                    for (String arg : args) {
+                        pw.print('\t');
+                        pw.println(arg);
+                    }
+                }
+                pw.println("******************************************");
+                pw.println(content);
+                pw.close();
+
+                if (userinfo == null || userinfo.get_mailaccount() == null) {
+                    final MailSendErrorDialog mailSendErrorDialog = new MailSendErrorDialog(LogFrame.getInstance());
+                    mailSendErrorDialog.getModel().setText(sw.toString());
+                    mailSendErrorDialog.setVisible(true);
+                } else {
+                    PAS.pasplugin.onSendErrorMessages(sw.toString(), userinfo.get_mailaccount(), new Smtp.smtp_callback() {
+
+                        @Override
+                        public void finished() {
+
+                        }
+
+                        @Override
+                        public void failed(String e) {
+                            JOptionPane.showMessageDialog(PAS.get_pas(), "Error sending mail, please check your settings");
+                        }
+                    });
+                }
+            }
+        }, enableDebugLogging);
+
         //Object connect_timeout = System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", "20000") ;
         //Object read_timeout = System.getProperties().setProperty("sun.net.client.defaultReadTimeout", "3600000" ) ;
         Object connect_timeout;
@@ -105,7 +160,6 @@ public class ExecApp {
 
         if (ServiceManager.getServiceNames() == null) {
             sz_codebase = sz_sitename;
-            LogRecordCollector.addSystemOutLogger();
         }
         else {
             try {
@@ -133,50 +187,7 @@ public class ExecApp {
         m_pas.setVB4Url(sz_vb4_url);
         PAS.pasplugin = loadPlugin();
         PasApplication.init(sz_pasws);
-        // Install logging handler and frame
-        LogRecordCollector.install(new LogMailSender() {
-            @Override
-            public void sendMail(String id, String content) {
-                final StringWriter sw = new StringWriter();
-                final PrintWriter pw = new PrintWriter(sw);
 
-                final UserInfo userinfo = PAS.get_pas().get_userinfo();
-
-                pw.printf("Error report\n");
-                pw.printf("Error id:   %s\n",id);
-                if (userinfo != null) {
-                    pw.printf("Username:   %s\n", userinfo.get_userid());
-                    pw.printf("Company:    %s\n", userinfo.get_compid());
-                    pw.printf("Department: %s\n", userinfo.get_current_department());
-                } else {
-                    pw.printf("User info:  Not logged in\n");
-                }
-                pw.printf("Pas site:   %s\n",PAS.get_pas().get_pasws());
-                pw.printf("Code base:  %s\n", PAS.get_pas().get_codebase());
-                pw.println("******************************************");
-                pw.println(content);
-                pw.close();
-
-                if (userinfo == null || userinfo.get_mailaccount() == null) {
-                    final MailSendErrorDialog mailSendErrorDialog = new MailSendErrorDialog(LogFrame.getInstance());
-                    mailSendErrorDialog.getModel().setText(sw.toString());
-                    mailSendErrorDialog.setVisible(true);
-                } else {
-                    PAS.pasplugin.onSendErrorMessages(sw.toString(), userinfo.get_mailaccount(), new Smtp.smtp_callback() {
-
-                        @Override
-                        public void finished() {
-
-                        }
-
-                        @Override
-                        public void failed(String e) {
-                            JOptionPane.showMessageDialog(PAS.get_pas(), "Error sending mail, please check your settings");
-                        }
-                    });
-                }
-            }
-        });
         LogFrame.install();
 
         SwingUtilities.invokeLater(new Runnable() {

@@ -348,7 +348,7 @@ public class LogFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        LogRecordCollector.install(null);
+        LogRecordCollector.install(null, true);
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));
         UmsLog.getLogger(LogFrame.class).debug("A Test message", new Exception("Test exception"));

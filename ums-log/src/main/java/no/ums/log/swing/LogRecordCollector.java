@@ -39,12 +39,43 @@ public class LogRecordCollector extends Handler {
     // As we only deploy to the Oracle JDK, we can ignore this warning.
     // http://findbugs.sourceforge.net/bugDescriptions.html#LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE")
-    public static void install(@Nullable LogMailSender logMailSender) {
-        umsLog.addHandler(new LogRecordCollector());
+    public static void install(@Nullable LogMailSender logMailSender, final boolean enableDebugLogging) {
+        umsLog.setUseParentHandlers(false);
         umsLog.setLevel(Level.FINEST);
+        umsLog.addHandler(new LogRecordCollector());
         if (logMailSender != null) {
             LogRecordCollector.logMailSender = logMailSender;
         }
+
+        // We log everything, so no need for the parent to log our messages
+        umsLog.addHandler(new Handler() {
+
+            {
+                setLevel((enableDebugLogging) ? Level.ALL : Level.WARNING);
+            }
+            private final SimpleFormatter simpleFormatter = new SimpleFormatter();
+
+            @Override
+            public void publish(LogRecord record) {
+                if (isLoggable(record)) {
+                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                        System.err.print(simpleFormatter.format(record));
+                    } else {
+                        System.out.print(simpleFormatter.format(record));
+                    }
+                }
+            }
+
+            @Override
+            public void flush() {
+                // Noop
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                // Noop
+            }
+        });
     }
 
     @Override
@@ -106,33 +137,4 @@ public class LogRecordCollector extends Handler {
         logMailSender.sendMail(id, sw.toString());
     }
 
-    public static void addSystemOutLogger() {
-        // We log everything, so no need for the parent to log our messages
-        umsLog.setUseParentHandlers(false);
-        umsLog.addHandler(new Handler() {
-
-            private final SimpleFormatter simpleFormatter = new SimpleFormatter();
-
-            @Override
-            public void publish(LogRecord record) {
-                if (isLoggable(record)) {
-                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-                        System.err.print(simpleFormatter.format(record));
-                    } else {
-                        System.out.print(simpleFormatter.format(record));
-                    }
-                }
-            }
-
-            @Override
-            public void flush() {
-                // Noop
-            }
-
-            @Override
-            public void close() throws SecurityException {
-                // Noop
-            }
-        });
-    }
 }
