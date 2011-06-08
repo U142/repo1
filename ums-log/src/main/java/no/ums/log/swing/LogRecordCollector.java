@@ -92,9 +92,7 @@ public class LogRecordCollector extends Handler {
 
     @Override
     public void publish(LogRecord record) {
-//        if (record.getLoggerName().startsWith("no")) {
-            MODEL.add(record);
-//        }
+        MODEL.add(record);
     }
 
     @Override
@@ -108,7 +106,6 @@ public class LogRecordCollector extends Handler {
     }
 
     public static void sendMail() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         final List<LogRecord> allRecords = MODEL.getAllRecords();
@@ -138,7 +135,7 @@ public class LogRecordCollector extends Handler {
         for (LogRecord logRecord : allRecords.subList(0, lastThrowable)) {
             // Only include logging statements from the last 10 seconds
             if (logRecord.getMillis() > startTime) {
-                pw.printf("%s %-6s %s\n\t%s\n", df.format(new Date(logRecord.getMillis())), logRecord.getLevel(), logRecord.getLoggerName(), logRecord.getMessage());
+                pw.printf("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%tS %-6s %s\n\t%s\n", logRecord.getMillis(), logRecord.getLevel(), logRecord.getLoggerName(), logRecord.getMessage());
                 final Throwable throwable = logRecord.getThrown();
                 if (throwable != null) {
                     throwable.printStackTrace(pw);
