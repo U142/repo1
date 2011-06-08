@@ -33,19 +33,6 @@ public class HouseDownloadCache {
     private static final List<UAddress> EMPTY = Collections.emptyList();
     private static final Log log = UmsLog.getLogger(HouseDownloadCache.class);
 
-    public static class HouseInfo {
-        private final LonLat pos;
-
-        public HouseInfo(@Nonnull LonLat pos) {
-            this.pos = Preconditions.checkNotNull(pos, "pos cannot be null");
-        }
-
-
-        public LonLat getPos() {
-            return pos;
-        }
-    }
-
     private static final int MIN_ZOOM = 16;
     private static final int MAX_ZOOM = 18;
 
