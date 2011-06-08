@@ -1,6 +1,5 @@
 package no.ums.pas.parm.xml;
 
-import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.GISRecord;
 import no.ums.pas.maps.defines.GISShape;
@@ -64,7 +63,7 @@ public class XmlGISReader {
 					for(int j=0;j<childnodes.getLength();j++) {
 						Node node = childnodes.item(j);
 //						log.debug(node.getAttributes());
-						if(node.getClass().equals(DeferredElementImpl.class)) {	// Denne er litt jalla				
+						if(node instanceof Element) {	// Denne er litt jalla
 							Element child = (Element)node;
 							GISRecord gisr = new GISRecord(child.getAttribute("municipal"),
 									child.getAttribute("streetid"),

@@ -8,7 +8,6 @@ import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
 import no.ums.ws.common.UMapPoint;
-import sun.security.util.Password;
 
 import java.awt.Dimension;
 import java.awt.Point;

@@ -3,39 +3,29 @@ package no.ums.pas.core.mainui;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
-import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults;
-import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.popupmenus.PUOpenStatus;
 import no.ums.pas.core.project.Project;
+import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
 import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
-import no.ums.pas.status.LBASEND;
 import no.ums.pas.status.StatusListObject;
 import no.ums.pas.ums.tools.TextFormat;
 import no.ums.pas.ums.tools.Utils;
+import no.ums.ws.common.UDeleteStatusResponse;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
-
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.SystemColor;
 import java.util.ArrayList;
-import no.ums.pas.core.ws.WSDeleteStatus.IDeleteStatus;
-import no.ums.ws.common.UDeleteStatusResponse;
 
 
 public class SearchPanelStatusList extends SearchPanelResults {

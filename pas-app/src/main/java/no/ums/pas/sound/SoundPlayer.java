@@ -5,7 +5,6 @@ import no.ums.log.UmsLog;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.ums.tools.StdTextLabel;
 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
