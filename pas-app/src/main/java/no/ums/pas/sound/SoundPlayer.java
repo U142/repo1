@@ -76,10 +76,6 @@ public class SoundPlayer {
 		} catch(Exception e) {
 			log.warn(e.getMessage(), e);
 		}
-		catch(Exception e)
-		{
-			
-		}
 	}
 	void set_timer(String sz_time) {
         m_txt_seconds.setText(sz_time + Localization.l("common_seconds_short"));
