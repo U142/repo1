@@ -1,26 +1,16 @@
 package no.ums.log.swing;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.PrivateKey;
-import java.security.acl.Owner;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
 import java.util.zip.CRC32;
 
 /**
@@ -53,28 +43,16 @@ public class LogRecordCollector extends Handler {
 
             {
                 setLevel((enableDebugLogging) ? Level.ALL : Level.WARNING);
+                setFormatter(new UmsLogFormat(true));
             }
             @Override
             public void publish(LogRecord record) {
                 if (isLoggable(record)) {
-                    String logger = record.getLoggerName();
-                    while (logger.length() > 25 && logger.indexOf('.') != -1) {
-                        logger = logger.substring(logger.indexOf('.')+1);
-                    }
-                    String text = String.format("%1$tH:%1$tM:%1$tS,%tL %-6s [%-25s] %s", record.getMillis(), record.getLevel().getName(), logger, record.getMessage());
-
                     if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-                        System.err.println(text);
-                        if (record.getThrown() != null) {
-                            record.getThrown().printStackTrace(System.err);
-                        }
+                        System.err.println(getFormatter().format(record));
                     } else {
-                        System.out.println(text);
-                        if (record.getThrown() != null) {
-                            record.getThrown().printStackTrace(System.out);
-                        }
+                        System.out.println(getFormatter().format(record));
                     }
-
                 }
             }
 
