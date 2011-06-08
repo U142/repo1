@@ -43,7 +43,7 @@ public class SoundPlayer {
 	StdTextLabel m_txt_seconds;
 	
 	public SoundPlayer(String sz_filename, boolean b_default_path) {
-		this(sz_filename, new JSlider(), null, new StdTextLabel(), b_default_path);
+		this(sz_filename, new JSlider(), new SoundRecorderPanel(null, "", 0, false), new StdTextLabel(), b_default_path);
 	}
 	
 	public SoundPlayer(String sz_filename, JSlider slider, SoundRecorderPanel rec_panel, 
