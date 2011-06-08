@@ -42,13 +42,16 @@ public class SoundPlayer {
 	Timer timer;
 	StdTextLabel m_txt_seconds;
 	
+	public SoundPlayer(String sz_filename, boolean b_default_path) {
+		this(sz_filename, new JSlider(), null, new StdTextLabel(), b_default_path);
+	}
+	
 	public SoundPlayer(String sz_filename, JSlider slider, SoundRecorderPanel rec_panel, 
 			StdTextLabel txt_seconds, boolean b_default_path) {
 		m_sz_filename = sz_filename;
 		m_txt_seconds = txt_seconds;
 		progress = slider;
 		m_panel = rec_panel;
-		//this.btn_play = btn_play;
 		File file = new File((b_default_path ? SoundRecorder.getVocTempPath() : "") + m_sz_filename);
 		try {
 			player_ctrl = new SoundPlayer(file, null, slider, rec_panel, txt_seconds);
