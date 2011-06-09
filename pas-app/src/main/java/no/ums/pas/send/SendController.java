@@ -382,7 +382,7 @@ public class SendController implements ActionListener {
 				obj.get_sendproperties().get_cell_broadcast_text().get_cbx_messages().addItem(alert.getCBMessages().get(i));
 		
 		}
-		
+		obj.get_toolbar().canFinalize();
 		return obj;
 	}
 	
