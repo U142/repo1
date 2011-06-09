@@ -159,7 +159,7 @@ public class TreeController {
 		// IllegalArgumentException("parentNode in addParentToTree is null");
 		// log.debug("addParentToTree(" + o.toString() + ") start");
 
-		if (o.getClass().equals(ObjectVO.class)) { // Object is of class
+		if (o instanceof ObjectVO) { // Object is of class
 													// ObjectVO
 
 			ObjectVO newObject = (ObjectVO) o;
@@ -187,7 +187,7 @@ public class TreeController {
 				addChildrenToTree(newRootFolder);
 		}
 
-		else if (o.getClass().equals(EventVO.class)) { // Object is of class
+		else if (o instanceof EventVO) { // Object is of class
 														// EventVO
 		// if (parentNode == null) throw new ParmException("parentNode is null
 		// for Event insertion");
@@ -213,10 +213,12 @@ public class TreeController {
 						+ " has no children. Goodly. :P");
 			else
 				addChildrenToTree(newRootFolder);
-		} else if (o.getClass().equals(AlertVO.class)) { // Object is of
+		} else if (o instanceof AlertVO) { // Object is of
 															// class AlertVO
 		// if (parentNode == null) throw new ParmException("parentNode is null
 		// for Alert insertion");
+			if (parentNode == null)
+				parentNode = gui.getRootnode();
 
 			AlertVO newObject = (AlertVO) o;
 			newRootFolder = new DefaultMutableTreeNode(newObject);

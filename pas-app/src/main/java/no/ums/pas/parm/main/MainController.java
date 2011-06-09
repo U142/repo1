@@ -1626,6 +1626,10 @@ public class MainController implements ActionListener, TreeModelListener,
 						else { // new element.
 							String parent = aVO.getParent();
 							DefaultMutableTreeNode parentNode = getParentNode(parent, this.treeCtrl.getGui().getTree());
+							if(parentNode==null)
+							{
+								log.error("parentNode==null for alertpk %s [%s]", aVO.getAlertpk(), aVO.getName());
+							}
 
 							this.treeCtrl.addParentToTree(aVO, parentNode);
 						}
