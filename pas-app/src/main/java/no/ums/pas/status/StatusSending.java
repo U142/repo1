@@ -2137,12 +2137,12 @@ public class StatusSending extends Object {
 			}
 			else if("act_kill_sending".equals(e.getActionCommand()))
 			{
-				
+				String szConfirmHeader = String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type()));
 				//ask first
 				StringBuilder szAsk = new StringBuilder();
 				szAsk.append("<html>");
 				szAsk.append("<font color=red>");
-				szAsk.append(String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type())));
+				szAsk.append(szConfirmHeader); //String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type())));
 				szAsk.append("</font>");
 				szAsk.append("<br>");
 				szAsk.append("<table>");
@@ -2178,7 +2178,7 @@ public class StatusSending extends Object {
 				}
 				szAsk.append("</html>");
 				
-				if(JOptionPane.showConfirmDialog(this, szAsk, Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+				if(JOptionPane.showConfirmDialog(this, szAsk, szConfirmHeader, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				{
 					setCancelRequestSent(true);
 					m_btn_kill.setEnabled(false);
