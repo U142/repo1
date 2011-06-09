@@ -2138,27 +2138,15 @@ public class StatusSending extends Object {
 			else if("act_kill_sending".equals(e.getActionCommand()))
 			{
 				String szConfirmHeader = String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type()));
+				
 				//ask first
 				StringBuilder szAsk = new StringBuilder();
+				
 				szAsk.append("<html>");
-				szAsk.append("<font color=red>");
-				szAsk.append(szConfirmHeader); //String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type())));
-				szAsk.append("</font>");
-				szAsk.append("<br>");
-				szAsk.append("<table>");
-				szAsk.append("<tr><td>");
-				szAsk.append(get_refno());
-				szAsk.append("</td><td>");
-				szAsk.append(StatusListObject.getChannel(get_type()));
-				szAsk.append("</td><td>");
-				szAsk.append(String.format("\"%s\"", get_sendingname()));
-				szAsk.append("</td></tr>");
-				szAsk.append("</table>");
 				
 				//test if there are more active sendings in this project
 				if(!Variables.getStatusController().allSendingsFinished(StatusSending.this))
 				{
-					szAsk.append("<br><br>");
 					szAsk.append("<font color=red>");
 					szAsk.append(Localization.l("common_kill_sending_still_active_channels"));
 					szAsk.append("</font>");
@@ -2175,7 +2163,24 @@ public class StatusSending extends Object {
 						szAsk.append("</td></tr>");
 					}
 					szAsk.append("</table>");
+					szAsk.append("<br><br>");
 				}
+				
+				szAsk.append("<font color=red>");
+				szAsk.append(szConfirmHeader); //String.format(Localization.l("common_kill_sending_are_you_sure"), StatusListObject.getChannel(get_type())));
+				szAsk.append("</font>");
+				szAsk.append("<br>");
+				szAsk.append("<table>");
+				szAsk.append("<tr><td>");
+				szAsk.append(get_refno());
+				szAsk.append("</td><td>");
+				szAsk.append(StatusListObject.getChannel(get_type()));
+				szAsk.append("</td><td>");
+				szAsk.append(String.format("\"%s\"", get_sendingname()));
+				szAsk.append("</td></tr>");
+				szAsk.append("</table>");
+				
+
 				szAsk.append("</html>");
 				
 				if(JOptionPane.showConfirmDialog(this, szAsk, szConfirmHeader, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
