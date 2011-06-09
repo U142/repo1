@@ -1647,9 +1647,12 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
         public bool UpdateInhabitant(ref UAddress adr, ref ULOGONINFO l)
         {
             OdbcDataReader rs = null;
+
+            String szSQL = String.Empty;
+            String szSQLError = this.sz_constring;
             try
             {
-                String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}",
+                szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_copy_adr {0}, {1}, {2}, {3}",
                                 l.l_deptpk, adr.lat, adr.lon, adr.kondmid);
                 rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
                 if (rs.Read())
@@ -1657,7 +1660,11 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                     //adr.kondmid = rs.GetString(0);
                     Int64 kondmid = rs.GetInt64(0);
                     if (kondmid <= 0)
-                        throw new UDbQueryException("Recordset error");
+                    {
+                        String szError = "Unable to make a copy of address with id="+adr.kondmid;
+                        ULog.error(0, szError, szSQLError + " " + szSQL);
+                        throw new UDbQueryException(szError);
+                    }
                     adr.kondmid = kondmid.ToString();
                     rs.Close();
                 }
@@ -1670,9 +1677,11 @@ sprintf(szSQL,  "SELECT isnull(KON_DMID, 0) KON_DMID, NAVN, ADRESSE, isnull(HUSN
                 //return false;
                 throw new UDbNoDataException("Error while moving inhabitant");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                String szError = "Unable to make a copy and update address with id=" + adr.kondmid;
+                ULog.error(0, szError, szSQLError + " " + szSQL);
+                throw new UDbQueryException(szError);
             }
             finally
             {
