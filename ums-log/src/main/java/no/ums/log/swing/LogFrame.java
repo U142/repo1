@@ -73,6 +73,10 @@ public class LogFrame extends javax.swing.JFrame {
 
     private boolean scrollEnabled = true;
 
+    public void setSendMailEnabled(boolean enabled) {
+        btnSendMail.setEnabled(enabled);
+    }
+
     /** Creates new form LogFrame2 */
     private void windowClosed() {
         LogRecordCollector.MODEL.clear();

@@ -71,15 +71,18 @@ public class ExecApp {
                     mailSendErrorDialog.getModel().setText(sw.toString());
                     mailSendErrorDialog.setVisible(true);
                 } else {
+                    LogFrame.getInstance().setSendMailEnabled(false);
                     PAS.pasplugin.onSendErrorMessages(sw.toString(), userinfo.get_mailaccount(), new Smtp.smtp_callback() {
 
                         @Override
                         public void finished() {
-
+                            LogFrame.getInstance().setSendMailEnabled(true);
+                            JOptionPane.showMessageDialog(LogFrame.getInstance(), "Mail sent");
                         }
 
                         @Override
                         public void failed(String e) {
+                            LogFrame.getInstance().setSendMailEnabled(true);
                             JOptionPane.showMessageDialog(PAS.get_pas(), "Error sending mail, please check your settings");
                         }
                     });
