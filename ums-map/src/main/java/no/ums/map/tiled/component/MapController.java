@@ -26,6 +26,8 @@ public class MapController implements MapComponent.Controller {
         final ZoomLookup zoomLookup = tileLookup.getZoomLookup(model.getZoom());
         final LonLat lonLat = zoomLookup.getLonLat(model.getTopLeft(), point.x, point.y);
         final ZoomLookup level = tileLookup.getZoomLookup(model.getZoom()+delta);
+        if(level.getZoomLevel()<=1)
+        	return;
         final Point centerAbs = level.getPoint(lonLat);
         final LonLat ll1 = level.getLonLat(centerAbs.x - point.x, centerAbs.y - point.y);
         model.setTopLeft(ll1);
