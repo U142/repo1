@@ -79,11 +79,14 @@ public class LogFrame extends javax.swing.JFrame {
 
     /** Creates new form LogFrame2 */
     private void windowClosed() {
-        LogRecordCollector.MODEL.clear();
+        //LogRecordCollector.MODEL.clear();
     }
 
     private void btnSendMailActionPerformed() {
-        LogRecordCollector.sendMail();
+        if(LogRecordCollector.sendMail())
+        {
+        	LogRecordCollector.MODEL.clear(); //clear all records sent
+        }
     }
 
     private void btnClearActionPerformed() {

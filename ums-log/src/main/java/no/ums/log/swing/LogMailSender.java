@@ -5,5 +5,5 @@ package no.ums.log.swing;
  */
 public interface LogMailSender {
 
-    void sendMail(String id, String content);
+    boolean sendMail(String id, String content);
 }

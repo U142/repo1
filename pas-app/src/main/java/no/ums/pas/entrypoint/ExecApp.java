@@ -37,7 +37,7 @@ public class ExecApp {
         // Install logging handler and frame
         LogRecordCollector.install(new LogMailSender() {
             @Override
-            public void sendMail(String id, String content) {
+            public boolean sendMail(String id, String content) {
                 final StringWriter sw = new StringWriter();
                 final PrintWriter pw = new PrintWriter(sw);
 
@@ -87,6 +87,7 @@ public class ExecApp {
                         }
                     });
                 }
+                return true;
             }
         }, enableDebugLogging);
 

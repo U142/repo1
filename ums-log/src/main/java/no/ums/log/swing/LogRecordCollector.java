@@ -21,8 +21,9 @@ public class LogRecordCollector extends Handler {
     private static final Logger umsLog = Logger.getLogger("no.ums");
     private static LogMailSender logMailSender = new LogMailSender() {
         @Override
-        public void sendMail(String id, String content) {
+        public boolean sendMail(String id, String content) {
             System.out.printf("Dummy mail:\n%s\nID: %s\n", content, id);
+            return true;
         }
     };
 
@@ -83,7 +84,7 @@ public class LogRecordCollector extends Handler {
         // Noop
     }
 
-    public static void sendMail() {
+    public static boolean sendMail() {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         final List<LogRecord> allRecords = MODEL.getAllRecords();
@@ -121,7 +122,7 @@ public class LogRecordCollector extends Handler {
             }
         }
         pw.close();
-        logMailSender.sendMail(id, sw.toString());
+        return logMailSender.sendMail(id, sw.toString());
     }
 
 }
