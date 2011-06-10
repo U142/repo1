@@ -252,6 +252,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
         help.add(OtherActions.HELP_ABOUT);
         help.add(OtherActions.SHOW_CONTACT_INFO);
         help.add(OtherActions.DOWNLOAD_DOCUMENTATION);
+        help.add(OtherActions.HELP_SHOWLOG);
 		return true;
 	}
 	

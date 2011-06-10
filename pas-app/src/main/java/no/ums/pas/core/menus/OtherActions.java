@@ -2,6 +2,7 @@ package no.ums.pas.core.menus;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.log.swing.LogFrame;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.SettingsGUI;
@@ -132,6 +133,15 @@ public interface OtherActions {
             PAS.pasplugin.onHelpAbout();
         }
     };
+    
+    // act_help_showlog - show logging window
+    Action HELP_SHOWLOG = new UmsAction("mainmenu_help_showlog") {
+    	@Override
+    	public void actionPerformed(ActionEvent e) {
+    		LogFrame.getInstance().setVisible(true);
+    	}
+    };
+    
     // act_trainingmode - mainmenu_trainingmode
     Action HELP_TRAININGMODE = new UmsAction("mainmenu_trainingmode") {
         @Override
