@@ -904,11 +904,12 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 			ComboRow row = (ComboRow)e.getItem();
 			if(row.getId()!=null)
 			{
-				if(row.getId().getClass().equals(StatusSending.class))
+				if(row.getId() instanceof StatusSending)//row.getId().getClass().equals(StatusSending.class))
 				{
 					StatusSending s = (StatusSending)row.getId();
 					String sz_filterby = s.toString();
-                    log.debug(Localization.l("main_status_filter_codes_by") + " " + sz_filterby);
+					
+                    log.debug(Localization.l("main_status_filter_codes_by") + " \"" + s.getSendingname() + "\""); //+ sz_filterby);
 					get_statuscodeframe().setFilter(s);
 					return;
 				}
