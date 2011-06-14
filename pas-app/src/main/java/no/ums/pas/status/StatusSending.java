@@ -184,7 +184,7 @@ public class StatusSending extends Object {
 	}
 	public JLabel getCompletionPercentLabel() {
 		//m_lbl_completion_percent.setText(n_sending_completion_percent + "%");
-		m_lbl_completion_percent.setText("" + Math.round(get_percentage()));
+		m_lbl_completion_percent.setText(Math.round(get_percentage()) + "%");
 		return m_lbl_completion_percent;
 	}
 	

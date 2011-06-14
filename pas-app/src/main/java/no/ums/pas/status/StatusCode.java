@@ -2,6 +2,8 @@ package no.ums.pas.status;
 
 import java.awt.Color;
 
+import javax.swing.UIManager;
+
 public class StatusCode extends Object implements Comparable {
 	private int m_n_code;
 	private boolean m_b_isuserdefined; //if a custom text is set in profile
@@ -73,6 +75,7 @@ public class StatusCode extends Object implements Comparable {
 	{
 		m_n_code = n_code;
 		m_sz_status = sz_status;
+		genColor();
 	}
 	public StatusCode(String [] sz_values)
 	{
@@ -85,6 +88,7 @@ public class StatusCode extends Object implements Comparable {
 		catch(Exception e) {
 			m_b_isuserdefined = false;
 		}
+		genColor();
 	}
 	public StatusCode(int n_code, String sz_status, boolean b_reserved, int n_count, boolean b_isuserdefined) {
 		m_n_code = n_code;
@@ -94,6 +98,27 @@ public class StatusCode extends Object implements Comparable {
 		m_b_reserved = b_reserved;
 		m_n_current_count = n_count;
 		m_b_isuserdefined = b_isuserdefined;
+		genColor();
+	}
+	
+	protected void genColor()
+	{
+		try
+		{
+			Object obj = UIManager.get(String.format("StatusCode.color.%s", get_code()));
+			if(obj!=null && obj instanceof Color)
+			{
+				set_color((Color)obj); //new Color(Integer.parseInt(UIManager.getString(String.format("StatusCode.color.%s", get_code())),16)));
+			}
+			else
+				set_color(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random() ) );
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			
+			set_color(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random() ) );
+		}
 	}
 
     @Override

@@ -184,43 +184,9 @@ public class OpenStatuscodes extends SearchPanelResults {
 				}
 
 				if(!current.get_addedtolist()) {
-					Color col;
-					
-					switch(current.get_code()) {
-						case 0:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						case 2:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						case 168:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						case 169:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						case 8000:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						case 8002:
-							col = new Color(Integer.parseInt(UIManager.getString(String.format("statuscodecolor.%s", current.get_code())),16));
-							break;
-						default:
-							col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
-							break;
-					}
-					/*
-					if(!current.isUserDefined())
-					{
-						col = Color.black;
-					}
-					else
-						col = new Color( (float)Math.random(), (float)Math.random(), (float)Math.random());
-						*/
-					current.set_color( col );
 					Object visibleType = new Boolean(visible);
 					Object animType = new Boolean(false);
-					insert_row(new Object[] { current, current.get_status(), hits, visibleType, animType, (colType!=null ? "" : col)}, -1);
+					insert_row(new Object[] { current, current.get_status(), hits, visibleType, animType, (colType!=null ? "" : current.get_color())}, -1);
 					current.set_addedtolist();
 				}
 				else { //update text and count
