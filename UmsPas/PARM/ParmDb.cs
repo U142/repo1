@@ -2349,6 +2349,23 @@ namespace com.ums.UmsParm
             }
             
         }
+
+        public String getPAShapeFromDb(long l_alertpk, PASHAPETYPES type)
+        {
+            String ret = null;
+            ExecNonQuery("set textsize 10000000");
+            String szSQL = String.Format("SELECT sz_xml FROM PASHAPE WHERE l_pk={0} AND l_type={1}",
+                                    l_alertpk, (long)type);
+
+            OdbcDataReader rs_poly = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
+            if (rs_poly.Read())
+            {
+                ret = rs_poly.GetString(0);
+            }
+            rs_poly.Close();
+            return ret;
+        }
+
         public UShape setPAShapeObsolete(ULOGONINFO logon, UDEPARTMENT department,UShape shape)
         {
             String szSQL = "";

@@ -15,7 +15,7 @@ namespace com.ums.UmsParm
     {
         protected ULOGONINFO m_logon;
         public void SetLogonInfo(ref ULOGONINFO logon) { m_logon = logon; }
-        protected String l_alertpk;
+        protected long l_alertpk = 0;
         protected URGBA m_rgba;
         public URGBA getRGBA() { return m_rgba; }
         protected UShape m_shape;
@@ -36,15 +36,25 @@ namespace com.ums.UmsParm
             this.jobType = jobType;
         }
 
+        public UXmlAlert(long l_alertpk, string path, string file)
+            : base(path, file)
+        {
+            n_sendingtype = -1;
+            this.l_alertpk = l_alertpk;
+        }
+
         public UXmlAlert(string path, string file) : base(path, file)
         {
             n_sendingtype = -1;
         }
         public bool load(string s_localid)
         {
+            String xml = null;
             try
             {
-                createLocalVersion(s_localid); //we need to make a new xml-file first
+                PASUmsDb db = new PASUmsDb();
+                xml = db.getPAShapeFromDb(l_alertpk, PASHAPETYPES.PAALERT); //read xml from db
+                createLocalVersion(s_localid, xml); //we need to make a new xml-file first
             }
             catch (Exception e)
             {
@@ -53,7 +63,7 @@ namespace com.ums.UmsParm
             }
             try
             {
-                parse();
+                parse(xml);
                 return true;
             }
             catch (Exception e)
@@ -77,7 +87,7 @@ namespace com.ums.UmsParm
         /*
          * Create a sending file in temp path based on the content from original predefined file
          */
-        protected bool createLocalVersion(String s_localid)
+        protected bool createLocalVersion(String s_localid, String xmlStr)
         {
             UFile dest = new UFile(UCommon.UPATHS.sz_path_temp, String.Format("temp-{0}.xml", s_localid));
             try
@@ -103,17 +113,23 @@ namespace com.ums.UmsParm
             }
             try
             {
-                //TextReader tr = File.OpenText(full()); //remote source file
-                //StreamReader tr = File.OpenText(full());
-                TextReader tr = new StreamReader(full(), new UTF8Encoding(false)); //Encoding.GetEncoding("iso-8859-1")); //new FileStream(full(),FileMode.Open),Encoding.GetEncoding("iso-8859-1"));
-                String file_content = tr.ReadToEnd();
+                String file_content = String.Empty;
+                if (xmlStr == null)
+                {
+                    TextReader tr = new StreamReader(full(), new UTF8Encoding(false)); //Encoding.GetEncoding("iso-8859-1")); //new FileStream(full(),FileMode.Open),Encoding.GetEncoding("iso-8859-1"));
+                    file_content = tr.ReadToEnd();
+                    tr.Close();
+                }
+                else
+                {
+                    file_content = xmlStr;
+                }
                 tw.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
                 tw.WriteLine("<sending>");
                 tw.Write(file_content);
                 tw.WriteLine("</sending>");
                 tw.Flush();
                 //tw.Close();
-                tr.Close();
 
                 //make new local file references and ignore the original file
             }
@@ -134,11 +150,11 @@ namespace com.ums.UmsParm
         }
 
 
-        protected bool parse()
+        protected bool parse(String xml)
         {
             try
             {
-                read();
+                read(); //from file
             }
             catch(Exception)
             {

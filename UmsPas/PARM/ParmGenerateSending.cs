@@ -1373,9 +1373,9 @@ namespace com.ums.UmsParm
 
             string sz_sendingname = String.Format("{0}", pa.sz_name);
 
-            
 
-            UXmlAlert file = new UXmlAlert(UCommon.UPATHS.sz_path_predefined_areas, String.Format("a{0}.xml", pa.l_alertpk));
+
+            UXmlAlert file = new UXmlAlert(pa.l_alertpk, UCommon.UPATHS.sz_path_predefined_areas, String.Format("a{0}.xml", pa.l_alertpk));
             file.SetLogonInfo(ref logoninfo);
             file.setPercentDelegate(percentDelegate);
             file.setJobType(ProgressJobType.PARM_SEND);

@@ -496,6 +496,19 @@ namespace com.ums.UmsFile
         public UXml(string path, string file) : base(path, file)
         {
         }
+        protected bool readFromString(String xmlStr)
+        {
+            try
+            {
+                doc = new XmlDocument();
+                doc.LoadXml(xmlStr);
+                return true;
+            }
+            finally
+            {
+            }
+        }
+
         /*
          * start XmlTextReader and start first reading
          */
