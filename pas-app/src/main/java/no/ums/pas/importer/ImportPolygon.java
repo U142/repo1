@@ -415,8 +415,12 @@ public class ImportPolygon implements ActionListener {
 				}
 				if(m_callback!=null)
 				{
-					int adrtypes = ((SendOptionToolbar)m_callback).get_addresstypes();
-					Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
+					int adrtypes = 0;
+					if(m_callback instanceof SendOptionToolbar)
+					{
+						adrtypes = ((SendOptionToolbar)m_callback).get_addresstypes();
+						Variables.getSendController().remove_sending((SendOptionToolbar)m_callback);
+					}
 
 					for(int i=0; i < m_shapes_found.size(); i++)
 					{

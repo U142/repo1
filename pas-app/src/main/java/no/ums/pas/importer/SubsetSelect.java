@@ -4,7 +4,9 @@ package no.ums.pas.importer;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.SearchPanelResults;
+import no.ums.pas.maps.MapFrame.MapMode;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.send.SendObject;
 import no.ums.pas.ums.tools.StdTextLabel;
@@ -18,11 +20,13 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 
 /*manually select a subset from e.g. a SOSI file (FLATE)*/
 
-public class SubsetSelect extends JDialog  {
+public class SubsetSelect extends JDialog implements WindowListener {
 
     private static final Log log = UmsLog.getLogger(SubsetSelect.class);
     
@@ -32,14 +36,20 @@ public class SubsetSelect extends JDialog  {
 
 	SubsetSelectPanel m_panel;
 	protected StdTextLabel m_lbl_info;
+	protected ShapeStruct currentSelection = null;
 	
 	protected void close() {
 		this.setVisible(false);
+		if(currentSelection!=null)
+		{
+			PAS.pasplugin.removeShapeToPaint(currentSelection);
+		}
 	}
 	
 	public SubsetSelect(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, java.util.List<SendObject> sendings) {
 		super(PAS.get_pas(), "Select subset", true);
 		this.setModal(true);
+		this.addWindowListener(this);
 		this.setAlwaysOnTop(true);
 		m_lbl_info = new StdTextLabel("", new Dimension(dim.width, 300));
 		
@@ -63,6 +73,7 @@ public class SubsetSelect extends JDialog  {
 	public SubsetSelect(String [] sz_columns, int [] n_width, boolean [] b_editable, Dimension dim, ActionListener callback, ShapeStruct [] sendings) {
 		super(PAS.get_pas(), "Select subset", true);
 		this.setModal(true);
+		this.addWindowListener(this);
 		m_lbl_info = new StdTextLabel("", new Dimension(dim.width, 300));
 		
 		m_panel = new SubsetSelectPanel(sz_columns, n_width, b_editable, new Dimension(50,50), callback, sendings);
@@ -146,18 +157,27 @@ public class SubsetSelect extends JDialog  {
 	
 		protected void onMouseLClick(int n_row, int n_col, Object[] rowcontent, Point p) {
 			//goto area and preview polygon
-			//m_callback.actionPerformed(new ActionEvent(rowcontent[0], ActionEvent.ACTION_PERFORMED, "act_sending_preview"));
+			 //ShapeStruct shape = (ShapeStruct)((SendObject)rowcontent[0]).get_sendproperties().typecast_poly().get_shapestruct();
+			ShapeStruct shape = null;
+			SendObject sendobject = null;
+			PAS.pasplugin.removeShapeToPaint(currentSelection);
+			if(rowcontent[0] instanceof ShapeStruct)
+			{
+				shape = (ShapeStruct)rowcontent[0];
+			}
+			else if(rowcontent[0] instanceof SendObject)
+			{
+				sendobject = (SendObject)rowcontent[0];
+				shape = sendobject.get_sendproperties().get_shapestruct();
+			}
+			currentSelection = shape;
+			PAS.pasplugin.addShapeToPaint(currentSelection);
 			if(m_sendings!=null)
 			{				
 				try {
-					 ShapeStruct shape = (ShapeStruct)((SendObject)rowcontent[0]).get_sendproperties().typecast_poly().get_shapestruct();
-					//PAS.get_pas().get_mappane().set_active_shape(shape);
-					//m_edit_shape = shape;
-					// PAS.get_pas().get_parmcontroller().clearDrawQueue();
-					//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(shape);
-					//this.toolbarPanel.setActiveShape(shape);
-					String sz_desc = ((SendObject)rowcontent[0]).get_sendproperties().get_description();
+					String sz_desc = sendobject.get_sendproperties().get_description();
 					m_lbl_info.setText(sz_desc);
+					PAS.pasplugin.addShapeToPaint(shape);
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 				} catch(Exception err) {
 					log.debug(err.getMessage());
@@ -167,7 +187,7 @@ public class SubsetSelect extends JDialog  {
 			{
 				try
 				{
-					ShapeStruct shape = (ShapeStruct)rowcontent[0];
+					//ShapeStruct shape = (ShapeStruct)rowcontent[0];
 					//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(shape);
 					m_lbl_info.setText(shape.shapeName);
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
@@ -181,25 +201,37 @@ public class SubsetSelect extends JDialog  {
 		}
 	
 		protected void onMouseLDblClick(int n_row, int n_col, Object[] rowcontent, Point p) {
-			//m_callback.actionPerformed(new ActionEvent(rowcontent[0], ActionEvent.ACTION_PERFORMED, "act_sending_selected"));
+			ShapeStruct shape = null;
+			SendObject sendobject = null;
+			if(rowcontent[0] instanceof ShapeStruct)
+			{
+				shape = (ShapeStruct)rowcontent[0];
+			}
+			else if(rowcontent[0] instanceof SendObject)
+			{
+				sendobject = (SendObject)rowcontent[0];
+				shape = sendobject.get_sendproperties().get_shapestruct();
+			}
+
 			if(m_sendings!=null)
 			{
 				try {
-					ShapeStruct shape = (ShapeStruct)((SendObject)rowcontent[0]).get_sendproperties().typecast_poly().get_shapestruct();
-					PAS.get_pas().get_mappane().set_active_shape(shape);  //m_edit_shape = (ShapeStruct)((SendObject)e.getSource()).get_sendproperties().typecast_poly().get_shapestruct());
+					PAS.get_pas().get_mappane().set_active_shape(shape);
+					PAS.get_pas().get_parmcontroller().updateShape(shape);
+					Variables.getMapFrame().setPaintModeBasedOnActiveShape(false);
+
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
-					//toolbarPanel.setActiveShape(m_edit_shape = (ShapeStruct)((SendObject)e.getSource()).get_sendproperties().typecast_poly().get_shapestruct());
 				} catch(Exception err) {
 					
 				}
 			}
 			else if(m_shapes!=null)
 			{
-				ShapeStruct shape = (ShapeStruct)rowcontent[0];
 				try
 				{
-					PAS.get_pas().get_parmcontroller().clearDrawQueue();
-					PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(shape);
+					//PAS.get_pas().get_parmcontroller().clearDrawQueue();
+					//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(shape);
+					//PAS.get_pas().get_parmcontroller().updateShape(shape);
 				}
 				catch(Exception e)
 				{
@@ -208,7 +240,8 @@ public class SubsetSelect extends JDialog  {
 				try
 				{
 					//PAS.get_pas().get_parmcontroller().addShapeToDrawQueue(shape);
-					PAS.get_pas().get_mappane().set_active_shape(shape);
+					//PAS.get_pas().get_mappane().set_active_shape(shape);
+					Variables.getMapFrame().set_active_shape(shape);
 					m_callback.actionPerformed(new ActionEvent(shape, ActionEvent.ACTION_PERFORMED, "act_set_shape"));
 					PAS.get_pas().actionPerformed(new ActionEvent(shape.calc_bounds(), ActionEvent.ACTION_PERFORMED, "act_map_goto_area"));
 					m_callback.actionPerformed(new ActionEvent(shape, ActionEvent.ACTION_PERFORMED, "act_sending_selected"));
@@ -218,6 +251,7 @@ public class SubsetSelect extends JDialog  {
 					
 				}
 			}
+			//currentSelection = null; //don't clear the shape from drawqueue
 			close();
 		}
 	
@@ -238,4 +272,42 @@ public class SubsetSelect extends JDialog  {
 		}
 		
 	}
+
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		close();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		close();
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		
+	}
+	
+	
 }

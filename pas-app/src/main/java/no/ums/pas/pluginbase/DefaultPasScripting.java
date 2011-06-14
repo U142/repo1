@@ -1009,6 +1009,8 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 	
 	@Override
 	public void removeShapeToPaint(ShapeStruct s) {
+		if(s==null)
+			return;
 		String key = "s" + s.shapeID;
 		if(shapes_to_paint.containsKey(key))
 		{

@@ -53,6 +53,11 @@ public class AlertController implements ActionListener {
 		m_edit_shape = null;
 		m_edit_shape_original = null;
 	}
+	public void setEditShape(ShapeStruct s)
+	{
+		m_edit_shape = s;
+		m_edit_shape_original = s;
+	}
 	protected ShapeStruct m_edit_shape;
 	protected ShapeStruct m_edit_shape_original;
 	public ShapeStruct get_m_edit_shape() { return m_edit_shape; }
@@ -110,6 +115,7 @@ public class AlertController implements ActionListener {
 		}
 		else if("act_set_shape".equals(e.getActionCommand())) {
 			m_edit_shape = (ShapeStruct)e.getSource();
+			get_main().updateShape(m_edit_shape);
 			toolbarPanel.setActiveShape(m_edit_shape);
 			PAS.get_pas().get_mappane().set_active_shape(m_edit_shape);
 
