@@ -168,7 +168,8 @@ public class MapFrame extends JPanel implements ActionListener {
     private ImageIcon m_icon_adredit = ImageFetcher.getIcon("pinpoint.png");
 
     private final MapModel mapModel = new MapModel();
-
+    final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
+    
     private void navigationChanged()
     {
         final TileLookup tileLookup = getTileLookup();
@@ -256,7 +257,10 @@ public class MapFrame extends JPanel implements ActionListener {
                 setPreferredSize(new Dimension(w, h));
             }
         });
-        final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
+        
+
+        
+        
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
             private Point mouseDownPoint;
@@ -276,11 +280,9 @@ public class MapFrame extends JPanel implements ActionListener {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 if (e.getSource().equals(MapFrame.this)) {
                     if (e.getWheelRotation() < 0) {
-                        controller.onZoomIn(mapModel, getTileLookup(), getSize(), e.getPoint());
-//                        get_navigation().exec_quickzoom(Navigation.Zoom.ZOOMIN);
+                    	onZoomGesture(true, e.getPoint());
                     } else if (e.getWheelRotation() > 0) {
-                        controller.onZoomOut(mapModel, getTileLookup(), getSize(), e.getPoint());
-//                        get_navigation().exec_quickzoom(Navigation.Zoom.ZOOMOUT);
+                    	onZoomGesture(false, e.getPoint());
                     }
                 }
             }
@@ -321,6 +323,18 @@ public class MapFrame extends JPanel implements ActionListener {
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
         addMouseWheelListener(mouseAdapter);
+    }
+    
+    protected void onZoomGesture(boolean bZoomIn, Point p)
+    {
+    	if(bZoomIn)
+    	{
+            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);        		
+    	}
+    	else
+    	{
+            controller.onZoomOut(mapModel, getTileLookup(), getSize(), p);
+    	}
     }
 
     public ShapeStruct get_active_shape() {

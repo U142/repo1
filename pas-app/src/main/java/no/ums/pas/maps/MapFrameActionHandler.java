@@ -965,7 +965,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				this.killMouseOver();
 				check_snap(e); //when pressed, always check snap right away
 				if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
-					get_mappane().get_navigation().exec_zoom_out(getMousedownPos());
+					get_mappane().onZoomGesture(false, new Point(getMousedownPos().width, getMousedownPos().height));
 					if(get_mappane().m_overlays!=null)
 						updateOverlay();
 				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
