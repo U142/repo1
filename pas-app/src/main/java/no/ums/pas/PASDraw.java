@@ -2,6 +2,8 @@ package no.ums.pas;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 
 public class PASDraw extends Draw {
@@ -28,7 +30,13 @@ public class PASDraw extends Draw {
 	}
 	public void draw_layers(Graphics g) {
 		if(PAS.get_pas()!=null) // Because of MapApplet for admin interface
+		{
+			//prepare graphics for antialiasing
+			Graphics2D g2d = (Graphics2D)g;
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
 			PAS.pasplugin.onMapDrawLayers(PAS.get_pas().get_navigation(), g, PAS.get_pas());
+		}
 		super.draw_layers(g);
 	}
 	protected void map_repaint() {

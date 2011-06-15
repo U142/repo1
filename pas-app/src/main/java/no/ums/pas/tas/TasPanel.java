@@ -5,6 +5,7 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
+import no.ums.pas.core.defines.SearchPanelResults;
 import no.ums.pas.core.defines.tree.TreeRenderer;
 import no.ums.pas.core.defines.tree.TreeTable;
 import no.ums.pas.core.defines.tree.TreeUpdater;
@@ -41,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -50,7 +52,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.BasicStroke;
@@ -232,7 +238,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	float f_detaillevel = 0.6f;
 	JMenuItem m_mi_request_touristcount;
 	
-	public class TasTree extends UMSTree
+	public class TasTree extends UMSTree implements TableCellRenderer
 	{
 		
 		@Override
@@ -284,7 +290,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		//JPopupMenu popup;
 		@Override
 		public int getRowHeight() {
-			return super.getRowHeight();
+			//return super.getRowHeight();
+			return 30;
 		}
 		public TasTree()
 		{
@@ -309,60 +316,25 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 	        mi.addActionListener(TasPanel.this);
 	        mi.setActionCommand("act_tas_show_statistics");
 	        popup.add(mi);
-			/*addMouseListener(
-	                new MouseAdapter() {
-	            public void mousePressed( MouseEvent e) {
-	            	try
-	            	{
-		            	TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-		            	tree.setSelectionPath(path);
-		            	Object o = path.getLastPathComponent();
-		            	if(o!=null)
-		            	{
-		            		CommonTASListItem c = (CommonTASListItem)o;
-		            		m_mi_request_touristcount.setEnabled(c.canRunCountRequest());
-		            	}
-	            	}
-	            	catch(Exception err)
-	            	{
-	            		
-	            	}
-	            }
-	            public void mouseReleased( MouseEvent e ) {
-	                if ( e.isPopupTrigger()) {
-	                    popup.show( (JComponent)e.getSource(), e.getX(), e.getY() );
-	                }
-	            }
-	        }
-	        );*/
-			/*addMouseMotionListener(new MouseAdapter() {
-				@Override
-				public void mouseMoved(MouseEvent e) {
-	            	TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-	            	if(path!=null && path.getLastPathComponent()!=null)
-	            	{
-		            	CommonTASListItem item = (CommonTASListItem)path.getLastPathComponent();
-						if(prevhovered!=null && !prevhovered.equals(item))
-						{
-							prevhovered.b_hovered = false;
-							item.b_hovered = true;
-							log.debug("Hover " + item.toString());
-							prevhovered = item;
-							PAS.get_pas().kickRepaint(prevhovered.rect);
-						}
-	            	}
-					super.mouseMoved(e);
-				}				
-			});*/
+	        
 		}
 		
+		int visibleRow;
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			visibleRow = row;
+			return this;
+		}
 		@Override
 		public void InitRenderer() {
             final String [] cols = new String [] {"", Localization.l("main_tas_panel_table_heading_tourists"), Localization.l("main_tas_panel_table_heading_updated")};
 			final int [] width = new int [] { 250, 80, 150 };
 			final boolean [] b_editable = new boolean [] { false, false, false };
 
-			TreeTable table = new TreeTable(cols, width, b_editable, new Dimension(300, 100))
+			final TreeTable table = new TreeTable(cols, width, b_editable, new Dimension(300, 100))
 			{
 				@Override
 				public void set_custom_cellrenderer(TableColumn column, final int n_col) {
@@ -370,22 +342,31 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						public static final long serialVersionUID = 1;
 					    public Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 					        Component renderer =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);    //---
-				        	if(n_col==2)
+				        	//renderer.setBackground(SystemColor.control);
+				        	
+					        Object o = (CommonTASListItem)m_tbl_list.getValueAt(row, 0);
+					        if(selected_node!=null && selected_node.equals(o))
+					        {
+				        		isSelected = true;
+					        }
+					        if(n_col==2)
 				        	{
-				        		CommonTASListItem item = (CommonTASListItem)m_tbl_list.getValueAt(row, 0);
-				        		
-				        		TableDateFormatter date = (TableDateFormatter)m_tbl_list.getValueAt(row, n_col);
+				        		CommonTASListItem item = (CommonTASListItem)m_tbl_list.getValueAt(row, 0);				        		
 				        		renderer.setForeground(item.getOutdatedColor());
 				        	}
 				        	else if(n_col==0)
 				        	{
 				        		CountryListItem item = (CountryListItem)m_tbl_list.getValueAt(row, 0);
-				        		return item.lbl;
+				        		//return item.lbl;
 				        	}
 				        	else
 				        	{
-				        		renderer.setForeground(Color.black);
+				        		//renderer.setForeground(Color.black);
 				        	}
+					        renderer.setBackground(isSelected ? DEFAULT_SELECTION_COLOR : ALTERNATING_BG_COLOR_2);
+					        renderer.setForeground(isSelected ? FOREGROUND_SELECTION_COLOR : FOREGROUND_COLOR);
+
+					        //renderer.setBackground(new Color(0,0,0,0));
 					        return renderer;
 					    }
 					});
@@ -412,16 +393,28 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						ULBACOUNTRY c = (ULBACOUNTRY)o;
 						if(li.lbl==null)
 						{
-							li.lbl = new JTextArea(c.getSzName());
+							SimpleAttributeSet attrs=new SimpleAttributeSet();
+				            StyleConstants.setAlignment(attrs,StyleConstants.ALIGN_CENTER);
+				            li.lbl = new JTextPane();
+				            StyledDocument doc=(StyledDocument)li.lbl.getDocument();
+				            try
+				            {
+				            	doc.insertString(0, c.getSzName(), attrs);
+				            	
+				            }
+				            catch(Exception e)
+				            {
+				            	log.error(e);
+				            }
+							//li.lbl.setText(c.getSzName());
 							li.lbl.setEnabled(true);
 							li.lbl.setEditable(false);
 							li.lbl.setBackground(new Color(0,0,0,Color.TRANSLUCENT));
-							li.lbl.setBorder(null);
 						}
 						li.lbl.setBorder(null);
 						setBackground(new Color(0,0,0,0));
 						int w = totalwidth; //getWidth();
-						this.setPreferredSize(new Dimension(w-50, 20));
+						this.setPreferredSize(new Dimension(w-50, getRowHeight()));
 						
 						//Color ul = SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor();
 						Color ul = SystemColor.controlDkShadow;
@@ -451,12 +444,13 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						Object [] data = new Object [] { li, c.getNTouristcount()+"", m_tbl_list.newTableDateFormatter(c.getNOldestupdate())/*UMS.Tools.TextFormat.format_datetime(c.getNOldestupdate()) */};
 						boolean [] update = new boolean[] { true, true, true };
 						m_tbl_list.edit_row(data, 0, update);
-						if(sel)
+						//if(sel)
 						{
-							m_tbl_list.m_tbl.setBackground(m_tbl_list.DEFAULT_SELECTION_COLOR);
-							m_tbl_list.m_tbl.setForeground(m_tbl_list.FOREGROUND_SELECTION_COLOR);
+							//m_tbl_list.m_tbl.setBackground(sel ? m_tbl_list.DEFAULT_SELECTION_COLOR : m_tbl_list.ALTERNATING_BG_COLOR_2);
+							//m_tbl_list.m_tbl.setForeground(sel ? m_tbl_list.FOREGROUND_SELECTION_COLOR : m_tbl_list.FOREGROUND_COLOR);
 							//this.setForeground(new java.awt.Color(255,0,0));
 						}
+						m_tbl_list.m_tbl.setRowHeight(getRowHeight());
 						return m_tbl_list.m_tbl;
 					}
 					else if(o.getClass().equals(ULBACONTINENT.class)) {
@@ -464,17 +458,13 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						setFont(UIManager.getFont("InternalFrame.titleFont"));
 						sel = true;
 						setBorder(null);
-						int width = colwidths[0]+30+(pane.getVerticalScrollBar().isVisible() ? -5 : 0); //pane.getVerticalScrollBar().getWidth());//261;
+						//int width = colwidths[0]+30+(pane.getVerticalScrollBar().isVisible() ? -5 : 0); //pane.getVerticalScrollBar().getWidth());//261;
+						int width = colwidths[0] + 15;
 						int w = totalwidth;
-						this.setPreferredSize(new Dimension(w, 30));
+						this.setPreferredSize(new Dimension(w, getRowHeight()));
+						int remaining_width = w - getSize().width - colwidths[0] - 30 + (pane.getVerticalScrollBar().isVisible() ? pane.getVerticalScrollBar().getWidth() : 0);
+						//this.setSize(new Dimension(w, 30));
 
-						try
-						{
-							//TableColumn col1 = m_tbl_list.m_tbl.getColumnModel().getColumn(0);
-							//width = col1.getWidth();
-						}
-						catch(Exception e) { }
-						//Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor();
 						Color c1 = SystemColor.controlHighlight;
 						int transparency = 255;
 						if(leaf)
@@ -482,9 +472,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						this.setForeground(new Color(255-transparency, 255-transparency, 255-transparency, transparency));
 						Color item_bg = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 255);
 						this.setBackground(item_bg);
-
-						this.setText("<html><tr><td width=" + (width) + ">" + c.getSzName() + "</td><td>" + c.getNTouristcount() + "</td></tr></html>");
 						this.setOpaque(true);
+						this.setText("<html><tr><td width=" + (width) + ">" + c.getSzName() + "</td><td>" + c.getNTouristcount() + "</td></tr></html>");
 						return this;
 					}
 					setFont(UIManager.getFont("Tree.font"));			
@@ -1453,7 +1442,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 			while(it.hasNext())
 			{
 				ContinentListItem node = it.next();
-				Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
+				//Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
+				Color c1 = SystemColor.controlDkShadow;
 				Color col = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 128);
 				if(node.getClass().equals(ContinentListItem.class))
 				{

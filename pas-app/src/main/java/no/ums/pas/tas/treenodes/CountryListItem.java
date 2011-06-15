@@ -7,6 +7,7 @@ import no.ums.ws.common.ULBACOUNTRY;
 import no.ums.ws.common.UTOURISTCOUNT;
 
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.Color;
@@ -28,7 +29,7 @@ public class CountryListItem extends CommonTASListItem implements Comparable<UMS
 		return 0;
 	}
 	public ContinentListItem parent = null;
-	public JTextArea lbl = null;
+	public JTextPane lbl = null;
 	ULBACOUNTRY country;
 	public ULBACOUNTRY getCountry() { return country; }
 	public CountryListItem(ULBACOUNTRY c, ContinentListItem parent, DefaultTreeModel model)

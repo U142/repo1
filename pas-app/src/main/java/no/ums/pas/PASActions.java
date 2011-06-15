@@ -2,6 +2,7 @@ package no.ums.pas;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.LonLat;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.logon.RightsManagement;
@@ -150,8 +151,10 @@ public class PASActions implements ActionListener {
 		}
 		else if("act_show_world".equals(e.getActionCommand())) {
 			//NavStruct nav = new NavStruct(-150, 150, 80, -80);
-			if(Variables.getNavigation().setNavigation(Navigation.NAV_WORLD))
-				PAS.get_pas().get_mappane().load_map(true);
+			//if(Variables.getNavigation().setNavigation(Navigation.NAV_WORLD))
+			//	PAS.get_pas().get_mappane().load_map(true);
+			Variables.getMapFrame().getMapModel().setZoom(1);
+			Variables.getMapFrame().getMapModel().setTopLeft(new LonLat(-180, 90));
 			PAS.get_pas().kickRepaint();
 		}
 		else if("act_center_all_polygon_sendings".equals(e.getActionCommand())) {
@@ -439,9 +442,12 @@ public class PASActions implements ActionListener {
 			}
 			PAS.get_pas().set_keep_sendings(false);
 			log.debug("Project Opened");
-			Project source = (Project)e.getSource();
-			PAS.get_pas().activateProject(source);	
-			PAS.get_pas().get_eastcontent().ensure_added(EastContent.PANEL_STATUS_LIST);
+			if(e.getSource() instanceof Project)
+			{
+				Project source = (Project)e.getSource();
+				PAS.get_pas().activateProject(source);	
+				PAS.get_pas().get_eastcontent().ensure_added(EastContent.PANEL_STATUS_LIST);
+			}
 			
 		}
 		else if("act_eastcontent_pane_opened".equals(e.getActionCommand())) {
