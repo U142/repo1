@@ -1143,6 +1143,7 @@ public class DefaultPasScripting extends AbstractPasScriptingInterface
 		try {
 			if(p.get_eastcontent().get_taspanel()!=null)
 			{
+				p.get_eastcontent().get_taspanel().calc_coortopix();
 				p.get_eastcontent().get_taspanel().drawItems((Graphics2D)g);
 				p.get_eastcontent().get_taspanel().drawLog((Graphics2D)g);
 			}

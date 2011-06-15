@@ -66,6 +66,7 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -399,7 +400,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 					Object o = node.getUserObject();
-					
+					setOpaque(true);
 					if(o==null)
 					{
 						setFont(UIManager.getFont("Tree.font"));
@@ -422,7 +423,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						int w = totalwidth; //getWidth();
 						this.setPreferredSize(new Dimension(w-50, 20));
 						
-						Color ul = SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor();
+						//Color ul = SubstanceLookAndFeel.getActiveColorScheme().getUltraDarkColor();
+						Color ul = SystemColor.controlDkShadow;
 						painter = new UnderlineHighlightPainter(new Color(ul.getRed(), ul.getGreen(), ul.getBlue(), 170));
 
 						li.lbl.getHighlighter().removeAllHighlights();
@@ -449,7 +451,12 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						Object [] data = new Object [] { li, c.getNTouristcount()+"", m_tbl_list.newTableDateFormatter(c.getNOldestupdate())/*UMS.Tools.TextFormat.format_datetime(c.getNOldestupdate()) */};
 						boolean [] update = new boolean[] { true, true, true };
 						m_tbl_list.edit_row(data, 0, update);
-						
+						if(sel)
+						{
+							m_tbl_list.m_tbl.setBackground(m_tbl_list.DEFAULT_SELECTION_COLOR);
+							m_tbl_list.m_tbl.setForeground(m_tbl_list.FOREGROUND_SELECTION_COLOR);
+							//this.setForeground(new java.awt.Color(255,0,0));
+						}
 						return m_tbl_list.m_tbl;
 					}
 					else if(o.getClass().equals(ULBACONTINENT.class)) {
@@ -467,7 +474,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 							//width = col1.getWidth();
 						}
 						catch(Exception e) { }
-						Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor();
+						//Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getUltraLightColor();
+						Color c1 = SystemColor.controlHighlight;
 						int transparency = 255;
 						if(leaf)
 							transparency = 127;
@@ -476,6 +484,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						this.setBackground(item_bg);
 
 						this.setText("<html><tr><td width=" + (width) + ">" + c.getSzName() + "</td><td>" + c.getNTouristcount() + "</td></tr></html>");
+						this.setOpaque(true);
 						return this;
 					}
 					setFont(UIManager.getFont("Tree.font"));			
@@ -1407,7 +1416,8 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 						CountryListItem cou = (CountryListItem)node;
 						if(!cou.isAddedToSendList())
 						{
-							Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
+							//Color c1 = SubstanceLookAndFeel.getActiveColorScheme().getDarkColor();
+							Color c1 = SystemColor.control;
 							Color col = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), (cou.b_selected ? 128 : 128));
 							//ULBACOUNTRY country = ((CountryListItem)node).getCountry();
 							UMapPoint screen = cou.getCountry().getWeightpointScreen();
@@ -1624,45 +1634,46 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 		//int mapwidth = Math.abs(Variables.NAVIGATION.get_mapwidthmeters().intValue());
 		//double modifier = Math.cos(Variables.NAVIGATION.getHeaderBBO() * CoorConverter.deg2rad);
 		double mapwidth = Variables.getNavigation().getDeltaLon();
-		log.debug("MapWidth deg = " + mapwidth);
+		int zoom = Variables.getMapFrame().getMapModel().getZoom();
+		//log.debug("MapWidth deg = " + mapwidth);
 		double levels [] = new double[] { 180, 90, 50, 40, 2, 1, 0.5 }; 
 		
-		if(mapwidth>levels[0]*f_detaillevel) //20000000
+		if(zoom<4) //20000000
 		{
 			b_paint_continents = true;
 			b_paint_countries = false;
 			n_countrytext_fontsize = 12;
 			n_countrytext_nonsel_fontsize = 7;
 		}
-		else if(mapwidth>levels[1] * f_detaillevel) //10000000
+		else if(zoom<5) //10000000
 		{
 			n_countrytext_fontsize = 7;
 			n_countrytext_nonsel_fontsize = 7;
 		}
-		else if(mapwidth>levels[2] * f_detaillevel) //6000000
+		else if(zoom<6) //6000000
 		{
 			n_countrytext_fontsize = 8;
 			n_countrytext_nonsel_fontsize = 8;
 		}
-		else if(mapwidth>levels[3] * f_detaillevel) //2800000
+		else if(zoom<7) //2800000
 		{
 			n_countrytext_fontsize = 8;
 			n_countrytext_nonsel_fontsize = 8;
 			b_paint_countrytext = true;
 		}
-		else if(mapwidth>levels[4] * f_detaillevel) //2000000
+		else if(zoom<8) //2000000
 		{
 			b_paint_countrytext = true;
 			n_countrytext_nonsel_fontsize = 10;
 			n_countrytext_fontsize = 10;
 		}
-		else if(mapwidth>levels[5] * f_detaillevel) //1400000
+		else if(zoom<9) //1400000
 		{
 			b_paint_countrytext = true;
 			n_countrytext_nonsel_fontsize = 11;
 			n_countrytext_fontsize = 11;
 		}
-		else if(mapwidth>levels[6] * f_detaillevel) //1000000
+		else if(zoom<10) //1000000
 		{
 			b_paint_countrytext = true;
 			n_countrytext_nonsel_fontsize = 12;
@@ -1833,7 +1844,7 @@ public class TasPanel extends DefaultPanel implements ComponentListener, ItemLis
 				b_newround = false;
 			}
 		}
-		log.debug("Iterations=" + iterations);
+		//log.debug("Iterations=" + iterations);
 		
 	}
 
