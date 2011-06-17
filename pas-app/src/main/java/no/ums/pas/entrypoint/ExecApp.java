@@ -3,22 +3,16 @@ package no.ums.pas.entrypoint;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.log.swing.LogFrame;
-import no.ums.log.swing.LogMailSender;
 import no.ums.log.swing.LogRecordCollector;
 import no.ums.pas.PAS;
 import no.ums.pas.PasApplication;
-import no.ums.pas.core.logon.UserInfo;
-import no.ums.pas.core.mail.Smtp;
 import no.ums.pas.pluginbase.DefaultPasScripting;
 import no.ums.pas.pluginbase.PasScriptingInterface;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.ServiceLoader;
 import java.util.SortedSet;
@@ -35,61 +29,7 @@ public class ExecApp {
         // Enable debug logging when there are no JNLP services available
         final boolean enableDebugLogging = ServiceManager.getServiceNames() == null;
         // Install logging handler and frame
-        LogRecordCollector.install(new LogMailSender() {
-            @Override
-            public boolean sendMail(String id, String content) {
-                final StringWriter sw = new StringWriter();
-                final PrintWriter pw = new PrintWriter(sw);
-
-                final UserInfo userinfo = (PAS.get_pas() == null) ? null : PAS.get_pas().get_userinfo();
-
-                pw.printf("Error report\n");
-                pw.printf("Error id:   %s\n",id);
-                if (userinfo != null) {
-                    pw.printf("Username:   %s\n", userinfo.get_userid());
-                    pw.printf("Company:    %s\n", userinfo.get_compid());
-                    pw.printf("Department: %s\n", userinfo.get_current_department());
-                } else {
-                    pw.printf("User info:  Not logged in\n");
-                }
-                if (PAS.get_pas() != null) {
-                    pw.printf("Pas site:   %s\n",PAS.get_pas().get_pasws());
-                    pw.printf("Code base:  %s\n", PAS.get_pas().get_codebase());
-                } else {
-                    pw.println("PAS not ready yet - args:");
-                    for (String arg : args) {
-                        pw.print('\t');
-                        pw.println(arg);
-                    }
-                }
-                pw.println("******************************************");
-                pw.println(content);
-                pw.close();
-
-                if (userinfo == null || userinfo.get_mailaccount() == null) {
-                    final MailSendErrorDialog mailSendErrorDialog = new MailSendErrorDialog(LogFrame.getInstance());
-                    mailSendErrorDialog.getModel().setText(sw.toString());
-                    mailSendErrorDialog.setVisible(true);
-                } else {
-                    LogFrame.getInstance().setSendMailEnabled(false);
-                    PAS.pasplugin.onSendErrorMessages(sw.toString(), userinfo.get_mailaccount(), new Smtp.smtp_callback() {
-
-                        @Override
-                        public void finished() {
-                            LogFrame.getInstance().setSendMailEnabled(true);
-                            JOptionPane.showMessageDialog(LogFrame.getInstance(), "Mail sent");
-                        }
-
-                        @Override
-                        public void failed(String e) {
-                            LogFrame.getInstance().setSendMailEnabled(true);
-                            JOptionPane.showMessageDialog(PAS.get_pas(), "Error sending mail, please check your settings");
-                        }
-                    });
-                }
-                return true;
-            }
-        }, enableDebugLogging);
+        LogRecordCollector.install(new PasMailSender(args), enableDebugLogging);
 
         //Object connect_timeout = System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", "20000") ;
         //Object read_timeout = System.getProperties().setProperty("sun.net.client.defaultReadTimeout", "3600000" ) ;
@@ -213,4 +153,5 @@ public class ExecApp {
         plugin.startPlugin();
         return plugin;
     }
+
 }
