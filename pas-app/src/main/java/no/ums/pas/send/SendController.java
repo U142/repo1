@@ -1145,7 +1145,7 @@ public class SendController implements ActionListener {
 				public void run()
 				{	
 					//only ask for closing the project if the project identity has changed
-					if(!PAS.get_pas().get_current_project().get_projectpk().equals(res.getProjectpk()))
+					if(PAS.get_pas().get_current_project() == null || !PAS.get_pas().get_current_project().get_projectpk().equals(res.getProjectpk()))
 					{
 						PAS.get_pas().askAndCloseActiveProject(new no.ums.pas.PAS.IAskCloseStatusComplete() {
 						
