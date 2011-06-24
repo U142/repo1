@@ -199,14 +199,22 @@ namespace com.ums.UmsParm
         public bool GetEventAlertStructure(ref ULOGONINFO l, ref List<PAEVENT> list)
         {
             bool b_ret = false;
-            /*String szSQL = String.Format("SELECT PA.l_alertpk, PA.l_parent, PE.l_eventpk, PE.l_parent FROM PAALERT PA, PAEVENT PE, PAOBJECT PO "+
-                                        "WHERE PA.l_parent=*PE.l_eventpk AND PE.l_parent=PO.l_objectpk AND PO.l_deptpk={0} "+
-                                        "ORDER BY PE.l_eventpk, PA.l_alertpk",
-                                        l.l_deptpk);*/
-            String szSQL = String.Format("SELECT isnull(PE.l_eventpk,-1), isnull(PE.l_parent,-1), isnull(PE.sz_name,'N/A'), PE.sz_description, " +
-                                        "isnull(PE.l_categorypk,-1), isnull(PE.l_timestamp,-1), isnull(PE.f_epi_lon,0), isnull(PE.f_epi_lat,0) " +
-                                        "FROM PAEVENT PE, PAOBJECT PO WHERE PE.l_parent=PO.l_objectpk AND PO.l_deptpk={0}",
-                                        l.l_deptpk);
+            
+            String szSQL = String.Format("SELECT " +
+                                         "isnull(PE.l_eventpk,-1), " +
+                                         "isnull(PE.l_parent,-1), " +
+                                         "isnull(PE.sz_name,'N/A'), " +
+                                         "PE.sz_description, " +
+                                         "isnull(PE.l_categorypk,-1), " +
+                                         "isnull(PE.l_timestamp,-1), " +
+                                         "isnull(PE.f_epi_lon,0), " +
+                                         "isnull(PE.f_epi_lat,0) " +
+                                         "FROM PAEVENT PE, PAOBJECT PO, BBUSERPROFILE_X_DEPT UPXD " + 
+                                         "WHERE PE.l_parent=PO.l_objectpk " + 
+                                         "AND PO.l_deptpk=UPXD.l_deptpk " +
+                                         "AND UPXD.l_deptpk={0} " +
+                                         "AND UPXD.l_userpk={1}", l.l_deptpk,l.l_userpk);
+
             OdbcDataReader rs = null;
 
             try
