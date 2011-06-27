@@ -6,6 +6,7 @@ using java.util.zip;
 using java.io;
 using System.IO;
 using com.ums.UmsFile;
+using System.IO.Compression;
 
 
 namespace com.ums.ZipLib
@@ -21,26 +22,15 @@ namespace com.ums.ZipLib
 
         public byte [] getZipped(String data)
         {
-            //write to zip
-            Byte[] str_encoded = Encoding.GetEncoding(encoding).GetBytes(data);
-            int l1 = (int)str_encoded.Length;
-            sbyte[] sb1 = new sbyte[l1];
-            Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
-            FileOutputStream output = new FileOutputStream(ufile.full());
-
-            GZIPOutputStream gzip = new GZIPOutputStream(output);
-            gzip.write(sb1, 0, l1);
-            gzip.close();
-
-            //open zip
-            FileInfo zipped = new FileInfo(ufile.full());
-            FileStream fszipped = zipped.OpenRead();
-            byte[] outbytes = new byte[zipped.Length];
-            fszipped.Read(outbytes, 0, (int)zipped.Length);
-            fszipped.Close();
-            System.IO.File.Delete(ufile.full());
-            return outbytes;
-
+            using (var ms = new MemoryStream())
+            {
+                using (var gzStream = new GZipStream(ms, CompressionMode.Compress))
+                {
+                    var content = Encoding.GetEncoding(encoding).GetBytes(data);
+                    gzStream.Write(content, 0, content.Length);
+                }
+                return ms.ToArray();
+            }
         }
     }
 
