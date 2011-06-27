@@ -51,13 +51,13 @@ public class ParmController extends MainController {
 	}
 	
 	public void createGUI() {
-		log.debug(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
+		log.debug(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + File.separator));
 		try {
-			StorageController.StorageElements.create_path(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
+			StorageController.StorageElements.create_path(StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + File.separator));
 		} catch(IOException e) {
 			Error.getError().addError("ParmController","IOException in StorageController.create_path",e,1);
 		}
-		ParmConstants.init(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + "\\"));
+		ParmConstants.init(PAS.get_pas().get_sitename(), StorageController.StorageElements.get_path(StorageController.PATH_PARM_).concat(String.valueOf(PAS.get_pas().get_userinfo().get_current_department().get_deptpk()) + File.separator));
 //		 Kjører denne testen for å se om programmet ble avsluttet riktig, dersom filen eksisterer var det noe feil
 		File cleanExit = new File(ParmConstants.cleanExit);
 		if(cleanExit.exists()) {

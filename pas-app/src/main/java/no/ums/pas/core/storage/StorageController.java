@@ -21,7 +21,7 @@ public class StorageController {
 		
 	}
 	
-	public void create_storageelements(String sz_home, String sz_tempwav, String sz_status, 
+	public void create_storageelements(String sz_home, String sz_tempwav, String sz_status,
 										String sz_fleetcontrol, String sz_usersettings, String sz_gisimport, 
 										String sz_parm) {
 		StorageElements.set_home(sz_home);

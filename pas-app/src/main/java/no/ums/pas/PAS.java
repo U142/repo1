@@ -63,7 +63,6 @@ import org.jvnet.substance.watermark.SubstanceNullWatermark;
 import org.jvnet.substance.watermark.WatermarkChangeListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
@@ -85,9 +84,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -649,12 +646,12 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 		this.addWindowListener(this);
 		
 		String sz_home = null;//this.getParameter("home_path");
-		String sz_storage_tempwav = "voc\\";
-		String sz_storage_status = "status\\";
-		String sz_storage_fleetcontrol = "fleetcontrol\\";
-		String sz_storage_gisimport = "gis\\";
+		String sz_storage_tempwav = "voc"+File.separator;
+		String sz_storage_status = "status"+File.separator;
+		String sz_storage_fleetcontrol = "fleetcontrol"+File.separator;
+		String sz_storage_gisimport = "gis"+File.separator;
 		String sz_storage_usersettings = "";
-		String sz_storage_parm = "PARM\\";
+		String sz_storage_parm = "PARM"+File.separator;
 			//sz_home = "C:\\Program Files\\UMS Population Alert System\\";
 		String os_name = System.getProperty("os.name");
 		boolean b_windows = false;
@@ -749,7 +746,7 @@ public class PAS extends JFrame implements ComponentListener, WindowListener, Sk
 			site = site.substring(8,site.length()-1);
 		
 		m_storagecontroller.create_storageelements(sz_home, sz_storage_tempwav, sz_storage_status, sz_storage_fleetcontrol,
-												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + "\\");
+												sz_storage_usersettings, sz_storage_gisimport, sz_storage_parm + site + File.separator);
 		SoundRecorder.setVocTempPath(StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_));
 		
 		//VISUAL SETTINGS MOVED TO WEBSERVICES

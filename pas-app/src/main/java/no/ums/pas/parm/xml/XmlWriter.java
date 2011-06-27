@@ -1090,7 +1090,7 @@ public class XmlWriter {
 		// Bruker dette for å gjøre ha noe å hente den riktige xml filen ut fra zip filen
 		if(!filepath.contains(".ini")) {
 			int index = xmlpath.indexOf(".zip");
-			strTemp = xmlpath.substring(xmlpath.lastIndexOf("\\")+1,index) + ".xml";
+			strTemp = xmlpath.substring(xmlpath.lastIndexOf(File.separator)+1,index) + ".xml";
 			//strTemp = xmlpath.substring(0,index) + ".xml";
 			
 			// Den må ikke pakke ut zipfilen for hver gang, sjekker om xmlfilen eksisterer
@@ -1389,7 +1389,7 @@ public class XmlWriter {
 			String entryName;
 			// Her henter jeg opp igjen og legger inn filene som jeg unzipet tidligere
 			for(int i=0;i<files.length;i++){
-				entryName = files[i].substring(files[i].lastIndexOf("\\")+1); // Hva entry'en skal hete
+				entryName = files[i].substring(files[i].lastIndexOf(File.pathSeparator)+1); // Hva entry'en skal hete
 				entryName = entryName.substring(0,entryName.lastIndexOf(".zip")) + ".xml";
 				FileInputStream in = new FileInputStream(files[i].substring(0,files[i].lastIndexOf(".zip")) + ".xml");
 				origin = new BufferedInputStream(in,BUFFER);
