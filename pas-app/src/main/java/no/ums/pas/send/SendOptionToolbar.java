@@ -17,7 +17,6 @@ import no.ums.pas.importer.gis.GISList;
 import no.ums.pas.importer.gis.PreviewFrame;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.MapFrame;
-import no.ums.pas.maps.defines.EllipseStruct;
 import no.ums.pas.maps.defines.GISShape;
 import no.ums.pas.maps.defines.Municipal;
 import no.ums.pas.maps.defines.PolygonStruct;
@@ -28,9 +27,7 @@ import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
 import no.ums.pas.ums.tools.StdTextArea;
 import no.ums.pas.ums.tools.StdTextLabel;
-import no.ums.pas.ums.tools.StdTextLabel.SIZING;
 import no.ums.ws.common.UMunicipalDef;
-import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -39,7 +36,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
@@ -733,36 +729,24 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 	}
 	public SendOptionToolbar(/*PAS pas, */SendObject sendobject, ActionListener callback, int n_sendnumber) {
 		super();
-		//m_pas = pas;
 		set_import_callback(this);
 		m_parent = sendobject;
 		m_n_initsendnumber = n_sendnumber;
 		m_callback = callback;
-		//m_gridlayout = new GridBagLayout();
-		//m_gridconst  = new GridBagConstraints();
 		m_btngroup_lba = new ButtonGroup();
 		init();
 		this.setSize(340, 25);
 		try {
-			//this.setFloatable(true);
 			this.setVisible(true);
 			this.setFocusable(true);
 		} catch(Exception e) {
-			//PAS.get_pas().add_event("ERROR SendOptionToolbar.constructor - " + e.getMessage());
 			Error.getError().addError("SendOptionToolbar","Exception in SendOptionToolbar",e,1);
 		}
-		//this.setOrientation(JToolBar.HORIZONTAL);
-		//setLayout((m_gridbag = new GridBagLayout()));
 		setLayout(this.getLayout());
 		if(PAS.get_pas()!=null)
 		{
 			PAS.get_pas().get_mappane().addActionListener(this);
 		}
-		//m_gridbag = this;
-		//setLayout(this);
-		//this.setFloatable(false);
-		//this.setRollover(true);
-		//setBorderPainted(true);
 	}
 	public void close() {
 		

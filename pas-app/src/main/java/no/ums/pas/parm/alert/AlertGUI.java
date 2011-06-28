@@ -44,79 +44,34 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		m_toolbar = toolbar;
 		pnlTop = new TopPanel();
 		pnlTop.add_controls();
-//		super(title);
-//		setIconImage(PAS.get_pas().get_appicon().getImage());
 		setLayout(new BorderLayout());
 		add(pnlTop, BorderLayout.NORTH);
-		/*
-		 * c.add(txtName); c.add(new JLabel("Description: "));
-		 * c.add(txtDescription);
-		 */
-		// Her kommer polygon/punkt greier
 		toolbar.setIsAlert(true);
-		//toolbar.setVisible(false);
-		
-		
-		
-		//add(new JScrollPane(toolbar), BorderLayout.CENTER);
-
-		//add(pnlSendingButton, BorderLayout.SOUTH);
-		//pnlSendingButton.setLayout(new BoxLayout(pnlSendingButton,
-		//		BoxLayout.X_AXIS));
-		
-		//createToolbar(pnlTop, toolbar);
-		
-//		addWindowListener(this);
 		setSize(300, 300);
 		setVisible(true);
-//		setAlwaysOnTop(true);
 	}
 
 	private void createToolbar(JPanel sendingPanel, SendOptionToolbar toolbar) {
-
         JLabel lblAHeader = new JLabel(Localization.l("main_parm_alert_dlg_area_definition"));
-		//pnlTop.set_gridconst(0, pnlTop.inc_panels() , 10, 1);
-		
-		
 		JPanel pnlAreabtns = new JPanel();
-		
-		//toolbar.get_colorbutton().getParent().setPreferredSize(new Dimension(25,25));
-		//pnlAreabtns.setPreferredSize(new Dimension(200,200));
-		
+
 		pnlAreabtns.setLayout(new BoxLayout(pnlAreabtns,BoxLayout.X_AXIS));
-		//pnlAreabtns.setBorder(BorderFactory.createLineBorder(Color.blue));
-				
-		toolbar.set_size(toolbar.get_btn_color(), SendOptionToolbar.SIZE_BUTTON_ICON, SendOptionToolbar.SIZE_BUTTON_ICON);
-		toolbar.get_btn_color().setMaximumSize(new Dimension(SendOptionToolbar.SIZE_BUTTON_ICON,SendOptionToolbar.SIZE_BUTTON_ICON));
+
 		pnlAreabtns.add(toolbar.get_btn_color());
-		//toolbar.get_btn_color().setPreferredSize(new Dimension(SendOptionToolbar.SIZE_BUTTON_LARGE,SendOptionToolbar.SIZE_BUTTON_LARGE));
 		pnlAreabtns.add(toolbar.get_radio_polygon());
 		pnlAreabtns.add(toolbar.get_radio_ellipse());
 		pnlAreabtns.add(toolbar.get_btn_open());
 		
-		//lblAHeader.setAlignmentY(Component.LEFT_ALIGNMENT);
-		//pnlTop.set_gridconst(0, pnlTop.inc_panels(), 10, 1);
         JLabel lblRTHeader = new JLabel(Localization.l("main_parm_alert_dlg_recipient_types"));
-		
-		
 		JPanel pnlRtypesbtns = new JPanel();
+
 		pnlRtypesbtns.setLayout(new BoxLayout(pnlRtypesbtns,BoxLayout.X_AXIS));
-		/*
-		pnlRtypesbtns.add(toolbar.get_adrtype_private_fixed());
-		pnlRtypesbtns.add(toolbar.get_adrtype_private_mobile());
-		pnlRtypesbtns.add(toolbar.get_adrtype_company_fixed());
-		pnlRtypesbtns.add(toolbar.get_adrtype_company_mobile());
-		pnlRtypesbtns.add(toolbar.get_adrtype_cell_broadcast_text());
-		pnlRtypesbtns.add(toolbar.get_adrtype_cell_broadcast_voice());
-		pnlRtypesbtns.add(toolbar.get_adrtype_nofax());
-		*/
+
+        toolbar.set_size(toolbar.get_btn_color(), SendOptionToolbar.SIZE_BUTTON_ICON, SendOptionToolbar.SIZE_BUTTON_ICON);
+        toolbar.get_btn_color().setMaximumSize(new Dimension(SendOptionToolbar.SIZE_BUTTON_ICON,SendOptionToolbar.SIZE_BUTTON_ICON));
         toolbar.set_sendingname("", Localization.l("main_parm_alert_dlg_default_sendingname"));
-		//toolbar.setBorder(null);
 		pnlRtypesbtns.add(toolbar);
-		//JPanel pnlRTypesLbls = new JPanel();
-		//pnl
-		
-		//pnlTop.add_spacing(DefaultPanel.DIR_VERTICAL, 20);
+
 		pnlTop.set_gridconst(0, pnlTop.get_panel(), 10, 1);
 		pnlTop.add(lblAHeader, pnlTop.m_gridconst);
 		pnlTop.set_gridconst(5, pnlTop.inc_panels(), 10, 1);
@@ -127,8 +82,6 @@ public class AlertGUI extends JPanel implements WindowListener, ActionListener {
 		pnlTop.add(pnlRtypesbtns, pnlTop.m_gridconst);		
 		pnlTop.add_spacing(DefaultPanel.DIR_VERTICAL, 20);
 		lblRTHeader.setAlignmentY(Component.LEFT_ALIGNMENT);
-
-
 	}
 	
 	public JTextArea getTxtDescription() {
