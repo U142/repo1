@@ -22,8 +22,6 @@ using com.ums.UmsFile;
 using com.ums.UmsDbLib;
 using com.ums.ZipLib;
 using System.Collections.Generic;
-using System.IO.Packaging;
-
 
 namespace com.ums.ws.parm
 {
