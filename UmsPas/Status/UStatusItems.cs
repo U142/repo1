@@ -637,11 +637,9 @@ namespace com.ums.PAS.Status
                 ULog.error(0, "Error writing Status ZIP", e.Message);
                 throw e;
             }*/
-            UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "statuszip." + Guid.NewGuid() + ".zip");
             try
             {
-                String xml = outxml.getXml();
-                return zip.getZipped(outxml.getXml());
+                return UGZipLib.getZipped(outxml.getXml());
             }
             catch (Exception e)
             {

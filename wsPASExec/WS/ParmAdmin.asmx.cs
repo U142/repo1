@@ -22,6 +22,7 @@ using com.ums.UmsFile;
 using com.ums.UmsDbLib;
 using com.ums.ZipLib;
 using System.Collections.Generic;
+using System.IO.Packaging;
 
 
 namespace com.ums.ws.parm
@@ -218,68 +219,44 @@ namespace com.ums.ws.parm
                 return null;
             }
 
-            String sz_zip_filename, sz_xml_filename, sz_xml_adrfilename, sz_output_parmxml, sz_output_polyxml, sz_output_parmzip, sz_parmxml, sz_polyxml;
-            sz_zip_filename = UCommon.UPATHS.sz_path_parmzipped + "obj" + sessid + ".zip";
-
-            sz_xml_filename = UCommon.UPATHS.sz_path_parmtemp + sessid + "_" + sz_filename;
-            sz_xml_adrfilename = UCommon.UPATHS.sz_path_parmtemp + sessid + "_" +  sz_polyfilename;
-
-            sz_parmxml = "parmroot-" + sessid + ".xml";
-            sz_polyxml = "parmpoly-" + sessid + ".xml";
-            sz_output_parmxml = UCommon.UPATHS.sz_path_parmtemp + "\\" + sz_parmxml;
-            sz_output_polyxml = UCommon.UPATHS.sz_path_parmtemp + "\\" + sz_polyxml;
-            sz_output_parmzip = "parmzip-" + sessid + ".zip";
-
-            //**************** save the zipped in-file ******************
-
-            try
-            {
-                FileStream fs = new FileStream(sz_zip_filename, FileMode.CreateNew);
-                fs.Write(zipfile, 0, zipfile.Length);
-                fs.Close();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
             //unzip the two files from in-file
-            try
+            Stream parmStream = null;
+            Stream adrStream = null;
+            using (var ms = new MemoryStream(zipfile))
             {
-                FileInputStream fis = new FileInputStream(sz_zip_filename);
-                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(fis));
-                ZipEntry entry = null;
-                int bufsize = 1;
-                while ((entry = zin.getNextEntry()) != null)
+                using (var zis = new Ionic.Zip.ZipInputStream(ms))
                 {
-                    FileOutputStream fos = new FileOutputStream(UCommon.UPATHS.sz_path_parmtemp + "\\" + sessid + "_" + entry.getName());
-                    BufferedOutputStream dest = new BufferedOutputStream(fos, bufsize);
-                    int count;
-                    sbyte[] data = new sbyte[bufsize];
-                    while ((count = zin.read(data, 0, bufsize)) != -1)
+                    Ionic.Zip.ZipEntry entry;
+                    while ((entry = zis.GetNextEntry()) != null)
                     {
-                        dest.write(data, 0, count);
+                        var content = new byte[entry.UncompressedSize];
+                        zis.Read(content, 0, content.Length);
+                        if (entry.FileName.Equals(sz_filename))
+                        {
+                            parmStream = new MemoryStream(content);
+                        }
+                        else if (entry.FileName.Equals(sz_polyfilename))
+                        {
+                            adrStream = new MemoryStream(content);
+                        }
                     }
-                    dest.flush();
-                    dest.close();
-                    fos.close();
                 }
-                zin.close();
             }
-            catch (Exception e)
+
+            if (parmStream == null)
             {
-                ULog.error(e.Message);
+                throw new ArgumentException("Could not find file " + sz_filename + " in zipfile");
             }
+            if (adrStream == null)
+            {
+                throw new ArgumentException("Could not find file " + sz_polyfilename + " in zipfile");
+            }
+
             m_res.n_percent = 20;
             m_percentdelegate(ref logoninfo, ProgressJobType.PARM_UPDATE, m_res);
 
 
             //**************** delete the original zip file ******************
-            System.IO.File.Delete(sz_zip_filename);
-            
-            
-            
-            
             
             pks_alert[0] = new ArrayList();
             pks_alert[1] = new ArrayList();
@@ -329,7 +306,7 @@ namespace com.ums.ws.parm
             //run updates
             try
             {
-                ParsePARM(sz_xml_filename, ref db);
+                ParsePARM(parmStream, ref db);
             }
             catch (Exception e)
             {
@@ -341,7 +318,7 @@ namespace com.ums.ws.parm
 
             try
             {
-                WriteShapeUpdates(sz_xml_adrfilename);
+                WriteShapeUpdates(adrStream);
             }
             catch (Exception e)
             {
@@ -357,8 +334,6 @@ namespace com.ums.ws.parm
             {
                 ULog.error(e.Message);
             }
-
-
 
             try //CLOSE UPDATE FILE (OUT)
             {
@@ -383,162 +358,22 @@ namespace com.ums.ws.parm
             {
                 String err = e.Message;
                 ULog.error(e.Message);
+                throw;
             }
 
-            //old zip
-            /*UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, sz_output_parmzip);
-            try
-            {
-                zip.AddTextAsZipFileEntry(sz_parmxml, outxml.getXml(), Encoding.GetEncoding(encoding));
-                zip.AddTextAsZipFileEntry(sz_polyxml, outpolyxml.getXml(), Encoding.GetEncoding(encoding));
-                zip.finalize();
-                System.IO.File.Delete(sz_xml_filename);
-                System.IO.File.Delete(sz_xml_adrfilename);
-
-            }
-            catch (Exception e)
-            {
-                ULog.error(0, "Error writing PARM ZIP file", e.Message);
-                throw e;
-            }*/
-
-            //new zip
-            String file_zip = UCommon.UPATHS.sz_path_parmtemp + "gzip_" + sz_output_parmzip;
-            /*try
-            {
-                Byte[] str_encoded = Encoding.GetEncoding(encoding).GetBytes(outxml.getXml());
-                int l1 = (int)str_encoded.Length;
-                sbyte[] sb1 = new sbyte[l1];
-                Buffer.BlockCopy(str_encoded, 0, sb1, 0, l1);
-                //ByteArrayOutputStream arr = new ByteArrayOutputStream(l1);
-                //arr.write(sb1);
-                
-                //MemoryStream mem = new MemoryStream();
-                //BinaryWriter bin = new BinaryWriter(mem);
-                //bin.Write(str_encoded);
-
-                FileOutputStream output = new FileOutputStream(file_zip);
-
-                GZIPOutputStream gzip = new GZIPOutputStream(output);
-                gzip.write(sb1, 0, l1);
-                gzip.close();
-
-            }
-            catch(Exception e)
-            {
-                ULog.error(0, "Error writing PARM ZIP file", e.Message);
-                throw e;
-            }*/
-            
-            
-            try
-            {
-                db.close();
-                System.IO.File.Delete(sz_xml_filename);
-                System.IO.File.Delete(sz_xml_adrfilename);
-            }
-            catch (Exception e)
-            { }
-            
-
+            db.close();
             PercentProgress.DeleteJob(ref m_logon, ProgressJobType.PARM_UPDATE);
 
-
-            //old zip
-            //return zip.ReadZipFileBytes();
-
-            //new zip
             try
             {
-                /*FileInfo zipped = new FileInfo(file_zip);
-                FileStream fszipped = zipped.OpenRead();
-                byte[] outbytes = new byte[zipped.Length];
-                fszipped.Read(outbytes, 0, (int)zipped.Length);
-                fszipped.Close();
-                System.IO.File.Delete(file_zip);
-                return outbytes;*/
-                UGZipLib zip = new UGZipLib(UCommon.UPATHS.sz_path_parmtemp, "gzip_" + sz_output_parmzip);
-
-                return zip.getZipped(outxml.getXml());
+                return UGZipLib.getZipped(outxml.getXml().Replace("&#x1A", "?"));
             }
             catch (Exception e)
             {
                 ULog.error(0, "Error returning PARM ZIP file", e.Message);
                 throw;
             }
-
-            //temp write out.xml
-            /*String txt_parmxml = outxml.getXml();
-            Byte[] parm_to_utf8 = Encoding.GetEncoding(encoding).GetBytes(txt_parmxml);
-
-            //temp write poly.xml
-            String txt_polyxml = outpolyxml.getXml();
-            Byte[] poly_to_utf8 = Encoding.GetEncoding(encoding).GetBytes(txt_polyxml);            
-
-            //close db connection
-            db.close();
-
-            //create ZIP file for output
-            {
-                java.io.File file = new java.io.File(sz_output_parmzip);
-                ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-                try
-                {
-                    //int l1 = txt_parmxml.ToCharArray().Length * 2; //UTF8 is twice as big
-                    int l1 = (int)parm_to_utf8.Length;
-                    sbyte[] sb1 = new sbyte[l1];
-                    Buffer.BlockCopy(parm_to_utf8, 0, sb1, 0, l1);
-                    writeZipFileEntry(zos, sz_parmxml, sb1);
-
-                    int l2 = (int)poly_to_utf8.Length; //UTF8 is twice as big
-                    sbyte[] sb2 = new sbyte[l2];
-                    Buffer.BlockCopy(poly_to_utf8, 0, sb2, 0, l2);
-                    writeZipFileEntry(zos, sz_polyxml, sb2);
-                    zos.close();
-
-                    System.IO.FileInfo zipped = new FileInfo(sz_output_parmzip);
-                    FileStream fszipped = zipped.OpenRead();
-                    //int read = 0;
-                    byte[] outbytes = new byte[zipped.Length];
-                    fszipped.Read(outbytes, 0, (int)zipped.Length);
-                    fszipped.Close();
-                    return outbytes;
-                }
-                catch (Exception e)
-                {
-                    String error = e.Message;
-                    ULog.error(e.Message);
-                }
-                finally
-                {
-                    System.IO.File.Delete(sz_xml_filename);
-                    System.IO.File.Delete(sz_xml_adrfilename);
-                    System.IO.File.Delete(sz_output_parmzip);
-                }
-
-            }*/
-
-
-            //byte[] output = new byte[1024];
-            //return null;
         }
-
-        /*public void writeZipFileEntry(ZipOutputStream zos, String zipEntryName, sbyte[] byteArray)
-        {
-            int byteArraySize = byteArray.Length;
-
-            CRC32 crc = new CRC32();
-            crc.update(byteArray, 0, byteArraySize);
-
-            ZipEntry entry = new ZipEntry(zipEntryName);
-            entry.setMethod(ZipEntry.STORED);
-            entry.setSize(byteArraySize);
-            entry.setCrc(crc.getValue());
-
-            zos.putNextEntry(entry);
-            zos.write(byteArray, 0, byteArraySize);
-            zos.closeEntry();
-        }*/
 
         private ArrayList[] pks_alert = new ArrayList[2]; //idx 0 contains temp-pks, idx 1 contains new values
         private ArrayList[] pks_event = new ArrayList[2];
@@ -581,13 +416,13 @@ namespace com.ums.ws.parm
          * The source is sent from PAS client
          * Open XML file and parse. Then make new text-files to be put in predefined-areas
          */
-        private int WriteShapeUpdates(String sz_xml_adrfilename)
+        private int WriteShapeUpdates(Stream adrStream)
         {
             int counter = 0;
             XmlDocument doc = new XmlDocument();
             try
             {
-                doc.Load(sz_xml_adrfilename);
+                doc.Load(adrStream);
             }
             catch (Exception e)
             {
@@ -2200,12 +2035,12 @@ namespace com.ums.ws.parm
             return counter;
         }
 
-        private int ParsePARM(String sz_filename, ref PASUmsDb db)
+        private int ParsePARM(Stream parmStream, ref PASUmsDb db)
         {
             XmlDocument doc = new XmlDocument();
             try
             {
-                doc.Load(sz_filename);
+                doc.Load(parmStream);
                 XmlNode node = doc.DocumentElement;
                 //TOP LEVEL
                 sz_timestamp = node.Attributes["l_timestamp"].Value;
