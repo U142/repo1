@@ -1389,7 +1389,7 @@ public class XmlWriter {
 			String entryName;
 			// Her henter jeg opp igjen og legger inn filene som jeg unzipet tidligere
 			for(int i=0;i<files.length;i++){
-				entryName = files[i].substring(files[i].lastIndexOf(File.pathSeparator)+1); // Hva entry'en skal hete
+				entryName = files[i].substring(files[i].lastIndexOf(File.separator)+1); // Hva entry'en skal hete
 				entryName = entryName.substring(0,entryName.lastIndexOf(".zip")) + ".xml";
 				FileInputStream in = new FileInputStream(files[i].substring(0,files[i].lastIndexOf(".zip")) + ".xml");
 				origin = new BufferedInputStream(in,BUFFER);
