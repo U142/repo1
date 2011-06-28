@@ -36,7 +36,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -78,6 +77,25 @@ public class AlertWindow extends SendWindow implements ActionListener, ChangeLis
 		try {
 			m_alert.createNewAlert(PAS.get_pas().get_parmcontroller().getHighestTemp(),event,new PolygonStruct(parmctrl.getMapSize()));
 			m_alert.getPanelToolbar().set_addresstypes((int)Variables.getSettings().getN_newsending_autochannel());
+            // Please don't use the code below as an example off how things should be done.
+            // Prefer initing a model with the desired value instead, that the UI should listen to.
+            switch (Variables.getSettings().getN_autoselect_shapetype()) {
+                case SendOptionToolbar.BTN_SENDINGTYPE_ELLIPSE_:
+                    m_alert.getPanelToolbar().get_radio_ellipse().doClick();
+                    break;
+                case SendOptionToolbar.BTN_SENDINGTYPE_MUNICIPAL_:
+                    m_alert.getPanelToolbar().get_radio_municipal().doClick();
+                    break;
+                case SendOptionToolbar.BTN_SENDINGTYPE_POLYGONAL_ELLIPSE_:
+                    m_alert.getPanelToolbar().get_radio_polygonal_ellipse().doClick();
+                    break;
+                case SendOptionToolbar.BTN_SENDINGTYPE_POLYGON_:
+                    m_alert.getPanelToolbar().get_radio_polygon().doClick();
+                    break;
+                case SendOptionToolbar.BTN_OPEN_:
+                    m_alert.getPanelToolbar().get_btn_open().doClick();
+            }
+
 			m_alert.getPanelToolbar().initSelections();
 		} catch(Exception e){
             Error.getError().addError(Localization.l("common_error"),"Error while creating alert",e,1);
