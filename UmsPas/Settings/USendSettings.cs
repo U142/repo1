@@ -71,11 +71,10 @@ namespace com.ums.PAS.Settings
             outxml.finalize();
             m_db.close();
 
-            UZipLib zip = new UZipLib(UCommon.UPATHS.sz_path_parmtemp, "settings." + Guid.NewGuid() + ".zip");
+            UZipLib zip = new UZipLib();
             try
             {
                 zip.AddTextAsZipFileEntry("settings", outxml.getXml(), Encoding.GetEncoding(sz_encoding));
-                zip.finalize();
                 return zip.ReadZipFileBytes();
             }
             catch (Exception e)
