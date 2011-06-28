@@ -11,23 +11,17 @@ using System.IO.Compression;
 
 namespace com.ums.ZipLib
 {
-    public class UGZipLib
+    public static class UGZipLib
     {
-        protected UFile ufile;
-        String encoding = "UTF-8";
-        public UGZipLib(string path, string file)
-        {
-            ufile = new UFile(path, file);
-        }
-
-        public byte [] getZipped(String data)
+        private static Encoding encoding = Encoding.GetEncoding("UTF-8");
+        public static byte[] getZipped(String data)
         {
             using (var ms = new MemoryStream())
             {
-                using (var gzStream = new GZipStream(ms, CompressionMode.Compress))
+                using (var gzs = new GZipStream(ms, CompressionMode.Compress))
                 {
-                    var content = Encoding.GetEncoding(encoding).GetBytes(data);
-                    gzStream.Write(content, 0, content.Length);
+                    byte[] content = encoding.GetBytes(data);
+                    gzs.Write(content, 0, content.Length);
                 }
                 return ms.ToArray();
             }
