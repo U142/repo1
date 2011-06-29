@@ -1,7 +1,6 @@
 package no.ums.pas.maps;
 
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -18,9 +17,8 @@ import no.ums.ws.pas.UAddress;
 import no.ums.ws.pas.UAddressList;
 import no.ums.ws.pas.UMapAddressParams;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.awt.Point;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -84,6 +82,13 @@ public class HouseDownloadCache {
 
     public List<UAddress> getHouseInfos(int zoom, int row, int column) {
         return (zoom < MIN_ZOOM) ? EMPTY : cache.get(new TileCell(zoom, row, column));
+    }
+
+    public void clearCache(double lon, double lat) {
+        for (int z = MIN_ZOOM; z<=MAX_ZOOM; z++) {
+            final Point tile = zoomLookups[z].getTile(new LonLat(lon, lat));
+            cache.remove(new TileCell(z, tile.y, tile.x));
+        }
     }
 
     public boolean isAvailable(int zoom, int row, int column) {

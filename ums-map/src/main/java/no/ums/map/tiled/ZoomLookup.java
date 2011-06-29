@@ -29,6 +29,11 @@ public class ZoomLookup {
         cc = maxPos / (2*Math.PI);
     }
 
+    public Point getTile(LonLat lonLat) {
+        final Point p1 = getPoint(lonLat);
+        return new Point((p1.x / tileSize) % maxTile, p1.y / tileSize);
+    }
+
     public List<Point> getTiles(LonLat topLeft, LonLat bottomRight) {
         final List<Point> tiles = new ArrayList<Point>();
         final Point p1 = getPoint(topLeft);
