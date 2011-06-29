@@ -25,7 +25,6 @@ import javax.swing.text.DefaultHighlighter;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.IllegalComponentStateException;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
@@ -135,10 +134,6 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		m_panel_messages.add(m_lbl_template, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_combo_templates, m_panel_messages.m_gridconst);
-		/*tree_msglib = new MessageLibTreePanel(this, UMSTree.TREEMODE.SELECTION_WITH_EDIT,10, false);
-		m_panel_messages.set_gridconst(7, m_panel_messages.get_panel(), 7, 1, GridBagConstraints.WEST);
-		m_panel_messages.add(tree_msglib, m_panel_messages.m_gridconst);
-		*/
 
 		//TEST
 		if(tree_msglib!=null)
@@ -192,18 +187,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		//activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
 		popupFactory = PopupFactory.getSharedInstance();
 	}
-	// Tatt fra Sending_SMS_Broadcast_text.java
-	
-	
-	/*@Override
-	public void keyPressed(KeyEvent e) {
-		//if(e.getKeyCode()==KeyEvent.VK_TAB)
-		//m_txt_messagetext.getHighlighter().addHighlight(p0, p1, p)
-		log.debug("Key pressed: " + e.getKeyChar());	
-	}*/
-	
 
-	
 	@Override
 	public void focusGained(FocusEvent e) {
 		resetHighLights();
@@ -235,10 +219,6 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 				}
 				else //null selected
 				{
-					/*if(m_combo_templates.getSelectedIndex() == 0) {
-						m_txt_messagetext.setText("");
-						m_txt_messagetext.setToolTipText(null);
-					}*/
 					UpdateTextFields();
 				}
 			}
@@ -315,38 +295,11 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 	}
 	
 	public void set_size_label(String text, JLabel activeLabel) {
-		
-		/*Matcher m = GSM_Alphabet_Regex.matcher(text);
-		int ext = 0;
-		while(m.find() == true)
-			++ext;
-			*/
-		int part = 1;
-		if(get_gsmsize(text)>m_maxSafe)
-			part = (int)Math.ceil((double)(get_gsmsize(text)/(double)(m_maxSafe-8)));
-        activeLabel.setText("(" + get_gsmsize(text) + " / " + (m_maxSize-get_gsmsize(text)) + " / " + part + ")");
-		if(this.getClass().equals(Sending_Cell_Broadcast_text.class) || this.getClass().equals(Sending_SMS_Broadcast_text.class)) {
-			if(text.length() > m_maxSafe) {
-				activeLabel.setForeground(Color.RED);
-				//activeLabel.setFont(new Font(null,Font.BOLD, parent.getFont().getSize()));
-				/*try {
-					if(m_popup!=null)
-						m_popup.hide();
-					m_popup = PopupFactory.getSharedInstance().getPopup(activeLabel, m_tooltip, activeLabel.getLocationOnScreen().x, activeLabel.getLocationOnScreen().y+20);
-					m_popup.show();
-				}
-				catch(IllegalComponentStateException e) {}
-				*/
-			}
-			else {
-				//activeLabel.setFont(new Font(null, parent.getFont().getStyle(), parent.getFont().getSize()));
-				//activeLabel.setToolTipText(null);
-				activeLabel.setForeground(PAS.get_pas().getForeground());
-				/*if(m_popup!=null) {
-					m_popup.hide();
-				}*/
-					
-			}
-		}			
-	}
+        final int gsmsize = get_gsmsize(text);
+		final int parts = (gsmsize <= m_maxSafe) ? 1 : (int) Math.ceil(gsmsize / (m_maxSafe-8d));
+        String formattedText = String.format(Localization.l("main_sending_sms_size_info"), gsmsize, (m_maxSize- gsmsize), parts);
+//        activeLabel.setText("<html>(" + get_gsmsize(text) + "<br /> " + (m_maxSize-get_gsmsize(text)) + " <br /> " + part + ")</html>");
+        activeLabel.setText(formattedText);
+        activeLabel.setForeground((parts == 1) ? PAS.get_pas().getForeground() : Color.RED);
+    }
 }

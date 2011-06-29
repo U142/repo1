@@ -130,7 +130,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 	public JComboBox get_replynumbers() { return m_combo_replynumbers; }
 	protected StdTextLabel m_lbl_messagetext = new StdTextLabel(Localization.l("main_sending_lba_message") + ":");
     protected StdTextLabel m_lbl_area = new StdTextLabel(Localization.l("main_sending_lba_area") + ":");
-    protected StdTextLabel m_lbl_messagesize = new StdTextLabel("(0 " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
+    protected StdTextLabel m_lbl_messagesize = new StdTextLabel("(0 " + Localization.l("common_x_of_y") + " " + m_maxSize + ")", new Dimension(125, 45));
     public JLabel get_lbl_localsize() { return m_lbl_messagesize; }
 	protected StdTextLabel m_lbl_internationalsize = new StdTextLabel("(0 " + Localization.l("common_x_of_y") + " " + m_maxSize + ")");
 
@@ -486,18 +486,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		pnl_settings.setPreferredSize(new Dimension(650, 100));
 		pnl_settings.setOpaque(false);
 		pnl_settings.setBackground(new Color(255,255,255,1));
-		
-		//m_panel_area.setPreferredSize(new Dimension(500, 100));
-		
-		/*m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
-		m_panel_messages.add(m_lbl_expirydate, m_panel_messages.m_gridconst);
-		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		ExpiryMins[] mins = new ExpiryMins[]{ new ExpiryMins(""), new ExpiryMins("30"), new ExpiryMins("60"), new ExpiryMins("120"), new ExpiryMins("360"), new ExpiryMins("720"), new ExpiryMins("1440") };		
-		m_combo_expdate = new JComboBox(mins);
-		m_combo_expdate.addItemListener(this);
-		m_panel_messages.add(m_combo_expdate, m_panel_messages.m_gridconst);
-		m_panel_messages.set_gridconst(n_width/3 + n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		*/
+
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/2, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_lbl_messagename, m_panel_messages.m_gridconst);
 		m_panel_messages.set_gridconst(n_width/2, m_panel_messages.get_panel(), n_width/2, 1, GridBagConstraints.WEST);
@@ -522,18 +511,6 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(m_cbx_messages, m_panel_messages.m_gridconst);
 
-		/*
-		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		
-		m_panel_messages.set_gridconst(0, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
-		m_panel_messages.add(m_lbl_requesttype, m_panel_messages.m_gridconst);
-		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		JPanel pnl_lba = new JPanel();
-		pnl_lba.setOpaque(false);
-		pnl_lba.add(m_radio_requesttype_0);
-		pnl_lba.add(m_radio_requesttype_1);
-		m_panel_messages.add(pnl_lba, m_panel_messages.m_gridconst);
-		*/
 		JPanel pnl = new JPanel();
 		pnl.setOpaque(false);
 		pnl.add(m_btn_new);
@@ -542,20 +519,10 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		m_panel_messages.set_gridconst(n_width/3, m_panel_messages.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
 		m_panel_messages.add(pnl, m_panel_messages.m_gridconst);
-		//m_panel_messages.add(lba_conf, m_panel_messages.m_gridconst);
-//		set_gridconst(n_width/3 + n_width/3, get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-//		add(m_btn_add, m_gridconst);
-		
-		//m_panel_area.set_gridconst(0, m_panel_area.inc_panels(), n_width/3, 1, GridBagConstraints.WEST);
-		//m_panel_area.add(m_lbl_area, m_panel_area.m_gridconst);
-		//m_panel_area.set_gridconst(n_width/2, m_panel_area.get_panel(), n_width/3, 1, GridBagConstraints.WEST);
-		//m_panel_area.add(m_combo_area, m_panel_area.m_gridconst);
-
 
         m_panel_messages.setBorder(BorderFactory.createTitledBorder(Localization.l("main_sending_lba_heading_messages")));
         pnl_settings.setBorder(BorderFactory.createTitledBorder(Localization.l("main_sending_lba_heading_setup")));
-		//m_panel_area.setBorder(BorderFactory.createTitledBorder("Area"));
-		
+
 		set_gridconst(0, 0, 1, 1);
 		add(pnl_settings, m_gridconst);
 		set_gridconst(0, 1, 1, 1);
@@ -563,7 +530,6 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		
 		m_tooltip = m_lbl_messagesize.createToolTip();
         m_tooltip.setTipText("<html> " + m_maxSafe + " " + Localization.l("main_sending_lba_messagetextlabel"));
-		//activeLabel.setToolTipText(m_maxSafe + " " + PAS.l("main_sending_lba_messagetextlabel"));
 		popupFactory = PopupFactory.getSharedInstance();
 		init();
 	}
