@@ -129,7 +129,8 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				//m_txt_streetid.setText(inhab.
 				//if(inhab.get_adrtype()==Controller.ADR_TYPES_COMPANY_)
 				if((inhab.get_adrtype() & SendController.SENDTO_FIXED_COMPANY) == SendController.SENDTO_FIXED_COMPANY ||
-					(inhab.get_adrtype() & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY)
+					(inhab.get_adrtype() & SendController.SENDTO_MOBILE_COMPANY) == SendController.SENDTO_MOBILE_COMPANY || 
+					(inhab.get_adrtype() & Inhabitant.INHABITANT_COMPANY) == inhab.INHABITANT_COMPANY)
 					m_radio_company.doClick();
 				else
 					m_radio_private.doClick();
@@ -291,8 +292,14 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 			if(result.is_success()) {
 				try {
 					//PAS.get_pas().get_housecontroller().start_download(false);
-					get_inhabitant().set_kondmid(sz_kondmid);
+					//String old_kondmid = get_inhabitant().get_kondmid();
+					//get_inhabitant().set_kondmid(sz_kondmid);
+					//PAS.get_pas().get_housecontroller().updateHouse(get_inhabitant(), old_kondmid);
+					PAS.get_pas().get_housecontroller().getCache().clearPoint(get_inhabitant().get_lon(), get_inhabitant().get_lat());
 					e.setSource(get_inhabitant());
+					// Må sette arr_found_houses i controller.java til get_house()
+					//PAS.get_pas().get_housecontroller().
+					//PAS.get_pas().get_mappane().set_mouseoverhouse(get_house()); // Må sette mouseoverhouse her ellers vil den gamle infoen komme opp ved markering
 					fill_form(null);
 					m_callback.actionPerformed(e);
 				} catch(Exception err) {
@@ -397,7 +404,7 @@ public class HouseEditorPanel extends DefaultPanel implements ComponentListener 
 				sz_gnr = "0";
 			if(sz_bnr.length()==0)
 				sz_bnr = "0";
-			
+				
 			m_inhabitant.set_kondmid(sz_kondmid);
 			m_inhabitant.set_adrname(sz_name);
 			m_inhabitant.set_number(sz_phone);

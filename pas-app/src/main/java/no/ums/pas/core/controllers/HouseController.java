@@ -118,7 +118,7 @@ public class HouseController extends Controller {
 
     private final ZoomLookup stdZoom = new ZoomLookup(17, 256);
     private final HouseDownloadCache cache = new HouseDownloadCache();
-
+    
 	public void start_download(final boolean b) {
 		create_filter();
 		set_visibility_change(true);
@@ -221,6 +221,5 @@ public class HouseController extends Controller {
 				find_houses_bypix(new Dimension(x, y));
 		}
 	}
-	
 }
 

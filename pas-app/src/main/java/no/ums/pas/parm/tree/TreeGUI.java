@@ -71,7 +71,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 	// private Container c;
 
 	
-	private DefaultTreeModel treeModel;
+	private TreeModel treeModel;
 
 	private DefaultMutableTreeNode rootnode;
 
@@ -101,6 +101,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		{
 			return new Dimension(preferredwidth, super.getPreferredSize().height);
 		}
+		
 		@Override
 		public Dimension getMinimumSize()
 		{
@@ -163,7 +164,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		DataFlavor m_source_flavor;
 		Transferable transferable;
 		
-		public Tree(DefaultTreeModel model) {
+		public Tree(TreeModel model) {
 			super(model);
 			this.setRowHeight(24);
 			m_source = new DragSource();
@@ -524,7 +525,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 		return tree;
 	}
 
-	public DefaultTreeModel getTreeModel() {
+	public TreeModel getTreeModel() {
 		return treeModel;
 	}
 
@@ -613,7 +614,7 @@ public class TreeGUI extends DefaultPanel implements ComponentListener {
 
 	public void createTree() {
 		rootnode = new DefaultMutableTreeNode("Rotnode");
-		treeModel = new DefaultTreeModel(rootnode);
+		treeModel = new TreeModel(rootnode);
 //		tree = new Tree(treeModel){
 //            public void paintComponent(Graphics g)
 //            {

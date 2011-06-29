@@ -3,6 +3,7 @@ package no.ums.pas.parm.object;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.fieldlimit.TextFieldLimit;
+import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -56,6 +57,18 @@ public class ObjectGUI extends JFrame implements WindowListener {
 		setLayout();
 		
 		addWindowListener(this);
+		
+		if(!PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management().write_parm()) {
+			objInfoPanel.txtName.setEnabled(false);
+			objInfoPanel.cbxCategory.setEnabled(false);
+			objInfoPanel.txtAdress.setEnabled(false);
+			objInfoPanel.txtPostno.setEnabled(false);
+			objInfoPanel.txtPlace.setEnabled(false);
+			objInfoPanel.txtPhone.setEnabled(false);
+			descriptionPanel.getTxaDescription().setEnabled(false);
+			actionPanel.btnCancel.setEnabled(false);
+			actionPanel.btnSave.setEnabled(false);
+		}
 		
 		setSize(400, 400);
 		setTitle(title);

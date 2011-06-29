@@ -3,6 +3,7 @@ package no.ums.pas.parm.event;
 import no.ums.pas.PAS;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.parm.fieldlimit.TextFieldLimit;
+import no.ums.pas.send.sendpanels.SendWindow.BtnPane;
 import no.ums.pas.ums.tools.ImageLoader;
 
 import javax.swing.BorderFactory;
@@ -54,6 +55,15 @@ public class EventGUI extends JFrame implements WindowListener {
 		setSize(400, 250);
 		setVisible(true);
 		setAlwaysOnTop(true);
+		
+		if(!PAS.get_pas().get_userinfo().get_current_department().get_userprofile().get_rights_management().write_parm()) {
+			eventInputPanel.txtName.setEnabled(false);
+			eventInputPanel.txaDesc.setEnabled(false);
+			eventInputPanel.cbxCategory.setEnabled(false);
+			actionPanel.btnCancel.setEnabled(false);
+			actionPanel.btnSave.setEnabled(false);
+		}
+		
 		//super.setLocationRelativeTo(getParent().getParent());
 		super.setLocation(no.ums.pas.ums.tools.Utils.get_dlg_location_centered(330, 250));
 	}
