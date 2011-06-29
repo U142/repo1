@@ -84,7 +84,7 @@ public class HouseDownloadCache {
         return (zoom < MIN_ZOOM) ? EMPTY : cache.get(new TileCell(zoom, row, column));
     }
 
-    public void clearCache(double lon, double lat) {
+    public void clearPoint(double lon, double lat) {
         for (int z = MIN_ZOOM; z<=MAX_ZOOM; z++) {
             final Point tile = zoomLookups[z].getTile(new LonLat(lon, lat));
             cache.remove(new TileCell(z, tile.y, tile.x));

@@ -118,6 +118,7 @@ public class HouseController extends Controller {
 
     private final ZoomLookup stdZoom = new ZoomLookup(17, 256);
     private final HouseDownloadCache cache = new HouseDownloadCache();
+    public HouseDownloadCache getCache() { return cache; }
     
 	public void start_download(final boolean b) {
 		create_filter();
