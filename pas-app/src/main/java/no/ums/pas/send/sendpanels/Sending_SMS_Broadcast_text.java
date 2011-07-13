@@ -111,7 +111,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		else
 			mins = new ExpiryMins[] { new ExpiryMins("4320") };
 		
-		m_combo_expdate = new JComboBox(mins);
+		m_combo_expdate = new JComboBox<ExpiryMins>(mins);
 		m_combo_expdate.setSelectedIndex(m_combo_expdate.getItemCount()-1);
 		super.m_n_expiry_minutes = Integer.parseInt(((ExpiryMins)m_combo_expdate.getItemAt(m_combo_expdate.getSelectedIndex())).get_minutes());
 		m_combo_expdate.addItemListener(this);
@@ -162,6 +162,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		
 		
 		m_panel_messages.set_gridconst(14, m_panel_messages.get_panel(), 1, 1, GridBagConstraints.WEST);
+        m_panel_messages.setPadding(10, 0);
 		m_panel_messages.add(m_lbl_messagesize, m_panel_messages.m_gridconst);
 		
 		JPanel pnl = new JPanel();
@@ -253,8 +254,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 				m_combo_replynumbers.setEnabled(false);
 		}
 		else if("act_download_finished".equals(e.getActionCommand())) {
-			//m_arr_projects = (ArrayList<Project>)e.getSource();
-			m_responsenumbers = (List<UTASRESPONSENUMBER>)e.getSource();
+            m_responsenumbers = (List<UTASRESPONSENUMBER>)e.getSource();
 			for(int i=0;i<m_responsenumbers.size();++i) {
 				m_combo_replynumbers.addItem(new SmsInReplyNumber(m_responsenumbers.get(i).getSzResponsenumber(),m_responsenumbers.get(i).getNRefno(),m_responsenumbers.get(i).getNTimestamp()));
 			}

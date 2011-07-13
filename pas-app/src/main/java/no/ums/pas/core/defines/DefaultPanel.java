@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -128,6 +129,10 @@ public abstract class DefaultPanel extends JPanel implements ActionListener, Com
 		//m_gridconst.fill = GridBagConstraints.BOTH;
 		m_gridconst.anchor = anc; //GridBagConstraints.WEST;
 	}
+    public final void setPadding(int x, int y) {
+        m_gridconst.insets = new Insets(y, x, 0, 0);
+    }
+
 	public final void set_gridconst(int n_x, int n_y, int n_width, int n_height) {
 		set_gridconst(n_x, n_y, n_width, n_height, GridBagConstraints.FIRST_LINE_START);
 	}	
