@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.ums.ws</groupId>
+    <artifactId>ws-java-clients</artifactId>
+    <name>UMS WebService Client</name>
+    <version>1.2-SNAPSHOT</version>
+    <properties>
+        <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
+        <wsdl.file>None.wsdl</wsdl.file>
+    </properties>
+    <scm>
+        <connection>scm:svn:svn+ssh://eris.sublevel3.org/svn/ws-java-clients/trunk</connection>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>bob</id>
+            <name>bob-releases</name>
+            <url>http://bob.ums2.no/artifactory/hudson-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>bob</id>
+            <name>bob-snapshot</name>
+            <url>http://bob.ums2.no/artifactory/hudson-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport"/>
+                                <echo message="Starting wsimport"/>
+                                <mkdir dir="target/jaxws/wsimport/java"/>
+                                <wsimport wsdl="${wsdl.base}/PasAdmin.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Pas.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/conference.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/ExternalExec.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Infosentral.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/ParmAdmin.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/PasStatus.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/TAS.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/Voice.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+                                <wsimport wsdl="${wsdl.base}/AddressDatabase.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <!--<xjcarg value="-Xequals"/>-->
+                                    <!--<xjcarg value="-XhashCode"/>-->
+                                    <!--<xjcarg value="-XtoString"/>-->
+                                </wsimport>
+<!--
+                                <wsimport wsdl="${wsdl.base}/ParmService.asmx?WSDL"
+                                          binding="${project.basedir}/src/jaxws/bindings.xml"
+                                          sourcedestdir="target/jaxws/wsimport/java" extension="true" verbose="true"
+                                          target="2.1" xnocompile="true">
+                                    <xjcarg value="-Xequals"/>
+                                    <xjcarg value="-XhashCode"/>
+                                    <xjcarg value="-XtoString"/>
+                                    <xjcarg value="-Xfluent-api"/>
+                                </wsimport>
+-->
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun.xml.ws</groupId>
+                        <artifactId>jaxws-tools</artifactId>
+                        <version>2.2.0.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics</artifactId>
+                        <version>0.6.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun.xml</groupId>
+                        <artifactId>jaxb-xjc</artifactId>
+                        <version>2.0EA3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.java.dev.jaxb2-commons</groupId>
+                        <artifactId>jaxb-fluent-api</artifactId>
+                        <version>2.0.1</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>com.sun.xml</groupId>
+                                <artifactId>jaxb-xjc</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/jaxws/wsimport/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.0.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <configuration>
+                        <downloadJavadocs>true</downloadJavadocs>
+                        <downloadSources>true</downloadSources>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <profiles>
+        <profile>
+            <id>beta</id>
+            <properties>
+                <wsdl.base>https://secure.ums2.no/PAS/ws_pasutv/WS</wsdl.base>
+            </properties>
+        </profile>
+        <profile>
+            <id>qa</id>
+            <properties>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pasqa/WS</wsdl.base>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pas/WS</wsdl.base>
+            </properties>
+        </profile>
+    </profiles>
+</project>

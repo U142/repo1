@@ -1,0 +1,1 @@
+﻿<%@ WebService Language="C#" CodeBehind="ExternalExec.asmx.cs" Class="com.ums.ws.parm.parmws" %>

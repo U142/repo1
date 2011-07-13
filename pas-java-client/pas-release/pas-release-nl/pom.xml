@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>no.ums</groupId>
+        <artifactId>pas-release</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>pas-release-nl</artifactId>
+    <name>NLAlert - BETA</name>
+    <description>NLAlert Beta</description>
+    <properties>
+        <jnlp.filename>nlalert.jnlp</jnlp.filename>
+        <jnlp_title>PAS - DEVEL</jnlp_title>
+        <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/	</jnlp_codebase_url>
+        <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
+        <jnlp_w>https://secure.ums2.no/PAS/ws_nlalert/WS/</jnlp_w>
+        <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-plugin-centric</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo.webstart</groupId>
+                <artifactId>webstart-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>nlalert-beta</id>
+            <properties>
+                <jnlp_title>NLAlert - BETA</jnlp_title>
+                <jnlp_codebase_url>https://secure.ums2.no/PAS/nlalert/</jnlp_codebase_url>
+                <jnlp_s>https://secure.ums2.no/PAS/</jnlp_s>
+                <jnlp_w>https://secure.ums2.no/PAS/ws_nlalert/WS/</jnlp_w>
+                <jnlp_v>https://secure.ums2.no/vb4utv/</jnlp_v>
+            </properties>
+        </profile>
+	</profiles>
+</project>

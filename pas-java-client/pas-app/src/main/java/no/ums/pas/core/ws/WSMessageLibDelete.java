@@ -1,0 +1,59 @@
+package no.ums.pas.core.ws;
+
+import no.ums.pas.PAS;
+import no.ums.pas.localization.Localization;
+import no.ums.pas.ums.errorhandling.Error;
+import no.ums.ws.common.UBBMESSAGE;
+import no.ums.ws.common.ULOGONINFO;
+import no.ums.ws.pas.Pasws;
+
+import javax.xml.namespace.QName;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class WSMessageLibDelete extends WSMessageLibEdit
+{
+	public WSMessageLibDelete(ActionListener callback, UBBMESSAGE msg)
+	{
+		super(callback, msg);
+	}
+
+	@Override
+	public void onDownloadFinished() {
+		m_callback.actionPerformed(new ActionEvent(m_msg, ActionEvent.ACTION_PERFORMED, "act_messagelib_deleted"));
+
+	}
+
+	@Override
+	public void run() {
+		ULOGONINFO logon = new ULOGONINFO();
+		no.ums.pas.core.logon.UserInfo ui = PAS.get_pas().get_userinfo();
+		logon.setLComppk(ui.get_comppk());
+		logon.setLDeptpk(ui.get_current_department().get_deptpk());
+		logon.setLUserpk(Long.parseLong(ui.get_userpk()));
+		logon.setSzCompid(ui.get_compid());
+		logon.setSzDeptid(ui.get_current_department().get_deptid());
+		logon.setSzUserid(ui.get_userid());
+		logon.setSzPassword(ui.get_passwd());
+		logon.setSessionid(ui.get_sessionid());
+		java.net.URL wsdl;
+		try
+		{			
+			wsdl = new java.net.URL(vars.WSDL_PAS);
+			QName service = new QName("http://ums.no/ws/pas/", "pasws");
+			m_msg = new Pasws(wsdl, service).getPaswsSoap12().deleteMessageLibrary(logon, m_msg);
+			//list = new Pasws(wsdl, service).getPaswsSoap12().getMessageLibrary(logon, filter);
+		}
+		catch(Exception e)
+		{
+            Error.getError().addError(Localization.l("common_error"), "Error saving message library", e, Error.SEVERITY_ERROR);
+			m_msg.setBValid(false);
+			//list = new UBBMESSAGELIST();
+			//list.setNServertimestamp(-1);
+		}
+		finally
+		{
+			onDownloadFinished();
+		}		
+	}
+}

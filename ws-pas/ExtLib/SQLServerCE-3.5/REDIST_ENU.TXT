@@ -1,0 +1,80 @@
+﻿The listed .msi files each install its enclosed components to a specific location on the destination computer.  This helps to ensure serviceability and technical support.  The .dll files enclosed in these .msi files are also available separately in this redist.txt.  However, distributions of these separate .dlls may result in issues of serviceability.  For more details, please see http://go.microsoft.com/fwlink/?LinkId=94589
+
+Microsoft SQL Server Compact 3.5
+-------------------------------------------------
+SSCERuntime-ENU.msi
+SSCERuntime-DEU.msi
+SSCERuntime-FRA.msi
+SSCERuntime-JPN.msi
+SSCERuntime-RUS.msi
+SSCERuntime-ESN.msi
+SSCERuntime-ITA.msi
+SSCERuntime-KOR.msi
+SSCERuntime-CHT.msi
+SSCERuntime-CHS.msi
+sqlcese35.dll
+sqlceqp35.dll
+sqlceoledb35.dll
+sqlceca35.dll
+sqlceme35.dll
+sqlcecompact35.dll
+sqlceer35en.dll
+sqlceer35cn.dll/sqlceer35zh-CHS.dll
+sqlceer35de.dll 
+sqlceer35es.dll 
+sqlceer35fr.dll 
+sqlceer35it.dll 
+sqlceer35ja.dll 
+sqlceer35ko.dll 
+sqlceer35tw.dll/sqlceer35zh-CHT.dll 
+sqlceer35ru.dll
+System.Data.SqlServerCe.dll
+
+Microsoft Synchronization Services for ADO.Net v1.0
+------------------------------------------------------------------------
+Microsoft.Synchronization.Data.dll
+Microsoft.Synchronization.Data.Server.dll
+Microsoft.Synchronization.Data.SqlServerCe.dll
+Microsoft.Synchronization.Data.resources.dll
+
+The listed .cab files each install its enclosed components to a specific location on the destination mobile device.  This helps to ensure serviceability and technical support.  The .dll and exe files enclosed in these .cab files are also available separately in this redist.txt.  However, distributions of these separate .dlls and exes may result in issues of serviceability.  For more details, please see http://go.microsoft.com/fwlink/?LinkId=94589
+
+Microsoft SQL Server Compact 3.5
+-------------------------------------------------
+sqlcese35.dll
+sqlceqp35.dll
+sqlceoledb35.dll
+sqlceca35.dll
+sqlceme35.dll
+sqlcecompact35.dll
+sqlceer35en.dll 
+sqlceer35cn.dll/sqlceer35zh-CHS.dll
+sqlceer35de.dll
+sqlceer35es.dll 
+sqlceer35fr.dll
+sqlceer35it.dll 
+sqlceer35ja.dll 
+sqlceer35ko.dll 
+sqlceer35tw.dll/sqlceer35zh-CHT.dll
+sqlceer35ru.dll
+System.Data.SqlServerCe.dll
+System.Data.SqlClient.dll
+isqlw35.exe
+upgrade.exe
+dbnetlib.dll
+
+language: CHS, CHT, DE, ENU, ES, FR, IT, JA, KO, RU
+device: ppc, phone
+platform: wce4, wce5
+processor: armv4, armv4i, mipsii, mipsii_fp, mipsiv, mipsiv_fp, sh4, x86
+
+sql.dev.[language].[device].[platform].[processor].CAB
+sql.dev.[language].[platform].[processor].CAB
+sql.[device].[platform].[processor].CAB
+sql.[platform].[processor].CAB
+sqlce.[device].[platform].[processor].CAB
+sqlce.[platform].[processor].CAB
+sqlce.repl.[device].[platform].[processor].CAB
+sqlce.repl.[platform].[processor].CAB
+sqlce.dev.[language].[device].[platform].[processor].CAB
+sqlce.dev.[language].[platform].[processor].CAB

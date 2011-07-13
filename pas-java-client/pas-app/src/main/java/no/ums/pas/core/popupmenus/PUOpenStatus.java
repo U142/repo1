@@ -1,0 +1,67 @@
+package no.ums.pas.core.popupmenus;
+
+
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+import no.ums.pas.PAS;
+import no.ums.pas.core.mainui.SearchPanelStatusList;
+import no.ums.pas.localization.Localization;
+import no.ums.pas.status.StatusListObject;
+
+import javax.swing.JMenuItem;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class PUOpenStatus extends PUMenu implements ActionListener {
+
+    private static final Log log = UmsLog.getLogger(PUOpenStatus.class);
+
+	public static final long serialVersionUID = 1;
+	//JMenuItem item_refno;
+	JMenuItem item_project;
+	SearchPanelStatusList m_callback;
+	boolean m_b_project = false;
+	StatusListObject m_obj;
+	
+	public PUOpenStatus(PAS pas, String sz_name, SearchPanelStatusList callback)
+	{
+		super(pas, sz_name);
+		//item_refno = new JMenuItem("Open status for refno");
+        item_project = new JMenuItem(Localization.l("projectdlg_open_project"));
+		//item_refno.setActionCommand("act_status_refno");
+		item_project.setActionCommand("act_status_project");
+		//add(item_refno);
+		add(item_project);
+		//item_refno.addActionListener(this);
+		item_project.addActionListener(this);
+		set_layout();
+		m_callback = callback;
+	}
+	public void pop(Component comp, Point p, StatusListObject obj) {
+		super.pop(comp, p);
+		m_obj = obj;
+		try {
+			if(obj.get_project().get_projectpk().equals("-1")) {
+				m_b_project = false;
+			} else {
+				m_b_project = true;
+			}
+			item_project.setEnabled(m_b_project);
+		} catch(Exception e) {
+			log.debug(e.getMessage());
+		}
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		/*if("act_status_refno".equals(e.getActionCommand())) {
+			m_callback.openStatus(false, "-1", m_obj.get_refno());
+		}
+		else */
+		if("act_status_project".equals(e.getActionCommand())) {
+			m_callback.openStatus(true, m_obj, -1);
+		}
+	}
+}

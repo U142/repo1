@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>pas-parent</artifactId>
+        <groupId>no.ums</groupId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>pas-release</artifactId>
+    <name>PAS - Release parent</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <build.number>Not set</build.number>
+    </properties>
+
+    <modules>
+        <module>pas-release-nl</module>
+        <module>pas-release-ums</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo.webstart</groupId>
+                    <artifactId>webstart-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jnlp</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <pack200>false</pack200>
+                        <jnlp>
+                            <mainClass>no.ums.pas.entrypoint.ExecApp</mainClass>
+                            <outputFile>${jnlp.filename}</outputFile>
+                        </jnlp>
+                        <sign>
+                            <keystore>${project.basedir}/../ums.keystore</keystore>
+                            <keypass>${key.keypass}</keypass>
+                            <storepass>${key.storepass}</storepass>
+                            <alias>${key.alias}</alias>
+
+                            <verify>true</verify>
+                        </sign>
+                        <libPath>${jnlp_codebase}</libPath>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>keytool-maven-plugin</artifactId>
+                    <configuration>
+                        <dname>CN=Morten H. Helvig, OU=Unified Messaging Systems AS, O=Unified Messaging Systems AS,
+                            L=Sandnes, ST=Rogaland, C=no
+                        </dname>
+                        <keystore>ums.keystore</keystore>
+                        <keypass>${key.keypass}</keypass>
+                        <storepass>${key.storepass}</storepass>
+                        <alias>${key.alias}</alias>
+                        <validity>5500</validity>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>no.ums.maven</groupId>
+                    <artifactId>maven-ums-plugin</artifactId>
+                    <configuration>
+                        <src>${build.directory}/${project.build.finalName}.zip</src>
+                        <!--<dest>${jnlp.output}</dest>-->
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-cellbroadcast</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>core</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>gps</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>importer</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>maps</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>parm</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>pas</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>send</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>sound</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>status</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>tas</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.ums</groupId>
+            <artifactId>pas-app</artifactId>
+            <classifier>ums</classifier>
+        </dependency>
+    </dependencies>
+</project>
