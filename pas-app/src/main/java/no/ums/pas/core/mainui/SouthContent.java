@@ -39,7 +39,8 @@ public class SouthContent extends JPanel implements ComponentListener {
 		prepare_controls();
 		add_controls();
 	}
-	public void resize(Dimension d) {
+	@SuppressWarnings({"deprecation"})
+    public void resize(Dimension d) {
 		revalidate();
 		m_eventpanel.revalidate();
 		repaint();

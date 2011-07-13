@@ -10,29 +10,48 @@
  */
 package no.ums.log.swing;
 
-import java.awt.*;
+import no.ums.log.Log;
+import no.ums.log.UmsLog;
+
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.LayoutStyle;
+import javax.swing.ListCellRenderer;
+import javax.swing.TransferHandler;
+import javax.swing.WindowConstants;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-
-import no.ums.log.Log;
-import no.ums.log.UmsLog;
 
 /**
  *
@@ -322,6 +341,7 @@ public class LogFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void writeSelected(final PrintWriter writer) {
+        //noinspection deprecation
         for (final Object o : jList1.getSelectedValues()) {
             final LogRecord logRecord = (LogRecord) o;
             writer.printf("%tF %tT [%-7s] (%s) %s\n", logRecord.getMillis(), logRecord.getMillis(), logRecord.getLevel().getName(), logRecord.getLoggerName(), logRecord.getMessage());

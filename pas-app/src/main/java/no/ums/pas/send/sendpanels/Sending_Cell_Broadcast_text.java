@@ -367,7 +367,8 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 			public void focusGained(FocusEvent e) {
 				if(n_focuscounter == 0 && m_cbx_messages.getSelectedIndex() == -1) {
 					m_txt_messagetext.setText("");
-					keyReleased(new KeyEvent(m_txt_messagetext,KeyEvent.KEY_RELEASED, 10, 0, 0));
+                    final KeyEvent keyEvent = new KeyEvent(m_txt_messagetext, KeyEvent.KEY_RELEASED, 10, 0, 0);
+                    keyReleased(keyEvent);
 				}
 				++n_focuscounter;
 			}
@@ -784,9 +785,7 @@ public class Sending_Cell_Broadcast_text extends DefaultPanel implements ActionL
 		}
 	}	
 	public ArrayList<CCode> getCCodes() {
-		/*Object selected[] = m_lst_cc.getSelectedObjects();*/
-		//listModel.get
-		Object selected [] = m_lst_cc.getSelectedValues();
+		@SuppressWarnings({"deprecation"}) Object selected [] = m_lst_cc.getSelectedValues();
 		ArrayList<CCode> al = new ArrayList<CCode>();
 		
 		for(int i=0;i<selected.length;i++) {

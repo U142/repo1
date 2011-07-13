@@ -18,7 +18,6 @@ import org.jvnet.substance.theme.SubstanceTheme;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -471,7 +470,8 @@ public class EastContent extends JPanel implements ActionListener, ComponentList
 	public void componentMoved(ComponentEvent e) { }
 	public void componentShown(ComponentEvent e) {
 		log.debug("test");
-	}	
+	}
+    @SuppressWarnings({"deprecated", "deprecation"})
 	public void resize(Dimension d) {
 		if(d.height<=0 || d.width<=0)
 			return;

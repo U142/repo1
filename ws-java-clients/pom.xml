@@ -44,37 +44,6 @@
     </distributionManagement>
     <build>
         <plugins>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>jaxws-maven-plugin</artifactId>-->
-            <!--<version>1.12</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>wsimport</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<wsdlUrls>-->
-            <!--<wsdlUrl>${wsdl.base}/PasAdmin.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Pas.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/conference.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/ExternalExec.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Infosentral.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/ParmAdmin.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/PasStatus.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/TAS.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/Voice.asmx?WSDL</wsdlUrl>-->
-            <!--<wsdlUrl>${wsdl.base}/AddressDatabase.asmx?WSDL</wsdlUrl>-->
-            <!--&lt;!&ndash;<wsdlUrl>${wsdl.base}/ParmService.asmx?WSDL</wsdlUrl>&ndash;&gt;-->
-            <!--</wsdlUrls>-->
-            <!--<extension>true</extension>-->
-            <!--<bindingFiles>-->
-            <!--<bindingFile>${project.basedir}/src/jaxws/bindings.xml</bindingFile>-->
-            <!--</bindingFiles>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>

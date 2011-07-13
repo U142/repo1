@@ -41,7 +41,8 @@ public abstract class ColorPicker extends JColorChooser
 		
 	}
 	public Color get_selected_color() { return m_selected_color; }
-	public void show()
+	@SuppressWarnings({"deprecation"})
+    public void show()
 	{
 		m_dialog = createDialog(m_parent, m_sz_title, true, this, new OnOk(), new OnCancel());
 		m_dialog.setVisible(true);

@@ -111,7 +111,7 @@ public class Sending_SMS_Broadcast_text extends Sending_Cell_Broadcast_text
 		else
 			mins = new ExpiryMins[] { new ExpiryMins("4320") };
 		
-		m_combo_expdate = new JComboBox<ExpiryMins>(mins);
+		m_combo_expdate = new JComboBox(mins);
 		m_combo_expdate.setSelectedIndex(m_combo_expdate.getItemCount()-1);
 		super.m_n_expiry_minutes = Integer.parseInt(((ExpiryMins)m_combo_expdate.getItemAt(m_combo_expdate.getSelectedIndex())).get_minutes());
 		m_combo_expdate.addItemListener(this);

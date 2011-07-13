@@ -74,6 +74,11 @@
             <groupId>jnlp</groupId>
             <artifactId>jnlp</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.ums.ws</groupId>
+            <artifactId>ws-java-clients</artifactId>
+            <version>1.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
