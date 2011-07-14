@@ -1,5 +1,7 @@
 package no.ums.pas.versioning;
 
+import com.google.common.io.Resources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,7 +29,7 @@ public enum VersionInfo {
     }
 
     Properties loadProperties() {
-        URL resource = Thread.currentThread().getContextClassLoader().getResource("build.properties");
+        URL resource = Resources.getResource("build.properties");
         Properties props = new Properties();
         if (resource != null) {
             try {
