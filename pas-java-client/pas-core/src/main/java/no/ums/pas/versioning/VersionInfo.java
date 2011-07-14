@@ -19,7 +19,7 @@ public enum VersionInfo {
     private VersionInfo() {
         Properties props = loadProperties();
 
-        revisionNumber = props.getProperty("revision.number", "").substring(0, 6);
+        revisionNumber = props.getProperty("revision.number", "").substring(0, 8);
         buildNumber = props.getProperty("build.number", "");
         buildUser = props.getProperty("build.user", "");
         buildVersion = props.getProperty("build.version", "");
