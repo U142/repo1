@@ -1,0 +1,141 @@
+﻿1.2.10
+======
+	* Fixed bug in Status check to prevent deactivated operators from sending infomessage/ems requests (SupportWeb 53)
+	* Fixed bug in GSM encoding, + was listed as = which meant that = got the ascii code for +, and + was replaced with ? since it was missing. (SupportWeb 52)
+
+1.2.9
+=====
+	* Fixed Regexp for GSM Δ was wrong character
+	* Added XML signing for t-mobile API
+
+1.2.8
+=====
+	* Fixed bug in GSM encoding for one2many and moved padding to the encoding function
+
+1.2.7
+=====
+	* Fixed typo in log message for T-Mobile if channel category isn't found
+	* Fixed bug in repetition interval calculation for one2many heartbeat messages. Should be <validity> * 60 / 1.883 (for one repetition), was <validity> / 1.883 / 1.883
+
+1.2.6
+=====
+CBServer
+	* Added a check for closing coordinate, won't be added if the polygon is already closed.
+	* Fixed XML not being posted as UTF-8 for T-Mobile.
+
+1.2.5
+=====
+CBServer
+	* Fixed bug in GetAlertStatus where valid data would be overwritten if operator gives error. Now uses existing values (if any) when a call fails, but updates timestamp to prevent spamming the operator with requests.
+	* Changed repetition interval from 240 to 480 on t-mobile heartbeats and tests
+	* Fixed bug in status check, 3-min check (report) would set a killed alert back to active and continue checking status
+	* Fixed bug in retry/kill combination. If a message is retrying and a kill message is send, message is set to cancelled right away instead of running through the retries and getting a final error (or being sent out if one of the later tries are successul)
+	* Fixed bug in status codes for killed messages. Were incorrectly set as finished in the database instead of cancelled
+Database
+	* Added sp_upd_cellhist_ts to enable the CBServer to update cellhist timestamp without overwriting data if info message/ems message fails
+
+1.2.4
+=====
+CBServer
+	* Fixed bug in EMS message response parsing, expected message_type report, but actualy message_type should be ack.
+
+1.2.3
+=====
+CBServer
+	* Added GetBytes and ToInt32 to Tools class to convert T-Mobile message number from little endian to big endian representation if architecture is running little endian.
+	* Changed default value to "High Priority" for T-Mobile priority.
+	* Fixed typo in logging of InfoMessage and KillMessage (were referred to as NewMessage if response was null) for T-Mobile
+	* Added link test for T-Mobile, and config parameters to set interval
+
+1.2.2
+=====
+CBServer
+	* Fixed EMS message for T-Mobile API, if EMS fails, it will insert -1 into histcell instead of just spamming new checks every second.
+	* Fixed repetitioninterval. LBAPARAM l_repetitioninterval is in minutes.
+		- For T-Mobile this is used for GSM, while UMTS is multiplied by 60 to get seconds.
+		- For one2many it is multiplied with 60 to get seconds, and then divided by 1.883 which is the increments.
+
+1.2.1
+=====
+CBServer
+	* Fixed bug in T-Mobile logging, logged l_refno instead of request pk in most operations.
+	* Changed getoperators to ignore department and just get all active cb operators.
+
+1.2.0
+=====
+CBServer
+	* Changed version to 1.2
+	* Removed l_testchannel and l_repetitioninterval from one2many operator XML.
+	* Added test_channel_category and heartbeat_channel_category to alcatel-lucentt operator XML. (removed)
+	* Changed retries for kill messages to infinite (as long as message is active).
+	* Changed kill status to CANCELLING, and retries to failed kill messages will not update the LBASEND tables tries or status.
+	* Added support for test and heartbeat messages in CreateAlert.
+	* Added LBAParameter class which reads values from the LBAPARAMETER table (test channels and system user)
+	* Added specific handeling of status code 1029 from one2many api (no cells in area)
+	* Changed database to allow recursive triggers (ALTER DATABASE <database> SET RECURSIVE_TRIGGERS ON)
+	* Added table LBAOPERATOR_CHANNELNAMES to allow easier editing of operator specific channel names
+	* Changed status thread. Now checks after 1 minute, 3 minutes, every x seconds and after expiration. X seconds can be disabled.
+	* Added table LBAHISTCELL_REPORT, the 3 minute status is stored here.
+	* Changed sp_cb_ins_cellhist and sp_cb_upd_cellhist to include LBAHISTCELL_REPORT.
+	* Changed default values for LBAHISTCELL to null, null, null, null, null, null, -1 to be able to differentiate which status check was needed to be run.
+	* Added f_active to LBAOPERATORS, when getting uservalues, only active operators are returned.
+	* Added heart beat and test message parameters to application configuration file.
+
+1.1.3
+=====
+Installation
+	* Updated documentation.
+	* Fixed install failing when an older version of the service was already installed.
+
+1.1.2
+=====
+one2many
+	* Changed status so only one of the two information calls is used. CBC_InfoMsgRequest for version < 2.4, and CBC_MsgNetworkCellCountRequest for version >= 2.4.
+CBServer
+	* Overhauling of the error and exception handling.
+
+1.1.1
+=====
+Config
+	* Added key Live (boolean), true means xml is sent to operators, false means the application stops when it usually would send the XML. The Debug key will now specify if the application should write the outbound and incoming XML to the dump folder, this is independent of the Live setting, so XML for both outbound and incoming calls will be logged if Live is true. If Live is false and Debug is true, it will behave as if Debug was true in version <1.1.0 (outbound XML will be dumped, and application stop before sending it to the operator).
+Log
+	* The lines 2010-08-11 11:09:41 100065 (op=KPN) NewMessage DUMPED will only be logged if Live is false. If Live is true, these log lines will not be written even if Debug is true. This is to prevent clogging the log file with too much information while running in Live mode.
+CBServer
+	* Added support for messages >93 characters for one2many. If the message is >93 characters, it will be split into multiple pages. The server will try to split between words if possible. For t-mobile I assume this will be done on their end as they have no page setting in the XML.
+	* Added better error handling throughout the application.
+	* Made sure logout is always run on the one2many API, even if an exception occurs during send operation.
+	* Added check to see if the broadcast has already been sent to the operator. This is to prevent multiple identical broadcasts being generated during retries if one or more operator fails.
+	* Added dump for incoming XML if Debug is set to true (need Live = true as well to actually send and receive XML of course, otherwise only outbound XML will be dumped as before).
+	* Changed xcord, ycord to lon, lat in CBServer XML (alertpolygon/polypoint). Outbound XML to operator is unchanged. Change done to support interface1 XML output which uses lon, lat instead of xcord, ycord.
+	* Fixed missing <IBAG_coordinate_system>UTM</IBAG_coordinate_system> for t-mobile in PLMN messages.
+	* Fixed bug in XML parser for PLMN messages (was treated as polygon while parsing which produced an exception when it tried to find the polygon).
+	* Added first polygon point in polygon point list for one2many (according to spec it should be coord1, coord2, coord3, ... , coordn, coord1 as with t-mobile).
+	* Fixed status updates, was missing some values in LBAHISTCELL.
+Database
+	* Added column l_successpercentage (float) to LBAHISTCELL.
+	* Changed procedure sp_cb_ins_cellhist to check for existing records (to prevent multiple inserts during retries if one or more operator fails).
+Self test
+	* The default test message is >93 characters to force 2 pages for the one2many api
+	* The polygon points are named lon, lat in the XML instead of xcord, ycord
+
+1.1.0
+=====
+t-mobile
+	Changes to XML output
+		* Added IBAG_cap_alert_uri to IBAG_Alert_Attributes
+		* Added IBAG_referenced_message_cap_identifier to IBAG_Alert_Attributes
+		* Added IBAG_response_type to IBAG_alert_info
+		* Added IBAG_channel_category to IBAG_alert_info
+		* Added IBAG_utm_zone to IBAG_Alert_Area
+		* Changed polygon from several elements to one element with “x1,y1 x2,y2 … xn,yn x1, y1”
+		* Changes XML encoding from UTF-16 to UTF-8
+	Changes to Default values
+		* Added cap_alert_uri
+		* Added channel_category
+		* Added response_type
+one2many
+	* Added CBCLOGOUTREQUEST and CBCLOGOUTREQRESULT
+	* Added logout to all operations (new message, new plmn message, kill message and info message)
+	* Fixed bug in CBCMSGNETWORKCELLCOUNTREQRESULT (renamed parameter from cbecbcstatuscode to cbccbestatuscode)
+	* Changed message in page data, message is now padded with CR to 93 characters, encoded with GSM 7-bit and then base64 encoded
+	* Password in CBCLOGINREQUEST is now base64 encoded

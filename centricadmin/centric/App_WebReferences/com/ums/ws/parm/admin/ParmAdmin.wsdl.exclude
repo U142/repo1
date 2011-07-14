@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/parm/admin/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/parm/admin/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/parm/admin/">
+      <s:element name="ExecEventUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="ev" type="tns:PAEVENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ULOGONINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_priserver" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altservers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PAEVENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="parmop" type="tns:PARMOPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_temppk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_eventpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parent" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_categorypk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_epi_lon" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_epi_lat" type="s:float" />
+          <s:element minOccurs="0" maxOccurs="1" name="alerts" type="tns:ArrayOfPAALERT" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PARMOPERATION">
+        <s:restriction base="s:string">
+          <s:enumeration value="insert" />
+          <s:enumeration value="update" />
+          <s:enumeration value="delete" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfPAALERT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PAALERT" nillable="true" type="tns:PAALERT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PAALERT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="parmop" type="tns:PARMOPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_temppk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_alertpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_parent" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profilepk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_schedpk" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_oadc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_validity" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_timestamp" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_locked" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_areaid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_function" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_shape" type="tns:UShape" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_lba_shape" type="tns:UShape" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_sendingtype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_maxchannels" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_expiry" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UShape" abstract="true">
+        <s:attribute name="col_red" type="s:float" use="required" />
+        <s:attribute name="col_green" type="s:float" use="required" />
+        <s:attribute name="col_blue" type="s:float" use="required" />
+        <s:attribute name="col_alpha" type="s:float" use="required" />
+        <s:attribute name="f_disabled" type="s:int" use="required" />
+        <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
+      </s:complexType>
+      <s:element name="ExecEventUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecEventUpdateResult" type="tns:UPAEVENTRESULT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPAEVENTRESULT">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UPARESULT" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPARESULT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="pk" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ExecObjectUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="obj" type="tns:PAOBJECT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PAOBJECT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="parmop" type="tns:PARMOPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_temppk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_objectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_importpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_categorypk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parent" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_postno" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_place" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_phone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_metadata" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_isobjectfolder" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_shape" type="tns:UPolygon" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="tns:UPolypoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPolypoint">
+        <s:attribute name="lon" type="s:double" use="required" />
+        <s:attribute name="lat" type="s:double" use="required" />
+      </s:complexType>
+      <s:element name="ExecObjectUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecObjectUpdateResult" type="tns:UPAOBJECTRESULT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPAOBJECTRESULT">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UPARESULT" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ExecPAShapeUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="obj" type="tns:PAOBJECT" />
+            <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:PASHAPETYPES" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="PASHAPETYPES">
+        <s:restriction base="s:string">
+          <s:enumeration value="PAALERT" />
+          <s:enumeration value="PAEVENT" />
+          <s:enumeration value="PAOBJECT" />
+          <s:enumeration value="PAUSERRESTRICTION" />
+          <s:enumeration value="PADEPARTMENTRESTRICTION" />
+          <s:enumeration value="PASENDING" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ExecPAShapeUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecPAShapeUpdateResult" type="tns:UPAOBJECTRESULT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Defines">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="e" type="tns:UEllipse" />
+            <s:element minOccurs="0" maxOccurs="1" name="p" type="tns:UPolygon" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="tns:UGeminiStreet" />
+            <s:element minOccurs="0" maxOccurs="1" name="l" type="tns:ULocationBasedAlert" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UEllipse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="x" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="y" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UGeminiStreet">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="linelist" type="tns:ArrayOfUGisImportResultLine" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUGisImportResultLine">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UGisImportResultLine" nillable="true" type="tns:UGisImportResultLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UGisImportResultLine">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="municipalid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="streetid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="houseno" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="letter" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="namefilter1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="namefilter2" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_linenumber" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_isvalid" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:UAddressList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UAddressList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="list_basics" type="tns:ArrayOfUAddressBasics" />
+          <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfUAddress" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUAddressBasics">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UAddressBasics" nillable="true" type="tns:UAddressBasics" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UAddressBasics">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="kondmid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="hasfixed" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="hasmobile" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="bedrift" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="arrayindex" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UAddress">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UAddressBasics">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="address" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="houseno" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="letter" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="postno" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="postarea" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="region" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="bday" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="number" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="mobile" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="gno" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="bno" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="importid" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="streetid" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="xycode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="municipalid" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUAddress">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UAddress" nillable="true" type="tns:UAddress" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULocationBasedAlert">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="l_alertpk" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="m_languages" type="tns:ArrayOfLBALanguage" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_expiry_minutes" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBALanguage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBALanguage" nillable="true" type="tns:LBALanguage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBALanguage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_cb_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_otoa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_ccodes" type="tns:ArrayOfLBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBACCode" nillable="true" type="tns:LBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ccode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DefinesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DefinesResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logon" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="a" type="tns:PAALERT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecAlertUpdateResult" type="tns:UPAALERTRESTULT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPAALERTRESTULT">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:UPARESULT" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="UpdateParm">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="zipfile" type="s:base64Binary" />
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_filename" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_polyfilename" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateParmResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateParmResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserRegion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="tns:ArrayOfUBBUSER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUBBUSER">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UBBUSER" nillable="true" type="tns:UBBUSER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UBBUSER">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_surname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profilepk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_bdate" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_disabled" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_logontries" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_nopasswd_change" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_ivrlogon" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_language" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_adrlistserie" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_adrlist_sort" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_adrlist_search" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_statusserie" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_sort" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_search" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_keepalive" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_recprpage" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_audiosetup" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status_owned_groups" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_paspassword" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_allow_nondept_resend" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_timezone" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_blocklist_default" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_session_expires_sec" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_hash_paspwd" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_deptpklist" type="tns:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_organization" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_disabled_reasoncode" type="tns:BBUSER_BLOCK_REASONS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="BBUSER_BLOCK_REASONS">
+        <s:restriction base="s:string">
+          <s:enumeration value="NONE" />
+          <s:enumeration value="REACHED_RETRY_LIMIT" />
+          <s:enumeration value="BLOCKED_BY_ADMIN" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetUserRegionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserRegionResult" type="tns:ArrayOfCB_USER_REGION_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCB_USER_REGION_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_USER_REGION_RESPONSE" nillable="true" type="tns:CB_USER_REGION_RESPONSE" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CB_USER_REGION_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="regionlist" type="tns:ArrayOfPAOBJECT" />
+          <s:element minOccurs="0" maxOccurs="1" name="user" type="tns:UBBUSER" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPAOBJECT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PAOBJECT" nillable="true" type="tns:PAOBJECT" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetRestrictionAreas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRestrictionAreasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRestrictionAreasResult" type="tns:ArrayOfUDEPARTMENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UDEPARTMENT" nillable="true" type="tns:UDEPARTMENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UDEPARTMENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="lbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="rbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="ubo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="bbo" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_default" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_maxalloc" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofilename" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userprofiledesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_status" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_newsending" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parm" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_fleetcontrol" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_lba" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_houseeditor" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_defaultnumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_map" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_pas" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="municipals" type="tns:ArrayOfUMunicipalDef" />
+          <s:element minOccurs="0" maxOccurs="1" name="restrictionShapes" type="tns:ArrayOfUShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UMunicipalDef" nillable="true" type="tns:UMunicipalDef" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalname" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUShape">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UShape" nillable="true" type="tns:UShape" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersResult" type="tns:ArrayOfUBBUSER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRegions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="logoninfo" type="tns:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRegionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRegionsResult" type="tns:ArrayOfPAOBJECT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccessPermissions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="objectpk" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccessPermissionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccessPermissionsResult" type="tns:ArrayOfUBBUSER" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ExecEventUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecEventUpdate" />
+  </wsdl:message>
+  <wsdl:message name="ExecEventUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecEventUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecObjectUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecObjectUpdate" />
+  </wsdl:message>
+  <wsdl:message name="ExecObjectUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecObjectUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecPAShapeUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecPAShapeUpdate" />
+  </wsdl:message>
+  <wsdl:message name="ExecPAShapeUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecPAShapeUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="DefinesSoapIn">
+    <wsdl:part name="parameters" element="tns:Defines" />
+  </wsdl:message>
+  <wsdl:message name="DefinesSoapOut">
+    <wsdl:part name="parameters" element="tns:DefinesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecAlertUpdate" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecAlertUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateParmSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateParm" />
+  </wsdl:message>
+  <wsdl:message name="UpdateParmSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateParmResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserRegionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserRegion" />
+  </wsdl:message>
+  <wsdl:message name="GetUserRegionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserRegionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRestrictionAreasSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRestrictionAreas" />
+  </wsdl:message>
+  <wsdl:message name="GetRestrictionAreasSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRestrictionAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsers" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRegionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRegions" />
+  </wsdl:message>
+  <wsdl:message name="GetRegionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRegionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccessPermissionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccessPermissions" />
+  </wsdl:message>
+  <wsdl:message name="GetAccessPermissionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccessPermissionsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ParmAdminSoap">
+    <wsdl:operation name="ExecEventUpdate">
+      <wsdl:input message="tns:ExecEventUpdateSoapIn" />
+      <wsdl:output message="tns:ExecEventUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecObjectUpdate">
+      <wsdl:input message="tns:ExecObjectUpdateSoapIn" />
+      <wsdl:output message="tns:ExecObjectUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecPAShapeUpdate">
+      <wsdl:input message="tns:ExecPAShapeUpdateSoapIn" />
+      <wsdl:output message="tns:ExecPAShapeUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Defines">
+      <wsdl:input message="tns:DefinesSoapIn" />
+      <wsdl:output message="tns:DefinesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertUpdate">
+      <wsdl:input message="tns:ExecAlertUpdateSoapIn" />
+      <wsdl:output message="tns:ExecAlertUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateParm">
+      <wsdl:input message="tns:UpdateParmSoapIn" />
+      <wsdl:output message="tns:UpdateParmSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserRegion">
+      <wsdl:input message="tns:GetUserRegionSoapIn" />
+      <wsdl:output message="tns:GetUserRegionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <wsdl:input message="tns:GetRestrictionAreasSoapIn" />
+      <wsdl:output message="tns:GetRestrictionAreasSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <wsdl:input message="tns:GetUsersSoapIn" />
+      <wsdl:output message="tns:GetUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegions">
+      <wsdl:input message="tns:GetRegionsSoapIn" />
+      <wsdl:output message="tns:GetRegionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccessPermissions">
+      <wsdl:input message="tns:GetAccessPermissionsSoapIn" />
+      <wsdl:output message="tns:GetAccessPermissionsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ParmAdminSoap" type="tns:ParmAdminSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ExecEventUpdate">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/ExecEventUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecObjectUpdate">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/ExecObjectUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecPAShapeUpdate">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/ExecPAShapeUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Defines">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/Defines" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertUpdate">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/ExecAlertUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateParm">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/UpdateParm" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserRegion">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetUserRegion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegions">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetRegions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccessPermissions">
+      <soap:operation soapAction="http://ums.no/ws/parm/admin/GetAccessPermissions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ParmAdminSoap12" type="tns:ParmAdminSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ExecEventUpdate">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/ExecEventUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecObjectUpdate">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/ExecObjectUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecPAShapeUpdate">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/ExecPAShapeUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Defines">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/Defines" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertUpdate">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/ExecAlertUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateParm">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/UpdateParm" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserRegion">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetUserRegion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRestrictionAreas">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetRestrictionAreas" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegions">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetRegions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccessPermissions">
+      <soap12:operation soapAction="http://ums.no/ws/parm/admin/GetAccessPermissions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ParmAdmin">
+    <wsdl:port name="ParmAdminSoap" binding="tns:ParmAdminSoap">
+      <soap:address location="http://localhost/WS/ParmAdmin.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ParmAdminSoap12" binding="tns:ParmAdminSoap12">
+      <soap12:address location="http://localhost/WS/ParmAdmin.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

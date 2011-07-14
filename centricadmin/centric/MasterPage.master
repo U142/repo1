@@ -1,0 +1,307 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="expires" content="0" />
+    <title>NL-Alert Administration <%=System.Configuration.ConfigurationSettings.AppSettings["version"]%></title>
+     <style type="text/css">
+        .IE8Fix
+        {
+            z-index: 100;
+        }
+    </style>
+    <link rel="stylesheet" href="css/default.css" />
+    <script type="text/javascript">
+    <!--
+        var ie5=document.all&&document.getElementById;
+        var ns6=document.getElementById&&!document.all;
+        var menuobj;
+        
+        function showmenuie5(e){ 
+            var targ;
+            if (!e) var e = window.event;
+            if (e.target) targ = e.target;
+            else if (e.srcElement) targ = e.srcElement;
+            if (targ.nodeType == 3) // defeat Safari bug
+	            targ = targ.parentNode;
+	            
+            //alert("target: " + targ.id);
+            if(isNaN(targ.id.substring(2))) {
+                document.getElementById("ctl00_body_txt_parent").value = "false";
+                document.getElementById("ctl00_body_txt_id").value = -1;
+            }
+            else {
+                document.getElementById("ctl00_body_txt_parent").value = "true";
+                document.getElementById("ctl00_body_txt_id").value = targ.id.substring(2);
+            }
+            
+            if (ie5||ns6) {
+                menuobj=document.getElementById('ctl00_body_Panel2');
+                //alert("Jall: " + findhead1('ctl00_body_Panel2'));
+            }
+            //Find out how close the mouse is to the corner of the window 
+            var rightedge=ie5?document.body.clientWidth-event.clientX:window.innerWidth-e.clientX;
+            var bottomedge=ie5?document.body.clientHeight-event.clientY:window.innerHeight-e.clientY;
+            //if the horizontal distance isn't enough to accomodate the width of the context menu 
+            if (rightedge<menuobj.offsetWidth){ 
+                //move the horizontal position of the menu to the left by it's width 
+                menuobj.style.left=ie5?document.body.scrollLeft+event.clientX-menuobj.offsetWidth:document.documentElement.scrollLeft+e.clientX-menuobj.offsetWidth;
+                //alert(document.body.scrollLeft+event.clientX + ' ' + 'window.pageXOffset: ' + document.documentElement.scrollLeft + 'e.clientX: ' + e.clientX)
+            } 
+            else{
+                //position the horizontal position of the menu where the mouse was clicked
+                menuobj.style.left=ie5?document.body.scrollLeft+event.clientX:document.documentElement.scrollLeft+e.clientX;
+                //alert(ie5?document.body.scrollLeft+event.clientX:document.documentElement.scrollLeft+e.clientX);
+            } 
+            //same concept with the vertical position 
+            if (bottomedge<menuobj.offsetHeight){ 
+                menuobj.style.top=ie5?document.body.scrollTop+event.clientY-menuobj.offsetHeight:document.documentElement.scrollTop+e.clientY-menuobj.offsetHeight;
+            } 
+            else{ 
+                menuobj.style.top=ie5?document.body.scrollTop+event.clientY:document.documentElement.scrollTop+e.clientY;
+                //alert(ie5?document.body.scrollTop+event.clientY:document.documentElement.scrollTop+e.clientY);
+            } 
+            if(ie5) 
+                window.event.cancelBubble = true; 
+            else if(ns6) 
+                e.stopPropagation(); 
+
+            
+            //menuobj.style.top=200;
+            //menuobj.style.left=300;
+            menuobj.style.position='absolute';
+            //alert('Style left: ' + menuobj.style.left + ' Top: ' + menuobj.style.top);
+            menuobj.style.visibility='visible';
+            return false;
+        }
+        function findhead1(tagname)
+        {
+            var tag, tags;
+            tags = "The tags in the page are: " + tagname;
+            for(i = 0; i < document.all.length; i++)
+            {
+                //tags = tags + "\r" + document.all(i).id + " is it equal to " + tagname + "?";
+                if(document.all(i).id == tagname) {
+                    //document.write(document.all(i).id);
+                    //tags = tags + "\r" + document.all(i).id + "success";
+                    return document.all(i);
+                }
+                    
+                //tag = document.all(i).tagName + " " + document.all(i).id;
+                //tags = tags + "\r" + tag;
+            }
+            //document.write(tags);
+        }
+        function hidemenuie5(e){
+            if(menuobj != null)
+                menuobj.style.visibility="hidden"
+        }
+
+        function highlightie5(e){
+            var firingobj=ie5? event.srcElement : e.target
+            if (firingobj.className=="menuitems"||ns6&&firingobj.parentNode.className=="menuitems"){
+                if (ns6&&firingobj.parentNode.className=="menuitems") 
+                    firingobj=firingobj.parentNode //up one node
+
+                firingobj.style.backgroundColor="highlight"
+
+            }
+        }
+
+        function lowlightie5(e){
+            var firingobj=ie5? event.srcElement : e.target
+            if (firingobj.className=="menuitems"||ns6&&firingobj.parentNode.className=="menuitems"){
+                if (ns6&&firingobj.parentNode.className=="menuitems") 
+                    firingobj=firingobj.parentNode //up one node
+
+                firingobj.style.backgroundColor=""
+
+
+                window.status=''
+            }
+        }
+
+        function jumptoie5(e){
+            var firingobj=ie5? event.srcElement : e.target
+            if (firingobj.className=="menuitems"||ns6&&firingobj.parentNode.className=="menuitems"){
+                if (ns6&&firingobj.parentNode.className=="menuitems") 
+                    var firingobj2=firingobj.parentNode
+                // the click can be controlled by firingobj
+                // if the click was generated by the div tag enclosing the link buttons
+                //then the value of firingobj=htmlDivElement el
+                // else if the click was generated by the linkbutton
+                // then the value of firingobj will be href of the link button and the value of firingobj2 will be htmlDivElement
+                // the code for controlling the clciks goes here
+
+            }
+        }
+        if (ie5||ns6){
+            //menuobj.style.display=''
+            document.onclick=hidemenuie5
+       }
+       
+      
+       var xmlhttp;
+
+       function InitXmlHttp() {
+           // Attempt to initialize xmlhttp object
+           try {
+               xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+           }
+           catch (e) {
+               // Try to use different activex object
+               try {
+                   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+               }
+               catch (E) {
+                   xmlhttp = false;
+               }
+           }
+
+           // If not initialized, create XMLHttpRequest object
+           if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+               xmlhttp = new XMLHttpRequest();
+           }
+           // Define function call for when Request obj state has changed
+           xmlhttp.onreadystatechange = XMLHttpRequestCompleted;
+       }
+
+       function setUnlock(parameter) {
+           InitXmlHttp();
+           xmlhttp.onreadystatechange = XMLHttpRequestCompleted;
+           xmlhttp.open("GET", "" + "Handler.ashx?" + parameter, true);
+           xmlhttp.send(null);
+       }
+
+       function XMLHttpRequestCompleted() {
+           if (xmlhttp.readyState == 4) {
+               if (xmlhttp.status == 200) {
+                   try {
+                       if (document.getElementById("ctl00_bd") != null)
+                           document.getElementById("ctl00_bd").removeAttribute("onbeforeunload");
+                       if(document.getElementById("ctl00_body_bd") != null)
+                           document.getElementById("ctl00_body_bd").removeAttribute("onbeforeunload");
+                   }
+                   catch (e) {
+                       alert('Error: ' + e.getMessage());
+                   }
+               }
+               else
+                   alert("AJAX Error: " + xmlhttp.status + " : " + xmlhttp.statusText);
+           }
+       }
+       
+
+       function validateDate(strValue) {
+           /************************************************
+           DESCRIPTION: Validates that a string contains only
+           valid dates with 2 digit month, 2 digit day,
+           4 digit year. Date separator can be ., -, or /.
+           Uses combination of regular expressions and
+           string parsing to validate date.
+           Ex. mm/dd/yyyy or mm-dd-yyyy or mm.dd.yyyy
+
+           PARAMETERS:
+           strValue - String to be tested for validity
+
+           RETURNS:
+           True if valid, otherwise false.
+
+           REMARKS:
+           Avoids some of the limitations of the Date.parse()
+           method such as the date separator character.
+           
+           EDIT:
+           Changed to format dd-mm-yyyy
+           *************************************************/
+           var objRegExp = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+           
+           //check to see if in correct format
+           if (!objRegExp.test(strValue))
+               return false; //doesn't match pattern, bad date
+           else {
+               var strSeparator = strValue.substring(2, 3)
+               var arrayDate = strValue.split(strSeparator);
+               //create a lookup for months not equal to Feb.
+               var arrayLookup = { '01': 31, '03': 31,
+                   '04': 30, '05': 31,
+                   '06': 30, '07': 31,
+                   '08': 31, '09': 30,
+                   '10': 31, '11': 30, '12': 31
+               }
+               var intDay = parseInt(arrayDate[0], 10);
+               
+               //check if month value and day value agree
+               if (arrayLookup[arrayDate[1]] != null) {
+                   if (intDay <= arrayLookup[arrayDate[1]] && intDay != 0)
+                       return true; //found in lookup table, good date
+               }
+
+               //check for February (bugfix 20050322)
+               //bugfix  for parseInt kevin
+               //bugfix  biss year  O.Jp Voutat
+               var intMonth = parseInt(arrayDate[1], 10);
+               if (intMonth == 2) {
+                   var intYear = parseInt(arrayDate[2]);
+                   if (intDay > 0 && intDay < 29) {
+                       return true;
+                   }
+                   else if (intDay == 29) {
+                       if ((intYear % 4 == 0) && (intYear % 100 != 0) ||
+             (intYear % 400 == 0)) {
+                           // year div by 4 and ((not div by 100) or div by 400) ->ok
+                           return true;
+                       }
+                   }
+               }
+           }
+           return false; //any other values, bad date
+       }
+       
+
+    -->
+    </script>
+</head>
+<body runat="server" id="bd">
+    <form id="form1" runat="server">
+    <div>
+    <asp:Table ID="table" runat="server">
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" StaticDisplayLevels="1">
+                    <DynamicMenuStyle CssClass="IE8Fix" />
+                    <Items>
+                        <asp:MenuItem Text="File">
+                            <asp:MenuItem Text="Main Administration Window" Value="New" NavigateUrl="~/main.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="System messages" Value="New" NavigateUrl="~/systemmessages.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Exit" NavigateUrl="~/logoff.aspx" ></asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem Text="System">
+                            <asp:MenuItem Text="Parameter" Value="text" NavigateUrl="~/parameters.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="User" Value="area" NavigateUrl="~/user_admin.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="Authorization area" NavigateUrl="~/area_edit.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="Predefined text" Value="text" NavigateUrl="~/predefine_text.aspx" ></asp:MenuItem>
+                        </asp:MenuItem>
+                         <asp:MenuItem Text="Reports">
+                            <asp:MenuItem Text="Monthly report" NavigateUrl="~/report_monthly.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="User activities" NavigateUrl="~/report_useractivity.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="Authorization area" NavigateUrl="~/report_authorizationarea.aspx" ></asp:MenuItem>
+                            <asp:MenuItem Text="Access permissions per user" NavigateUrl="~/report_accesspruser.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="User per access permission" NavigateUrl="~/report_useraccess.aspx" ></asp:MenuItem>
+                        </asp:MenuItem>
+                    </Items>
+                </asp:Menu>       
+            </asp:TableCell>
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:ContentPlaceHolder ID="body" runat="server"></asp:ContentPlaceHolder>
+            </asp:TableCell>
+        </asp:TableRow>
+    </asp:Table>        
+    </div>
+    </form>
+</body>
+</html>
