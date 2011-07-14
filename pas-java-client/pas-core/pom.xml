@@ -83,6 +83,22 @@
     <build>
         <plugins>
             <plugin>
+                   <groupId>pl.project13.maven</groupId>
+                   <artifactId>git-commit-id-plugin</artifactId>
+                   <version>1.5</version>
+                   <executions>
+                       <execution>
+                           <phase>initialize</phase>
+                           <goals>
+                               <goal>revision</goal>
+                           </goals>
+                       </execution>
+                   </executions>
+                   <configuration>
+                       <dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory> <!-- required, you have to specify this path -->
+                   </configuration>
+               </plugin>
+            <plugin>
                 <groupId>no.ums.maven</groupId>
                 <artifactId>maven-ums-plugin</artifactId>
                 <executions>
@@ -94,7 +110,7 @@
                         <configuration>
                             <dest>${project.build.outputDirectory}/build.properties</dest>
                             <props>
-                                <revision.number>${buildNumber}</revision.number>
+                                <revision.number>${git.commit.id}</revision.number>
                                 <build.number>${build.number}</build.number>
                                 <build.user>${user.name}</build.user>
                                 <build.version>${version}</build.version>
