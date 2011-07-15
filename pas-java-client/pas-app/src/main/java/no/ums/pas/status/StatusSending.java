@@ -321,7 +321,11 @@ public class StatusSending extends Object {
 			lba.n_items += m_lba_by_operator.get(i).n_items==-1?0:m_lba_by_operator.get(i).n_items;
 			lba.n_proc += m_lba_by_operator.get(i).n_proc==-1?0:m_lba_by_operator.get(i).n_proc;
 			lba.n_queued += m_lba_by_operator.get(i).n_queued;
-			
+			lba.n_expired += m_lba_by_operator.get(i).n_expired;
+			lba.l_created_ts = m_lba_by_operator.get(i).l_created_ts;
+			lba.l_started_ts = m_lba_by_operator.get(i).l_started_ts;
+			lba.l_expires_ts = m_lba_by_operator.get(i).l_expires_ts;
+
 			lba.n_cbtype = m_lba_by_operator.get(i).n_cbtype;
 			lba.f_simulation = m_lba_by_operator.get(i).f_simulation;
 			lba.l_operator = m_lba_by_operator.get(i).l_operator;
@@ -2351,6 +2355,7 @@ public class StatusSending extends Object {
         private StdTextLabel m_lbl_failed = new StdTextLabel(Localization.l("main_status_failed") + ":", 150, 11, false);
         private StdTextLabel m_lbl_delivered = new StdTextLabel(Localization.l("main_status_delivered") + ":", 150, 11, false);
         private StdTextLabel m_lbl_expired = new StdTextLabel(Localization.l("main_status_expired") + ":", 150, 11, false);
+        private StdTextLabel m_lbl_expires_ts = new StdTextLabel(Localization.l("main_status_lba_expires_timestamp") + ": ", 150, 11, false);
         private StdTextLabel m_txt_refno = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_sendingstatus = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_items = new StdTextLabel("", 150, 11, false);
@@ -2360,6 +2365,7 @@ public class StatusSending extends Object {
 		private StdTextLabel m_txt_delivered = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_operator = new StdTextLabel("", 150, 11, false);
 		private StdTextLabel m_txt_expired = new StdTextLabel("", 150, 11, false);
+		private StdTextLabel m_txt_expires_ts = new StdTextLabel("", 150, 11, false);
 		
 		private StdTextLabel [] m_lbl_status_ts = new StdTextLabel[7];
 		private StdTextLabel [] m_txt_status_ts = new StdTextLabel[7];
@@ -2411,8 +2417,14 @@ public class StatusSending extends Object {
 			set_gridconst(1, get_panel(), 2, 1);
 			add(m_txt_refno, m_gridconst);
 
+			set_gridconst(0, inc_panels(), 1, 1);
+			add(m_lbl_expires_ts, m_gridconst);
+			set_gridconst(1, get_panel(), 2, 1);
+			add(m_txt_expires_ts, m_gridconst);
+
 			
 			add_spacing(DefaultPanel.DIR_VERTICAL,12);
+			
 									
 			set_gridconst(0, inc_panels(), 1, 1);
 			add(m_lbl_queued, m_gridconst);
@@ -2494,6 +2506,8 @@ public class StatusSending extends Object {
 			{
 			case -1:
                 m_txt_operator.setText(Localization.l("main_status_lba_nationalities"));
+                if(m_lba!=null)
+                	m_txt_expires_ts.setText(TextFormat.format_datetime(m_lba.l_expires_ts));
 				break;
 			default:
 			{
@@ -2505,6 +2519,7 @@ public class StatusSending extends Object {
 					if(temp.l_operator==m_filter_status_by_operator)
 					{
 						sz_operator = temp.sz_operator;
+						m_txt_expires_ts.setText(TextFormat.format_datetime(temp.l_expires_ts));
 						break;
 					}
 				}

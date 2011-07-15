@@ -327,9 +327,9 @@ public class LBASEND
 			l_operator = new Integer(v[11]).intValue();
 			sz_operator = v[12];
 			n_type = Integer.valueOf(v[13]); 
-			l_created_ts = Integer.valueOf(v[14]);
-			l_started_ts = Integer.valueOf(v[15]);
-			l_expires_ts = Integer.valueOf(v[16]);
+			l_created_ts = Long.valueOf(v[14]);
+			l_started_ts = Long.valueOf(v[15]);
+			l_expires_ts = Long.valueOf(v[16]);
 		}
 		catch(Exception e)
 		{
