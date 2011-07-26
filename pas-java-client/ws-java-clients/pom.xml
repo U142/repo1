@@ -240,7 +240,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <wsdl.base>https://secure.ums.no/PAS/ws_pas/WS</wsdl.base>
+                <wsdl.base>https://secure.ums.no/PAS/ws_pasprod/WS</wsdl.base>
             </properties>
         </profile>
     </profiles>
