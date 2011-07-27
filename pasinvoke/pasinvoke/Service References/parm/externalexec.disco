@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx?wsdl" docRef="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx" xmlns:q1="http://ums.no/ws/parm/" binding="q1:parmwsSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx" xmlns:q2="http://ums.no/ws/parm/" binding="q2:parmwsSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

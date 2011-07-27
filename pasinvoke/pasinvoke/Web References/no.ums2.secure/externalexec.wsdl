@@ -1,0 +1,1631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s3="http://ums.no/ws/common/cb" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://ums.no/ws/parm/" xmlns:s1="http://ums.no/ws/common/parm" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s2="http://ums.no/ws/common" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://ums.no/ws/parm/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/parm/">
+      <s:import namespace="http://ums.no/ws/common/parm" />
+      <s:import namespace="http://ums.no/ws/common" />
+      <s:import namespace="http://ums.no/ws/common/cb" />
+      <s:element name="GetEventListTest">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetEventListTestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventListTestResult" type="tns:ArrayOfPAEVENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPAEVENT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PAEVENT" nillable="true" type="s1:PAEVENT" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetEventList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s2:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventListResult" type="tns:ArrayOfPAEVENT" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecTasSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tas" type="s1:UTASSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecTasSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecTasSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ExecResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="l_execpk" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_function" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_projectpk" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="arr_alertresults" type="tns:ArrayOfAlertResultLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAlertResultLine">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AlertResultLine" nillable="true" type="tns:AlertResultLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AlertResultLine">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_alertpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_result" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_result_code" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_extended_info" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ExecPolygonSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="poly" type="s1:UPOLYGONSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecPolygonSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecPolygonSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecEllipseSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ellipse" type="s1:UELLIPSESENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecEllipseSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecEllipseSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecGisSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="gis" type="s1:UGISSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecGisSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecGisSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecMunicipalSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="municipal" type="s1:UMUNICIPALSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecMunicipalSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecMunicipalSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecTestSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="send" type="s1:UTESTSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecTestSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecTestSendingResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapBoundsFromSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UMAPSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapBoundsFromSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMapBoundsFromSendingResult" type="s2:UMapBounds" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountPolygon">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UPOLYGONSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountPolygonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountPolygonResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UAdrCount">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="n_private_fixed" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_company_fixed" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_private_mobile" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_company_mobile" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_private_sms" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_company_sms" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_total_recipients" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_private_nonumber" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_company_nonumber" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_private_fax" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_company_fax" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_duplicates" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAdrCountEllipse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UELLIPSESENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountEllipseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountEllipseResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountGis">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UGIS" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountGisResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountGisResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountMunicipal">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UMUNICIPALSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountMunicipalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountMunicipalResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountTestsending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="s" type="s1:UTESTSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountTestsendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountTestsendingResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="mapsending" type="s1:UMAPSENDING" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdrCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdrCountResult" type="tns:UAdrCount" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelSending">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="refno" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelSendingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelSendingResult" type="s2:UCancelSendingResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TASResend">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="refno" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="lbaoperator" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s2:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TASResendResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TASResendResult" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecCBOperation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="cb" nillable="true" type="s3:CB_OPERATION_BASE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecCBOperationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecCBOperationResult" type="s3:CB_SENDING_RESPONSE" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="l_alertpk" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_function" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_scheddate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_schedtime" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecAlertV2Result" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertV3">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="l_alertpk" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_function" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_scheddate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_schedtime" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecAlertV3Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecAlertV3Result" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecEventV3">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="l_eventpk" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_function" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_scheddate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_schedtime" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecEventV3Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecEventV3Result" type="tns:ExecResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmJob_2_0">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_confirm" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmJob_2_0Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConfirmJob_2_0Result" type="tns:UConfirmJobResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UConfirmJobResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_jobid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="resultcode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="resulttext" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ConfirmJob">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+            <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sz_jobid" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_confirm" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmJobResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConfirmJobResult" type="tns:UConfirmJobResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCBSendingFields">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="logon" type="s2:ULOGONINFO" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCBSendingFieldsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCBSendingFieldsResult" type="s3:CB_MESSAGE_FIELDS" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common/parm">
+      <s:import namespace="http://ums.no/ws/common" />
+      <s:complexType name="PAEVENT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="parmop" type="s1:PARMOPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_temppk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_eventpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_parent" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_categorypk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_epi_lon" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_epi_lat" type="s:float" />
+          <s:element minOccurs="0" maxOccurs="1" name="alerts" type="s1:ArrayOfPAALERT" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PARMOPERATION">
+        <s:restriction base="s:string">
+          <s:enumeration value="insert" />
+          <s:enumeration value="update" />
+          <s:enumeration value="delete" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfPAALERT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PAALERT" nillable="true" type="s1:PAALERT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PAALERT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="parmop" type="s1:PARMOPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_temppk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_alertpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_parent" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_profilepk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_schedpk" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_oadc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_validity" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="l_timestamp" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="f_locked" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_areaid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_function" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_shape" type="s1:UShape" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_lba_shape" type="s1:UShape" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_sendingtype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_maxchannels" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_expiry" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UShape" abstract="true">
+        <s:attribute name="col_red" type="s:float" use="required" />
+        <s:attribute name="col_green" type="s:float" use="required" />
+        <s:attribute name="col_blue" type="s:float" use="required" />
+        <s:attribute name="col_alpha" type="s:float" use="required" />
+        <s:attribute name="f_disabled" type="s:int" use="required" />
+        <s:attribute name="l_disabled_timestamp" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="UPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="polypoint" type="s1:UPolypoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UPolypoint">
+        <s:attribute name="lon" type="s:double" use="required" />
+        <s:attribute name="lat" type="s:double" use="required" />
+      </s:complexType>
+      <s:complexType name="UPLMN">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UShape" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UTASSENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="countrylist" type="s1:ArrayOfULBACOUNTRY" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="b_allow_response" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="sz_response_number" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UMAPSENDING">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sendingname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_profilepk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_scheddate" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_schedtime" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="oadc" type="s1:BBSENDNUM" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_validity" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_reschedpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_sendingtype" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_projectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_refno" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_dynvoc" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_retries" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_interval" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_canceltime" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_canceldate" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_pausetime" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_pauseinterval" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_addresstypes" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="logoninfo" type="s2:ULOGONINFO" />
+          <s:element minOccurs="0" maxOccurs="1" name="mapbounds" type="s2:UMapBounds" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_function" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_lba_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_lba" type="s1:ULocationBasedAlert" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_sms_message" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_sms_expirytime_minutes" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_resend" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_resend_refno" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="resend_statuscodes" type="s1:ArrayOfLong" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_send_channels" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_maxchannels" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BBSENDNUM">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_number" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULocationBasedAlert">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="l_alertpk" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="m_languages" type="s1:ArrayOfLBALanguage" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_expiry_minutes" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="n_requesttype" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBALanguage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBALanguage" nillable="true" type="s2:LBALanguage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLong">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="long" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfULBACOUNTRY">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ULBACOUNTRY" nillable="true" type="s2:ULBACOUNTRY" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UPOLYGONSENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="polygonpoints" type="s1:ArrayOfUMapPoint" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUMapPoint">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UMapPoint" nillable="true" type="s2:UMapPoint" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UELLIPSESENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ellipse" type="s2:UEllipseDef" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UGISSENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="gis" type="s1:ArrayOfUGisRecord" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUGisRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UGisRecord" nillable="true" type="s2:UGisRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMUNICIPALSENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="municipals" type="s1:ArrayOfUMunicipalDef" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfUMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UMunicipalDef" nillable="true" type="s2:UMunicipalDef" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UTESTSENDING">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UMAPSENDING">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="numbers" type="s1:ArrayOfString" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UGIS">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:UShape">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="m_gis" type="s1:ArrayOfUGisRecord" />
+              <s:element minOccurs="0" maxOccurs="1" name="m_bounds" type="s2:UMapBounds" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common">
+      <s:complexType name="ULOGONINFO">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_userpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_comppk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpk" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_deptid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_userid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_compid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_deptpri" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_priserver" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_altservers" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_stdcc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="jobid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sessionid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="onetimekey" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMapBounds">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="r_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="u_bo" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="b_bo" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBALanguage">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_textpk" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_cb_oadc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_otoa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_text" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="m_ccodes" type="s2:ArrayOfLBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LBACCode" nillable="true" type="s2:LBACCode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LBACCode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ccode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ULBACOUNTRY">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_cc" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_iso" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint" type="s2:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="weightpoint_screen" type="s2:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="bounds" type="s2:UMapBounds" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_continentpk" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_iso_numeric" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_touristcount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_oldestupdate" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="n_newestupdate" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="operators" type="s2:ArrayOfUTOURISTCOUNT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMapPoint">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="lon" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="lat" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUTOURISTCOUNT">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UTOURISTCOUNT" nillable="true" type="s2:UTOURISTCOUNT" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UTOURISTCOUNT">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_lastupdate" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_operator" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_operator" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_touristcount" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UEllipseDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="center" type="s2:UMapPoint" />
+          <s:element minOccurs="0" maxOccurs="1" name="radius" type="s2:UMapPoint" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UGisRecord">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UMunicipalDef">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sz_municipalname" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UCancelSendingResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="response" type="s2:UCancelSending" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="UCancelSending">
+        <s:restriction base="s:string">
+          <s:enumeration value="OK" />
+          <s:enumeration value="ERROR" />
+          <s:enumeration value="ALREADY_MARKED_AS_CANCELLED" />
+          <s:enumeration value="FAILED_USER_RESTRICTED" />
+          <s:enumeration value="INVALID_SENDING_STATE" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="MDVSENDINGINFO_GROUP">
+        <s:restriction base="s:string">
+          <s:enumeration value="ADDRESSLIST" />
+          <s:enumeration value="GROUPSENDING" />
+          <s:enumeration value="MAP_POLYGON" />
+          <s:enumeration value="MAP_GEMINI_GNOBNO" />
+          <s:enumeration value="MAP_GEMINI_STREETID" />
+          <s:enumeration value="MAP_ELLIPSE" />
+          <s:enumeration value="MAP_MUNICIPAL" />
+          <s:enumeration value="MAP_LBA_VOICE" />
+          <s:enumeration value="MAP_CB_NATIONAL" />
+          <s:enumeration value="MAP_POLYGONAL_ELLIPSE" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ums.no/ws/common/cb">
+      <s:import namespace="http://ums.no/ws/common" />
+      <s:import namespace="http://ums.no/ws/common/parm" />
+      <s:complexType name="CB_OPERATION_BASE" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="risk" type="s3:CB_RISK" />
+          <s:element minOccurs="0" maxOccurs="1" name="reaction" type="s3:CB_REACTION" />
+          <s:element minOccurs="0" maxOccurs="1" name="originator" type="s3:CB_ORIGINATOR" />
+          <s:element minOccurs="0" maxOccurs="1" name="messageconfirmation" type="s3:CB_MESSAGE_CONFIRMATION" />
+        </s:sequence>
+        <s:attribute name="operation" type="s3:CB_OPERATION" use="required" />
+        <s:attribute name="l_refno" type="s:long" use="required" />
+        <s:attribute name="l_projectpk" type="s:long" use="required" />
+        <s:attribute name="sz_projectname" type="s:string" />
+        <s:attribute name="l_comppk" type="s:int" use="required" />
+        <s:attribute name="l_deptpk" type="s:int" use="required" />
+        <s:attribute name="l_userpk" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="CB_RISK">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE_FIELDS_BASE">
+        <s:attribute name="l_pk" type="s:long" use="required" />
+        <s:attribute name="sz_name" type="s:string" />
+      </s:complexType>
+      <s:complexType name="CB_SENDER">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGEPART">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE_CONFIRMATION">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_ORIGINATOR">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_REACTION">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_MESSAGE_FIELDS_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="CB_OPERATION">
+        <s:restriction base="s:string">
+          <s:enumeration value="NewAlertPolygon" />
+          <s:enumeration value="NewAlertPLMN" />
+          <s:enumeration value="UpdateAlert" />
+          <s:enumeration value="KillAlert" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="CB_SEND_BASE" abstract="true">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_OPERATION_BASE">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="messagepart" type="s3:CB_MESSAGEPART" />
+              <s:element minOccurs="0" maxOccurs="1" name="textmessages" type="s3:CB_MESSAGELIST" />
+              <s:element minOccurs="0" maxOccurs="1" name="sender" type="s3:CB_SENDER" />
+            </s:sequence>
+            <s:attribute name="l_sched_utc" type="s:long" use="required" />
+            <s:attribute name="mdvgroup" type="s2:MDVSENDINGINFO_GROUP" use="required" />
+            <s:attribute name="l_validity" type="s:int" use="required" />
+            <s:attribute name="l_parent_refno" type="s:long" use="required" />
+            <s:attribute name="f_simulation" type="s:boolean" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGELIST">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="message" type="s3:CB_MESSAGE" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE">
+        <s:attribute name="l_channel" type="s:int" use="required" />
+        <s:attribute name="sz_text" type="s:string" />
+      </s:complexType>
+      <s:complexType name="CB_ALERT_POLYGON">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_SEND_BASE">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="alertpolygon" type="s1:UPolygon" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_ALERT_PLMN">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_SEND_BASE">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="alertplmn" type="s1:UPLMN" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_ALERT_UPDATE">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_SEND_BASE" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_ALERT_KILL">
+        <s:complexContent mixed="false">
+          <s:extension base="s3:CB_OPERATION_BASE">
+            <s:attribute name="l_sched_utc" type="s:long" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CB_SENDING_RESPONSE">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="operation" type="s3:CB_OPERATION" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_projectpk" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_timestamp" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_refno" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="l_code" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CB_MESSAGE_FIELDS">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="l_db_timestamp" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="risk_list" type="s3:ArrayOfCB_RISK" />
+          <s:element minOccurs="0" maxOccurs="1" name="reaction_list" type="s3:ArrayOfCB_REACTION" />
+          <s:element minOccurs="0" maxOccurs="1" name="originator_list" type="s3:ArrayOfCB_ORIGINATOR" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCB_RISK">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_RISK" nillable="true" type="s3:CB_RISK" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCB_REACTION">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_REACTION" nillable="true" type="s3:CB_REACTION" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCB_ORIGINATOR">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CB_ORIGINATOR" nillable="true" type="s3:CB_ORIGINATOR" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetEventListTestSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventListTest" />
+  </wsdl:message>
+  <wsdl:message name="GetEventListTestSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventListTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventList" />
+  </wsdl:message>
+  <wsdl:message name="GetEventListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventListResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecTasSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecTasSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecTasSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecTasSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecPolygonSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecPolygonSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecPolygonSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecPolygonSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecEllipseSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecEllipseSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecEllipseSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecEllipseSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecGisSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecGisSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecGisSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecGisSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecMunicipalSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecMunicipalSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecMunicipalSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecMunicipalSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecTestSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecTestSending" />
+  </wsdl:message>
+  <wsdl:message name="ExecTestSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecTestSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMapBoundsFromSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMapBoundsFromSending" />
+  </wsdl:message>
+  <wsdl:message name="GetMapBoundsFromSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMapBoundsFromSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountPolygonSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCountPolygon" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountPolygonSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountPolygonResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountEllipseSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCountEllipse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountEllipseSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountEllipseResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountGisSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCountGis" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountGisSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountGisResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountMunicipalSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCountMunicipal" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountMunicipalSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountMunicipalResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountTestsendingSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCountTestsending" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountTestsendingSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountTestsendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdrCount" />
+  </wsdl:message>
+  <wsdl:message name="GetAdrCountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdrCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelSendingSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelSending" />
+  </wsdl:message>
+  <wsdl:message name="CancelSendingSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelSendingResponse" />
+  </wsdl:message>
+  <wsdl:message name="TASResendSoapIn">
+    <wsdl:part name="parameters" element="tns:TASResend" />
+  </wsdl:message>
+  <wsdl:message name="TASResendSoapOut">
+    <wsdl:part name="parameters" element="tns:TASResendResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecCBOperationSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecCBOperation" />
+  </wsdl:message>
+  <wsdl:message name="ExecCBOperationSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecCBOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertV2SoapIn">
+    <wsdl:part name="parameters" element="tns:ExecAlertV2" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertV2SoapOut">
+    <wsdl:part name="parameters" element="tns:ExecAlertV2Response" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertV3SoapIn">
+    <wsdl:part name="parameters" element="tns:ExecAlertV3" />
+  </wsdl:message>
+  <wsdl:message name="ExecAlertV3SoapOut">
+    <wsdl:part name="parameters" element="tns:ExecAlertV3Response" />
+  </wsdl:message>
+  <wsdl:message name="ExecEventV3SoapIn">
+    <wsdl:part name="parameters" element="tns:ExecEventV3" />
+  </wsdl:message>
+  <wsdl:message name="ExecEventV3SoapOut">
+    <wsdl:part name="parameters" element="tns:ExecEventV3Response" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmJob_2_0SoapIn">
+    <wsdl:part name="parameters" element="tns:ConfirmJob_2_0" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmJob_2_0SoapOut">
+    <wsdl:part name="parameters" element="tns:ConfirmJob_2_0Response" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmJobSoapIn">
+    <wsdl:part name="parameters" element="tns:ConfirmJob" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmJobSoapOut">
+    <wsdl:part name="parameters" element="tns:ConfirmJobResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCBSendingFieldsSoapIn">
+    <wsdl:part name="parameters" element="tns:getCBSendingFields" />
+  </wsdl:message>
+  <wsdl:message name="getCBSendingFieldsSoapOut">
+    <wsdl:part name="parameters" element="tns:getCBSendingFieldsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="parmwsSoap">
+    <wsdl:operation name="GetEventListTest">
+      <wsdl:input message="tns:GetEventListTestSoapIn" />
+      <wsdl:output message="tns:GetEventListTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventList">
+      <wsdl:input message="tns:GetEventListSoapIn" />
+      <wsdl:output message="tns:GetEventListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecTasSending">
+      <wsdl:input message="tns:ExecTasSendingSoapIn" />
+      <wsdl:output message="tns:ExecTasSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecPolygonSending">
+      <wsdl:input message="tns:ExecPolygonSendingSoapIn" />
+      <wsdl:output message="tns:ExecPolygonSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecEllipseSending">
+      <wsdl:input message="tns:ExecEllipseSendingSoapIn" />
+      <wsdl:output message="tns:ExecEllipseSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecGisSending">
+      <wsdl:input message="tns:ExecGisSendingSoapIn" />
+      <wsdl:output message="tns:ExecGisSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecMunicipalSending">
+      <wsdl:input message="tns:ExecMunicipalSendingSoapIn" />
+      <wsdl:output message="tns:ExecMunicipalSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecTestSending">
+      <wsdl:input message="tns:ExecTestSendingSoapIn" />
+      <wsdl:output message="tns:ExecTestSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMapBoundsFromSending">
+      <wsdl:input message="tns:GetMapBoundsFromSendingSoapIn" />
+      <wsdl:output message="tns:GetMapBoundsFromSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountPolygon">
+      <wsdl:input message="tns:GetAdrCountPolygonSoapIn" />
+      <wsdl:output message="tns:GetAdrCountPolygonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountEllipse">
+      <wsdl:input message="tns:GetAdrCountEllipseSoapIn" />
+      <wsdl:output message="tns:GetAdrCountEllipseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountGis">
+      <wsdl:input message="tns:GetAdrCountGisSoapIn" />
+      <wsdl:output message="tns:GetAdrCountGisSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountMunicipal">
+      <wsdl:input message="tns:GetAdrCountMunicipalSoapIn" />
+      <wsdl:output message="tns:GetAdrCountMunicipalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountTestsending">
+      <wsdl:input message="tns:GetAdrCountTestsendingSoapIn" />
+      <wsdl:output message="tns:GetAdrCountTestsendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <wsdl:input message="tns:GetAdrCountSoapIn" />
+      <wsdl:output message="tns:GetAdrCountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelSending">
+      <wsdl:input message="tns:CancelSendingSoapIn" />
+      <wsdl:output message="tns:CancelSendingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="TASResend">
+      <wsdl:input message="tns:TASResendSoapIn" />
+      <wsdl:output message="tns:TASResendSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecCBOperation">
+      <wsdl:input message="tns:ExecCBOperationSoapIn" />
+      <wsdl:output message="tns:ExecCBOperationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV2">
+      <wsdl:input message="tns:ExecAlertV2SoapIn" />
+      <wsdl:output message="tns:ExecAlertV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV3">
+      <wsdl:input message="tns:ExecAlertV3SoapIn" />
+      <wsdl:output message="tns:ExecAlertV3SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecEventV3">
+      <wsdl:input message="tns:ExecEventV3SoapIn" />
+      <wsdl:output message="tns:ExecEventV3SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob_2_0">
+      <wsdl:input message="tns:ConfirmJob_2_0SoapIn" />
+      <wsdl:output message="tns:ConfirmJob_2_0SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob">
+      <wsdl:input message="tns:ConfirmJobSoapIn" />
+      <wsdl:output message="tns:ConfirmJobSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCBSendingFields">
+      <wsdl:input message="tns:getCBSendingFieldsSoapIn" />
+      <wsdl:output message="tns:getCBSendingFieldsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="parmwsSoap" type="tns:parmwsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetEventListTest">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetEventListTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventList">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetEventList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecTasSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecTasSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecPolygonSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecPolygonSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecEllipseSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecEllipseSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecGisSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecGisSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecMunicipalSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecMunicipalSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecTestSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecTestSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapBoundsFromSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetMapBoundsFromSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountPolygon">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCountPolygon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountEllipse">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCountEllipse" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountGis">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCountGis" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountMunicipal">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCountMunicipal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountTestsending">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCountTestsending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <soap:operation soapAction="http://ums.no/ws/parm/GetAdrCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelSending">
+      <soap:operation soapAction="http://ums.no/ws/parm/CancelSending" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TASResend">
+      <soap:operation soapAction="http://ums.no/ws/parm/TASResend" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecCBOperation">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecCBOperation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV2">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecAlertV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV3">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecAlertV3" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecEventV3">
+      <soap:operation soapAction="http://ums.no/ws/parm/ExecEventV3" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob_2_0">
+      <soap:operation soapAction="http://ums.no/ws/parm/ConfirmJob_2_0" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob">
+      <soap:operation soapAction="http://ums.no/ws/parm/ConfirmJob" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCBSendingFields">
+      <soap:operation soapAction="http://ums.no/ws/parm/getCBSendingFields" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="parmwsSoap12" type="tns:parmwsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetEventListTest">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetEventListTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventList">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetEventList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecTasSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecTasSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecPolygonSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecPolygonSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecEllipseSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecEllipseSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecGisSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecGisSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecMunicipalSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecMunicipalSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecTestSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecTestSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapBoundsFromSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetMapBoundsFromSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountPolygon">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCountPolygon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountEllipse">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCountEllipse" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountGis">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCountGis" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountMunicipal">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCountMunicipal" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCountTestsending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCountTestsending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdrCount">
+      <soap12:operation soapAction="http://ums.no/ws/parm/GetAdrCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelSending">
+      <soap12:operation soapAction="http://ums.no/ws/parm/CancelSending" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TASResend">
+      <soap12:operation soapAction="http://ums.no/ws/parm/TASResend" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecCBOperation">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecCBOperation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV2">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecAlertV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecAlertV3">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecAlertV3" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecEventV3">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ExecEventV3" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob_2_0">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ConfirmJob_2_0" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmJob">
+      <soap12:operation soapAction="http://ums.no/ws/parm/ConfirmJob" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCBSendingFields">
+      <soap12:operation soapAction="http://ums.no/ws/parm/getCBSendingFields" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="parmws">
+    <wsdl:port name="parmwsSoap" binding="tns:parmwsSoap">
+      <soap:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx" />
+    </wsdl:port>
+    <wsdl:port name="parmwsSoap12" binding="tns:parmwsSoap12">
+      <soap12:address location="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

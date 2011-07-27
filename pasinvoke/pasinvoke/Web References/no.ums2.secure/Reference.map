@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx?disco" filename="externalexec.disco" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://secure.ums2.no/PAS/ws_pasutv/WS/externalexec.asmx?wsdl" filename="externalexec.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>
