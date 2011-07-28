@@ -23,6 +23,7 @@ namespace pasinvoke
         private string sz_company;
         private string sz_department;
         private string sz_pk;
+        private string sz_eventname;
         private long l_userpk;       
         private int l_comppk;
         private int l_deptpk;
@@ -34,7 +35,7 @@ namespace pasinvoke
             lbl_status.AutoSize = false;
 
         }
-        public Invoke(string user, string company, string department, string pk, long userpk, int comppk, int deptpk)
+        public Invoke(string user, string company, string department, string pk, long userpk, int comppk, int deptpk, String eventname)
         {
             InitializeComponent();
 
@@ -45,11 +46,12 @@ namespace pasinvoke
             sz_company = company;
             sz_department = department;
             sz_pk = pk;
+            sz_eventname = eventname;
             l_userpk = userpk;
             l_comppk = comppk;
             l_deptpk = deptpk;
 
-            lbl_status.Text = "Current event is: " + sz_pk;
+            lbl_status.Text = "Current event is: " + eventname;
 
             if (user.Length < 1)
             {
@@ -113,7 +115,7 @@ namespace pasinvoke
             {
                 Send send = new Send(logon);
                 send.send(long.Parse(sz_pk));
-                SendingStatusDialog ssd = new SendingStatusDialog(send, logon);
+                SendingStatusDialog ssd = new SendingStatusDialog(send, logon, sz_eventname);
                 ssd.ShowDialog(this);
             }
             catch (EndpointNotFoundException)

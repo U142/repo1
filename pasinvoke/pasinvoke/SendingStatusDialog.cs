@@ -140,10 +140,12 @@ namespace pasinvoke
             InitializeComponent();
             initializeSendingInfoAndType();
         }
-        public SendingStatusDialog(Send send, no.ums2.secure.ULOGONINFO logon)
+        public SendingStatusDialog(Send send, no.ums2.secure.ULOGONINFO logon, String eventname)
         {
             InitializeComponent();
             initializeSendingInfoAndType();
+
+            this.Text += " - " + eventname;
 
             execResponse = send.execResponse;
             this.logon = logon;
@@ -334,7 +336,6 @@ namespace pasinvoke
 
         private void updateEventAndProjectPk(Send send)
         {
-            lbl_eventinfo.Text = send.execResponse.l_execpk;
             lbl_projectpk.Text = send.execResponse.l_projectpk;
         }
 

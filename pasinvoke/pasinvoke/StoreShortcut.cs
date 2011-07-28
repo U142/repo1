@@ -56,7 +56,7 @@ namespace pasinvoke
                     //IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut("C:\\Documents and Settings\\" + Environment.UserName + "\\Desktop\\invoke " + eventVO.sz_name + ".lnk");
                     IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\invoke " + eventVO.sz_name + ".lnk");
                     shortcut.TargetPath = Environment.CurrentDirectory + "\\pasinvoke.exe";//"C:\\Program Files\\UMS Population Alert System\\PAS Invoke\\pasinvoke.exe";
-                    shortcut.Arguments = txt_user.Text + " " + txt_company.Text + " " + txt_department.Text + " " + eventVO.l_eventpk + " " + logon.l_userpk + " " + logon.l_comppk + " " + logon.l_deptpk;
+                    shortcut.Arguments = txt_user.Text + " " + txt_company.Text + " " + txt_department.Text + " " + eventVO.l_eventpk + " " + logon.l_userpk + " " + logon.l_comppk + " " + logon.l_deptpk + " \"" + eventVO.sz_name + "\"";
                     shortcut.Description = "Invoking PAS event";
                     shortcut.IconLocation = Environment.CurrentDirectory + "\\pas.ico";
                     shortcut.Save();
@@ -152,7 +152,7 @@ namespace pasinvoke
             try
             {
                 send.send(((PAEVENT)cbx_events.SelectedItem).l_eventpk);
-                SendingStatusDialog ssd = new SendingStatusDialog(send, logon);
+                SendingStatusDialog ssd = new SendingStatusDialog(send, logon, ((PAEVENT)cbx_events.SelectedItem).sz_name);
                 ssd.ShowDialog(this);
             }
             catch(Exception ex)

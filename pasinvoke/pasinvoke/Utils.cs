@@ -113,7 +113,6 @@ namespace pasinvoke
             info.sz_actionprofilename = node.Attributes["sz_actionprofilename"].Value;
             info.sz_messagetext = node.Attributes["sz_messagetext"].Value;
             info.b_marked_as_cancelled = bool.Parse(node.Attributes["b_marked_as_cancelled"].Value);
-
             return info;
         }
     }

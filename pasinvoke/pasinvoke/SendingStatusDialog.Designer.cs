@@ -31,9 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SendingStatusDialog));
             this.dgv_status = new System.Windows.Forms.DataGridView();
             this.lbl_project = new System.Windows.Forms.Label();
-            this.lbl_eventpk = new System.Windows.Forms.Label();
             this.lbl_projectpk = new System.Windows.Forms.Label();
-            this.lbl_eventinfo = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lbl_info = new System.Windows.Forms.Label();
@@ -54,42 +52,25 @@
             // lbl_project
             // 
             this.lbl_project.AutoSize = true;
-            this.lbl_project.Location = new System.Drawing.Point(9, 9);
+            this.lbl_project.Location = new System.Drawing.Point(12, 16);
             this.lbl_project.Name = "lbl_project";
-            this.lbl_project.Size = new System.Drawing.Size(43, 13);
+            this.lbl_project.Size = new System.Drawing.Size(38, 13);
             this.lbl_project.TabIndex = 1;
-            this.lbl_project.Text = "Project:";
-            // 
-            // lbl_eventpk
-            // 
-            this.lbl_eventpk.AutoSize = true;
-            this.lbl_eventpk.Location = new System.Drawing.Point(9, 32);
-            this.lbl_eventpk.Name = "lbl_eventpk";
-            this.lbl_eventpk.Size = new System.Drawing.Size(41, 13);
-            this.lbl_eventpk.TabIndex = 2;
-            this.lbl_eventpk.Text = "Event: ";
+            this.lbl_project.Text = "Event:";
             // 
             // lbl_projectpk
             // 
             this.lbl_projectpk.AutoSize = true;
-            this.lbl_projectpk.Location = new System.Drawing.Point(76, 9);
+            this.lbl_projectpk.Location = new System.Drawing.Point(79, 16);
             this.lbl_projectpk.Name = "lbl_projectpk";
             this.lbl_projectpk.Size = new System.Drawing.Size(0, 13);
             this.lbl_projectpk.TabIndex = 3;
             // 
-            // lbl_eventinfo
-            // 
-            this.lbl_eventinfo.AutoSize = true;
-            this.lbl_eventinfo.Location = new System.Drawing.Point(76, 32);
-            this.lbl_eventinfo.Name = "lbl_eventinfo";
-            this.lbl_eventinfo.Size = new System.Drawing.Size(0, 13);
-            this.lbl_eventinfo.TabIndex = 4;
-            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // progressBar1
             // 
@@ -114,9 +95,7 @@
             this.ClientSize = new System.Drawing.Size(842, 298);
             this.Controls.Add(this.lbl_info);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.lbl_eventinfo);
             this.Controls.Add(this.lbl_projectpk);
-            this.Controls.Add(this.lbl_eventpk);
             this.Controls.Add(this.lbl_project);
             this.Controls.Add(this.dgv_status);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -135,9 +114,7 @@
 
         private System.Windows.Forms.DataGridView dgv_status;
         private System.Windows.Forms.Label lbl_project;
-        private System.Windows.Forms.Label lbl_eventpk;
         private System.Windows.Forms.Label lbl_projectpk;
-        private System.Windows.Forms.Label lbl_eventinfo;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lbl_info;

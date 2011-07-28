@@ -16,7 +16,7 @@
         "Entry"
         {
         "MsmKey" = "8:_016843FB72BDC5BFD3BAFDD6E537DB8C"
-        "OwnerKey" = "8:_450D5F48451C35E51048FE3AC8CBCE97"
+        "OwnerKey" = "8:_FD3BF732D074674A1BE5CE5D6D15330D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -27,20 +27,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_217D2E347775ED0E73E2D6DD6D48A079"
-        "OwnerKey" = "8:_14120378CAA74B2D9B0E58682E555F65"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_326B9D286D97CBD9729BEB4A962AC8E8"
-        "OwnerKey" = "8:_217D2E347775ED0E73E2D6DD6D48A079"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_450D5F48451C35E51048FE3AC8CBCE97"
-        "OwnerKey" = "8:_14120378CAA74B2D9B0E58682E555F65"
+        "OwnerKey" = "8:_A093958D4ED79BDAA370DA7259162FFA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -57,20 +45,32 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_A093958D4ED79BDAA370DA7259162FFA"
+        "OwnerKey" = "8:_14120378CAA74B2D9B0E58682E555F65"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FD3BF732D074674A1BE5CE5D6D15330D"
         "OwnerKey" = "8:_14120378CAA74B2D9B0E58682E555F65"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_217D2E347775ED0E73E2D6DD6D48A079"
+        "OwnerKey" = "8:_A093958D4ED79BDAA370DA7259162FFA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_450D5F48451C35E51048FE3AC8CBCE97"
+        "OwnerKey" = "8:_FD3BF732D074674A1BE5CE5D6D15330D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_14120378CAA74B2D9B0E58682E555F65"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -198,7 +198,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:3.5.21022"
+                "FrameworkVersion" = "8:3.5.21022 "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -226,72 +226,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_217D2E347775ED0E73E2D6DD6D48A079"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.Shell32, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_217D2E347775ED0E73E2D6DD6D48A079"
-                    {
-                    "Name" = "8:Interop.Shell32.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Interop.Shell32.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_6E75035920E946BDA681F6BF0F9193B4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_326B9D286D97CBD9729BEB4A962AC8E8"
             {
             "SourcePath" = "8:shell32.dll"
             "TargetName" = "8:SHELL32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_6E75035920E946BDA681F6BF0F9193B4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_450D5F48451C35E51048FE3AC8CBCE97"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.IWshRuntimeLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_450D5F48451C35E51048FE3AC8CBCE97"
-                    {
-                    "Name" = "8:Interop.IWshRuntimeLibrary.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Interop.IWshRuntimeLibrary.dll"
-            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6E75035920E946BDA681F6BF0F9193B4"
             "Condition" = "8:"
@@ -346,6 +284,68 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A093958D4ED79BDAA370DA7259162FFA"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Interop.Shell32, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_A093958D4ED79BDAA370DA7259162FFA"
+                    {
+                    "Name" = "8:Interop.Shell32.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Interop.Shell32.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6E75035920E946BDA681F6BF0F9193B4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FD3BF732D074674A1BE5CE5D6D15330D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Interop.IWshRuntimeLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_FD3BF732D074674A1BE5CE5D6D15330D"
+                    {
+                    "Name" = "8:Interop.IWshRuntimeLibrary.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Interop.IWshRuntimeLibrary.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6E75035920E946BDA681F6BF0F9193B4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -416,7 +416,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PASInvoke"
         "ProductCode" = "8:{BA8F969B-688A-40D5-B1C3-D243A5114BBD}"
-        "PackageCode" = "8:{C9C7A0C7-6E59-4B9A-B16A-13EA64686B6A}"
+        "PackageCode" = "8:{83FD9F6E-E998-473E-95FF-30BDF5B7BA5C}"
         "UpgradeCode" = "8:{B5E89B0E-4D40-44D3-9E17-505CD8314B8B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
