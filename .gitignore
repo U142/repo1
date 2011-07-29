@@ -14,3 +14,7 @@ pasinvoke/PASInvokeSetup/Debug/PASInvokeSetup.msi
 pasinvoke/PASInvokeSetup/Debug/setup.exe
 pasinvoke/PASInvokeSetup/Release/setup.exe
 pasinvoke/PASInvokeSetup/Release/PASInvokeSetup.msi
+ws-pas/wsPASExec.suo
+.gitignore
+pasinvoke/pasinvoke.suo
+pasinvoke/pasinvoke.suo
