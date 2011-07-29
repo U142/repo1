@@ -16,13 +16,13 @@ namespace pasinvoke.src
             this.logon = logon;
         }
 
-        public void send(long eventpk)
+        public void send(long eventpk, string sendmode = "live")
         {
             parmws _parmws = new parmws();
             _parmws.Url = "https://secure.ums.no/pas/ws_pasqa/ws/ExternalExec.asmx";
 
             _parmws.ExecEventV3Completed += new ExecEventV3CompletedEventHandler(ExecEventV3Completed);
-            _parmws.ExecEventV3Async(eventpk, logon, "simulate", DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+            _parmws.ExecEventV3Async(eventpk, logon, sendmode, DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
                 
         }
 

@@ -41,6 +41,7 @@
             this.txt_department = new System.Windows.Forms.TextBox();
             this.lbl_version_number = new System.Windows.Forms.Label();
             this.lbl_version = new System.Windows.Forms.Label();
+            this.lbl_simualte = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_send
@@ -149,11 +150,24 @@
             this.lbl_version.TabIndex = 11;
             this.lbl_version.Text = "Version:";
             // 
+            // lbl_simualte
+            // 
+            this.lbl_simualte.AutoSize = true;
+            this.lbl_simualte.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_simualte.ForeColor = System.Drawing.Color.Red;
+            this.lbl_simualte.Location = new System.Drawing.Point(17, 121);
+            this.lbl_simualte.Name = "lbl_simualte";
+            this.lbl_simualte.Size = new System.Drawing.Size(97, 20);
+            this.lbl_simualte.TabIndex = 12;
+            this.lbl_simualte.Text = "Simulating";
+            this.lbl_simualte.Visible = false;
+            // 
             // Invoke
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(278, 204);
+            this.Controls.Add(this.lbl_simualte);
             this.Controls.Add(this.lbl_version);
             this.Controls.Add(this.lbl_version_number);
             this.Controls.Add(this.btn_send);
@@ -190,5 +204,6 @@
         private System.Windows.Forms.TextBox txt_department;
         private System.Windows.Forms.Label lbl_version_number;
         private System.Windows.Forms.Label lbl_version;
+        private System.Windows.Forms.Label lbl_simualte;
     }
 }

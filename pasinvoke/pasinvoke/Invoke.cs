@@ -27,6 +27,7 @@ namespace pasinvoke
         private long l_userpk;       
         private int l_comppk;
         private int l_deptpk;
+        private string sz_sendMode;
 
         public Invoke()
         {
@@ -35,7 +36,7 @@ namespace pasinvoke
             lbl_status.AutoSize = false;
 
         }
-        public Invoke(string user, string company, string department, string pk, long userpk, int comppk, int deptpk, String eventname)
+        public Invoke(string user, string company, string department, string pk, long userpk, int comppk, int deptpk, string eventname, string sendmode = "live")
         {
             InitializeComponent();
 
@@ -50,6 +51,12 @@ namespace pasinvoke
             l_userpk = userpk;
             l_comppk = comppk;
             l_deptpk = deptpk;
+            sz_sendMode = sendmode;
+
+            if (sz_sendMode.ToLower().Equals("simulate"))
+            {
+                lbl_simualte.Visible = true;
+            }
 
             lbl_status.Text = "Current event is: " + eventname;
 
@@ -114,7 +121,7 @@ namespace pasinvoke
             try
             {
                 Send send = new Send(logon);
-                send.send(long.Parse(sz_pk));
+                send.send(long.Parse(sz_pk), sz_sendMode);
                 SendingStatusDialog ssd = new SendingStatusDialog(send, logon, sz_eventname);
                 ssd.ShowDialog(this);
             }

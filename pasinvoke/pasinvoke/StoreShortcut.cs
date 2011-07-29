@@ -56,7 +56,7 @@ namespace pasinvoke
                     //IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut("C:\\Documents and Settings\\" + Environment.UserName + "\\Desktop\\invoke " + eventVO.sz_name + ".lnk");
                     IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\invoke " + eventVO.sz_name + ".lnk");
                     shortcut.TargetPath = Environment.CurrentDirectory + "\\pasinvoke.exe";//"C:\\Program Files\\UMS Population Alert System\\PAS Invoke\\pasinvoke.exe";
-                    shortcut.Arguments = txt_user.Text + " " + txt_company.Text + " " + txt_department.Text + " " + eventVO.l_eventpk + " " + logon.l_userpk + " " + logon.l_comppk + " " + logon.l_deptpk + " \"" + eventVO.sz_name + "\"";
+                    shortcut.Arguments = txt_user.Text + " " + txt_company.Text + " " + txt_department.Text + " " + eventVO.l_eventpk + " " + logon.l_userpk + " " + logon.l_comppk + " " + logon.l_deptpk + " \"" + eventVO.sz_name + "\"" + " \"live\"";
                     shortcut.Description = "Invoking PAS event";
                     shortcut.IconLocation = Environment.CurrentDirectory + "\\pas.ico";
                     shortcut.Save();
