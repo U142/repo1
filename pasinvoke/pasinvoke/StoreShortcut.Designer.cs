@@ -172,6 +172,7 @@
             this.btn_send.TabIndex = 14;
             this.btn_send.Text = "Send";
             this.btn_send.UseVisualStyleBackColor = true;
+            this.btn_send.Visible = false;
             this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
             // progressBar1
