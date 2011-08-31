@@ -14,7 +14,4 @@ public class MixerLinesModel extends AbstractBean {
 		this.mixersAndLines = mixersAndLines;
 		update("mixersAndLines", oldValue, this.mixersAndLines);
 	}
-	
-	
-	
 }

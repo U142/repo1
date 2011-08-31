@@ -198,7 +198,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:3.5.21022   "
+                "FrameworkVersion" = "8:3.5.21022    "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -416,7 +416,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PASInvoke"
         "ProductCode" = "8:{BA8F969B-688A-40D5-B1C3-D243A5114BBD}"
-        "PackageCode" = "8:{A1D2F9DF-5E3E-414C-9889-DA6987DBF0B9}"
+        "PackageCode" = "8:{5E9C7A40-74BB-48D9-947C-05D17904E49D}"
         "UpgradeCode" = "8:{B5E89B0E-4D40-44D3-9E17-505CD8314B8B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

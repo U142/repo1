@@ -55,6 +55,12 @@ namespace pasinvoke
 
             if (sz_sendMode.ToLower().Equals("simulate"))
             {
+                lbl_simualte.Text = "Simulation";
+                lbl_simualte.Visible = true;
+            }
+            else
+            {
+                lbl_simualte.Text = "Live";
                 lbl_simualte.Visible = true;
             }
 
