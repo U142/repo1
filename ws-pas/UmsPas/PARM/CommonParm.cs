@@ -9,6 +9,7 @@ using System.Xml;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using System.IO;
+using com.ums.pas.cap.CapServiceReference;
 
 
 namespace com.ums.UmsParm
@@ -2286,9 +2287,39 @@ namespace com.ums.UmsParm
     }
 
 
+    [XmlType(Namespace = "http://ums.no/ws/common/parm")]
+    public class UMapSendingCapFields
+    {
+        //alert parameters
+        public alertStatus status;
+        public alertScope scope;
+        public String note;
+        public String source;
+        public String restriction;
+        public String [] code;
+
+        //alert.info parameters
+        public alertInfoCategory [] category;
+        public alertInfoUrgency urgency;
+        public alertInfoCertainty certainty;
+        public alertInfoSeverity severity;
+        public String headline;
+        public String description;
+        public String instruction;
+        public String web;
+        public String contact;
+        public String language;
+        public alertInfoResponseType [] responseType;
+        public DateTime effective;
+        public DateTime onset;
+        public DateTime expires;
+        public String audience;
+    }
+
     [XmlType(Namespace="http://ums.no/ws/common/parm")]
     public class UMAPSENDING
     {
+        public ADRTYPES adrtypes;
         public String sz_sendingname;
         public long n_profilepk;
         public long n_scheddate;
@@ -2319,6 +2350,7 @@ namespace com.ums.UmsParm
         public long n_resend_refno;
         public long[] resend_statuscodes;
         public int n_send_channels; //0=all, 1=voice, 2=sms
+        public UMapSendingCapFields capFields;
         /*public String sz_sms_message;
         public String sz_sms_oadc;
         public int n_sms_expirytime_minutes;*/

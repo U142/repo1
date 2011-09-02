@@ -253,7 +253,8 @@ namespace com.ums.ws.parm
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY) > 0 ||
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_COMPANY_ALT_FIXED) > 0 ||
                    (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE) > 0 ||
-                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0)
+                   (mapsending.n_addresstypes & (long)ADRTYPES.SMS_PRIVATE_ALT_FIXED) > 0 ||
+                   (mapsending.n_addresstypes & (long)ADRTYPES.ONLY_VULNERABLE_CITIZENS) > 0)
                 {
                     return new UAdrDb(logon.sz_stdcc, 120, logon.l_deptpk).GetAddressCount(ref logon, ref mapsending);
                 }

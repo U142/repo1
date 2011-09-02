@@ -160,6 +160,7 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 	}
 	protected void set_addresscount(AddressCount c) {
 		int n_addrtypes = get_parent().get_sendcontroller().get_activesending().get_toolbar().get_addresstypes();
+		boolean bVunerableOnly = (n_addrtypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0;
 		m_txt_adrcount_private.setText(new Integer(c.get_private()).toString());
 		if((n_addrtypes & SendController.SENDTO_FIXED_PRIVATE) > 0 || (n_addrtypes & SendController.SENDTO_FIXED_PRIVATE_ALT_SMS) > 0 ||
 				(n_addrtypes & SendController.SENDTO_FIXED_PRIVATE_AND_MOBILE) > 0 || (n_addrtypes & SendController.SENDTO_MOBILE_PRIVATE_AND_FIXED) > 0 ||
@@ -281,9 +282,9 @@ public abstract class Sending_AddressPanel extends DefaultPanel {
 				  (SendController.HasType(newadrtypes, SendController.SENDTO_SMS_COMPANY) ? c.get_companymobile(): 0) +
 				  (SendController.HasType(newadrtypes, SendController.SENDTO_SMS_PRIVATE) ? c.get_privatemobile(): 0);*/
 		n_total = c.get_private()+c.get_company()+c.get_privatemobile()+c.get_companymobile();
-		m_txt_adrcount_total.setText(new Integer(n_total).toString());
+		m_txt_adrcount_total.setText(new Integer(n_total).toString() + (bVunerableOnly ? " (" + Localization.l("main_sending_adr_btn_vulnerable_citizens") + ")" : ""));
 		n_total = c.get_privatesms()+c.get_companysms();
-		m_txt_adrcount_total_sms.setText(new Integer(n_total).toString());
+		m_txt_adrcount_total_sms.setText(new Integer(n_total).toString() + (bVunerableOnly ? " (" + Localization.l("main_sending_adr_btn_vulnerable_citizens") + ")" : ""));
 		n_total = c.get_private()+c.get_company()+c.get_privatemobile()+c.get_companymobile() + c.get_privatesms()+c.get_companysms();
 		c.set_total_by_types(n_total);
 	}	

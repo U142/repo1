@@ -54,7 +54,13 @@ public class Sending_AddressPanelGIS extends Sending_AddressPanel {
 			for(int j=0; j < gr.get_inhabitantcount(); j++)
 			{
 				InhabitantBasics inh = gr.get_inhabitant(j);
-				_AddToAdrcount(adrcount, inh, get_parent().get_sendobject().get_sendproperties().get_addresstypes());
+				//check if user marked to send only to vulnerable citizens
+				int adrTypes = get_parent().get_sendobject().get_sendproperties().get_addresstypes();
+				if(((adrTypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0 && inh.isVulnerable()) ||
+					((adrTypes & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) <= 0))
+				{
+					_AddToAdrcount(adrcount, inh, get_parent().get_sendobject().get_sendproperties().get_addresstypes());
+				}
 			}
 		}
 		

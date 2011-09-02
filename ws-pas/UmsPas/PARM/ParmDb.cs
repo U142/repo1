@@ -2407,6 +2407,33 @@ namespace com.ums.UmsParm
             }
         }
 
+        public String getCompanyName(int lCompPk)
+        {
+            OdbcDataReader rs = null;
+            try
+            {
+                String szSQL = String.Format("SELECT sz_companyname FROM BBCOMPANY where l_comppk={0}", lCompPk);
+                rs = ExecReader(szSQL, UmsDb.UREADER_AUTOCLOSE);
+                if (rs.Read())
+                {
+                    return rs.GetString(0);
+                }
+                return "";
+            }
+            catch (Exception e)
+            {
+                ULog.error(0, e.Message);
+                return "ERR:Unknown";
+            }
+            finally
+            {
+                if (rs != null && !rs.IsClosed)
+                {
+                    rs.Close();
+                }
+            }
+        }
+
         public bool insertLBASENDMessageField(long l_refno, CB_MESSAGE_FIELDS_BASE msgpart)
         {
             String szSQL = "";

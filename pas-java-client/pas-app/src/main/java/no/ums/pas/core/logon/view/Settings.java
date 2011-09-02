@@ -107,6 +107,10 @@ public class Settings extends JDialog {
 		{
 			toggleBlocklist.doClick();
 		}
+		if((sot.get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0)
+		{
+			toggleVulnerable.doClick();
+		}
 	}
 	
 	
@@ -304,6 +308,15 @@ public class Settings extends JDialog {
 		log.debug(sot.gen_adrtypes_text(sot.get_addresstypes(), ADRGROUPS.NOFAX));
 		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
 	}
+	private void toggleVulnerableActionPerformed(ActionEvent e) {
+		toggleVulnerable.toggleSelection();
+		if(toggleVulnerable.isSelected())
+			sot.add_addresstypes(SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		else
+			sot.remove_addresstypes(SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		log.debug(sot.gen_adrtypes_text(sot.get_addresstypes(), ADRGROUPS.VULNERABLE));
+		sot.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_set_addresstypes"));
+	}
 
 	private void toggleImportActionPerformed(ActionEvent e) {
 		settingsModel1.setNewSendingAutoShape(SendOptionToolbar.BTN_OPEN_);
@@ -369,6 +382,11 @@ public class Settings extends JDialog {
 		return toggleBlocklist;
 	}
 
+	public ToggleAddresstype getToggleVulnerable() {
+		return toggleVulnerable;
+	}
+
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("no.ums.pas.localization.lang");
@@ -425,6 +443,7 @@ public class Settings extends JDialog {
 		togglePolygon = new JToggleButton();
 		toggleEllipse = new JToggleButton();
 		toggleImport = new JToggleButton();
+		toggleVulnerable = new ToggleAddresstype();
 		settingsModel1 = new SettingsModel();
 		stringToInt1 = new StringToInt();
 
@@ -500,7 +519,7 @@ public class Settings extends JDialog {
 							.addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(lblCompany)
 								.addComponent(txtCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap(336, Short.MAX_VALUE))
+							.addContainerGap(327, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_user_heading"), userinfo);
@@ -643,9 +662,9 @@ public class Settings extends JDialog {
 							.addGroup(mapsettingsLayout.createParallelGroup()
 								.addGroup(mapsettingsLayout.createSequentialGroup()
 									.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
 									.addComponent(btnMoveDown, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollWMS, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+								.addComponent(scrollWMS, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
 							.addContainerGap())
 				);
 				mapsettingsLayout.linkSize(SwingConstants.VERTICAL, new Component[] {btnMoveDown, btnMoveUp});
@@ -696,7 +715,7 @@ public class Settings extends JDialog {
 							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(radioNavZoomFromCenter)
 								.addComponent(radioNavZoomFromCorner))
-							.addContainerGap(304, Short.MAX_VALUE))
+							.addContainerGap(295, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_navigation_heading"), navigation);
@@ -772,7 +791,7 @@ public class Settings extends JDialog {
 							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblMailServer))
-							.addContainerGap(294, Short.MAX_VALUE))
+							.addContainerGap(285, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_email_heading"), panel4);
@@ -918,6 +937,16 @@ public class Settings extends JDialog {
 						}
 					});
 
+					//---- toggleVulnerable ----
+					toggleVulnerable.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/bandaid_24.png")));
+					toggleVulnerable.setToolTipText(bundle.getString("main_sending_adr_btn_vulnerable_citizens_tooltip"));
+					toggleVulnerable.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							toggleVulnerableActionPerformed(e);
+						}
+					});
+
 					GroupLayout panel2Layout = new GroupLayout(panel2);
 					panel2.setLayout(panel2Layout);
 					panel2Layout.setHorizontalGroup(
@@ -944,14 +973,16 @@ public class Settings extends JDialog {
 												.addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 												.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
-											.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
+											.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(panel2Layout.createParallelGroup()
+											.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
 											.addGroup(panel2Layout.createSequentialGroup()
 												.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addGap(24, 24, 24)
-												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-											.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
+												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+												.addGap(3, 3, 3)
+												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
 								.addContainerGap())
 					);
 					panel2Layout.setVerticalGroup(
@@ -963,16 +994,16 @@ public class Settings extends JDialog {
 									.addComponent(toggleEllipse)
 									.addComponent(toggleImport))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(panel2Layout.createParallelGroup()
-									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+									.addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+									.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
 										.addComponent(togglePrivateFixed, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 										.addComponent(togglePrivateMobile, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(toggleLba, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+									.addComponent(toggleLba, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 										.addComponent(toggleCompanyMobile, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-										.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+										.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 									.addComponent(lblLbaText, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
@@ -1004,7 +1035,7 @@ public class Settings extends JDialog {
 							.addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
 							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(41, Short.MAX_VALUE))
+							.addContainerGap(32, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
@@ -1030,7 +1061,7 @@ public class Settings extends JDialog {
 			contentPaneLayout.createParallelGroup()
 				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+					.addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(btnSave)
@@ -1176,6 +1207,7 @@ public class Settings extends JDialog {
 	private JToggleButton togglePolygon;
 	private JToggleButton toggleEllipse;
 	private JToggleButton toggleImport;
+	private ToggleAddresstype toggleVulnerable;
 	public SettingsModel settingsModel1;
 	private StringToInt stringToInt1;
 	private BindingGroup bindingGroup;

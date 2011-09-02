@@ -13,6 +13,7 @@ import no.ums.pas.core.ws.WSAdrcount;
 import no.ums.pas.core.ws.vars;
 import no.ums.pas.maps.defines.PolySnapStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
+import no.ums.pas.send.cap.CapConfigView;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.send.sendpanels.Sending_SMS_Broadcast_text;
 import no.ums.pas.status.StatusCode;
@@ -29,6 +30,7 @@ import no.ums.ws.common.parm.ArrayOfString;
 import no.ums.ws.common.parm.BBSENDNUM;
 import no.ums.ws.common.parm.ULocationBasedAlert;
 import no.ums.ws.common.parm.UMAPSENDING;
+import no.ums.ws.common.parm.UMapSendingCapFields;
 import no.ums.ws.common.parm.UTESTSENDING;
 import no.ums.ws.parm.AlertResultLine;
 import no.ums.ws.parm.ExecResponse;
@@ -360,6 +362,7 @@ public abstract class SendProperties extends Object {
 	
 	protected boolean populate_common(UMAPSENDING s, ULOGONINFO logon, UMapBounds bounds)
 	{
+		
 		UserInfo info = PAS.get_pas().get_userinfo();
 		logon.setLComppk(info.get_comppk());
 		logon.setLDeptpk(info.get_current_department().get_deptpk());
@@ -491,6 +494,17 @@ public abstract class SendProperties extends Object {
 		}
 		s.setMLba(lba);
 
+		
+		UMapSendingCapFields cap = new UMapSendingCapFields();
+		cap.setLanguage(System.getProperty("user.language"));
+		cap.setSource(String.format("%s %s/%s/%s", "Operator", logon.getSzCompid(), logon.getSzDeptid(), logon.getSzUserid()));
+		if(get_sms_broadcast_text()!=null)
+		{
+			cap.setHeadline(s.getSzSmsMessage());
+		}
+		//s.setCapFields(new CapConfigView().edit(cap));
+		s.setCapFields(null);
+		
 		
 		return true;
 	}

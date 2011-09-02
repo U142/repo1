@@ -401,6 +401,7 @@ namespace com.ums.UmsCommon
         public long id; //kon_dmid from adr-db
     }
 
+    [Flags]
     [XmlType(Namespace="http://ums.no/ws/common")]
     public enum ADRTYPES
     {
@@ -425,6 +426,7 @@ namespace com.ums.UmsCommon
         FIXED_PRIVATE_AND_MOBILE    = 1 << 18,
         FIXED_COMPANY_AND_MOBILE    = 1 << 19,
         SENDTO_TAS_SMS              = 1 << 20,
+        ONLY_VULNERABLE_CITIZENS    = 1 << 21,
         SENDTO_USE_NOFAX_COMPANY    = 1 << 27,
         SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28, //reserved for future use
         SENDTO_USE_NOFAX_GLOBAL     = 1 << 29, //should always be off
@@ -563,6 +565,8 @@ namespace com.ums.UmsCommon
             public static String sz_path_predefined_messages;
             public static String sz_path_global_wav_dir;
             public static String sz_path_infosent;
+            public static String sz_path_cap_publish;
+            public static String sz_url_vb;
             public static String sz_url_nslookup; //MaxMind NS account
 
 

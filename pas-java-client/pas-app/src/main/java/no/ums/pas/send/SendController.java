@@ -92,6 +92,9 @@ public class SendController implements ActionListener {
 	public static final int SENDTO_FIXED_COMPANY_AND_MOBILE = 1 << 19;
 	
 	public static final int SENDTO_TAS_SMS = 1 << 20;
+	public static final int SENDTO_ONLY_VULNERABLE_CITIZENS = 1 << 21;
+	public static final int SENDTO_CAP = 1 << 22;
+	
 	public static final int SENDTO_USE_NOFAX_COMPANY = 1 << 27;
 	public static final int SENDTO_USE_NOFAX_DEPARTMENT = 1 << 28; //reserved for future use
 	public static final int SENDTO_USE_NOFAX_GLOBAL = 1 << 29; //should always be off

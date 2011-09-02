@@ -41,6 +41,7 @@ public class InhabitantBasics
 	protected int m_n_hasmobile = 0;
 	protected int m_n_inhabitant_type; //bedrift
 	protected int arrayindex;
+	protected int m_n_vulnerable = 0;
 	HouseItem m_parent_house;
 	private boolean m_b_included = true; //For GIS-import manual edit and namefilter
 	public void set_included(boolean b) { m_b_included = b; }
@@ -53,6 +54,8 @@ public class InhabitantBasics
 	public boolean hasfixed() { return (get_hasfixed()==1 ? true : false); }
 	public boolean hasmobile() { return (get_hasmobile()==1 ? true : false); }
 	public void set_kondmid(String s) { m_sz_kondmid = s; }
+	public boolean isVulnerable() { return m_n_vulnerable > 0;}
+	public int getVulnerable() { return m_n_vulnerable; }
 
 	public double get_lon() { return m_f_lon; }
 	public double get_lat() { return m_f_lat; }
@@ -72,7 +75,8 @@ public class InhabitantBasics
 	{
 		
 	}
-	public InhabitantBasics(String kondmid, double lon, double lat, int n_hasfixed, int n_hasmobile, int bedrift, int arrayindex)
+	public InhabitantBasics(String kondmid, double lon, double lat, int n_hasfixed, 
+						int n_hasmobile, int bedrift, int arrayindex, int n_vulnerable)
 	{
 		m_sz_kondmid = kondmid;
 		m_f_lon = lon;
@@ -80,6 +84,7 @@ public class InhabitantBasics
 		m_n_hasfixed = n_hasfixed;
 		m_n_hasmobile = n_hasmobile;
 		m_n_adrtype = bedrift;
+		m_n_vulnerable = n_vulnerable;
 		if(bedrift==10 || bedrift==12) //manual address (private/mobile)
 			m_n_inhabitant_type = INHABITANT_PRIVATE;
 		else if(bedrift==11) //manual address (company)

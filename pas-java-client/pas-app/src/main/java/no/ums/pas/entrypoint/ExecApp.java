@@ -130,9 +130,17 @@ public class ExecApp {
         m_pas.setAddressSeachUrl(sz_addresssearch_url);
         m_pas.setVB4Url(sz_vb4_url);
         PAS.pasplugin = loadPlugin();
-        PasApplication.init(sz_pasws);
-
         LogFrame.install();
+        try
+        {
+        	PasApplication.init(sz_pasws);
+        }
+        catch(Exception e)
+        {
+        	log.error(e);
+        	
+        }
+
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

@@ -16,6 +16,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Design" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -66,6 +68,7 @@
     <Compile Include="Address\UAddressList.cs" />
     <Compile Include="Address\UInhabitantsByDistance.cs" />
     <Compile Include="Address\UMapAddressSearch.cs" />
+    <Compile Include="CAP\Cap.cs" />
     <Compile Include="CB\CBCommon.cs" />
     <Compile Include="CB\CBGenerateSending.cs" />
     <Compile Include="Database\UAdrDb.cs" />
@@ -94,6 +97,10 @@
     <Compile Include="Weather\UWeatherReport.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CapProxy\CapProxy.csproj">
+      <Project>{AFA1CF4A-03FA-402D-A8E0-D4F0CC6AC6A3}</Project>
+      <Name>CapProxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UmsCommon\UmsCommon.csproj">
       <Project>{21957982-6FBC-49F9-8F75-C0DE18558133}</Project>
       <Name>UmsCommon</Name>

@@ -29,18 +29,33 @@ public enum VersionInfo {
     }
 
     Properties loadProperties() {
-        URL resource = Resources.getResource("build.properties");
         Properties props = new Properties();
-        if (resource != null) {
-            try {
-                InputStream propsStream = resource.openStream();
-                props.load(propsStream);
-                propsStream.close();
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to open stream: "+resource);
-            }
-        }
-        return props;
+    	try
+    	{
+	        URL resource = Resources.getResource("build.properties");
+	        if (resource != null) {
+	            try {
+	                InputStream propsStream = resource.openStream();
+	                props.load(propsStream);
+	                propsStream.close();
+	            } catch (IOException e) {
+	                throw new IllegalStateException("Failed to open stream: "+resource);
+	            }
+	        }
+    	}
+    	catch(Exception e)
+    	{
+    		props.put("build.properties", "Development");
+    		props.put("revision.number", "00000000");
+    		props.put("build.number", "0");
+    		props.put("build.user", "Development");
+    		props.put("build.version", "0");
+    		props.put("build.timestamp", "0");
+    	}
+    	finally
+    	{
+    		return props;
+    	}
     }
 
 }
