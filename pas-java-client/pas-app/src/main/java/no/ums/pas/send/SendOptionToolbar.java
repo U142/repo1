@@ -452,9 +452,11 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		else
 			m_lbl_addresstypes_company.setVisible(false);
 		
-		boolean b = (ADR & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS;
+		//boolean b = (ADR & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS;
 		m_btn_adrtypes_cell_broadcast_voice.setVisible((ADR & SendController.SENDTO_CELL_BROADCAST_VOICE) == SendController.SENDTO_CELL_BROADCAST_VOICE);
-		m_btn_adrtypes_vulnerable.setVisible((ADR & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
+		
+		m_btn_adrtypes_vulnerable.setVisible(PAS.get_pas().get_rightsmanagement().only_vulnerable_subscribers() &&
+				(ADR & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) == SendController.SENDTO_ONLY_VULNERABLE_CITIZENS);
 	}
 	
 	public void show_buttonsbyadrtype(long ADR, AbstractButton btn_private_fixed, AbstractButton btn_private_mobile,
@@ -534,7 +536,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			this.m_btn_adrtypes_nofax.setVisible(b_show);
 		}
 		//only make access to vulnerable citizens adrtype if LBA-text is not enabled.
-		if((FLAGS & BTN_ADRTYPES_VULNERABLE_) == BTN_ADRTYPES_VULNERABLE_ && (FLAGS & BTN_CELL_BROADCAST_) == 0) {
+		if((FLAGS & BTN_ADRTYPES_VULNERABLE_) == BTN_ADRTYPES_VULNERABLE_) {
 			this.m_btn_adrtypes_vulnerable.setVisible(b_show);
 		}
 	}

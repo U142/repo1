@@ -1,5 +1,7 @@
 package no.ums.pas.core.logon;
 
+import no.ums.pas.send.SendController;
+
 public class RightsManagement {
 	
 	private UserProfile m_userprofile;
@@ -90,5 +92,20 @@ public class RightsManagement {
 //		else
 //			return false;
 		return true;
+	}
+	
+	public boolean only_vulnerable_subscribers()
+	{
+		return (m_userprofile.get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0; 
+	}
+	
+	public boolean cap()
+	{
+		return (m_userprofile.get_addresstypes() & SendController.SENDTO_CAP) > 0;
+	}
+	
+	public boolean only_head_of_household()
+	{
+		return (m_userprofile.get_addresstypes() & SendController.SENDTO_ONLY_HEAD_OF_HOUSEHOLD) > 0;
 	}
 }
