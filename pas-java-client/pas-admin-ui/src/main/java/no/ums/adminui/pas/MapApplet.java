@@ -78,6 +78,7 @@ public class MapApplet extends JApplet implements ActionListener {
 		//info = new LogonInfo("mh","ums","a8a5dce8b728e1b62dac48f0c2550bc1b3ce3c28fb686d376868a1ecc6aa1661258ff9ac095924fc146d8e226966db7ee271e2832de42d589f53b62c6ca4c8b5","GB");
 		//WSLogon proc = new WSLogon(this, info.get_userid(), info.get_compid(), info.get_passwd());
 		System.out.println("Tester git integrasjon");
+		System.out.println("Mer git testing");
 		ULOGONINFO logon = new ULOGONINFO();
 		/*
 		String session = "9235035e-f6f8-413c-b921-059f78f8516c";
