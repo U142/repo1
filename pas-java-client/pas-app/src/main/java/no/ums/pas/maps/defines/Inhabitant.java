@@ -50,21 +50,21 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 			   values[7], values[8], values[9], values[16], (values[10].equals("") ? 0.0 : new Double(values[10]).doubleValue()), 
 			   (values[11].equals("") ? 0.0 : new Double(values[11]).doubleValue()), new Integer(values[12]).intValue(),
 			   new Integer(values[13]).intValue(), new Integer(values[14]).intValue(), new Integer(values[15]).intValue(), 
-			   new Integer(values[17]).intValue(), new String(values[18]), new Integer(values[19]).intValue(), new Integer(values[20]).intValue());
+			   new Integer(values[17]).intValue(), new String(values[18]), new Integer(values[19]).intValue(), new Integer(values[20]).intValue(), 0);
 	}
 	public Inhabitant(String sz_adrname, String sz_postaddr, String sz_postno, String sz_postarea, 
 		   String sz_number, String sz_mobile, double f_lon, double f_lat, int n_adrtype, int n_deptpk, 
 		   int n_streetid, String sz_quality, int n_hasfixed, int n_hasmobile) {
 		init("", sz_adrname, sz_postaddr, "", "", sz_postno, sz_postarea, "", "", sz_number, sz_mobile, f_lon, f_lat, 0, 0, 
-				n_adrtype, n_deptpk, n_streetid, sz_quality, n_hasfixed, n_hasmobile);
+				n_adrtype, n_deptpk, n_streetid, sz_quality, n_hasfixed, n_hasmobile, 0);
 	}
 	public Inhabitant(String sz_kondmid, String sz_adrname, String sz_postaddr, String sz_no, String sz_letter,
 		   String sz_postno, String sz_postarea, String sz_region, String sz_birthday, String sz_number, String sz_mobile, 
 		   double f_lon, double f_lat, int n_gnumber, int n_bnumber, int n_adrtype, int n_deptpk, int n_streetid, 
-		   String sz_quality, int n_hasfixed, int n_hasmobile) {
+		   String sz_quality, int n_hasfixed, int n_hasmobile, int n_vulnerable) {
 	init(sz_kondmid, sz_adrname, sz_postaddr, sz_no, sz_letter, sz_postno, sz_postarea, 
 		 sz_region, sz_birthday, sz_number, sz_mobile, f_lon, f_lat, n_gnumber, n_bnumber, n_adrtype, n_deptpk, 
-		 n_streetid, sz_quality, n_hasfixed, n_hasmobile);
+		 n_streetid, sz_quality, n_hasfixed, n_hasmobile, n_vulnerable);
 	}
 
 
@@ -72,19 +72,19 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
         init(a.getKondmid(), a.getName(), a.getAddress(), Integer.toString(a.getHouseno()), a.getLetter(),
                     a.getPostno(), a.getPostarea(), Integer.toString(a.getRegion()), a.getBday(), a.getNumber(),
                     a.getMobile(), a.getLat(), a.getLon(), a.getGno(), a.getBno(), a.getBedrift(),
-                    new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
+                    new Long(a.getImportid()).intValue(), a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile(), a.getHasdisabled());
     }
 
 	public String toString() {
 		return get_adrname();
 	}
 	public Inhabitant(double f_lon, double f_lat) {
-		init("", "", "", "", "", "", "", "", "", "", "", f_lon, f_lat, 0, 0, 0, 0, 0, "a", 1, 1);
+		init("", "", "", "", "", "", "", "", "", "", "", f_lon, f_lat, 0, 0, 0, 0, 0, "a", 1, 1, 0);
 	}
 	public void init(String sz_kondmid, String sz_adrname, String sz_postaddr, String sz_no, String sz_letter,
 		   String sz_postno, String sz_postarea, String sz_region, String sz_birthday, String sz_number, String sz_mobile, 
 		   double f_lon, double f_lat, int n_gnumber, int n_bnumber, int n_adrtype, int n_deptpk, int n_streetid, 
-		   String sz_quality, int n_hasfixed, int n_hasmobile) {
+		   String sz_quality, int n_hasfixed, int n_hasmobile, int n_vulnerable) {
 		m_sz_kondmid	= sz_kondmid;
 		if(sz_adrname!=null)
 			m_sz_adrname	= sz_adrname;
@@ -141,6 +141,7 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 		if(n_adrtype==11) m_n_adrtype = SendController.SENDTO_MOVED_RECIPIENT_COMPANY;
 		
 		m_n_deptpk		= n_deptpk;
+		m_n_vulnerable	= n_vulnerable;
 		if(m_n_deptpk >= 0)
 			set_useredited();
 	}

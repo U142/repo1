@@ -171,7 +171,7 @@ public class Settings {
 		return this.sz_wms_site;
 	}
 	public boolean setWmsSite(String s) {
-		boolean b_change = !this.sz_wms_site.equals(s);
+		boolean b_change = this.sz_wms_site==null || !this.sz_wms_site.equals(s);
 		this.sz_wms_site = s;
 		return b_change;
 	}

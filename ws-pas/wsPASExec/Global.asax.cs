@@ -7,8 +7,8 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Xml.Linq;
-using com.ums.UmsCommon;
 using com.ums.address;
+using com.ums.UmsCommon;
 
 namespace com.ums.wsPASExec
 {
@@ -33,6 +33,7 @@ namespace com.ums.wsPASExec
 
         protected void Application_Start(object sender, EventArgs e)
         {
+
             // Manual registration of hibernate module.
             StartupAddressDb();
             DateTime ret = DateTime.ParseExact("20100923121859", "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
@@ -57,6 +58,8 @@ namespace com.ums.wsPASExec
             UCommon.UPATHS.sz_path_global_wav_dir = settings["sz_path_global_wav_dir"];
             UCommon.UPATHS.sz_path_infosent = settings["sz_path_infosent"];
             UCommon.UPATHS.sz_url_nslookup = settings["sz_url_nslookup"];
+            UCommon.UPATHS.sz_path_cap_publish = settings["sz_path_cap_publish"];
+            UCommon.UPATHS.sz_url_vb = settings["sz_url_vb"];
             
             UCommon.UBBDATABASE.sz_dsn = settings["sz_db_dsn"]; //"backbone_ibuki";
             UCommon.UBBDATABASE.sz_dsn_aoba = settings["sz_db_dsn_aoba"]; //"aoba";

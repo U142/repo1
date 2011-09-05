@@ -448,6 +448,7 @@ public class AlertController implements ActionListener {
 		toolbarPanel.get_adrtype_private_fixed().setEnabled(val);
 		toolbarPanel.get_adrtype_private_mobile().setEnabled(val);
 		toolbarPanel.get_adrtype_nofax().setEnabled(val);
+		toolbarPanel.get_adrtype_vulnerable().setEnabled(val);
 		getGui().getTxtDescription().setEnabled(val);
 		/*
 		if(!val) {

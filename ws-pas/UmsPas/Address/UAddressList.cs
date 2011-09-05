@@ -189,6 +189,7 @@ namespace com.ums.PAS.Address
         public int hasmobile;
         public int bedrift;
         public int arrayindex; //used in Gemini import to reference a UAddress to a files linenumber
+        public int hasdisabled; //flag if user is defined as vulnerable.
     }
 
     /*single address*/

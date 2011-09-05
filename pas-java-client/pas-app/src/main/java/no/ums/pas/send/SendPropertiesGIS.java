@@ -167,9 +167,19 @@ public class SendPropertiesGIS extends SendProperties {
 					for(int j=0; j < get_gislist().get_gisrecord(i).get_inhabitantcount(); j++)
 					{
 						long l = new Long(get_gislist().get_gisrecord(i).get_inhabitant(j).get_kondmid());
-						UGisRecord r = new UGisRecord();
-						r.setId(l);
-						gis.getUGisRecord().add(r);
+						
+						/*
+						 * Check addresstypes. If "only send to vulnerable citizens" is selected,
+						 * add only inhabitants marked as vulnerable.
+						 */
+						boolean bVulnerable = get_gislist().get_gisrecord(i).get_inhabitant(j).isVulnerable();
+						if(((get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) > 0 && bVulnerable) ||
+							((get_addresstypes() & SendController.SENDTO_ONLY_VULNERABLE_CITIZENS) <= 0))
+						{
+							UGisRecord r = new UGisRecord();
+							r.setId(l);
+							gis.getUGisRecord().add(r);
+						}
 					}
 				}
 				poly.setGis(gis);

@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/System.Xml" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="alert">
+    <xs:sequence>
+      <xs:element name="addressesField" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.Xml" name="anyField" nillable="true" type="q1:ArrayOfXmlElement" />
+      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="codeField" nillable="true" type="q2:ArrayOfstring" />
+      <xs:element name="identifierField" nillable="true" type="xs:string" />
+      <xs:element name="incidentsField" nillable="true" type="xs:string" />
+      <xs:element name="infoField" nillable="true" type="tns:ArrayOfalertInfo" />
+      <xs:element name="msgTypeField" type="tns:alertMsgType" />
+      <xs:element name="noteField" nillable="true" type="xs:string" />
+      <xs:element name="referencesField" nillable="true" type="xs:string" />
+      <xs:element name="restrictionField" nillable="true" type="xs:string" />
+      <xs:element name="scopeField" type="tns:alertScope" />
+      <xs:element name="senderField" nillable="true" type="xs:string" />
+      <xs:element name="sentField" type="xs:dateTime" />
+      <xs:element name="sourceField" nillable="true" type="xs:string" />
+      <xs:element name="statusField" type="tns:alertStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alert" nillable="true" type="tns:alert" />
+  <xs:complexType name="ArrayOfalertInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfo" nillable="true" type="tns:alertInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfo" nillable="true" type="tns:ArrayOfalertInfo" />
+  <xs:complexType name="alertInfo">
+    <xs:sequence>
+      <xs:element name="areaField" nillable="true" type="tns:ArrayOfalertInfoArea" />
+      <xs:element name="audienceField" nillable="true" type="xs:string" />
+      <xs:element name="categoryField" nillable="true" type="tns:ArrayOfalertInfoCategory" />
+      <xs:element name="certaintyField" type="tns:alertInfoCertainty" />
+      <xs:element name="contactField" nillable="true" type="xs:string" />
+      <xs:element name="descriptionField" nillable="true" type="xs:string" />
+      <xs:element name="effectiveField" type="xs:dateTime" />
+      <xs:element name="effectiveFieldSpecified" type="xs:boolean" />
+      <xs:element name="eventCodeField" nillable="true" type="tns:ArrayOfalertInfoEventCode" />
+      <xs:element name="eventField" nillable="true" type="xs:string" />
+      <xs:element name="expiresField" type="xs:dateTime" />
+      <xs:element name="expiresFieldSpecified" type="xs:boolean" />
+      <xs:element name="headlineField" nillable="true" type="xs:string" />
+      <xs:element name="instructionField" nillable="true" type="xs:string" />
+      <xs:element name="languageField" nillable="true" type="xs:string" />
+      <xs:element name="onsetField" type="xs:dateTime" />
+      <xs:element name="onsetFieldSpecified" type="xs:boolean" />
+      <xs:element name="parameterField" nillable="true" type="tns:ArrayOfalertInfoParameter" />
+      <xs:element name="resourceField" nillable="true" type="tns:ArrayOfalertInfoResource" />
+      <xs:element name="responseTypeField" nillable="true" type="tns:ArrayOfalertInfoResponseType" />
+      <xs:element name="senderNameField" nillable="true" type="xs:string" />
+      <xs:element name="severityField" type="tns:alertInfoSeverity" />
+      <xs:element name="urgencyField" type="tns:alertInfoUrgency" />
+      <xs:element name="webField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfo" nillable="true" type="tns:alertInfo" />
+  <xs:complexType name="ArrayOfalertInfoArea">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoArea" nillable="true" type="tns:alertInfoArea" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoArea" nillable="true" type="tns:ArrayOfalertInfoArea" />
+  <xs:complexType name="alertInfoArea">
+    <xs:sequence>
+      <xs:element name="altitudeField" type="xs:decimal" />
+      <xs:element name="altitudeFieldSpecified" type="xs:boolean" />
+      <xs:element name="areaDescField" nillable="true" type="xs:string" />
+      <xs:element name="ceilingField" type="xs:decimal" />
+      <xs:element name="ceilingFieldSpecified" type="xs:boolean" />
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="circleField" nillable="true" type="q3:ArrayOfstring" />
+      <xs:element name="geocodeField" nillable="true" type="tns:ArrayOfalertInfoAreaGeocode" />
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="polygonField" nillable="true" type="q4:ArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfoArea" nillable="true" type="tns:alertInfoArea" />
+  <xs:complexType name="ArrayOfalertInfoAreaGeocode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoAreaGeocode" nillable="true" type="tns:alertInfoAreaGeocode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoAreaGeocode" nillable="true" type="tns:ArrayOfalertInfoAreaGeocode" />
+  <xs:complexType name="alertInfoAreaGeocode">
+    <xs:sequence>
+      <xs:element name="valueField" nillable="true" type="xs:string" />
+      <xs:element name="valueNameField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfoAreaGeocode" nillable="true" type="tns:alertInfoAreaGeocode" />
+  <xs:complexType name="ArrayOfalertInfoCategory">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoCategory" type="tns:alertInfoCategory" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoCategory" nillable="true" type="tns:ArrayOfalertInfoCategory" />
+  <xs:simpleType name="alertInfoCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Geo" />
+      <xs:enumeration value="Met" />
+      <xs:enumeration value="Safety" />
+      <xs:enumeration value="Security" />
+      <xs:enumeration value="Rescue" />
+      <xs:enumeration value="Fire" />
+      <xs:enumeration value="Health" />
+      <xs:enumeration value="Env" />
+      <xs:enumeration value="Transport" />
+      <xs:enumeration value="Infra" />
+      <xs:enumeration value="CBRNE" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertInfoCategory" nillable="true" type="tns:alertInfoCategory" />
+  <xs:simpleType name="alertInfoCertainty">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Observed" />
+      <xs:enumeration value="Likely" />
+      <xs:enumeration value="Possible" />
+      <xs:enumeration value="Unlikely" />
+      <xs:enumeration value="Unknown" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertInfoCertainty" nillable="true" type="tns:alertInfoCertainty" />
+  <xs:complexType name="ArrayOfalertInfoEventCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoEventCode" nillable="true" type="tns:alertInfoEventCode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoEventCode" nillable="true" type="tns:ArrayOfalertInfoEventCode" />
+  <xs:complexType name="alertInfoEventCode">
+    <xs:sequence>
+      <xs:element name="valueField" nillable="true" type="xs:string" />
+      <xs:element name="valueNameField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfoEventCode" nillable="true" type="tns:alertInfoEventCode" />
+  <xs:complexType name="ArrayOfalertInfoParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoParameter" nillable="true" type="tns:alertInfoParameter" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoParameter" nillable="true" type="tns:ArrayOfalertInfoParameter" />
+  <xs:complexType name="alertInfoParameter">
+    <xs:sequence>
+      <xs:element name="valueField" nillable="true" type="xs:string" />
+      <xs:element name="valueNameField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfoParameter" nillable="true" type="tns:alertInfoParameter" />
+  <xs:complexType name="ArrayOfalertInfoResource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoResource" nillable="true" type="tns:alertInfoResource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoResource" nillable="true" type="tns:ArrayOfalertInfoResource" />
+  <xs:complexType name="alertInfoResource">
+    <xs:sequence>
+      <xs:element name="derefUriField" nillable="true" type="xs:string" />
+      <xs:element name="digestField" nillable="true" type="xs:string" />
+      <xs:element name="mimeTypeField" nillable="true" type="xs:string" />
+      <xs:element name="resourceDescField" nillable="true" type="xs:string" />
+      <xs:element name="sizeField" nillable="true" type="xs:string" />
+      <xs:element name="uriField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alertInfoResource" nillable="true" type="tns:alertInfoResource" />
+  <xs:complexType name="ArrayOfalertInfoResponseType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="alertInfoResponseType" type="tns:alertInfoResponseType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfalertInfoResponseType" nillable="true" type="tns:ArrayOfalertInfoResponseType" />
+  <xs:simpleType name="alertInfoResponseType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Shelter" />
+      <xs:enumeration value="Evacuate" />
+      <xs:enumeration value="Prepare" />
+      <xs:enumeration value="Execute" />
+      <xs:enumeration value="Avoid" />
+      <xs:enumeration value="Monitor" />
+      <xs:enumeration value="Assess" />
+      <xs:enumeration value="AllClear" />
+      <xs:enumeration value="None" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertInfoResponseType" nillable="true" type="tns:alertInfoResponseType" />
+  <xs:simpleType name="alertInfoSeverity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Extreme" />
+      <xs:enumeration value="Severe" />
+      <xs:enumeration value="Moderate" />
+      <xs:enumeration value="Minor" />
+      <xs:enumeration value="Unknown" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertInfoSeverity" nillable="true" type="tns:alertInfoSeverity" />
+  <xs:simpleType name="alertInfoUrgency">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Immediate" />
+      <xs:enumeration value="Expected" />
+      <xs:enumeration value="Future" />
+      <xs:enumeration value="Past" />
+      <xs:enumeration value="Unknown" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertInfoUrgency" nillable="true" type="tns:alertInfoUrgency" />
+  <xs:simpleType name="alertMsgType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Alert" />
+      <xs:enumeration value="Update" />
+      <xs:enumeration value="Cancel" />
+      <xs:enumeration value="Ack" />
+      <xs:enumeration value="Error" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertMsgType" nillable="true" type="tns:alertMsgType" />
+  <xs:simpleType name="alertScope">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Public" />
+      <xs:enumeration value="Restricted" />
+      <xs:enumeration value="Private" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertScope" nillable="true" type="tns:alertScope" />
+  <xs:simpleType name="alertStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Actual" />
+      <xs:enumeration value="Exercise" />
+      <xs:enumeration value="System" />
+      <xs:enumeration value="Test" />
+      <xs:enumeration value="Draft" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="alertStatus" nillable="true" type="tns:alertStatus" />
+</xs:schema>

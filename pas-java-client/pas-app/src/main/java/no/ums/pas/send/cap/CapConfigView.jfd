@@ -1,0 +1,1375 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_20" class="java.beans.XMLDecoder"> 
+ <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundlePackage</string> 
+   <string>no.ums.pas.localization</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>lang</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.keyPrefix</string> 
+   <string>CapConfigView</string> 
+  </void> 
+  <void property="contentType"> 
+   <string>form/swing</string> 
+  </void> 
+  <void property="root"> 
+   <object class="com.jformdesigner.model.FormRoot"> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormWindow"> 
+      <string>javax.swing.JDialog</string> 
+      <object class="com.jformdesigner.model.FormLayoutManager"> 
+       <class>org.jdesktop.layout.GroupLayout</class> 
+       <void method="setProperty"> 
+        <string>$horizontalGroup</string> 
+        <string>par l {comp dialogPane:::p:879:p}</string> 
+       </void> 
+       <void method="setProperty"> 
+        <string>$verticalGroup</string> 
+        <string>par l {comp dialogPane:::p::p}</string> 
+       </void> 
+      </object> 
+      <void method="setProperty"> 
+       <string>title</string> 
+       <object class="com.jformdesigner.model.FormMessage"> 
+        <null/> 
+        <string>CapConfigView.Title</string> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>modal</string> 
+       <boolean>true</boolean> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JPanel</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>java.awt.BorderLayout</class> 
+        </object> 
+        <void method="setProperty"> 
+         <string>border</string> 
+         <object class="javax.swing.border.EmptyBorder"> 
+          <int>12</int> 
+          <int>12</int> 
+          <int>12</int> 
+          <int>12</int> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>dialogPane</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormContainer"> 
+          <string>javax.swing.JPanel</string> 
+          <object class="com.jformdesigner.model.FormLayoutManager"> 
+           <class>org.jdesktop.layout.GroupLayout</class> 
+           <void method="setProperty"> 
+            <string>$horizontalGroup</string> 
+            <string>par l {seq {space :::p, par l {seq {comp lblStatus::::0:x:1, space :p:376:p}, seq {comp panelAlert:::p:369:p, space :::p}}, comp panelAlertInfo:::p::p, space :p:26:p, comp comboStatus::::0:x:1, space :p:282:p}}</string> 
+           </void> 
+           <void method="setProperty"> 
+            <string>$verticalGroup</string> 
+            <string>par l {seq {par l {seq {space :p:635:p, par l {comp lblStatus:::p::p, comp comboStatus:::p::p}}, comp panelAlertInfo::l:p:637:p, comp panelAlert::l:p::p}, space ::21:x}}</string> 
+           </void> 
+          </object> 
+          <void property="name"> 
+           <string>contentPanel</string> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JLabel</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>CapConfigView.lblStatus.text</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>CapConfigView.comboStatus.toolTipText</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>visible</string> 
+             <boolean>false</boolean> 
+            </void> 
+            <void property="name"> 
+             <string>lblStatus</string> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JComboBox</string> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>CapConfigView.comboStatus.toolTipText</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>visible</string> 
+             <boolean>false</boolean> 
+            </void> 
+            <void property="name"> 
+             <string>comboStatus</string> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormContainer"> 
+            <string>javax.swing.JPanel</string> 
+            <object class="com.jformdesigner.model.FormLayoutManager"> 
+             <class>org.jdesktop.layout.GroupLayout</class> 
+             <void method="setProperty"> 
+              <string>$horizontalGroup</string> 
+              <string>par l {seq t {par t {seq {space :::p, comp lblHeadline::::79:x:1}, seq l {space :::p, comp lblResponseType:::::x:1}, seq l {space :::p, comp lblAudience::::79:x:1}, seq l {space :::p, par t {comp lblWeb::t::79:x:1, comp lblInstruction::t::79:x:1, comp Contact::l::79:x:1}}, seq l {space :10:10:10, par l {comp lblUrgency::t::81:x:1, comp lblCertainty::t::81:x:1, comp lblSeverity::t::81:x:1, comp lblDescription::l::81:x:1, comp lblCategory::t::81:x:1}}}, space :::p, par l {comp scrollPane6::::362:x:1, comp txtAudience::t::362:x, comp scrollPane4::t::362:x, comp txtWeb::l::362:x:1, comp txtContact::t::362:x:1, comp txtInstruction::t::362:x:1, comp scrollPane2::l::362:x:1, par t:l::p {comp comboSeverity::l:::x:1, comp comboCertainty::l:::x:1, comp comboUrgency::l::141:x:1}, comp scrollPane3:::p:362:p:1}, space :::p}}</string> 
+             </void> 
+             <void method="setProperty"> 
+              <string>$verticalGroup</string> 
+              <string>par l {seq l {par l {comp scrollPane2:::p:126:p, comp lblCategory:::p::p}, space :::p, par b {comp comboUrgency::b:p::p, comp lblUrgency::b:p::p}, space :::p, par b {comp lblCertainty::b:p::p, comp comboCertainty::b:p::p}, space :::p, par b {comp lblSeverity::b:p::p, comp comboSeverity::b:p::p}, space :::p, par l {comp lblHeadline:::p::p, comp scrollPane6:2::p:79:p}, space :::p, par t {comp lblDescription::l:p::p, comp scrollPane3:2:l:p:84:p}, space :::x, par b {comp lblInstruction::b:p::p, comp txtInstruction::b:p::p}, space :::p, par b {comp lblWeb::b:p::p, comp txtWeb::b:p::p}, space :::p, par l {comp txtContact:::p::p, comp Contact:::p::p}, space :::p, par l {comp scrollPane4:::p:119:p, comp lblResponseType:::p::p}, space :::p, par b {comp txtAudience::b:p::p, comp lblAudience::b:p::p}, space :::p}}</string> 
+             </void> 
+            </object> 
+            <void property="name"> 
+             <string>panelAlertInfo</string> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblCategory.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.listCategory.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblCategory</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblUrgency.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboUrgency.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblUrgency</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JComboBox</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboUrgency.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>comboUrgency</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane2</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JList</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.listCategory.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>listCategory</string> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblCertainty.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboCertainty.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblCertainty</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JComboBox</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboCertainty.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>comboCertainty</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblSeverity.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboSeverity.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblSeverity</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JComboBox</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboSeverity.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>comboSeverity</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblHeadline.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtHeadline.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblHeadline</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane6</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JTextArea</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.txtHeadline.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>txtHeadline</string> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblDescription.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtDescription.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblDescription</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane3</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JTextArea</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.txtDescription.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>txtDescription</string> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblInstruction.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtInstruction.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblInstruction</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtInstruction.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtInstruction</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblWeb.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtWeb.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblWeb</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtWeb.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtWeb</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.Contact.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtContact.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>Contact</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtContact.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtContact</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblResponseType.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.listResponsetype.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblResponseType</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane4</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JList</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.listResponsetype.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>listResponsetype</string> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblAudience.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtAudience.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblAudience</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtAudience.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtAudience</string> 
+              </void> 
+             </object> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormContainer"> 
+            <string>javax.swing.JPanel</string> 
+            <object class="com.jformdesigner.model.FormLayoutManager"> 
+             <class>org.jdesktop.layout.GroupLayout</class> 
+             <void method="setProperty"> 
+              <string>$horizontalGroup</string> 
+              <string>par l {seq {par l {par t:l::p {comp lblNote::l:::x:1, comp lblRestriction::l:::x:1, comp lblScope::l:::x:1, comp lblSource::l::110:x:1}, comp lblCode::::110:x:1}, space :::p, par l {seq l {comp btnRemoveCode:3::p::p, space :::p, comp btnCodeClear:3::p:107:p, space :::p}, seq t {par t {comp scrollPane5::l::228:x:1, par l:l::p {comp txtRestriction:::::x:1, comp comboScope:::::x:1, comp txtSource::l::228:x:1, comp scrollPane1::l:::x:1}, seq l {comp txtCode:::p:169:p:1, space :::p, comp btnAddCode::::52:x}}, space :p:45:p}}}}</string> 
+             </void> 
+             <void method="setProperty"> 
+              <string>$verticalGroup</string> 
+              <string>par l {seq l {par b {comp lblSource::b:p::p, comp txtSource::b:p::p}, space :::p, par b {comp lblScope::b:p::p, comp comboScope::b:p::p}, space :::p, par b {comp lblRestriction::b:p::p, comp txtRestriction::b:p::p}, space :::p, par l {comp lblNote:::p::p, comp scrollPane1:::p:106:p}, space :::p, par l {seq {space :p:11:p, comp lblCode:::p::p}, par b:l {comp txtCode::b:p::p, comp btnAddCode::b:p::p}}, space :::p, comp scrollPane5:::p::p, space :::p, par b {comp btnRemoveCode::b:p::p, comp btnCodeClear::b:p::p}, space ::223:x}}</string> 
+             </void> 
+            </object> 
+            <void property="name"> 
+             <string>panelAlert</string> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblSource.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtSource.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblSource</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtSource.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtSource</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblScope.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboScope.toolTipText</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>foreground</string> 
+               <object class="java.awt.Color" field="red"/> 
+              </void> 
+              <void property="name"> 
+               <string>lblScope</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JComboBox</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.comboScope.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>comboScope</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtRestriction.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtRestriction</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblRestriction.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtRestriction.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblRestriction</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblNote.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtNote.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblNote</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane1</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JTextArea</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.txtNote.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>txtNote</string> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JLabel</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.lblCode.text</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtCode.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>lblCode</string> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JTextField</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>CapConfigView.txtCode.toolTipText</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>txtCode</string> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.KeyListener</string> 
+                <string>keyPressed</string> 
+                <string>txtCodeKeyPressed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>common_add</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>btnAddCode</string> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>btnAddCodeActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormContainer"> 
+              <string>javax.swing.JScrollPane</string> 
+              <object class="com.jformdesigner.model.FormLayoutManager"> 
+               <class>javax.swing.JScrollPane</class> 
+              </object> 
+              <void property="name"> 
+               <string>scrollPane5</string> 
+              </void> 
+              <void method="add"> 
+               <object class="com.jformdesigner.model.FormComponent"> 
+                <string>javax.swing.JList</string> 
+                <void method="setProperty"> 
+                 <string>toolTipText</string> 
+                 <object class="com.jformdesigner.model.FormMessage"> 
+                  <null/> 
+                  <string>CapConfigView.txtCode.toolTipText</string> 
+                 </object> 
+                </void> 
+                <void property="name"> 
+                 <string>listCodes</string> 
+                </void> 
+                <void method="addEvent"> 
+                 <object class="com.jformdesigner.model.FormEvent"> 
+                  <string>javax.swing.event.ListSelectionListener</string> 
+                  <string>valueChanged</string> 
+                  <string>listCodesValueChanged</string> 
+                  <boolean>true</boolean> 
+                 </object> 
+                </void> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>common_remove</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>btnRemoveCode</string> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>btnRemoveCodeActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>common_clear</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>btnCodeClear</string> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>btnCodeClearActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+           </object> 
+          </void> 
+         </object> 
+         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+          <class>java.lang.String</class> 
+          <void method="setProperty"> 
+           <string>value</string> 
+           <string>Center</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormContainer"> 
+          <string>javax.swing.JPanel</string> 
+          <object class="com.jformdesigner.model.FormLayoutManager"> 
+           <class>org.jdesktop.layout.GroupLayout</class> 
+           <void method="setProperty"> 
+            <string>$horizontalGroup</string> 
+            <string>par l {seq t {space ::672:x, comp okButton:1::p:82:p, space :::p, comp cancelButton:1::p:80:p, space :::p}}</string> 
+           </void> 
+           <void method="setProperty"> 
+            <string>$verticalGroup</string> 
+            <string>par l {par b:l {comp cancelButton::b:p::p, comp okButton::b:p::p}}</string> 
+           </void> 
+          </object> 
+          <void method="setProperty"> 
+           <string>border</string> 
+           <object class="javax.swing.border.EmptyBorder"> 
+            <int>12</int> 
+            <int>0</int> 
+            <int>0</int> 
+            <int>0</int> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>buttonBar</string> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JButton</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <string>OK</string> 
+            </void> 
+            <void property="name"> 
+             <string>okButton</string> 
+            </void> 
+            <void method="addEvent"> 
+             <object class="com.jformdesigner.model.FormEvent"> 
+              <string>java.awt.event.ActionListener</string> 
+              <string>actionPerformed</string> 
+              <string>okButtonActionPerformed</string> 
+              <boolean>true</boolean> 
+             </object> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JButton</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <string>Cancel</string> 
+            </void> 
+            <void property="name"> 
+             <string>cancelButton</string> 
+            </void> 
+            <void method="addEvent"> 
+             <object class="com.jformdesigner.model.FormEvent"> 
+              <string>java.awt.event.ActionListener</string> 
+              <string>actionPerformed</string> 
+              <string>cancelButtonActionPerformed</string> 
+              <boolean>true</boolean> 
+             </object> 
+            </void> 
+           </object> 
+          </void> 
+         </object> 
+         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+          <class>java.lang.String</class> 
+          <void method="setProperty"> 
+           <string>value</string> 
+           <string>South</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void property="name"> 
+       <string>this</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>0</int> 
+        <int>0</int> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>size</string> 
+       <object class="java.awt.Dimension"> 
+        <int>895</int> 
+        <int>755</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormNonVisual"> 
+      <string>no.ums.pas.send.cap.CapConfigModel</string> 
+      <void property="name"> 
+       <string>capConfigModel</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>90</int> 
+        <int>495</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="addBindingGroup"> 
+     <object class="com.jformdesigner.model.FormBindingGroup"> 
+      <class>org.jdesktop.beansbinding.BindingGroup</class> 
+      <void method="setProperty"> 
+       <string>name</string> 
+       <string>bindingGroup</string> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listStatus</string> 
+        <string>comboStatus</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object id="AutoBinding$UpdateStrategy0" class="java.lang.Enum" method="valueOf"> 
+          <class>org.jdesktop.beansbinding.AutoBinding$UpdateStrategy</class> 
+          <string>READ</string> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>status</string> 
+        <string>comboStatus</string> 
+        <string>selectedItem</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>note</string> 
+        <string>txtNote</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>source</string> 
+        <string>txtSource</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>restriction</string> 
+        <string>txtRestriction</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listInfoUrgency</string> 
+        <string>comboUrgency</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>urgency</string> 
+        <string>comboUrgency</string> 
+        <string>selectedItem</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listInfoCateogry</string> 
+        <string>listCategory</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>category</string> 
+        <string>listCategory</string> 
+        <string>selectedElements</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listInfoCertainty</string> 
+        <string>comboCertainty</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>certainty</string> 
+        <string>comboCertainty</string> 
+        <string>selectedItem</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listInfoSeverity</string> 
+        <string>comboSeverity</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>severity</string> 
+        <string>comboSeverity</string> 
+        <string>selectedItem</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>headline</string> 
+        <string>txtHeadline</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>description</string> 
+        <string>txtDescription</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>instruction</string> 
+        <string>txtInstruction</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>web</string> 
+        <string>txtWeb</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>contact</string> 
+        <string>txtContact</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listInfoResponseType</string> 
+        <string>listResponsetype</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>responseType</string> 
+        <string>listResponsetype</string> 
+        <string>selectedElements</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>audience</string> 
+        <string>txtAudience</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableRestriction</string> 
+        <string>txtRestriction</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableOk</string> 
+        <string>okButton</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>code</string> 
+        <string>txtCode</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>codes</string> 
+        <string>listCodes</string> 
+        <string>elements</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>selectedCodes</string> 
+        <string>listCodes</string> 
+        <string>selectedElements</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>listScope</string> 
+        <string>comboScope</string> 
+        <string>elements</string> 
+        <void method="setProperty"> 
+         <string>updateStrategy</string> 
+         <object idref="AutoBinding$UpdateStrategy0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>scope</string> 
+        <string>comboScope</string> 
+        <string>selectedItem</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableClearCode</string> 
+        <string>btnRemoveCode</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableClearAllCodes</string> 
+        <string>btnCodeClear</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableSource</string> 
+        <string>txtSource</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>capConfigModel</string> 
+        <string>enableAddCode</string> 
+        <string>btnAddCode</string> 
+        <string>enabled</string> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

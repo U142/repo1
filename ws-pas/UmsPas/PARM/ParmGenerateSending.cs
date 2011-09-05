@@ -7,6 +7,7 @@ using com.ums.UmsDbLib;
 using com.ums.UmsFile;
 using System.Collections;
 using com.ums.UmsParm;
+using com.ums.PAS.cap;
 
 
 namespace com.ums.UmsParm
@@ -153,6 +154,12 @@ namespace com.ums.UmsParm
             xmlwriter.insertAttribute("l_projectpk", project.sz_projectpk);
             try
             {
+                if (sending.capFields != null)
+                {
+                    Cap cap = new Cap();
+                    cap.SendCap(sending);
+                }
+
                 if (sending.b_resend && typeof(UTASSENDING) == sending.GetType())
                     resend_tas(ref project, ref sending, n_function);
                 else

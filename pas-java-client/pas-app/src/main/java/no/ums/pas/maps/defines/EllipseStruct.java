@@ -117,8 +117,8 @@ public class EllipseStruct extends ShapeStruct {
 
             double width = zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x + w, corner.y));
             double height= zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x, corner.y + h));
-            g2d.drawString(String.format("%.2fm", width), (center.x-offset.x + w/2) + 5, center.y-offset.y);
-            g2d.drawString(String.format("%.2fm", height),center.x-offset.x, center.y-offset.y + h/2 + 17);
+            g2d.drawString(String.format("%.2fm", height), (center.x-offset.x + w/2) + 5, center.y-offset.y);
+            g2d.drawString(String.format("%.2fm", width),center.x-offset.x, center.y-offset.y + h/2 + 17);
 
             final Ellipse2D.Double ellipse = new Ellipse2D.Double(center.x - offset.x - w/2, center.y - offset.y - h/2, w, h);
             drawShape(g2d, ellipse, nPenSize, bDashed, bFill, bBorder, bPaintShapeName, bHasFocus);

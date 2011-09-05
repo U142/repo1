@@ -25,7 +25,7 @@
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::p, comp tabbedPane1::::430:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, comp tabbedPane1::::421:x, space :::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :::p}}</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -118,7 +118,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::336:x}}</string> 
+            <string>par l {seq l {space :::p, par b {comp lblUser::b:p::p, comp txtUser::b:p::p}, space :::p, par b {comp lblCompany::b:p::p, comp txtCompany::b:p::p}, space ::327:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -205,7 +205,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par l {seq {comp btnMoveUp:6::p:31:p, space ::169:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::t::231:x}, space :::p}}</string> 
+            <string>par l {seq l {space :::p, par b {comp radioMapDefault::b:p::p, comp radioMapWms::b:p::p}, space :::p, par b {comp txtMapWms::b:p::p, comp btnMapWmsOpen::b:p::p}, space :::p, par b {comp lblMapWmsUser::b:p::p, comp txtMapWmsUser::b:p::p}, space :::p, par b {comp lblMapWmsPassword::b:p::p, comp txtMapWmsPassword::b:p::p}, space :::p, comp comboMapWmsImg:::p::p, space :::p, par l {seq {comp btnMoveUp:6::p:31:p, space ::160:x, comp btnMoveDown:6::p:27:p}, comp scrollWMS::t::222:x}, space :::p}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -522,7 +522,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::304:x}}</string> 
+            <string>par l {seq l {space :p:17:p, par b {comp radioNavPanByClick::b:p::p, comp radioNavPanByDrag::b:p::p}, space :p:29:p, par b {comp radioNavZoomFromCenter::b:p::p, comp radioNavZoomFromCorner::b:p::p}, space ::295:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -670,7 +670,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::294:x}}</string> 
+            <string>par l {seq l {space :p:26:p, par b {comp txtMailDisplayname::b:p::p, comp lblMailDisplayname::b:p::p}, space :::p, par b {comp txtMailAddress::b:p::p, comp lblMailAddress::b:p::p}, space :::p, par b {comp txtMailServer::b:p::p, comp lblMailServer::b:p::p}, space ::285:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -796,7 +796,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::41:x}}</string> 
+            <string>par l {seq l {space :::p, comp autostartup:::p::p, space s:::p, comp pnlLBA:::p::p, space s:::p, comp panel2:::p::p, space ::32:x}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -927,11 +927,11 @@
              <class>org.jdesktop.layout.GroupLayout</class> 
              <void method="setProperty"> 
               <string>$horizontalGroup</string> 
-              <string>par l {seq l {space :p:31:p, par l {seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}, seq l {par l {seq {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}, comp lblPrivateAdrTypes::::121:x:1}, space s:::p, par l {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes::::153:x:1}, space :::p, par l {seq {comp toggleLba:::p::p, space :p:24:p, comp toggleBlocklist:::p::p}, comp lblLbaText::::170:x}}}, space :::p}}</string> 
+              <string>par l {seq l {space :p:31:p, par l {seq l {comp togglePolygon:::p:46:p, space :::p, comp toggleEllipse:::p:46:p, space :::p, comp toggleImport:::p:44:p}, seq l {par l {seq {comp togglePrivateFixed:::p::p, space :::p, comp togglePrivateMobile:::p::p}, comp lblPrivateAdrTypes::::121:x:1}, space s:::p, par l {seq {comp toggleCompanyFixed:::p::p, space :::p, comp toggleCompanyMobile:::p:57:p}, comp lblCompanyAdrtypes::::142:x:1}, space :::p, par l {comp lblLbaText::::181:x, seq l {comp toggleLba:::p::p, space :::p, comp toggleVulnerable::::57:x, space :p:3:p, comp toggleBlocklist:::p::p}}}}, space :::p}}</string> 
              </void> 
              <void method="setProperty"> 
               <string>$verticalGroup</string> 
-              <string>par l {seq t::p {space :::p, par t {comp togglePolygon:::p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par l {par t:l::p {comp togglePrivateFixed::l:::x:1, comp togglePrivateMobile::l:::x:1}, par b {comp toggleLba::b:::x:1, comp toggleBlocklist::b:::x:1}, par b {comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}}, space :::p, par l:::p {comp lblLbaText:7:l:p:48:p, comp lblCompanyAdrtypes:7:l:p:48:p, comp lblPrivateAdrTypes:7:l:p:48:p:1}, space :::p}}</string> 
+              <string>par l {seq t::p {space :::p, par t {comp togglePolygon:::p::p, comp toggleEllipse:::p::p, comp toggleImport:::p::p}, space :::p, par t {comp toggleVulnerable::::33:x, par t:l::p {comp togglePrivateFixed::l:::x:1, comp togglePrivateMobile::l:::x:1}, comp toggleLba::l:::x:1, par b:l {comp toggleCompanyMobile::b::33:x:1, comp toggleCompanyFixed::b:::x:1}, comp toggleBlocklist:::::x:1}, space :::p, par l:::p {comp lblLbaText:7:l:p:48:p, comp lblCompanyAdrtypes:7:l:p:48:p, comp lblPrivateAdrTypes:7:l:p:48:p:1}, space :::p}}</string> 
              </void> 
             </object> 
             <void method="setProperty"> 
@@ -1305,6 +1305,42 @@
                 <string>java.awt.event.ActionListener</string> 
                 <string>actionPerformed</string> 
                 <string>toggleImportActionPerformed</string> 
+                <boolean>true</boolean> 
+               </object> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>no.ums.pas.send.ToggleAddresstype</string> 
+              <void method="setProperty"> 
+               <string>icon</string> 
+               <object class="com.jformdesigner.model.SwingIcon"> 
+                <int>0</int> 
+                <string>/no/ums/pas/icons/bandaid_24.png</string> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>main_sending_adr_btn_vulnerable_citizens_tooltip</string> 
+               </object> 
+              </void> 
+              <void property="name"> 
+               <string>toggleVulnerable</string> 
+              </void> 
+              <void method="auxiliary"> 
+               <void method="setProperty"> 
+                <string>JavaCodeGenerator.variableGetter</string> 
+                <boolean>true</boolean> 
+               </void> 
+              </void> 
+              <void method="addEvent"> 
+               <object class="com.jformdesigner.model.FormEvent"> 
+                <string>java.awt.event.ActionListener</string> 
+                <string>actionPerformed</string> 
+                <string>toggleVulnerableActionPerformed</string> 
                 <boolean>true</boolean> 
                </object> 
               </void> 

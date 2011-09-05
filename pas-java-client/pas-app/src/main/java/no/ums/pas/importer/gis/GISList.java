@@ -47,7 +47,8 @@ public class GISList extends ArrayList<GISRecord> {
                         Integer.toString(a.getHouseno()), a.getLetter(), a.getPostno(), a.getPostarea(),
                         Integer.toString(a.getRegion()), a.getBday(), a.getNumber(), a.getMobile(), a.getLat(),
                         a.getLon(), a.getGno(), a.getBno(), a.getBedrift(), -1,
-                        a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile());
+                        a.getStreetid(), a.getXycode(), a.getHasfixed(), a.getHasmobile(),
+                        a.getHasdisabled());
                 gr.add_inhabitant(in);
                 if (a.getLat() < m_bounds._lbo)
                     m_bounds._lbo = a.getLat();
@@ -61,7 +62,7 @@ public class GISList extends ArrayList<GISRecord> {
 
             List<UAddressBasics> bl = rl.getList().getListBasics().getUAddressBasics();
             for (UAddressBasics a : bl) {
-                InhabitantBasics inhab = new InhabitantBasics(a.getKondmid(), a.getLat(), a.getLon(), a.getHasfixed(), a.getHasmobile(), a.getBedrift(), a.getArrayindex());
+                InhabitantBasics inhab = new InhabitantBasics(a.getKondmid(), a.getLat(), a.getLon(), a.getHasfixed(), a.getHasmobile(), a.getBedrift(), a.getArrayindex(), a.getHasdisabled());
                 //inhab.init(a.getKondmid(), null, null, null, null, null, null, null, null, null, null, a.getLat(), a.getLon(), 0, 0, a.getBedrift(), 0, 0, null, a.getHasfixed(), a.getHasmobile());
                 gr.add_inhabitant(inhab);
                 if (a.getLat() < m_bounds._lbo)

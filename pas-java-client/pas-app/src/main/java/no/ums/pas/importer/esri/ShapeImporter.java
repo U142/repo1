@@ -146,8 +146,8 @@ public class ShapeImporter extends FileParser
 						com.vividsolutions.jts.geom.Geometry g = geom.getGeometryN(i);
 						com.vividsolutions.jts.geom.Coordinate [] coors = g.getCoordinates();
 						PolygonStruct poly = new PolygonStruct(new java.awt.Dimension(1,1));
-						poly.shapeID = (++totalshapes);
 						poly.shapeName = (dbf_strings.size() > totalshapes ? dbf_strings.get(totalshapes) : "Imported Polygon "+poly.shapeID);
+						poly.shapeID = (++totalshapes);
 						//poly.SetBounds(geom.getBoundary()., bounds._rbo, bounds._ubo, bounds._bbo);
 						for(int p = 0; p < coors.length; p++)
 						{
@@ -156,6 +156,12 @@ public class ShapeImporter extends FileParser
 							{
 								LLCoor ll = conv.rd_to_wgs84(coors[p].x, coors[p].y);
 								poly.add_coor(ll.get_lon(), ll.get_lat(), true, false);								
+							}
+							else if(projection_code.toLowerCase().contains("sweref"))
+							{
+								//same as UTM zone 33
+								LLCoor ll1 = conv.UTM2LL(23, coors[p].y, coors[p].x, "33V");
+								poly.add_coor(ll1.get_lon(), ll1.get_lat(), true, false);								
 							}
 							else if(projection_code.toLowerCase().contains("utm") || (coors[p].x>180 || coors[p].x < -180))
 							{
