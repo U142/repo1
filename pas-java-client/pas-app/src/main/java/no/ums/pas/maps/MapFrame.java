@@ -423,17 +423,15 @@ public class MapFrame extends JPanel implements ActionListener {
     //Image m_img_overlay = null;
     //Image m_img_overlay_onscreen = null;
 
-    ArrayList<MapOverlay> m_overlays = null;//new ArrayList<MapOverlay>();
+    private final List<MapOverlay> m_overlays = new ArrayList<MapOverlay>();
 
-    public ArrayList<MapOverlay> getOverlays() {
+    public List<MapOverlay> getOverlays() {
         return m_overlays;
     }
 
 
     public void showAllOverlays(int layer, boolean b_show, String jobid, JCheckBox chkref, String provider) {
         try {
-            if (m_overlays == null)
-                m_overlays = new ArrayList<MapOverlay>();
             for (MapOverlay m_overlay : m_overlays) { //disable old overlays
                 JCheckBox chk = m_overlay.chk_ref;
                 if (chk != null)
@@ -468,7 +466,7 @@ public class MapFrame extends JPanel implements ActionListener {
     }
 
     public void setAllOverlays() {
-        m_overlays = new ArrayList<MapOverlay>();
+        m_overlays.clear();
     }
 
     //close status should run this
@@ -480,7 +478,6 @@ public class MapFrame extends JPanel implements ActionListener {
                     chk.setSelected(false);
             }
             m_overlays.clear();
-            m_overlays = null;
             log.debug("Overlays reset");
         }
     }
