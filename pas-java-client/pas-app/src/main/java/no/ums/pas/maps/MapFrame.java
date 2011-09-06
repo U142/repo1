@@ -812,7 +812,10 @@ public class MapFrame extends JPanel implements ActionListener {
                         overlay.img_load = null;
                         overlay.img_onscreen = null;
                         int layer = overlay.n_layer;
-                        overlay.img_load = m_maploader.load_overlay(sz_jobid, layer, get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), get_navigation().getDimension());
+
+                        final LonLat topLeft = mapModel.getTopLeft();
+                        final LonLat bottomRight = getTileLookup().getZoomLookup(mapModel.getZoom()).getLonLat(topLeft, getSize().width, getSize().height);
+                        overlay.img_load = m_maploader.load_overlay(sz_jobid, layer, topLeft.getLon(), bottomRight.getLon(), topLeft.getLat(), bottomRight.getLat(), getSize());
 
                         if (overlay.img_load == null) {
                             overlay.img_onscreen = null;
@@ -972,6 +975,11 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
             PAS.get_pas().get_drawthread().draw_layers(g);
+            for (MapOverlay overlay : m_overlays) {
+                if (overlay.b_isdownloaded && overlay.b_visible && overlay.img_onscreen != null) {
+                    g.drawImage(overlay.img_onscreen, 0, 0, null);
+                }
+            }
             drawOnEvents(g);
         } catch (Exception e) {
             log.error("Failed to draw map", e);
