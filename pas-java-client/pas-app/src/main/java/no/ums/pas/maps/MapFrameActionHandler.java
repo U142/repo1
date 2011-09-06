@@ -20,11 +20,9 @@ import no.ums.pas.maps.defines.Navigation;
 import no.ums.pas.maps.defines.PolygonStruct;
 import no.ums.pas.maps.defines.ShapeStruct;
 import no.ums.pas.ums.errorhandling.Error;
-
-import javax.swing.SwingUtilities;
-
 import org.jdesktop.beansbinding.AbstractBean;
 
+import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -92,8 +90,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 	}
 	
 	public void updateOverlay() {
-		for(int i=0;i<get_mappane().m_overlays.size();++i)
-			((MapOverlay)get_mappane().m_overlays.get(i)).b_needupdate = true;
+		for(int i=0;i<get_mappane().getOverlays().size();++i)
+			((MapOverlay)get_mappane().getOverlays().get(i)).b_needupdate = true;
 		get_mappane().start_gsm_coverage_loader();
 	}
 
@@ -966,7 +964,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				check_snap(e); //when pressed, always check snap right away
 				if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
 					get_mappane().onZoomGesture(false, new Point(getMousedownPos().width, getMousedownPos().height));
-					if(get_mappane().m_overlays!=null)
+					if(get_mappane().getOverlays()!=null)
 						updateOverlay();
 				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
 						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
@@ -1088,7 +1086,7 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 					//Variables.NAVIGATION.gotoMap(nav);
 					resetPanDrag();
-					if(get_mappane().m_overlays!=null)
+					if(get_mappane().getOverlays()!=null)
 						updateOverlay();
 				}
 				break;

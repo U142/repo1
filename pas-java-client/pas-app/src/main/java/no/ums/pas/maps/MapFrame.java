@@ -423,17 +423,15 @@ public class MapFrame extends JPanel implements ActionListener {
     //Image m_img_overlay = null;
     //Image m_img_overlay_onscreen = null;
 
-    ArrayList<MapOverlay> m_overlays = null;//new ArrayList<MapOverlay>();
+    private final List<MapOverlay> m_overlays = new ArrayList<MapOverlay>();
 
-    public ArrayList<MapOverlay> getOverlays() {
+    public List<MapOverlay> getOverlays() {
         return m_overlays;
     }
 
 
     public void showAllOverlays(int layer, boolean b_show, String jobid, JCheckBox chkref, String provider) {
         try {
-            if (m_overlays == null)
-                m_overlays = new ArrayList<MapOverlay>();
             for (MapOverlay m_overlay : m_overlays) { //disable old overlays
                 JCheckBox chk = m_overlay.chk_ref;
                 if (chk != null)
@@ -468,7 +466,7 @@ public class MapFrame extends JPanel implements ActionListener {
     }
 
     public void setAllOverlays() {
-        m_overlays = new ArrayList<MapOverlay>();
+        m_overlays.clear();
     }
 
     //close status should run this
@@ -480,7 +478,6 @@ public class MapFrame extends JPanel implements ActionListener {
                     chk.setSelected(false);
             }
             m_overlays.clear();
-            m_overlays = null;
             log.debug("Overlays reset");
         }
     }
@@ -812,7 +809,10 @@ public class MapFrame extends JPanel implements ActionListener {
                         overlay.img_load = null;
                         overlay.img_onscreen = null;
                         int layer = overlay.n_layer;
-                        overlay.img_load = m_maploader.load_overlay(sz_jobid, layer, get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), get_navigation().getDimension());
+
+                        final LonLat topLeft = mapModel.getTopLeft();
+                        final LonLat bottomRight = getTileLookup().getZoomLookup(mapModel.getZoom()).getLonLat(topLeft, getSize().width, getSize().height);
+                        overlay.img_load = m_maploader.load_overlay(sz_jobid, layer, topLeft.getLon(), bottomRight.getLon(), topLeft.getLat(), bottomRight.getLat(), getSize());
 
                         if (overlay.img_load == null) {
                             overlay.img_onscreen = null;
@@ -972,6 +972,11 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
             PAS.get_pas().get_drawthread().draw_layers(g);
+            for (MapOverlay overlay : m_overlays) {
+                if (overlay.b_isdownloaded && overlay.b_visible && overlay.img_onscreen != null) {
+                    g.drawImage(overlay.img_onscreen, 0, 0, null);
+                }
+            }
             drawOnEvents(g);
         } catch (Exception e) {
             log.error("Failed to draw map", e);

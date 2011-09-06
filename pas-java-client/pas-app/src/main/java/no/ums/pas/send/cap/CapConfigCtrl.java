@@ -51,15 +51,10 @@ public class CapConfigCtrl implements IController {
 		ret.setContact(model.getContact());
 		ret.setDescription(model.getDescription());
 		
-		GregorianCalendar calendar = new GregorianCalendar();
-		//calendar.setTime(model.getEffective().toDate());
-		//ret.setEffective(new Dateti);
-		//ret.setExpires(model.getExpires());
 		ret.setHeadline(model.getHeadline());
 		ret.setInstruction(model.getInstruction());
 		ret.setLanguage(model.getLanguage());
 		ret.setNote(model.getNote());
-		//ret.setOnset(value)
 		ret.setResponseType(new ArrayOfAlertInfoResponseType());
 		if(model.getResponseType()!=null)
 			ret.getResponseType().getAlertInfoResponseType().addAll(model.getResponseType());
