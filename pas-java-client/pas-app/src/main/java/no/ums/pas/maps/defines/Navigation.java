@@ -7,6 +7,7 @@ import no.ums.map.tiled.TileLookup;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.menus.ViewOptions;
+import no.ums.pas.ums.tools.CoorConverter;
 import no.ums.ws.common.UMapPoint;
 
 import java.awt.Dimension;
@@ -613,6 +614,14 @@ public class Navigation extends AbstractBean{
 	}
 	public synchronized long calc_pix_distance(int px1, int py1, int px2, int py2) {
 		return Math.round(Math.sqrt( Math.pow(Math.abs(px2 - px1), 2) + Math.pow(Math.abs(py2 - py1), 2) ) );
+	}
+	
+	public synchronized double calc_distance(LonLat ll1, LonLat ll2)
+	{
+		//return Math.sqrt( Math.pow(Math.abs(Math.cos(CoorConverter.deg2rad * ll1.getLat())*(ll2.getLon() - ll1.getLon())), 2) + Math.pow(Math.abs(ll2.getLat() - ll1.getLat()), 2) );
+		double distX = Math.abs(ll1.getLon() - ll2.getLon()) * 30.92 * 3600 * Math.cos(CoorConverter.deg2rad * ll1.getLat());
+		double distY = Math.abs(ll1.getLat() - ll2.getLat()) * 30.92 * 3600;
+		return Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 	}
 	
 	public synchronized Dimension coor_to_screen(double f_lon, double f_lat, boolean b_mustbevisible)

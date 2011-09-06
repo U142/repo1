@@ -120,7 +120,20 @@ public class Settings extends JDialog {
 		togglePrivateMobile.setSelected(sot.adrGroupRepresented(sot.group_smsprivbtn));
 		toggleCompanyFixed.setSelected(sot.adrGroupRepresented(sot.group_fixedcompbtn));
 		toggleCompanyMobile.setSelected(sot.adrGroupRepresented(sot.group_smscompbtn));
-		
+		boolean bEnableAbas = togglePrivateFixed.isSelected() |
+				togglePrivateMobile.isSelected() |
+				toggleCompanyFixed.isSelected() |
+				toggleCompanyMobile.isSelected();
+		if(!bEnableAbas && toggleVulnerable.isSelected())
+		{
+			toggleVulnerable.doClick();
+		}
+		if(!bEnableAbas && toggleBlocklist.isSelected())
+		{
+			toggleBlocklist.doClick();
+		}
+		toggleVulnerable.setEnabled(bEnableAbas);
+		toggleBlocklist.setEnabled(bEnableAbas);
 	}
 
 
@@ -519,7 +532,7 @@ public class Settings extends JDialog {
 							.addGroup(userinfoLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(lblCompany)
 								.addComponent(txtCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap(327, Short.MAX_VALUE))
+							.addContainerGap(332, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_user_heading"), userinfo);
@@ -609,13 +622,13 @@ public class Settings extends JDialog {
 							.addContainerGap()
 							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-									.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)
+									.addComponent(txtMapWms, GroupLayout.PREFERRED_SIZE, 463, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(btnMapWmsOpen, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+									.addComponent(btnMapWmsOpen, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 									.addComponent(radioMapDefault, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-									.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
+									.addComponent(radioMapWms, GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
 									.addGroup(mapsettingsLayout.createParallelGroup()
 										.addComponent(lblMapWmsUser, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
@@ -626,10 +639,10 @@ public class Settings extends JDialog {
 									.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 										.addComponent(txtMapWmsPassword)
 										.addComponent(txtMapWmsUser, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 287, Short.MAX_VALUE))
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE))
 								.addGroup(GroupLayout.Alignment.LEADING, mapsettingsLayout.createSequentialGroup()
-									.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+									.addComponent(scrollWMS, GroupLayout.PREFERRED_SIZE, 507, GroupLayout.PREFERRED_SIZE)
+									.addGap(18, 18, 18)
 									.addGroup(mapsettingsLayout.createParallelGroup()
 										.addComponent(btnMoveDown, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
 										.addComponent(btnMoveUp, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))))
@@ -659,12 +672,12 @@ public class Settings extends JDialog {
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 							.addComponent(comboMapWmsImg, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addGroup(mapsettingsLayout.createParallelGroup()
+							.addGroup(mapsettingsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 								.addGroup(mapsettingsLayout.createSequentialGroup()
 									.addComponent(btnMoveUp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
 									.addComponent(btnMoveDown, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollWMS, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
+								.addComponent(scrollWMS, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
 							.addContainerGap())
 				);
 				mapsettingsLayout.linkSize(SwingConstants.VERTICAL, new Component[] {btnMoveDown, btnMoveUp});
@@ -697,12 +710,12 @@ public class Settings extends JDialog {
 							.addContainerGap()
 							.addGroup(navigationLayout.createParallelGroup()
 								.addComponent(radioNavPanByClick, GroupLayout.PREFERRED_SIZE, 248, GroupLayout.PREFERRED_SIZE)
-								.addComponent(radioNavZoomFromCenter, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+								.addComponent(radioNavZoomFromCenter, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addGroup(navigationLayout.createParallelGroup()
-								.addComponent(radioNavPanByDrag, GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-								.addComponent(radioNavZoomFromCorner, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap())
+							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+								.addComponent(radioNavPanByDrag, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(radioNavZoomFromCorner, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+							.addContainerGap(70, Short.MAX_VALUE))
 				);
 				navigationLayout.setVerticalGroup(
 					navigationLayout.createParallelGroup()
@@ -715,7 +728,7 @@ public class Settings extends JDialog {
 							.addGroup(navigationLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(radioNavZoomFromCenter)
 								.addComponent(radioNavZoomFromCorner))
-							.addContainerGap(295, Short.MAX_VALUE))
+							.addContainerGap(300, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_navigation_heading"), navigation);
@@ -765,9 +778,9 @@ public class Settings extends JDialog {
 						.addGroup(panel4Layout.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(panel4Layout.createParallelGroup()
-								.addComponent(lblMailServer, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-								.addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-								.addComponent(lblMailDisplayname, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+								.addComponent(lblMailServer, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+								.addComponent(lblMailAddress, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+								.addComponent(lblMailDisplayname, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 								.addComponent(txtMailDisplayname, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
@@ -791,7 +804,7 @@ public class Settings extends JDialog {
 							.addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(txtMailServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblMailServer))
-							.addContainerGap(285, Short.MAX_VALUE))
+							.addContainerGap(290, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_email_heading"), panel4);
@@ -813,8 +826,8 @@ public class Settings extends JDialog {
 						autostartupLayout.createParallelGroup()
 							.addGroup(autostartupLayout.createSequentialGroup()
 								.addContainerGap()
-								.addComponent(chkAutoStartParm, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(393, Short.MAX_VALUE))
+								.addComponent(chkAutoStartParm, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(279, Short.MAX_VALUE))
 					);
 					autostartupLayout.setVerticalGroup(
 						autostartupLayout.createParallelGroup()
@@ -848,7 +861,7 @@ public class Settings extends JDialog {
 								.addComponent(lblLbaUpdate, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(comboLbaUpdate, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(158, Short.MAX_VALUE))
+								.addContainerGap(205, Short.MAX_VALUE))
 					);
 					pnlLBALayout.setVerticalGroup(
 						pnlLBALayout.createParallelGroup()
@@ -906,6 +919,12 @@ public class Settings extends JDialog {
 						}
 					});
 
+					//---- lblPrivateAdrTypes ----
+					lblPrivateAdrTypes.setVerticalAlignment(SwingConstants.TOP);
+
+					//---- lblCompanyAdrtypes ----
+					lblCompanyAdrtypes.setVerticalAlignment(SwingConstants.TOP);
+
 					//---- togglePolygon ----
 					togglePolygon.setIcon(new ImageIcon(getClass().getResource("/no/ums/pas/icons/send_polygon_24.png")));
 					togglePolygon.setSelected(true);
@@ -952,39 +971,39 @@ public class Settings extends JDialog {
 					panel2Layout.setHorizontalGroup(
 						panel2Layout.createParallelGroup()
 							.addGroup(panel2Layout.createSequentialGroup()
-								.addGap(31, 31, 31)
-								.addGroup(panel2Layout.createParallelGroup()
-									.addGroup(panel2Layout.createSequentialGroup()
-										.addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+								.addContainerGap()
+								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 									.addGroup(panel2Layout.createSequentialGroup()
 										.addGroup(panel2Layout.createParallelGroup()
 											.addGroup(panel2Layout.createSequentialGroup()
 												.addComponent(togglePrivateFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 												.addComponent(togglePrivateMobile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-											.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
-										.addGap(18, 18, 18)
+											.addComponent(lblPrivateAdrTypes, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(panel2Layout.createParallelGroup()
 											.addGroup(panel2Layout.createSequentialGroup()
 												.addComponent(toggleCompanyFixed, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-												.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
-											.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(panel2Layout.createParallelGroup()
-											.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-											.addGroup(panel2Layout.createSequentialGroup()
-												.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addComponent(toggleCompanyMobile, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+												.addGap(18, 18, 18)
+												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-												.addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-												.addGap(3, 3, 3)
-												.addComponent(toggleBlocklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+												.addComponent(toggleVulnerable, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
+										.addGap(18, 18, 18)
+										.addGroup(panel2Layout.createParallelGroup()
+											.addComponent(lblLbaText, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+											.addComponent(toggleLba, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)))
+									.addGroup(panel2Layout.createSequentialGroup()
+										.addComponent(togglePolygon, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleEllipse, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(toggleImport, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)))
 								.addContainerGap())
 					);
+					panel2Layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {toggleBlocklist, toggleCompanyFixed, toggleCompanyMobile, toggleLba, togglePrivateFixed, togglePrivateMobile, toggleVulnerable});
 					panel2Layout.setVerticalGroup(
 						panel2Layout.createParallelGroup()
 							.addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
@@ -994,37 +1013,34 @@ public class Settings extends JDialog {
 									.addComponent(toggleEllipse)
 									.addComponent(toggleImport))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+								.addGroup(panel2Layout.createParallelGroup()
+									.addComponent(toggleLba, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
 									.addComponent(toggleVulnerable, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-									.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-										.addComponent(togglePrivateFixed, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(togglePrivateMobile, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addComponent(toggleLba, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(toggleCompanyMobile, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-										.addComponent(toggleCompanyFixed, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addComponent(toggleBlocklist, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+									.addComponent(toggleCompanyMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+									.addComponent(togglePrivateFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(togglePrivateMobile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(toggleCompanyFixed, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 								.addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-									.addComponent(lblLbaText, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblCompanyAdrtypes, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblPrivateAdrTypes, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE))
+									.addComponent(lblLbaText)
+									.addComponent(lblPrivateAdrTypes, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+									.addComponent(lblCompanyAdrtypes, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 								.addContainerGap())
 					);
-					panel2Layout.linkSize(SwingConstants.VERTICAL, new Component[] {lblCompanyAdrtypes, lblLbaText, lblPrivateAdrTypes});
 				}
 
 				GroupLayout pnlDiverseLayout = new GroupLayout(pnlDiverse);
 				pnlDiverse.setLayout(pnlDiverseLayout);
 				pnlDiverseLayout.setHorizontalGroup(
 					pnlDiverseLayout.createParallelGroup()
-						.addGroup(GroupLayout.Alignment.TRAILING, pnlDiverseLayout.createSequentialGroup()
+						.addGroup(pnlDiverseLayout.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-								.addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(pnlDiverseLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
 								.addComponent(autostartup, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(pnlLBA, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addContainerGap())
+								.addComponent(pnlLBA, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE))
+							.addGap(35, 35, 35))
 				);
 				pnlDiverseLayout.setVerticalGroup(
 					pnlDiverseLayout.createParallelGroup()
@@ -1034,8 +1050,8 @@ public class Settings extends JDialog {
 							.addGap(18, 18, 18)
 							.addComponent(pnlLBA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18, 18, 18)
-							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(32, Short.MAX_VALUE))
+							.addComponent(panel2, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(37, Short.MAX_VALUE))
 				);
 			}
 			tabbedPane1.addTab(bundle.getString("main_pas_settings_misc_heading"), pnlDiverse);
@@ -1046,14 +1062,14 @@ public class Settings extends JDialog {
 		contentPane.setLayout(contentPaneLayout);
 		contentPaneLayout.setHorizontalGroup(
 			contentPaneLayout.createParallelGroup()
-				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+				.addGroup(contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-						.addComponent(tabbedPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
-						.addGroup(contentPaneLayout.createSequentialGroup()
+					.addGroup(contentPaneLayout.createParallelGroup()
+						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 							.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
+						.addComponent(tabbedPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		contentPaneLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {btnCancel, btnSave});
@@ -1061,7 +1077,7 @@ public class Settings extends JDialog {
 			contentPaneLayout.createParallelGroup()
 				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+					.addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(btnSave)

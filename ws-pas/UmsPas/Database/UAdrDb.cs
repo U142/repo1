@@ -433,7 +433,7 @@ namespace com.ums.PAS.Database
                 String szSQL = String.Format(UCommon.UGlobalizationInfo, "sp_getellipseadr {0}, {1}, {2}, {3}{4}",
                                             e.center.lon, e.center.lat,
                                             e.radius.lon, e.radius.lat,
-                                            (m_n_pastype==2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "0")) : ""));
+                                            (m_n_pastype==2 ? String.Format(",{0},'{1}'", m_n_deptpk, (bVulnerableCitizensOnly ? "1" : "")) : ""));
                 rs = ExecReader(szSQL, UmsDb.UREADER_KEEPOPEN);
                 UAdrcountCandidate c = new UAdrcountCandidate();
                 while (rs.Read())

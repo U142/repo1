@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_20" class="java.beans.XMLDecoder"> 
+ <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundlePackage</string> 
+   <string>no.ums.pas.localization</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>lang</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.keyPrefix</string> 
+   <string>SendOptionToolbarForm</string> 
+  </void> 
+  <void property="contentType"> 
+   <string>form/swing</string> 
+  </void> 
+  <void property="root"> 
+   <object class="com.jformdesigner.model.FormRoot"> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormWindow"> 
+      <string>javax.swing.JDialog</string> 
+      <object class="com.jformdesigner.model.FormLayoutManager"> 
+       <class>org.jdesktop.layout.GroupLayout</class> 
+       <void method="setProperty"> 
+        <string>$horizontalGroup</string> 
+        <string>par l {comp dialogPane::l:::x}</string> 
+       </void> 
+       <void method="setProperty"> 
+        <string>$verticalGroup</string> 
+        <string>par l {seq l {comp dialogPane:::p::p, space ::44:x}}</string> 
+       </void> 
+      </object> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JPanel</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>org.jdesktop.layout.GroupLayout</class> 
+         <void method="setProperty"> 
+          <string>$horizontalGroup</string> 
+          <string>par l {seq l {par l {seq {comp button1:3::p:27:p, space :::p, comp textField1:::p:186:p, space u:::p, comp button2:3::p:15:p}, seq {comp button11:7::p:42:p, space :::p, comp button12:7::p:42:p, space s:::p, comp button13:7::p:42:p, space :::p, comp button14:7::p:42:p, space s:::p, comp button15:7::p:42:p}}, space :::p, comp button16:7::p:42:p, space ::21:x, par t {comp button3:1::p:33:p, comp button7:5::p:42:p}, space :::p, par l {comp button8:5:l:p:42:p, comp button4:1:l:p:32:p}, space :::p, par l {comp button9:5:l:p:42:p, seq l {space :1:1:1, comp button5:1::p:32:p}}, space :::p, par l {comp button6:1::p:42:p, comp button10:5:l:p:42:p}}, seq l {comp button17:7::p:42:p, space :::p, comp button18:7::p:42:p, space :::p, comp button19:7::p:42:p, space :::p, comp button20:7::p:42:p, space :::p, comp button21:7::p:42:p, space :p:282:p}}</string> 
+         </void> 
+         <void method="setProperty"> 
+          <string>$verticalGroup</string> 
+          <string>par l {seq {par l {seq l {par b {comp button5:2:b:p::p, comp button6:2:b:p:35:p}, space :::p, par b {comp button9:6:b:p:35:p, comp button10:6:b:p:35:p}}, seq l {par l {par b:l {comp button4:2:b:p::p, comp button3:2:b:p::p}, par b:l {comp button1:4:b:p::p, comp textField1::b:p::p, comp button2:4:b:p:12:p}}, space :::p, par l {comp button15:8::p:35:p, par b:l {comp button8:6:b:p:35:p, comp button7:6:b:p:35:p}, par b:l {comp button11:8:b:p:35:p, comp button12:8:b:p:35:p, comp button13:8:b:p:35:p, comp button14:8:b:p:35:p}, comp button16:8:l:p:35:p}}}, space :::p, par l {comp button17:8::p:35:p, comp button18:8::p:35:p, comp button19:8::p:35:p, comp button20:8::p:35:p, comp button21:8::p:35:p}, space ::52:x}}</string> 
+         </void> 
+        </object> 
+        <void method="setProperty"> 
+         <string>border</string> 
+         <object class="javax.swing.border.EmptyBorder"> 
+          <int>12</int> 
+          <int>12</int> 
+          <int>12</int> 
+          <int>12</int> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>dialogPane</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/brush_disabled_16.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button1</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JTextField</string> 
+          <void property="name"> 
+           <string>textField1</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void property="name"> 
+           <string>button2</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/send_polygon_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button3</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/send_ellipse_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button4</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/send_municipal_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button5</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/folder_open_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button6</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/find_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button7</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/lock_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button8</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/outbox_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button9</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/delete_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button10</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/phone_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button11</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/mobile_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button12</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/phone_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button13</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/mobile_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button14</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/flag_red_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button15</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/bandaid_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button16</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/lba_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button17</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/cap_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button18</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/facebook_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button19</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/twitter_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button20</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JButton</string> 
+          <void method="setProperty"> 
+           <string>icon</string> 
+           <object class="com.jformdesigner.model.SwingIcon"> 
+            <int>0</int> 
+            <string>/no/ums/pas/icons/atom_24.png</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>button21</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void property="name"> 
+       <string>this</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>10</int> 
+        <int>0</int> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>size</string> 
+       <object class="java.awt.Dimension"> 
+        <int>560</int> 
+        <int>275</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

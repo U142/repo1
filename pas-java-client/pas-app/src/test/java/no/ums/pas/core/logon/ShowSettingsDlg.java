@@ -19,9 +19,11 @@ public class ShowSettingsDlg {
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Settings s = new Settings(frm);
 		UserInfo ui = new UserInfo();
-		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0,
+		UserProfile up = new UserProfile("", "", 2, 2, 2, 2, 2, 2, 2097471, 2, 0, 0, 0, 0,
 							0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-		ui.set_current_department(new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null));
+		DeptInfo di = new DeptInfo(0, "", "", null, true, 1, 1, "", up, null, 1, 1, null);
+		ui.get_departments().add(di);
+		ui.set_current_department(di);
 		Variables.setUserInfo(ui);
 		no.ums.pas.core.logon.Settings settings = new no.ums.pas.core.logon.Settings();
 		MailAccount mail = new MailAccount();

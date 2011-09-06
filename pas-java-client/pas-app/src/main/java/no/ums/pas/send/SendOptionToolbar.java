@@ -371,6 +371,18 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_lbl_addresstypes_private.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.PRIVATE));
 		m_lbl_addresstypes_company.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.COMPANY));
 		m_lbl_addresstypes_lba.setText(gen_adrtypes_text(m_n_addresstypes, ADRGROUPS.LBA));	
+
+		m_btn_adrtypes_nofax.setEnabled(IsAbasChannelSelected());
+		m_btn_adrtypes_vulnerable.setEnabled(IsAbasChannelSelected());
+
+	}
+	
+	public boolean IsAbasChannelSelected()
+	{
+		return m_btn_adrtypes_private_fixed.isSelected() | 
+				m_btn_adrtypes_private_mobile.isSelected() |
+				m_btn_adrtypes_company_fixed.isSelected() | 
+				m_btn_adrtypes_company_mobile.isSelected();	
 	}
 	
 	public static final int BTN_SENDINGTYPE_POLYGON_	= 1;
@@ -629,6 +641,8 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 				TYPES |= i;
 		}
 		disableAddressMenus();
+		
+		
 		return TYPES;
 	}
 	
@@ -663,6 +677,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			TYPES |= m_btn_adrtypes_cell_broadcast_text.get_adrtype();
 		if(m_btn_adrtypes_cell_broadcast_voice.isSelected() && m_btn_adrtypes_cell_broadcast_voice.isVisible() && !m_btn_adrtypes_cell_broadcast_text.isSelected()) 
 			TYPES |= m_btn_adrtypes_cell_broadcast_voice.get_adrtype();
+		
 		
 		if(m_btn_adrtypes_nofax.isSelected()) 
 			TYPES |= m_btn_adrtypes_nofax.get_adrtype();
@@ -1071,7 +1086,10 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 			Error.getError().addError("SendOptionToolbar","Exception in init",e,1);
 		}
 		//TODO: check for access to send only to vulnerable citizens
-		show_buttons(SendOptionToolbar.BTN_ADRTYPES_VULNERABLE_, true);
+		if(PAS.get_pas() != null && PAS.get_pas().get_rightsmanagement().only_vulnerable_subscribers())
+		{
+			show_buttons(SendOptionToolbar.BTN_ADRTYPES_VULNERABLE_, true);
+		}
 		add_controls();
 		
 		//Substance 3.3
@@ -1259,48 +1277,38 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		DefaultPanel.ENABLE_GRID_DEBUG = false;
 		JLabel m_place_holder;
 		add_spacing(DIR_VERTICAL, 5);
-		//inc_panels();
 		this.reset_xpanels();
 		this.set_gridconst(0, inc_panels(), 1, 1, GridBagConstraints.WEST);
 		add(m_radio_activate, m_gridconst);
-		set_gridconst(inc_xpanels(), get_panel(), 11, 1, GridBagConstraints.WEST);
+		set_gridconst(inc_xpanels(), get_panel(), 13, 1, GridBagConstraints.WEST);
 		add(m_txt_sendname, m_gridconst);
-		inc_xpanels2(9);
-		//addSeparator();
-		//inc_xpanels2();
-		//addSeparator();
-		//inc_xpanels2();
-		add_spacing(DIR_HORIZONTAL, 30);
+		inc_xpanels2(10);
+		//add_spacing(DIR_HORIZONTAL, 15);
+		inc_xpanels2(3);
+		//addSeparator(15);
 		inc_xpanels2();
 		m_gridconst.anchor = GridBagConstraints.CENTER;
 		add(m_btn_color, m_gridconst);
 		inc_xpanels2();
-		//this.addSeparator();
-		//inc_panels2();
 		add(m_radio_sendingtype_polygon, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_ellipse, m_gridconst);
-		//inc_xpanels2();
-		//add(m_radio_sendingtype_polygonal_ellipse, m_gridconst);
 		inc_xpanels2();
 		add(m_radio_sendingtype_municipal, m_gridconst);
 		inc_xpanels2();
-		//addSeparator();
 		add(m_btn_open, m_gridconst);
 		inc_xpanels2();
 		add_spacing(DIR_VERTICAL, 15);
 		
-		//this.addSeparator();
-		//this.set_gridconst(get_xpanel(), inc_panels(), 1, 1, GridBagConstraints.WEST);
 		this.reset_xpanels();
 		inc_panels2();
-		inc_xpanels2();
+		//inc_xpanels2();
 	
 		add(m_btn_adrtypes_private_fixed, m_gridconst);
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(5);
+		addSeparator(2);
 		inc_xpanels2();
 		add(m_btn_adrtypes_private_mobile, m_gridconst);
 		m_place_holder = new JLabel("");
@@ -1312,7 +1320,7 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(5);
+		addSeparator(2);
 		inc_xpanels2();
 		add(m_btn_adrtypes_company_mobile, m_gridconst);
 		m_place_holder = new JLabel("");
@@ -1324,56 +1332,45 @@ public class SendOptionToolbar extends DefaultPanel implements ActionListener, F
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		addSeparator(15);
-		/*inc_xpanels2();
-		add(m_btn_adrtypes_nophone_private, m_gridconst);
-		//addSeparator();
 		inc_xpanels2();
-		add(m_btn_adrtypes_nophone_company, m_gridconst);*/
-		//addSeparator();
+		addSeparator(2);
 		inc_xpanels2();
-		//inc_xpanels2();
-		add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
+	
 		add(m_btn_adrtypes_vulnerable, m_gridconst);
 		m_place_holder = new JLabel("");
 		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
 		add(m_place_holder,m_gridconst);
-		//inc_xpanels2();
-		//inc_xpanels2(2);
-		add_spacing(DIR_HORIZONTAL, 30);
+		addSeparator(15);
+		
 		inc_xpanels2();
-		//inc_panels2();
-		//add(m_btn_adrtypes_cell_broadcast_voice, m_gridconst);
-		//inc_xpanels2();
+		add(m_btn_adrtypes_cell_broadcast_text, m_gridconst);
+		m_place_holder = new JLabel("");
+		m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		add(m_place_holder,m_gridconst);
+
+		inc_xpanels2(3);
+		//m_place_holder = new JLabel("");
+		//m_place_holder.setPreferredSize(new Dimension(SIZE_BUTTON_LARGE,SIZE_BUTTON_LARGE));
+		//add_spacing(DIR_HORIZONTAL, 10);
 		
 		m_btn_adrtypes_nophone_private.setSelected(false);
 		m_btn_adrtypes_nophone_company.setSelected(false);
 		m_btn_adrtypes_nophone_private.setEnabled(false);
 		m_btn_adrtypes_nophone_company.setEnabled(false);
-		//m_btn_adrtypes_cell_broadcast_text.setEnabled(false);
-
-		//this.addSeparator();
-		//add_spacing(DIR_VERTICAL, 5);
 		add(m_btn_goto, m_gridconst);
 		inc_xpanels2();
-		//addSeparator();
-		
-		//this.addSeparator();
-		
-		//this.addSeparator();
 		add(m_btn_finalize, m_gridconst);
 		inc_xpanels2();
 		add(m_btn_send, m_gridconst);
 		inc_xpanels2();
-		//this.addSeparator();
 		add(m_btn_close, m_gridconst);
 		inc_xpanels2();
 		inc_panels2();
-		set_gridconst(1, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);	
+		set_gridconst(0, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);	
 		add(m_lbl_addresstypes_private, m_gridconst);
-		set_gridconst(5, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
+		set_gridconst(4, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		add(m_lbl_addresstypes_company, m_gridconst);
-		set_gridconst(10, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
+		set_gridconst(13, get_panel(), 8, 1, GridBagConstraints.NORTHWEST);
 		add(m_lbl_addresstypes_lba, m_gridconst);
 		init_addresstypes(0); //SendController.SENDTO_ALL);
 		add_spacing(DIR_VERTICAL, 5);

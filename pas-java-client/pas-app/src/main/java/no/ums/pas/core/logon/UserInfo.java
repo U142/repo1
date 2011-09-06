@@ -106,7 +106,8 @@ public class UserInfo extends Object implements Cloneable {
 	}
 	public UserInfo()
 	{
-		
+		m_departments = new DeptArray();
+
 	}
 	/*public UserInfo(String [] s) {
 		//"l_userpk", "l_comppk", "sz_userid", "sz_compid", "sz_name", "sz_surname" 

@@ -5,6 +5,8 @@ import no.ums.log.UmsLog;
 import no.ums.map.tiled.LonLat;
 import no.ums.map.tiled.ZoomLookup;
 import no.ums.map.tiled.component.MapModel;
+import no.ums.pas.PAS;
+import no.ums.pas.core.Variables;
 import no.ums.pas.ums.errorhandling.Error;
 
 import java.awt.BasicStroke;
@@ -105,6 +107,15 @@ public class EllipseStruct extends ShapeStruct {
             g2d.setColor(new Color(0.0f, 0.0f, 0.0f, 0.6f));
 
             final LonLat centerLL = new LonLat(get_center().get_lon(), get_center().get_lat());
+            
+            final LonLat centerMapPoint = new LonLat(get_center().get_lon(), get_center().get_lat());
+            final LonLat cornerLLX = new LonLat(get_corner().get_lon(), get_center().get_lat());
+            final LonLat cornerLLY = new LonLat(get_center().get_lon(), get_corner().get_lat());
+            
+            final double fWidth = 2 * Variables.getNavigation().calc_distance(centerMapPoint, cornerLLX);
+            final double fHeight = 2 * Variables.getNavigation().calc_distance(centerMapPoint, cornerLLY);
+            
+            
             final Point offset = zoomLookup.getPoint(mapModel.getTopLeft());
             final Point center = zoomLookup.getPoint(centerLL);
             final Point corner = zoomLookup.getPoint(new LonLat(get_corner().get_lon(), get_corner().get_lat()));
@@ -117,8 +128,8 @@ public class EllipseStruct extends ShapeStruct {
 
             double width = zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x + w, corner.y));
             double height= zoomLookup.getLonLat(corner.x, corner.y).distanceToInM(zoomLookup.getLonLat(corner.x, corner.y + h));
-            g2d.drawString(String.format("%.2fm", height), (center.x-offset.x + w/2) + 5, center.y-offset.y);
-            g2d.drawString(String.format("%.2fm", width),center.x-offset.x, center.y-offset.y + h/2 + 17);
+            g2d.drawString(String.format("%.2fm", fHeight), (center.x-offset.x + w/2) + 5, center.y-offset.y);
+            g2d.drawString(String.format("%.2fm", fWidth),center.x-offset.x, center.y-offset.y + h/2 + 17);
 
             final Ellipse2D.Double ellipse = new Ellipse2D.Double(center.x - offset.x - w/2, center.y - offset.y - h/2, w, h);
             drawShape(g2d, ellipse, nPenSize, bDashed, bFill, bBorder, bPaintShapeName, bHasFocus);
