@@ -15,20 +15,21 @@ import java.awt.image.BufferedImage;
 /**
  * @author Ståle Undheim <su@ums.no>
  */
-public class TileCacheCoverage extends AbstractTileCache {
+public abstract class AbstractLayerTileCache extends AbstractTileCache {
 
-    private static final Log log = UmsLog.getLogger(TileCacheCoverage.class);
+    private static final Log log = UmsLog.getLogger(AbstractLayerTileCache.class);
 
     private static final int TILE_SIZE = 256;
-    private static final String LAYER = "1";
     private static final int MIN_ALPHA = 50;
 
-    private final String jobId;
     private final Image blank = new BufferedImage(TILE_SIZE, TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
+    private final String jobId;
+    private final String layer;
 
-    public TileCacheCoverage(String jobId) {
+    public AbstractLayerTileCache(String jobId, String layer) {
         super(18, TILE_SIZE);
         this.jobId = jobId;
+        this.layer = layer;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class TileCacheCoverage extends AbstractTileCache {
         info.setBBo(bottomRight.getLat());
         info.setHeight(TILE_SIZE);
         info.setWidth(TILE_SIZE);
-        info.setLayers(LAYER);
+        info.setLayers(layer);
         info.setSRS("4326");
         info.setSzJobid(jobId);
         info.setSzUserid("jone");
@@ -76,24 +77,18 @@ public class TileCacheCoverage extends AbstractTileCache {
                         {
                             //this is a visible pixel. if one neighbour is not visible, then outline this pixel
                             if (getA(j - 1, i - 1, bi) < MIN_ALPHA ||
-                                getA(j    , i - 1, bi) < MIN_ALPHA ||
-                                getA(j + 1, i - 1, bi) < MIN_ALPHA ||
+                                    getA(j, i - 1, bi) < MIN_ALPHA ||
+                                    getA(j + 1, i - 1, bi) < MIN_ALPHA ||
 
-                                getA(j - 1, i, bi) < MIN_ALPHA ||
-                                getA(j + 1, i, bi) < MIN_ALPHA ||
+                                    getA(j - 1, i, bi) < MIN_ALPHA ||
+                                    getA(j + 1, i, bi) < MIN_ALPHA ||
 
-                                getA(j - 1, i + 1, bi) < MIN_ALPHA ||
-                                getA(j    , i + 1, bi) < MIN_ALPHA ||
-                                getA(j + 1, i + 1, bi) < MIN_ALPHA) {
-                                bi.setRGB(j, i, (255 << 24));
+                                    getA(j - 1, i + 1, bi) < MIN_ALPHA ||
+                                    getA(j, i + 1, bi) < MIN_ALPHA ||
+                                    getA(j + 1, i + 1, bi) < MIN_ALPHA) {
+                                markOutline(bi, j, i);
                             } else if (alpha > MIN_ALPHA) {
-                                int red = ((rgb >> 16) & 0xff);
-                                int green = ((rgb >> 8) & 0xff);
-                                int blue = ((rgb) & 0xff);
-                                int luma = (int) (red * 0.3 + green * 0.59 + blue * 0.11);
-                                int ca = 190;
-                                int baseColor = (ca << 24) | (luma << 16) | (luma << 8) | luma;
-                                bi.setRGB(j, i, baseColor);
+                                markFilled(bi, j, i, rgb);
                             }
                         }
                     }
@@ -105,6 +100,10 @@ public class TileCacheCoverage extends AbstractTileCache {
             return blank;
         }
     }
+
+    protected abstract void markFilled(BufferedImage bi, int x, int y, int rgbBase);
+
+    protected abstract void markOutline(BufferedImage image, int x, int y);
 
     private int getA(int x, int y, BufferedImage bufferedImage) {
         return ((bufferedImage.getRGB(x, y) >> 24) & 0xff);

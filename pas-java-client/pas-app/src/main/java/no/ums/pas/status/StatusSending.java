@@ -4,7 +4,8 @@ package no.ums.pas.status;
 import com.google.common.base.Supplier;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
-import no.ums.map.tiled.TileCacheCoverage;
+import no.ums.map.tiled.TileCacheGsmCoverage;
+import no.ums.map.tiled.TileCacheUmtsCoverage;
 import no.ums.map.tiled.TileLookupImpl;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
@@ -82,7 +83,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class StatusSending extends Object {
+public class StatusSending {
 	/*sprintf(sz_xmltemp, "<SENDING sz_sendingname=\"%s\" l_refno=\"%d\" l_group=\"%d\" l_createdate=\"%d\" l_createtime=\"%d\" "
 			"l_scheddate=\"%d\" l_schedtime=\"%d\" l_sendingstatus=\"%d\" l_comppk=\"%d\" l_deptpk=\"%d\" "
 			"l_type=\"%d\" l_addresstypes=\"%d\" l_profilepk=\"%d\" l_queuestatus=\"%d\" l_totitem=\"%d\" "
@@ -149,7 +150,7 @@ public class StatusSending extends Object {
 		return percent;
 	}
 	public LBASEND getLBA() { return m_lba; }
-	public boolean hasLBA() { return (m_lba==null ? false : true); }
+	public boolean hasLBA() { return (m_lba != null); }
 	
 	
 	private StatusSendingUI m_uipanel;
@@ -192,8 +193,7 @@ public class StatusSending extends Object {
 	
 	public String toString()
 	{
-		String ret = getTotalSendingnameLabel().getText();
-		return ret;
+        return getTotalSendingnameLabel().getText();
 	}
 	public String getSendingname() { 
 		return _sz_sendingname;
@@ -224,7 +224,7 @@ public class StatusSending extends Object {
 			b_use_voice = false;
 		
 		float n_lba_percent = 100;
-		float n_voice_percent = 100;
+		float n_voice_percent;
 		if(m_lba!=null && 
 				(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT)) ||
 				(((get_addresstypes() & SendController.SENDTO_TAS_SMS) == SendController.SENDTO_TAS_SMS)))
@@ -267,19 +267,11 @@ public class StatusSending extends Object {
 			n_percent = n_lba_percent;
 		else if(b_use_voice)
 			n_percent = n_voice_percent;
-		n_sending_completion_percent = (int)Math.round(n_percent);
-		setSendingnameLabel((int)Math.round(n_percent) + "%");
+		n_sending_completion_percent = Math.round(n_percent);
+		setSendingnameLabel(Math.round(n_percent) + "%");
 	}
-	
-	public void SetStatusNeedsAttention(boolean b)
-	{
-		if(b)
-			getTotalSendingnameLabel().setIcon(ImageLoader.load_icon("alert.gif"));
-		else
-			getTotalSendingnameLabel().setIcon(null);
-	}
-	
-	public void set_sendinglist(StatusSendingList parent) {
+
+    public void set_sendinglist(StatusSendingList parent) {
 		m_sendinglist = parent;
 	}
 	public StatusSendingList get_sendinglist() { return m_sendinglist; }
@@ -313,38 +305,37 @@ public class StatusSending extends Object {
 	public void CalcLbaTotalsFromOperators()
 	{
 		LBASEND lba = new LBASEND();
-		for(int i=0; i < m_lba_by_operator.size(); i++)
-		{
-			if(m_filter_status_by_operator != m_lba_by_operator.get(i).l_operator && m_filter_status_by_operator > -1)
-				continue;
-			lba.n_cancelled += m_lba_by_operator.get(i).n_cancelled;
-			lba.n_delivered += m_lba_by_operator.get(i).n_delivered;
-			lba.n_failed += m_lba_by_operator.get(i).n_failed;
-			lba.n_items += m_lba_by_operator.get(i).n_items==-1?0:m_lba_by_operator.get(i).n_items;
-			lba.n_proc += m_lba_by_operator.get(i).n_proc==-1?0:m_lba_by_operator.get(i).n_proc;
-			lba.n_queued += m_lba_by_operator.get(i).n_queued;
-			lba.n_expired += m_lba_by_operator.get(i).n_expired;
-			lba.l_created_ts = m_lba_by_operator.get(i).l_created_ts;
-			lba.l_started_ts = m_lba_by_operator.get(i).l_started_ts;
-			lba.l_expires_ts = m_lba_by_operator.get(i).l_expires_ts;
+        for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
+            if (m_filter_status_by_operator != aM_lba_by_operator.l_operator && m_filter_status_by_operator > -1)
+                continue;
+            lba.n_cancelled += aM_lba_by_operator.n_cancelled;
+            lba.n_delivered += aM_lba_by_operator.n_delivered;
+            lba.n_failed += aM_lba_by_operator.n_failed;
+            lba.n_items += aM_lba_by_operator.n_items == -1 ? 0 : aM_lba_by_operator.n_items;
+            lba.n_proc += aM_lba_by_operator.n_proc == -1 ? 0 : aM_lba_by_operator.n_proc;
+            lba.n_queued += aM_lba_by_operator.n_queued;
+            lba.n_expired += aM_lba_by_operator.n_expired;
+            lba.l_created_ts = aM_lba_by_operator.l_created_ts;
+            lba.l_started_ts = aM_lba_by_operator.l_started_ts;
+            lba.l_expires_ts = aM_lba_by_operator.l_expires_ts;
 
-			lba.n_cbtype = m_lba_by_operator.get(i).n_cbtype;
-			lba.f_simulation = m_lba_by_operator.get(i).f_simulation;
-			lba.l_operator = m_lba_by_operator.get(i).l_operator;
-			lba.n_parentrefno = m_lba_by_operator.get(i).n_parentrefno;
-			lba.n_requesttype = m_lba_by_operator.get(i).n_requesttype;
-			lba.n_response = m_lba_by_operator.get(i).n_response;
-			lba.n_retries = m_lba_by_operator.get(i).n_retries;
-			if(lba.n_status>m_lba_by_operator.get(i).n_status || lba.n_status<0)
-				lba.n_status = m_lba_by_operator.get(i).n_status;
-			lba.sz_areaid = m_lba_by_operator.get(i).sz_areaid;
-			lba.sz_jobid = m_lba_by_operator.get(i).sz_jobid;
+            lba.n_cbtype = aM_lba_by_operator.n_cbtype;
+            lba.f_simulation = aM_lba_by_operator.f_simulation;
+            lba.l_operator = aM_lba_by_operator.l_operator;
+            lba.n_parentrefno = aM_lba_by_operator.n_parentrefno;
+            lba.n_requesttype = aM_lba_by_operator.n_requesttype;
+            lba.n_response = aM_lba_by_operator.n_response;
+            lba.n_retries = aM_lba_by_operator.n_retries;
+            if (lba.n_status > aM_lba_by_operator.n_status || lba.n_status < 0)
+                lba.n_status = aM_lba_by_operator.n_status;
+            lba.sz_areaid = aM_lba_by_operator.sz_areaid;
+            lba.sz_jobid = aM_lba_by_operator.sz_jobid;
 
-			lba.send_ts = m_lba_by_operator.get(i).send_ts;
-			lba.hist_cc = m_lba_by_operator.get(i).hist_cc;
-			lba.hist_cell = m_lba_by_operator.get(i).hist_cell;
+            lba.send_ts = aM_lba_by_operator.send_ts;
+            lba.hist_cc = aM_lba_by_operator.hist_cc;
+            lba.hist_cell = aM_lba_by_operator.hist_cell;
 
-		}
+        }
 		//log.debug("Worst operator status for refno="+lba.n_parentrefno+": "+lba.n_status);
 		lba.hist_cc = CalcTotalsByCC();
 		lba.send_ts = MergeLbaTimestamps();
@@ -365,18 +356,16 @@ public class StatusSending extends Object {
 	
 	protected ArrayList<LBASEND_TS> MergeLbaTimestamps()
 	{
-		ArrayList<LBASEND_TS> tslist = new ArrayList<LBASEND_TS>(); 
-		for(int i=0; i < m_lba_by_operator.size(); i++)
-		{
-			if(m_filter_status_by_operator != m_lba_by_operator.get(i).l_operator && m_filter_status_by_operator > -1)
-				continue;			
-			for(int ts=0; ts < m_lba_by_operator.get(i).send_ts.size(); ts++)
-			{
-				LBASEND_TS temp = m_lba_by_operator.get(i).send_ts.get(ts);
-				temp.sz_operator = m_lba_by_operator.get(i).sz_operator;
-				tslist.add(temp);
-			}
-		}
+		ArrayList<LBASEND_TS> tslist = new ArrayList<LBASEND_TS>();
+        for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
+            if (m_filter_status_by_operator != aM_lba_by_operator.l_operator && m_filter_status_by_operator > -1)
+                continue;
+            for (int ts = 0; ts < aM_lba_by_operator.send_ts.size(); ts++) {
+                LBASEND_TS temp = aM_lba_by_operator.send_ts.get(ts);
+                temp.sz_operator = aM_lba_by_operator.sz_operator;
+                tslist.add(temp);
+            }
+        }
 		//m_lba.send_ts = tslist;
 		Collections.sort(tslist);
 		return tslist;
@@ -387,44 +376,38 @@ public class StatusSending extends Object {
 	{
 		ArrayList<LBAHISTCC> cclist = new ArrayList<LBAHISTCC>(); //make a new list
 		Hashtable<Integer, LBAHISTCC> added = new Hashtable<Integer, LBAHISTCC>();
-		
-		for(int i=0; i < m_lba_by_operator.size(); i++)
-		{
-			if(m_filter_status_by_operator != m_lba_by_operator.get(i).l_operator && m_filter_status_by_operator > -1)
-				continue;
-			for(int cc=0; cc < m_lba_by_operator.get(i).hist_cc.size(); cc++)
-			{
-				LBAHISTCC cctemp = m_lba_by_operator.get(i).hist_cc.get(cc); //to be added to cclist
-				Integer ccode = new Integer(cctemp.l_ccode);
-				if(added.containsKey(ccode)) //already added ccode, accumulate
-				{
-					/*LBAHISTCC ccfound = added.get(ccode);*/
-					LBAHISTCC ccfound = added.get(ccode);
-					ccfound.l_delivered += cctemp.l_delivered;
-					ccfound.l_expired += cctemp.l_expired;
-					ccfound.l_failed += cctemp.l_failed;
-					ccfound.l_queued += cctemp.l_queued;
-					ccfound.l_submitted += cctemp.l_submitted;
-					ccfound.l_subscribers += cctemp.l_subscribers;
-					ccfound.l_unknown += cctemp.l_unknown;
-					
-				}
-				else { //new ccode, make new
-					//added.put(new Integer(cctemp.l_ccode), cctemp);
-					try
-					{
-						LBAHISTCC newcc = (LBAHISTCC)cctemp.clone();
-						cclist.add(newcc);
-						added.put(new Integer(cctemp.l_ccode), newcc);
-					}
-					catch(Exception e)
-					{ 
-						
-					}
-				}
-				
-			}
-		}
+
+        for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
+            if (m_filter_status_by_operator != aM_lba_by_operator.l_operator && m_filter_status_by_operator > -1)
+                continue;
+            for (int cc = 0; cc < aM_lba_by_operator.hist_cc.size(); cc++) {
+                LBAHISTCC cctemp = aM_lba_by_operator.hist_cc.get(cc); //to be added to cclist
+                Integer ccode = cctemp.l_ccode;
+                if (added.containsKey(ccode)) //already added ccode, accumulate
+                {
+                    /*LBAHISTCC ccfound = added.get(ccode);*/
+                    LBAHISTCC ccfound = added.get(ccode);
+                    ccfound.l_delivered += cctemp.l_delivered;
+                    ccfound.l_expired += cctemp.l_expired;
+                    ccfound.l_failed += cctemp.l_failed;
+                    ccfound.l_queued += cctemp.l_queued;
+                    ccfound.l_submitted += cctemp.l_submitted;
+                    ccfound.l_subscribers += cctemp.l_subscribers;
+                    ccfound.l_unknown += cctemp.l_unknown;
+
+                } else { //new ccode, make new
+                    LBAHISTCC newcc = null;
+                    try {
+                        newcc = (LBAHISTCC) cctemp.clone();
+                        cclist.add(newcc);
+                        added.put(cctemp.l_ccode, newcc);
+                    } catch (CloneNotSupportedException e) {
+                        throw new IllegalStateException("Failed to clone LBAHISTCC", e);
+                    }
+                }
+
+            }
+        }
 		/*Enumeration<LBAHISTCC> en = added.elements();
 		while(en.hasMoreElements())
 		{
@@ -516,7 +499,7 @@ public class StatusSending extends Object {
                         {
                             dateFormat = new SimpleDateFormat("dd'" + Localization.l("common_days_short") + " 'HH'" + Localization.l("common_hours_short") + " 'mm'" + Localization.l("common_minutes_short") + " 'ss'" + Localization.l("common_seconds_short") + "'");
                         }
-						if(diff >= 1000*60*60)//one hour or more
+						else if(diff >= 1000*60*60)//one hour or more
                         {
                             dateFormat = new SimpleDateFormat("HH'" + Localization.l("common_hours_short") + " 'mm'" + Localization.l("common_minutes_short") + " 'ss'" + Localization.l("common_seconds_short") + "'");
                         }
@@ -528,10 +511,11 @@ public class StatusSending extends Object {
 					}
 					catch(Exception timeerr)
 					{
+                        log.warn("Failed to format text", timeerr);
 					}
 				}
 			}
-			String sz_type = "";
+			String sz_type;
 			switch(get_group())
 			{
 			case 5:
@@ -554,6 +538,7 @@ public class StatusSending extends Object {
 		}
 		catch(Exception e)
 		{
+            log.warn("Failed to set LBA", e);
 		}
 		try
 		{
@@ -561,7 +546,7 @@ public class StatusSending extends Object {
 		}
 		catch(Exception e)
 		{
-			
+		    log.warn("Failed to init cell", e);
 		}
 		
 	}
@@ -830,35 +815,35 @@ public class StatusSending extends Object {
 		pnl_icon = new IconPanel();
 
 		_sz_sendingname = sz_sendingname;
-		_n_refno		= new Integer(sz_refno).intValue();
-		_n_group		= new Integer(sz_group).intValue();
-		_n_createdate	= new Integer(sz_createdate).intValue();
-		_n_createtime	= new Integer(sz_createtime).intValue();
-		_n_scheddate	= new Integer(sz_scheddate).intValue();
-		_n_schedtime	= new Integer(sz_schedtime).intValue();
-		_n_sendingstatus= new Integer(sz_sendingstatus).intValue();
-		_n_comppk		= new Integer(sz_comppk).intValue();
-		_n_deptpk		= new Integer(sz_deptpk).intValue();
-		_n_type			= new Integer(sz_type).intValue();
-		_n_addresstypes = new Integer(sz_addresstypes).intValue();
-		_n_profilepk	= new Integer(sz_profilepk).intValue();
-		_n_queuestatus	= new Integer(sz_queuestatus).intValue();
-		_n_totitem		= new Integer(sz_totitem).intValue();
+		_n_refno		= Integer.valueOf(sz_refno);
+		_n_group		= Integer.valueOf(sz_group);
+		_n_createdate	= Integer.valueOf(sz_createdate);
+		_n_createtime	= Integer.valueOf(sz_createtime);
+		_n_scheddate	= Integer.valueOf(sz_scheddate);
+		_n_schedtime	= Integer.valueOf(sz_schedtime);
+		_n_sendingstatus= Integer.valueOf(sz_sendingstatus);
+		_n_comppk		= Integer.valueOf(sz_comppk);
+		_n_deptpk		= Integer.valueOf(sz_deptpk);
+		_n_type			= Integer.valueOf(sz_type);
+		_n_addresstypes = Integer.valueOf(sz_addresstypes);
+		_n_profilepk	= Integer.valueOf(sz_profilepk);
+		_n_queuestatus	= Integer.valueOf(sz_queuestatus);
+		_n_totitem		= Integer.valueOf(sz_totitem);
 		if(_n_totitem<0)
 			_n_totitem = 0;
-		_n_proc			= new Integer(sz_proc).intValue();
-		_n_altjmp		= new Integer(sz_altjmp).intValue();
-		_n_alloc		= new Integer(sz_alloc).intValue();
-		_n_maxalloc		= new Integer(sz_maxalloc).intValue();
+		_n_proc			= Integer.valueOf(sz_proc);
+		_n_altjmp		= Integer.valueOf(sz_altjmp);
+		_n_alloc		= Integer.valueOf(sz_alloc);
+		_n_maxalloc		= Integer.valueOf(sz_maxalloc);
 		_sz_oadc		= sz_oadc;
-		_n_qreftype		= new Integer(sz_qreftype).intValue();
-		_f_dynacall		= new Integer(sz_dynacall).intValue();
-		_n_nofax		= new Integer(sz_nofax).intValue();
-		_n_linktype		= new Integer(sz_linktype).intValue();
-		_n_resendrefno  = new Integer(sz_resendrefno).intValue();
+		_n_qreftype		= Integer.valueOf(sz_qreftype);
+		_f_dynacall		= Integer.valueOf(sz_dynacall);
+		_n_nofax		= Integer.valueOf(sz_nofax);
+		_n_linktype		= Integer.valueOf(sz_linktype);
+		_n_resendrefno  = Integer.valueOf(sz_resendrefno);
 		_sz_sms_messagetext = sz_messagetext;
 		_sz_actionprofilename = sz_actionprofilename;
-		_n_num_dynfiles = new Integer(sz_num_dynfiles).intValue();
+		_n_num_dynfiles = Integer.valueOf(sz_num_dynfiles);
 		_b_marked_as_cancelled = Boolean.parseBoolean(sz_marked_as_cancelled);
 		_m_smsin_stats = new ArrayList<USMSINSTATS>();
 		m_this			= this;
@@ -877,7 +862,7 @@ public class StatusSending extends Object {
 				{
 					Integer operator = (Integer)e.getSource();
 					
-					pnl_icon.enableOverlayButtons((operator>0 ? true : false));
+					pnl_icon.enableOverlayButtons((operator > 0));
 					/*
 					boolean show_resend = false;
 					for(int i=0;i<m_lba_by_operator.size();++i) {
@@ -890,7 +875,7 @@ public class StatusSending extends Object {
 					*/
 					try
 					{
-						if(m_filter_status_by_operator!=operator.intValue())
+						if(m_filter_status_by_operator!= operator)
 						{
 							PAS.get_pas().get_mappane().resetAllOverlays();
 						}
@@ -899,7 +884,7 @@ public class StatusSending extends Object {
 					{
 						
 					}
-					m_filter_status_by_operator = operator.intValue();
+					m_filter_status_by_operator = operator;
 					log.debug("Filter by operator " + m_filter_status_by_operator);
 					CalcLbaTotalsFromOperators();
 					update_ui();
@@ -945,7 +930,7 @@ public class StatusSending extends Object {
 		}
 		catch(Exception e)
 		{
-			
+		    log.warn("Failed to set variables", e);
 		}
 		_sz_oadc		= s.get_oadc();
 		_n_qreftype		= s.get_qreftype();
@@ -1387,54 +1372,34 @@ public class StatusSending extends Object {
 			}
 			else if("act_show_layers_gsm".equals(e.getActionCommand()))
 			{
-                JCheckBox chk = (JCheckBox) e.getSource();
-                String sz_operator = "";
-                String jobid = "";
-                for (LBASEND temp : m_lba_by_operator) {
-                    if (temp.l_operator == m_filter_status_by_operator) {
-                        sz_operator = temp.sz_operator;
-                        jobid = temp.sz_jobid;
-                        break;
-                    }
-                }
-                if (jobid.length() > 0) {
-                    log.debug("Loading GSM overlay for job=" + jobid + " (" + sz_operator + ")");
-                    if (chk.isSelected()) {
-                        PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheCoverage(jobid)));
-                    } else {
-                        PAS.get_pas().get_mappane().removeTileOverlay("GSM");
+                final JCheckBox chk = (JCheckBox) e.getSource();
+                if (chk.isSelected()) {
+                    for (LBASEND lbasend : m_lba_by_operator) {
+                        if (lbasend.l_operator == m_filter_status_by_operator) {
+                            log.debug("Loading GSM overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
+                                PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheGsmCoverage(lbasend.sz_jobid)));
+                            break;
+                        }
                     }
                 } else {
-                    Error.getError().addError(Localization.l("common_error"), "No valid JobId for operator found", new Exception(), Error.SEVERITY_ERROR);
+                    PAS.get_pas().get_mappane().removeTileOverlay("GSM");
                 }
 			}
 			else if("act_show_layers_umts".equals(e.getActionCommand()))
 			{
-				try
-				{
-					JCheckBox chk = (JCheckBox)e.getSource();
-					String sz_operator = "";
-					String jobid = "";
-					Iterator<LBASEND> en = m_lba_by_operator.iterator();
-					while(en.hasNext())
-					{
-						LBASEND temp = en.next();
-						if(temp.l_operator==m_filter_status_by_operator)
-						{
-							sz_operator = temp.sz_operator;
-							jobid = temp.sz_jobid;
-							break;
-						}
-					}
-					
-					log.debug("Loading UMTS overlay for job=" + jobid + " (" + sz_operator + ")");
-					PAS.get_pas().get_mappane().showAllOverlays(4, chk.isSelected(), jobid, chk, sz_operator);				
-				}
-				catch(Exception err)
-				{
-					
-				}
-			}
+                final JCheckBox chk = (JCheckBox) e.getSource();
+                if (chk.isSelected()) {
+                    for (LBASEND lbasend : m_lba_by_operator) {
+                        if (lbasend.l_operator == m_filter_status_by_operator) {
+                            log.debug("Loading GSM overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
+                            PAS.get_pas().get_mappane().putTileOverlay("UMTS", new TileLookupImpl(new TileCacheUmtsCoverage(lbasend.sz_jobid)));
+                            break;
+                        }
+                    }
+                } else {
+                    PAS.get_pas().get_mappane().removeTileOverlay("UMTS");
+                }
+            }
 			else if("act_lbalanguage_selected".equals(e.getActionCommand()))
 			{
 				try
