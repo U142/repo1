@@ -686,7 +686,7 @@ namespace com.ums.UmsParm
             {
                 if (lbasending.hasLBA())
                 {
-                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    ULog.error(lbasending.l_refno, "Could not publish LBA address file", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
@@ -1152,6 +1152,7 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
+                    ULog.error(smssending.l_refno, "Could not publish SMS address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 try
@@ -1161,7 +1162,8 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    ULog.warning(smssending.l_refno, "Could not publish SMS GUI address file. Only required for status view.", e.ToString());
+                    setAlertInfo(true, project.sz_projectpk, smssending.l_refno, 0, smssending.m_sendinginfo.sz_sendingname, "Could not publish SMS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
 
             }
@@ -1176,8 +1178,8 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     //this is not important for the sending, so continue
-                    //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
-                    setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    ULog.warning(passending.l_refno, "Could not publish GUI address file. Only required for status view.", e.ToString());
+                    setAlertInfo(true, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
 
                 try
@@ -1190,7 +1192,7 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
+                    ULog.error(passending.l_refno, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, passending.l_refno, 0, passending.m_sendinginfo.sz_sendingname, "Could not publish address file. Aborting... [" + PAALERT.getSendingTypeText(sending.getGroup()) + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
             }
@@ -1203,7 +1205,8 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Could not publish TAS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    ULog.warning(tassending.l_refno, "Could not publish TAS GUI address file. Only required for status view.", e.ToString());
+                    setAlertInfo(true, project.sz_projectpk, tassending.l_refno, 0, tassending.m_sendinginfo.sz_sendingname, "Could not publish TAS GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
                 try
                 {
@@ -1252,8 +1255,8 @@ namespace com.ums.UmsParm
                             catch (Exception e)
                             {
                                 //this is not important for the sending, so continue
-                                //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
-                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                                ULog.warning(lbasending.l_refno, "Could not publish GUI address file. Only required for status view.", e.ToString());
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                             }
 
                             int n_linktype = 0;
@@ -1288,7 +1291,7 @@ namespace com.ums.UmsParm
             {
                 if (lbasending.hasLBA())
                 {
-                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    ULog.error(lbasending.l_refno, "Could not publish LBA address file", e.Message);
                     setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, 0, lbasending.m_sendinginfo.sz_sendingname, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
@@ -1659,7 +1662,8 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     //this is not important for the sending, so continue
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [VOICE] GUI address file (VOICE). Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    ULog.warning(sending.l_refno, "Could not publish [VOICE] GUI address file. Only required for status view.", e.ToString());
+                    setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [VOICE] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                 }
                 try
                 {
@@ -1674,6 +1678,7 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
+                    ULog.error(sending.l_refno, "Could not publish [VOICE] address file. Aborting... [" + pa.getSendingTypeText() + "]", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [VOICE] address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
             }
@@ -1700,7 +1705,9 @@ namespace com.ums.UmsParm
                 catch (Exception e)
                 {
                     //this is not important for the sending, so continue
-                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                    ULog.warning(smssending.l_refno, "Could not publish [SMS] GUI address file. Only required for status view", e.ToString());
+                    setAlertInfo(true, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                
                 }
                 try
                 {
@@ -1715,7 +1722,8 @@ namespace com.ums.UmsParm
                 }
                 catch (Exception e)
                 {
-                    setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] address file (VOICE). Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
+                    ULog.error(smssending.l_refno, "Could not publish [SMS] address file. Aborting... [" + pa.getSendingTypeText() + "]", e.ToString());
+                    setAlertInfo(false, project.sz_projectpk, smssending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
 
             }
@@ -1737,7 +1745,8 @@ namespace com.ums.UmsParm
                             catch (Exception e)
                             {
                                 //this is not important for the sending, so continue
-                                setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                                ULog.warning(lbasending.l_refno, "Could not publish [SMS] GUI address file. Only required for status view.", e.ToString());
+                                setAlertInfo(true, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish [SMS] GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
                             }
 
                             b_ret = db.linkRefnoToProject(ref project, lbasending.l_refno, 0, 0);
@@ -1768,7 +1777,7 @@ namespace com.ums.UmsParm
             {
                 if(sending.hasLBA())
                 {
-                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    ULog.error(lbasending.l_refno, "Could not publish LBA address file", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, lbasending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else
@@ -1979,8 +1988,8 @@ namespace com.ums.UmsParm
             catch (Exception e)
             {
                 //this is not important for the sending, so continue
-                //ULog.warning(sending.l_refno, "Could not publish GUI address file", e.Message);
-                setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
+                ULog.warning(sending.l_refno, "Could not publish GUI address file. Only required for status view.", e.ToString());
+                setAlertInfo(true, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish GUI address file. Only required for status view.", e.Message, SYSLOG.ALERTINFO_SYSLOG_WARNING);
             }
             try
             {
@@ -1995,7 +2004,7 @@ namespace com.ums.UmsParm
             }
             catch (Exception e)
             {
-                //ULog.error(sending.l_refno, "Could not publish address file", e.Message);
+                ULog.error(sending.l_refno, "Could not publish address file. Aborting... [" + pa.getSendingTypeText() + "]", e.ToString());
                 setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish address file. Aborting... [" + pa.getSendingTypeText() + "]", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
             }
             try
@@ -2019,7 +2028,7 @@ namespace com.ums.UmsParm
             {
                 if(sending.hasLBA())
                 {
-                    //ULog.error(sending.l_refno, "Could not publish LBA address file", e.Message);
+                    ULog.error(sending.l_refno, "Could not publish LBA address file", e.ToString());
                     setAlertInfo(false, project.sz_projectpk, sending.l_refno, pa.l_alertpk, pa.sz_name, "Could not publish LBA address file.", e.Message, SYSLOG.ALERTINFO_SYSLOG_ERROR);
                 }
                 else

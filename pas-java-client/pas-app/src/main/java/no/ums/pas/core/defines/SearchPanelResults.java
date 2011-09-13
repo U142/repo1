@@ -357,6 +357,16 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 		sorter.setSortingStatus(n_col, TableSorter.ASCENDING);
 	}
 	
+	/***
+	 * 
+	 * @param n_col column number
+	 * @param DIRECTION TableSorter.ASCENDING = 1, TableSorter.DESCENDING = -1, TableSorter.NOT_SORTED = 0
+	 */
+	public void sort(int n_col, int DIRECTION)
+	{
+		sorter.setSortingStatus(n_col, DIRECTION);
+	}
+	
 	void prepare_controls()
 	{
 		
