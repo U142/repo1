@@ -17,7 +17,7 @@ public class LBAListCC extends SearchPanelResults
 	public LBAListCC(String [] cols, int [] width, Dimension size)
 	{
 		super(cols, width, null, size);
-		super.sort(0);
+		super.sort(6, -1);
 		SetColumnClass(7, JProgressBar.class);
 	}
 	

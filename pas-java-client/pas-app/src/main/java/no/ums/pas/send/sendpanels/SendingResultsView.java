@@ -10,6 +10,11 @@ import java.util.*;
 
 import javax.swing.*;
 
+import no.ums.pas.core.dataexchange.soap.SoapExecAlert.SnapAlertResults;
+
+import org.jdesktop.beansbinding.*;
+import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+
 /**
  * @author User #3
  */
@@ -20,36 +25,34 @@ public class SendingResultsView extends JDialog {
 		public void onNo();
 	}
 	
-	ISendingResultsUpdate callback;
+	private ISendingResultsUpdate callback;
+	private SendingResultsController controller;
 	
-	public SendingResultsView(Frame owner, ISendingResultsUpdate callback) {
-		super(owner);
-		this.callback = callback;
+	public SendingResultsView(Frame owner, boolean bStatusNotOpened) {
 		initComponents();
-
+		controller = new SendingResultsController();
+		sendingResultsModel1.setStatusNotOpened(bStatusNotOpened);
+	}
+	
+	public boolean getAnswer(SnapAlertResults res) {
+		controller.init(sendingResultsModel1, res);
+		this.setVisible(true);
+		return sendingResultsModel1.getAnswer();
 	}
 	
 	public ISendingResultsUpdate getCallback() {
 		return callback;
 	}
 
-	public JScrollPane getScrollPane2() {
-		return scrollPane2;
+	public JScrollPane getScrollPane1() {
+		return scrollPane1;
 	}
 
-	public JLabel getLblTest() {
-		return lblTest;
-	}
 
-	public SendingResultsView(Frame owner) {
+	/*public SendingResultsView(Dialog owner) {
 		super(owner);
 		initComponents();
-	}
-
-	public SendingResultsView(Dialog owner) {
-		super(owner);
-		initComponents();
-	}
+	}*/
 
 	public JButton getBtnYes() {
 		return btnYes;
@@ -59,18 +62,30 @@ public class SendingResultsView extends JDialog {
 		return btnNo;
 	}
 
+	public JButton getBtnOk() {
+		return btnOk;
+	}
+
 	public JLabel getLblOpenStatus() {
 		return lblOpenStatus;
 	}
 
 	private void btnYesActionPerformed(ActionEvent e) {
 		// TODO add your code here
-		callback.onYes();
+		sendingResultsModel1.setYesOption();
+		this.dispose();
 	}
 
 	private void btnNoActionPerformed(ActionEvent e) {
 		// TODO add your code here
-		callback.onNo();
+		sendingResultsModel1.setNoOption();
+		this.dispose();
+	}
+
+	private void btnOkActionPerformed(ActionEvent e) {
+		// TODO add your code here
+		sendingResultsModel1.setOkOption();
+		this.dispose();
 	}
 
 	private void initComponents() {
@@ -79,11 +94,15 @@ public class SendingResultsView extends JDialog {
 		btnYes = new JButton();
 		btnNo = new JButton();
 		lblOpenStatus = new JLabel();
-		scrollPane2 = new JScrollPane();
-		lblTest = new JLabel();
+		scrollPane1 = new JScrollPane();
+		lblResult = new JLabel();
+		btnOk = new JButton();
+		sendingResultsModel1 = new SendingResultsModel();
 
 		//======== this ========
 		setTitle(bundle.getString("quicksend_dlg_results"));
+		setModal(true);
+		setResizable(false);
 		Container contentPane = getContentPane();
 
 		//---- btnYes ----
@@ -107,10 +126,22 @@ public class SendingResultsView extends JDialog {
 		//---- lblOpenStatus ----
 		lblOpenStatus.setText(bundle.getString("quicksend_dlg_open_status"));
 
-		//======== scrollPane2 ========
+		//======== scrollPane1 ========
 		{
-			scrollPane2.setViewportView(lblTest);
+
+			//---- lblResult ----
+			lblResult.setVerticalAlignment(SwingConstants.TOP);
+			scrollPane1.setViewportView(lblResult);
 		}
+
+		//---- btnOk ----
+		btnOk.setText(bundle.getString("common_ok"));
+		btnOk.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnOkActionPerformed(e);
+			}
+		});
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);
@@ -120,33 +151,56 @@ public class SendingResultsView extends JDialog {
 					.addContainerGap()
 					.addGroup(contentPaneLayout.createParallelGroup()
 						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+							.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
 							.addContainerGap())
 						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 							.addComponent(lblOpenStatus)
-							.addGap(129, 129, 129))))
-				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-					.addGap(107, 107, 107)
-					.addComponent(btnYes, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-					.addGap(35, 35, 35)
-					.addComponent(btnNo, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
-					.addGap(97, 97, 97))
+							.addGap(129, 129, 129))
+						.addGroup(contentPaneLayout.createSequentialGroup()
+							.addComponent(btnYes, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+							.addComponent(btnNo, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())
+						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+							.addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+							.addGap(153, 153, 153))))
 		);
 		contentPaneLayout.setVerticalGroup(
 			contentPaneLayout.createParallelGroup()
 				.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
 					.addGap(18, 18, 18)
 					.addComponent(lblOpenStatus)
 					.addGap(18, 18, 18)
 					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addComponent(btnYes)
-						.addComponent(btnNo))
-					.addGap(56, 56, 56))
+						.addComponent(btnNo)
+						.addComponent(btnYes))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addComponent(btnOk)
+					.addGap(30, 30, 30))
 		);
 		pack();
 		setLocationRelativeTo(getOwner());
+
+		//---- bindings ----
+		bindingGroup = new BindingGroup();
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			sendingResultsModel1, BeanProperty.create("resText"),
+			lblResult, BeanProperty.create("text")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+			lblOpenStatus, BeanProperty.create("visible")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+			btnNo, BeanProperty.create("visible")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			sendingResultsModel1, BeanProperty.create("statusOpened"),
+			btnOk, BeanProperty.create("visible")));
+		bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+			sendingResultsModel1, BeanProperty.create("statusNotOpened"),
+			btnYes, BeanProperty.create("visible")));
+		bindingGroup.bind();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -154,7 +208,10 @@ public class SendingResultsView extends JDialog {
 	private JButton btnYes;
 	private JButton btnNo;
 	private JLabel lblOpenStatus;
-	private JScrollPane scrollPane2;
-	private JLabel lblTest;
+	private JScrollPane scrollPane1;
+	private JLabel lblResult;
+	private JButton btnOk;
+	private SendingResultsModel sendingResultsModel1;
+	private BindingGroup bindingGroup;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

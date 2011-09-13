@@ -770,7 +770,7 @@ public class StatusSending {
 			break;
 		case 4: //lba
 		case 5: //tas
-			b_ret = LBASEND.HasFinalStatus(get_sendingstatus());
+			b_ret = (m_lba!=null ? m_lba.HasFinalStatus() : false);
 			break;
 		}
 		return b_ret;

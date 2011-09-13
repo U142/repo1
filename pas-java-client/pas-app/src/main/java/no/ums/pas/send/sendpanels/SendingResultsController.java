@@ -16,35 +16,31 @@ import no.ums.pas.send.sendpanels.SendingResultsView.ISendingResultsUpdate;
 
 public class SendingResultsController implements ISendingResultsUpdate {
 
-	private final SendingResultsView dlg;
-	private int result = JOptionPane.NO_OPTION;
 	
-	public SendingResultsController(Component parent, boolean modal, SnapAlertResults res) {
-		dlg = new SendingResultsView(null, this);
-		initializeGui(res);
-		//dlg.initValues();
-    	dlg.setLocationRelativeTo(parent);
-    	dlg.setModal(modal);
-    	dlg.setVisible(true);
+	private int result = JOptionPane.NO_OPTION;
+	private SendingResultsModel model;
+	
+	public SendingResultsController() {
+		
 	}
 	
-	public void initializeGui(SnapAlertResults res)
-    {
-		dlg.getLblTest().setText(res.toString(false));
-    }
+	public void init(SendingResultsModel model, SnapAlertResults res) {
+		this.model = model;
+		model.setResText(res.toString(false));
+	}
 	
 	@Override
 	public void onYes() {
 		// TODO Auto-generated method stub
 		result = JOptionPane.YES_OPTION;
-		dlg.dispose();
+		model.setYesOption();
 	}
 
 	@Override
 	public void onNo() {
 		// TODO Auto-generated method stub
 		result = JOptionPane.NO_OPTION;
-		dlg.dispose();
+		model.setNoOption();
 	}
 	
 	public int getAnswer() { return result; }
