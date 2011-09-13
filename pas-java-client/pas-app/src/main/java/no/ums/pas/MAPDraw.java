@@ -83,15 +83,13 @@ public class MAPDraw extends Draw {
 			//depts.ClearCombinedRestrictionShapelist();
 			//depts.CreateCombinedRestrictionShape(null, null, 0, POINT_DIRECTION.UP, -1);
 			//depts.test();
-			for(int i=0; i < depts.size(); i++)
-			{
-				((DeptInfo)depts.get(i)).drawRestrictionShapes(m_gfx_buffer, Variables.getNavigation());
-			}
+            for (Object dept : depts) {
+                ((DeptInfo) dept).drawRestrictionShapes(m_gfx_buffer, Variables.getNavigation());
+            }
 			List<ShapeStruct> list = Variables.getUserInfo().get_departments().get_combined_restriction_shape();
-			for(int i=0; i < list.size(); i++)
-			{
-				list.get(i).draw(m_gfx_buffer, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, true, false, null, true, true, 1, false);
-			}
+            for (ShapeStruct aList : list) {
+                aList.draw(m_gfx_buffer, Variables.getMapFrame().getMapModel(), Variables.getMapFrame().getZoomLookup(), false, true, false, null, true, true, 1, false);
+            }
 
 		}
 		catch(Exception e)

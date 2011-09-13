@@ -4,6 +4,7 @@ package no.ums.pas.maps;
 //import no.ums.log.UmsLog;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.map.tiled.AbstractTileCacheWms;
@@ -69,7 +70,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public class MapFrame extends JPanel implements ActionListener {
@@ -169,7 +173,9 @@ public class MapFrame extends JPanel implements ActionListener {
 
     private final MapModel mapModel = new MapModel();
     final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
-    
+
+    private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
+
     private void navigationChanged()
     {
         final TileLookup tileLookup = getTileLookup();
@@ -179,7 +185,7 @@ public class MapFrame extends JPanel implements ActionListener {
         Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
     }
 
-    
+
     public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap) {
         super();
         m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
@@ -190,12 +196,12 @@ public class MapFrame extends JPanel implements ActionListener {
     			navigationChanged();
             	//if(mapModel.getZoom()>=17)
             	{
-        			PAS.get_pas().download_houses();            		
+        			PAS.get_pas().download_houses();
                     PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
             	}
             	//else
             	{
-            		
+
             	}
             	PAS.get_pas().kickRepaint();
             }
@@ -207,7 +213,7 @@ public class MapFrame extends JPanel implements ActionListener {
             	PAS.get_pas().kickRepaint();
             }
         });
-        get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {			
+        get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 		        //download houses when user stops dragging
@@ -218,7 +224,7 @@ public class MapFrame extends JPanel implements ActionListener {
 				case PAN_BY_DRAG:
 					if(!get_actionhandler().get_isdragging())
 					{
-            			PAS.get_pas().download_houses();						
+            			PAS.get_pas().download_houses();
                         PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
 					}
 					break;
@@ -257,10 +263,10 @@ public class MapFrame extends JPanel implements ActionListener {
                 setPreferredSize(new Dimension(w, h));
             }
         });
-        
 
-        
-        
+
+
+
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
             private Point mouseDownPoint;
@@ -324,12 +330,12 @@ public class MapFrame extends JPanel implements ActionListener {
         addMouseMotionListener(mouseAdapter);
         addMouseWheelListener(mouseAdapter);
     }
-    
+
     protected void onZoomGesture(boolean bZoomIn, Point p)
     {
     	if(bZoomIn)
     	{
-            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);        		
+            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);
     	}
     	else
     	{
@@ -429,6 +435,15 @@ public class MapFrame extends JPanel implements ActionListener {
         return m_overlays;
     }
 
+    public void putTileOverlay(String id, TileLookup tileLookup) {
+        tileOverlays.put(id, tileLookup);
+        repaint();
+    }
+
+    public void removeTileOverlay(String gsm) {
+        tileOverlays.remove(gsm);
+        repaint();
+    }
 
     public void showAllOverlays(int layer, boolean b_show, String jobid, JCheckBox chkref, String provider) {
         try {
@@ -827,7 +842,7 @@ public class MapFrame extends JPanel implements ActionListener {
                         SetIsLoading(false, "");
                     }
                 } catch (Exception e) {
-
+                    log.warn("Error getting gsm coverage", e);
                 }
             }
         }.start();
@@ -943,7 +958,7 @@ public class MapFrame extends JPanel implements ActionListener {
 		g.setClip(0, 0, getWidth(), getHeight());
 		paintComponent(g);
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -954,23 +969,27 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
             pendingDownloads.clear();
-            final TileLookup tileLookup = getTileLookup();
-            final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
-            final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
-            get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
 
-            for (final TileData tileData : tileInfo.getTileData()) {
-                g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
-                if (!tileLookup.exists(tileData)) {
-                    pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            tileLookup.getImage(tileData);
-                            repaint();
-                        }
-                    }));
+            final Iterable<TileLookup> layers = Iterables.concat(Collections.singleton(getTileLookup()), tileOverlays.values());
+            for (final TileLookup tileLookup : layers) {
+                final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
+                final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
+                get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
+
+                for (final TileData tileData : tileInfo.getTileData()) {
+                    g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+                    if (!tileLookup.exists(tileData)) {
+                        pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                tileLookup.getImage(tileData);
+                                repaint();
+                            }
+                        }));
+                    }
                 }
             }
+
             PAS.get_pas().get_drawthread().draw_layers(g);
             for (MapOverlay overlay : m_overlays) {
                 if (overlay.b_isdownloaded && overlay.b_visible && overlay.img_onscreen != null) {

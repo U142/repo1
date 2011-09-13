@@ -4,6 +4,8 @@ package no.ums.pas.status;
 import com.google.common.base.Supplier;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.TileCacheCoverage;
+import no.ums.map.tiled.TileLookupImpl;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
@@ -12,6 +14,7 @@ import no.ums.pas.core.laf.ULookAndFeel;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.StatusPanel;
 import no.ums.pas.core.ws.WSCancelSending;
+import no.ums.pas.core.ws.WSCancelSending.ICallback;
 import no.ums.pas.core.ws.WSTasResend;
 import no.ums.pas.localization.Localization;
 import no.ums.pas.maps.defines.EllipseStruct;
@@ -77,7 +80,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import no.ums.pas.core.ws.WSCancelSending.ICallback;
 
 
 public class StatusSending extends Object {
@@ -1385,35 +1387,26 @@ public class StatusSending extends Object {
 			}
 			else if("act_show_layers_gsm".equals(e.getActionCommand()))
 			{
-				try
-				{
-					JCheckBox chk = (JCheckBox)e.getSource();
-					String sz_operator = "";
-					String jobid = "";
-					Iterator<LBASEND> en = m_lba_by_operator.iterator();
-					while(en.hasNext())
-					{
-						LBASEND temp = en.next();
-						if(temp.l_operator==m_filter_status_by_operator)
-						{
-							sz_operator = temp.sz_operator;
-							jobid = temp.sz_jobid;
-							break;
-						}
-					}
-					if(jobid.length()>0)
-					{
-						log.debug("Loading GSM overlay for job=" + jobid + " (" + sz_operator + ")");
-						PAS.get_pas().get_mappane().showAllOverlays(1, chk.isSelected(), jobid, chk, sz_operator);
-					}
-					else {
-                        Error.getError().addError(Localization.l("common_error"), "No valid JobId for operator found", new Exception(), Error.SEVERITY_ERROR);
+                JCheckBox chk = (JCheckBox) e.getSource();
+                String sz_operator = "";
+                String jobid = "";
+                for (LBASEND temp : m_lba_by_operator) {
+                    if (temp.l_operator == m_filter_status_by_operator) {
+                        sz_operator = temp.sz_operator;
+                        jobid = temp.sz_jobid;
+                        break;
                     }
-				}
-				catch(Exception err)
-				{
-					
-				}
+                }
+                if (jobid.length() > 0) {
+                    log.debug("Loading GSM overlay for job=" + jobid + " (" + sz_operator + ")");
+                    if (chk.isSelected()) {
+                        PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheCoverage(jobid)));
+                    } else {
+                        PAS.get_pas().get_mappane().removeTileOverlay("GSM");
+                    }
+                } else {
+                    Error.getError().addError(Localization.l("common_error"), "No valid JobId for operator found", new Exception(), Error.SEVERITY_ERROR);
+                }
 			}
 			else if("act_show_layers_umts".equals(e.getActionCommand()))
 			{
