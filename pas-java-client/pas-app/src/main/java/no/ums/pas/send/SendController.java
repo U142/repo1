@@ -31,6 +31,7 @@ import no.ums.pas.maps.defines.TasStruct;
 import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.sendpanels.SendWindow;
+import no.ums.pas.send.sendpanels.SendingResultsController;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
@@ -1104,11 +1105,15 @@ public class SendController implements ActionListener {
 				{
 					int answer= JOptionPane.NO_OPTION;
 					if(PAS.get_pas().get_statuscontroller().get_sendinglist().size() > 0) {
-                        JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
+                        
 						openStatus(res);
 					}
 					else {
-                        if(b_openstatus_question && (answer = JOptionPane.showConfirmDialog(parent_to_popup, res.toString(), Localization.l("quicksend_dlg_results"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE))==JOptionPane.YES_OPTION)
+						SendingResultsController sr = new SendingResultsController(null, true, res);
+						answer = sr.getAnswer();
+
+                        if(b_openstatus_question && answer==JOptionPane.YES_OPTION)
                         {
                             openStatus(res);
                         }
