@@ -21,11 +21,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {seq l {comp scrollPane2::::387:x, space :::p}, seq t {comp lblOpenStatus:::p::p, space :p:129:p}}}, seq t {space :p:107:p, comp btnYes::::84:x:1, space :p:35:p, comp btnNo:::p:84:p:1, space :p:97:p}}</string> 
+        <string>par l {seq {space :::p, par l {seq l {comp scrollPane1::::387:x, space :::p}, seq t {comp lblOpenStatus:::p::p, space :p:129:p}, seq l {comp btnYes:::p:114:p:1, space ::159:x, comp btnNo:::p:114:p:1, space :::p}, seq t {comp btnOk:::p:86:p, space :p:153:p}}}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::p, comp scrollPane2::::183:x, space s:::p, comp lblOpenStatus:::p::p, space s:::p, par b {comp btnYes::b:p::p, comp btnNo::b:p::p}, space :p:56:p}}</string> 
+        <string>par l {seq t {space :::p, comp scrollPane1::::209:x, space s:::p, comp lblOpenStatus:::p::p, space s:::p, par b {comp btnNo::b:p::p, comp btnYes::b:p::p}, space :::p, comp btnOk:::p::p, space :p:30:p}}</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -34,6 +34,14 @@
         <null/> 
         <string>quicksend_dlg_results</string> 
        </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>modal</string> 
+       <boolean>true</boolean> 
+      </void> 
+      <void method="setProperty"> 
+       <string>resizable</string> 
+       <boolean>false</boolean> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
@@ -103,14 +111,41 @@
          <class>javax.swing.JScrollPane</class> 
         </object> 
         <void property="name"> 
-         <string>scrollPane2</string> 
+         <string>scrollPane1</string> 
         </void> 
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JLabel</string> 
-          <void property="name"> 
-           <string>lblTest</string> 
+          <void method="setProperty"> 
+           <string>verticalAlignment</string> 
+           <int>1</int> 
           </void> 
+          <void property="name"> 
+           <string>lblResult</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>common_ok</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>btnOk</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>btnOkActionPerformed</string> 
+          <boolean>true</boolean> 
          </object> 
         </void> 
        </object> 
@@ -133,6 +168,73 @@
        <object class="java.awt.Dimension"> 
         <int>415</int> 
         <int>350</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormNonVisual"> 
+      <string>no.ums.pas.send.sendpanels.SendingResultsModel</string> 
+      <void property="name"> 
+       <string>sendingResultsModel1</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>350</int> 
+        <int>490</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="addBindingGroup"> 
+     <object class="com.jformdesigner.model.FormBindingGroup"> 
+      <class>org.jdesktop.beansbinding.BindingGroup</class> 
+      <void method="setProperty"> 
+       <string>name</string> 
+       <string>bindingGroup</string> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>sendingResultsModel1</string> 
+        <string>resText</string> 
+        <string>lblResult</string> 
+        <string>text</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>sendingResultsModel1</string> 
+        <string>statusNotOpened</string> 
+        <string>lblOpenStatus</string> 
+        <string>visible</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>sendingResultsModel1</string> 
+        <string>statusNotOpened</string> 
+        <string>btnNo</string> 
+        <string>visible</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>sendingResultsModel1</string> 
+        <string>statusOpened</string> 
+        <string>btnOk</string> 
+        <string>visible</string> 
+       </object> 
+      </void> 
+      <void method="addBinding"> 
+       <object class="com.jformdesigner.model.FormBinding"> 
+        <string>sendingResultsModel1</string> 
+        <string>statusNotOpened</string> 
+        <string>btnYes</string> 
+        <string>visible</string> 
        </object> 
       </void> 
      </object> 

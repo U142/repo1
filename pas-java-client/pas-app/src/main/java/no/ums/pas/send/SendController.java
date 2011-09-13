@@ -32,6 +32,7 @@ import no.ums.pas.parm.voobjects.AlertVO;
 import no.ums.pas.parm.voobjects.EventVO;
 import no.ums.pas.send.sendpanels.SendWindow;
 import no.ums.pas.send.sendpanels.SendingResultsController;
+import no.ums.pas.send.sendpanels.SendingResultsView;
 import no.ums.pas.send.sendpanels.Sending_Cell_Broadcast_text;
 import no.ums.pas.status.StatusSending;
 import no.ums.pas.ums.errorhandling.Error;
@@ -1103,21 +1104,22 @@ public class SendController implements ActionListener {
 				}
 				else
 				{
-					int answer= JOptionPane.NO_OPTION;
+					boolean answer = false;
 					if(PAS.get_pas().get_statuscontroller().get_sendinglist().size() > 0) {
-						JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
+						answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), false).getAnswer(res);
+						//JOptionPane.showMessageDialog(parent_to_popup,res.toString(b_openstatus_question), Localization.l("quicksend_dlg_results"),JOptionPane.INFORMATION_MESSAGE);
                         
 						openStatus(res);
 					}
 					else {
-						SendingResultsController sr = new SendingResultsController(null, true, res);
-						answer = sr.getAnswer();
+						
+						answer = new SendingResultsView(PAS.get_pas().get_applet_frame(), true).getAnswer(res);
 
-                        if(b_openstatus_question && answer==JOptionPane.YES_OPTION)
+                        if(b_openstatus_question && answer)
                         {
                             openStatus(res);
                         }
-                        else if(b_openstatus_question && answer==JOptionPane.NO_OPTION)
+                        else if(b_openstatus_question && answer)
                         {
                             try
                             {
