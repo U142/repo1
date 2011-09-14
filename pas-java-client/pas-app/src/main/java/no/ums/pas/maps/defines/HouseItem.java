@@ -161,6 +161,15 @@ public class HouseItem extends Object {
 	private int m_n_fax_adr = 0;
 //	private int m_n_visible_adr = 0;
 	private int m_n_useredited_adr = 0;
+	private int m_n_vulnerable = 0;
+	
+	/***
+	 * @return true if at least one citizen is marked as vulnerable
+	 */
+	public boolean HasVulnerable()
+	{
+		return m_n_vulnerable>0;
+	}
 	
 	public int is_useredited() {
 		if(m_n_useredited_adr==0)
@@ -278,6 +287,8 @@ public class HouseItem extends Object {
 
 		if(item.is_useredited())
 			m_n_useredited_adr++;
+		if(item.isVulnerable())
+			++m_n_vulnerable;
 	}
 	
 	//public int get_visible_adrcount() { return (m_n_visible_adr = m_n_private_adr + m_n_company_adr + m_n_mobile_adr + m_n_fax_adr); }

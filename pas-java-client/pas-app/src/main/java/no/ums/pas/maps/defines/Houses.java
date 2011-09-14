@@ -385,8 +385,12 @@ public class Houses {
 			//check visible statuscodes
 			if(current.get_screencoords() != null && current.isVisible())// && (current.HAS_INHABITANT_TYPES_ & n_addresstypes)>0)
 			{
+				Color oldOverride = col_override;
+				if(current.HasVulnerable())
+					col_override = Color.red;
 				drawItem(current, gfx, Math.min(15, PAS.get_pas().get_mapproperties().get_pixradius() + (int)(1+current.getJoinedHouses()*0.1)), b_border, n_alertborder, 
 						 b_showtext, n_fontsize, n_addresstypes, col_override);
+				col_override = oldOverride;
 				n_houses++;
 			}
 		}
