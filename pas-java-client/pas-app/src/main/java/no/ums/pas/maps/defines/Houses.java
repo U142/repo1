@@ -377,18 +377,14 @@ public class Houses {
 			//check visible statuscodes
 			if(current.get_screencoords() != null && current.isVisible())// && (current.HAS_INHABITANT_TYPES_ & n_addresstypes)>0)
 			{
-				Color oldOverride = col_override;
-				if(current.HasVulnerable())
-					col_override = Color.red;
 				drawItem(current, gfx, Math.min(15, PAS.get_pas().get_mapproperties().get_pixradius() + (int)(1+current.getJoinedHouses()*0.1)), b_border, n_alertborder, 
-						 b_showtext, n_fontsize, n_addresstypes, col_override);
-				col_override = oldOverride;
+						 b_showtext, n_fontsize, n_addresstypes, col_override, current.HasVulnerable() ? Color.red : Color.black, current.HasVulnerable() ? 2 : 1);
 				n_houses++;
 			}
 		}
 	}
 	public void drawItem(HouseItem house, Graphics gfx, int n_size, boolean b_border, int n_alertborder, boolean b_showtext,
-						 int n_fontsize, int n_addresstypes, Color col_override)
+						 int n_fontsize, int n_addresstypes, Color col_override, Color col_border_override, int borderWidth)
 	{
 		int n_border = n_size;
 		if(house.get_alert()) {
@@ -406,7 +402,10 @@ public class Houses {
 			gfx.fillRect(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
 			gfx.setColor(Color.black);
 			if(b_border)
+			{
+				gfx.setColor(col_border_override);
 				gfx.drawRect(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
+			}
 		}
 		else
 		{
@@ -414,8 +413,8 @@ public class Houses {
 			gfx.setColor(Color.black);
 			Graphics2D gfx2d = (Graphics2D)gfx;
 			Stroke revertStroke = gfx2d.getStroke();
-			Stroke singleStroke = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-			Stroke dualstroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			Stroke singleStroke = new BasicStroke(borderWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			Stroke dualstroke = new BasicStroke(borderWidth+1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 			if(house.get_armed()) {				
 				gfx2d.setStroke(dualstroke);
 			}
@@ -424,7 +423,10 @@ public class Houses {
 				gfx2d.setStroke(singleStroke);
 			}
 			if(b_border)
+			{
+				gfx.setColor(col_border_override);
 				gfx.drawOval(house.get_screencoords().width - n_border/2, house.get_screencoords().height - n_border/2, n_border, n_border);
+			}
 			if(house.get_armed()) {
 			}
 			n_border+=4;

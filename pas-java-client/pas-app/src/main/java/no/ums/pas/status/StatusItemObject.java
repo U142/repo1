@@ -238,13 +238,15 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 		m_n_changetime= obj.m_n_changetime;
 		m_n_latestdate= obj.m_n_latestdate;
 		m_n_latesttime= obj.m_n_latesttime;
+		m_n_vulnerable = obj.m_n_vulnerable;
 	}	
 	
 	public StatusItemObject(int n_refno, int n_item, String sz_adrpk, double f_lon, double f_lat, String sz_adrname, String sz_postaddr,
 		     String sz_postno, String sz_postarea, int n_date, int n_time, int n_status, String sz_number, int n_tries,
-		     int n_channel, int n_pcid, int n_seconds, int n_changedate, int n_changetime, int n_latestdate, int n_latesttime)
+		     int n_channel, int n_pcid, int n_seconds, int n_changedate, int n_changetime, int n_latestdate, int n_latesttime,
+		     int n_vulnerable)
 	{
-		super(sz_adrname, sz_postaddr, sz_postno, sz_postarea, sz_number, "", f_lon, f_lat, 0, -1, 0, "a", 1, 1);
+		super(sz_adrname, sz_postaddr, sz_postno, sz_postarea, sz_number, "", f_lon, f_lat, 0, -1, 0, "a", 1, 1, n_vulnerable);
 		m_n_refno	= n_refno;
 		m_n_item	= n_item;
 		m_sz_adrpk	= sz_adrpk;
@@ -265,10 +267,11 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 	}
 	public StatusItemObject(String n_refno, String n_item, String sz_adrpk, String f_lon, String f_lat, String sz_adrname, String sz_postaddr,
 		     String sz_postno, String sz_postarea, String n_date, String n_time, String n_status, String sz_number, String n_tries,
-		     String n_channel, String n_pcid, String n_seconds, String n_changedate, String n_changetime, String n_latestdate, String n_latesttime)
+		     String n_channel, String n_pcid, String n_seconds, String n_changedate, String n_changetime, String n_latestdate, String n_latesttime,
+		     String n_vulnerable)
 	{
 		super(sz_adrname, sz_postaddr, sz_postno, sz_postarea, sz_number, "", 
-			  new Double(f_lon).doubleValue(), new Double(f_lat).doubleValue(), 0, -1, 0, "a", 1, 1);		
+			  new Double(f_lon).doubleValue(), new Double(f_lat).doubleValue(), 0, -1, 0, "a", 1, 1, new Integer(n_vulnerable));		
 		m_n_refno	= new Integer(n_refno).intValue();
 		m_n_item	= new Integer(n_item).intValue();
 		m_sz_adrpk	= sz_adrpk;
@@ -290,7 +293,7 @@ public class StatusItemObject extends Inhabitant implements Comparable {
 	public StatusItemObject(String [] sz_values)
 	{
 		super(sz_values[5], sz_values[6], sz_values[7], sz_values[8], sz_values[12], "" /*mobile*/, 
-			  new Double(sz_values[3]).doubleValue(), new Double(sz_values[4]).doubleValue(), 0, -1, 0, "S", 1, 1);
+			  new Double(sz_values[3]).doubleValue(), new Double(sz_values[4]).doubleValue(), 0, -1, 0, "S", 1, 1, Integer.parseInt(sz_values[21]));
 		m_n_refno	= new Integer(sz_values[0]).intValue();
 		m_n_item	= new Integer(sz_values[1]).intValue();
 		m_sz_adrpk	= sz_values[2];

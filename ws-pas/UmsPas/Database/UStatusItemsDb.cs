@@ -693,6 +693,8 @@ namespace com.ums.PAS.Database
                     item.n_refno = rs.GetInt32(15);
                     item.n_ldate = rs.GetInt32(16);
                     item.n_ltime = rs.GetInt32(17);
+                    //projectpk no 18
+                    item.n_prioritized = rs.GetInt16(19);
                     //for SMS, real statuscode is stored in n_tries. n_status contains l_dst [0,1,2]. 
                     //If n_dst=2 (failed) and real status is -100, then this message is cancelled
                     //this is marked as 8003 to the client (SMS cancelled)
@@ -834,6 +836,7 @@ namespace com.ums.PAS.Database
         public int n_changetime;
         public int n_ldate;
         public int n_ltime;
+        public int n_prioritized;
         public void setAdrInfo(String str)
         {
             sz_adrinfo = str;

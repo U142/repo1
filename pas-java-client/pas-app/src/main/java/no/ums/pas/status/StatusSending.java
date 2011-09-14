@@ -819,7 +819,7 @@ public class StatusSending {
 					    log.warn("Failed to reset all overlays", err);
 					}
 					m_filter_status_by_operator = operator;
-					log.debug("Filter by operator " + m_filter_status_by_operator);
+					//log.debug("Filter by operator " + m_filter_status_by_operator);
 					CalcLbaTotalsFromOperators();
 					update_ui();
 					//MergeLbaTimestamps();
@@ -857,7 +857,7 @@ public class StatusSending {
 		{
 			_n_alloc		= s.get_alloc();
 			_n_maxalloc		= s.get_maxalloc();
-			if(!pnl_voice.m_b_allocset) {
+			if(pnl_voice!=null && !pnl_voice.m_b_allocset) {
 				pnl_voice.set_maxalloc(_n_maxalloc);
 				pnl_voice.m_progress.setValue(_n_maxalloc);
 			}
@@ -1777,8 +1777,14 @@ public class StatusSending {
 				}
 				else
 				{
-					pnl_cell.setVisible(false);
-					pnl_voice.setVisible(true);
+					if(pnl_cell!=null)
+					{
+						pnl_cell.setVisible(false);
+					}
+					if(pnl_voice!=null)
+					{
+						pnl_voice.setVisible(true);
+					}
 					m_btn_kill.setVisible(true);
 					if(get_sendingstatus()==7) {
 						enableResend();

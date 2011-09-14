@@ -54,9 +54,9 @@ public class Inhabitant extends InhabitantBasics implements Cloneable {
 	}
 	public Inhabitant(String sz_adrname, String sz_postaddr, String sz_postno, String sz_postarea, 
 		   String sz_number, String sz_mobile, double f_lon, double f_lat, int n_adrtype, int n_deptpk, 
-		   int n_streetid, String sz_quality, int n_hasfixed, int n_hasmobile) {
+		   int n_streetid, String sz_quality, int n_hasfixed, int n_hasmobile, int n_vulnerable) {
 		init("", sz_adrname, sz_postaddr, "", "", sz_postno, sz_postarea, "", "", sz_number, sz_mobile, f_lon, f_lat, 0, 0, 
-				n_adrtype, n_deptpk, n_streetid, sz_quality, n_hasfixed, n_hasmobile, 0);
+				n_adrtype, n_deptpk, n_streetid, sz_quality, n_hasfixed, n_hasmobile, n_vulnerable);
 	}
 	public Inhabitant(String sz_kondmid, String sz_adrname, String sz_postaddr, String sz_no, String sz_letter,
 		   String sz_postno, String sz_postarea, String sz_region, String sz_birthday, String sz_number, String sz_mobile, 

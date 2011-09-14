@@ -447,6 +447,7 @@ namespace com.ums.PAS.Status
                     outxml.insertAttribute("l_changetime", item.n_changetime.ToString());
                     outxml.insertAttribute("l_ldate", item.n_ldate.ToString());
                     outxml.insertAttribute("l_ltime", item.n_ltime.ToString());
+                    outxml.insertAttribute("l_prioritized", item.n_prioritized.ToString());
 
                     outxml.insertEndElement();
                 }

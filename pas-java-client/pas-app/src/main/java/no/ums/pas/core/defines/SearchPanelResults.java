@@ -4,8 +4,10 @@ package no.ums.pas.core.defines;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.importer.csv.csvexporter;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 import no.ums.pas.ums.tools.ColorButton;
 import no.ums.pas.ums.tools.ImageLoader;
@@ -480,6 +482,18 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 				else if(JLabel.class.equals(type))
 				{
 					return (JLabel)value;
+				}
+				else if(type.equals(Inhabitant.class))
+				{
+					
+					Inhabitant inhab = (Inhabitant)value;
+					JLabel ret;
+					ret = inhab.isVulnerable() ? new JLabel(inhab.get_adrname(), ImageFetcher.getIcon("bandaid_12.png"), JLabel.LEFT) : new JLabel(inhab.get_adrname());
+					ret.setOpaque(true);
+					ret.setBackground(getBgColorForRow(row));
+					ret.setForeground(inhab.isVulnerable() ? Color.red : getFgColorForRow(row));
+					
+					return ret;
 				}
 				else if(no.ums.pas.core.mainui.OpenStatuscodes.StatusCodeRenderer.class.equals(type))
 					return (no.ums.pas.core.mainui.OpenStatuscodes.StatusCodeRenderer)value;
