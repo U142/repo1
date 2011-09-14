@@ -14,6 +14,13 @@ public class lang {
 
     }
 
+    public static final LangError NO_ERROR = new LangError() {
+        @Override
+        public void logMissing(Locale locale, String key, String valueInDefault) {
+            // Noop
+        }
+    };
+
     private static final ResourceBundle DEFAULT = ResourceBundle.getBundle(lang.class.getName(), new Locale("en", "GB"));
 
     private final ResourceBundle bundle;

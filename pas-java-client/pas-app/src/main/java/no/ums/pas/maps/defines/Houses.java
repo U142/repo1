@@ -7,7 +7,6 @@ import no.ums.log.UmsLog;
 import no.ums.pas.PAS;
 import no.ums.pas.core.Variables;
 import no.ums.pas.ums.tools.Timeout;
-import no.ums.pas.ums.tools.Utils;
 
 import javax.annotation.Nonnull;
 import java.awt.BasicStroke;
@@ -245,9 +244,6 @@ public class Houses {
 			if(idx==-1) { //error
 				m_bounds = null;
 			} else {
-				InhabitantBasics inhab_ul = (InhabitantBasics)inhabitants.get(idx);
-				InhabitantBasics inhab_lr = (InhabitantBasics)inhabitants.get(inhabitants.size()-1);
-				//m_bounds = new NavStruct(inhab_ul.get_lon()-0.05, inhab_lr.get_lon()+0.05, inhab_ul.get_lat()+0.05, inhab_lr.get_lat()-0.05);
 				m_fullbounds = m_bounds;
 			}
 		} catch(Exception e) {
@@ -259,38 +255,34 @@ public class Houses {
 		HouseItem prev_item = null;
 		InhabitantBasics current;
 		//for(int i=0; i < get_controller().get_items().size(); i++)
-		for(int i=0; i < inhabitants.size(); i++)
-		{
-			//current = (Inhabitant)get_controller().get_items().get(i);
-			current = (InhabitantBasics)inhabitants.get(i);
-			
-			/* lon and/or lat is different, this is a new house
-			 * add the house to the list, and add current inhabitant
-			 * */
-			
-			if(f_prev_lon != current.get_lon() || f_prev_lat != current.get_lat())
-			{
-				HouseItem item = new HouseItem(current.get_lon(), current.get_lat());
-				item.add_itemtohouse(current, b_statusmode);
-				current.set_parenthouse(item);
-				add_house(item);
-				prev_item = item;
-				item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
-				
-			}
-			/* lon and lat is equal, add a new inhabitant to the house*/
-			else
-			{
-				if(prev_item!=null)
-				{
-					prev_item.add_itemtohouse(current, b_statusmode);
-					current.set_parenthouse(prev_item);
-					prev_item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
-				}
-			}
-			f_prev_lon = current.get_lon();
-			f_prev_lat = current.get_lat();
-		}
+        for (Object inhabitant : inhabitants) {
+            //current = (Inhabitant)get_controller().get_items().get(i);
+            current = (InhabitantBasics) inhabitant;
+
+            /* lon and/or lat is different, this is a new house
+                * add the house to the list, and add current inhabitant
+                * */
+
+            if (f_prev_lon != current.get_lon() || f_prev_lat != current.get_lat()) {
+                HouseItem item = new HouseItem(current.get_lon(), current.get_lat());
+                item.add_itemtohouse(current, b_statusmode);
+                current.set_parenthouse(item);
+                add_house(item);
+                prev_item = item;
+                item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
+
+            }
+            /* lon and lat is equal, add a new inhabitant to the house*/
+            else {
+                if (prev_item != null) {
+                    prev_item.add_itemtohouse(current, b_statusmode);
+                    current.set_parenthouse(prev_item);
+                    prev_item.HAS_INHABITANT_TYPES_ |= current.get_adrtype();
+                }
+            }
+            f_prev_lon = current.get_lon();
+            f_prev_lat = current.get_lat();
+        }
 		m_bounds = calc_bbox_by_stddev(inhabitants);
 		//get_controller().get_pas().add_event("sort_houses: " + get_controller().get_items().size());
 		m_b_housesready = true;

@@ -198,11 +198,10 @@ public class MapPanel extends JPanel implements ActionListener {
 			super.draw_layers(g);
 			//if(m_polygon!=null)
 			m_shape.typecast_polygon().draw(get_gfxbuffer(), get_mapframe().getMapModel(), get_mapframe().getZoomLookup(), false, false, true, getMousePos());
-			Iterator it = m_shapes.iterator();
-			while(it.hasNext()) {
-				PolygonStruct poly = (PolygonStruct)it.next();
-				poly.draw(get_gfxbuffer(), get_mapframe().getMapModel(), get_mapframe().getZoomLookup(), true, true, false, getMousePos());
-			}
+            for (Object m_shape1 : m_shapes) {
+                PolygonStruct poly = (PolygonStruct) m_shape1;
+                poly.draw(get_gfxbuffer(), get_mapframe().getMapModel(), get_mapframe().getZoomLookup(), true, true, false, getMousePos());
+            }
 		}
 	}
 

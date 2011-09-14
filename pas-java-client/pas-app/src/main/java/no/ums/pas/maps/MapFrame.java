@@ -4,6 +4,7 @@ package no.ums.pas.maps;
 //import no.ums.log.UmsLog;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
 import no.ums.map.tiled.AbstractTileCacheWms;
@@ -42,7 +43,6 @@ import org.geotools.data.wms.WebMapServer;
 import org.geotools.ows.ServiceException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
@@ -69,7 +69,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public class MapFrame extends JPanel implements ActionListener {
@@ -85,25 +88,6 @@ public class MapFrame extends JPanel implements ActionListener {
 
     public void print_map() {
         PrintCtrl.printComponent(this, null);
-    }
-
-    public class MapOverlay {
-        MapOverlay(String jobid, int layer, JCheckBox ref, String provider) {
-            sz_jobid = jobid;
-            n_layer = layer;
-            chk_ref = ref;
-            sz_provider = provider;
-        }
-
-        public String sz_provider;
-        public String sz_jobid;
-        public Image img_load;
-        public Image img_onscreen;
-        public int n_layer;
-        public JCheckBox chk_ref;
-        public boolean b_isdownloaded = false;
-        public boolean b_needupdate = false;
-        public boolean b_visible = true;
     }
 
     private static final long serialVersionUID = 1L;
@@ -169,7 +153,9 @@ public class MapFrame extends JPanel implements ActionListener {
 
     private final MapModel mapModel = new MapModel();
     final no.ums.map.tiled.component.MapController controller = new no.ums.map.tiled.component.MapController();
-    
+
+    private final Map<String, TileLookup> tileOverlays = new HashMap<String, TileLookup>();
+
     private void navigationChanged()
     {
         final TileLookup tileLookup = getTileLookup();
@@ -179,7 +165,7 @@ public class MapFrame extends JPanel implements ActionListener {
         Variables.getNavigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
     }
 
-    
+
     public MapFrame(int n_width, int n_height, Draw drawthread, Navigation nav, HTTPReq http, boolean b_enable_snap) {
         super();
         m_actionhandler = new MapFrameActionHandler(this, b_enable_snap);
@@ -190,12 +176,12 @@ public class MapFrame extends JPanel implements ActionListener {
     			navigationChanged();
             	//if(mapModel.getZoom()>=17)
             	{
-        			PAS.get_pas().download_houses();            		
+        			PAS.get_pas().download_houses();
                     PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
             	}
             	//else
             	{
-            		
+
             	}
             	PAS.get_pas().kickRepaint();
             }
@@ -207,7 +193,7 @@ public class MapFrame extends JPanel implements ActionListener {
             	PAS.get_pas().kickRepaint();
             }
         });
-        get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {			
+        get_actionhandler().addPropertyChangeListener("dragging", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 		        //download houses when user stops dragging
@@ -218,7 +204,7 @@ public class MapFrame extends JPanel implements ActionListener {
 				case PAN_BY_DRAG:
 					if(!get_actionhandler().get_isdragging())
 					{
-            			PAS.get_pas().download_houses();						
+            			PAS.get_pas().download_houses();
                         PAS.pasplugin.onAfterLoadMap(PAS.get_pas().get_settings(), m_navigation, MapFrame.this);
 					}
 					break;
@@ -257,10 +243,10 @@ public class MapFrame extends JPanel implements ActionListener {
                 setPreferredSize(new Dimension(w, h));
             }
         });
-        
 
-        
-        
+
+
+
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
             private Point mouseDownPoint;
@@ -324,12 +310,12 @@ public class MapFrame extends JPanel implements ActionListener {
         addMouseMotionListener(mouseAdapter);
         addMouseWheelListener(mouseAdapter);
     }
-    
+
     protected void onZoomGesture(boolean bZoomIn, Point p)
     {
     	if(bZoomIn)
     	{
-            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);        		
+            controller.onZoomIn(mapModel, getTileLookup(), getSize(), p);
     	}
     	else
     	{
@@ -423,63 +409,19 @@ public class MapFrame extends JPanel implements ActionListener {
     //Image m_img_overlay = null;
     //Image m_img_overlay_onscreen = null;
 
-    private final List<MapOverlay> m_overlays = new ArrayList<MapOverlay>();
-
-    public List<MapOverlay> getOverlays() {
-        return m_overlays;
+    public void putTileOverlay(String id, TileLookup tileLookup) {
+        tileOverlays.put(id, tileLookup);
+        repaint();
     }
 
-
-    public void showAllOverlays(int layer, boolean b_show, String jobid, JCheckBox chkref, String provider) {
-        try {
-            for (MapOverlay m_overlay : m_overlays) { //disable old overlays
-                JCheckBox chk = m_overlay.chk_ref;
-                if (chk != null)
-                    chk.setSelected(false);
-            }
-            m_overlays.clear();
-            m_overlays.add(new MapOverlay(jobid, layer, chkref, provider));
-            for (MapOverlay m_overlay : m_overlays) {
-                if (m_overlay.n_layer == layer) {
-                    m_overlay.b_visible = b_show;
-                    chkref.setSelected(b_show);
-                    if (!m_overlay.b_isdownloaded && b_show) //not yet downloaded and should be visible
-                        m_overlay.b_needupdate = true; //mark need update before starting loader
-
-                    start_gsm_coverage_loader();
-                }
-            }
-
-        } catch (Exception e) {
-            log.warn("Failed to show all overlays", e);
-        }
-    }
-
-    //when new map is downloaded
-    public void setAllOverlaysDirty() {
-        if (m_overlays == null)
-            return;
-        for (MapOverlay m_overlay : m_overlays) {
-            m_overlay.b_isdownloaded = false;
-            m_overlay.b_needupdate = true;
-        }
-    }
-
-    public void setAllOverlays() {
-        m_overlays.clear();
+    public void removeTileOverlay(String gsm) {
+        tileOverlays.remove(gsm);
+        repaint();
     }
 
     //close status should run this
     public void resetAllOverlays() {
-        if (m_overlays != null) {
-            for (MapOverlay m_overlay : m_overlays) {
-                JCheckBox chk = m_overlay.chk_ref;
-                if (chk != null)
-                    chk.setSelected(false);
-            }
-            m_overlays.clear();
-            log.debug("Overlays reset");
-        }
+        tileOverlays.clear();
     }
 
     MapFrameActionHandler m_actionhandler;
@@ -783,57 +725,6 @@ public class MapFrame extends JPanel implements ActionListener {
         return m_actionhandler;
     }
 
-    protected void start_gsm_coverage_loader() {
-        if (m_maploader.IsLoadingOverlay() || m_overlays == null)
-            return;
-        new Thread("GSM Coverage loader thread") {
-            public void run() {
-                try {
-                    for (MapOverlay overlay : m_overlays) {
-                        if (!overlay.b_needupdate) //marked to need update
-                            continue;
-                        if (overlay.b_isdownloaded) //already downloaded
-                            continue;
-                        if (!overlay.b_visible) //not visible
-                            continue;
-                        String sz_jobid = overlay.sz_jobid;
-                        switch (overlay.n_layer) {
-                            case 1:
-                                SetIsLoading(true, "GSM (" + overlay.sz_provider + ")");
-                                break;
-                            case 4:
-                                SetIsLoading(true, "UMTS (" + overlay.sz_provider + ")");
-                                break;
-                        }
-
-                        overlay.img_load = null;
-                        overlay.img_onscreen = null;
-                        int layer = overlay.n_layer;
-
-                        final LonLat topLeft = mapModel.getTopLeft();
-                        final LonLat bottomRight = getTileLookup().getZoomLookup(mapModel.getZoom()).getLonLat(topLeft, getSize().width, getSize().height);
-                        overlay.img_load = m_maploader.load_overlay(sz_jobid, layer, topLeft.getLon(), bottomRight.getLon(), topLeft.getLat(), bottomRight.getLat(), getSize());
-
-                        if (overlay.img_load == null) {
-                            overlay.img_onscreen = null;
-                            overlay.b_needupdate = true;
-                            overlay.b_isdownloaded = false;
-                        } else {
-                            prepareImage(overlay.img_onscreen, get_drawthread());
-                            overlay.img_onscreen = overlay.img_load;
-                            overlay.b_needupdate = false;
-                            overlay.b_isdownloaded = true;
-                        }
-                        SetIsLoading(false, "");
-                    }
-                } catch (Exception e) {
-
-                }
-            }
-        }.start();
-
-    }
-
     public void load_map() {
         //m_img_loading.flush();
 
@@ -842,7 +733,7 @@ public class MapFrame extends JPanel implements ActionListener {
         PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer() == MAPSERVER.DEFAULT ? true : false));
         if (m_maploader.IsLoadingMapImage())
             return;
-        setAllOverlaysDirty();
+
         set_cursor(new Cursor(Cursor.WAIT_CURSOR));
         get_drawthread().set_need_imageupdate();
         //m_img_onscreen = null;
@@ -854,13 +745,6 @@ public class MapFrame extends JPanel implements ActionListener {
                 case WMS:
                     m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), Variables.getSettings().getWmsSite());
                     break;
-            }
-
-            //m_img_loading = wmsimg;
-            if (m_img_loading == null) {
-            }
-            if (m_overlays != null) {
-                start_gsm_coverage_loader();
             }
         } catch (Exception e) {
             //log.debug("Error loading map " + e.getMessage());
@@ -943,7 +827,7 @@ public class MapFrame extends JPanel implements ActionListener {
 		g.setClip(0, 0, getWidth(), getHeight());
 		paintComponent(g);
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -954,29 +838,28 @@ public class MapFrame extends JPanel implements ActionListener {
                 }
             }
             pendingDownloads.clear();
-            final TileLookup tileLookup = getTileLookup();
-            final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
-            final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
-            get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
 
-            for (final TileData tileData : tileInfo.getTileData()) {
-                g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
-                if (!tileLookup.exists(tileData)) {
-                    pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            tileLookup.getImage(tileData);
-                            repaint();
-                        }
-                    }));
+            final Iterable<TileLookup> layers = Iterables.concat(Collections.singleton(getTileLookup()), tileOverlays.values());
+            for (final TileLookup tileLookup : layers) {
+                final TileInfo tileInfo = tileLookup.getTileInfo(mapModel.getZoom(), mapModel.getTopLeft(), getSize());
+                final LonLat bottomRight = tileLookup.getZoomLookup(mapModel.getZoom()).getLonLat(mapModel.getTopLeft(), getSize().width, getSize().height);
+                get_navigation().setHeaderBounds(mapModel.getTopLeft().getLon(), bottomRight.getLon(), mapModel.getTopLeft().getLat(), bottomRight.getLat());
+
+                for (final TileData tileData : tileInfo.getTileData()) {
+                    g.drawImage(tileLookup.getImageFast(tileData), tileData.getX(), tileData.getY(), tileData.getWidth(), tileData.getHeight(), null);
+                    if (!tileLookup.exists(tileData)) {
+                        pendingDownloads.add(PasApplication.getInstance().getExecutor().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                tileLookup.getImage(tileData);
+                                repaint();
+                            }
+                        }));
+                    }
                 }
             }
+
             PAS.get_pas().get_drawthread().draw_layers(g);
-            for (MapOverlay overlay : m_overlays) {
-                if (overlay.b_isdownloaded && overlay.b_visible && overlay.img_onscreen != null) {
-                    g.drawImage(overlay.img_onscreen, 0, 0, null);
-                }
-            }
             drawOnEvents(g);
         } catch (Exception e) {
             log.error("Failed to draw map", e);
@@ -1074,7 +957,7 @@ public class MapFrame extends JPanel implements ActionListener {
         //return m_img_overlay_onscreen;
         Image ret = null;
         try {
-            ret = getOverlays().get(n).img_onscreen;
+            ret = null;
         } catch (Exception e) {
         }
         return ret;

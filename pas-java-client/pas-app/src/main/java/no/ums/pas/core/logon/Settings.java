@@ -4,8 +4,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.ums.pas.core.logon.WmsLayer;
-
 public class Settings {
 	public enum MAPSERVER
 	{
@@ -62,7 +60,7 @@ public class Settings {
 		n_mapserver = MAPSERVER.DEFAULT;
 		sz_wms_site = "http://";
 		sz_wms_format = "";
-		b_pan_by_drag = false;
+		b_pan_by_drag = true;
 		sz_languageid = "en_GB";
 		sz_wms_username = "";
 		sz_wms_password = "";

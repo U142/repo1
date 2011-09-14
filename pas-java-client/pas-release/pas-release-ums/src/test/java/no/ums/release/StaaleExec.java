@@ -14,7 +14,8 @@ public class StaaleExec {
                 "-wmh123mh123",
                 "-x$jnlp_codebase",
                 "-shttps://secure.ums2.no/vb4utv/",
-                "-whttp://192.168.3.157/pas/WS/",
+//                "-whttp://192.168.3.157/pas/WS/", // Staale private
+                "-whttps://secure.ums.no/PAS/ws_pasprod/WS/", // prod server
                 "-p"
         });
     }

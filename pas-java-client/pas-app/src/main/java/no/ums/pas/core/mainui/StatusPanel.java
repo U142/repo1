@@ -5,6 +5,8 @@ package no.ums.pas.core.mainui;
 
 import no.ums.log.Log;
 import no.ums.log.UmsLog;
+import no.ums.map.tiled.TileCacheGsmCoverage;
+import no.ums.map.tiled.TileCacheUmtsCoverage;
 import no.ums.pas.PAS;
 import no.ums.pas.cellbroadcast.CountryCodes;
 import no.ums.pas.core.Variables;
@@ -168,7 +170,10 @@ public class StatusPanel extends DefaultPanel implements ComponentListener, Item
 		// Reloads map to get updated GSM coverage
 		if(n_lba_percent <= 100 && n_lba_prev_perc < 100) {
 			if(n_lba_prev_perc+PAS.get_pas().get_settings().getLbaRefresh() < n_lba_percent || n_lba_percent == 100) {
-				PAS.get_pas().get_pasactionlistener().actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"act_loadmap"));
+                TileCacheGsmCoverage.clearCache();
+                TileCacheUmtsCoverage.clearTileCache();
+                PAS.get_pas().get_mappane().repaint();
+				PAS.get_pas().get_pasactionlistener().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "act_loadmap"));
 				n_lba_prev_perc = n_lba_percent;
 			}
 		}

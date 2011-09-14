@@ -64,6 +64,10 @@ public abstract class AbstractTileCache {
         return cache.containsKey(new TileCell(zoom, row, column));
     }
 
+    public void clear() {
+        cache.clear();
+    }
+
     public TileLookup.BoundsMatch getBestMatch(final LonLat topLeft, final LonLat bottomRight, final Dimension size) {
         for (int i = 0; i < zoomLookups.length; i++) {
             final ZoomLookup zoomLookup = zoomLookups[i];
