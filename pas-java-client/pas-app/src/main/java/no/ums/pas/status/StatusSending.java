@@ -82,25 +82,13 @@ import java.util.List;
 
 
 public class StatusSending {
-	/*sprintf(sz_xmltemp, "<SENDING sz_sendingname=\"%s\" l_refno=\"%d\" l_group=\"%d\" l_createdate=\"%d\" l_createtime=\"%d\" "
-			"l_scheddate=\"%d\" l_schedtime=\"%d\" l_sendingstatus=\"%d\" l_comppk=\"%d\" l_deptpk=\"%d\" "
-			"l_type=\"%d\" l_addresstypes=\"%d\" l_profilepk=\"%d\" l_queuestatus=\"%d\" l_totitem=\"%d\" "
-			"l_proc=\"%d\" l_altjmp=\"%d\" l_alloc=\"%d\" l_maxalloc=\"%d\">",
-			info->_sz_sendingname, info->_n_refno, info->_n_group, info->_n_createdate, info->_n_createtime,
-			info->_n_scheddate, info->_n_schedtime, info->_n_sendingstatus, info->_n_companypk,
-			info->_n_deptpk, info->_n_type, info->_n_addresstypes, info->_n_profilepk, info->_n_queuestatus,
-			info->_n_totitem, info->_n_processed, info->_n_altjmp, info->_n_alloc, info->_n_maxalloc);*/
-	
 
     private static final Log log = UmsLog.getLogger(StatusSending.class);
 	
 	protected StatusSending m_this;
-	protected VoicePanel VOICEPANEL;
 	public StatusSending get_statussending() { return m_this; }
 	private StatusSendingList m_sendinglist = null;
-	//private StatusCellBroadcast m_cellbroadcast = null; //singleton. Every sending may have a child cell broadcast. This will be refreshed on every statusupdate.
-	//public StatusCellBroadcast getStatusCellBroadcast() { return m_cellbroadcast; }
-	private LBASEND m_lba = null; 
+	private LBASEND m_lba = null;
 	private ArrayList<LBASEND> m_lba_by_operator = new ArrayList<LBASEND>();
 	
 	public void ResetLbaByOperator() {
@@ -119,9 +107,7 @@ public class StatusSending {
 				percent = 100.0f;
 			else if(this.get_proc()>0)
 				percent = this.get_proc() * 100.0f / this.get_totitem();
-			//else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus > 1 ) // gone past parsequeue
-			//	percent = 100;
-			else 
+			else
 				percent = 0;
 			break;
 		case 2: // SMS
@@ -129,9 +115,7 @@ public class StatusSending {
 				percent = 100.0f;
 			else if(this.get_proc()>0)
 				percent = this.get_proc() * 100.0f / this.get_totitem();
-		//	else if(this.get_proc()==0 && this.get_statussending()._n_sendingstatus >  ) // gone past parsequeue
-		//		percent = 100;
-			else 
+			else
 				percent = 0;
 			break;
 		case 4: // LBA
@@ -160,10 +144,8 @@ public class StatusSending {
 	private StdTextLabel m_sendingname_label = new StdTextLabel("", 11, false);
 	public StdTextLabel getTotalSendingnameLabel() { return m_sendingname_label; }
 	protected int n_sending_completion_percent = 0;
-	
-	public JProgressBar getVoiceProgressbar() { return m_voice_progress; }
-	
-	/*labels for updating UI*/
+
+    /*labels for updating UI*/
 	protected JLabel m_lbl_sendingname = new JLabel("");
 	protected JLabel m_lbl_processed_and_total = new JLabel("");
 	protected JLabel m_lbl_completion_percent = new JLabel("");
@@ -184,7 +166,6 @@ public class StatusSending {
 		return m_lbl_processed_and_total;
 	}
 	public JLabel getCompletionPercentLabel() {
-		//m_lbl_completion_percent.setText(n_sending_completion_percent + "%");
 		m_lbl_completion_percent.setText(Math.round(get_percentage()) + "%");
 		return m_lbl_completion_percent;
 	}
@@ -196,20 +177,12 @@ public class StatusSending {
 	public String getSendingname() { 
 		return _sz_sendingname;
 	}
-	public int getSendingPercent()
-	{
-		return n_sending_completion_percent;
-	}
-	
-	public void setSendingnameLabel(String sz)
+
+    public void setSendingnameLabel(String sz)
 	{
 		String sz_newtext = "<html><font style=\"font-size:9px;\">" + _sz_sendingname + "&nbsp;&nbsp;&nbsp;<b>" + sz + "</font></b></html>"; //font-face:Arial; 
-		String sz_text = m_sendingname_label.getText();
-		//if(sz_text.compareTo(sz_newtext)!=0)
-		{
-			m_sendingname_label.setText(sz_newtext);
-			m_sendingname_label.revalidate();
-		}
+        m_sendingname_label.setText(sz_newtext);
+        m_sendingname_label.revalidate();
 	}
 	public void setSendingnameLabel()
 	{
@@ -457,8 +430,7 @@ public class StatusSending {
 			set_lba_expired(m_lba.getExpired());
 			set_lba_processed(m_lba.n_proc);
 			set_lba_items(m_lba.n_items);
-			set_lba_cancelled(m_lba.n_cancelled);
-			//update rows in list
+            //update rows in list
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run()
 				{
@@ -612,44 +584,13 @@ public class StatusSending {
 	private int _n_lba_expired;
 	private int _n_lba_processed;
 	private int _n_lba_items;
-	private int _n_lba_cancelled;
-	private String _sz_sms_messagetext;
+    private String _sz_sms_messagetext;
 	private String _sz_actionprofilename;
 	private int _n_num_dynfiles;
 	private boolean _b_marked_as_cancelled = false;
 	private boolean cancelRequestSent = false;
-	
-	
-	public String get_sz_sendingname() {
-		return _sz_sendingname;
-	}
-	public void set_sz_sendingname(String _sz_sendingname) {
-		this._sz_sendingname = _sz_sendingname;
-	}
-	public int get_n_refno() {
-		return _n_refno;
-	}
-	public void set_n_refno(int _n_refno) {
-		this._n_refno = _n_refno;
-	}
-	public int get_n_group() {
-		return _n_group;
-	}
-	public void set_n_group(int _n_group) {
-		this._n_group = _n_group;
-	}
-	public int get_n_type() {
-		return _n_type;
-	}
-	public void set_n_type(int _n_type) {
-		this._n_type = _n_type;
-	}
-	public boolean is_b_marked_as_cancelled() {
-		return _b_marked_as_cancelled;
-	}
-	public void set_b_marked_as_cancelled(boolean _b_marked_as_cancelled) {
-		this._b_marked_as_cancelled = _b_marked_as_cancelled;
-	}
+
+
 	public boolean isCancelRequestSent() {
 		return cancelRequestSent;
 	}
@@ -658,11 +599,8 @@ public class StatusSending {
 	}
 	
 	private List<USMSINSTATS> _m_smsin_stats;
-	public void setSmsInStats(List<USMSINSTATS> ref)
-	{
-		_m_smsin_stats = ref;
-	}
-	public List<USMSINSTATS> getSmsInStats() {
+
+    public List<USMSINSTATS> getSmsInStats() {
 		return _m_smsin_stats;
 	}
 	public void addSmsInStats(USMSINSTATS ref)
@@ -747,13 +685,11 @@ public class StatusSending {
 	public int get_lba_processed() { return _n_lba_processed; }
 	public void set_lba_items(int n) { _n_lba_items = n; }
 	public int get_lba_items() { return _n_lba_items; }
-	public void set_lba_cancelled(int n) { _n_lba_cancelled = n; }
-	public int get_lba_cancelled() { return _n_lba_cancelled; }
-	public String get_sms_message_text() { return _sz_sms_messagetext; }
-	public void set_sms_message_text(String s) { _sz_sms_messagetext = s; }
-	
-	
-	public void setProjectpk(String sz_projectpk) { m_sz_projectpk = sz_projectpk; }
+
+    public String get_sms_message_text() { return _sz_sms_messagetext; }
+
+
+    public void setProjectpk(String sz_projectpk) { m_sz_projectpk = sz_projectpk; }
 	
 	public boolean HasFinalStatus()
 	{
@@ -952,10 +888,7 @@ public class StatusSending {
 	public class StatusSendingUI extends DefaultPanel implements ComponentListener {	
 		public static final long serialVersionUID = 1;
 
-		private boolean b_need_attention = false;
-		public boolean GetNeedAttention() { return b_need_attention; }
-
-		public StatusSendingUI() {
+        public StatusSendingUI() {
 			super();
 			pnl_voice = new VoicePanel();
 			pnl_voice.init_ui();
@@ -1117,11 +1050,8 @@ public class StatusSending {
 		JButton m_btn_cancel_lba_sending = null;
 		private JCheckBox m_chk_layers_gsm = new JCheckBox("GSM900 " + Localization.l("main_status_gsmcoverage"), false);
 
-        public JCheckBox get_chk_layers_gsm() { return m_chk_layers_gsm; }
-		private JCheckBox m_chk_layers_umts = new JCheckBox("UMTS " + Localization.l("main_status_gsmcoverage"), false);
+        private JCheckBox m_chk_layers_umts = new JCheckBox("UMTS " + Localization.l("main_status_gsmcoverage"), false);
 
-        public JCheckBox get_chk_layers_umts() { return m_chk_layers_umts; }
-		//private StdTextLabel m_lbl_lbalanguages = new StdTextLabel("Languages", 150, 11, false);
 		private JButton m_btn_lbalanguages = new JButton(ImageLoader.load_icon("message_32.png"));
 		private JPopupMenu m_pop_lbalanguages = new JPopupMenu();
 		
@@ -1287,58 +1217,14 @@ public class StatusSending {
 			m_btn_cancel_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
 			m_btn_confirm_lba_sending.putClientProperty(ULookAndFeel.WINDOW_MODIFIED, b);
 		}
-		
-		private boolean beforeConfirmOrCancelLba(boolean confirm)
-		{
-			boolean ret = false;
-			List<LBASEND> notprepared = new ArrayList<LBASEND>();
-			StringBuilder sbnot = new StringBuilder();
-			StringBuilder sbprepared = new StringBuilder();
-			StringBuilder sbtotal = new StringBuilder();
-			
-			sbnot.append("<b>The following operator(s) are not yet ready</b><br>");
-			sbprepared.append("<b>");
-            sbprepared.append((confirm ? Localization.l("common_confirm").toUpperCase() : Localization.l("common_cancel").toUpperCase()));
-			sbprepared.append("-operation will only affect</b><br>");
-			if(m_lba_by_operator!=null)
-			{
-				for(LBASEND lbasend : m_lba_by_operator)
-				{
-					if(lbasend.NotYetPrepared())
-					{
-						notprepared.add(lbasend);
-                        sbnot.append("-").append(lbasend.sz_operator);
-						sbnot.append("<br>");
-					}
-					else if(lbasend.IsPrepared())
-					{
-                        sbprepared.append("-").append(lbasend.sz_operator);
-						sbprepared.append("<br>");
-					}
-				}
-				sbnot.append("<br>");
-				sbprepared.append("<br>");
-				
-				sbtotal.append("<html>");
-				sbtotal.append(sbprepared.toString());
-				sbtotal.append(sbnot.toString());
-				sbtotal.append("<b>");
-                sbtotal.append(Localization.l("common_are_you_sure"));
-				sbtotal.append("<br><br></b>");
-				sbtotal.append("</html>");
-                ret = notprepared.size() <= 0 ||
-                        JOptionPane.showConfirmDialog(this, sbtotal.toString(), Localization.l("common_are_you_sure"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
-			}
-			return ret;
-		}
-		
-		public void actionPerformed(ActionEvent e) {
+
+        public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(m_btn_goto)) {
 				Variables.getNavigation().gotoMap(get_shape().calc_bounds());
 			} else if(e.getSource().equals(m_btn_cancel_lba_sending))
 			{
 				//CANCEL
-				if(getLBA()!=null)// && beforeConfirmOrCancelLba(false))
+				if(getLBA()!=null)
 				{
 					log.debug("Cancel LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, false);
@@ -1347,7 +1233,7 @@ public class StatusSending {
 			} else if(e.getSource().equals(m_btn_confirm_lba_sending))
 			{
 				//CONFIRM
-				if(getLBA()!=null)// && beforeConfirmOrCancelLba(true))
+				if(getLBA()!=null)
 				{
 					log.debug("Confirm LBA");
 					new no.ums.pas.core.ws.WSConfirmLBA(getLBA().n_parentrefno, getLBA().sz_jobid, true);
@@ -1552,19 +1438,8 @@ public class StatusSending {
 			//m_resend_status.start_search();
 			//m_resend_status.setBorder(BorderFactory.createRaisedBevelBorder());
 		}
-		public void updateUi() {
-			//OpenStatuscodes osc = new OpenStatuscodes();
-			ArrayList<Object> objects = PAS.get_pas().get_statuscontroller().get_items();
-			// Må ha noe lignende openstatuscodes
-			// 
-			// Kanskje bruke USMSINSTATUS her?
-			m_chk_sent_ok.setText("Sent OK (" + (int)(Math.random()*250) + ")");
-			m_chk_failed.setText("Failed (" + (int)(Math.random()*50) + ")");
-			m_chk_unknown.setText("Unknown (" + (int)(Math.random()*20) + ")");
-			
-			// Må vel få inn et array med statuskoder?
-		}
-		public void componentResized(ComponentEvent e) {
+
+        public void componentResized(ComponentEvent e) {
 			int w = getWidth() - 20;
 			int h = getHeight();
 			//m_scroll_cc.setPreferredSize(new Dimension(w-10, h/2));
@@ -1588,9 +1463,7 @@ public class StatusSending {
         private StdTextLabel m_lbl_sched	= new StdTextLabel(Localization.l("common_scheduled") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_status	= new StdTextLabel(Localization.l("common_sendingstatus") + ":", lbl_width, 11, true);
         private StdTextLabel m_lbl_type		= new StdTextLabel(Localization.l("common_type") + ":", lbl_width, 11, false);
-        private StdTextLabel m_lbl_addresstypes = new StdTextLabel(Localization.l("common_addresstypes") + ":", lbl_width, 11, false);
-        private StdTextLabel m_lbl_queuestatus  = new StdTextLabel("Queue status:" , lbl_width, 11, false);
-		private StdTextLabel m_lbl_items	= new StdTextLabel(Localization.l("common_items") + ":", lbl_width, 11, false);
+        private StdTextLabel m_lbl_items	= new StdTextLabel(Localization.l("common_items") + ":", lbl_width, 11, false);
 		private StdTextLabel m_lbl_sms_recipients = new StdTextLabel(Localization.l("common_sms_recipients") + ":", lbl_width, 11, false);
 		private StdTextLabel m_lbl_sms_total = new StdTextLabel(Localization.l("common_sms_total") + ":", lbl_width, 11, false);
         private StdTextLabel m_lbl_proc		= new StdTextLabel(Localization.l("common_processed") + ":", lbl_width, 11, false);
@@ -1638,9 +1511,8 @@ public class StatusSending {
 		public JPopupMenu m_menu_dynfiles = new JPopupMenu();
 
 		private boolean b_is_dynfiles_showing = false;
-		private boolean b_is_hovering_dynfiles = false;
-		
-		private JButton m_btn_resend		= new JButton(Localization.l("main_status_resend"));
+
+        private JButton m_btn_resend		= new JButton(Localization.l("main_status_resend"));
 		private JButton m_btn_kill			= new JButton(Localization.l("common_kill_sending"));
         public boolean m_b_allocset = false;
 		
@@ -1713,8 +1585,7 @@ public class StatusSending {
 		@Override
 		public void componentResized(ComponentEvent e) {
 			int w = getWidth()-20;
-			int h = getHeight()-10;
-			m_voice_progress.setPreferredSize(new Dimension(w,20));
+            m_voice_progress.setPreferredSize(new Dimension(w,20));
 			m_voice_progress.setSize(new Dimension(w,20));
 			m_voice_progress.revalidate();
 		}
@@ -1822,11 +1693,9 @@ public class StatusSending {
 			}
 			m_menu_dynfiles.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
-					b_is_hovering_dynfiles = true;
-				}
+                }
 				public void mouseExited(MouseEvent e) {
-					b_is_hovering_dynfiles = false;
-					//m_menu_dynfiles.setVisible(false);
+                    //m_menu_dynfiles.setVisible(false);
 					//b_is_dynfiles_showing = false;
 				}				
 			});
@@ -1864,10 +1733,7 @@ public class StatusSending {
 				{
 					try
 					{
-						String url = PAS.get_pas().get_sitename() + "/audiofiles/v" + refno + "_" + fileno + ".wav";
-						//SoundRecorderPanel m_playpanel = new SoundRecorderPanel(this, StorageController.StorageElements.get_path(StorageController.PATH_TEMPWAV_), SoundRecorder.RECTYPE_FILE);
-						//m_playpanel.disable_record();
-						SoundlibFileWav f = (SoundlibFileWav)e.getSource();
+                        SoundlibFileWav f = (SoundlibFileWav)e.getSource();
 						if(player!=null)
 							player.getPlayer().stop();
 						if(f.get_file().getPath()!=null)
@@ -1875,9 +1741,6 @@ public class StatusSending {
 							player = new SoundPlayer(f.get_file().getPath(), true);
 							player.getPlayer().play();
 						}
-						//player.initialize_player(f.get_file().getPath(), true);
-
-						//m_playpanel.initialize_player(url, false);
 					}
 					catch(Exception err)
 					{
@@ -2492,41 +2355,19 @@ public class StatusSending {
 						pnl_cell.setVisible(true);
 				}
 			}
-			
-			/*if(((get_addresstypes() & SendController.SENDTO_CELL_BROADCAST_TEXT) == SendController.SENDTO_CELL_BROADCAST_TEXT))
-				m_btn_tas_resend.setVisible(true);*/
-			
-			
-			/*if(get_lba_sendingstatus()==LBASEND.LBASTATUS_PREPARED_CELLVISION)
-			{
-				pnl_icon.ShowConfirmAndCancel(true);
-				setNeedAttention(true);
-			}
-			else
-			{
-				pnl_icon.ShowConfirmAndCancel(false);
-				setNeedAttention(false);
-			}*/
-			int n_one_or_more_operators_ready = 0;
+
             for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
                 if (aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION ||
                         aM_lba_by_operator.n_status == LBASEND.LBASTATUS_PREPARED_CELLVISION_COUNT_COMPLETE) {
-                    ++n_one_or_more_operators_ready;
                 }
             }
 			pnl_icon.ShowConfirmAndCancel(m_lba.IsPrepared());
 			setNeedAttention(m_lba.IsPrepared());
-			/*if(n_one_or_more_operators_ready<=0)
-			{
-				pnl_icon.ShowConfirmAndCancel(false);
-				setNeedAttention(false);				
-			}*/
-			
+
 			int n_total_items = 0;
 			if(getLBA()!=null)
 			{
-				int n_operators_ready_for_confirmation = 0;
-				String sz_operators = "";
+                String sz_operators = "";
                 for (LBASEND aM_lba_by_operator : m_lba_by_operator) {
                     //list up all operators ready for confirmation
                     sz_operators += "<b>";
@@ -2555,8 +2396,7 @@ public class StatusSending {
                 pnl_icon._SetToolTipText_Confirm(Localization.l("main_status_locationbased_alert_short") + "&nbsp;" + sz_sendtext + "&nbsp;" + Localization.l("common_to") + "&nbsp;" + n_total_items + "&nbsp;" + Localization.l("main_sending_recipients") + "<br><br>" + sz_operators);
 			}
 
-			String tooltip = "";
-			int n_start_at  = Math.max(0, m_lba.send_ts.size() - m_lbl_status_ts.length);
+            int n_start_at  = Math.max(0, m_lba.send_ts.size() - m_lbl_status_ts.length);
 			for(int i=n_start_at; i < m_lba.send_ts.size(); i++)
 			{
 				m_lbl_status_ts[i-n_start_at].setText(m_lba.send_ts.get(i).sz_operator + " - " + m_lba.send_ts.get(i).sz_status);
@@ -2576,7 +2416,6 @@ public class StatusSending {
 		
 		public void setNeedAttention(final boolean b)
 		{
-			get_uipanel().b_need_attention = b;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run()
                 {
@@ -2640,15 +2479,8 @@ public class StatusSending {
 		public static final long serialVersionUID = 1;
 		private StdTextLabel m_lbl_message = new StdTextLabel(Localization.l("main_sending_lba_message") + ":", 150,11,true);
         private JTextArea 	 m_txt_message = new JTextArea("",1,1);
-		private StdTextLabel m_lbl_operator = new StdTextLabel(Localization.l("common_operator") + ":", 150, 11, true);
-        private StdTextLabel [] m_lbl_status_ts = new StdTextLabel[7];
-		private StdTextLabel [] m_txt_status_ts = new StdTextLabel[7];
-		//private StdTextLabel m_lbl_status_cc = new StdTextLabel("GSM numbers from ", 150, 12, true);
-		private JTextArea m_txt_status_cc = new JTextArea(" ", 1, 1);
-		private JButton m_btn_tas_resend;
-		JScrollPane m_scroll_cc;
-		
-		public PAPanel() {
+
+        public PAPanel() {
 			super();
 			setPreferredSize(new Dimension(300, 500));
 			add_controls();
@@ -2673,15 +2505,7 @@ public class StatusSending {
 			set_gridconst(0, inc_panels(), 2, 1); //5
 			//m_pa_tabbed.setPreferredSize(new Dimension(200, 150));
 			add(m_pa_tabbed, m_gridconst);
-			//m_pa_tabbed.addTab("operator 1", new PAStatusTab());
-			//m_pa_tabbed.addTab("operator 2", new PAStatusTab());
-			/*
-			if(get_type()==5) {
-				add_spacing(DIR_VERTICAL, 10);
-				set_gridconst(0, inc_panels(), 1, 1);
-				add(new LbaSmsReplyPanel(),m_gridconst);
-			}*/	
-			
+
 			this.revalidate();
 			repaint();
 			init();
