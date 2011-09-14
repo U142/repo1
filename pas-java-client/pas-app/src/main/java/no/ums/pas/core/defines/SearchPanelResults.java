@@ -488,7 +488,7 @@ public abstract class SearchPanelResults extends JPanel implements ComponentList
 					
 					Inhabitant inhab = (Inhabitant)value;
 					JLabel ret;
-					ret = inhab.isVulnerable() ? new JLabel(inhab.get_adrname(), ImageFetcher.getIcon("bandaid_12.png"), JLabel.LEFT) : new JLabel(inhab.get_adrname());
+					ret = inhab.isVulnerable() ? new JLabel(inhab.get_adrname(), ImageFetcher.getIcon("bandaid_16.png"), JLabel.LEFT) : new JLabel(inhab.get_adrname());
 					ret.setOpaque(true);
 					ret.setBackground(getBgColorForRow(row));
 					ret.setForeground(inhab.isVulnerable() ? Color.red : getFgColorForRow(row));

@@ -36,6 +36,7 @@ public class InhabitantFrame extends JPanel implements ComponentListener { //JFr
 		m_inhabitantpanel = new InhabitantResults(get_pas(), this, sz_columns, n_width, b_editable, m_dim);
 		m_label = new JLabel("Inhabitants");
 		m_inhabitantpanel.sort(0);
+		m_inhabitantpanel.m_tbl.setRowHeight(24);
 		addComponentListener(this);
 		init();
 	}

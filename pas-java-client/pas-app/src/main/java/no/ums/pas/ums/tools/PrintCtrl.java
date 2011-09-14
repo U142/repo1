@@ -7,7 +7,9 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.defines.DefaultPanel;
 import no.ums.pas.core.mainui.InhabitantResults;
 import no.ums.pas.core.storage.StorageController;
+import no.ums.pas.icons.ImageFetcher;
 import no.ums.pas.localization.Localization;
+import no.ums.pas.maps.defines.Inhabitant;
 import no.ums.pas.ums.errorhandling.Error;
 
 import javax.imageio.ImageIO;
@@ -181,7 +183,7 @@ public class PrintCtrl implements Printable {
 	        
 	        //g.copyArea()
 	        disableDoubleBuffering(componentToBePrinted);
-
+	        g2d.translate(10, 10);
 	        g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 	        g2d.setFont(new Font(null, Font.BOLD, 20));
 	        int headerHeight = g2d.getFontMetrics(g2d.getFont()).getHeight();
@@ -261,11 +263,28 @@ public class PrintCtrl implements Printable {
 	        			return PAGE_EXISTS;
 	        		}
 	        		for(int j=0;j<is.get_table().getColumnCount();++j) {
-	        			if(j==0)
+	        			/*if(j==0)
 	        				g2d.drawString(is.get_table().getValueAt(i, j).toString(),0*columnwidth,(line*10)+25);
 	        			else if(j==1);
 	        			else
 	        				g2d.drawString(is.get_table().getValueAt(i, j).toString(),columnsize[j-1]*columnwidth,(line*10)+25);
+	        				*/
+	        			if(j==1)
+	        				continue;
+	        			Object tmp = is.get_table().getValueAt(i, j);
+	        			int xpos = j > 0 ? columnsize[j-1]*columnwidth : 0;
+	        			int ypos = (line*10)+25;
+	        			if(tmp instanceof Inhabitant)
+	        			{
+	        				Inhabitant inhab = (Inhabitant)tmp;
+	        				if(inhab.isVulnerable())
+	        				{
+		        				Image img = ImageFetcher.getImage("bandaid_8.png");
+		        				g2d.drawImage(img, xpos, ypos-img.getHeight(null)+1, null);
+		        				xpos += img.getWidth(null) + 1;
+	        				}
+	        			}
+	        			g2d.drawString(is.get_table().getValueAt(i, j).toString(),xpos,ypos);
 	        		}
 	        		++line;
 	        		//g2d.drawLine(0, i, (int)pageFormat.getWidth(), 0);
