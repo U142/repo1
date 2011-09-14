@@ -100,9 +100,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		//contentpane.add(Variables.MAPPANE);
 		//add(Variables.MAPPANE);
 		Variables.getMapFrame().setVisible(true);
-		
-		Variables.getMapFrame().setAllOverlays();
-		//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+
+        //Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
 		Variables.getDraw().set_mappane(Variables.getMapFrame());
 		
 		lat = getParameter("lat");
@@ -123,10 +122,9 @@ public class MapImageDownload extends JApplet implements ActionListener {
 		shape.set_fill_color(Color.BLUE);
 		
 		NavStruct nav = shape.typecast_polygon().calc_bounds();
-	     
-		
-		Variables.getMapFrame().setAllOverlays();
-		//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+
+
+        //Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
 		//Variables.DRAW.set_mappane(Variables.MAPPANE);
 		
 		
@@ -179,9 +177,8 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			//contentpane.add(Variables.MAPPANE);
 			//add(Variables.MAPPANE);
 			Variables.getMapFrame().setVisible(true);
-			
-			Variables.getMapFrame().setAllOverlays();
-			//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+
+            //Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
 			Variables.getDraw().set_mappane(Variables.getMapFrame());
 			
 			lat = getParameter("lat");
@@ -202,10 +199,9 @@ public class MapImageDownload extends JApplet implements ActionListener {
 			shape.set_fill_color(Color.BLUE);
 			
 			NavStruct nav = shape.typecast_polygon().calc_bounds();
-		     
-			
-			Variables.getMapFrame().setAllOverlays();
-			//Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
+
+
+            //Variables.NAVIGATION.setNavigation(5.3353, 7.2271, 53.466, 52.2176);
 			//Variables.DRAW.set_mappane(Variables.MAPPANE);
 			
 			

@@ -225,44 +225,12 @@ import java.awt.image.ImageObserver;
 								PAS.get_pas().kickRepaint();
 								//return;
 							}*/
-							AlphaComposite alpha = AlphaComposite.getInstance(AlphaComposite.SRC);
 							Graphics2D g2d = (Graphics2D)m_gfx_buffer;
 							g2d.clearRect(0, 0, m_dimension.width, m_dimension.height);
 							AlphaComposite prev_alpha = (AlphaComposite)g2d.getComposite();
 							boolean b_alpha_set = false;
-							if(get_mappane().getOverlays()!=null)
-							{
-								for(int i=0; i < get_mappane().getOverlays().size(); i++)
-								{
-									if(get_mappane().get_mapoverlay(i)!=null)
-									{
-										if(get_mappane().getOverlays().get(i).b_visible)
-										{
-											AlphaComposite alpha2 = alpha.derive(0.7f);
-											g2d.setComposite(alpha2);
-											b_alpha_set = true;
-											break;
-										}
-									}
-								}
-							}
-							/*Graphics2D gfx = (Graphics2D)m_gfx_buffer;
-							gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-									RenderingHints.VALUE_ANTIALIAS_ON);				
-*/
-							/*int translate_x = m_dimension.width/2;
-							int translate_y = m_dimension.height/2;
-							double rotate = 0;//Math.PI/400.0f;
-							g2d.translate(translate_x, translate_y);
-							g2d.rotate(rotate);
-							g2d.translate(-translate_x, -translate_y);
-							*/
 							m_gfx_buffer.drawImage(m_mapimg, 0, 0, m_dimension.width, m_dimension.height, 0, 0, m_dimension.width, m_dimension.height, this);
-							//g2d.rotate(-rotate, -translate_x, -translate_y);
-							/*g2d.translate(translate_x, translate_y);
-							g2d.rotate(-rotate);
-							g2d.translate(-translate_x, -translate_y);*/
-							
+
 							//revert
 							if(b_alpha_set)
 								g2d.setComposite(prev_alpha);
@@ -335,25 +303,7 @@ import java.awt.image.ImageObserver;
 						//log.debug(get_lasterror());
 					}
 					b_firstmap = false;
-					if(get_mappane().getOverlays()!=null)
-					{
-						for(int i=0; i < get_mappane().getOverlays().size(); i++)
-						{
-							if(get_mappane().get_mapoverlay(i)!=null)
-							{
-								if(get_mappane().getOverlays().get(i).b_visible)
-								{
-									try {
-										m_gfx_buffer.drawImage(get_mappane().get_mapoverlay(i), 0, 0, m_dimension.width, m_dimension.height, this);
-										} catch(Exception e) {
-											m_b_imgpaint_success = false;
-											setPainted();
-										}
-								}
-							}
-						}
-					}
-					
+
 					//m_b_needrepaint = false;
 					draw_layers(m_gfx_buffer);
 					map_repaint();						

@@ -6,11 +6,11 @@ import no.ums.pas.PasApplication;
 import no.ums.ws.pas.UMapInfoLayerCellVision;
 import no.ums.ws.pas.UPASMap;
 
-import java.awt.AlphaComposite;
+import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -52,21 +52,20 @@ public abstract class AbstractLayerTileCache extends AbstractTileCache {
         info.setVersion("1.1.1");
         info.setSzRequest("GetMap");
 
+        log.debug("Requesting cell coverage off area (%.4f %.4f %.4f %.4f) jobId: %s", topLeft.getLon(), topLeft.getLat(), bottomRight.getLon(), bottomRight.getLat(), jobId);
+
         try {
             final UPASMap map = PasApplication.getInstance().getPaswsSoap().getMapOverlay(info);
 
             if (map.getImage().length < 100) {
                 String sz = new String(map.getImage(), 0, map.getImage().length, "iso-8859-1");
-                log.error("Error loading map overlay %s JobID=%s", sz, jobId, new Exception(sz));
+                log.warn("Error loading map overlay %s JobID=%s", sz, jobId);
                 return blank;
             } else {
-                Image img = Toolkit.getDefaultToolkit().createImage(map.getImage());
-
-                BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage img = ImageIO.read(new ByteArrayInputStream(map.getImage()));
+                BufferedImage bi = new BufferedImage(TILE_SIZE, TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = bi.createGraphics();
-                g.drawImage(img, 0, 0, null);
-                g.setComposite(AlphaComposite.Src);
-                g.dispose();
+                g.drawImage(img, 0, 0, TILE_SIZE, TILE_SIZE, 0, 0, img.getWidth(), img.getHeight(), null);
 
                 for (int i = 0; i < bi.getHeight(); i++) {
                     for (int j = 0; j < bi.getWidth(); j++) {

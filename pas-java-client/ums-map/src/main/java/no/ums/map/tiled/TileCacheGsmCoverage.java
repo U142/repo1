@@ -1,6 +1,11 @@
 package no.ums.map.tiled;
 
+import com.google.common.collect.MapMaker;
+import no.ums.pas.cache.Cache;
+
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Ståle Undheim <su@ums.no>
@@ -8,6 +13,25 @@ import java.awt.image.BufferedImage;
 public class TileCacheGsmCoverage extends AbstractLayerTileCache {
 
     private static final String LAYER = "1";
+
+    private static final ConcurrentMap<String, TileCacheGsmCoverage> gsmCoverage = new MapMaker()
+            .softValues()
+            .makeComputingMap(new Cache<String, TileCacheGsmCoverage>() {
+                @Override
+                public TileCacheGsmCoverage apply(@Nullable String input) {
+                    return new TileCacheGsmCoverage(input);
+                }
+            });
+
+    public static TileCacheGsmCoverage of(String jobId) {
+        return gsmCoverage.get(jobId);
+    }
+
+    public static void clearCache() {
+        for (TileCacheGsmCoverage tileCacheGsmCoverage : gsmCoverage.values()) {
+            tileCacheGsmCoverage.clear();
+        }
+    }
 
     public TileCacheGsmCoverage(String jobId) {
         super(jobId, LAYER);

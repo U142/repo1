@@ -84,7 +84,7 @@ import java.util.List;
 public class StatusSending {
 
     private static final Log log = UmsLog.getLogger(StatusSending.class);
-	
+
 	protected StatusSending m_this;
 	public StatusSending get_statussending() { return m_this; }
 	private StatusSendingList m_sendinglist = null;
@@ -980,14 +980,6 @@ public class StatusSending {
 			else if(get_type()==6) {
 				add(pnl_pa, m_gridconst);
 			}
-			/*
-			else if(get_type()==2 && get_group()==5)
-			{
-				pnl_resend.setBorder(UMS.Tools.TextFormat.CreateStdBorder(" " + PAS.l("Responses")));
-				set_gridconst(0, inc_panels(), 1, 1);
-				add(pnl_resend, m_gridconst);				
-			}*/
-						
 			init();
 		}
 		public void init() {
@@ -1249,7 +1241,7 @@ public class StatusSending {
                     for (LBASEND lbasend : m_lba_by_operator) {
                         if (lbasend.l_operator == m_filter_status_by_operator) {
                             log.debug("Loading GSM overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
-                            PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(new TileCacheGsmCoverage(lbasend.sz_jobid)));
+                            PAS.get_pas().get_mappane().putTileOverlay("GSM", new TileLookupImpl(TileCacheGsmCoverage.of(lbasend.sz_jobid)));
                             break;
                         }
                     }
@@ -1264,7 +1256,7 @@ public class StatusSending {
                     for (LBASEND lbasend : m_lba_by_operator) {
                         if (lbasend.l_operator == m_filter_status_by_operator) {
                             log.debug("Loading UMTS overlay for job=" + lbasend.sz_jobid + " (" + lbasend.sz_operator + ")");
-                            PAS.get_pas().get_mappane().putTileOverlay("UMTS", new TileLookupImpl(new TileCacheUmtsCoverage(lbasend.sz_jobid)));
+                            PAS.get_pas().get_mappane().putTileOverlay("UMTS", new TileLookupImpl(TileCacheUmtsCoverage.of(lbasend.sz_jobid)));
                             break;
                         }
                     }
@@ -1287,7 +1279,7 @@ public class StatusSending {
 			}
 		}
 
-		public void add_controls() {
+        public void add_controls() {
 			add_spacing(DIR_VERTICAL, 40);
 			m_gridconst.fill = GridBagConstraints.BOTH;
 			set_gridconst(inc_xpanels(), inc_panels(), 1, 1);

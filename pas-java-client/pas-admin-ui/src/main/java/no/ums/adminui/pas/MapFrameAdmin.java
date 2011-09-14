@@ -66,8 +66,8 @@ public class MapFrameAdmin extends MapFrame {
 			PAS.get_pas().get_mainmenu().enableUglandPortrayal((PAS.get_pas().get_settings().getMapServer()==MAPSERVER.DEFAULT ? true : false));
 		if(m_maploader.IsLoadingMapImage())
 			return;
-		setAllOverlaysDirty();
-		set_cursor(new Cursor(Cursor.WAIT_CURSOR));
+
+        set_cursor(new Cursor(Cursor.WAIT_CURSOR));
 		get_drawthread().set_need_imageupdate();
 		//m_img_onscreen = null;
 		try {
@@ -80,24 +80,6 @@ public class MapFrameAdmin extends MapFrame {
 				m_img_loading = m_maploader.load_map_wms(get_navigation().getNavLBO(), get_navigation().getNavRBO(), get_navigation().getNavUBO(), get_navigation().getNavBBO(), this.getSize(), Variables.getSettings().getWmsSite());
 			}
 			
-			//m_img_loading = wmsimg;
-			if(m_img_loading==null)
-			{
-			}
-			
-			for(int i=0;i<getOverlays().size();++i) {
-				/*if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_gsm().isSelected())
-					showAllOverlays(1, true);
-				else
-					showAllOverlays(1, false);
-				
-				if(PAS.get_pas().get_eastcontent().get_statuspanel().get_chk_layers_umts().isSelected())
-					showAllOverlays(4, true);
-				else
-					showAllOverlays(4, false);
-					*/
-				start_gsm_coverage_loader();
-			}
 		} catch(Exception e) {
 			//log.debug("Error loading map " + e.getMessage());
 			//Error.getError().addError("MapFrame","Exception in load_map",e,1);

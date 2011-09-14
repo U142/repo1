@@ -10,7 +10,6 @@ import no.ums.pas.core.Variables;
 import no.ums.pas.core.logon.DeptArray;
 import no.ums.pas.core.logon.DeptInfo;
 import no.ums.pas.core.mainui.HouseEditorDlg;
-import no.ums.pas.maps.MapFrame.MapOverlay;
 import no.ums.pas.maps.defines.HouseItem;
 import no.ums.pas.maps.defines.MapPoint;
 import no.ums.pas.maps.defines.MapPointLL;
@@ -88,14 +87,8 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 		m_pan_drag.set_x(0);
 		m_pan_drag.set_y(0);
 	}
-	
-	public void updateOverlay() {
-		for(int i=0;i<get_mappane().getOverlays().size();++i)
-			((MapOverlay)get_mappane().getOverlays().get(i)).b_needupdate = true;
-		get_mappane().start_gsm_coverage_loader();
-	}
 
-	boolean m_b_isdragging = false;
+    boolean m_b_isdragging = false;
 	private MapFrame m_map;
 	protected MapFrame get_mappane() { return m_map; }
 	private ArrayList<ActionListener> m_callback;
@@ -964,8 +957,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 				check_snap(e); //when pressed, always check snap right away
 				if(get_mappane().get_mode() == MapFrame.MapMode.ZOOM) {
 					get_mappane().onZoomGesture(false, new Point(getMousedownPos().width, getMousedownPos().height));
-					if(get_mappane().getOverlays()!=null)
-						updateOverlay();
 				} else if(get_mappane().get_mode() == MapFrame.MapMode.SENDING_POLY ||
 						get_mappane().get_mode() == MapFrame.MapMode.PAINT_RESTRICTIONAREA) {
 					MapPoint p = new MapPoint(get_mappane().get_navigation(), new MapPointPix(e.getX(), e.getY()));
@@ -1086,8 +1077,6 @@ public class MapFrameActionHandler extends AbstractBean implements ActionListene
 					PAS.get_pas().get_eastcontent().actionPerformed(new ActionEvent(Variables.getNavigation(), ActionEvent.ACTION_PERFORMED, "act_maploaded"));
 					//Variables.NAVIGATION.gotoMap(nav);
 					resetPanDrag();
-					if(get_mappane().getOverlays()!=null)
-						updateOverlay();
 				}
 				break;
 			case MouseEvent.BUTTON2:
